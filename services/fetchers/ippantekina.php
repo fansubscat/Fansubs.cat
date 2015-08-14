@@ -42,7 +42,7 @@ while ($go_on){
 	$go_on = FALSE;
 	foreach ($texts as $text){
 		if ($text->plaintext=='Missatges més antics'){
-			usleep(750000); //0.75 second sleep. Seems to help get rid of 503 errors... probably Blogger is rate-limited
+			sleep(1); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
 			$html = file_get_html($text->parent->href) or exit(1);
 			$go_on = TRUE;
 			break;
