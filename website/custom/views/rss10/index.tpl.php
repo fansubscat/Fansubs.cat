@@ -15,14 +15,14 @@ echo '<?xml version="1.0" encoding="UTF-8" ?>';
 
     <channel rdf:about="<?php echo $PlanetConfig->getUrl(); ?>">
         <title><?php echo $PlanetConfig->getName(); ?></title>
-        <description></description>
+        <description>Les notícies dels fansubs en català</description>
         <link><?php echo $PlanetConfig->getUrl(); ?></link>
-        <dc:language></dc:language>
+        <dc:language>ca</dc:language>
         <dc:creator></dc:creator>
         <dc:rights></dc:rights>
         <dc:date><?php echo date('Y-m-d\\TH:i:s+00:00'); ?></dc:date>
         <admin:generatorAgent rdf:resource="http://moonmoon.inertie.org/" />
-    
+
         <items>
         <rdf:Seq>
             <?php foreach ($items as $item): ?>
@@ -32,16 +32,25 @@ echo '<?xml version="1.0" encoding="UTF-8" ?>';
         </rdf:Seq>
         </items>
     </channel>
-    
-    <?php $count = 0; ?>
-    <?php foreach ($items as $item): ?>
+
+<?php $count = 0; ?>
+<?php foreach ($items as $item): ?>
     <item rdf:about="<?php echo $item->get_permalink();?>">
-        <title><?php echo htmlspecialchars($item->get_feed()->getName()) ?> : <?php echo htmlspecialchars($item->get_title());?></title>
+        <title><?php echo htmlspecialchars($item->get_feed()->getName()) ?>: <?php echo htmlspecialchars($item->get_title());?></title>
         <link><?php echo htmlspecialchars($item->get_permalink());?></link>
         <dc:date><?php echo date('Y-m-d\\TH:i:s+00:00',$item->get_date('U')); ?></dc:date>
-        <dc:creator><?php echo htmlspecialchars($item->get_author()? $item->get_author()->get_name() : 'anonymous') ?></dc:creator>
-        <description><?php echo htmlspecialchars($item->get_content()); ?></description>
-        <content:encoded><![CDATA[<?php echo $item->get_content();?>]]></content:encoded>
+        <description><?php
+$content = $item->get_content();
+$content = strip_tags($content, '<br><b><strong><em><i><ul><li><ol><hr><sub><sup><u><tt><p>');
+$content = str_replace('&nbsp;',' ', $content);
+$content = str_replace(' & ','&amp;', $content);
+$content = str_replace('<br>','<br />', $content);
+$content = preg_replace('/(<br\s*\/?>\s*){3,}/', '<br /><br />', $content);
+$content = preg_replace('/(?:<br\s*\/?>\s*)+$/', '', preg_replace('/^(?:<br\s*\/?>\s*)+/', '', trim($content)));
+
+echo htmlspecialchars($content);
+?></description>
+        <content:encoded><![CDATA[<?php echo $content;?>]]></content:encoded>
     </item>
     <?php if (++$count == $limit) { break; } ?>
     <?php endforeach; ?>

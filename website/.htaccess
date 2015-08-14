@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteRule ^arxiu$ /?type=archive [L]
+RewriteRule ^atom$ /?type=atom10 [L]
+RewriteRule ^rss$ /?type=rss10 [L]
+RewriteRule ^cron.php$ - [F,L]
+RewriteRule ^admin/inc/(.*)$ - [F,L]
+RewriteRule ^cache/(.*)$ - [F,L]
+RewriteRule ^custom/config.yml$ - [F,L]
+RewriteRule ^custom/people.opml$ - [F,L]
+RewriteRule ^custom/views/(.*)$ - [F,L]

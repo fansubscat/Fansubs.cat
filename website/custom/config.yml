@@ -1,9 +1,10 @@
 ---
-url: http://example.com/
-name: Untitled
-items: 10
+url: http://www.fansubs.cat/
+name: Fansubs.cat
+locale: ca
+items: 20
 shuffle: 0
-refresh: 240
+refresh: 900
 cache: 10
 nohtml: 0
 postmaxlength: 0

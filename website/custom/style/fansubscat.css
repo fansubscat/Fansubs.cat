@@ -1,0 +1,296 @@
+html{
+    font-family: "Lucida Grande", "Segoe UI", sans-serif;
+    color: #111;
+    background-image: url('/custom/img/stripe_pattern.png');
+    font-size: 62.5%;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    font-size: 1.3em;
+    line-height: 1.5em;
+}
+
+a{
+    color: #669;
+}
+
+a:visited{
+    color: #444;
+}
+
+a:hover{
+    color: #000;
+}
+
+a img{
+    border: none;
+}
+
+pre, code{
+    max-height: 100%;
+    width: 100%;
+    font-size: 1.2em;
+    overflow: auto;
+}
+
+h1, h2{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h2{
+    margin: 0;
+}
+
+#page {
+    max-width: 1000px;
+    margin: 5px auto;
+    padding: 0px 20px;
+    background-color: #EEE;
+}
+
+/* Header
+*******************************************************************************/
+#top {
+    color: #FFF;
+    padding: 10px 0px;
+    height: 200px;
+    position: relative;
+}
+    div#top a,
+    div#top a:visited, 
+    div#top a:hover {
+        color: #000;
+        text-decoration: none;
+	display: block;
+	height: 100%;
+	width: 100%;
+    }
+
+#header{
+	margin-bottom: 20px;
+	margin-left: -20px;
+	margin-right: -20px;
+}
+
+div#toppadding {
+	padding-left: 40px;
+}
+
+div#top h1{
+	position: absolute;
+        color: #000;
+	font-size: 2.3em;
+	bottom: 34px;
+	padding-left: 10px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-right: 10px;
+	background-color: rgba(255,255,255,0.6);
+}
+
+div#top h2{
+	position: absolute;
+        color: #000;
+	font-size: 1.3em;
+	bottom: 20px;
+	padding-left: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-right: 10px;
+	background-color: rgba(255,255,255,0.6);
+}
+
+/* Content
+*******************************************************************************/
+#content {
+    width: 77.5%;
+    float: left;
+}
+
+/* Sidebar
+*******************************************************************************/
+#sidebar {
+    width: 22.5%;
+    float: left;
+}
+    #sidebar div {
+        padding: 1em 25px;
+    }
+    #sidebar h2 {
+        color: #665;
+    }
+    #sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin: 1em 0;
+    }
+    
+/* Article
+*******************************************************************************/
+.article{
+    margin-bottom: 2em;
+    padding: 30px;
+    background: #FFF;
+    border: 1px solid #DDD;
+}
+
+#benvinguda {
+    margin-bottom: 2em;
+    padding: 5px;
+    background: #FFF;
+    border: 1px solid #DDD;
+    display: 
+}
+
+#benvinguda #textbenvinguda{
+	display: table;
+	height: 80px;
+}
+
+#benvinguda #textbenvinguda #textbenvingudareal{
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#benvinguda #noia {
+	float: left;
+	margin-right: 15px;
+}
+
+#benvinguda #tanca {
+	float: right;
+	margin-top: 5px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.article-logo{
+	float: right;
+}
+
+.article-logo img{
+    max-height: 40px;
+    max-width: 140px;
+    height: auto;
+    width: auto;
+}
+
+.article-image{
+	max-height: 200px;
+	max-width: 200px;
+	height: auto;
+	width: auto;
+	float: right;
+	margin-left: 10px;
+}
+
+.article-content:after, #benvinguda:after{
+	content: ".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+
+.article-readmore{
+	margin-top: 10px;
+}
+
+    .article-title,
+    .article-title a{
+        color: #111;
+        text-decoration: none;
+    }
+
+    .article-info{
+        margin: 0 0 1em 0;
+        color: #999;
+    }
+    
+    .article-content {
+        font-family: Georgia, serif;
+	font-size: 1.1em;
+    }
+
+    .article .collapsed{
+        display: none;
+    }
+
+/* Footer
+*******************************************************************************/
+#footer {
+    clear: both;
+    padding: 0 30px;
+}
+
+#footer p {
+	text-align: center;
+	font-size: 0.85em;
+}
+
+#sidebar ul li img, #sidebar ul li a, #sidebar ul li span{
+	vertical-align: middle;
+	line-height: 1.5em;
+}
+
+
+/* MOBILE */
+@media screen and (max-width: 1000px){
+	#content{
+		width: 100%;
+	}
+
+	#sidebar{
+		display: none;
+	}
+
+	#top{
+		height: 100px;
+	}
+}
+
+@media screen and (max-width: 650px){
+	#page {
+		padding: 0px 8px;
+	}
+	#header{
+		margin-left: -8px;
+		margin-right: -8px;
+	}
+	.article-logo img{
+		max-height: 20px;
+		max-width: 200px;
+	}
+
+	.article{
+		padding: 10px;
+		margin-bottom: 1em;
+	}
+
+	#benvinguda{
+		margin-bottom: 1em;
+	}
+
+	.article-logo{
+		float: left;
+	}
+
+	.article-title{
+		clear: both;
+	}
+
+	.article-image{
+		float: none;
+		margin-left: auto;
+		margin-right: auto;
+		display: block;
+		max-width: 75%;
+		margin-bottom: 10px;
+	}
+	div#toppadding{
+		padding-left: 8px;
+	}
+}
+

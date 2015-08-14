@@ -272,7 +272,7 @@ class Planet{
         foreach ($this->people as $person) {
             //Avoid mass loading with variable cache duration
             //$person->set_cache_duration($this->config->getCacheTimeout()+rand(0,30));
-            
+            $person->set_cache_duration($this->config->getCacheTimeout()); //ADDED BY EREZA
             //Load only a few feeds, force other to fetch from the cache
             if (0 > $max_load_feeds--) {
                 $person->set_timeout(-1);

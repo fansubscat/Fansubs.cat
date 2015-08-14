@@ -1,34 +1,60 @@
-<?php
-$all_people = &$Planet->getPeople();
-usort($all_people, array('PlanetPerson', 'compare'));
-?>
-<div id="sidebar">
-    <div id="sidebar-people">
-        <h2>People (<?php echo count($all_people); ?>)</h2>
-        <ul>
-            <?php foreach ($all_people as $person) : ?>
-            <li>
-                <a href="<?php echo htmlspecialchars($person->getFeed(), ENT_QUOTES, 'UTF-8'); ?>" title="Feed"><img src="postload.php?url=<?php echo urlencode(htmlspecialchars($person->getFeed(), ENT_QUOTES, 'UTF-8')); ?>" alt="feed" height="12" width="12" /></a>
-                <a href="<?php echo $person->getWebsite(); ?>" title="Website"><?php echo htmlspecialchars($person->getName(), ENT_QUOTES, 'UTF-8'); ?></a>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-        <p>
-        <a href="custom/people.opml"><img src="custom/img/opml.png" alt="feed" height="12" width="12" />&nbsp;All feeds in OPML format</a>
-        </p>
-    </div>
-    
-    <div>
-        <h2>Syndicate</h2>
-        <ul>
-            <li><img src="custom/img/feed.png" alt="feed" height="12" width="12" />&nbsp;<a href="?type=atom10">Feed (ATOM)</a></li>
-        </ul>
-    </div>
+			<div id="sidebar" class="aside">
+				<div class="section">
+					<h2>Fansubs actius</h2>
+					<ul>
+						<li>
+							<img src="custom/img/favicon-www-catsub-net.png" alt="" height="14" width="14" />
+							<a href="http://www.catsub.net/">CatSub</a>
+						</li>
+						<li>
+							<img src="custom/img/favicon-ippantekina-blogspot-com.png" alt="" height="14" width="14" />
+							<a href="http://ippantekina.blogspot.com/">Ippantekina Jimaku</a>
+						</li>
+						<li>
+							<img src="custom/img/favicon-llunaplenanofansub-blogspot-com-es.png" alt="" height="14" width="14" />
+							<a href="http://llunaplenanofansub.blogspot.com.es/">Lluna Plena no Fansub</a>
+						</li>
+						<li>
+							<img src="custom/img/favicon-seireiteinofansub-blogspot-com-es.png" alt="" height="14" width="14" />
+							<a href="http://seireiteinofansub.blogspot.com.es/">Seireitei no Fansub</a>
+						</li>
+					</ul>
+				</div>
 
-    <div>
-        <h2>Archives</h2>
-        <ul>
-            <li><a href="?type=archive">See all headlines</a></li>
-        </ul>
-    </div>
-</div>
+				<div class="section">
+					<h2>Fansubs inactius</h2>
+					<ul>
+						<li>
+							<img src="custom/img/favicon-hist-anicat.png" alt="" height="14" width="14" />
+							<span>AniCat</span>
+						</li>
+						<li>
+							<img src="custom/img/favicon-hist-animelliure.png" alt="" height="14" width="14" />
+							<span>Animelliure Fansub</span>
+						</li>
+						<li>
+							<img src="custom/img/favicon-hist-dragon.png" alt="" height="14" width="14" />
+							<a href="http://dragonnofansub.new-forum.net/">Dragon no Fansub</a>
+						</li>
+						<li>
+							<img src="custom/img/favicon-hist-gacelapunch.png" alt="" height="14" width="14" />
+							<span>GacelaPunch no Fansub</span>
+						</li>
+						<li>
+							<img src="custom/img/favicon-hist-tintaxina.png" alt="" height="14" width="14" />
+							<span>TintaXina.net</span>
+						</li>
+						<li>
+							<img src="custom/img/favicon-hist-xop.png" alt="" height="14" width="14" />
+							<a href="https://xopfansub.wordpress.com/">XOP Fansub</a>
+						</li>
+					</ul>
+				</div>
+
+				<div class="section">
+					<h2>Últimes notícies</h2>
+					<ul>
+						<li><a href="/">Torna a la pàgina inicial</a></li>
+					</ul>
+				</div>
+			</div>

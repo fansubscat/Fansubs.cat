@@ -59,9 +59,9 @@ if (!OutputCache::Start($_GET['type'], $cache_key, $cache_duration)) {
 
 $bench['contentdisplayed'] = microtime(true);
 
-echo "<!-- Load code: ".($bench['codeloaded'] - $bench['start'])." -->";
-echo "<!-- Load content: ".($bench['contentloaded'] - $bench['codeloaded'])." -->";
-echo "<!-- Display: ".($bench['contentdisplayed'] - $bench['contentloaded'])." -->";
-echo "<!--";
-var_dump($Planet->errors);
-echo "-->";
+echo "<!-- Load code: ".($bench['codeloaded'] - $bench['start'])." -->\n";
+echo "<!-- Load content: ".($bench['contentloaded'] - $bench['codeloaded'])." -->\n";
+echo "<!-- Display: ".($bench['contentdisplayed'] - $bench['contentloaded'])." -->\n";
+//echo "<!--";
+//var_dump($Planet->errors);
+//echo "-->";

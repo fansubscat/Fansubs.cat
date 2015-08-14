@@ -1,10 +1,15 @@
 <?xml version="1.0"?>
 <opml version="1.1">
 <head>
-<title>Untitled</title>
-<dateCreated>2008-12-14T15:51:52+01:00</dateCreated>
-<dateModified>2008-12-14T15:51:52+01:00</dateModified>
+<title>Fansubs.cat</title>
+<dateCreated>2015-07-09T04:59:50+02:00</dateCreated>
+<dateModified>2015-07-09T04:59:50+02:00</dateModified>
 </head>
 <body>
+<outline text="CatSub" htmlUrl="http://www.catsub.net/" xmlUrl="http://www.fansubs.cat/fansubs/catsub"/>
+<outline text="Ippantekina Jimaku" htmlUrl="http://ippantekina.blogspot.com/" xmlUrl="http://www.fansubs.cat/fansubs/ippantekina"/>
+<outline text="Lluna Plena no Fansub" htmlUrl="http://llunaplenanofansub.blogspot.com.es/" xmlUrl="http://www.fansubs.cat/fansubs/llunaplena"/>
+<outline text="Seireitei no Fansub" htmlUrl="http://seireiteinofansub.blogspot.com.es/" xmlUrl="http://www.fansubs.cat/fansubs/seireitei"/>
+<outline text="XOP Fansub" htmlUrl="https://xopfansub.wordpress.com/" xmlUrl="http://www.fansubs.cat/fansubs/xop"/>
 </body>
 </opml>

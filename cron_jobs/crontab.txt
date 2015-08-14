@@ -1,0 +1,3 @@
+# Update feeds every hour
+# Change these routes to your services directory if you install it on another server
+*/15 * * * * cd /srv/tourian_data/services/fansubs/ && ./fetch_all.sh >> log.txt 2>&1
