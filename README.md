@@ -16,7 +16,7 @@ All contributions are welcome. However, you will probably just want to add new f
 ## How does it work?
 
 The site is run on a very simple machine with Debian Wheezy, with an Apache + PHP server.
-The site is a modified version of MoonMoon with custom templates, and the RSS feeds are generated from web scraping.
+The site is a modified version of [MoonMoon](http://moonmoon.org/) with custom templates, and the RSS feeds are generated from web scraping.
 Take a look at the code if you want to know more! :)
 
 ## License
