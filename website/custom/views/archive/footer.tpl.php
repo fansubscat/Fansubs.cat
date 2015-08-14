@@ -2,7 +2,7 @@
 				<p>
 					Aquest lloc web només recopila notícies dels webs esmentats a dalt. Tots els drets dels textos, imatges i obres esmentades pertanyen als seus respectius propietaris.<br />
 					Disseny i contingut propi © 2015 Fansubs.cat.<br />
-					Funciona amb <a href="http://moonmoon.org/">moonmoon</a> (i una mica de web scraping).
+					Funciona amb <a href="http://moonmoon.org/">moonmoon</a> (i una mica de web scraping). <a href="https://github.com/Ereza/Fansubs.cat">És codi obert</a>.
 				</p>
 			</div>
 			<script>
