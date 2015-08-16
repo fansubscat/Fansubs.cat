@@ -8,7 +8,7 @@
 						</li>
 						<li>
 							<img src="custom/img/favicon-ippantekina-blogspot-com.png" alt="" height="14" width="14" />
-							<a href="http://ippantekina.blogspot.com/">Ippantekina Jimaku</a>
+							<a href="http://ippantekina.blogspot.com/">Ippantekina jimaku</a>
 						</li>
 						<li>
 							<img src="custom/img/favicon-llunaplenanofansub-blogspot-com-es.png" alt="" height="14" width="14" />
@@ -52,9 +52,23 @@
 				</div>
 
 				<div class="section">
+<?php
+if (isset($_GET['fansub']) && $_GET['fansub']!=''){
+?>
+					<h2>Totes les notícies</h2>
+					<ul>
+						<li><a href="/">Torna a la pàgina inicial</a></li>
+					</ul>
+<?php
+}
+else{
+?>
 					<h2>Arxiu</h2>
 					<ul>
 						<li><a href="/arxiu">Mostra tot l'històric</a></li>
 					</ul>
+<?php
+}
+?>
 				</div>
 			</div>

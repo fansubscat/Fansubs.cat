@@ -4,7 +4,7 @@ include("libs/simple_html_dom.php");
 
 //Creating an instance of FeedWriter class. 
 $TestFeed = new RSS2FeedWriter();
-$TestFeed->setTitle('Ippantekina Jimaku');
+$TestFeed->setTitle('Ippantekina jimaku');
 $TestFeed->setLink('http://ippantekina.blogspot.com/');
 
 $html = file_get_html("http://ippantekina.blogspot.com/") or exit(1);

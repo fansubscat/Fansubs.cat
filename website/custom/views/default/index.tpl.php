@@ -19,7 +19,23 @@ header('Content-type: text/html; charset=UTF-8');
 		<div id="page">
 <?php include(dirname(__FILE__).'/top.tpl.php'); ?>
 			<div id="content">
-<?php if ($_COOKIE['benvinguda']!='0'){ ?>
+<?php
+if (isset($_GET['fansub']) && $_GET['fansub']!=''){
+?>
+				<div id="benvinguda">
+					<img id="noia" src="custom/img/benvinguts.png" alt="" />
+					<div id="textbenvinguda">
+						<div id="textbenvingudareal">
+							<strong>Benvinguts a Fansubs.cat!</strong><br />
+							Ara mateix estàs veient només les notícies de <?php echo $_GET['fansub']; ?>.<br />
+							<a href="/">Torna a la pàgina inicial</a> per veure les notícies de tots els fansubs.
+						</div>
+					</div>
+				</div>
+<?php
+}
+else if ($_COOKIE['benvinguda']!='0'){
+?>
 				<div id="benvinguda">
 					<img id="noia" src="custom/img/benvinguts.png" alt="" />
 					<img id="tanca" src="custom/img/tanca.png" alt="Amaga aquest missatge" onclick="document.cookie='benvinguda=0';document.getElementById('benvinguda').style.display='none';" />
@@ -32,6 +48,15 @@ header('Content-type: text/html; charset=UTF-8');
 					</div>
 				</div>
 <?php
+}
+
+//If fansub is set, remove items from other fansubs
+if (isset($_GET['fansub']) && $_GET['fansub']!=''){
+	foreach ($items as $index => $item){
+		if ($item->get_feed()->name!=$_GET['fansub']){
+			unset($items[$index]);
+		}
+	}
 }
 ?>
 <?php if (0 == count($items)) : ?>

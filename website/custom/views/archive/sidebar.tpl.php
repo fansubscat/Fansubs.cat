@@ -8,7 +8,7 @@
 						</li>
 						<li>
 							<img src="custom/img/favicon-ippantekina-blogspot-com.png" alt="" height="14" width="14" />
-							<a href="http://ippantekina.blogspot.com/">Ippantekina Jimaku</a>
+							<a href="http://ippantekina.blogspot.com/">Ippantekina jimaku</a>
 						</li>
 						<li>
 							<img src="custom/img/favicon-llunaplenanofansub-blogspot-com-es.png" alt="" height="14" width="14" />

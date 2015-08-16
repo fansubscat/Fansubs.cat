@@ -1,7 +1,18 @@
 RewriteEngine On
+
+# General pages
 RewriteRule ^arxiu$ /?type=archive [L]
 RewriteRule ^atom$ /?type=atom10 [L]
 RewriteRule ^rss$ /?type=rss10 [L]
+
+# Fansub-specific URLs
+RewriteRule ^catsub$ /?fansub=CatSub [L]
+RewriteRule ^ippantekina$ /?fansub=Ippantekina\ jimaku [L]
+RewriteRule ^llunaplenanofansub$ /?fansub=Lluna\ Plena\ no\ Fansub [L]
+RewriteRule ^seireiteinofansub$ /?fansub=Seireitei\ no\ Fansub [L]
+RewriteRule ^xopfansub$ /?fansub=XOP\ Fansub [L]
+
+# Disallowed pages
 RewriteRule ^cron.php$ - [F,L]
 RewriteRule ^admin/inc/(.*)$ - [F,L]
 RewriteRule ^cache/(.*)$ - [F,L]
