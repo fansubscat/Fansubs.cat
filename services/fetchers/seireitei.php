@@ -49,8 +49,25 @@ while ($go_on){
 	$go_on = FALSE;
 	foreach ($texts as $text){
 		if ($text->plaintext=='Missatges més antics'){
-			sleep(2); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
-			$html = file_get_html($text->parent->href) or exit(1);
+			$tries=1;
+			while ($tries<=3){
+				if ($tries>1){
+					echo "Retrying...";
+				}
+				sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
+				$error=FALSE;
+				$html = file_get_html($text->parent->href) or $error=TRUE;
+
+				if (!$error){
+					break;
+				}
+				else{
+					$tries++;
+				}
+			}
+			if ($tries>3){
+				exit(1);
+			}
 			$go_on = TRUE;
 			break;
 		}
