@@ -7,7 +7,12 @@ $TestFeed = new RSS2FeedWriter();
 $TestFeed->setTitle('Seireitei no Fansub');
 $TestFeed->setLink('http://seireiteinofansub.blogspot.com.es/');
 
-$html = file_get_html("http://seireiteinofansub.blogspot.com.es/") or exit(1);
+$tidy_config = dirname(__FILE__) . "/tidy.conf";
+
+$html_text = file_get_contents("http://seireiteinofansub.blogspot.com.es/") or exit(1);
+$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+tidy_clean_repair($tidy);
+$html = str_get_html(tidy_get_output($tidy));
 
 $go_on = TRUE;
 $feed_count = 0;
@@ -53,14 +58,14 @@ while ($go_on){
 		if ($text->plaintext=='Missatges més antics'){
 			$tries=1;
 			while ($tries<=3){
-				if ($tries>1){
-					echo "Retrying...";
-				}
 				sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
 				$error=FALSE;
-				$html = file_get_html($text->parent->href) or $error=TRUE;
+				$html_text = file_get_contents($text->parent->href) or $error=TRUE;
 
 				if (!$error){
+					$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+					tidy_clean_repair($tidy);
+					$html = str_get_html(tidy_get_output($tidy));
 					break;
 				}
 				else{

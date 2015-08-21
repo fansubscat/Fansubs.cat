@@ -7,7 +7,12 @@ $TestFeed = new RSS2FeedWriter();
 $TestFeed->setTitle('XOP Fansub');
 $TestFeed->setLink('https://xopfansub.wordpress.com/');
 
-$html = file_get_html("https://xopfansub.wordpress.com/") or exit(1);
+$tidy_config = dirname(__FILE__) . "/tidy.conf";
+
+$html_text = file_get_contents("https://xopfansub.wordpress.com/") or exit(1);
+$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+tidy_clean_repair($tidy);
+$html = str_get_html(tidy_get_output($tidy));
 
 $go_on = TRUE;
 $feed_count = 0;
@@ -73,7 +78,10 @@ while ($go_on){
 	foreach ($texts as $text){
 		if ($text->plaintext=='&laquo; Older Entries'){
 			//Not sleeping, Wordpress.com does not appear to be rate-limited
-			$html = file_get_html($text->parent->href) or exit(1);
+			$html_text = file_get_contents($text->parent->href) or exit(1);
+			$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+			tidy_clean_repair($tidy);
+			$html = str_get_html(tidy_get_output($tidy));
 			$go_on = TRUE;
 			break;
 		}

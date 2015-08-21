@@ -7,7 +7,12 @@ $TestFeed = new RSS2FeedWriter();
 $TestFeed->setTitle('CatSub');
 $TestFeed->setLink('http://www.catsub.net/');
 
-$html = file_get_html("http://www.catsub.net/") or exit(1);
+$tidy_config = dirname(__FILE__) . "/tidy.conf";
+
+$html_text = file_get_contents("http://www.catsub.net/") or exit(1);
+$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+tidy_clean_repair($tidy);
+$html = str_get_html(tidy_get_output($tidy));
 
 $go_on = TRUE;
 $feed_count = 0;
@@ -50,7 +55,10 @@ while ($go_on){
 	$go_on = FALSE;
 	foreach ($texts as $text){
 		if ($text->plaintext=='Notícies més antigues &gt;'){
-			$html = file_get_html("http://www.catsub.net/" . $text->parent->href) or exit(1);
+			$html_text = file_get_contents("http://www.catsub.net/" . $text->parent->href) or exit(1);
+			$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+			tidy_clean_repair($tidy);
+			$html = str_get_html(tidy_get_output($tidy));
 			$go_on = TRUE;
 			break;
 		}
