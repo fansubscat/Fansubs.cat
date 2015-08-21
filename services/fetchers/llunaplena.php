@@ -9,6 +9,8 @@ $TestFeed->setLink('http://llunaplenanofansub.blogspot.com.es/');
 
 $blog_urls = array("http://llunaplenanofansub.blogspot.com.es/", "http://cuadefada.blogspot.com.es/", "http://unapeca.blogspot.com.es/");
 
+$feed_count = 0;
+
 foreach ($blog_urls as $blog_url){
 	$html = file_get_html($blog_url) or exit(1);
 
@@ -61,6 +63,7 @@ foreach ($blog_urls as $blog_url){
 
 				//Now add the feed item
 				$TestFeed->addItem($newItem);
+				$feed_count++;
 			}
 		}
 
@@ -93,6 +96,11 @@ foreach ($blog_urls as $blog_url){
 		}
 	
 	}
+}
+
+if ($feed_count==0){
+	//No error but no feeds, this is wrong
+	exit(1);
 }
 
 $TestFeed->generateFeed();

@@ -10,6 +10,7 @@ $TestFeed->setLink('http://www.catsub.net/');
 $html = file_get_html("http://www.catsub.net/") or exit(1);
 
 $go_on = TRUE;
+$feed_count = 0;
 
 while ($go_on){
 	//parse through the HTML and build up the RSS feed as we go along
@@ -42,6 +43,7 @@ while ($go_on){
 
 		//Now add the feed item
 		$TestFeed->addItem($newItem);
+		$feed_count++;
 	}
 
 	$texts = $html->find('text');
@@ -54,6 +56,11 @@ while ($go_on){
 		}
 	}
 	
+}
+
+if ($feed_count==0){
+	//No error but no feeds, this is wrong
+	exit(1);
 }
 
 $TestFeed->generateFeed();
