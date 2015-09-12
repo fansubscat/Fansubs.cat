@@ -25,7 +25,7 @@ foreach ($blog_urls as $blog_url){
 		//parse through the HTML and build up the RSS feed as we go along
 		foreach($html->find('div.post') as $article) {
 			//We only show news with tag "Notícies" from the main blog, or we will also show the series pages...
-			if ($blog_url!='http://llunaplenanofansub.blogspot.com.es/' || ($article->find('span.post-labels', 0) && strpos($article->find('span.post-labels', 0)->innertext, 'Notícies')!==FALSE)){
+			if ($blog_url!='http://llunaplenanofansub.blogspot.com.es/' || ($article->find('span.post-labels', 0) && (strpos($article->find('span.post-labels', 0)->innertext, 'Notícies')!==FALSE || strpos($article->find('span.post-labels', 0)->innertext, 'Noticies')!==FALSE))){
 				//Create an empty FeedItem
 				$newItem = $TestFeed->createNewItem();
 
