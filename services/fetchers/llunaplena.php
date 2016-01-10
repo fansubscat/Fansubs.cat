@@ -25,18 +25,17 @@ foreach ($blog_urls as $blog_url){
 		//parse through the HTML and build up the RSS feed as we go along
 		foreach($html->find('div.post') as $article) {
 			//We only show news with tag "Notícies" from the main blog, or we will also show the series pages...
-			if ($blog_url!='http://llunaplenanofansub.blogspot.com.es/' || ($article->find('span.post-labels', 0) && (strpos($article->find('span.post-labels', 0)->innertext, 'Notícies')!==FALSE || strpos($article->find('span.post-labels', 0)->innertext, 'Noticies')!==FALSE))){
+			if ($article->find('h3.post-title a', 0)!==NULL &&
+					(stripos($article->find('h3.post-title a', 0)->innertext,'[LlPnF')===FALSE
+					|| stripos($article->find('h3.post-title a', 0)->innertext,'[LlPnF')>0) &&
+					(stripos($article->find('h3.post-title a', 0)->innertext,'[DnF')===FALSE
+					|| stripos($article->find('h3.post-title a', 0)->innertext,'[DnF')>0)){
 				//Create an empty FeedItem
 				$newItem = $TestFeed->createNewItem();
 
 				//Look up and add elements to the feed item   
 				$title = $article->find('h3.post-title a', 0);
-				if ($title!=NULL){
-					$newItem->setTitle($title->innertext);
-				}
-				else{
-					$newItem->setTitle('(Sense títol)');
-				}
+				$newItem->setTitle($title->innertext);
 
 				$description = $article->find('div.post-body', 0)->innertext;
 
@@ -58,13 +57,8 @@ foreach ($blog_urls as $blog_url){
 
 				$newItem->setDescription($description);
 
-				if ($title!=NULL){
-					$newItem->setLink($title->href);
-				}
-				else{
-					$newItem->setLink($blog_url);
-				}
-				$newItem->setDate($article->find('abbr.published', 0)->title);
+				$newItem->setLink($title->href);
+				$newItem->setDate($article->parent->find('abbr.published', 0)->title);
 
 				//Now add the feed item
 				$TestFeed->addItem($newItem);

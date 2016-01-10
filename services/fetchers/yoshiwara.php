@@ -20,39 +20,31 @@ $feed_count = 0;
 while ($go_on){
 	//parse through the HTML and build up the RSS feed as we go along
 	foreach($html->find('article') as $article) {
-		//Create an empty FeedItem
-		$newItem = $TestFeed->createNewItem();
+		if ($article->find('h1.entry-title a', 0)!==NULL){
+			//Create an empty FeedItem
+			$newItem = $TestFeed->createNewItem();
 
-		//Look up and add elements to the feed item
-		$title = $article->find('h1.entry-title a', 0);
-		if ($title!=NULL){
+			//Look up and add elements to the feed item
+			$title = $article->find('h1.entry-title a', 0);
 			$newItem->setTitle($title->innertext);
-		}
-		else{
-			$newItem->setTitle('(Sense títol)');
-		}
 
-		$description = str_replace("text-align:center;","",$article->find('div.entry-content', 0)->innertext);
+			$description = str_replace("text-align:center;","",$article->find('div.entry-content', 0)->innertext);
 
-		$newItem->setDescription($description);
+			$newItem->setDescription($description);
 
-		if ($title!=NULL){
 			$newItem->setLink($title->href);
+
+			//The format is: 2013-09-02T14:43:43+00:00
+			$datetext = $article->find('time', 0)->datetime;
+
+			$date = date_create_from_format('Y-m-d\TH:i:sP', $datetext);
+
+			$newItem->setDate($date->format('Y-m-d H:i:s'));
+
+			//Now add the feed item
+			$TestFeed->addItem($newItem);
+			$feed_count++;
 		}
-		else{
-			$newItem->setLink('https://dengekidaisycat.wordpress.com/');
-		}
-
-		//The format is: 2013-09-02T14:43:43+00:00
-		$datetext = $article->find('time', 0)->datetime;
-
-		$date = date_create_from_format('Y-m-d\TH:i:sP', $datetext);
-
-		$newItem->setDate($date->format('Y-m-d H:i:s'));
-
-		//Now add the feed item
-		$TestFeed->addItem($newItem);
-		$feed_count++;
 	}
 
 	$texts = $html->find('text');

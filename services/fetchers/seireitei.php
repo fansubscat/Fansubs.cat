@@ -20,36 +20,28 @@ $feed_count = 0;
 while ($go_on){
 	//parse through the HTML and build up the RSS feed as we go along
 	foreach($html->find('div.post') as $article) {
-		//Create an empty FeedItem
-		$newItem = $TestFeed->createNewItem();
+		if ($article->find('h3.post-title a', 0)!==NULL){
+			//Create an empty FeedItem
+			$newItem = $TestFeed->createNewItem();
 
-		//Look up and add elements to the feed item   
-		$title = $article->find('h3.post-title a', 0);
-		if ($title!=NULL){
+			//Look up and add elements to the feed item
+			$title = $article->find('h3.post-title a', 0);
 			$newItem->setTitle($title->innertext);
-		}
-		else{
-			$newItem->setTitle('(Sense títol)');
-		}
 
-		$description = $article->find('div.post-body', 0)->innertext;
+			$description = $article->find('div.post-body', 0)->innertext;
 
-		//We remove the password string (seems to always be the same)
-		$description = str_replace("<b>Contrasenya: snf</b>",'', $description);
+			//We remove the password string (seems to always be the same)
+			$description = str_replace("<b>Contrasenya: snf</b>",'', $description);
 
-		$newItem->setDescription($description);
+			$newItem->setDescription($description);
 
-		if ($title!=NULL){
 			$newItem->setLink($title->href);
-		}
-		else{
-			$newItem->setLink('http://seireiteinofansub.blogspot.com.es/');
-		}
-		$newItem->setDate($article->find('abbr.published', 0)->title);
+			$newItem->setDate($article->find('abbr.published', 0)->title);
 
-		//Now add the feed item
-		$TestFeed->addItem($newItem);
-		$feed_count++;
+			//Now add the feed item
+			$TestFeed->addItem($newItem);
+			$feed_count++;
+		}
 	}
 
 	$texts = $html->find('text');

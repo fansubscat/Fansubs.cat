@@ -20,29 +20,21 @@ $feed_count = 0;
 while ($go_on){
 	//parse through the HTML and build up the RSS feed as we go along
 	foreach($html->find('div.post') as $article) {
-		//Create an empty FeedItem
-		$newItem = $TestFeed->createNewItem();
+		if ($article->find('h3.post-title a', 0)!==NULL){
+			//Create an empty FeedItem
+			$newItem = $TestFeed->createNewItem();
 
-		//Look up and add elements to the feed item   
-		$title = $article->find('h3.post-title a', 0);
-		if ($title!=NULL){
+			//Look up and add elements to the feed item
+			$title = $article->find('h3.post-title a', 0);
 			$newItem->setTitle($title->innertext);
-		}
-		else{
-			$newItem->setTitle('(Sense títol)');
-		}
-		$newItem->setDescription($article->find('div.post-body', 0)->innertext);
-		if ($title!=NULL){
+			$newItem->setDescription($article->find('div.post-body', 0)->innertext);
 			$newItem->setLink($title->href);
-		}
-		else{
-			$newItem->setLink('http://ippantekina.blogspot.com/');
-		}
-		$newItem->setDate($article->find('abbr.published', 0)->title);
+			$newItem->setDate($article->find('abbr.published', 0)->title);
 
-		//Now add the feed item
-		$TestFeed->addItem($newItem);
-		$feed_count++;
+			//Now add the feed item
+			$TestFeed->addItem($newItem);
+			$feed_count++;
+		}
 	}
 
 	$texts = $html->find('text');
