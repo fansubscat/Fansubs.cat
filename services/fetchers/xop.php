@@ -76,7 +76,7 @@ while ($go_on){
 	$texts = $html->find('text');
 	$go_on = FALSE;
 	foreach ($texts as $text){
-		if ($text->plaintext=='&laquo; Older Entries'){
+		if ($text->plaintext=='« Older Entries'){
 			//Not sleeping, Wordpress.com does not appear to be rate-limited
 			$html_text = file_get_contents($text->parent->href) or exit(1);
 			$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');

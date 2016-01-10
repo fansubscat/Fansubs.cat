@@ -7,10 +7,12 @@ RewriteRule ^rss$ /?type=rss10 [L]
 
 # Fansub-specific URLs
 RewriteRule ^catsub$ /?fansub=CatSub [L]
+RewriteRule ^dengekidaisycat$ /?fansub=Dengeki\ Daisy\ Cat [L]
 RewriteRule ^ippantekina$ /?fansub=Ippantekina\ jimaku [L]
 RewriteRule ^llunaplenanofansub$ /?fansub=Lluna\ Plena\ no\ Fansub [L]
 RewriteRule ^seireiteinofansub$ /?fansub=Seireitei\ no\ Fansub [L]
 RewriteRule ^xopfansub$ /?fansub=XOP\ Fansub [L]
+RewriteRule ^yoshiwaranofansub$ /?fansub=Yoshiwara\ no\ Fansub [L]
 
 # Disallowed pages
 RewriteRule ^cron.php$ - [F,L]

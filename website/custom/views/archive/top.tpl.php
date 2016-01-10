@@ -1,5 +1,5 @@
 			<div id="header">
-				<div id="top" style="background-image: url('custom/img/header<?php echo rand(1, 7); ?>.jpg')">
+				<div id="top" style="background-image: url('custom/img/header<?php echo rand(1, 8); ?>.jpg')">
 					<a href="/"></a>
 					<div id="toppadding">
 						<h1><a href="/"><?php echo $PlanetConfig->getName(); ?></a></h1>
