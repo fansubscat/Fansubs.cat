@@ -1,23 +1,15 @@
-RewriteEngine On
+RewriteEngine on
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 403 /error.php?code=403
+RewriteRule ^pagina/(.*)(/?)$ index.php?page=$1
+RewriteRule ^fansub/(.*)/pagina/(.*)(/?)$ index.php?fansub_id=$1&page=$2
+RewriteRule ^fansub/(.*)(/?)$ index.php?fansub_id=$1
+RewriteRule ^estat-del-sistema(/?)$ status.php
+RewriteRule ^envia-noticies-contacta(/?)$ contact.php
+RewriteRule ^arxiu(/?)$ archive.php
+RewriteRule ^rss(/?)$ rss.php
+RewriteRule ^.*\.inc\.php$ error.php?code=404
 
-# General pages
-RewriteRule ^arxiu$ /?type=archive [L]
-RewriteRule ^atom$ /?type=atom10 [L]
-RewriteRule ^rss$ /?type=rss10 [L]
-
-# Fansub-specific URLs
-RewriteRule ^catsub$ /?fansub=CatSub [L]
-RewriteRule ^dengekidaisycat$ /?fansub=Dengeki\ Daisy\ Cat [L]
-RewriteRule ^ippantekina$ /?fansub=Ippantekina\ jimaku [L]
-RewriteRule ^llunaplenanofansub$ /?fansub=Lluna\ Plena\ no\ Fansub [L]
-RewriteRule ^seireiteinofansub$ /?fansub=Seireitei\ no\ Fansub [L]
-RewriteRule ^xopfansub$ /?fansub=XOP\ Fansub [L]
-RewriteRule ^yoshiwaranofansub$ /?fansub=Yoshiwara\ no\ Fansub [L]
-
-# Disallowed pages
-RewriteRule ^cron.php$ - [F,L]
-RewriteRule ^admin/inc/(.*)$ - [F,L]
-RewriteRule ^cache/(.*)$ - [F,L]
-RewriteRule ^custom/config.yml$ - [F,L]
-RewriteRule ^custom/people.opml$ - [F,L]
-RewriteRule ^custom/views/(.*)$ - [F,L]
+#Temporary fixes for LlPnF usage
+RewriteRule ^llunaplenanofansub(/?)$ index.php?fansub_id=lluna-plena-no-fansub
+RewriteRule ^custom/img/affiliate_banner.png$ style/images/affiliate_banner.png

@@ -11,17 +11,16 @@ Of course, the site is completely non-profit and will always remain like that.
 
 ## Contributing
 
-All contributions are welcome. However, you will probably just want to add new fansubs, or modify the fetching procedure for one specific fansub.
+All contributions are welcome. This is a collaborative project! :)
 
 ## How does it work?
 
-The site is run on a very simple machine with Debian Wheezy, with an Apache + PHP server.
-The site is a modified version of [MoonMoon](http://moonmoon.org/) with custom templates, and the RSS feeds are generated from web scraping.
+The site is run on a very simple machine with Debian Wheezy, with an Apache + PHP + MySQL server.
+The site allows displaying and filtering of the news database, and the news are inserted into the database by web scraping the different fansub websites.
 Take a look at the code if you want to know more! :)
 
 ## License
 
-This project is licensed under the [GNU Affero Public License 3.0](https://github.com/Ereza/Fansubs.cat/blob/master/LICENSE), except the modifications where the original license of the modified code forces to use that license on the changes.
-This basically means that you can do whatever you want, but if you use this on a website, you **must** release the modified code.
+This project is licensed under the [GNU Affero Public License 3.0](https://github.com/Ereza/Fansubs.cat/blob/master/LICENSE). This basically means that you can do whatever you want, but if you use this on a website, you **must** release the modified code.
 
-The fansub icons and background images used are property of their original authors. If you want them removed, please contact me!
+The fansub icons and background images used are property of their original authors and not subject to the license. If you want them removed, please contact me!

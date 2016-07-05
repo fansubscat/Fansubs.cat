@@ -1,3 +1,4 @@
-# Update feeds every hour
+# Fansubs.cat - Update feeds every 15 minutes
 # Change these routes to your services directory if you install it on another server
-*/15 * * * * cd /srv/tourian_data/services/fansubs/ && ./fetch_all.sh >> log.txt 2>&1
+# Should be run by the Apache user (www-data)
+*/15 * * * * cd /srv/tourian_data/services/fansubs.cat/ && /usr/bin/php fetch.php
