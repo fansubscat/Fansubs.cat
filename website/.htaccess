@@ -9,7 +9,3 @@ RewriteRule ^envia-noticies-contacta(/?)$ contact.php
 RewriteRule ^arxiu(/?)$ archive.php
 RewriteRule ^rss(/?)$ rss.php
 RewriteRule ^.*\.inc\.php$ error.php?code=404
-
-#Temporary fixes for LlPnF usage
-RewriteRule ^llunaplenanofansub(/?)$ index.php?fansub_id=lluna-plena-no-fansub
-RewriteRule ^custom/img/affiliate_banner.png$ style/images/affiliate_banner.png
