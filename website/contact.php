@@ -27,7 +27,7 @@ if ($_POST['reason']!=NULL){
 			$message .= "URL de la notícia: {$_POST['add_news_url']}\n";
 			$message .= "URL de la imatge: {$_POST['add_news_image_url']}\n";
 			$message .= "Comentaris: {$_POST['comments']}\n";
-			mail('ereza@catsub.net','Fansubs.cat - Nova notícia', $message,'','-f info@fansubs.cat -F Fansubs.cat');
+			mail($contact_email,'Fansubs.cat - Nova notícia', $message,'','-f info@fansubs.cat -F Fansubs.cat');
 			mysqli_query($db_connection, "INSERT INTO pending_news (title, contents, url, image_url, sender_name, sender_email, comments) VALUES ('".mysqli_real_escape_string($db_connection, $_POST['add_news_title'])."','".mysqli_real_escape_string($db_connection, $_POST['add_news_contents'])."','".mysqli_real_escape_string($db_connection, $_POST['add_news_url'])."',".($_POST['add_news_image_url']!=NULL ? "'".mysqli_real_escape_string($db_connection, $_POST['add_news_image_url'])."'" : '').",'".mysqli_real_escape_string($db_connection, $_POST['name'])."','".mysqli_real_escape_string($db_connection, $_POST['email'])."',".($_POST['comments']!=NULL ? "'".mysqli_real_escape_string($db_connection, $_POST['comments'])."'" : 'NULL').")") or crash(mysqli_error($db_connection));
 			$valid = TRUE;
 		}
@@ -43,7 +43,7 @@ if ($_POST['reason']!=NULL){
 			$message .= "Nom del fansub: {$_POST['new_fansub_name']}\n";
 			$message .= "URL del fansub: {$_POST['new_fansub_url']}\n";
 			$message .= "Comentaris: {$_POST['comments']}\n";
-			mail('ereza@catsub.net','Fansubs.cat - Nou fansub', $message,'','-f info@fansubs.cat -F Fansubs.cat');
+			mail($contact_email,'Fansubs.cat - Nou fansub', $message,'','-f info@fansubs.cat -F Fansubs.cat');
 			$valid = TRUE;
 		}
 	}
@@ -55,7 +55,7 @@ if ($_POST['reason']!=NULL){
 			$message .= "Nom: {$_POST['name']}\n";
 			$message .= "Correu electrònic: {$_POST['email']}\n";
 			$message .= "Comentaris: {$_POST['comments']}\n";
-			mail('ereza@catsub.net','Fansubs.cat - Comentaris', $message,'','-f info@fansubs.cat -F Fansubs.cat');
+			mail($contact_email,'Fansubs.cat - Comentaris', $message,'','-f info@fansubs.cat -F Fansubs.cat');
 			$valid = TRUE;
 		}
 	}
@@ -78,7 +78,7 @@ if ($_POST['reason']!=NULL){
 else{
 ?>
 						<p>Si has subtitulat alguna obra al català però no estàs associat a cap fansub, pots afegir una notícia al web de Fansubs.cat per difondre-ho.<br />D'altra banda, si coneixes o pertanys a un fansub en català que no aparegui aquí, avisa'ns! Mirarem d'afegir-lo ben aviat, de manera que les properes notícies apareguin automàticament al web.</p><p>Tingues en compte que tot el que enviïs en aquest formulari serà validat manualment per un administrador, de manera que pot passar un temps fins que aparegui al web.</p>
-						<form method="post" action="/nou-fansub">
+						<form method="post" action="/envia-noticies-contacta">
 							<table class="contact-us">
 								<tbody>
 									<tr>
