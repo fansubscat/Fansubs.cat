@@ -42,7 +42,7 @@ $(document).ready(function() {
       
       //Set to a user cookie with 10 years of expiry time
       //Just hoping users don't complain in 2026.
-      Cookies.set('favorite_fansubs', selectedChildrenAsText, { expires: 3650, path: '/' });
+      Cookies.set('favorite_fansubs', selectedChildrenAsText, { expires: 3650, path: '/', domain: 'fansubs.cat' });
       location.href='/';
     }
     else if ($("#filter-toggle").text()=='Torna a la pàgina principal'){
@@ -68,7 +68,7 @@ $(document).ready(function() {
   //Setup close button for the first time welcome message
   //Also using a cookie with 10 years expiration time
   $("#close").click(function(){
-    Cookies.set('welcome_closed', '1', { expires: 3650, path: '/' });
+    Cookies.set('welcome_closed', '1', { expires: 3650, path: '/', domain: 'fansubs.cat' });
     $("#welcome").hide();
   });
 
