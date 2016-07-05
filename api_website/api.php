@@ -19,7 +19,7 @@ if ($method == 'refresh') {
 	}
 	else{
 		http_response_code(400);
-		echo '{status: "ko", error: "No refresh token has been provided."}';
+		echo '{"status": "ko", error: "No refresh token has been provided."}';
 	}
 }
 else{
