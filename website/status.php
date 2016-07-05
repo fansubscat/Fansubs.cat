@@ -10,7 +10,7 @@ function show_fetch_type($fetch_type){
 	switch ($fetch_type){
 		case 'periodic':
 			return 'Periòdic<br />(15 min.)';
-		case 'on_request':
+		case 'onrequest':
 			return 'A petició';
 		case 'onetime_retired':
 			return 'Única vegada<br />(retirat)';
