@@ -88,13 +88,16 @@ h2 {
 	font-weight: bold;
 }
 
-#filter-footer{
+#filter-footer {
 	font-size: 0.9em;
 	clear: both;
 	color: #669;
 	font-weight: bold;
-	cursor: pointer;
 	padding: 2px;
+}
+
+#filter-footer span {
+	cursor: pointer;
 }
 
 #page {

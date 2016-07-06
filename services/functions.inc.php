@@ -75,6 +75,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		case 'phpbb_dnf':
 			$result = fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date);
 			break;
+		case 'weebly_rnnf':
+			$result = fetch_via_weebly_rnnf($fansub_id, $url, $last_fetched_item_date);
+			break;
 		case 'wordpress_ddc':
 			$result = fetch_via_wordpress_ddc($fansub_id, $url, $last_fetched_item_date);
 			break;
@@ -773,6 +776,73 @@ function fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date){
 				tidy_clean_repair($tidy);
 				$html = str_get_html(tidy_get_output($tidy));
 				$go_on = TRUE;
+			}
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_weebly_rnnf($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('div.blog-post') as $article) {
+			if ($article->find('h2.blog-title a', 0)!==NULL && stripos($article->find('h2.blog-title a', 0),'audio en Català')===FALSE && stripos($article->find('h2.blog-title a', 0),'audio en catala')===FALSE && stripos($article->find('h2.blog-title a', 0),'Bleach 001')===FALSE && stripos($article->find('h2.blog-title a', 0),'One Piece - 396, 397 i 298')===FALSE && stripos($article->find('h2.blog-title a', 0),'One Piece - 399, 400 i 401')===FALSE && stripos($article->find('h2.blog-title a', 0),'One Piece - 402, 403 i 404')===FALSE && stripos($article->find('h2.blog-title a', 0),'One Piece 405')===FALSE && stripos($article->find('h2.blog-title a', 0),'InuYasha')===FALSE){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('h2.blog-title a', 0);
+				$item[0]=$title->innertext;
+
+				$description = $article->find('div.blog-content', 0)->innertext;
+
+				$item[1]=$article->find('div.blog-content', 0)->innertext;
+				$item[2]=parse_description($description);
+
+				//The format is: 2013-09-02T14:43:43+00:00
+				$datetext = $article->find('p.blog-date span', 0)->innertext;
+
+				$date = date_create_from_format('!m/d/Y', $datetext);
+
+				$item[3]=$date->format('Y-m-d H:i:s');
+				$item[4]=$url . substr($title->href, 1);
+				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+
+				$elements[]=$item;
+			}
+		}
+
+		$texts = $html->find('text');
+		$go_on = FALSE;
+		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
+			foreach ($texts as $text){
+				if ($text->plaintext=='&lt;&lt; Previous'){
+					//Not sleeping, Weebly does not appear to be rate-limited
+					$html_text = file_get_contents($url . substr($text->parent->href, 1)) or $error_connect=TRUE;
+					if ($error_connect){
+						return array('error_connect',array());
+					}
+					$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+					tidy_clean_repair($tidy);
+					$html = str_get_html(tidy_get_output($tidy));
+					$go_on = TRUE;
+					break;
+				}
 			}
 		}
 	}
