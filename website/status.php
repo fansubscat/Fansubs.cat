@@ -37,6 +37,8 @@ function show_method($method){
 			return 'CatSub';
 		case 'phpbb_dnf':
 			return 'phpBB<br />(variant DNF)';
+		case 'phpbb_llpnf':
+			return 'phpBB<br />(variant LlPnF)';
 		case 'weebly_rnnf':
 			return 'Weebly<br />(variant RNNF)';
 		case 'wordpress_ddc':

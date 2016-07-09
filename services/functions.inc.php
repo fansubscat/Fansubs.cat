@@ -2,6 +2,14 @@
 require_once("libs/simple_html_dom.php");
 require_once('common.inc.php');
 
+//Get last occurrence in a string
+function strrstr($h, $n, $before = false) {
+    $rpos = strrpos($h, $n);
+    if($rpos === false) return false;
+    if($before == false) return substr($h, $rpos);
+    else return substr($h, 0, $rpos);
+}
+
 //Removes the unwanted tags, double enters, etc. from descriptions
 function parse_description($description){
 	$description = strip_tags($description, '<br><b><strong><em><i><ul><li><ol><hr><sub><sup><u><tt><p>');
@@ -74,6 +82,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 			break;
 		case 'phpbb_dnf':
 			$result = fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date);
+			break;
+		case 'phpbb_llpnf':
+			$result = fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'weebly_rnnf':
 			$result = fetch_via_weebly_rnnf($fansub_id, $url, $last_fetched_item_date);
@@ -741,6 +752,7 @@ function fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date){
 			$datetext = str_replace('Mar', 'March', $datetext);
 			$datetext = str_replace('Abr', 'April', $datetext);
 			$datetext = str_replace('Maig', 'May', $datetext);
+			$datetext = str_replace('Mai', 'May', $datetext);
 			$datetext = str_replace('Jun', 'June', $datetext);
 			$datetext = str_replace('Jul', 'July', $datetext);
 			$datetext = str_replace('Ago', 'August', $datetext);
@@ -777,6 +789,119 @@ function fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date){
 				$html = str_get_html(tidy_get_output($tidy));
 				$go_on = TRUE;
 			}
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$base_url=substr($url,0,strrpos($url,'/'));
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('a.topictitle') as $topic) {
+			if (strpos($topic->innertext,'Com funciona Lluna Plena no Fansub?')===FALSE 
+				&& strpos($topic->innertext,'Tret de sortida dels regals!')===FALSE
+				&& strpos($topic->innertext,'Nou funcionament del blog i les notícies')===FALSE
+				&& strpos($topic->innertext,'Necessitem gent!')===FALSE
+				&& strpos($topic->innertext,'Kokoro Connect 01, 02, 03 i 04')===FALSE
+				&& strpos($topic->innertext,'One Piece #732')===FALSE
+				&& strpos($topic->innertext,'Fairy Tail 131, 132 i 133')===FALSE
+				&& strpos($topic->innertext,'Lovely Complex 19')===FALSE
+				&& strpos($topic->innertext,'Temporada d\'anime tardor-hivern a LlPnF')===FALSE
+				&& strpos($topic->innertext,'Sora no Otoshimono #5')===FALSE
+				&& strpos($topic->innertext,'Més enllà dels núvols, el lloc promès')===FALSE){
+				$html_text_topic = file_get_contents($base_url.$topic->href) or $error_connect=TRUE;
+				if ($error_connect){
+					return array('error_connect',array());
+				}
+				$tidy_topic = tidy_parse_string($html_text_topic, $tidy_config, 'UTF8');
+				tidy_clean_repair($tidy_topic);
+				$html_topic = str_get_html(tidy_get_output($tidy_topic));
+
+				$is_blogspot = FALSE;
+				foreach($html_topic->find('div.post div.content div a img') as $linked_image) {
+					if (strpos($linked_image->parent->href,'.blogspot.')!==FALSE){
+						$is_blogspot = TRUE;
+					}
+				}
+
+				if (!$is_blogspot){
+					//Create an empty item
+					$item = array();
+
+					//Look up and add elements to the item
+					$title=$html_topic->find('h2.topic-title a', 0)->innertext;
+					$item[0]=$title;
+
+					$description=$html_topic->find('div.post div.content div', 0)->innertext;
+
+					$item[1]=$description;
+					$item[2]=parse_description($description);
+
+					$datetext = $html_topic->find('div.post p.author', 0)->plaintext;
+					//We now have this (only the text): <img class="sprite-icon_post_target" src="http://illiweb.com/fa/empty.gif" alt="Missatge" title="Missatge">&nbsp;&nbsp;<a href="/u227"><span style="color:#7F0985"><strong>bombillero</strong></span></a> el Dt 05 Jul 2016, 15:08
+					$datetext = substr(strrstr($datetext, " el "), 4);
+
+					$datetext = str_replace('Gen', 'January', $datetext);
+					$datetext = str_replace('Feb', 'February', $datetext);
+					$datetext = str_replace('Mar', 'March', $datetext);
+					$datetext = str_replace('Abr', 'April', $datetext);
+					$datetext = str_replace('Maig', 'May', $datetext);
+					$datetext = str_replace('Mai', 'May', $datetext);
+					$datetext = str_replace('Jun', 'June', $datetext);
+					$datetext = str_replace('Jul', 'July', $datetext);
+					$datetext = str_replace('Ago', 'August', $datetext);
+					$datetext = str_replace('Set', 'September', $datetext);
+					$datetext = str_replace('Oct', 'October', $datetext);
+					$datetext = str_replace('Nov', 'November', $datetext);
+					$datetext = str_replace('Des', 'December', $datetext);
+
+					$datetext = str_replace('Dl', 'Mon', $datetext);
+					$datetext = str_replace('Dt', 'Tue', $datetext);
+					$datetext = str_replace('Dc', 'Wed', $datetext);
+					$datetext = str_replace('Dj', 'Thu', $datetext);
+					$datetext = str_replace('Dv', 'Fri', $datetext);
+					$datetext = str_replace('Ds', 'Sat', $datetext);
+					$datetext = str_replace('Dg', 'Sun', $datetext);
+
+					$date = date_create_from_format('D d F Y, H:i', $datetext);
+					$item[3]= $date->format('Y-m-d H:i:s');
+					$item[4]= $base_url.$topic->href;
+					$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+
+					$elements[]=$item;
+				}
+			}
+		}
+
+		$go_on = FALSE;
+	
+		//This fetching method has no support for pre-existing data. All data is fetched again each time.
+		//If not used as onetime, will lead to duplicates
+		if ($html->find('img.sprite-arrow_prosilver_right', 0)!==NULL){
+			$html_text = file_get_contents($base_url . $html->find('img.sprite-arrow_prosilver_right', 0)->parent->href) or $error_connect=TRUE;
+			if ($error_connect){
+					return array('error_connect',array());
+			}
+			$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+			tidy_clean_repair($tidy);
+			$html = str_get_html(tidy_get_output($tidy));
+			$go_on = TRUE;
 		}
 	}
 	return array('ok', $elements);
