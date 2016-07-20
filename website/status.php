@@ -91,8 +91,7 @@ require_once('header.inc.php');
 $result = mysqli_query($db_connection, "SELECT fe.*,fa.name FROM fetchers fe LEFT JOIN fansubs fa ON fe.fansub_id=fa.id ORDER BY fetch_type DESC, fa.name ASC, fe.url ASC") or crash(mysqli_error($db_connection));
 ?>
 					<div class="article">
-						<h2 class="article-title">Obtenció de dades dels fansubs</h2>
-						<p>Les dades s'obtenen automàticament dels diferents fansubs cada 15 minuts.<br />En alguns casos, els fansubs notifiquen que hi ha hagut un canvi i llavors el refresc és quasi immediat.<br />Aquí pots veure l'estat actual del sistema i quan s'han obtingut les dades per últim cop.</p>
+						<p style="margin-top: 0px;">Aquí pots veure l'estat del sistema d'obtenció de dades dels diferents fansubs i quan s'han obtingut les dades per últim cop.<br />Les dades s'obtenen automàticament dels diferents fansubs cada 15 minuts. En alguns casos, els fansubs notifiquen que hi ha hagut un canvi i llavors el refresc és quasi immediat.</p>
 						<table class="status">
 							<thead>
 								<th>Fansub / URL</th>
@@ -121,44 +120,6 @@ mysqli_free_result($result);
 							</tbody>
 						</table>
 					</div>
-					<div class="article">
-						<h2 class="article-title">Estadístiques</h2>
-						<p><strong>Nombre total de fansubs en català:</strong> 
-<?php 
-$resultfansubs = mysqli_query($db_connection, "SELECT COUNT(*) count FROM fansubs WHERE is_visible=1") or crash(mysqli_error($db_connection));
-$row = mysqli_fetch_assoc($resultfansubs);
-echo $row['count'];
-mysqli_free_result($resultfansubs);
-?>
-						<br />
-						<strong>Nombre total de notícies de fansubs:</strong> 
-<?php 
-$resultnews = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE is_own=0") or crash(mysqli_error($db_connection));
-$row = mysqli_fetch_assoc($resultnews);
-echo $row['count'];
-mysqli_free_result($resultnews);
-?>
-						</p>
-						<p>El fansub més actiu d'aquest mes és <strong>
-<?php 
-$resultactive = mysqli_query($db_connection, "SELECT COUNT(*) count,f.name,f.url FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE f.is_visible=1 AND date>'".date('Y-m')."' GROUP BY fansub_id ORDER BY count DESC, f.name ASC LIMIT 1") or crash(mysqli_error($db_connection));
-if ($row = mysqli_fetch_assoc($resultactive)){
-?>
-							<a href="<?php echo $row['url']; ?>"><?php echo $row['name']; ?></a></strong>. L'enhorabona!
 <?php
-}
-else{
-?>
-							de moment cap</strong>. A esforçar-s'hi!
-<?php
-}
-?>
-						</p>
-						<p><strong>Gràfic del nombre de notícies per fansub i any:</strong></p>
-						<div id="chart_div" style="width: 100%; height: 400px;"></div>
-				</div>
-<?php
-mysqli_free_result($resultactive);
-
 require_once('footer.inc.php');
 ?>

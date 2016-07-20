@@ -39,7 +39,7 @@ if ($header_current_page=='main'){
 		<script type="text/javascript" src="/js/js.cookie-2.1.2.min.js"></script>
 		<script type="text/javascript" src="/js/common.js"></script>
 <?php
-if ($header_current_page=='status'){
+if ($header_current_page=='stats'){
 	$result = mysqli_query($db_connection, "SELECT name FROM fansubs WHERE is_own=0 ORDER BY is_visible DESC, name ASC");
 	$fansubs_names = "";
 	while ($row = mysqli_fetch_assoc($result)){

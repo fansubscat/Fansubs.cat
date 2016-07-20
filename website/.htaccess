@@ -5,6 +5,7 @@ RewriteRule ^pagina/(.*)(/?)$ index.php?page=$1
 RewriteRule ^fansub/(.*)/pagina/(.*)(/?)$ index.php?fansub_id=$1&page=$2
 RewriteRule ^fansub/(.*)(/?)$ index.php?fansub_id=$1
 RewriteRule ^estat-del-sistema(/?)$ status.php
+RewriteRule ^estadistiques(/?)$ stats.php
 RewriteRule ^envia-noticies-contacta(/?)$ contact.php
 RewriteRule ^arxiu(/?)$ archive.php
 RewriteRule ^rss(/?)$ rss.php

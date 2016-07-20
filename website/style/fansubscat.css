@@ -280,6 +280,12 @@ div#top h2 {
 	margin: 1em 0;
 }
 
+#sidebar ul li {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 #sidebar ul li img,
 #sidebar ul li a,
 #sidebar ul li span {
@@ -311,6 +317,27 @@ table.status tr:nth-child(odd) td {
 
 table.status tbody tr > :first-child{
 	text-align: left;
+}
+
+/* For stats page */
+
+table.top_three {
+	font-size: 0.9em;
+	border-collapse: collapse;
+	width: 100%;
+	text-align: center;
+}
+
+table.top_three th {
+	background-color: #dddddd;
+	font-size: 1em;
+}
+table.top_three tr:nth-child(odd) td {
+	background-color: #eeeeee;
+}
+
+table.top_three tbody tr{
+	text-align: center;
 }
 
 /* For contact page */
