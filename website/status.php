@@ -25,10 +25,14 @@ function show_method($method){
 			return 'Blogspot';
 		case 'blogspot_2nf':
 			return 'Blogspot<br />(variant 2NF)';
+		case 'blogspot_bsc':
+			return 'Blogspot<br />(variant BSC)';
 		case 'blogspot_dnf':
 			return 'Blogspot<br />(variant DNF)';
 		case 'blogspot_llpnf':
 			return 'Blogspot<br />(variant LlPnF)';
+		case 'blogspot_mnf':
+			return 'Blogspot<br />(variant MNF)';
 		case 'blogspot_snf':
 			return 'Blogspot<br />(variant SNF)';
 		case 'blogspot_tnf':
@@ -63,10 +67,21 @@ function show_status($status){
 	}
 }
 
-function show_last_result($last_result){
+function show_last_result($last_result, $last_increment){
 	switch ($last_result){
 		case 'ok':
-			return '<span style="color: #008800">✔ Correcte</span>';
+			if ($last_increment===NULL){
+				return '<span style="color: #008800">✔ Correcte</span>';
+			}
+			else if ($last_increment==0){
+				return '<span style="color: #008800">✔ Correcte (±0)</span>';
+			}
+			else if ($last_increment>0){
+				return '<span style="color: #008800">✔ Correcte (+'.$last_increment.')</span>';
+			}
+			else{
+				return '<span style="color: #008800">✔ Correcte ('.$last_increment.')</span>';
+			}
 		case 'error_mysql':
 			return '<span style="color: #880000">✖ Error<br />(BD)</span>';
 		case 'error_empty':
@@ -111,7 +126,7 @@ while ($row = mysqli_fetch_assoc($result)){
 									<td><?php echo show_method($row['method']); ?></td>
 									<td><?php echo show_status($row['status']); ?></td>
 									<td><?php echo ($row['last_fetch_date']!=NULL ? relative_time(strtotime($row['last_fetch_date'])) : 'Mai'); ?></td>
-									<td><strong><?php echo show_last_result($row['last_fetch_result']); ?></strong></td>
+									<td><strong><?php echo show_last_result($row['last_fetch_result'], $row['last_fetch_increment']); ?></strong></td>
 								</tr>
 <?php
 }

@@ -58,6 +58,8 @@ function fetch_and_parse_image($fansub_id, $url, $description){
 //Decides depending on the method and then processes the returned feed items, inserting them to database
 function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, $url, $last_fetched_item_date){
 	mysqli_query($db_connection, "UPDATE fetchers SET status='fetching' WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
+	$old_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
+	$old_count = mysqli_fetch_assoc($old_count_result)['count'];
 	switch($method){
 		case 'catsub':
 			$result = fetch_via_catsub($fansub_id, $url, $last_fetched_item_date);
@@ -68,11 +70,17 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		case 'blogspot_2nf':
 			$result = fetch_via_blogspot_2nf($fansub_id, $url, $last_fetched_item_date);
 			break;
+		case 'blogspot_bsc':
+			$result = fetch_via_blogspot_bsc($fansub_id, $url, $last_fetched_item_date);
+			break;
 		case 'blogspot_dnf':
 			$result = fetch_via_blogspot_dnf($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_llpnf':
 			$result = fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date);
+			break;
+		case 'blogspot_mnf':
+			$result = fetch_via_blogspot_mnf($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_snf':
 			$result = fetch_via_blogspot_snf($fansub_id, $url, $last_fetched_item_date);
@@ -146,8 +154,22 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		}
 	}
 	
+	$increment=NULL;
+
+	if ($result[0]=='ok'){		
+		$new_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
+		$new_count = mysqli_fetch_assoc($new_count_result)['count'];
+		$increment = $new_count-$old_count;
+	}
+	
 	//Update fetch status
-	mysqli_query($db_connection, "UPDATE fetchers SET status='idle',last_fetch_result='".$result[0]."',last_fetch_date='".date('Y-m-d H:i:s')."' WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
+	mysqli_query($db_connection, "UPDATE fetchers SET status='idle',last_fetch_result='".$result[0]."',last_fetch_date='".date('Y-m-d H:i:s')."',last_fetch_increment=".($increment!==NULL ? $increment : 'NULL')." WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
+
+	if ($increment>0){
+		//TODO: In the future, do things here, i.e, post to Twitter/Facebook accounts indicating that we have news from a certain fansub
+		//We can assume that the X most recent items will be the new ones.
+		//In case of a decrement, we won't be able to delete news, but this is unlikely...
+	}
 }
 
 /** BELOW HERE ARE ALL INDIVIDUAL METHODS OF FETCHING **/
@@ -273,6 +295,78 @@ function fetch_via_blogspot_2nf($fansub_id, $url, $last_fetched_item_date){
 		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
 			foreach ($texts as $text){
 				if ($text->plaintext=='Missatges més antics'){
+					$tries=1;
+					while ($tries<=3){
+						sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
+						$error=FALSE;
+
+						$html_text = file_get_contents($text->parent->href) or $error=TRUE;
+
+						if (!$error){
+							$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+							tidy_clean_repair($tidy);
+							$html = str_get_html(tidy_get_output($tidy));
+							break;
+						}
+						else{
+							$tries++;
+						}
+					}
+					if ($tries>3){
+						return array('error_connect',array());
+					}
+					$go_on = TRUE;
+					break;
+				}
+			}
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_blogspot_bsc($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('div.post') as $article) {
+			if ($article->find('h3.post-title a', 0)!==NULL && stripos($article->find('h3.post-title a', 0),'Bleach')!==FALSE){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('h3.post-title a', 0);
+				$item[0]=$title->innertext;
+				$item[1]=$article->find('div.post-body', 0)->innertext;
+				$item[2]=parse_description($article->find('div.post-body', 0)->innertext);
+				$date = date_create_from_format('Y-m-d\TH:i:sP', $article->find('abbr.published', 0)->title);
+				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+				$item[3]= $date->format('Y-m-d H:i:s');
+				$item[4]=$title->href;
+				$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body', 0)->innertext);
+
+				$elements[]=$item;
+			}
+		}
+
+		$texts = $html->find('text');
+		$go_on = FALSE;
+		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
+			foreach ($texts as $text){
+				if ($text->plaintext=='Entradas antiguas'){
 					$tries=1;
 					while ($tries<=3){
 						sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
@@ -456,6 +550,78 @@ function fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date){
 					while ($tries<=3){
 						sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
 						$error=FALSE;
+						$html_text = file_get_contents($text->parent->href) or $error=TRUE;
+
+						if (!$error){
+							$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+							tidy_clean_repair($tidy);
+							$html = str_get_html(tidy_get_output($tidy));
+							break;
+						}
+						else{
+							$tries++;
+						}
+					}
+					if ($tries>3){
+						return array('error_connect',array());
+					}
+					$go_on = TRUE;
+					break;
+				}
+			}
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_blogspot_mnf($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('div.post') as $article) {
+			if ($article->find('h3.post-title a', 0)!==NULL && stripos($article->find('h3.post-title a', 0),'Cicle de signatures')===FALSE){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('h3.post-title a', 0);
+				$item[0]=$title->innertext;
+				$item[1]=$article->find('div.post-body', 0)->innertext;
+				$item[2]=parse_description($article->find('div.post-body', 0)->innertext);
+				$date = date_create_from_format('Y-m-d\TH:i:sP', $article->find('abbr.published', 0)->title);
+				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+				$item[3]= $date->format('Y-m-d H:i:s');
+				$item[4]=$title->href;
+				$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body', 0)->innertext);
+
+				$elements[]=$item;
+			}
+		}
+
+		$texts = $html->find('text');
+		$go_on = FALSE;
+		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
+			foreach ($texts as $text){
+				if ($text->plaintext=='Missatges més antics'){
+					$tries=1;
+					while ($tries<=3){
+						sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
+						$error=FALSE;
+
 						$html_text = file_get_contents($text->parent->href) or $error=TRUE;
 
 						if (!$error){
