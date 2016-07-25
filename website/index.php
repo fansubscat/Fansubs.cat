@@ -98,7 +98,7 @@ mysqli_free_result($result);
 <?php
 $query_fansubs = implode("','",$selected_fansubs);
 
-$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name,f.url fansub_url,f.logo_image fansub_logo_image, f.is_visible FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fansub_id IN ('".($fansub_id!=NULL ? mysqli_real_escape_string($db_connection, $fansub_id) : $query_fansubs)."') ORDER BY date DESC LIMIT 20 OFFSET ".(($page-1)*20)) or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name,f.url fansub_url,f.logo_image fansub_logo_image, f.is_visible, f.archive_url FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fansub_id IN ('".($fansub_id!=NULL ? mysqli_real_escape_string($db_connection, $fansub_id) : $query_fansubs)."') ORDER BY date DESC LIMIT 20 OFFSET ".(($page-1)*20)) or crash(mysqli_error($db_connection));
 
 if (mysqli_num_rows($result)==0){
 ?>	
@@ -115,7 +115,7 @@ else{
 <?php
 		if ($row['fansub_logo_image']!=NULL){
 ?>
-						<a class="article-logo" href="<?php echo $row['fansub_url']; ?>" title="<?php echo $row['fansub_name']; ?>">
+						<a class="article-logo" href="<?php echo ($row['fansub_url']!=NULL ? $row['fansub_url'] : $row['archive_url']); ?>" title="<?php echo $row['fansub_name']; ?>">
 							<img src="/images/fansubs/logos/<?php echo $row['fansub_logo_image']; ?>" alt="<?php echo $row['fansub_name']; ?>" />
 						</a>
 <?php

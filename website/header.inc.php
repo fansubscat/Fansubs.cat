@@ -46,7 +46,7 @@ if ($header_current_page=='stats'){
 		if ($fansubs_names!=""){
 			$fansubs_names.=',';
 		}
-		$fansubs_names.="'{$row['name']}'";
+		$fansubs_names.="'".str_replace("'","\\'",$row['name'])."'";
 	}
 	mysqli_free_result($result);
 ?>

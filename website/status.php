@@ -14,6 +14,8 @@ function show_fetch_type($fetch_type){
 			return 'A petició';
 		case 'onetime_retired':
 			return 'Única vegada<br />(retirat)';
+		case 'onetime_inactive':
+			return 'Única vegada<br />(inactiu)';
 		default:
 			return $fetch_type;
 	}
@@ -35,6 +37,8 @@ function show_method($method){
 			return 'Blogspot<br />(variant MNF)';
 		case 'blogspot_snf':
 			return 'Blogspot<br />(variant SNF)';
+		case 'blogspot_teqma':
+			return 'Blogspot<br />(variant TEQMA)';
 		case 'blogspot_tnf':
 			return 'Blogspot<br />(variant TNF)';
 		case 'catsub':
@@ -47,6 +51,8 @@ function show_method($method){
 			return 'Weebly<br />(variant RNNF)';
 		case 'wordpress_ddc':
 			return 'WordPress<br />(variant DDC)';
+		case 'wordpress_mdcf':
+			return 'WordPress<br />(variant MDCF)';
 		case 'wordpress_xf':
 			return 'WordPress<br />(variant XF)';
 		case 'wordpress_ynf':

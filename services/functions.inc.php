@@ -85,6 +85,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		case 'blogspot_snf':
 			$result = fetch_via_blogspot_snf($fansub_id, $url, $last_fetched_item_date);
 			break;
+		case 'blogspot_teqma':
+			$result = fetch_via_blogspot_teqma($fansub_id, $url, $last_fetched_item_date);
+			break;
 		case 'blogspot_tnf':
 			$result = fetch_via_blogspot_tnf($fansub_id, $url, $last_fetched_item_date);
 			break;
@@ -99,6 +102,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 			break;
 		case 'wordpress_ddc':
 			$result = fetch_via_wordpress_ddc($fansub_id, $url, $last_fetched_item_date);
+			break;
+		case 'wordpress_mdcf':
+			$result = fetch_via_wordpress_mdcf($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'wordpress_xf':
 			$result = fetch_via_wordpress_xf($fansub_id, $url, $last_fetched_item_date);
@@ -724,6 +730,79 @@ function fetch_via_blogspot_snf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
+function fetch_via_blogspot_teqma($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('div.post') as $article) {
+			//This is terribly unoptimal... Try to find a better way!
+			if ($article->find('h3.post-title a', 0)!==NULL && (stripos($article->find('h3.post-title a', 0),'fansub')!==FALSE || (stripos($article->find('h3.post-title a', 0),'Matsuri Special')!==FALSE && stripos($article->find('h3.post-title a', 0),'castellano')===FALSE))){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('h3.post-title a', 0);
+				$item[0]=$title->innertext;
+				$item[1]=$article->find('div.post-body', 0)->innertext;
+				$item[2]=parse_description($article->find('div.post-body', 0)->innertext);
+				$date = date_create_from_format('Y-m-d\TH:i:sP', $article->find('abbr.published', 0)->title);
+				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+				$item[3]= $date->format('Y-m-d H:i:s');
+				$item[4]=$title->href;
+				$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body', 0)->innertext);
+
+				$elements[]=$item;
+			}
+		}
+
+		$texts = $html->find('text');
+		$go_on = FALSE;
+		if (count($elements)==0 || (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date)){
+			foreach ($texts as $text){
+				if ($text->plaintext=='Entradas antiguas'){
+					$tries=1;
+					while ($tries<=3){
+						sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
+						$error=FALSE;
+
+						$html_text = file_get_contents($text->parent->href) or $error=TRUE;
+
+						if (!$error){
+							$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+							tidy_clean_repair($tidy);
+							$html = str_get_html(tidy_get_output($tidy));
+							break;
+						}
+						else{
+							$tries++;
+						}
+					}
+					if ($tries>3){
+						return array('error_connect',array());
+					}
+					$go_on = TRUE;
+					break;
+				}
+			}
+		}
+	}
+	return array('ok', $elements);
+}
+
 function fetch_via_blogspot_tnf($fansub_id, $url, $last_fetched_item_date){
 	$elements = array();
 
@@ -1195,6 +1274,86 @@ function fetch_via_wordpress_ddc($fansub_id, $url, $last_fetched_item_date){
 		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
 			foreach ($texts as $text){
 				if ($text->plaintext==' Entradas anteriores'){
+					//Not sleeping, Wordpress.com does not appear to be rate-limited
+					$html_text = file_get_contents($text->parent->href) or $error_connect=TRUE;
+					if ($error_connect){
+						return array('error_connect',array());
+					}
+					$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+					tidy_clean_repair($tidy);
+					$html = str_get_html(tidy_get_output($tidy));
+					$go_on = TRUE;
+					break;
+				}
+			}
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_wordpress_mdcf($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('div.post') as $article) {
+			if ($article->find('div.main-title h3 a', 0)!==NULL){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('div.main-title h3 a', 0);
+				$item[0]=$title->innertext;
+
+				$description = $article->find('div.entry', 0)->innertext;
+				$item[1]=$description;
+
+				$item[2]=parse_description($description);
+
+				//The format is: març 5, 2013
+				$datetext = $article->find('div.post-date span', 0)->innertext;
+
+				$datetext = str_replace('gener', 'January', $datetext);
+				$datetext = str_replace('febrer', 'February', $datetext);
+				$datetext = str_replace('març', 'March', $datetext);
+				$datetext = str_replace('abril', 'April', $datetext);
+				$datetext = str_replace('maig', 'May', $datetext);
+				$datetext = str_replace('juny', 'June', $datetext);
+				$datetext = str_replace('juliol', 'July', $datetext);
+				$datetext = str_replace('agost', 'August', $datetext);
+				$datetext = str_replace('setembre', 'September', $datetext);
+				$datetext = str_replace('octubre', 'October', $datetext);
+				$datetext = str_replace('novembre', 'November', $datetext);
+				$datetext = str_replace('desembre', 'December', $datetext);
+
+				$date = date_create_from_format('F d, Y H:i:s', $datetext . ' 00:00:00');
+
+				$item[3]=$date->format('Y-m-d H:i:s');
+				$item[4]=$title->href;
+				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+
+				$elements[]=$item;
+			}
+		}
+
+		$texts = $html->find('text');
+		$go_on = FALSE;
+		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
+			foreach ($texts as $text){
+				if ($text->plaintext=='« Older Entries'){
 					//Not sleeping, Wordpress.com does not appear to be rate-limited
 					$html_text = file_get_contents($text->parent->href) or $error_connect=TRUE;
 					if ($error_connect){
