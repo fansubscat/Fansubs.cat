@@ -9,63 +9,22 @@ $header_current_page='status';
 function show_fetch_type($fetch_type){
 	switch ($fetch_type){
 		case 'periodic':
-			return 'Periòdic<br />(15 min.)';
+			return 'Periòdic<br />(15&nbsp;min.)';
 		case 'onrequest':
-			return 'A petició';
+			return 'A&nbsp;petició';
 		case 'onetime_retired':
-			return 'Única vegada<br />(retirat)';
+			return 'Una&nbsp;vegada<br />(retirat)';
 		case 'onetime_inactive':
-			return 'Única vegada<br />(inactiu)';
+			return 'Una&nbsp;vegada<br />(inactiu)';
 		default:
 			return $fetch_type;
-	}
-}
-
-function show_method($method){
-	switch ($method){
-		case 'blogspot':
-			return 'Blogspot';
-		case 'blogspot_2nf':
-			return 'Blogspot<br />(variant 2NF)';
-		case 'blogspot_bsc':
-			return 'Blogspot<br />(variant BSC)';
-		case 'blogspot_dnf':
-			return 'Blogspot<br />(variant DNF)';
-		case 'blogspot_llpnf':
-			return 'Blogspot<br />(variant LlPnF)';
-		case 'blogspot_mnf':
-			return 'Blogspot<br />(variant MNF)';
-		case 'blogspot_snf':
-			return 'Blogspot<br />(variant SNF)';
-		case 'blogspot_teqma':
-			return 'Blogspot<br />(variant TEQMA)';
-		case 'blogspot_tnf':
-			return 'Blogspot<br />(variant TNF)';
-		case 'catsub':
-			return 'CatSub';
-		case 'phpbb_dnf':
-			return 'phpBB<br />(variant DNF)';
-		case 'phpbb_llpnf':
-			return 'phpBB<br />(variant LlPnF)';
-		case 'weebly_rnnf':
-			return 'Weebly<br />(variant RNNF)';
-		case 'wordpress_ddc':
-			return 'WordPress<br />(variant DDC)';
-		case 'wordpress_mdcf':
-			return 'WordPress<br />(variant MDCF)';
-		case 'wordpress_xf':
-			return 'WordPress<br />(variant XF)';
-		case 'wordpress_ynf':
-			return 'WordPress<br />(variant YNF)';
-		default:
-			return $method;
 	}
 }
 
 function show_status($status){
 	switch ($status){
 		case 'idle':
-			return 'En repòs';
+			return 'En&nbsp;repòs';
 		case 'fetching':
 			return 'Obtenint dades';
 		default:
@@ -117,7 +76,6 @@ $result = mysqli_query($db_connection, "SELECT fe.*,fa.name FROM fetchers fe LEF
 							<thead>
 								<th>Fansub / URL</th>
 								<th>Tipus</th>
-								<th>Mètode</th>
 								<th>Estat</th>
 								<th>Última connexió</th>
 								<th>Últim resultat</th>
@@ -127,9 +85,8 @@ $result = mysqli_query($db_connection, "SELECT fe.*,fa.name FROM fetchers fe LEF
 while ($row = mysqli_fetch_assoc($result)){
 ?>
 								<tr>
-									<td><strong><?php echo $row['name']; ?></strong><br />&nbsp;&nbsp;&nbsp;<?php echo $row['url']; ?></td>
+									<td><strong><?php echo $row['name']; ?></strong><br />&nbsp;&nbsp;&nbsp;<small><?php echo $row['url']; ?></small></td>
 									<td><?php echo show_fetch_type($row['fetch_type']); ?></td>
-									<td><?php echo show_method($row['method']); ?></td>
 									<td><?php echo show_status($row['status']); ?></td>
 									<td><?php echo ($row['last_fetch_date']!=NULL ? relative_time(strtotime($row['last_fetch_date'])) : 'Mai'); ?></td>
 									<td><strong><?php echo show_last_result($row['last_fetch_result'], $row['last_fetch_increment']); ?></strong></td>

@@ -80,7 +80,7 @@ else{
 					<ul>
 						<li>
 							<img src="/style/images/icon_home.png" alt="" height="14" width="14" />
-							<a href="/">Torna a la pàgina principal</a>
+							<a href="/">Torna a l'inici</a>
 						</li>
 					</ul>
 				</div>
@@ -108,7 +108,7 @@ else{
 
 			<div id="footer">
 				<p>
-					Aquest lloc web només recopila notícies dels webs esmentats a dalt. Tots els drets dels textos, imatges i obres esmentades pertanyen als seus respectius propietaris.<br />
+					Fansubs.cat només recopila notícies dels webs esmentats. Tots els drets dels textos, imatges i obres esmentades pertanyen als seus respectius propietaris.<br />
 					Codi, disseny i contingut propi © 2015-<?php echo date('Y'); ?> Fansubs.cat. <a href="https://github.com/Ereza/Fansubs.cat">És codi obert</a>.
 				</p>
 			</div>

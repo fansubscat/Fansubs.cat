@@ -61,14 +61,14 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 	$old_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
 	$old_count = mysqli_fetch_assoc($old_count_result)['count'];
 	switch($method){
-		case 'catsub':
-			$result = fetch_via_catsub($fansub_id, $url, $last_fetched_item_date);
-			break;
 		case 'blogspot':
 			$result = fetch_via_blogspot($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_2nf':
 			$result = fetch_via_blogspot_2nf($fansub_id, $url, $last_fetched_item_date);
+			break;
+		case 'blogspot_as':
+			$result = fetch_via_blogspot_as($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_bsc':
 			$result = fetch_via_blogspot_bsc($fansub_id, $url, $last_fetched_item_date);
@@ -91,11 +91,17 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		case 'blogspot_tnf':
 			$result = fetch_via_blogspot_tnf($fansub_id, $url, $last_fetched_item_date);
 			break;
+		case 'catsub':
+			$result = fetch_via_catsub($fansub_id, $url, $last_fetched_item_date);
+			break;
 		case 'phpbb_dnf':
 			$result = fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'phpbb_llpnf':
 			$result = fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date);
+			break;
+		case 'roninfansub':
+			$result = fetch_via_roninfansub($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'weebly_rnnf':
 			$result = fetch_via_weebly_rnnf($fansub_id, $url, $last_fetched_item_date);
@@ -326,6 +332,71 @@ function fetch_via_blogspot_2nf($fansub_id, $url, $last_fetched_item_date){
 				}
 			}
 		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_blogspot_as($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('h3.mobile-index-title a') as $article) {
+			$tries=1;
+			while ($tries<=3){
+				sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
+				$error=FALSE;
+
+				$article_html_text = file_get_contents($article->href) or $error=TRUE;
+
+				if (!$error){
+					$article_tidy = tidy_parse_string($article_html_text, $tidy_config, 'UTF8');
+					tidy_clean_repair($article_tidy);
+					$article_html = str_get_html(tidy_get_output($article_tidy));
+					//Create an empty item
+					$item = array();
+
+					//Look up and add elements to the item
+					$title = $article_html->find('h3.post-title', 0);
+					$item[0]=$title->innertext;
+			
+					$description=$article_html->find('div.post-body', 0)->innertext;
+					$item[1]=$description;
+				
+					$description = preg_replace("/Links de Descàrrega(.*)/i", '</span>', $description);
+				
+					$item[2]=parse_description($description);
+					$date = date_create_from_format('Y-m-d\TH:i:sP', $article_html->find('abbr.published', 0)->title);
+					$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+					$item[3]= $date->format('Y-m-d H:i:s');
+					$item[4]=str_replace('?m=1','',$article->href);
+					$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+
+					$elements[]=$item;
+					break;
+				}
+				else{
+					$tries++;
+				}
+			}
+			if ($tries>3){
+				return array('error_connect',array());
+			}
+		}
+		$go_on = FALSE; //We do this for now, because we don't know how to access next pages
 	}
 	return array('ok', $elements);
 }
@@ -992,27 +1063,27 @@ function fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date){
 			//We now have this: <img class="sprite-icon_post_target" src="http://illiweb.com/fa/empty.gif" alt="Missatge" title="Missatge" border="0" />Assumpte: Novetats] Fusió de DnF i LlPnF!&nbsp; &nbsp;<img src="http://illiweb.com/fa/empty.gif" alt="" border="0" />Ds Maig 15, 2010 9:49 pm
 			$datetext = substr(strrchr($datetext, ">"), 1);
 
-			$datetext = str_replace('Gen', 'January', $datetext);
-			$datetext = str_replace('Feb', 'February', $datetext);
-			$datetext = str_replace('Mar', 'March', $datetext);
-			$datetext = str_replace('Abr', 'April', $datetext);
-			$datetext = str_replace('Maig', 'May', $datetext);
-			$datetext = str_replace('Mai', 'May', $datetext);
-			$datetext = str_replace('Jun', 'June', $datetext);
-			$datetext = str_replace('Jul', 'July', $datetext);
-			$datetext = str_replace('Ago', 'August', $datetext);
-			$datetext = str_replace('Set', 'September', $datetext);
-			$datetext = str_replace('Oct', 'October', $datetext);
-			$datetext = str_replace('Nov', 'November', $datetext);
-			$datetext = str_replace('Des', 'December', $datetext);
+			$datetext = str_ireplace('Gen', 'January', $datetext);
+			$datetext = str_ireplace('Feb', 'February', $datetext);
+			$datetext = str_ireplace('Mar', 'March', $datetext);
+			$datetext = str_ireplace('Abr', 'April', $datetext);
+			$datetext = str_ireplace('Maig', 'May', $datetext);
+			$datetext = str_ireplace('Mai', 'May', $datetext);
+			$datetext = str_ireplace('Jun', 'June', $datetext);
+			$datetext = str_ireplace('Jul', 'July', $datetext);
+			$datetext = str_ireplace('Ago', 'August', $datetext);
+			$datetext = str_ireplace('Set', 'September', $datetext);
+			$datetext = str_ireplace('Oct', 'October', $datetext);
+			$datetext = str_ireplace('Nov', 'November', $datetext);
+			$datetext = str_ireplace('Des', 'December', $datetext);
 
-			$datetext = str_replace('Dl', 'Mon', $datetext);
-			$datetext = str_replace('Dt', 'Tue', $datetext);
-			$datetext = str_replace('Dc', 'Wed', $datetext);
-			$datetext = str_replace('Dj', 'Thu', $datetext);
-			$datetext = str_replace('Dv', 'Fri', $datetext);
-			$datetext = str_replace('Ds', 'Sat', $datetext);
-			$datetext = str_replace('Dg', 'Sun', $datetext);
+			$datetext = str_ireplace('Dl', 'Mon', $datetext);
+			$datetext = str_ireplace('Dt', 'Tue', $datetext);
+			$datetext = str_ireplace('Dc', 'Wed', $datetext);
+			$datetext = str_ireplace('Dj', 'Thu', $datetext);
+			$datetext = str_ireplace('Dv', 'Fri', $datetext);
+			$datetext = str_ireplace('Ds', 'Sat', $datetext);
+			$datetext = str_ireplace('Dg', 'Sun', $datetext);
 
 			$date = date_create_from_format('D F d, Y H:i a', $datetext);
 			$item[3]= $date->format('Y-m-d H:i:s');
@@ -1102,27 +1173,27 @@ function fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date){
 					//We now have this (only the text): <img class="sprite-icon_post_target" src="http://illiweb.com/fa/empty.gif" alt="Missatge" title="Missatge">&nbsp;&nbsp;<a href="/u227"><span style="color:#7F0985"><strong>bombillero</strong></span></a> el Dt 05 Jul 2016, 15:08
 					$datetext = substr(strrstr($datetext, " el "), 4);
 
-					$datetext = str_replace('Gen', 'January', $datetext);
-					$datetext = str_replace('Feb', 'February', $datetext);
-					$datetext = str_replace('Mar', 'March', $datetext);
-					$datetext = str_replace('Abr', 'April', $datetext);
-					$datetext = str_replace('Maig', 'May', $datetext);
-					$datetext = str_replace('Mai', 'May', $datetext);
-					$datetext = str_replace('Jun', 'June', $datetext);
-					$datetext = str_replace('Jul', 'July', $datetext);
-					$datetext = str_replace('Ago', 'August', $datetext);
-					$datetext = str_replace('Set', 'September', $datetext);
-					$datetext = str_replace('Oct', 'October', $datetext);
-					$datetext = str_replace('Nov', 'November', $datetext);
-					$datetext = str_replace('Des', 'December', $datetext);
+					$datetext = str_ireplace('Gen', 'January', $datetext);
+					$datetext = str_ireplace('Feb', 'February', $datetext);
+					$datetext = str_ireplace('Mar', 'March', $datetext);
+					$datetext = str_ireplace('Abr', 'April', $datetext);
+					$datetext = str_ireplace('Maig', 'May', $datetext);
+					$datetext = str_ireplace('Mai', 'May', $datetext);
+					$datetext = str_ireplace('Jun', 'June', $datetext);
+					$datetext = str_ireplace('Jul', 'July', $datetext);
+					$datetext = str_ireplace('Ago', 'August', $datetext);
+					$datetext = str_ireplace('Set', 'September', $datetext);
+					$datetext = str_ireplace('Oct', 'October', $datetext);
+					$datetext = str_ireplace('Nov', 'November', $datetext);
+					$datetext = str_ireplace('Des', 'December', $datetext);
 
-					$datetext = str_replace('Dl', 'Mon', $datetext);
-					$datetext = str_replace('Dt', 'Tue', $datetext);
-					$datetext = str_replace('Dc', 'Wed', $datetext);
-					$datetext = str_replace('Dj', 'Thu', $datetext);
-					$datetext = str_replace('Dv', 'Fri', $datetext);
-					$datetext = str_replace('Ds', 'Sat', $datetext);
-					$datetext = str_replace('Dg', 'Sun', $datetext);
+					$datetext = str_ireplace('Dl', 'Mon', $datetext);
+					$datetext = str_ireplace('Dt', 'Tue', $datetext);
+					$datetext = str_ireplace('Dc', 'Wed', $datetext);
+					$datetext = str_ireplace('Dj', 'Thu', $datetext);
+					$datetext = str_ireplace('Dv', 'Fri', $datetext);
+					$datetext = str_ireplace('Ds', 'Sat', $datetext);
+					$datetext = str_ireplace('Dg', 'Sun', $datetext);
 
 					$date = date_create_from_format('D d F Y, H:i', $datetext);
 					$item[3]= $date->format('Y-m-d H:i:s');
@@ -1147,6 +1218,50 @@ function fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date){
 			tidy_clean_repair($tidy);
 			$html = str_get_html(tidy_get_output($tidy));
 			$go_on = TRUE;
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_roninfansub($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	//parse through the HTML and build up the elements feed as we go along
+	foreach($html->find('div.titolpublicacio') as $article) {
+		//Fix for elements not containing a date
+		if ($article->next_sibling()->find('div.datapublicacio', 0)!==NULL){
+			//Create an empty item
+			$item = array();
+
+			//Look up and add elements to the item
+			$item[0]=$article->find('a', 0)->innertext;
+
+			$description = $article->next_sibling()->innertext;
+			$item[1]=$description;
+
+			//We have to explode because the format is: 05/07/2015
+			$datetext = $article->next_sibling()->find('div.datapublicacio', 0)->innertext;
+
+			$item[2]=parse_description(str_replace($datetext, '', $description));
+
+			$date = date_create_from_format('d/m/Y H:i:s', $datetext.' 00:00:00');
+
+			$item[3]=$date->format('Y-m-d H:i:s');
+			$item[4]=$url . ($article->find('a', 0)!==NULL ? $article->find('a', 0)->href : '');
+			$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+
+			$elements[]=$item;
 		}
 	}
 	return array('ok', $elements);
@@ -1326,18 +1441,18 @@ function fetch_via_wordpress_mdcf($fansub_id, $url, $last_fetched_item_date){
 				//The format is: març 5, 2013
 				$datetext = $article->find('div.post-date span', 0)->innertext;
 
-				$datetext = str_replace('gener', 'January', $datetext);
-				$datetext = str_replace('febrer', 'February', $datetext);
-				$datetext = str_replace('març', 'March', $datetext);
-				$datetext = str_replace('abril', 'April', $datetext);
-				$datetext = str_replace('maig', 'May', $datetext);
-				$datetext = str_replace('juny', 'June', $datetext);
-				$datetext = str_replace('juliol', 'July', $datetext);
-				$datetext = str_replace('agost', 'August', $datetext);
-				$datetext = str_replace('setembre', 'September', $datetext);
-				$datetext = str_replace('octubre', 'October', $datetext);
-				$datetext = str_replace('novembre', 'November', $datetext);
-				$datetext = str_replace('desembre', 'December', $datetext);
+				$datetext = str_ireplace('gener', 'January', $datetext);
+				$datetext = str_ireplace('febrer', 'February', $datetext);
+				$datetext = str_ireplace('març', 'March', $datetext);
+				$datetext = str_ireplace('abril', 'April', $datetext);
+				$datetext = str_ireplace('maig', 'May', $datetext);
+				$datetext = str_ireplace('juny', 'June', $datetext);
+				$datetext = str_ireplace('juliol', 'July', $datetext);
+				$datetext = str_ireplace('agost', 'August', $datetext);
+				$datetext = str_ireplace('setembre', 'September', $datetext);
+				$datetext = str_ireplace('octubre', 'October', $datetext);
+				$datetext = str_ireplace('novembre', 'November', $datetext);
+				$datetext = str_ireplace('desembre', 'December', $datetext);
 
 				$date = date_create_from_format('F d, Y H:i:s', $datetext . ' 00:00:00');
 
@@ -1411,18 +1526,18 @@ function fetch_via_wordpress_xf($fansub_id, $url, $last_fetched_item_date){
 				//The format is: març 5, 2013
 				$datetext = $article->find('div.post-header div.date a', 0)->innertext;
 
-				$datetext = str_replace('gener', 'January', $datetext);
-				$datetext = str_replace('febrer', 'February', $datetext);
-				$datetext = str_replace('març', 'March', $datetext);
-				$datetext = str_replace('abril', 'April', $datetext);
-				$datetext = str_replace('maig', 'May', $datetext);
-				$datetext = str_replace('juny', 'June', $datetext);
-				$datetext = str_replace('juliol', 'July', $datetext);
-				$datetext = str_replace('agost', 'August', $datetext);
-				$datetext = str_replace('setembre', 'September', $datetext);
-				$datetext = str_replace('octubre', 'October', $datetext);
-				$datetext = str_replace('novembre', 'November', $datetext);
-				$datetext = str_replace('desembre', 'December', $datetext);
+				$datetext = str_ireplace('gener', 'January', $datetext);
+				$datetext = str_ireplace('febrer', 'February', $datetext);
+				$datetext = str_ireplace('març', 'March', $datetext);
+				$datetext = str_ireplace('abril', 'April', $datetext);
+				$datetext = str_ireplace('maig', 'May', $datetext);
+				$datetext = str_ireplace('juny', 'June', $datetext);
+				$datetext = str_ireplace('juliol', 'July', $datetext);
+				$datetext = str_ireplace('agost', 'August', $datetext);
+				$datetext = str_ireplace('setembre', 'September', $datetext);
+				$datetext = str_ireplace('octubre', 'October', $datetext);
+				$datetext = str_ireplace('novembre', 'November', $datetext);
+				$datetext = str_ireplace('desembre', 'December', $datetext);
 
 				$date = date_create_from_format('F d, Y H:i:s', $datetext . ' 00:00:00');
 
