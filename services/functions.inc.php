@@ -1255,7 +1255,7 @@ function fetch_via_roninfansub($fansub_id, $url, $last_fetched_item_date){
 
 			$item[2]=parse_description(str_replace($datetext, '', $description));
 
-			$date = date_create_from_format('d/m/Y H:i:s', $datetext.' 00:00:00');
+			$date = date_create_from_format('d/m/Y H:i', $datetext);
 
 			$item[3]=$date->format('Y-m-d H:i:s');
 			$item[4]=$url . ($article->find('a', 0)!==NULL ? $article->find('a', 0)->href : '');
