@@ -573,7 +573,7 @@ function fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date){
 	while ($go_on){
 		//parse through the HTML and build up the elements feed as we go along
 		foreach($html->find('div.post') as $article) {
-			//We only show news which start with [LlPnF or [DnF from the main blog, or we will also show the series pages...
+			//We only show news which don't start with [LlPnF or [DnF from the main blog, or we will also show the series pages...
 			//Could be improved, of course...
 			if ($article->find('h3.post-title a', 0)!==NULL &&
 					(stripos($article->find('h3.post-title a', 0)->innertext,'[LlPnF')===FALSE
@@ -608,7 +608,22 @@ function fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date){
 
 				$item[2]=parse_description($description);
 
-				$date = date_create_from_format('Y-m-d\TH:i:sP', $article->parent->find('abbr.published', 0)->title);
+				if ($article->parent->find('abbr.published', 0)!==NULL){
+					$date = date_create_from_format('Y-m-d\TH:i:sP', $article->parent->find('abbr.published', 0)->title);
+				}
+				else if ($article->parent->parent->find('abbr.published', 0)!==NULL){
+					//We will be here if the article has broken links that cause the date to be
+					//parsed onto its parent element...
+					//Previously, it crashed the script.
+					//This WILL be inconsistent if this happens on a day with several posts, 
+					//and the post will get its date overwritten by the newest post of the day.
+					//Also, if the HTML is broken, the article contents may not be loaded properly.
+					$date = date_create_from_format('Y-m-d\TH:i:sP', $article->parent->parent->find('abbr.published', 0)->title);
+				}
+				else{
+					//Something is very broken, just skip the article so we don't crash
+					continue;
+				}
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
