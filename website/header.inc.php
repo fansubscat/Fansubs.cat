@@ -12,7 +12,19 @@ require_once('common.inc.php');
 
 		<title><?php echo $header_page_title; ?></title>
 
+<?php
+$is_fools_day = (date('d')==28 && date('m')==12);
+if ($is_fools_day){
+?>
+		<link rel="stylesheet" media="screen" type="text/css" href="/style/fansubscat_28dec.css" />
+<?php
+}
+else{
+?>
 		<link rel="stylesheet" media="screen" type="text/css" href="/style/fansubscat.css" />
+<?php
+}
+?>
 		<link rel="stylesheet" type="text/css" media="screen" href="/style/magnific-popup-1.1.0.css" />
 
 <?php
@@ -103,7 +115,18 @@ if ($header_current_page=='stats'){
 					<a href="/"></a>
 					<div id="toppadding">
 						<h1><a href="/">Fansubs.cat</a></h1>
+<?php
+if ($is_fools_day){
+?>
+						<h2><a href="/">Les notícies dels fansubs en català (ara, amb més Comic Sans)</a></h2>
+<?php
+}
+else{
+?>
 						<h2><a href="/">Les notícies dels fansubs en català</a></h2>
+<?php
+}
+?>
 					</div>
 				</div>
 			</div>
