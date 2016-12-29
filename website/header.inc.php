@@ -42,7 +42,7 @@ if ($header_current_page=='main'){
 		<meta property="og:title" content="Fansubs.cat - Les notícies dels fansubs en català" />
 		<meta property="og:url" content="http://www.fansubs.cat/" />
 		<meta property="og:description" content="Benvinguts a Fansubs.cat! Aquí hi trobareu les últimes notícies de tots els fansubs en català! Les notícies s'obtenen automàticament dels diferents webs dels fansubs. Per accedir a cada notícia, només cal que hi feu clic!" />
-		<meta property="og:image" content="http://www.fansubs.cat/custom/img/header2.jpg" />
+		<meta property="og:image" content="http://www.fansubs.cat/style/images/header2.jpg" />
 <?php
 }
 ?>
