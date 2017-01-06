@@ -10,6 +10,5 @@ $db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or die('
 
 unset($db_host, $db_name, $db_user, $db_passwd);
 
-mysqli_query($db_connection, "SET NAMES 'utf8'") or crash(mysqli_error($db_connection));
-mysqli_query($db_connection, "SET CHARACTER SET 'utf8'") or crash(mysqli_error($db_connection));
+mysqli_set_charset($db_connection, 'utf8') or crash(mysqli_error($db_connection));
 ?>
