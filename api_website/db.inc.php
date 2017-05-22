@@ -6,7 +6,10 @@ function crash($string){
 	http_response_code(500);
 	$response = array(
 		'status' => 'ko',
-		'error' => $string
+		'error' => array(
+				'code' => 'SERVER_ERROR',
+				'description' => $string
+			)
 	);
 	die(json_encode($response));
 }
@@ -15,6 +18,5 @@ $db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash
 
 unset($db_host, $db_name, $db_user, $db_passwd);
 
-mysqli_query($db_connection, "SET NAMES 'utf8'") or crash('Internal error: '.mysqli_error($db_connection));
-mysqli_query($db_connection, "SET CHARACTER SET 'utf8'") or crash('Internal error: '.mysqli_error($db_connection));
+mysqli_set_charset($db_connection, 'utf8') or crash(mysqli_error($db_connection));
 ?>
