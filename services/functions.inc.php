@@ -357,7 +357,7 @@ function fetch_via_blogspot_as($fansub_id, $url, $last_fetched_item_date){
 
 	while ($go_on){
 		//parse through the HTML and build up the elements feed as we go along
-		foreach($html->find('h3.mobile-index-title a') as $article) {
+		foreach($html->find('div.mobile-post-outer a') as $article) {
 			$tries=1;
 			while ($tries<=3){
 				sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited

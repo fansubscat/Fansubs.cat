@@ -29,7 +29,7 @@ mysqli_free_result($resultnews);
 						</p>
 						<p style="margin-bottom: 0px;">El fansub més actiu d'aquest mes és <strong>
 <?php 
-$resultactive = mysqli_query($db_connection, "SELECT COUNT(*) count,f.name,f.url FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE f.is_visible=1 AND date>'".date('Y-m')."' GROUP BY fansub_id ORDER BY count DESC, f.name ASC LIMIT 1") or crash(mysqli_error($db_connection));
+$resultactive = mysqli_query($db_connection, "SELECT COUNT(*) count,f.name,f.url FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE f.is_visible=1 AND CAST(date AS CHAR)>'".date('Y-m')."' GROUP BY fansub_id ORDER BY count DESC, f.name ASC LIMIT 1") or crash(mysqli_error($db_connection));
 if ($row = mysqli_fetch_assoc($resultactive)){
 ?>
 							<a href="<?php echo $row['url']; ?>"><?php echo $row['name']; ?></a></strong>. L'enhorabona!
@@ -65,7 +65,7 @@ for ($y=date('Y');$y>2002;$y--){
 									<td><strong><?php echo $y; ?></strong></td>
 <?php
 	$i=0;
-	$result = mysqli_query($db_connection, "SELECT COUNT(*) count,f.name FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE f.is_visible=1 AND date>='$y' AND date<'".($y+1)."' GROUP BY fansub_id ORDER BY count DESC, f.name ASC LIMIT 3") or crash(mysqli_error($db_connection));
+	$result = mysqli_query($db_connection, "SELECT COUNT(*) count,f.name FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE f.is_visible=1 AND CAST(date AS CHAR)>='$y' AND CAST(date AS CHAR)<'".($y+1)."' GROUP BY fansub_id ORDER BY count DESC, f.name ASC LIMIT 3") or crash(mysqli_error($db_connection));
 	while ($row = mysqli_fetch_assoc($result)){
 ?>									<td><b><?php echo $row['name']; ?></b><br /><span style="font-size: 0.9em;">(<?php echo ($row['count'])==1 ? '1 notícia' : $row['count'].' notícies'; ?>)</span></td>
 <?php

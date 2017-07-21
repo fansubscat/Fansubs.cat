@@ -9,5 +9,5 @@ $db_passwd="YOUR_DB_PASS_HERE";
 $lock_file='/tmp/fansubscat_fetch_lock';
 
 //Paths
-$website_directory='/srv/tourian_data/websites/www.fansubs.cat/';
+$website_directory='/srv/websites/www.fansubs.cat/';
 ?>
