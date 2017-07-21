@@ -15,7 +15,7 @@ All contributions are welcome. This is a collaborative project! :)
 
 ## How does it work?
 
-The site is run on a very simple machine with Debian Wheezy, with an Apache + PHP + MySQL server.
+The site is run on a very simple machine with Debian Stretch, with an Apache 2.4 + PHP 7.0 + MariaDB 10.1 server.
 The site allows displaying and filtering of the news database, and the news are inserted into the database by web scraping the different fansub websites.
 Take a look at the code if you want to know more! :)
 
