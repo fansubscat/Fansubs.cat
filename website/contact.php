@@ -123,7 +123,7 @@ else{
 										<td><input type="text" class="wide" required maxlength="255" name="new_fansub_url"></td>
 									</tr>
 									<tr>
-										<td><strong>Comentaris</strong><br /><small><small>Comenta'ns el que vulguis, si ho creus apropiat.</small></small></td>
+										<td><strong>Comentaris</strong><br /><small><small>Comenta'ns el que vulguis, si et sembla apropiat.</small></small></td>
 										<td><textarea class="notsotall wide" name="comments"></textarea></td>
 									</tr>
 								</tbody>
