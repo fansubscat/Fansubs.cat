@@ -1169,8 +1169,8 @@ function fetch_via_facebook_edcec($fansub_id, $url, $last_fetched_item_date){
 
 			$description = str_replace("\n",'<br />', $album->description);
 
-			$item[1] = $description;
-			$item[2] = $album->description;
+			$item[1] = $album->description;
+			$item[2] = $description;
 
 			$date = date_create_from_format('Y-m-d\TH:i:sP', $album->created_time);
 			$item[3] = $date->format('Y-m-d H:i:s');
