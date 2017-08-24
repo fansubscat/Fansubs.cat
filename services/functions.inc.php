@@ -97,6 +97,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		case 'catsub':
 			$result = fetch_via_catsub($fansub_id, $url, $last_fetched_item_date);
 			break;
+		case 'facebook_edcec':
+			$result = fetch_via_facebook_edcec($fansub_id, $url, $last_fetched_item_date);
+			break;
 		case 'phpbb_dnf':
 			$result = fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date);
 			break;
@@ -1125,6 +1128,61 @@ function fetch_via_catsub($fansub_id, $url, $last_fetched_item_date){
 			}
 		}
 	}
+	return array('ok', $elements);
+}
+
+function fetch_via_facebook_edcec($fansub_id, $url, $last_fetched_item_date){
+	global $facebook_api_token;
+
+	$elements = array();
+
+	$page_id = substr($url, strrpos($url,'/') + 1, strlen($url));
+	$api_base_url = "https://graph.facebook.com/v2.10/";
+
+	$error_connect=FALSE;
+
+	$result = file_get_contents($api_base_url . $page_id . "/albums?access_token=" . $facebook_api_token . "&fields=name,description,link,cover_photo,created_time") or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$result_json = json_decode($result) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+
+	foreach($result_json->data as $album) {
+		if (stripos($album->name,'El Detectiu Conan - Manga')!==FALSE){
+			$photo_url_result = file_get_contents($api_base_url . $album->cover_photo->id . "?access_token=" . $facebook_api_token . "&fields=source") or $error_connect=TRUE;
+			if ($error_connect){
+				return array('error_connect',array());
+			}
+			$photo_url_result_json = json_decode($photo_url_result) or $error_connect=TRUE;
+			if ($error_connect){
+				return array('error_connect',array());
+			}
+
+			//Create an empty item
+			$item = array();
+
+			//Look up and add elements to the item
+			$item[0] = $album->name;
+
+			$description = str_replace("\n",'<br />', $album->description);
+
+			$item[1] = $description;
+			$item[2] = $album->description;
+
+			$date = date_create_from_format('Y-m-d\TH:i:sP', $album->created_time);
+			$item[3] = $date->format('Y-m-d H:i:s');
+			$item[4] = $album->link;
+
+			//Using this ugly hack for now, because we don't have a method that does the fetching+storage by itself.
+			$item[5] = fetch_and_parse_image($fansub_id, $url, '<img src="' . $photo_url_result_json->source . '" />');
+
+			$elements[]=$item;
+		}
+	}
+
 	return array('ok', $elements);
 }
 

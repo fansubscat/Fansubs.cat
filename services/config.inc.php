@@ -5,6 +5,9 @@ $db_name="YOUR_DB_NAME_HERE";
 $db_user="YOUR_DB_USER_HERE";
 $db_passwd="YOUR_DB_PASS_HERE";
 
+//Social network tokens
+$facebook_api_token='YOUR_APP_TOKEN_HERE';
+
 //Files
 $lock_file='/tmp/fansubscat_fetch_lock';
 
