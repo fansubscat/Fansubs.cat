@@ -6,5 +6,5 @@ $db_user="YOUR_DB_USER_HERE";
 $db_passwd="YOUR_DB_PASS_HERE";
 
 //Paths
-$services_path='/srv/tourian_data/services/fansubs.cat/';
+$services_path='/srv/services/fansubs.cat/';
 ?>
