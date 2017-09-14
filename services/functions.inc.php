@@ -1088,7 +1088,7 @@ function fetch_via_catsub($fansub_id, $url, $last_fetched_item_date){
 			$item[1]=$description;
 
 			//Remove the download icon, or it will be the first image of the feed
-			$description = preg_replace("/\<img (.*)dlicon(.*)Descàrregues\" \/\>/i", '', $description);
+			$description = preg_replace("/\<img (.*)dlicon(.*)Descàrregues( \/ Visualitza en línia)?\" \/\>/i", '', $description);
 
 			//Remove the post-screenshot text
 			if (strpos($description, 'cs_newsimage')!==0){
