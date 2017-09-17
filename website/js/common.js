@@ -109,4 +109,14 @@ $(document).ready(function() {
 
   //Fix for back button after sending the form in contact us page
   $('select[name="reason"]').trigger("change");
+
+  var form = document.getElementById("search_form");
+  if (form!=null){
+    $(form).submit(function () {
+      if (document.getElementById('search_query').value!=''){
+        window.location.href='/cerca/' + document.getElementById('search_query').value;
+      }
+      return false;
+    });
+  }
 });

@@ -2,6 +2,23 @@
 			</div>
 
 			<div id="sidebar" class="aside">
+<?php
+if (!isset($fansub_id) || $fansub_id==NULL){
+?>
+				<div class="section">
+					<h2>Cerca notícies</h2>
+					<ul>
+						<li>
+							<form id="search_form">
+								<input id="search_query" required type="text" value="<?php echo (isset($query) ? $query : ''); ?>" placeholder="Introdueix la cerca..." />
+								<input id="search_button" type="image" src="/style/images/search.png" title="Cerca" alt="Cerca" />
+							</form>
+						</li>
+					</ul>
+				</div>
+<?php
+}
+?>
 				<div class="section">
 					<h2>Fansubs actius</h2>
 					<ul>

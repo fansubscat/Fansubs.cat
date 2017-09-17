@@ -298,6 +298,17 @@ div#top h2 {
 	text-decoration: none;
 }
 
+#search_query{
+	vertical-align: middle;
+	width: 140px;
+	padding: 2px;
+	margin-right: 2px;
+}
+
+#search_button{
+	vertical-align: middle;
+}
+
 /* For status page */
 
 table.status {
