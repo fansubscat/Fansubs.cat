@@ -165,7 +165,7 @@ div#top h2 {
 	text-align: center;
 }
 
-#welcome {
+#welcome, #app {
 	margin-bottom: 1.3em;
 	padding: 5px;
 	background: #FFF;
@@ -173,18 +173,18 @@ div#top h2 {
 	position: relative;
 }
 
-#welcometext {
+#welcometext, #apptext {
 	display: table;
 	height: 80px;
 	margin-left: 105px;
 }
 
-#realwelcometext {
+#realwelcometext, #realapptext {
 	display: table-cell;
 	vertical-align: middle;
 }
 
-#girl {
+#girl, #appicon {
 	position: absolute;
 	bottom: 0px;
 	left: 5px;

@@ -187,6 +187,34 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		//TODO: In the future, do things here, i.e, post to Twitter/Facebook accounts indicating that we have news from a certain fansub
 		//We can assume that the X most recent items will be the new ones.
 		//In case of a decrement, we won't be able to delete news, but this is unlikely...
+
+		//Hello 2016, we are now in the future 2018. We will send it via FCM so the Android app receives it ;)
+		global $firebase_api_key;
+
+		$push_result = mysqli_query($db_connection, "SELECT n.title, n.fansub_id, f.name FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fetcher_id=$fetcher_id ORDER BY date DESC LIMIT $increment") or die(mysqli_error($db_connection));
+		while ($push_row = mysqli_fetch_assoc($push_result)){
+			$notification = array(
+				'to' => '/topics/all',
+				'data' => array(
+					'title' => $push_row['title'],
+					'fansub' => $push_row['name'],
+					'fansub_id' => $push_row['fansub_id']
+				)
+			);
+			$headers = array('Content-Type: application/json', 'Authorization: key=' . $firebase_api_key);
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+			curl_setopt($curl, CURLOPT_CUSTOMREQUEST,"POST");
+			curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($notification));
+			curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+			//Send the request
+			curl_exec($curl) or die('FCM Send Error: ' . curl_error($curl));
+			//Close request
+			curl_close($curl);
+		}
+
+		mysqli_free_result($push_result);
 	}
 }
 

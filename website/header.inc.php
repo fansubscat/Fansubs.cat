@@ -148,6 +148,21 @@ if ((!isset($_COOKIE['welcome_closed']) || $_COOKIE['welcome_closed']!='1') && $
 				</div>
 <?php
 }
+
+//Show app layout if we are being accessed from an Android browser (rely on the User-Agent)
+if ((!isset($_COOKIE['app_closed']) || $_COOKIE['app_closed']!='1') && $header_current_page=='main' && stripos(strtolower($_SERVER['HTTP_USER_AGENT']),'android')!==FALSE){
+?>
+				<div id="app">
+					<img id="appicon" src="/style/images/app.png" alt="" />
+					<img id="appclose" src="/style/images/close.png" alt="Amaga aquest missatge" />
+					<div id="apptext">
+						<div id="realapptext">
+							<strong>Tenim aplicació d'Android!</strong> <a href="https://play.google.com/store/apps/details?id=cat.fansubs.app">Descarrega-la ara</a> i podràs rebre notificacions quan hi hagi notícies noves.
+						</div>
+					</div>
+				</div>
+<?php
+}
 ?>
 				<div id="real_content">
 

@@ -70,20 +70,39 @@ else if ($method == 'fansubs'){
 	);
 	echo json_encode($response);
 }
-else if ($method == 'news'){
-	$page = array_shift($request);
+else if (substr($method, 0, 4) === "news"){
+	$page = $_GET['page'];
+	$search = $_GET['search'];
+	$fansub_ids = $_GET['fansub_ids'];
 	if ($page!=NULL && is_numeric($page) && $page>=0){
 		$page = (int)$page*25;
-		$result = mysqli_query($db_connection, "SELECT * FROM news ORDER BY date DESC LIMIT 25 OFFSET $page") or crash('Internal error: '.mysqli_error($db_connection));
+
+		$search_extra="";
+		$fansub_ids_extra="";
+
+		if ($search!=NULL && $search!=''){
+			$search = mysqli_real_escape_string($db_connection, $search);
+			$search_extra = " AND (n.title LIKE '%$search%' OR n.contents LIKE '%$search%')";
+		}
+
+		if ($fansub_ids!=NULL && count($fansub_ids)>0){
+			foreach ($fansub_ids as &$fansub_id){
+				$fansub_id = mysqli_real_escape_string($db_connection, $fansub_id);
+			}
+			$fansub_ids_extra = " AND n.fansub_id IN ('" . implode("', '", $fansub_ids) . "')";
+		}
+
+		$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE 1" . $search_extra . $fansub_ids_extra . " ORDER BY n.date DESC LIMIT 25 OFFSET $page") or crash('Internal error: ' . mysqli_error($db_connection));
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
-				'date' => (int)$row['date'],
+				'date' => date_create_from_format('Y-m-d H:i:s', $row['date'])->getTimestamp(),
 				'fansub_id' => $row['fansub_id'],
+				'fansub_name' => $row['fansub_name'],
 				'title' => $row['title'],
 				'contents' => $row['contents'],
 				'url' => $row['url'],
-				'image_url' => 'http://www.fansubs.cat/images/news/'.$row['fansub_id'].'/'.$row['image']
+				'image_url' => $row['image']!=NULL ? 'http://www.fansubs.cat/images/news/'.$row['fansub_id'].'/'.$row['image'] : NULL
 			);
 		}
 

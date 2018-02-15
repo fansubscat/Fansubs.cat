@@ -72,6 +72,12 @@ $(document).ready(function() {
     $("#welcome").hide();
   });
 
+  //Same for the close button for the app message
+  $("#appclose").click(function(){
+    Cookies.set('app_closed', '1', { expires: 3650, path: '/', domain: 'fansubs.cat' });
+    $("#app").hide();
+  });
+
   //Select all button
   $(".filter-select-all").click(function(){
     $(".filter-fansub").addClass('filter-selected');

@@ -8,6 +8,9 @@ $db_passwd="YOUR_DB_PASS_HERE";
 //Social network tokens
 $facebook_api_token='YOUR_APP_TOKEN_HERE';
 
+//Firebase Cloud Messaging key
+$firebase_api_key='YOUR_FIREBASE_TOKEN_HERE';
+
 //Files
 $lock_file='/tmp/fansubscat_fetch_lock';
 
