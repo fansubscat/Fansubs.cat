@@ -1,0 +1,1077 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<licenses>
+    <license>
+        <name>Android Support Library</name>
+        <url>https://developer.android.com/topic/libraries/support-library/packages.html#v4</url>
+        <copyright>
+            <![CDATA[
+                Copyright (C) 2014 The Android Open Source Project
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>AppCompat</name>
+        <url>https://developer.android.com/topic/libraries/support-library/packages.html#v4-compat</url>
+        <copyright>
+            <![CDATA[
+                Copyright (C) 2012 The Android Open Source Project
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Design Support Library</name>
+        <url>https://developer.android.com/topic/libraries/support-library/packages.html#design</url>
+        <copyright>
+            <![CDATA[
+                Copyright (C) 2015 The Android Open Source Project
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>CardView</name>
+        <url>https://developer.android.com/topic/libraries/support-library/packages.html#v7-cardview</url>
+        <copyright>
+            <![CDATA[
+                Copyright (C) 2014 The Android Open Source Project
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>RecyclerView</name>
+        <url>https://developer.android.com/topic/libraries/support-library/packages.html#v7-recyclerview</url>
+        <copyright>
+            <![CDATA[
+                Copyright (C) 2013 The Android Open Source Project
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Retrofit</name>
+        <url>http://square.github.io/retrofit/</url>
+        <copyright>
+            <![CDATA[
+                Copyright 2013 Square, Inc.
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>OkHttp</name>
+        <url>http://square.github.io/okhttp/</url>
+        <copyright>
+            <![CDATA[
+                Copyright 2014 Square, Inc.
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Picasso</name>
+        <url>http://square.github.io/picasso/</url>
+        <copyright>
+            <![CDATA[
+                Copyright 2013 Square, Inc.
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Custom Activity On Crash</name>
+        <url>https://github.com/Ereza/CustomActivityOnCrash</url>
+        <copyright>
+            <![CDATA[
+                Copyright (c) 2014-2016 Eduard Ereza, http://www.eduardereza.com/
+
+                This product is licensed under the terms of the Apache Software License 2.0. See the LICENSE file for the full license text.
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+
+                You may obtain a copy of the License at
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Logcat Reporter</name>
+        <url>https://github.com/Ereza/LogcatReporter</url>
+        <copyright>
+            <![CDATA[
+                Copyright (c) 2016 Eduard Ereza, http://www.eduardereza.com/
+
+                This product is licensed under the terms of the Apache Software License 2.0. See the LICENSE file for the full license text.
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+
+                You may obtain a copy of the License at
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Gson</name>
+        <url>https://github.com/google/gson</url>
+        <copyright>
+            <![CDATA[
+                Copyright (C) 2008 Google Inc.
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Icons8 icons</name>
+        <url>https://icons8.com/</url>
+        <text>
+            <![CDATA[
+                Icons licensed under Creative Commons Attribution-NoDerivs 3.0 Unported.
+
+                THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY COPYRIGHT AND/OR OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS AUTHORIZED UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+
+                BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE MAY BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND CONDITIONS.
+
+                1. Definitions
+
+                "Adaptation" means a work based upon the Work, or upon the Work and other pre-existing works, such as a translation, adaptation, derivative work, arrangement of music or other alterations of a literary or artistic work, or phonogram or performance and includes cinematographic adaptations or any other form in which the Work may be recast, transformed, or adapted including in any form recognizably derived from the original, except that a work that constitutes a Collection will not be considered an Adaptation for the purpose of this License. For the avoidance of doubt, where the Work is a musical work, performance or phonogram, the synchronization of the Work in timed-relation with a moving image ("synching") will be considered an Adaptation for the purpose of this License.
+                "Collection" means a collection of literary or artistic works, such as encyclopedias and anthologies, or performances, phonograms or broadcasts, or other works or subject matter other than works listed in Section 1(f) below, which, by reason of the selection and arrangement of their contents, constitute intellectual creations, in which the Work is included in its entirety in unmodified form along with one or more other contributions, each constituting separate and independent works in themselves, which together are assembled into a collective whole. A work that constitutes a Collection will not be considered an Adaptation (as defined above) for the purposes of this License.
+                "Distribute" means to make available to the public the original and copies of the Work through sale or other transfer of ownership.
+                "Licensor" means the individual, individuals, entity or entities that offer(s) the Work under the terms of this License.
+                "Original Author" means, in the case of a literary or artistic work, the individual, individuals, entity or entities who created the Work or if no individual or entity can be identified, the publisher; and in addition (i) in the case of a performance the actors, singers, musicians, dancers, and other persons who act, sing, deliver, declaim, play in, interpret or otherwise perform literary or artistic works or expressions of folklore; (ii) in the case of a phonogram the producer being the person or legal entity who first fixes the sounds of a performance or other sounds; and, (iii) in the case of broadcasts, the organization that transmits the broadcast.
+                "Work" means the literary and/or artistic work offered under the terms of this License including without limitation any production in the literary, scientific and artistic domain, whatever may be the mode or form of its expression including digital form, such as a book, pamphlet and other writing; a lecture, address, sermon or other work of the same nature; a dramatic or dramatico-musical work; a choreographic work or entertainment in dumb show; a musical composition with or without words; a cinematographic work to which are assimilated works expressed by a process analogous to cinematography; a work of drawing, painting, architecture, sculpture, engraving or lithography; a photographic work to which are assimilated works expressed by a process analogous to photography; a work of applied art; an illustration, map, plan, sketch or three-dimensional work relative to geography, topography, architecture or science; a performance; a broadcast; a phonogram; a compilation of data to the extent it is protected as a copyrightable work; or a work performed by a variety or circus performer to the extent it is not otherwise considered a literary or artistic work.
+                "You" means an individual or entity exercising rights under this License who has not previously violated the terms of this License with respect to the Work, or who has received express permission from the Licensor to exercise rights under this License despite a previous violation.
+                "Publicly Perform" means to perform public recitations of the Work and to communicate to the public those public recitations, by any means or process, including by wire or wireless means or public digital performances; to make available to the public Works in such a way that members of the public may access these Works from a place and at a place individually chosen by them; to perform the Work to the public by any means or process and the communication to the public of the performances of the Work, including by public digital performance; to broadcast and rebroadcast the Work by any means including signs, sounds or images.
+                "Reproduce" means to make copies of the Work by any means including without limitation by sound or visual recordings and the right of fixation and reproducing fixations of the Work, including storage of a protected performance or phonogram in digital form or other electronic medium.
+                2. Fair Dealing Rights. Nothing in this License is intended to reduce, limit, or restrict any uses free from copyright or rights arising from limitations or exceptions that are provided for in connection with the copyright protection under copyright law or other applicable laws.
+
+                3. License Grant. Subject to the terms and conditions of this License, Licensor hereby grants You a worldwide, royalty-free, non-exclusive, perpetual (for the duration of the applicable copyright) license to exercise the rights in the Work as stated below:
+
+                to Reproduce the Work, to incorporate the Work into one or more Collections, and to Reproduce the Work as incorporated in the Collections; and,
+                to Distribute and Publicly Perform the Work including as incorporated in Collections.
+                For the avoidance of doubt:
+
+                Non-waivable Compulsory License Schemes. In those jurisdictions in which the right to collect royalties through any statutory or compulsory licensing scheme cannot be waived, the Licensor reserves the exclusive right to collect such royalties for any exercise by You of the rights granted under this License;
+                Waivable Compulsory License Schemes. In those jurisdictions in which the right to collect royalties through any statutory or compulsory licensing scheme can be waived, the Licensor waives the exclusive right to collect such royalties for any exercise by You of the rights granted under this License; and,
+                Voluntary License Schemes. The Licensor waives the right to collect royalties, whether individually or, in the event that the Licensor is a member of a collecting society that administers voluntary licensing schemes, via that society, from any exercise by You of the rights granted under this License.
+                The above rights may be exercised in all media and formats whether now known or hereafter devised. The above rights include the right to make such modifications as are technically necessary to exercise the rights in other media and formats, but otherwise you have no rights to make Adaptations. Subject to Section 8(f), all rights not expressly granted by Licensor are hereby reserved.
+
+                4. Restrictions. The license granted in Section 3 above is expressly made subject to and limited by the following restrictions:
+
+                You may Distribute or Publicly Perform the Work only under the terms of this License. You must include a copy of, or the Uniform Resource Identifier (URI) for, this License with every copy of the Work You Distribute or Publicly Perform. You may not offer or impose any terms on the Work that restrict the terms of this License or the ability of the recipient of the Work to exercise the rights granted to that recipient under the terms of the License. You may not sublicense the Work. You must keep intact all notices that refer to this License and to the disclaimer of warranties with every copy of the Work You Distribute or Publicly Perform. When You Distribute or Publicly Perform the Work, You may not impose any effective technological measures on the Work that restrict the ability of a recipient of the Work from You to exercise the rights granted to that recipient under the terms of the License. This Section 4(a) applies to the Work as incorporated in a Collection, but this does not require the Collection apart from the Work itself to be made subject to the terms of this License. If You create a Collection, upon notice from any Licensor You must, to the extent practicable, remove from the Collection any credit as required by Section 4(b), as requested.
+                If You Distribute, or Publicly Perform the Work or Collections, You must, unless a request has been made pursuant to Section 4(a), keep intact all copyright notices for the Work and provide, reasonable to the medium or means You are utilizing: (i) the name of the Original Author (or pseudonym, if applicable) if supplied, and/or if the Original Author and/or Licensor designate another party or parties (e.g., a sponsor institute, publishing entity, journal) for attribution ("Attribution Parties") in Licensor's copyright notice, terms of service or by other reasonable means, the name of such party or parties; (ii) the title of the Work if supplied; (iii) to the extent reasonably practicable, the URI, if any, that Licensor specifies to be associated with the Work, unless such URI does not refer to the copyright notice or licensing information for the Work. The credit required by this Section 4(b) may be implemented in any reasonable manner; provided, however, that in the case of a Collection, at a minimum such credit will appear, if a credit for all contributing authors of the Collection appears, then as part of these credits and in a manner at least as prominent as the credits for the other contributing authors. For the avoidance of doubt, You may only use the credit required by this Section for the purpose of attribution in the manner set out above and, by exercising Your rights under this License, You may not implicitly or explicitly assert or imply any connection with, sponsorship or endorsement by the Original Author, Licensor and/or Attribution Parties, as appropriate, of You or Your use of the Work, without the separate, express prior written permission of the Original Author, Licensor and/or Attribution Parties.
+                Except as otherwise agreed in writing by the Licensor or as may be otherwise permitted by applicable law, if You Reproduce, Distribute or Publicly Perform the Work either by itself or as part of any Collections, You must not distort, mutilate, modify or take other derogatory action in relation to the Work which would be prejudicial to the Original Author's honor or reputation.
+                5. Representations, Warranties and Disclaimer
+
+                UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING, LICENSOR OFFERS THE WORK AS-IS AND MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE WORK, EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING, WITHOUT LIMITATION, WARRANTIES OF TITLE, MERCHANTIBILITY, FITNESS FOR A PARTICULAR PURPOSE, NONINFRINGEMENT, OR THE ABSENCE OF LATENT OR OTHER DEFECTS, ACCURACY, OR THE PRESENCE OF ABSENCE OF ERRORS, WHETHER OR NOT DISCOVERABLE. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO SUCH EXCLUSION MAY NOT APPLY TO YOU.
+
+                6. Limitation on Liability. EXCEPT TO THE EXTENT REQUIRED BY APPLICABLE LAW, IN NO EVENT WILL LICENSOR BE LIABLE TO YOU ON ANY LEGAL THEORY FOR ANY SPECIAL, INCIDENTAL, CONSEQUENTIAL, PUNITIVE OR EXEMPLARY DAMAGES ARISING OUT OF THIS LICENSE OR THE USE OF THE WORK, EVEN IF LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+                7. Termination
+
+                This License and the rights granted hereunder will terminate automatically upon any breach by You of the terms of this License. Individuals or entities who have received Collections from You under this License, however, will not have their licenses terminated provided such individuals or entities remain in full compliance with those licenses. Sections 1, 2, 5, 6, 7, and 8 will survive any termination of this License.
+                Subject to the above terms and conditions, the license granted here is perpetual (for the duration of the applicable copyright in the Work). Notwithstanding the above, Licensor reserves the right to release the Work under different license terms or to stop distributing the Work at any time; provided, however that any such election will not serve to withdraw this License (or any other license that has been, or is required to be, granted under the terms of this License), and this License will continue in full force and effect unless terminated as stated above.
+                8. Miscellaneous
+
+                Each time You Distribute or Publicly Perform the Work or a Collection, the Licensor offers to the recipient a license to the Work on the same terms and conditions as the license granted to You under this License.
+                If any provision of this License is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this License, and without further action by the parties to this agreement, such provision shall be reformed to the minimum extent necessary to make such provision valid and enforceable.
+                No term or provision of this License shall be deemed waived and no breach consented to unless such waiver or consent shall be in writing and signed by the party to be charged with such waiver or consent.
+                This License constitutes the entire agreement between the parties with respect to the Work licensed here. There are no understandings, agreements or representations with respect to the Work not specified here. Licensor shall not be bound by any additional provisions that may appear in any communication from You. This License may not be modified without the mutual written agreement of the Licensor and You.
+                The rights granted under, and the subject matter referenced, in this License were drafted utilizing the terminology of the Berne Convention for the Protection of Literary and Artistic Works (as amended on September 28, 1979), the Rome Convention of 1961, the WIPO Copyright Treaty of 1996, the WIPO Performances and Phonograms Treaty of 1996 and the Universal Copyright Convention (as revised on July 24, 1971). These rights and subject matter take effect in the relevant jurisdiction in which the License terms are sought to be enforced according to the corresponding provisions of the implementation of those treaty provisions in the applicable national law. If the standard suite of rights granted under applicable copyright law includes additional rights not granted under this License, such additional rights are deemed to be included in the License; this License is not intended to restrict the license of any rights under applicable law.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Material Design Icons</name>
+        <url>https://github.com/Templarian/MaterialDesign</url>
+        <text>
+            <![CDATA[
+                Copyright (c) 2014, Austin Andrews (http://materialdesignicons.com/),
+                with Reserved Font Name Material Design Icons.
+                Copyright (c) 2014, Google (http://www.google.com/design/)
+                uses the license at https://github.com/google/material-design-icons/blob/master/LICENSE
+
+                This Font Software is licensed under the SIL Open Font License, Version 1.1.
+                This license is copied below, and is also available with a FAQ at:
+                http://scripts.sil.org/OFL
+
+
+                -----------------------------------------------------------
+                SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+                -----------------------------------------------------------
+
+                PREAMBLE
+                The goals of the Open Font License (OFL) are to stimulate worldwide
+                development of collaborative font projects, to support the font creation
+                efforts of academic and linguistic communities, and to provide a free and
+                open framework in which fonts may be shared and improved in partnership
+                with others.
+
+                The OFL allows the licensed fonts to be used, studied, modified and
+                redistributed freely as long as they are not sold by themselves. The
+                fonts, including any derivative works, can be bundled, embedded,
+                redistributed and/or sold with any software provided that any reserved
+                names are not used by derivative works. The fonts and derivatives,
+                however, cannot be released under any other type of license. The
+                requirement for fonts to remain under this license does not apply
+                to any document created using the fonts or their derivatives.
+
+                DEFINITIONS
+                "Font Software" refers to the set of files released by the Copyright
+                Holder(s) under this license and clearly marked as such. This may
+                include source files, build scripts and documentation.
+
+                "Reserved Font Name" refers to any names specified as such after the
+                copyright statement(s).
+
+                "Original Version" refers to the collection of Font Software components as
+                distributed by the Copyright Holder(s).
+
+                "Modified Version" refers to any derivative made by adding to, deleting,
+                or substituting -- in part or in whole -- any of the components of the
+                Original Version, by changing formats or by porting the Font Software to a
+                new environment.
+
+                "Author" refers to any designer, engineer, programmer, technical
+                writer or other person who contributed to the Font Software.
+
+                PERMISSION & CONDITIONS
+                Permission is hereby granted, free of charge, to any person obtaining
+                a copy of the Font Software, to use, study, copy, merge, embed, modify,
+                redistribute, and sell modified and unmodified copies of the Font
+                Software, subject to the following conditions:
+
+                1) Neither the Font Software nor any of its individual components,
+                in Original or Modified Versions, may be sold by itself.
+
+                2) Original or Modified Versions of the Font Software may be bundled,
+                redistributed and/or sold with any software, provided that each copy
+                contains the above copyright notice and this license. These can be
+                included either as stand-alone text files, human-readable headers or
+                in the appropriate machine-readable metadata fields within text or
+                binary files as long as those fields can be easily viewed by the user.
+
+                3) No Modified Version of the Font Software may use the Reserved Font
+                Name(s) unless explicit written permission is granted by the corresponding
+                Copyright Holder. This restriction only applies to the primary font name as
+                presented to the users.
+
+                4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+                Software shall not be used to promote, endorse or advertise any
+                Modified Version, except to acknowledge the contribution(s) of the
+                Copyright Holder(s) and the Author(s) or with their explicit written
+                permission.
+
+                5) The Font Software, modified or unmodified, in part or in whole,
+                must be distributed entirely under this license, and must not be
+                distributed under any other license. The requirement for fonts to
+                remain under this license does not apply to any document created
+                using the Font Software.
+
+                TERMINATION
+                This license becomes null and void if any of the above conditions are
+                not met.
+
+                DISCLAIMER
+                THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+                EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+                MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+                OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+                COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+                INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+                DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+                FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+                OTHER DEALINGS IN THE FONT SOFTWARE.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Crashlytics</name>
+        <url>http://try.crashlytics.com/</url>
+        <copyright>
+            <![CDATA[
+                Copyright © 2014 Crashlytics. All Rights Reserved.
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                Last Updated: January 27, 2016
+
+                This Crashlytics Agreement (“Agreement”) is entered into by Crashlytics, Inc., a wholly owned subsidiary of Twitter, Inc., on behalf of itself and its worldwide affiliates (“Crashlytics”) and you (“Developer” or “You”) and governs your access and use of www.crashlytics.com and the Crashlytics crash reporting and beta testing solution (collectively, the “Services,” as more fully described below). If You are accessing or using the Services on behalf of a company or other legal entity, You represent and warrant that You are an authorized representative of that entity and have the authority to bind such entity to this Agreement, in which case the terms “Developer” and “You” shall refer to such entity. You and Crashlytics hereby agree as follows:
+
+                YOUR RIGHT TO ACCESS AND USE THE SERVICES IS EXPRESSLY CONDITIONED ON ACCEPTANCE OF THIS AGREEMENT. BY ACCESSING OR USING THE SERVICES, YOU AGREE TO BE BOUND BY THIS AGREEMENT. IF YOU ARE ACCESSING OR USING THE SERVICES ON BEHALF OF YOUR EMPLOYER OR ANOTHER ENTITY (“ENTITY”), YOU AGREE TO PROVIDE CRASHLYTICS WITH THE NAME OF THE ENTITY AND OBTAIN CRASHLYTICS'S APPROVAL TO USE THE SOFTWARE ON YOUR BEHALF AND BEHALF OF THE ENTITY AND YOU AGREE TO REMAIN RESPONSIBLE AND LIABLE FOR YOUR AND SUCH ENTITY'S COMPLIANCE WITH THIS AGREEMENT. FURTHER, YOU REPRESENT AND WARRANT THAT (I) YOU ARE THE AUTHORIZED AGENT OF THE APPLICABLE ENTITY AND HAVE THE LEGAL AUTHORITY TO ENTER INTO THE AGREEMENT ON BEHALF OF YOURSELF AND THE ENTITY, AND (II) YOU HAVE OBTAINED, ON BEHALF OF YOURSELF AND THE ENTITY (IF APPLICABLE), ALL NECESSARY RIGHTS, WAIVERS, CONSENTS AND PERMISSIONS NECESSARY TO COLLECT, USE, STORE, AND SHARE USER INFORMATION IN CONNECTION WITH THE SOFTWARE.
+
+                Effective November 20, 2015, this Agreement does not cover www.answers.io or Crashlytics’s “Answers” service, which is a software development kit and associated services focused on analysis and computation of the behavior and usage of mobile applications, including app analytics, event tracking, and conversion tracking. If you use Answers, then please consult the Answers Agreement, which is the contract between you and Crashlytics governing your use of Answers. If you have questions regarding this Agreement, please contact Crashlytics at support@crashlytics.com.
+
+                SECTION 1. OVERVIEW OF THE SERVICES
+                1.1 The Services provide a reporting solution for developers of mobile applications (“Developer(s)”), including publicly released mobile applications (“Application(s)”), and facilitates Developers’ ability to invite certain designated users (“Beta Tester(s)”) to test mobile applications that have not yet been publicly released (“Beta Application(s)”). The Services provide information to Developers about the functioning of Applications and Beta Applications they own or manage, including, but not limited to, information about how and under what circumstances such applications crashed and how many users interact with such applications and how they do so.
+
+                SECTION 2. SPECIFIC TERMS FOR DEVELOPERS
+                2.1 Service and Access Credentials. Developer will provide reasonable cooperation, assistance, information and access to Crashlytics as may be necessary to initiate Developer’s use of the Services. During the Term, and subject to Developer’s compliance with all terms and conditions of this Agreement, Crashlytics will provide Developer with access to the Services. As part of the implementation process, Developer will identify a user name and password that will be used to set up Developer’s account. Developer will not share its user name or password with any third party and will be responsible and liable for the acts or omissions of any person who accesses the Services using passwords or access procedures provided to Developer. Crashlytics reserves the right to refuse registration of, or to suspend or cancel, login IDs used by Developer to access the Services for any reason, including if Developer violates the terms and conditions set forth in this Agreement.
+
+                2.2 License to Developer. During the Term, and subject to all terms and conditions of this Agreement (as a condition to the grants below), Crashlytics grants Developer and Developer accepts a nonexclusive, nontransferable right and license (without right to sublicense) to (a) access and use the Services, solely for the purpose of accessing and downloading the Software (defined below) and assessing the performance of its own Applications and Beta Applications for Developer’s internal business purposes; and (b) download, install and use a reasonable number of copies of the Crashlytics software development kit (the “SDK”) and any tools provided as part of the SDK, including, but not limited to, any plugins (collectively, the “Software”) solely for the integration of the Software into an Application or Beta Application. Developer may use the Services and the Software for the sole purposes of (i) enabling Developer’s users, including Beta Testers, to access and use Applications and Beta Applications, (ii) obtaining information regarding the installation, use of and engagement with, and the functionality of Developer’s Applications and Beta Applications, including reporting on errors or bugs (collectively, “Performance Data”), (iii) improving the functionality of Developer’s Applications, Beta Applications and related products and services, and (iv) communicating with users, including Beta Testers, about Developer’s Applications and Beta Applications. Developer’s access and use of the Services shall also comply with all other conditions set forth in all documentation, instructions, end user guides and other documents regarding the Services and Software, in each case that is provided or made available by Crashlytics to Developer in electronic or other form (collectively, “Documentation”). Developer shall comply with all (a) applicable laws, rules, and regulations, and (b) any applicable third­-party terms, including any third­-party terms applicable to Developer’s development and distribution of any Application or Beta Application operating on the Android or iOS mobile operating systems, or any other operating system upon which the Application or Beta Application is made available and upon which Crashlytics makes the Services available to Developer.
+
+                2.3 Restrictions. Developer shall not directly or indirectly (a) use the Services or any of Crashlytics’s Confidential Information (as defined below) to create any service, software, or documentation that is the same as, substantially similar to or has similar functionality as the Services, (b) disassemble, decompile, reverse engineer, decipher, translate or use any other means to attempt to discover any source code, algorithms, or trade secrets underlying the Services or Background Materials (defined below), except and only to the extent these restrictions are expressly prohibited by applicable statutory law, (c) encumber, sublicense, transfer, distribute, rent, lease, time­-share, or use any Crashlytics Properties (as defined below) in any service bureau, rental or managed services arrangement or permit other individuals or entities to create Internet "links" to the Crashlytics Properties or "frame" or "mirror" the Crashlytics Properties on any other server, or wireless or Internet-based device, (d) adapt, combine, create derivative works of, or otherwise modify any Crashlytics Properties, (e) use or allow the transmission, transfer, export, re­-export, or other transfer of any product, technology, or information it obtains or learns in connection with Developer’s use of the Services in violation of any export control or other laws and regulations of the United States or any other relevant jurisdiction, (f) remove or alter any proprietary notices or labels on or in any Crashlytics Properties; (g) use any Crashlytics Properties in connection with the development or transmission of any virus, worms or malicious code, (h) use any Crashlytics Properties to infringe the rights of Crashlytics or any third party, or in any way that does not comply with all applicable laws, or (i) use any Crashlytics Properties (including to create any Application) in any way that interferes with, disrupts, damages, or accesses in an unauthorized manner the servers, networks, or other properties or services of Crashlytics or any third party, including any mobile communications carrier.
+
+                2.4 Developer Feedback. From time to time, Crashlytics may solicit from Developer or Developer may make, in its sole discretion, suggestions for changes, modifications or improvements to the Crashlytics Properties (as defined below) or any other feedback related to Crashlytics or the Crashlytics Properties (collectively, “Developer Feedback”). All Developer Feedback shall be solely owned by Crashlytics (including all intellectual property rights therein and thereto) and shall also be Crashlytics’s confidential information. Developer hereby assigns all of its right, title and interest in and to any Developer Feedback to Crashlytics and acknowledges that Crashlytics has the unrestricted right to use and exploit such Developer Feedback in any manner, without attribution, and without any obligations or compensation to Developer.
+
+                2.5 Developer Data. Developer hereby grants Crashlytics a nonexclusive, license­-fee free and royalty-free right and license to access, copy, distribute, process and use all information, data and other content provided by Developer or received by Crashlytics in connection with Developer’s authorized use of the Services, including, without limitation information provided through any Application or Beta Application that Developer makes available for testing through the Services (collectively, “Developer Data”), solely for the purpose of providing the Services and as otherwise expressly permitted in this Agreement. Developer agrees that (a) the Services depend on the availability of the Developer Data, and (b) Crashlytics will not assume any responsibility or liability for, or undertake to verify, the legality, accuracy or completeness of the Developer Data. Crashlytics shall have no obligation to store any Developer Data or Results (as defined below).
+
+                2.6 Access by Beta Testers; EULA; End Users; Compliance. Developer shall provide to Crashlytics the contact information of any user of Developer’s application(s) whom Developer intends to invite to become a Beta Tester. Developer is solely responsible for determining which users will receive an invitation to become a Beta Tester, and for ensuring the accuracy of any user contact information provided to Crashlytics. Developer may provide Beta Testers with its own EULA for a Beta Application that will be accessed by Beta Testers (“Developer EULA”); provided that the Developer EULA provides terms and conditions consistent with this Agreement and, with respect to Crashlytics, no less protective than those terms and conditions set forth in the standard EULA provided in Appendix A (“Standard EULA”). If Developer does not provide a separate Developer EULA to Beta Testers that is applicable to Developer’s Beta Application, then Developer acknowledges and agrees that such Beta Testers’ use of the Beta Application shall be subject to the Standard EULA. Developer acknowledges and agrees that Crashlytics provides the Standard EULA by way of convenience only, and does not represent or warrant that the Standard EULA will be enforceable under, or in compliance with, all applicable laws, rules, regulations, or otherwise. Developer acknowledges and agrees that the EULA applicable to Developer’s Beta Application shall be between Developer and any Beta Tester, and Crashlytics shall not be responsible for, and shall not have any liability whatsoever for, such EULA, any application tested by a Beta Tester, or for any breach by Developer or any Beta Tester of the terms and conditions of such EULA. The Services allow the Developer to collect information relating to performance of Developer’s applications, including, without limitation, device state information, unique device identifiers, information relating to the physical location of a device, and information about how the application was used. Developer may turn on features of the Services to allow collection of other information via the Services, including some personally identifiable information (e.g., a user’s e­-mail address), which allows Developers to communicate with users about the engagement with and functionality of their applications and to invite them to become Beta Testers. Developer represents and warrants that Developer is collecting information via the Services solely to obtain information about the user engagement with and functionality of Developer’s applications, and to communicate with users about such engagement and functionality. Developer agrees that it will not enable collection of personally identifiable information via the Services unless it is necessary to communicate with users about the applications or Developer wishes to invite users to be Beta Testers and the user has provided affirmative consent to the collection and use of such information. Subject to and without limiting the foregoing, Developer agrees it will not enable collection or use of credit card information, Social Security numbers, driver’s license numbers, dates of birth or physical addresses via the Services. Developer further agrees it will not integrate the Software into any Application or Beta Application (i) with end users who Developer has actual knowledge are under the age of 13, or (ii) that may be deemed to be a “Web site or online service directed to children” as defined under the Children’s Online Privacy Protection Act of 1998 (“COPPA”) and the regulations promulgated thereunder. At all times during the term of this Agreement, Developer shall maintain a privacy policy (a) that is readily accessible to users from its website or within its online service (as applicable), (b) that fully and accurately discloses to its users what information is collected about its users, and (c) that states that such information is disclosed to and processed by third party providers like Crashlytics in the manner contemplated by the Services, including, without limitation, disclosure of the use of technology to track users’ activity and otherwise collect information from users. For Developer’s users in the European Union, Developer shall provide such users with clear notice of, and obtain such users’ consent to, the transfer, storage, and use of their information in the United States and any other country where Crashlytics, or any third-party service providers acting on its behalf, operates, and shall further notify such users that the privacy and data protection laws in some of these countries may vary from the laws in the country where such users live. Developer shall at all times comply with all applicable laws, rules and regulations relating to data collection, privacy and security, including without limitation COPPA. Crashlytics may, at its sole discretion from time to time during the Term of this Agreement, audit Developer Data to verify compliance.
+
+                2.7 Developer Systems. Developer is responsible for providing (a) all equipment, subscriptions and credentials necessary for Crashlytics to receive the Developer Data, and (b) all modems, servers, devices, storage, software (other than Software), databases, network and communications equipment and ancillary services needed to connect to, access, or otherwise use the Services at its facility (collectively, “Developer Systems”). Developer shall ensure that Developer Systems are compatible with the Services and comply with all configurations and specifications described in the Documentation.
+
+                2.8 Limitations Crashlytics will not be responsible or liable for any failures in the Services or any other problems which are related to (a) the Developer Data or Developer Systems, or (b) any satellite, telecommunications, network or other equipment or service outside of Crashlytics’s facilities or control.
+
+                2.9 Confidentiality. “Confidential Information” means any information disclosed by one party (“Discloser”) to the other party (“Recipient”) that is marked or otherwise identified as “confidential” or “proprietary,” or by its nature or the circumstances of disclosure should reasonably be understood to be confidential, including without limitation, all financial, business or technical information disclosed in relation to this Agreement. Except for the specific rights granted by this Agreement, the Recipient may not use, copy or disclose any Confidential Information of the Discloser without Discloser’s prior written consent, and shall use no less than reasonable care to safeguard Discloser’s Confidential Information, including ensuring that Recipient’s employees, contractors and agents (“Representatives”) with access to Discloser’s Confidential Information have a need to know such Confidential Information for the purposes of this Agreement and are bound by confidentiality obligations no less protective of the parties as those set forth herein. The foregoing obligations shall not apply to any Confidential Information that Recipient can demonstrate is (a) already known by it without restriction, (b) rightfully furnished to it without restriction by a third party not in breach of any obligation to Discloser, (c) generally available to the public without breach of this Agreement or (d) independently developed by it without reference to or use of any of Discloser’s Confidential Information and without any violation of any obligation of this Agreement. Each party shall be responsible for any breach of confidentiality by its Representatives, as applicable. Promptly upon Discloser’s request at any time, Recipient shall, or in the case of Developer Data shall use reasonable efforts to, return all of Discloser’s tangible Confidential Information, permanently erase all Confidential Information from any storage media and destroy all information, records, copies, summaries, analyses and materials developed therefrom. Nothing herein shall prevent a party from disclosing any of the other’s Confidential Information as necessary pursuant to any court order or any legal, regulatory, law enforcement or similar requirement or investigation; provided, however, prior to any such disclosure, Recipient shall use reasonable efforts to (i) promptly notify Discloser in writing of such requirement to disclose where permitted by law, and (ii) cooperate with Discloser in protecting against or minimizing any such disclosure and/or obtaining a protective order.
+
+                2.10 Proprietary Rights. As used in this Agreement: “Background Materials” means all ideas, concepts, inventions, systems, platforms, software (including all Software), interfaces, tools, utilities, templates, forms, Report Formats, techniques, methods, processes, algorithms, know­-how, trade secrets and other technologies and information that are used by Crashlytics in providing the Services and Results (including any correction, improvement, derivative work, extension or other modification to the Services made, created, conceived or developed by or for Crashlytics, including at Developer’s request or as a result of feedback provided by Developer to Crashlytics); “Reports” means the reports, charts, graphs and other presentation in which the Results are presented to Developer; “Report Formats” means the formatting, look and feel of the Reports; and “Results” means the work products resulting from the Services that are delivered to Developer by Crashlytics through the Services, and which are based on the Developer Data. For the sake of clarity, Results shall expressly exclude all Background Materials. Developer shall own all right, title and interest (including all intellectual property and other proprietary rights) in and to (a) feedback, suggestions, ideas or other materials and information provided by Beta Testers with respect to any Beta Application (“User Feedback”), (b) the Results and (c) Developer Data. Developer acknowledges and agrees that the Results will be presented to it in a Report, the Report Format of which is Confidential Information and proprietary to Crashlytics. Developer may make a reasonable number of copies of the Reports only for its internal purposes in using the Results. Developer hereby grants to Crashlytics a license­-fee-free, royalty­-free, fully paid up, non­-exclusive, perpetual and irrevocable, worldwide right and license to access, copy, distribute, process, and use (and to make, use and otherwise dispose of systems and processing using) (x) the Developer Data, Performance Data and User Feedback, solely for purposes of (i) providing the Services to Developer, including without limitation providing customer support to Developer, (ii) sharing crash report information with developers who offer software development kits via Twitter’s Fabric portal for application developers if a Developer has integrated such a kit into their application and the given crash is attributable to such a kit, solely so that such kit developers may maintain and improve their kits, and (iii) creating aggregate measures of Services usage, engagement, and performance, and (y) the Results and aggregated Developer Data, Performance Data and User Feedback to improve any component of the Services generally or of any other service of Crashlytics, and for its other business purposes.
+
+                2.11 General Learning; Aggregate Data. Crashlytics reserves the right to disclose aggregate information of Services usage, engagement, and performance, and to reuse all general knowledge, experience, know­-how, works and technologies (including ideas, concepts, processes and techniques) related to the Results or acquired during provision of the Services (including without limitation, that which it could have acquired performing the same or similar services for another customer).
+
+                2.12 Reservation of Rights. Except for the limited rights and licenses expressly granted hereunder, no other license is granted, no other use is permitted and Crashlytics (and its licensors) shall retain all right, title, and interest (including all intellectual property and proprietary rights embodied therein) in and to the Services, Software, Documentation, Background Materials, aggregate data, and analyses (collectively, "Crashlytics Properties").
+
+                SECTION 3. SPECIFIC TERMS FOR BETA TESTERS
+                3.1 License; Restrictions. In order to access and use the Services to test any Beta Application, you may need to download or install Software (defined in Section 2 above), web clips, certificates, or other materials provided by Crashlytics (“Crashlytics Material”). Subject to your compliance with this Agreement, Crashlytics grants you a limited, non­-exclusive, non-­assignable, non-­sublicensable license to access, download, and use any Crashlytics Material made available to you by Crashlytics, solely to access and use the Services. Crashlytics reserves all right, title, and interest in the Crashlytics Material not expressly granted to you, including but not limited to intellectual property rights. To the maximum extent permitted by law, you may not do any of the following with respect to any Crashlytics Material you receive or otherwise have access to: (a) modify, reverse engineer, decompile, or disassemble any Crashlytics Material, (b) rent, lease, loan, sell, sublicense, distribute, transmit, or otherwise transfer any Crashlytics Material, (c) make any copy of or otherwise reproduce any Crashlytics Material, (d) remove, alter, or obscure any copyright, trademark or other proprietary rights notice on or in any Crashlytics Material, (e) work around any technical limitations in any Crashlytics Material, or (f) use any Crashlytics Material for purposes for which it is not designed.
+
+                3.2 No Responsibility for Beta Applications. If you have any complaints or disputes relating to your use of any Beta Application, you agree to look solely to the applicable Developer of such Beta Application and not Crashlytics. You acknowledge and agree that the applicable Developer, not Crashlytics, is fully responsible for any Beta Application. If you want to terminate this Agreement, you must stop using the Services and delete from your device all Crashlytics Material.
+
+                3.3 Consent to Data Processing and Transfer. Irrespective of which country you live in, you authorize Crashlytics to use your information in, and as a result to transfer it to and store it in, the United States and any other country where Crashlytics operates. Privacy and data protection laws in some of these countries may vary from the laws in the country where you live.
+
+                3.4 No Compensation. By becoming a Beta Tester, you are acting as a volunteer. You will bear your own costs, including any mobile carrier and data costs, that you incur in connection with your use of the Beta Application or any User Feedback (defined above) that you submit
+
+                3.5 Standard EULA for Beta Applications. You agree to comply with the terms of the Standard EULA in connection with your access and use of any Beta Application of a Developer, unless you agree to comply with a separate license agreement that the Developer provides in connection with such Beta Application, in which case the terms of that separate license agreement will govern.
+
+                SECTION 4. WARRANTY, LIABILITY & INDEMNITY
+                4.1 Warranties. Crashlytics represents and warrants that it has full right, power, and authority to enter into this Agreement and to perform its obligations and duties under this Agreement, and that the performance of such obligations and duties does not conflict with or result in a breach of any other agreement of Crashlytics, or any judgment, order, or decree by which such party is bound. Developer’s sole and exclusive remedy for any and all breaches of this provision is the remedy set forth in Section 4.4. Developer represents and warrants that it owns all right, title and interest, or possesses sufficient license rights, in and to the Developer Data as may be necessary to grant the rights and licenses, and provide the representations, and for Crashlytics to provide the Services set forth herein. Developer bears all responsibility and liability for the legality, accuracy and completeness of the Developer Data and Crashlytics’s access, possession, distribution, and use thereof, as permitted herein.
+
+                4.2 Disclaimers. THE CRASHLYTICS SERVICES, CRASHLYTICS PROPERTIES AND RESULTS ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND. WITHOUT LIMITING THE FOREGOING, CRASHLYTICS AND ITS PARENTS, SUBSIDIARIES, AFFILIATES, RELATED COMPANIES, OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, REPRESENTATIVES, PARTNERS AND LICENSORS (COLLECTIVELY, THE “CRASHLYTICS ENTITIES”) MAKE NO WARRANTY (I) THAT THE SERVICES OR RESULTS WILL MEET YOUR REQUIREMENTS OR BE UNINTERRUPTED, ERROR­-FREE OR BUG­-FREE, (II) REGARDING THE RELIABILITY, TIMELINESS, OR PERFORMANCE OF THE SERVICES, OR (III) THAT ANY ERRORS IN THE SERVICES CAN OR WILL BE CORRECTED. THE CRASHLYTICS ENTITIES HEREBY DISCLAIM (FOR THEMSELVES AND THEIR SUPPLIERS) ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, ORAL OR WRITTEN, INCLUDING WITHOUT LIMITATION, ALL IMPLIED WARRANTIES OF NON-­INFRINGEMENT, MERCHANTABILITY, TITLE OR FITNESS FOR ANY PARTICULAR PURPOSE AND ALL WARRANTIES ARISING FROM ANY COURSE OF DEALING, COURSE OF PERFORMANCE OR USAGE OF TRADE
+
+                4.3 Claims Against Crashlytics. Developer will defend Crashlytics from all third party claims, whether actual or alleged (collectively, “Crashlytics Claims”), and will indemnify Crashlytics and hold Crashlytics harmless from any and all losses, liabilities, damages, costs, and expenses (including reasonable attorney’s fees) resulting from such Claims that arise out of Developer’s (a) use of the Services, (b) actual or alleged infringement or misappropriation of the rights of any third party, including, without limitation, any intellectual property rights, privacy rights or publicity rights, and (c) breach of any representations and warranties set forth in the Agreement. Developer is solely responsible for defending any such Crashlytics Claims, subject to Crashlytics’s right to participate with counsel of its own choosing, and for payment of all judgments, settlements, damages, losses, liabilities, costs, and expenses, including reasonable attorneys’ fees, resulting from such Claims against Crashlytics, provided that Developer will not agree to any settlement related to any such Claims without Crashlytics’s prior express written consent regardless of whether or not such settlement releases Crashlytics from any obligation or liability. If Developer uses the Services in an official capacity as an employee or representative of a United States federal, state, or local government entity and is legally unable to accept this indemnification provision, then it does not apply to such entity, but only to the extent as required by applicable law
+
+                4.4 Claims Against Developer. Crashlytics will defend the Developer from all third party claims, actions, suits, or proceedings, whether actual or alleged (collectively, “Developer Claims”), and will indemnify Developer and hold Developer harmless from any and all losses, liabilities, damages, costs, and expenses (including reasonable attorney’s fees) resulting from such Claims, that arise out of an allegation that the Services, when used as expressly permitted by this Agreement, infringes the intellectual property rights of such third party. Notwithstanding the foregoing, Crashlytics will have no obligation under this Section 4.4 or otherwise with respect to any infringement claim based upon: (a) any use of the Services not expressly permitted under this Agreement; (b) any use of the Services in combination with products, equipment, software, or data not made available by Crashlytics if such infringement would have been avoided without the combination with such other products, equipment, software, or data; (c) any modification of the Services by any person other than Crashlytics or its authorized agents or subcontractors; or (d) any claim not clearly based on the Services itself. This Section 4.4 states Crashlytics’s entire liability and Developer’s sole and exclusive remedy for all third party claims.
+
+                4.5 Procedure. The foregoing obligations are conditioned on the party seeking indemnification: (a) promptly notifying the other party in writing of such claim; (b) giving the other party sole control of the defense thereof and any related settlement negotiations; and (c) cooperating and, at other party’s request and expense, assisting in such defense. Neither party may make any public announcement of any claim, defense or settlement without the other party’s prior written approval. The indemnifying party may not settle, compromise or resolve a claim without the consent of the indemnified party, if such settlement, compromise or resolution (x) causes or requires an admission or finding of guilt against the indemnified party, (y) imposes any monetary damages against the indemnified party, or (z) does not fully release the indemnified party from liability with respect to the claim.
+
+                4.6 Limitation of Liability.
+
+                (a) IN NO EVENT WILL EITHER PARTY BE LIABLE TO THE OTHER FOR ANY INDIRECT, SPECIAL, INCIDENTAL, EXEMPLARY, PUNITIVE, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR IN CONNECTION WITH THIS AGREEMENT, OR FOR ANY DAMAGES ASSOCIATED WITH ANY LOSS OF USE, BUSINESS, PROFITS, OR GOODWILL OR FOR INTERRUPTION, LOSS OR CORRUPTION OF DATA OR NETWORKS.
+
+                (b) IN NO EVENT WILL EITHER PARTY’S AGGREGATE LIABILITY FOR ANY AND ALL CLAIMS UNDER THIS AGREEMENT EXCEED FIFTY ($50.00) DOLLARS (USD).
+
+                (c) THE FOREGOING LIMITATIONS SHALL NOT APPLY TO BREACHES OF CONFIDENTIALITY OBLIGATIONS OR FOR MISAPPROPRIATION OR INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS, AND SHALL APPLY NOTWITHSTANDING THE FAILURE OF ANY REMEDY PROVIDED HEREIN. THE FOREGOING LIMITATIONS, EXCLUSIONS AND DISCLAIMERS SHALL APPLY TO ANY AND ALL CLAIMS, REGARDLESS OF WHETHER SUCH LIABILITY ARISES FROM ANY CLAIM BASED UPON CONTRACT, WARRANTY, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY, OR OTHERWISE, AND WHETHER OR NOT THE PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH LOSS OR DAMAGE
+
+                Some states do not allow the exclusion or limitation of incidental or consequential damages, so the above limitation or exclusion may not apply to You. INSOFAR AS APPLICABLE LAW PROHIBITS ANY LIMITATION ON LIABILITY HEREIN, THE PARTIES AGREE THAT SUCH LIMITATION WILL BE AUTOMATICALLY MODIFIED, BUT ONLY TO THE EXTENT SO AS TO MAKE THE LIMITATION COMPLIANT WITH APPLICABLE LAW.
+
+                SECTION 5. TERM AND TERMINATION
+                5.1 Term. The term of this Agreement will begin on the date you first agree to this Agreement and are approved to register for the Services, and continue until terminated as set forth herein (“Term”). Your use of the Services may be terminated by Crashlytics or you at any time, for any reason, effective immediately upon notice provided by one party to the other party as set forth herein.
+
+                5.2 Effects of Termination. Upon any expiration or termination of this Agreement, all rights, obligations and licenses of the parties shall cease, except that (a) all obligations that accrued prior to the effective date of termination and all remedies for breach of this Agreement shall survive, (b) you must discontinue accessing and using the Services and delete all Software, Crashlytics Properties, and Crashlytics Material, and (c) the provisions in Section 2 titled Restrictions, Developer Feedback, Confidentiality, Proprietary Rights, General Learning; Aggregate Data, the provisions of Section 4 and the provisions in this Section 5 shall survive. Crashlytics has no obligation to store, delete or return any User Feedback, Performance Data, Developer Data, or Results.
+
+                6. MISCELLANEOUS
+                6.1 Entire Agreement. This Agreement (which includes any order form completed by Developer) constitutes the entire agreement, and supersede all prior negotiations, understandings, or agreements (oral or written), between the parties about the subject matter of this Agreement.
+
+                6.2 Waivers, Consents and Amendments. No waiver, consent, or modification of this Agreement shall bind the Crashlytics Entities unless in writing and signed by Crashlytics. We may amend this Agreement from time to time. If we make a change to this Agreement that, in our sole discretion, is material, we will notify you at the email address that you provided upon signing up to access the Services or upon signing up to access the Twitter Fabric services, at crashlytics.com, or otherwise through the Services. If you do not agree to the modified terms, you shall notify Crashlytics in writing within thirty (30) days, after which your right to access and use the Services shall immediately terminate and the Crashlytics Entities shall have no further responsibility or liability to you. The failure of either party to enforce its rights under this Agreement at any time for any period will not be construed as a waiver of such rights.
+
+                6.3 Severability. If any provision of this Agreement is determined to be illegal or unenforceable, that provision will be limited or eliminated to the minimum extent necessary so that this Agreement will otherwise remain in full force and effect and enforceable.
+
+                6.4 Governing Law. This Agreement shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflicts of law provisions. Neither the United Nations Convention on Contracts for the International Sale of Goods nor any implementation of the Uniform Computer Information Transactions Act in any jurisdiction shall apply to this Agreement. Except that the Crashlytics Entities may seek equitable or similar relief from any court of competent jurisdiction to prevent or restrain any breach or threatened breach of this Agreement by you, exclusive jurisdiction and venue for actions related to this Agreement or your use of the Services will be the state and federal courts located in San Francisco County, California, United States, and both parties consent to the jurisdiction of such courts with respect to any such actions. In any action or proceeding to enforce or interpret this Agreement, the prevailing party will be entitled to recover from the other party its costs and expenses (including reasonable attorneys’ fees) incurred in connection with such action or proceeding and enforcing any judgment or order obtained.
+
+                6.5 Force Majeure. In the event that either party is prevented from performing, or is unable to perform, any of its obligations under this Agreement (except payment obligations) due to any cause beyond its reasonable control, the affected party shall give written notice thereof to the other party and its performance shall be extended for the period of delay or inability to perform due to such occurrence.
+
+                6.6 Notices. Any notice or communication hereunder shall be in writing and either personally delivered or sent via confirmed facsimile, confirmed electronic transmission, recognized express delivery courier or certified or registered mail, prepaid and return receipt requested, addressed to the other party, which, in the case of Developer, shall be the email address provided to Crashlytics upon signing up for the Services or upon signing up to access the Twitter Fabric services, and, in the case of Crashlytics, shall be Crashlytics Inc. c/o Twitter, Inc. 1355 Market Street, Suite 900, San Francisco, CA 94103, Attn: Legal Department, or, if different, at such other address for either party as is designated in a subsequent notice. All notices shall be in English, and deemed to have been received when they are hand delivered, or five business days after their mailing, or upon confirmed electronic transmission or confirmed facsimile transmission.
+
+                6.7 Assignment. This Agreement and the rights and obligations hereunder may not be assigned, transferred or delegated, in whole or in part, whether voluntarily or by operation of law, contract, merger (whether Developer is the surviving or disappearing entity), stock or asset sale, consolidation, dissolution, through government action or otherwise, by Developer without Crashlytics’s prior written consent. Any assignment or transfer in violation of the foregoing shall automatically be null and void, and Crashlytics may immediately terminate this Agreement upon such an attempt. This Agreement shall be binding upon, and inure to the benefit of, any permitted successors, representatives, and permitted assigns of the parties hereto.
+
+                6.8 Independent Contractors. The parties shall be independent contractors under this Agreement, and nothing herein will constitute either party as the employer, employee, agent, or representative of the other party, or both parties as joint venturers or partners for any purpose.
+
+                Appendix A - Standard EULA
+                You, the Beta Tester, and the Developer (“Licensor”) of the Beta Application you access and use via the Services agree to comply with the terms of this EULA in connection with your access and use of such Beta Application (the “Application”).
+
+                1. Relationship between the Parties. Licensor and the Beta Tester acknowledge that this Standard EULA is entered into by and between Licensor and the Beta Tester only, and not with Crashlytics, Inc., a wholly owned subsidiary of Twitter, Inc., and its worldwide affiliates (“Crashlytics”), and Licensor, not Crashlytics, is solely responsible and liable for the Application accessed and used by the Beta Tester, including (i) any related maintenance and support, (ii) any and all express, implied, or statutory warranties associated with the Application, and (iii) any disputes or claims arising out of or related to the access and use of the Application.
+
+                2. License. Subject to your compliance with this Standard EULA, the Licensor grants you a limited, non­-exclusive, non­-assignable, non­-sublicensable license to access, download, and use the Application and any related documentation made available to you by the Licensor, solely for beta testing purposes. Licensor reserves all right, title, and interest in the Application not expressly granted to you, including but not limited to intellectual property rights. To the maximum extent permitted by law, you may not do any of the following with respect to the Application: (a) modify, reverse engineer, decompile, or disassemble the Application; (b) rent, lease, loan, sell, sublicense, distribute, transmit, or otherwise transfer the Application; or (c) make any copy of or otherwise reproduce the Application. This license is effective until terminated by you or the Licensor. Your rights under this license will terminate automatically without notice from the Licensor if you fail to comply with any term of this Standard EULA. Upon termination of the license, you shall cease all use of the Application, and destroy all copies, full or partial, of the Application.
+
+                3. Consent to Data Processing and Transfer. Irrespective of which country you live in, you authorize us to use your information in, and as a result to transfer it to and store it in, the United States and any other country where we or Crashlytics operate. Privacy and data protection laws in some of these countries may vary from the laws in the country where you live.
+
+                4. No Compensation. By becoming a Beta Tester, you are acting as a volunteer. You will bear your own costs, including any mobile carrier and data costs, that you incur in connection with your use of the Application or any User Feedback (defined in Section 2 above) that you submit.
+
+                5. User Feedback. You agree to use reasonable efforts to beta test any application downloaded from the Services. User Feedback shall be owned by the Licensor. You hereby assign all of your right, title, and interest in and to any User Feedback to Licensor and acknowledge that Licensor has the unrestricted right to use and exploit such User Feedback in any manner, with or without attribution, and without compensation or any duty to account to you for such use.
+
+                6. Confidentiality. The Application and related information that Licensor provides to you are Licensor’s confidential information. You will not disclose information about the Application or any other Licensor confidential information to anyone other than Licensor’s employees, unless Licensor gives you written permission. For example, do not share screenshots or video clips of the Application with your friends, family, coworkers, or the media. You will also take reasonable precautions to prevent anyone from obtaining Licensor’s confidential information. For example, you should restrict access to your mobile device, prevent others from watching you use the Application, and not create any screenshots or video clips of the Application.
+
+                7. Disclaimer. THE APPLICATION IS A TEST VERSION THAT IS MADE AVAILABLE TO YOU FOR TESTING AND EVALUATION PURPOSES ONLY. THE APPLICATION IS NOT READY FOR COMMERCIAL RELEASE AND MAY CONTAIN BUGS, ERRORS, AND DEFECTS. ACCORDINGLY, THE APPLICATION IS PROVIDED “AS IS,” WITH ALL FAULTS, DEFECTS, AND ERRORS, AND WITHOUT WARRANTY OF ANY KIND. LICENSOR AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES (EXPRESS, IMPLIED, ARISING BY LAW, OR OTHERWISE) REGARDING THE APPLICATION AND ITS PERFORMANCE OR SUITABILITY FOR YOUR INTENDED USE, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NONINFRINGEMENT.
+
+                8. Limitation of Liability. EXCEPT TO THE EXTENT PROHIBITED BY LAW, IN NO EVENT WILL LICENSOR OR ITS SUPPLIERS BE LIABLE (UNDER ANY THEORY OF LIABILITY) FOR PERSONAL INJURY OR ANY INDIRECT, INCIDENTAL, CONSEQUENTIAL OR SPECIAL DAMAGES (INCLUDING FOR LOSS OF DATA, LOSS OF CONTENT, LOSS OF IN­-APPLICATION FEATURES, LOSS OF PROFITS, OR BUSINESS INTERRUPTION) ARISING OUT OF OR RELATED TO YOUR USE OF OR INABILITY TO USE THE APPLICATION, EVEN IF LICENSOR AND/OR ITS SUPPLIERS HAS/HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. SOME JURISDICTIONS DO NOT ALLOW THE FOREGOING LIMITATIONS OF LIABILITY, SO THESE LIMITATIONS MAY NOT APPLY TO YOU. IN NO EVENT SHALL LICENSOR AND ITS SUPPLIERS’ AGGREGATE LIABILITY ARISING FROM YOUR USE OR INABILITY TO USE THE APPLICATION EXCEED FIFTY UNITED STATES DOLLARS (US $50.00).
+
+                ======
+
+                SDK:
+                protobuf-c http://code.google.com/p/protobuf-c/source/browse/trunk/LICENSE
+
+                Copyright (c) 2008-2011, Dave Benson.
+
+                All rights reserved.
+
+                Redistribution and use in source and binary forms, with
+                or without modification, are permitted provided that the
+                following conditions are met:
+
+                * Redistributions of source code must retain the above
+                copyright notice, this list of conditions and the following
+                disclaimer.
+                * Redistributions in binary form must reproduce
+                the above copyright notice, this list of conditions and
+                the following disclaimer in the documentation and/or other
+                materials provided with the distribution.
+                * Neither the name
+                of "protobuf-c" nor the names of its contributors
+                may be used to endorse or promote products derived from
+                this software without specific prior written permission.
+
+                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+                CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+                INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+                OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+                ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
+                OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+                INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+                (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+                GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+                BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+                LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+                (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+                OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+                POSSIBILITY OF SUCH DAMAGE.
+
+
+                Square Tape - QueueFile.java https://raw.github.com/square/tape/master/LICENSE.txt
+
+                Copyright 2012 Square, Inc.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+                This file has been modified from its original licensed form.
+                Modifications are Copyright (C) 2013 Twitter, Inc.
+
+
+
+                Apache Software Foundation http://www.apache.org/licenses/LICENSE-2.0
+
+                Apache Commons CLI
+                Copyright 2001-2013 The Apache Software Foundation
+
+                Apache Commons Codec
+                Copyright 2002-2013 The Apache Software Foundation
+
+                Apache Felix Copyright
+                2006-2013 The Apache Software Foundation
+
+                Apache HttpComponents Client
+                Copyright 1999-2013 The Apache Software Foundation
+
+                Apache HttpComponents Core
+                Copyright 1999-2013 The Apache Software Foundation
+
+                Apache log4j
+                Copyright 2010-2013 The Apache Software Foundation
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+
+                JSON.simple http://code.google.com/p/json-simple/source/browse/trunk/LICENSE.txt
+
+                Copyright 2006-2012 Yidong Fang Chris Nokleberg Dave Hughes
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+
+                SLF4J http://www.slf4j.org/license.html
+
+                Copyright (c) 2004-2013 QOS.ch
+                All rights reserved.
+
+                Permission is hereby granted, free  of charge, to any person obtaining
+                a  copy  of this  software  and  associated  documentation files  (the
+                "Software"), to  deal in  the Software without  restriction, including
+                without limitation  the rights to  use, copy, modify,  merge, publish,
+                distribute,  sublicense, and/or sell  copies of  the Software,  and to
+                permit persons to whom the Software  is furnished to do so, subject to
+                the following conditions:
+
+                The  above  copyright  notice  and  this permission  notice  shall  be
+                included in all copies or substantial portions of the Software.
+
+                THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
+                EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
+                MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
+                NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+                LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+                OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
+                WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+                Timing Framwork https://java.net/projects/timingframework
+
+                Copyright (c) 2013, SureLogic, Inc
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+
+                Otto - https://raw.github.com/square/otto/master/LICENSE.txt
+
+                Copyright 2013 Square, Inc.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                Beta By Crashlytics App:
+
+                Android Open Source Project https://source.android.com/
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                     http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                ASM Core http://asm.ow2.org/
+
+                Copyright (c) 2000-2011 INRIA, France Telecom
+                All rights reserved.
+
+                Redistribution and use in source and binary forms, with or without
+                modification, are permitted provided that the following conditions
+                are met:
+
+                1. Redistributions of source code must retain the above copyright
+                   notice, this list of conditions and the following disclaimer.
+
+                2. Redistributions in binary form must reproduce the above copyright
+                   notice, this list of conditions and the following disclaimer in the
+                   documentation and/or other materials provided with the distribution.
+
+                3. Neither the name of the copyright holders nor the names of its
+                   contributors may be used to endorse or promote products derived from
+                   this software without specific prior written permission.
+
+                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+                AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+                IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+                ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+                LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+                CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+                SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+                INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+                CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+                ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+                THE POSSIBILITY OF SUCH DAMAGE.
+
+
+                Auto https://github.com/google/auto
+
+                Copyright 2013 Google, Inc.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                ButterKnife http://jakewharton.github.io/butterknife/
+
+                Copyright 2013 Jake Wharton
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                Dagger: http://square.github.io/dagger/
+
+                Copyright 2013 Square, Inc.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                Guava https://github.com/google/guava
+
+                Copyright (C) 2010 The Guava Authors
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                JavaWriter https://github.com/square/javapoet/tree/javawriter_2
+
+                Copyright 2013 Square, Inc.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                Nine Old Androids https://github.com/JakeWharton/NineOldAndroids
+
+                Copyright 2012 Jake Wharton
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                Material Dialogs https://github.com/afollestad/material-dialogs
+
+                Copyright (c) 2015 Aidan Michael Follestad
+
+                Permission is hereby granted, free of charge, to any person obtaining a copy
+                of this software and associated documentation files (the "Software"), to deal
+                in the Software without restriction, including without limitation the rights
+                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                copies of the Software, and to permit persons to whom the Software is
+                furnished to do so, subject to the following conditions:
+
+                The above copyright notice and this permission notice shall be included in all
+                copies or substantial portions of the Software.
+
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                SOFTWARE.
+
+
+                Otto http://square.github.io/otto/
+
+                Copyright 2013 Square, Inc.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                Picasso http://square.github.io/picasso/
+
+                Copyright 2013 Square, Inc.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                RxAndroid https://github.com/ReactiveX/RxAndroid
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                RxJava https://github.com/ReactiveX/RxJava
+
+                Copyright 2013 Netflix, Inc.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                Timber: https://github.com/JakeWharton/timber
+
+                Copyright 2013 Jake Wharton
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+
+
+                JSR-250 Common Annotations for the JavaTM Platform: http://jcp.org/aboutJava/communityprocess/final/jsr250/index.html
+                COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0 1.
+
+                Definitions.
+
+                1.1. Contributor means each individual or entity that creates or contributes to the creation of Modifications.
+
+                1.2. Contributor Version means the combination of the Original Software, prior Modifications used by a Contributor (if any), and the Modifications made by that particular Contributor.
+
+                1.3. Covered Software means (a) the Original Software, or (b) Modifications, or (c) the combination of files containing Original Software with files containing Modifications, in each case including portions thereof.
+
+                1.4. Executable means the Covered Software in any form other than Source Code.
+
+                1.5. Initial Developer means the individual or entity that first makes Original Software available under this License.
+
+                1.6. Larger Work means a work which combines Covered Software or portions thereof with code not governed by the terms of this License.
+
+                1.7. License means this document.
+
+                1.8. Licensable means having the right to grant, to the maximum extent possible, whether at the time of the initial grant or subsequently acquired, any and all of the rights conveyed herein.
+
+                1.9. Modifications means the Source Code and Executable form of any of the following: A. Any file that results from an addition to, deletion from or modification of the contents of a file containing Original Software or previous Modifications; B. Any new file that contains any part of the Original Software or previous Modification; or C. Any new file that is contributed or otherwise made available under the terms of this License.
+
+                1.10. Original Software means the Source Code and Executable form of computer software code that is originally released under this License.
+
+                1.11. Patent Claims means any patent claim(s), now owned or hereafter acquired, including without limitation, method, process, and apparatus claims, in any patent Licensable by grantor.
+
+                1.12. Source Code means (a) the common form of computer software code in which modifications are made and (b) associated documentation included in or with such code.
+
+                1.13. You (or Your) means an individual or a legal entity exercising rights under, and complying with all of the terms of, this License. For legal entities, You includes any entity which controls, is controlled by, or is under common control with You. For purposes of this definition, control means (a) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (b) ownership of more than fifty percent (50%) of the outstanding shares or beneficial ownership of such entity.
+
+                2. License Grants.
+
+                 2.1. The Initial Developer Grant. Conditioned upon Your compliance with Section 3.1 below and subject to third party intellectual property claims, the Initial Developer hereby grants You a world-wide, royalty-free, non-exclusive license:
+
+                (a) under intellectual property rights (other than patent or trademark) Licensable by Initial Developer, to use, reproduce, modify, display, perform, sublicense and distribute the Original Software (or portions thereof), with or without Modifications, and/or as part of a Larger Work; and
+
+                (b) under Patent Claims infringed by the making, using or selling of Original Software, to make, have made, use, practice, sell, and offer for sale, and/or otherwise dispose of the Original Software (or portions thereof);
+
+                 (c) The licenses granted in Sections 2.1(a) and (b) are effective on the date Initial Developer first distributes or otherwise makes the Original Software available to a third party under the terms of this License;
+
+                 (d) Notwithstanding Section 2.1(b) above, no patent license is granted: (1) for code that You delete from the Original Software, or (2) for infringements caused by: (i) the modification of the Original Software, or (ii) the combination of the Original Software with other software or devices.
+
+                2.2. Contributor Grant. Conditioned upon Your compliance with Section 3.1 below and subject to third party intellectual property claims, each Contributor hereby grants You a world-wide, royalty-free, non-exclusive license:
+
+                (a) under intellectual property rights (other than patent or trademark) Licensable by Contributor to use, reproduce, modify, display, perform, sublicense and distribute the Modifications created by such Contributor (or portions thereof), either on an unmodified basis, with other Modifications, as Covered Software and/or as part of a Larger Work; and
+
+                (b) under Patent Claims infringed by the making, using, or selling of Modifications made by that Contributor either alone and/or in combination with its Contributor Version (or portions of such combination), to make, use, sell, offer for sale, have made, and/or otherwise dispose of: (1) Modifications made by that Contributor (or portions thereof); and (2) the combination of Modifications made by that Contributor with its Contributor Version (or portions of such combination).
+
+                (c) The licenses granted in Sections 2.2(a) and 2.2(b) are effective on the date Contributor first distributes or otherwise makes the Modifications available to a third party.
+
+                (d) Notwithstanding Section 2.2(b) above, no patent license is granted: (1) for any code that Contributor has deleted from the Contributor Version; (2) for infringements caused by: (i) third party modifications of Contributor Version, or (ii) the combination of Modifications made by that Contributor with other software (except as part of the Contributor Version) or other devices; or (3) under Patent Claims infringed by Covered Software in the absence of Modifications made by that Contributor.
+
+                3. Distribution Obligations.
+
+                3.1. Availability of Source Code. Any Covered Software that You distribute or otherwise make available in Executable form must also be made available in Source Code form and that Source Code form must be distributed only under the terms of this License. You must include a copy of this License with every copy of the Source Code form of the Covered Software You distribute or otherwise make available. You must inform recipients of any such Covered Software in Executable form as to how they can obtain such Covered Software in Source Code form in a reasonable manner on or through a medium customarily used for software exchange.
+
+                3.2. Modifications. The Modifications that You create or to which You contribute are governed by the terms of this License. You represent that You believe Your Modifications are Your original creation(s) and/or You have sufficient rights to grant the rights conveyed by this License.
+
+                3.3. Required Notices. You must include a notice in each of Your Modifications that identifies You as the Contributor of the Modification. You may not remove or alter any copyright, patent or trademark notices contained within the Covered Software, or any notices of licensing or any descriptive text giving attribution to any Contributor or the Initial Developer.
+
+                3.4. Application of Additional Terms. You may not offer or impose any terms on any Covered Software in Source Code form that alters or restricts the applicable version of this License or the recipients rights hereunder. You may choose to offer, and to charge a fee for, warranty, support, indemnity or liability obligations to one or more recipients of Covered Software. However, you may do so only on Your own behalf, and not on behalf of the Initial Developer or any Contributor. You must make it absolutely clear that any such warranty, support, indemnity or liability obligation is offered by You alone, and You hereby agree to indemnify the Initial Developer and every Contributor for any liability incurred by the Initial Developer or such Contributor as a result of warranty, support, indemnity or liability terms You offer.
+
+                3.5. Distribution of Executable Versions. You may distribute the Executable form of the Covered Software under the terms of this License or under the terms of a license of Your choice, which may contain terms different from this License, provided that You are in compliance with the terms of this License and that the license for the Executable form does not attempt to limit or alter the recipients rights in the Source Code form from the rights set forth in this License. If You distribute the Covered Software in Executable form under a different license, You must make it absolutely clear that any terms which differ from this License are offered by You alone, not by the Initial Developer or Contributor. You hereby agree to indemnify the Initial Developer and every Contributor for any liability incurred by the Initial Developer or such Contributor as a result of any such terms You offer.
+
+                3.6. Larger Works. You may create a Larger Work by combining Covered Software with other code not governed by the terms of this License and distribute the Larger Work as a single product. In such a case, You must make sure the requirements of this License are fulfilled for the Covered Software.
+
+                4. Versions of the License.
+
+                4.1. New Versions. Sun Microsystems, Inc. is the initial license steward and may publish revised and/or new versions of this License from time to time. Each version will be given a distinguishing version number. Except as provided in Section 4.3, no one other than the license steward has the right to modify this License.
+
+                4.2. Effect of New Versions. You may always continue to use, distribute or otherwise make the Covered Software available under the terms of the version of the License under which You originally received the Covered Software. If the Initial Developer includes a notice in the Original Software prohibiting it from being distributed or otherwise made available under any subsequent version of the License, You must distribute and make the Covered Software available under the terms of the version of the License under which You originally received the Covered Software. Otherwise, You may also choose to use, distribute or otherwise make the Covered Software available under the terms of any subsequent version of the License published by the license steward.
+
+                4.3. Modified Versions. When You are an Initial Developer and You want to create a new license for Your Original Software, You may create and use a modified version of this License if You: (a) rename the license and remove any references to the name of the license steward (except to note that the license differs from this License); and (b) otherwise make it clear that the license contains terms which differ from this License.
+
+                5. DISCLAIMER OF WARRANTY. COVERED SOFTWARE IS PROVIDED UNDER THIS LICENSE ON AN AS IS BASIS, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT THE COVERED SOFTWARE IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE COVERED SOFTWARE IS WITH YOU. SHOULD ANY COVERED SOFTWARE PROVE DEFECTIVE IN ANY RESPECT, YOU (NOT THE INITIAL DEVELOPER OR ANY OTHER CONTRIBUTOR) ASSUME THE COST OF ANY NECESSARY SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS LICENSE. NO USE OF ANY COVERED SOFTWARE IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER.
+
+                6. TERMINATION.
+
+                6.1. This License and the rights granted hereunder will terminate automatically if You fail to comply with terms herein and fail to cure such breach within 30 days of becoming aware of the breach. Provisions which, by their nature, must remain in effect beyond the termination of this License shall survive.
+
+                6.2. If You assert a patent infringement claim (excluding declaratory judgment actions) against Initial Developer or a Contributor (the Initial Developer or Contributor against whom You assert such claim is referred to as Participant) alleging that the Participant Software (meaning the Contributor Version where the Participant is a Contributor or the Original Software where the Participant is the Initial Developer) directly or indirectly infringes any patent, then any and all rights granted directly or indirectly to You by such Participant, the Initial Developer (if the Initial Developer is not the Participant) and all Contributors under Sections 2.1 and/or 2.2 of this License shall, upon 60 days notice from Participant terminate prospectively and automatically at the expiration of such 60 day notice period, unless if within such 60 day period You withdraw Your claim with respect to the Participant Software against such Participant either unilaterally or pursuant to a written agreement with Participant.
+
+                6.3. In the event of termination under Sections 6.1 or 6.2 above, all end user licenses that have been validly granted by You or any distributor hereunder prior to termination (excluding licenses granted to You by any distributor) shall survive termination.
+
+                7. LIMITATION OF LIABILITY. UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL YOU, THE INITIAL DEVELOPER, ANY OTHER CONTRIBUTOR, OR ANY DISTRIBUTOR OF COVERED SOFTWARE, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON FOR ANY INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOST PROFITS, LOSS OF GOODWILL, WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER COMMERCIAL DAMAGES OR LOSSES, EVEN IF SUCH PARTY SHALL HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. THIS LIMITATION OF LIABILITY SHALL NOT APPLY TO LIABILITY FOR DEATH OR PERSONAL INJURY RESULTING FROM SUCH PARTYS NEGLIGENCE TO THE EXTENT APPLICABLE LAW PROHIBITS SUCH LIMITATION. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THIS EXCLUSION AND LIMITATION MAY NOT APPLY TO YOU.
+
+                8. U.S. GOVERNMENT END USERS. The Covered Software is a commercial item, as that term is defined in 48 C.F.R. 2.101 (Oct. 1995), consisting of commercial computer software (as that term is defined at 48 C.F.R.  252.227-7014(a)(1)) and commercial computer software documentation as such terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent with 48 C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4 (June 1995), all U.S. Government End Users acquire Covered Software with only those rights set forth herein. This U.S. Government Rights clause is in lieu of, and supersedes, any other FAR, DFAR, or other clause or provision that addresses Government rights in computer software under this License.
+
+                9. MISCELLANEOUS. This License represents the complete agreement concerning subject matter hereof. If any provision of this License is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable. This License shall be governed by the law of the jurisdiction specified in a notice contained within the Original Software (except to the extent applicable law, if any, provides otherwise), excluding such jurisdictions conflict-of-law provisions. Any litigation relating to this License shall be subject to the jurisdiction of the courts located in the jurisdiction and venue specified in a notice contained within the Original Software, with the losing party responsible for costs, including, without limitation, court costs and reasonable attorneys fees and expenses. The application of the United Nations Convention on Contracts for the International Sale of Goods is expressly excluded. Any law or regulation which provides that the language of a contract shall be construed against the drafter shall not apply to this License. You agree that You alone are responsible for compliance with the United States export administration regulations (and the export control laws and regulation of any other countries) when You use, distribute or otherwise make available any Covered Software.
+
+                10. RESPONSIBILITY FOR CLAIMS. As between Initial Developer and the Contributors, each party is responsible for claims and damages arising, directly or indirectly, out of its utilization of rights under this License and You agree to work with Initial Developer and Contributors to distribute such responsibility on an equitable basis. Nothing herein is intended or shall be deemed to constitute any admission of liability.
+
+                NOTICE PURSUANT TO SECTION 9 OF THE COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) The code released under the CDDL shall be governed by the laws of the State of California (excluding conflict-of-law provisions). Any litigation relating to this License shall be subject to the jurisdiction of the Federal Courts of the Northern District of California and the state courts of the State of California, with venue lying in Santa Clara County, California.
+            ]]>
+        </text>
+    </license>
+
+</licenses>

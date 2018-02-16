@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cat.fansubs.app">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name="cat.fansubs.app.FansubsApplication"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Fansubscat.Main"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name="cat.fansubs.app.activities.MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="cat.fansubs.app.activities.ImageActivity"
+            android:parentActivityName="cat.fansubs.app.activities.MainActivity"
+            android:theme="@style/Theme.Fansubscat.WithActionBar" />
+        <activity
+            android:name="cat.fansubs.app.activities.AboutActivity"
+            android:parentActivityName="cat.fansubs.app.activities.MainActivity"
+            android:theme="@style/Theme.Fansubscat.WithActionBar" />
+        <activity
+            android:name="cat.fansubs.app.activities.NotificationsActivity"
+            android:parentActivityName="cat.fansubs.app.activities.MainActivity"
+            android:theme="@style/Theme.Fansubscat.WithActionBar" />
+        <activity
+            android:name="cat.fansubs.app.activities.LicensesActivity"
+            android:parentActivityName="cat.fansubs.app.activities.AboutActivity"
+            android:theme="@style/Theme.Fansubscat.WithActionBar" />
+        <activity
+            android:name="cat.ereza.customactivityoncrash.activity.DefaultErrorActivity"
+            android:theme="@style/Theme.Fansubscat.WithActionBar" />
+
+        <service
+            android:name="cat.fansubs.app.services.FirebasePushService"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="YOUR_API_KEY_HERE" />
+    </application>
+
+</manifest>

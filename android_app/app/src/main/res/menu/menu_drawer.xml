@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/primary_group"
+        android:checkableBehavior="single"
+        android:orderInCategory="1">
+        <item
+            android:id="@+id/menu_news"
+            android:checkable="true"
+            android:checked="true"
+            android:icon="@drawable/ic_vector_news"
+            android:title="@string/menu_news" />
+    </group>
+    <group
+        android:id="@+id/active_fansubs_group"
+        android:checkableBehavior="none"
+        android:orderInCategory="2">
+        <!-- To be filled programmatically -->
+    </group>
+    <group
+        android:id="@+id/other_fansubs_group"
+        android:checkableBehavior="single"
+        android:orderInCategory="3">
+        <item
+            android:id="@+id/menu_other_fansubs"
+            android:checkable="true"
+            android:icon="@drawable/ic_vector_list"
+            android:title="@string/menu_more_fansubs" />
+    </group>
+    <group
+        android:id="@+id/secondary_group"
+        android:checkableBehavior="none"
+        android:orderInCategory="4">
+        <item
+            android:id="@+id/menu_notifications"
+            android:icon="@drawable/ic_vector_notifications"
+            android:title="@string/menu_notifications" />
+        <item
+            android:id="@+id/menu_share"
+            android:icon="@drawable/ic_vector_share_menu"
+            android:title="@string/menu_share" />
+    </group>
+    <group
+        android:id="@+id/others_group"
+        android:checkableBehavior="none"
+        android:orderInCategory="5">
+        <item
+            android:id="@+id/menu_about"
+            android:title="@string/menu_about" />
+    </group>
+</menu>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    tools:ignore="Overdraw">
+
+    <TextView
+        android:id="@+id/text"
+        style="@style/font_roboto_regular"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/text_color_disableable"
+        android:textSize="15sp"
+        tools:text="Ramen Amb Pa Amb Tomàquet No Fansub" />
+
+    <ImageView
+        android:id="@+id/remove_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/content_description_remove"
+        android:src="@drawable/ic_vector_remove"
+        android:tint="@color/text_color_disableable" />
+</LinearLayout>

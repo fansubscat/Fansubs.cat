@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/font_roboto_regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notifications_show_filter"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    style="@style/font_roboto_regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notifications_show_filter_explanation"
+                    android:textColor="@color/text_color_white_grey"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/notifications_fansubs_enabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:id="@+id/notification_texts_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                style="@style/font_roboto_regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications_only_text"
+                android:textColor="@color/text_color_disableable"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/font_roboto_regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications_only_text_explanation"
+                android:textColor="@color/text_color_white_grey_disableable"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:id="@+id/notifications_texts_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- To be filled programmatically -->
+            </LinearLayout>
+
+            <!-- We know that the tinting only works on API>=23, but don't care -->
+            <TextView
+                android:id="@+id/notifications_texts_add"
+                style="@style/font_roboto_regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_vector_add"
+                android:drawableTint="@color/text_color_disableable"
+                android:gravity="center_vertical"
+                android:paddingBottom="16dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="12dp"
+                android:paddingTop="16dp"
+                android:text="@string/notifications_text_add"
+                android:textColor="@color/text_color_disableable"
+                android:textSize="15sp"
+                tools:ignore="UnusedAttribute" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

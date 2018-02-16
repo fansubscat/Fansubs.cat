@@ -1,0 +1,114 @@
+<resources>
+    <string name="app_name">Fansubs.cat</string>
+
+    <!-- General -->
+    <string name="ok">D\'acord</string>
+    <string name="cancel">Cancel·la</string>
+    <string name="header_title">Fansubs.cat</string>
+    <string name="menu_drawer_open">Obre el menú</string>
+    <string name="menu_drawer_back">Endarrere</string>
+    <string name="invalid_link">Aquest enllaç no es pot obrir.</string>
+    <string name="error_layout_text">Sembla que no hi ha connexió a Internet.</string>
+    <string name="error_retry">Torna-ho a provar</string>
+
+    <!-- Date plurals -->
+    <plurals name="date_seconds_ago">
+        <item quantity="one">fa %d segon</item>
+        <item quantity="other">fa %d segons</item>
+    </plurals>
+    <plurals name="date_minutes_ago">
+        <item quantity="one">fa %d minut</item>
+        <item quantity="other">fa %d minuts</item>
+    </plurals>
+    <plurals name="date_hours_ago">
+        <item quantity="one">fa %d hora</item>
+        <item quantity="other">fa %d hores</item>
+    </plurals>
+    <plurals name="date_days_ago">
+        <item quantity="one">fa %d dia</item>
+        <item quantity="other">fa %d dies</item>
+    </plurals>
+
+    <!-- Drawer options -->
+    <string name="menu_news">Darreres notícies</string>
+    <string name="menu_more_fansubs">Tots els fansubs</string>
+    <string name="menu_notifications">Notificacions</string>
+    <string name="menu_share">Comparteix</string>
+    <string name="menu_about">Quant a l\'aplicació</string>
+
+    <!-- Menu options -->
+    <string name="menu_search">Cerca</string>
+    <string name="menu_filter">Filtra</string>
+
+    <!-- Searches -->
+    <string name="search_results_title">Resultats de la cerca</string>
+    <string name="search_please_enter">Introdueix una cerca més llarga</string>
+    <string name="search_go_button">Cerca</string>
+    <string name="search_hint">Cerca…</string>
+
+    <!-- Main screen (news) -->
+    <string name="main_title">Darreres notícies</string>
+    <string name="news_empty_text">No hi ha notícies que coincideixin amb el teu criteri. Prova de reduir el filtre.</string>
+    <string name="filter_fansubs">Mostra les notícies d\'aquests fansubs:</string>
+    <string name="filter_apply">Aplica</string>
+    <string name="filter_cancel">Cancel·la</string>
+
+    <!-- News detail screen -->
+    <string name="visit_fansub">Visita %s</string>
+
+    <!-- Image screen -->
+    <string name="image_title">Imatge</string>
+
+    <!-- Fansubs screen -->
+    <string name="fansubs_title">Tots els fansubs</string>
+
+    <!-- Notifications screen -->
+    <string name="notifications_title">Notificacions</string>
+    <string name="notifications_show_filter">Notícies noves dels meus fansubs</string>
+    <string name="notifications_show_filter_explanation">Si està activat, rebràs notificacions dels teus fansubs (els mateixos que veus a la llista de notícies).</string>
+    <string name="notifications_only_text">Filtres de text</string>
+    <string name="notifications_only_text_explanation">Si en defineixes algun, només rebràs notificacions de les notícies que continguin algun d\'aquests textos al títol. Pots fer-ho servir per rebre només notificacions de les teves sèries preferides.</string>
+    <string name="notifications_text_add">Afegeix un text</string>
+    <string name="add_text_title">Afegeix un text</string>
+
+    <!-- Share option -->
+    <string name="share_chooser_title">Comparteix amb…</string>
+    <string name="share_title">Segueix les notícies de tots els fansubs en català!</string>
+    <string name="share_link">https://play.google.com/store/apps/details?id=cat.fansubs.app</string>
+
+    <!-- About -->
+    <string name="about_title">Quant a l\'aplicació</string>
+    <string name="suggestion_subject">Suggeriment per a l\'aplicació (versió %s)</string>
+    <string name="suggestion_email_intent_failed">No s\'ha pogut enviar cap correu. Assegura\'t que tens una aplicació de correu electrònic instal·lada.</string>
+    <string name="about_user_feedback_title">Comentaris i suggeriments</string>
+    <string name="about_user_feedback_explanation">Si tens cap problema amb Fansubs.cat, o vols fer algun suggeriment de millora, ens pots escriure en qualsevol moment!</string>
+    <string name="about_user_feedback_email_button">Contacta\'ns</string>
+    <string name="about_legal_info_title">Informació legal</string>
+    <string name="about_legal_info_explanation">Fansubs.cat només recopila notícies dels webs esmentats. Tots els drets dels textos, imatges i obres esmentades pertanyen a llurs propietaris.</string>
+    <string name="about_open_source_title">Codi obert</string>
+    <string name="about_open_source_explanation">Aquesta aplicació és de codi obert, publicada sota la llicència GNU Affero General Public License v3.0. Pots proposar-hi millores i analitzar-ne el codi al nostre web de GitHub.</string>
+    <string name="about_github">Visita\'ns a GitHub</string>
+    <string name="about_third_party_libraries">Llicències de tercers</string>
+    <string name="unknown_version">desconeguda</string>
+
+    <!-- Third-parties -->
+    <string name="licenses_title">Llicències de tercers</string>
+
+    <!-- Push notifications -->
+    <string name="notification_channel_name">Notícies</string>
+    <plurals name="push_title_fansub">
+        <item quantity="one">%s té una nova notícia</item>
+        <item quantity="other">%s té %d noves notícies</item>
+    </plurals>
+    <plurals name="push_title_fansubs">
+        <item quantity="other">%d noves notícies de diversos fansubs</item>
+    </plurals>
+
+    <!-- Content descriptions (not shown on app) -->
+    <string name="content_description_fansub_icon">Icona del fansub</string>
+    <string name="content_description_image">Imatge de la notícia</string>
+    <string name="content_description_app_icon">Icona de l\'aplicació</string>
+    <string name="content_description_visit_website">Visita\'n el lloc web</string>
+    <string name="content_description_remove">Suprimeix</string>
+    <string name="content_description_clear">Esborra</string>
+</resources>

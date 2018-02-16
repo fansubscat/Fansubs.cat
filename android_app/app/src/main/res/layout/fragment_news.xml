@@ -1,0 +1,60 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/news_image"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/content_description_image"
+            tools:src="@drawable/icon_big" />
+
+        <TextView
+            android:id="@+id/news_title"
+            style="@style/font_roboto_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            tools:text="Boruto - Naruto Next Generations - 09-11" />
+
+        <TextView
+            android:id="@+id/news_date"
+            style="@style/font_roboto_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color_white_grey"
+            android:textSize="12sp"
+            tools:text="04/02/2018 10:18" />
+
+        <TextView
+            android:id="@+id/news_text"
+            style="@style/font_roboto_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/text_color"
+            android:textSize="14sp"
+            tools:text="Lorem fistrum qué dise usteer está la cosa muy malar pecador torpedo." />
+
+        <Button
+            android:id="@+id/news_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Visita Ramen Amb Pa Amb Tomàquet No Fansub" />
+    </LinearLayout>
+</ScrollView>

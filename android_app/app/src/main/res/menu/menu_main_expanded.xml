@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_search_expanded"
+        android:orderInCategory="1"
+        android:visible="false"
+        app:actionLayout="@layout/action_search_layout"
+        app:showAsAction="always" />
+</menu>
