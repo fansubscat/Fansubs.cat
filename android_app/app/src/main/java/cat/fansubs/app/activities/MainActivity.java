@@ -102,17 +102,16 @@ public class MainActivity extends AppCompatActivity {
 
         loadRandomImageInHeader();
 
-        navigationView.getHeaderView(0).setOnLongClickListener(new View.OnLongClickListener() {
+        navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
             int count = 0;
 
             @Override
-            public boolean onLongClick(View view) {
+            public void onClick(View view) {
                 count++;
-                if (count % 4 == 0) {
+                if (count % 13 == 0) {
                     SharedPreferencesUtils.setBoolean(SharedPreferencesUtils.EASTER_EGG_ENABLED, !SharedPreferencesUtils.getBoolean(SharedPreferencesUtils.EASTER_EGG_ENABLED));
                     loadRandomImageInHeader();
                 }
-                return true;
             }
         });
 
@@ -121,12 +120,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected List<Fansub> doInBackground(Void... params) {
-                ServerResponse<Fansub> fansubServerResponse = ServerAccess.getFansubs();
-                if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_OK)) {
-                    return fansubServerResponse.getResult();
-                } else {
-                    return null;
+                if (UiUtils.isOnline()) {
+                    ServerResponse<Fansub> fansubServerResponse = ServerAccess.getFansubs();
+                    if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_OK)) {
+                        return fansubServerResponse.getResult();
+                    }
                 }
+                return null;
             }
 
             @Override

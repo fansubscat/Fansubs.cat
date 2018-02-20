@@ -197,15 +197,13 @@ public class MainFragment extends Fragment implements BackableFragment {
 
             @Override
             protected List<News> doInBackground(Void... params) {
-                if (!UiUtils.isOnline()) {
-                    return null;
+                if (UiUtils.isOnline()) {
+                    ServerResponse<News> fansubServerResponse = ServerAccess.getNews(page, searchText, DataUtils.retrieveFilterFansubIds());
+                    if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_OK)) {
+                        return fansubServerResponse.getResult();
+                    }
                 }
-                ServerResponse<News> fansubServerResponse = ServerAccess.getNews(page, searchText, DataUtils.retrieveFilterFansubIds());
-                if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_OK)) {
-                    return fansubServerResponse.getResult();
-                } else {
-                    return null;
-                }
+                return null;
             }
 
             @Override

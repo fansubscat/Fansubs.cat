@@ -48,12 +48,4 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="font_roboto_thin">
-        <item name="android:fontFamily">sans-serif-thin</item>
-    </style>
-
-    <style name="font_roboto_condensed">
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
 </resources>
