@@ -104,6 +104,17 @@
         <item quantity="other">%d noves notícies de diversos fansubs</item>
     </plurals>
 
+    <!-- Error screen -->
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">S\'ha produït un error inesperat a l\'aplicació. Disculpa les molèsties!</string>
+    <string name="customactivityoncrash_error_activity_restart_app">Reinicia l\'aplicació</string>
+    <string name="customactivityoncrash_error_activity_close_app">Tanca l\'aplicació</string>
+    <string name="customactivityoncrash_error_activity_error_details">Detalls de l\'error</string>
+    <string name="customactivityoncrash_error_activity_error_details_title">Detalls de l\'error</string>
+    <string name="customactivityoncrash_error_activity_error_details_close">Tanca</string>
+    <string name="customactivityoncrash_error_activity_error_details_copy">Copia al porta-retalls</string>
+    <string name="customactivityoncrash_error_activity_error_details_copied">S\'ha copiat al porta-retalls</string>
+    <string name="customactivityoncrash_error_activity_error_details_clipboard_label">Informació de l\'error</string>
+
     <!-- Content descriptions (not shown on app) -->
     <string name="content_description_fansub_icon">Icona del fansub</string>
     <string name="content_description_image">Imatge de la notícia</string>
