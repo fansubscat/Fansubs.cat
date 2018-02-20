@@ -40,7 +40,7 @@ public class FansubsApplication extends Application {
 
         Crashlytics.setString("play_services_version", gpsVersion);
 
-        FirebaseApp.initializeApp(this);
+        FirebaseApp.initializeApp(this); //Needed so Caoc doesn't crash
         FirebaseMessaging.getInstance().subscribeToTopic("all");
     }
 
@@ -52,12 +52,12 @@ public class FansubsApplication extends Application {
 
         @Override
         public void onLaunchErrorActivity() {
-//            GoogleAnalyticsHelper.trackEvent(GoogleAnalyticsHelper.ACTION_LAUNCH_ERROR_SCREEN);
+            //Nothing for now
         }
 
         @Override
         public void onRestartAppFromErrorActivity() {
-//            GoogleAnalyticsHelper.trackEvent(GoogleAnalyticsHelper.ACTION_RESTART_FROM_ERROR);
+            //Nothing for now
         }
 
         @Override

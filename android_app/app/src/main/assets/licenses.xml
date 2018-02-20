@@ -169,35 +169,11 @@
         </text>
     </license>
     <license>
-        <name>Picasso</name>
-        <url>http://square.github.io/picasso/</url>
-        <copyright>
-            <![CDATA[
-                Copyright 2013 Square, Inc.
-            ]]>
-        </copyright>
-        <text>
-            <![CDATA[
-                Licensed under the Apache License, Version 2.0 (the "License");
-                you may not use this file except in compliance with the License.
-                You may obtain a copy of the License at
-
-                http://www.apache.org/licenses/LICENSE-2.0
-
-                Unless required by applicable law or agreed to in writing, software
-                distributed under the License is distributed on an "AS IS" BASIS,
-                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-                See the License for the specific language governing permissions and
-                limitations under the License.
-            ]]>
-        </text>
-    </license>
-    <license>
         <name>Custom Activity On Crash</name>
         <url>https://github.com/Ereza/CustomActivityOnCrash</url>
         <copyright>
             <![CDATA[
-                Copyright (c) 2014-2016 Eduard Ereza, http://www.eduardereza.com/
+                Copyright (c) 2014-2017 Eduard Ereza, http://www.eduardereza.com/
 
                 This product is licensed under the terms of the Apache Software License 2.0. See the LICENSE file for the full license text.
             ]]>
@@ -223,7 +199,7 @@
         <url>https://github.com/Ereza/LogcatReporter</url>
         <copyright>
             <![CDATA[
-                Copyright (c) 2016 Eduard Ereza, http://www.eduardereza.com/
+                Copyright (c) 2016-2017 Eduard Ereza, http://www.eduardereza.com/
 
                 This product is licensed under the terms of the Apache Software License 2.0. See the LICENSE file for the full license text.
             ]]>
@@ -306,8 +282,8 @@
                 4. Restrictions. The license granted in Section 3 above is expressly made subject to and limited by the following restrictions:
 
                 You may Distribute or Publicly Perform the Work only under the terms of this License. You must include a copy of, or the Uniform Resource Identifier (URI) for, this License with every copy of the Work You Distribute or Publicly Perform. You may not offer or impose any terms on the Work that restrict the terms of this License or the ability of the recipient of the Work to exercise the rights granted to that recipient under the terms of the License. You may not sublicense the Work. You must keep intact all notices that refer to this License and to the disclaimer of warranties with every copy of the Work You Distribute or Publicly Perform. When You Distribute or Publicly Perform the Work, You may not impose any effective technological measures on the Work that restrict the ability of a recipient of the Work from You to exercise the rights granted to that recipient under the terms of the License. This Section 4(a) applies to the Work as incorporated in a Collection, but this does not require the Collection apart from the Work itself to be made subject to the terms of this License. If You create a Collection, upon notice from any Licensor You must, to the extent practicable, remove from the Collection any credit as required by Section 4(b), as requested.
-                If You Distribute, or Publicly Perform the Work or Collections, You must, unless a request has been made pursuant to Section 4(a), keep intact all copyright notices for the Work and provide, reasonable to the medium or means You are utilizing: (i) the name of the Original Author (or pseudonym, if applicable) if supplied, and/or if the Original Author and/or Licensor designate another party or parties (e.g., a sponsor institute, publishing entity, journal) for attribution ("Attribution Parties") in Licensor's copyright notice, terms of service or by other reasonable means, the name of such party or parties; (ii) the title of the Work if supplied; (iii) to the extent reasonably practicable, the URI, if any, that Licensor specifies to be associated with the Work, unless such URI does not refer to the copyright notice or licensing information for the Work. The credit required by this Section 4(b) may be implemented in any reasonable manner; provided, however, that in the case of a Collection, at a minimum such credit will appear, if a credit for all contributing authors of the Collection appears, then as part of these credits and in a manner at least as prominent as the credits for the other contributing authors. For the avoidance of doubt, You may only use the credit required by this Section for the purpose of attribution in the manner set out above and, by exercising Your rights under this License, You may not implicitly or explicitly assert or imply any connection with, sponsorship or endorsement by the Original Author, Licensor and/or Attribution Parties, as appropriate, of You or Your use of the Work, without the separate, express prior written permission of the Original Author, Licensor and/or Attribution Parties.
-                Except as otherwise agreed in writing by the Licensor or as may be otherwise permitted by applicable law, if You Reproduce, Distribute or Publicly Perform the Work either by itself or as part of any Collections, You must not distort, mutilate, modify or take other derogatory action in relation to the Work which would be prejudicial to the Original Author's honor or reputation.
+                If You Distribute, or Publicly Perform the Work or Collections, You must, unless a request has been made pursuant to Section 4(a), keep intact all copyright notices for the Work and provide, reasonable to the medium or means You are utilizing: (i) the name of the Original Author (or pseudonym, if applicable) if supplied, and/or if the Original Author and/or Licensor designate another party or parties (e.g., a sponsor institute, publishing entity, journal) for attribution ("Attribution Parties") in Licensor´s copyright notice, terms of service or by other reasonable means, the name of such party or parties; (ii) the title of the Work if supplied; (iii) to the extent reasonably practicable, the URI, if any, that Licensor specifies to be associated with the Work, unless such URI does not refer to the copyright notice or licensing information for the Work. The credit required by this Section 4(b) may be implemented in any reasonable manner; provided, however, that in the case of a Collection, at a minimum such credit will appear, if a credit for all contributing authors of the Collection appears, then as part of these credits and in a manner at least as prominent as the credits for the other contributing authors. For the avoidance of doubt, You may only use the credit required by this Section for the purpose of attribution in the manner set out above and, by exercising Your rights under this License, You may not implicitly or explicitly assert or imply any connection with, sponsorship or endorsement by the Original Author, Licensor and/or Attribution Parties, as appropriate, of You or Your use of the Work, without the separate, express prior written permission of the Original Author, Licensor and/or Attribution Parties.
+                Except as otherwise agreed in writing by the Licensor or as may be otherwise permitted by applicable law, if You Reproduce, Distribute or Publicly Perform the Work either by itself or as part of any Collections, You must not distort, mutilate, modify or take other derogatory action in relation to the Work which would be prejudicial to the Original Author´s honor or reputation.
                 5. Representations, Warranties and Disclaimer
 
                 UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING, LICENSOR OFFERS THE WORK AS-IS AND MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING THE WORK, EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING, WITHOUT LIMITATION, WARRANTIES OF TITLE, MERCHANTIBILITY, FITNESS FOR A PARTICULAR PURPOSE, NONINFRINGEMENT, OR THE ABSENCE OF LATENT OR OTHER DEFECTS, ACCURACY, OR THE PRESENCE OF ABSENCE OF ERRORS, WHETHER OR NOT DISCOVERABLE. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO SUCH EXCLUSION MAY NOT APPLY TO YOU.
@@ -446,7 +422,7 @@
 
                 This Crashlytics Agreement (“Agreement”) is entered into by Crashlytics, Inc., a wholly owned subsidiary of Twitter, Inc., on behalf of itself and its worldwide affiliates (“Crashlytics”) and you (“Developer” or “You”) and governs your access and use of www.crashlytics.com and the Crashlytics crash reporting and beta testing solution (collectively, the “Services,” as more fully described below). If You are accessing or using the Services on behalf of a company or other legal entity, You represent and warrant that You are an authorized representative of that entity and have the authority to bind such entity to this Agreement, in which case the terms “Developer” and “You” shall refer to such entity. You and Crashlytics hereby agree as follows:
 
-                YOUR RIGHT TO ACCESS AND USE THE SERVICES IS EXPRESSLY CONDITIONED ON ACCEPTANCE OF THIS AGREEMENT. BY ACCESSING OR USING THE SERVICES, YOU AGREE TO BE BOUND BY THIS AGREEMENT. IF YOU ARE ACCESSING OR USING THE SERVICES ON BEHALF OF YOUR EMPLOYER OR ANOTHER ENTITY (“ENTITY”), YOU AGREE TO PROVIDE CRASHLYTICS WITH THE NAME OF THE ENTITY AND OBTAIN CRASHLYTICS'S APPROVAL TO USE THE SOFTWARE ON YOUR BEHALF AND BEHALF OF THE ENTITY AND YOU AGREE TO REMAIN RESPONSIBLE AND LIABLE FOR YOUR AND SUCH ENTITY'S COMPLIANCE WITH THIS AGREEMENT. FURTHER, YOU REPRESENT AND WARRANT THAT (I) YOU ARE THE AUTHORIZED AGENT OF THE APPLICABLE ENTITY AND HAVE THE LEGAL AUTHORITY TO ENTER INTO THE AGREEMENT ON BEHALF OF YOURSELF AND THE ENTITY, AND (II) YOU HAVE OBTAINED, ON BEHALF OF YOURSELF AND THE ENTITY (IF APPLICABLE), ALL NECESSARY RIGHTS, WAIVERS, CONSENTS AND PERMISSIONS NECESSARY TO COLLECT, USE, STORE, AND SHARE USER INFORMATION IN CONNECTION WITH THE SOFTWARE.
+                YOUR RIGHT TO ACCESS AND USE THE SERVICES IS EXPRESSLY CONDITIONED ON ACCEPTANCE OF THIS AGREEMENT. BY ACCESSING OR USING THE SERVICES, YOU AGREE TO BE BOUND BY THIS AGREEMENT. IF YOU ARE ACCESSING OR USING THE SERVICES ON BEHALF OF YOUR EMPLOYER OR ANOTHER ENTITY (“ENTITY”), YOU AGREE TO PROVIDE CRASHLYTICS WITH THE NAME OF THE ENTITY AND OBTAIN CRASHLYTICS´S APPROVAL TO USE THE SOFTWARE ON YOUR BEHALF AND BEHALF OF THE ENTITY AND YOU AGREE TO REMAIN RESPONSIBLE AND LIABLE FOR YOUR AND SUCH ENTITY´S COMPLIANCE WITH THIS AGREEMENT. FURTHER, YOU REPRESENT AND WARRANT THAT (I) YOU ARE THE AUTHORIZED AGENT OF THE APPLICABLE ENTITY AND HAVE THE LEGAL AUTHORITY TO ENTER INTO THE AGREEMENT ON BEHALF OF YOURSELF AND THE ENTITY, AND (II) YOU HAVE OBTAINED, ON BEHALF OF YOURSELF AND THE ENTITY (IF APPLICABLE), ALL NECESSARY RIGHTS, WAIVERS, CONSENTS AND PERMISSIONS NECESSARY TO COLLECT, USE, STORE, AND SHARE USER INFORMATION IN CONNECTION WITH THE SOFTWARE.
 
                 Effective November 20, 2015, this Agreement does not cover www.answers.io or Crashlytics’s “Answers” service, which is a software development kit and associated services focused on analysis and computation of the behavior and usage of mobile applications, including app analytics, event tracking, and conversion tracking. If you use Answers, then please consult the Answers Agreement, which is the contract between you and Crashlytics governing your use of Answers. If you have questions regarding this Agreement, please contact Crashlytics at support@crashlytics.com.
 
@@ -1070,6 +1046,113 @@
                 10. RESPONSIBILITY FOR CLAIMS. As between Initial Developer and the Contributors, each party is responsible for claims and damages arising, directly or indirectly, out of its utilization of rights under this License and You agree to work with Initial Developer and Contributors to distribute such responsibility on an equitable basis. Nothing herein is intended or shall be deemed to constitute any admission of liability.
 
                 NOTICE PURSUANT TO SECTION 9 OF THE COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) The code released under the CDDL shall be governed by the laws of the State of California (excluding conflict-of-law provisions). Any litigation relating to this License shall be subject to the jurisdiction of the Federal Courts of the Northern District of California and the state courts of the State of California, with venue lying in Santa Clara County, California.
+            ]]>
+        </text>
+    </license>
+    <license>
+        <name>Glide</name>
+        <url>https://github.com/bumptech/glide</url>
+        <copyright>
+            <![CDATA[
+                Copyright 2014 Google, Inc. All rights reserved.
+            ]]>
+        </copyright>
+        <text>
+            <![CDATA[
+                License for everything not in third_party and not otherwise marked:
+
+                Copyright 2014 Google, Inc. All rights reserved.
+
+                Redistribution and use in source and binary forms, with or without modification, are
+                permitted provided that the following conditions are met:
+
+                   1. Redistributions of source code must retain the above copyright notice, this list of
+                         conditions and the following disclaimer.
+
+                   2. Redistributions in binary form must reproduce the above copyright notice, this list
+                         of conditions and the following disclaimer in the documentation and/or other materials
+                         provided with the distribution.
+
+                THIS SOFTWARE IS PROVIDED BY GOOGLE, INC. ``AS IS´´ AND ANY EXPRESS OR IMPLIED
+                WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+                FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GOOGLE, INC. OR
+                CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+                CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+                SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+                ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+                NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+                ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+                The views and conclusions contained in the software and documentation are those of the
+                authors and should not be interpreted as representing official policies, either expressed
+                or implied, of Google, Inc.
+                ---------------------------------------------------------------------------------------------
+                License for third_party/disklrucache:
+
+                Copyright 2012 Jake Wharton
+                Copyright 2011 The Android Open Source Project
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                   http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+                ---------------------------------------------------------------------------------------------
+                License for third_party/gif_decoder:
+
+                Copyright (c) 2013 Xcellent Creations, Inc.
+
+                Permission is hereby granted, free of charge, to any person obtaining
+                a copy of this software and associated documentation files (the
+                "Software"), to deal in the Software without restriction, including
+                without limitation the rights to use, copy, modify, merge, publish,
+                distribute, sublicense, and/or sell copies of the Software, and to
+                permit persons to whom the Software is furnished to do so, subject to
+                the following conditions:
+
+                The above copyright notice and this permission notice shall be
+                included in all copies or substantial portions of the Software.
+
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+                EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+                MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+                NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+                LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+                OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+                WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                ---------------------------------------------------------------------------------------------
+                License for third_party/gif_encoder/AnimatedGifEncoder.java and
+                third_party/gif_encoder/LZWEncoder.java:
+
+                No copyright asserted on the source code of this class. May be used for any
+                purpose, however, refer to the Unisys LZW patent for restrictions on use of
+                the associated LZWEncoder class. Please forward any corrections to
+                kweiner@fmsware.com.
+
+                -----------------------------------------------------------------------------
+                License for third_party/gif_encoder/NeuQuant.java
+
+                Copyright (c) 1994 Anthony Dekker
+
+                NEUQUANT Neural-Net quantization algorithm by Anthony Dekker, 1994. See
+                "Kohonen neural networks for optimal colour quantization" in "Network:
+                Computation in Neural Systems" Vol. 5 (1994) pp 351-367. for a discussion of
+                the algorithm.
+
+                Any party obtaining a copy of these files from the author, directly or
+                indirectly, is granted, free of charge, a full and unrestricted irrevocable,
+                world-wide, paid up, royalty-free, nonexclusive right and license to deal in
+                this software and documentation files (the "Software"), including without
+                limitation the rights to use, copy, modify, merge, publish, distribute,
+                sublicense, and/or sell copies of the Software, and to permit persons who
+                receive copies from any such party to do so, with the only requirement being
+                that this copyright notice remain intact.
             ]]>
         </text>
     </license>

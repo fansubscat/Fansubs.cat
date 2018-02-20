@@ -4,6 +4,7 @@ import android.content.res.XmlResourceParser;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import cat.fansubs.app.FansubsApplication;
-import cat.fansubs.app.R;
 import cat.fansubs.app.beans.License;
 
 public class LicensesUtil {
@@ -24,7 +24,8 @@ public class LicensesUtil {
 
     public static List<License> loadLicenses() {
         try {
-            XmlResourceParser parser = FansubsApplication.getInstance().getResources().getXml(R.xml.licenses);
+            XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+            parser.setInput(FansubsApplication.getInstance().getAssets().open("licenses.xml"), null);
 
             List<License> licenses = new ArrayList<>();
             int event = parser.getEventType();
@@ -44,22 +45,20 @@ public class LicensesUtil {
                         currentLicense = new License();
                     }
                 } else if (event == XmlPullParser.TEXT) {
-                    if (ATTR_NAME.equals(currentTag)) {
-                        String text = parser.getText();
-                        currentLicense.setName(trimAllLines(text));
-                    } else if (ATTR_COPYRIGHT.equals(currentTag)) {
-                        String text = parser.getText();
-                        currentLicense.setCopyright(trimAllLines(text));
-                    } else if (ATTR_URL.equals(currentTag)) {
-                        String text = parser.getText();
-                        currentLicense.setUrl(trimAllLines(text));
-                    } else if (ATTR_TEXT.equals(currentTag)) {
-                        String text = parser.getText();
-                        currentLicense.setLicense(trimAllLines(text));
+                    String text = parser.getText();
+                    if (!text.trim().equals("")) {
+                        if (ATTR_NAME.equals(currentTag)) {
+                            currentLicense.setName(trimAllLines(text));
+                        } else if (ATTR_COPYRIGHT.equals(currentTag)) {
+                            currentLicense.setCopyright(trimAllLines(text));
+                        } else if (ATTR_URL.equals(currentTag)) {
+                            currentLicense.setUrl(trimAllLines(text));
+                        } else if (ATTR_TEXT.equals(currentTag)) {
+                            currentLicense.setLicense(trimAllLines(text));
+                        }
                     }
                 }
             }
-            parser.close();
 
             Collections.sort(licenses, new Comparator<License>() {
                 @Override
@@ -76,7 +75,7 @@ public class LicensesUtil {
 
     private static String trimAllLines(String text) {
         StringBuilder result = null;
-        String[] lines = text.replace("\r\n", "\n").split("\\n");
+        String[] lines = text.replace("\r\n", "\n").trim().split("\\n");
         for (String line : lines) {
             if (result == null) {
                 result = new StringBuilder(line.trim());
