@@ -1,6 +1,7 @@
 package cat.fansubs.app.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.bumptech.glide.request.RequestOptions;
 import cat.fansubs.app.R;
 import cat.fansubs.app.activities.ImageActivity;
 import cat.fansubs.app.beans.News;
+import cat.fansubs.app.utils.DataUtils;
 import cat.fansubs.app.utils.UiUtils;
 
 public class NewsFragment extends Fragment implements BackableFragment {
@@ -45,7 +47,7 @@ public class NewsFragment extends Fragment implements BackableFragment {
         TextView date = view.findViewById(R.id.news_date);
         Button button = view.findViewById(R.id.news_button);
         TextView contents = view.findViewById(R.id.news_text);
-        ImageView image = view.findViewById(R.id.news_image);
+        final ImageView image = view.findViewById(R.id.news_image);
 
         title.setText(news.getTitle());
         date.setText(UiUtils.getRelativeDate(news.getDate()));
@@ -63,6 +65,7 @@ public class NewsFragment extends Fragment implements BackableFragment {
             @Override
             public void onClick(View view) {
                 if (getActivity() != null) {
+                    DataUtils.setBitmap(((BitmapDrawable) image.getDrawable()).getBitmap());
                     Intent intent = new Intent(getActivity(), ImageActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString(ImageActivity.IMAGE_URL, news.getImageUrl());

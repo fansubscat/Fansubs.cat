@@ -1,5 +1,7 @@
 package cat.fansubs.app.utils;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -16,6 +18,9 @@ import cat.fansubs.app.beans.UnreadPush;
 
 public class DataUtils {
     private static List<Fansub> fansubs = null;
+
+    //Yes, this is ugly. Any better idea so the transition works well?
+    private static Bitmap bitmap = null;
 
     public static List<Fansub> retrieveFansubs() {
         if (fansubs == null) {
@@ -113,5 +118,13 @@ public class DataUtils {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         return gsonBuilder.create().fromJson(json, typeOfT);
+    }
+
+    public static Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public static void setBitmap(Bitmap bitmap) {
+        DataUtils.bitmap = bitmap;
     }
 }

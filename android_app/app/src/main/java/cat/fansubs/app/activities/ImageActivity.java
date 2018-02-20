@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import cat.fansubs.app.R;
+import cat.fansubs.app.utils.DataUtils;
 
 public class ImageActivity extends AppCompatActivity {
     public static String IMAGE_URL = "image_url";
@@ -30,10 +31,15 @@ public class ImageActivity extends AppCompatActivity {
         }
 
         ImageView image = findViewById(R.id.image);
-        Glide.with(this)
-                .load(imageUrl)
-                .apply(new RequestOptions().placeholder(R.color.transparent).error(R.color.transparent))
-                .into(image);
+        if (DataUtils.getBitmap() != null) {
+            image.setImageBitmap(DataUtils.getBitmap());
+            DataUtils.setBitmap(null);
+        } else {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .apply(new RequestOptions().placeholder(R.color.transparent).error(R.color.transparent))
+                    .into(image);
+        }
     }
 
     @Override
