@@ -157,7 +157,7 @@ if ((!isset($_COOKIE['app_closed']) || $_COOKIE['app_closed']!='1') && $header_c
 					<img id="appclose" src="/style/images/close.png" alt="Amaga aquest missatge" />
 					<div id="apptext">
 						<div id="realapptext">
-							<strong>Tenim aplicació d'Android!</strong> <a href="https://play.google.com/store/apps/details?id=cat.fansubs.app">Descarrega-la ara</a> i podràs rebre notificacions quan hi hagi notícies noves.
+							<strong>Ara tenim aplicació d'Android!</strong><br /><strong><a href="https://play.google.com/store/apps/details?id=cat.fansubs.app">Descarrega-la ara</a></strong> i podràs rebre notificacions quan hi hagi notícies noves.
 						</div>
 					</div>
 				</div>
