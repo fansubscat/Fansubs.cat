@@ -80,7 +80,8 @@
     <!-- Share option -->
     <string name="share_chooser_title">Comparteix amb…</string>
     <string name="share_title">Segueix les notícies de tots els fansubs en català!</string>
-    <string name="share_link">https://play.google.com/store/apps/details?id=cat.fansubs.app</string>
+    <!--<string name="share_link">https://play.google.com/store/apps/details?id=cat.fansubs.app</string>-->
+    <string name="share_link">https://www.fansubs.cat/app_fansubs_cat.apk</string>
 
     <!-- About -->
     <string name="about_title">Quant a l\'aplicació</string>
