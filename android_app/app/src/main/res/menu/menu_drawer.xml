@@ -10,6 +10,12 @@
             android:checked="true"
             android:icon="@drawable/ic_vector_news"
             android:title="@string/menu_news" />
+        <item
+            android:id="@+id/menu_manga"
+            android:checkable="true"
+            android:checked="true"
+            android:icon="@drawable/ic_vector_manga"
+            android:title="@string/menu_manga" />
     </group>
     <group
         android:id="@+id/active_fansubs_group"

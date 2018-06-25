@@ -28,6 +28,10 @@
             android:parentActivityName="cat.fansubs.app.activities.MainActivity"
             android:theme="@style/Theme.Fansubscat.WithActionBar" />
         <activity
+            android:name="cat.fansubs.app.activities.MangaCarouselActivity"
+            android:parentActivityName="cat.fansubs.app.activities.MainActivity"
+            android:theme="@style/Theme.Fansubscat.WithActionBar" />
+        <activity
             android:name="cat.fansubs.app.activities.AboutActivity"
             android:parentActivityName="cat.fansubs.app.activities.MainActivity"
             android:theme="@style/Theme.Fansubscat.WithActionBar" />

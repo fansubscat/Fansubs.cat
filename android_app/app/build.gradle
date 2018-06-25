@@ -18,8 +18,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -31,8 +31,7 @@ android {
 }
 
 ext {
-    supportLibsVersion = "27.0.2"
-    playServicesLibsVersion = "11.8.0"
+    supportLibsVersion = "27.1.1"
 }
 
 dependencies {
@@ -41,15 +40,16 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:${supportLibsVersion}"
     implementation "com.android.support:design:${supportLibsVersion}"
     implementation "com.android.support:customtabs:${supportLibsVersion}"
-    implementation "com.google.android.gms:play-services-analytics:${playServicesLibsVersion}"
-    implementation "com.google.firebase:firebase-messaging:${playServicesLibsVersion}"
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation "com.google.android.gms:play-services-analytics:16.0.1"
+    implementation "com.google.firebase:firebase-messaging:17.0.0"
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.github.bumptech.glide:glide:4.1.1'
+    implementation 'it.sephiroth.android.library.imagezoom:imagezoom:2.3.0'
     implementation 'cat.ereza:customactivityoncrash:2.2.0'
     implementation 'cat.ereza:logcatreporter:1.2.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.0@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.3@aar') {
         transitive = true
     }
 }

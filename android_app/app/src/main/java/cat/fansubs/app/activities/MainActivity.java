@@ -41,6 +41,7 @@ import cat.fansubs.app.components.CustomActionBarDrawerToggle;
 import cat.fansubs.app.fragments.BackableFragment;
 import cat.fansubs.app.fragments.FansubsFragment;
 import cat.fansubs.app.fragments.MainFragment;
+import cat.fansubs.app.fragments.MangaListFragment;
 import cat.fansubs.app.fragments.NewsFragment;
 import cat.fansubs.app.serveraccess.ServerAccess;
 import cat.fansubs.app.serveraccess.model.base.ServerResponse;
@@ -118,12 +119,16 @@ public class MainActivity extends AppCompatActivity {
         //Load fansubs list (and cache it locally).
         new AsyncTask<Void, Void, List<Fansub>>() {
 
+            boolean mustUpdate = false;
+
             @Override
             protected List<Fansub> doInBackground(Void... params) {
                 if (UiUtils.isOnline()) {
                     ServerResponse<Fansub> fansubServerResponse = ServerAccess.getFansubs();
                     if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_OK)) {
                         return fansubServerResponse.getResult();
+                    }else if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_UPDATE)){
+                        mustUpdate = true;
                     }
                 }
                 return null;
@@ -135,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
                     DataUtils.storeFansubs(fansubs);
                 } else {
                     resetNavigationView(DataUtils.retrieveFansubs());
+                }
+
+                if (mustUpdate){
+                    //TODO Show update dialog
                 }
             }
         }.execute();
@@ -207,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
         if (currentFragment instanceof FansubsFragment) {
             navigationView.setCheckedItem(R.id.menu_other_fansubs);
+        } else if (currentFragment instanceof MangaListFragment) {
+            navigationView.setCheckedItem(R.id.menu_manga);
         } else {
             navigationView.setCheckedItem(R.id.menu_news);
         }
@@ -219,6 +230,9 @@ public class MainActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
                             case R.id.menu_news:
                                 showNews();
+                                break;
+                            case R.id.menu_manga:
+                                showManga(-1);
                                 break;
                             case R.id.menu_other_fansubs:
                                 showAllFansubs();
@@ -259,6 +273,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setMenuSelection(R.id.menu_news);
+    }
+
+    public void showManga(long categoryId) {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.main_container);
+        currentFragment.setExitTransition(null);
+        currentFragment.setEnterTransition(null);
+        MangaListFragment mangaListFragment = new MangaListFragment();
+        Bundle arguments = new Bundle();
+        arguments.putLong(MangaListFragment.PARAM_CATEGORY_ID, categoryId);
+        mangaListFragment.setArguments(arguments);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        try {
+            transaction.replace(R.id.main_container, mangaListFragment);
+            if (categoryId != -1) {
+                transaction.addToBackStack(null);
+                drawerToggle.animateToState(CustomActionBarDrawerToggle.State.UP);
+                invalidateOptionsMenu();
+            }
+            transaction.commit();
+            invalidateOptionsMenu();
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "Could not show manga due to commit failing on the fragment", e);
+        }
+
+        setMenuSelection(R.id.menu_manga);
     }
 
     private void showAllFansubs() {

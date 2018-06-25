@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    tools:ignore="Overdraw">
+
+    <ImageView
+        android:id="@+id/manga_category_image"
+        android:layout_width="72dp"
+        android:layout_height="96dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/content_description_manga_category_image"
+        android:scaleType="fitCenter"
+        tools:src="@drawable/icon_big" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/manga_category_title"
+            style="@style/font_roboto_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            tools:text="Una nit de tempesta" />
+
+        <TextView
+            android:id="@+id/manga_category_info"
+            style="@style/font_roboto_regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_color"
+            android:textSize="13sp"
+            tools:text="Una nit de tempesta" />
+
+        <TextView
+            android:id="@+id/manga_category_contents"
+            style="@style/font_roboto_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@color/text_color_black_grey"
+            android:textSize="13sp"
+            tools:text="Lorem fistrum qué dise usteer está la cosa muy malar pecador torpedo. Lorem fistrum qué dise usteer está la cosa" />
+    </LinearLayout>
+</LinearLayout>

@@ -31,6 +31,7 @@
 
     <!-- Drawer options -->
     <string name="menu_news">Darreres notícies</string>
+    <string name="menu_manga">Lector de manga</string>
     <string name="menu_more_fansubs">Tots els fansubs</string>
     <string name="menu_notifications">Notificacions</string>
     <string name="menu_share">Comparteix</string>
@@ -122,4 +123,15 @@
     <string name="content_description_visit_website">Visita\'n el lloc web</string>
     <string name="content_description_remove">Suprimeix</string>
     <string name="content_description_clear">Esborra</string>
+    <string name="manga_title">Lector de manga</string>
+    <string name="content_description_manga_category_image">Imatge de l\'àlbum</string>
+    <string name="manga_empty_text">No hi ha cap categoria ni imatge.</string>
+    <plurals name="manga_category_info_images">
+        <item quantity="one">%d imatge</item>
+        <item quantity="other">%d imatges</item>
+    </plurals>
+    <plurals name="manga_category_info_subalbums">
+        <item quantity="one">%d subàlbum</item>
+        <item quantity="other">%d subàlbums</item>
+    </plurals>
 </resources>
