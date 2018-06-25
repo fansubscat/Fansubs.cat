@@ -1,5 +1,6 @@
 package cat.fansubs.app.utils;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -91,6 +93,19 @@ public class UiUtils {
         InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public static void downloadFileViaDownloadManager(String url, String downloadName, String fileName) {
+        DownloadManager mgr = (DownloadManager) FansubsApplication.getInstance().getSystemService(Context.DOWNLOAD_SERVICE);
+        if (mgr != null) {
+            DownloadManager.Request req = new DownloadManager.Request(Uri.parse(url));
+            req.setTitle(downloadName)
+                    .setDescription(fileName)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            mgr.enqueue(req);
+            Toast.makeText(FansubsApplication.getInstance(), R.string.must_update_app_downloading, Toast.LENGTH_SHORT).show();
         }
     }
 }

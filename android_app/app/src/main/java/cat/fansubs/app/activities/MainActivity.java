@@ -1,8 +1,12 @@
 package cat.fansubs.app.activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -10,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -45,12 +51,15 @@ import cat.fansubs.app.fragments.MangaListFragment;
 import cat.fansubs.app.fragments.NewsFragment;
 import cat.fansubs.app.serveraccess.ServerAccess;
 import cat.fansubs.app.serveraccess.model.base.ServerResponse;
+import cat.fansubs.app.utils.Constants;
 import cat.fansubs.app.utils.DataUtils;
 import cat.fansubs.app.utils.SharedPreferencesUtils;
 import cat.fansubs.app.utils.UiUtils;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+
+    private static final int REQUEST_PERMISSIONS = 666;
 
     private static final String STATE_DRAWER_TOGGLE_STATE = "drawerToggleState";
 
@@ -127,8 +136,9 @@ public class MainActivity extends AppCompatActivity {
                     ServerResponse<Fansub> fansubServerResponse = ServerAccess.getFansubs();
                     if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_OK)) {
                         return fansubServerResponse.getResult();
-                    }else if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_UPDATE)){
+                    } else if (fansubServerResponse.getStatus().equals(ServerAccess.STATUS_UPDATE)) {
                         mustUpdate = true;
+                        return fansubServerResponse.getResult();
                     }
                 }
                 return null;
@@ -142,8 +152,23 @@ public class MainActivity extends AppCompatActivity {
                     resetNavigationView(DataUtils.retrieveFansubs());
                 }
 
-                if (mustUpdate){
-                    //TODO Show update dialog
+                if (mustUpdate) {
+                    new AlertDialog.Builder(MainActivity.this).setTitle(R.string.must_update_app_title)
+                            .setMessage(R.string.must_update_app_description)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.dismiss();
+                                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS);
+                                    } else {
+                                        UiUtils.downloadFileViaDownloadManager(Constants.APP_UPDATE_URL, getString(R.string.must_update_app_download_name), "app_fansubs_cat.apk");
+                                    }
+                                }
+                            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.dismiss();
+                        }
+                    }).create().show();
                 }
             }
         }.execute();
@@ -184,6 +209,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         isStopped = true;
         super.onStop();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { //length>0 because that should be treated as cancellation, Google says!
+                UiUtils.downloadFileViaDownloadManager(Constants.APP_UPDATE_URL, getString(R.string.must_update_app_download_name), "app_fansubs_cat.apk");
+            } else {
+                Toast.makeText(this, R.string.must_update_app_failed, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void updateTintingForDrawer() {

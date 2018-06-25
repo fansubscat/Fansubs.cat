@@ -15,7 +15,8 @@
             android:checkable="true"
             android:checked="true"
             android:icon="@drawable/ic_vector_manga"
-            android:title="@string/menu_manga" />
+            android:title="@string/menu_manga"
+            android:visible="false" />
     </group>
     <group
         android:id="@+id/active_fansubs_group"

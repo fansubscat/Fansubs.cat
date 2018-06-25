@@ -53,6 +53,11 @@
     <string name="filter_fansubs">Mostra les notícies d\'aquests fansubs:</string>
     <string name="filter_apply">Aplica</string>
     <string name="filter_cancel">Cancel·la</string>
+    <string name="must_update_app_title">Actualització</string>
+    <string name="must_update_app_description">Hi ha una nova versió disponible de l\'aplicació. És molt recomanable que l\'actualitzis. Es descarregarà el fitxer APK i caldrà que l\'instal·lis manualment.</string>
+    <string name="must_update_app_downloading">S\'està començant la descàrrega…</string>
+    <string name="must_update_app_failed">Has denegat el permís. Permet-lo per poder descarregar la versió.</string>
+    <string name="must_update_app_download_name">Nova versió de Fansubs.cat</string>
 
     <!-- News detail screen -->
     <string name="visit_fansub">Visita %s</string>
