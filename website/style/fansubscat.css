@@ -190,7 +190,7 @@ div#top h2 {
 	left: 5px;
 }
 
-#close {
+#close, #appclose {
 	float: right;
 	margin: 5px;
 	cursor: pointer;
@@ -267,7 +267,16 @@ div#top h2 {
 }
 
 #sidebar div {
-	padding: 1em 25px;
+	padding: 1em 0 1em 20px;
+}
+
+#sidebar div.promo {
+	padding: 0 0 0 20px;
+}
+
+#sidebar div.promo img {
+	width: 205px;
+	height: 128px;
 }
 
 #sidebar h2 {

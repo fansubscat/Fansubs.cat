@@ -2,6 +2,9 @@
 			</div>
 
 			<div id="sidebar" class="aside">
+				<div class="section promo">
+					<a href="https://manga.fansubs.cat/"><img src="/style/images/manga_promo.png" alt="Llegeix tot el manga dels fansubs en català!" /></a>
+				</div>
 <?php
 if (!isset($fansub_id) || $fansub_id==NULL){
 ?>
