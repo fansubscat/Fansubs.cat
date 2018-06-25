@@ -43,12 +43,12 @@ function fetch_and_parse_image($fansub_id, $url, $description){
 		if (!is_dir("$website_directory/images/news/$fansub_id/")){
 			mkdir("$website_directory/images/news/$fansub_id/");
 		}
-		if (@copy($first_image_url, "$website_directory/images/news/$fansub_id/".slugify($first_image_url))){
-			return slugify($first_image_url);
+		if (@copy($first_image_url, "$website_directory/images/news/$fansub_id/".slugify_short($first_image_url))){
+			return slugify_short($first_image_url);
 		}
-		else if (file_exists("$website_directory/images/news/$fansub_id/".slugify($first_image_url))){
+		else if (file_exists("$website_directory/images/news/$fansub_id/".slugify_short($first_image_url))){
 			//This means that the file is no longer accessible, but we already have it locally!
-			return slugify($first_image_url);
+			return slugify_short($first_image_url);
 		}
 	}
 	return NULL;
@@ -1179,7 +1179,7 @@ function fetch_via_facebook_edcec($fansub_id, $url, $last_fetched_item_date){
 	}
 
 	foreach($result_json->data as $album) {
-		if (stripos($album->name,'El Detectiu Conan - Manga')!==FALSE){
+		if (stripos($album->name,'El Detectiu Conan - Manga')!==FALSE || stripos($album->name,'El Detectiu Conan - Files')!==FALSE){
 			$photo_url_result = file_get_contents($api_base_url . $album->cover_photo->id . "?access_token=" . $facebook_api_token . "&fields=source") or $error_connect=TRUE;
 			if ($error_connect){
 				return array('error_connect',array());
