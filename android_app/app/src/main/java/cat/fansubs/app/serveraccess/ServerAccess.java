@@ -16,6 +16,7 @@ import cat.fansubs.app.serveraccess.model.PiwigoImagesResponse;
 import cat.fansubs.app.serveraccess.model.base.PiwigoResponse;
 import cat.fansubs.app.serveraccess.model.base.ServerError;
 import cat.fansubs.app.serveraccess.model.base.ServerResponse;
+import cat.fansubs.app.utils.Constants;
 import cat.fansubs.app.utils.HttpLoggingInterceptor;
 import cat.fansubs.app.utils.UserAgentHeaderInterceptor;
 import okhttp3.OkHttpClient;
@@ -24,9 +25,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServerAccess {
-    private static final String ACCESS_URL = "https://api.fansubs.cat/";
-    private static final String PIWIGO_URL = "https://manga.fansubs.cat/";
-
     public static final String STATUS_OK = "ok";
     public static final String STATUS_KO = "ko";
     public static final String STATUS_UPDATE = "must_update";
@@ -138,7 +136,7 @@ public class ServerAccess {
         Gson gson = gsonBuilder.create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ACCESS_URL)
+                .baseUrl(Constants.API_URL)
                 .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -160,7 +158,7 @@ public class ServerAccess {
         Gson gson = gsonBuilder.create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(PIWIGO_URL)
+                .baseUrl(Constants.PIWIGO_URL)
                 .client(builder.build())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

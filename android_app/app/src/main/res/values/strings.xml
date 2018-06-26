@@ -32,6 +32,7 @@
     <!-- Drawer options -->
     <string name="menu_news">Darreres notícies</string>
     <string name="menu_manga">Lector de manga</string>
+    <string name="menu_manga_link">Manga</string>
     <string name="menu_more_fansubs">Tots els fansubs</string>
     <string name="menu_notifications">Notificacions</string>
     <string name="menu_share">Comparteix</string>

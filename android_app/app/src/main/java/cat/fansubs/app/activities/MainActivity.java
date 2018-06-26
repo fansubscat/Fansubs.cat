@@ -271,6 +271,9 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.menu_manga:
                                 showManga(-1);
                                 break;
+                            case R.id.menu_manga_link:
+                                UiUtils.openUrl(MainActivity.this, Constants.PIWIGO_URL);
+                                break;
                             case R.id.menu_other_fansubs:
                                 showAllFansubs();
                                 break;
