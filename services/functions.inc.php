@@ -1,6 +1,20 @@
 <?php
 require_once("libs/simple_html_dom.php");
 require_once('common.inc.php');
+require_once("vendor/autoload.php");
+
+use LanguageDetection\Language;
+
+//Check if the provided text is Catalan or Spanish (Catalan=true, Spanish=false)
+function is_catalan($text, $only_beginning=TRUE){
+	$ld = new Language(['ca', 'es']);
+	$text = preg_replace('!\s+!', ' ', $text);
+	if ($only_beginning){
+		$text = implode(' ', array_slice(explode(' ', $text), 0, 30));
+	}
+	$result = $ld->detect($text)->close();
+	return $result['ca']>=$result['es'];
+}
 
 //Get last occurrence in a string
 function strrstr($h, $n, $before = false) {
@@ -61,6 +75,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 	$old_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
 	$old_count = mysqli_fetch_assoc($old_count_result)['count'];
 	switch($method){
+		case 'animugen':
+			$result = fetch_via_animugen($fansub_id, $url, $last_fetched_item_date);
+			break;
 		case 'blogspot':
 			$result = fetch_via_blogspot($fansub_id, $url, $last_fetched_item_date);
 			break;
@@ -220,6 +237,84 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 
 /** BELOW HERE ARE ALL INDIVIDUAL METHODS OF FETCHING **/
 /** THE CODE IS ULTRA UGLY AND HACKY, BUT IT WORKS (as of July 2016). BEWARE! **/
+
+function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$cur_page = 0;
+
+	$html_text = file_get_contents($url.'?;tpstart='.$cur_page) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		$cur_count = 0;
+		foreach($html->find('div.tp_article_frame') as $article) {
+			$cur_count++;
+			if ($article->find('div.tp_subject a', 0)!==NULL){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('div.tp_subject a', 0);
+				$item[0]=$title->innertext;
+				$item[1]=$article->find('div.tp_articletext', 0)->innertext;
+
+				//This is the description before the image (normally only Catalan, sometimes Cat/Spa)
+				$description = explode("<div style=\"text-align: right;\"", $article->find('div.tp_articletext', 0)->innertext)[0];
+				//Now we remove the poster and replies text
+				if (strpos($description, "Respuestas</div>")!==FALSE){
+					$description = explode("Respuestas</div>",$description)[1];
+				}
+				else{
+					$description = explode("Respuesta</div>",$description)[1];
+				}
+				
+				$item[2]=parse_description($description);
+				$date = date_create_from_format('Y-M-d H:i:s', $article->find('span.tp_year', 0)->innertext . '-' . 
+					$article->find('span.tp_month', 0)->innertext . '-' . $article->find('span.tp_day', 0)->innertext . ' 00:00:00');
+				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+				$item[3]= $date->format('Y-m-d H:i:s');
+				$item[4]=$title->href;
+				if ($article->find('div.tp_articletext div[style="text-align: right;"]', 0)!==NULL){
+					$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.tp_articletext div[style="text-align: right;"]', 0)->innertext);
+				}
+				else{
+					$item[5]=NULL;
+				}
+				
+				//If the text is empty, we assume Spanish
+				if ($item[2]!='' && is_catalan($item[2])){
+					$elements[]=$item;
+				}
+			}
+		}
+
+		$go_on = FALSE;
+		if ($cur_count>0 && count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
+			$cur_page = $cur_page+5;
+			$html_text = file_get_contents($url.'?;tpstart='.$cur_page) or $error_connect=TRUE;
+			if ($error_connect){
+				return array('error_connect',array());
+			}
+			$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+			tidy_clean_repair($tidy);
+			$html = str_get_html(tidy_get_output($tidy));
+			$go_on = TRUE;
+		}
+	}
+	return array('ok', $elements);
+}
 
 function fetch_via_blogspot($fansub_id, $url, $last_fetched_item_date){
 	$elements = array();
