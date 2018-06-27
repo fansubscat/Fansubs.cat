@@ -11,6 +11,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import java.util.Locale;
 
 import cat.fansubs.app.FansubsApplication;
 import cat.fansubs.app.R;
+import cat.fansubs.app.components.CustomURLSpan;
 
 public class UiUtils {
     public static String getRelativeDate(long date) {
@@ -107,5 +111,20 @@ public class UiUtils {
             mgr.enqueue(req);
             Toast.makeText(FansubsApplication.getInstance(), R.string.must_update_app_downloading, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static Spannable parseHtml(String richText) {
+        Spannable html = (Spannable) Html.fromHtml(richText);
+        Object[] spans = html.getSpans(0, html.length(), URLSpan.class);
+        for (Object span1 : spans) {
+            URLSpan span = (URLSpan) span1;
+            CustomURLSpan newSpan = new CustomURLSpan(span.getURL());
+            int end = html.getSpanEnd(span);
+            int start = html.getSpanStart(span);
+            int flags = html.getSpanFlags(span);
+            html.removeSpan(span);
+            html.setSpan(newSpan, start, end, flags);
+        }
+        return html;
     }
 }

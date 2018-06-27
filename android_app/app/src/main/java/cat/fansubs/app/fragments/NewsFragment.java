@@ -7,7 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.text.Html;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,7 @@ import com.bumptech.glide.request.RequestOptions;
 import cat.fansubs.app.R;
 import cat.fansubs.app.activities.ImageActivity;
 import cat.fansubs.app.beans.News;
+import cat.fansubs.app.components.LinkMovementMethodOverride;
 import cat.fansubs.app.utils.DataUtils;
 import cat.fansubs.app.utils.UiUtils;
 
@@ -51,15 +53,24 @@ public class NewsFragment extends Fragment implements BackableFragment {
 
         title.setText(news.getTitle());
         date.setText(UiUtils.getRelativeDate(news.getDate()));
-        contents.setText(Html.fromHtml(news.getContents()));
+        contents.setText(UiUtils.parseHtml(news.getContents()));
+        contents.setMovementMethod(LinkMovementMethod.getInstance());
+        //The following is needed so the view does not scroll when a link is clicked or selected
+        //See: http://stackoverflow.com/a/15362634/1254846
+        contents.setOnTouchListener(new LinkMovementMethodOverride());
         button.setText(getString(R.string.visit_fansub, news.getFansubName()));
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 UiUtils.openUrl(getActivity(), news.getUrl());
             }
         });
+
+        if (TextUtils.isEmpty(news.getUrl())) {
+            button.setVisibility(View.GONE);
+        } else {
+            button.setVisibility(View.VISIBLE);
+        }
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override

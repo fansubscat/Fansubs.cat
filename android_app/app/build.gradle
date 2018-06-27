@@ -8,8 +8,8 @@ android {
         applicationId "cat.fansubs.app"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
 
         resConfigs "ca"
 
@@ -42,6 +42,7 @@ dependencies {
     implementation "com.android.support:customtabs:${supportLibsVersion}"
     implementation "com.google.android.gms:play-services-analytics:16.0.1"
     implementation "com.google.firebase:firebase-messaging:17.0.0"
+    implementation "com.google.firebase:firebase-core:16.0.1"
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'

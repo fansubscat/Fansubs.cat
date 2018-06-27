@@ -5,7 +5,7 @@ $request = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 
 function is_outdated_fansubs_app(){
 	$ua = $_SERVER['HTTP_USER_AGENT'];
-	return strpos($ua,'FansubsCatApp/Android/')===0 && explode(' [', explode('FansubsCatApp/Android/', $ua)[1])[0]<'1.0.1';
+	return strpos($ua,'FansubsCatApp/Android/')===0 && explode(' [', explode('FansubsCatApp/Android/', $ua)[1])[0]<'1.0.2';
 }
 
 $method = array_shift($request);
