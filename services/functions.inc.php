@@ -735,6 +735,9 @@ function fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date){
 				$description = str_replace('<h3>','<b>', $description);
 				$description = str_replace('</h3>','</b><br />', $description);
 
+				//Fix for big text style
+				$description = str_replace(' style="font-size: xx-large;"','', $description);
+
 				$item[2]=parse_description($description);
 
 				if ($article->parent->find('abbr.published', 0)!==NULL){
