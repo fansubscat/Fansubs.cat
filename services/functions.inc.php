@@ -246,7 +246,7 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 
 	$cur_page = 0;
 
-	$html_text = file_get_contents($url.'?;tpstart='.$cur_page) or $error_connect=TRUE;
+	$html_text = file_get_contents($url.'?frontpage;p='.$cur_page) or $error_connect=TRUE;
 	if ($error_connect){
 		return array('error_connect',array());
 	}
@@ -259,35 +259,43 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 	while ($go_on){
 		//parse through the HTML and build up the elements feed as we go along
 		$cur_count = 0;
-		foreach($html->find('div.tp_article_frame') as $article) {
+		foreach($html->find('div[style="overflow: hidden;"]') as $article) {
 			$cur_count++;
-			if ($article->find('div.tp_subject a', 0)!==NULL){
+			if ($article->find('h3.catbg a', 0)!==NULL){
 				//Create an empty item
 				$item = array();
 
 				//Look up and add elements to the item
-				$title = $article->find('div.tp_subject a', 0);
+				$title = $article->find('h3.catbg a', 0);
 				$item[0]=$title->innertext;
-				$item[1]=$article->find('div.tp_articletext', 0)->innertext;
+				$item[1]=$article->find('div.article_inner', 0)->innertext;
 
 				//This is the description before the image (normally only Catalan, sometimes Cat/Spa)
-				$description = explode("<div style=\"text-align: right;\"", $article->find('div.tp_articletext', 0)->innertext)[0];
-				//Now we remove the poster and replies text
-				if (strpos($description, "Respuestas</div>")!==FALSE){
-					$description = explode("Respuestas</div>",$description)[1];
-				}
-				else{
-					$description = explode("Respuesta</div>",$description)[1];
-				}
+				$description = explode("<div style=\"text-align: right;\"", $article->find('div.article_inner', 0)->innertext)[0];
 				
 				$item[2]=parse_description($description);
-				$date = date_create_from_format('Y-M-d H:i:s', $article->find('span.tp_year', 0)->innertext . '-' . 
-					$article->find('span.tp_month', 0)->innertext . '-' . $article->find('span.tp_day', 0)->innertext . ' 00:00:00');
+				$datetext = $article->find('span.article_date', 0)->innertext;
+
+				$datetext = str_ireplace('Enero', 'January', $datetext);
+				$datetext = str_ireplace('Febrero', 'February', $datetext);
+				$datetext = str_ireplace('Marzo', 'March', $datetext);
+				$datetext = str_ireplace('Abril', 'April', $datetext);
+				$datetext = str_ireplace('Mayo', 'May', $datetext);
+				$datetext = str_ireplace('Junio', 'June', $datetext);
+				$datetext = str_ireplace('Julio', 'July', $datetext);
+				$datetext = str_ireplace('Agosto', 'August', $datetext);
+				$datetext = str_ireplace('Setiembre', 'September', $datetext);
+				$datetext = str_ireplace('Septiembre', 'September', $datetext);
+				$datetext = str_ireplace('Octubre', 'October', $datetext);
+				$datetext = str_ireplace('Noviembre', 'November', $datetext);
+				$datetext = str_ireplace('Diciembre', 'December', $datetext);
+
+				$date = date_create_from_format('F d, Y, h:i:s a', $datetext);
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				if ($article->find('div.tp_articletext div[style="text-align: right;"]', 0)!==NULL){
-					$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.tp_articletext div[style="text-align: right;"]', 0)->innertext);
+				if ($article->find('div.article_inner div[style="text-align: right;"]', 0)!==NULL){
+					$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.article_inner div[style="text-align: right;"]', 0)->innertext);
 				}
 				else{
 					$item[5]=NULL;
@@ -303,7 +311,7 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 		$go_on = FALSE;
 		if ($cur_count>0 && count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
 			$cur_page = $cur_page+5;
-			$html_text = file_get_contents($url.'?;tpstart='.$cur_page) or $error_connect=TRUE;
+			$html_text = file_get_contents($url.'?;frontpage;p='.$cur_page) or $error_connect=TRUE;
 			if ($error_connect){
 				return array('error_connect',array());
 			}
