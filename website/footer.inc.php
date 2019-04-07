@@ -70,7 +70,7 @@ while ($row = mysqli_fetch_assoc($result)){
 ?>
 						<li>
 							<img src="/images/fansubs/favicons/<?php echo $row['favicon_image']; ?>" alt="" height="14" width="14" />
-							<a<?php echo $row['archive_url']!=NULL ? ' class="archive-org-link"' : ''; ?> title="Versió històrica a Archive.org" href="<?php echo $row['archive_url']!=NULL ? $row['archive_url'] : $row['url']; ?>"><?php echo $row['name']; ?></a>
+							<a<?php echo $row['archive_url']!=NULL ? ' class="archive-org-link" title="Versió històrica a Archive.org"' : ''; ?> href="<?php echo $row['archive_url']!=NULL ? $row['archive_url'] : $row['url']; ?>"><?php echo $row['name']; ?></a>
 						</li>
 <?php
 }
