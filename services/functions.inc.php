@@ -70,6 +70,13 @@ function fetch_and_parse_image($fansub_id, $url, $description){
 
 //This function does the actual fetching:
 //Decides depending on the method and then processes the returned feed items, inserting them to database
+//These methods must return an array of items, where each item is an array with these values at each position:
+//  0 - title
+//  1 - description (unparsed)
+//  2 - description (parsed)
+//  3 - date (formatted as Y-m-d H:i:s)
+//  4 - url
+//  5 - image URL
 function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, $url, $last_fetched_item_date){
 	mysqli_query($db_connection, "UPDATE fetchers SET status='fetching' WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
 	$old_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
@@ -114,8 +121,8 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		case 'catsub':
 			$result = fetch_via_catsub($fansub_id, $url, $last_fetched_item_date);
 			break;
-		case 'facebook_edcec':
-			$result = fetch_via_facebook_edcec($fansub_id, $url, $last_fetched_item_date);
+		case 'mangadex_edcec':
+			$result = fetch_via_mangadex_edcec($fansub_id, $url, $last_fetched_item_date);
 			break;
 		case 'phpbb_dnf':
 			$result = fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date);
@@ -246,6 +253,7 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 
 	$cur_page = 0;
 
+	//Frontpage not needed anymore since there is no paging...
 	$html_text = file_get_contents($url.'?frontpage;p='.$cur_page) or $error_connect=TRUE;
 	if ($error_connect){
 		return array('error_connect',array());
@@ -259,43 +267,43 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 	while ($go_on){
 		//parse through the HTML and build up the elements feed as we go along
 		$cur_count = 0;
-		foreach($html->find('div[style="overflow: hidden;"]') as $article) {
+		foreach($html->find('div.one-post') as $article) {
 			$cur_count++;
-			if ($article->find('h3.catbg a', 0)!==NULL){
+			if ($article->find('h2 a', 0)!==NULL){
 				//Create an empty item
 				$item = array();
 
 				//Look up and add elements to the item
-				$title = $article->find('h3.catbg a', 0);
+				$title = $article->find('h2 a', 0);
 				$item[0]=$title->innertext;
-				$item[1]=$article->find('div.article_inner', 0)->innertext;
+				$item[1]=$article->find('div.post-body', 0)->innertext;
 
 				//This is the description before the image (normally only Catalan, sometimes Cat/Spa)
-				$description = explode("<div style=\"text-align: right;\"", $article->find('div.article_inner', 0)->innertext)[0];
+				$description = explode("<figure", $article->find('div.post-body', 0)->innertext)[0];
 				
 				$item[2]=parse_description($description);
-				$datetext = $article->find('span.article_date', 0)->innertext;
+				$datetext = $article->find('span.post-date', 0)->innertext;
 
-				$datetext = str_ireplace('Enero', 'January', $datetext);
-				$datetext = str_ireplace('Febrero', 'February', $datetext);
-				$datetext = str_ireplace('Marzo', 'March', $datetext);
-				$datetext = str_ireplace('Abril', 'April', $datetext);
-				$datetext = str_ireplace('Mayo', 'May', $datetext);
-				$datetext = str_ireplace('Junio', 'June', $datetext);
-				$datetext = str_ireplace('Julio', 'July', $datetext);
-				$datetext = str_ireplace('Agosto', 'August', $datetext);
-				$datetext = str_ireplace('Setiembre', 'September', $datetext);
-				$datetext = str_ireplace('Septiembre', 'September', $datetext);
-				$datetext = str_ireplace('Octubre', 'October', $datetext);
-				$datetext = str_ireplace('Noviembre', 'November', $datetext);
-				$datetext = str_ireplace('Diciembre', 'December', $datetext);
+				$datetext = str_ireplace('enero', 'January', $datetext);
+				$datetext = str_ireplace('febrero', 'February', $datetext);
+				$datetext = str_ireplace('marzo', 'March', $datetext);
+				$datetext = str_ireplace('abril', 'April', $datetext);
+				$datetext = str_ireplace('mayo', 'May', $datetext);
+				$datetext = str_ireplace('junio', 'June', $datetext);
+				$datetext = str_ireplace('julio', 'July', $datetext);
+				$datetext = str_ireplace('agosto', 'August', $datetext);
+				$datetext = str_ireplace('setiembre', 'September', $datetext);
+				$datetext = str_ireplace('septiembre', 'September', $datetext);
+				$datetext = str_ireplace('octubre', 'October', $datetext);
+				$datetext = str_ireplace('noviembre', 'November', $datetext);
+				$datetext = str_ireplace('diciembre', 'December', $datetext);
 
-				$date = date_create_from_format('F d, Y, h:i:s a', $datetext);
+				$date = date_create_from_format('d F, Y H:i:s', $datetext . ' 00:00:00');
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				if ($article->find('div.article_inner div[style="text-align: right;"]', 0)!==NULL){
-					$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.article_inner div[style="text-align: right;"]', 0)->innertext);
+				if ($article->find('div.post-body figure', 0)!==NULL){
+					$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body figure', 0)->innertext);
 				}
 				else{
 					$item[5]=NULL;
@@ -309,6 +317,9 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 		}
 
 		$go_on = FALSE;
+
+		//Looks like there is no paging now, so commenting out for now...
+/*
 		if ($cur_count>0 && count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
 			$cur_page = $cur_page+5;
 			$html_text = file_get_contents($url.'?;frontpage;p='.$cur_page) or $error_connect=TRUE;
@@ -320,6 +331,7 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 			$html = str_get_html(tidy_get_output($tidy));
 			$go_on = TRUE;
 		}
+*/
 	}
 	return array('ok', $elements);
 }
@@ -1265,58 +1277,56 @@ function fetch_via_catsub($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_facebook_edcec($fansub_id, $url, $last_fetched_item_date){
-	global $facebook_api_token;
-
+function fetch_via_mangadex_edcec($fansub_id, $url, $last_fetched_item_date){
 	$elements = array();
 
-	$page_id = substr($url, strrpos($url,'/') + 1, strlen($url));
-	$api_base_url = "https://graph.facebook.com/v2.10/";
-
+	$tidy_config = "tidy.conf";
 	$error_connect=FALSE;
 
-	$result = file_get_contents($api_base_url . $page_id . "/albums?access_token=" . $facebook_api_token . "&fields=name,description,link,cover_photo,created_time") or $error_connect=TRUE;
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
 	if ($error_connect){
 		return array('error_connect',array());
 	}
-	$result_json = json_decode($result) or $error_connect=TRUE;
-	if ($error_connect){
-		return array('error_connect',array());
-	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
 
-	foreach($result_json->data as $album) {
-		if (stripos($album->name,'El Detectiu Conan - Manga')!==FALSE || stripos($album->name,'El Detectiu Conan - Files')!==FALSE){
-			$photo_url_result = file_get_contents($api_base_url . $album->cover_photo->id . "?access_token=" . $facebook_api_token . "&fields=source") or $error_connect=TRUE;
-			if ($error_connect){
-				return array('error_connect',array());
-			}
-			$photo_url_result_json = json_decode($photo_url_result) or $error_connect=TRUE;
-			if ($error_connect){
-				return array('error_connect',array());
-			}
+	//parse through the HTML and build up the elements feed as we go along
+	$has_parsed_first = FALSE;
+	foreach($html->find('div.chapter-row') as $article) {
+		if (!$has_parsed_first){
+			$has_parsed_first = TRUE;
+			continue;
+		}
 
-			//Create an empty item
-			$item = array();
+		//Create an empty item
+		$item = array();
 
-			//Look up and add elements to the item
-			$item[0] = $album->name;
+		//Look up and add elements to the item
+		$title = $article->find('a', 0);
+		$item[0]='El Detectiu Conan - ' . $title->innertext;
+		$item[1]=$title->innertext;
+		$item[2]='El Detectiu Conan - ' . $title->innertext . ".<br />Capítol disponible a MangaDex.";
+		$datetext = $article->find('div.col-2', 0)->title;
 
-			$description = str_replace("\n",'<br />', $album->description);
-
-			$item[1] = $album->description;
-			$item[2] = $description;
-
-			$date = date_create_from_format('Y-m-d\TH:i:sP', $album->created_time);
-			$item[3] = $date->format('Y-m-d H:i:s');
-			$item[4] = $album->link;
-
-			//Using this ugly hack for now, because we don't have a method that does the fetching+storage by itself.
-			$item[5] = fetch_and_parse_image($fansub_id, $url, '<img src="' . $photo_url_result_json->source . '" />');
-
+		$date = date_create_from_format('Y-m-d H:i:s e', $datetext);
+		$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+		$item[3]= $date->format('Y-m-d H:i:s');
+		$item[4]='https://mangadex.org' . $title->href;
+		if ($article->find('div.post-body figure', 0)!==NULL){
+			$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body figure', 0)->innertext);
+		}
+		else{
+			$item[5]=NULL;
+		}
+		
+		//If the item is older than 2018-11-23 (switch from Facebook), reject it
+		if ($item[3]<'2018-11-23 00:00:00'){
+			break;
+		} else {
 			$elements[]=$item;
 		}
 	}
-
 	return array('ok', $elements);
 }
 
