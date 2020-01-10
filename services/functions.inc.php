@@ -186,9 +186,8 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 					mysqli_query($db_connection, "INSERT INTO news (fansub_id, fetcher_id, title, original_contents, contents, date, url, image) VALUES ('$fansub_id', $fetcher_id, '".mysqli_real_escape_string($db_connection, $element[0])."','".mysqli_real_escape_string($db_connection, $element[1])."','".mysqli_real_escape_string($db_connection, $element[2])."','".$element[3]."','".mysqli_real_escape_string($db_connection, $element[4])."',".($element[5]!=NULL ? "'".mysqli_real_escape_string($db_connection, $element[5])."'" : 'NULL').")") or (mysqli_rollback($db_connection) && $result[0]='error_mysql');
 				}
 			}
-			if ($result[0]=='ok'){
-				mysqli_autocommit($db_connection, TRUE);
-			}
+			
+			mysqli_autocommit($db_connection, TRUE);
 		}
 		else{
 			//The feed was empty, don't treat as success

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `fansubs` (
   `is_own` int(11) NOT NULL DEFAULT '0',
   `archive_url` text,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `fetchers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `fetchers` (
   `last_fetch_result` varchar(255) DEFAULT NULL,
   `last_fetch_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `news` (
   `fansub_id` varchar(255) DEFAULT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `url` text,
   `image` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `pending_news` (
   `title` text NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `pending_news` (
   `sender_name` varchar(255) NOT NULL,
   `sender_email` varchar(255) NOT NULL,
   `comments` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `fetchers` ADD KEY `fk_fetchers_fansubs` (`fansub_id`);
 ALTER TABLE `news` ADD KEY `fk_news_fansubs` (`fansub_id`);

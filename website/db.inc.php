@@ -10,5 +10,5 @@ $db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash
 
 unset($db_host, $db_name, $db_user, $db_passwd);
 
-mysqli_set_charset($db_connection, 'utf8') or crash(mysqli_error($db_connection));
+mysqli_set_charset($db_connection, 'utf8mb4') or crash(mysqli_error($db_connection));
 ?>
