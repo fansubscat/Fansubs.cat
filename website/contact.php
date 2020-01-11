@@ -12,12 +12,13 @@ require_once('header.inc.php');
 					<div class="article">
 <?php
 //We must validate everything even with HTML5 validation, we never know what evil people will do.
-if ($_POST['reason']!=NULL){
+if (isset($_POST['reason']) && $_POST['reason']!=NULL){
 	$valid = FALSE;
 	if ($_POST['reason']=='add_news'){
 		//Add news
-		if ($_POST['name']!=NULL && strlen($_POST['name'])<=255 && $_POST['email']!=NULL && strlen($_POST['email'])<=255
-			&& $_POST['add_news_title']!=NULL && $_POST['add_news_contents']!=NULL && $_POST['add_news_url']!=NULL){
+		if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255
+			&& isset($_POST['add_news_title']) && $_POST['add_news_title']!=NULL && isset($_POST['add_news_contents']) && $_POST['add_news_contents']!=NULL 
+			&& isset($_POST['add_news_url']) && $_POST['add_news_url']!=NULL){
 			$message = "";
 			$message .= "Nou correu des de Fansubs.cat - Nova notícia.\n\n";
 			$message .= "Nom: {$_POST['name']}\n";
@@ -26,7 +27,9 @@ if ($_POST['reason']!=NULL){
 			$message .= "Contingut: {$_POST['add_news_contents']}\n";
 			$message .= "URL de la notícia: {$_POST['add_news_url']}\n";
 			$message .= "URL de la imatge: {$_POST['add_news_image_url']}\n";
-			$message .= "Comentaris: {$_POST['comments']}\n";
+			if (isset($_POST['comments'])){
+				$message .= "Comentaris: {$_POST['comments']}\n";
+			}
 			mail($contact_email,'Fansubs.cat - Nova notícia', $message,'','-f info@fansubs.cat -F Fansubs.cat');
 			mysqli_query($db_connection, "INSERT INTO pending_news (title, contents, url, image_url, sender_name, sender_email, comments) VALUES ('".mysqli_real_escape_string($db_connection, $_POST['add_news_title'])."','".mysqli_real_escape_string($db_connection, $_POST['add_news_contents'])."','".mysqli_real_escape_string($db_connection, $_POST['add_news_url'])."',".($_POST['add_news_image_url']!=NULL ? "'".mysqli_real_escape_string($db_connection, $_POST['add_news_image_url'])."'" : '').",'".mysqli_real_escape_string($db_connection, $_POST['name'])."','".mysqli_real_escape_string($db_connection, $_POST['email'])."',".($_POST['comments']!=NULL ? "'".mysqli_real_escape_string($db_connection, $_POST['comments'])."'" : 'NULL').")") or crash(mysqli_error($db_connection));
 			$valid = TRUE;
@@ -34,27 +37,32 @@ if ($_POST['reason']!=NULL){
 	}
 	else if ($_POST['reason']=='new_fansub'){
 		//New fansub
-		if ($_POST['name']!=NULL && strlen($_POST['name'])<=255 && $_POST['email']!=NULL && strlen($_POST['email'])<=255
-			&& $_POST['new_fansub_name']!=NULL && strlen($_POST['new_fansub_name'])<=255 && $_POST['new_fansub_url']!=NULL && strlen($_POST['new_fansub_url'])<=255){
+		if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255
+			&& isset($_POST['new_fansub_name']) && $_POST['new_fansub_name']!=NULL && strlen($_POST['new_fansub_name'])<=255 && isset($_POST['new_fansub_url'])
+			&& $_POST['new_fansub_url']!=NULL && strlen($_POST['new_fansub_url'])<=255){
 			$message = "";
 			$message .= "Nou correu des de Fansubs.cat - Nou fansub.\n\n";
 			$message .= "Nom: {$_POST['name']}\n";
 			$message .= "Correu electrònic: {$_POST['email']}\n";
 			$message .= "Nom del fansub: {$_POST['new_fansub_name']}\n";
 			$message .= "URL del fansub: {$_POST['new_fansub_url']}\n";
-			$message .= "Comentaris: {$_POST['comments']}\n";
+			if (isset($_POST['comments'])){
+				$message .= "Comentaris: {$_POST['comments']}\n";
+			}
 			mail($contact_email,'Fansubs.cat - Nou fansub', $message,'','-f info@fansubs.cat -F Fansubs.cat');
 			$valid = TRUE;
 		}
 	}
 	else{
 		//Others
-		if ($_POST['name']!=NULL && strlen($_POST['name'])<=255 && $_POST['email']!=NULL && strlen($_POST['email'])<=255){
+		if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255){
 			$message = "";
 			$message .= "Nou correu des de Fansubs.cat - Comentaris (altres).\n\n";
 			$message .= "Nom: {$_POST['name']}\n";
 			$message .= "Correu electrònic: {$_POST['email']}\n";
-			$message .= "Comentaris: {$_POST['comments']}\n";
+			if (isset($_POST['comments'])){
+				$message .= "Comentaris: {$_POST['comments']}\n";
+			}
 			mail($contact_email,'Fansubs.cat - Comentaris', $message,'','-f info@fansubs.cat -F Fansubs.cat');
 			$valid = TRUE;
 		}
