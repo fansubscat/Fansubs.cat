@@ -76,9 +76,9 @@ else if ($method == 'fansubs'){
 	echo json_encode($response);
 }
 else if (substr($method, 0, 4) === "news"){
-	$page = $_GET['page'];
-	$search = $_GET['search'];
-	$fansub_ids = $_GET['fansub_ids'];
+	$page = isset($_GET['page']) ? $_GET['page'] : NULL;
+	$search = isset($_GET['search']) ? $_GET['search'] : NULL;
+	$fansub_ids = isset($_GET['fansub_ids']) ? $_GET['fansub_ids'] : NULL;
 	if ($page!=NULL && is_numeric($page) && $page>=0){
 		$page = (int)$page*25;
 
