@@ -1,0 +1,656 @@
+<?php
+$header_title="Versions";
+$page="version";
+include("header.inc.php");
+
+if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
+	if (!empty($_POST['action'])) {
+		$data=array();
+		if (!empty($_POST['id']) && is_numeric($_POST['id'])) {
+			$data['id']=escape($_POST['id']);
+		} else if ($_POST['action']=='edit') {
+			crash("Dades invàlides: manca id");
+		}
+		if (!empty($_POST['fansub_1']) && is_numeric($_POST['fansub_1'])) {
+			$data['fansub_1']=escape($_POST['fansub_1']);
+		} else {
+			crash("Dades invàlides: manca fansub_1");
+		}
+		if (!empty($_POST['series_id']) && is_numeric($_POST['series_id'])) {
+			$data['series_id']=escape($_POST['series_id']);
+		} else {
+			crash("Dades invàlides: manca series_id");
+		}
+		if (!empty($_POST['fansub_2']) && is_numeric($_POST['fansub_2'])) {
+			$data['fansub_2']=escape($_POST['fansub_2']);
+		} else {
+			$data['fansub_2']=NULL;
+		}
+		if (!empty($_POST['fansub_3']) && is_numeric($_POST['fansub_3'])) {
+			$data['fansub_3']=escape($_POST['fansub_3']);
+		} else {
+			$data['fansub_3']=NULL;
+		}
+		if (!empty($_POST['default_resolution']) && is_numeric($_POST['default_resolution'])) {
+			$data['default_resolution']="'".escape($_POST['default_resolution'])."'";
+		} else {
+			$data['default_resolution']="NULL";
+		}
+		if (!empty($_POST['status']) && is_numeric($_POST['status'])) {
+			$data['status']=escape($_POST['status']);
+		} else {
+			crash("Dades invàlides: manca status");
+		}
+
+		$links=array();
+		$episodes=array();
+
+		$resulte = query("SELECT e.* FROM episode e WHERE e.series_id=".$data['series_id']);
+		
+		while ($rowe = mysqli_fetch_assoc($resulte)) {
+			$episode_id=$rowe['id'];
+
+			$episode = array();
+			$episode['id'] = $episode_id;
+
+			if (!empty($_POST['form-links-list-'.$episode_id.'-title'])) {
+				$episode['title'] = "'".escape($_POST['form-links-list-'.$episode_id.'-title'])."'";
+			} else {
+				$episode['title'] = "NULL";
+			}
+			array_push($episodes, $episode);
+			
+			$i=1;
+			while (!empty($_POST['form-links-list-'.$episode_id.'-id-'.$i])) {
+				$link = array();
+				if (is_numeric($_POST['form-links-list-'.$episode_id.'-id-'.$i])) {
+					$link['id']=escape($_POST['form-links-list-'.$episode_id.'-id-'.$i]);
+				} else {
+					crash("Dades invàlides: manca id del capítol");
+				}
+				if (!empty($_POST['form-links-list-'.$episode_id.'-link-'.$i])) {
+					$link['url']="'".escape($_POST['form-links-list-'.$episode_id.'-link-'.$i])."'";
+				} else {
+					$link['url']="NULL";
+				}
+				if (!empty($_POST['form-links-list-'.$episode_id.'-resolution-'.$i])) {
+					$link['resolution']="'".escape($_POST['form-links-list-'.$episode_id.'-resolution-'.$i])."'";
+				} else {
+					$link['resolution']="NULL";
+				}
+				if (!empty($_POST['form-links-list-'.$episode_id.'-comments-'.$i])) {
+					$link['comments']="'".escape($_POST['form-links-list-'.$episode_id.'-comments-'.$i])."'";
+				} else {
+					$link['comments']="NULL";
+				}
+				$link['episode_id']=$episode_id;
+
+				if ($link['url']!="NULL") {
+					array_push($links, $link);
+				}
+				$i++;
+			}
+		}
+		mysqli_free_result($resulte);
+
+		$extras=array();
+		$i=1;
+		while (!empty($_POST['form-extras-list-id-'.$i])) {
+			$extra = array();
+			if (is_numeric($_POST['form-extras-list-id-'.$i])) {
+				$extra['id']=escape($_POST['form-extras-list-id-'.$i]);
+			} else {
+				crash("Dades invàlides: manca id de l'extra");
+			}
+			if (!empty($_POST['form-extras-list-name-'.$i])) {
+				$extra['name']=escape($_POST['form-extras-list-name-'.$i]);
+			} else {
+				crash("Dades invàlides: manca name de l'extra");
+			}
+			if (!empty($_POST['form-extras-list-link-'.$i])) {
+				$extra['url']=escape($_POST['form-extras-list-link-'.$i]);
+			} else {
+				crash("Dades invàlides: manca url de l'extra");
+			}
+			if (!empty($_POST['form-extras-list-resolution-'.$i])) {
+				$extra['resolution']="'".escape($_POST['form-extras-list-resolution-'.$i])."'";
+			} else {
+				$extra['resolution']="NULL";
+			}
+			if (!empty($_POST['form-extras-list-comments-'.$i])) {
+				$extra['comments']="'".escape($_POST['form-extras-list-comments-'.$i])."'";
+			} else {
+				$extra['comments']="NULL";
+			}
+			array_push($extras, $extra);
+			$i++;
+		}
+
+		$folders=array();
+		$i=1;
+		while (!empty($_POST['form-folders-list-id-'.$i])) {
+			$folder = array();
+			if (is_numeric($_POST['form-folders-list-id-'.$i])) {
+				$folder['id']=escape($_POST['form-folders-list-id-'.$i]);
+			} else {
+				crash("Dades invàlides: manca id de la carpeta");
+			}
+			if (!empty($_POST['form-folders-list-account_id-'.$i])) {
+				$folder['account_id']=escape($_POST['form-folders-list-account_id-'.$i]);
+			} else {
+				crash("Dades invàlides: manca account_id de la carpeta");
+			}
+			if (!empty($_POST['form-folders-list-folder-'.$i])) {
+				$folder['folder']=escape($_POST['form-folders-list-folder-'.$i]);
+			} else {
+				crash("Dades invàlides: manca folder de la carpeta");
+			}
+			array_push($folders, $folder);
+			$i++;
+		}
+		
+		if ($_POST['action']=='edit') {
+			log_action("update", "version", $data['series_id'].'/'.$data['id']);
+			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
+			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
+			if ($data['fansub_1']!=NULL) {
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$data['id'].",".$data['fansub_1'].")");
+			}
+			if ($data['fansub_2']!=NULL) {
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$data['id'].",".$data['fansub_2'].")");
+			}
+			if ($data['fansub_3']!=NULL) {
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$data['id'].",".$data['fansub_3'].")");
+			}
+
+			foreach ($episodes as $episode) {
+				if ($episode['title']!="NULL") {
+					query("INSERT INTO episode_title (version_id,episode_id,title) VALUES (".$data['id'].",".$episode['id'].",".$episode['title'].")");
+				}
+			}
+
+			$ids=array();
+			foreach ($links as $link) {
+				if ($link['id']!=-1) {
+					array_push($ids,$link['id']);
+				}
+			}
+			//Views will be removed too because their FK is set to cascade
+			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NOT NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
+			foreach ($links as $link) {
+				if ($link['id']==-1) {
+					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$data['id'].",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].")");
+				} else {
+					query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",comments=".$link['comments']." WHERE id=".$link['id']);
+				}
+			}
+
+			$ids=array();
+			foreach ($extras as $extra) {
+				if ($extra['id']!=-1) {
+					array_push($ids,$extra['id']);
+				}
+			}
+			//Views will be removed too because their FK is set to cascade
+			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
+			foreach ($extras as $extra) {
+				if ($extra['id']==-1) {
+					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$data['id'].",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].")");
+				} else {
+					query("UPDATE link SET extra_name='".$extra['name']."',url='".$extra['url']."',resolution=".$extra['resolution'].",comments=".$extra['comments']." WHERE id=".$extra['id']);
+				}
+			}
+
+			$ids=array();
+			foreach ($folders as $folder) {
+				if ($folder['id']!=-1) {
+					array_push($ids,$folder['id']);
+				}
+			}
+			query("DELETE FROM folder WHERE version_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
+			foreach ($folders as $folder) {
+				if ($folder['id']==-1) {
+					query("INSERT INTO folder (version_id,account_id,folder) VALUES (".$data['id'].",NULL,".$folder['account_id'].",'".$folder['folder']."')");
+				} else {
+					query("UPDATE folder SET account_id=".$folder['account_id'].",folder='".$folder['folder']."' WHERE id=".$folder['id']);
+				}
+			}
+
+			$_SESSION['message']="S'han desat les dades correctament.";
+		}
+		else {
+			log_action("create", "version", $data['series_id']);
+			query("INSERT INTO version (series_id,status,default_resolution,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			$inserted_id=mysqli_insert_id($db_connection);
+			if ($data['fansub_1']!=NULL) {
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_1'].")");
+			}
+			if ($data['fansub_2']!=NULL) {
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_2'].")");
+			}
+			if ($data['fansub_3']!=NULL) {
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_3'].")");
+			}
+			foreach ($episodes as $episode) {
+				if ($episode['title']!="NULL") {
+					query("INSERT INTO episode_title (version_id,episode_id,title) VALUES (".$inserted_id.",".$episode['id'].",".$episode['title'].")");
+				}
+			}
+			foreach ($links as $link) {
+				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$inserted_id.",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].")");
+			}
+			foreach ($extras as $extra) {
+				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$inserted_id.",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].")");
+			}
+			foreach ($folders as $folder) {
+				query("INSERT INTO folder (version_id,account_id,folder) VALUES (".$inserted_id.",".$folder['account_id'].",'".$folder['folder']."')");
+			}
+
+			$_SESSION['message']="S'han desat les dades correctament.";
+		}
+
+		header("Location: version_list.php");
+		die();
+	}
+
+	if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
+		$result = query("SELECT v.* FROM version v WHERE id=".escape($_GET['id']));
+		$row = mysqli_fetch_assoc($result) or crash('Version not found');
+		mysqli_free_result($result);
+
+		$results = query("SELECT s.* FROM series s WHERE id=".$row['series_id']);
+		$series = mysqli_fetch_assoc($results) or crash('Series not found');
+		mysqli_free_result($results);
+
+		$resultf = query("SELECT fansub_id FROM rel_version_fansub vf WHERE vf.version_id=".$row['id']);
+		$fansubs = array();
+		while ($rowf = mysqli_fetch_assoc($resultf)) {
+			array_push($fansubs, $rowf['fansub_id']);
+		}
+		mysqli_free_result($resultf);
+
+		$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY e.number ASC");
+		$episodes = array();
+		while ($rowe = mysqli_fetch_assoc($resulte)) {
+			array_push($episodes, $rowe);
+		}
+		mysqli_free_result($resulte);
+	} else if (!empty($_GET['series_id']) && is_numeric($_GET['series_id'])) {
+		$row = array();
+
+		$results = query("SELECT s.* FROM series s WHERE id=".escape($_GET['series_id']));
+		$series = mysqli_fetch_assoc($results) or crash('Series not found');
+		mysqli_free_result($results);
+
+		$fansubs = array();
+
+		$resulte = query("SELECT e.* FROM episode e WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY e.number ASC");
+		$episodes = array();
+		while ($rowe = mysqli_fetch_assoc($resulte)) {
+			array_push($episodes, $rowe);
+		}
+		mysqli_free_result($resulte);
+	}
+?>
+		<div class="container d-flex justify-content-center p-4">
+			<div class="card w-100">
+				<article class="card-body">
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la versió" : "Afegeix una versió"; ?></h4>
+					<hr>
+					<form method="post" action="version_edit.php">
+						<div class="form-group">
+							<label for="form-series">Sèrie</label>
+							<div id="form-series" class="font-weight-bold form-control"><?php echo htmlspecialchars($series['name']); ?></div>
+							<input name="series_id" type="hidden" value="<?php echo $series['id']; ?>"/>
+							<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+						</div>
+						<div class="row align-items-end">
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-fansub-1">Fansub</label>
+									<select name="fansub_1" class="form-control" id="form-fansub-1" required>
+										<option value="">- Selecciona un fansub -</option>
+<?php
+	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
+	while ($frow = mysqli_fetch_assoc($result)) {
+?>
+										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>0 && $fansubs[0]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
+<?php
+	}
+	mysqli_free_result($result);
+?>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-fansub-2">Fansub 2 <small class="text-muted">(en cas que sigui una col·laboració)</small></label>
+									<select name="fansub_2" class="form-control" id="form-fansub-2">
+										<option value="">- Cap més fansub -</option>
+<?php
+	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
+	while ($frow = mysqli_fetch_assoc($result)) {
+?>
+										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>1 && $fansubs[1]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
+<?php
+	}
+	mysqli_free_result($result);
+?>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-fansub-3">Fansub 3 <small class="text-muted">(en cas que sigui una col·laboració)</small></label>
+									<select name="fansub_3" class="form-control" id="form-fansub-3">
+										<option value="">- Cap més fansub -</option>
+<?php
+	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
+	while ($frow = mysqli_fetch_assoc($result)) {
+?>
+										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>2 && $fansubs[2]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
+<?php
+	}
+	mysqli_free_result($result);
+?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-status">Estat</label>
+									<select class="form-control" name="status" id="form-status" required>
+										<option value="">- Selecciona un estat -</option>
+										<option value="1"<?php echo $row['status']==1 ? " selected" : ""; ?>>Completada</option>
+										<option value="2"<?php echo $row['status']==2 ? " selected" : ""; ?>>En procés</option>
+										<option value="3"<?php echo $row['status']==3 ? " selected" : ""; ?>>Pausada</option>
+										<option value="4"<?php echo $row['status']==4 ? " selected" : ""; ?>>Cancel·lada</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-default_resolution">Resolució per defecte <small class="text-muted">(per als enllaços automàtics)</small></label>
+									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-folders-list">Carpetes de MEGA <small class="text-muted">(per a l'obtenció automàtica d'enllaços)</small></label>
+							<div class="container" id="form-folders-list">
+<?php
+
+	if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
+		$resultfo = query("SELECT f.* FROM folder f WHERE f.version_id=".escape($_GET['id'])." ORDER BY f.id ASC");
+		$folders = array();
+		while ($rowfo = mysqli_fetch_assoc($resultfo)) {
+			array_push($folders, $rowfo);
+		}
+		mysqli_free_result($resultfo);
+	} else {
+		$folders=array();
+	}
+?>
+								<div class="row mb-3">
+									<div class="w-100 column">
+										<select id="form-folders-list-account_id-XXX" name="form-folders-list-account_id-XXX" class="form-control d-none">
+											<option value="">- Selecciona un compte -</option>
+<?php
+		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
+			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'];
+		} else {
+			$where = '';
+		}
+
+		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.name ASC");
+		while ($arow = mysqli_fetch_assoc($resulta)) {
+?>
+											<option value="<?php echo $arow['id']; ?>"><?php echo htmlspecialchars($arow['name']); ?></option>
+<?php
+		}
+		mysqli_free_result($resulta);
+?>
+										</select>
+										<table class="table table-bordered table-hover table-sm" id="folders-list-table" data-count="<?php echo count($folders); ?>">
+											<thead>
+												<tr>
+													<th style="width: 30%;">Compte</th>
+													<th>Carpeta</th>
+													<th class="text-center" style="width: 5%;">Acció</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr id="folders-list-table-empty" class="<?php echo count($folders)>0 ? 'd-none' : ''; ?>">
+													<td colspan="3" class="text-center">- No hi ha configurada cap carpeta -</td>
+												</tr>
+<?php
+	for ($j=0;$j<count($folders);$j++) {
+?>
+												<tr id="form-folders-list-row-<?php echo $j+1; ?>">
+													<td>
+														<select id="form-folders-list-account_id-<?php echo $j+1; ?>" name="form-folders-list-account_id-<?php echo $j+1; ?>" class="form-control" required>
+															<option value="">- Selecciona un compte -</option>
+<?php
+		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
+			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].')';
+		} else {
+			$where = '';
+		}
+
+		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.name ASC");
+		while ($arow = mysqli_fetch_assoc($resulta)) {
+?>
+								<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($arow['name']); ?></option>
+<?php
+		}
+		mysqli_free_result($resulta);
+?>
+														</select>
+														<input id="form-folders-list-id-<?php echo $j+1; ?>" name="form-folders-list-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $folders[$j]['id']; ?>"/>
+													</td>
+													<td>
+														<input id="form-folders-list-folder-<?php echo $j+1; ?>" name="form-folders-list-folder-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($folders[$j]['folder']); ?>" maxlength="200" required/>
+													</td>
+													<td class="text-center align-middle">
+														<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionFolderRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+													</td>
+												</tr>
+<?php
+	}
+?>
+											</tbody>
+										</table>
+									</div>
+									<div class="form-group row w-100 ml-0">
+										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
+											<button onclick="addVersionFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una altra carpeta</button>
+										</div>
+										<div class="col-sm text-right" style="padding-left: 0; padding-right: 0">
+											<button type="button" id="import-from-mega" class="btn btn-primary btn-sm">
+												<span id="import-from-mega-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
+												<span id="import-from-mega-not-loading" class="fa fa-redo pr-2"></span>Actualitza els enllaços ara
+											</button>
+										</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-episode-list">Capítols i enllaços</label>
+							<div class="container" id="form-episode-list">
+								<datalist id="resolution-options">
+									<option value="1080p">
+									<option value="720p">
+									<option value="480p">
+									<option value="360p">
+								</datalist>
+<?php
+	for ($i=0;$i<count($episodes);$i++) {
+		if ($episodes[$i]['name']!=NULL) {
+			$episode_name='Capítol '.$episodes[$i]['number'].' <small class="text-muted">(Títol intern: '.htmlspecialchars($episodes[$i]['name']).')</small>';
+		} else {
+			$episode_name='Capítol '.$episodes[$i]['number'];
+		}
+
+		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
+			$resultl = query("SELECT l.* FROM link l WHERE l.version_id=".escape($_GET['id'])." AND l.episode_id=".$episodes[$i]['id']." ORDER BY l.id ASC");
+			$links = array();
+			while ($rowl = mysqli_fetch_assoc($resultl)) {
+				array_push($links, $rowl);
+			}
+			mysqli_free_result($resultl);
+		} else {
+			$links=array();
+		}
+?>
+								<div class="form-group">
+									<label for="form-links-list-<?php echo $episodes[$i]['id']; ?>-title"><span class="fa fa-caret-square-right pr-2 text-primary"></span><?php echo $episode_name; ?></label>
+									<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="200" placeholder="(Sense títol)"/>
+									<div class="container" id="form-links-list-<?php echo $episodes[$i]['id']; ?>">
+										<div class="row mb-3">
+											<div class="w-100 column">
+												<table class="table table-bordered table-hover table-sm" id="links-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($links),1); ?>">
+													<thead>
+														<tr>
+															<th>Enllaç</th>
+															<th style="width: 15%;">Resolució</th>
+															<th style="width: 20%;">Comentaris</th>
+															<th class="text-center" style="width: 5%;">Acció</th>
+														</tr>
+													</thead>
+													<tbody>
+<?php
+		for ($j=0;$j<count($links);$j++) {
+?>
+														<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>">
+															<td>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($links[$j]['url']); ?>" maxlength="200" placeholder="(Sense enllaç)"/>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $links[$j]['id']; ?>"/>
+															</td>
+															<td>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-resolution-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-resolution-<?php echo $j+1; ?>" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($links[$j]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
+															</td>
+															<td>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($links[$j]['comments']); ?>" maxlength="200"/>
+															</td>
+															<td class="text-center align-middle">
+																<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+															</td>
+														</tr>
+<?php
+		}
+		if (count($links)==0) {
+?>
+														<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1">
+															<td>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1" type="url" class="form-control" value="" maxlength="200" placeholder="(Sense enllaç)"/>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-1" type="hidden" value="-1"/>
+															</td>
+															<td>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-resolution-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-resolution-1" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
+															</td>
+															<td>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-1" type="text" class="form-control" value="" maxlength="200"/>
+															</td>
+															<td class="text-center align-middle">
+																<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+															</td>
+														</tr>
+<?php
+		}
+?>
+													</tbody>
+												</table>
+											</div>
+											<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+										</div>
+									</div>
+								</div>
+<?php
+	}
+?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-extras-list">Enllaços extra</label>
+							<div class="container" id="form-extras-list">
+<?php
+
+	if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
+		$resultex = query("SELECT l.* FROM link l WHERE l.version_id=".escape($_GET['id'])." AND l.episode_id IS NULL ORDER BY l.extra_name ASC, l.resolution ASC");
+		$extras = array();
+		while ($rowex = mysqli_fetch_assoc($resultex)) {
+			array_push($extras, $rowex);
+		}
+		mysqli_free_result($resultex);
+	} else {
+		$extras=array();
+	}
+?>
+								<div class="form-group">
+									<div class="container" id="form-extras-list">
+										<div class="row mb-3">
+											<div class="w-100 column">
+												<table class="table table-bordered table-hover table-sm" id="extras-list-table" data-count="<?php echo count($extras); ?>">
+													<thead>
+														<tr>
+															<th style="width: 20%;">Nom</th>
+															<th>Enllaç</th>
+															<th style="width: 15%;">Resolució</th>
+															<th style="width: 20%;">Comentaris</th>
+															<th class="text-center" style="width: 5%;">Acció</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr id="extras-list-table-empty" class="<?php echo count($extras)>0 ? 'd-none' : ''; ?>">
+															<td colspan="5" class="text-center">- No hi ha cap extra -</td>
+														</tr>
+<?php
+	for ($j=0;$j<count($extras);$j++) {
+?>
+														<tr id="form-extras-list-row-<?php echo $j+1; ?>">
+															<td>
+																<input id="form-extras-list-name-<?php echo $j+1; ?>" name="form-extras-list-name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['extra_name']); ?>" maxlength="200" required placeholder="- Introdueix un nom -"/>
+																<input id="form-extras-list-id-<?php echo $j+1; ?>" name="form-extras-list-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $extras[$j]['id']; ?>"/>
+															</td>
+															<td>
+																<input id="form-extras-list-link-<?php echo $j+1; ?>" name="form-extras-list-link-<?php echo $j+1; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['url']); ?>" maxlength="200" required placeholder="- Introdueix un enllaç -"/>
+															</td>
+															<td>
+																<input id="form-extras-list-resolution-<?php echo $j+1; ?>" name="form-extras-list-resolution-<?php echo $j+1; ?>" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($extras[$j]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
+															</td>
+															<td>
+																<input id="form-extras-list-comments-<?php echo $j+1; ?>" name="form-extras-list-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['comments']); ?>" maxlength="200"/>
+															</td>
+															<td class="text-center align-middle">
+																<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionExtraRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+															</td>
+														</tr>
+<?php
+	}
+?>
+													</tbody>
+												</table>
+											</div>
+											<button onclick="addVersionExtraRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group text-center pt-2">
+							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
+						</div>
+					</form>
+				</article>
+			</div>
+		</div>
+<?php
+} else {
+	header("Location: login.php");
+}
+
+include("footer.inc.php");
+?>

@@ -1,4 +1,8 @@
-# Fansubs.cat - Update feeds every 15 minutes
 # Change these routes to your services directory if you install it on another server
 # Should be run by the Apache user (www-data)
+
+# Fansubs.cat - Update feeds every 15 minutes
 */15 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php fetch.php
+
+# Fansubs.cat - Anime - Update Mega links from accounts
+0 * * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php mega_cron_updater.php

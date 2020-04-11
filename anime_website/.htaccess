@@ -1,0 +1,14 @@
+RewriteEngine on
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 403 /error.php?code=403
+RewriteRule ^films/$ index.php?page=movies
+RewriteRule ^films$ index.php?page=movies
+RewriteRule ^films/(.*)/$ series.php?page=movies&slug=$1
+RewriteRule ^films/(.*)$ series.php?page=movies&slug=$1
+RewriteRule ^series/$ index.php?page=series
+RewriteRule ^series$ index.php?page=series
+RewriteRule ^series/(.*)/$ series.php?page=series&slug=$1
+RewriteRule ^series/(.*)$ series.php?page=series&slug=$1
+RewriteRule ^cerca/(.*)/$ index.php?page=search&query=$1
+RewriteRule ^cerca/(.*)$ index.php?page=search&query=$1
+RewriteRule ^.*\.inc\.php$ error.php?code=404
