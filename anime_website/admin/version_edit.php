@@ -31,7 +31,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['fansub_3']=NULL;
 		}
-		if (!empty($_POST['default_resolution']) && is_numeric($_POST['default_resolution'])) {
+		if (!empty($_POST['default_resolution'])) {
 			$data['default_resolution']="'".escape($_POST['default_resolution'])."'";
 		} else {
 			$data['default_resolution']="NULL";
@@ -145,6 +145,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				crash("Dades invàlides: manca folder de la carpeta");
 			}
+			if (!empty($_POST['form-folders-list-active-'.$i]) && $_POST['form-folders-list-active-'.$i]==1) {
+				$folder['active']=1;
+			} else {
+				$folder['active']=0;
+			}
 			array_push($folders, $folder);
 			$i++;
 		}
@@ -211,9 +216,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM folder WHERE version_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($folders as $folder) {
 				if ($folder['id']==-1) {
-					query("INSERT INTO folder (version_id,account_id,folder) VALUES (".$data['id'].",NULL,".$folder['account_id'].",'".$folder['folder']."')");
+					query("INSERT INTO folder (version_id,account_id,folder,active) VALUES (".$data['id'].",".$folder['account_id'].",'".$folder['folder']."',".$folder['active'].")");
 				} else {
-					query("UPDATE folder SET account_id=".$folder['account_id'].",folder='".$folder['folder']."' WHERE id=".$folder['id']);
+					query("UPDATE folder SET account_id=".$folder['account_id'].",folder='".$folder['folder']."',active=".$folder['active']." WHERE id=".$folder['id']);
 				}
 			}
 
@@ -244,7 +249,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$inserted_id.",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].")");
 			}
 			foreach ($folders as $folder) {
-				query("INSERT INTO folder (version_id,account_id,folder) VALUES (".$inserted_id.",".$folder['account_id'].",'".$folder['folder']."')");
+				query("INSERT INTO folder (version_id,account_id,folder,active) VALUES (".$inserted_id.",".$folder['account_id'].",'".$folder['folder']."',".$folder['active'].")");
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.";
@@ -417,8 +422,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="folders-list-table" data-count="<?php echo count($folders); ?>">
 											<thead>
 												<tr>
-													<th style="width: 30%;">Compte</th>
+													<th style="width: 40%;">Compte</th>
 													<th>Carpeta</th>
+													<th style="width: 10%;">Sincronitza</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
@@ -453,6 +459,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</td>
 													<td>
 														<input id="form-folders-list-folder-<?php echo $j+1; ?>" name="form-folders-list-folder-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($folders[$j]['folder']); ?>" maxlength="200" required/>
+													</td>
+													<td class="text-center align-middle">
+														<input id="form-folders-list-active-<?php echo $j+1; ?>" name="form-folders-list-active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $folders[$j]['active']==1? " checked" : ""; ?>/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionFolderRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>

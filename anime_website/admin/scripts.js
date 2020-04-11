@@ -192,7 +192,7 @@ function addVersionFolderRow() {
 
 	var html = $('#form-folders-list-account_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
 
-	$('#folders-list-table').append('<tr id="form-folders-list-row-'+i+'"><td>'+html+'<input id="form-folders-list-id-'+i+'" name="form-folders-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-folders-list-folder-'+i+'" name="form-folders-list-folder-'+i+'" class="form-control" value="" maxlength="200" required/></td><td class="text-center align-middle"><button id="form-folders-list-delete-'+i+'" onclick="deleteVersionFolderRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#folders-list-table').append('<tr id="form-folders-list-row-'+i+'"><td>'+html+'<input id="form-folders-list-id-'+i+'" name="form-folders-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-folders-list-folder-'+i+'" name="form-folders-list-folder-'+i+'" class="form-control" value="" maxlength="200" required/></td><td class="text-center align-middle"><input id="form-folders-list-active-'+i+'" name="form-folders-list-active-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-folders-list-delete-'+i+'" onclick="deleteVersionFolderRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#folders-list-table').attr('data-count', i);
 	$('#folders-list-table-empty').addClass('d-none');
 }
@@ -326,6 +326,99 @@ function checkNumberOfEpisodes() {
 		return true;
 	}
 	return true;
+}
+
+var validLinks=0;
+var invalidLinks=0;
+var failedLinks=0;
+var unknownLinks=0;
+var linkVerifyRetries=0;
+
+function verifyLinks(i) {
+	if (i==links.length){
+		$('#link-verifier-button').prop('disabled', false);
+		$('#link-verifier-loading').addClass('d-none');
+		$('#link-verifier-progress')[0].innerHTML="Procés completat";
+		return;
+	}
+
+	if (i==0){
+		validLinks=0;
+		invalidLinks=0;
+		failedLinks=0;
+		unknownLinks=0;
+		linkVerifyRetries=0;
+		updateVerifyLinksResult(0);
+		$('#link-verifier-progress').removeClass('d-none');
+		$('#link-verifier-wrong-links-list').addClass('d-none');
+		$('#link-verifier-failed-links-list').addClass('d-none');
+		$('#link-verifier-results').removeClass('d-none');
+		$('#link-verifier-button').prop('disabled', true);
+		$('#link-verifier-loading').removeClass('d-none');
+	}
+	
+	var matches = links[i].link.match(/https:\/\/mega\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/);
+	if (matches && matches.length>1 && matches[1]!=''){
+		//MEGA link
+		$.post("https://eu.api.mega.co.nz/cs", "[{\"a\":\"g\", \"g\":1, \"ssl\":0, \"p\":\""+matches[1]+"\"}]", function(data, status){
+			if (data=="-9") {
+				//invalid
+				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				invalidLinks++;
+				updateVerifyLinksResult(i+1);
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			} else if (status=='success') {
+				//valid
+				validLinks++;
+				updateVerifyLinksResult(i+1);
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			} else {
+				if (linkVerifyRetries<5){
+					linkVerifyRetries++;
+					setTimeout(function(){
+						verifyLinks(i);
+					}, 5000);
+				} else {
+					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+					failedLinks++;
+					linkVerifyRetries=0;
+					verifyLinks(i+1);
+				}
+			}
+		}).fail(function() {
+			if (linkVerifyRetries<5){
+				linkVerifyRetries++;
+				setTimeout(function(){
+					verifyLinks(i);
+				}, 5000);
+			} else {
+				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				failedLinks++;
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			}
+		});
+	} else {
+		unknownLinks++;
+		updateVerifyLinksResult(i+1);
+		verifyLinks(i+1);
+	}
+}
+
+function updateVerifyLinksResult(i) {
+	$('#link-verifier-progress')[0].innerHTML=i+"/"+links.length;
+	$('#link-verifier-good-links')[0].innerHTML=validLinks;
+	$('#link-verifier-unknown-links')[0].innerHTML=unknownLinks;
+	$('#link-verifier-failed-links')[0].innerHTML=failedLinks;
+	$('#link-verifier-wrong-links')[0].innerHTML=invalidLinks;
+	if (invalidLinks>0) {
+		$('#link-verifier-wrong-links-list').removeClass('d-none');
+	}
+	if (failedLinks>0) {
+		$('#link-verifier-failed-links-list').removeClass('d-none');
+	}
 }
 
 var malData;

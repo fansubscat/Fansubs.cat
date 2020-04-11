@@ -153,7 +153,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO episode (series_id,number,name,date) VALUES (".$inserted_id.",".$episode['number'].",".$episode['name'].",".$episode['date'].")");
 			}
 
-			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary\" href=\"version_edit.php?series_id=$inserted_id\">Crea'n una versió</a>";
+			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\">Crea'n una versió</a>";
 		}
 
 		header("Location: series_list.php");

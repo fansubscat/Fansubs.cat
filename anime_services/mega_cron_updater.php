@@ -1,7 +1,7 @@
 <?php
 require_once('db.inc.php');
 
-$resulta = query("SELECT *, a.name, a.session_id,v.series_id FROM folder f LEFT JOIN account a ON f.account_id=a.id LEFT JOIN version v ON f.version_id=v.id");
+$resulta = query("SELECT *, a.name, a.session_id,v.series_id FROM folder f LEFT JOIN account a ON f.account_id=a.id LEFT JOIN version v ON f.version_id=v.id WHERE active=1");
 
 while ($folder = mysqli_fetch_assoc($resulta)) {
 	echo "Updating account ".$folder['name']. " / ".$folder['folder']."\n";
@@ -25,7 +25,7 @@ while ($folder = mysqli_fetch_assoc($resulta)) {
 					if ($link = mysqli_fetch_assoc($links)) {
 						if ($link['url']!=$real_link){
 							log_action("cron-update",'link',"Updated link with id ".$link['id']." with new Mega link (file: $filename)");
-							query("UPDATE link SET url='".$real_link."' WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
+							query("UPDATE link SET url='".escape($real_link)."' WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
 						}
 					} else {
 						$resultv = query("SELECT * FROM version WHERE id=".$folder['version_id']);
@@ -33,7 +33,7 @@ while ($folder = mysqli_fetch_assoc($resulta)) {
 							$resolution = (!empty($version['default_resolution']) ? "'".$version['default_resolution']."'" : "NULL");
 
 							log_action("cron-insert",'link',"Inserted link with new Mega link (file: $filename)");
-							query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES(".$folder['version_id'].",".$row['id'].",NULL,'.$real_link',$resolution,NULL)");
+							query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES(".$folder['version_id'].",".$row['id'].",NULL,'".escape($real_link)."',$resolution,NULL)");
 							log_action("cron-update",'version',"Updated version with id ".$folder['version_id']." update date because of new Mega link added");
 							query("UPDATE version SET updated=CURRENT_TIMESTAMP,updated_by='Cron' WHERE id=".$folder['version_id']);
 
@@ -41,13 +41,13 @@ while ($folder = mysqli_fetch_assoc($resulta)) {
 							$results = query("SELECT * FROM series WHERE id=".escape($folder['series_id']));
 							$resultl = query("SELECT DISTINCT l.episode_id FROM link l WHERE l.version_id=".$folder['version_id']." AND l.episode_id IS NOT NULL");
 
-							if (($series = mysqli_fetch_assoc($results)) && ()) {
+							if (($series = mysqli_fetch_assoc($results))) {
 								if ($series['episodes']==mysqli_num_rows($resultl) && $version['status']==2) {
 									log_action("cron-update",'version',"Updated version with id ".$version['id']." to complete due to new Mega link");
 									query("UPDATE version SET status=1,updated=CURRENT_TIMESTAMP,updated_by='Cron' WHERE id=".$version['id']);
 								}
 							} else {
-								log_action("cron-match-failed",NULL,"Failed to match link $filename: series or links not found");
+								log_action("cron-match-failed",NULL,"Failed to match link $filename: series not found");
 							}
 							mysqli_free_result($results);
 							mysqli_free_result($resultl);

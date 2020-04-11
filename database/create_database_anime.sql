@@ -12,11 +12,13 @@ CREATE TABLE IF NOT EXISTS `account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `action_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `action` varchar(200) NOT NULL,
   `entity` varchar(200) DEFAULT NULL,
   `text` text DEFAULT NULL,
   `author` varchar(200) DEFAULT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `episode` (
@@ -54,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `folder` (
   `version_id` int(11) NOT NULL,
   `account_id` int(11) NOT NULL,
   `folder` varchar(200) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
