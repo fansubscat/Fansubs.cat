@@ -59,6 +59,11 @@ if (!empty($series['episodes']) && $series['episodes']>1) {
 							<div><span class="numepisodes" title="Nombre de capítols"><?php echo $series['episodes'].' capítols'; ?></span></div>
 <?php
 }
+if (!empty($series['duration'])) {
+?>
+							<div><span class="duration" title="Durada"><?php echo $series['duration']; ?></span></div>
+<?php
+}
 if (!empty($series['genres'])) {
 ?>
 							<div><span class="genres" title="Gèneres"><?php echo htmlspecialchars($series['genres']); ?></span></div>
@@ -141,7 +146,7 @@ if ($count==0) {
 							</div>
 <?php
 		} else {
-			$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." WHERE series_id=".$series['id']." ORDER BY number ASC");
+			$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." WHERE series_id=".$series['id']." ORDER BY number IS NULL ASC, number ASC, IFNULL(et.title,e.name) ASC");
 			$episodes = array();
 			while ($row = mysqli_fetch_assoc($resulte)) {
 				array_push($episodes, $row);

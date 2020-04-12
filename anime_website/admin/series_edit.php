@@ -66,6 +66,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca synopsis");
 		}
+		if (!empty($_POST['duration'])) {
+			$data['duration']="'".escape($_POST['duration'])."'";
+		} else {
+			$data['duration']="NULL";
+		}
 		if (!empty($_POST['episodes']) && is_numeric($_POST['episodes'])) {
 			$data['episodes']=escape($_POST['episodes']);
 		} else {
@@ -101,7 +106,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (!empty($_POST['form-episode-list-num-'.$i]) && is_numeric($_POST['form-episode-list-num-'.$i])) {
 				$episode['number']=escape($_POST['form-episode-list-num-'.$i]);
 			} else {
-				crash("Dades invàlides: manca id de capítol");
+				$episode['number']="NULL";
 			}
 			if (!empty($_POST['form-episode-list-name-'.$i])) {
 				$episode['name']="'".escape($_POST['form-episode-list-name-'.$i])."'";
@@ -119,7 +124,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update", "series", $data['name']);
-			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',image='".$data['image']."',myanimelist_id=".$data['myanimelist_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',duration=".$data['duration'].",image='".$data['image']."',myanimelist_id=".$data['myanimelist_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$data['id'].",".$genre.")");
@@ -144,7 +149,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create", "series", $data['name']);
-			query("INSERT INTO series (slug,name,alternate_names,type,air_date,author,director,studio,rating,episodes,synopsis,image,myanimelist_id,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."','".$data['image']."',".$data['myanimelist_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO series (slug,name,alternate_names,type,air_date,author,director,studio,rating,episodes,synopsis,duration,image,myanimelist_id,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."',".$data['duration'].",'".$data['image']."',".$data['myanimelist_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$inserted_id.",".$genre.")");
@@ -212,7 +217,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm">
 								<div class="form-group">
 									<label for="form-name-with-autocomplete">Nom</label>
-									<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
+									<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['name'])); ?>">
 									<input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>">
 								</div>
 							</div>
@@ -226,7 +231,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 						<div class="form-group">
 							<label for="form-alternate_names">Altres noms</label>
-							<input class="form-control" name="alternate_names" id="form-alternate_names" maxlength="200" value="<?php echo htmlspecialchars($row['alternate_names']); ?>">
+							<input class="form-control" name="alternate_names" id="form-alternate_names" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_names'])); ?>">
 						</div>
 						<div class="row">
 							<div class="col-sm">
@@ -282,11 +287,28 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="form-group">
 							<label for="form-synopsis">Sinopsi</label>
-							<textarea class="form-control" name="synopsis" id="form-synopsis" required style="height: 150px;"><?php echo htmlspecialchars($row['synopsis']); ?></textarea>
+							<textarea class="form-control" name="synopsis" id="form-synopsis" required style="height: 150px;"><?php echo htmlspecialchars(str_replace('&#039;',"'",html_entity_decode($row['synopsis']))); ?></textarea>
 						</div>
-						<div class="form-group">
-							<label for="form-image">URL de la imatge de portada</label>
-							<input class="form-control" name="image" type="url" id="form-image" required maxlength="200" value="<?php echo htmlspecialchars($row['image']); ?>">
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="form-duration">Durada</label>
+									<input class="form-control" name="duration" id="form-duration" maxlength="200" value="<?php echo htmlspecialchars($row['duration']); ?>">
+								</div>
+							</div>
+							<div class="col-sm-7">
+								<div class="form-group">
+									<label for="form-image">URL de la imatge de portada</label>
+									<input class="form-control" name="image" type="url" id="form-image" required maxlength="200" value="<?php echo htmlspecialchars($row['image']); ?>" oninput="$('#form-image-preview').prop('src',$(this).val());$('#form-image-preview-link').prop('href',$(this).val());">
+								</div>
+							</div>
+							<div class="col-sm-1">
+								<div class="form-group">
+									<a id="form-image-preview-link" href="<?php echo htmlspecialchars($row['image']); ?>" target="blank">
+										<img id="form-image-preview" style="width: 67.5px; height: 90px; object-fit: cover; background-color: black;" src="<?php echo htmlspecialchars($row['image']); ?>" alt="Imatge">
+									</a>
+								</div>
+							</div>
 						</div>
 						<div class="form-group">
 							<label for="form-genres">Gèneres</label>
@@ -347,7 +369,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-episode-list-row-<?php echo $i+1; ?>">
 													<td>
-														<input id="form-episode-list-num-<?php echo $i+1; ?>" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']; ?>" required placeholder="(S/N)"/>
+														<input id="form-episode-list-num-<?php echo $i+1; ?>" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']; ?>" placeholder="(Esp.)"/>
 														<input id="form-episode-list-id-<?php echo $i+1; ?>" name="form-episode-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $episodes[$i]['id']; ?>"/>
 													</td>
 													<td>
@@ -366,7 +388,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-episode-list-row-1">
 													<td>
-														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="" required placeholder="(S/N)"/>
+														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="" placeholder="(Esp.)"/>
 														<input id="form-episode-list-id-1" name="form-episode-list-id-1" type="hidden" value="-1"/>
 													</td>
 													<td>

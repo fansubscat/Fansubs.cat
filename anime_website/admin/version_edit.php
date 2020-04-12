@@ -275,7 +275,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultf);
 
-		$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY e.number ASC");
+		$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY number IS NULL ASC, number ASC, IFNULL(et.title,e.name) ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -290,7 +290,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$fansubs = array();
 
-		$resulte = query("SELECT e.* FROM episode e WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY e.number ASC");
+		$resulte = query("SELECT e.* FROM episode e WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY e.number IS NULL ASC, e.number ASC, e.name ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -497,10 +497,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</datalist>
 <?php
 	for ($i=0;$i<count($episodes);$i++) {
-		if ($episodes[$i]['name']!=NULL) {
-			$episode_name='Capítol '.$episodes[$i]['number'].' <small class="text-muted">(Títol intern: '.htmlspecialchars($episodes[$i]['name']).')</small>';
+		if (!empty($episodes[$i]['number'])) {
+			if (!empty($episodes[$i]['name'])) {
+				$episode_name='Capítol '.$episodes[$i]['number'].' <small class="text-muted">(Títol intern: '.htmlspecialchars($episodes[$i]['name']).')</small>';
+			} else {
+				$episode_name='Capítol '.$episodes[$i]['number'];
+			}
 		} else {
-			$episode_name='Capítol '.$episodes[$i]['number'];
+			$episode_name = $episodes[$i]['name'].' <small class="text-muted">(Aquest títol NO és intern: es mostrarà si no introdueixes cap títol!)</small>';
 		}
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {

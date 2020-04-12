@@ -37,6 +37,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<tbody>
 <?php
 	$result = query("SELECT u.*, f.name fansub_name FROM user u LEFT JOIN fansub f ON u.fansub_id=f.id ORDER BY u.username ASC");
+	if (mysqli_num_rows($result)==0) {
+?>
+							<tr>
+								<td colspan="4" class="text-center">- No hi ha cap usuari -</td>
+							</tr>
+<?php
+	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>

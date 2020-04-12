@@ -36,6 +36,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<tbody>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
+	if (mysqli_num_rows($result)==0) {
+?>
+							<tr>
+								<td colspan="4" class="text-center">- No hi ha cap fansub -</td>
+							</tr>
+<?php
+	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>

@@ -41,6 +41,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$where = '';
 	}
 	$result = query("SELECT a.*, f.name fansub_name FROM account a LEFT JOIN fansub f ON a.fansub_id=f.id$where ORDER BY a.name ASC");
+	if (mysqli_num_rows($result)==0) {
+?>
+							<tr>
+								<td colspan="3" class="text-center">- No hi ha cap compte -</td>
+							</tr>
+<?php
+	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>

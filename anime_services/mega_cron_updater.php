@@ -39,7 +39,7 @@ while ($folder = mysqli_fetch_assoc($resulta)) {
 
 							//Now check if we need to upgrade in progess -> complete
 							$results = query("SELECT * FROM series WHERE id=".escape($folder['series_id']));
-							$resultl = query("SELECT DISTINCT l.episode_id FROM link l WHERE l.version_id=".$folder['version_id']." AND l.episode_id IS NOT NULL");
+							$resultl = query("SELECT DISTINCT l.episode_id FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.version_id=".$folder['version_id']." AND l.episode_id IS NOT NULL AND e.number IS NOT NULL");
 
 							if (($series = mysqli_fetch_assoc($results))) {
 								if ($series['episodes']==mysqli_num_rows($resultl) && $version['status']==2) {

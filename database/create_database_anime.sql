@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `action_log` (
 CREATE TABLE IF NOT EXISTS `episode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `series_id` int(11) NOT NULL,
-  `number` int(11) NOT NULL,
+  `number` int(11) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL,
   `date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `series` (
   `rating` varchar(200) DEFAULT NULL,
   `episodes` int(11) NOT NULL,
   `synopsis` text NOT NULL,
+  `duration` varchar(200) DEFAULT NULL,
   `image` varchar(200) NOT NULL,
   `myanimelist_id` int(11) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -163,8 +164,8 @@ ALTER TABLE `rel_series_genre`
   ADD CONSTRAINT `rel_series_genre_ibfk_1` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`),
   ADD CONSTRAINT `rel_series_genre_ibfk_2` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`);
 ALTER TABLE `rel_version_fansub`
-  ADD CONSTRAINT `rel_version_fansub_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `rel_version_fansub_ibfk_2` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `rel_version_fansub_ibfk_2` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `rel_version_fansub_ibfk_3` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`);
 ALTER TABLE `version`

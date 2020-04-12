@@ -342,6 +342,11 @@ a:hover {
 	padding-left:20px;
 }
 
+.duration {
+	background:url('/style/images/duration.png') no-repeat left center;
+	padding-left:20px;
+}
+
 .genres {
 	background:url('/style/images/genres.png') no-repeat left center;
 	padding-left:20px;

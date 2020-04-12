@@ -96,13 +96,28 @@ function print_episode($row,$version_id,$series){
 
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="episode'.(mysqli_num_rows($result)==0 ? ' episode-unavailable' : '').'">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">';
-	if ($series['episodes']==1){
-		echo htmlspecialchars($series['name']);
-	} else if ($row['title']!=NULL){
-		echo 'Capítol '.$row['number'].': '.htmlspecialchars($row['title']);
-	}
-	else {
-		echo 'Capítol '.$row['number'];
+	if (!empty($row['number'])) {
+		if (!empty($row['title'])){
+			if ($series['episodes']==1){
+				echo htmlspecialchars($row['title']);
+			} else {
+				echo 'Capítol '.$row['number'].': '.htmlspecialchars($row['title']);
+			}
+		}
+		else {
+			if ($series['episodes']==1){
+				echo htmlspecialchars($series['name']);
+			} else {
+				echo 'Capítol '.$row['number'];
+			}
+		}
+	} else {
+		if (!empty($row['title'])){
+			echo htmlspecialchars($row['title']);
+		}
+		else {
+			echo $row['name'];
+		}
 	}
 	echo "</div>\n";
 

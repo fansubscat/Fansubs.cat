@@ -9,14 +9,24 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			var links = [
 <?php
 	if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-		$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].')';
+		$where = ' WHERE EXISTS (SELECT vf.version_id FROM rel_version_fansub vf WHERE vf.version_id=v.id AND vf.fansub_id='.$_SESSION['fansub_id'].')';
 	} else {
 		$where = '';
 	}
-	$resultl = query("SELECT l.*,s.name series_name, e.number episode_number FROM link l LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id$where ORDER BY s.name ASC, e.number ASC, extra_name ASC");
+	$resultl = query("SELECT l.*,s.name series_name, e.number episode_number, e.name episode_name FROM link l LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id$where ORDER BY s.name ASC, e.number ASC, extra_name ASC");
 	while ($row = mysqli_fetch_assoc($resultl)) {
+		if (!empty($row['episode_id'])){
+			if (!empty($row['episode_number'])) {
+				$chapter_title = 'Capítol '.$row['episode_number'];
+			} else {
+				$chapter_title = $row['episode_name'];
+			}
+		} else {
+			$chapter_title = 'Extra - '.$row['extra_name'];
+		}
+		$chapter_name = $row['series_name'].' - '.(!empty($row['episode_id']) ? 'Capítol '.$row['episode_number'] : 'Extra - '.$row['extra_name'])
 ?>
-				{link: <?php echo json_encode(htmlspecialchars($row['url'])); ?>, text: <?php echo json_encode(htmlspecialchars($row['series_name'].' - '.(!empty($row['episode_id']) ? 'Capítol '.$row['episode_number'] : 'Extra - '.$row['extra_name']))); ?>},
+				{link: <?php echo json_encode(htmlspecialchars($row['url'])); ?>, text: <?php echo json_encode(htmlspecialchars($chapter_name)); ?>},
 <?php
 	}
 	mysqli_free_result($resultl);
