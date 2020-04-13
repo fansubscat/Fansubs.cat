@@ -430,7 +430,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 												<tr id="folders-list-table-empty" class="<?php echo count($folders)>0 ? 'd-none' : ''; ?>">
-													<td colspan="3" class="text-center">- No hi ha configurada cap carpeta -</td>
+													<td colspan="4" class="text-center">- No hi ha configurada cap carpeta -</td>
 												</tr>
 <?php
 	for ($j=0;$j<count($folders);$j++) {

@@ -38,7 +38,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Verificador d'enllaços</h4>
 					<hr>
-					<p class="text-center">El verificador d'enllaços comprova que tots els enllaços de MEGA estiguin disponibles. En executar-lo, es comprovaran els enllaços un a un i se n'obtindrà un resum. És un procés molt lent, tingues paciència.</p>
+					<p class="text-center">El verificador d'enllaços comprova que tots els enllaços de MEGA i Google Drive estiguin disponibles. En executar-lo, es comprovaran els enllaços un a un i se n'obtindrà un resum. És un procés molt lent, tingues paciència.</p>
 					<div class="text-center p-2">
 						<button id="link-verifier-button" onclick="verifyLinks(0);" class="btn btn-primary">
 							<span id="link-verifier-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
@@ -55,27 +55,27 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1">Resultats</h4>
 					<hr>
 					<div class="row text-success">
-						<p class="text-right col-sm-6 mb-0 font-weight-bold">Correctes:</p>
+						<p class="text-right col-sm-6 mb-0 font-weight-bold">Vàlids:</p>
 						<p class="text-left col-sm-6 mb-0 font-weight-bold" id="link-verifier-good-links">0</p>
 					</div>
 					<div class="row text-danger">
-						<p class="text-right col-sm-6 mb-0 font-weight-bold">Incorrectes:</p>
+						<p class="text-right col-sm-6 mb-0 font-weight-bold">Invàlids:</p>
 						<p class="text-left col-sm-6 mb-0 font-weight-bold" id="link-verifier-wrong-links">0</p>
 					</div>
 					<div class="row text-warning">
-						<p class="text-right col-sm-6 mb-0 font-weight-bold">No verificables:</p>
+						<p class="text-right col-sm-6 mb-0 font-weight-bold">Desconeguts:</p>
 						<p class="text-left col-sm-6 mb-0 font-weight-bold" id="link-verifier-failed-links">0</p>
 					</div>
 					<div class="row text-muted">
-						<p class="text-right col-sm-6 mb-0 font-weight-bold">No són de MEGA:</p>
+						<p class="text-right col-sm-6 mb-0 font-weight-bold">No verificables:</p>
 						<p class="text-left col-sm-6 mb-0 font-weight-bold" id="link-verifier-unknown-links">0</p>
 					</div>
 					<div id="link-verifier-wrong-links-list" class="d-none mt-4">
-						<h4 class="card-title text-center mb-4 mt-1">Enllaços incorrectes</h4>
+						<h4 class="card-title text-center mb-4 mt-1">Enllaços invàlids</h4>
 						<hr>
 					</div>
 					<div id="link-verifier-failed-links-list" class="d-none mt-4">
-						<h4 class="card-title text-center mb-4 mt-1">Enllaços no verificables</h4>
+						<h4 class="card-title text-center mb-4 mt-1">Enllaços desconeguts</h4>
 						<hr>
 					</div>
 				</article>

@@ -386,10 +386,11 @@ function verifyLinks(i) {
 		$('#link-verifier-loading').removeClass('d-none');
 	}
 	
-	var matches = links[i].link.match(/https:\/\/mega\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/);
-	if (matches && matches.length>1 && matches[1]!=''){
+	var matchesMega = links[i].link.match(/https:\/\/mega\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/);
+	var matchesGoogleDrive = links[i].link.match(/https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)?([^\/]*)(?:preview|view)?/);
+	if (matchesMega && matchesMega.length>1 && matchesMega[1]!=''){
 		//MEGA link
-		$.post("https://eu.api.mega.co.nz/cs", "[{\"a\":\"g\", \"g\":1, \"ssl\":0, \"p\":\""+matches[1]+"\"}]", function(data, status){
+		$.post("https://eu.api.mega.co.nz/cs", "[{\"a\":\"g\", \"g\":1, \"ssl\":0, \"p\":\""+matchesMega[1]+"\"}]", function(data, status){
 			if (data=="-9") {
 				//invalid
 				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
@@ -422,6 +423,44 @@ function verifyLinks(i) {
 				setTimeout(function(){
 					verifyLinks(i);
 				}, 5000);
+			} else {
+				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				failedLinks++;
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			}
+		});
+	} else if (matchesGoogleDrive && matchesGoogleDrive.length>1 && matchesGoogleDrive[1]!=''){
+		//Google Drive link
+		$.post("check_googledrive_link.php?link="+encodeURIComponent(matchesGoogleDrive[1]), function(data, status){
+			if (data=='OK') {
+				//valid
+				validLinks++;
+				updateVerifyLinksResult(i+1);
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			} else if (data=='KO') {
+				//invalid
+				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				invalidLinks++;
+				updateVerifyLinksResult(i+1);
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			} else {
+				if (linkVerifyRetries<5){
+					linkVerifyRetries++;
+					verifyLinks(i);
+				} else {
+					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+					failedLinks++;
+					linkVerifyRetries=0;
+					verifyLinks(i+1);
+				}
+			}
+		}).fail(function() {
+			if (linkVerifyRetries<5){
+				linkVerifyRetries++;
+				verifyLinks(i);
 			} else {
 				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
 				failedLinks++;
