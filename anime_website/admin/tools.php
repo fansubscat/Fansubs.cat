@@ -40,6 +40,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($_SESSION['admin_level']>=3) {
 ?>
 					<div class="text-center p-2">
+						<a href="action_log.php" class="btn btn-primary">Mostra el registre d'accions</a>
+					</div>
+					<div class="text-center p-2">
 						<a href="tools.php?action=clear-logs" class="btn btn-warning" onclick="return confirm('Segur que vols buidar el registre d\'accions? Es perdrà l\'historial de canvis. L\'acció no es pot desfer.')" onauxclick="return false;">Buida el registre d'accions</a>
 					</div>
 					<div class="text-center p-2">
