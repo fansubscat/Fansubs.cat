@@ -98,7 +98,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 ?>
 				</ul>
 				<a class="text-light pr-4" href="https://docs.google.com/document/d/10EMgWjVqrmDFUpxLI44cq4n5iOPHRKL3vZfL59Tt3SA/edit?usp=sharing" target="blank">Ajuda</a>
-				<a class="text-light" href="logout.php">Tanca la sessió</a>
+				<a class="text-light" href="logout.php">Tanca la sessió (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
 			</div>
 		</nav>
 <?php

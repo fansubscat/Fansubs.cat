@@ -49,7 +49,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				</article>
 			</div>
 		</div>
-		<div id="link-verifier-results" class="d-none container d-flex justify-content-center p-4">
+		<div id="link-verifier-results" class="d-none container justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Resultats</h4>
