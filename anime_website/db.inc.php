@@ -1,13 +1,8 @@
 <?php
 require_once('config.inc.php');
 
-function log_action($action, $entity=NULL, $text=NULL){
+function log_action($action, $text=NULL){
 	global $db_connection;
-	if (!empty($entity)){
-		$entity = "'".escape($entity)."'";
-	} else {
-		$entity = "NULL";
-	}
 	if (!empty($text)){
 		$text = "'".escape($text)."'";
 	} else {
@@ -18,7 +13,7 @@ function log_action($action, $entity=NULL, $text=NULL){
 	} else {
 		$username = "NULL";
 	}
-	query("INSERT INTO action_log (action, entity, text, author, date) VALUES ('".escape($action)."',$entity,$text,$username, CURRENT_TIMESTAMP)", TRUE);
+	query("INSERT INTO action_log (action, text, author, date) VALUES ('".escape($action)."',$text,$username, CURRENT_TIMESTAMP)", TRUE);
 }
 
 function crash($string){
@@ -37,7 +32,7 @@ function query($query, $ignore_crash=FALSE){
 	if ($ignore_crash){
 		$result = mysqli_query($db_connection, $query);
 	} else {
-		$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Original query: $query");
+		$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");
 	}
 	return $result;
 }

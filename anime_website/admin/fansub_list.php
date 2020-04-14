@@ -5,7 +5,7 @@ include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete", "fansub", $_GET['delete_id']);
+		log_action("delete-fansub", "S'ha suprimit el fansub (id. de fansub: ".$_GET['delete_id'].")");
 		query("DELETE FROM fansub WHERE id=".escape($_GET['delete_id']));
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}

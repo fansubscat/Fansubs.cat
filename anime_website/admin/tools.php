@@ -7,14 +7,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($_GET['action'])) {
 		switch ($_GET['action']) {
 			case 'clear-views':
-				log_action("clear-views");
+				log_action("clear-views","S'han buidat totes les visualitzacions");
 				query("DELETE FROM views");
 				$_SESSION['message']="S'han buidat les visualitzacions correctament.";
 				break;
 			case 'clear-logs':
 				query("DELETE FROM action_log");
-				log_action("clear-logs");
-				$_SESSION['message']="S'han buidat els registres correctament.";
+				log_action("clear-logs","S'ha buidat el registre d'accions");
+				$_SESSION['message']="S'ha buidat el registres d'accions correctament.";
 				break;
 		}
 	}

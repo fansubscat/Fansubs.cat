@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS `account` (
 CREATE TABLE IF NOT EXISTS `action_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `action` varchar(200) NOT NULL,
-  `entity` varchar(200) DEFAULT NULL,
   `text` text DEFAULT NULL,
   `author` varchar(200) DEFAULT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp(),

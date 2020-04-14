@@ -5,7 +5,7 @@ include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete", "series", $_GET['delete_id']);
+		log_action("delete-series", "S'ha suprimit la sèrie (id. de sèrie: ".$_GET['delete_id'].")");
 		query("DELETE FROM rel_series_genre WHERE series_id=".escape($_GET['delete_id']));
 		query("DELETE FROM episode WHERE series_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE series_id=".escape($_GET['delete_id']));

@@ -5,7 +5,7 @@ include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete", "account", $_GET['delete_id']);
+		log_action("delete-account", "S'ha suprimit el compte (id. de compte: ".$_GET['delete_id'].")");
 		query("DELETE FROM folder WHERE account_id=".escape($_GET['delete_id']));
 		query("DELETE FROM account WHERE id=".escape($_GET['delete_id']));
 		$_SESSION['message']="S'ha suprimit correctament.";

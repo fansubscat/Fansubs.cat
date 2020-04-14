@@ -5,7 +5,7 @@ include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id'])) {
-		log_action("delete", "user", $_GET['delete_id']);
+		log_action("delete-user", "S'ha suprimit l'usuari (id. d'usuari: ".$_GET['delete_id'].")");
 		query("DELETE FROM user WHERE username='".escape($_GET['delete_id'])."'");
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}

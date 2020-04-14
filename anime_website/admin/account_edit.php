@@ -28,11 +28,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update", "account", $data['name']);
+			log_action("update-account", "S'ha actualitzat el compte amb nom '".$data['name']."' (id. de compte: ".$data['id'].")");
 			query("UPDATE account SET name='".$data['name']."',session_id='".$data['session_id']."',fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
 		else {
-			log_action("create", "account", $data['name']);
+			log_action("create-account", "S'ha creat el compte amb nom '".$data['name']."'");
 			query("INSERT INTO account (name,session_id,fansub_id,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['session_id']."',".$data['fansub_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 

@@ -3,6 +3,9 @@ require_once('db.inc.php');
 
 $resulta = query("SELECT *, a.name, a.session_id,v.series_id FROM folder f LEFT JOIN account a ON f.account_id=a.id LEFT JOIN version v ON f.version_id=v.id WHERE active=1");
 
+//For compatibility with manual fetching
+file_put_contents('/tmp/mega.lock','1');
+
 while ($folder = mysqli_fetch_assoc($resulta)) {
 	echo "Updating account ".$folder['name']. " / ".$folder['folder']."\n";
 
@@ -11,7 +14,7 @@ while ($folder = mysqli_fetch_assoc($resulta)) {
 	exec("./mega_list_links.sh ".$folder['session_id']." \"".$folder['folder']."\"", $output, $result);
 
 	if ($result!=0){
-		log_action("cron-error",NULL,"Error $result found when processing ".$folder['session_id']." / ".$folder['folder']);
+		log_action("cron-error","S'ha produït l'error $result en processar la carpeta '".$folder['folder']."' del compte '".$folder['name']."' (id. de versió: ".$folder['version_id'].")");
 	} else {
 		foreach ($output as $line) {
 			$filename = explode(":",$line, 2)[0];
@@ -24,18 +27,17 @@ while ($folder = mysqli_fetch_assoc($resulta)) {
 					$links = query("SELECT * FROM link WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
 					if ($link = mysqli_fetch_assoc($links)) {
 						if ($link['url']!=$real_link){
-							log_action("cron-update",'link',"Updated link with id ".$link['id']." with new Mega link (file: $filename)");
 							query("UPDATE link SET url='".escape($real_link)."' WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
+							log_action("cron-update-link","S'ha actualitzat automàticament l'enllaç del fitxer '$filename' (id. d'enllaç: ".$link['id'].", id. de versió: ".$folder['version_id'].")");
 						}
 					} else {
 						$resultv = query("SELECT * FROM version WHERE id=".$folder['version_id']);
 						if ($version = mysqli_fetch_assoc($resultv)){
 							$resolution = (!empty($version['default_resolution']) ? "'".$version['default_resolution']."'" : "NULL");
 
-							log_action("cron-insert",'link',"Inserted link with new Mega link (file: $filename)");
 							query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES(".$folder['version_id'].",".$row['id'].",NULL,'".escape($real_link)."',$resolution,NULL)");
-							log_action("cron-update",'version',"Updated version with id ".$folder['version_id']." update date because of new Mega link added");
 							query("UPDATE version SET updated=CURRENT_TIMESTAMP,updated_by='Cron' WHERE id=".$folder['version_id']);
+							log_action("cron-create-link","S'ha inserit automàticament l'enllaç del fitxer '$filename' (id. de versió: ".$folder['version_id'].") i s'ha actualitzat la data de modificació de la versió");
 
 							//Now check if we need to upgrade in progess -> complete
 							$results = query("SELECT * FROM series WHERE id=".escape($folder['series_id']));
@@ -43,29 +45,33 @@ while ($folder = mysqli_fetch_assoc($resulta)) {
 
 							if (($series = mysqli_fetch_assoc($results))) {
 								if ($series['episodes']==mysqli_num_rows($resultl) && $version['status']==2) {
-									log_action("cron-update",'version',"Updated version with id ".$version['id']." to complete due to new Mega link");
+									log_action("cron-update-version","La versió (id. de versió: ".$version['id'].") s'ha marcat com a completada perquè ja té un enllaç per capítol");
 									query("UPDATE version SET status=1,updated=CURRENT_TIMESTAMP,updated_by='Cron' WHERE id=".$version['id']);
 								}
 							} else {
-								log_action("cron-match-failed",NULL,"Failed to match link $filename: series not found");
+								log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': la sèrie no existeix");
 							}
 							mysqli_free_result($results);
 							mysqli_free_result($resultl);
 						} else {
-								log_action("cron-match-failed",NULL,"Failed to match link $filename: version not found");
+								log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': la versió no existeix");
 						}
 						mysqli_free_result($resultv);
 					}
 					mysqli_free_result($links);
 				} else {
-					log_action("cron-match-failed",NULL,"Failed to match link $filename: no episode for this number");
+					log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': no hi ha cap capítol amb aquest número");
 				}
 				mysqli_free_result($resulte);
 			} else {
-				log_action("cron-match-failed",NULL,"Failed to match link $filename: does not match regular expression");
+				log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': no coincideix amb l'expressió regular");
 			}
 		}
 	}
 }
+
+//For compatibility with manual fetching
+unlink('/tmp/mega.lock');
+
 mysqli_free_result($resulta);
 ?>

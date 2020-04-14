@@ -1,19 +1,14 @@
 <?php
 require_once('config.inc.php');
 
-function log_action($action, $entity=NULL, $text=NULL){
+function log_action($action, $text=NULL){
 	global $db_connection;
-	if (!empty($entity)){
-		$entity = "'".escape($entity)."'";
-	} else {
-		$entity = "NULL";
-	}
 	if (!empty($text)){
 		$text = "'".escape($text)."'";
 	} else {
 		$text = "NULL";
 	}
-	query("INSERT INTO action_log (action, entity, text, author, date) VALUES ('".escape($action)."',$entity,$text,'Service', CURRENT_TIMESTAMP)", TRUE);
+	query("INSERT INTO action_log (action, text, author, date) VALUES ('".escape($action)."',$text,'(Servei intern)', CURRENT_TIMESTAMP)", TRUE);
 }
 
 function crash($string){

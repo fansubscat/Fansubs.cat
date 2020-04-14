@@ -19,8 +19,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="col" style="width: 18%;">Data i hora</th>
 								<th scope="col" style="width: 12%;">Usuari</th>
-								<th scope="col" style="width: 12%;">Acció</th>
-								<th scope="col" style="width: 10%;">Entitat</th>
+								<th scope="col" style="width: 15%;">Acció</th>
 								<th scope="col">Text</th>
 							</tr>
 						</thead>
@@ -40,7 +39,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo date('Y-m-d H:i:s', strtotime($row['date'])); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars($row['author']); ?></td>
 								<td class="align-middle"><?php echo htmlspecialchars($row['action']); ?></td>
-								<td class="align-middle"><?php echo htmlspecialchars($row['entity']); ?></td>
 								<td class="align-middle"><?php echo htmlspecialchars($row['text']); ?></td>
 							</tr>
 <?php
