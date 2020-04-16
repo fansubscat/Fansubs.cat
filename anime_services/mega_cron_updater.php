@@ -60,11 +60,21 @@ while ($folder = mysqli_fetch_assoc($resulta)) {
 					}
 					mysqli_free_result($links);
 				} else {
-					log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': no hi ha cap capítol amb aquest número");
+					$resultff = query("SELECT * FROM folder_failed_files WHERE folder_id=".$folder['id']." AND file_name='".escape($filename)."'");
+					if (mysqli_num_rows($resultff)==0) {
+						query("INSERT INTO folder_failed_files (folder_id, file_name) VALUES (".$folder['id'].",'".escape($filename)."')");
+						log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': no hi ha cap capítol amb aquest número");
+					}
+					mysqli_free_result($resultff);
 				}
 				mysqli_free_result($resulte);
 			} else {
-				log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': no coincideix amb l'expressió regular");
+				$resultff = query("SELECT * FROM folder_failed_files WHERE folder_id=".$folder['id']." AND file_name='".escape($filename)."'");
+				if (mysqli_num_rows($resultff)==0) {
+					query("INSERT INTO folder_failed_files (folder_id, file_name) VALUES (".$folder['id'].",'".escape($filename)."')");
+					log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': no coincideix amb l'expressió regular");
+				}
+				mysqli_free_result($resultff);
 			}
 		}
 	}

@@ -50,6 +50,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="col">Fansub</th>
 								<th scope="col">Sèrie</th>
 								<th class="text-center" scope="col">Estat</th>
+								<th class="text-center" scope="col"><span title="Obtenció automàtica d'enllaços activada">OA</span></th>
 								<th class="text-center" scope="col">Enllaços</th>
 								<th class="text-center" scope="col">Accions</th>
 							</tr>
@@ -62,13 +63,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$where = '';
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT l.id) links FROM version v LEFT JOIN link l ON v.id=l.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id$where GROUP BY v.id ORDER BY f.name, s.name");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT l.id) links, (SELECT COUNT(*) FROM folder fo WHERE fo.active=1 AND fo.version_id=v.id) autofetch FROM version v LEFT JOIN link l ON v.id=l.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id$where GROUP BY v.id ORDER BY f.name, s.name");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></td>
 								<td class="align-middle text-center"><?php echo get_status_description_short($row['status']); ?></td>
+								<td class="align-middle text-center"><?php echo $row['autofetch']==1 ? 'Sí' : 'No'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['links']; ?></td>
 								<td class="align-middle text-center"><a href="version_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de la sèrie '".$row['series_name']."' de ".$row['fansub_name']." i tots els seus enllaços? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fansub_id` (`fansub_id`)
+  KEY `account_ibfk_1` (`fansub_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `action_log` (
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `episode` (
   `name` varchar(200) DEFAULT NULL,
   `date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `series_id` (`series_id`)
+  KEY `episode_ibfk_1` (`series_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `episode_title` (
@@ -56,7 +56,17 @@ CREATE TABLE IF NOT EXISTS `folder` (
   `account_id` int(11) NOT NULL,
   `folder` varchar(200) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `folder_ibfk_1` (`account_id`),
+  KEY `folder_ibfk_2` (`version_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `folder_failed_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `folder_id` int(11) NOT NULL,
+  `file_name` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `folder_failed_files_ibfk_1` (`folder_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `genre` (
@@ -75,22 +85,22 @@ CREATE TABLE IF NOT EXISTS `link` (
   `resolution` varchar(200) DEFAULT NULL,
   `comments` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `episode_id` (`episode_id`) USING BTREE,
-  KEY `version_id` (`version_id`)
+  KEY `link_ibfk_1` (`episode_id`) USING BTREE,
+  KEY `link_ibfk_2` (`version_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `rel_series_genre` (
   `series_id` int(11) NOT NULL,
   `genre_id` int(11) NOT NULL,
   PRIMARY KEY (`series_id`,`genre_id`),
-  KEY `genre_id` (`genre_id`)
+  KEY `rel_series_genre_ibfk_1` (`genre_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `rel_version_fansub` (
   `version_id` int(11) NOT NULL,
   `fansub_id` int(11) NOT NULL,
   PRIMARY KEY (`version_id`,`fansub_id`),
-  KEY `rel_version_fansub_ibfk_2` (`fansub_id`)
+  KEY `rel_version_fansub_ibfk_1` (`fansub_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `series` (
@@ -126,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL,
   PRIMARY KEY (`username`),
-  KEY `fansub_id` (`fansub_id`)
+  KEY `user_ibfk_1` (`fansub_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `version` (
@@ -139,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `version` (
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `series_id` (`series_id`)
+  KEY `version_ibfk_1` (`series_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `views` (
@@ -152,22 +162,29 @@ CREATE TABLE IF NOT EXISTS `views` (
 ALTER TABLE `account`
   ADD CONSTRAINT `account_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `episode`
-  ADD CONSTRAINT `episode_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`);
+  ADD CONSTRAINT `episode_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `episode_title`
   ADD CONSTRAINT `episode_title_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `episode_title_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`);
+  ADD CONSTRAINT `episode_title_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `folder`
+  ADD CONSTRAINT `folder_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `folder_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `folder_failed_files`
+  ADD CONSTRAINT `folder_failed_files_ibfk_1` FOREIGN KEY (`folder_id`) REFERENCES `folder` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `link`
   ADD CONSTRAINT `link_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `link_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `rel_series_genre`
   ADD CONSTRAINT `rel_series_genre_ibfk_1` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`),
-  ADD CONSTRAINT `rel_series_genre_ibfk_2` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`);
+  ADD CONSTRAINT `rel_series_genre_ibfk_2` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `rel_version_fansub`
-  ADD CONSTRAINT `rel_version_fansub_ibfk_2` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `rel_version_fansub_ibfk_3` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `rel_version_fansub_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `rel_version_fansub_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `user`
-  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`);
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `version`
-  ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`);
+  ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `views`
+  ADD CONSTRAINT `views_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
