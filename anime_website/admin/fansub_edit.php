@@ -32,7 +32,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("UPDATE fansub SET name='".$data['name']."',url=".$data['url'].",status=".$data['status'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
 		else {
-			log_action("create-fansub", "S'ha creat el fansub amb nom '".$data['name']."'");
+			log_action("create-fansub", "S'ha creat un fansub amb nom '".$data['name']."'");
 			query("INSERT INTO fansub (name,url,status,created,created_by,updated,updated_by) VALUES ('".$data['name']."',".$data['url'].",".$data['status'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 

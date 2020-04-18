@@ -96,6 +96,7 @@ a:hover {
 
 #search_button {
 	vertical-align: middle;
+	cursor: pointer;
 }
 
 /* Content: articles and so */
@@ -312,44 +313,12 @@ a:hover {
 	background-color: #444444;
 }
 
-.year {
-	background:url('/style/images/year.png') no-repeat left center;
-	padding-left:20px;
+.icon {
+	padding-right: 0.25em;
 }
 
-.author {
-	background:url('/style/images/author.png') no-repeat left center;
-	padding-left:20px;
-}
-
-.director {
-	background:url('/style/images/director.png') no-repeat left center;
-	padding-left:20px;
-}
-
-.studio {
-	background:url('/style/images/studio.png') no-repeat left center;
-	padding-left:20px;
-}
-
-.rating {
-	background:url('/style/images/rating.png') no-repeat left center;
-	padding-left:20px;
-}
-
-.numepisodes {
-	background:url('/style/images/numepisodes.png') no-repeat left center;
-	padding-left:20px;
-}
-
-.duration {
-	background:url('/style/images/duration.png') no-repeat left center;
-	padding-left:20px;
-}
-
-.genres {
-	background:url('/style/images/genres.png') no-repeat left center;
-	padding-left:20px;
+.icon-play {
+	padding-right: 0.5em;
 }
 
 .episode-title {
@@ -371,13 +340,7 @@ a:hover {
 }
 
 .video-player {
-	background:url('/style/images/play.png') no-repeat left center;
-	padding-left:20px;
 	font-weight:bold;
-}
-
-.video-player:hover {
-	background:url('/style/images/play_hover.png') no-repeat left center;
 }
 
 .version-method {

@@ -17,6 +17,7 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 		<title><?php echo !empty($header_page_title) ? $header_page_title.' - Fansubs.cat - Anime' : 'Fansubs.cat - Anime'; ?></title>
 		<link rel="stylesheet" media="screen" type="text/css" href="/style/anime.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="/style/magnific-popup-1.1.0.css" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
 		<link rel="shortcut icon" href="/favicon.png" />
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.magnific-popup-1.1.0.min.js"></script>
@@ -46,7 +47,7 @@ if (empty($header_hide_options)) {
 				<div class="search-form">
 					<form id="search_form">
 						<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? $_GET['query'] : ''; ?>" placeholder="Fes una cerca...">
-						<input id="search_button" type="image" src="/style/images/search.png" title="Cerca" alt="Cerca">
+						<span id="search_button" class="fa fa-search" title="Cerca"></span>
 					</form>
 				</div>
 			</div>

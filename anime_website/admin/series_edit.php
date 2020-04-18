@@ -26,6 +26,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['myanimelist_id']="NULL";
 		}
+		if (!empty($_POST['score']) && is_numeric($_POST['score'])) {
+			$data['score']=escape($_POST['score']);
+		} else {
+			$data['score']="NULL";
+		}
 		if (!empty($_POST['alternate_names'])) {
 			$data['alternate_names']="'".escape($_POST['alternate_names'])."'";
 		} else {
@@ -124,7 +129,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-series", "S'ha actualitzat la sèrie amb nom '".$data['name']."' (id. de sèrie: ".$data['id'].")");
-			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',duration=".$data['duration'].",image='".$data['image']."',myanimelist_id=".$data['myanimelist_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",score=".$data['score'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',duration=".$data['duration'].",image='".$data['image']."',myanimelist_id=".$data['myanimelist_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$data['id'].",".$genre.")");
@@ -148,8 +153,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
-			log_action("create-series", "S'ha creat la sèrie amb nom '".$data['name']."'");
-			query("INSERT INTO series (slug,name,alternate_names,type,air_date,author,director,studio,rating,episodes,synopsis,duration,image,myanimelist_id,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."',".$data['duration'].",'".$data['image']."',".$data['myanimelist_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			log_action("create-series", "S'ha creat una sèrie amb nom '".$data['name']."'");
+			query("INSERT INTO series (slug,name,alternate_names,type,air_date,author,director,studio,rating,episodes,synopsis,duration,image,myanimelist_id,score,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."',".$data['duration'].",'".$data['image']."',".$data['myanimelist_id'].",".$data['score'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$inserted_id.",".$genre.")");
@@ -229,9 +234,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 
-						<div class="form-group">
-							<label for="form-alternate_names">Altres noms</label>
-							<input class="form-control" name="alternate_names" id="form-alternate_names" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_names'])); ?>">
+						<div class="row">
+							<div class="col-sm-8">
+								<div class="form-group">
+									<label for="form-alternate_names">Altres noms</label>
+									<input class="form-control" name="alternate_names" id="form-alternate_names" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_names'])); ?>">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="form-score">Puntuació a MyAnimeList</label>
+									<input class="form-control" name="score" id="form-score" type="number" value="<?php echo $row['score']; ?>" step=".01">
+								</div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm">

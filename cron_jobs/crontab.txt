@@ -5,4 +5,7 @@
 */15 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php fetch.php
 
 # Fansubs.cat - Anime - Update Mega links from accounts
-0 * * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php mega_cron_updater.php
+*/30 * * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php mega_cron_updater.php
+
+# Fansubs.cat - Anime - Update MyAnimeList score for all series
+0 0 * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php score_cron_updater.php

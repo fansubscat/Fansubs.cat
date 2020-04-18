@@ -225,7 +225,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
-			log_action("create-version", "S'ha creat la versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
+			log_action("create-version", "S'ha creat una versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
 			query("INSERT INTO version (series_id,status,default_resolution,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {

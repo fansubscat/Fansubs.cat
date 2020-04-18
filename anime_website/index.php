@@ -32,18 +32,19 @@ switch ($header_tab){
 		$result = query("SELECT a.series_id
 FROM (SELECT SUM(vi.counter) counter, l.version_id, s.id series_id FROM views vi LEFT JOIN link l ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL AND  vi.day>='".date("Y-m-d",strtotime("-1 month"))."' GROUP BY l.version_id, l.episode_id) a
 GROUP BY a.series_id
-ORDER BY MAX(a.counter) DESC
+ORDER BY MAX(a.counter) DESC, a.series_id ASC
 LIMIT 10");
 		$in_clause='0';
 		while ($row = mysqli_fetch_assoc($result)){
 			$in_clause.=','.$row['series_id'];
 		}
 		mysqli_free_result($result);
-		$sections=array("Darreres actualitzacions", "Més populars", "Més actuals");
+		$sections=array("Darreres actualitzacions", "Més populars", "Més actuals", "Més ben valorades");
 		$queries=array(
 			$base_query . " GROUP BY s.id ORDER BY last_updated DESC LIMIT 10",
 			$base_query . " WHERE s.id IN ($in_clause) GROUP BY s.id ORDER BY FIELD(s.id,$in_clause)",
-			$base_query . " GROUP BY s.id ORDER BY s.air_date DESC LIMIT 10");
+			$base_query . " GROUP BY s.id ORDER BY s.air_date DESC LIMIT 10",
+			$base_query . " GROUP BY s.id ORDER BY s.score DESC LIMIT 10");
 		break;
 }
 

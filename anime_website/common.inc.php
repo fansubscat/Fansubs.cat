@@ -127,7 +127,7 @@ function print_episode($row,$version_id,$series){
 	else{
 		while ($vrow = mysqli_fetch_assoc($result)){
 			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'">Reprodueix</a> '."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-play icon-play"></span>Reprodueix</a> '."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-method" title="Plataforma en què s\'allotja el vídeo">'.htmlspecialchars(get_provider($vrow['url'])).'</span>'."\n";
 			if (!empty($vrow['resolution'])){
 				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution" title="Resolució del vídeo">'.htmlspecialchars($vrow['resolution']).'</span>'."\n";
@@ -150,7 +150,7 @@ function print_extra($row,$version_id){
 	echo "</div>\n";
 	while ($vrow = mysqli_fetch_assoc($result)){
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'">Reprodueix</a> '."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-play icon-play"></span>Reprodueix</a> '."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-method" title="Plataforma en què s\'allotja el vídeo">'.htmlspecialchars(get_provider($vrow['url'])).'</span>'."\n";
 		if (!empty($vrow['resolution'])){
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution" title="Resolució del vídeo">'.htmlspecialchars($vrow['resolution']).'</span>'."\n";

@@ -31,42 +31,47 @@ if (!empty($series['alternate_names'])) {
 <?php
 if (!empty($series['air_date'])) {
 ?>
-							<div><span class="year" title="Any"><?php echo date('Y',strtotime($series['air_date'])); ?></span></div>
+							<div><span title="Any"><span class="fa fa-calendar icon"></span><?php echo date('Y',strtotime($series['air_date'])); ?></span></div>
 <?php
 }
 if (!empty($series['author'])) {
 ?>
-							<div><span class="author" title="Autor"><?php echo htmlspecialchars($series['author']); ?></span></div>
+							<div><span title="Autor"><span class="fa fa-book icon"></span><?php echo htmlspecialchars($series['author']); ?></span></div>
 <?php
 }
 if (!empty($series['director'])) {
 ?>
-							<div><span class="director" title="Director"><?php echo htmlspecialchars($series['director']); ?></span></div>
+							<div><span title="Director"><span class="fa fa-bullhorn icon"></span><?php echo htmlspecialchars($series['director']); ?></span></div>
 <?php
 }
 if (!empty($series['studio'])) {
 ?>
-							<div><span class="studio" title="Estudi"><?php echo htmlspecialchars($series['studio']); ?></span></div>
+							<div><span title="Estudi"><span class="fa fa-video icon"></span><?php echo htmlspecialchars($series['studio']); ?></span></div>
 <?php
 }
 if (!empty($series['rating'])) {
 ?>
-							<div><span class="rating" title="Edat recomanada"><?php echo htmlspecialchars(get_rating($series['rating'])); ?></span></div>
+							<div><span title="Edat recomanada"><span class="fa fa-star icon"></span><?php echo htmlspecialchars(get_rating($series['rating'])); ?></span></div>
 <?php
 }
 if (!empty($series['episodes']) && $series['episodes']>1) {
 ?>
-							<div><span class="numepisodes" title="Nombre de capítols"><?php echo $series['episodes'].' capítols'; ?></span></div>
+							<div><span title="Nombre de capítols"><span class="fa fa-ruler icon"></span><?php echo $series['episodes'].' capítols'; ?></span></div>
 <?php
 }
 if (!empty($series['duration'])) {
 ?>
-							<div><span class="duration" title="Durada"><?php echo $series['duration']; ?></span></div>
+							<div><span title="Durada"><span class="fa fa-clock icon"></span><?php echo $series['duration']; ?></span></div>
+<?php
+}
+if (!empty($series['score'])) {
+?>
+							<div><span title="Puntuació a MyAnimeList"><span class="fa fa-smile icon"></span><?php echo number_format($series['score'],2,","," "); ?>/10</span></div>
 <?php
 }
 if (!empty($series['genres'])) {
 ?>
-							<div><span class="genres" title="Gèneres"><?php echo htmlspecialchars($series['genres']); ?></span></div>
+							<div><span title="Gèneres"><span class="fa fa-tags icon"></span><?php echo htmlspecialchars($series['genres']); ?></span></div>
 <?php
 }
 ?>

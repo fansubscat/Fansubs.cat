@@ -8,7 +8,6 @@ function getSource(method, url){
 }
 
 $(document).ready(function() {
-
 	//We setup magnific popups for all fansub images
 	$(".video-player").each(function(){
 		$(this).magnificPopup({
@@ -47,16 +46,17 @@ $(document).ready(function() {
 			});
 		}
 	});
-	var form = document.getElementById("search_form");
-	if (form!=null){
-		$(form).submit(function(){
-			if (document.getElementById('search_query').value!=''){
-				window.location.href='/cerca/' + document.getElementById('search_query').value;
-			}
-			else{
-				window.location.href='/';
-			}
-			return false;
-		});
-	}
+	$('#search_form').submit(function(){
+		if ($('#search_query').val()!=''){
+			window.location.href='/cerca/' + $('#search_query').val();
+		}
+		else{
+			window.location.href='/';
+		}
+		return false;
+	});
+	$('#search_button').click(function(){
+		$('#search_form').submit();
+		return true;
+	});
 });
