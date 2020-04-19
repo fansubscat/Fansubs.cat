@@ -28,6 +28,10 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 		<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 	</head>
 	<body>
+		<div id="overlay" class="hidden">
+			<a id="overlay-close"><span class="fa fa-times"></span></a>
+			<div id="overlay-content"></div>
+		</div>
 		<div id="page">
 			<div id="header">
 				<a class="page-title" href="/">Fansubs.cat - Anime</a>

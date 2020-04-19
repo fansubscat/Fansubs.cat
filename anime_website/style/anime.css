@@ -43,6 +43,37 @@ h2 {
 	margin-right: auto;
 }
 
+#overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,1);
+	z-index: 2000;
+}
+
+#overlay-close {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-size: 2em;
+	padding: 0.5em;
+	z-index: 2000;
+	background-color: #000;
+}
+
+#overlay-content {
+	width: 100%;
+	height: 100%;
+}
+
+.no-overflow {
+	overflow: hidden;
+}
+
 #header {
 	margin-left: 2em;
 	margin-right: 2em;

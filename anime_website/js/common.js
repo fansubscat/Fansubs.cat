@@ -1,3 +1,6 @@
+var currentLinkId=-1;
+var currentStartTime=-1;
+
 function getSource(method, url){
 	var start='<div class="white-popup"><div style="display: flex; height: 100%;">';
 	var end='</div></div>';
@@ -8,20 +11,26 @@ function getSource(method, url){
 }
 
 $(document).ready(function() {
+	$('#overlay-close').click(function(){
+		$('#overlay-content').html('');
+		$('#overlay').addClass('hidden');
+		$('body').removeClass('no-overflow');
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", '/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
+		xmlHttp.send(null);
+		currentLinkId=-1;
+		currentStartTime=-1;
+	});
 	//We setup magnific popups for all fansub images
-	$(".video-player").each(function(){
-		$(this).magnificPopup({
-			items: {
-				src: getSource($(this).attr('data-method'), atob($(this).attr('data-url'))),
-				type: 'inline'
-			},
-			closeBtnInside: true
-		});
-		$(this).on('mfpOpen', function(e) {
-			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("GET", '/counter.php?link_id='+$(this).attr('data-link-id'), true);
-			xmlHttp.send(null);
-		});
+	$(".video-player").click(function(){
+		$('body').addClass('no-overflow');
+		$('#overlay').removeClass('hidden');
+		$('#overlay-content').html(getSource($(this).attr('data-method'), atob($(this).attr('data-url'))));
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", '/counter.php?link_id='+$(this).attr('data-link-id')+"&action=open", true);
+		xmlHttp.send(null);
+		currentLinkId=$(this).attr('data-link-id');
+		currentStartTime=Math.floor(new Date().getTime()/1000);
 	});
 	$(".version_tab").click(function(){
 		$(".version_tab").each(function(){
