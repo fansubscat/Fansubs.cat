@@ -441,7 +441,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															<option value="">- Selecciona un compte -</option>
 <?php
 		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].')';
+			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'];
 		} else {
 			$where = '';
 		}
@@ -449,7 +449,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-								<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($arow['name']); ?></option>
+															<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);
@@ -483,8 +483,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<span id="import-from-mega-not-loading" class="fa fa-redo pr-2"></span>Actualitza els enllaços ara
 											</button>
 										</div>
+									</div>
 								</div>
 							</div>
+						</div>
+						<div class="d-none alert alert-warning" id="import-failed-results">
+							<div>Els següents elements no s'han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa de la sèrie. Afegeix-los a mà on correspongui. Recorda que els fitxers només s'importen automàticament si tenen el format "<i>text</i><u><b> - 123</b></u><i>text</i>.mp4".</div>
+							<table class="table-hover table-sm mt-2 small w-100" id="import-failed-results-table">
+								<thead>
+									<tr>
+										<th>Fitxer</th>
+										<th>Enllaç</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
 						</div>
 						<div class="form-group">
 							<label for="form-episode-list">Capítols i enllaços</label>

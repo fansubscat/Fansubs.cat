@@ -36,14 +36,12 @@ $(document).ready(function() {
 	$("#show_cancelled").change(function() {
 		if (this.checked) {
 			Cookies.set('show_cancelled', '1', { expires: 3650, path: '/', domain: 'anime.fansubs.cat' });
-			$(".status-cancelled").each(function(){
-				$(this).parent().removeClass("hidden");
-			});
+			$('.carousel').slick('slickUnfilter');
+			$(".cancelled-not-carousel").removeClass("hidden");
 		} else {
 			Cookies.set('show_cancelled', '0', { expires: 3650, path: '/', domain: 'anime.fansubs.cat' });
-			$(".status-cancelled").each(function(){
-				$(this).parent().addClass("hidden");
-			});
+			$('.carousel').slick('slickFilter',':not(.cancelled)');
+			$(".cancelled-not-carousel").addClass("hidden");
 		}
 	});
 	$('#search_form').submit(function(){
@@ -58,5 +56,38 @@ $(document).ready(function() {
 	$('#search_button').click(function(){
 		$('#search_form').submit();
 		return true;
+	});
+
+	var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
+
+	$('.carousel').slick({
+		speed: 300,
+		infinite: false,
+		slidesToShow: size,
+		slidesToScroll: size,
+		variableWidth: true
+	});
+
+	if ($('#show_cancelled').length>0 && !$('#show_cancelled')[0].checked) {
+		$('.carousel').slick('slickFilter',':not(.cancelled)');
+		$(".cancelled-not-carousel").addClass("hidden");
+	}
+
+	$(window).resize(function() {
+		var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
+
+		$('.carousel').slick('slickUnfilter');
+		$('.carousel').slick('unslick');
+		$('.carousel').slick({
+			speed: 300,
+			infinite: false,
+			slidesToShow: size,
+			slidesToScroll: size,
+			variableWidth: true
+		});
+
+		if ($('#show_cancelled').length>0 && !$('#show_cancelled')[0].checked) {
+			$('.carousel').slick('slickFilter',':not(.cancelled)');
+		}
 	});
 });

@@ -22,6 +22,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 	}
 
+	$links = array();
+
 	foreach ($account_folders as $account_folder) {
 		//Awfully ugly logic, will probably break, but for now it works.
 		//Had to do this crap with a helper script because Mega-CMD cannot be run inside the Apache process.
@@ -60,32 +62,50 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				"error" => $results
 			));
 			die();
+		} else {
+			$lines = explode("\n",$results);
+			foreach ($lines as $line) {
+				if ($line!='') {
+					array_push($links,$line);
+				}
+			}
 		}
 	}
 
-	$links = explode("\n",$results);
-
 	$response = array();
+	$unmatched_results = array();
 
 	foreach ($links as $link){
-		$filename = explode(":",$link, 2)[0];
-		$real_link = explode(":",$link, 2)[1];
-		$matches = array();
-		if (preg_match('/.* - (\d+).*\.mp4/', $filename, $matches)) {
-			$number = $matches[1];
-			$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND number=".$number);
-			if ($row = mysqli_fetch_assoc($result)) {
-				$element = array();
-				$element['id'] = $row['id'];
-				$element['link'] = $real_link;
-				array_push($response, $element);
+		//log_action('get-link', "New link data: '".$link."'");
+		if (count(explode(":",$link, 2))>1) {
+			$filename = explode(":",$link, 2)[0];
+			$real_link = explode(":",$link, 2)[1];
+			$matches = array();
+			if (preg_match('/.* - (\d+).*\.mp4/', $filename, $matches)) {
+				$number = $matches[1];
+				$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND number=".$number);
+				if ($row = mysqli_fetch_assoc($result)) {
+					$element = array();
+					$element['id'] = $row['id'];
+					$element['link'] = $real_link;
+					array_push($response, $element);
+				}
 			}
+			else{
+				$element = array();
+				$element['file'] = $filename;
+				$element['link'] = $real_link;
+				array_push($unmatched_results, $element);
+			}
+		} else {
+			log_action('get-link-failed', "No s'ha pogut obtenir l'enllaç, text de sortida sense el format correcte: '".$link."'");
 		}
 	}
 
 	echo json_encode(array(
 		"status" => 'ok',
-		"results" => $response
+		"results" => $response,
+		"unmatched_results" => $unmatched_results
 	));
 }
 

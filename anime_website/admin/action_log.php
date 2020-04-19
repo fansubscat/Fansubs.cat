@@ -19,7 +19,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="col" style="width: 18%;">Data i hora</th>
 								<th scope="col" style="width: 12%;">Usuari</th>
-								<th scope="col" style="width: 15%;">Acció</th>
+								<th scope="col" style="width: 18%;">Acció</th>
 								<th scope="col">Text</th>
 							</tr>
 						</thead>

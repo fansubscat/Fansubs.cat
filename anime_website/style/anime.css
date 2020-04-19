@@ -103,7 +103,7 @@ a:hover {
 
 #content {
 	background-color: #222;
-	overflow: auto;
+	overflow: hidden;
 	width: 100%;
 }
 
@@ -133,18 +133,47 @@ a:hover {
 
 /* Main screen */
 .thumbnail {
-	display: inline-block;
+	display: block;
 	width: 180px; 
-	height: 240px;
+	height: 256px;
+	max-width: 180px;
+	max-height: 256px;
 	background-color: #888;
 	position: relative;
 	transition: transform .2s;
-	margin: 0.1em;
+	margin: 2px;
 }
 
 .thumbnail:hover {
 	transform: scale(1.1);
 	z-index: 99;
+}
+
+.slick-list {
+	overflow: visible !important;
+}
+
+.slick-prev, .slick-next {
+	z-index: 100;
+	border-radius: 4px;
+	background: #222 !important;
+	width: 26px !important;
+	height: 26px !important;
+}
+
+.slick-disabled {
+	visibility: hidden;
+}
+
+.carousel {
+	opacity: 0;
+	min-height: 256px;
+	max-height: 256px;
+}
+
+.carousel.slick-initialized {
+	opacity: 1;
+	position: relative;
 }
 
 .thumbnail img {
@@ -260,8 +289,8 @@ a:hover {
 }
 
 .sidebar_thumbnail {
-	width: 337.5px; 
-	height: 450px;
+	width: 338px; 
+	height: 478px;
 	object-fit: cover;
 }
 
@@ -417,8 +446,8 @@ a:hover {
 	}
 
 	.sidebar_thumbnail {
-		width: 168.75px; 
-		height: 225px;
+		width: 169px; 
+		height: 239px;
 		object-fit: cover;
 	}
 
@@ -438,16 +467,14 @@ a:hover {
 		padding: 0.5em 0.5em 0.5em 0em;
 	}
 
-	.wrappable {
-		justify-content: center;
-	}
-
-	.section {
-		padding: 1em;
-	}
-
 	.thumbnail {
-		width: 120px; 
-		height: 160px;
+		width: 120px;
+		height: 170px;
+		margin: 1px;
+	}
+
+	.carousel {
+		min-height: 170px;
+		min-height: 170px;
 	}
 }

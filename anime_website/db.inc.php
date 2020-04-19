@@ -18,7 +18,7 @@ function log_action($action, $text=NULL){
 
 function crash($string){
 	ob_end_clean();
-	log_action('crash', NULL, $string);
+	log_action('crash', $string);
 	die($string);
 }
 

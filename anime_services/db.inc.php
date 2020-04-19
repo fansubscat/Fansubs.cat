@@ -12,7 +12,7 @@ function log_action($action, $text=NULL){
 }
 
 function crash($string){
-	log_action('service-crash', NULL, $string);
+	log_action('service-crash', $string);
 	die($string);
 }
 

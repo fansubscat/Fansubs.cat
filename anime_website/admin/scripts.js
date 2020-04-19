@@ -14,6 +14,9 @@ function populateMalData(data, staff) {
 			$("#form-alternate_names").val(data.title_english);
 		}
 	}
+	if ($("#form-score").val()=='') {
+		$("#form-score").val(data.score ? data.score : '');
+	}
 	if ($("#form-type").val()=='') {
 		$("#form-type").val(data.episodes>1 ? 'series' : 'movie');
 	}
@@ -622,6 +625,8 @@ $(document).ready(function() {
 		$("#import-from-mega-loading").removeClass("d-none");
 		$("#import-from-mega-not-loading").addClass("d-none");
 		$("#import-from-mega").prop('disabled', true);
+		$('#import-failed-results-table tbody').empty();
+		$('#import-failed-results').addClass('d-none');
 
 		var account_ids = [];
 		var folders = [];
@@ -641,6 +646,13 @@ $(document).ready(function() {
 				} else {
 					for (var i = 0; i < data.results.length; i++) {
 						$("[id^=form-links-list-"+data.results[i].id+"-link-]").val(data.results[i].link);
+						$("[id^=form-links-list-"+data.results[i].id+"-resolution-]").val($('#form-default_resolution').val());
+					}
+					if (data.unmatched_results.length>0) {
+						$('#import-failed-results').removeClass('d-none');
+						for (var i = 0; i < data.unmatched_results.length; i++) {
+							$('#import-failed-results-table').append('<tr><td>'+data.unmatched_results[i].file+'</td><td>'+data.unmatched_results[i].link+'</td></tr>');
+						}
 					}
 				}
 				$("#import-from-mega-loading").addClass("d-none");
