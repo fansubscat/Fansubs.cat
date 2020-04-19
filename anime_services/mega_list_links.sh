@@ -21,7 +21,7 @@ then
 	exit 3
 fi
 
-mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":" $2}'
+mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}'
 if [ $? -ne 0 ]
 then
 	exit 4

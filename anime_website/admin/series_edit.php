@@ -320,7 +320,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm-1">
 								<div class="form-group">
 									<a id="form-image-preview-link" href="<?php echo htmlspecialchars($row['image']); ?>" target="blank">
-										<img id="form-image-preview" style="width: 67.5px; height: 90px; object-fit: cover; background-color: black; display:inline-block;" src="<?php echo htmlspecialchars($row['image']); ?>" alt="">
+										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block;" src="<?php echo htmlspecialchars($row['image']); ?>" alt="">
 									</a>
 								</div>
 							</div>

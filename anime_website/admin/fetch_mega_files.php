@@ -27,17 +27,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	foreach ($account_folders as $account_folder) {
 		//Awfully ugly logic, will probably break, but for now it works.
 		//Had to do this crap with a helper script because Mega-CMD cannot be run inside the Apache process.
-		while (file_exists('/tmp/mega.lock')){
-			sleep(1);
+		$lock_pointer = fopen($mega_lock_file, "w+");
+
+		//We acquire a file lock to prevent two invocations at the same time.
+		//This could happen if a cron or another request is running while this one is done.
+		if (flock($lock_pointer, LOCK_EX)) {
+			file_put_contents('/tmp/mega.request',$account_folder['session_id'].":::".$account_folder['folder']);
+			while (file_exists('/tmp/mega.request')){
+				sleep(1);
+			}
+			$results = file_get_contents('/tmp/mega.response');
+			unlink('/tmp/mega.response');
+			flock($lock_pointer, LOCK_UN);
+		} else {
+			echo json_encode(array(
+				"status" => 'ko',
+				"error" => "Error en la creació del fitxer de blocatge. Torna-ho a provar més tard. (codi: L)"
+			));
+			die();
 		}
-		file_put_contents('/tmp/mega.lock','1');
-		file_put_contents('/tmp/mega.request',$account_folder['session_id'].":".$account_folder['folder']);
-		while (file_exists('/tmp/mega.request')){
-			sleep(1);
-		}
-		$results = file_get_contents('/tmp/mega.response');
-		unlink('/tmp/mega.response');
-		unlink('/tmp/mega.lock');
 
 		if (substr($results,0,5)=='ERROR'){
 			switch(substr($results,0,7)){
@@ -56,7 +64,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				case 'ERROR 5':
 					$results = "Error en tancar la sessió. (codi: 5)";
 					break;
-			}	
+			}
 			echo json_encode(array(
 				"status" => 'ko',
 				"error" => $results
@@ -77,9 +85,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	foreach ($links as $link){
 		//log_action('get-link', "New link data: '".$link."'");
-		if (count(explode(":",$link, 2))>1) {
-			$filename = explode(":",$link, 2)[0];
-			$real_link = explode(":",$link, 2)[1];
+		if (count(explode(":::",$link, 2))>1) {
+			$filename = explode(":::",$link, 2)[0];
+			$real_link = explode(":::",$link, 2)[1];
 			$matches = array();
 			if (preg_match('/.* - (\d+).*\.mp4/', $filename, $matches)) {
 				$number = $matches[1];

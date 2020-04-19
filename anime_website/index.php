@@ -9,7 +9,7 @@ if (!empty($_GET['query']) || $header_tab=='movies'){
 
 require_once('header.inc.php');
 
-$max_items=20;
+$max_items=24;
 
 $base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, MIN(v.status) status, MAX(v.updated) last_updated FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 

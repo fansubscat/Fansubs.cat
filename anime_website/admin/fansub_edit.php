@@ -21,6 +21,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['url']="NULL";
 		}
+		if (!empty($_POST['twitter_url'])) {
+			$data['twitter_url']="'".escape($_POST['twitter_url'])."'";
+		} else {
+			$data['twitter_url']="NULL";
+		}
 		if (!empty($_POST['status']) && $_POST['status']==1) {
 			$data['status']=1;
 		} else {
@@ -29,11 +34,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-fansub", "S'ha actualitzat el fansub amb nom '".$data['name']."' (id. de fansub: ".$data['id'].")");
-			query("UPDATE fansub SET name='".$data['name']."',url=".$data['url'].",status=".$data['status'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE fansub SET name='".$data['name']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",status=".$data['status'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
 		else {
 			log_action("create-fansub", "S'ha creat un fansub amb nom '".$data['name']."'");
-			query("INSERT INTO fansub (name,url,status,created,created_by,updated,updated_by) VALUES ('".$data['name']."',".$data['url'].",".$data['status'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO fansub (name,url,twitter_url,status,created,created_by,updated,updated_by) VALUES ('".$data['name']."',".$data['url'].",".$data['twitter_url'].",".$data['status'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 
 		$_SESSION['message']="S'han desat les dades correctament.";
@@ -64,6 +69,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="form-group">
 						<label for="form-url">URL</label>
 						<input class="form-control" type="url" name="url" id="form-url" maxlength="200" value="<?php echo htmlspecialchars($row['url']); ?>">
+					</div>
+					<div class="form-group">
+						<label for="form-twitter_url">URL del perfil de Twitter</label>
+						<input class="form-control" type="url" name="twitter_url" id="form-twitter_url" maxlength="200" value="<?php echo htmlspecialchars($row['twitter_url']); ?>">
 					</div>
 					<div class="form-group">
 						<label for="form-status">Estat</label>

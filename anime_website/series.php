@@ -1,6 +1,14 @@
 <?php
 require_once("db.inc.php");
 
+function get_fansub_with_url($fansub) {
+	if (!empty($fansub['url'])) {
+		return '<a href="'.htmlspecialchars($fansub['url']).'" target="_blank">'.htmlspecialchars($fansub['name']).'</a>';
+	} else {
+		return htmlspecialchars($fansub['name']);
+	}
+}
+
 $result = query("SELECT s.*, YEAR(s.air_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE slug='".escape($_GET['slug'])."' GROUP BY s.id");
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
@@ -103,7 +111,7 @@ if ($count==0) {
 ?>
 							<div class="version_tab<?php echo $i==0 ? ' version_tab_selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>">
 								<div class="status-<?php echo get_status($version['status']); ?>" title="<?php echo get_status_description($version['status']); ?>"></div>
-								<div class="version_tab_text"><?php echo htmlspecialchars(get_fansub_version_title($version['fansub_name'])); ?></div>
+								<div class="version_tab_text"><?php echo htmlspecialchars('Versió '.get_fansub_preposition_name($version['fansub_name'])); ?></div>
 							</div>
 <?php
 			$i++;
@@ -120,45 +128,56 @@ if ($count==0) {
 						<div class="version_content<?php echo $count>1 ? ' version_content_multi' : ''; ?><?php echo $i>0 ? ' hidden' : ''; ?>" id="version_content_<?php echo $version['id']; ?>">
 <?php
 		$resultf = query("SELECT f.* FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE vf.version_id=".$version['id']." ORDER BY f.name ASC");
+		$fansubs = array();
 		while ($fansub = mysqli_fetch_assoc($resultf)) {
-?>
-							<div class="fansub_data">Aquesta obra ha estat subtitulada per 
-<?php
-			if (!empty($fansub['url'])) {
-?>
-								<a href="<?php echo htmlspecialchars($fansub['url']); ?>" target="_blank"><?php echo htmlspecialchars($fansub['name']); ?></a>.
-<?php
-			}
-			else{
-				echo htmlspecialchars($fansub['name']).'.';
-			}
-			if ($fansub['status']==1){
-?>
-								Si vols veure-la amb màxima qualitat, al seu web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!
-<?php
-			}
-?>
-							</div>
-<?php
+			array_push($fansubs, $fansub);
 		}
 		mysqli_free_result($resultf);
 
-		if (FALSE/*!empty($version['general_url'])*/) {
+		$any_active = ($fansubs[0]['status']==1);
+		$conjunctioned_names = get_fansub_with_url($fansubs[0]);
+		for ($j=1;$j<count($fansubs);$j++) {
+			if ($j==count($fansubs)-1) {
+				$conjunctioned_names.=' i ';
+			} else {
+				$conjunctioned_names.=', ';
+			}
+			$conjunctioned_names.=get_fansub_with_url($fansubs[$j]);
+			if ($fansubs[$j]['status']==1) {
+				$any_active = TRUE;
+			}
+		}
+
+		$fansub_buttons = '';
+		for ($j=0;$j<count($fansubs);$j++) {
+			if (!empty($fansubs[$j]['url'])) {
+				$fansub_buttons.='<a class="fansub-website" href="'.$fansubs[$j]['url'].'" target="_blank"><span class="fa fa-globe icon"></span>Web '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
+			}
+			if (!empty($fansubs[$j]['twitter_url'])) {
+				$fansub_buttons.='<a class="fansub-twitter" href="'.$fansubs[$j]['twitter_url'].'" target="_blank"><span class="fab fa-twitter icon"></span>Twitter '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
+			}
+		}
 ?>
 							<div class="section">
-								<h2 class="section-title">Contingut</h2>
-								<div class="section-content">Trobaràs tot el contingut a <a href="<?php echo htmlspecialchars($version['general_url']); ?>" target="blank"><?php echo htmlspecialchars($version['general_url']); ?></a></div>
+								<h2 class="section-title"><?php echo count($fansubs)>1 ? 'Fansubs' : 'Fansub'; ?></h2>
+								<div class="section-content">Aquesta obra ha estat subtitulada per <?php echo $conjunctioned_names; ?>. <?php echo $any_active ? "Si vols veure-la amb màxima qualitat, al seu web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!" : ''; ?></div>
+<?php
+		if (!empty($fansub_buttons)) {
+?>
+								<div class="flex wrappable fansub-buttons"><?php echo $fansub_buttons; ?></div>
+<?php
+		}
+?>
 							</div>
 <?php
-		} else {
-			$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." WHERE series_id=".$series['id']." ORDER BY number IS NULL ASC, number ASC, IFNULL(et.title,e.name) ASC");
-			$episodes = array();
-			while ($row = mysqli_fetch_assoc($resulte)) {
-				array_push($episodes, $row);
-			}
-			mysqli_free_result($resulte);
+		$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." WHERE series_id=".$series['id']." ORDER BY number IS NULL ASC, number ASC, IFNULL(et.title,e.name) ASC");
+		$episodes = array();
+		while ($row = mysqli_fetch_assoc($resulte)) {
+			array_push($episodes, $row);
+		}
+		mysqli_free_result($resulte);
 
-			if (count($episodes)>0) {
+		if (count($episodes)>0) {
 ?>
 							<div class="section">
 								<h2 class="section-title">Contingut</h2>
@@ -171,28 +190,27 @@ if ($count==0) {
 								</div>
 							</div>
 <?php
-			}
-			$resulte = query("SELECT DISTINCT l.extra_name FROM link l WHERE version_id=".$version['id']." AND l.episode_id IS NULL ORDER BY extra_name ASC");
-			$extras = array();
-			while ($row = mysqli_fetch_assoc($resulte)) {
-				array_push($extras, $row);
-			}
-			mysqli_free_result($resulte);
+		}
+		$resulte = query("SELECT DISTINCT l.extra_name FROM link l WHERE version_id=".$version['id']." AND l.episode_id IS NULL ORDER BY extra_name ASC");
+		$extras = array();
+		while ($row = mysqli_fetch_assoc($resulte)) {
+			array_push($extras, $row);
+		}
+		mysqli_free_result($resulte);
 
-			if (count($extras)>0) {
+		if (count($extras)>0) {
 ?>
 							<div class="section">
 								<h2 class="section-title">Contingut extra</h2>
 								<div class="section-content flex wrappable">
 <?php
-				foreach ($extras as $row) {
-					print_extra($row, $version['id']);
-				}
+			foreach ($extras as $row) {
+				print_extra($row, $version['id']);
+			}
 ?>
 								</div>
 							</div>
 <?php
-			}
 		}
 ?>
 						</div>

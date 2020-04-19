@@ -37,6 +37,12 @@ h2 {
 
 /* Header */
 
+#page {
+	max-width: 1156px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #header {
 	margin-left: 2em;
 	margin-right: 2em;
@@ -116,7 +122,7 @@ a:hover {
 }
 
 .section {
-	padding: 1.5em 2em;
+	padding: 1.5em 2em 1em 2em;
 }
 
 .section-title,
@@ -206,6 +212,10 @@ a:hover {
 	padding-left: 0.2em;
 	padding-right: 0.2em;
 	font-weight: bold;
+	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 90%;
 }
 
 .status-completed {
@@ -271,6 +281,7 @@ a:hover {
 .main_content {
 	order: 2;
 	flex-grow: 1;
+	margin-top: 0.5em;
 }
 
 .sidebar_data {
@@ -294,16 +305,44 @@ a:hover {
 	object-fit: cover;
 }
 
-.fansub_data {
-	margin: 0em 2em;
-	margin-bottom: 1em;
-	padding: .75em 1em;
-	position: relative;
-	border: 1px solid transparent;
-	border-radius: .25rem;
-	color: #FFFFFF;
-	background-color: #4a4915;
-	border-color: #69671d;
+.fansub-buttons {
+	margin-top: 1em;
+}
+
+.fansub-website {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-right: 0.5em;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+	padding: 0.5em;
+	background: rgb(12, 87, 21);
+	white-space: nowrap;
+}
+
+.fansub-website:hover {
+	background: rgb(32, 107, 41);
+}
+
+.fansub-twitter {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-right: 0.5em;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+	padding: 0.5em;
+	background: rgb(14, 87, 102);
+	white-space: nowrap;
+}
+
+.fansub-twitter:hover {
+	background: rgb(34, 107, 122);
 }
 
 .hidden {
@@ -332,22 +371,21 @@ a:hover {
 	padding: 0.5em;
 }
 
-.version_content {	
-	padding-top: 1em;
-}
-
 .version_content_multi {
-	padding-top: 2em;
 	margin: 0em 2em;
 	background-color: #444444;
 }
 
 .icon {
-	padding-right: 0.25em;
+	padding-right: 0.3em;
 }
 
 .icon-play {
 	padding-right: 0.5em;
+}
+
+.icon-unavailable {
+	padding-right: 0.4em;
 }
 
 .episode-title {
@@ -356,8 +394,9 @@ a:hover {
 }
 
 .episode {
+	margin-left: 1.5em;
 	margin-bottom: 0.6em;
-	width: 450px;
+	width: 100%;
 }
 
 .episode-unavailable {
@@ -370,39 +409,64 @@ a:hover {
 
 .video-player {
 	font-weight:bold;
+	color: #E0E0E0;
+}
+
+.nowrap {	
+	white-space: nowrap;
 }
 
 .version-method {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.2em;
-	padding-left: 0.2em;
-	padding-right: 0.2em;
-	background: rgb(117, 8, 21);
+	margin-left: 0.4em;
+	padding: 0.1em 0.4em;
+	background: rgb(100, 0, 0);
 	white-space: nowrap;
+	cursor: help;
 }
 
-.version-resolution {
+.version-resolution-hd {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.2em;
-	padding-left: 0.2em;
-	padding-right: 0.2em;
-	background: rgb(92, 92, 11);
+	padding: 0.1em 0.4em;
+	background: rgb(0, 80, 0);
 	white-space: nowrap;
+	cursor: help;
+}
+
+.version-resolution-sd {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(100, 100, 0);
+	white-space: nowrap;
+	cursor: help;
 }
 
 .version-comments {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.2em;
-	padding-left: 0.2em;
-	padding-right: 0.2em;
-	background: rgb(12, 111, 135);
+	padding: 0.1em 0.4em;
+	background: rgb(0, 50, 100);
 	white-space: nowrap;
+	cursor: help;
+}
+
+.version-unavailable {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-left: 0.2em;
+	padding: 0.1em 0.4em;
+	background: rgb(80, 80, 80);
+	white-space: nowrap;
+	cursor: help;
+	color: #DDD;
 }
 
 
@@ -476,5 +540,25 @@ a:hover {
 	.carousel {
 		min-height: 170px;
 		min-height: 170px;
+	}
+
+	.section {
+		padding: 1em 1em 1em 0.75em;
+	}
+
+	.slick-prev, .slick-next {
+		visibility: hidden;
+	}
+
+	.episode {
+		margin-left: 0.5em;
+	}
+
+	.thumbnail .fansub {
+		font-size: 0.6em;
+	}
+
+	.thumbnail .title {
+		font-size: 0.75em;
 	}
 }

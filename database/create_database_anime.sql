@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `fansub` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `url` varchar(200) DEFAULT NULL,
+  `twitter_url` varchar(200) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,

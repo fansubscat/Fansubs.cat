@@ -6,8 +6,8 @@ while true
 do
 	if [ -f "/tmp/mega.request" ]
 	then
-		SESSION_ID=`cat /tmp/mega.request | awk -F':' '{print $1}'`
-		FOLDER=`cat /tmp/mega.request | awk -F':' '{print $2}'`
+		SESSION_ID=`cat /tmp/mega.request | awk -F':::' '{print $1}'`
+		FOLDER=`cat /tmp/mega.request | awk -F':::' '{print $2}'`
 
 		echo "Got request for session id '$SESSION_ID' and folder '$FOLDER'" >> mega_worker.log
 
@@ -40,7 +40,7 @@ do
 			continue;
 		fi
 
-		mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":" $2}' > /tmp/mega.temp
+		mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' > /tmp/mega.temp
 		if [ $? -ne 0 ] 
 		then
 			mega-logout --keep-session > /dev/null 2> /dev/null
