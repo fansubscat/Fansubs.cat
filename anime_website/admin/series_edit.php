@@ -182,7 +182,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultg);
 
-		$resulte = query("SELECT e.* FROM episode e WHERE e.series_id=".escape($_GET['id'])." ORDER BY e.number ASC");
+		$resulte = query("SELECT e.* FROM episode e WHERE e.series_id=".escape($_GET['id'])." ORDER BY e.number IS NULL ASC, e.number ASC, e.name ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
