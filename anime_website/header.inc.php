@@ -32,6 +32,41 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 			<a id="overlay-close"><span class="fa fa-times"></span></a>
 			<div id="overlay-content"></div>
 		</div>
+		<div id="options-overlay" class="hidden flex">
+			<div id="options-overlay-content">
+				<form id="options-form">
+					<h2 class="section-title">Opcions de visualització</h2>
+					<div class="options-item">
+						<input id="show_cancelled" type="checkbox"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
+					  	<label for="show_cancelled">Mostra sèries cancel·lades</label>
+					</div>
+					<div class="options-item">
+						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
+					  	<label for="show_hentai">Mostra hentai (confirmes que ets major d'edat)</label>
+					</div>
+					<h2 class="section-title options-section-divider">Fansubs que es mostren</h2>
+					<div id="options-fansubs">
+<?php
+$cookie_fansub_ids = get_cookie_fansub_ids();
+$resultf = query("SELECT * FROM fansub ORDER BY name");
+while ($row = mysqli_fetch_assoc($resultf)) {
+?>
+						<div class="options-item options-fansub">
+							<input id="show_fansub_<?php echo $row['id']; ?>" type="checkbox"<?php echo in_array($row['id'],$cookie_fansub_ids) ? '' : ' checked'; ?> value="<?php echo $row['id']; ?>">
+						  	<label for="show_fansub_<?php echo $row['id']; ?>"><?php echo $row['name']; ?></label>
+						</div>
+<?php
+}
+mysqli_free_result($resultf);
+?>
+					</div>
+				</form>
+				<div id="options-buttonbar">
+					<button id="options-save-button"><span class="fa fa-check icon"></span>Desa la configuració</button>
+					<button id="options-cancel-button"><span class="fa fa-times icon"></span>Cancel·la</button>
+				</div>
+			</div>
+		</div>
 		<div id="page">
 			<div id="header">
 				<a class="page-title" href="/">Fansubs.cat - Anime</a>
@@ -41,16 +76,9 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 					<a class="tab<?php if ($header_tab=='series') echo ' selectedtab'; ?>" href="/series">Sèries</a>
 				</div>
 				<div class="separator"></div>
-<?php
-if (empty($header_hide_options)) {
-?>
 				<div class="user-options">
-					<input type="checkbox" id="show_cancelled"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
-				  <label for="show_cancelled">Mostra sèries cancel·lades</label>
+					<a id="options-button" class="tab">Opcions</a>
 				</div>
-<?php
-}
-?>
 				<div class="search-form">
 					<form id="search_form">
 						<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? $_GET['query'] : ''; ?>" placeholder="Fes una cerca...">

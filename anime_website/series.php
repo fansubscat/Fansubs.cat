@@ -20,7 +20,6 @@ if (isset($failed)) {
 $header_page_title=$series['name'];
 
 $header_tab=$_GET['page'];
-$header_hide_options=TRUE;
 
 require_once('header.inc.php');
 ?>

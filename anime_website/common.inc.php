@@ -207,4 +207,17 @@ function internal_print_episode($episode_title, $result) {
 		echo "\t\t\t\t\t\t\t\t\t</div>\n";
 	}
 }
+
+function get_cookie_fansub_ids() {
+	$fansub_ids = array();
+	if (!empty($_COOKIE['hidden_fansubs'])) {
+		$exploded = explode(',',$_COOKIE['hidden_fansubs']);
+		foreach ($exploded as $id) {
+			if (is_numeric($id)) {
+				array_push($fansub_ids, $id);
+			}
+		}
+	}
+	return $fansub_ids;
+}
 ?>
