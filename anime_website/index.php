@@ -37,9 +37,9 @@ switch ($header_tab){
 		break;
 	default:
 		$result = query("SELECT a.series_id
-FROM (SELECT SUM(vi.counter) counter, l.version_id, s.id series_id FROM views vi LEFT JOIN link l ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL AND  vi.day>='".date("Y-m-d",strtotime("-1 month"))."' GROUP BY l.version_id, l.episode_id) a
+FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id FROM views vi LEFT JOIN link l ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL AND vi.views>0 AND vi.day>='".date("Y-m-d",strtotime("-1 month"))."' GROUP BY l.version_id, l.episode_id) a
 GROUP BY a.series_id
-ORDER BY MAX(a.counter) DESC, a.series_id ASC");
+ORDER BY MAX(a.views) DESC, a.series_id ASC");
 		$in_clause='0';
 		while ($row = mysqli_fetch_assoc($result)){
 			$in_clause.=','.$row['series_id'];

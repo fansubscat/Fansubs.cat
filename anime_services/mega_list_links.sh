@@ -15,13 +15,19 @@ then
 	exit 2
 fi
 
+mega-reload > /dev/null 2> /dev/null
+if [ $? -ne 0 ]
+then
+	exit 6
+fi
+
 mega-cd "$FOLDER" > /dev/null 2> /dev/null
 if [ $? -ne 0 ]
 then
 	exit 3
 fi
 
-mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}'
+mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | sort
 if [ $? -ne 0 ]
 then
 	exit 4

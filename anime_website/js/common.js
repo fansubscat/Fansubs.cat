@@ -1,6 +1,24 @@
 var currentLinkId=-1;
 var currentStartTime=-1;
 
+function sendAjaxViewEnd(){
+	if (currentLinkId!=-1){
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", '/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
+		xmlHttp.send(null);
+		currentLinkId=-1;
+		currentStartTime=-1;
+	}
+}
+
+function sendBeaconViewEnd(){
+	if (currentLinkId!=-1){
+		navigator.sendBeacon('/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime));
+		currentLinkId=-1;
+		currentStartTime=-1;
+	}
+}
+
 function getSource(method, url){
 	var start='<div class="white-popup"><div style="display: flex; height: 100%;">';
 	var end='</div></div>';
@@ -15,11 +33,7 @@ $(document).ready(function() {
 		$('#overlay-content').html('');
 		$('#overlay').addClass('hidden');
 		$('body').removeClass('no-overflow');
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", '/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
-		xmlHttp.send(null);
-		currentLinkId=-1;
-		currentStartTime=-1;
+		sendAjaxViewEnd();
 	});
 	//We setup magnific popups for all fansub images
 	$(".video-player").click(function(){
@@ -108,5 +122,9 @@ $(document).ready(function() {
 		if ($('#show_cancelled').length>0 && !$('#show_cancelled')[0].checked) {
 			$('.carousel').slick('slickFilter',':not(.cancelled)');
 		}
+	});
+
+	$(window).on('unload', function() {
+		sendBeaconViewEnd();
 	});
 });

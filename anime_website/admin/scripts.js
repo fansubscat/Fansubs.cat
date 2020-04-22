@@ -651,7 +651,7 @@ $(document).ready(function() {
 					if (data.unmatched_results.length>0) {
 						$('#import-failed-results').removeClass('d-none');
 						for (var i = 0; i < data.unmatched_results.length; i++) {
-							$('#import-failed-results-table').append('<tr><td>'+data.unmatched_results[i].file+'</td><td>'+data.unmatched_results[i].link+'</td></tr>');
+							$('#import-failed-results-table').append('<tr><td>'+data.unmatched_results[i].file+'</td><td>'+data.unmatched_results[i].link+'</td><td title="'+data.unmatched_results[i].reason_description+'" style="white-space: nowrap;">'+data.unmatched_results[i].reason+'<span class="fa fa-question-circle ml-1"></span></td></tr>');
 						}
 					}
 				}

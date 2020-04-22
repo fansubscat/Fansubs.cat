@@ -82,6 +82,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	$response = array();
 	$unmatched_results = array();
+	$processed_numbers = array();
 
 	foreach ($links as $link){
 		//log_action('get-link', "New link data: '".$link."'");
@@ -91,18 +92,40 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$matches = array();
 			if (preg_match('/.* - (\d+).*\.mp4/', $filename, $matches)) {
 				$number = $matches[1];
-				$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND number=".$number);
-				if ($row = mysqli_fetch_assoc($result)) {
+				if (!in_array($number, $processed_numbers)) {
+					$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND number=".$number);
+					if ($row = mysqli_fetch_assoc($result)) {
+						$element = array();
+						$element['id'] = $row['id'];
+						$element['link'] = $real_link;
+						array_push($response, $element);
+						array_push($processed_numbers, $number);
+					} else {
+						//Episode number does not exist
+						$element = array();
+						$element['file'] = $filename;
+						$element['link'] = $real_link;
+						$element['reason'] = "Capítol inexistent";
+						$element['reason_description'] = "No s'ha trobat cap capítol amb aquest número.";
+						array_push($unmatched_results, $element);
+					}
+				} else {
+					//More than one link per episode - only first gets accepted
 					$element = array();
-					$element['id'] = $row['id'];
+					$element['file'] = $filename;
 					$element['link'] = $real_link;
-					array_push($response, $element);
+					$element['reason'] = "Múltiples enllaços";
+					$element['reason_description'] = "Hi ha més d'un enllaç amb aquest número de capítol, s'ha importat només el primer.";
+					array_push($unmatched_results, $element);
 				}
 			}
 			else{
+				//Link does not match regexp
 				$element = array();
 				$element['file'] = $filename;
 				$element['link'] = $real_link;
+				$element['reason'] = "Format erroni";
+				$element['reason_description'] = "No coincideix amb el format correcte de nom de fitxer. Potser és un capítol especial?";
 				array_push($unmatched_results, $element);
 			}
 		} else {

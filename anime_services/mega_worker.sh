@@ -30,6 +30,16 @@ do
 			continue;
 		fi
 
+
+		mega-reload > /dev/null 2> /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo "ERROR 6" > /tmp/mega.response
+			rm /tmp/mega.request
+			echo "Request served with error 6" >> mega_worker.log
+			continue;
+		fi
+
 		mega-cd "$FOLDER" > /dev/null 2> /dev/null
 		if [ $? -ne 0 ] 
 		then
@@ -40,7 +50,7 @@ do
 			continue;
 		fi
 
-		mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' > /tmp/mega.temp
+		mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | sort > /tmp/mega.temp
 		if [ $? -ne 0 ] 
 		then
 			mega-logout --keep-session > /dev/null 2> /dev/null

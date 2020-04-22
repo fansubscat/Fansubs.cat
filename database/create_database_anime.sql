@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `folder` (
 CREATE TABLE IF NOT EXISTS `folder_failed_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `folder_id` int(11) NOT NULL,
-  `file_name` int(11) NOT NULL,
+  `file_name` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `folder_failed_files_ibfk_1` (`folder_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

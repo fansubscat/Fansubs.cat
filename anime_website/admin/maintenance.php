@@ -3,7 +3,7 @@ $header_title="Eines";
 $page="tools";
 include("header.inc.php");
 
-if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
+if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['action'])) {
 		switch ($_GET['action']) {
 			case 'clear-views':
@@ -22,7 +22,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Eines</h4>
+					<h4 class="card-title text-center mb-4 mt-1">Manteniment</h4>
 					<hr>
 
 <?php
@@ -34,23 +34,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 					<div class="text-center p-2">
-						<a href="link_verifier.php" class="btn btn-primary">Verificador d'enllaços</a>
-					</div>
-<?php
-	if ($_SESSION['admin_level']>=3) {
-?>
-					<div class="text-center p-2">
-						<a href="action_log.php" class="btn btn-primary">Mostra el registre d'accions</a>
-					</div>
-					<div class="text-center p-2">
 						<a href="tools.php?action=clear-logs" class="btn btn-warning" onclick="return confirm('Segur que vols buidar el registre d\'accions? Es perdrà l\'historial de canvis. L\'acció no es pot desfer.')" onauxclick="return false;">Buida el registre d'accions</a>
 					</div>
 					<div class="text-center p-2">
 						<a href="tools.php?action=clear-views" class="btn btn-danger" onclick="return confirm('Segur que vols esborrar totes les visualitzacions? Es perdran totes les estadístiques i l\'apartat \'Més populars\' apareixerà buit fins que no hi hagi visualitzacions noves. L\'acció no es pot desfer.')" onauxclick="return false;">Esborra totes les visualitzacions</a>
 					</div>
-<?php
-	}
-?>
 				</article>
 			</div>
 		</div>

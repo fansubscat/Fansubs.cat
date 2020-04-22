@@ -494,6 +494,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<tr>
 										<th>Fitxer</th>
 										<th>Enllaç</th>
+										<th>Motiu</th>
 									</tr>
 								</thead>
 								<tbody>
