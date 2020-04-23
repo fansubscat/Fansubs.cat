@@ -11,7 +11,7 @@ $base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR 
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
-$cookie_extra_conditions = (empty($_COOKIE['show_cancelled']) ? " AND v.status<>4" : "").(empty($_COOKIE['show_hentai']) ? " AND s.rating<>'XXX'" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
+$cookie_extra_conditions = (empty($_COOKIE['show_cancelled']) ? " AND v.status<>4 AND v.status<>3" : "").(empty($_COOKIE['show_hentai']) ? " AND s.rating<>'XXX'" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
 switch ($header_tab){
 	case 'movies':
@@ -71,7 +71,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 		while ($row = mysqli_fetch_assoc($result)){
 ?>
-							<div<?php echo ($row['best_status']==4 && empty($_GET['query'])) ? ' class="cancelled'.($carousel[$i] ? '' : '-not-carousel').'"' : ''; ?>>
+							<div>
 								<a class="thumbnail" href="/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?>">
 									<div class="status-<?php echo get_status($row['best_status']); ?>" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 									<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />

@@ -10,7 +10,7 @@ function get_status($id){
 		case 2:
 			return "in-progress";
 		case 3:
-			return "on-hold";
+			return "abandoned";
 		case 4:
 			return "cancelled";
 		default:
@@ -25,7 +25,7 @@ function get_status_description($id){
 		case 2:
 			return "En procés: No hi ha tots els capítols disponibles";
 		case 3:
-			return "Pausada: No hi ha tots els capítols disponibles";
+			return "Abandonada: No hi ha tots els capítols disponibles";
 		case 4:
 			return "Cancel·lada: No hi ha tots els capítols disponibles";
 		default:

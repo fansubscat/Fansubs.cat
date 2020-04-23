@@ -6,7 +6,7 @@ function get_status_description_short($id){
 		case 2:
 			return "En procés";
 		case 3:
-			return "Pausada";
+			return "Abandonada";
 		case 4:
 			return "Cancel·lada";
 		default:

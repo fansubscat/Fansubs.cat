@@ -2,7 +2,9 @@
 require_once("db.inc.php");
 
 function get_fansub_with_url($fansub) {
-	if (!empty($fansub['url'])) {
+	if ($fansub['name']=='Fansub independent') {
+		return "un fansub independent";
+	} else if (!empty($fansub['url'])) {
 		return '<a href="'.htmlspecialchars($fansub['url']).'" target="_blank">'.htmlspecialchars($fansub['name']).'</a>';
 	} else {
 		return htmlspecialchars($fansub['name']);
@@ -156,14 +158,38 @@ if ($count==0) {
 				$fansub_buttons.='<a class="fansub-twitter" href="'.$fansubs[$j]['twitter_url'].'" target="_blank"><span class="fab fa-twitter icon"></span>Twitter '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
 			}
 		}
+
+		$plurals = array(
+				"active" => array("Si vols veure-la amb màxima qualitat, al seu lloc web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!","Si vols veure-la amb màxima qualitat, als seus llocs web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!"),
+				"inactive" => array("Actualment, aquest fansub ja no està actiu.","Actualment, aquests fansubs ja no estan actius."),
+				"abandoned" => array("Aquesta obra es considera abandonada, segurament no se'n llançaran més capítols.","Aquesta obra es considera abandonada, segurament no se'n llançaran més capítols."),
+				"cancelled" => array("Tingues en compte que aquesta obra ha estat cancel·lada, no se'n llançaran més capítols.","Tingues en compte que aquesta obra ha estat cancel·lada, no se'n llançaran més capítols.")
+		);
 ?>
 							<div class="section">
 								<h2 class="section-title"><?php echo count($fansubs)>1 ? 'Fansubs' : 'Fansub'; ?></h2>
-								<div class="section-content">Aquesta obra ha estat subtitulada per <?php echo $conjunctioned_names; ?>. <?php echo $any_active ? "Si vols veure-la amb màxima qualitat, al seu web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!" : ''; ?></div>
+								<div class="section-content">
+									Aquesta obra ha estat subtitulada per <?php echo $conjunctioned_names; ?>. <?php echo $any_active ? (count($fansubs)>1 ? $plurals['active'][1] : $plurals['active'][0]) : (count($fansubs)>1 ? $plurals['inactive'][1] : $plurals['inactive'][0]); ?>
+								</div>
 <?php
 		if (!empty($fansub_buttons)) {
 ?>
 								<div class="flex wrappable fansub-buttons"><?php echo $fansub_buttons; ?></div>
+<?php
+		}
+?>
+<?php
+		if ($version['status']==3) {
+?>
+								<div class="section-content fansub-buttons">
+									<?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
+								</div>
+<?php
+		} else if ($version['status']==4) {
+?>
+								<div class="section-content fansub-buttons">
+									<?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
+								</div>
 <?php
 		}
 ?>

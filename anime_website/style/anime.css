@@ -368,11 +368,11 @@ a:hover {
 	border-right: 20px solid transparent;
 }
 
-.status-on-hold {
+.status-abandoned {
 	position: absolute;
 	width: 0;
 	height: 0;
-	border-top: 20px solid cyan;
+	border-top: 20px solid coral;
 	border-right: 20px solid transparent;
 }
 

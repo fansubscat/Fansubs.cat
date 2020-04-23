@@ -38,7 +38,7 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 					<h2 class="section-title">Opcions de visualització</h2>
 					<div class="options-item">
 						<input id="show_cancelled" type="checkbox"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
-					  	<label for="show_cancelled">Mostra sèries cancel·lades</label>
+					  	<label for="show_cancelled">Mostra sèries cancel·lades o abandonades</label>
 					</div>
 					<div class="options-item">
 						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
@@ -48,7 +48,7 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 					<div id="options-fansubs">
 <?php
 $cookie_fansub_ids = get_cookie_fansub_ids();
-$resultf = query("SELECT * FROM fansub ORDER BY name");
+$resultf = query("SELECT id, IF(name='Fansub independent','Fansubs independents',name) name FROM fansub ORDER BY IF(name='Fansub independent','Fansubs independents',name)");
 while ($row = mysqli_fetch_assoc($resultf)) {
 ?>
 						<div class="options-item options-fansub">
