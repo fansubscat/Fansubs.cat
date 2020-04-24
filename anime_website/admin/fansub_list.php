@@ -30,12 +30,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="col">Nom</th>
 								<th scope="col">URL</th>
 								<th class="text-center" scope="col">Estat</th>
+								<th class="text-center" scope="col">Versions</th>
 								<th class="text-center" scope="col">Accions</th>
 							</tr>
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
+	$result = query("SELECT f.*, COUNT(DISTINCT vf.version_id) versions FROM fansub f LEFT JOIN rel_version_fansub vf ON f.id=vf.fansub_id GROUP BY f.id ORDER BY f.name ASC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -49,6 +50,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars($row['url']); ?></td>
 								<td class="align-middle text-center"><?php echo $row['status']==1 ? 'Actiu' : 'Inactiu'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
 								<td class="align-middle text-center"><a href="fansub_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="fansub_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el fansub '".$row['name']."' i tot el seu material? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php

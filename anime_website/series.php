@@ -89,7 +89,7 @@ if (!empty($series['genres'])) {
 					<div class="main_content">
 						<div class="section">
 							<h2 class="section-title">Sinopsi</h2>
-							<div class="section-content"><?php echo htmlspecialchars($series['synopsis']); ?></div>
+							<div class="section-content"><?php echo str_replace("\n","<br />",htmlspecialchars($series['synopsis'])); ?></div>
 						</div>
 <?php
 $result = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id ON v.id=vf.version_id WHERE v.series_id=".$series['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
@@ -169,7 +169,7 @@ if ($count==0) {
 							<div class="section">
 								<h2 class="section-title"><?php echo count($fansubs)>1 ? 'Fansubs' : 'Fansub'; ?></h2>
 								<div class="section-content">
-									Aquesta obra ha estat subtitulada per <?php echo $conjunctioned_names; ?>. <?php echo $any_active ? (count($fansubs)>1 ? $plurals['active'][1] : $plurals['active'][0]) : (count($fansubs)>1 ? $plurals['inactive'][1] : $plurals['inactive'][0]); ?>
+									Aquesta obra ha estat subtitulada per <?php echo $conjunctioned_names; ?>. <?php echo $any_active ? (count($fansubs)>1 ? $plurals['active'][1] : $plurals['active'][0]) : (count($fansubs)>1 ? $plurals['inactive'][1] : ($fansubs[0]['name']=='Fansub independent' ? '' : $plurals['inactive'][0])); ?>
 								</div>
 <?php
 		if (!empty($fansub_buttons)) {

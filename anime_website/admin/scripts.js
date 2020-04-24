@@ -193,6 +193,10 @@ function deleteRow(id) {
 }
 
 function addVersionRow(episode_id) {
+	if (isAutoFetchActive()){
+		alert("Si hi ha activada la sincronització automàtica de carpetes de MEGA, no és possible afegir més d'un enllaç per capítol. Abans has de desactivar-la.");
+		return;
+	}
 	var i = parseInt($('#links-list-table-'+episode_id).attr('data-count'))+1;
 	$('#links-list-table-'+episode_id).append('<tr id="form-links-list-'+episode_id+'-row-'+i+'"><td><input id="form-links-list-'+episode_id+'-link-'+i+'" name="form-links-list-'+episode_id+'-link-'+i+'" type="url" class="form-control" value="" maxlength="200" placeholder="(Sense enllaç)"/><input id="form-links-list-'+episode_id+'-id-'+i+'" name="form-links-list-'+episode_id+'-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-links-list-'+episode_id+'-resolution-'+i+'" name="form-links-list-'+episode_id+'-resolution-'+i+'" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td><input id="form-links-list-'+episode_id+'-comments-'+i+'" name="form-links-list-'+episode_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><button id="form-links-list-'+episode_id+'-delete-'+i+'" onclick="deleteVersionRow('+episode_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#links-list-table-'+episode_id).attr('data-count', i);
@@ -360,6 +364,26 @@ function checkNumberOfEpisodes() {
 	return true;
 }
 
+function checkNumberOfLinks() {
+	if (isAutoFetchActive()){
+		var linkTables = $('[id^=links-list-table-]');
+		var multipleLinks = false;
+		for (var i=0;i<linkTables.length;i++) {
+			if ($(linkTables).attr('data-count')>1){
+				multipleLinks = true;
+				break;
+			}
+		}
+
+		if (multipleLinks) {
+			alert("Si hi ha activada la sincronització automàtica de carpetes de MEGA, no és possible afegir més d'un enllaç per capítol. Has de desactivar-la o bé eliminar els enllaços addicionals dels capítols.");
+			return false;
+		}
+	}
+
+	return true;
+}
+
 var validLinks=0;
 var invalidLinks=0;
 var failedLinks=0;
@@ -490,6 +514,10 @@ function updateVerifyLinksResult(i) {
 	if (failedLinks>0) {
 		$('#link-verifier-failed-links-list').removeClass('d-none');
 	}
+}
+
+function isAutoFetchActive() {
+	return $('[id^=form-folders-list-active-]:checked').length>0;
 }
 
 var malData;

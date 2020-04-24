@@ -29,10 +29,12 @@ if (flock($lock_pointer, LOCK_EX)) {
 						$resulte = query("SELECT e.id FROM episode e WHERE series_id=".escape($folder['series_id'])." AND number=".$number);
 						if ($row = mysqli_fetch_assoc($resulte)) {
 							$links = query("SELECT * FROM link WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
+							//WARNING: We must prevent the version from having multiple links if autofetch is enabled, or bad things will happen!!!
 							if ($link = mysqli_fetch_assoc($links)) {
 								if ($link['url']!=$real_link){
 									query("UPDATE link SET url='".escape($real_link)."' WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
 									log_action("cron-update-link","S'ha actualitzat automàticament l'enllaç del fitxer '$filename' (id. d'enllaç: ".$link['id'].", id. de versió: ".$folder['version_id'].")");
+									query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,lists_updated_by='Cron' WHERE id=".$folder['version_id']);
 								}
 							} else {
 								$resultv = query("SELECT * FROM version WHERE id=".$folder['version_id']);
@@ -40,7 +42,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 									$resolution = (!empty($version['default_resolution']) ? "'".$version['default_resolution']."'" : "NULL");
 
 									query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES(".$folder['version_id'].",".$row['id'].",NULL,'".escape($real_link)."',$resolution,NULL)");
-									query("UPDATE version SET updated=CURRENT_TIMESTAMP,updated_by='Cron' WHERE id=".$folder['version_id']);
+									query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='Cron' WHERE id=".$folder['version_id']);
 									log_action("cron-create-link","S'ha inserit automàticament l'enllaç del fitxer '$filename' (id. de versió: ".$folder['version_id'].") i s'ha actualitzat la data de modificació de la versió");
 
 									//Now check if we need to upgrade in progess -> complete

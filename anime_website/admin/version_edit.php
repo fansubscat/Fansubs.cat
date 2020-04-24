@@ -183,11 +183,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			//Views will be removed too because their FK is set to cascade
 			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NOT NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
+			//We do not count removing links as updating them, only insertions and real updated
 			foreach ($links as $link) {
 				if ($link['id']==-1) {
 					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$data['id'].",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].")");
+					query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 				} else {
-					query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",comments=".$link['comments']." WHERE id=".$link['id']);
+					$resultcr = query("SELECT * FROM link WHERE id=".$link['id']);
+					if ($current_link = mysqli_fetch_assoc($resultcr)) {
+						query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",comments=".$link['comments']." WHERE id=".$link['id']);
+						if (("'".escape($current_link['url'])."'")!=$link['url']) {
+							query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+						}
+					}
+					mysqli_free_result($resultcr);
 				}
 			}
 
@@ -202,8 +211,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			foreach ($extras as $extra) {
 				if ($extra['id']==-1) {
 					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$data['id'].",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].")");
+					query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 				} else {
-					query("UPDATE link SET extra_name='".$extra['name']."',url='".$extra['url']."',resolution=".$extra['resolution'].",comments=".$extra['comments']." WHERE id=".$extra['id']);
+					$resultcr = query("SELECT * FROM link WHERE id=".$extra['id']);
+					if ($current_extra = mysqli_fetch_assoc($resultcr)) {
+						query("UPDATE link SET extra_name='".$extra['name']."',url='".$extra['url']."',resolution=".$extra['resolution'].",comments=".$extra['comments']." WHERE id=".$extra['id']);
+						if (("'".escape($current_extra['url'])."'")!=$extra['url']) {
+							query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+						}
+					}
+					mysqli_free_result($resultcr);
 				}
 			}
 
@@ -226,7 +243,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
-			query("INSERT INTO version (series_id,status,default_resolution,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,default_resolution,created,created_by,updated,updated_by,links_updated,links_updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_1'].")");
@@ -303,7 +320,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la versió" : "Afegeix una versió"; ?></h4>
 					<hr>
-					<form method="post" action="version_edit.php">
+					<form method="post" action="version_edit.php" onsubmit="return checkNumberOfLinks()">
 						<div class="form-group">
 							<label for="form-series">Sèrie</label>
 							<div id="form-series" class="font-weight-bold form-control"><?php echo htmlspecialchars($series['name']); ?></div>
