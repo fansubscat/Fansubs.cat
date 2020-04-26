@@ -87,7 +87,11 @@ function get_provider_short($url){
 }
 
 function get_resolution_short($resolution){
-	if ($resolution=='720p' || $resolution=='1080p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=720) {
+	if ($resolution=='2160p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=2000) {
+		return "UHD";
+	} else if ($resolution=='1080p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=1000) {
+		return "FHD";
+	} else if ($resolution=='720p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=700) {
 		return "HD";
 	} else {
 		return "SD";
@@ -95,7 +99,7 @@ function get_resolution_short($resolution){
 }
 
 function get_resolution_css($resolution){
-	if ($resolution=='720p' || $resolution=='1080p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=720) {
+	if ($resolution=='720p' || $resolution=='1080p' || $resolution=='2160p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=700) {
 		return "hd";
 	} else {
 		return "sd";

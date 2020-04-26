@@ -78,6 +78,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		if (!empty($_POST['episodes']) && is_numeric($_POST['episodes'])) {
 			$data['episodes']=escape($_POST['episodes']);
+		} else if (!empty($_POST['is_open'])){
+			$data['episodes']=-1;
 		} else {
 			crash("Dades invàlides: manca episodes");
 		}
@@ -163,7 +165,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO episode (series_id,number,name,date) VALUES (".$inserted_id.",".$episode['number'].",".$episode['name'].",".$episode['date'].")");
 			}
 
-			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\">Crea'n una versió</a>";
+			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
 		}
 
 		header("Location: series_list.php");
@@ -343,13 +345,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="row align-items-end">
-							<div class="col-sm-3">
+							<div class="col-sm-2">
 								<div class="form-group">
 									<label for="form-episodes">Nombre de capítols</label>
-									<input class="form-control" name="episodes" type="number" id="form-episodes" value="<?php echo $row['episodes']; ?>" required>
+									<input class="form-control" name="episodes" type="number" id="form-episodes" value="<?php echo $row['episodes']!=-1 ? $row['episodes'] : ''; ?>"<?php echo $row['episodes']==-1 ? ' disabled' : ''; ?>>
 								</div>
 							</div>
 							<div class="col-sm form-group row">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="is_open" id="form-is_open" value="1"<?php echo $row['episodes']==-1? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-is_open">Sèrie oberta</label>
+								</div>
 								<button type="button" id="import-from-mal-episodes" class="btn btn-primary">
 									<span id="import-from-mal-episodes-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
 									<span id="import-from-mal-episodes-not-loading" class="fa fa-th-list pr-2"></span>

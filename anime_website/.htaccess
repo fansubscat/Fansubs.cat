@@ -11,4 +11,6 @@ RewriteRule ^series/(.*)/$ series.php?page=series&slug=$1
 RewriteRule ^series/(.*)$ series.php?page=series&slug=$1
 RewriteRule ^cerca/(.*)/$ index.php?page=search&query=$1
 RewriteRule ^cerca/(.*)$ index.php?page=search&query=$1
+RewriteRule ^qui-som/$ about.php
+RewriteRule ^qui-som$ about.php
 RewriteRule ^.*\.inc\.php$ error.php?code=404

@@ -137,11 +137,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 ?>
 							<tr>
-								<td scope="col"><?php echo $episode_title; ?></th>
-								<td class="text-center"><?php echo $row['total_clicks']; ?></th>
-								<td class="text-center"><?php echo $row['total_views']; ?></th>
-								<td class="text-center"><?php echo round($row['total_time_spent']/60); ?> min</th>
-								<td class="text-center"><?php echo $row['total_views']!=0 ? round($row['total_time_spent']/$row['total_views']/60) : 0; ?> min</th>
+								<td scope="col"><?php echo $episode_title; ?></td>
+								<td class="text-center"><?php echo $row['total_clicks']; ?></td>
+								<td class="text-center"><?php echo $row['total_views']; ?></td>
+								<td class="text-center"><?php echo round($row['total_time_spent']/60); ?> min</td>
+								<td class="text-center"><?php echo $row['total_views']!=0 ? round($row['total_time_spent']/$row['total_views']/60) : 0; ?> min</td>
 							</tr>
 <?php
 	}

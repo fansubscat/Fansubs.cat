@@ -14,7 +14,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			case 'clear-logs':
 				query("DELETE FROM action_log");
 				log_action("clear-logs","S'ha buidat el registre d'accions");
-				$_SESSION['message']="S'ha buidat el registres d'accions correctament.";
+				$_SESSION['message']="S'ha buidat el registre d'accions correctament.";
 				break;
 		}
 	}
@@ -34,10 +34,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 					<div class="text-center p-2">
-						<a href="tools.php?action=clear-logs" class="btn btn-warning" onclick="return confirm('Segur que vols buidar el registre d\'accions? Es perdrà l\'historial de canvis. L\'acció no es pot desfer.')" onauxclick="return false;">Buida el registre d'accions</a>
+						<a href="maintenance.php?action=clear-logs" class="btn btn-warning" onclick="return confirm('Segur que vols buidar el registre d\'accions? Es perdrà l\'historial de canvis. L\'acció no es pot desfer.')" onauxclick="return false;">Buida el registre d'accions</a>
 					</div>
 					<div class="text-center p-2">
-						<a href="tools.php?action=clear-views" class="btn btn-danger" onclick="return confirm('Segur que vols esborrar totes les visualitzacions? Es perdran totes les estadístiques i l\'apartat \'Més populars\' apareixerà buit fins que no hi hagi visualitzacions noves. L\'acció no es pot desfer.')" onauxclick="return false;">Esborra totes les visualitzacions</a>
+						<a href="maintenance.php?action=clear-views" class="btn btn-danger" onclick="return confirm('Segur que vols esborrar totes les visualitzacions? Es perdran totes les estadístiques i l\'apartat \'Més populars\' apareixerà buit fins que no hi hagi visualitzacions noves. L\'acció no es pot desfer.')" onauxclick="return false;">Esborra totes les visualitzacions</a>
 					</div>
 				</article>
 			</div>

@@ -36,6 +36,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['default_resolution']="NULL";
 		}
+		if (!empty($_POST['episodes_missing']) && $_POST['episodes_missing']==1) {
+			$data['episodes_missing']=1;
+		} else {
+			$data['episodes_missing']=0;
+		}
 		if (!empty($_POST['status']) && is_numeric($_POST['status'])) {
 			$data['status']=escape($_POST['status']);
 		} else {
@@ -156,7 +161,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-version", "S'ha actualitzat la versió de la sèrie (id. de sèrie: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -243,7 +248,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
-			query("INSERT INTO version (series_id,status,default_resolution,created,created_by,updated,updated_by,links_updated,links_updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_1'].")");
@@ -395,8 +400,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="form-group">
-									<label for="form-default_resolution">Resolució per defecte <small class="text-muted">(per als enllaços automàtics)</small></label>
+									<label for="form-default_resolution">Resolució per defecte <small class="text-muted">(per a enllaços automàtics)</small></label>
 									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
+								</div>
+							</div>
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-episodes_missing_main">Opcions especials <small class="text-muted">(només fansubs antics)</small></label>
+									<div id="form-episodes_missing_main" class="row pl-3 pr-3">
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="episodes_missing" id="form-episodes_missing" value="1"<?php echo $row['episodes_missing']==1? " checked" : ""; ?>>
+											<label class="form-check-label" for="form-episodes_missing">Hi manquen enllaços</label>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

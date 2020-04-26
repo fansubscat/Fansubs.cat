@@ -63,7 +63,7 @@ if (!empty($series['rating'])) {
 							<div><span title="Edat recomanada"><span class="fa fa-star icon"></span><?php echo htmlspecialchars(get_rating($series['rating'])); ?></span></div>
 <?php
 }
-if (!empty($series['episodes']) && $series['episodes']>1) {
+if ($series['episodes']>1) {
 ?>
 							<div><span title="Nombre de capítols"><span class="fa fa-ruler icon"></span><?php echo $series['episodes'].' capítols'; ?></span></div>
 <?php
@@ -90,6 +90,15 @@ if (!empty($series['genres'])) {
 						<div class="section">
 							<h2 class="section-title">Sinopsi</h2>
 							<div class="section-content"><?php echo str_replace("\n","<br />",htmlspecialchars($series['synopsis'])); ?></div>
+<?php
+if ($series['episodes']==-1) {
+?>
+							<div class="section-content fansub-buttons series-on-air">
+								<span class="fa fa-exclamation-triangle icon"></span>Aquesta sèrie encara està en emissió. És possible que la llista de capítols no estigui actualitzada.
+							</div>
+<?php
+}
+?>
 						</div>
 <?php
 $result = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id ON v.id=vf.version_id WHERE v.series_id=".$series['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
@@ -189,6 +198,14 @@ if ($count==0) {
 ?>
 								<div class="section-content fansub-buttons">
 									<?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
+								</div>
+<?php
+		}
+
+		if ($version['episodes_missing']==1) {
+?>
+								<div class="section-content fansub-buttons episodes-missing">
+									<span class="fa fa-exclamation-triangle icon"></span>Hi ha capítols que han estat subtitulats però que no tenen cap enllaç vàlid.
 								</div>
 <?php
 		}

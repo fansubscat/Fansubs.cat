@@ -3,7 +3,7 @@ ob_start();
 require_once("db.inc.php");
 require_once('common.inc.php');
 
-if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $header_tab!='error'){
+if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $header_tab!='error' && $header_tab!='about'){
 	$header_tab='main';
 }
 ?>
@@ -77,7 +77,8 @@ mysqli_free_result($resultf);
 				</div>
 				<div class="separator"></div>
 				<div class="user-options">
-					<a id="options-button" class="tab">Opcions</a>
+					<a id="options-button" class="iconbutton" title="Opcions"><span class="fa fa-cogs"></span></a>
+					<a id="about-button" class="iconbutton<?php if ($header_tab=='about') echo ' selectedtab'; ?>" title="Qui som?" href="/qui-som"><span class="fa fa-info-circle"></span></a>
 				</div>
 				<div class="search-form">
 					<form id="search_form">

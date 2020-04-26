@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS `series` (
   `duration` varchar(200) DEFAULT NULL,
   `image` varchar(200) NOT NULL,
   `myanimelist_id` int(11) DEFAULT NULL,
+  `score` float DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -145,10 +146,13 @@ CREATE TABLE IF NOT EXISTS `version` (
   `series_id` int(11) NOT NULL,
   `status` int(11) NOT NULL,
   `default_resolution` varchar(200) DEFAULT NULL,
+  `episodes_missing` tinyint(1) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL,
+  `links_updated` timestamp NOT NULL DEFAULT current_timestamp(),
+  `links_updated_by` varchar(200) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `version_ibfk_1` (`series_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -156,7 +160,9 @@ CREATE TABLE IF NOT EXISTS `version` (
 CREATE TABLE IF NOT EXISTS `views` (
   `link_id` int(11) NOT NULL,
   `day` varchar(200) NOT NULL,
-  `counter` int(11) NOT NULL DEFAULT 0,
+  `clicks` int(11) NOT NULL DEFAULT 0,
+  `views` int(11) NOT NULL DEFAULT 0,
+  `time_spent` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`link_id`,`day`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -187,5 +193,4 @@ ALTER TABLE `version`
   ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `views`
   ADD CONSTRAINT `views_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
 

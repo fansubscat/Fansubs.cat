@@ -18,7 +18,7 @@ function populateMalData(data, staff) {
 		$("#form-score").val(data.score ? data.score : '');
 	}
 	if ($("#form-type").val()=='') {
-		$("#form-type").val(data.episodes>1 ? 'series' : 'movie');
+		$("#form-type").val(data.episodes==1 ? 'movie' : 'series');
 	}
 	if ($("#form-air_date").val()=='') {
 		$("#form-air_date").val(data.aired.from.substr(0, 10));
@@ -51,7 +51,15 @@ function populateMalData(data, staff) {
 		$('#form-image-preview-link').prop('href', url);
 	}
 	if ($("#form-episodes").val()=='' || $("#form-episodes").val()=='0') {
-		$("#form-episodes").val(data.episodes);
+		if (data.episodes) {
+			$("#form-episodes").val(data.episodes);
+			$("#form-is_open").prop('checked', false);
+			$("#form-episodes").prop('disabled', false);
+		} else {
+			$("#form-episodes").val('');
+			$("#form-is_open").prop('checked', true);
+			$("#form-episodes").prop('disabled', true);
+		}
 	}
 
 	if (data.episodes==1) {
@@ -352,6 +360,9 @@ function checkNumberOfEpisodes() {
 			alert('El nombre de capítols numerats de la llista ha de coincidir amb el nombre de capítols indicat a la fitxa.');
 			return false;
 		}
+	} else if (!$('#form-is_open').prop('checked')){
+			alert('El nombre de capítols és obligatori si la sèrie no és oberta.');
+			return false;
 	}
 	var episodeCount2 = parseInt($('#episode-list-table').attr('data-count'));
 	for (var i=1;i<=episodeCount2;i++){
@@ -622,9 +633,19 @@ $(document).ready(function() {
 	});
 
 	$("#generate-episodes").click(function() {
-		if ($("#form-episodes").val()=='') {
-			alert('Per a poder-los generar, cal que introdueix el nombre de capítols.');
+		var targetNumber;
+		if ($('#form-is_open').prop('checked')) {
+			var result = prompt("La sèrie és oberta. Quants capítols vols generar?");
+			if (!result || parseInt(result)==NaN || parseInt(result)<1) {
+				return;
+			} else {
+				targetNumber=parseInt(result);
+			}
+		} else if ($("#form-episodes").val()=='') {
+			alert('Per a poder-los generar, cal que introdueixis el nombre de capítols.');
 			return;
+		} else {
+			targetNumber=$("#form-episodes").val()
 		}
 		if ((parseInt($('#episode-list-table').attr('data-count'))>1 || $('#form-episode-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots i es tornaran a crear. Totes les versions que continguin aquests capítols i tots els enllaços d'aquests capítols desapareixeran i no es podrà desfer l'acció un cop hagis desat els canvis. Vols continuar?")) {
 			return;
@@ -635,7 +656,7 @@ $(document).ready(function() {
 		}
 		$('#episode-list-table').attr('data-count', 0);
 
-		for (var i=0;i<$("#form-episodes").val();i++) {
+		for (var i=0;i<targetNumber;i++) {
 			addRow();
 			$("#form-episode-list-num-"+(i+1)).val(i+1);
 			$("#form-episode-list-name-"+(i+1)).val('');
@@ -695,5 +716,13 @@ $(document).ready(function() {
 		};
 		xmlhttp.open("GET", url, true);
 		xmlhttp.send();
+	});
+	$("#form-is_open").change(function() {
+		if ($(this).prop('checked')) {
+			$("#form-episodes").val('');
+			$("#form-episodes").prop('disabled', true);
+		} else {
+			$("#form-episodes").prop('disabled', false);
+		}
 	});
 });
