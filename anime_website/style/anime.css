@@ -562,11 +562,21 @@ a:hover {
 	white-space: nowrap;
 }
 
-.version-method {
+.read-indicator {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
 	margin-left: 0.4em;
+	padding: 0.1em 0.4em;
+	background: rgb(80, 80, 80);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.version-method {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
 	padding: 0.1em 0.4em;
 	background: rgb(100, 0, 0);
 	white-space: nowrap;

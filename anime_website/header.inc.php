@@ -14,15 +14,23 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#000000" />
 
+<?php
+if (!empty($header_social)) {
+?>		<meta property="og:title" content="<?php echo htmlspecialchars($header_social['title']); ?>" />
+		<meta property="og:url" content="<?php echo htmlspecialchars($header_social['url']); ?>" />
+		<meta property="og:description" content="<?php echo htmlspecialchars($header_social['description']); ?>" />
+		<meta property="og:image" content="<?php echo htmlspecialchars($header_social['image']); ?>" />
+<?php
+}
+?>
+
 		<title><?php echo !empty($header_page_title) ? $header_page_title.' - Fansubs.cat - Anime' : 'Fansubs.cat - Anime'; ?></title>
 		<link rel="stylesheet" media="screen" type="text/css" href="/style/anime.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="/style/magnific-popup-1.1.0.css" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
 		<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 		<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 		<link rel="shortcut icon" href="/favicon.png" />
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/jquery.magnific-popup-1.1.0.min.js"></script>
 		<script type="text/javascript" src="/js/js.cookie-2.1.2.min.js"></script>
 		<script type="text/javascript" src="/js/common.js"></script>
 		<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

@@ -297,7 +297,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultf);
 
-		$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY number IS NULL ASC, number ASC, IFNULL(et.title,e.name) ASC");
+		$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY number IS NULL ASC, number ASC, e.name ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -312,7 +312,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$fansubs = array();
 
-		$resulte = query("SELECT e.* FROM episode e WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY e.number IS NULL ASC, e.number ASC, e.name ASC");
+		$resulte = query("SELECT e.*, NULL title FROM episode e WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY e.number IS NULL ASC, e.number ASC, e.name ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);

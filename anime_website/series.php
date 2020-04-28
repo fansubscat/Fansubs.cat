@@ -23,6 +23,13 @@ $header_page_title=$series['name'];
 
 $header_tab=$_GET['page'];
 
+$header_social = array(
+	'title' => $series['name'].' - Fansubs.cat - Anime',
+	'url' => 'https://anime.fansubs.cat/'.($series['type']=='movie' ? 'films/' : 'series/').$series['slug'],
+	'description' => $series['synopsis'],
+	'image' => $series['image']
+);
+
 require_once('header.inc.php');
 ?>
 				<div class="flex mobilewrappable">

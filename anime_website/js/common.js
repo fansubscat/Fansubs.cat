@@ -1,6 +1,12 @@
 var currentLinkId=-1;
 var currentStartTime=-1;
 
+var cookieOptions = {
+	expires: 3650,
+	path: '/',
+	domain: 'anime.fansubs.cat'
+};
+
 function sendAjaxViewEnd(){
 	if (currentLinkId!=-1){
 		var xmlHttp = new XMLHttpRequest();
@@ -19,6 +25,40 @@ function sendBeaconViewEnd(){
 	}
 }
 
+function markLinkAsViewed(link_id){
+	var current = Cookies.get('viewed_links', cookieOptions);
+	if (current){
+		var links = current.split(',');
+		if (!links.includes(link_id)){
+			links.push(link_id);
+			Cookies.set('viewed_links', links.join(','), cookieOptions);
+		}
+	} else {
+		var links = [];
+		links.push(link_id);
+		Cookies.set('viewed_links', links.join(','), cookieOptions);
+	}
+	$('.read-indicator[data-link-id='+link_id+']').attr('title','Ja l\'has vist: prem per a marcar-lo com a no vist');
+	$('.read-indicator[data-link-id='+link_id+'] span').removeClass('fa-eye-slash');
+	$('.read-indicator[data-link-id='+link_id+'] span').addClass('fa-eye');
+}
+
+function markLinkAsNotViewed(link_id){
+	var current = Cookies.get('viewed_links', cookieOptions);
+	if (current){
+		var links = current.split(',');
+		if (links.includes(link_id)){
+			var result = links.filter(function(elem){
+				return elem != link_id; 
+			});
+			Cookies.set('viewed_links', result.join(','), cookieOptions);
+		}
+	}
+	$('.read-indicator[data-link-id='+link_id+']').attr('title','Encara no l\'has vist: prem per a marcar-lo com a vist');
+	$('.read-indicator[data-link-id='+link_id+'] span').removeClass('fa-eye');
+	$('.read-indicator[data-link-id='+link_id+'] span').addClass('fa-eye-slash');
+}
+
 function getSource(method, url){
 	var start='<div class="white-popup"><div style="display: flex; height: 100%;">';
 	var end='</div></div>';
@@ -35,7 +75,6 @@ $(document).ready(function() {
 		$('body').removeClass('no-overflow');
 		sendAjaxViewEnd();
 	});
-	//We setup magnific popups for all fansub images
 	$(".video-player").click(function(){
 		$('body').addClass('no-overflow');
 		$('#overlay').removeClass('hidden');
@@ -45,6 +84,14 @@ $(document).ready(function() {
 		xmlHttp.send(null);
 		currentLinkId=$(this).attr('data-link-id');
 		currentStartTime=Math.floor(new Date().getTime()/1000);
+		markLinkAsViewed($(this).attr('data-link-id'));
+	});
+	$(".read-indicator").click(function(){
+		if ($(this).children('.fa').hasClass('fa-eye-slash')){
+			markLinkAsViewed($(this).attr('data-link-id'));
+		} else {
+			markLinkAsNotViewed($(this).attr('data-link-id'));
+		}
 	});
 	$(".version_tab").click(function(){
 		$(".version_tab").each(function(){
@@ -78,15 +125,15 @@ $(document).ready(function() {
 		$('body').removeClass('no-overflow');
 	});
 	$('#options-save-button').click(function(){
-		Cookies.set('show_cancelled', $('#show_cancelled').prop('checked') ? '1' : '0', { expires: 3650, path: '/', domain: 'anime.fansubs.cat' });
-		Cookies.set('show_hentai', $('#show_hentai').prop('checked') ? '1' : '0', { expires: 3650, path: '/', domain: 'anime.fansubs.cat' });
+		Cookies.set('show_cancelled', $('#show_cancelled').prop('checked') ? '1' : '0', cookieOptions);
+		Cookies.set('show_hentai', $('#show_hentai').prop('checked') ? '1' : '0', cookieOptions);
 		var hiddenFansubs = $('#options-fansubs input:not(:checked)');
 		var values = [];
 		
 		for (var i=0;i<hiddenFansubs.length;i++){
 			values.push(hiddenFansubs[i].value);
 		}
-		Cookies.set('hidden_fansubs', values.join(','), { expires: 3650, path: '/', domain: 'anime.fansubs.cat' });
+		Cookies.set('hidden_fansubs', values.join(','), cookieOptions);
 
 		location.reload();
 	});

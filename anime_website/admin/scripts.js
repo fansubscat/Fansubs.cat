@@ -6,7 +6,7 @@ function populateMalData(data, staff) {
 		$("#form-slug").val(string_to_slug(data.title));
 	}
 	if ($("#form-alternate_names").val()=='') {
-		if (data.title && data.title_english) {
+		if (data.title && data.title_english && data.title_english!=data.title) {
 			$("#form-alternate_names").val(data.title+', '+data.title_english);
 		} else if (data.title) {
 			$("#form-alternate_names").val(data.title);

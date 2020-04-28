@@ -179,6 +179,11 @@ function internal_print_episode($episode_title, $result) {
 			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-play icon-play"></span>Reprodueix</a> '."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
+			if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="read-indicator" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-eye"></span></span>'."\n";
+			} else {
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="read-indicator" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-eye-slash"></span></span>'."\n";
+			}
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-method" title="Plataforma en què s\'allotja el vídeo: '.htmlspecialchars(get_provider($vrow['url'])).'">'.htmlspecialchars(get_provider_short($vrow['url'])).'</span>'."\n";
 			if (!empty($vrow['resolution'])){
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).'" title="Resolució del vídeo: '.htmlspecialchars($vrow['resolution']).'">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'</span>'."\n";
@@ -199,6 +204,11 @@ function internal_print_episode($episode_title, $result) {
 
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
+		if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="read-indicator" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-eye"></span></span>'."\n";
+		} else {
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="read-indicator" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-eye-slash"></span></span>'."\n";
+		}
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-method" title="Plataforma en què s\'allotja el vídeo: '.htmlspecialchars(get_provider($vrow['url'])).'">'.htmlspecialchars(get_provider_short($vrow['url'])).'</span>'."\n";
 		if (!empty($vrow['resolution'])){
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).'" title="Resolució del vídeo: '.htmlspecialchars($vrow['resolution']).'">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'</span>'."\n";
@@ -223,5 +233,18 @@ function get_cookie_fansub_ids() {
 		}
 	}
 	return $fansub_ids;
+}
+
+function get_cookie_viewed_links_ids() {
+	$link_ids = array();
+	if (!empty($_COOKIE['viewed_links'])) {
+		$exploded = explode(',',$_COOKIE['viewed_links']);
+		foreach ($exploded as $id) {
+			if (is_numeric($id)) {
+				array_push($link_ids, $id);
+			}
+		}
+	}
+	return $link_ids;
 }
 ?>

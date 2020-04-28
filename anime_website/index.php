@@ -3,6 +3,13 @@ require_once("db.inc.php");
 
 $header_tab=(!empty($_GET['page']) ? $_GET['page'] : '');
 
+$header_social = array(
+	'title' => 'Fansubs.cat - Anime',
+	'url' => 'https://anime.fansubs.cat/',
+	'description' => "Aquí podràs veure en línia tot l'anime subtitulat pels fansubs en català!",
+	'image' => 'https://anime.fansubs.cat/style/og_image.jpg'
+);
+
 require_once('header.inc.php');
 
 $max_items=24;
