@@ -62,7 +62,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<hr>
 				<form method="post" action="fansub_edit.php">
 					<div class="form-group">
-						<label for="form-name">Nom</label>
+						<label for="form-name" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>

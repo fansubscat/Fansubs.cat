@@ -23,6 +23,7 @@ session_start();
 			html,body{height: 100%;}
 			a{text-decoration: none !important;}
 			.form-group label{font-weight: bold;}
+			.mandatory:after {padding-left: 0.2em; content:"*"; color:red;}
 		</style>
 	</head>
 	<body>

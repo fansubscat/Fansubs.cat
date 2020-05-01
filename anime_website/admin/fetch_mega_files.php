@@ -8,16 +8,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$series_id = $_GET['series_id'];
 	$account_ids = $_GET['account_ids'];
 	$folders = $_GET['folders'];
+	$season_ids = $_GET['season_ids'];
 
 	$account_folders = array();
 	for($i=0;$i<count($account_ids);$i++){
 		$account_folder = array();
 
-		if (is_numeric($account_ids[$i])){
+		if (is_numeric($account_ids[$i]) && is_numeric($season_ids[$i])){
 			$result = query("SELECT session_id FROM account WHERE id=".escape($account_ids[$i]));
 			$row = mysqli_fetch_assoc($result);
 			$account_folder['session_id']=$row['session_id'];
 			$account_folder['folder']=$folders[$i];
+			$account_folder['season_id']=$season_ids[$i];
 			array_push($account_folders, $account_folder);
 		}
 	}
@@ -74,7 +76,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$lines = explode("\n",$results);
 			foreach ($lines as $line) {
 				if ($line!='') {
-					array_push($links,$line);
+					array_push($links,$account_folder['season_id'].':::'.$line);
 				}
 			}
 		}
@@ -82,40 +84,41 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	$response = array();
 	$unmatched_results = array();
-	$processed_numbers = array();
+	$processed_episode_ids = array();
 
 	foreach ($links as $link){
 		//log_action('get-link', "New link data: '".$link."'");
-		if (count(explode(":::",$link, 2))>1) {
-			$filename = explode(":::",$link, 2)[0];
-			$real_link = explode(":::",$link, 2)[1];
+		if (count(explode(":::",$link, 3))>1) {
+			$season_id = explode(":::",$link, 3)[0];
+			$filename = explode(":::",$link, 3)[1];
+			$real_link = explode(":::",$link, 3)[2];
 			$matches = array();
 			if (preg_match('/.* - (\d+).*\.mp4/', $filename, $matches)) {
 				$number = $matches[1];
-				if (!in_array($number, $processed_numbers)) {
-					$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND number=".$number);
-					if ($row = mysqli_fetch_assoc($result)) {
+				$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND number=$number".($season_id!=-1 ? " AND season_id=$season_id" : ''));
+				if ($row = mysqli_fetch_assoc($result)) {
+					if (!in_array($row['id'], $processed_episode_ids)) {
 						$element = array();
 						$element['id'] = $row['id'];
 						$element['link'] = $real_link;
 						array_push($response, $element);
-						array_push($processed_numbers, $number);
+						array_push($processed_episode_ids, $row['id']);
 					} else {
-						//Episode number does not exist
+						//More than one link per episode - only first gets accepted
 						$element = array();
 						$element['file'] = $filename;
 						$element['link'] = $real_link;
-						$element['reason'] = "Capítol inexistent";
-						$element['reason_description'] = "No s'ha trobat cap capítol amb aquest número.";
+						$element['reason'] = "Múltiples enllaços";
+						$element['reason_description'] = "Hi ha més d'un enllaç per a aquest capítol, s'ha importat només el primer.";
 						array_push($unmatched_results, $element);
 					}
 				} else {
-					//More than one link per episode - only first gets accepted
+					//Episode number does not exist
 					$element = array();
 					$element['file'] = $filename;
 					$element['link'] = $real_link;
-					$element['reason'] = "Múltiples enllaços";
-					$element['reason_description'] = "Hi ha més d'un enllaç amb aquest número de capítol, s'ha importat només el primer.";
+					$element['reason'] = "Capítol inexistent";
+					$element['reason_description'] = "No s'ha trobat cap capítol amb aquest número.";
 					array_push($unmatched_results, $element);
 				}
 			}

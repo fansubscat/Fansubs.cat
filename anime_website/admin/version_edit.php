@@ -150,6 +150,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				crash("Dades invàlides: manca folder de la carpeta");
 			}
+			if (!empty($_POST['form-folders-list-season_id-'.$i])) {
+				$folder['season_id']=escape($_POST['form-folders-list-season_id-'.$i]);
+			} else {
+				$folder['season_id']="NULL";
+			}
 			if (!empty($_POST['form-folders-list-active-'.$i]) && $_POST['form-folders-list-active-'.$i]==1) {
 				$folder['active']=1;
 			} else {
@@ -238,9 +243,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM folder WHERE version_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($folders as $folder) {
 				if ($folder['id']==-1) {
-					query("INSERT INTO folder (version_id,account_id,folder,active) VALUES (".$data['id'].",".$folder['account_id'].",'".$folder['folder']."',".$folder['active'].")");
+					query("INSERT INTO folder (version_id,account_id,folder,season_id,active) VALUES (".$data['id'].",".$folder['account_id'].",'".$folder['folder']."',".$folder['season_id'].",".$folder['active'].")");
 				} else {
-					query("UPDATE folder SET account_id=".$folder['account_id'].",folder='".$folder['folder']."',active=".$folder['active']." WHERE id=".$folder['id']);
+					query("UPDATE folder SET account_id=".$folder['account_id'].",folder='".$folder['folder']."',season_id=".$folder['season_id'].",active=".$folder['active']." WHERE id=".$folder['id']);
 				}
 			}
 
@@ -271,7 +276,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$inserted_id.",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].")");
 			}
 			foreach ($folders as $folder) {
-				query("INSERT INTO folder (version_id,account_id,folder,active) VALUES (".$inserted_id.",".$folder['account_id'].",'".$folder['folder']."',".$folder['active'].")");
+				query("INSERT INTO folder (version_id,account_id,folder,season_id,active) VALUES (".$inserted_id.",".$folder['account_id'].",'".$folder['folder']."',".$folder['season_id'].",".$folder['active'].")");
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.";
@@ -297,7 +302,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultf);
 
-		$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY number IS NULL ASC, number ASC, e.name ASC");
+		$resulte = query("SELECT e.*, et.title, ss.number season_number FROM episode e LEFT JOIN season ss ON e.season_id=ss.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, e.name ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -312,7 +317,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$fansubs = array();
 
-		$resulte = query("SELECT e.*, NULL title FROM episode e WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY e.number IS NULL ASC, e.number ASC, e.name ASC");
+		$resulte = query("SELECT e.*, NULL title, ss.number season_number FROM episode e LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, e.name ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -327,7 +332,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<form method="post" action="version_edit.php" onsubmit="return checkNumberOfLinks()">
 						<div class="form-group">
-							<label for="form-series">Sèrie</label>
+							<label for="form-series" class="mandatory">Sèrie</label>
 							<div id="form-series" class="font-weight-bold form-control"><?php echo htmlspecialchars($series['name']); ?></div>
 							<input name="series_id" type="hidden" value="<?php echo $series['id']; ?>"/>
 							<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
@@ -335,7 +340,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row align-items-end">
 							<div class="col-sm">
 								<div class="form-group">
-									<label for="form-fansub-1">Fansub</label>
+									<label for="form-fansub-1" class="mandatory">Fansub</label>
 									<select name="fansub_1" class="form-control" id="form-fansub-1" required>
 										<option value="">- Selecciona un fansub -</option>
 <?php
@@ -388,7 +393,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm">
 								<div class="form-group">
-									<label for="form-status">Estat</label>
+									<label for="form-status" class="mandatory">Estat</label>
 									<select class="form-control" name="status" id="form-status" required>
 										<option value="">- Selecciona un estat -</option>
 										<option value="1"<?php echo $row['status']==1 ? " selected" : ""; ?>>Completada</option>
@@ -452,18 +457,31 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resulta);
 ?>
 										</select>
+										<select id="form-folders-list-season_id-XXX" name="form-folders-list-season_id-XXX" class="form-control d-none">
+											<option value="">- Qualsevol -</option>
+<?php
+		$resultss = query("SELECT ss.* FROM season ss WHERE ss.series_id=".$series['id']." ORDER BY ss.number ASC");
+		while ($ssrow = mysqli_fetch_assoc($resultss)) {
+?>
+											<option value="<?php echo $ssrow['id']; ?>"><?php echo htmlspecialchars($ssrow['number'].(!empty($ssrow['name']) ? ' ('.$ssrow['name'].')' : '')); ?></option>
+<?php
+		}
+		mysqli_free_result($resultss);
+?>
+										</select>
 										<table class="table table-bordered table-hover table-sm" id="folders-list-table" data-count="<?php echo count($folders); ?>">
 											<thead>
 												<tr>
-													<th style="width: 40%;">Compte</th>
-													<th>Carpeta</th>
+													<th style="width: 25%;" class="mandatory">Compte</th>
+													<th class="mandatory">Carpeta</th>
+													<th style="width: 15%;">Temporada</th>
 													<th style="width: 10%;">Sincronitza</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr id="folders-list-table-empty" class="<?php echo count($folders)>0 ? 'd-none' : ''; ?>">
-													<td colspan="4" class="text-center">- No hi ha configurada cap carpeta -</td>
+													<td colspan="5" class="text-center">- No hi ha configurada cap carpeta -</td>
 												</tr>
 <?php
 	for ($j=0;$j<count($folders);$j++) {
@@ -492,6 +510,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</td>
 													<td>
 														<input id="form-folders-list-folder-<?php echo $j+1; ?>" name="form-folders-list-folder-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($folders[$j]['folder']); ?>" maxlength="200" required/>
+													</td>
+													<td>
+														<select id="form-folders-list-season_id-<?php echo $j+1; ?>" name="form-folders-list-season_id-<?php echo $j+1; ?>" class="form-control">
+															<option value="">- Qualsevol -</option>
+<?php
+		$resultss = query("SELECT ss.* FROM season ss WHERE ss.series_id=".$series['id']." ORDER BY ss.number ASC");
+		while ($ssrow = mysqli_fetch_assoc($resultss)) {
+?>
+															<option value="<?php echo $ssrow['id']; ?>"<?php echo $folders[$j]['season_id']==$ssrow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($ssrow['number'].(!empty($ssrow['name']) ? ' ('.$ssrow['name'].')' : '')); ?></option>
+<?php
+		}
+		mysqli_free_result($resultss);
+?>
+														</select>
+														<input id="form-folders-list-id-<?php echo $j+1; ?>" name="form-folders-list-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $folders[$j]['id']; ?>"/>
 													</td>
 													<td class="text-center align-middle">
 														<input id="form-folders-list-active-<?php echo $j+1; ?>" name="form-folders-list-active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $folders[$j]['active']==1? " checked" : ""; ?>/>
@@ -545,14 +578,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</datalist>
 <?php
 	for ($i=0;$i<count($episodes);$i++) {
+		$episode_name='';
+		if (!empty($episodes[$i]['season_number'])) {
+			$episode_name.='Temporada '.$episodes[$i]['season_number'].' - ';
+		} else {
+			$episode_name.='Altres - ';
+		}
 		if (!empty($episodes[$i]['number'])) {
 			if (!empty($episodes[$i]['name'])) {
-				$episode_name='Capítol '.$episodes[$i]['number'].' <small class="text-muted">(Títol intern: '.htmlspecialchars($episodes[$i]['name']).')</small>';
+				$episode_name.='Capítol '.$episodes[$i]['number'].' <small class="text-muted">(Títol intern: '.htmlspecialchars($episodes[$i]['name']).')</small>';
 			} else {
-				$episode_name='Capítol '.$episodes[$i]['number'];
+				$episode_name.='Capítol '.$episodes[$i]['number'];
 			}
 		} else {
-			$episode_name = $episodes[$i]['name'].' <small class="text-muted">(Aquest títol NO és intern: es mostrarà si no introdueixes cap títol!)</small>';
+			$episode_name.=$episodes[$i]['name'].' <small class="text-muted">(Aquest títol NO és intern: es mostrarà si no introdueixes cap títol!)</small>';
 		}
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
@@ -657,8 +696,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="extras-list-table" data-count="<?php echo count($extras); ?>">
 													<thead>
 														<tr>
-															<th style="width: 20%;">Nom</th>
-															<th>Enllaç</th>
+															<th style="width: 20%;" class="mandatory">Nom</th>
+															<th class="mandatory">Enllaç</th>
 															<th style="width: 15%;">Resolució</th>
 															<th style="width: 20%;">Comentaris</th>
 															<th class="text-center" style="width: 5%;">Acció</th>

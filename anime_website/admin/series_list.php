@@ -34,6 +34,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="col">Nom</th>
 								<th class="text-center" scope="col">Tipus</th>
+								<th class="text-center" scope="col">Temporades</th>
 								<th class="text-center" scope="col">Capítols</th>
 								<th class="text-center" scope="col">Versions</th>
 								<th class="text-center" scope="col">Accions</th>
@@ -41,7 +42,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT s.*,COUNT(DISTINCT v.id) versions, SUM(ISNULL(e.number)) specials FROM series s LEFT JOIN episode e ON s.id=e.series_id LEFT JOIN version v ON s.id=v.series_id GROUP BY s.id ORDER BY s.name");
+	$result = query("SELECT s.*,(SELECT COUNT(DISTINCT v.id) FROM version v WHERE v.series_id=s.id) versions,(SELECT COUNT(DISTINCT ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, SUM(ISNULL(e.number)) specials FROM series s LEFT JOIN episode e ON s.id=e.series_id GROUP BY s.id ORDER BY s.name");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -54,6 +55,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle text-center"><?php echo $row['type']=='movie' ? 'Film' : 'Sèrie'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['seasons']; ?></td>
 								<td class="align-middle text-center"><?php echo ($row['episodes']!=-1 ? $row['episodes'] : 'Oberta').($row['specials']>0 ? '<small>+'.$row['specials'].'</small>' : ''); ?></td>
 								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
 								<td class="align-middle text-center"><a href="version_edit.php?series_id=<?php echo $row['id']; ?>" title="Crea'n una versió" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="series_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la sèrie '".$row['name']."' i tot el seu material? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>

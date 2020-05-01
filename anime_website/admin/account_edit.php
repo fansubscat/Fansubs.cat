@@ -57,16 +57,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<hr>
 				<form method="post" action="account_edit.php">
 					<div class="form-group">
-						<label for="form-name">Nom</label>
+						<label for="form-name" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-session_id">Identificador de sessió</label>
+						<label for="form-session_id" class="mandatory">Identificador de sessió</label>
 						<input class="form-control" name="session_id" id="form-session_id" required maxlength="200" value="<?php echo htmlspecialchars($row['session_id']); ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-fansub_id">Fansub</label>
+						<label for="form-fansub_id" class="mandatory">Fansub</label>
 						<select name="fansub_id" class="form-control" id="form-fansub_id" required>
 							<option value="">- Selecciona -</option>
 <?php

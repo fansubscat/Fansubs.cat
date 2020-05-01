@@ -11,7 +11,7 @@ function get_fansub_with_url($fansub) {
 	}
 }
 
-$result = query("SELECT s.*, YEAR(s.air_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE slug='".escape($_GET['slug'])."' GROUP BY s.id");
+$result = query("SELECT s.*, YEAR(s.air_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT ss.id) FROM season ss WHERE ss.series_id=s.id) seasons FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE slug='".escape($_GET['slug'])."' GROUP BY s.id");
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
@@ -73,6 +73,11 @@ if (!empty($series['rating'])) {
 if ($series['episodes']>1) {
 ?>
 							<div><span title="Nombre de capítols"><span class="fa fa-ruler icon"></span><?php echo $series['episodes'].' capítols'; ?></span></div>
+<?php
+}
+if ($series['seasons']>1) {
+?>
+							<div><span title="Nombre de temporades"><span class="fa fa-th-large icon"></span><?php echo $series['seasons'].' temporades'; ?></span></div>
 <?php
 }
 if (!empty($series['duration'])) {
@@ -167,6 +172,9 @@ if ($count==0) {
 
 		$fansub_buttons = '';
 		for ($j=0;$j<count($fansubs);$j++) {
+			if ($j>0) {
+				$fansub_buttons.='<br />';
+			}
 			if (!empty($fansubs[$j]['url'])) {
 				$fansub_buttons.='<a class="fansub-website" href="'.$fansubs[$j]['url'].'" target="_blank"><span class="fa fa-globe icon"></span>Web '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
 			}
@@ -190,7 +198,7 @@ if ($count==0) {
 <?php
 		if (!empty($fansub_buttons)) {
 ?>
-								<div class="flex wrappable fansub-buttons"><?php echo $fansub_buttons; ?></div>
+								<div class="fansub-buttons"><?php echo $fansub_buttons; ?></div>
 <?php
 		}
 ?>
@@ -219,7 +227,7 @@ if ($count==0) {
 ?>
 							</div>
 <?php
-		$resulte = query("SELECT e.*, et.title FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." WHERE series_id=".$series['id']." ORDER BY number IS NULL ASC, number ASC, IFNULL(et.title,e.name) ASC");
+		$resulte = query("SELECT e.*, et.title, ss.number season_number, ss.name season_name FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".$series['id']." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, IFNULL(et.title,e.name) ASC");
 		$episodes = array();
 		while ($row = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $row);
@@ -230,11 +238,36 @@ if ($count==0) {
 ?>
 							<div class="section">
 								<h2 class="section-title">Contingut</h2>
-								<div class="section-content flex wrappable">
+								<div class="section-content">
 <?php
+			if ($series['seasons']<2) {
 				foreach ($episodes as $row) {
 					print_episode($row, $version['id'], $series);
 				}
+			} else { //Multiple seasons
+?>
+									<details class="season"<?php echo $series['seasons']<3 ? ' open' : ''; ?>>
+<?php
+				$last_season = -1;
+				foreach ($episodes as $row) {
+					if ($row['season_number']!=$last_season){
+						if ($last_season!=-1) {
+?>
+									</details>
+									<details class="season"<?php echo $series['seasons']<3 ? ' open' : ''; ?>>
+<?php
+						}
+?>
+										<summary class="season_name"><?php echo !empty($row['season_number']) ? ('Temporada '.$row['season_number'].(!empty($row['season_name']) ? ': '.$row['season_name'] : '')) : 'Diversos'; ?></summary>
+<?php
+						$last_season=$row['season_number'];
+					}
+					print_episode($row, $version['id'], $series);
+				}
+?>
+									</details>
+<?php
+			}
 ?>
 								</div>
 							</div>
@@ -251,7 +284,7 @@ if ($count==0) {
 ?>
 							<div class="section">
 								<h2 class="section-title">Contingut extra</h2>
-								<div class="section-content flex wrappable">
+								<div class="section-content">
 <?php
 			foreach ($extras as $row) {
 				print_extra($row, $version['id']);

@@ -68,6 +68,9 @@ while ($row = mysqli_fetch_assoc($resultf)) {
 mysqli_free_result($resultf);
 ?>
 					</div>
+					<div id="options-select-buttons">
+						<a id="options-select-all">Selecciona'ls tots</a> / <a id="options-unselect-all">Deselecciona'ls tots</a>
+					</div>
 				</form>
 				<div id="options-buttonbar">
 					<button id="options-save-button"><span class="fa fa-check icon"></span>Desa la configuració</button>

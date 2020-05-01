@@ -150,6 +150,11 @@ h2 {
 	background: rgb(100, 100, 100);
 }
 
+#options-select-buttons {
+	margin-top: 0.5em;
+	font-size: 0.9em;
+}
+
 #overlay-close {
 	position: absolute;
 	right: 0;
@@ -464,9 +469,10 @@ a:hover {
 	margin-right: 0.5em;
 	margin-top: 0.1em;
 	margin-bottom: 0.1em;
-	padding: 0.5em;
+	padding: 0.3em 0.5em;
 	background: rgb(12, 87, 21);
 	white-space: nowrap;
+	display: inline-block;
 }
 
 .fansub-website:hover {
@@ -482,9 +488,10 @@ a:hover {
 	margin-right: 0.5em;
 	margin-top: 0.1em;
 	margin-bottom: 0.1em;
-	padding: 0.5em;
+	padding: 0.3em 0.5em;
 	background: rgb(14, 87, 102);
 	white-space: nowrap;
+	display: inline-block;
 }
 
 .fansub-twitter:hover {
@@ -518,7 +525,7 @@ a:hover {
 }
 
 .version_content_multi {
-	margin: 0em 2em;
+	margin: 0em 2em 2em 2em;
 	background-color: #444444;
 }
 
@@ -527,10 +534,6 @@ a:hover {
 }
 
 .icon-play {
-	padding-right: 0.5em;
-}
-
-.icon-unavailable {
 	padding-right: 0.4em;
 }
 
@@ -543,6 +546,21 @@ a:hover {
 	margin-left: 1.5em;
 	margin-bottom: 0.5em;
 	width: 100%;
+}
+
+.season {
+	margin-bottom: 1em;
+}
+
+.season_name {
+	font-weight: bold;
+	margin-bottom: 1em;
+	cursor: pointer;
+	outline: none;
+}
+
+.season_name:hover {
+	color: #FFD;
 }
 
 .episode-unavailable {
@@ -562,15 +580,24 @@ a:hover {
 	white-space: nowrap;
 }
 
-.read-indicator {
+.viewed-indicator {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
 	margin-left: 0.4em;
 	padding: 0.1em 0.4em;
-	background: rgb(80, 80, 80);
 	white-space: nowrap;
 	cursor: pointer;
+}
+
+.viewed {
+	background: rgb(140, 140, 140);
+	color: #FFF;
+}
+
+.not-viewed {
+	background: rgb(140, 140, 140);
+	color: #000;
 }
 
 .version-method {
@@ -617,7 +644,7 @@ a:hover {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.2em;
+	margin-left: 0.4em;
 	padding: 0.1em 0.4em;
 	background: rgb(80, 80, 80);
 	white-space: nowrap;
@@ -730,5 +757,13 @@ a:hover {
 
 	.thumbnail .title {
 		font-size: 0.75em;
+	}
+
+	.version_tab_container {
+		padding: 0em 1em;
+	}
+
+	.version_content_multi {
+		margin: 0em 1em 1em 1em;
 	}
 }

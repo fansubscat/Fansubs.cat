@@ -1,6 +1,8 @@
 <?php
 require_once('db.inc.php');
 
+log_action('cron-updater-started', "S'ha iniciat l'obtenció automàtica d'enllaços de MEGA");
+
 $resulta = query("SELECT f.*, a.name, a.session_id, v.series_id FROM folder f LEFT JOIN account a ON f.account_id=a.id LEFT JOIN version v ON f.version_id=v.id WHERE active=1");
 
 $lock_pointer = fopen($mega_lock_file, "w+");
@@ -26,7 +28,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 				if (preg_match('/.* - (\d+).*\.mp4/', $filename, $matches)) {
 					$number = $matches[1];
 					if (!in_array($number, $processed_numbers)) {
-						$resulte = query("SELECT e.id FROM episode e WHERE series_id=".escape($folder['series_id'])." AND number=".$number);
+						$resulte = query("SELECT e.id FROM episode e WHERE series_id=".escape($folder['series_id'])." AND number=".$number.(!empty($folder['season_id']) ? " AND season_id=".$folder['season_id'] : ''));
 						if ($row = mysqli_fetch_assoc($resulte)) {
 							$links = query("SELECT * FROM link WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
 							//WARNING: We must prevent the version from having multiple links if autofetch is enabled, or bad things will happen!!!
@@ -34,7 +36,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 								if ($link['url']!=$real_link){
 									query("UPDATE link SET url='".escape($real_link)."' WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
 									log_action("cron-update-link","S'ha actualitzat automàticament l'enllaç del fitxer '$filename' (id. d'enllaç: ".$link['id'].", id. de versió: ".$folder['version_id'].")");
-									query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,lists_updated_by='Cron' WHERE id=".$folder['version_id']);
+									query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='Cron' WHERE id=".$folder['version_id']);
 								}
 							} else {
 								$resultv = query("SELECT * FROM version WHERE id=".$folder['version_id']);
@@ -102,6 +104,8 @@ if (flock($lock_pointer, LOCK_EX)) {
 } else {
 	log_action("cron-error","No s'ha pogut blocar el fitxer de blocatge de MEGA");
 }
+
+log_action('cron-updater-finished', "S'ha completat l'obtenció automàtica d'enllaços de MEGA");
 
 mysqli_free_result($resulta);
 ?>

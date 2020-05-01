@@ -70,7 +70,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<form method="post" action="user_edit.php">
 						<div class="form-group">
-							<label for="form-user">Usuari</label>
+							<label for="form-user" class="mandatory">Usuari</label>
 							<input class="form-control" name="username" id="form-user" required maxlength="200" value="<?php echo $row['username']; ?>">
 							<input type="hidden" name="username_old" value="<?php echo htmlspecialchars($row['username']); ?>">
 						</div>
@@ -78,7 +78,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	if ($row['username']==NULL) {
 ?>
-							<label for="form-password">Contrasenya</label>
+							<label for="form-password" class="mandatory">Contrasenya</label>
 							<input class="form-control" type="password" name="password" required id="form-password">
 <?php
 	} else {
@@ -90,7 +90,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						</div>
 						<div class="form-group">
-							<label for="form-admin-level">Nivell d'administrador</label>
+							<label for="form-admin-level" class="mandatory">Nivell d'administrador</label>
 							<select class="form-control" name="admin_level" id="form-admin-level" required>
 								<option value="">- Selecciona un nivell -</option>
 								<option value="1"<?php echo $row['admin_level']==1 ? " selected" : ""; ?>>1: Gestor de versions</option>

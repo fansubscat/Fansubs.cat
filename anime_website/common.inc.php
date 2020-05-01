@@ -35,7 +35,7 @@ function get_status_description($id){
 
 function get_fansub_preposition_name($text){
 	$first = substr($text, 0, 1);
-	if ($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U'){ //Ugly...
+	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
 		return "d'$text";
 	}
 	return "de $text";
@@ -70,7 +70,7 @@ function get_provider($url){
 	if (preg_match(REGEXP_YOUTUBE,$url)){
 		return "YouTube";
 	}
-	return "Enllaç";
+	return "Vídeo incrustat";
 }
 
 function get_provider_short($url){
@@ -83,7 +83,7 @@ function get_provider_short($url){
 	if (preg_match(REGEXP_YOUTUBE,$url)){
 		return "Y";
 	}
-	return "E";
+	return "V";
 }
 
 function get_resolution_short($resolution){
@@ -107,7 +107,16 @@ function get_resolution_css($resolution){
 }
 
 function get_display_method($url){
-	return "embed";
+	if (preg_match(REGEXP_MEGA,$url)){
+		return "embed";
+	}
+	if (preg_match(REGEXP_GOOGLE_DRIVE,$url)){
+		return "embed";
+	}
+	if (preg_match(REGEXP_YOUTUBE,$url)){
+		return "embed";
+	}
+	return "direct-video";
 }
 
 function get_display_url($url){
@@ -158,7 +167,7 @@ function print_episode($row,$version_id,$series){
 }
 
 function print_extra($row,$version_id){
-	$result = query("SELECT l.* FROM link l WHERE l.episode_id IS NULL AND l.extra_name='".$row['extra_name']."' AND l.version_id=$version_id ORDER BY l.resolution ASC, l.id ASC");
+	$result = query("SELECT l.* FROM link l WHERE l.episode_id IS NULL AND l.extra_name='".escape($row['extra_name'])."' AND l.version_id=$version_id ORDER BY l.resolution ASC, l.id ASC");
 
 	$episode_title=htmlspecialchars($row['extra_name']);
 	
@@ -169,7 +178,7 @@ function print_extra($row,$version_id){
 function internal_print_episode($episode_title, $result) {
 	if (mysqli_num_rows($result)==0){
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="episode episode-unavailable">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title"><span class="fa fa-times-circle icon-unavailable"></span>'.$episode_title.' <span class="version-unavailable" title="Aquest capítol no està disponible">No disponible</span></div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title"><span class="fa fa-fw fa-times-circle icon-play"></span>'.$episode_title.' <span class="version-unavailable" title="Aquest capítol no està disponible">No disponible</span></div>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t</div>\n";
 	} else if (mysqli_num_rows($result)>1) {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="episode">'."\n";
@@ -177,12 +186,12 @@ function internal_print_episode($episode_title, $result) {
 
 		while ($vrow = mysqli_fetch_assoc($result)){
 			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-play icon-play"></span>Reprodueix</a> '."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>Reprodueix</a> '."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
 			if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="read-indicator" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-eye"></span></span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";
 			} else {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="read-indicator" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-eye-slash"></span></span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
 			}
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-method" title="Plataforma en què s\'allotja el vídeo: '.htmlspecialchars(get_provider($vrow['url'])).'">'.htmlspecialchars(get_provider_short($vrow['url'])).'</span>'."\n";
 			if (!empty($vrow['resolution'])){
@@ -202,12 +211,12 @@ function internal_print_episode($episode_title, $result) {
 		
 		$vrow = mysqli_fetch_assoc($result);
 
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
 		if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="read-indicator" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-eye"></span></span>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";
 		} else {
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="read-indicator" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-eye-slash"></span></span>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
 		}
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-method" title="Plataforma en què s\'allotja el vídeo: '.htmlspecialchars(get_provider($vrow['url'])).'">'.htmlspecialchars(get_provider_short($vrow['url'])).'</span>'."\n";
 		if (!empty($vrow['resolution'])){

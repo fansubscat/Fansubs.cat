@@ -1,31 +1,53 @@
 <?php
 require_once('db.inc.php');
 
-$result = query("SELECT * FROM series WHERE myanimelist_id IS NOT NULL ORDER BY name");
+log_action('cron-scores-started', "S'ha iniciat l'actualització de la puntuació de les sèries");
+
+$result = query("SELECT * FROM series ORDER BY name ASC");
 
 while ($series = mysqli_fetch_assoc($result)) {
 	echo "Updating score for series ".$series['name']."\n";
-	$url = 'https://api.jikan.moe/v3/anime/'.$series['myanimelist_id'];
-	$response = json_decode(file_get_contents($url));
-	
-	if (!$response){
+
+	$resultss = query("SELECT * FROM season WHERE series_id=".$series['id']." AND myanimelist_id IS NOT NULL ORDER BY number ASC");
+
+	$seasoncount = 0;
+	$seasonscoresum = 0;
+	$error = FALSE;
+	while ($season = mysqli_fetch_assoc($resultss)) {
+		$url = 'https://api.jikan.moe/v3/anime/'.$season['myanimelist_id'];
+		$response = json_decode(file_get_contents($url));
+		
+		if (!$response){
+			$error = TRUE;
+			break;
+		} else {
+			$score = $response->score;
+			if ($score && is_numeric($score)) {
+				$seasonscoresum+=$score;
+			} else {
+				$error = TRUE;
+				break;
+			}
+		}
+		$seasoncount++;
+	}
+
+	if ($error) {	
 		echo "Update failed for series ".$series['name']."\n";
 		log_action('cron-score-failed', "No s'ha pogut actualitzar la puntuació de la sèrie '".$series['name']."'");
 	} else {
-		$score = $response->score;
-		if ($score && is_numeric($score)) {
-			if ($series['score']!=$score) {
-				echo "Previous score: ".$series['score']." / New score: $score\n";
-				query("UPDATE series SET score=".escape($score)." WHERE id=".$series['id']);
+		if ($seasoncount>0) { //if it's zero, we ignore it... no myanimelist, probably
+			$new_score=$seasonscoresum/$seasoncount;
+			if ($series['score']!=$new_score) {
+				echo "Previous score: ".$series['score']." / New score: $new_score\n";
+				log_action('cron-score-updated', "La puntuació de la sèrie '".$series['name']."' ha canviat de ".$series['score'].' a '.$new_score);
+				query("UPDATE series SET score=".escape($new_score)." WHERE id=".$series['id']);
 			}
-		} else {
-			echo "Update failed for series ".$series['name']."\n";
-			log_action('cron-score-failed', "No s'ha pogut actualitzar la puntuació de la sèrie '".$series['name']."'");
 		}
 	}
-	sleep(4);
+	sleep(4); //4s for Jikan request limits
 }
-log_action('cron-scores-updated', "S'ha actualitzat la puntuació de les sèries");
+log_action('cron-scores-finished', "S'ha completat l'actualització de la puntuació de les sèries");
 echo "All done!\n";
 
 mysqli_free_result($result);

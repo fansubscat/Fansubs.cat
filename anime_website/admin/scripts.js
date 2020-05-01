@@ -130,23 +130,38 @@ function populateMalData(data, staff) {
 	for (var i = 0; i < data.genres.length; i++) {
 		$("[data-myanimelist-id='"+data.genres[i].mal_id+"']").prop('checked', true);
 	}
+
+	if ($("#form-season-list-episodes-1").val()=='') {
+		if (data.episodes) {
+			$("#form-season-list-episodes-1").val(data.episodes);
+		}
+	}
+
+	if ($("#form-season-list-myanimelist_id-1").val()=='') {
+		$("#form-season-list-myanimelist_id-1").val(data.mal_id);
+	}
 }
 
-function populateMalEpisodes(episodes) {
-	var i = parseInt($('#episode-list-table').attr('data-count'));
-	for (var id=1;id<i+1;id++) {
-		$("#form-episode-list-row-"+id).remove();
+function populateMalEpisodes(season_line, episodes) {
+	if (season_line==1) {
+		var i = parseInt($('#episode-list-table').attr('data-count'));
+		for (var id=1;id<i+1;id++) {
+			$("#form-episode-list-row-"+id).remove();
+		}
+		$('#episode-list-table').attr('data-count', 0);
 	}
-	$('#episode-list-table').attr('data-count', 0);
+
+	initialNumber = parseInt($('#episode-list-table').attr('data-count'))+1;
 
 	for (var i=0;i<episodes.episodes.length;i++) {
 		addRow();
-		$("#form-episode-list-num-"+(i+1)).val(episodes.episodes[i].episode_id);
-		$("#form-episode-list-name-"+(i+1)).val(episodes.episodes[i].title);
+		$("#form-episode-list-season-"+(i+initialNumber)).val($('#form-season-list-number-'+season_line).val());
+		$("#form-episode-list-num-"+(i+initialNumber)).val(episodes.episodes[i].episode_id);
+		$("#form-episode-list-name-"+(i+initialNumber)).val(episodes.episodes[i].title);
 		if (episodes.episodes[i].aired) {
-			$("#form-episode-list-date-"+(i+1)).val(episodes.episodes[i].aired.substr(0,10));
+			$("#form-episode-list-date-"+(i+initialNumber)).val(episodes.episodes[i].aired.substr(0,10));
 		} else {
-			$("#form-episode-list-date-"+(i+1)).val(episodes.episodes[i].aired);
+			$("#form-episode-list-date-"+(i+initialNumber)).val(episodes.episodes[i].aired);
 		}
 	}
 }
@@ -172,7 +187,7 @@ function string_to_slug(str) {
 
 function addRow() {
 	var i = parseInt($('#episode-list-table').attr('data-count'))+1;
-	$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-episode-list-name-'+i+'" name="form-episode-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td><input id="form-episode-list-date-'+i+'" name="form-episode-list-date-'+i+'" type="date" class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-season-'+i+'" name="form-episode-list-season-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-episode-list-name-'+i+'" name="form-episode-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td><input id="form-episode-list-date-'+i+'" name="form-episode-list-date-'+i+'" type="date" class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#episode-list-table').attr('data-count', i);
 }
 
@@ -187,6 +202,8 @@ function deleteRow(id) {
 			$("#form-episode-list-row-"+j).attr('id','form-episode-list-row-'+(j-1));
 			$("#form-episode-list-id-"+j).attr('name','form-episode-list-id-'+(j-1));
 			$("#form-episode-list-id-"+j).attr('id','form-episode-list-id-'+(j-1));
+			$("#form-episode-list-season-"+j).attr('name','form-episode-list-season-'+(j-1));
+			$("#form-episode-list-season-"+j).attr('id','form-episode-list-season-'+(j-1));
 			$("#form-episode-list-num-"+j).attr('name','form-episode-list-num-'+(j-1));
 			$("#form-episode-list-num-"+j).attr('id','form-episode-list-num-'+(j-1));
 			$("#form-episode-list-name-"+j).attr('name','form-episode-list-name-'+(j-1));
@@ -197,6 +214,38 @@ function deleteRow(id) {
 			$("#form-episode-list-delete-"+j).attr('id','form-episode-list-delete-'+(j-1));
 		}
 		$('#episode-list-table').attr('data-count', i-1);
+	}
+}
+
+function addSeasonRow() {
+	var i = parseInt($('#season-list-table').attr('data-count'))+1;
+	$('#season-list-table').append('<tr id="form-season-list-row-'+i+'"><td><input id="form-season-list-number-'+i+'" name="form-season-list-number-'+i+'" type="number" class="form-control" value="'+(parseInt($('#form-season-list-number-'+(i-1)).val())+1)+'" required/><input id="form-season-list-id-'+i+'" name="form-season-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-season-list-name-'+i+'" name="form-season-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense nom)"/></td><td><input id="form-season-list-episodes-'+i+'" name="form-season-list-episodes-'+i+'" type="number" class="form-control" value="" required/></td><td><input id="form-season-list-myanimelist_id-'+i+'" name="form-season-list-myanimelist_id-'+i+'" type="number" class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-season-list-delete-'+i+'" onclick="deleteSeasonRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#season-list-table').attr('data-count', i);
+}
+
+function deleteSeasonRow(id) {
+	var i = parseInt($('#season-list-table').attr('data-count'));
+	if(i==1) {
+		alert('La sèrie ha de tenir una temporada, com a mínim!');
+	}
+	else {
+		$("#form-season-list-row-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-season-list-row-"+j).attr('id','form-season-list-row-'+(j-1));
+			$("#form-season-list-id-"+j).attr('name','form-season-list-id-'+(j-1));
+			$("#form-season-list-id-"+j).attr('id','form-season-list-id-'+(j-1));
+			$("#form-season-list-number-"+j).attr('name','form-season-list-number-'+(j-1));
+			$("#form-season-list-number-"+j).attr('id','form-season-list-number-'+(j-1));
+			$("#form-season-list-name-"+j).attr('name','form-season-list-name-'+(j-1));
+			$("#form-season-list-name-"+j).attr('id','form-season-list-name-'+(j-1));
+			$("#form-season-list-episodes-"+j).attr('name','form-season-list-episodes-'+(j-1));
+			$("#form-season-list-episodes-"+j).attr('id','form-season-list-episodes-'+(j-1));
+			$("#form-season-list-myanimelist_id-"+j).attr('name','form-season-list-myanimelist_id-'+(j-1));
+			$("#form-season-list-myanimelist_id-"+j).attr('id','form-season-list-myanimelist_id-'+(j-1));
+			$("#form-season-list-delete-"+j).attr('onclick','deleteSeasonRow('+(j-1)+');');
+			$("#form-season-list-delete-"+j).attr('id','form-season-list-delete-'+(j-1));
+		}
+		$('#season-list-table').attr('data-count', i-1);
 	}
 }
 
@@ -220,9 +269,11 @@ function addVersionExtraRow() {
 function addVersionFolderRow() {
 	var i = parseInt($('#folders-list-table').attr('data-count'))+1;
 
-	var html = $('#form-folders-list-account_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
+	var htmlAcc = $('#form-folders-list-account_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
 
-	$('#folders-list-table').append('<tr id="form-folders-list-row-'+i+'"><td>'+html+'<input id="form-folders-list-id-'+i+'" name="form-folders-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-folders-list-folder-'+i+'" name="form-folders-list-folder-'+i+'" class="form-control" value="" maxlength="200" required/></td><td class="text-center align-middle"><input id="form-folders-list-active-'+i+'" name="form-folders-list-active-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-folders-list-delete-'+i+'" onclick="deleteVersionFolderRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	var htmlSea = $('#form-folders-list-season_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','">');
+
+	$('#folders-list-table').append('<tr id="form-folders-list-row-'+i+'"><td>'+htmlAcc+'<input id="form-folders-list-id-'+i+'" name="form-folders-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-folders-list-folder-'+i+'" name="form-folders-list-folder-'+i+'" class="form-control" value="" maxlength="200" required/></td><td>'+htmlSea+'</td><td class="text-center align-middle"><input id="form-folders-list-active-'+i+'" name="form-folders-list-active-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-folders-list-delete-'+i+'" onclick="deleteVersionFolderRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#folders-list-table').attr('data-count', i);
 	$('#folders-list-table-empty').addClass('d-none');
 }
@@ -300,9 +351,13 @@ function deleteVersionFolderRow(id) {
 	}
 }
 
-function fetchMalEpisodes(page) {
+function fetchMalEpisodes(current_season, total_seasons, page) {
+	if (current_season==1 && page==1) {
+		malDataSeasonsEpisodes = [];
+	}
+
 	var xmlhttp = new XMLHttpRequest();
-	var url = "https://api.jikan.moe/v3/anime/"+$("#form-myanimelist_id").val()+"/episodes/"+page;
+	var url = "https://api.jikan.moe/v3/anime/"+$("#form-season-list-myanimelist_id-"+current_season).val()+"/episodes/"+page;
 
 	xmlhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -314,22 +369,33 @@ function fetchMalEpisodes(page) {
 			}
 			if (page<malDataEpisodesPage.episodes_last_page) {
 				setTimeout(function() {
-					fetchMalEpisodes(page+1);
+					fetchMalEpisodes(current_season, total_seasons, page+1);
 				}, 4000);
 			} else{
 				if (malDataEpisodes.episodes.length>0) {
-					$("#import-from-mal-episodes-done").removeClass("d-none");
-					populateMalEpisodes(malDataEpisodes);
+					malDataSeasonsEpisodes.push(malDataEpisodes);
 				}
 				else{
-					alert("Aquesta sèrie no té capítols donats d'alta a MyAnimeList. Introdueix-los a mà.");
+					alert("La temporada "+$("#form-season-list-number-"+current_season)+" no té capítols donats d'alta a MyAnimeList. Caldrà que els introdueixis a mà.");
+					malDataSeasonsEpisodes.push([]);
 				}
-				$("#import-from-mal-episodes-loading").addClass("d-none");
-				$("#import-from-mal-episodes-not-loading").removeClass("d-none");
-				setTimeout(function() {
-					$("#import-from-mal").prop('disabled', false);
-					$("#import-from-mal-episodes").prop('disabled', false);
-				}, 4000);
+				if (current_season<total_seasons) {
+					setTimeout(function() {
+						fetchMalEpisodes(current_season+1, total_seasons, 1);
+					}, 4000);
+				} else {
+					for (var i=0;i<malDataSeasonsEpisodes.length;i++) {
+						populateMalEpisodes(i+1,malDataSeasonsEpisodes[i]);
+					}			
+					
+					$("#import-from-mal-episodes-done").removeClass("d-none");
+					$("#import-from-mal-episodes-loading").addClass("d-none");
+					$("#import-from-mal-episodes-not-loading").removeClass("d-none");
+					setTimeout(function() {
+						$("#import-from-mal").prop('disabled', false);
+						$("#import-from-mal-episodes").prop('disabled', false);
+					}, 4000);
+				}
 			}
 		} else if (this.readyState == 4) {
 			alert("S'ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
@@ -346,28 +412,41 @@ function fetchMalEpisodes(page) {
 }
 
 function checkNumberOfEpisodes() {
-	if ($('#form-episodes').val()!=''){
-		var episodeCount = parseInt($('#episode-list-table').attr('data-count'));
-		var seriesCount = parseInt($('#form-episodes').val());
-		var normalEpisodeCount = 0;
+	var seasons = $('[id^=form-season-list-episodes-]');
+	var seasonsEpisodeCount=0;
+	for (var i=0;i<seasons.length;i++){
+		if ($(seasons[i]).val()!='' && $(seasons[i]).val()>0) {
+			seasonsEpisodeCount+=parseInt($(seasons[i]).val());
+		}
+	}
+	var episodeCount = parseInt($('#episode-list-table').attr('data-count'));
+	var normalEpisodeCount = 0;
 
-		for (var i=1;i<=episodeCount;i++){
-			if ($('#form-episode-list-num-'+i).val()!=''){
-				normalEpisodeCount++;
-			}
+	for (var i=1;i<=episodeCount;i++){
+		if ($('#form-episode-list-num-'+i).val()!=''){
+			normalEpisodeCount++;
 		}
-		if (normalEpisodeCount!=seriesCount){
-			alert('El nombre de capítols numerats de la llista ha de coincidir amb el nombre de capítols indicat a la fitxa.');
-			return false;
-		}
-	} else if (!$('#form-is_open').prop('checked')){
-			alert('El nombre de capítols és obligatori si la sèrie no és oberta.');
-			return false;
+	}
+	if (normalEpisodeCount!=seasonsEpisodeCount){
+		alert('El nombre de capítols numerats de la llista ha de coincidir amb el nombre de capítols indicat a les temporades.');
+		return false;
 	}
 	var episodeCount2 = parseInt($('#episode-list-table').attr('data-count'));
 	for (var i=1;i<=episodeCount2;i++){
 		if ($('#form-episode-list-num-'+i).val()=='' && $('#form-episode-list-name-'+i).val()==''){
 			alert('Hi ha capítols sense número ni nom. Els capítols normals han de tenir com a mínim número, i els capítols especials han de tenir com a mínim nom.');
+			return false;
+		}
+	}
+
+	var seasonNumbers = [];
+	for (var i=0;i<seasons.length;i++){
+		seasonNumbers.push($('#form-season-list-number-'+(i+1)).val());
+	}
+	var episodeCount3 = parseInt($('#episode-list-table').attr('data-count'));
+	for (var i=1;i<=episodeCount3;i++){
+		if ($('#form-episode-list-season-'+i).val()!='' && !seasonNumbers.includes($('#form-episode-list-season-'+i).val())){
+			alert('Hi ha capítols de temporades inexistents. Corregeix-ho.');
 			return false;
 		}
 	}
@@ -533,6 +612,7 @@ function isAutoFetchActive() {
 
 var malData;
 var malDataStaff;
+var malDataSeasonsEpisodes;
 var malDataEpisodes;
 
 $(document).ready(function() {
@@ -609,14 +689,18 @@ $(document).ready(function() {
 	});
 
 	$("#import-from-mal-episodes").click(function() {
-		if ($("#form-myanimelist_id").val()=='') {
-			var result = prompt("Introdueix l'URL de l'anime a MyAnimeList per a importar-ne la fitxa.");
-			if (!result) {
-				return;
-			} else if (result.match(/https?:\/\/.*myanimelist.net\/anime\/(\d+)\//i)) {
-				$("#form-myanimelist_id").val(result.match(/https?:\/\/.*myanimelist.net\/anime\/(\d*)\//i)[1]);
-			} else {
-				alert("L'URL no és vàlida.");
+		var seasons = $('[id^=form-season-list-myanimelist_id-]');
+		var with_id=0;
+		for (var i=0;i<seasons.length;i++){
+			if ($(seasons[i]).val()!='') {
+				with_id++;
+			}
+		}
+		if (with_id==0) {
+			alert("Cal que introdueixis l'identificador de MyAnimeList d'almenys una de les temporades.");
+			return;
+		} else if (with_id<seasons.length) {
+			if (!confirm("Hi ha temporades sense identificador de MyAnimeList. Només s'importaran els capítols de les temporades que tinguin identificador.")){
 				return;
 			}
 		}
@@ -629,38 +713,45 @@ $(document).ready(function() {
 		$("#import-from-mal-episodes-loading").removeClass("d-none");
 		$("#import-from-mal-episodes-not-loading").addClass("d-none");
 
-		fetchMalEpisodes(1);
+		fetchMalEpisodes(1,seasons.length,1);
 	});
 
 	$("#generate-episodes").click(function() {
-		var targetNumber;
-		if ($('#form-is_open').prop('checked')) {
-			var result = prompt("La sèrie és oberta. Quants capítols vols generar?");
-			if (!result || parseInt(result)==NaN || parseInt(result)<1) {
-				return;
-			} else {
-				targetNumber=parseInt(result);
+		var seasons = $('[id^=form-season-list-episodes-]');
+		var with_episodes=0;
+		for (var i=0;i<seasons.length;i++){
+			if ($(seasons[i]).val()!='' && $(seasons[i]).val()>0) {
+				with_episodes++;
 			}
-		} else if ($("#form-episodes").val()=='') {
-			alert('Per a poder-los generar, cal que introdueixis el nombre de capítols.');
-			return;
-		} else {
-			targetNumber=$("#form-episodes").val()
 		}
+		if (with_episodes!=seasons.length) {
+			alert("Per a poder-los generar, cal que introdueixis el nombre de capítols de cada temporada.");
+			return;
+		}
+
 		if ((parseInt($('#episode-list-table').attr('data-count'))>1 || $('#form-episode-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots i es tornaran a crear. Totes les versions que continguin aquests capítols i tots els enllaços d'aquests capítols desapareixeran i no es podrà desfer l'acció un cop hagis desat els canvis. Vols continuar?")) {
 			return;
 		}
+
+		var restart = confirm("Vols reiniciar la numeració de capítols a cada temporada? Si és així, prem 'D'acord', en cas contrari, prem 'Cancel·la'.")
+
 		var i = parseInt($('#episode-list-table').attr('data-count'));
 		for (var id=1;id<i+1;id++) {
 			$("#form-episode-list-row-"+id).remove();
 		}
 		$('#episode-list-table').attr('data-count', 0);
 
-		for (var i=0;i<targetNumber;i++) {
-			addRow();
-			$("#form-episode-list-num-"+(i+1)).val(i+1);
-			$("#form-episode-list-name-"+(i+1)).val('');
-			$("#form-episode-list-date-"+(i+1)).val('');
+		var rowNumber=1;
+
+		for (var i=0;i<seasons.length;i++) {
+			for (var j=0;j<$(seasons[i]).val();j++) {
+				addRow();
+				$("#form-episode-list-season-"+rowNumber).val($('#form-season-list-number-'+(i+1)).val());
+				$("#form-episode-list-num-"+rowNumber).val(restart ? j+1 : rowNumber);
+				$("#form-episode-list-name-"+rowNumber).val('');
+				$("#form-episode-list-date-"+rowNumber).val('');
+				rowNumber++;
+			}
 		}
 	});
 
@@ -679,13 +770,15 @@ $(document).ready(function() {
 
 		var account_ids = [];
 		var folders = [];
+		var season_ids = [];
 		for (var i=1;i<=count;i++){
 			account_ids.push(encodeURIComponent($('#form-folders-list-account_id-'+i).val()));
 			folders.push(encodeURIComponent($('#form-folders-list-folder-'+i).val()));
+			season_ids.push(encodeURIComponent($('#form-folders-list-season_id-'+i).val()!='' ? $('#form-folders-list-season_id-'+i).val() : -1));
 		}
 
 		var xmlhttp = new XMLHttpRequest();
-		var url = "fetch_mega_files.php?series_id="+$('[name="series_id"]').val()+"&account_ids[]="+account_ids.join("&account_ids[]=")+"&folders[]="+folders.join("&folders[]=");
+		var url = "fetch_mega_files.php?series_id="+$('[name="series_id"]').val()+"&account_ids[]="+account_ids.join("&account_ids[]=")+"&folders[]="+folders.join("&folders[]=")+"&season_ids[]="+season_ids.join("&season_ids[]=");
 
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
