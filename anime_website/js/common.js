@@ -75,6 +75,11 @@ function getSource(method, url){
 	return '<div class="white-popup"><div style="display: flex; height: 100%; justify-content: center; align-items: center;"><div>Mètode de visualització no compatible: '+method+'</div></div></div>';
 }
 
+function showContactScreen(reason) {
+	$('body').addClass('no-overflow');
+	$('#contact-overlay').removeClass('hidden');
+}
+
 $(document).ready(function() {
 	$('#overlay-close').click(function(){
 		$('#overlay-content').html('');
@@ -99,6 +104,15 @@ $(document).ready(function() {
 		} else {
 			markLinkAsNotViewed($(this).attr('data-link-id'));
 		}
+	});
+	$("#contact-link").click(function(){
+		showContactScreen('generic');
+	});
+	$(".version-lost").click(function(){
+		showContactScreen('version_lost');
+	});
+	$(".version-missing-links-link").click(function(){
+		showContactScreen('version_lost');
 	});
 	$(".version_tab").click(function(){
 		$(".version_tab").each(function(){
@@ -132,6 +146,7 @@ $(document).ready(function() {
 		$('body').removeClass('no-overflow');
 	});
 	$('#options-save-button').click(function(){
+		Cookies.set('hide_missing', $('#hide_missing').prop('checked') ? '0' : '1', cookieOptions);
 		Cookies.set('show_cancelled', $('#show_cancelled').prop('checked') ? '1' : '0', cookieOptions);
 		Cookies.set('show_hentai', $('#show_hentai').prop('checked') ? '1' : '0', cookieOptions);
 		var hiddenFansubs = $('#options-fansubs input:not(:checked)');
@@ -153,6 +168,44 @@ $(document).ready(function() {
 		$('[id^=show_fansub_]').each(function(){
 			$(this).prop('checked',false);
 		});
+	});
+	$('#contact-cancel-button').click(function(){
+		$('#contact-form').trigger("reset");
+		$('#contact-overlay').addClass('hidden');
+		$('body').removeClass('no-overflow');
+	});
+	$('#contact-send-button').click(function(){
+		if (!/\S+@\S+\.\S+/.test($('#contact_address').val())) {
+			alert('Introdueix una adreça de resposta vàlida.');
+			return;
+		}
+		if ($('#contact_message').val()=='') {
+			alert('Introdueix un missatge.');
+			return;
+		}
+		$('#contact-send-button').addClass('hidden');
+		$('#contact-send-button-loading').removeClass('hidden');
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", '/contact.php', true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.onreadystatechange = function() {
+			if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+				$('#contact-send-button-loading').addClass('hidden');
+				$('#contact-send-button-done').removeClass('hidden');
+				setTimeout(function(){
+					$('#contact-send-button-done').addClass('hidden');
+					$('#contact-send-button').removeClass('hidden');
+					$('#contact-form').trigger("reset");
+					$('#contact-overlay').addClass('hidden');
+					$('body').removeClass('no-overflow');
+				}, 4000);
+			} else if (this.readyState === XMLHttpRequest.DONE) {
+				alert("S'ha produït un error en enviar el missatge. Torna-ho a provar.");
+				$('#contact-send-button-loading').addClass('hidden');
+				$('#contact-send-button').removeClass('hidden');
+			}
+		}
+		xhr.send("address="+encodeURIComponent($('#contact_address').val())+"&message="+encodeURIComponent($('#contact_message').val())+"&magic=1714");
 	});
 
 	var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);

@@ -45,12 +45,16 @@ if (!empty($header_social)) {
 				<form id="options-form">
 					<h2 class="section-title">Opcions de visualització</h2>
 					<div class="options-item">
+						<input id="hide_missing" type="checkbox"<?php echo !empty($_COOKIE['hide_missing']) ? '' : ' checked'; ?>>
+					  	<label for="hide_missing">Mostra les sèries amb capítols subtitulats però sense enllaç</label>
+					</div>
+					<div class="options-item">
 						<input id="show_cancelled" type="checkbox"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
-					  	<label for="show_cancelled">Mostra sèries cancel·lades o abandonades</label>
+					  	<label for="show_cancelled">Mostra les sèries cancel·lades o abandonades</label>
 					</div>
 					<div class="options-item">
 						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
-					  	<label for="show_hentai">Mostra hentai (confirmes que ets major d'edat)</label>
+					  	<label for="show_hentai">Mostra el hentai (confirmes que ets major d'edat)</label>
 					</div>
 					<h2 class="section-title options-section-divider">Fansubs que es mostren</h2>
 					<div id="options-fansubs">
@@ -75,6 +79,27 @@ mysqli_free_result($resultf);
 				<div id="options-buttonbar">
 					<button id="options-save-button"><span class="fa fa-check icon"></span>Desa la configuració</button>
 					<button id="options-cancel-button"><span class="fa fa-times icon"></span>Cancel·la</button>
+				</div>
+			</div>
+		</div>
+		<div id="contact-overlay" class="hidden flex">
+			<div id="contact-overlay-content">
+				<form id="contact-form">
+					<h2 class="section-title">Envia'ns un comentari</h2>
+					<div>
+					  	<label for="contact_address">Adreça electrònica <small>(et respondrem aquí)</small></label><br>
+						<input id="contact_address" name="address" required>
+					</div>
+					<div style="margin-top: 0.5em;">
+					  	<label for="contact_address">Missatge <small>(digues qui ets i per què ens escrius)</small></label><br>
+						<textarea id="contact_message" name="message" required></textarea>
+					</div>
+				</form>
+				<div id="contact-buttonbar">
+					<button id="contact-send-button"><span class="fa fa-check icon"></span>Envia el missatge</button>
+					<button id="contact-send-button-loading" class="hidden">S'està enviant...</button>
+					<button id="contact-send-button-done" class="hidden">Missatge enviat!</button>
+					<button id="contact-cancel-button"><span class="fa fa-times icon"></span>Cancel·la</button>
 				</div>
 			</div>
 		</div>

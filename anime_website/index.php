@@ -18,7 +18,7 @@ $base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR 
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
-$cookie_extra_conditions = (empty($_COOKIE['show_cancelled']) ? " AND v.status<>4 AND v.status<>3" : "").(empty($_COOKIE['show_hentai']) ? " AND s.rating<>'XXX'" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
+$cookie_extra_conditions = (empty($_COOKIE['show_cancelled']) ? " AND v.status<>4 AND v.status<>3" : "").(!empty($_COOKIE['hide_missing']) ? " AND v.episodes_missing=0" : "").(empty($_COOKIE['show_hentai']) ? " AND s.rating<>'XXX'" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
 switch ($header_tab){
 	case 'movies':

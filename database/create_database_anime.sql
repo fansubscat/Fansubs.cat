@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `action_log` (
 CREATE TABLE IF NOT EXISTS `episode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `series_id` int(11) NOT NULL,
+  `season_id` int(11) DEFAULT NULL,
   `number` int(11) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL,
   `date` timestamp NULL DEFAULT NULL,
@@ -56,10 +57,12 @@ CREATE TABLE IF NOT EXISTS `folder` (
   `version_id` int(11) NOT NULL,
   `account_id` int(11) NOT NULL,
   `folder` varchar(200) NOT NULL,
+  `season_id` int(11) DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `folder_ibfk_1` (`account_id`),
-  KEY `folder_ibfk_2` (`version_id`)
+  KEY `folder_ibfk_2` (`version_id`),
+  KEY `folder_ibfk_3` (`season_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `folder_failed_files` (
@@ -82,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `link` (
   `version_id` int(11) NOT NULL,
   `episode_id` int(11) DEFAULT NULL,
   `extra_name` varchar(200) DEFAULT NULL,
-  `url` varchar(200) NOT NULL,
+  `url` varchar(200) DEFAULT NULL,
   `resolution` varchar(200) DEFAULT NULL,
   `comments` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -102,6 +105,17 @@ CREATE TABLE IF NOT EXISTS `rel_version_fansub` (
   `fansub_id` int(11) NOT NULL,
   PRIMARY KEY (`version_id`,`fansub_id`),
   KEY `rel_version_fansub_ibfk_1` (`fansub_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `season` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `series_id` int(11) NOT NULL,
+  `number` int(11) NOT NULL,
+  `name` varchar(200) DEFAULT NULL,
+  `episodes` int(11) DEFAULT NULL,
+  `myanimelist_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `season_ibfk_1` (`series_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS `series` (
@@ -175,7 +189,8 @@ ALTER TABLE `episode_title`
   ADD CONSTRAINT `episode_title_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `folder`
   ADD CONSTRAINT `folder_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `folder_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `folder_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `folder_ibfk_3` FOREIGN KEY (`season_id`) REFERENCES `season` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `folder_failed_files`
   ADD CONSTRAINT `folder_failed_files_ibfk_1` FOREIGN KEY (`folder_id`) REFERENCES `folder` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `link`
@@ -187,6 +202,8 @@ ALTER TABLE `rel_series_genre`
 ALTER TABLE `rel_version_fansub`
   ADD CONSTRAINT `rel_version_fansub_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `rel_version_fansub_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `season`
+  ADD CONSTRAINT `season_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `version`

@@ -55,7 +55,7 @@ h2 {
 	z-index: 2000;
 }
 
-#options-overlay {
+#options-overlay, #contact-overlay {
 	justify-content: center;
 	align-items: center;
 	position: fixed;
@@ -69,7 +69,7 @@ h2 {
 	z-index: 2000;
 }
 
-#options-overlay-content {
+#options-overlay-content, #contact-overlay-content {
 	max-width: 660px;
 	background-color: #000;
 	padding: 2em;
@@ -79,9 +79,10 @@ h2 {
 	box-sizing: border-box;
 	margin: 1em;
 	max-height: 100%;
+	width: 100%;
 }
 
-#options-buttonbar {
+#options-buttonbar, #contact-buttonbar {
 	text-align: center;
 	width: 100%;
 	margin-top: 1.5em;
@@ -114,7 +115,7 @@ h2 {
 	 margin-top: 1.5em;
 }
 
-#options-save-button {
+#options-save-button, #contact-send-button {
 	color: #FFF;
 	font-size: 1em;
 	font-weight: bold;
@@ -129,11 +130,25 @@ h2 {
 	cursor: pointer;
 }
 
-#options-save-button:hover {
+#contact-send-button-loading, #contact-send-button-done {
+	color: #FFF;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-right: 0.5em;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+	padding: 0.5em;
+	background: rgb(42, 117, 51);
+	white-space: nowrap;
+	border: none;
+}
+
+#options-save-button:hover, #contact-send-button:hover {
 	background: rgb(32, 107, 41);
 }
 
-#options-cancel-button {
+#options-cancel-button, #contact-cancel-button {
 	color: #FFF;
 	font-size: 1em;
 	font-weight: bold;
@@ -153,6 +168,14 @@ h2 {
 #options-select-buttons {
 	margin-top: 0.5em;
 	font-size: 0.9em;
+}
+
+#contact_address,#contact_message {
+	width: 100%;
+}
+
+#contact_message {
+	height: 12em;
 }
 
 #overlay-close {
@@ -456,6 +479,10 @@ a:hover {
 	color: rgb(255,200,0);
 }
 
+.episodes-missing a {
+	color: rgb(255,230,30);
+}
+
 .series-on-air {
 	color: rgb(200,200,255);
 }
@@ -565,6 +592,7 @@ a:hover {
 
 .episode-unavailable {
 	color: #888;
+	font-weight: bold;
 }
 
 .version {
@@ -649,6 +677,18 @@ a:hover {
 	background: rgb(80, 80, 80);
 	white-space: nowrap;
 	cursor: help;
+	color: #DDD;
+}
+
+.version-lost {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-left: 0.4em;
+	padding: 0.1em 0.4em;
+	background: rgb(80, 80, 80);
+	white-space: nowrap;
+	cursor: pointer;
 	color: #DDD;
 }
 

@@ -281,7 +281,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div id="import-from-mal-done" class="col-sm form-group alert alert-warning d-none">
-							S'ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el nom, si s'escau.
+							<span class="fa fa-exclamation-triangle pr-2"></span>S'ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el nom, si s'escau.
 						</div>
 						<hr />
 						<div class="row">
@@ -429,8 +429,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<tr>
 													<th style="width: 10%;" class="mandatory">Núm.</th>
 													<th>Nom <small class="text-muted">(només es mostra si hi ha més d'una temporada)</small></th>
-													<th class="text-center" style="width: 15%;" class="mandatory">Capítols</th>
-													<th class="text-center" style="width: 15%;">Id. MyAnimeList</th>
+													<th class="mandatory" style="width: 15%;">Capítols</th>
+													<th style="width: 15%;">Id. MyAnimeList</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
@@ -491,7 +491,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="form-group">
 							<label for="form-episode-list">Capítols</label>
 							<div id="import-from-mal-episodes-done" class="col-sm form-group alert alert-warning d-none">
-								S'han importat els capítols de MyAnimeList. Revisa'n tots els camps i no oblidis traduir-ne els títols.
+								<span class="fa fa-exclamation-triangle pr-2"></span>S'han importat els capítols de MyAnimeList. Revisa'n tots els camps i no oblidis traduir-ne els títols.
 							</div>
 							<div class="container" id="form-episode-list">
 								<div class="row">
@@ -502,7 +502,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<th style="width: 10%;">Temp.</th>
 													<th style="width: 10%;">Núm.</th>
 													<th>Títol <small class="text-muted">(informatiu, només es mostra públicament en el cas dels especials)</small></th>
-													<th class="text-center" style="width: 15%;">Data d'emissió</th>
+													<th style="width: 15%;">Data d'emissió</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>

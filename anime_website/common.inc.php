@@ -185,8 +185,39 @@ function internal_print_episode($episode_title, $result) {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'.$episode_title."</div>\n";
 
 		while ($vrow = mysqli_fetch_assoc($result)){
-			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>Reprodueix</a> '."\n";
+			if (!empty($vrow['url'])) {
+				echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>Reprodueix</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
+				if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";
+				} else {
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
+				}
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-method" title="Plataforma en què s\'allotja el vídeo: '.htmlspecialchars(get_provider($vrow['url'])).'">'.htmlspecialchars(get_provider_short($vrow['url'])).'</span>'."\n";
+				if (!empty($vrow['resolution'])){
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).'" title="Resolució del vídeo: '.htmlspecialchars($vrow['resolution']).'">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'</span>'."\n";
+				}
+				if (!empty($vrow['comments'])){
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-comments" title="Notes addicionals de la versió">'.htmlspecialchars($vrow['comments']).'</span>'."\n";
+				}
+				echo "\t\t\t\t\t\t\t\t\t\t\t</span>\n";
+				echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
+			} else { //Empty link -> lost link
+				echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-unavailable">'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-times-circle icon-play"></span>Reprodueix <span class="version-lost" title="Aquest capítol està subtitulat, però no està disponible enlloc. Si ens pots ajudar a trobar-lo, prem aquí i envia\'ns un comentari!">Capítol perdut: ajuda\'ns!</span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
+			}
+		}
+
+		echo "\t\t\t\t\t\t\t\t\t</div>\n";
+	} else { //Only one link
+		$vrow = mysqli_fetch_assoc($result);
+
+		if (!empty($vrow['url'])) {
+			echo "\t\t\t\t\t\t\t\t\t".'<div class="episode">'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
 			if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";
@@ -202,32 +233,12 @@ function internal_print_episode($episode_title, $result) {
 			}
 			echo "\t\t\t\t\t\t\t\t\t\t\t</span>\n";
 			echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
+			echo "\t\t\t\t\t\t\t\t\t</div>\n";
+		} else { //Empty link -> lost link
+			echo "\t\t\t\t\t\t\t\t\t".'<div class="episode episode-unavailable">'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title"><span class="fa fa-fw fa-times-circle icon-play"></span>'.$episode_title.' <span class="version-lost" title="Aquest capítol està subtitulat, però no està disponible enlloc. Si ens pots ajudar a trobar-lo, prem aquí i envia\'ns un comentari!">Capítol perdut: ajuda\'ns!</span></div>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t</div>\n";
 		}
-
-		echo "\t\t\t\t\t\t\t\t\t</div>\n";
-	} else { //Only one link
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="episode">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-		
-		$vrow = mysqli_fetch_assoc($result);
-
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
-		if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";
-		} else {
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
-		}
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-method" title="Plataforma en què s\'allotja el vídeo: '.htmlspecialchars(get_provider($vrow['url'])).'">'.htmlspecialchars(get_provider_short($vrow['url'])).'</span>'."\n";
-		if (!empty($vrow['resolution'])){
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).'" title="Resolució del vídeo: '.htmlspecialchars($vrow['resolution']).'">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'</span>'."\n";
-		}
-		if (!empty($vrow['comments'])){
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-comments" title="Notes addicionals de la versió">'.htmlspecialchars($vrow['comments']).'</span>'."\n";
-		}
-			echo "\t\t\t\t\t\t\t\t\t\t\t</span>\n";
-		echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
-		echo "\t\t\t\t\t\t\t\t\t</div>\n";
 	}
 }
 

@@ -36,11 +36,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['default_resolution']="NULL";
 		}
-		if (!empty($_POST['episodes_missing']) && $_POST['episodes_missing']==1) {
-			$data['episodes_missing']=1;
-		} else {
-			$data['episodes_missing']=0;
-		}
 		if (!empty($_POST['status']) && is_numeric($_POST['status'])) {
 			$data['status']=escape($_POST['status']);
 		} else {
@@ -51,6 +46,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$episodes=array();
 
 		$resulte = query("SELECT e.* FROM episode e WHERE e.series_id=".$data['series_id']);
+
+		$data['episodes_missing']=0; //By default.. will be calculated depending on links
 		
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			$episode_id=$rowe['id'];
@@ -90,7 +87,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 				$link['episode_id']=$episode_id;
 
-				if ($link['url']!="NULL") {
+				if (!empty($_POST['form-links-list-'.$episode_id.'-lost-'.$i])) {
+					$data['episodes_missing']=1;
+				}
+
+				if ($link['url']!="NULL" || !empty($_POST['form-links-list-'.$episode_id.'-lost-'.$i])) {
 					array_push($links, $link);
 				}
 				$i++;
@@ -391,7 +392,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm">
+							<div class="col-sm-4">
 								<div class="form-group">
 									<label for="form-status" class="mandatory">Estat</label>
 									<select class="form-control" name="status" id="form-status" required>
@@ -403,21 +404,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</select>
 								</div>
 							</div>
-							<div class="col-sm">
+							<div class="col-sm-4">
 								<div class="form-group">
 									<label for="form-default_resolution">Resolució per defecte <small class="text-muted">(per a enllaços automàtics)</small></label>
 									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
-								</div>
-							</div>
-							<div class="col-sm">
-								<div class="form-group">
-									<label for="form-episodes_missing_main">Opcions especials <small class="text-muted">(només fansubs antics)</small></label>
-									<div id="form-episodes_missing_main" class="row pl-3 pr-3">
-										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="episodes_missing" id="form-episodes_missing" value="1"<?php echo $row['episodes_missing']==1? " checked" : ""; ?>>
-											<label class="form-check-label" for="form-episodes_missing">Hi manquen enllaços</label>
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -475,7 +465,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<th style="width: 25%;" class="mandatory">Compte</th>
 													<th class="mandatory">Carpeta</th>
 													<th style="width: 15%;">Temporada</th>
-													<th style="width: 10%;">Sincronitza</th>
+													<th class="text-center" style="width: 10%;">Sincronitza</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
@@ -554,7 +544,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="d-none alert alert-warning" id="import-failed-results">
-							<div>Els següents elements no s'han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa de la sèrie. Afegeix-los a mà on correspongui. Recorda que els fitxers només s'importen automàticament si tenen el format "<i>text</i><u><b> - 123</b></u><i>text</i>.mp4".</div>
+							<div><span class="fa fa-exclamation-triangle mr-2"></span> Els següents elements no s'han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa de la sèrie. Afegeix-los a mà on correspongui. Recorda que els fitxers només s'importen automàticament si tenen el format "<i>text</i><u><b> - 123</b></u><i>text</i>.mp4".</div>
 							<table class="table-hover table-sm mt-2 small w-100" id="import-failed-results-table">
 								<thead>
 									<tr>
@@ -617,6 +607,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															<th>Enllaç</th>
 															<th style="width: 15%;">Resolució</th>
 															<th style="width: 20%;">Comentaris</th>
+															<th class="text-center" style="width: 5%;">Perdut</th>
 															<th class="text-center" style="width: 5%;">Acció</th>
 														</tr>
 													</thead>
@@ -636,6 +627,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($links[$j]['comments']); ?>" maxlength="200"/>
 															</td>
 															<td class="text-center align-middle">
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-<?php echo $j+1; ?>" type="checkbox" value="1""<?php echo empty($links[$j]['url']) ? ' checked' : ''; ?>/>
+															</td>
+															<td class="text-center align-middle">
 																<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
 															</td>
 														</tr>
@@ -653,6 +647,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															</td>
 															<td>
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-1" type="text" class="form-control" value="" maxlength="200"/>
+															</td>
+															<td class="text-center align-middle">
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" type="checkbox" value="1"/>
 															</td>
 															<td class="text-center align-middle">
 																<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>

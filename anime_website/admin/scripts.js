@@ -255,7 +255,7 @@ function addVersionRow(episode_id) {
 		return;
 	}
 	var i = parseInt($('#links-list-table-'+episode_id).attr('data-count'))+1;
-	$('#links-list-table-'+episode_id).append('<tr id="form-links-list-'+episode_id+'-row-'+i+'"><td><input id="form-links-list-'+episode_id+'-link-'+i+'" name="form-links-list-'+episode_id+'-link-'+i+'" type="url" class="form-control" value="" maxlength="200" placeholder="(Sense enllaç)"/><input id="form-links-list-'+episode_id+'-id-'+i+'" name="form-links-list-'+episode_id+'-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-links-list-'+episode_id+'-resolution-'+i+'" name="form-links-list-'+episode_id+'-resolution-'+i+'" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td><input id="form-links-list-'+episode_id+'-comments-'+i+'" name="form-links-list-'+episode_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><button id="form-links-list-'+episode_id+'-delete-'+i+'" onclick="deleteVersionRow('+episode_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#links-list-table-'+episode_id).append('<tr id="form-links-list-'+episode_id+'-row-'+i+'"><td><input id="form-links-list-'+episode_id+'-link-'+i+'" name="form-links-list-'+episode_id+'-link-'+i+'" type="url" class="form-control" value="" maxlength="200" placeholder="(Sense enllaç)"/><input id="form-links-list-'+episode_id+'-id-'+i+'" name="form-links-list-'+episode_id+'-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-links-list-'+episode_id+'-resolution-'+i+'" name="form-links-list-'+episode_id+'-resolution-'+i+'" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td><input id="form-links-list-'+episode_id+'-comments-'+i+'" name="form-links-list-'+episode_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><input id="form-links-list-'+episode_id+'-lost-'+i+'" name="form-links-list-'+episode_id+'-lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-links-list-'+episode_id+'-delete-'+i+'" onclick="deleteVersionRow('+episode_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#links-list-table-'+episode_id).attr('data-count', i);
 }
 
@@ -285,6 +285,7 @@ function deleteVersionRow(episode_id, id) {
 		$("#form-links-list-"+episode_id+"-link-1").val("");
 		$("#form-links-list-"+episode_id+"-resolution-1").val("");
 		$("#form-links-list-"+episode_id+"-comments-1").val("");
+		$("#form-links-list-"+episode_id+"-lost-1").prop('checked',false);
 	}
 	else {
 		$("#form-links-list-"+episode_id+"-row-"+id).remove();
@@ -298,6 +299,8 @@ function deleteVersionRow(episode_id, id) {
 			$("#form-links-list-"+episode_id+"-resolution-"+j).attr('id','form-links-list-'+episode_id+'-resolution-'+(j-1));
 			$("#form-links-list-"+episode_id+"-comments-"+j).attr('name','form-links-list-'+episode_id+'-comments-'+(j-1));
 			$("#form-links-list-"+episode_id+"-comments-"+j).attr('id','form-links-list-'+episode_id+'-comments-'+(j-1));
+			$("#form-links-list-"+episode_id+"-lost-"+j).attr('name','form-links-list-'+episode_id+'-lost-'+(j-1));
+			$("#form-links-list-"+episode_id+"-lost-"+j).attr('id','form-links-list-'+episode_id+'-lost-'+(j-1));
 			$("#form-links-list-"+episode_id+"-delete-"+j).attr('onclick','deleteVersionRow('+episode_id+','+(j-1)+');');
 			$("#form-links-list-"+episode_id+"-delete-"+j).attr('id','form-links-list-'+episode_id+'-delete-'+(j-1));
 		}
@@ -354,6 +357,8 @@ function deleteVersionFolderRow(id) {
 function fetchMalEpisodes(current_season, total_seasons, page) {
 	if (current_season==1 && page==1) {
 		malDataSeasonsEpisodes = [];
+		malDataSeasonsEpisodesCount = 0;
+		malDataMessages = "";
 	}
 
 	var xmlhttp = new XMLHttpRequest();
@@ -374,21 +379,28 @@ function fetchMalEpisodes(current_season, total_seasons, page) {
 			} else{
 				if (malDataEpisodes.episodes.length>0) {
 					malDataSeasonsEpisodes.push(malDataEpisodes);
+					malDataSeasonsEpisodesCount+=malDataEpisodes.episodes.length;
 				}
 				else{
-					alert("La temporada "+$("#form-season-list-number-"+current_season)+" no té capítols donats d'alta a MyAnimeList. Caldrà que els introdueixis a mà.");
-					malDataSeasonsEpisodes.push([]);
+					malDataMessages+="\nLa temporada "+$("#form-season-list-number-"+current_season).val()+" no té capítols donats d'alta a MyAnimeList. Caldrà que els introdueixis a mà.";
+					malDataSeasonsEpisodes.push({'episodes': []});
 				}
 				if (current_season<total_seasons) {
 					setTimeout(function() {
 						fetchMalEpisodes(current_season+1, total_seasons, 1);
 					}, 4000);
 				} else {
-					for (var i=0;i<malDataSeasonsEpisodes.length;i++) {
-						populateMalEpisodes(i+1,malDataSeasonsEpisodes[i]);
-					}			
-					
-					$("#import-from-mal-episodes-done").removeClass("d-none");
+					if (malDataSeasonsEpisodesCount>0) {
+						for (var i=0;i<malDataSeasonsEpisodes.length;i++) {
+							populateMalEpisodes(i+1,malDataSeasonsEpisodes[i]);
+						}
+						if (malDataMessages!='') {
+							alert("S'han produït els següents errors:\n"+malDataMessages);
+						}
+						$("#import-from-mal-episodes-done").removeClass("d-none");
+					} else {
+						alert("No hi ha capítols donats d'alta a MyAnimeList. Caldrà que els introdueixis a mà.");
+					}
 					$("#import-from-mal-episodes-loading").addClass("d-none");
 					$("#import-from-mal-episodes-not-loading").removeClass("d-none");
 					setTimeout(function() {
@@ -614,6 +626,7 @@ var malData;
 var malDataStaff;
 var malDataSeasonsEpisodes;
 var malDataEpisodes;
+var malDataMessages;
 
 $(document).ready(function() {
 	$("#form-name-with-autocomplete").on('input', function() {
@@ -733,7 +746,7 @@ $(document).ready(function() {
 			return;
 		}
 
-		var restart = confirm("Vols reiniciar la numeració de capítols a cada temporada? Si és així, prem 'D'acord', en cas contrari, prem 'Cancel·la'.")
+		var restart = (seasons.length==1 || confirm("Vols reiniciar la numeració de capítols a cada temporada? Si és així, prem 'D'acord', en cas contrari, prem 'Cancel·la'."));
 
 		var i = parseInt($('#episode-list-table').attr('data-count'));
 		for (var id=1;id<i+1;id++) {

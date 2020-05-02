@@ -220,7 +220,7 @@ if ($count==0) {
 		if ($version['episodes_missing']==1) {
 ?>
 								<div class="section-content fansub-buttons episodes-missing">
-									<span class="fa fa-exclamation-triangle icon"></span>Hi ha capítols que han estat subtitulats però que no tenen cap enllaç vàlid.
+									<span class="fa fa-exclamation-triangle icon"></span>Hi ha capítols subtitulats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
 								</div>
 <?php
 		}
