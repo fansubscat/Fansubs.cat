@@ -159,10 +159,15 @@ div#top h2 {
 	background-color: rgba(255,255,255,0.6);
 }
 
-.page-title {
+.page-title-top {
 	color: #000 !important;
 	font-size: 2em;
 	font-weight: bold;
+}
+
+.page-title {
+	margin-bottom: 1.5em;
+	text-align: center;
 }
 
 div#top .page-title-block a {

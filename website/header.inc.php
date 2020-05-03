@@ -114,7 +114,7 @@ if ($header_current_page=='stats'){
 				<div id="top" style="background-image: url('/style/images/header<?php echo rand(1, 8); ?>.jpg')">
 					<div id="toppadding">
 						<div class="page-title-block">
-							<a class="page-title" href="/">Fansubs.cat</a>
+							<a class="page-title-top" href="/">Fansubs.cat</a>
 							<div class="page-links">
 								<?php /* <a href="https://anime.fansubs.cat/">Anime</a> | */ ?><a href="https://manga.fansubs.cat/">Manga</a> | <b>Notícies</b>
 							</div>
