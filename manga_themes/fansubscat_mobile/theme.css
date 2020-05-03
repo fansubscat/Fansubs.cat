@@ -1,0 +1,34 @@
+.page-title-block {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #FFF;
+	font-size: 1em;
+	padding: 0em;
+	text-align: center;
+	display: inline-block;
+	margin-top: -0.5em;
+}
+
+.page-title-block a {
+	color: #CCC !important;
+	cursor: pointer !important;
+	font-weight: normal !important;
+}
+
+.page-title-block a.page-title {
+	color: #FFF !important;
+	font-size: 1.75em;
+	font-weight: bold !important;
+}
+
+.page-title-block a:hover {
+	color: #FFF !important;
+}
+.page-title-block a,
+.page-title-block a:visited, 
+.page-title-block a:hover {
+	text-decoration: none !important;
+}
+
+.page-links {
+	margin-top: 0.2em;
+}
