@@ -86,9 +86,10 @@ mysqli_free_result($resultf);
 			<div id="contact-overlay-content">
 				<form id="contact-form">
 					<h2 class="section-title">Envia'ns un comentari</h2>
+					<div id="contact-explanation"></div>
 					<div>
 					  	<label for="contact_address">Adreça electrònica <small>(et respondrem aquí)</small></label><br>
-						<input id="contact_address" name="address" required>
+						<input id="contact_address" name="email" required>
 					</div>
 					<div style="margin-top: 0.5em;">
 					  	<label for="contact_address">Missatge <small>(digues qui ets i per què ens escrius)</small></label><br>
@@ -105,7 +106,12 @@ mysqli_free_result($resultf);
 		</div>
 		<div id="page">
 			<div id="header">
-				<a class="page-title" href="/">Fansubs.cat - Anime</a>
+				<div class="page-title-block">
+					<a class="page-title" href="/">Fansubs.cat</a>
+					<div class="page-links">
+						<b>Anime</b> | <a href="https://manga.fansubs.cat/">Manga</a> | <a href="https://www.fansubs.cat/">Notícies</a>
+					</div>
+				</div>
 				<div class="tabs">
 					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="/">Destacat</a>
 					<a class="tab<?php if ($header_tab=='movies') echo ' selectedtab'; ?>" href="/films">Films</a>
@@ -118,7 +124,7 @@ mysqli_free_result($resultf);
 				</div>
 				<div class="search-form">
 					<form id="search_form">
-						<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? $_GET['query'] : ''; ?>" placeholder="Fes una cerca...">
+						<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Fes una cerca...">
 						<span id="search_button" class="fa fa-search" title="Cerca"></span>
 					</form>
 				</div>

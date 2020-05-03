@@ -1,5 +1,5 @@
 html {
-	font-family: "Lucida Grande", "Segoe UI", sans-serif;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: #FFF;
 	background-color: #000000;
 	font-size: 62.5%;
@@ -24,11 +24,6 @@ a:hover {
 
 a img {
 	border: none;
-}
-
-h1,
-h2 {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 h2 {
@@ -144,6 +139,10 @@ h2 {
 	border: none;
 }
 
+#contact-explanation {
+	margin-bottom: 1em;
+}
+
 #options-save-button:hover, #contact-send-button:hover {
 	background: rgb(32, 107, 41);
 }
@@ -206,6 +205,10 @@ h2 {
 	justify-content: center;
 }
 
+#header > div {
+	font-size: 1.2em;
+}
+
 a,
 a:visited, 
 #header a:hover {
@@ -216,11 +219,19 @@ a:hover {
 	text-decoration: underline;
 }
 
+.page-title-block {
+	padding: 1em 1em 1em 0em;
+	text-align: center;
+}
+
 .page-title {
 	color: #FFF;
 	font-size: 2em;
-	padding: 1em 1em 1em 0em;
 	font-weight: bold;
+}
+
+.page-links {
+	margin-top: 0.2em;
 }
 
 .tab {
@@ -295,7 +306,6 @@ a:hover {
 }
 
 .section-content {
-	font-family: sans-serif;
 	font-size: 1.1em;
 }
 
@@ -363,8 +373,14 @@ a:hover {
 	bottom: 0;
 	font-weight: bold;
 	text-overflow: ellipsis;
-	font-size: 1em;
+	font-size: 0.9em;
 	text-align: center;
+	/* For ellipsizing and max 2 lines */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .thumbnail .fansub {
@@ -703,7 +719,7 @@ a:hover {
 
 #footer p {
 	text-align: center;
-	font-size: 0.85em;
+	font-size: 1em;
 }
 
 
@@ -763,9 +779,12 @@ a:hover {
 		 margin-top: 1em;
 	}
 
+	.page-title-block {
+		padding: 0.5em 0.5em 0.5em 0em;
+	}
+
 	.page-title {
 		font-size: 1.75em;
-		padding: 0.5em 0.5em 0.5em 0em;
 	}
 
 	.thumbnail {
@@ -793,10 +812,12 @@ a:hover {
 
 	.thumbnail .fansub {
 		font-size: 0.6em;
+		line-height: 1.2em;
 	}
 
 	.thumbnail .title {
-		font-size: 0.75em;
+		font-size: 0.65em;
+		line-height: 1.2em;
 	}
 
 	.version_tab_container {

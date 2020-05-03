@@ -78,6 +78,12 @@ function getSource(method, url){
 function showContactScreen(reason) {
 	$('body').addClass('no-overflow');
 	$('#contact-overlay').removeClass('hidden');
+
+	if (reason=='version_lost') {
+		$('#contact-explanation').text("Hi ha capítols de fansubs antics que sabem que van ser subtitulats, però que actualment no estan disponibles. Si saps on els podem aconseguir, o si ens els pots fer arribar, si us plau, escriu-nos fent servir aquest formulari:");
+	} else {
+		$('#contact-explanation').text("Per a temes relacionats amb els fansubs, és recomanable que escriguis directament al fansub en qüestió fent servir el seu web o Twitter. En cas contrari, ens pots fer arribar comentaris, avisar-nos d'errors o de qualsevol problema o suggeriment per al web fent servir aquest formulari:");
+	}
 }
 
 $(document).ready(function() {
@@ -105,7 +111,7 @@ $(document).ready(function() {
 			markLinkAsNotViewed($(this).attr('data-link-id'));
 		}
 	});
-	$("#contact-link").click(function(){
+	$(".contact-link").click(function(){
 		showContactScreen('generic');
 	});
 	$(".version-lost").click(function(){

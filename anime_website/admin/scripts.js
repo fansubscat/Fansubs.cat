@@ -65,6 +65,7 @@ function populateMalData(data, staff) {
 	if (data.episodes==1) {
 		//Movie, populate first episode
 		if ($('#form-episode-list-num-1').val()=='') {
+			$('#form-episode-list-season-1').val("1");
 			$('#form-episode-list-num-1').val("1");
 			$('#form-episode-list-name-1').val($("#form-name-with-autocomplete").val());
 			$('#form-episode-list-date-1').val(data.aired.from.substr(0, 10));
