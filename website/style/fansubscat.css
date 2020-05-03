@@ -121,9 +121,6 @@ div#top a:visited,
 div#top a:hover {
 	color: #000;
 	text-decoration: none;
-	display: block;
-	height: 100%;
-	width: 100%;
 }
 
 #header {
@@ -133,19 +130,8 @@ div#top a:hover {
 }
 
 div#toppadding {
-	padding-left: 40px;
-}
-
-div#top h1 {
-	position: absolute;
-	color: #000;
-	font-size: 2.3em;
-	bottom: 34px;
-	padding-left: 10px;
-	padding-top: 15px;
-	padding-bottom: 15px;
-	padding-right: 10px;
-	background-color: rgba(255,255,255,0.6);
+	padding-left: 20px;
+	margin-top: 10px;
 }
 
 div#top h2 {
@@ -160,9 +146,35 @@ div#top h2 {
 	background-color: rgba(255,255,255,0.6);
 }
 
-.page-title {
-	margin-bottom: 1.5em;
+.page-title-block {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #000;
+	font-size: 1.2em;
 	text-align: center;
+	display: inline-block;
+	padding-left: 10px;
+	padding-top: 16px;
+	padding-bottom: 10px;
+	padding-right: 10px;
+	background-color: rgba(255,255,255,0.6);
+}
+
+.page-title {
+	color: #000 !important;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+div#top .page-title-block a {
+	color: #444;
+}
+
+div#top .page-title-block a:hover {
+	color: #000;
+}
+
+.page-links {
+	margin-top: 0.2em;
 }
 
 #welcome, #app {
@@ -422,6 +434,20 @@ table.contact-us tbody tr > :first-child {
 
 	#top{
 		height: 100px;
+	}
+
+	div#toppadding {
+		margin-top: 0;
+	}
+
+	div#top h2 {
+		bottom: 10px;
+	}
+
+	.page-title-block {
+		font-size: 1em;
+		padding-top: 12px;
+		padding-bottom: 6px;
 	}
 }
 

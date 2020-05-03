@@ -41,7 +41,7 @@ if ($header_current_page=='main'){
 ?>
 		<meta property="og:title" content="Fansubs.cat - Les notícies dels fansubs en català" />
 		<meta property="og:url" content="https://www.fansubs.cat/" />
-		<meta property="og:description" content="Benvinguts a Fansubs.cat! Aquí trobareu les darreres notícies de tots els fansubs en català! Les notícies s'obtenen automàticament dels diferents webs dels fansubs. Per accedir a cada notícia, només cal que hi facis clic!" />
+		<meta property="og:description" content="A Fansubs.cat trobareu les darreres notícies de tots els fansubs en català! Les notícies s'obtenen automàticament dels diferents webs dels fansubs. Per a accedir a cada notícia, només cal que hi facis clic!" />
 		<meta property="og:image" content="https://www.fansubs.cat/style/images/header2.jpg" />
 <?php
 }
@@ -112,9 +112,13 @@ if ($header_current_page=='stats'){
 		<div id="page">
 			<div id="header">
 				<div id="top" style="background-image: url('/style/images/header<?php echo rand(1, 8); ?>.jpg')">
-					<a href="/"></a>
 					<div id="toppadding">
-						<h1><a href="/">Fansubs.cat</a></h1>
+						<div class="page-title-block">
+							<a class="page-title" href="/">Fansubs.cat</a>
+							<div class="page-links">
+								<?php /* <a href="https://anime.fansubs.cat/">Anime</a> | */ ?><a href="https://manga.fansubs.cat/">Manga</a> | <b>Notícies</b>
+							</div>
+						</div>
 <?php
 if ($is_fools_day){
 ?>
@@ -142,7 +146,7 @@ if ((!isset($_COOKIE['welcome_closed']) || $_COOKIE['welcome_closed']!='1') && $
 						<div id="realwelcometext">
 							<strong>Et donem la benvinguda a Fansubs.cat!</strong> Aquí trobaràs les darreres notícies de tots els fansubs en català!<br />
 							Les notícies s'obtenen automàticament dels diferents webs dels fansubs.<br />
-							Per accedir a cada notícia, només cal que hi facis clic!
+							Per a accedir a cada notícia, només cal que hi facis clic!
 						</div>
 					</div>
 				</div>
@@ -157,7 +161,7 @@ if ((!isset($_COOKIE['app_closed']) || $_COOKIE['app_closed']!='1') && $header_c
 					<img id="appclose" src="/style/images/close.png" alt="Amaga aquest missatge" />
 					<div id="apptext">
 						<div id="realapptext">
-							<strong>Ara tenim aplicació per a Android!</strong><br /><strong><a href="/app_fansubs_cat.apk">Descarrega-la ara</a></strong> i, a més a més de poder consultar les darreres notícies, podràs rebre notificacions quan hi hagi notícies noves.
+							<strong>Ara tenim aplicació per a Android!</strong><br /><strong><a href="/app_fansubs_cat.apk">Baixa-la ara</a></strong> i, a més a més de poder consultar les darreres notícies, podràs rebre notificacions quan hi hagi notícies noves.
 						</div>
 					</div>
 				</div>

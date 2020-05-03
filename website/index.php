@@ -80,7 +80,7 @@ else{
 }
 ?></span>
 						<div id="filter-details" style="display: none;">
-						<div id="filter-explanation">Escull de quins fansubs vols veure notícies, i prem "Aplica els canvis" per desar les teves preferències.</div>
+						<div id="filter-explanation">Tria de quins fansubs vols veure notícies, i prem "Aplica els canvis" per a desar les teves preferències.</div>
 <?php
 
 while ($row = mysqli_fetch_assoc($result)){

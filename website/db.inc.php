@@ -6,7 +6,7 @@ function crash($string){
 	die($string);
 }
 
-$db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash('No s\'ha pogut connectar a la BD');
+$db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash('No s\'ha pogut connectar a la base de dades');
 
 unset($db_host, $db_name, $db_user, $db_passwd);
 
