@@ -132,7 +132,7 @@ $(document).ready(function() {
 	});
 	$('#search_form').submit(function(){
 		if ($('#search_query').val()!=''){
-			window.location.href='/cerca/' + encodeURIComponent($('#search_query').val());
+			window.location.href='/cerca/' + encodeURIComponent(encodeURIComponent($('#search_query').val()));
 		}
 		else{
 			window.location.href='/';
