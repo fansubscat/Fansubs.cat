@@ -3,15 +3,27 @@ require_once("db.inc.php");
 
 $header_tab="about";
 
+$header_social = array(
+	'title' => 'Fansubs.cat - Qui som?',
+	'url' => 'https://anime.fansubs.cat/qui-som',
+	'description' => "Aquest portal és un projecte sorgit dels esforços conjunts dels principals fansubs en català i allotjat a Fansubs.cat. El nostre únic objectiu és potenciar el consum d'anime subtitulat en català, permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.",
+	'image' => 'https://anime.fansubs.cat/style/og_image.jpg'
+);
+
 require_once('header.inc.php');
 ?>
 					<div class="section">
 						<h2 class="section-title">Qui som?</h2>
-						<div class="section-content">Lorem fansub dolor sit amet, consectetur adipiscing elit. Maecenas vulputate, sem non ullamcorper luctus, lectus libero fringilla ipsum, eu elementum nulla neque sit amet nisl. Fusce eget auctor dolor. Ut malesuada arcu eu ex cursus malesuada. Donec finibus tortor sed viverra fermentum. In ornare est sit amet tortor suscipit, faucibus ultrices tortor dignissim. Curabitur dapibus, tortor ac cursus posuere, eros elit dignissim metus, vel rutrum est lacus a erat. Quisque augue enim, congue in iaculis vel, sodales non elit.</div>
-						<div class="section-content new-paragraph">Cras fringilla mi vel elementum aliquet. Aenean semper quam id dolor bibendum, ut ornare ipsum pretium. Cras viverra nec sapien ut auctor. Integer mattis cursus imperdiet. Donec laoreet vulputate ligula, sed tristique arcu. Duis ac dui non tortor egestas facilisis. Sed sed leo eleifend, finibus ante sed, suscipit nulla. Pellentesque lorem est, iaculis sit amet nunc vitae, ultricies sagittis enim. Nullam sollicitudin nibh a metus imperdiet vulputate. Nullam convallis feugiat tortor, id rhoncus urna porta a. Integer porta at eros a consequat. Suspendisse maximus, risus id lobortis hendrerit, felis lectus sodales nunc, nec molestie sem est vel nisi.</div>
-						<div class="section-content new-paragraph">Nunc in odio maximus eros lacinia luctus euismod sit amet tortor. Proin lacus lorem, dapibus vitae malesuada at, volutpat in est. Quisque in consequat augue. Quisque non vehicula mi. Mauris interdum fermentum tellus, nec volutpat leo ultrices eget. Mauris malesuada aliquam lectus, et pulvinar ipsum euismod vel. Quisque quis volutpat elit, sed facilisis felis.</div>
-						<div class="section-content new-paragraph">Sed eget consequat dui, eu rhoncus tortor. Etiam gravida ut mauris id sollicitudin. Quisque vel ultricies lectus. Fusce maximus, quam eget imperdiet tristique, quam leo venenatis tellus, a vehicula risus purus vel tortor. Phasellus tristique enim dolor, non pretium nisl lobortis vitae. Sed sit amet risus et nunc volutpat tincidunt. Suspendisse justo felis, bibendum eget ipsum ut, aliquet rhoncus massa. Quisque non pellentesque elit. In hac habitasse platea dictumst. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus vitae pretium leo.</div>
-						<div class="section-content new-paragraph">Cras mattis metus sit amet nisi tristique, sed rhoncus nulla eleifend. Pellentesque ullamcorper, mauris eu pellentesque molestie, lectus nisl eleifend mi, non commodo tortor erat in mauris. Vivamus a sapien quis nibh pulvinar posuere ac sed leo. Mauris rhoncus iaculis quam, ac maximus velit hendrerit quis. Donec vestibulum ex nec mauris varius feugiat. Sed commodo nisl quis eros porta, vitae ornare ipsum suscipit. Proin at quam risus. Ut fermentum augue vitae tellus commodo gravida. Praesent malesuada condimentum sapien id hendrerit. Vestibulum faucibus erat quis accumsan porttitor. Aenean felis nibh, scelerisque ac quam convallis, rhoncus iaculis magna. Quisque lobortis convallis pellentesque. Aliquam id quam dolor.</div>
+						<div class="section-content">Aquest portal és un projecte sorgit dels esforços conjunts dels principals fansubs en català i allotjat a Fansubs.cat. El nostre únic objectiu és potenciar el consum d'anime subtitulat en català, permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.</div>
+						<div class="section-content new-paragraph">Fansubs.cat també disposa de portals similars per a llegir <a href="https://manga.fansubs.cat/" target="_blank">el manga dels fansubs en català</a> o consultar <a href="https://www.fansubs.cat/" target="_blank">les darreres notícies dels fansubs</a>.</div>
+						<h2 class="section-title new-paragraph">Declaració de principis</h2>
+						<div class="section-content">En aquest portal sols trobaràs anime que no ha estat llicenciat ni editat en català. Quan sabem que un film o sèrie es llicencia per a editar-se en català, es retira immediatament del web amb l'objectiu d'ajudar-ne la comercialització.</div>
+						<div class="section-content new-paragraph">Considerem que fem una tasca que, en un país normal, no hauríem de fer. L’objectiu original d’un fansub és acostar al públic material poc rendible comercialment. Desafortunadament, si parlem de manga i anime en català, les obres susceptibles a entrar en aquesta categoria són totes, i és que actualment, aquest sector està en una situació crítica: no hi aposten ni les editorials, ni la televisió pública, ni les plataformes de contingut a la carta.</div>
+						<div class="section-content new-paragraph">Hem explorat vies per a aconseguir editar el material de manera oficial, però no és viable sense una inversió forta pel sector des dels ens públics, cosa que de moment no es produeix. Per aquest motiu, hem decidit fer aquesta feina com bonament podem: durant el nostre temps lliure i de manera completament altruista. El material que trobaràs en aquest portal n'és el resultat.</div>
+						<div class="section-content new-paragraph">Com que és una tasca altruista, aquest web no té, ni tindrà mai, publicitat de cap mena. La publicitat que pugui aparèixer als reproductors pertany als proveïdors del servei de streaming, i en cap cas la controlem ni en rebem cap rendiment econòmic.</div>
+						<div class="section-content new-paragraph">Desitgem de tot cor que gaudeixis del nostre contingut, i ens alegrarà molt que ens en facis arribar comentaris.</div>
+						<h2 class="section-title new-paragraph">Contacte</h2>
+						<div class="section-content">Pots contactar amb nosaltres fent servir <a class="contact-link">aquest formulari</a>. Si vols contactar amb un fansub en concret, pots fer-ho mitjançant el seu lloc web o el seu Twitter.</div>
 					</div>
 <?php
 require_once('footer.inc.php');
