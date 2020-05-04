@@ -14,7 +14,7 @@ require_once('header.inc.php');
 
 $max_items=24;
 
-$base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
@@ -22,14 +22,14 @@ $cookie_extra_conditions = (empty($_COOKIE['show_cancelled']) ? " AND v.status<>
 
 switch ($header_tab){
 	case 'movies':
-		$sections=array("Darreres actualitzacions", "Tot el catàleg de films");
+		$sections=array("Darreres actualitzacions", "Catàleg de films");
 		$queries=array(
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$carousel=array(TRUE, FALSE);
 		break;
 	case 'series':
-		$sections=array("Darreres actualitzacions", "Tot el catàleg de sèries");
+		$sections=array("Darreres actualitzacions", "Catàleg de sèries");
 		$queries=array(
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
@@ -73,14 +73,59 @@ for ($i=0;$i<count($sections);$i++){
 						<div class="section-content">No s'ha trobat cap element.</div>
 <?php
 	} else {
+		if (!$carousel[$i]) {
+			$genres = array();
+			while ($row = mysqli_fetch_assoc($result)) {
+				if (!empty($row['genres'])) {
+					$dbgenres = explode(',',$row['genres']);
+					foreach ($dbgenres as $dbgenre) {
+						if (!empty($genres[$dbgenre])) {
+							$genres[$dbgenre]=$genres[$dbgenre]+1;
+						} else {
+							$genres[$dbgenre]=1;
+						}
+					}
+				}
+			}
+			mysqli_data_seek($result, 0);
+
 ?>
-						<div class="section-content<?php echo $carousel[$i] ? ' carousel' : ' flex wrappable'; ?>">
+						<div class="section-content genres-carousel">
+							<div>
+								<div class="select-genre select-genre-selected" data-genre-id="-1">
+									<a>Mostra-ho tot</a>
+								</div>
+							</div>
 <?php
-		while ($row = mysqli_fetch_assoc($result)){
+			arsort($genres);
+			$resultg = query("SELECT g.id, g.name FROM genre g WHERE g.id IN (0".implode(',',array_keys($genres)).") ORDER BY FIELD(g.id,0".implode(',',array_keys($genres)).")");
+			while ($rowg = mysqli_fetch_assoc($resultg)) {
 ?>
 							<div>
+								<div class="select-genre" data-genre-id="<?php echo $rowg['id']; ?>">
+									<a><?php echo $rowg['name'].' ('.$genres[$rowg['id']].')'; ?></a>
+								</div>
+							</div>
+<?php
+			}
+			mysqli_free_result($resultg);
+?>
+						</div>
+<?php
+		}
+?>
+						<div class="section-content<?php echo $carousel[$i] ? ' carousel' : ' flex wrappable catalog'; ?>">
+<?php
+		while ($row = mysqli_fetch_assoc($result)){
+			if (!empty($row['genres']) && !$carousel[$i]) {
+				$genres = ' class="genre-'.implode(' genre-', explode(',',$row['genres'])).'"';
+			} else {
+				$genres = "";
+			}
+?>
+							<div<?php echo $genres; ?>>
 								<a class="thumbnail" href="/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?>">
-									<div class="status-<?php echo get_status($row['best_status']); ?>" title="<?php echo get_status_description($row['best_status']); ?>"></div>
+									<div class="status-<?php echo get_status($row['best_status']).$genres; ?>" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 									<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
 									<div class="title"><?php echo $row['name'].($row['seasons']>1 ? ' ('.$row['seasons'].' temporades)' : ''); ?></div>
 									<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $row['fansub_name']; ?></div>

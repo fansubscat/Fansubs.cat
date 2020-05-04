@@ -1,5 +1,6 @@
 var currentLinkId=-1;
 var currentStartTime=-1;
+var lastWindowWidth=0;
 
 var cookieOptions = {
 	expires: 3650,
@@ -213,8 +214,20 @@ $(document).ready(function() {
 		}
 		xhr.send("address="+encodeURIComponent($('#contact_address').val())+"&message="+encodeURIComponent($('#contact_message').val())+"&magic=1714");
 	});
+	$('.select-genre').click(function(){
+		$('.select-genre').removeClass('select-genre-selected');
+		$(this).addClass('select-genre-selected');
+		var genreId = $(this).attr("data-genre-id");
+		if (genreId==-1) {
+			$('.catalog > div').removeClass('hidden');
+		} else {
+			$('.catalog > div').addClass('hidden');
+			$('.catalog > div.genre-'+genreId).removeClass('hidden');
+		}
+	});
 
 	var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
+	var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
 
 	$('.carousel').slick({
 		speed: 300,
@@ -224,20 +237,44 @@ $(document).ready(function() {
 		variableWidth: true
 	});
 
-	$(window).resize(function() {
-		var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
+	$('.genres-carousel').slick({
+		speed: 300,
+		infinite: false,
+		slidesToShow: genresSize,
+		slidesToScroll: genresSize,
+		variableWidth: true
+	});
 
-		$('.carousel').slick('unslick');
-		$('.carousel').slick({
-			speed: 300,
-			infinite: false,
-			slidesToShow: size,
-			slidesToScroll: size,
-			variableWidth: true
-		});
+	$(window).resize(function() {
+		if ($(window).width()!=lastWindowWidth) {
+			var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
+			var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
+
+			$('.carousel').slick('unslick');
+			$('.carousel').slick({
+				speed: 300,
+				infinite: false,
+				slidesToShow: size,
+				slidesToScroll: size,
+				variableWidth: true
+			});
+
+			$('.genres-carousel').slick('unslick');
+			$('.genres-carousel').slick({
+				speed: 300,
+				infinite: false,
+				slidesToShow: genresSize,
+				slidesToScroll: genresSize,
+				variableWidth: true
+			});
+
+			lastWindowWidth=$(window).width();
+		}
 	});
 
 	$(window).on('unload', function() {
 		sendBeaconViewEnd();
 	});
+
+	lastWindowWidth=$(window).width();
 });
