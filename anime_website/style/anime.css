@@ -582,6 +582,44 @@ a:hover {
 	background: rgb(34, 107, 122);
 }
 
+.mal-button {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-right: 0.5em;
+	margin-top: 0.2em;
+	margin-bottom: 0.1em;
+	padding: 0.3em 0.5em;
+	background: rgb(50, 50, 114);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.mal-button:hover {
+	background: rgb(70, 70, 134);
+}
+
+.tadaima-button {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-right: 0.5em;
+	margin-top: 0.2em;
+	margin-bottom: 0.1em;
+	padding: 0.3em 0.5em;
+	background: rgb(90, 0, 0);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.tadaima-button:hover {
+	background: rgb(110, 20, 20);
+}
+
 .hidden {
 	display: none;
 }

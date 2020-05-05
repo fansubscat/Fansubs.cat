@@ -39,7 +39,10 @@ function query($query, $ignore_crash=FALSE){
 
 $db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash("No s'ha pogut connectar a la base de dades.");
 
-unset($db_host, $db_name, $db_user, $db_passwd);
+$memcached = new Memcached();
+$memcached->addServer($memcached_host, $memcached_port);
+
+unset($db_host, $db_name, $db_user, $db_passwd, $memcached_host, $memcached_port);
 
 mysqli_set_charset($db_connection, 'utf8mb4') or crash(mysqli_error($db_connection));
 ?>

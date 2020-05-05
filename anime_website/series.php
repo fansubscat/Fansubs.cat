@@ -97,6 +97,28 @@ if (!empty($series['genres'])) {
 }
 ?>
 						</div>
+<?php
+if (!empty($series['myanimelist_id'])) {
+?>
+						<a class="mal-button" href="https://myanimelist.net/anime/<?php echo $series['myanimelist_id']; ?>/" target="_blank">Fitxa a MyAnimeList</a>
+<?php
+}
+if (!empty($series['tadaima_id'])) {
+?>
+						<a class="tadaima-button" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><?php echo get_tadaima_info($series['tadaima_id']); ?></a>
+<?php
+} else {
+	if ($series['type']=='movie') {
+?>
+						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=10" target="_blank">Comenta'l a Tadaima.cat</a>
+<?php
+	} else {
+?>
+						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=14" target="_blank">Comenta-la a Tadaima.cat</a>
+<?php
+	}
+}
+?>
 					</div>
 					<div class="main_content">
 						<div class="section">
