@@ -108,8 +108,8 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 	}
 ?>
 				</ul>
-				<a class="text-light pr-4" href="https://anime.fansubs.cat/" target="blank" title="Mostra el web públic"><span class="fa fa-globe"></span></a>
-				<a class="text-light pr-4" href="https://docs.google.com/document/d/10EMgWjVqrmDFUpxLI44cq4n5iOPHRKL3vZfL59Tt3SA/edit?usp=sharing" target="blank" title="Ajuda"><span class="fa fa-question-circle"></span></a>
+				<a class="text-light pr-4" href="https://anime.fansubs.cat/" target="_blank" title="Mostra el web públic"><span class="fa fa-globe"></span></a>
+				<a class="text-light pr-4" href="https://docs.google.com/document/d/10EMgWjVqrmDFUpxLI44cq4n5iOPHRKL3vZfL59Tt3SA/edit?usp=sharing" target="_blank" title="Ajuda"><span class="fa fa-question-circle"></span></a>
 				<a class="text-light" href="logout.php" title="Tanca la sessió"><?php echo htmlspecialchars($_SESSION['username']); ?><span class="fa fa-sign-out-alt ml-2"></span></a>
 			</div>
 		</nav>

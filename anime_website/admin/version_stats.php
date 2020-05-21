@@ -2,6 +2,7 @@
 $header_title="Versions";
 $page="version";
 include("header.inc.php");
+require_once("../common.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1 && !empty($_GET['id']) && is_numeric($_GET['id'])) {
 	$result = query("SELECT v.*, s.name series_name, GROUP_CONCAT(f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN series s ON v.series_id=s.id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id=".escape($_GET['id'])." GROUP BY v.id");
@@ -20,9 +21,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	mysqli_free_result($result);
 ?>
 					<div class="row">
-						<div class="col-sm-4 text-center"><b>Clics:</b> <?php echo $totals['total_clicks']; ?></div>
-						<div class="col-sm-4 text-center"><b>Visualitzacions:</b> <?php echo $totals['total_views']; ?></div>
-						<div class="col-sm-4 text-center"><b>Temps total:</b> <?php echo round($totals['total_time_spent']/60); ?> min</div>
+						<div class="col-sm-4 text-center"><b>Visualitzacions reals:</b> <?php echo $totals['total_views']; ?></div>
+						<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b> <?php echo max(0, $totals['total_clicks']-$totals['total_views']); ?></div>
+						<div class="col-sm-4 text-center"><b>Temps de visualització:</b> <?php echo get_hours_or_minutes_formatted($totals['total_time_spent']); ?></div>
 					</div>
 				</article>
 			</div>
@@ -42,9 +43,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i++;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0) total_time_spent FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id=".escape($_GET['id'])." GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id=".escape($_GET['id'])." GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
-		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['time_spent']);
+		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
 	mysqli_free_result($result);
 
@@ -69,18 +70,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								labels: [<?php echo implode(',',$month_values); ?>],
 								datasets: [
 								{
-									label: 'Clics',
+									label: 'Visualitzacions reals',
+									backgroundColor: 'rgb(0, 123, 255)',
+									borderColor: 'rgb(0, 123, 255)',
+									fill: false,
+									data: [<?php echo implode(',',$view_values); ?>]
+								},
+								{
+									label: 'Clics sense visualitzar',
 									backgroundColor: 'rgb(220, 53, 69)',
 									borderColor: 'rgb(220, 53, 69)',
 									fill: false,
 									data: [<?php echo implode(',',$click_values); ?>]
 								},
 								{
-									label: 'Visualitzacions',
-									backgroundColor: 'rgb(0, 123, 255)',
-									borderColor: 'rgb(0, 123, 255)',
+									label: 'Temps de visualització (h)',
+									backgroundColor: 'rgb(40, 167, 69)',
+									borderColor: 'rgb(40, 167, 69)',
 									fill: false,
-									data: [<?php echo implode(',',$view_values); ?>]
+									data: [<?php echo implode(',',$time_values); ?>]
 								}]
 							},
 							options: {}
@@ -98,8 +106,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<thead class="thead-dark">
 							<tr>
 								<th scope="col">Capítol</th>
-								<th class="text-center" scope="col" style="width: 12%;">Clics</th>
-								<th class="text-center" scope="col" style="width: 12%;">Visualitz.</th>
+								<th class="text-center" scope="col" style="width: 12%;">Visualitzacions</th>
+								<th class="text-center" scope="col" style="width: 12%;">Clics sense v.</th>
 								<th class="text-center" scope="col" style="width: 12%;">Temps total</th>
 								<th class="text-center" scope="col" style="width: 12%;">Temps mitjà</th>
 							</tr>
@@ -138,10 +146,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<tr>
 								<td scope="col"><?php echo $episode_title; ?></td>
-								<td class="text-center"><?php echo $row['total_clicks']; ?></td>
 								<td class="text-center"><?php echo $row['total_views']; ?></td>
-								<td class="text-center"><?php echo round($row['total_time_spent']/60); ?> min</td>
-								<td class="text-center"><?php echo $row['total_views']!=0 ? round($row['total_time_spent']/$row['total_views']/60) : 0; ?> min</td>
+								<td class="text-center"><?php echo max(0, $row['total_clicks']-$row['total_views']); ?></td>
+								<td class="text-center"><?php echo get_hours_or_minutes_formatted($row['total_time_spent']); ?></td>
+								<td class="text-center"><?php echo $row['total_views']!=0 ? get_hours_or_minutes_formatted($row['total_time_spent']/$row['total_views']) : 0; ?></td>
 							</tr>
 <?php
 	}

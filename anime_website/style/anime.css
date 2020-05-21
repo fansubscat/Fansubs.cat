@@ -90,6 +90,42 @@ h2 {
 	flex-wrap: wrap;
 }
 
+#options-tooltip-base {
+	position: relative;
+	display: inline-block;
+}
+
+#options-tooltip {
+	width: 150px;
+	font-size: 0.8em;
+	line-height: 1.1em;
+	background-color: beige;
+	color: black;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px;
+	box-sizing: border-box;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	top: 100%;
+	left: 50%;
+	margin-left: -75px; /* Use half of the width (120/2 = 60), to center the tooltip */
+	margin-top: 10px;
+}
+
+#options-tooltip::after {
+	content: " ";
+	position: absolute;
+	bottom: 100%;  /* At the top of the tooltip */
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent beige transparent;
+}
+
 .options-item {
 	display: flex;
 	align-items: center;
@@ -342,7 +378,7 @@ a:hover {
 }
 
 .select-genre-selected a {
-	background-color: #474 !important;
+	background-color: #374 !important;
 	font-weight: bold;
 }
 
@@ -354,7 +390,7 @@ a:hover {
 	height: 100%;
 	width: 100%;
 	font-size: 0.9em;
-	background-color: #444;
+	background-color: #333;
 	color: #FFF;
 	border-radius: 999px;
 	line-height: 1.1em;
@@ -441,36 +477,57 @@ a:hover {
 	max-width: 90%;
 }
 
-.status-completed {
+.status-completed .status-indicator {
 	position: absolute;
 	width: 0;
 	height: 0;
 	border-top: 20px solid green;
 	border-right: 20px solid transparent;
+	z-index: 1;
 }
 
-.status-in-progress {
+.status-in-progress .status-indicator {
 	position: absolute;
 	width: 0;
 	height: 0;
 	border-top: 20px solid yellow;
 	border-right: 20px solid transparent;
+	z-index: 1;
 }
 
-.status-cancelled {
+.status-partially-abandoned .status-indicator {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-top: 20px solid greenyellow;
+	border-right: 20px solid transparent;
+	z-index: 1;
+}
+
+.status-cancelled .status-indicator {
 	position: absolute;
 	width: 0;
 	height: 0;
 	border-top: 20px solid red;
 	border-right: 20px solid transparent;
+	z-index: 1;
 }
 
-.status-abandoned {
+.status-abandoned .status-indicator {
 	position: absolute;
 	width: 0;
 	height: 0;
 	border-top: 20px solid coral;
 	border-right: 20px solid transparent;
+	z-index: 1;
+}
+
+.status-abandoned .thumbnail img {
+	filter: grayscale(80%) brightness(60%);
+}
+
+.status-cancelled .thumbnail img {
+	filter: grayscale(80%) brightness(60%);
 }
 
 /* Series screen */
@@ -633,13 +690,14 @@ a:hover {
 	flex-grow: 1;
 	font-weight: bold;
 	font-size: 1.2em;
-	background-color: #333333;
+	background-color: #282828;
 	cursor: pointer;
 	text-align: center;
+	flex-basis: 400px;
 }
 
 .version_tab_selected {
-	background-color: #444444;
+	background-color: #333333;
 }
 
 .version_tab_text {
@@ -648,7 +706,7 @@ a:hover {
 
 .version_content_multi {
 	margin: 0em 2em 2em 2em;
-	background-color: #444444;
+	background-color: #333333;
 }
 
 .icon {

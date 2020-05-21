@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `episode` (
   `season_id` int(11) DEFAULT NULL,
   `number` int(11) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL,
-  `date` timestamp NULL DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `episode_ibfk_1` (`series_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -134,7 +134,12 @@ CREATE TABLE IF NOT EXISTS `series` (
   `duration` varchar(200) DEFAULT NULL,
   `image` varchar(200) NOT NULL,
   `myanimelist_id` int(11) DEFAULT NULL,
+  `tadaima_id` int(11) DEFAULT NULL,
   `score` float DEFAULT NULL,
+  `show_seasons` tinyint(1) NOT NULL DEFAULT 1,
+  `show_expanded_seasons` tinyint(1) NOT NULL DEFAULT 1,
+  `show_episode_numbers` tinyint(1) NOT NULL DEFAULT 1,
+  `order_type` int(11) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),

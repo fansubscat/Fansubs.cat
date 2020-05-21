@@ -34,24 +34,24 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques totals</h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM series) total_series, (SELECT COUNT(*) FROM version) total_versions, (SELECT COUNT(*) FROM link) total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT SUM(clicks) FROM views) total_clicks, (SELECT SUM(views) FROM views) total_views, (SELECT SUM(time_spent) FROM views) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL) total_linked_episodes");
+			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM series) total_series, (SELECT COUNT(*) FROM version) total_versions, (SELECT COUNT(*) FROM link WHERE url IS NOT NULL) total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT SUM(clicks) FROM views) total_clicks, (SELECT SUM(views) FROM views) total_views, (SELECT SUM(time_spent) FROM views) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND url IS NOT NULL) total_linked_episodes, (SELECT SUM(e.duration) FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.url IS NOT NULL) total_duration");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
 								<div class="row">
 									<div class="col-sm-4 text-center"><b>Fansubs:</b> <?php echo $totals['total_fansubs']; ?></div>
-									<div class="col-sm-4 text-center"><b>Sèries:</b> <?php echo $totals['total_series']; ?></div>
+									<div class="col-sm-4 text-center"><b>Sèries:</b> <?php echo $totals['total_series']; ?> <small>(duplicades: <?php echo $totals['total_duplicity']; ?>)</small></div>
 									<div class="col-sm-4 text-center"><b>Versions:</b> <?php echo $totals['total_versions']; ?></div>
 								</div>
 								<div class="row">
 									<div class="col-sm-4 text-center"><b>Episodis amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
 									<div class="col-sm-4 text-center"><b>Enllaços:</b> <?php echo $totals['total_links']; ?></div>
-									<div class="col-sm-4 text-center"><b>Sèries duplicades:</b> <?php echo $totals['total_duplicity']; ?></div>
+									<div class="col-sm-4 text-center"><b>Durada total:</b> <?php echo get_hours_or_minutes_formatted($totals['total_duration']*60); ?></div>
 								</div>
 								<div class="row">
-									<div class="col-sm-4 text-center"><b>Clics totals:</b> <?php echo $totals['total_clicks']; ?></div>
-									<div class="col-sm-4 text-center"><b>Visualitzacions totals:</b> <?php echo $totals['total_views']; ?></div>
-									<div class="col-sm-4 text-center"><b>Temps total:</b> <?php echo round($totals['total_time_spent']/60); ?> min</div>
+									<div class="col-sm-4 text-center"><b>Visualitzacions reals:</b> <?php echo $totals['total_views']; ?></div>
+									<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b> <?php echo max(0, $totals['total_clicks']-$totals['total_views']); ?></div>
+									<div class="col-sm-4 text-center"><b>Temps de visualització:</b> <?php echo get_hours_or_minutes_formatted($totals['total_time_spent']); ?></div>
 								</div>
 							</article>
 						</div>
@@ -71,9 +71,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i++;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0) total_time_spent FROM views v GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
-		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['time_spent']);
+		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
 	mysqli_free_result($result);
 
@@ -98,18 +98,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											labels: [<?php echo implode(',',$month_values); ?>],
 											datasets: [
 											{
-												label: 'Clics',
+												label: 'Visualitzacions reals',
+												backgroundColor: 'rgb(0, 123, 255)',
+												borderColor: 'rgb(0, 123, 255)',
+												fill: false,
+												data: [<?php echo implode(',',$view_values); ?>]
+											},
+											{
+												label: 'Clics sense visualitzar',
 												backgroundColor: 'rgb(220, 53, 69)',
 												borderColor: 'rgb(220, 53, 69)',
 												fill: false,
 												data: [<?php echo implode(',',$click_values); ?>]
 											},
 											{
-												label: 'Visualitzacions',
-												backgroundColor: 'rgb(0, 123, 255)',
-												borderColor: 'rgb(0, 123, 255)',
+												label: 'Temps de visualització (h)',
+												backgroundColor: 'rgb(40, 167, 69)',
+												borderColor: 'rgb(40, 167, 69)',
 												fill: false,
-												data: [<?php echo implode(',',$view_values); ?>]
+												data: [<?php echo implode(',',$time_values); ?>]
 											}]
 										},
 										options: {
@@ -164,13 +171,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$result = query("SELECT v.status, COUNT(v.id) version_count FROM version v GROUP BY v.status ORDER BY status ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['status']) {
-			case 4:
+			case 5:
 				array_push($status_values, "'Cancel·lada'");
 				array_push($status_colors, "'red'");
 				break;
-			case 3:
+			case 4:
 				array_push($status_values, "'Abandonada'");
 				array_push($status_colors, "'coral'");
+				break;
+			case 3:
+				array_push($status_values, "'Parcialment abandonada'");
+				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
 				array_push($status_values, "'En procés'");
@@ -260,24 +271,24 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id WHERE vf.fansub_id=".$fansub['id'].") total_series, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id'].") total_versions, (SELECT COUNT(DISTINCT l.id) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id WHERE vf.fansub_id=".$fansub['id'].") total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_episodes");
+			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id WHERE vf.fansub_id=".$fansub['id'].") total_series, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id'].") total_versions, (SELECT COUNT(DISTINCT l.id) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id WHERE l.url IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND url IS NOT NULL AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_episodes, (SELECT SUM(e.duration) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id LEFT JOIN episode e ON l.episode_id=e.id WHERE l.url IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_duration");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
 								<div class="row">
 									<div class="col-sm-4 text-center"><b>Col·laboracions:</b> <?php echo $totals['total_collabs']; ?></div>
-									<div class="col-sm-4 text-center"><b>Sèries:</b> <?php echo $totals['total_series']; ?></div>
+									<div class="col-sm-4 text-center"><b>Sèries:</b> <?php echo $totals['total_series']; ?> <small>(duplicades: <?php echo $totals['total_duplicity']; ?>)</small></div>
 									<div class="col-sm-4 text-center"><b>Versions:</b> <?php echo $totals['total_versions']; ?></div>
 								</div>
 								<div class="row">
 									<div class="col-sm-4 text-center"><b>Episodis amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
 									<div class="col-sm-4 text-center"><b>Enllaços:</b> <?php echo $totals['total_links']; ?></div>
-									<div class="col-sm-4 text-center"><b>Sèries duplicades:</b> <?php echo $totals['total_duplicity']; ?></div>
+									<div class="col-sm-4 text-center"><b>Durada total:</b> <?php echo get_hours_or_minutes_formatted($totals['total_duration']*60); ?></div>
 								</div>
 								<div class="row">
-									<div class="col-sm-4 text-center"><b>Clics totals:</b> <?php echo $totals['total_clicks']; ?></div>
-									<div class="col-sm-4 text-center"><b>Visualitzacions totals:</b> <?php echo $totals['total_views']; ?></div>
-									<div class="col-sm-4 text-center"><b>Temps total:</b> <?php echo round($totals['total_time_spent']/60); ?> min</div>
+									<div class="col-sm-4 text-center"><b>Visualitzacions reals:</b> <?php echo $totals['total_views']; ?></div>
+									<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b> <?php echo max(0, $totals['total_clicks']-$totals['total_views']); ?></div>
+									<div class="col-sm-4 text-center"><b>Temps de visualització:</b> <?php echo get_hours_or_minutes_formatted($totals['total_time_spent']); ?></div>
 								</div>
 							</article>
 						</div>
@@ -297,9 +308,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$i++;
 		}
 
-		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0) total_time_spent FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 		while ($row = mysqli_fetch_assoc($result)) {
-			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['time_spent']);
+			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 		}
 		mysqli_free_result($result);
 
@@ -324,18 +335,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											labels: [<?php echo implode(',',$month_values); ?>],
 											datasets: [
 											{
-												label: 'Clics',
+												label: 'Visualitzacions reals',
+												backgroundColor: 'rgb(0, 123, 255)',
+												borderColor: 'rgb(0, 123, 255)',
+												fill: false,
+												data: [<?php echo implode(',',$view_values); ?>]
+											},
+											{
+												label: 'Clics sense visualitzar',
 												backgroundColor: 'rgb(220, 53, 69)',
 												borderColor: 'rgb(220, 53, 69)',
 												fill: false,
 												data: [<?php echo implode(',',$click_values); ?>]
 											},
 											{
-												label: 'Visualitzacions',
-												backgroundColor: 'rgb(0, 123, 255)',
-												borderColor: 'rgb(0, 123, 255)',
+												label: 'Temps de visualització (h)',
+												backgroundColor: 'rgb(40, 167, 69)',
+												borderColor: 'rgb(40, 167, 69)',
 												fill: false,
-												data: [<?php echo implode(',',$view_values); ?>]
+												data: [<?php echo implode(',',$time_values); ?>]
 											}]
 										},
 										options: {
@@ -390,13 +408,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$result = query("SELECT v.status, COUNT(v.id) version_count FROM version v WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY v.status ORDER BY status ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['status']) {
-			case 4:
+			case 5:
 				array_push($status_values, "'Cancel·lada'");
 				array_push($status_colors, "'red'");
 				break;
-			case 3:
+			case 4:
 				array_push($status_values, "'Abandonada'");
 				array_push($status_colors, "'coral'");
+				break;
+			case 3:
+				array_push($status_values, "'Parcialment abandonada'");
+				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
 				array_push($status_values, "'En procés'");

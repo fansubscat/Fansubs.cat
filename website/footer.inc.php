@@ -129,7 +129,7 @@ else{
 			<div id="footer">
 				<p>
 					Fansubs.cat sols recopila notícies dels webs esmentats. Tots els drets dels textos, imatges i obres esmentades pertanyen a llurs propietaris.<br />
-					Codi, disseny i contingut propi © 2015-<?php echo date('Y'); ?> Fansubs.cat. <a href="https://github.com/Ereza/Fansubs.cat">És codi obert</a>. <a href="/envia-noticies-contacta">Contacta'ns</a>.
+					Codi, disseny i contingut propi © 2015-<?php echo date('Y'); ?> Fansubs.cat. <a href="https://github.com/Ereza/Fansubs.cat" target="_blank">És codi obert</a>. <a href="/envia-noticies-contacta">Contacta'ns</a>.
 				</p>
 			</div>
 			<script>

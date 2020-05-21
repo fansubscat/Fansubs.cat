@@ -146,6 +146,12 @@ $(document).ready(function() {
 	$('#options-button').click(function(){
 		$('body').addClass('no-overflow');
 		$('#options-overlay').removeClass('hidden');
+		$('#options-tooltip').attr('style','');
+		Cookies.set('tooltip_closed', '1', cookieOptions);
+	});
+	$('#options-tooltip-close').click(function(){
+		$('#options-tooltip').attr('style','');
+		Cookies.set('tooltip_closed', '1', cookieOptions);
 	});
 	$('#options-cancel-button').click(function(){
 		$('#options-form').trigger("reset");
@@ -244,6 +250,10 @@ $(document).ready(function() {
 		slidesToScroll: genresSize,
 		variableWidth: true
 	});
+
+	if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
+		$("#options-tooltip").fadeIn("slow");
+	}
 
 	$(window).resize(function() {
 		if ($(window).width()!=lastWindowWidth) {

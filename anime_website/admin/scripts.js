@@ -1,3 +1,19 @@
+function getDurationFromString(str) {
+	var result = str.match(/(?:(\d*) h)? ?(?:(\d*) min)?(?: per capítol)?/);
+	var duration = 0;
+	if (result[1]!=undefined){
+		duration+=parseInt(result[1])*60;
+	}
+	if (result[2]!=undefined){
+		duration+=parseInt(result[2]);
+	}
+	if (duration>0) {
+		return duration;
+	} else {
+		return "";
+	}
+}
+
 function populateMalData(data, staff) {
 	if ($("#form-name-with-autocomplete").val()=='') {
 		$("#form-name-with-autocomplete").val(data.title);
@@ -63,13 +79,15 @@ function populateMalData(data, staff) {
 	}
 
 	if (data.episodes==1) {
-		//Movie, populate first episode
-		if ($('#form-episode-list-num-1').val()=='') {
-			$('#form-episode-list-season-1').val("1");
-			$('#form-episode-list-num-1').val("1");
+		//Movie, populate first episode and uncheck show episode numbers
+		$('#form-show_episode_numbers').prop('checked', false);
+		if ($('#form-episode-list-name-1').val()=='') {
 			$('#form-episode-list-name-1').val($("#form-name-with-autocomplete").val());
-			$('#form-episode-list-date-1').val(data.aired.from.substr(0, 10));
 		}
+	}
+	//Populate first episode duration
+	if ($('#form-episode-list-duration-1').val()=='') {
+		$('#form-episode-list-duration-1').val(getDurationFromString($("#form-duration").val()));
 	}
 
 	var authors = staff.staff.filter(function(value, index, array) {
@@ -155,15 +173,11 @@ function populateMalEpisodes(season_line, episodes) {
 	initialNumber = parseInt($('#episode-list-table').attr('data-count'))+1;
 
 	for (var i=0;i<episodes.episodes.length;i++) {
-		addRow();
+		addRow(false);
 		$("#form-episode-list-season-"+(i+initialNumber)).val($('#form-season-list-number-'+season_line).val());
 		$("#form-episode-list-num-"+(i+initialNumber)).val(episodes.episodes[i].episode_id);
 		$("#form-episode-list-name-"+(i+initialNumber)).val(episodes.episodes[i].title);
-		if (episodes.episodes[i].aired) {
-			$("#form-episode-list-date-"+(i+initialNumber)).val(episodes.episodes[i].aired.substr(0,10));
-		} else {
-			$("#form-episode-list-date-"+(i+initialNumber)).val(episodes.episodes[i].aired);
-		}
+		$("#form-episode-list-duration-"+(i+initialNumber)).val(getDurationFromString($("#form-duration").val()));
 	}
 }
 
@@ -186,10 +200,16 @@ function string_to_slug(str) {
 	return str;
 }
 
-function addRow() {
+function addRow(extra) {
 	var i = parseInt($('#episode-list-table').attr('data-count'))+1;
-	$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-season-'+i+'" name="form-episode-list-season-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-episode-list-name-'+i+'" name="form-episode-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td><input id="form-episode-list-date-'+i+'" name="form-episode-list-date-'+i+'" type="date" class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-season-'+i+'" name="form-episode-list-season-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-episode-list-name-'+i+'" name="form-episode-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td><input id="form-episode-list-duration-'+i+'" name="form-episode-list-duration-'+i+'" type="number" class="form-control" value="" required/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#episode-list-table').attr('data-count', i);
+
+	if (!extra) {
+		$('#form-episode-list-season-'+i).val($('#form-episode-list-season-'+(i-1)).val()!='' ? $('#form-episode-list-season-'+(i-1)).val() : 1);
+		$('#form-episode-list-num-'+i).val($('#form-episode-list-num-'+(i-1)).val()!='' ? parseInt($('#form-episode-list-num-'+(i-1)).val())+1 : 1);
+		$('#form-episode-list-duration-'+i).val(getDurationFromString($("#form-duration").val()));
+	}
 }
 
 function deleteRow(id) {
@@ -209,8 +229,8 @@ function deleteRow(id) {
 			$("#form-episode-list-num-"+j).attr('id','form-episode-list-num-'+(j-1));
 			$("#form-episode-list-name-"+j).attr('name','form-episode-list-name-'+(j-1));
 			$("#form-episode-list-name-"+j).attr('id','form-episode-list-name-'+(j-1));
-			$("#form-episode-list-date-"+j).attr('name','form-episode-list-date-'+(j-1));
-			$("#form-episode-list-date-"+j).attr('id','form-episode-list-date-'+(j-1));
+			$("#form-episode-list-duration-"+j).attr('name','form-episode-list-duration-'+(j-1));
+			$("#form-episode-list-duration-"+j).attr('id','form-episode-list-duration-'+(j-1));
 			$("#form-episode-list-delete-"+j).attr('onclick','deleteRow('+(j-1)+');');
 			$("#form-episode-list-delete-"+j).attr('id','form-episode-list-delete-'+(j-1));
 		}
@@ -444,8 +464,7 @@ function checkNumberOfEpisodes() {
 		alert('El nombre de capítols numerats de la llista ha de coincidir amb el nombre de capítols indicat a les temporades.');
 		return false;
 	}
-	var episodeCount2 = parseInt($('#episode-list-table').attr('data-count'));
-	for (var i=1;i<=episodeCount2;i++){
+	for (var i=1;i<=episodeCount;i++){
 		if ($('#form-episode-list-num-'+i).val()=='' && $('#form-episode-list-name-'+i).val()==''){
 			alert('Hi ha capítols sense número ni nom. Els capítols normals han de tenir com a mínim número, i els capítols especials han de tenir com a mínim nom.');
 			return false;
@@ -456,10 +475,17 @@ function checkNumberOfEpisodes() {
 	for (var i=0;i<seasons.length;i++){
 		seasonNumbers.push($('#form-season-list-number-'+(i+1)).val());
 	}
-	var episodeCount3 = parseInt($('#episode-list-table').attr('data-count'));
-	for (var i=1;i<=episodeCount3;i++){
+	for (var i=1;i<=episodeCount;i++){
 		if ($('#form-episode-list-season-'+i).val()!='' && !seasonNumbers.includes($('#form-episode-list-season-'+i).val())){
 			alert('Hi ha capítols de temporades inexistents. Corregeix-ho.');
+			return false;
+		}
+		if ($('#form-episode-list-num-'+i).val()!='' && $('#form-episode-list-num-'+i).val()==0){
+			alert('0 no és un número de capítol vàlid. Corregeix-ho.');
+			return false;
+		}
+		if ($('#form-episode-list-num-'+i).val()>episodeCount){
+			alert('Hi ha números de capítol més alts que el nombre total de capítols. Corregeix-ho.');
 			return false;
 		}
 	}
@@ -759,11 +785,11 @@ $(document).ready(function() {
 
 		for (var i=0;i<seasons.length;i++) {
 			for (var j=0;j<$(seasons[i]).val();j++) {
-				addRow();
+				addRow(false);
 				$("#form-episode-list-season-"+rowNumber).val($('#form-season-list-number-'+(i+1)).val());
 				$("#form-episode-list-num-"+rowNumber).val(restart ? j+1 : rowNumber);
 				$("#form-episode-list-name-"+rowNumber).val('');
-				$("#form-episode-list-date-"+rowNumber).val('');
+				$("#form-episode-list-duration-"+rowNumber).val(getDurationFromString($("#form-duration").val()));
 				rowNumber++;
 			}
 		}

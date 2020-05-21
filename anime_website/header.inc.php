@@ -16,8 +16,10 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 
 <?php
 if (!empty($header_social)) {
-?>		<meta property="og:title" content="<?php echo htmlspecialchars($header_social['title']); ?>" />
-		<meta property="og:url" content="<?php echo htmlspecialchars($header_social['url']); ?>" />
+?>
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta property="og:title" content="<?php echo htmlspecialchars($header_social['title']); ?>" />
+		<meta property="og:url" content="<?php echo htmlspecialchars($header_social['url']); ?>?ext=fake.png" />
 		<meta property="og:description" content="<?php echo htmlspecialchars($header_social['description']); ?>" />
 		<meta property="og:image" content="<?php echo htmlspecialchars($header_social['image']); ?>" />
 <?php
@@ -45,16 +47,16 @@ if (!empty($header_social)) {
 				<form id="options-form">
 					<h2 class="section-title">Opcions de visualització</h2>
 					<div class="options-item">
-						<input id="hide_missing" type="checkbox"<?php echo !empty($_COOKIE['hide_missing']) ? '' : ' checked'; ?>>
-					  	<label for="hide_missing">Mostra les sèries amb capítols subtitulats però sense enllaç</label>
-					</div>
-					<div class="options-item">
 						<input id="show_cancelled" type="checkbox"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
 					  	<label for="show_cancelled">Mostra les sèries cancel·lades o abandonades</label>
 					</div>
 					<div class="options-item">
 						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
 					  	<label for="show_hentai">Mostra el hentai (confirmes que ets major d'edat)</label>
+					</div>
+					<div class="options-item">
+						<input id="hide_missing" type="checkbox"<?php echo !empty($_COOKIE['hide_missing']) ? '' : ' checked'; ?>>
+					  	<label for="hide_missing">Mostra les sèries amb capítols perduts</label>
 					</div>
 					<h2 class="section-title options-section-divider">Fansubs que es mostren</h2>
 					<div id="options-fansubs">
@@ -119,7 +121,10 @@ mysqli_free_result($resultf);
 				</div>
 				<div class="separator"></div>
 				<div class="user-options">
-					<a id="options-button" class="iconbutton" title="Opcions"><span class="fa fa-cogs"></span></a>
+					<div id="options-tooltip-base">
+						<a id="options-button" class="iconbutton" title="Opcions"><span class="fa fa-cogs"></span></a>
+						<span id="options-tooltip" class="hidden"><a id="options-tooltip-close" class="fa fa-times" style="float: right; color: black;"></a>Si canvies les opcions, veuràs més sèries</span>
+					</div>
 					<a id="about-button" class="iconbutton<?php if ($header_tab=='about') echo ' selectedtab'; ?>" title="Qui som?" href="/qui-som"><span class="fa fa-info-circle"></span></a>
 				</div>
 				<div class="search-form">

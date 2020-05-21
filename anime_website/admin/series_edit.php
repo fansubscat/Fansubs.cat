@@ -86,6 +86,26 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca image");
 		}
+		if (!empty($_POST['show_seasons'])){
+			$data['show_seasons']=1;
+		} else {
+			$data['show_seasons']=0;
+		}
+		if (!empty($_POST['show_expanded_seasons'])){
+			$data['show_expanded_seasons']=1;
+		} else {
+			$data['show_expanded_seasons']=0;
+		}
+		if (!empty($_POST['show_episode_numbers'])){
+			$data['show_episode_numbers']=1;
+		} else {
+			$data['show_episode_numbers']=0;
+		}
+		if (!empty($_POST['order_type'])){
+			$data['order_type']=escape($_POST['order_type']);
+		} else {
+			$data['order_type']=0;
+		}
 
 		$genres=array();
 		if (!empty($_POST['genres'])) {
@@ -164,10 +184,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				$episode['name']="NULL";
 			}
-			if (!empty($_POST['form-episode-list-date-'.$i])) {
-				$episode['date']="'".date('Y-m-d H:i:s', strtotime($_POST['form-episode-list-date-'.$i]))."'";
+			if (!empty($_POST['form-episode-list-duration-'.$i])) {
+				$episode['duration']=escape($_POST['form-episode-list-duration-'.$i]);
 			} else {
-				$episode['date']="NULL";
+				$episode['duration']="NULL";
 			}
 			array_push($episodes, $episode);
 			$i++;
@@ -175,7 +195,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-series", "S'ha actualitzat la sèrie amb nom '".$data['name']."' (id. de sèrie: ".$data['id'].")");
-			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",score=".$data['score'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',duration=".$data['duration'].",image='".$data['image']."',myanimelist_id=".$data['myanimelist_id'].",tadaima_id=".$data['tadaima_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",score=".$data['score'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',duration=".$data['duration'].",image='".$data['image']."',myanimelist_id=".$data['myanimelist_id'].",tadaima_id=".$data['tadaima_id'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",order_type=".$data['order_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$data['id'].",".$genre.")");
@@ -204,9 +224,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM episode WHERE series_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($episodes as $episode) {
 				if ($episode['id']==-1) {
-					query("INSERT INTO episode (series_id,season_id,number,name,date) VALUES (".$data['id'].",(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$data['id']."),".$episode['number'].",".$episode['name'].",".$episode['date'].")");
+					query("INSERT INTO episode (series_id,season_id,number,name,duration) VALUES (".$data['id'].",(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$data['id']."),".$episode['number'].",".$episode['name'].",".$episode['duration'].")");
 				} else {
-					query("UPDATE episode SET season_id=(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$data['id']."),number=".$episode['number'].",name=".$episode['name'].",date=".$episode['date']." WHERE id=".$episode['id']);
+					query("UPDATE episode SET season_id=(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$data['id']."),number=".$episode['number'].",name=".$episode['name'].",duration=".$episode['duration']." WHERE id=".$episode['id']);
 				}
 			}
 
@@ -214,7 +234,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-series", "S'ha creat una sèrie amb nom '".$data['name']."'");
-			query("INSERT INTO series (slug,name,alternate_names,type,air_date,author,director,studio,rating,episodes,synopsis,duration,image,myanimelist_id,tadaima_id,score,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."',".$data['duration'].",'".$data['image']."',".$data['myanimelist_id'].",".$data['tadaima_id'].",".$data['score'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO series (slug,name,alternate_names,type,air_date,author,director,studio,rating,episodes,synopsis,duration,image,myanimelist_id,tadaima_id,score,show_seasons,show_expanded_seasons,show_episode_numbers,order_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."',".$data['duration'].",'".$data['image']."',".$data['myanimelist_id'].",".$data['tadaima_id'].",".$data['score'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['order_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$inserted_id.",".$genre.")");
@@ -223,7 +243,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO season (series_id,number,name,episodes,myanimelist_id) VALUES (".$inserted_id.",".$season['number'].",".$season['name'].",".$season['episodes'].",".$season['myanimelist_id'].")");
 			}
 			foreach ($episodes as $episode) {
-				query("INSERT INTO episode (series_id,season_id,number,name,date) VALUES (".$inserted_id.",(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$inserted_id."),".$episode['number'].",".$episode['name'].",".$episode['date'].")");
+				query("INSERT INTO episode (series_id,season_id,number,name,duration) VALUES (".$inserted_id.",(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$inserted_id."),".$episode['number'].",".$episode['name'].",".$episode['duration'].")");
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
@@ -263,6 +283,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$genres = array();
 		$seasons = array();
 		$episodes = array();
+		$row['show_seasons']=1;
+		$row['show_expanded_seasons']=1;
+		$row['show_episode_numbers']=1;
+		$row['order_type']=0;
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -407,7 +431,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-1">
 								<div class="form-group">
-									<a id="form-image-preview-link" href="<?php echo htmlspecialchars($row['image']); ?>" target="blank">
+									<a id="form-image-preview-link" href="<?php echo htmlspecialchars($row['image']); ?>" target="_blank">
 										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block;" src="<?php echo htmlspecialchars($row['image']); ?>" alt="">
 									</a>
 								</div>
@@ -439,7 +463,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 10%;" class="mandatory">Núm.</th>
-													<th>Nom <small class="text-muted">(només es mostra si hi ha més d'una temporada)</small></th>
+													<th>Nom <small class="text-muted">(només es mostra si n'hi ha més d'una i la casella de dalt està marcada)</small></th>
 													<th class="mandatory" style="width: 15%;">Capítols</th>
 													<th style="width: 15%;">Id. MyAnimeList</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -495,14 +519,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<button onclick="addSeasonRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una altra temporada</button>
+									<button onclick="addSeasonRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una temporada</button>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="form-episode-list">Capítols</label>
 							<div id="import-from-mal-episodes-done" class="col-sm form-group alert alert-warning d-none">
-								<span class="fa fa-exclamation-triangle pr-2"></span>S'han importat els capítols de MyAnimeList. Revisa'n tots els camps i no oblidis traduir-ne els títols.
+								<span class="fa fa-exclamation-triangle pr-2"></span>S'han importat els capítols de MyAnimeList. Revisa'n tots els camps.
 							</div>
 							<div class="container" id="form-episode-list">
 								<div class="row">
@@ -513,7 +537,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<th style="width: 10%;">Temp.</th>
 													<th style="width: 10%;">Núm.</th>
 													<th>Títol <small class="text-muted">(informatiu, només es mostra públicament en el cas dels especials)</small></th>
-													<th style="width: 15%;">Data d'emissió</th>
+													<th style="width: 15%;" class="mandatory">Durada (min)</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
@@ -533,7 +557,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-episode-list-name-<?php echo $i+1; ?>" name="form-episode-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['name']); ?>" placeholder="(Sense títol)"/>
 													</td>
 													<td>
-														<input id="form-episode-list-date-<?php echo $i+1; ?>" name="form-episode-list-date-<?php echo $i+1; ?>" type="date" class="form-control" value="<?php echo !empty($episodes[$i]['date']) ? date('Y-m-d',strtotime($episodes[$i]['date'])) : ''; ?>"/>
+														<input id="form-episode-list-duration-<?php echo $i+1; ?>" name="form-episode-list-duration-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['duration']; ?>" required/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-episode-list-delete-<?php echo $i+1; ?>" onclick="deleteRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
@@ -545,17 +569,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-episode-list-row-1">
 													<td>
-														<input id="form-episode-list-season-1" name="form-episode-list-season-1" type="number" class="form-control" value="" placeholder="(Altres)"/>
+														<input id="form-episode-list-season-1" name="form-episode-list-season-1" type="number" class="form-control" value="1" placeholder="(Altres)"/>
 													</td>
 													<td>
-														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="" placeholder="(Esp.)"/>
+														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)"/>
 														<input id="form-episode-list-id-1" name="form-episode-list-id-1" type="hidden" value="-1"/>
 													</td>
 													<td>
 														<input id="form-episode-list-name-1" name="form-episode-list-name-1" type="text" class="form-control" value="" placeholder="(Sense títol)"/>
 													</td>
 													<td>
-														<input id="form-episode-list-date-1" name="form-episode-list-date-1" type="date" class="form-control" value=""/>
+														<input id="form-episode-list-duration-1" name="form-episode-list-duration-1" type="number" class="form-control" value="" required/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-episode-list-delete-1" onclick="deleteRow(1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
@@ -567,17 +591,47 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<button onclick="addRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre capítol</button>
+									<button onclick="addRow(false);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un capítol</button>
+									<button onclick="addRow(true);" type="button" class="btn btn-success btn-sm ml-2"><span class="fa fa-plus pr-2"></span>Afegeix un especial</button>
 									<span style="flex-grow: 1;"></span>
-									<button type="button" id="import-from-mal-episodes" class="btn btn-primary btn-sm ml-3">
+									<button type="button" id="import-from-mal-episodes" class="btn btn-primary btn-sm">
 										<span id="import-from-mal-episodes-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
 										<span id="import-from-mal-episodes-not-loading" class="fa fa-th-list pr-2"></span>
 										Importa els capítols de MyAnimeList
 									</button>
-									<button type="button" id="generate-episodes" class="btn btn-primary btn-sm ml-3">
+									<button type="button" id="generate-episodes" class="btn btn-primary btn-sm ml-2">
 										<span class="fa fa-sort-numeric-down pr-2"></span>
 										Genera els capítols automàticament
 									</button>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-view-options">Opcions de visualització de la fitxa pública</label>
+							<div id="form-view-options" class="row pl-3 pr-3">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_seasons" id="form-show_seasons" value="1"<?php echo $row['show_seasons']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_seasons">Separa per temporades i mostra'n els noms <small class="text-muted">(si només n'hi ha una, no es mostrarà)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_expanded_seasons" id="form-show_expanded_seasons" value="1"<?php echo $row['show_expanded_seasons']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_expanded_seasons">Mostra les temporades desplegades per defecte <small class="text-muted">(si n'hi ha moltes o amb molts capítols, és recomanable desmarcar-ho)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols normals <small class="text-muted">(afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_standard" value="0"<?php echo $row['order_type']==0 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-order_type_standard">Aplica l'ordenació estàndard <small class="text-muted">(primer capítols normals per ordre numèric, després especials per ordre alfabètic estricte)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_alphabetic" value="1"<?php echo $row['order_type']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-order_type_alphabetic">Aplica l'ordenació alfabètica estricta <small class="text-muted">(capítols i especials barrejats, ordre: 1, 10, 11, 12..., 2, 3...)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_natural" value="2"<?php echo $row['order_type']==2 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-order_type_natural">Aplica l'ordenació alfabètica natural <small class="text-muted">(capítols i especials barrejats, ordre: 1, 2, 3... 10, 11, 12...)</small></label>
 								</div>
 							</div>
 						</div>

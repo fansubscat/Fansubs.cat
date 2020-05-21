@@ -10,8 +10,10 @@ function get_status($id){
 		case 2:
 			return "in-progress";
 		case 3:
-			return "abandoned";
+			return "partially-abandoned";
 		case 4:
+			return "abandoned";
+		case 5:
 			return "cancelled";
 		default:
 			return "unknown";
@@ -25,8 +27,10 @@ function get_status_description($id){
 		case 2:
 			return "En procés: No hi ha tots els capítols disponibles";
 		case 3:
-			return "Abandonada: No hi ha tots els capítols disponibles";
+			return "Parcialment abandonada: No hi ha tots els capítols disponibles, però alguna temporada està completada";
 		case 4:
+			return "Abandonada: No hi ha tots els capítols disponibles";
+		case 5:
 			return "Cancel·lada: No hi ha tots els capítols disponibles";
 		default:
 			return "Estat desconegut";
@@ -133,32 +137,35 @@ function get_display_url($url){
 	return $url;
 }
 
+function get_hours_or_minutes_formatted($time){
+	if ($time>=3600) {
+		$hours = floor($time/3600);
+		$time = $time-$hours*3600;
+		echo $hours." h ".round($time/60)." min";
+	} else {
+		echo round($time/60)." min";
+	}
+}
+
 function print_episode($row,$version_id,$series){
 	$result = query("SELECT l.* FROM link l WHERE l.episode_id=".$row['id']." AND l.version_id=$version_id ORDER BY l.resolution ASC, l.id ASC");
 
 	$episode_title='';
 	
-	if (!empty($row['number'])) {
+	if ($series['show_episode_numbers']==1 && !empty($row['number'])) {
 		if (!empty($row['title'])){
-			if ($series['episodes']==1){
-				$episode_title.=htmlspecialchars($row['title']);
-			} else {
-				$episode_title.='Capítol '.$row['number'].': '.htmlspecialchars($row['title']);
-			}
+			$episode_title.='Capítol '.$row['number'].': '.htmlspecialchars($row['title']);
 		}
 		else {
-			if ($series['episodes']==1){
-				$episode_title.=htmlspecialchars($series['name']);
-			} else {
-				$episode_title.='Capítol '.$row['number'];
-			}
+			$episode_title.='Capítol '.$row['number'];
 		}
 	} else {
 		if (!empty($row['title'])){
 			$episode_title.=htmlspecialchars($row['title']);
-		}
-		else {
-			$episode_title.=$row['name'];
+		} else if ($series['type']=='movie') {
+			$episode_title.=$series['name'];
+		} else {
+			$episode_title.='Capítol sense nom';
 		}
 	}
 
@@ -266,5 +273,45 @@ function get_cookie_viewed_links_ids() {
 		}
 	}
 	return $link_ids;
+}
+
+function get_tadaima_info($thread_id) {
+	global $memcached, $memcached_expiry_time;
+
+	$response = $memcached->get("tadaima_post_$thread_id");
+	if ($response==FALSE) {
+		$ch = curl_init("https://tadaima.cat/api/get_topic_detail/$thread_id");
+
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, 
+			array(
+				'User-Agent: Fansubscat/Anime/1.0.0',
+				'X-Tadaima-App-Id: TadaimaApp',
+				'X-Tadaima-Api-Version: 1'
+			)
+		);
+
+		$response = curl_exec($ch);
+		if($response!==FALSE) {
+			$memcached->set("tadaima_post_$thread_id", $response, $memcached_expiry_time);
+		}
+		curl_close($ch);
+	}
+	if($response===FALSE) {
+		return "Fil a Tadaima.cat";
+	} else {
+		$json_response = json_decode($response);
+		if ($json_response->status!='ok') {
+			return "Fil a Tadaima.cat";
+		} else {
+			$number_of_posts = count($json_response->result->posts);
+			if ($number_of_posts==1){
+				return "Fil a Tadaima.cat (1 comentari)";
+			} else {
+				return "Fil a Tadaima.cat ($number_of_posts comentaris)";
+			}
+		}
+	}
 }
 ?>

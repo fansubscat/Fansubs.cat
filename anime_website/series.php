@@ -11,6 +11,46 @@ function get_fansub_with_url($fansub) {
 	}
 }
 
+function apply_sort($order_type, $episodes) {
+	switch ($order_type){
+		case 1: // Alphabetic strict sort
+			$titles = array_column($episodes, 'title');
+			$numbers = array_column($episodes, 'number');
+			array_multisort($titles, SORT_ASC, SORT_LOCALE_STRING|SORT_FLAG_CASE, $numbers, SORT_ASC, SORT_NUMERIC, $episodes);
+
+			// Move empty titles to last
+			while(reset($titles) == '') {
+				$k = key($titles);
+				unset($titles[$k]); // remove empty element from beginning of array
+				$titles[$k] = ''; // add it to end of array
+				$v = reset($episodes);
+				$k = key($episodes);
+				unset($episodes[$k]);
+				$episodes[$k] = $v;
+			}
+			return $episodes;
+		case 2: // Alphabetic natural sort
+			$titles = array_column($episodes, 'title');
+			$numbers = array_column($episodes, 'number');
+			array_multisort($titles, SORT_ASC, SORT_NATURAL|SORT_FLAG_CASE, $numbers, SORT_ASC, SORT_NUMERIC, $episodes);
+
+			// Move empty titles to last
+			while(reset($titles) == '') {
+				$k = key($titles);
+				unset($titles[$k]); // remove empty element from beginning of array
+				$titles[$k] = ''; // add it to end of array
+				$v = reset($episodes);
+				$k = key($episodes);
+				unset($episodes[$k]);
+				$episodes[$k] = $v;
+			}
+			return $episodes;
+		case 0: //Normal sort - already sorted from the database
+		default:
+			return $episodes;
+	}
+}
+
 $result = query("SELECT s.*, YEAR(s.air_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT ss.id) FROM season ss WHERE ss.series_id=s.id) seasons FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE slug='".escape($_GET['slug'])."' GROUP BY s.id");
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
@@ -75,7 +115,7 @@ if ($series['episodes']>1) {
 							<div><span title="Nombre de capítols"><span class="fa fa-ruler icon"></span><?php echo $series['episodes'].' capítols'; ?></span></div>
 <?php
 }
-if ($series['seasons']>1) {
+if ($series['seasons']>1 && $series['show_seasons']==1) {
 ?>
 							<div><span title="Nombre de temporades"><span class="fa fa-th-large icon"></span><?php echo $series['seasons'].' temporades'; ?></span></div>
 <?php
@@ -110,11 +150,11 @@ if (!empty($series['tadaima_id'])) {
 } else {
 	if ($series['type']=='movie') {
 ?>
-						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=10" target="_blank">Comenta'l a Tadaima.cat</a>
+						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=14" target="_blank">Comenta'l a Tadaima.cat</a>
 <?php
 	} else {
 ?>
-						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=14" target="_blank">Comenta-la a Tadaima.cat</a>
+						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=10" target="_blank">Comenta-la a Tadaima.cat</a>
 <?php
 	}
 }
@@ -206,7 +246,7 @@ if ($count==0) {
 		}
 
 		$plurals = array(
-				"active" => array("Si vols veure-la amb màxima qualitat, al seu lloc web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!","Si vols veure-la amb màxima qualitat, als seus llocs web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!"),
+				"active" => array("Si la vols veure amb màxima qualitat, al seu lloc web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!","Si la vols veure amb màxima qualitat, als seus llocs web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!"),
 				"inactive" => array("Actualment, aquest fansub ja no està actiu.","Actualment, aquests fansubs ja no estan actius."),
 				"abandoned" => array("Aquesta obra es considera abandonada, segurament no se'n llançaran més capítols.","Aquesta obra es considera abandonada, segurament no se'n llançaran més capítols."),
 				"cancelled" => array("Tingues en compte que aquesta obra ha estat cancel·lada, no se'n llançaran més capítols.","Tingues en compte que aquesta obra ha estat cancel·lada, no se'n llançaran més capítols.")
@@ -225,13 +265,13 @@ if ($count==0) {
 		}
 ?>
 <?php
-		if ($version['status']==3) {
+		if ($version['status']==3 || $version['status']==4) {
 ?>
 								<div class="section-content fansub-buttons">
 									<?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
 								</div>
 <?php
-		} else if ($version['status']==4) {
+		} else if ($version['status']==5) {
 ?>
 								<div class="section-content fansub-buttons">
 									<?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
@@ -262,33 +302,53 @@ if ($count==0) {
 								<h2 class="section-title">Contingut</h2>
 								<div class="section-content">
 <?php
-			if ($series['seasons']<2) {
-				foreach ($episodes as $row) {
-					print_episode($row, $version['id'], $series);
+			$seasons = array();
+			$last_season_number = -1;
+			$last_season_name = "";
+			$current_season_episodes = array();
+			foreach ($episodes as $row) {
+				if ($row['season_number']!=$last_season_number && ($series['show_seasons']==1 || empty($row['season_number']))){
+					if ($last_season_number!=-1) {
+						array_push($seasons, array(
+							'season_number' => $last_season_number,
+							'season_name' => $last_season_name,
+							'episodes' => apply_sort($series['order_type'],$current_season_episodes)
+						));
+					}
+					$last_season_number=$row['season_number'];
+					$last_season_name=$row['season_name'];
+					$current_season_episodes = array();
+				}
+
+				array_push($current_season_episodes, $row);
+			}
+			array_push($seasons, array(
+				'season_number' => $last_season_number,
+				'season_name' => $last_season_name,
+				'episodes' => apply_sort($series['order_type'],$current_season_episodes)
+			));
+
+//print_r($seasons);
+
+			if (count($seasons)<2) {
+				foreach ($seasons as $season) {
+					foreach ($season['episodes'] as $episode) {
+						print_episode($episode, $version['id'], $series);
+					}
 				}
 			} else { //Multiple seasons
+				foreach ($seasons as $season) {
 ?>
-									<details class="season"<?php echo $series['seasons']<3 ? ' open' : ''; ?>>
+									<details class="season"<?php echo $series['show_expanded_seasons']==1 ? ' open' : ''; ?>>
+										<summary class="season_name"><?php echo !empty($season['season_number']) ? (($series['show_seasons']!=1 || (count($seasons)==2 && empty($last_season_number))) ? 'Capítols normals' : ('Temporada '.$season['season_number'].(!empty($season['season_name']) ? ': '.$season['season_name'] : ''))) : 'Altres'; ?></summary>
 <?php
-				$last_season = -1;
-				foreach ($episodes as $row) {
-					if ($row['season_number']!=$last_season){
-						if ($last_season!=-1) {
-?>
-									</details>
-									<details class="season"<?php echo $series['seasons']<3 ? ' open' : ''; ?>>
-<?php
-						}
-?>
-										<summary class="season_name"><?php echo !empty($row['season_number']) ? ('Temporada '.$row['season_number'].(!empty($row['season_name']) ? ': '.$row['season_name'] : '')) : 'Diversos'; ?></summary>
-<?php
-						$last_season=$row['season_number'];
+					foreach ($season['episodes'] as $episode) {
+						print_episode($episode, $version['id'], $series);
 					}
-					print_episode($row, $version['id'], $series);
-				}
 ?>
 									</details>
 <?php
+				}
 			}
 ?>
 								</div>

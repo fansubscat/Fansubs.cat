@@ -399,8 +399,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<option value="">- Selecciona un estat -</option>
 										<option value="1"<?php echo $row['status']==1 ? " selected" : ""; ?>>Completada</option>
 										<option value="2"<?php echo $row['status']==2 ? " selected" : ""; ?>>En procés</option>
-										<option value="3"<?php echo $row['status']==3 ? " selected" : ""; ?>>Abandonada</option>
-										<option value="4"<?php echo $row['status']==4 ? " selected" : ""; ?>>Cancel·lada</option>
+										<option value="3"<?php echo $row['status']==3 ? " selected" : ""; ?>>Parcialment abandonada (abandonada però amb alguna temporada completada)</option>
+										<option value="4"<?php echo $row['status']==4 ? " selected" : ""; ?>>Abandonada</option>
+										<option value="5"<?php echo $row['status']==5 ? " selected" : ""; ?>>Cancel·lada</option>
 									</select>
 								</div>
 							</div>
@@ -531,7 +532,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</div>
 									<div class="form-group row w-100 ml-0">
 										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
-											<button onclick="addVersionFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una altra carpeta</button>
+											<button onclick="addVersionFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una carpeta</button>
 										</div>
 										<div class="col-sm text-right" style="padding-left: 0; padding-right: 0">
 											<button type="button" id="import-from-mega" class="btn btn-primary btn-sm">
@@ -567,6 +568,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<option value="360p">
 								</datalist>
 <?php
+	if ($series['show_episode_numbers']==0 && $series['order_type']!=0) {
+?>
+								<div class="alert alert-warning">
+									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquesta sèrie <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $series['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+								</div>
+<?php
+	} else if ($series['show_episode_numbers']==0) {
+?>
+								<div class="alert alert-warning">
+									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquesta sèrie <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.</div>
+								</div>
+<?php
+	} else if ($series['order_type']!=0) {
+?>
+								<div class="alert alert-warning">
+									<div><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $series['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+								</div>
+<?php
+	}
 	for ($i=0;$i<count($episodes);$i++) {
 		$episode_name='';
 		if (!empty($episodes[$i]['season_number'])) {
