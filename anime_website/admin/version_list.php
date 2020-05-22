@@ -6,7 +6,7 @@ function get_status_description_short($id){
 		case 2:
 			return "En procés";
 		case 3:
-			return "Parcialment abandonada";
+			return "Parcialment completada";
 		case 4:
 			return "Abandonada";
 		case 5:

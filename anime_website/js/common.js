@@ -251,6 +251,24 @@ $(document).ready(function() {
 		variableWidth: true
 	});
 
+	if ($('.synopsis-content').height()>=154) {
+		$(".show-more").removeClass('hidden');
+		$('.synopsis-content').addClass('expandable-content-hidden');
+		$(".show-more a").on("click", function() {
+			var linkText = $(this).text();    
+
+			if(linkText === "Mostra'n més..."){
+				linkText = "Mostra'n menys";
+				$(".synopsis-content").switchClass("expandable-content-hidden", "expandable-content-shown", 400);
+			} else {
+				linkText = "Mostra'n més...";
+				$(".synopsis-content").switchClass("expandable-content-shown", "expandable-content-hidden", 400);
+			};
+
+			$(this).text(linkText);
+		});
+	}
+
 	if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
 		$("#options-tooltip").fadeIn("slow");
 	}

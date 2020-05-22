@@ -477,7 +477,11 @@ a:hover {
 	max-width: 90%;
 }
 
-.status-completed .status-indicator {
+.status-indicator-tab {
+	align-self: flex-start;
+}
+
+.status-completed .status-indicator, .status-completed.status-indicator-tab {
 	position: absolute;
 	width: 0;
 	height: 0;
@@ -486,7 +490,7 @@ a:hover {
 	z-index: 1;
 }
 
-.status-in-progress .status-indicator {
+.status-in-progress .status-indicator, .status-in-progress.status-indicator-tab {
 	position: absolute;
 	width: 0;
 	height: 0;
@@ -495,7 +499,7 @@ a:hover {
 	z-index: 1;
 }
 
-.status-partially-abandoned .status-indicator {
+.status-partially-completed .status-indicator, .status-partially-completed.status-indicator-tab {
 	position: absolute;
 	width: 0;
 	height: 0;
@@ -504,7 +508,7 @@ a:hover {
 	z-index: 1;
 }
 
-.status-cancelled .status-indicator {
+.status-cancelled .status-indicator, .status-cancelled.status-indicator-tab {
 	position: absolute;
 	width: 0;
 	height: 0;
@@ -513,7 +517,7 @@ a:hover {
 	z-index: 1;
 }
 
-.status-abandoned .status-indicator {
+.status-abandoned .status-indicator, .status-abandoned.status-indicator-tab {
 	position: absolute;
 	width: 0;
 	height: 0;
@@ -587,6 +591,10 @@ a:hover {
 
 .fansub-buttons {
 	margin-top: 1em;
+}
+
+.parts-licensed {
+	color: rgb(200,255,200);
 }
 
 .episodes-missing {
@@ -668,13 +676,13 @@ a:hover {
 	margin-top: 0.2em;
 	margin-bottom: 0.1em;
 	padding: 0.3em 0.5em;
-	background: rgb(90, 0, 0);
+	background: rgb(90, 30, 30);
 	white-space: nowrap;
 	display: inline-block;
 }
 
 .tadaima-button:hover {
-	background: rgb(110, 20, 20);
+	background: rgb(110, 50, 50);
 }
 
 .hidden {
@@ -683,10 +691,42 @@ a:hover {
 
 .version_tab_container {
 	display: flex;
-	padding: 0em 2em;
+	padding: 0em 2em 0em 0em;
+}
+
+.main_content .section {
+	padding-left: 0;
+}
+
+.synopsis-content {
+	overflow: hidden;
+}
+
+.show-more {
+	padding: 0;
+	text-align: right;
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+.show-more a {
+	color: #FFF;
+}
+
+.expandable-content-hidden {
+	line-height: 1.35em;
+	height: 10.80em;
+	text-overflow: ellipsis;
+}
+
+.expandable-content-shown {
+	line-height: 1.35em;
+	height: auto;
 }
 
 .version_tab {
+	display: flex;
+	align-items: center;
 	flex-grow: 1;
 	font-weight: bold;
 	font-size: 1.2em;
@@ -702,11 +742,16 @@ a:hover {
 
 .version_tab_text {
 	padding: 0.5em;
+	width: 100%;
 }
 
 .version_content_multi {
-	margin: 0em 2em 2em 2em;
+	margin: 0em 2em 2em 0em;
 	background-color: #333333;
+}
+
+.version_content_multi .section {
+	padding-left: 2em;
 }
 
 .icon {
@@ -723,9 +768,12 @@ a:hover {
 }
 
 .episode {
-	margin-left: 1.5em;
 	margin-bottom: 0.5em;
 	width: 100%;
+}
+
+.season .episode {
+	margin-left: 1.5em;
 }
 
 .season {
@@ -894,6 +942,23 @@ a:hover {
 	.episode {
 		width: 100%;
 	}
+
+	.season .episode {
+		margin-left: 1.5em;
+		width: 100%;
+	}
+
+	.main_content .section {
+		padding-left: 2em;
+	}
+	
+	.version_content_multi {
+		margin: 0em 2em 2em 2em;
+	}
+	
+	.version_tab_container {
+		padding: 0em 2em;
+	}
 }
 
 @media screen and (max-width: 650px){
@@ -943,8 +1008,8 @@ a:hover {
 		visibility: hidden;
 	}
 
-	.episode {
-		margin-left: 0.5em;
+	.season .episode {
+		margin-left: 1em;
 	}
 
 	.thumbnail .fansub {
@@ -963,5 +1028,13 @@ a:hover {
 
 	.version_content_multi {
 		margin: 0em 1em 1em 1em;
+	}
+
+	.version_content_multi .section {
+		padding-left: 1em;
+	}
+
+	.main_content .section {
+		padding-left: 1em;
 	}
 }

@@ -1,5 +1,6 @@
 <?php
 require_once("db.inc.php");
+require_once("parsedown.inc.php");
 
 function get_fansub_with_url($fansub) {
 	if ($fansub['name']=='Fansub independent') {
@@ -63,10 +64,13 @@ $header_page_title=$series['name'];
 
 $header_tab=$_GET['page'];
 
+$Parsedown = new Parsedown();
+$synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
+
 $header_social = array(
 	'title' => $series['name'].' - Fansubs.cat - Anime',
 	'url' => 'https://anime.fansubs.cat/'.($series['type']=='movie' ? 'films/' : 'series/').$series['slug'],
-	'description' => $series['synopsis'],
+	'description' => strip_tags($synopsis),
 	'image' => $series['image']
 );
 
@@ -140,21 +144,21 @@ if (!empty($series['genres'])) {
 <?php
 if (!empty($series['myanimelist_id'])) {
 ?>
-						<a class="mal-button" href="https://myanimelist.net/anime/<?php echo $series['myanimelist_id']; ?>/" target="_blank">Fitxa a MyAnimeList</a>
+						<a class="mal-button" href="https://myanimelist.net/anime/<?php echo $series['myanimelist_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>MyAnimeList</a>
 <?php
 }
 if (!empty($series['tadaima_id'])) {
 ?>
-						<a class="tadaima-button" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><?php echo get_tadaima_info($series['tadaima_id']); ?></a>
+						<a class="tadaima-button" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><span class="fa fa-comments icon"></span><?php echo get_tadaima_info($series['tadaima_id']); ?></a>
 <?php
 } else {
 	if ($series['type']=='movie') {
 ?>
-						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=14" target="_blank">Comenta'l a Tadaima.cat</a>
+						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=14" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
 <?php
 	} else {
 ?>
-						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=10" target="_blank">Comenta-la a Tadaima.cat</a>
+						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=10" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
 <?php
 	}
 }
@@ -163,12 +167,26 @@ if (!empty($series['tadaima_id'])) {
 					<div class="main_content">
 						<div class="section">
 							<h2 class="section-title">Sinopsi</h2>
-							<div class="section-content"><?php echo str_replace("\n","<br />",htmlspecialchars($series['synopsis'])); ?></div>
+							<div class="section-content">
+								<div class="synopsis-content">
+									<?php echo $synopsis; ?>
+								</div>
+								<div class="show-more hidden">
+									<a>Mostra'n més...</a>
+								</div>
+							</div>
 <?php
 if ($series['episodes']==-1) {
 ?>
 							<div class="section-content fansub-buttons series-on-air">
 								<span class="fa fa-exclamation-triangle icon"></span>Aquesta sèrie encara està en emissió. És possible que la llista de capítols no estigui actualitzada.
+							</div>
+<?php
+}
+if ($series['has_licensed_parts']==1) {
+?>
+							<div class="section-content fansub-buttons parts-licensed">
+								<span class="fa fa-exclamation-triangle icon"></span>Part d'aquesta obra ha estat llicenciada o editada en català. Se'n mostren només les parts no llicenciades.
 							</div>
 <?php
 }
@@ -194,7 +212,7 @@ if ($count==0) {
 		while ($version = mysqli_fetch_assoc($result)) {
 ?>
 							<div class="version_tab<?php echo $i==0 ? ' version_tab_selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>">
-								<div class="status-<?php echo get_status($version['status']); ?>" title="<?php echo get_status_description($version['status']); ?>"></div>
+								<div class="status-<?php echo get_status($version['status']); ?> status-indicator-tab" title="<?php echo get_status_description($version['status']); ?>"></div>
 								<div class="version_tab_text"><?php echo htmlspecialchars('Versió '.get_fansub_preposition_name($version['fansub_name'])); ?></div>
 							</div>
 <?php
@@ -234,14 +252,11 @@ if ($count==0) {
 
 		$fansub_buttons = '';
 		for ($j=0;$j<count($fansubs);$j++) {
-			if ($j>0) {
-				$fansub_buttons.='<br />';
-			}
 			if (!empty($fansubs[$j]['url'])) {
-				$fansub_buttons.='<a class="fansub-website" href="'.$fansubs[$j]['url'].'" target="_blank"><span class="fa fa-globe icon"></span>Web '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
+				$fansub_buttons.='<a class="fansub-website" href="'.$fansubs[$j]['url'].'" target="_blank"><span class="fa fa-globe icon"></span>'.$fansubs[$j]['name'].'</a>';
 			}
 			if (!empty($fansubs[$j]['twitter_url'])) {
-				$fansub_buttons.='<a class="fansub-twitter" href="'.$fansubs[$j]['twitter_url'].'" target="_blank"><span class="fab fa-twitter icon"></span>Twitter '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
+				$fansub_buttons.='<a class="fansub-twitter" href="'.$fansubs[$j]['twitter_url'].'" target="_blank"><span class="fab fa-twitter icon"></span>'.$fansubs[$j]['name'].'</a>';
 			}
 		}
 
@@ -265,7 +280,7 @@ if ($count==0) {
 		}
 ?>
 <?php
-		if ($version['status']==3 || $version['status']==4) {
+		if ($version['status']==4) {
 ?>
 								<div class="section-content fansub-buttons">
 									<?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>

@@ -399,7 +399,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<option value="">- Selecciona un estat -</option>
 										<option value="1"<?php echo $row['status']==1 ? " selected" : ""; ?>>Completada</option>
 										<option value="2"<?php echo $row['status']==2 ? " selected" : ""; ?>>En procés</option>
-										<option value="3"<?php echo $row['status']==3 ? " selected" : ""; ?>>Parcialment abandonada (abandonada però amb alguna temporada completada)</option>
+										<option value="3"<?php echo $row['status']==3 ? " selected" : ""; ?>>Parcialment completada (alguna temporada completada)</option>
 										<option value="4"<?php echo $row['status']==4 ? " selected" : ""; ?>>Abandonada</option>
 										<option value="5"<?php echo $row['status']==5 ? " selected" : ""; ?>>Cancel·lada</option>
 									</select>

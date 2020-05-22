@@ -139,6 +139,8 @@ CREATE TABLE IF NOT EXISTS `series` (
   `show_seasons` tinyint(1) NOT NULL DEFAULT 1,
   `show_expanded_seasons` tinyint(1) NOT NULL DEFAULT 1,
   `show_episode_numbers` tinyint(1) NOT NULL DEFAULT 1,
+  `show_unavailable_episodes` tinyint(1) NOT NULL DEFAULT 1,
+  `has_licensed_parts` tinyint(1) NOT NULL DEFAULT 0,
   `order_type` int(11) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,

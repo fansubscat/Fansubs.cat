@@ -10,7 +10,7 @@ function get_status($id){
 		case 2:
 			return "in-progress";
 		case 3:
-			return "partially-abandoned";
+			return "partially-completed";
 		case 4:
 			return "abandoned";
 		case 5:
@@ -27,7 +27,7 @@ function get_status_description($id){
 		case 2:
 			return "En procés: No hi ha tots els capítols disponibles";
 		case 3:
-			return "Parcialment abandonada: No hi ha tots els capítols disponibles, però alguna temporada està completada";
+			return "Parcialment completada: Almenys una part de l'obra està completada";
 		case 4:
 			return "Abandonada: No hi ha tots els capítols disponibles";
 		case 5:
@@ -150,6 +150,10 @@ function get_hours_or_minutes_formatted($time){
 function print_episode($row,$version_id,$series){
 	$result = query("SELECT l.* FROM link l WHERE l.episode_id=".$row['id']." AND l.version_id=$version_id ORDER BY l.resolution ASC, l.id ASC");
 
+	if (mysqli_num_rows($result)==0 && $series['show_unavailable_episodes']!=1){
+		return;
+	}
+
 	$episode_title='';
 	
 	if ($series['show_episode_numbers']==1 && !empty($row['number'])) {
@@ -189,7 +193,7 @@ function internal_print_episode($episode_title, $result) {
 		echo "\t\t\t\t\t\t\t\t\t</div>\n";
 	} else if (mysqli_num_rows($result)>1) {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="episode">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'.$episode_title."</div>\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title"><span class="fa fa-fw fa-list-ul icon-play"></span>'.$episode_title."</div>\n";
 
 		while ($vrow = mysqli_fetch_assoc($result)){
 			if (!empty($vrow['url'])) {
@@ -299,17 +303,17 @@ function get_tadaima_info($thread_id) {
 		curl_close($ch);
 	}
 	if($response===FALSE) {
-		return "Fil a Tadaima.cat";
+		return "Tadaima.cat";
 	} else {
 		$json_response = json_decode($response);
 		if ($json_response->status!='ok') {
-			return "Fil a Tadaima.cat";
+			return "Tadaima.cat";
 		} else {
 			$number_of_posts = count($json_response->result->posts);
 			if ($number_of_posts==1){
-				return "Fil a Tadaima.cat (1 comentari)";
+				return "Tadaima.cat (1 comentari)";
 			} else {
-				return "Fil a Tadaima.cat ($number_of_posts comentaris)";
+				return "Tadaima.cat ($number_of_posts comentaris)";
 			}
 		}
 	}

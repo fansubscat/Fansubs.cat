@@ -180,7 +180,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				array_push($status_colors, "'coral'");
 				break;
 			case 3:
-				array_push($status_values, "'Parcialment abandonada'");
+				array_push($status_values, "'Parcialment completada'");
 				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
@@ -417,7 +417,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				array_push($status_colors, "'coral'");
 				break;
 			case 3:
-				array_push($status_values, "'Parcialment abandonada'");
+				array_push($status_values, "'Parcialment completada'");
 				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
