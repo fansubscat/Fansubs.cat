@@ -527,11 +527,11 @@ a:hover {
 }
 
 .status-abandoned .thumbnail img {
-	filter: grayscale(80%) brightness(60%);
+	filter: grayscale(70%) brightness(60%);
 }
 
 .status-cancelled .thumbnail img {
-	filter: grayscale(80%) brightness(60%);
+	filter: grayscale(70%) brightness(60%);
 }
 
 /* Series screen */

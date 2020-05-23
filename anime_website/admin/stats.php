@@ -9,6 +9,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$resultf = query("SELECT * FROM fansub WHERE id=".escape($_SESSION['fansub_id']));
 		$fansub = mysqli_fetch_assoc($resultf);
 		mysqli_free_result($resultf);
+	} else if ($_SESSION['admin_level']>=3 && !empty($_GET['fansub_id'])) {
+		$resultf = query("SELECT * FROM fansub WHERE id=".escape($_GET['fansub_id']));
+		$fansub = mysqli_fetch_assoc($resultf);
+		mysqli_free_result($resultf);
 	}
 ?>
 		<div class="container justify-content-center p-4">
@@ -34,7 +38,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques totals</h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM series) total_series, (SELECT COUNT(*) FROM version) total_versions, (SELECT COUNT(*) FROM link WHERE url IS NOT NULL) total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT SUM(clicks) FROM views) total_clicks, (SELECT SUM(views) FROM views) total_views, (SELECT SUM(time_spent) FROM views) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND url IS NOT NULL) total_linked_episodes, (SELECT SUM(e.duration) FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.url IS NOT NULL) total_duration");
+			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM series) total_series, (SELECT COUNT(*) FROM version) total_versions, (SELECT COUNT(*) FROM link WHERE url IS NOT NULL) total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND url IS NOT NULL) total_linked_episodes, (SELECT SUM(e.duration) FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.url IS NOT NULL) total_duration");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
@@ -44,7 +48,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<div class="col-sm-4 text-center"><b>Versions:</b> <?php echo $totals['total_versions']; ?></div>
 								</div>
 								<div class="row">
-									<div class="col-sm-4 text-center"><b>Episodis amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
+									<div class="col-sm-4 text-center"><b>Capítols amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
 									<div class="col-sm-4 text-center"><b>Enllaços:</b> <?php echo $totals['total_links']; ?></div>
 									<div class="col-sm-4 text-center"><b>Durada total:</b> <?php echo get_hours_or_minutes_formatted($totals['total_duration']*60); ?></div>
 								</div>
@@ -66,8 +70,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	$current_month = strtotime(date('Y-m-01'));
 	$i=0;
-	while (strtotime(date('2020-03-01')."+$i months")<=$current_month) {
-		$months[date("Y-m", strtotime(date('2020-03-01')."+$i months"))]=array(0, 0, 0);
+	while (strtotime(date('2020-04-01')."+$i months")<=$current_month) {
+		$months[date("Y-m", strtotime(date('2020-04-01')."+$i months"))]=array(0, 0, 0);
 		$i++;
 	}
 
@@ -228,7 +232,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$fansub_values=array();
 	$fansub_colors=array();
 	$link_count_values=array();
-	$result = query("SELECT b.fansub_name,SUM(b.link_count) link_count FROM (SELECT IF(COUNT(a.id)>20,a.fansub_name,'Altres') fansub_name, COUNT(a.id) link_count FROM (SELECT l.id, l.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id GROUP BY l.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, link_count DESC");
+	$result = query("SELECT b.fansub_name,SUM(b.link_count) link_count FROM (SELECT IF(COUNT(a.id)>20,a.fansub_name,'Altres') fansub_name, COUNT(a.id) link_count FROM (SELECT l.id, l.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE l.url IS NOT NULL GROUP BY l.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, link_count DESC");
 	mt_srand(0); //To always get the same values from the random colors
 	while ($row = mysqli_fetch_assoc($result)) {
 		array_push($fansub_values, "'".$row['fansub_name']."'");
@@ -281,7 +285,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<div class="col-sm-4 text-center"><b>Versions:</b> <?php echo $totals['total_versions']; ?></div>
 								</div>
 								<div class="row">
-									<div class="col-sm-4 text-center"><b>Episodis amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
+									<div class="col-sm-4 text-center"><b>Capítols amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
 									<div class="col-sm-4 text-center"><b>Enllaços:</b> <?php echo $totals['total_links']; ?></div>
 									<div class="col-sm-4 text-center"><b>Durada total:</b> <?php echo get_hours_or_minutes_formatted($totals['total_duration']*60); ?></div>
 								</div>
@@ -303,8 +307,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$current_month = strtotime(date('Y-m-01'));
 		$i=0;
-		while (strtotime(date('2020-03-01')."+$i months")<=$current_month) {
-			$months[date("Y-m", strtotime(date('2020-03-01')."+$i months"))]=array(0, 0, 0);
+		while (strtotime(date('2020-04-01')."+$i months")<=$current_month) {
+			$months[date("Y-m", strtotime(date('2020-04-01')."+$i months"))]=array(0, 0, 0);
 			$i++;
 		}
 

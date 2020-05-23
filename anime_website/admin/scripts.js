@@ -740,9 +740,8 @@ $(document).ready(function() {
 			alert("Cal que introdueixis l'identificador de MyAnimeList d'almenys una de les temporades.");
 			return;
 		} else if (with_id<seasons.length) {
-			if (!confirm("Hi ha temporades sense identificador de MyAnimeList. Només s'importaran els capítols de les temporades que tinguin identificador.")){
-				return;
-			}
+			alert("Hi ha temporades sense identificador de MyAnimeList. Cal que especifiquis l'identificador de totes.");
+			return;
 		}
 		if ((parseInt($('#episode-list-table').attr('data-count'))>1 || $('#form-episode-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots i es tornaran a crear. Totes les versions que continguin aquests capítols i tots els enllaços d'aquests capítols desapareixeran i no es podrà desfer l'acció un cop hagis desat els canvis. Vols continuar?")) {
 			return;
