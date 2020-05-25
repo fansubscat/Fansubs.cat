@@ -87,7 +87,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 				$link['episode_id']=$episode_id;
 
-				if (!empty($_POST['form-links-list-'.$episode_id.'-lost-'.$i])) {
+				if ($link['url']=="NULL" && !empty($_POST['form-links-list-'.$episode_id.'-lost-'.$i])) {
 					$data['episodes_missing']=1;
 				}
 

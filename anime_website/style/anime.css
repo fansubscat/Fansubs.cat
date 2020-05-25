@@ -358,13 +358,22 @@ a:hover {
 	max-height: 256px;
 	background-color: #888;
 	position: relative;
-	transition: transform .2s;
+	transition: all .2s;
 	margin: 2px;
 }
 
 .thumbnail:hover {
 	transform: scale(1.1);
+	filter: grayscale(0%) brightness(100%);
 	z-index: 99;
+}
+
+.status-abandoned .thumbnail:hover img {
+	filter: grayscale(0%) brightness(100%);
+}
+
+.status-canceled .thumbnail:hover img {
+	filter: grayscale(0%) brightness(100%);
 }
 
 .select-genre {
@@ -528,10 +537,12 @@ a:hover {
 
 .status-abandoned .thumbnail img {
 	filter: grayscale(70%) brightness(60%);
+	transition: all .2s;
 }
 
 .status-cancelled .thumbnail img {
 	filter: grayscale(70%) brightness(60%);
+	transition: all .2s;
 }
 
 /* Series screen */
@@ -590,7 +601,15 @@ a:hover {
 }
 
 .fansub-buttons {
+	margin-top: 0.8em;
+}
+
+.padding-top {
 	margin-top: 1em;
+}
+
+.padding-bottom {
+	margin-bottom: 1.2em;
 }
 
 .parts-licensed {
@@ -615,9 +634,9 @@ a:hover {
 	font-size: 1em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-right: 0.5em;
-	margin-top: 0.1em;
-	margin-bottom: 0.1em;
+	margin-right: 0.4em;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
 	padding: 0.3em 0.5em;
 	background: rgb(12, 87, 21);
 	white-space: nowrap;
@@ -634,9 +653,9 @@ a:hover {
 	font-size: 1em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-right: 0.5em;
-	margin-top: 0.1em;
-	margin-bottom: 0.1em;
+	margin-right: 0.4em;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
 	padding: 0.3em 0.5em;
 	background: rgb(14, 87, 102);
 	white-space: nowrap;

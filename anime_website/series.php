@@ -176,16 +176,9 @@ if (!empty($series['tadaima_id'])) {
 								</div>
 							</div>
 <?php
-if ($series['episodes']==-1) {
-?>
-							<div class="section-content fansub-buttons series-on-air">
-								<span class="fa fa-exclamation-triangle icon"></span>Aquesta sèrie encara està en emissió. És possible que la llista de capítols no estigui actualitzada.
-							</div>
-<?php
-}
 if ($series['has_licensed_parts']==1) {
 ?>
-							<div class="section-content fansub-buttons parts-licensed">
+							<div class="section-content padding-top parts-licensed">
 								<span class="fa fa-exclamation-triangle icon"></span>Part d'aquesta obra ha estat llicenciada o editada en català. Se'n mostren només les parts no llicenciades.
 							</div>
 <?php
@@ -250,14 +243,27 @@ if ($count==0) {
 			}
 		}
 
-		$fansub_buttons = '';
+		$web_buttons = '';
+		$web_buttons_count=0;
 		for ($j=0;$j<count($fansubs);$j++) {
 			if (!empty($fansubs[$j]['url'])) {
-				$fansub_buttons.='<a class="fansub-website" href="'.$fansubs[$j]['url'].'" target="_blank"><span class="fa fa-globe icon"></span>'.$fansubs[$j]['name'].'</a>';
+				$web_buttons.='<a class="fansub-website" href="'.$fansubs[$j]['url'].'" target="_blank"><span class="fa fa-globe icon"></span>Web '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
+				$web_buttons_count++;
 			}
+		}
+		$twitter_buttons = '';
+		$twitter_buttons_count=0;
+		for ($j=0;$j<count($fansubs);$j++) {
 			if (!empty($fansubs[$j]['twitter_url'])) {
-				$fansub_buttons.='<a class="fansub-twitter" href="'.$fansubs[$j]['twitter_url'].'" target="_blank"><span class="fab fa-twitter icon"></span>'.$fansubs[$j]['name'].'</a>';
+				$twitter_buttons.='<a class="fansub-twitter" href="'.$fansubs[$j]['twitter_url'].'" target="_blank"><span class="fab fa-twitter icon"></span>Twitter '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
+				$twitter_buttons_count++;
 			}
+		}
+
+		if ($web_buttons!='' && $twitter_buttons!='' && ($web_buttons_count>1 || $twitter_buttons_count>1)) {
+			$fansub_buttons=$web_buttons.'<br />'.$twitter_buttons;
+		} else {
+			$fansub_buttons=$web_buttons.$twitter_buttons;
 		}
 
 		$plurals = array(
@@ -282,22 +288,14 @@ if ($count==0) {
 <?php
 		if ($version['status']==4) {
 ?>
-								<div class="section-content fansub-buttons">
+								<div class="section-content padding-top">
 									<?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
 								</div>
 <?php
 		} else if ($version['status']==5) {
 ?>
-								<div class="section-content fansub-buttons">
+								<div class="section-content padding-top">
 									<?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
-								</div>
-<?php
-		}
-
-		if ($version['episodes_missing']==1) {
-?>
-								<div class="section-content fansub-buttons episodes-missing">
-									<span class="fa fa-exclamation-triangle icon"></span>Hi ha capítols subtitulats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
 								</div>
 <?php
 		}
@@ -315,6 +313,23 @@ if ($count==0) {
 ?>
 							<div class="section">
 								<h2 class="section-title">Contingut</h2>
+<?php
+
+			if ($version['episodes_missing']==1) {
+?>
+								<div class="section-content padding-bottom episodes-missing">
+									<span class="fa fa-exclamation-triangle icon"></span>Hi ha capítols subtitulats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
+								</div>
+<?php
+			}
+			if ($series['episodes']==-1) {
+?>
+							<div class="section-content padding-bottom series-on-air">
+								<span class="fa fa-exclamation-triangle icon"></span>Aquesta sèrie encara està en emissió. És possible que la llista de capítols no estigui actualitzada.
+							</div>
+<?php
+			}
+?>
 								<div class="section-content">
 <?php
 			$seasons = array();

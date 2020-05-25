@@ -14,6 +14,7 @@ while ($series = mysqli_fetch_assoc($result)) {
 	$seasonscoresum = 0;
 	$error = FALSE;
 	while ($season = mysqli_fetch_assoc($resultss)) {
+		sleep(4); //4s for Jikan request limits
 		$url = 'https://api.jikan.moe/v3/anime/'.$season['myanimelist_id'];
 		$response = json_decode(file_get_contents($url));
 		
@@ -24,20 +25,20 @@ while ($series = mysqli_fetch_assoc($result)) {
 			$score = $response->score;
 			if ($score && is_numeric($score)) {
 				$seasonscoresum+=$score;
-			} else {
-				$error = TRUE;
-				break;
+			} else { //Skip this season: no score
+				echo "Series ".$series['name']." has season ".$season['myanimelist_id']." with no score.\n";
+				continue;
 			}
 		}
 		$seasoncount++;
 	}
 
-	if ($error) {	
+	if ($error) {
 		echo "Update failed for series ".$series['name']."\n";
 		log_action('cron-score-failed', "No s'ha pogut actualitzar la puntuació de la sèrie '".$series['name']."'");
 	} else {
 		if ($seasoncount>0) { //if it's zero, we ignore it... no myanimelist, probably
-			$new_score=$seasonscoresum/$seasoncount;
+			$new_score=round($seasonscoresum/$seasoncount, 2);
 			if ($series['score']!=$new_score) {
 				echo "Previous score: ".$series['score']." / New score: $new_score\n";
 				log_action('cron-score-updated', "La puntuació de la sèrie '".$series['name']."' ha canviat de ".$series['score'].' a '.$new_score);
@@ -45,7 +46,6 @@ while ($series = mysqli_fetch_assoc($result)) {
 			}
 		}
 	}
-	sleep(4); //4s for Jikan request limits
 }
 log_action('cron-scores-finished', "S'ha completat l'actualització de la puntuació de les sèries");
 echo "All done!\n";
