@@ -68,7 +68,7 @@ function getSource(method, url){
 	var start='<div class="white-popup"><div style="display: flex; height: 100%;">';
 	var end='</div></div>';
 	if (method=="embed"){
-		return start+'<iframe style="flex-grow: 1;" frameborder="0" src="'+url+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>'+end;
+		return start+'<iframe style="flex-grow: 1;" frameborder="0" src="'+url+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true" sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"></iframe>'+end;
 	}
 	if (method=="direct-video"){
 		return start+'<video style="flex-grow: 1; max-width: 100%"  controls autoplay><source src="'+url+'" type="video/mp4">El teu navegador no suporta el vídeo incrustat.</video>'+end;
@@ -84,6 +84,18 @@ function showContactScreen(reason) {
 		$('#contact-explanation').text("Hi ha capítols de fansubs antics que sabem que van ser subtitulats, però que actualment no estan disponibles. Si saps on els podem aconseguir, o si ens els pots fer arribar, si us plau, escriu-nos fent servir aquest formulari:");
 	} else {
 		$('#contact-explanation').text("Per a temes relacionats amb els fansubs, és recomanable que escriguis directament al fansub en qüestió fent servir el seu web o Twitter. En cas contrari, ens pots fer arribar comentaris, avisar-nos d'errors o de qualsevol problema o suggeriment per al web fent servir aquest formulari:");
+	}
+}
+
+function initTooltip(tooltip, target) {
+	var total_width = target.offset().left + tooltip.outerWidth();
+
+	if( total_width > $(window).width()) {
+		tooltip.removeClass('tooltip-right');
+		tooltip.addClass('tooltip-left');
+	} else {
+		tooltip.removeClass('tooltip-left');
+		tooltip.addClass('tooltip-right');
 	}
 }
 
@@ -269,6 +281,34 @@ $(document).ready(function() {
 		});
 	}
 
+	$(".tooltip-container").click(function () {
+		var $title = $(this).find(".tooltip");
+		if (!$title.hasClass("hidden")) {
+			$title.addClass("hidden");
+		} else {
+			$(".tooltip").addClass("hidden");
+			$title.removeClass("hidden");
+		}
+	});
+
+	//Clumsy detection for mobile OS... They break tooltips due to bad mouseenter/leave handling
+	if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+		$(".tooltip-container").mouseenter(function () {
+			var $title = $(this).find(".tooltip");
+			$title.removeClass("hidden");
+		});
+		$(".tooltip-container").mouseleave(function () {
+			var $title = $(this).find(".tooltip");
+			$title.addClass("hidden");
+		});
+	}
+
+	$(".tooltip").css('max-width', $(window).width()/2);
+
+	$(".tooltip").each(function (){
+		initTooltip($(this), $(this).parent());
+	});
+
 	if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
 		$("#options-tooltip").fadeIn("slow");
 	}
@@ -297,6 +337,12 @@ $(document).ready(function() {
 			});
 
 			lastWindowWidth=$(window).width();
+
+			$(".tooltip").css('max-width', $(window).width()/2);
+
+			$(".tooltip").each(function (){
+				initTooltip($(this), $(this).parent());
+			});
 		}
 	});
 

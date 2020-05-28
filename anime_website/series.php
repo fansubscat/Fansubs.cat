@@ -74,6 +74,8 @@ $header_social = array(
 	'image' => $series['image']
 );
 
+$header_series_page=TRUE;
+
 require_once('header.inc.php');
 ?>
 				<div class="flex mobilewrappable">

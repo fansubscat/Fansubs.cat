@@ -42,6 +42,7 @@ if (!empty($header_social)) {
 	<body>
 		<div id="overlay" class="hidden">
 			<a id="overlay-close"><span class="fa fa-times"></span></a>
+			<div id="overlay-mask"></div>
 			<div id="overlay-content"></div>
 		</div>
 		<div id="options-overlay" class="hidden flex">
@@ -136,4 +137,4 @@ mysqli_free_result($resultf);
 					</form>
 				</div>
 			</div>
-			<div id="content">
+			<div id="content"<?php echo !empty($header_series_page) ? ' class="series-page"' : ''; ?>>

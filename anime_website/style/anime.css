@@ -223,6 +223,14 @@ h2 {
 	background-color: #000;
 }
 
+#overlay-mask {
+	position: absolute;
+	width: 100%;
+	height: 52px;
+	cursor: pointer;
+	z-index: 1999;
+}
+
 #overlay-content {
 	width: 100%;
 	height: 100%;
@@ -320,6 +328,10 @@ a:hover {
 	background-color: #222;
 	overflow: hidden;
 	width: 100%;
+}
+
+#content.series-page {
+	overflow: visible;
 }
 
 .flex {
@@ -832,7 +844,6 @@ a:hover {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.4em;
 	padding: 0.1em 0.4em;
 	white-space: nowrap;
 	cursor: pointer;
@@ -855,37 +866,61 @@ a:hover {
 	padding: 0.1em 0.4em;
 	background: rgb(100, 0, 0);
 	white-space: nowrap;
-	cursor: help;
+	cursor: pointer;
 }
 
-.version-resolution-hd {
+.version-resolution-4k {
+	margin-left: 0.4em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
 	padding: 0.1em 0.4em;
 	background: rgb(0, 80, 0);
 	white-space: nowrap;
-	cursor: help;
+	cursor: pointer;
+}
+
+.version-resolution-hd1080 {
+	margin-left: 0.4em;
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(0, 80, 0);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.version-resolution-hd720 {
+	margin-left: 0.4em;
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(70, 120, 0);
+	white-space: nowrap;
+	cursor: pointer;
 }
 
 .version-resolution-sd {
+	margin-left: 0.4em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
 	padding: 0.1em 0.4em;
-	background: rgb(100, 100, 0);
+	background: rgb(120, 100, 0);
 	white-space: nowrap;
-	cursor: help;
+	cursor: pointer;
 }
 
-.version-comments {
+.version-info {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
 	padding: 0.1em 0.4em;
-	background: rgb(0, 50, 100);
+	background: rgb(0, 80, 140);
 	white-space: nowrap;
-	cursor: help;
+	cursor: pointer;
 }
 
 .version-unavailable {
@@ -896,7 +931,7 @@ a:hover {
 	padding: 0.1em 0.4em;
 	background: rgb(80, 80, 80);
 	white-space: nowrap;
-	cursor: help;
+	cursor: pointer;
 	color: #DDD;
 }
 
@@ -912,6 +947,30 @@ a:hover {
 	color: #DDD;
 }
 
+.tooltip-container {
+	position: relative;
+}
+
+.tooltip-container .tooltip {
+	position: absolute;
+	top: 15px; /*must overlap parent element otherwise pop-up doesn't stay open when rolloing over '*/
+	background: #333;
+	border: 1px solid #fff;
+	padding: 4px 8px;
+	z-index: 100;
+	margin-top: 6px;
+	overflow: hidden;
+	font-weight: normal;
+	font-size: 1.1em;
+}
+
+.tooltip.tooltip-left {
+	right: 0;
+}
+
+.tooltip.tooltip-right {
+	left: 0;
+}
 
 /* Footer */
 
@@ -925,7 +984,6 @@ a:hover {
 	text-align: center;
 	font-size: 1em;
 }
-
 
 /* MOBILE */
 @media screen and (max-width: 1000px){

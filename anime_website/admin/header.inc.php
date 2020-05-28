@@ -102,6 +102,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 <?php
 		}
 ?>
+							<a class="dropdown-item" href="change_password.php">Canvia la contrasenya</a>
 						</div>
 					</li>
 <?php
