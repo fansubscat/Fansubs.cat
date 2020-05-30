@@ -19,7 +19,7 @@ if (!empty($header_social)) {
 ?>
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta property="og:title" content="<?php echo htmlspecialchars($header_social['title']); ?>" />
-		<meta property="og:url" content="<?php echo htmlspecialchars($header_social['url']); ?>?ext=fake.png" />
+		<meta property="og:url" content="<?php echo htmlspecialchars($header_social['url']); ?>" />
 		<meta property="og:description" content="<?php echo htmlspecialchars($header_social['description']); ?>" />
 		<meta property="og:image" content="<?php echo htmlspecialchars($header_social['image']); ?>" />
 <?php
@@ -40,12 +40,12 @@ if (!empty($header_social)) {
 		<script src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 	</head>
 	<body>
-		<div id="overlay" class="hidden">
+		<div data-nosnippet id="overlay" class="hidden">
 			<a id="overlay-close"><span class="fa fa-times"></span></a>
 			<div id="overlay-mask"></div>
 			<div id="overlay-content"></div>
 		</div>
-		<div id="options-overlay" class="hidden flex">
+		<div data-nosnippet id="options-overlay" class="hidden flex">
 			<div id="options-overlay-content">
 				<form id="options-form">
 					<h2 class="section-title">Opcions de visualització</h2>
@@ -87,7 +87,7 @@ mysqli_free_result($resultf);
 				</div>
 			</div>
 		</div>
-		<div id="contact-overlay" class="hidden flex">
+		<div data-nosnippet id="contact-overlay" class="hidden flex">
 			<div id="contact-overlay-content">
 				<form id="contact-form">
 					<h2 class="section-title">Envia'ns un comentari</h2>
