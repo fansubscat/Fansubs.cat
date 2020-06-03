@@ -14,7 +14,7 @@ require_once('header.inc.php');
 
 $max_items=24;
 
-$base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
@@ -127,7 +127,20 @@ for ($i=0;$i<count($sections);$i++){
 								<a class="thumbnail" href="/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?>">
 									<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 									<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
-									<div class="title"><?php echo $row['name'].($row['seasons']>1 && $row['show_seasons']==1 ? ' ('.$row['seasons'].' temporades)' : ''); ?></div>
+									<div class="infoholder">
+<?php
+			if ($row['type']=='movie' && $row['episodes']>1) {
+?>
+										<div class="seasons"><?php echo $row['episodes']; ?> films</div>
+<?php
+			} else if ($row['seasons']>1 && $row['show_seasons']==1) {
+?>
+										<div class="seasons"><?php echo $row['seasons']; ?> temporades</div>
+<?php
+			}
+?>
+										<div class="title"><?php echo $row['name']; ?></div>
+									</div>
 									<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $row['fansub_name']; ?></div>
 								</a>
 							</div>

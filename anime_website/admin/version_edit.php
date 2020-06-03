@@ -521,7 +521,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-folders-list-active-<?php echo $j+1; ?>" name="form-folders-list-active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $folders[$j]['active']==1? " checked" : ""; ?>/>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionFolderRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+														<button id="form-folders-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionFolderRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
 													</td>
 												</tr>
 <?php

@@ -1,6 +1,7 @@
 RewriteEngine on
 ErrorDocument 404 /error.php?code=404
 ErrorDocument 403 /error.php?code=403
+RewriteRule ^.*\.inc\.php$ error.php?code=404
 RewriteRule ^films/$ index.php?page=movies
 RewriteRule ^films$ index.php?page=movies
 RewriteRule ^films/(.*)/$ series.php?page=movies&slug=$1
@@ -13,4 +14,5 @@ RewriteRule ^cerca/(.*)/$ index.php?page=search&query=$1
 RewriteRule ^cerca/(.*)$ index.php?page=search&query=$1
 RewriteRule ^qui-som/$ about.php
 RewriteRule ^qui-som$ about.php
-RewriteRule ^.*\.inc\.php$ error.php?code=404
+RewriteRule ^embed/(.*)/$ embed.php?link_id=$1
+RewriteRule ^embed/(.*)$ embed.php?link_id=$1

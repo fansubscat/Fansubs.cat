@@ -287,6 +287,33 @@ function addVersionExtraRow() {
 	$('#extras-list-table-empty').addClass('d-none');
 }
 
+function addRelatedSeriesRow() {
+	var i = parseInt($('#related-list-table').attr('data-count'))+1;
+
+	var htmlAcc = $('#form-related-list-related_series_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
+
+	$('#related-list-table').append('<tr id="form-related-list-row-'+i+'"><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-folders-list-delete-'+i+'" onclick="deleteRelatedSeriesRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#related-list-table').attr('data-count', i);
+	$('#related-list-table-empty').addClass('d-none');
+}
+
+function deleteRelatedSeriesRow(id) {
+	var i = parseInt($('#related-list-table').attr('data-count'));
+	$("#form-related-list-row-"+id).remove();
+	for (var j=id+1;j<i+1;j++) {
+		$("#form-related-list-row-"+j).attr('id','form-related-list-row-'+(j-1));
+		$("#form-related-list-related_series_id-"+j).attr('name','form-related-list-related_series_id-'+(j-1));
+		$("#form-related-list-related_series_id-"+j).attr('id','form-related-list-related_series_id-'+(j-1));
+		$("#form-related-list-delete-"+j).attr('onclick','deleteRelatedSeriesRow('+(j-1)+');');
+		$("#form-related-list-delete-"+j).attr('id','form-related-list-delete-'+(j-1));
+	}
+	$('#related-list-table').attr('data-count', i-1);
+
+	if (i-1==0) {
+		$('#related-list-table-empty').removeClass('d-none');
+	}
+}
+
 function addVersionFolderRow() {
 	var i = parseInt($('#folders-list-table').attr('data-count'))+1;
 

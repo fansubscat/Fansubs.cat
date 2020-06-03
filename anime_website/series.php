@@ -414,6 +414,31 @@ if ($count==0) {
 		$i++;
 	}
 }
+
+$resultrs = query("SELECT s.* FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE rs.series_id=".$series['id']." ORDER BY s.name ASC");
+
+if (mysqli_num_rows($resultrs)>0) {
+?>
+						<div class="section" style="padding-top: 1em;">
+							<h2 class="section-title">Anime relacionat</h2>
+							<div class="section-content">
+<?php
+	$first = TRUE;
+	while ($row = mysqli_fetch_assoc($resultrs)) {
+		if (!$first) {
+			echo ", ";
+		} else {
+			$first = FALSE;
+		}
+		echo '<a href="/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
+	}
+?>
+							</div>
+						</div>
+<?php
+}
+
+mysqli_free_result($resultrs);
 ?>
 					</div>
 				</div>

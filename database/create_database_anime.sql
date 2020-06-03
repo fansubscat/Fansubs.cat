@@ -93,6 +93,13 @@ CREATE TABLE IF NOT EXISTS `link` (
   KEY `link_ibfk_2` (`version_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS `related_series` (
+  `series_id` int(11) NOT NULL,
+  `related_series_id` int(11) NOT NULL,
+  PRIMARY KEY (`series_id`,`related_series_id`),
+  KEY `related_series_id` (`related_series_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `rel_series_genre` (
   `series_id` int(11) NOT NULL,
   `genre_id` int(11) NOT NULL,
@@ -203,6 +210,9 @@ ALTER TABLE `folder_failed_files`
 ALTER TABLE `link`
   ADD CONSTRAINT `link_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `link_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `related_series`
+  ADD CONSTRAINT `related_series_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `related_series_ibfk_2` FOREIGN KEY (`related_series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `rel_series_genre`
   ADD CONSTRAINT `rel_series_genre_ibfk_1` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`),
   ADD CONSTRAINT `rel_series_genre_ibfk_2` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

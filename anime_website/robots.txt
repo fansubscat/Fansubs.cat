@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /*.php
 Disallow: /admin
+Disallow: /embed
 

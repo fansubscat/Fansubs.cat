@@ -202,6 +202,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($episodes, $episode);
 			$i++;
 		}
+
+		$related_series=array();
+		$i=1;
+		while (!empty($_POST['form-related-list-related_series_id-'.$i])) {
+			if (is_numeric($_POST['form-related-list-related_series_id-'.$i])) {
+				array_push($related_series,escape($_POST['form-related-list-related_series_id-'.$i]));
+			} else {
+				crash("Dades invàlides: id de sèrie relacionada no numèric");
+			}
+			$i++;
+		}
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-series", "S'ha actualitzat la sèrie amb nom '".$data['name']."' (id. de sèrie: ".$data['id'].")");
@@ -239,6 +250,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					query("UPDATE episode SET season_id=(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$data['id']."),number=".$episode['number'].",name=".$episode['name'].",duration=".$episode['duration']." WHERE id=".$episode['id']);
 				}
 			}
+			query("DELETE FROM related_series WHERE series_id=".$data['id']);
+			foreach ($related_series as $related_series_id) {
+				query("REPLACE INTO related_series (series_id,related_series_id) VALUES (".$data['id'].",".$related_series_id.")");
+			}
 
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
@@ -254,6 +269,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			foreach ($episodes as $episode) {
 				query("INSERT INTO episode (series_id,season_id,number,name,duration) VALUES (".$inserted_id.",(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$inserted_id."),".$episode['number'].",".$episode['name'].",".$episode['duration'].")");
+			}
+			foreach ($related_series as $related_series_id) {
+				query("REPLACE INTO related_series (series_id,related_series_id) VALUES (".$inserted_id.",".$related_series_id.")");
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
@@ -616,6 +634,83 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<span class="fa fa-sort-numeric-down pr-2"></span>
 										Genera els capítols automàticament
 									</button>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-related-list">Sèries relacionades <small class="text-muted">(es mostraran a la fitxa pública)</small></label>
+							<div class="container" id="form-related-list">
+<?php
+
+	if (!empty($row['id'])) {
+		$resultrs = query("SELECT rs.* FROM related_series rs WHERE rs.series_id=".escape($_GET['id'])." ORDER BY rs.related_series_id ASC");
+		$related_series = array();
+		while ($rowrs = mysqli_fetch_assoc($resultrs)) {
+			array_push($related_series, $rowrs);
+		}
+		mysqli_free_result($resultrs);
+	} else {
+		$related_series=array();
+	}
+?>
+								<div class="row mb-3">
+									<div class="w-100 column">
+										<select id="form-related-list-related_series_id-XXX" name="form-related-list-related_series_id-XXX" class="form-control d-none">
+											<option value="">- Selecciona una sèrie -</option>
+<?php
+		$results = query("SELECT s.* FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.name ASC");
+		while ($srow = mysqli_fetch_assoc($results)) {
+?>
+											<option value="<?php echo $srow['id']; ?>"><?php echo htmlspecialchars($srow['name']); ?></option>
+<?php
+		}
+		mysqli_free_result($results);
+?>
+										</select>
+										<table class="table table-bordered table-hover table-sm" id="related-list-table" data-count="<?php echo count($related_series); ?>">
+											<thead>
+												<tr>
+													<th class="mandatory">Sèrie</th>
+													<th class="text-center" style="width: 5%;">Acció</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr id="related-list-table-empty" class="<?php echo count($related_series)>0 ? 'd-none' : ''; ?>">
+													<td colspan="5" class="text-center">- No hi ha cap sèrie relacionada -</td>
+												</tr>
+<?php
+	for ($j=0;$j<count($related_series);$j++) {
+?>
+												<tr id="form-related-list-row-<?php echo $j+1; ?>">
+													<td>
+														<select id="form-related-list-related_series_id-<?php echo $j+1; ?>" name="form-related-list-related_series_id-<?php echo $j+1; ?>" class="form-control" required>
+															<option value="">- Selecciona una sèrie -</option>
+<?php
+		$results = query("SELECT s.* FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.name ASC");
+		while ($srow = mysqli_fetch_assoc($results)) {
+?>
+															<option value="<?php echo $srow['id']; ?>"<?php echo $related_series[$j]['related_series_id']==$srow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($srow['name']); ?></option>
+<?php
+		}
+		mysqli_free_result($results);
+?>
+														</select>
+													</td>
+													<td class="text-center align-middle">
+														<button id="form-related-list-delete-<?php echo $j+1; ?>" onclick="deleteRelatedSeriesRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+													</td>
+												</tr>
+<?php
+	}
+?>
+											</tbody>
+										</table>
+									</div>
+									<div class="form-group row w-100 ml-0">
+										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
+											<button onclick="addRelatedSeriesRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una sèrie relacionada</button>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

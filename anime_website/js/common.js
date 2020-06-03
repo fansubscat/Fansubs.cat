@@ -100,255 +100,266 @@ function initTooltip(tooltip, target) {
 }
 
 $(document).ready(function() {
-	$('#overlay-close').click(function(){
-		$('#overlay-content').html('');
-		$('#overlay').addClass('hidden');
-		$('body').removeClass('no-overflow');
-		sendAjaxViewEnd();
-	});
-	$(".video-player").click(function(){
-		$('body').addClass('no-overflow');
-		$('#overlay').removeClass('hidden');
-		$('#overlay-content').html(getSource($(this).attr('data-method'), atob($(this).attr('data-url'))));
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", '/counter.php?link_id='+$(this).attr('data-link-id')+"&action=open", true);
-		xmlHttp.send(null);
-		currentLinkId=$(this).attr('data-link-id');
-		currentStartTime=Math.floor(new Date().getTime()/1000);
-		markLinkAsViewed($(this).attr('data-link-id'));
-	});
-	$(".viewed-indicator").click(function(){
-		if ($(this).hasClass('not-viewed')){
+	if ($('#embed-page').length==0) {
+		$('#overlay-close').click(function(){
+			$('#overlay-content').html('');
+			$('#overlay').addClass('hidden');
+			$('body').removeClass('no-overflow');
+			sendAjaxViewEnd();
+		});
+		$(".video-player").click(function(){
+			$('body').addClass('no-overflow');
+			$('#overlay').removeClass('hidden');
+			$('#overlay-content').html(getSource($(this).attr('data-method'), atob($(this).attr('data-url'))));
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("GET", '/counter.php?link_id='+$(this).attr('data-link-id')+"&action=open", true);
+			xmlHttp.send(null);
+			currentLinkId=$(this).attr('data-link-id');
+			currentStartTime=Math.floor(new Date().getTime()/1000);
 			markLinkAsViewed($(this).attr('data-link-id'));
-		} else {
-			markLinkAsNotViewed($(this).attr('data-link-id'));
-		}
-	});
-	$(".contact-link").click(function(){
-		showContactScreen('generic');
-	});
-	$(".version-lost").click(function(){
-		showContactScreen('version_lost');
-	});
-	$(".version-missing-links-link").click(function(){
-		showContactScreen('version_lost');
-	});
-	$(".version_tab").click(function(){
-		$(".version_tab").each(function(){
-			$(this).removeClass("version_tab_selected");
 		});
-		$(".version_content").each(function(){
-			$(this).addClass("hidden");
-		});
-		$(this).addClass("version_tab_selected");
-		$("#version_content_"+$(this).attr('data-version-id')).removeClass("hidden");
-	});
-	$('#search_form').submit(function(){
-		if ($('#search_query').val()!=''){
-			window.location.href='/cerca/' + encodeURIComponent(encodeURIComponent($('#search_query').val()));
-		}
-		else{
-			window.location.href='/';
-		}
-		return false;
-	});
-	$('#search_button').click(function(){
-		$('#search_form').submit();
-	});
-	$('#options-button').click(function(){
-		$('body').addClass('no-overflow');
-		$('#options-overlay').removeClass('hidden');
-		$('#options-tooltip').attr('style','');
-		Cookies.set('tooltip_closed', '1', cookieOptions);
-	});
-	$('#options-tooltip-close').click(function(){
-		$('#options-tooltip').attr('style','');
-		Cookies.set('tooltip_closed', '1', cookieOptions);
-	});
-	$('#options-cancel-button').click(function(){
-		$('#options-form').trigger("reset");
-		$('#options-overlay').addClass('hidden');
-		$('body').removeClass('no-overflow');
-	});
-	$('#options-save-button').click(function(){
-		Cookies.set('hide_missing', $('#hide_missing').prop('checked') ? '0' : '1', cookieOptions);
-		Cookies.set('show_cancelled', $('#show_cancelled').prop('checked') ? '1' : '0', cookieOptions);
-		Cookies.set('show_hentai', $('#show_hentai').prop('checked') ? '1' : '0', cookieOptions);
-		var hiddenFansubs = $('#options-fansubs input:not(:checked)');
-		var values = [];
-		
-		for (var i=0;i<hiddenFansubs.length;i++){
-			values.push(hiddenFansubs[i].value);
-		}
-		Cookies.set('hidden_fansubs', values.join(','), cookieOptions);
-
-		location.reload();
-	});
-	$('#options-select-all').click(function(){
-		$('[id^=show_fansub_]').each(function(){
-			$(this).prop('checked',true);
-		});
-	});
-	$('#options-unselect-all').click(function(){
-		$('[id^=show_fansub_]').each(function(){
-			$(this).prop('checked',false);
-		});
-	});
-	$('#contact-cancel-button').click(function(){
-		$('#contact-form').trigger("reset");
-		$('#contact-overlay').addClass('hidden');
-		$('body').removeClass('no-overflow');
-	});
-	$('#contact-send-button').click(function(){
-		if (!/\S+@\S+\.\S+/.test($('#contact_address').val())) {
-			alert('Introdueix una adreça de resposta vàlida.');
-			return;
-		}
-		if ($('#contact_message').val()=='') {
-			alert('Introdueix un missatge.');
-			return;
-		}
-		$('#contact-send-button').addClass('hidden');
-		$('#contact-send-button-loading').removeClass('hidden');
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", '/contact.php', true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.onreadystatechange = function() {
-			if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-				$('#contact-send-button-loading').addClass('hidden');
-				$('#contact-send-button-done').removeClass('hidden');
-				setTimeout(function(){
-					$('#contact-send-button-done').addClass('hidden');
-					$('#contact-send-button').removeClass('hidden');
-					$('#contact-form').trigger("reset");
-					$('#contact-overlay').addClass('hidden');
-					$('body').removeClass('no-overflow');
-				}, 4000);
-			} else if (this.readyState === XMLHttpRequest.DONE) {
-				alert("S'ha produït un error en enviar el missatge. Torna-ho a provar.");
-				$('#contact-send-button-loading').addClass('hidden');
-				$('#contact-send-button').removeClass('hidden');
-			}
-		}
-		xhr.send("address="+encodeURIComponent($('#contact_address').val())+"&message="+encodeURIComponent($('#contact_message').val())+"&magic=1714");
-	});
-	$('.select-genre').click(function(){
-		$('.select-genre').removeClass('select-genre-selected');
-		$(this).addClass('select-genre-selected');
-		var genreId = $(this).attr("data-genre-id");
-		if (genreId==-1) {
-			$('.catalog > div').removeClass('hidden');
-		} else {
-			$('.catalog > div').addClass('hidden');
-			$('.catalog > div.genre-'+genreId).removeClass('hidden');
-		}
-	});
-
-	var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
-	var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
-
-	$('.carousel').slick({
-		speed: 300,
-		infinite: false,
-		slidesToShow: size,
-		slidesToScroll: size,
-		variableWidth: true
-	});
-
-	$('.genres-carousel').slick({
-		speed: 300,
-		infinite: false,
-		slidesToShow: genresSize,
-		slidesToScroll: genresSize,
-		variableWidth: true
-	});
-
-	if ($('.synopsis-content').height()>=154) {
-		$(".show-more").removeClass('hidden');
-		$('.synopsis-content').addClass('expandable-content-hidden');
-		$(".show-more a").on("click", function() {
-			var linkText = $(this).text();    
-
-			if(linkText === "Mostra'n més..."){
-				linkText = "Mostra'n menys";
-				$(".synopsis-content").switchClass("expandable-content-hidden", "expandable-content-shown", 400);
+		$(".viewed-indicator").click(function(){
+			if ($(this).hasClass('not-viewed')){
+				markLinkAsViewed($(this).attr('data-link-id'));
 			} else {
-				linkText = "Mostra'n més...";
-				$(".synopsis-content").switchClass("expandable-content-shown", "expandable-content-hidden", 400);
-			};
-
-			$(this).text(linkText);
+				markLinkAsNotViewed($(this).attr('data-link-id'));
+			}
 		});
-	}
+		$(".contact-link").click(function(){
+			showContactScreen('generic');
+		});
+		$(".version-lost").click(function(){
+			showContactScreen('version_lost');
+		});
+		$(".version-missing-links-link").click(function(){
+			showContactScreen('version_lost');
+		});
+		$(".version_tab").click(function(){
+			$(".version_tab").each(function(){
+				$(this).removeClass("version_tab_selected");
+			});
+			$(".version_content").each(function(){
+				$(this).addClass("hidden");
+			});
+			$(this).addClass("version_tab_selected");
+			$("#version_content_"+$(this).attr('data-version-id')).removeClass("hidden");
+		});
+		$('#search_form').submit(function(){
+			if ($('#search_query').val()!=''){
+				window.location.href='/cerca/' + encodeURIComponent(encodeURIComponent($('#search_query').val()));
+			}
+			else{
+				window.location.href='/';
+			}
+			return false;
+		});
+		$('#search_button').click(function(){
+			$('#search_form').submit();
+		});
+		$('#options-button').click(function(){
+			$('body').addClass('no-overflow');
+			$('#options-overlay').removeClass('hidden');
+			$('#options-tooltip').attr('style','');
+			Cookies.set('tooltip_closed', '1', cookieOptions);
+		});
+		$('#options-tooltip-close').click(function(){
+			$('#options-tooltip').attr('style','');
+			Cookies.set('tooltip_closed', '1', cookieOptions);
+		});
+		$('#options-cancel-button').click(function(){
+			$('#options-form').trigger("reset");
+			$('#options-overlay').addClass('hidden');
+			$('body').removeClass('no-overflow');
+		});
+		$('#options-save-button').click(function(){
+			Cookies.set('hide_missing', $('#hide_missing').prop('checked') ? '0' : '1', cookieOptions);
+			Cookies.set('show_cancelled', $('#show_cancelled').prop('checked') ? '1' : '0', cookieOptions);
+			Cookies.set('show_hentai', $('#show_hentai').prop('checked') ? '1' : '0', cookieOptions);
+			var hiddenFansubs = $('#options-fansubs input:not(:checked)');
+			var values = [];
+			
+			for (var i=0;i<hiddenFansubs.length;i++){
+				values.push(hiddenFansubs[i].value);
+			}
+			Cookies.set('hidden_fansubs', values.join(','), cookieOptions);
 
-	$(".tooltip-container").click(function () {
-		var $title = $(this).find(".tooltip");
-		if (!$title.hasClass("hidden")) {
-			$title.addClass("hidden");
-		} else {
-			$(".tooltip").addClass("hidden");
-			$title.removeClass("hidden");
+			location.reload();
+		});
+		$('#options-select-all').click(function(){
+			$('[id^=show_fansub_]').each(function(){
+				$(this).prop('checked',true);
+			});
+		});
+		$('#options-unselect-all').click(function(){
+			$('[id^=show_fansub_]').each(function(){
+				$(this).prop('checked',false);
+			});
+		});
+		$('#contact-cancel-button').click(function(){
+			$('#contact-form').trigger("reset");
+			$('#contact-overlay').addClass('hidden');
+			$('body').removeClass('no-overflow');
+		});
+		$('#contact-send-button').click(function(){
+			if (!/\S+@\S+\.\S+/.test($('#contact_address').val())) {
+				alert('Introdueix una adreça de resposta vàlida.');
+				return;
+			}
+			if ($('#contact_message').val()=='') {
+				alert('Introdueix un missatge.');
+				return;
+			}
+			$('#contact-send-button').addClass('hidden');
+			$('#contact-send-button-loading').removeClass('hidden');
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", '/contact.php', true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.onreadystatechange = function() {
+				if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+					$('#contact-send-button-loading').addClass('hidden');
+					$('#contact-send-button-done').removeClass('hidden');
+					setTimeout(function(){
+						$('#contact-send-button-done').addClass('hidden');
+						$('#contact-send-button').removeClass('hidden');
+						$('#contact-form').trigger("reset");
+						$('#contact-overlay').addClass('hidden');
+						$('body').removeClass('no-overflow');
+					}, 4000);
+				} else if (this.readyState === XMLHttpRequest.DONE) {
+					alert("S'ha produït un error en enviar el missatge. Torna-ho a provar.");
+					$('#contact-send-button-loading').addClass('hidden');
+					$('#contact-send-button').removeClass('hidden');
+				}
+			}
+			xhr.send("address="+encodeURIComponent($('#contact_address').val())+"&message="+encodeURIComponent($('#contact_message').val())+"&magic=1714");
+		});
+		$('.select-genre').click(function(){
+			$('.select-genre').removeClass('select-genre-selected');
+			$(this).addClass('select-genre-selected');
+			var genreId = $(this).attr("data-genre-id");
+			if (genreId==-1) {
+				$('.catalog > div').removeClass('hidden');
+			} else {
+				$('.catalog > div').addClass('hidden');
+				$('.catalog > div.genre-'+genreId).removeClass('hidden');
+			}
+		});
+
+		var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
+		var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
+
+		$('.carousel').slick({
+			speed: 300,
+			infinite: false,
+			slidesToShow: size,
+			slidesToScroll: size,
+			variableWidth: true
+		});
+
+		$('.genres-carousel').slick({
+			speed: 300,
+			infinite: false,
+			slidesToShow: genresSize,
+			slidesToScroll: genresSize,
+			variableWidth: true
+		});
+
+		if ($('.synopsis-content').height()>=154) {
+			$(".show-more").removeClass('hidden');
+			$('.synopsis-content').addClass('expandable-content-hidden');
+			$(".show-more a").on("click", function() {
+				var linkText = $(this).text();    
+
+				if(linkText === "Mostra'n més..."){
+					linkText = "Mostra'n menys";
+					$(".synopsis-content").switchClass("expandable-content-hidden", "expandable-content-shown", 400);
+				} else {
+					linkText = "Mostra'n més...";
+					$(".synopsis-content").switchClass("expandable-content-shown", "expandable-content-hidden", 400);
+				};
+
+				$(this).text(linkText);
+			});
 		}
-	});
 
-	//Clumsy detection for mobile OS... They break tooltips due to bad mouseenter/leave handling
-	if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-		$(".tooltip-container").mouseenter(function () {
+		$(".tooltip-container").click(function () {
 			var $title = $(this).find(".tooltip");
-			$title.removeClass("hidden");
+			if (!$title.hasClass("hidden")) {
+				$title.addClass("hidden");
+			} else {
+				$(".tooltip").addClass("hidden");
+				$title.removeClass("hidden");
+			}
 		});
-		$(".tooltip-container").mouseleave(function () {
-			var $title = $(this).find(".tooltip");
-			$title.addClass("hidden");
-		});
-	}
 
-	$(".tooltip").css('max-width', $(window).width()/2);
-
-	$(".tooltip").each(function (){
-		initTooltip($(this), $(this).parent());
-	});
-
-	if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
-		$("#options-tooltip").fadeIn("slow");
-	}
-
-	$(window).resize(function() {
-		if ($(window).width()!=lastWindowWidth) {
-			var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
-			var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
-
-			$('.carousel').slick('unslick');
-			$('.carousel').slick({
-				speed: 300,
-				infinite: false,
-				slidesToShow: size,
-				slidesToScroll: size,
-				variableWidth: true
+		//Clumsy detection for mobile OS... They break tooltips due to bad mouseenter/leave handling
+		if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+			$(".tooltip-container").mouseenter(function () {
+				var $title = $(this).find(".tooltip");
+				$title.removeClass("hidden");
 			});
-
-			$('.genres-carousel').slick('unslick');
-			$('.genres-carousel').slick({
-				speed: 300,
-				infinite: false,
-				slidesToShow: genresSize,
-				slidesToScroll: genresSize,
-				variableWidth: true
-			});
-
-			lastWindowWidth=$(window).width();
-
-			$(".tooltip").css('max-width', $(window).width()/2);
-
-			$(".tooltip").each(function (){
-				initTooltip($(this), $(this).parent());
+			$(".tooltip-container").mouseleave(function () {
+				var $title = $(this).find(".tooltip");
+				$title.addClass("hidden");
 			});
 		}
-	});
+
+		$(".tooltip").css('max-width', $(window).width()/2);
+
+		$(".tooltip").each(function (){
+			initTooltip($(this), $(this).parent());
+		});
+
+		if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
+			$("#options-tooltip").fadeIn("slow");
+		}
+
+		$(window).resize(function() {
+			if ($(window).width()!=lastWindowWidth) {
+				var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
+				var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
+
+				$('.carousel').slick('unslick');
+				$('.carousel').slick({
+					speed: 300,
+					infinite: false,
+					slidesToShow: size,
+					slidesToScroll: size,
+					variableWidth: true
+				});
+
+				$('.genres-carousel').slick('unslick');
+				$('.genres-carousel').slick({
+					speed: 300,
+					infinite: false,
+					slidesToShow: genresSize,
+					slidesToScroll: genresSize,
+					variableWidth: true
+				});
+
+				lastWindowWidth=$(window).width();
+
+				$(".tooltip").css('max-width', $(window).width()/2);
+
+				$(".tooltip").each(function (){
+					initTooltip($(this), $(this).parent());
+				});
+			}
+		});
+
+		lastWindowWidth=$(window).width();
+	} else {
+		$('body').addClass('no-overflow');
+		$('#overlay-content').html(getSource($('#data-method').val(), atob($('#data-url').val())));
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", '/counter.php?link_id='+$('#data-link-id').val()+"&action=open", true);
+		xmlHttp.send(null);
+		currentLinkId=$('#data-link-id').val();
+		currentStartTime=Math.floor(new Date().getTime()/1000);
+		markLinkAsViewed($('#data-link-id').val());
+	}
 
 	$(window).on('unload', function() {
 		sendBeaconViewEnd();
 	});
-
-	lastWindowWidth=$(window).width();
 });

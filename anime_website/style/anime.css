@@ -463,12 +463,30 @@ a:hover {
 	object-fit: cover;
 }
 
-.thumbnail .title {
-	width: 100%;
-	background-color: rgba(0,0,128,0.8);
+.thumbnail .seasons {
+	background-color: rgba(0,0,100,0.7);
 	color: white;
+	font-weight: bold;
+	font-size: 0.8em;
+	text-align: right;
+	margin-left: auto;
+	width: fit-content;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+}
+
+.thumbnail .infoholder {
+	width: 100%;
 	position: absolute;
 	bottom: 0;
+	text-align: center;
+}
+
+.thumbnail .title {
+	width: 100%;
+	background-color: rgba(0,0,100,0.8);
+	color: white;
 	font-weight: bold;
 	text-overflow: ellipsis;
 	font-size: 0.9em;
@@ -479,10 +497,11 @@ a:hover {
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	line-height: 1.2em;
 }
 
 .thumbnail .fansub {
-	background-color: rgba(30, 105, 30, 0.8);
+	background-color: rgba(30, 105, 30, 0.7);
 	color: white;
 	position: absolute;
 	top: 0;
@@ -496,6 +515,9 @@ a:hover {
 	white-space: nowrap;
 	overflow: hidden;
 	max-width: 90%;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
 }
 
 .status-indicator-tab {
