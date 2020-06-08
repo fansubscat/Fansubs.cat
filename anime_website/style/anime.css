@@ -852,7 +852,8 @@ a:hover {
 }
 
 .version {
-	margin-left: 1em;
+	margin-left: 2.5em;
+	text-indent: -1em;
 }
 
 .video-player {

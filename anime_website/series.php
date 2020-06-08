@@ -172,6 +172,7 @@ if (!empty($series['tadaima_id'])) {
 							<div class="section-content">
 								<div class="synopsis-content">
 									<?php echo $synopsis; ?>
+
 								</div>
 								<div class="show-more hidden">
 									<a>Mostra'n més...</a>
@@ -278,7 +279,8 @@ if ($count==0) {
 							<div class="section">
 								<h2 class="section-title"><?php echo count($fansubs)>1 ? 'Fansubs' : 'Fansub'; ?></h2>
 								<div class="section-content">
-									Aquesta obra ha estat subtitulada per <?php echo $conjunctioned_names; ?>. <?php echo $any_active ? (count($fansubs)>1 ? $plurals['active'][1] : $plurals['active'][0]) : (count($fansubs)>1 ? $plurals['inactive'][1] : ($fansubs[0]['name']=='Fansub independent' ? '' : $plurals['inactive'][0])); ?>
+									Aquesta obra ha estat subtitulada per <?php echo $conjunctioned_names; ?>. <?php echo $any_active ? (count($fansubs)>1 ? $plurals['active'][1] : $plurals['active'][0]) : (count($fansubs)>1 ? $plurals['inactive'][1] : ($fansubs[0]['name']=='Fansub independent' ? '' : $plurals['inactive'][0]));?>
+
 								</div>
 <?php
 		if (!empty($fansub_buttons)) {
@@ -292,12 +294,14 @@ if ($count==0) {
 ?>
 								<div class="section-content padding-top">
 									<?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
+
 								</div>
 <?php
 		} else if ($version['status']==5) {
 ?>
 								<div class="section-content padding-top">
 									<?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
+
 								</div>
 <?php
 		}
@@ -428,11 +432,13 @@ if (mysqli_num_rows($resultrs)>0) {
 		if (!$first) {
 			echo ", ";
 		} else {
+			echo "\t\t\t\t\t\t\t\t";
 			$first = FALSE;
 		}
 		echo '<a href="/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
 	}
 ?>
+
 							</div>
 						</div>
 <?php

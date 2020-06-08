@@ -64,13 +64,13 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 
 for ($i=0;$i<count($sections);$i++){
 	$result = query($queries[$i]);
-?>	
-					<div class="section">
-						<h2 class="section-title"><?php echo $sections[$i]; ?></h2>
+?>
+				<div class="section">
+					<h2 class="section-title"><?php echo $sections[$i]; ?></h2>
 <?php
 	if (mysqli_num_rows($result)==0){
 ?>
-						<div class="section-content">No s'ha trobat cap element.</div>
+					<div class="section-content">No s'ha trobat cap element.</div>
 <?php
 	} else {
 		if (!$carousel[$i]) {
@@ -90,31 +90,31 @@ for ($i=0;$i<count($sections);$i++){
 			mysqli_data_seek($result, 0);
 
 ?>
-						<div class="section-content genres-carousel">
-							<div>
-								<div class="select-genre select-genre-selected" data-genre-id="-1">
-									<a>Mostra-ho tot</a>
-								</div>
+					<div class="section-content genres-carousel">
+						<div>
+							<div class="select-genre select-genre-selected" data-genre-id="-1">
+								<a>Mostra-ho tot</a>
 							</div>
+						</div>
 <?php
 			arsort($genres);
 			$resultg = query("SELECT g.id, g.name FROM genre g WHERE g.id IN (0".implode(',',array_keys($genres)).") ORDER BY FIELD(g.id,0".implode(',',array_keys($genres)).")");
 			while ($rowg = mysqli_fetch_assoc($resultg)) {
 ?>
-							<div>
-								<div class="select-genre" data-genre-id="<?php echo $rowg['id']; ?>">
-									<a><?php echo $rowg['name'].' ('.$genres[$rowg['id']].')'; ?></a>
-								</div>
+						<div>
+							<div class="select-genre" data-genre-id="<?php echo $rowg['id']; ?>">
+								<a><?php echo $rowg['name'].' ('.$genres[$rowg['id']].')'; ?></a>
 							</div>
+						</div>
 <?php
 			}
 			mysqli_free_result($resultg);
 ?>
-						</div>
+					</div>
 <?php
 		}
 ?>
-						<div class="section-content<?php echo $carousel[$i] ? ' carousel' : ' flex wrappable catalog'; ?>">
+					<div class="section-content<?php echo $carousel[$i] ? ' carousel' : ' flex wrappable catalog'; ?>">
 <?php
 		while ($row = mysqli_fetch_assoc($result)){
 			if (!empty($row['genres']) && !$carousel[$i]) {
@@ -123,36 +123,36 @@ for ($i=0;$i<count($sections);$i++){
 				$genres = "";
 			}
 ?>
-							<div class="status-<?php echo get_status($row['best_status']); ?><?php echo $genres; ?>">
-								<a class="thumbnail" href="/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?>">
-									<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
-									<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
-									<div class="infoholder">
+						<div class="status-<?php echo get_status($row['best_status']); ?><?php echo $genres; ?>">
+							<a class="thumbnail" href="/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?>">
+								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
+								<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
+								<div class="infoholder">
 <?php
 			if ($row['type']=='movie' && $row['episodes']>1) {
 ?>
-										<div class="seasons"><?php echo $row['episodes']; ?> films</div>
+									<div class="seasons"><?php echo $row['episodes']; ?> films</div>
 <?php
 			} else if ($row['seasons']>1 && $row['show_seasons']==1) {
 ?>
-										<div class="seasons"><?php echo $row['seasons']; ?> temporades</div>
+									<div class="seasons"><?php echo $row['seasons']; ?> temporades</div>
 <?php
 			}
 ?>
-										<div class="title"><?php echo $row['name']; ?></div>
-									</div>
-									<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $row['fansub_name']; ?></div>
-								</a>
-							</div>
+									<div class="title"><?php echo $row['name']; ?></div>
+								</div>
+								<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $row['fansub_name']; ?></div>
+							</a>
+						</div>
 <?php
 		}
 ?>
-						</div>
+					</div>
 <?php
 	}
 	mysqli_free_result($result);
 ?>
-					</div>
+				</div>
 <?php
 }
 

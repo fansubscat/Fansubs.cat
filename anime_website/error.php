@@ -4,21 +4,23 @@ require_once("db.inc.php");
 $header_page_title='Error';
 $header_tab='error';
 
-http_response_code(!empty($_GET['code']) ? $_GET['code'] : 404);
+$code = !empty($_GET['code']) ? $_GET['code'] : 404;
+
+http_response_code($code);
 
 require_once('header.inc.php');
-?>	
+?>
 				<div class="section" style="text-align: center;">
-					<h2 class="section-title">S'ha produït un error</h2>
+					<h2 class="section-title"><?php echo $code==403 ? "Meeec! Permís denegat!" : "Meeec! La pàgina no existeix!"; ?></h2>
 					<div class="section-content">
 <?php
-if (isset($_GET['code']) && $_GET['code']==403){
+if ($code==403){
 ?>
-						<strong>No tens permisos per a accedir a aquesta adreça!</strong><br /><br />Et recomanem que tornis a la pàgina principal i provis de trobar el que cerques allà!
+						<strong>No tens permís per a accedir a aquesta adreça.</strong><br /><br />Et recomanem que tornis a la <a href="/">pàgina principal</a> i provis de trobar el que cerques allà!
 <?php
 } else {
 ?>
-						<strong>La pàgina no existeix!</strong><br /><br />És possible que hagis seguit un enllaç antic. Et recomanem que tornis a la pàgina principal i provis de trobar el que cerques allà!
+						<strong>És possible que hagis seguit un enllaç antic o que l'anime ja no estigui disponible.</strong><br /><br />Et recomanem que tornis a la <a href="/">pàgina principal</a> i provis de trobar el que cerques allà!
 <?php
 }
 ?>

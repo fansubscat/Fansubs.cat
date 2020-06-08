@@ -13,12 +13,12 @@ if (isset($failed)) {
 <!DOCTYPE html>
 <html lang="ca">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Fansubs.cat - Anime</title>
-		<link rel="stylesheet" media="screen" type="text/css" href="/style/anime.css" />
+		<link rel="stylesheet" href="/style/anime.css" media="screen" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<script src="/js/js.cookie-2.1.2.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="/js/common.js"></script>
 	</head>
 	<body>

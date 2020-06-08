@@ -180,7 +180,10 @@ function print_extra($row,$version_id){
 function internal_print_episode($episode_title, $result) {
 	if (mysqli_num_rows($result)==0){
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="episode episode-unavailable">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title"><span class="fa fa-fw fa-times-circle icon-play"></span>'.$episode_title.' <span class="version-unavailable" title="Aquest capítol no està disponible">No disponible</span></div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-times-circle icon-play"></span>'.$episode_title."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-unavailable" title="Aquest capítol no està disponible">No disponible</span>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
 		echo "\t\t\t\t\t\t\t\t\t</div>\n";
 	} else if (mysqli_num_rows($result)>1) {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="episode">'."\n";
@@ -202,7 +205,8 @@ function internal_print_episode($episode_title, $result) {
 				echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
 			} else { //Empty link -> lost link
 				echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-unavailable">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-times-circle icon-play"></span>Reprodueix <span class="version-lost" title="Aquest capítol està subtitulat, però no està disponible enlloc. Si ens pots ajudar a trobar-lo, prem aquí i envia\'ns un comentari!">Capítol perdut: ajuda\'ns!</span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-times-circle icon-play"></span>Reprodueix'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-lost" title="Aquest capítol està subtitulat, però no està disponible enlloc. Si ens pots ajudar a trobar-lo, prem aquí i envia\'ns un comentari!">Capítol perdut: ajuda\'ns!</span>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
 			}
 		}
@@ -231,7 +235,10 @@ function internal_print_episode($episode_title, $result) {
 			echo "\t\t\t\t\t\t\t\t\t</div>\n";
 		} else { //Empty link -> lost link
 			echo "\t\t\t\t\t\t\t\t\t".'<div class="episode episode-unavailable">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title"><span class="fa fa-fw fa-times-circle icon-play"></span>'.$episode_title.' <span class="version-lost" title="Aquest capítol està subtitulat, però no està disponible enlloc. Si ens pots ajudar a trobar-lo, prem aquí i envia\'ns un comentari!">Capítol perdut: ajuda\'ns!</span></div>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-times-circle icon-play"></span>'.$episode_title."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-lost" title="Aquest capítol està subtitulat, però no està disponible enlloc. Si ens pots ajudar a trobar-lo, prem aquí i envia\'ns un comentari!">Capítol perdut: ajuda\'ns!</span>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
 			echo "\t\t\t\t\t\t\t\t\t</div>\n";
 		}
 	}

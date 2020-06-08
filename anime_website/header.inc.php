@@ -10,10 +10,9 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 <!DOCTYPE html>
 <html lang="ca">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#000000" />
-
 <?php
 if (!empty($header_social)) {
 ?>
@@ -25,14 +24,13 @@ if (!empty($header_social)) {
 <?php
 }
 ?>
-
 		<title><?php echo !empty($header_page_title) ? $header_page_title.' - Fansubs.cat - Anime' : 'Fansubs.cat - Anime'; ?></title>
 		<link rel="shortcut icon" href="/favicon.png" />
-		<link rel="stylesheet" href="/style/anime.css" media="screen" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+		<link rel="stylesheet" href="/style/anime.css" media="screen" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
@@ -93,11 +91,11 @@ mysqli_free_result($resultf);
 					<h2 class="section-title">Envia'ns un comentari</h2>
 					<div id="contact-explanation"></div>
 					<div>
-					  	<label for="contact_address">Adreça electrònica <small>(et respondrem aquí)</small></label><br>
+					  	<label for="contact_address">Adreça electrònica <small>(et respondrem aquí)</small></label><br />
 						<input id="contact_address" name="email" required>
 					</div>
 					<div style="margin-top: 0.5em;">
-					  	<label for="contact_address">Missatge <small>(digues qui ets i per què ens escrius)</small></label><br>
+					  	<label for="contact_address">Missatge <small>(digues qui ets i per què ens escrius)</small></label><br />
 						<textarea id="contact_message" name="message" required></textarea>
 					</div>
 				</form>
