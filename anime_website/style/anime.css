@@ -812,12 +812,14 @@ a:hover {
 }
 
 .icon-play {
-	padding-right: 0.4em;
+	margin-right: -0.3em;
 }
 
 .episode-title {
 	font-weight: bold;
 	margin-bottom: 0.4em;
+	margin-left: 1.5em;
+	text-indent: -1em;
 }
 
 .episode {
@@ -858,6 +860,10 @@ a:hover {
 	color: #E0E0E0;
 }
 
+.video-info {
+	text-indent: 0;
+}
+
 .nowrap {	
 	white-space: nowrap;
 }
@@ -892,7 +898,7 @@ a:hover {
 }
 
 .version-resolution-4k {
-	margin-left: 0.4em;
+	margin-left: 0.2em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
@@ -903,7 +909,7 @@ a:hover {
 }
 
 .version-resolution-hd1080 {
-	margin-left: 0.4em;
+	margin-left: 0.2em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
@@ -914,7 +920,7 @@ a:hover {
 }
 
 .version-resolution-hd720 {
-	margin-left: 0.4em;
+	margin-left: 0.2em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
@@ -925,7 +931,7 @@ a:hover {
 }
 
 .version-resolution-sd {
-	margin-left: 0.4em;
+	margin-left: 0.2em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
@@ -949,7 +955,7 @@ a:hover {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.4em;
+	margin-left: 0.2em;
 	padding: 0.1em 0.4em;
 	background: rgb(80, 80, 80);
 	white-space: nowrap;
@@ -961,7 +967,7 @@ a:hover {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.4em;
+	margin-left: 0.2em;
 	padding: 0.1em 0.4em;
 	background: rgb(80, 80, 80);
 	white-space: nowrap;

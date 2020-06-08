@@ -36,7 +36,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 								if ($link['url']!=$real_link){
 									query("UPDATE link SET url='".escape($real_link)."' WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
 									log_action("cron-update-link","S'ha actualitzat automàticament l'enllaç del fitxer '$filename' (id. d'enllaç: ".$link['id'].", id. de versió: ".$folder['version_id'].")");
-									query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='Cron' WHERE id=".$folder['version_id']);
+									//We do not update the links_updated field because we don't want the series to show in "last updated"
 								}
 							} else {
 								$resultv = query("SELECT * FROM version WHERE id=".$folder['version_id']);
@@ -47,7 +47,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 									query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='Cron' WHERE id=".$folder['version_id']);
 									log_action("cron-create-link","S'ha inserit automàticament l'enllaç del fitxer '$filename' (id. de versió: ".$folder['version_id'].") i s'ha actualitzat la data de modificació de la versió");
 
-									//Now check if we need to upgrade in progess -> complete
+									//Now check if we need to upgrade in progress -> complete
 									$results = query("SELECT * FROM series WHERE id=".escape($folder['series_id']));
 									$resultl = query("SELECT DISTINCT l.episode_id FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.version_id=".$folder['version_id']." AND l.episode_id IS NOT NULL AND e.number IS NOT NULL");
 

@@ -194,16 +194,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			//Views will be removed too because their FK is set to cascade
 			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NOT NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
-			//We do not count removing links as updating them, only insertions and real updated
+			//We do not count removing links as updating them, only insertions and real updates
 			foreach ($links as $link) {
 				if ($link['id']==-1) {
 					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$data['id'].",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].")");
-					query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+					if (empty($_POST['do_not_count_as_update'])) {
+						query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+					}
 				} else {
 					$resultcr = query("SELECT * FROM link WHERE id=".$link['id']);
 					if ($current_link = mysqli_fetch_assoc($resultcr)) {
 						query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",comments=".$link['comments']." WHERE id=".$link['id']);
-						if (("'".escape($current_link['url'])."'")!=$link['url']) {
+						if (empty($_POST['do_not_count_as_update']) && (empty($current_link['url']) ? "NULL" : "'".escape($current_link['url'])."'")!=$link['url']) {
 							query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 						}
 					}
@@ -758,6 +760,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group text-center pt-2">
+<?php
+	if (!empty($row['id'])) {
+?>
+							<div class="form-check form-check-inline mb-2">
+								<input class="form-check-input" type="checkbox" name="do_not_count_as_update" id="form-do_not_count_as_update" value="1">
+								<label class="form-check-label" for="form-do_not_count_as_update">No moguis a "Darreres actualitzacions"</label>
+							</div>
+							<br>
+<?php
+	}
+?>
 							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
 						</div>
 					</form>

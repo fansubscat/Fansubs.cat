@@ -569,7 +569,7 @@ function verifyLinks(i) {
 		$('#link-verifier-loading').removeClass('d-none');
 	}
 	
-	var matchesMega = links[i].link.match(/https:\/\/mega\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/);
+	var matchesMega = links[i].link.match(/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/);
 	var matchesGoogleDrive = links[i].link.match(/https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)?([^\/]*)(?:preview|view)?/);
 	if (matchesMega && matchesMega.length>1 && matchesMega[1]!=''){
 		//MEGA link

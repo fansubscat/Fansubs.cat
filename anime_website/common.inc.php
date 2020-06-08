@@ -190,7 +190,7 @@ function internal_print_episode($episode_title, $result) {
 			if (!empty($vrow['url'])) {
 				echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Reprodueix').'</a> '."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap video-info">'."\n";
 				$extra_info="Resolució del vídeo: ".$vrow['resolution']."\nTipus de streaming: ".get_provider($vrow['url']);
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<div class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</div></span>'."\n";
 				if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
@@ -215,7 +215,7 @@ function internal_print_episode($episode_title, $result) {
 			echo "\t\t\t\t\t\t\t\t\t".'<div class="episode">'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap">'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap video-info">'."\n";
 			$extra_info="Resolució del vídeo: ".$vrow['resolution']."\nTipus de streaming: ".get_provider($vrow['url']);
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<div class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</div></span>'."\n";
 			if (!empty($vrow['comments'])){
