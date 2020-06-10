@@ -1,6 +1,8 @@
 <?php
 require_once("libs/simple_html_dom.php");
+require_once("libs/codebird.php");
 require_once('common.inc.php');
+require_once('config.inc.php');
 require_once("vendor/autoload.php");
 
 use LanguageDetection\Language;
@@ -212,9 +214,14 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		//In case of a decrement, we won't be able to delete news, but this is unlikely...
 
 		//Hello 2016, we are now in the future 2018. We will send it via FCM so the Android app receives it ;)
+		//Hello 2018, we are now in the future 2020. We will send some tweets too... ;)
 		global $firebase_api_key;
+		global $twitter_consumer_key;
+		global $twitter_consumer_secret;
+		global $twitter_access_token;
+		global $twitter_access_token_secret;
 
-		$push_result = mysqli_query($db_connection, "SELECT n.title, n.fansub_id, f.name FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fetcher_id=$fetcher_id ORDER BY date DESC LIMIT $increment") or die(mysqli_error($db_connection));
+		$push_result = mysqli_query($db_connection, "SELECT n.title, n.fansub_id, n.url, f.name, f.twitter FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fetcher_id=$fetcher_id ORDER BY date DESC LIMIT $increment") or die(mysqli_error($db_connection));
 		while ($push_row = mysqli_fetch_assoc($push_result)){
 			$notification = array(
 				'to' => '/topics/all',
@@ -235,6 +242,18 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 			curl_exec($curl) or die('FCM Send Error: ' . curl_error($curl));
 			//Close request
 			curl_close($curl);
+
+			\Codebird\Codebird::setConsumerKey($twitter_consumer_key, $twitter_consumer_secret);
+			$cb = \Codebird\Codebird::getInstance();
+			$cb->setToken($twitter_access_token, $twitter_access_token_secret);
+
+			$status = "Nova notícia de ".(!empty($push_row['twitter']) ? $push_row['twitter'] : $push_row['name']).": «".$push_row['title']."»";
+			$url = (!empty($push_row['url']) ? $push_row['url'] : 'https://www.fansubs.cat/');
+
+			$params = array(
+				'status' => 'status' => (strlen($status)>254 ? substr($status, 0, 250)."...»" : $status)."\n".$url
+			);
+			$cb->statuses_update($params);
 		}
 
 		mysqli_free_result($push_result);

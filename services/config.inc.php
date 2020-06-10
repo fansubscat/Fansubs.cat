@@ -11,6 +11,12 @@ $facebook_api_token='YOUR_APP_TOKEN_HERE';
 //Firebase Cloud Messaging key
 $firebase_api_key='YOUR_FIREBASE_TOKEN_HERE';
 
+//Twitter keys
+$twitter_consumer_key='YOUR_TWITTER_KEY_HERE';
+$twitter_consumer_secret='YOUR_TWITTER_SECRET_HERE';
+$twitter_access_token='YOUR_TWITTER_ACCESS_TOKEN_HERE';
+$twitter_access_token_secret='YOUR_TWITTER_ACCESS_SECRET_HERE';
+
 //Files
 $lock_file='/tmp/fansubscat_fetch_lock';
 

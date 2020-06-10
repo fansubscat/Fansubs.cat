@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `fansubs` (
   `id` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
+  `twitter` varchar(255) DEFAULT NULL,
   `logo_image` varchar(255) DEFAULT NULL,
   `favicon_image` varchar(255) DEFAULT NULL,
   `ping_token` varchar(255) DEFAULT NULL,
