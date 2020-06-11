@@ -36,6 +36,14 @@ function parse_description($description){
 	return preg_replace('/(?:<br\s*\/?>\s*)+$/', '', preg_replace('/^(?:<br\s*\/?>\s*)+/', '', trim($description)));
 }
 
+function get_prepositioned_text($text, $twitter=FALSE){
+	$first = substr($text, $twitter ? 1 : 0, 1);
+	if ($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U' || $first == 'a' || $first == 'e' || $first == 'i' || $first == 'o' || $first == 'u'){
+		return "d'$text";
+	}
+	return "de $text";
+}
+
 //Gets the first image in the news content that is not a SVG, if available.
 //Then copies it to our website directory
 function fetch_and_parse_image($fansub_id, $url, $description){
@@ -247,11 +255,11 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 			$cb = \Codebird\Codebird::getInstance();
 			$cb->setToken($twitter_access_token, $twitter_access_token_secret);
 
-			$status = "Nova notícia de ".(!empty($push_row['twitter']) ? $push_row['twitter'] : $push_row['name']).": «".$push_row['title']."»";
+			$status = "Nova notícia ".(!empty($push_row['twitter']) ? get_prepositioned_text($push_row['twitter'],TRUE) : get_prepositioned_text($push_row['name'])).": «".$push_row['title']."»";
 			$url = (!empty($push_row['url']) ? $push_row['url'] : 'https://www.fansubs.cat/');
 
 			$params = array(
-				'status' => 'status' => (strlen($status)>254 ? substr($status, 0, 250)."...»" : $status)."\n".$url
+				'status' => (strlen($status)>254 ? substr($status, 0, 250)."...»" : $status)."\n".$url
 			);
 			$cb->statuses_update($params);
 		}
