@@ -441,7 +441,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$where = '';
 		}
 
-		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.name ASC");
+		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type ASC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
 											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Google Drive').': '.htmlspecialchars($arow['name']); ?></option>
@@ -490,7 +490,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$where = '';
 		}
 
-		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.name ASC");
+		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type ASC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
 															<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Google Drive').': '.htmlspecialchars($arow['name']); ?></option>
