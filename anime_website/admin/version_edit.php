@@ -415,7 +415,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="form-folders-list">Carpetes de MEGA <small class="text-muted">(per a l'obtenció automàtica d'enllaços)</small></label>
+							<label for="form-folders-list">Carpetes d'emmagatzematge <small class="text-muted">(per a l'obtenció automàtica d'enllaços)</small></label>
 							<div class="container" id="form-folders-list">
 <?php
 
