@@ -14,12 +14,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['fansub_id']) && is_numeric($_POST['fansub_id'])) {
 			$data['fansub_id']=escape($_POST['fansub_id']);
 		} else {
-			crash("Dades invàlides: manca fansub_id");
+			$data['fansub_id']='NULL';
 		}
 		if (!empty($_POST['name'])) {
 			$data['name']=escape($_POST['name']);
 		} else {
 			crash("Dades invàlides: manca name");
+		}
+		if (!empty($_POST['type'])) {
+			$data['type']=escape($_POST['type']);
+		} else {
+			crash("Dades invàlides: manca type");
 		}
 		if (!empty($_POST['session_id'])) {
 			$data['session_id']=escape($_POST['session_id']);
@@ -29,11 +34,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-account", "S'ha actualitzat el compte amb nom '".$data['name']."' (id. de compte: ".$data['id'].")");
-			query("UPDATE account SET name='".$data['name']."',session_id='".$data['session_id']."',fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE account SET name='".$data['name']."',type='".$data['type']."',session_id='".$data['session_id']."',fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
 		else {
 			log_action("create-account", "S'ha creat un compte amb nom '".$data['name']."'");
-			query("INSERT INTO account (name,session_id,fansub_id,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['session_id']."',".$data['fansub_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO account (name,type,session_id,fansub_id,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['type']."','".$data['session_id']."',".$data['fansub_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 
 		$_SESSION['message']="S'han desat les dades correctament.";
@@ -62,13 +67,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-session_id" class="mandatory">Identificador de sessió</label>
+						<label for="form-type" class="mandatory">Tipus</label>
+						<select name="type" class="form-control" id="form-type" required>
+							<option value="">- Selecciona -</option>
+							<option value="googledrive"<?php echo $row['type']=='googledrive' ? " selected" : ""; ?>>Google Drive</option>
+							<option value="mega"<?php echo $row['type']=='mega' ? " selected" : ""; ?>>MEGA</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="form-session_id" class="mandatory">Id. de sessió (MEGA) / Id. d'unitat compartida (Google Drive)</label>
 						<input class="form-control" name="session_id" id="form-session_id" required maxlength="200" value="<?php echo htmlspecialchars($row['session_id']); ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-fansub_id" class="mandatory">Fansub</label>
-						<select name="fansub_id" class="form-control" id="form-fansub_id" required>
-							<option value="">- Selecciona -</option>
+						<label for="form-fansub_id">Fansub</label>
+						<select name="fansub_id" class="form-control" id="form-fansub_id">
+							<option value="">- Qualsevol fansub hi té accés -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {

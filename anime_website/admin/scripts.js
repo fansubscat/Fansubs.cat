@@ -844,7 +844,7 @@ $(document).ready(function() {
 		}
 
 		var xmlhttp = new XMLHttpRequest();
-		var url = "fetch_mega_files.php?series_id="+$('[name="series_id"]').val()+"&account_ids[]="+account_ids.join("&account_ids[]=")+"&folders[]="+folders.join("&folders[]=")+"&season_ids[]="+season_ids.join("&season_ids[]=");
+		var url = "fetch_storage_links.php?series_id="+$('[name="series_id"]').val()+"&account_ids[]="+account_ids.join("&account_ids[]=")+"&folders[]="+folders.join("&folders[]=")+"&season_ids[]="+season_ids.join("&season_ids[]=");
 
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {

@@ -436,7 +436,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<option value="">- Selecciona un compte -</option>
 <?php
 		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'];
+			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
 		} else {
 			$where = '';
 		}
@@ -444,7 +444,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-											<option value="<?php echo $arow['id']; ?>"><?php echo htmlspecialchars($arow['name']); ?></option>
+											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Google Drive').': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);
@@ -466,7 +466,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 25%;" class="mandatory">Compte</th>
-													<th class="mandatory">Carpeta</th>
+													<th class="mandatory">Carpeta (MEGA) / Id. de carpeta (Google Drive)</th>
 													<th style="width: 15%;">Temporada</th>
 													<th class="text-center" style="width: 10%;">Sincronitza</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -485,7 +485,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															<option value="">- Selecciona un compte -</option>
 <?php
 		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'];
+			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
 		} else {
 			$where = '';
 		}
@@ -493,7 +493,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-															<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($arow['name']); ?></option>
+															<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Google Drive').': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);

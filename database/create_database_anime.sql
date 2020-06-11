@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS `account` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fansub_id` int(11) NOT NULL,
+  `fansub_id` int(11) DEFAULT NULL,
   `name` varchar(200) NOT NULL,
   `session_id` varchar(200) NOT NULL,
+  `type` varchar(200) NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),

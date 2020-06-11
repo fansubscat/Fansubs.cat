@@ -29,6 +29,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<thead class="thead-dark">
 							<tr>
 								<th scope="col">Nom</th>
+								<th scope="col">Tipus</th>
 								<th scope="col">Fansub</th>
 								<th class="text-center" scope="col">Accions</th>
 							</tr>
@@ -36,7 +37,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<tbody>
 <?php
 	if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-		$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'];
+		$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
 	} else {
 		$where = '';
 	}
@@ -52,7 +53,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<tr>
 								<th scope="row"><?php echo htmlspecialchars($row['name']); ?></th>
-								<td class="align-middle"><?php echo htmlspecialchars($row['fansub_name']); ?></td>
+								<td class="align-middle"><?php echo $row['type']=='mega' ? 'MEGA' : 'Google Drive'; ?></th>
+								<td class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : '(Tots)'; ?></td>
 								<td class="align-middle text-center"><a href="account_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="account_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el compte '".$row['name']."'? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
