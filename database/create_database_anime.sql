@@ -1,5 +1,5 @@
-CREATE TABLE IF NOT EXISTS `account` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `account` (
+  `id` int(11) NOT NULL,
   `fansub_id` int(11) DEFAULT NULL,
   `name` varchar(200) NOT NULL,
   `session_id` varchar(200) NOT NULL,
@@ -7,41 +7,34 @@ CREATE TABLE IF NOT EXISTS `account` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_by` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `account_ibfk_1` (`fansub_id`)
+  `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `action_log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `action_log` (
+  `id` int(11) NOT NULL,
   `action` varchar(200) NOT NULL,
   `text` text DEFAULT NULL,
   `author` varchar(200) DEFAULT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `episode` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `episode` (
+  `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
   `season_id` int(11) DEFAULT NULL,
   `number` int(11) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL,
-  `duration` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `episode_ibfk_1` (`series_id`)
+  `duration` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `episode_title` (
+CREATE TABLE `episode_title` (
   `version_id` int(11) NOT NULL,
   `episode_id` int(11) NOT NULL,
-  `title` varchar(200) NOT NULL,
-  PRIMARY KEY (`version_id`,`episode_id`),
-  KEY `episode_title_ibfk_1` (`episode_id`) USING BTREE
+  `title` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `fansub` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `fansub` (
+  `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
   `url` varchar(200) DEFAULT NULL,
   `twitter_url` varchar(200) DEFAULT NULL,
@@ -49,85 +42,66 @@ CREATE TABLE IF NOT EXISTS `fansub` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_by` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`)
+  `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `folder` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `folder` (
+  `id` int(11) NOT NULL,
   `version_id` int(11) NOT NULL,
   `account_id` int(11) NOT NULL,
   `folder` varchar(200) NOT NULL,
   `season_id` int(11) DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  KEY `folder_ibfk_1` (`account_id`),
-  KEY `folder_ibfk_2` (`version_id`),
-  KEY `folder_ibfk_3` (`season_id`) USING BTREE
+  `active` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `folder_failed_files` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `folder_failed_files` (
+  `id` int(11) NOT NULL,
   `folder_id` int(11) NOT NULL,
-  `file_name` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `folder_failed_files_ibfk_1` (`folder_id`)
+  `file_name` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `genre` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `genre` (
+  `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
-  `myanimelist_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  `myanimelist_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `link` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `link` (
+  `id` int(11) NOT NULL,
   `version_id` int(11) NOT NULL,
   `episode_id` int(11) DEFAULT NULL,
   `extra_name` varchar(200) DEFAULT NULL,
   `url` varchar(200) DEFAULT NULL,
   `resolution` varchar(200) DEFAULT NULL,
-  `comments` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `link_ibfk_1` (`episode_id`) USING BTREE,
-  KEY `link_ibfk_2` (`version_id`) USING BTREE
+  `comments` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `related_series` (
+CREATE TABLE `related_series` (
   `series_id` int(11) NOT NULL,
-  `related_series_id` int(11) NOT NULL,
-  PRIMARY KEY (`series_id`,`related_series_id`),
-  KEY `related_series_id` (`related_series_id`)
+  `related_series_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `rel_series_genre` (
+CREATE TABLE `rel_series_genre` (
   `series_id` int(11) NOT NULL,
-  `genre_id` int(11) NOT NULL,
-  PRIMARY KEY (`series_id`,`genre_id`),
-  KEY `rel_series_genre_ibfk_1` (`genre_id`)
+  `genre_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `rel_version_fansub` (
+CREATE TABLE `rel_version_fansub` (
   `version_id` int(11) NOT NULL,
-  `fansub_id` int(11) NOT NULL,
-  PRIMARY KEY (`version_id`,`fansub_id`),
-  KEY `rel_version_fansub_ibfk_1` (`fansub_id`)
+  `fansub_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `season` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `season` (
+  `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
   `number` int(11) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
   `episodes` int(11) DEFAULT NULL,
-  `myanimelist_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `season_ibfk_1` (`series_id`) USING BTREE
+  `myanimelist_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `series` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `series` (
+  `id` int(11) NOT NULL,
   `slug` varchar(200) NOT NULL,
   `name` varchar(200) NOT NULL,
   `alternate_names` varchar(200) DEFAULT NULL,
@@ -153,11 +127,10 @@ CREATE TABLE IF NOT EXISTS `series` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_by` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`)
+  `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE `user` (
   `username` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
   `admin_level` int(11) NOT NULL,
@@ -165,35 +138,103 @@ CREATE TABLE IF NOT EXISTS `user` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_by` varchar(200) NOT NULL,
-  PRIMARY KEY (`username`),
-  KEY `user_ibfk_1` (`fansub_id`)
+  `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `version` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `version` (
+  `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
   `status` int(11) NOT NULL,
   `default_resolution` varchar(200) DEFAULT NULL,
+  `downloads_url` varchar(200) DEFAULT NULL,
   `episodes_missing` tinyint(1) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL,
   `links_updated` timestamp NOT NULL DEFAULT current_timestamp(),
-  `links_updated_by` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `version_ibfk_1` (`series_id`)
+  `links_updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `views` (
+CREATE TABLE `views` (
   `link_id` int(11) NOT NULL,
   `day` varchar(200) NOT NULL,
   `clicks` int(11) NOT NULL DEFAULT 0,
   `views` int(11) NOT NULL DEFAULT 0,
-  `time_spent` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`link_id`,`day`)
+  `time_spent` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `account`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `account_ibfk_1` (`fansub_id`);
+ALTER TABLE `action_log`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `episode`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `episode_ibfk_1` (`series_id`);
+ALTER TABLE `episode_title`
+  ADD PRIMARY KEY (`version_id`,`episode_id`),
+  ADD KEY `episode_title_ibfk_1` (`episode_id`) USING BTREE;
+ALTER TABLE `fansub`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `folder`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `folder_ibfk_1` (`account_id`),
+  ADD KEY `folder_ibfk_2` (`version_id`),
+  ADD KEY `folder_ibfk_3` (`season_id`) USING BTREE;
+ALTER TABLE `folder_failed_files`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `folder_failed_files_ibfk_1` (`folder_id`);
+ALTER TABLE `genre`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `link`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `link_ibfk_1` (`episode_id`) USING BTREE,
+  ADD KEY `link_ibfk_2` (`version_id`) USING BTREE;
+ALTER TABLE `related_series`
+  ADD PRIMARY KEY (`series_id`,`related_series_id`),
+  ADD KEY `related_series_id` (`related_series_id`);
+ALTER TABLE `rel_series_genre`
+  ADD PRIMARY KEY (`series_id`,`genre_id`),
+  ADD KEY `rel_series_genre_ibfk_1` (`genre_id`);
+ALTER TABLE `rel_version_fansub`
+  ADD PRIMARY KEY (`version_id`,`fansub_id`),
+  ADD KEY `rel_version_fansub_ibfk_1` (`fansub_id`);
+ALTER TABLE `season`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `season_ibfk_1` (`series_id`) USING BTREE;
+ALTER TABLE `series`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`username`),
+  ADD KEY `user_ibfk_1` (`fansub_id`);
+ALTER TABLE `version`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `version_ibfk_1` (`series_id`);
+ALTER TABLE `views`
+  ADD PRIMARY KEY (`link_id`,`day`);
+ALTER TABLE `account`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `action_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `episode`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `fansub`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `folder`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `folder_failed_files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `genre`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `link`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `season`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `series`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `version`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `account`
   ADD CONSTRAINT `account_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

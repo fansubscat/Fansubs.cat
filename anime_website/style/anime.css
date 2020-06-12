@@ -700,13 +700,32 @@ a:hover {
 	margin-top: 0.2em;
 	margin-bottom: 0.2em;
 	padding: 0.3em 0.5em;
-	background: rgb(14, 87, 102);
+	background: rgb(14, 87, 142);
 	white-space: nowrap;
 	display: inline-block;
 }
 
 .fansub-twitter:hover {
-	background: rgb(34, 107, 122);
+	background: rgb(34, 107, 162);
+}
+
+.fansub-downloads {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-right: 0.4em;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	padding: 0.3em 0.5em;
+	background: rgb(0, 100, 120);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.fansub-downloads:hover {
+	background: rgb(20, 120, 140);
 }
 
 .mal-button {

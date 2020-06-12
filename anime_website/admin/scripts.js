@@ -371,7 +371,7 @@ function deleteVersionExtraRow(id) {
 		$("#form-extras-list-resolution-"+j).attr('id','form-extras-list-resolution-'+(j-1));
 		$("#form-extras-list-comments-"+j).attr('name','form-extras-list-comments-'+(j-1));
 		$("#form-extras-list-comments-"+j).attr('id','form-extras-list-comments-'+(j-1));
-		$("#form-extras-list-delete-"+j).attr('onclick','deleteVersionRow('+(j-1)+');');
+		$("#form-extras-list-delete-"+j).attr('onclick','deleteVersionExtraRow('+(j-1)+');');
 		$("#form-extras-list-delete-"+j).attr('id','form-extras-list-delete-'+(j-1));
 	}
 	$('#extras-list-table').attr('data-count', i-1);

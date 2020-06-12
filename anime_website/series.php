@@ -264,13 +264,13 @@ if ($count==0) {
 		}
 
 		if ($web_buttons!='' && $twitter_buttons!='' && ($web_buttons_count>1 || $twitter_buttons_count>1)) {
-			$fansub_buttons=$web_buttons.'<br />'.$twitter_buttons;
+			$fansub_buttons=$web_buttons.'<br />'.$twitter_buttons.(!empty($version['downloads_url']) ? '<br /><a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>Baixades</a>' : '');
 		} else {
-			$fansub_buttons=$web_buttons.$twitter_buttons;
+			$fansub_buttons=$web_buttons.$twitter_buttons.(!empty($version['downloads_url']) ? '<a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>Baixades</a>' : '');;
 		}
 
 		$plurals = array(
-				"active" => array("Si la vols veure amb màxima qualitat, al seu lloc web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!","Si la vols veure amb màxima qualitat, als seus llocs web trobaràs enllaços per a baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!"),
+				"active" => array("Si la vols veure amb màxima qualitat, al seu lloc web trobaràs la manera de baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!","Si la vols veure amb màxima qualitat, als seus llocs web trobaràs la manera de baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!"),
 				"inactive" => array("Actualment, aquest fansub ja no està actiu.","Actualment, aquests fansubs ja no estan actius."),
 				"abandoned" => array("Aquesta obra es considera abandonada, segurament no se'n llançaran més capítols.","Aquesta obra es considera abandonada, segurament no se'n llançaran més capítols."),
 				"cancelled" => array("Tingues en compte que aquesta obra ha estat cancel·lada, no se'n llançaran més capítols.","Tingues en compte que aquesta obra ha estat cancel·lada, no se'n llançaran més capítols.")

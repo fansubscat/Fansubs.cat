@@ -195,7 +195,7 @@ function internal_print_episode($episode_title, $result) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Reprodueix').'</a> '."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap video-info">'."\n";
 				$extra_info="Resolució del vídeo: ".$vrow['resolution']."\nTipus de streaming: ".get_provider($vrow['url']);
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<div class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</div></span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<span class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</span></span>'."\n";
 				if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";
 				} else {
@@ -221,9 +221,9 @@ function internal_print_episode($episode_title, $result) {
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="nowrap video-info">'."\n";
 			$extra_info="Resolució del vídeo: ".$vrow['resolution']."\nTipus de streaming: ".get_provider($vrow['url']);
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<div class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</div></span>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<span class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</span></span>'."\n";
 			if (!empty($vrow['comments'])){
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip-container"><span class="fa fa-fw fa-info-circle"></span><div class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'</div></span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip-container"><span class="fa fa-fw fa-info-circle"></span><span class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'</span></span>'."\n";
 			}
 			if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";

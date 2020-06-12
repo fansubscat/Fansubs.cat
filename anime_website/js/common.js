@@ -128,6 +128,9 @@ $(document).ready(function() {
 		$(".contact-link").click(function(){
 			showContactScreen('generic');
 		});
+		$(".fansub-downloads").click(function(){
+			window.open(atob($(this).attr('data-url')));
+		});
 		$(".version-lost").click(function(){
 			showContactScreen('version_lost');
 		});

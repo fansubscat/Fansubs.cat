@@ -36,6 +36,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['default_resolution']="NULL";
 		}
+		if (!empty($_POST['downloads_url'])) {
+			$data['downloads_url']="'".escape($_POST['downloads_url'])."'";
+		} else {
+			$data['downloads_url']="NULL";
+		}
 		if (!empty($_POST['status']) && is_numeric($_POST['status'])) {
 			$data['status']=escape($_POST['status']);
 		} else {
@@ -167,7 +172,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-version", "S'ha actualitzat la versió de la sèrie (id. de sèrie: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",downloads_url=".$data['downloads_url'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -256,7 +261,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
-			query("INSERT INTO version (series_id,status,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,default_resolution,downloads_url,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['downloads_url'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_1'].")");
@@ -411,6 +416,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="form-group">
 									<label for="form-default_resolution">Resolució per defecte <small class="text-muted">(per a enllaços automàtics)</small></label>
 									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="form-downloads_url">Enllaç de baixades <small class="text-muted">(o fitxa del fansub)</small></label>
+									<input id="form-downloads_url" name="downloads_url" type="url" class="form-control" value="<?php echo htmlspecialchars($row['downloads_url']); ?>" maxlength="200"/>
 								</div>
 							</div>
 						</div>
@@ -626,9 +637,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="links-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($links),1); ?>">
 													<thead>
 														<tr>
-															<th>Enllaç</th>
+															<th>Enllaç de streaming</th>
 															<th style="width: 15%;">Resolució</th>
-															<th style="width: 20%;">Comentaris</th>
+															<th style="width: 15%;">Comentaris</th>
 															<th class="text-center" style="width: 5%;">Perdut</th>
 															<th class="text-center" style="width: 5%;">Acció</th>
 														</tr>
@@ -716,9 +727,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<thead>
 														<tr>
 															<th style="width: 20%;" class="mandatory">Nom</th>
-															<th class="mandatory">Enllaç</th>
+															<th class="mandatory">Enllaç de streaming</th>
 															<th style="width: 15%;">Resolució</th>
-															<th style="width: 20%;">Comentaris</th>
+															<th style="width: 15%;">Comentaris</th>
 															<th class="text-center" style="width: 5%;">Acció</th>
 														</tr>
 													</thead>
