@@ -189,17 +189,41 @@ if ($series['has_licensed_parts']==1) {
 ?>
 						</div>
 <?php
-$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id ON v.id=vf.version_id WHERE v.series_id=".$series['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
+$result_unfiltered = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.series_id=".$series['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
+$count_unfiltered = mysqli_num_rows($result_unfiltered);
+mysqli_free_result($result_unfiltered);
+
+$cookie_fansub_ids = get_cookie_fansub_ids();
+
+$cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ? " AND v.status<>5 AND v.status<>4" : "").(!empty($_COOKIE['hide_missing']) ? " AND v.episodes_missing=0" : "").((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND s.rating<>'XXX'" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
+
+$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE v.series_id=".$series['id']."$cookie_extra_conditions GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
 $count = mysqli_num_rows($result);
 
-if ($count==0) {
+if ($count_unfiltered==0) {
 ?>
 						<div class="section">
 							<h2 class="section-title">Informació</h2>
 							<div class="section-content">Aquesta obra encara no disposa de cap versió amb subtítols en català.</div>
 						</div>
 <?php
-} else{
+} else if ($count==0) {
+	if ($series['rating']=='XXX' && empty($_COOKIE['show_hentai'])) {
+?>
+						<div class="section">
+							<h2 class="section-title">Informació</h2>
+							<div class="section-content">Aquesta obra és només per a majors d'edat. Si ets major d'edat i vols veure-la, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
+						</div>
+<?php
+	} else {
+?>
+						<div class="section">
+							<h2 class="section-title">Informació</h2>
+							<div class="section-content">Aquesta obra disposa d'alguna versió amb subtítols en català, però el teu filtre d'usuari impedeix mostrar-la. Si vols veure-la, canvia el filtre a la icona de configuració de la part superior de la pàgina.</div>
+						</div>
+<?php
+	}
+} else {
 	if ($count>1) {
 ?>
 						<div class="version_tab_container">
