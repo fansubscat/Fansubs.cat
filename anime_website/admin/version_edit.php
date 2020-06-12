@@ -229,12 +229,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			foreach ($extras as $extra) {
 				if ($extra['id']==-1) {
 					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$data['id'].",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].")");
-					query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+					if (empty($_POST['do_not_count_as_update'])) {
+						query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+					}
 				} else {
 					$resultcr = query("SELECT * FROM link WHERE id=".$extra['id']);
 					if ($current_extra = mysqli_fetch_assoc($resultcr)) {
 						query("UPDATE link SET extra_name='".$extra['name']."',url='".$extra['url']."',resolution=".$extra['resolution'].",comments=".$extra['comments']." WHERE id=".$extra['id']);
-						if (("'".escape($current_extra['url'])."'")!=$extra['url']) {
+						if (empty($_POST['do_not_count_as_update']) && escape($current_extra['url'])!=$extra['url']) {
 							query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 						}
 					}
