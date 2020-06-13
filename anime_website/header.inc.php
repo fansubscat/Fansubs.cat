@@ -108,7 +108,7 @@ mysqli_free_result($resultf);
 			</div>
 		</div>
 		<div id="page">
-			<div id="header">
+			<div data-nosnippet id="header">
 				<div class="page-title-block">
 					<a class="page-title" href="/">Fansubs.cat</a>
 					<div class="page-links">

@@ -286,6 +286,16 @@ a:hover {
 	margin-top: 0.2em;
 }
 
+.site-message {
+	padding: .75em 1.25em;
+	border: 1px solid #fff3cd;
+	border-radius: .25em;
+	border-color: #ffeeba;
+	background-color: #fff3cd;
+	color: #856404;
+	text-align: center;
+}
+
 .tab {
 	padding: 0 1.5em;
 	font-size: 1.4em;

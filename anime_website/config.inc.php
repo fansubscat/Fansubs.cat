@@ -15,4 +15,7 @@ $mega_lock_file='/tmp/mega_fetch.lock';
 
 //Password salt for hashes
 $password_salt='YOUR_PASSWORD_SALT_HERE';
+
+//Populate this variable if you want to display a message on all listing pages
+$site_message="";
 ?>

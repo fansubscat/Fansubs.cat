@@ -256,7 +256,9 @@ $(document).ready(function() {
 			infinite: false,
 			slidesToShow: size,
 			slidesToScroll: size,
-			variableWidth: true
+			variableWidth: true,
+			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
 		});
 
 		$('.genres-carousel').slick({
@@ -264,7 +266,9 @@ $(document).ready(function() {
 			infinite: false,
 			slidesToShow: genresSize,
 			slidesToScroll: genresSize,
-			variableWidth: true
+			variableWidth: true,
+			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
 		});
 
 		if ($('.synopsis-content').height()>=154) {
@@ -328,7 +332,9 @@ $(document).ready(function() {
 					infinite: false,
 					slidesToShow: size,
 					slidesToScroll: size,
-					variableWidth: true
+					variableWidth: true,
+					prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+					nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
 				});
 
 				$('.genres-carousel').slick('unslick');
@@ -337,7 +343,9 @@ $(document).ready(function() {
 					infinite: false,
 					slidesToShow: genresSize,
 					slidesToScroll: genresSize,
-					variableWidth: true
+					variableWidth: true,
+					prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+					nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
 				});
 
 				lastWindowWidth=$(window).width();

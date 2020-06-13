@@ -3,8 +3,10 @@ require_once("db.inc.php");
 
 $header_tab="about";
 
+$header_page_title="Qui som?";
+
 $header_social = array(
-	'title' => 'Fansubs.cat - Qui som?',
+	'title' => 'Qui som? - Fansubs.cat - Anime',
 	'url' => 'https://anime.fansubs.cat/qui-som',
 	'description' => "Aquest portal és un projecte sorgit dels esforços conjunts dels principals fansubs en català i allotjat a Fansubs.cat. El nostre únic objectiu és potenciar el consum d'anime subtitulat en català, permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.",
 	'image' => 'https://anime.fansubs.cat/style/og_image.jpg'
