@@ -126,3 +126,11 @@ $(document).ready(function() {
     });
   }
 });
+
+//Google Analytics
+window.dataLayer = window.dataLayer || [];
+function gtag(){
+  dataLayer.push(arguments)
+}
+gtag('js', new Date());
+gtag('config', 'UA-628107-13');

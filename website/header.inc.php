@@ -46,6 +46,7 @@ if ($header_current_page=='main'){
 <?php
 }
 ?>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-13"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 		<script src="/js/jquery.magnific-popup-1.1.0.min.js"></script>
 		<script src="/js/js.cookie-2.1.2.min.js"></script>

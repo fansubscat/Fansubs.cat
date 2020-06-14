@@ -51,6 +51,16 @@
 <!-- BEGIN get_combined -->
 {get_combined_css}
 
+{literal}
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-15"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-628107-15');
+</script>
+{/literal}
+
 {get_combined_scripts load='header'}
 <!-- END get_combined -->
 

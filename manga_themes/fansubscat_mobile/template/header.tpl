@@ -36,6 +36,16 @@
 
 {if not empty($page_refresh)    }<meta http-equiv="refresh" content="{$page_refresh.TIME};url={$page_refresh.U_REFRESH}">{/if}
 
+{literal}
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-15"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-628107-15');
+</script>
+{/literal}
+
 {get_combined_scripts load='header'}
 
 {combine_script id='config' path='themes/smartpocket/js/config.js' require='jquery'}
