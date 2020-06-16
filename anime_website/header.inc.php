@@ -131,7 +131,7 @@ mysqli_free_result($resultf);
 				</div>
 				<div class="search-form">
 					<form id="search_form">
-						<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Fes una cerca...">
+						<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
 						<span id="search_button" class="fa fa-search" title="Cerca"></span>
 					</form>
 				</div>
