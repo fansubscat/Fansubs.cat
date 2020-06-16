@@ -73,7 +73,8 @@ CREATE TABLE `link` (
   `extra_name` varchar(200) DEFAULT NULL,
   `url` varchar(200) DEFAULT NULL,
   `resolution` varchar(200) DEFAULT NULL,
-  `comments` varchar(200) DEFAULT NULL
+  `comments` varchar(200) DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `related_series` (

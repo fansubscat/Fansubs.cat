@@ -2,6 +2,7 @@
 const REGEXP_MEGA='/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/';
 const REGEXP_GOOGLE_DRIVE='/https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)?([^\/]*)(?:preview|view)?/';
 const REGEXP_YOUTUBE='/(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})?/';
+const REGEXP_DL_LINK='/^https:\/\/(?:drive\.google\.com|mega\.nz|mega\.co\.nz).*/';
 
 function is_robot(){
 	return !empty($_SERVER['HTTP_USER_AGENT']) && preg_match('/bot|crawl|slurp|spider|mediapartners/i', $_SERVER['HTTP_USER_AGENT']);
@@ -16,7 +17,6 @@ function get_status($id){
 		case 3:
 			return "partially-completed";
 		case 4:
-			return "abandoned";
 		case 5:
 			return "cancelled";
 		default:
@@ -202,8 +202,14 @@ function internal_print_episode($episode_title, $result) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<span class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</span></span>'."\n";
 				if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";
+					if ($vrow['created']>=date('d-m-Y', strtotime("-1 week"))) {
+						echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode hidden" data-link-id="'.$vrow['id'].'" title="Publicat durant la darrera setmana">NOU</span>'."\n";
+					}
 				} else {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
+					if ($vrow['created']>=date('d-m-Y', strtotime("-1 week"))) {
+						echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode" data-link-id="'.$vrow['id'].'" title="Publicat durant la darrera setmana">NOU</span>'."\n";
+					}
 				}
 				echo "\t\t\t\t\t\t\t\t\t\t\t</span>\n";
 				echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
@@ -231,8 +237,14 @@ function internal_print_episode($episode_title, $result) {
 			}
 			if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-link-id="'.$vrow['id'].'" title="Ja l\'has vist: prem per a marcar-lo com a no vist"><span class="fa fa-fw fa-eye"></span></span>'."\n";
+				if ($vrow['created']>=date('d-m-Y', strtotime("-1 week"))) {
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode hidden" data-link-id="'.$vrow['id'].'" title="Publicat durant la darrera setmana">NOU</span>'."\n";
+				}
 			} else {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-link-id="'.$vrow['id'].'" title="Encara no l\'has vist: prem per a marcar-lo com a vist"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
+				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode" data-link-id="'.$vrow['id'].'" title="Publicat durant la darrera setmana">NOU</span>'."\n";
+				}
 			}
 			echo "\t\t\t\t\t\t\t\t\t\t\t</span>\n";
 			echo "\t\t\t\t\t\t\t\t\t\t</div>\n";

@@ -202,7 +202,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			//We do not count removing links as updating them, only insertions and real updates
 			foreach ($links as $link) {
 				if ($link['id']==-1) {
-					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$data['id'].",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].")");
+					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES (".$data['id'].",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].",CURRENT_TIMESTAMP)");
 					if (empty($_POST['do_not_count_as_update'])) {
 						query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
@@ -228,7 +228,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($extras as $extra) {
 				if ($extra['id']==-1) {
-					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$data['id'].",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].")");
+					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES (".$data['id'].",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].",CURRENT_TIMESTAMP)");
 					if (empty($_POST['do_not_count_as_update'])) {
 						query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
@@ -280,10 +280,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 			foreach ($links as $link) {
-				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$inserted_id.",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].")");
+				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES (".$inserted_id.",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].",CURRENT_TIMESTAMP)");
 			}
 			foreach ($extras as $extra) {
-				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES (".$inserted_id.",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].")");
+				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES (".$inserted_id.",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].",CURRENT_TIMESTAMP)");
 			}
 			foreach ($folders as $folder) {
 				query("INSERT INTO folder (version_id,account_id,folder,season_id,active) VALUES (".$inserted_id.",".$folder['account_id'].",'".$folder['folder']."',".$folder['season_id'].",".$folder['active'].")");

@@ -44,6 +44,7 @@ function markLinkAsViewed(link_id){
 	$('.viewed-indicator[data-link-id='+link_id+']').addClass('viewed');
 	$('.viewed-indicator[data-link-id='+link_id+'] span').removeClass('fa-eye-slash');
 	$('.viewed-indicator[data-link-id='+link_id+'] span').addClass('fa-eye');
+	$('.new-episode[data-link-id='+link_id+']').addClass('hidden');
 }
 
 function markLinkAsNotViewed(link_id){
@@ -62,6 +63,7 @@ function markLinkAsNotViewed(link_id){
 	$('.viewed-indicator[data-link-id='+link_id+']').addClass('not-viewed');
 	$('.viewed-indicator[data-link-id='+link_id+'] span').removeClass('fa-eye');
 	$('.viewed-indicator[data-link-id='+link_id+'] span').addClass('fa-eye-slash');
+	$('.new-episode[data-link-id='+link_id+']').removeClass('hidden');
 }
 
 function getSource(method, url){

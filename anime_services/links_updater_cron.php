@@ -53,7 +53,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 								if ($version = mysqli_fetch_assoc($resultv)){
 									$resolution = (!empty($version['default_resolution']) ? "'".$version['default_resolution']."'" : "NULL");
 
-									query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments) VALUES(".$folder['version_id'].",".$row['id'].",NULL,'".escape($real_link)."',$resolution,NULL)");
+									query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES(".$folder['version_id'].",".$row['id'].",NULL,'".escape($real_link)."',$resolution,NULL,CURRENT_TIMESTAMP)");
 									query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='Cron' WHERE id=".$folder['version_id']);
 									log_action("cron-create-link","S'ha inserit automàticament l'enllaç del fitxer '$filename' (id. de versió: ".$folder['version_id'].") i s'ha actualitzat la data de modificació de la versió");
 
