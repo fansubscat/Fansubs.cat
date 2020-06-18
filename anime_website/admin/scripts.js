@@ -838,9 +838,11 @@ $(document).ready(function() {
 		var folders = [];
 		var season_ids = [];
 		for (var i=1;i<=count;i++){
-			account_ids.push(encodeURIComponent($('#form-folders-list-account_id-'+i).val()));
-			folders.push(encodeURIComponent($('#form-folders-list-folder-'+i).val()));
-			season_ids.push(encodeURIComponent($('#form-folders-list-season_id-'+i).val()!='' ? $('#form-folders-list-season_id-'+i).val() : -1));
+			if ($('#import-type').val()!='sync' || $('#form-folders-list-active-'+i).prop('checked')) {
+				account_ids.push(encodeURIComponent($('#form-folders-list-account_id-'+i).val()));
+				folders.push(encodeURIComponent($('#form-folders-list-folder-'+i).val()));
+				season_ids.push(encodeURIComponent($('#form-folders-list-season_id-'+i).val()!='' ? $('#form-folders-list-season_id-'+i).val() : -1));
+			}
 		}
 
 		var xmlhttp = new XMLHttpRequest();

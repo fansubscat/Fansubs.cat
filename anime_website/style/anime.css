@@ -859,31 +859,84 @@ a:hover {
 	margin-right: -0.3em;
 }
 
+.episode-table {
+	width: 100%;
+}
+
+.episode-table .right {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.episode-table td {
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+}
+
+.episode-table tr.episode-multiple td {
+	padding-bottom: 0;
+}
+
+.episode-table thead tr {
+	text-align: left;
+	border-bottom: 1px solid white;
+}
+
+.episode-table thead th.episode-seen-head {
+	width: 1px;
+	white-space: nowrap;
+	padding-right: 0.5em;
+}
+
+.episode-table thead th.episode-info-head {
+	width: 1px;
+	white-space: nowrap;
+	padding-left: 0.5em;
+}
+
+.episode-table tbody tr {
+	text-align: left;
+	vertical-align: top;
+	border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.episode-table tbody tr.episode-multiple {
+	text-align: left;
+	border-bottom: 1px solid transparent;
+}
+
 .episode-title {
 	font-weight: bold;
-	margin-bottom: 0.4em;
 	margin-left: 1.5em;
 	text-indent: -1em;
 }
 
-.episode {
-	margin-bottom: 0.5em;
-	width: 100%;
-}
-
-.season .episode {
-	margin-left: 1.5em;
-}
-
 .season {
 	margin-bottom: 1em;
+	margin-left: 1.2em;
+}
+
+.extra-content {
+	margin-bottom: 1em;
+	margin-left: 1.2em;
+}
+
+.extra-content.extra-content-single-season {
+	margin-left: 0;
+	margin-top: 2em;
+}
+
+.extra-content.extra-content-single-season .season_name {
+	margin-left: 0;
 }
 
 .season_name {
 	font-weight: bold;
-	margin-bottom: 1em;
+	margin-bottom: 0.5em;
 	cursor: pointer;
 	outline: none;
+	font-size: 1.2em;
+	margin-left: -1em;
 }
 
 .season_name:hover {
@@ -903,10 +956,6 @@ a:hover {
 .video-player {
 	font-weight:bold;
 	color: #E0E0E0;
-}
-
-.video-info {
-	text-indent: 0;
 }
 
 .nowrap {	
@@ -932,18 +981,7 @@ a:hover {
 	color: #000;
 }
 
-.version-method {
-	font-size: 0.9em;
-	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
-	background: rgb(100, 0, 0);
-	white-space: nowrap;
-	cursor: pointer;
-}
-
 .version-resolution-4k {
-	margin-left: 0.2em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
@@ -954,7 +992,6 @@ a:hover {
 }
 
 .version-resolution-hd1080 {
-	margin-left: 0.2em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
@@ -965,7 +1002,6 @@ a:hover {
 }
 
 .version-resolution-hd720 {
-	margin-left: 0.2em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
@@ -976,7 +1012,6 @@ a:hover {
 }
 
 .version-resolution-sd {
-	margin-left: 0.2em;
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
@@ -994,13 +1029,13 @@ a:hover {
 	background: rgb(0, 80, 140);
 	white-space: nowrap;
 	cursor: pointer;
+	margin-right: 0.2em;
 }
 
 .version-unavailable {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.2em;
 	padding: 0.1em 0.4em;
 	background: rgb(80, 80, 80);
 	white-space: nowrap;
@@ -1012,7 +1047,6 @@ a:hover {
 	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-left: 0.2em;
 	padding: 0.1em 0.4em;
 	background: rgb(80, 80, 80);
 	white-space: nowrap;
@@ -1028,6 +1062,7 @@ a:hover {
 	background: rgb(155, 0, 0);
 	white-space: nowrap;
 	cursor: pointer;
+	margin-left: 0.4em;
 }
 
 .tooltip-container {
@@ -1045,6 +1080,7 @@ a:hover {
 	overflow: hidden;
 	font-weight: normal;
 	font-size: 1.1em;
+	text-align: left;
 }
 
 .tooltip.tooltip-left {

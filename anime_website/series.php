@@ -399,28 +399,48 @@ if ($count_unfiltered==0) {
 
 			if (count($seasons)<2) {
 				foreach ($seasons as $season) {
+?>
+									<table class="episode-table" rules="rows">
+										<thead>
+											<tr>
+												<th class="episode-seen-head">Vist</th>
+												<th>Nom</th>
+												<th class="episode-info-head right">Notes</th></tr>
+										</thead>
+										<tbody>
+<?php
 					foreach ($season['episodes'] as $episode) {
 						print_episode($episode, $version['id'], $series);
 					}
+?>
+										</tbody>
+									</table>
+<?php
 				}
 			} else { //Multiple seasons
 				foreach ($seasons as $season) {
 ?>
 									<details class="season"<?php echo $series['show_expanded_seasons']==1 ? ' open' : ''; ?>>
 										<summary class="season_name"><?php echo !empty($season['season_number']) ? (($series['show_seasons']!=1 || (count($seasons)==2 && empty($last_season_number))) ? 'Capítols normals' : ('Temporada '.$season['season_number'].(!empty($season['season_name']) ? ': '.$season['season_name'] : ''))) : 'Altres'; ?></summary>
+										<table class="episode-table" rules="rows">
+											<thead>
+												<tr>
+													<th class="episode-seen-head">Vist</th>
+													<th>Nom</th>
+													<th class="episode-info-head right">Notes</th></tr>
+											</thead>
+											<tbody>
 <?php
 					foreach ($season['episodes'] as $episode) {
 						print_episode($episode, $version['id'], $series);
 					}
 ?>
+											</tbody>
+										</table>
 									</details>
 <?php
 				}
 			}
-?>
-								</div>
-							</div>
-<?php
 		}
 		$resulte = query("SELECT DISTINCT l.extra_name FROM link l WHERE version_id=".$version['id']." AND l.episode_id IS NULL ORDER BY extra_name ASC");
 		$extras = array();
@@ -431,19 +451,29 @@ if ($count_unfiltered==0) {
 
 		if (count($extras)>0) {
 ?>
-							<div class="section">
-								<h2 class="section-title">Contingut extra</h2>
-								<div class="section-content">
+									<details class="extra-content<?php echo count($seasons)<2 ? ' extra-content-single-season' : ''; ?>">
+										<summary class="season_name">Contingut extra</summary>
+										<table class="episode-table" rules="rows">
+											<thead>
+												<tr>
+													<th class="episode-seen-head">Vist</th>
+													<th>Nom</th>
+													<th class="episode-info-head right">Notes</th></tr>
+											</thead>
+											<tbody>
 <?php
 			foreach ($extras as $row) {
 				print_extra($row, $version['id']);
 			}
 ?>
-								</div>
-							</div>
+											</tbody>
+										</table>
+									</details>
 <?php
 		}
 ?>
+								</div>
+							</div>
 						</div>
 <?php
 		$i++;
