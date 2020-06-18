@@ -550,6 +550,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<button onclick="addVersionFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una carpeta</button>
 										</div>
 										<div class="col-sm text-right" style="padding-left: 0; padding-right: 0">
+											<select id="import-type" class="form-control form-control-sm form-inline" title="Indica el tipus de streaming preferit en aquesta actualització d'enllaços. Si hi ha algun compte d'aquell tipus, només s'utilitzarà aquell tipus. Si no n'hi ha cap d'aquell tipus, s'utilitzaran tots. Si hi ha alguns capítols a MEGA i altres a Google Drive, cal marcar 'Utilitza-ho tot'." style="width: auto; display: inline; font-size: 78%;">
+												<option value="googledrive" selected>Prefereix Google Drive</option>
+												<option value="mega">Prefereix MEGA</option>
+												<option value="all">Utilitza-ho tot</option>
+											</select> →
 											<button type="button" id="import-from-mega" class="btn btn-primary btn-sm">
 												<span id="import-from-mega-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
 												<span id="import-from-mega-not-loading" class="fa fa-redo pr-2"></span>Actualitza els enllaços ara

@@ -12,6 +12,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$season_ids = $_GET['season_ids'];
 
 	$account_folders = array();
+	$count_mega = 0;
+	$count_google_drive = 0;
 	for($i=0;$i<count($account_ids);$i++){
 		$account_folder = array();
 
@@ -21,10 +23,34 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$account_folder['account_id']=$row['id'];
 			$account_folder['session_id']=$row['session_id'];
 			$account_folder['type']=$row['type'];
+			if ($row['type']=='mega') {
+				$count_mega++;
+			} else if ($row['type']=='googledrive') {
+				$count_google_drive++;
+			}
 			$account_folder['folder']=$folders[$i];
 			$account_folder['season_id']=$season_ids[$i];
 			array_push($account_folders, $account_folder);
 		}
+	}
+
+	$import_type = $_GET['import_type'];
+	if ($import_type=='mega' && $count_google_drive>0) {
+		$new_account_folders = array();
+		foreach ($account_folders as $account_folder) {
+			if ($account_folder['type']=='mega') {
+				array_push($new_account_folders, $account_folder);
+			}
+		}
+		$account_folders = $new_account_folders;
+	} else if ($import_type=='googledrive' && $count_google_drive>0) {
+		$new_account_folders = array();
+		foreach ($account_folders as $account_folder) {
+			if ($account_folder['type']=='googledrive') {
+				array_push($new_account_folders, $account_folder);
+			}
+		}
+		$account_folders = $new_account_folders;
 	}
 
 	$links = array();
