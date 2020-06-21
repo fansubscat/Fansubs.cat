@@ -70,8 +70,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	$current_month = strtotime(date('Y-m-01'));
 	$i=0;
-	while (strtotime(date('2020-04-01')."+$i months")<=$current_month) {
-		$months[date("Y-m", strtotime(date('2020-04-01')."+$i months"))]=array(0, 0, 0);
+	while (strtotime(date('2020-05-01')."+$i months")<=$current_month) {
+		$months[date("Y-m", strtotime(date('2020-05-01')."+$i months"))]=array(0, 0, 0);
 		$i++;
 	}
 
@@ -307,8 +307,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$current_month = strtotime(date('Y-m-01'));
 		$i=0;
-		while (strtotime(date('2020-04-01')."+$i months")<=$current_month) {
-			$months[date("Y-m", strtotime(date('2020-04-01')."+$i months"))]=array(0, 0, 0);
+		while (strtotime(date('2020-05-01')."+$i months")<=$current_month) {
+			$months[date("Y-m", strtotime(date('2020-05-01')."+$i months"))]=array(0, 0, 0);
 			$i++;
 		}
 
