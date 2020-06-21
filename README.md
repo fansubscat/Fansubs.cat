@@ -27,6 +27,6 @@ Take a look at the code if you want to know more, or create an issue if in doubt
 
 ## License
 
-This project is licensed under the [GNU Affero Public License 3.0](https://github.com/Ereza/Fansubs.cat/blob/master/LICENSE). This basically means that you can do whatever you want, but if you use this on a website, you **must** release the modified code.
+This project is licensed under the [GNU Affero Public License 3.0](https://github.com/fansubscat/Fansubs.cat/blob/master/LICENSE). This basically means that you can do whatever you want, but if you use this on a website, you **must** release the modified code.
 
 All fansub icons, content and images used are property of their original authors and not subject to the license. If you want them removed, please contact us!
