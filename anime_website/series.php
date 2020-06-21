@@ -289,15 +289,22 @@ if ($count_unfiltered==0) {
 		}
 
 		$fansub_buttons='';
-		if ($web_buttons!='' && $twitter_buttons!='' && ($web_buttons_count>1 || $twitter_buttons_count>1)) {
-			if (!empty($version['downloads_url'])) {
-				$fansub_buttons.='<br /><a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>'.(preg_match(REGEXP_MEGA,$version['downloads_url']) ? 'Baixa el fitxer original' : (preg_match(REGEXP_DL_LINK,$version['downloads_url']) ? 'Baixa els fitxers originals' : 'Baixades (fitxa del fansub)')).'</a>';
-			}
-			$fansub_buttons.=$web_buttons.'<br />'.$twitter_buttons;
-		} else {
-			if (!empty($version['downloads_url'])) {
+		if (!empty($version['downloads_url'])) {
+			$url_arr=explode(';', $version['downloads_url']);
+			if (count($url_arr)==1) {
 				$fansub_buttons.='<a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>'.(preg_match(REGEXP_MEGA,$version['downloads_url']) ? 'Baixa el fitxer original' : (preg_match(REGEXP_DL_LINK,$version['downloads_url']) ? 'Baixa els fitxers originals' : 'Baixades (fitxa del fansub)')).'</a>';
+			} else {
+				$cnt=1;
+				foreach ($url_arr as $url) {
+					$fansub_buttons.='<a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($url)).'"><span class="fa fa-download icon"></span>Baixa els fitxers originals ('.$cnt.')</a>';
+					$cnt++;
+				}
 			}
+		}
+
+		if ($web_buttons!='' && $twitter_buttons!='' && ($web_buttons_count>1 || $twitter_buttons_count>1)) {
+			$fansub_buttons.=(!empty($version['downloads_url']) ? '<br />' : '').$web_buttons.'<br />'.$twitter_buttons;
+		} else {
 			$fansub_buttons.=$web_buttons.$twitter_buttons;
 		}
 
