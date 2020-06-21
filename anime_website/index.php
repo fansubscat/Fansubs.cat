@@ -20,6 +20,14 @@ if (!empty($site_message)){
 <?php
 }
 
+if (is_robot()){
+?>
+				<div class="section">
+					<div class="site-message">Fansubs.cat et permet veure en streaming més de 250 films i sèries d'anime subtitulades en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.</div>
+				</div>
+<?php
+}
+
 $max_items=24;
 
 $base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";

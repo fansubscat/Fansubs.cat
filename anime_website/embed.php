@@ -6,7 +6,8 @@ $result = query("SELECT * FROM link WHERE id=".escape($_GET['link_id']).' AND ur
 $link = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
-	header("Location: /error.php?code=404");
+	http_response_code(404);
+	include('error.php');
 	die();
 }
 ?>

@@ -56,7 +56,8 @@ $result = query("SELECT s.*, YEAR(s.air_date) year, GROUP_CONCAT(DISTINCT g.name
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
-	header("Location: /error.php?code=404");
+	http_response_code(404);
+	include('error.php');
 	die();
 }
 
@@ -290,12 +291,12 @@ if ($count_unfiltered==0) {
 		$fansub_buttons='';
 		if ($web_buttons!='' && $twitter_buttons!='' && ($web_buttons_count>1 || $twitter_buttons_count>1)) {
 			if (!empty($version['downloads_url'])) {
-				$fansub_buttons.='<br /><a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>'.(preg_match(REGEXP_DL_LINK,$version['downloads_url']) ? 'Carpeta de baixades' : 'Fitxa al fansub (baixades)').'</a>';
+				$fansub_buttons.='<br /><a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>'.(preg_match(REGEXP_MEGA,$version['downloads_url']) ? 'Baixa el fitxer original' : (preg_match(REGEXP_DL_LINK,$version['downloads_url']) ? 'Baixa els fitxers originals' : 'Baixades (fitxa del fansub)')).'</a>';
 			}
 			$fansub_buttons.=$web_buttons.'<br />'.$twitter_buttons;
 		} else {
 			if (!empty($version['downloads_url'])) {
-				$fansub_buttons.='<a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>'.(preg_match(REGEXP_DL_LINK,$version['downloads_url']) ? 'Carpeta de baixades' : 'Fitxa al fansub (baixades)').'</a>';
+				$fansub_buttons.='<a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>'.(preg_match(REGEXP_MEGA,$version['downloads_url']) ? 'Baixa el fitxer original' : (preg_match(REGEXP_DL_LINK,$version['downloads_url']) ? 'Baixa els fitxers originals' : 'Baixades (fitxa del fansub)')).'</a>';
 			}
 			$fansub_buttons.=$web_buttons.$twitter_buttons;
 		}
