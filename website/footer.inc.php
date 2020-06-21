@@ -3,6 +3,9 @@
 
 			<div id="sidebar" class="aside">
 				<div class="section promo">
+					<a href="https://anime.fansubs.cat/"><img src="/style/images/anime_promo.png" alt="Mira tot l'anime dels fansubs en català!" /></a>
+				</div>
+				<div class="section promo">
 					<a href="https://manga.fansubs.cat/"><img src="/style/images/manga_promo.png" alt="Llegeix tot el manga dels fansubs en català!" /></a>
 				</div>
 <?php
