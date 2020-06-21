@@ -64,7 +64,7 @@
     <div class="page-title-block">{* This is the only change made to the template *}
         <a class="page-title" href="/">Fansubs.cat</a>
         <div class="page-links">
-            {* <a href="https://anime.fansubs.cat/">Anime</a> | *}<b>Manga</b> | <a href="https://www.fansubs.cat/">Notícies</a>
+            <a href="https://anime.fansubs.cat/">Anime</a> | <b>Manga</b> | <a href="https://www.fansubs.cat/">Notícies</a>
         </div>
     </div>
     <a href="#menubar" data-icon="grid" data-iconpos="notext" data-role="button" style="float: right" >Menu</a>

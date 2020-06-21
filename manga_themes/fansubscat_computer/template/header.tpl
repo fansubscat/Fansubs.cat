@@ -91,7 +91,7 @@
 	<div class="page-title-block">
 		<a class="page-title" href="/">Fansubs.cat</a>
 		<div class="page-links">
-			{* <a href="https://anime.fansubs.cat/">Anime</a> | *}<b>Manga</b> | <a href="https://www.fansubs.cat/">Notícies</a>
+			<a href="https://anime.fansubs.cat/">Anime</a> | <b>Manga</b> | <a href="https://www.fansubs.cat/">Notícies</a>
 		</div>
 	</div>
 	En aquesta galeria pots llegir tot el manga en català que han editat els diferents fansubs i que no ha estat llicenciat en la nostra llengua.
