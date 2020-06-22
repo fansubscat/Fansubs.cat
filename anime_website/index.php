@@ -2,10 +2,30 @@
 require_once("db.inc.php");
 
 $header_tab=(!empty($_GET['page']) ? $_GET['page'] : '');
+$header_page_title='';
+
+switch ($header_tab) {
+	case 'movies':
+		$header_page_title='Films';
+		$header_url='films/';
+		break;
+	case 'series':
+		$header_page_title='Sèries';
+		$header_url='series/';
+		break;
+	case 'search':
+		$header_page_title='Resultats de la cerca';
+		$header_url='cerca/'.(!empty($_GET['query']) ? urlencode(urlencode($_GET['query'])) : '');
+		break;
+	default:
+		$header_page_title='';
+		$header_url='';
+		break;
+}
 
 $header_social = array(
-	'title' => 'Fansubs.cat - Anime',
-	'url' => 'https://anime.fansubs.cat/',
+	'title' => (!empty($header_page_title) ? $header_page_title.' - ' : '').'Fansubs.cat - Anime',
+	'url' => 'https://anime.fansubs.cat/'.$header_url,
 	'description' => "Aquí podràs veure en línia tot l'anime subtitulat pels fansubs en català!",
 	'image' => 'https://anime.fansubs.cat/style/og_image.jpg'
 );
@@ -71,7 +91,9 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 		$sections=array("Darreres actualitzacions", "Més populars", "Més actuals", "Més ben valorades");
 		$queries=array(
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
-			$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
+			#$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
+			#$base_query . " WHERE 1 AND v.status<>5 AND v.status<>4 AND s.rating<>'XXX' GROUP BY s.id ORDER BY FIELD(s.id,348,358,408,411,395,89,320) DESC LIMIT $max_items",
+			$base_query . " WHERE 1$cookie_extra_conditions AND s.id IN ($in_clause,324,280,20,132,77,207,71) GROUP BY s.id ORDER BY FIELD(s.id,324,280,20,132,77,207,71,$in_clause) DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.air_date DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
 		$carousel=array(TRUE, TRUE, TRUE, TRUE);

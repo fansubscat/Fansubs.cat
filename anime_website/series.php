@@ -408,7 +408,7 @@ if ($count_unfiltered==0) {
 			if (count($seasons)<2) {
 				foreach ($seasons as $season) {
 ?>
-									<table class="episode-table" rules="rows">
+									<table class="episode-table">
 										<thead>
 											<tr>
 												<th class="episode-seen-head">Vist</th>

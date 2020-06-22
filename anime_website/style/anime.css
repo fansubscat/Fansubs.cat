@@ -861,6 +861,7 @@ a:hover {
 
 .episode-table {
 	width: 100%;
+	border-collapse: collapse;
 }
 
 .episode-table .right {
@@ -898,6 +899,10 @@ a:hover {
 	text-align: left;
 	vertical-align: top;
 	border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.episode-table tbody tr:last-child {
+	border-bottom: none;
 }
 
 .episode-table tbody tr.episode-multiple {
