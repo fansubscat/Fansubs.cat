@@ -194,9 +194,7 @@ function internal_print_episode($episode_title, $result) {
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode-multiple">'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-list-ul icon-play"></span>'.$episode_title."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title no-indent">'.$episode_title."</div>\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right"></td>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
@@ -220,8 +218,10 @@ function internal_print_episode($episode_title, $result) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-				$extra_info="Resolució del vídeo: ".$vrow['resolution']."\nTipus de streaming: ".get_provider($vrow['url']);
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<span class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</span></span>'."\n";
+				if (!empty($vrow['resolution'])) {
+					$extra_info="Resolució del vídeo: ".$vrow['resolution']."\nTipus de streaming: ".get_provider($vrow['url']);
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip-container">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'<span class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($extra_info)).'</span></span>'."\n";
+				}
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 			} else { //Empty link -> lost link

@@ -911,6 +911,11 @@ a:hover {
 	text-indent: -1em;
 }
 
+.episode-title.no-indent {
+	margin-left: 0;
+	text-indent: 0;
+}
+
 .season {
 	margin-bottom: 1em;
 	margin-left: 1.2em;
