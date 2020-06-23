@@ -92,6 +92,11 @@ CREATE TABLE `rel_version_fansub` (
   `fansub_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `search_history` (
+  `query` varchar(200) NOT NULL,
+  `day` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `season` (
   `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,

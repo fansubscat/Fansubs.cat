@@ -509,20 +509,22 @@ a:hover {
 	background-color: rgba(0,0,100,0.8);
 	color: white;
 	font-weight: bold;
-	text-overflow: ellipsis;
 	font-size: 0.9em;
 	text-align: center;
-	/* For ellipsizing and max 2 lines */
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
 	line-height: 1.2em;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 2.4em;
+}
+
+.thumbnail .title .ellipsized-title {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	/* For ellipsizing and max 2 lines */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 }
 
 .thumbnail .fansub {

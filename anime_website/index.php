@@ -54,7 +54,7 @@ $base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR 
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
-$cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ? " AND v.status<>5 AND v.status<>4" : "").(!empty($_COOKIE['hide_missing']) ? " AND v.episodes_missing=0" : "").((empty($_COOKIE['show_hentai'] && !is_robot())) ? " AND s.rating<>'XXX'" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
+$cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ? " AND v.status<>5 AND v.status<>4" : "").(!empty($_COOKIE['hide_missing']) ? " AND v.episodes_missing=0" : "").((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND s.rating<>'XXX'" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
 switch ($header_tab){
 	case 'movies':
@@ -73,6 +73,9 @@ switch ($header_tab){
 		break;
 	case 'search':
 		$query = (!empty($_GET['query']) ? escape($_GET['query']) : "");
+		if (!empty($query)){
+			query("INSERT INTO search_history (query,day) VALUES ('".escape($_GET['query'])."','".date('Y-m-d')."')");
+		}
 		$sections=array("Resultats de la cerca");
 		$queries=array(
 			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%')$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
@@ -91,9 +94,7 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 		$sections=array("Darreres actualitzacions", "Més populars", "Més actuals", "Més ben valorades");
 		$queries=array(
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
-			#$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
-			#$base_query . " WHERE 1 AND v.status<>5 AND v.status<>4 AND s.rating<>'XXX' GROUP BY s.id ORDER BY FIELD(s.id,348,358,408,411,395,89,320) DESC LIMIT $max_items",
-			$base_query . " WHERE 1$cookie_extra_conditions AND s.id IN ($in_clause,324,280,20,132,77,207,71) GROUP BY s.id ORDER BY FIELD(s.id,324,280,20,132,77,207,71,$in_clause) DESC LIMIT $max_items",
+			$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.air_date DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
 		$carousel=array(TRUE, TRUE, TRUE, TRUE);
@@ -177,7 +178,9 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 			}
 ?>
-									<div class="title"><?php echo $row['name']; ?></div>
+									<div class="title">
+										<div class="ellipsized-title"><?php echo $row['name']; ?></div>
+									</div>
 								</div>
 								<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $row['fansub_name']; ?></div>
 							</a>

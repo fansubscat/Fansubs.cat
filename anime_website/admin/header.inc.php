@@ -93,6 +93,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Eines</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
 							<a class="dropdown-item" href="stats.php">Estadístiques</a>
+							<a class="dropdown-item" href="search_history.php">Historial de cerques</a>
 							<a class="dropdown-item" href="link_verifier.php">Verificador d'enllaços</a>
 <?php
 		if ($_SESSION['admin_level']>=3) {
