@@ -490,6 +490,21 @@ a:hover {
 	font-size: 0.8em;
 	text-align: right;
 	margin-left: auto;
+	float: right;
+	width: fit-content;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+}
+
+.thumbnail .new {
+	background-color: rgba(255,0,0,0.7);
+	color: white;
+	font-weight: bold;
+	font-size: 0.8em;
+	text-align: left;
+	margin-right: auto;
+	float: left;
 	width: fit-content;
 	line-height: 1.4em;
 	padding-left: 0.4em;
@@ -516,6 +531,7 @@ a:hover {
 	align-items: center;
 	justify-content: center;
 	height: 2.4em;
+	clear: both;
 }
 
 .thumbnail .title .ellipsized-title {

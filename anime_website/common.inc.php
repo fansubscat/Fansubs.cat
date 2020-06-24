@@ -280,8 +280,8 @@ function get_cookie_fansub_ids() {
 	if (!empty($_COOKIE['hidden_fansubs'])) {
 		$exploded = explode(',',$_COOKIE['hidden_fansubs']);
 		foreach ($exploded as $id) {
-			if (is_numeric($id)) {
-				array_push($fansub_ids, $id);
+			if (intval($id)) {
+				array_push($fansub_ids, intval($id));
 			}
 		}
 	}
@@ -293,8 +293,8 @@ function get_cookie_viewed_links_ids() {
 	if (!empty($_COOKIE['viewed_links'])) {
 		$exploded = explode(',',$_COOKIE['viewed_links']);
 		foreach ($exploded as $id) {
-			if (is_numeric($id)) {
-				array_push($link_ids, $id);
+			if (intval($id)) {
+				array_push($link_ids, intval($id));
 			}
 		}
 	}

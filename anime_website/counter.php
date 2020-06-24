@@ -2,9 +2,9 @@
 ob_start();
 require_once("db.inc.php");
 
-if (!empty($_GET['link_id']) && is_numeric($_GET['link_id']) && !empty($_GET['action'])) {
-	$link_id = escape($_GET['link_id']);
+$link_id = (!empty($_GET['link_id']) ? intval($_GET['link_id']) : 0);
 
+if ($link_id>0 && !empty($_GET['action'])) {
 	$result = query("SELECT l.*, e.duration FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.id=$link_id");
 	if ($row = mysqli_fetch_assoc($result)) {
 		if ($_GET['action']=='close') {

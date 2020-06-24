@@ -50,7 +50,9 @@ if (is_robot()){
 
 $max_items=24;
 
-$base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$cookie_viewed_links = get_cookie_viewed_links_ids();
+
+$base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
@@ -78,7 +80,7 @@ switch ($header_tab){
 		}
 		$sections=array("Resultats de la cerca");
 		$queries=array(
-			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%')$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
+			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%') GROUP BY s.id ORDER BY s.name ASC");
 		$carousel=array(FALSE);
 		break;
 	default:
@@ -167,6 +169,13 @@ for ($i=0;$i<count($sections);$i++){
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">
+<?php
+			if (!empty($row['last_link_created']) && $row['last_link_created']>=date('d-m-Y', strtotime("-1 week"))) {
+?>
+									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">NOU</div>
+<?php
+			}
+?>
 <?php
 			if ($row['type']=='movie' && $row['episodes']>1) {
 ?>

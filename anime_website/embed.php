@@ -2,7 +2,9 @@
 require_once("db.inc.php");
 require_once("common.inc.php");
 
-$result = query("SELECT * FROM link WHERE id=".escape($_GET['link_id']).' AND url IS NOT NULL');
+$link_id = (!empty($_GET['link_id']) ? intval($_GET['link_id']) : 0);
+
+$result = query("SELECT * FROM link WHERE id=$link_id AND url IS NOT NULL");
 $link = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
