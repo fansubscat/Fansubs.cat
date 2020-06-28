@@ -78,9 +78,10 @@ switch ($header_tab){
 		if (!empty($query)){
 			query("INSERT INTO search_history (query,day) VALUES ('".escape($_GET['query'])."','".date('Y-m-d')."')");
 		}
+		$query = str_replace(" ", "%", $query);
 		$sections=array("Resultats de la cerca");
 		$queries=array(
-			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%') GROUP BY s.id ORDER BY s.name ASC");
+			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords LIKE '%$query%') GROUP BY s.id ORDER BY s.name ASC");
 		$carousel=array(FALSE);
 		break;
 	default:
@@ -170,7 +171,7 @@ for ($i=0;$i<count($sections);$i++){
 								<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">
 <?php
-			if (!empty($row['last_link_created']) && $row['last_link_created']>=date('d-m-Y', strtotime("-1 week"))) {
+			if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
 ?>
 									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">NOU</div>
 <?php

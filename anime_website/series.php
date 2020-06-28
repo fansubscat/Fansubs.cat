@@ -4,11 +4,11 @@ require_once("parsedown.inc.php");
 
 function get_fansub_with_url($fansub) {
 	if ($fansub['name']=='Fansub independent') {
-		return "un fansub independent";
+		return "<strong>un fansub independent</strong>";
 	} else if (!empty($fansub['url'])) {
-		return '<a href="'.htmlspecialchars($fansub['url']).'" target="_blank">'.htmlspecialchars($fansub['name']).'</a>';
+		return '<strong><a href="'.htmlspecialchars($fansub['url']).'" target="_blank">'.htmlspecialchars($fansub['name']).'</a></strong>';
 	} else {
-		return htmlspecialchars($fansub['name']);
+		return '<strong>'.htmlspecialchars($fansub['name']).'</strong>';
 	}
 }
 

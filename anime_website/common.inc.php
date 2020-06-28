@@ -212,7 +212,7 @@ function internal_print_episode($episode_title, $result) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Reprodueix').'</a> '."\n";
-				if ($vrow['created']>=date('d-m-Y', strtotime("-1 week"))) {
+				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode'.(in_array($vrow['id'], get_cookie_viewed_links_ids()) ? ' hidden' : '').'" data-link-id="'.$vrow['id'].'" title="Publicat durant la darrera setmana">NOU</span>'."\n";
 				}
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
@@ -246,7 +246,7 @@ function internal_print_episode($episode_title, $result) {
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
-			if ($vrow['created']>=date('d-m-Y', strtotime("-1 week"))) {
+			if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode'.(in_array($vrow['id'], get_cookie_viewed_links_ids()) ? ' hidden' : '').'" data-link-id="'.$vrow['id'].'" title="Publicat durant la darrera setmana">NOU</span>'."\n";
 			}
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
