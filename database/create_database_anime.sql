@@ -111,6 +111,7 @@ CREATE TABLE `series` (
   `slug` varchar(200) NOT NULL,
   `name` varchar(200) NOT NULL,
   `alternate_names` varchar(200) DEFAULT NULL,
+  `keywords` varchar(200) DEFAULT NULL,
   `type` varchar(200) NOT NULL DEFAULT 'movie',
   `air_date` timestamp NULL DEFAULT NULL,
   `author` varchar(200) DEFAULT NULL,
