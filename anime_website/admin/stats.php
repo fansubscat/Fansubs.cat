@@ -136,30 +136,58 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Les 10 sèries més vistes</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Les 10 sèries més vistes (darrers 7 dies / sempre)</h4>
 								<hr>
-								<table class="table table-hover table-striped">
-									<thead class="thead-dark">
-										<tr>
-											<th scope="col">Sèrie</th>
-											<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
-										</tr>
+								<div class="row">
+									<div class="w-50 pr-1">
+										<table class="table table-hover table-striped">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col">Sèrie</th>
+													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
+												</tr>
+											</thead>
+											<tbody>
 <?php
-	$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
+	$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='".date("Y-m-d",strtotime("-1 week"))."' AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-										<tr>
-											<td scope="col"><?php echo $row['series_name']; ?></td>
-											<td class="text-center"><?php echo $row['max_views']; ?></td>
-										</tr>
+												<tr>
+													<td scope="col"><?php echo $row['series_name']; ?></td>
+													<td class="text-center"><?php echo $row['max_views']; ?></td>
+												</tr>
 <?php
 	}
 	mysqli_free_result($result);
 ?>
-									</thead>
-									<tbody>
-									</tbody>
-								</table>
+											</tbody>
+										</table>
+									</div>
+									<div class="w-50 pl-1">
+										<table class="table table-hover table-striped">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col">Sèrie</th>
+													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
+												</tr>
+											</thead>
+											<tbody>
+<?php
+	$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
+	while ($row = mysqli_fetch_assoc($result)) {
+?>
+												<tr>
+													<td scope="col"><?php echo $row['series_name']; ?></td>
+													<td class="text-center"><?php echo $row['max_views']; ?></td>
+												</tr>
+<?php
+	}
+	mysqli_free_result($result);
+?>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</article>
 						</div>
 					</div>
@@ -373,30 +401,58 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Les 10 sèries més vistes</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Les 10 sèries més vistes (darrers 7 dies / sempre)</h4>
 								<hr>
-								<table class="table table-hover table-striped">
-									<thead class="thead-dark">
-										<tr>
-											<th scope="col">Sèrie</th>
-											<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
-										</tr>
+								<div class="row">
+									<div class="w-50 pr-1">
+										<table class="table table-hover table-striped">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col">Sèrie</th>
+													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
+												</tr>
+											</thead>
+											<tbody>
 <?php
-		$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL AND l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
+		$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='".date("Y-m-d",strtotime("-1 week"))."' AND l.episode_id IS NOT NULL AND l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
 		while ($row = mysqli_fetch_assoc($result)) {
 ?>
-										<tr>
-											<td scope="col"><?php echo $row['series_name']; ?></td>
-											<td class="text-center"><?php echo $row['max_views']; ?></td>
-										</tr>
+												<tr>
+													<td scope="col"><?php echo $row['series_name']; ?></td>
+													<td class="text-center"><?php echo $row['max_views']; ?></td>
+												</tr>
 <?php
 		}
 		mysqli_free_result($result);
 ?>
-									</thead>
-									<tbody>
-									</tbody>
-								</table>
+											</tbody>
+										</table>
+									</div>
+									<div class="w-50 pl-1">
+										<table class="table table-hover table-striped">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col">Sèrie</th>
+													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
+												</tr>
+											</thead>
+											<tbody>
+<?php
+		$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL AND l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
+		while ($row = mysqli_fetch_assoc($result)) {
+?>
+												<tr>
+													<td scope="col"><?php echo $row['series_name']; ?></td>
+													<td class="text-center"><?php echo $row['max_views']; ?></td>
+												</tr>
+<?php
+		}
+		mysqli_free_result($result);
+?>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</article>
 						</div>
 					</div>

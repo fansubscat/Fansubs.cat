@@ -212,6 +212,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",comments=".$link['comments']." WHERE id=".$link['id']);
 						if (empty($_POST['do_not_count_as_update']) && (empty($current_link['url']) ? "NULL" : "'".escape($current_link['url'])."'")!=$link['url']) {
 							query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+							if (empty($current_link['url']) && $link['url']!='NULL') {
+								query("UPDATE link SET created=CURRENT_TIMESTAMP WHERE id=".$link['id']);
+							}
 						}
 					}
 					mysqli_free_result($resultcr);

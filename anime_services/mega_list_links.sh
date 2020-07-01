@@ -12,6 +12,7 @@ fi
 mega-login $SESSION_ID > /dev/null 2> /dev/null
 if [ $? -ne 0 ]
 then
+	mega-logout --keep-session > /dev/null 2> /dev/null
 	exit 2
 fi
 
