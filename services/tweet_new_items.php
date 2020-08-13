@@ -17,6 +17,14 @@ $last_tweeted_manga_id=(int)file_get_contents('last_tweeted_manga_id.txt');
 $last_tweeted_anime_id=(int)file_get_contents('last_tweeted_anime_id.txt');
 
 $new_manga_tweets = array(
+	'Tenim un nou manga editat per %2$s a manga.fansubs.cat: «%1$s»!',
+	'Hi ha disponible un nou manga editat per %2$s a manga.fansubs.cat: «%1$s»!',
+	'Ja podeu llegir el nou manga «%1$s» editat per %2$s a manga.fansubs.cat!',
+	'Hem afegit un nou manga editat per %2$s a manga.fansubs.cat: «%1$s»!',
+	'Nou manga: «%1$s», editat per %2$s! Seguiu-lo a manga.fansubs.cat!'
+);
+
+$new_manga_tweets_no_fansub = array(
 	'Tenim un nou manga a manga.fansubs.cat: «%1$s»!',
 	'Hi ha disponible un nou manga a manga.fansubs.cat: «%1$s»!',
 	'Ja podeu llegir el nou manga «%1$s» a manga.fansubs.cat!',
@@ -25,6 +33,12 @@ $new_manga_tweets = array(
 );
 
 $new_chapter_tweets = array(
+	'Ja hi ha disponible «%1$s - %2$s» (%3$s) al web de manga.fansubs.cat!',
+	'S\'ha afegit «%1$s - %2$s» (%3$s) al web de manga.fansubs.cat!',
+	'Ja podeu llegir «%1$s - %2$s» (%3$s) al web de manga.fansubs.cat!'
+);
+
+$new_chapter_tweets_no_fansub = array(
 	'Ja hi ha disponible «%1$s - %2$s» al web de manga.fansubs.cat!',
 	'S\'ha afegit «%1$s - %2$s» al web de manga.fansubs.cat!',
 	'Ja podeu llegir «%1$s - %2$s» al web de manga.fansubs.cat!'
@@ -69,9 +83,45 @@ $new_mangas = array();
 while ($row = mysqli_fetch_assoc($result)){
 	if (empty($row['id_uppercat'])) {
 		array_push($new_mangas, $row['id']);
-		$random = array_rand($new_manga_tweets, 1);
-		$tweet = sprintf($new_manga_tweets[$random], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
-		array_push($tweets, $tweet);
+
+		//YES, THIS IS UGLY
+		//Find which fansub uploaded this (max 5 levels)
+		$fansubres = mysqli_query($db_connection_manga, "SELECT GROUP_CONCAT(DISTINCT u.username SEPARATOR '|') fansub_name FROM piwigo_image_category ic LEFT JOIN piwigo_images i ON ic.image_id=i.id LEFT JOIN piwigo_users u ON i.added_by=u.id WHERE category_id IN (SELECT DISTINCT IFNULL(c4.id,IFNULL(c3.id,IFNULL(c2.id,c1.id))) id FROM piwigo_categories c1 LEFT JOIN piwigo_categories c2 ON c2.id_uppercat=c1.id LEFT JOIN piwigo_categories c3 ON c3.id_uppercat=c2.id LEFT JOIN piwigo_categories c4 ON c4.id_uppercat=c3.id WHERE c1.id_uppercat=".$row['id']." UNION SELECT ".$row['id'].")") or die(mysqli_error($db_connection_manga));
+		$fansub_names = explode('|', mysqli_fetch_assoc($fansubres)['fansub_name']);
+		$fansub_handle='';
+		foreach ($fansub_names as $fansub_name) {
+			switch ($fansub_name){
+				case 'CatSub':
+					if (!empty($fansub_handle)) {
+						$fansub_handle.=' + ';
+					}
+					$fansub_handle.='@CatSubFansub';
+					break;
+				case 'El Detectiu Conan':
+					if (!empty($fansub_handle)) {
+						$fansub_handle.=' + ';
+					}
+					$fansub_handle.='@ElDetectiuConan';
+					break;
+				case 'Lluna Plena no Fansub':
+					if (!empty($fansub_handle)) {
+						$fansub_handle.=' + ';
+					}
+					$fansub_handle.='@LlPnF';
+					break;
+				default:
+					break;
+			}
+		}
+		if (!empty($fansub_handle)) {
+			$random = array_rand($new_manga_tweets, 1);
+			$tweet = sprintf($new_manga_tweets[$random], $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
+			array_push($tweets, $tweet);
+		} else {
+			$random = array_rand($new_manga_tweets_no_fansub, 1);
+			$tweet = sprintf($new_manga_tweets_no_fansub[$random], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
+			array_push($tweets, $tweet);
+		}
 	} else { // Get only the last branches of the tree
 		$cntres = mysqli_query($db_connection_manga, "SELECT COUNT(*) cnt FROM piwigo_categories c WHERE id_uppercat=".$row['id']) or die(mysqli_error($db_connection_manga));
 		$cntrow = mysqli_fetch_assoc($cntres);
@@ -86,9 +136,44 @@ while ($row = mysqli_fetch_assoc($result)){
 			} while (!empty($parentrow['id_uppercat']));
 
 			if (!in_array($parentrow['id'], $new_mangas)) { //Ignore if already reported as new manga
-				$random = array_rand($new_chapter_tweets, 1);
-				$tweet = sprintf($new_chapter_tweets[$random], $parentrow['name'], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
-				array_push($tweets, $tweet);
+				//YES, THIS IS UGLY
+				//Find which fansub uploaded this (max 5 levels)
+				$fansubres = mysqli_query($db_connection_manga, "SELECT GROUP_CONCAT(DISTINCT u.username SEPARATOR '|') fansub_name FROM piwigo_image_category ic LEFT JOIN piwigo_images i ON ic.image_id=i.id LEFT JOIN piwigo_users u ON i.added_by=u.id WHERE category_id IN (SELECT DISTINCT IFNULL(c4.id,IFNULL(c3.id,IFNULL(c2.id,c1.id))) id FROM piwigo_categories c1 LEFT JOIN piwigo_categories c2 ON c2.id_uppercat=c1.id LEFT JOIN piwigo_categories c3 ON c3.id_uppercat=c2.id LEFT JOIN piwigo_categories c4 ON c4.id_uppercat=c3.id WHERE c1.id_uppercat=".$parentrow['id'].")") or die(mysqli_error($db_connection_manga));
+				$fansub_names = explode('|', mysqli_fetch_assoc($fansubres)['fansub_name']);
+				$fansub_handle='';
+				foreach ($fansub_names as $fansub_name) {
+					switch ($fansub_name){
+						case 'CatSub':
+							if (!empty($fansub_handle)) {
+								$fansub_handle.=' + ';
+							}
+							$fansub_handle.='@CatSubFansub';
+							break;
+						case 'El Detectiu Conan':
+							if (!empty($fansub_handle)) {
+								$fansub_handle.=' + ';
+							}
+							$fansub_handle.='@ElDetectiuConan';
+							break;
+						case 'Lluna Plena no Fansub':
+							if (!empty($fansub_handle)) {
+								$fansub_handle.=' + ';
+							}
+							$fansub_handle.='@LlPnF';
+							break;
+						default:
+							break;
+					}
+				}
+				if (!empty($fansub_handle)) {
+					$random = array_rand($new_chapter_tweets, 1);
+					$tweet = sprintf($new_chapter_tweets[$random], $parentrow['name'], $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
+					array_push($tweets, $tweet);
+				} else {
+					$random = array_rand($new_chapter_tweets_no_fansub, 1);
+					$tweet = sprintf($new_chapter_tweets_no_fansub[$random], $parentrow['name'], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
+					array_push($tweets, $tweet);
+				}
 			}
 		}
 	}
@@ -123,7 +208,7 @@ while ($row = mysqli_fetch_assoc($result)){
 				array_push($tweets, $tweet);
 			} else {
 				$random = array_rand($new_episode_number_no_name_tweets, 1);
-				$tweet = sprintf($new_episode_number_tweets[$random], $row['name'], '', $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug']."?version=".$row['version_id'];
+				$tweet = sprintf($new_episode_number_no_name_tweets[$random], $row['name'], '', $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug']."?version=".$row['version_id'];
 				array_push($tweets, $tweet);
 			}
 		} else {
