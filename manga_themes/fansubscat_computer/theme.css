@@ -25,3 +25,9 @@
 .page-links {
 	margin-top: 0.2em;
 }
+
+#theImage img {
+	width: auto;
+	height: auto;
+	max-width: 1200px;
+}

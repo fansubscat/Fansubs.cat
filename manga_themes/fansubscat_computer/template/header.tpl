@@ -19,7 +19,7 @@
 {/if}
 
 <title>{if $PAGE_TITLE!=l10n('Home') && $PAGE_TITLE!=$GALLERY_TITLE}{$PAGE_TITLE} | {/if}{$GALLERY_TITLE}</title>
-<link rel="shortcut icon" type="image/x-icon" href="{$ROOT_URL}{$themeconf.icon_dir}/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="/local/favicon.ico">
 
 <link rel="start" title="{'Home'|translate}" href="{$U_HOME}" >
 <link rel="search" title="{'Search'|translate}" href="{$ROOT_URL}search.php" >
@@ -53,11 +53,16 @@
 
 {literal}
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-15"></script>
+<script src="/themes/fansubscat_computer/imageMapResizer.js"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'UA-628107-15');
+
+  window.onload = function () {
+    imageMapResize();
+  }
 </script>
 {/literal}
 
