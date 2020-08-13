@@ -1,6 +1,5 @@
 <?php
 require_once("libs/simple_html_dom.php");
-require_once("libs/codebird.php");
 require_once('common.inc.php');
 require_once('config.inc.php');
 require_once("vendor/autoload.php");
@@ -223,11 +222,8 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 
 		//Hello 2016, we are now in the future 2018. We will send it via FCM so the Android app receives it ;)
 		//Hello 2018, we are now in the future 2020. We will send some tweets too... ;)
+		//Hello 2020, 2020 still. Maybe we will disable the news tweets, they are a bit annoying... And replace them with a cron job that tweets new manga/anime added to the DB.
 		global $firebase_api_key;
-		global $twitter_consumer_key;
-		global $twitter_consumer_secret;
-		global $twitter_access_token;
-		global $twitter_access_token_secret;
 
 		$push_result = mysqli_query($db_connection, "SELECT n.title, n.fansub_id, n.url, f.name, f.twitter FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fetcher_id=$fetcher_id ORDER BY date DESC LIMIT $increment") or die(mysqli_error($db_connection));
 		while ($push_row = mysqli_fetch_assoc($push_result)){
@@ -250,18 +246,6 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 			curl_exec($curl) or die('FCM Send Error: ' . curl_error($curl));
 			//Close request
 			curl_close($curl);
-
-			\Codebird\Codebird::setConsumerKey($twitter_consumer_key, $twitter_consumer_secret);
-			$cb = \Codebird\Codebird::getInstance();
-			$cb->setToken($twitter_access_token, $twitter_access_token_secret);
-
-			$status = "Nova notícia ".(!empty($push_row['twitter']) ? get_prepositioned_text($push_row['twitter'],TRUE) : get_prepositioned_text($push_row['name'])).": «".$push_row['title']."»";
-			$url = (!empty($push_row['url']) ? $push_row['url'] : 'https://www.fansubs.cat/');
-
-			$params = array(
-				'status' => (strlen($status)>254 ? substr($status, 0, 250)."...»" : $status)."\n".$url
-			);
-			$cb->statuses_update($params);
 		}
 
 		mysqli_free_result($push_result);
@@ -324,7 +308,7 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 				$datetext = str_ireplace('noviembre', 'November', $datetext);
 				$datetext = str_ireplace('diciembre', 'December', $datetext);
 
-				$date = date_create_from_format('d F, Y H:i:s', $datetext . ' 00:00:00');
+				$date = date_create_from_format('d/m/Y H:i:s', $datetext . ' 00:00:00');
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;

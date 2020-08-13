@@ -4,6 +4,9 @@
 # Fansubs.cat - Update feeds every 15 minutes
 */15 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php fetch.php
 
+# Fansubs.cat - Post tweets with newly added items
+*/12 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php tweet_new_items.php
+
 # Fansubs.cat - Anime - Update Mega links from accounts
 */30 * * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php links_updater_cron.php
 

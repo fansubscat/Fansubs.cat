@@ -13,6 +13,10 @@ function sendAjaxViewEnd(){
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open("GET", '/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
 		xmlHttp.send(null);
+		gtag('event', 'Close link', {
+			'event_category': "Playback",
+			'event_label': currentLinkId + " / " + (Math.floor(new Date().getTime()/1000)-currentStartTime)
+		});
 		currentLinkId=-1;
 		currentStartTime=-1;
 	}
@@ -21,6 +25,10 @@ function sendAjaxViewEnd(){
 function sendBeaconViewEnd(){
 	if (currentLinkId!=-1){
 		navigator.sendBeacon('/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime));
+		gtag('event', 'Close link', {
+			'event_category': "Playback",
+			'event_label': currentLinkId + " / " + (Math.floor(new Date().getTime()/1000)-currentStartTime)
+		});
 		currentLinkId=-1;
 		currentStartTime=-1;
 	}
@@ -116,6 +124,10 @@ $(document).ready(function() {
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.open("GET", '/counter.php?link_id='+$(this).attr('data-link-id')+"&action=open", true);
 			xmlHttp.send(null);
+			gtag('event', 'Open link', {
+				'event_category': "Playback",
+				'event_label': currentLinkId
+			});
 			currentLinkId=$(this).attr('data-link-id');
 			currentStartTime=Math.floor(new Date().getTime()/1000);
 			markLinkAsViewed($(this).attr('data-link-id'));
@@ -383,4 +395,4 @@ function gtag(){
 	dataLayer.push(arguments)
 }
 gtag('js', new Date());
-gtag('config', 'UA-628107-14');
+gtag('config', 'UA-628107-14', {'transport_type': 'beacon'});

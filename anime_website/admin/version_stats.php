@@ -112,7 +112,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th class="text-center" scope="col" style="width: 12%;">Temps mitjà</th>
 							</tr>
 <?php
-	$result = query("SELECT l.episode_id, e.number, e.name, et.title, l.extra_name, s.episodes series_episodes, s.name series_name, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0) total_time_spent FROM link l LEFT JOIN views v ON l.id=v.link_id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN episode_title et ON e.id=et.episode_id LEFT JOIN series s ON e.series_id=s.id WHERE l.version_id=".escape($_GET['id'])." GROUP BY IFNULL(l.episode_id,l.extra_name) ORDER BY l.episode_id IS NULL ASC, e.number IS NULL ASC, e.number ASC, l.extra_name ASC");
+	$result = query("SELECT l.episode_id, e.number, e.name, et.title, l.extra_name, s.episodes series_episodes, s.name series_name, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0) total_time_spent FROM link l LEFT JOIN views v ON l.id=v.link_id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=l.version_id LEFT JOIN series s ON e.series_id=s.id WHERE l.version_id=".escape($_GET['id'])." GROUP BY IFNULL(l.episode_id,l.extra_name) ORDER BY l.episode_id IS NULL ASC, e.number IS NULL ASC, e.number ASC, l.extra_name ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$episode_title='';
 		

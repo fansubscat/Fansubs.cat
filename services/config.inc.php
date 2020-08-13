@@ -5,6 +5,18 @@ $db_name="YOUR_DB_NAME_HERE";
 $db_user="YOUR_DB_USER_HERE";
 $db_passwd="YOUR_DB_PASS_HERE";
 
+//Anime database access
+$db_host_anime="YOUR_ANIME_DB_HOST_HERE";
+$db_name_anime="YOUR_ANIME_DB_NAME_HERE";
+$db_user_anime="YOUR_ANIME_DB_USER_HERE";
+$db_passwd_anime="YOUR_ANIME_DB_PASS_HERE";
+
+//Manga database access
+$db_host_manga="YOUR_MANGA_DB_HOST_HERE";
+$db_name_manga="YOUR_MANGA_DB_NAME_HERE";
+$db_user_manga="YOUR_MANGA_DB_USER_HERE";
+$db_passwd_manga="YOUR_MANGA_DB_PASS_HERE";
+
 //Social network tokens
 $facebook_api_token='YOUR_APP_TOKEN_HERE';
 
