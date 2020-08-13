@@ -226,13 +226,22 @@ if ($count_unfiltered==0) {
 	}
 } else {
 	if ($count>1) {
+		//Check if specified version exists
+		$version_found = FALSE;
+		while ($version = mysqli_fetch_assoc($result)) {
+			if ($version['id']==$_GET['version']){
+				$version_found = TRUE;
+				break;
+			}
+		}
+		mysqli_data_seek($result, 0);
 ?>
 						<div class="version_tab_container">
 <?php
 		$i=0;
 		while ($version = mysqli_fetch_assoc($result)) {
 ?>
-							<div class="version_tab<?php echo (!empty($_GET['version']) ? $version['id']==$_GET['version'] : $i==0) ? ' version_tab_selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>">
+							<div class="version_tab<?php echo ($version_found ? $version['id']==$_GET['version'] : $i==0) ? ' version_tab_selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>">
 								<div class="status-<?php echo get_status($version['status']); ?> status-indicator-tab" title="<?php echo get_status_description($version['status']); ?>"></div>
 								<div class="version_tab_text"><?php echo htmlspecialchars('Versió '.get_fansub_preposition_name($version['fansub_name'])); ?></div>
 							</div>
@@ -248,7 +257,7 @@ if ($count_unfiltered==0) {
 	$i=0;
 	while ($version = mysqli_fetch_assoc($result)) {
 ?>
-						<div class="version_content<?php echo $count>1 ? ' version_content_multi' : ''; ?><?php echo (!empty($_GET['version']) ? $version['id']!=$_GET['version'] : $i>0) ? ' hidden' : ''; ?>" id="version_content_<?php echo $version['id']; ?>">
+						<div class="version_content<?php echo $count>1 ? ' version_content_multi' : ''; ?><?php echo ($version_found ? $version['id']!=$_GET['version'] : $i>0) ? ' hidden' : ''; ?>" id="version_content_<?php echo $version['id']; ?>">
 <?php
 		$resultf = query("SELECT f.* FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE vf.version_id=".$version['id']." ORDER BY f.name ASC");
 		$fansubs = array();

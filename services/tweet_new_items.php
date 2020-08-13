@@ -109,11 +109,11 @@ WHERE l.id>$last_tweeted_anime_id AND l.url IS NOT NULL AND l.episode_id IS NOT 
 while ($row = mysqli_fetch_assoc($result)){
 	if ($row['new_series']==1) {
 		$random = array_rand($new_anime_tweets, 1);
-		$tweet = sprintf($new_anime_tweets[$random], $row['name'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'];
+		$tweet = sprintf($new_anime_tweets[$random], $row['name'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug']."?version=".$row['version_id'];
 		array_push($tweets, $tweet);
 	} else if ($row['cnt']>1){ //Multiple episodes
 		$random = array_rand($new_episodes_tweets, 1);
-		$tweet = sprintf($new_episodes_tweets[$random], $row['name'], $row['cnt'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'];
+		$tweet = sprintf($new_episodes_tweets[$random], $row['name'], $row['cnt'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug']."?version=".$row['version_id'];
 		array_push($tweets, $tweet);
 	} else { //Single episode
 		if ($row['show_episode_numbers']==1) {
