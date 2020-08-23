@@ -182,7 +182,7 @@ while ($row = mysqli_fetch_assoc($result)){
 
 mysqli_free_result($result);
 
-$result = mysqli_query($db_connection_anime, "SELECT s.name, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(l.version_id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.url IS NOT NULL) new_series
+$result = mysqli_query($db_connection_anime, "SELECT IF(s.show_seasons=1, IFNULL(se.name,s.name), s.name) name, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(l.version_id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.url IS NOT NULL) new_series
 FROM link l
 LEFT JOIN version v ON l.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -190,6 +190,7 @@ LEFT JOIN fansub f ON vf.fansub_id=f.id
 LEFT JOIN series s ON v.series_id=s.id
 LEFT JOIN episode_title et ON l.episode_id=et.episode_id AND et.version_id=l.version_id
 LEFT JOIN episode e ON l.episode_id=e.id
+LEFT JOIN season se ON se.id=e.season_id
 WHERE l.id>$last_tweeted_anime_id AND l.url IS NOT NULL AND l.episode_id IS NOT NULL GROUP BY l.version_id ORDER BY MAX(l.id) ASC") or die(mysqli_error($db_connection_anime));
 while ($row = mysqli_fetch_assoc($result)){
 	if ($row['new_series']==1) {
