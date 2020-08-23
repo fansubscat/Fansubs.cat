@@ -218,6 +218,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			$i++;
 		}
+
+		$related_manga=array();
+		$i=1;
+		while (!empty($_POST['form-relatedmanga-list-name-'.$i])) {
+			if (!empty($_POST['form-relatedmanga-list-url-'.$i])) {
+				array_push($related_manga,array(
+					'name' => escape($_POST['form-relatedmanga-list-name-'.$i]),
+					'url' => escape($_POST['form-relatedmanga-list-url-'.$i]),
+					)
+				);
+			} else {
+				crash("Dades invàlides: manca url de manga relacionat");
+			}
+			$i++;
+		}
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-series", "S'ha actualitzat la sèrie amb nom '".$data['name']."' (id. de sèrie: ".$data['id'].")");
@@ -259,6 +274,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			foreach ($related_series as $related_series_id) {
 				query("REPLACE INTO related_series (series_id,related_series_id) VALUES (".$data['id'].",".$related_series_id.")");
 			}
+			query("DELETE FROM related_manga WHERE series_id=".$data['id']);
+			foreach ($related_manga as $related_manga_item) {
+				query("REPLACE INTO related_manga (series_id,name,url) VALUES (".$data['id'].",'".$related_manga_item['name']."','".$related_manga_item['url']."')");
+			}
 
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
@@ -277,6 +296,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			foreach ($related_series as $related_series_id) {
 				query("REPLACE INTO related_series (series_id,related_series_id) VALUES (".$inserted_id.",".$related_series_id.")");
+			}
+			foreach ($related_manga as $related_manga_item) {
+				query("REPLACE INTO related_manga (series_id,name,url) VALUES (".$inserted_id.",'".$related_manga_item['name']."','".$related_manga_item['url']."')");
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
@@ -688,7 +710,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 												<tr id="related-list-table-empty" class="<?php echo count($related_series)>0 ? 'd-none' : ''; ?>">
-													<td colspan="5" class="text-center">- No hi ha cap sèrie relacionada -</td>
+													<td colspan="2" class="text-center">- No hi ha cap sèrie relacionada -</td>
 												</tr>
 <?php
 	for ($j=0;$j<count($related_series);$j++) {
@@ -721,6 +743,64 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<div class="form-group row w-100 ml-0">
 										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
 											<button onclick="addRelatedSeriesRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una sèrie relacionada</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-relatedmanga-list">Manga relacionat <small class="text-muted">(es mostrarà a la fitxa pública)</small></label>
+							<div class="container" id="form-relatedmanga-list">
+<?php
+
+	if (!empty($row['id'])) {
+		$resultrm = query("SELECT rm.* FROM related_manga rm WHERE rm.series_id=".escape($_GET['id'])." ORDER BY rm.name ASC");
+		$related_manga = array();
+		while ($rowrm = mysqli_fetch_assoc($resultrm)) {
+			array_push($related_manga, $rowrm);
+		}
+		mysqli_free_result($resultrm);
+	} else {
+		$related_manga=array();
+	}
+?>
+								<div class="row mb-3">
+									<div class="w-100 column">
+										<table class="table table-bordered table-hover table-sm" id="relatedmanga-list-table" data-count="<?php echo count($related_manga); ?>">
+											<thead>
+												<tr>
+													<th class="mandatory">Nom</th>
+													<th class="mandatory">URL</th>
+													<th class="text-center" style="width: 5%;">Acció</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr id="relatedmanga-list-table-empty" class="<?php echo count($related_manga)>0 ? 'd-none' : ''; ?>">
+													<td colspan="3" class="text-center">- No hi ha cap manga relacionat -</td>
+												</tr>
+<?php
+	for ($j=0;$j<count($related_manga);$j++) {
+?>
+												<tr id="form-relatedmanga-list-row-<?php echo $j+1; ?>">
+													<td>
+														<input type="text" id="form-relatedmanga-list-name-<?php echo $j+1; ?>" name="form-relatedmanga-list-name-<?php echo $j+1; ?>" class="form-control" required value="<?php echo $related_manga[$j]['name']; ?>" />
+													</td>
+													<td>
+														<input type="url" id="form-relatedmanga-list-url-<?php echo $j+1; ?>" name="form-relatedmanga-list-url-<?php echo $j+1; ?>" class="form-control" required value="<?php echo $related_manga[$j]['url']; ?>" />
+													</td>
+													<td class="text-center align-middle">
+														<button id="form-relatedmanga-list-delete-<?php echo $j+1; ?>" onclick="deleteRelatedMangaRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+													</td>
+												</tr>
+<?php
+	}
+?>
+											</tbody>
+										</table>
+									</div>
+									<div class="form-group row w-100 ml-0">
+										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
+											<button onclick="addRelatedMangaRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un manga relacionat</button>
 										</div>
 									</div>
 								</div>

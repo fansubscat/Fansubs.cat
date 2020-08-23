@@ -292,7 +292,7 @@ function addRelatedSeriesRow() {
 
 	var htmlAcc = $('#form-related-list-related_series_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
 
-	$('#related-list-table').append('<tr id="form-related-list-row-'+i+'"><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-folders-list-delete-'+i+'" onclick="deleteRelatedSeriesRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#related-list-table').append('<tr id="form-related-list-row-'+i+'"><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-related-list-delete-'+i+'" onclick="deleteRelatedSeriesRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#related-list-table').attr('data-count', i);
 	$('#related-list-table-empty').addClass('d-none');
 }
@@ -311,6 +311,33 @@ function deleteRelatedSeriesRow(id) {
 
 	if (i-1==0) {
 		$('#related-list-table-empty').removeClass('d-none');
+	}
+}
+
+function addRelatedMangaRow() {
+	var i = parseInt($('#relatedmanga-list-table').attr('data-count'))+1;
+
+	$('#relatedmanga-list-table').append('<tr id="form-relatedmanga-list-row-'+i+'"><td><input type="text" id="form-relatedmanga-list-name-'+i+'" name="form-relatedmanga-list-name-'+i+'" class="form-control" required value="" /></td><td><input type="url" id="form-relatedmanga-list-url-'+i+'" name="form-relatedmanga-list-url-'+i+'" class="form-control" required value="" /></td><td class="text-center align-middle"><button id="form-relatedmanga-list-delete-'+i+'" onclick="deleteRelatedMangaRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#relatedmanga-list-table').attr('data-count', i);
+	$('#relatedmanga-list-table-empty').addClass('d-none');
+}
+
+function deleteRelatedMangaRow(id) {
+	var i = parseInt($('#relatedmanga-list-table').attr('data-count'));
+	$("#form-relatedmanga-list-row-"+id).remove();
+	for (var j=id+1;j<i+1;j++) {
+		$("#form-relatedmanga-list-row-"+j).attr('id','form-relatedmanga-list-row-'+(j-1));
+		$("#form-relatedmanga-list-name-"+j).attr('name','form-relatedmanga-list-name-'+(j-1));
+		$("#form-relatedmanga-list-name-"+j).attr('id','form-relatedmanga-list-name-'+(j-1));
+		$("#form-relatedmanga-list-url-"+j).attr('name','form-relatedmanga-list-url-'+(j-1));
+		$("#form-relatedmanga-list-url-"+j).attr('id','form-relatedmanga-list-url-'+(j-1));
+		$("#form-relatedmanga-list-delete-"+j).attr('onclick','deleteRelatedMangaRow('+(j-1)+');');
+		$("#form-relatedmanga-list-delete-"+j).attr('id','form-relatedmanga-list-delete-'+(j-1));
+	}
+	$('#relatedmanga-list-table').attr('data-count', i-1);
+
+	if (i-1==0) {
+		$('#relatedmanga-list-table-empty').removeClass('d-none');
 	}
 }
 

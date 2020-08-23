@@ -78,6 +78,12 @@ CREATE TABLE `link` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `related_manga` (
+  `series_id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `url` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `related_series` (
   `series_id` int(11) NOT NULL,
   `related_series_id` int(11) NOT NULL
@@ -260,6 +266,8 @@ ALTER TABLE `folder_failed_files`
 ALTER TABLE `link`
   ADD CONSTRAINT `link_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `link_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `related_manga`
+  ADD CONSTRAINT `related_manga_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `related_series`
   ADD CONSTRAINT `related_series_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `related_series_ibfk_2` FOREIGN KEY (`related_series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -523,6 +523,33 @@ if (mysqli_num_rows($resultrs)>0) {
 }
 
 mysqli_free_result($resultrs);
+
+$resultrm = query("SELECT rm.* FROM related_manga rm WHERE rm.series_id=".$series['id']." ORDER BY rm.name ASC");
+
+if (mysqli_num_rows($resultrm)>0) {
+?>
+						<div class="section" style="padding-top: 1em;">
+							<h2 class="section-title">Manga relacionat</h2>
+							<div class="section-content">
+<?php
+	$first = TRUE;
+	while ($row = mysqli_fetch_assoc($resultrm)) {
+		if (!$first) {
+			echo ", ";
+		} else {
+			echo "\t\t\t\t\t\t\t\t";
+			$first = FALSE;
+		}
+		echo '<a href="'.$row['url'].'">'.$row['name'].'</a>';
+	}
+?>
+
+							</div>
+						</div>
+<?php
+}
+
+mysqli_free_result($resultrm);
 ?>
 					</div>
 				</div>
