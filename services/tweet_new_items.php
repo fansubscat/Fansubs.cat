@@ -182,7 +182,7 @@ while ($row = mysqli_fetch_assoc($result)){
 
 mysqli_free_result($result);
 
-$result = mysqli_query($db_connection_anime, "SELECT IF(s.show_seasons=1, IFNULL(se.name,s.name), s.name) name, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(l.version_id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.url IS NOT NULL) new_series
+$result = mysqli_query($db_connection_anime, "SELECT IF(s.show_seasons=1, IFNULL(se.name,s.name), s.name) name, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(DISTINCT l.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.url IS NOT NULL) new_series
 FROM link l
 LEFT JOIN version v ON l.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -203,7 +203,11 @@ while ($row = mysqli_fetch_assoc($result)){
 		array_push($tweets, $tweet);
 	} else { //Single episode
 		if ($row['show_episode_numbers']==1) {
-			if (!empty($row['title'])) {
+			if (!empty($row['title']) && empty($row['number'])) {
+				$random = array_rand($new_episode_no_number_tweets, 1);
+				$tweet = sprintf($new_episode_no_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug']."?version=".$row['version_id'];
+				array_push($tweets, $tweet);
+			} else if (!empty($row['title'])) { //and has a number (normal case)
 				$random = array_rand($new_episode_number_tweets, 1);
 				$tweet = sprintf($new_episode_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug']."?version=".$row['version_id'];
 				array_push($tweets, $tweet);
