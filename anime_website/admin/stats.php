@@ -63,8 +63,86 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució mensual</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Evolució</h4>
 								<hr>
+
+								<ul class="nav nav-tabs" id="chart_tabs" role="tablist">
+									<li class="nav-item">
+										<a class="nav-link active" id="daily-tab" data-toggle="tab" href="#daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers 60 dies)</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" id="monthly-tab" data-toggle="tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="daily" role="tabpanel" aria-labelledby="daily-tab">
+<?php
+	$days = array();
+
+	$current_day = strtotime(date('Y-m-d'));
+	$i=60;
+	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
+		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
+		$i--;
+	}
+
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v WHERE DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-60 days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	while ($row = mysqli_fetch_assoc($result)) {
+		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
+	}
+	mysqli_free_result($result);
+
+	$day_values=array();
+	$click_values=array();
+	$view_values=array();
+	$time_values=array();
+
+	foreach ($days as $day => $values) {
+		array_push($day_values, "'".$day."'");
+		array_push($click_values, $values[0]);
+		array_push($view_values, $values[1]);
+		array_push($time_values, $values[2]);
+	}
+?>
+										<canvas id="daily_chart"></canvas>
+										<script>
+											var ctx = document.getElementById('daily_chart').getContext('2d');
+											var chart = new Chart(ctx, {
+												type: 'line',
+												data: {
+													labels: [<?php echo implode(',',$day_values); ?>],
+													datasets: [
+													{
+														label: 'Visualitzacions reals',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														fill: false,
+														data: [<?php echo implode(',',$view_values); ?>]
+													},
+													{
+														label: 'Clics sense visualitzar',
+														backgroundColor: 'rgb(220, 53, 69)',
+														borderColor: 'rgb(220, 53, 69)',
+														fill: false,
+														data: [<?php echo implode(',',$click_values); ?>]
+													},
+													{
+														label: 'Temps de visualització (h)',
+														backgroundColor: 'rgb(40, 167, 69)',
+														borderColor: 'rgb(40, 167, 69)',
+														fill: false,
+														data: [<?php echo implode(',',$time_values); ?>]
+													}]
+												},
+												options: {
+													legend: {
+														position: 'bottom'
+													}
+												}
+											});
+										</script>
+									</div>
+									<div class="tab-pane fade" id="monthly" role="tabpanel" aria-labelledby="monthly-tab">
 <?php
 	$months = array();
 
@@ -93,43 +171,45 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-								<canvas id="monthly_chart"></canvas>
-								<script>
-									var ctx = document.getElementById('monthly_chart').getContext('2d');
-									var chart = new Chart(ctx, {
-										type: 'line',
-										data: {
-											labels: [<?php echo implode(',',$month_values); ?>],
-											datasets: [
-											{
-												label: 'Visualitzacions reals',
-												backgroundColor: 'rgb(0, 123, 255)',
-												borderColor: 'rgb(0, 123, 255)',
-												fill: false,
-												data: [<?php echo implode(',',$view_values); ?>]
-											},
-											{
-												label: 'Clics sense visualitzar',
-												backgroundColor: 'rgb(220, 53, 69)',
-												borderColor: 'rgb(220, 53, 69)',
-												fill: false,
-												data: [<?php echo implode(',',$click_values); ?>]
-											},
-											{
-												label: 'Temps de visualització (h)',
-												backgroundColor: 'rgb(40, 167, 69)',
-												borderColor: 'rgb(40, 167, 69)',
-												fill: false,
-												data: [<?php echo implode(',',$time_values); ?>]
-											}]
-										},
-										options: {
-											legend: {
-												position: 'bottom'
-											}
-										}
-									});
-								</script>
+										<canvas id="monthly_chart"></canvas>
+										<script>
+											var ctx = document.getElementById('monthly_chart').getContext('2d');
+											var chart = new Chart(ctx, {
+												type: 'line',
+												data: {
+													labels: [<?php echo implode(',',$month_values); ?>],
+													datasets: [
+													{
+														label: 'Visualitzacions reals',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														fill: false,
+														data: [<?php echo implode(',',$view_values); ?>]
+													},
+													{
+														label: 'Clics sense visualitzar',
+														backgroundColor: 'rgb(220, 53, 69)',
+														borderColor: 'rgb(220, 53, 69)',
+														fill: false,
+														data: [<?php echo implode(',',$click_values); ?>]
+													},
+													{
+														label: 'Temps de visualització (h)',
+														backgroundColor: 'rgb(40, 167, 69)',
+														borderColor: 'rgb(40, 167, 69)',
+														fill: false,
+														data: [<?php echo implode(',',$time_values); ?>]
+													}]
+												},
+												options: {
+													legend: {
+														position: 'bottom'
+													}
+												}
+											});
+										</script>
+									</div>
+								</div>
 							</article>
 						</div>
 					</div>
@@ -328,8 +408,86 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució mensual</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Evolució</h4>
 								<hr>
+
+								<ul class="nav nav-tabs" id="chart_tabs_fansub" role="tablist">
+									<li class="nav-item">
+										<a class="nav-link active" id="daily_fansub-tab" data-toggle="tab" href="#daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true">Evolució diària (darrers 60 dies)</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" id="monthly_fansub-tab" data-toggle="tab" href="#monthly_fansub" role="tab" aria-controls="monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="daily_fansub" role="tabpanel" aria-labelledby="daily_fansub-tab">
+<?php
+	$days = array();
+
+	$current_day = strtotime(date('Y-m-d'));
+	$i=60;
+	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
+		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
+		$i--;
+	}
+
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-60 days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	while ($row = mysqli_fetch_assoc($result)) {
+		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
+	}
+	mysqli_free_result($result);
+
+	$day_values=array();
+	$click_values=array();
+	$view_values=array();
+	$time_values=array();
+
+	foreach ($days as $day => $values) {
+		array_push($day_values, "'".$day."'");
+		array_push($click_values, $values[0]);
+		array_push($view_values, $values[1]);
+		array_push($time_values, $values[2]);
+	}
+?>
+										<canvas id="daily_chart_fansub"></canvas>
+										<script>
+											var ctx = document.getElementById('daily_chart_fansub').getContext('2d');
+											var chart = new Chart(ctx, {
+												type: 'line',
+												data: {
+													labels: [<?php echo implode(',',$day_values); ?>],
+													datasets: [
+													{
+														label: 'Visualitzacions reals',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														fill: false,
+														data: [<?php echo implode(',',$view_values); ?>]
+													},
+													{
+														label: 'Clics sense visualitzar',
+														backgroundColor: 'rgb(220, 53, 69)',
+														borderColor: 'rgb(220, 53, 69)',
+														fill: false,
+														data: [<?php echo implode(',',$click_values); ?>]
+													},
+													{
+														label: 'Temps de visualització (h)',
+														backgroundColor: 'rgb(40, 167, 69)',
+														borderColor: 'rgb(40, 167, 69)',
+														fill: false,
+														data: [<?php echo implode(',',$time_values); ?>]
+													}]
+												},
+												options: {
+													legend: {
+														position: 'bottom'
+													}
+												}
+											});
+										</script>
+									</div>
+									<div class="tab-pane fade" id="monthly_fansub" role="tabpanel" aria-labelledby="monthly_fansub-tab">
 <?php
 		$months = array();
 
@@ -358,43 +516,45 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($time_values, $values[2]);
 		}
 ?>
-								<canvas id="monthly_chart_fansub"></canvas>
-								<script>
-									var ctx = document.getElementById('monthly_chart_fansub').getContext('2d');
-									var chart = new Chart(ctx, {
-										type: 'line',
-										data: {
-											labels: [<?php echo implode(',',$month_values); ?>],
-											datasets: [
-											{
-												label: 'Visualitzacions reals',
-												backgroundColor: 'rgb(0, 123, 255)',
-												borderColor: 'rgb(0, 123, 255)',
-												fill: false,
-												data: [<?php echo implode(',',$view_values); ?>]
-											},
-											{
-												label: 'Clics sense visualitzar',
-												backgroundColor: 'rgb(220, 53, 69)',
-												borderColor: 'rgb(220, 53, 69)',
-												fill: false,
-												data: [<?php echo implode(',',$click_values); ?>]
-											},
-											{
-												label: 'Temps de visualització (h)',
-												backgroundColor: 'rgb(40, 167, 69)',
-												borderColor: 'rgb(40, 167, 69)',
-												fill: false,
-												data: [<?php echo implode(',',$time_values); ?>]
-											}]
-										},
-										options: {
-											legend: {
-												position: 'bottom'
-											}
-										}
-									});
-								</script>
+										<canvas id="monthly_chart_fansub"></canvas>
+										<script>
+											var ctx = document.getElementById('monthly_chart_fansub').getContext('2d');
+											var chart = new Chart(ctx, {
+												type: 'line',
+												data: {
+													labels: [<?php echo implode(',',$month_values); ?>],
+													datasets: [
+													{
+														label: 'Visualitzacions reals',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														fill: false,
+														data: [<?php echo implode(',',$view_values); ?>]
+													},
+													{
+														label: 'Clics sense visualitzar',
+														backgroundColor: 'rgb(220, 53, 69)',
+														borderColor: 'rgb(220, 53, 69)',
+														fill: false,
+														data: [<?php echo implode(',',$click_values); ?>]
+													},
+													{
+														label: 'Temps de visualització (h)',
+														backgroundColor: 'rgb(40, 167, 69)',
+														borderColor: 'rgb(40, 167, 69)',
+														fill: false,
+														data: [<?php echo implode(',',$time_values); ?>]
+													}]
+												},
+												options: {
+													legend: {
+														position: 'bottom'
+													}
+												}
+											});
+										</script>
+									</div>
+								</div>
 							</article>
 						</div>
 					</div>
