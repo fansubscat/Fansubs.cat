@@ -17,6 +17,7 @@ require_once('header.inc.php');
 				<div class="section">
 					<h2 class="section-title">Qui som?</h2>
 					<div class="section-content">Aquest portal és un projecte sorgit dels esforços conjunts dels principals fansubs en català i allotjat a Fansubs.cat. El nostre únic objectiu és potenciar el consum d'anime subtitulat en català, permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.</div>
+					<div class="section-content new-paragraph">El web és un recull de tot l'anime subtitulat pels fansubs en català. No en valorem la qualitat ni hi fem cap correcció, per tant, sigueu conscients que algunes obres poden tenir una qualitat inferior a l'esperada. Si no us agrada algun fansub en concret, el podeu desactivar a les opcions per a amagar-ne el contingut.</div>
 					<div class="section-content new-paragraph">Fansubs.cat també disposa de portals similars per a llegir <a href="https://manga.fansubs.cat/" target="_blank">el manga dels fansubs en català</a> o consultar <a href="https://www.fansubs.cat/" target="_blank">les darreres notícies dels fansubs</a>.</div>
 					<h2 class="section-title new-paragraph">Declaració de principis</h2>
 					<div class="section-content">En aquest portal sols trobaràs anime que no ha estat llicenciat ni editat en català. Quan sabem que un film o sèrie es llicencia per a editar-se en català, es retira immediatament del web amb l'objectiu d'ajudar-ne la comercialització.</div>
