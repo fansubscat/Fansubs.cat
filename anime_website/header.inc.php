@@ -53,12 +53,12 @@ if (!empty($header_social)) {
 					  	<label for="show_cancelled">Mostra les sèries cancel·lades o abandonades</label>
 					</div>
 					<div class="options-item">
-						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
-					  	<label for="show_hentai">Mostra el hentai (confirmes que ets major d'edat)</label>
+						<input id="show_missing" type="checkbox"<?php echo !empty($_COOKIE['show_missing']) ? ' checked' : ''; ?>>
+					  	<label for="show_missing">Mostra les sèries amb capítols sense cap enllaç vàlid</label>
 					</div>
 					<div class="options-item">
-						<input id="hide_missing" type="checkbox"<?php echo !empty($_COOKIE['hide_missing']) ? '' : ' checked'; ?>>
-					  	<label for="hide_missing">Mostra les sèries amb capítols perduts</label>
+						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
+					  	<label for="show_hentai">Mostra el hentai (confirmes que ets major d'edat)</label>
 					</div>
 					<h2 class="section-title options-section-divider">Fansubs que es mostren</h2>
 					<div id="options-fansubs">

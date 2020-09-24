@@ -189,7 +189,7 @@ $(document).ready(function() {
 			$('body').removeClass('no-overflow');
 		});
 		$('#options-save-button').click(function(){
-			Cookies.set('hide_missing', $('#hide_missing').prop('checked') ? '0' : '1', cookieOptions);
+			Cookies.set('show_missing', $('#show_missing').prop('checked') ? '1' : '0', cookieOptions);
 			Cookies.set('show_cancelled', $('#show_cancelled').prop('checked') ? '1' : '0', cookieOptions);
 			Cookies.set('show_hentai', $('#show_hentai').prop('checked') ? '1' : '0', cookieOptions);
 			var hiddenFansubs = $('#options-fansubs input:not(:checked)');
