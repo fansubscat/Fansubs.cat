@@ -1243,9 +1243,6 @@ function fetch_via_catsub($fansub_id, $url, $last_fetched_item_date){
 			$description = $article->find('div.cs_newscontent', 0)->innertext;
 			$item[1]=$description;
 
-			//Remove the download icon, or it will be the first image of the feed
-			$description = preg_replace("/\<img (.*)dlicon(.*)Descàrregues( \/ Visualitza en línia)?\" \/\>/i", '', $description);
-
 			//Remove the post-screenshot text
 			if (strpos($description, 'cs_newsimage')!==0){
 				$description = preg_replace("/\<span class=\\\"note\\\"\>(.*)\<\/span\>$/i", '', trim($description));
@@ -1256,7 +1253,7 @@ function fetch_via_catsub($fansub_id, $url, $last_fetched_item_date){
 			//We have to explode because the format is: 05/07/2015 a les 19:48 / Ereza
 			$datetext = explode(' / ', $article->find('div.cs_date', 0)->innertext)[0];
 
-			$date = date_create_from_format('d/m/Y \a \l\e\s H:i', $datetext);
+			$date = date_create_from_format('d/m/Y \a \l\e\s H.i', $datetext);
 
 			$item[3]=$date->format('Y-m-d H:i:s');
 			$item[4]=$url . substr($article->find('div.cs_newstitle a', 0)->href, 1);
