@@ -5,6 +5,9 @@ $db_name="YOUR_DB_NAME_HERE";
 $db_user="YOUR_DB_USER_HERE";
 $db_passwd="YOUR_DB_PASS_HERE";
 
+//Website config (no final slash)
+$base_url="";
+
 //Memcached access (for storing remote requests cache)
 $memcached_host='YOUR_MEMCACHED_HOST_HERE';
 $memcached_port=YOUR_MEMCACHED_PORT_HERE;

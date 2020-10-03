@@ -228,8 +228,14 @@ if ($count_unfiltered==0) {
 	if ($count>1) {
 		//Check if specified version exists
 		$version_found = FALSE;
+		$passed_version = NULL;
+		if (isset($_GET['version'])) {
+			$passed_version = $_GET['version'];
+		} else if (isset($_GET['v'])) {
+			$passed_version = $_GET['v'];
+		}
 		while ($version = mysqli_fetch_assoc($result)) {
-			if ($version['id']==$_GET['version']){
+			if ($version['id']==$passed_version){
 				$version_found = TRUE;
 				break;
 			}
@@ -241,7 +247,7 @@ if ($count_unfiltered==0) {
 		$i=0;
 		while ($version = mysqli_fetch_assoc($result)) {
 ?>
-							<div class="version_tab<?php echo ($version_found ? $version['id']==$_GET['version'] : $i==0) ? ' version_tab_selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>">
+							<div class="version_tab<?php echo ($version_found ? $version['id']==$passed_version : $i==0) ? ' version_tab_selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>">
 								<div class="status-<?php echo get_status($version['status']); ?> status-indicator-tab" title="<?php echo get_status_description($version['status']); ?>"></div>
 								<div class="version_tab_text"><?php echo htmlspecialchars('Versió '.get_fansub_preposition_name($version['fansub_name'])); ?></div>
 							</div>
@@ -257,7 +263,7 @@ if ($count_unfiltered==0) {
 	$i=0;
 	while ($version = mysqli_fetch_assoc($result)) {
 ?>
-						<div class="version_content<?php echo $count>1 ? ' version_content_multi' : ''; ?><?php echo ($version_found ? $version['id']!=$_GET['version'] : $i>0) ? ' hidden' : ''; ?>" id="version_content_<?php echo $version['id']; ?>">
+						<div class="version_content<?php echo $count>1 ? ' version_content_multi' : ''; ?><?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version_content_<?php echo $version['id']; ?>">
 <?php
 		$resultf = query("SELECT f.* FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE vf.version_id=".$version['id']." ORDER BY f.name ASC");
 		$fansubs = array();
@@ -513,7 +519,7 @@ if (mysqli_num_rows($resultrs)>0) {
 			echo "\t\t\t\t\t\t\t\t";
 			$first = FALSE;
 		}
-		echo '<a href="/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
+		echo '<a href="'.$base_url.'/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
 	}
 ?>
 

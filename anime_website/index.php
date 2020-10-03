@@ -25,9 +25,9 @@ switch ($header_tab) {
 
 $header_social = array(
 	'title' => (!empty($header_page_title) ? $header_page_title.' - ' : '').'Fansubs.cat - Anime',
-	'url' => 'https://anime.fansubs.cat/'.$header_url,
+	'url' => 'https://anime.fansubs.cat'.$base_url.'/'.$header_url,
 	'description' => "Aquí podràs veure en línia tot l'anime subtitulat pels fansubs en català!",
-	'image' => 'https://anime.fansubs.cat/style/og_image.jpg'
+	'image' => 'https://anime.fansubs.cat'.$base_url.'/style/og_image.jpg'
 );
 
 require_once('header.inc.php');
@@ -166,7 +166,7 @@ for ($i=0;$i<count($sections);$i++){
 			}
 ?>
 						<div class="status-<?php echo get_status($row['best_status']); ?><?php echo $genres; ?>">
-							<a class="thumbnail" href="/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?>">
+							<a class="thumbnail" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">

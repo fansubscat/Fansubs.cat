@@ -1,17 +1,18 @@
 var currentLinkId=-1;
 var currentStartTime=-1;
 var lastWindowWidth=0;
+var baseUrl='';
 
 var cookieOptions = {
 	expires: 3650,
-	path: '/',
+	path: baseUrl+'/',
 	domain: 'anime.fansubs.cat'
 };
 
 function sendAjaxViewEnd(){
 	if (currentLinkId!=-1){
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", '/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
+		xmlHttp.open("GET", baseUrl+'/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
 		xmlHttp.send(null);
 		gtag('event', 'Close link', {
 			'event_category': "Playback",
@@ -24,7 +25,7 @@ function sendAjaxViewEnd(){
 
 function sendBeaconViewEnd(){
 	if (currentLinkId!=-1){
-		navigator.sendBeacon('/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime));
+		navigator.sendBeacon(baseUrl+'/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime));
 		gtag('event', 'Close link', {
 			'event_category': "Playback",
 			'event_label': currentLinkId + " / " + (Math.floor(new Date().getTime()/1000)-currentStartTime)
@@ -122,7 +123,7 @@ $(document).ready(function() {
 			$('#overlay').removeClass('hidden');
 			$('#overlay-content').html(getSource($(this).attr('data-method'), atob($(this).attr('data-url'))));
 			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("GET", '/counter.php?link_id='+$(this).attr('data-link-id')+"&action=open", true);
+			xmlHttp.open("GET", baseUrl+'/counter.php?link_id='+$(this).attr('data-link-id')+"&action=open", true);
 			xmlHttp.send(null);
 			gtag('event', 'Open link', {
 				'event_category': "Playback",
@@ -163,10 +164,10 @@ $(document).ready(function() {
 		});
 		$('#search_form').submit(function(){
 			if ($('#search_query').val()!=''){
-				window.location.href='/cerca/' + encodeURIComponent(encodeURIComponent($('#search_query').val()));
+				window.location.href=baseUrl+'/cerca/' + encodeURIComponent(encodeURIComponent($('#search_query').val()));
 			}
 			else{
-				window.location.href='/';
+				window.location.href=baseUrl+'/';
 			}
 			return false;
 		});
@@ -229,7 +230,7 @@ $(document).ready(function() {
 			$('#contact-send-button').addClass('hidden');
 			$('#contact-send-button-loading').removeClass('hidden');
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", '/contact.php', true);
+			xhr.open("POST", baseUrl+'/contact.php', true);
 			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			xhr.onreadystatechange = function() {
 				if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -377,7 +378,7 @@ $(document).ready(function() {
 		$('body').addClass('no-overflow');
 		$('#overlay-content').html(getSource($('#data-method').val(), atob($('#data-url').val())));
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", '/counter.php?link_id='+$('#data-link-id').val()+"&action=open", true);
+		xmlHttp.open("GET", baseUrl+'/counter.php?link_id='+$('#data-link-id').val()+"&action=open", true);
 		xmlHttp.send(null);
 		currentLinkId=$('#data-link-id').val();
 		currentStartTime=Math.floor(new Date().getTime()/1000);

@@ -19,11 +19,11 @@ require_once('header.inc.php');
 <?php
 if ($code==403){
 ?>
-						<strong>No tens permís per a accedir a aquesta adreça.</strong><br />Fes bondat i fes servir només la part pública de la web ;)<br /><br />Et recomanem que tornis a la <a href="/">pàgina principal</a> i provis de trobar el que cerques allà!
+						<strong>No tens permís per a accedir a aquesta adreça.</strong><br />Fes bondat i fes servir només la part pública de la web ;)<br /><br />Et recomanem que tornis a la <a href="<?php echo $base_url; ?>/">pàgina principal</a> i provis de trobar el que cerques allà!
 <?php
 } else {
 ?>
-						<strong>És possible que hagis seguit un enllaç antic o que l'anime ja no estigui disponible.</strong><br />Qui sap, potser l'han llicenciat en català i tot! O potser no i només és un error...<br /><br />Et recomanem que tornis a la <a href="/">pàgina principal</a> i provis de trobar el que cerques allà!
+						<strong>És possible que hagis seguit un enllaç antic o que l'anime ja no estigui disponible.</strong><br />Qui sap, potser l'han llicenciat en català i tot! O potser no i només és un error...<br /><br />Et recomanem que tornis a la <a href="<?php echo $base_url; ?>/">pàgina principal</a> i provis de trobar el que cerques allà!
 <?php
 }
 ?>

@@ -30,13 +30,13 @@ if (!empty($header_social)) {
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-		<link rel="stylesheet" href="/style/anime.css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css" media="screen" />
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-14"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="/js/common.js"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js"></script>
 	</head>
 	<body>
 		<div data-nosnippet id="overlay" class="hidden">
@@ -111,15 +111,15 @@ mysqli_free_result($resultf);
 		<div id="page">
 			<div data-nosnippet id="header">
 				<div class="page-title-block">
-					<a class="page-title" href="/">Fansubs.cat</a>
+					<a class="page-title" href="<?php echo $base_url; ?>/">Fansubs.cat</a>
 					<div class="page-links">
 						<b>Anime</b> | <a href="https://manga.fansubs.cat/">Manga</a> | <a href="https://www.fansubs.cat/">Notícies</a>
 					</div>
 				</div>
 				<div class="tabs">
-					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="/">Destacat</a>
-					<a class="tab<?php if ($header_tab=='movies') echo ' selectedtab'; ?>" href="/films">Films</a>
-					<a class="tab<?php if ($header_tab=='series') echo ' selectedtab'; ?>" href="/series">Sèries</a>
+					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/">Destacat</a>
+					<a class="tab<?php if ($header_tab=='movies') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/films">Films</a>
+					<a class="tab<?php if ($header_tab=='series') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/series">Sèries</a>
 				</div>
 				<div class="separator"></div>
 				<div class="user-options">
@@ -127,7 +127,7 @@ mysqli_free_result($resultf);
 						<a id="options-button" class="iconbutton" title="Opcions"><span class="fa fa-cogs"></span></a>
 						<span id="options-tooltip" class="hidden"><a id="options-tooltip-close" class="fa fa-times" style="float: right; color: black;"></a>Si canvies les opcions, veuràs més sèries</span>
 					</div>
-					<a id="about-button" class="iconbutton<?php if ($header_tab=='about') echo ' selectedtab'; ?>" title="Qui som?" href="/qui-som"><span class="fa fa-info-circle"></span></a>
+					<a id="about-button" class="iconbutton<?php if ($header_tab=='about') echo ' selectedtab'; ?>" title="Qui som?" href="<?php echo $base_url; ?>/qui-som"><span class="fa fa-info-circle"></span></a>
 				</div>
 				<div class="search-form">
 					<form id="search_form">
