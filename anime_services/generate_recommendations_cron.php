@@ -4,11 +4,11 @@ require_once('db.inc.php');
 log_action('cron-recommendations-started', "S'ha iniciat l'actualització quinzenal de recomanacions");
 
 $previous_ids=array(-1);
-/*$result = query("SELECT version_id FROM recommendation");
+$result = query("SELECT version_id FROM recommendation");
 while ($row = mysqli_fetch_assoc($result)) {
 	array_push($previous_ids, $row['version_id']);
 }
-mysqli_free_result($result);*/
+mysqli_free_result($result);
 
 query("DELETE FROM recommendation");
 //We hide:
