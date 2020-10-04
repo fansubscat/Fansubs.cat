@@ -415,10 +415,12 @@ function deleteVersionFolderRow(id) {
 		$("#form-folders-list-row-"+j).attr('id','form-folders-list-row-'+(j-1));
 		$("#form-folders-list-id-"+j).attr('name','form-folders-list-id-'+(j-1));
 		$("#form-folders-list-id-"+j).attr('id','form-folders-list-id-'+(j-1));
-		$("#form-folders-list-account_id-"+j).attr('name','form-folders-account_id-link-'+(j-1));
-		$("#form-folders-list-account_id-"+j).attr('id','form-folders-account_id-link-'+(j-1));
+		$("#form-folders-list-account_id-"+j).attr('name','form-folders-list-account_id-'+(j-1));
+		$("#form-folders-list-account_id-"+j).attr('id','form-folders-list-account_id-'+(j-1));
 		$("#form-folders-list-folder-"+j).attr('name','form-folders-list-folder-'+(j-1));
 		$("#form-folders-list-folder-"+j).attr('id','form-folders-list-folder-'+(j-1));
+		$("#form-folders-list-season_id-"+j).attr('name','form-folders-list-season_id-'+(j-1));
+		$("#form-folders-list-season_id-"+j).attr('id','form-folders-list-season_id-'+(j-1));
 		$("#form-folders-list-delete-"+j).attr('onclick','deleteVersionFolderRow('+(j-1)+');');
 		$("#form-folders-list-delete-"+j).attr('id','form-folders-list-delete-'+(j-1));
 	}
