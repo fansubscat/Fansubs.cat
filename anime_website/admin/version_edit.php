@@ -46,6 +46,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca status");
 		}
+		if (!empty($_POST['is_featurable'])){
+			$data['is_featurable']=1;
+		} else {
+			$data['is_featurable']=0;
+		}
 
 		$links=array();
 		$episodes=array();
@@ -172,7 +177,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-version", "S'ha actualitzat la versió de la sèrie (id. de sèrie: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",downloads_url=".$data['downloads_url'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",downloads_url=".$data['downloads_url'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -266,7 +271,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
-			query("INSERT INTO version (series_id,status,default_resolution,downloads_url,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['downloads_url'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,default_resolution,downloads_url,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['downloads_url'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_1'].")");
@@ -423,9 +428,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
 								</div>
 							</div>
-							<div class="col-sm-4">
+							<div class="col-sm">
 								<div class="form-group">
-									<label for="form-downloads_url">Enllaç de baixades <small class="text-muted">(o fitxa del fansub)</small></label>
+									<label for="form-featurable_check">Recomanacions</label>
+									<div id="form-featurable_check" class="row pl-3 pr-3">
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="is_featurable" id="form-is_featurable" value="1"<?php echo $row['is_featurable']==1? " checked" : ""; ?>>
+											<label class="form-check-label" for="form-is_featurable">Té qualitat per a ser recomanada</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-downloads_url">Enllaç a la carpeta de baixades dels fitxers originals <small class="text-muted">(o fitxa del fansub, si es prefereix; si n'hi ha més d'un, separa'ls amb un punt i coma)</small></label>
 									<input id="form-downloads_url" name="downloads_url" type="url" class="form-control" value="<?php echo htmlspecialchars($row['downloads_url']); ?>" maxlength="200"/>
 								</div>
 							</div>

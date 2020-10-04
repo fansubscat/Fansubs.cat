@@ -1,6 +1,13 @@
 <?php
 require_once("db.inc.php");
 
+function exists_more_than_one_version($series_id){
+	$result = query("SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id");
+	$row = mysqli_fetch_assoc($result);
+	mysqli_free_result($result);	
+	return ($row['cnt']>1);
+}
+
 $header_tab=(!empty($_GET['page']) ? $_GET['page'] : '');
 $header_page_title='';
 
@@ -52,7 +59,7 @@ $max_items=24;
 
 $cookie_viewed_links = get_cookie_viewed_links_ids();
 
-$base_query="SELECT s.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, v.id version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
@@ -61,28 +68,34 @@ $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ?
 switch ($header_tab){
 	case 'movies':
 		$sections=array("Darreres actualitzacions", "Catàleg de films");
+		$descriptions=array("Vols estar al dia de les darreres novetats dels fansubs? Aquesta és la teva secció!", "Tria i remena entre un catàleg de %%% films! Prepara les crispetes!");
 		$queries=array(
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$carousel=array(TRUE, FALSE);
+		$specific_version=array(FALSE, FALSE);
 		break;
 	case 'series':
 		$sections=array("Darreres actualitzacions", "Catàleg de sèries");
+		$descriptions=array("Vols estar al dia de les darreres novetats dels fansubs? Aquesta és la teva secció!", "Tria i remena entre un catàleg de %%% sèries! Compte, que enganxen!");
 		$queries=array(
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$carousel=array(TRUE, FALSE);
+		$specific_version=array(FALSE, FALSE);
 		break;
 	case 'search':
 		$query = (!empty($_GET['query']) ? escape($_GET['query']) : "");
 		if (!empty($query)){
 			query("INSERT INTO search_history (query,day) VALUES ('".escape($_GET['query'])."','".date('Y-m-d')."')");
 		}
-		$query = str_replace(" ", "%", $query);
 		$sections=array("Resultats de la cerca");
+		$descriptions=array("La cerca de \"$query\" ha obtingut %%% resultats.");
+		$query = str_replace(" ", "%", $query);
 		$queries=array(
 			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords LIKE '%$query%') GROUP BY s.id ORDER BY s.name ASC");
 		$carousel=array(FALSE);
+		$specific_version=array(FALSE);
 		break;
 	default:
 		$result = query("SELECT a.series_id
@@ -94,13 +107,17 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 			$in_clause.=','.$row['series_id'];
 		}
 		mysqli_free_result($result);
-		$sections=array("Darreres actualitzacions", "Més populars", "Més actuals", "Més ben valorades");
+		$sections=array("Recomanacions de la quinzena", "Darreres actualitzacions", "A l'atzar", "Més populars", "Més actuals", "Més ben valorades");
+		$descriptions=array("Una tria d'obres de qualitat que es renova cada quinze dies! T'animes a mirar-ne alguna?","Vols estar al dia de les darreres novetats dels fansubs? Aquesta és la teva secció!", "T'agrada provar sort? El sistema ha triat un seguit d'obres aleatòries. Si no te n'agrada cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
 		$queries=array(
+			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND(".(date('W')%2==1 ? date('W') : (date('W')-1)).")",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
+			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY RAND() LIMIT $max_items",
 			$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.air_date DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
-		$carousel=array(TRUE, TRUE, TRUE, TRUE);
+		$carousel=array(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE);
+		$specific_version=array(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
 		break;
 }
 
@@ -108,12 +125,19 @@ for ($i=0;$i<count($sections);$i++){
 	$result = query($queries[$i]);
 ?>
 				<div class="section">
-					<h2 class="section-title"><?php echo $sections[$i]; ?></h2>
+					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
+					<h3 class="section-subtitle"><?php echo str_replace("%%%", mysqli_num_rows($result), $descriptions[$i]); ?></h3>
 <?php
 	if (mysqli_num_rows($result)==0){
+		if ($sections[$i]=='Resultats de la cerca'){
 ?>
-					<div class="section-content">No s'ha trobat cap element.</div>
+					<div class="section-content fake-carousel"><div><span class="fa fa-search empty-icon"></span><br><br>No s'ha trobat cap element. Prova una altra cerca o explora el catàleg a les pestanyes superiors.</div></div>
 <?php
+		} else {
+?>
+					<div class="section-content fake-carousel"><div><span class="fa fa-ban empty-icon"></span><br><br>No s'ha trobat cap element. Prova de reduir el filtre a les opcions de la part superior dreta.</div></div>
+<?php
+		}
 	} else {
 		if (!$carousel[$i]) {
 			$genres = array();
@@ -166,7 +190,7 @@ for ($i=0;$i<count($sections);$i++){
 			}
 ?>
 						<div class="status-<?php echo get_status($row['best_status']); ?><?php echo $genres; ?>">
-							<a class="thumbnail" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?>">
+							<a class="thumbnail" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">

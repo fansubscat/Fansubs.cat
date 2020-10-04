@@ -225,22 +225,23 @@ if ($count_unfiltered==0) {
 <?php
 	}
 } else {
+	//Check if specified version exists
+	$version_found = FALSE;
+	$passed_version = NULL;
+	if (isset($_GET['version'])) {
+		$passed_version = $_GET['version'];
+	} else if (isset($_GET['v'])) {
+		$passed_version = $_GET['v'];
+	}
+	while ($version = mysqli_fetch_assoc($result)) {
+		if ($version['id']==$passed_version){
+			$version_found = TRUE;
+			break;
+		}
+	}
+	mysqli_data_seek($result, 0);
+
 	if ($count>1) {
-		//Check if specified version exists
-		$version_found = FALSE;
-		$passed_version = NULL;
-		if (isset($_GET['version'])) {
-			$passed_version = $_GET['version'];
-		} else if (isset($_GET['v'])) {
-			$passed_version = $_GET['v'];
-		}
-		while ($version = mysqli_fetch_assoc($result)) {
-			if ($version['id']==$passed_version){
-				$version_found = TRUE;
-				break;
-			}
-		}
-		mysqli_data_seek($result, 0);
 ?>
 						<div class="version_tab_container">
 <?php
