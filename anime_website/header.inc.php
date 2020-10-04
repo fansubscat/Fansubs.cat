@@ -117,9 +117,9 @@ mysqli_free_result($resultf);
 					</div>
 				</div>
 				<div class="tabs">
-					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/">Destacat</a>
-					<a class="tab<?php if ($header_tab=='movies') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/films">Films</a>
-					<a class="tab<?php if ($header_tab=='series') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/series">Sèries</a>
+					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/"><span class="fa fa-star"></span>Destacat</a>
+					<a class="tab<?php if ($header_tab=='movies') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/films"><span class="fa fa-video"></span>Films</a>
+					<a class="tab<?php if ($header_tab=='series') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/series"><span class="fa fa-tv"></span>Sèries</a>
 				</div>
 				<div class="separator"></div>
 				<div class="user-options">

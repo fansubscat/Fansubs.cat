@@ -252,7 +252,7 @@ h2, h3 {
 	margin-left: 2em;
 	margin-right: 2em;
 	display: flex;
-	align-items: center;
+	align-items: flex-end;
 	flex-wrap: wrap;
 	justify-content: center;
 }
@@ -297,11 +297,32 @@ a:hover {
 	font-size: 1.2em;
 }
 
+.tabs {
+	padding: 0 1em;
+	flex-grow: 1;
+	display: flex;
+}
+
 .tab {
-	padding: 0 1.5em;
-	font-size: 1.4em;
+	padding: 0.5em 1em;
+	margin: 0 0.1em;
+	font-size: 1.25em;
 	font-weight: bold;
 	color: #BBB;
+	background-color: #333;
+	flex-grow: 1;
+	text-align: center;
+	border-top-left-radius: 0.4em;
+	border-top-right-radius: 0.4em;
+	border: 1px solid #333;
+	border-bottom: none;
+}
+
+.tab .fa {
+	padding-right: 0.4em;
+	font-size: 0.8em;
+	vertical-align: middle;
+	margin-top: -0.2em;
 }
 
 .iconbutton {
@@ -309,24 +330,26 @@ a:hover {
 	font-size: 1.4em;
 	font-weight: bold;
 	color: #BBB;
+	background: none !important;
+	border: none !important;
 }
 
 .selectedtab {
 	color: #FFF !important;
+	background-color: #222;
 }
 
 .separator {
-	flex-grow: 1;
+	flex-grow: 0;
 }
 
 .user-options {
-	margin: 1em;
+	margin: 0.5em;
 	display: flex;
 }
 
 .search-form {
-	margin-top: 1em;
-	margin-bottom: 1em;
+	margin: 0.5em;
 }
 
 #search_query {
@@ -705,6 +728,7 @@ a:hover {
 }
 
 .sidebar_alternate_names {
+	color: #BBB;
 	font-size: 1em;
 	margin-top: -1em;
 	margin-bottom: 1em;
@@ -1179,11 +1203,8 @@ a:hover {
 
 	.tabs {
 		width: 100%;
-		text-align: center;
-	}
-
-	.tab {
-		padding: 0 0.5em;
+		order: 999;
+		padding: 0;
 	}
 
 	.mobilewrappable {
@@ -1222,6 +1243,10 @@ a:hover {
 	.version_tab_container {
 		padding: 0em 2em;
 	}
+
+	.user-options, .search-form {
+		margin-top: -0.5em;
+	}
 }
 
 @media screen and (max-width: 650px){
@@ -1233,6 +1258,15 @@ a:hover {
 	#options-overlay-content {
 		max-width: 100%;
 		padding: 1em;
+	}
+
+	.tabs {
+		margin-left: -0.75em;
+		margin-right: -0.75em;
+	}
+
+	.tab {
+		padding: 0.5em 0.5em;
 	}
 
 	.options-fansub {
@@ -1303,5 +1337,9 @@ a:hover {
 
 	.main_content .section {
 		padding-left: 1em;
+	}
+
+	.user-options, .search-form {
+		margin-top: 0;
 	}
 }
