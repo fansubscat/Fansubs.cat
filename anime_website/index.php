@@ -73,7 +73,7 @@ switch ($header_tab){
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$carousel=array(TRUE, FALSE);
-		$specific_version=array(FALSE, FALSE);
+		$specific_version=array(TRUE, FALSE);
 		break;
 	case 'series':
 		$sections=array("Darreres actualitzacions", "Catàleg de sèries");
@@ -82,7 +82,7 @@ switch ($header_tab){
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$carousel=array(TRUE, FALSE);
-		$specific_version=array(FALSE, FALSE);
+		$specific_version=array(TRUE, FALSE);
 		break;
 	case 'search':
 		$query = (!empty($_GET['query']) ? escape($_GET['query']) : "");
@@ -107,17 +107,17 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 			$in_clause.=','.$row['series_id'];
 		}
 		mysqli_free_result($result);
-		$sections=array("Recomanacions de la quinzena", "Darreres actualitzacions", "A l'atzar", "Més populars", "Més actuals", "Més ben valorades");
-		$descriptions=array("Una tria d'obres de qualitat que es renova cada quinze dies! T'animes a mirar-ne alguna?","Vols estar al dia de les darreres novetats dels fansubs? Aquesta és la teva secció!", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
+		$sections=array("Darreres actualitzacions", "Recomanacions de la quinzena", "A l'atzar", "Més populars", "Més actuals", "Més ben valorades");
+		$descriptions=array("Vols estar al dia de les darreres novetats dels fansubs? Aquesta és la teva secció!", "Una tria d'obres de qualitat que es renova cada quinze dies! T'animes a mirar-ne alguna?", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
 		$queries=array(
-			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND(".(date('W')%2==1 ? date('W') : (date('W')-1)).")",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
+			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY RAND() LIMIT $max_items",
 			$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.air_date DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
 		$carousel=array(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE);
-		$specific_version=array(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+		$specific_version=array(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
 		break;
 }
 

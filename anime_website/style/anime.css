@@ -309,7 +309,7 @@ a:hover {
 	font-size: 1.25em;
 	font-weight: bold;
 	color: #BBB;
-	background-color: #333;
+	background-color: #000;
 	flex-grow: 1;
 	text-align: center;
 	border-top-left-radius: 0.4em;
