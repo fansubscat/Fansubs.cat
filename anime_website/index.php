@@ -68,7 +68,7 @@ $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ?
 switch ($header_tab){
 	case 'movies':
 		$sections=array("Darreres actualitzacions", "Catàleg de films");
-		$descriptions=array("Vols estar al dia de les darreres novetats dels fansubs? Aquesta és la teva secció!", "Tria i remena entre un catàleg de %%% films! Prepara les crispetes!");
+		$descriptions=array("Aquests són els darrers films d'anime subtitulats en català! T'animes a mirar-ne algun?", "Tria i remena entre un catàleg de %%% films! Prepara les crispetes!");
 		$queries=array(
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
@@ -77,7 +77,7 @@ switch ($header_tab){
 		break;
 	case 'series':
 		$sections=array("Darreres actualitzacions", "Catàleg de sèries");
-		$descriptions=array("Vols estar al dia de les darreres novetats dels fansubs? Aquesta és la teva secció!", "Tria i remena entre un catàleg de %%% sèries! Compte, que enganxen!");
+		$descriptions=array("Aquestes són les darreres sèries d'anime subtitulades en català! T'animes a mirar-ne alguna?", "Tria i remena entre un catàleg de %%% sèries! Compte, que enganxen!");
 		$queries=array(
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
@@ -108,7 +108,7 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 		}
 		mysqli_free_result($result);
 		$sections=array("Darreres actualitzacions", "Recomanacions de la quinzena", "A l'atzar", "Més populars", "Més actuals", "Més ben valorades");
-		$descriptions=array("Vols estar al dia de les darreres novetats dels fansubs? Aquesta és la teva secció!", "Una tria d'obres de qualitat que es renova cada quinze dies! T'animes a mirar-ne alguna?", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
+		$descriptions=array("Aquestes són les darreres novetats d'anime subtitulades en català pels diferents fansubs.", "Una tria d'obres de qualitat que es renova cada quinze dies! T'animes a mirar-ne alguna?", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
 		$queries=array(
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
