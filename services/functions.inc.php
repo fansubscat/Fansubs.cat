@@ -261,10 +261,7 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 	$tidy_config = "tidy.conf";
 	$error_connect=FALSE;
 
-	$cur_page = 0;
-
-	//Frontpage not needed anymore since there is no paging...
-	$html_text = file_get_contents($url.'?frontpage;p='.$cur_page) or $error_connect=TRUE;
+	$html_text = file_get_contents($url.'/'.date('Y')) or $error_connect=TRUE;
 	if ($error_connect){
 		return array('error_connect',array());
 	}
@@ -277,71 +274,65 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 	while ($go_on){
 		//parse through the HTML and build up the elements feed as we go along
 		$cur_count = 0;
-		foreach($html->find('div.one-post') as $article) {
-			$cur_count++;
-			if ($article->find('h2 a', 0)!==NULL){
-				//Create an empty item
-				$item = array();
+		foreach($html->find('article') as $article) {
+			$tries=1;
+			while ($tries<=3){
+				$error=FALSE;
 
-				//Look up and add elements to the item
-				$title = $article->find('h2 a', 0);
-				$item[0]=$title->innertext;
-				$item[1]=$article->find('div.post-body', 0)->innertext;
+				$article_html_text = file_get_contents($article->find('a', 0)->href) or $error=TRUE;
 
-				//This is the description before the image (normally only Catalan, sometimes Cat/Spa)
-				$description = explode("<figure", $article->find('div.post-body', 0)->innertext)[0];
-				
-				$item[2]=parse_description($description);
-				$datetext = $article->find('span.post-date', 0)->innertext;
+				if (!$error){
+					$article_tidy = tidy_parse_string($article_html_text, $tidy_config, 'UTF8');
+					tidy_clean_repair($article_tidy);
+					$article_html = str_get_html(tidy_get_output($article_tidy));
+					//Create an empty item
+					$item = array();
 
-				$datetext = str_ireplace('enero', 'January', $datetext);
-				$datetext = str_ireplace('febrero', 'February', $datetext);
-				$datetext = str_ireplace('marzo', 'March', $datetext);
-				$datetext = str_ireplace('abril', 'April', $datetext);
-				$datetext = str_ireplace('mayo', 'May', $datetext);
-				$datetext = str_ireplace('junio', 'June', $datetext);
-				$datetext = str_ireplace('julio', 'July', $datetext);
-				$datetext = str_ireplace('agosto', 'August', $datetext);
-				$datetext = str_ireplace('setiembre', 'September', $datetext);
-				$datetext = str_ireplace('septiembre', 'September', $datetext);
-				$datetext = str_ireplace('octubre', 'October', $datetext);
-				$datetext = str_ireplace('noviembre', 'November', $datetext);
-				$datetext = str_ireplace('diciembre', 'December', $datetext);
+					//Look up and add elements to the item
+					$title = $article_html->find('h1.title a', 0);
+					$item[0]=$title->innertext;
+					$item[1]=$article_html->find('article', 0)->innertext;
 
-				$date = date_create_from_format('d/m/Y H:i:s', $datetext . ' 00:00:00');
-				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
-				$item[3]= $date->format('Y-m-d H:i:s');
-				$item[4]=$title->href;
-				if ($article->find('div.post-body figure', 0)!==NULL){
-					$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body figure', 0)->innertext);
+					//This is the description before the image (normally only Catalan, sometimes Cat/Spa)
+					$description = explode("<figure", $article_html->find('article', 0)->innertext)[0];
+					
+					$item[2]=parse_description($description);
+					$datetext = $article->find('span.mg-blog-date a', 0)->innertext;
+
+					//Don't forget to replace Spanish into English or the script crashes...
+					$datetext = str_ireplace('Ene', 'Jan', $datetext);
+					$datetext = str_ireplace('Abr', 'Apr', $datetext);
+					$datetext = str_ireplace('Ago', 'Aug', $datetext);
+					$datetext = str_ireplace('Dic', 'Dec', $datetext);
+
+					//News have no time, so we assume 00:00:00, if there are any other news on the same day, these will show below them...
+					$date = date_create_from_format('M j, Y H:i:s', $datetext . ' 00:00:00');
+					$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+					$item[3]= $date->format('Y-m-d H:i:s');
+					$item[4]=$article->find('a', 0)->href;
+					if ($article_html->find('article figure', 0)!==NULL){
+						$item[5]=fetch_and_parse_image($fansub_id, $url, $article_html->find('article figure', 0)->innertext);
+					}
+					else{
+						$item[5]=NULL;
+					}
+					
+					//If the text is empty, we assume Spanish
+					if ($item[2]!='' && is_catalan($item[2])){
+						$elements[]=$item;
+					}
+					break;
 				}
 				else{
-					$item[5]=NULL;
+					$tries++;
 				}
-				
-				//If the text is empty, we assume Spanish
-				if ($item[2]!='' && is_catalan($item[2])){
-					$elements[]=$item;
-				}
+			}
+			if ($tries>3){
+				return array('error_connect',array());
 			}
 		}
 
 		$go_on = FALSE;
-
-		//Looks like there is no paging now, so commenting out for now...
-/*
-		if ($cur_count>0 && count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
-			$cur_page = $cur_page+5;
-			$html_text = file_get_contents($url.'?;frontpage;p='.$cur_page) or $error_connect=TRUE;
-			if ($error_connect){
-				return array('error_connect',array());
-			}
-			$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
-			tidy_clean_repair($tidy);
-			$html = str_get_html(tidy_get_output($tidy));
-			$go_on = TRUE;
-		}
-*/
 	}
 	return array('ok', $elements);
 }
