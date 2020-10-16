@@ -1,5 +1,6 @@
 <?php
 require_once("db.inc.php");
+require_once("parsedown.inc.php");
 
 function exists_more_than_one_version($series_id){
 	$result = query("SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id");
@@ -59,7 +60,7 @@ $max_items=24;
 
 $cookie_viewed_links = get_cookie_viewed_links_ids();
 
-$base_query="SELECT s.*, v.id version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, v.id version_id, v.featured_image_url, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
@@ -67,22 +68,20 @@ $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ?
 
 switch ($header_tab){
 	case 'movies':
-		$sections=array("Darreres actualitzacions", "Catàleg de films");
-		$descriptions=array("Aquests són els darrers films d'anime subtitulats en català! T'animes a mirar-ne algun?", "Tria i remena entre un catàleg de %%% films! Prepara les crispetes!");
+		$sections=array("Catàleg de films");
+		$descriptions=array("Tria i remena entre un catàleg de %%% films! Prepara les crispetes!");
 		$queries=array(
-			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
-		$carousel=array(TRUE, FALSE);
-		$specific_version=array(TRUE, FALSE);
+		$specific_version=array(FALSE);
+		$type=array('static');
 		break;
 	case 'series':
-		$sections=array("Darreres actualitzacions", "Catàleg de sèries");
-		$descriptions=array("Aquestes són les darreres sèries d'anime subtitulades en català! T'animes a mirar-ne alguna?", "Tria i remena entre un catàleg de %%% sèries! Compte, que enganxen!");
+		$sections=array("Catàleg de sèries");
+		$descriptions=array("Tria i remena entre un catàleg de %%% sèries! Compte, que enganxen!");
 		$queries=array(
-			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
-		$carousel=array(TRUE, FALSE);
-		$specific_version=array(TRUE, FALSE);
+		$specific_version=array(FALSE);
+		$type=array('static');
 		break;
 	case 'search':
 		$query = (!empty($_GET['query']) ? escape($_GET['query']) : "");
@@ -94,8 +93,8 @@ switch ($header_tab){
 		$query = str_replace(" ", "%", $query);
 		$queries=array(
 			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords LIKE '%$query%') GROUP BY s.id ORDER BY s.name ASC");
-		$carousel=array(FALSE);
 		$specific_version=array(FALSE);
+		$type=array('static');
 		break;
 	default:
 		$result = query("SELECT a.series_id
@@ -107,17 +106,17 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 			$in_clause.=','.$row['series_id'];
 		}
 		mysqli_free_result($result);
-		$sections=array("Darreres actualitzacions", "Recomanacions de la quinzena", "A l'atzar", "Més populars", "Més actuals", "Més ben valorades");
-		$descriptions=array("Aquestes són les darreres novetats d'anime subtitulades en català pels diferents fansubs.", "Una tria de 12 obres de qualitat que es renova cada quinze dies! T'animes a mirar-ne alguna?", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
+		$sections=array("Obres destacades", "Darreres actualitzacions", "A l'atzar", "Més populars", "Més actuals", "Més ben valorades");
+		$descriptions=array("Aquí tens una tria d'obres de qualitat! T'animes a mirar-ne alguna?", "Aquestes són les darreres novetats d'anime subtitulades en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
 		$queries=array(
+			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation UNION SELECT id FROM version WHERE is_always_featured=1)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
-			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY RAND() LIMIT $max_items",
 			$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.air_date DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
-		$carousel=array(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE);
 		$specific_version=array(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
+		$type=array('recommendations', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel');
 		break;
 }
 
@@ -139,7 +138,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 		}
 	} else {
-		if (!$carousel[$i]) {
+		if ($type[$i]=='static') {
 			$genres = array();
 			while ($row = mysqli_fetch_assoc($result)) {
 				if (!empty($row['genres'])) {
@@ -180,37 +179,89 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 		}
 ?>
-					<div class="section-content<?php echo $carousel[$i] ? ' carousel' : ' flex wrappable catalog'; ?>">
+					<div class="section-content<?php echo $type[$i]=='carousel' ? ' carousel' : ($type[$i]=='recommendations' ? ' recommendations' : ' flex wrappable catalog'); ?>">
 <?php
 		while ($row = mysqli_fetch_assoc($result)){
-			if (!empty($row['genres']) && !$carousel[$i]) {
+			if (!empty($row['genres']) && $type[$i]=='static') {
 				$genres = ' genre-'.implode(' genre-', explode(',',$row['genres']));
 			} else {
 				$genres = "";
 			}
 ?>
 						<div class="status-<?php echo get_status($row['best_status']); ?><?php echo $genres; ?>">
+<?php
+			if ($type[$i]=='recommendations') {
+?>
+							<a class="recommendation" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
+								<div class="status" title="<?php echo get_status_description($row['best_status']); ?>"><?php echo get_status_description_short($row['best_status']); ?></div>
+<?php
+				if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
+?>
+									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>
+<?php
+				}
+?>
+<?php
+				if ($row['type']=='movie' && $row['episodes']>1) {
+?>
+									<div class="seasons"><?php echo $row['episodes']; ?> films</div>
+<?php
+				} else if ($row['type']=='movie') {
+?>
+									<div class="seasons">Film</div>
+<?php
+				} else if ($row['seasons']>1 && $row['show_seasons']==1) {
+?>
+									<div class="seasons">Sèrie de <?php echo $row['seasons']; ?> temporades, <?php echo $row['episodes']==-1 ? 'en emissió' : $row['episodes'].' capítols'; ?></div>
+<?php
+				} else {
+?>
+									<div class="seasons">Sèrie <?php echo $row['episodes']==-1 ? 'en emissió' : 'de '.$row['episodes'].' capítols'; ?></div>
+<?php
+				}
+?>
+								<img src="<?php echo $row['featured_image_url']; ?>" alt="<?php echo $row['name']; ?>" />
+								<div class="watchbutton">
+									<span class="fa fa-fw fa-play"></span> Mira-la ara
+								</div>
+								<div class="infoholder">
+									<div class="title">
+										<?php echo $row['name']; ?>
+									</div>
+									<div class="synopsis">
+<?php
+				$Parsedown = new Parsedown();
+				$synopsis = $Parsedown->setBreaksEnabled(false)->line($row['synopsis']);
+?>
+										<?php echo $synopsis; ?>
+									</div>
+								</div>
+								<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Subtítols de diversos fansubs' : 'Subtítols '.get_fansub_preposition_name($row['fansub_name']); ?></div>
+							</a>
+<?php			
+			} else {
+?>
 							<a class="thumbnail" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">
 <?php
-			if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
+				if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
 ?>
 									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">NOU</div>
 <?php
-			}
+				}
 ?>
 <?php
-			if ($row['type']=='movie' && $row['episodes']>1) {
+				if ($row['type']=='movie' && $row['episodes']>1) {
 ?>
 									<div class="seasons"><?php echo $row['episodes']; ?> films</div>
 <?php
-			} else if ($row['seasons']>1 && $row['show_seasons']==1) {
+				} else if ($row['seasons']>1 && $row['show_seasons']==1) {
 ?>
 									<div class="seasons"><?php echo $row['seasons']; ?> temporades</div>
 <?php
-			}
+				}
 ?>
 									<div class="title">
 										<div class="ellipsized-title"><?php echo $row['name']; ?></div>
@@ -218,6 +269,9 @@ for ($i=0;$i<count($sections);$i++){
 								</div>
 								<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $row['fansub_name']; ?></div>
 							</a>
+<?php
+			}
+?>
 						</div>
 <?php
 		}

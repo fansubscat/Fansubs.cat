@@ -24,6 +24,23 @@ function get_status($id){
 	}
 }
 
+function get_status_description_short($id){
+	switch ($id){
+		case 1:
+			return "Completada";
+		case 2:
+			return "En procés";
+		case 3:
+			return "Parcialment completada";
+		case 4:
+			return "Abandonada";
+		case 5:
+			return "Cancel·lada";
+		default:
+			return "Estat desconegut";
+	}
+}
+
 function get_status_description($id){
 	switch ($id){
 		case 1:

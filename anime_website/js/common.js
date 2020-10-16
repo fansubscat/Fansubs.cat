@@ -276,6 +276,17 @@ $(document).ready(function() {
 			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
 		});
 
+		$('.recommendations').slick({
+			speed: 600,
+			infinite: true,
+			autoplay: true,
+			autoplaySpeed: 5000,
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
+		});
+
 		$('.genres-carousel').slick({
 			speed: 300,
 			infinite: false,

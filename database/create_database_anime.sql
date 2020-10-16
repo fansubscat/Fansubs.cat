@@ -171,7 +171,10 @@ CREATE TABLE `version` (
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL,
   `links_updated` timestamp NOT NULL DEFAULT current_timestamp(),
-  `links_updated_by` varchar(200) NOT NULL
+  `links_updated_by` varchar(200) NOT NULL,
+  `is_featurable` tinyint(1) NOT NULL DEFAULT 0,
+  `is_always_featured` tinyint(1) NOT NULL DEFAULT 0,
+  `featured_image_url` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `views` (

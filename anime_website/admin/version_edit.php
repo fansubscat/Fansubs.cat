@@ -51,6 +51,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['is_featurable']=0;
 		}
+		if (!empty($_POST['is_always_featured'])){
+			$data['is_always_featured']=1;
+		} else {
+			$data['is_always_featured']=0;
+		}
+		if (!empty($_POST['featured_image_url'])) {
+			$data['featured_image_url']="'".escape($_POST['featured_image_url'])."'";
+		} else {
+			$data['featured_image_url']="NULL";
+		}
 
 		$links=array();
 		$episodes=array();
@@ -177,7 +187,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-version", "S'ha actualitzat la versió de la sèrie (id. de sèrie: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",downloads_url=".$data['downloads_url'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable']." WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",downloads_url=".$data['downloads_url'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",featured_image_url=".$data['featured_image_url']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -271,7 +281,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
-			query("INSERT INTO version (series_id,status,default_resolution,downloads_url,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['downloads_url'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].")");
+			query("INSERT INTO version (series_id,status,default_resolution,downloads_url,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured,featured_image_url) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['downloads_url'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['featured_image_url'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_1'].")");
@@ -436,7 +446,26 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<input class="form-check-input" type="checkbox" name="is_featurable" id="form-is_featurable" value="1"<?php echo $row['is_featurable']==1? " checked" : ""; ?>>
 											<label class="form-check-label" for="form-is_featurable">Té qualitat per a ser recomanada</label>
 										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="is_always_featured" id="form-is_always_featured" value="1"<?php echo $row['is_always_featured']==1? " checked" : ""; ?>>
+											<label class="form-check-label" for="form-is_always_featured">Mostra-la sempre com a recomanada</label>
+										</div>
 									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-8">
+								<div class="form-group">
+									<label for="form-featured_image_url">URL de la imatge de la recomanació <small class="text-muted">(obligatori si és recomanable, mida aprox. 1104x256px, puja-ho a <a href="https://imgur.com/upload" target="_blank">imgur</a>)</small></label>
+									<input class="form-control" name="featured_image_url" type="url" id="form-featured_image_url" maxlength="200" value="<?php echo htmlspecialchars($row['featured_image_url']); ?>" oninput="$('#form-image-preview').prop('src',$(this).val());$('#form-image-preview-link').prop('href',$(this).val());">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<a id="form-image-preview-link" href="<?php echo htmlspecialchars($row['featured_image_url']); ?>" target="_blank">
+										<img id="form-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block;" src="<?php echo htmlspecialchars($row['featured_image_url']); ?>" alt="">
+									</a>
 								</div>
 							</div>
 						</div>
