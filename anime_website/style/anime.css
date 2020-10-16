@@ -644,7 +644,7 @@ a:hover {
 	visibility: hidden;
 }
 
-.carousel {
+.carousel, .recommendations {
 	opacity: 0;
 /*	min-height: 256px;
 	max-height: 256px;*/
@@ -667,7 +667,7 @@ a:hover {
 	font-size: 4em;
 }
 
-.carousel.slick-initialized, .genres-carousel.slick-initialized {
+.carousel.slick-initialized, .genres-carousel.slick-initialized, .recommendations.slick-initialized {
 	opacity: 1;
 	position: relative;
 }
