@@ -327,6 +327,35 @@ $(document).ready(function() {
 			}
 		});
 
+		$("[class*='trackable-']").click(function () {
+			var event="Click series on unknown";
+			if ($(this).hasClass('trackable-films-catalog')){
+				event="Click series on films catalog";
+			} else if ($(this).hasClass('trackable-series-catalog')){
+				event="Click series on series catalog";
+			} else if ($(this).hasClass('trackable-search-results')){
+				event="Click series on search results";
+			} else if ($(this).hasClass('trackable-featured')){
+				event="Click series on featured section";
+			} else if ($(this).hasClass('trackable-latest')){
+				event="Click series on latest updates section";
+			} else if ($(this).hasClass('trackable-random')){
+				event="Click series on random section";
+			} else if ($(this).hasClass('trackable-popular')){
+				event="Click series on most popular section";
+			} else if ($(this).hasClass('trackable-newest')){
+				event="Click series on newest section";
+			} else if ($(this).hasClass('trackable-toprated')){
+				event="Click series on top rated section";
+			} else if ($(this).hasClass('trackable-related-anime')){
+				event="Click series on related anime";
+			}
+			gtag('event', event, {
+				'event_category': "Click series",
+				'event_label': $(this).attr('data-series-id')
+			});
+		});
+
 		//Clumsy detection for mobile OS... They break tooltips due to bad mouseenter/leave handling
 		if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 			$(".tooltip-container").mouseenter(function () {

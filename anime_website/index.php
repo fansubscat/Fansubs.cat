@@ -74,6 +74,7 @@ switch ($header_tab){
 			$base_query . " WHERE s.type='movie'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
+		$tracking_classes=array('films-catalog');
 		break;
 	case 'series':
 		$sections=array("Catàleg de sèries");
@@ -82,6 +83,7 @@ switch ($header_tab){
 			$base_query . " WHERE s.type='series'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
+		$tracking_classes=array('series-catalog');
 		break;
 	case 'search':
 		$query = (!empty($_GET['query']) ? escape($_GET['query']) : "");
@@ -95,6 +97,7 @@ switch ($header_tab){
 			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords LIKE '%$query%') GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
+		$tracking_classes=array('search-results');
 		break;
 	default:
 		$result = query("SELECT a.series_id
@@ -106,8 +109,8 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 			$in_clause.=','.$row['series_id'];
 		}
 		mysqli_free_result($result);
-		$sections=array("Obres destacades", "Darreres actualitzacions", "A l'atzar", "Més populars", "Més actuals", "Més ben valorades");
-		$descriptions=array("Aquí tens una tria d'obres de qualitat! T'animes a mirar-ne alguna?", "Aquestes són les darreres novetats d'anime subtitulades en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
+		$sections=array("<span class=\"iconsm fa fa-fw fa-star\"></span> Obres destacades", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorades");
+		$descriptions=array("Aquí tens la tria d'obres de qualitat d'aquesta quinzena! T'animes a mirar-ne alguna?", "Aquestes són les darreres novetats d'anime subtitulades en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
 		$queries=array(
 			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation UNION SELECT id FROM version WHERE is_always_featured=1)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
@@ -117,6 +120,7 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
 		$specific_version=array(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
 		$type=array('recommendations', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel');
+		$tracking_classes=array('featured', 'latest', 'random', 'popular', 'newest', 'toprated');
 		break;
 }
 
@@ -192,7 +196,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 			if ($type[$i]=='recommendations') {
 ?>
-							<a class="recommendation" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
+							<a class="recommendation trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
 								<div class="status" title="<?php echo get_status_description($row['best_status']); ?>"><?php echo get_status_description_short($row['best_status']); ?></div>
 <?php
 				if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
@@ -241,7 +245,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php			
 			} else {
 ?>
-							<a class="thumbnail" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
+							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">

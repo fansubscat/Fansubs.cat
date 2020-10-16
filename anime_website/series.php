@@ -520,7 +520,7 @@ if (mysqli_num_rows($resultrs)>0) {
 			echo "\t\t\t\t\t\t\t\t";
 			$first = FALSE;
 		}
-		echo '<a href="'.$base_url.'/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
+		echo '<a class="trackable-related-anime" data-series-id="'.$row['slug'].'" href="'.$base_url.'/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
 	}
 ?>
 
