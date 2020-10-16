@@ -277,10 +277,12 @@ $(document).ready(function() {
 		});
 
 		$('.recommendations').slick({
+			dots: true,
+			appendDots: '.recommendations',
 			speed: 600,
 			infinite: true,
 			autoplay: true,
-			autoplaySpeed: 5000,
+			autoplaySpeed: 10000,
 			slidesToShow: 1,
 			slidesToScroll: 1,
 			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',

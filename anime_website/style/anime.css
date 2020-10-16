@@ -644,6 +644,15 @@ a:hover {
 	visibility: hidden;
 }
 
+.slick-dots {
+	bottom: unset;
+	top: 0;
+}
+
+.slick-dotted.slick-slider {
+	margin-bottom: unset;
+}
+
 .carousel, .recommendations {
 	opacity: 0;
 /*	min-height: 256px;
