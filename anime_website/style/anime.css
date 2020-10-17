@@ -883,6 +883,48 @@ a:hover {
 	opacity: 1 !important;
 }
 
+.warning {
+	background-color: #444;
+	text-align: center;
+	margin-right: 2em;
+	padding-left: 1em !important;
+	padding-right: 1em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.warning-small {
+	background-color: #444;
+	margin-right: 2em;
+	padding-left: 1em !important;
+	padding-right: 1em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	padding: 0.5em;
+	display: flex;
+}
+
+.warning-small .force-display {
+	margin-top: 0;
+	font-size: 1em;
+	align-self: center;
+}
+
+.warning-small > .fa {
+	font-size: 1.3em;
+	align-self: center;
+}
+
+.warning-small .section-content {
+	padding-left: 0.8em;
+	padding-right: 0.5em;
+}
+
+.warning > span {
+	font-size: 2.5em;
+	margin-bottom: 0.5em;
+}
+
 .series_sidebar {
 	order: 1;
 	margin: 2em;
@@ -944,6 +986,23 @@ a:hover {
 
 .series-on-air {
 	color: rgb(200,200,255);
+}
+
+.force-display {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1.2em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 1em;
+	padding: 0.3em 0.5em;
+	background: rgb(32, 107, 41);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.force-display:hover {
+	background: rgb(52, 127, 61);
 }
 
 .fansub-website {
@@ -1524,6 +1583,11 @@ a:hover {
 
 	.version_content_multi .section {
 		padding-left: 1em;
+	}
+
+	.warning-small {
+		margin-left: 1em;
+		margin-right: 1em;
 	}
 
 	.main_content .section {
