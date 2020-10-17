@@ -72,7 +72,7 @@ $header_social = array(
 	'title' => $series['name'].' - Fansubs.cat - Anime',
 	'url' => 'https://anime.fansubs.cat/'.($series['type']=='movie' ? 'films/' : 'series/').$series['slug'],
 	'description' => strip_tags($synopsis),
-	'image' => $series['image']
+	'image' => 'https://anime.fansubs.cat/images/series/'.$series['id'].'.jpg'
 );
 
 $header_series_page=TRUE;
@@ -89,7 +89,7 @@ if (!empty($series['alternate_names'])) {
 <?php
 }
 ?>
-						<img class="sidebar_thumbnail" src="<?php echo htmlspecialchars($series['image']); ?>" alt="<?php echo htmlspecialchars($series['name']); ?>">
+						<img class="sidebar_thumbnail" src="/images/series/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
 						<div class="sidebar_data flex wrappable">
 <?php
 if (!empty($series['air_date'])) {
@@ -557,7 +557,7 @@ if (mysqli_num_rows($resultrm)>0) {
 			echo "\t\t\t\t\t\t\t\t";
 			$first = FALSE;
 		}
-		echo '<a href="'.$row['url'].'">'.$row['name'].'</a>';
+		echo '<a class="trackable-related-manga" data-name="'.$row['name'].'" href="'.$row['url'].'">'.$row['name'].'</a>';
 	}
 ?>
 

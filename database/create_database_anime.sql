@@ -132,7 +132,6 @@ CREATE TABLE `series` (
   `episodes` int(11) NOT NULL,
   `synopsis` text NOT NULL,
   `duration` varchar(200) DEFAULT NULL,
-  `image` varchar(200) NOT NULL,
   `myanimelist_id` int(11) DEFAULT NULL,
   `tadaima_id` int(11) DEFAULT NULL,
   `score` float DEFAULT NULL,
@@ -173,8 +172,7 @@ CREATE TABLE `version` (
   `links_updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `links_updated_by` varchar(200) NOT NULL,
   `is_featurable` tinyint(1) NOT NULL DEFAULT 0,
-  `is_always_featured` tinyint(1) NOT NULL DEFAULT 0,
-  `featured_image_url` varchar(200) DEFAULT NULL
+  `is_always_featured` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `views` (

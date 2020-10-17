@@ -86,11 +86,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['duration']="NULL";
 		}
-		if (!empty($_POST['image'])) {
-			$data['image']=escape($_POST['image']);
-		} else {
-			crash("Dades invàlides: manca image");
-		}
 		if (!empty($_POST['show_seasons'])){
 			$data['show_seasons']=1;
 		} else {
@@ -236,7 +231,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-series", "S'ha actualitzat la sèrie amb nom '".$data['name']."' (id. de sèrie: ".$data['id'].")");
-			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",score=".$data['score'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',duration=".$data['duration'].",image='".$data['image']."',myanimelist_id=".$data['myanimelist_id'].",tadaima_id=".$data['tadaima_id'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",has_licensed_parts=".$data['has_licensed_parts'].",order_type=".$data['order_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",score=".$data['score'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',duration=".$data['duration'].",myanimelist_id=".$data['myanimelist_id'].",tadaima_id=".$data['tadaima_id'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",has_licensed_parts=".$data['has_licensed_parts'].",order_type=".$data['order_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$data['id'].",".$genre.")");
@@ -279,11 +274,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("REPLACE INTO related_manga (series_id,name,url) VALUES (".$data['id'].",'".$related_manga_item['name']."','".$related_manga_item['url']."')");
 			}
 
+			if (!empty($_POST['image'])) {
+				copy($_POST['image'],'../images/series/'.$data['id'].'.jpg');
+			}
+
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
 			log_action("create-series", "S'ha creat una sèrie amb nom '".$data['name']."'");
-			query("INSERT INTO series (slug,name,alternate_names,keywords,type,air_date,author,director,studio,rating,episodes,synopsis,duration,image,myanimelist_id,tadaima_id,score,show_seasons,show_expanded_seasons,show_episode_numbers,show_unavailable_episodes,has_licensed_parts,order_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."',".$data['duration'].",'".$data['image']."',".$data['myanimelist_id'].",".$data['tadaima_id'].",".$data['score'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['has_licensed_parts'].",".$data['order_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO series (slug,name,alternate_names,keywords,type,air_date,author,director,studio,rating,episodes,synopsis,duration,myanimelist_id,tadaima_id,score,show_seasons,show_expanded_seasons,show_episode_numbers,show_unavailable_episodes,has_licensed_parts,order_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."',".$data['duration'].",".$data['myanimelist_id'].",".$data['tadaima_id'].",".$data['score'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['has_licensed_parts'].",".$data['order_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$inserted_id.",".$genre.")");
@@ -299,6 +298,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			foreach ($related_manga as $related_manga_item) {
 				query("REPLACE INTO related_manga (series_id,name,url) VALUES (".$inserted_id.",'".$related_manga_item['name']."','".$related_manga_item['url']."')");
+			}
+
+			if (!empty($_POST['image'])) {
+				copy($_POST['image'],'../images/series/'.$inserted_id.'.jpg');
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
@@ -489,14 +492,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-7">
 								<div class="form-group">
-									<label for="form-image" class="mandatory">URL de la imatge de portada</label>
-									<input class="form-control" name="image" type="url" id="form-image" required maxlength="200" value="<?php echo htmlspecialchars($row['image']); ?>" oninput="$('#form-image-preview').prop('src',$(this).val());$('#form-image-preview-link').prop('href',$(this).val());">
+									<label for="form-image"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>URL de la imatge de portada <?php echo empty($row['id']) ? '<small class="text-muted">(JPEG, es copiarà al servidor)</small>' : '<small class="text-muted">(només si la vols canviar; JPEG, es copiarà al servidor)</small>'; ?></label>
+									<input class="form-control" name="image" type="url" id="form-image"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200" value="" oninput="$('#form-image-preview').prop('src',$(this).val());$('#form-image-preview-link').prop('href',$(this).val());">
 								</div>
 							</div>
 							<div class="col-sm-1">
 								<div class="form-group">
-									<a id="form-image-preview-link" href="<?php echo htmlspecialchars($row['image']); ?>" target="_blank">
-										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block;" src="<?php echo htmlspecialchars($row['image']); ?>" alt="">
+									<a id="form-image-preview-link" href="../images/series/<?php echo $row['id']; ?>.jpg" target="_blank">
+										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block;" src="../images/series/<?php echo $row['id']; ?>.jpg" alt="">
 									</a>
 								</div>
 							</div>

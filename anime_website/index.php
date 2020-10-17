@@ -60,7 +60,7 @@ $max_items=24;
 
 $cookie_viewed_links = get_cookie_viewed_links_ids();
 
-$base_query="SELECT s.*, v.id version_id, v.featured_image_url, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, v.id version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
@@ -224,7 +224,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 				}
 ?>
-								<img src="<?php echo $row['featured_image_url']; ?>" alt="<?php echo $row['name']; ?>" />
+								<img src="/images/versions/<?php echo $row['version_id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
 								<div class="watchbutton">
 									<span class="fa fa-fw fa-play"></span> Mira-la ara
 								</div>
@@ -247,12 +247,12 @@ for ($i=0;$i<count($sections);$i++){
 ?>
 							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
-								<img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>" />
+								<img src="/images/series/<?php echo $row['id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">
 <?php
 				if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
 ?>
-									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">NOU</div>
+									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat</div>
 <?php
 				}
 ?>

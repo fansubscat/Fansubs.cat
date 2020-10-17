@@ -328,32 +328,59 @@ $(document).ready(function() {
 		});
 
 		$("[class*='trackable-']").click(function () {
-			var event="Click series on unknown";
+			var type="";
+			var event="";
+			var label="";
 			if ($(this).hasClass('trackable-films-catalog')){
+				type="Click series";
 				event="Click series on films catalog";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-series-catalog')){
+				type="Click series";
 				event="Click series on series catalog";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-search-results')){
+				type="Click series";
 				event="Click series on search results";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-featured')){
+				type="Click series";
 				event="Click series on featured section";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-latest')){
+				type="Click series";
 				event="Click series on latest updates section";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-random')){
+				type="Click series";
 				event="Click series on random section";
 			} else if ($(this).hasClass('trackable-popular')){
+				type="Click series";
 				event="Click series on most popular section";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-newest')){
+				type="Click series";
 				event="Click series on newest section";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-toprated')){
+				type="Click series";
 				event="Click series on top rated section";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-related-anime')){
+				type="Click series";
 				event="Click series on related anime";
+				label=$(this).attr('data-series-id');
+			} else if ($(this).hasClass('trackable-related-manga')){
+				type="Click manga";
+				event="Click related manga";
+				label=$(this).attr('data-name');
 			}
-			gtag('event', event, {
-				'event_category': "Click series",
-				'event_label': $(this).attr('data-series-id')
-			});
+			if (type!='' && event!='' && label!='') {
+				gtag('event', event, {
+					'event_category': type,
+					'event_label': label
+				});
+			}
 		});
 
 		//Clumsy detection for mobile OS... They break tooltips due to bad mouseenter/leave handling
