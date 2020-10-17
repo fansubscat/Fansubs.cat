@@ -467,7 +467,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm-4">
 								<div class="form-group">
 									<a id="form-image-preview-link" href="../images/versions/<?php echo $row['id']; ?>.jpg" target="_blank">
-										<img id="form-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block;" src="../images/versions/<?php echo $row['id']; ?>.jpg" alt="">
+										<img id="form-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="../images/versions/<?php echo $row['id']; ?>.jpg" alt="">
 									</a>
 								</div>
 							</div>
