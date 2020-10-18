@@ -252,7 +252,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 				if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
 ?>
-									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat</div>
+									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>
 <?php
 				}
 ?>
