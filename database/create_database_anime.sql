@@ -183,6 +183,12 @@ CREATE TABLE `views` (
   `time_spent` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `view_log` (
+  `id` int(11) NOT NULL,
+  `link_id` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 ALTER TABLE `account`
   ADD PRIMARY KEY (`id`),
   ADD KEY `account_ibfk_1` (`fansub_id`);
@@ -234,6 +240,8 @@ ALTER TABLE `version`
   ADD KEY `version_ibfk_1` (`series_id`);
 ALTER TABLE `views`
   ADD PRIMARY KEY (`link_id`,`day`);
+ALTER TABLE `view_log`
+  ADD PRIMARY KEY (`id`);
 ALTER TABLE `account`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `action_log`
@@ -255,6 +263,8 @@ ALTER TABLE `season`
 ALTER TABLE `series`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `version`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `view_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `account`
