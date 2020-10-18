@@ -82,7 +82,7 @@ function getSource(method, url){
 		return start+'<iframe style="flex-grow: 1;" frameborder="0" src="'+url+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true" sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"></iframe>'+end;
 	}
 	if (method=="direct-video"){
-		return start+'<video style="flex-grow: 1; max-width: 100%"  controls autoplay><source src="'+url+'" type="video/mp4">El teu navegador no suporta el vídeo incrustat.</video>'+end;
+		return start+'<video style="flex-grow: 1; max-width: 100%" controls autoplay controlslist="nodownload"><source src="'+url+'" type="video/mp4">El teu navegador no suporta el vídeo incrustat.</video>'+end;
 	}
 	return '<div class="white-popup"><div style="display: flex; height: 100%; justify-content: center; align-items: center;"><div>Mètode de visualització no compatible: '+method+'</div></div></div>';
 }

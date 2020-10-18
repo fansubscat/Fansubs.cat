@@ -1569,6 +1569,16 @@ a:hover {
 		line-height: 1.2em;
 	}
 
+	.thumbnail .new {
+		font-size: 0.6em;
+		line-height: 1.2em;
+	}
+
+	.thumbnail .seasons {
+		font-size: 0.6em;
+		line-height: 1.2em;
+	}
+
 	.thumbnail .title {
 		font-size: 0.65em;
 	}
