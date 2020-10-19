@@ -337,8 +337,8 @@ if ($count_unfiltered==0) {
 		$plurals = array(
 				"active" => array("Si la vols veure amb màxima qualitat, al seu lloc web trobaràs la manera de baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!","Si la vols veure amb màxima qualitat, als seus llocs web trobaràs la manera de baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!"),
 				"inactive" => array("Actualment, aquest fansub ja no està actiu.","Actualment, aquests fansubs ja no estan actius."),
-				"abandoned" => array("Aquesta obra es considera abandonada, segurament no se'n llançaran més capítols.","Aquesta obra es considera abandonada, segurament no se'n llançaran més capítols."),
-				"cancelled" => array("Tingues en compte que aquesta obra ha estat cancel·lada, no se'n llançaran més capítols.","Tingues en compte que aquesta obra ha estat cancel·lada, no se'n llançaran més capítols.")
+				"abandoned" => array("Aquesta obra es considera abandonada pel fansub, segurament no se'n llançaran més capítols.","Aquesta obra es considera abandonada pels fansubs, segurament no se'n llançaran més capítols."),
+				"cancelled" => array("Aquesta obra ha estat cancel·lada pel fansub, no se'n llançaran més capítols.","Aquesta obra ha estat cancel·lada pels fansubs, no se'n llançaran més capítols.")
 		);
 ?>
 							<div class="section">
@@ -351,23 +351,6 @@ if ($count_unfiltered==0) {
 		if (!empty($fansub_buttons)) {
 ?>
 								<div class="fansub-buttons"><?php echo $fansub_buttons; ?></div>
-<?php
-		}
-?>
-<?php
-		if ($version['status']==4) {
-?>
-								<div class="section-content padding-top">
-									<?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
-
-								</div>
-<?php
-		} else if ($version['status']==5) {
-?>
-								<div class="section-content padding-top">
-									<?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
-
-								</div>
 <?php
 		}
 ?>
@@ -385,18 +368,32 @@ if ($count_unfiltered==0) {
 							<div class="section">
 								<h2 class="section-title">Contingut</h2>
 <?php
+			if ($version['status']==4) {
+?>
+								<div class="section-content padding-bottom cancelled-warning">
+									<span class="fa fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
 
+								</div>
+<?php
+			} else if ($version['status']==5) {
+?>
+								<div class="section-content padding-bottom cancelled-warning">
+									<span class="fa fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
+
+								</div>
+<?php
+			}
 			if ($version['episodes_missing']==1) {
 ?>
 								<div class="section-content padding-bottom episodes-missing">
-									<span class="fa fa-exclamation-triangle icon"></span>Hi ha capítols subtitulats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
+									<span class="fa fa-exclamation-triangle icon-pr"></span>Hi ha capítols subtitulats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
 								</div>
 <?php
 			}
 			if ($series['episodes']==-1) {
 ?>
 							<div class="section-content padding-bottom series-on-air">
-								<span class="fa fa-exclamation-triangle icon"></span>Aquesta sèrie encara està en emissió. És possible que la llista de capítols no estigui actualitzada.
+								<span class="fa fa-exclamation-triangle icon-pr"></span>Aquesta sèrie encara està en emissió. És possible que tingui més capítols que els que hi ha a la llista.
 							</div>
 <?php
 			}

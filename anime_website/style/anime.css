@@ -449,11 +449,22 @@ a:hover {
 	transform: scale(0.98);
 	transition: all .6s ease;
 	filter: grayscale(70%) brightness(60%);
+	overflow: hidden;
 }
 
 .slick-active .recommendation {
 	transform: scale(1);
 	filter: grayscale(0%) brightness(100%);
+}
+
+.slick-active .recommendation img {
+	transform: scale(1);
+	transition: all .6s ease;
+}
+
+.slick-active .recommendation:hover img {
+	transform: scale(1.1);
+	transition: all .6s ease;
 }
 
 .recommendation img {
@@ -978,6 +989,16 @@ a:hover {
 
 .episodes-missing {
 	color: rgb(255,200,0);
+	background: rgb(80,80,0);
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
+}
+
+.cancelled-warning {
+	color: rgb(250,200,200);
+	background: rgb(100,00,0);
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
 }
 
 .episodes-missing a {
@@ -986,6 +1007,9 @@ a:hover {
 
 .series-on-air {
 	color: rgb(200,200,255);
+	background: rgb(0,0,55);
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
 }
 
 .force-display {
@@ -1171,6 +1195,10 @@ a:hover {
 
 .icon {
 	padding-right: 0.3em;
+}
+
+.icon-pr {
+	padding-right: 0.5em;
 }
 
 .icon-play {
@@ -1598,6 +1626,11 @@ a:hover {
 	.warning-small {
 		margin-left: 1em;
 		margin-right: 1em;
+	}
+
+	.warning{
+		margin-right: 1em;
+		margin-left: 1em;
 	}
 
 	.main_content .section {
