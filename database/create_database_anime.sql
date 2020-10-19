@@ -100,7 +100,8 @@ CREATE TABLE `rel_series_genre` (
 
 CREATE TABLE `rel_version_fansub` (
   `version_id` int(11) NOT NULL,
-  `fansub_id` int(11) NOT NULL
+  `fansub_id` int(11) NOT NULL,
+  `downloads_url` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `search_history` (
@@ -163,7 +164,6 @@ CREATE TABLE `version` (
   `series_id` int(11) NOT NULL,
   `status` int(11) NOT NULL,
   `default_resolution` varchar(200) DEFAULT NULL,
-  `downloads_url` varchar(200) DEFAULT NULL,
   `episodes_missing` tinyint(1) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,

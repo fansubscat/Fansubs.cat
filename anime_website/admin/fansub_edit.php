@@ -40,10 +40,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if ($_POST['action']=='edit') {
 			log_action("update-fansub", "S'ha actualitzat el fansub amb nom '".$data['name']."' (id. de fansub: ".$data['id'].")");
 			query("UPDATE fansub SET name='".$data['name']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',status=".$data['status'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+
+			if (!empty($_FILES['icon'])) {
+				move_uploaded_file($_FILES['icon']["tmp_name"], '../images/fansubs/'.$data['id'].'.png');
+			}
 		}
 		else {
 			log_action("create-fansub", "S'ha creat un fansub amb nom '".$data['name']."'");
 			query("INSERT INTO fansub (name,url,twitter_url,twitter_handle,status,created,created_by,updated,updated_by) VALUES ('".$data['name']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['status'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+
+			if (!empty($_FILES['icon'])) {
+				move_uploaded_file($_FILES['icon']["tmp_name"], '../images/fansubs/'.mysqli_insert_id($db_connection).'.png');
+			}
 		}
 
 		$_SESSION['message']="S'han desat les dades correctament.";
@@ -65,11 +73,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			<article class="card-body">
 				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita el fansub" : "Afegeix un fansub"; ?></h4>
 				<hr>
-				<form method="post" action="fansub_edit.php">
+				<form method="post" action="fansub_edit.php" enctype="multipart/form-data">
 					<div class="form-group">
 						<label for="form-name" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+					</div>
+					<div class="form-group">
+						<label for="form-icon"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Icona <small class="text-muted">(PNG, mida 24x24px)</small></label>
+						<input class="form-control" name="icon" type="file" accept="image/png" id="form-icon"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200">
 					</div>
 					<div class="form-group">
 						<label for="form-url">URL</label>
@@ -80,7 +92,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input class="form-control" type="url" name="twitter_url" id="form-twitter_url" maxlength="200" value="<?php echo htmlspecialchars($row['twitter_url']); ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-twitter_handle" class="mandatory">Nom a Twitter <small class="text-muted">(si no en té, el nom sencer del fansub)</small></label>
+						<label for="form-twitter_handle" class="mandatory">Nom a Twitter <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
 						<input class="form-control" name="twitter_handle" id="form-twitter_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['twitter_handle']); ?>">
 					</div>
 					<div class="form-group">

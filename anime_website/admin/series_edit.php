@@ -278,6 +278,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				copy($_POST['image'],'../images/series/'.$data['id'].'.jpg');
 			}
 
+			if (!empty($_FILES['featured_image'])) {
+				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../images/featured/'.$data['id'].'.jpg');
+			}
+
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
@@ -302,6 +306,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 			if (!empty($_POST['image'])) {
 				copy($_POST['image'],'../images/series/'.$inserted_id.'.jpg');
+			}
+
+			if (!empty($_FILES['featured_image'])) {
+				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../images/featured/'.$inserted_id.'.jpg');
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
@@ -354,7 +362,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la sèrie" : "Afegeix una sèrie"; ?></h4>
 					<hr>
-					<form method="post" action="series_edit.php" onsubmit="return checkNumberOfEpisodes()">
+					<form method="post" action="series_edit.php" enctype="multipart/form-data" onsubmit="return checkNumberOfEpisodes()">
 						<div class="row align-items-end">
 							<div class="col-sm-3">
 								<div class="form-group">
@@ -500,6 +508,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="form-group">
 									<a id="form-image-preview-link" href="../images/series/<?php echo $row['id']; ?>.jpg" target="_blank">
 										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="../images/series/<?php echo $row['id']; ?>.jpg" alt="">
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-8">
+								<div class="form-group">
+									<label for="form-featured_image"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge per a la capçalera i les recomanacions <small class="text-muted">(JPEG, mida aprox. 1104x256px)</small></label>
+									<input class="form-control" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200" onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-featured-image-preview').prop('src',e.target.result);$('#form-featured-image-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<a id="form-featured-image-preview-link" href="../images/featured/<?php echo $row['id']; ?>.jpg" target="_blank">
+										<img id="form-featured-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="../images/featured/<?php echo $row['id']; ?>.jpg" alt="">
 									</a>
 								</div>
 							</div>

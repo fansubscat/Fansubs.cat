@@ -342,17 +342,17 @@ function get_tadaima_info($thread_id) {
 		curl_close($ch);
 	}
 	if($response===FALSE) {
-		return "Tadaima.cat";
+		return "Comenta-ho a Tadaima.cat";
 	} else {
 		$json_response = json_decode($response);
 		if ($json_response->status!='ok') {
-			return "Tadaima.cat";
+			return "Comenta-ho a Tadaima.cat";
 		} else {
 			$number_of_posts = count($json_response->result->posts);
 			if ($number_of_posts==1){
-				return "Tadaima.cat (1 comentari)";
+				return "Comenta-ho a Tadaima.cat (1 comentari)";
 			} else {
-				return "Tadaima.cat ($number_of_posts comentaris)";
+				return "Comenta-ho a Tadaima.cat ($number_of_posts comentaris)";
 			}
 		}
 	}

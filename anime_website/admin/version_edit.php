@@ -31,15 +31,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['fansub_3']=NULL;
 		}
+		if (!empty($_POST['downloads_url_1'])) {
+			$data['downloads_url_1']="'".escape($_POST['downloads_url_1'])."'";
+		} else {
+			$data['downloads_url_1']="NULL";
+		}
+		if (!empty($_POST['downloads_url_2'])) {
+			$data['downloads_url_2']="'".escape($_POST['downloads_url_2'])."'";
+		} else {
+			$data['downloads_url_2']="NULL";
+		}
+		if (!empty($_POST['downloads_url_3'])) {
+			$data['downloads_url_3']="'".escape($_POST['downloads_url_3'])."'";
+		} else {
+			$data['downloads_url_3']="NULL";
+		}
 		if (!empty($_POST['default_resolution'])) {
 			$data['default_resolution']="'".escape($_POST['default_resolution'])."'";
 		} else {
 			$data['default_resolution']="NULL";
-		}
-		if (!empty($_POST['downloads_url'])) {
-			$data['downloads_url']="'".escape($_POST['downloads_url'])."'";
-		} else {
-			$data['downloads_url']="NULL";
 		}
 		if (!empty($_POST['status']) && is_numeric($_POST['status'])) {
 			$data['status']=escape($_POST['status']);
@@ -182,17 +192,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-version", "S'ha actualitzat la versió de la sèrie (id. de sèrie: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",downloads_url=".$data['downloads_url'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured']." WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
-				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$data['id'].",".$data['fansub_1'].")");
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$data['id'].",".$data['fansub_1'].",".$data['downloads_url_1'].")");
 			}
 			if ($data['fansub_2']!=NULL) {
-				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$data['id'].",".$data['fansub_2'].")");
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$data['id'].",".$data['fansub_2'].",".$data['downloads_url_2'].")");
 			}
 			if ($data['fansub_3']!=NULL) {
-				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$data['id'].",".$data['fansub_3'].")");
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$data['id'].",".$data['fansub_3'].",".$data['downloads_url_3'].")");
 			}
 
 			foreach ($episodes as $episode) {
@@ -272,24 +282,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 
-			if (!empty($_FILES['featured_image'])) {
-				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../images/versions/'.$data['id'].'.jpg');
-			}
-
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
-			query("INSERT INTO version (series_id,status,default_resolution,downloads_url,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['downloads_url'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].")");
+			query("INSERT INTO version (series_id,status,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
-				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_1'].")");
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
 			}
 			if ($data['fansub_2']!=NULL) {
-				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_2'].")");
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_2'].",".$data['downloads_url_1'].")");
 			}
 			if ($data['fansub_3']!=NULL) {
-				query("INSERT INTO rel_version_fansub (version_id,fansub_id) VALUES (".$inserted_id.",".$data['fansub_3'].")");
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_3'].",".$data['downloads_url_1'].")");
 			}
 			foreach ($episodes as $episode) {
 				if ($episode['title']!="NULL") {
@@ -304,10 +310,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			foreach ($folders as $folder) {
 				query("INSERT INTO folder (version_id,account_id,folder,season_id,active) VALUES (".$inserted_id.",".$folder['account_id'].",'".$folder['folder']."',".$folder['season_id'].",".$folder['active'].")");
-			}
-
-			if (!empty($_FILES['featured_image'])) {
-				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../images/versions/'.$inserted_id.'.jpg');
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.";
@@ -326,10 +328,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$series = mysqli_fetch_assoc($results) or crash('Series not found');
 		mysqli_free_result($results);
 
-		$resultf = query("SELECT fansub_id FROM rel_version_fansub vf WHERE vf.version_id=".$row['id']);
+		$resultf = query("SELECT fansub_id, downloads_url FROM rel_version_fansub vf WHERE vf.version_id=".$row['id']);
 		$fansubs = array();
 		while ($rowf = mysqli_fetch_assoc($resultf)) {
-			array_push($fansubs, $rowf['fansub_id']);
+			array_push($fansubs, array($rowf['fansub_id'], $rowf['downloads_url']));
 		}
 		mysqli_free_result($resultf);
 
@@ -361,7 +363,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la versió" : "Afegeix una versió"; ?></h4>
 					<hr>
-					<form method="post" action="version_edit.php" enctype='multipart/form-data' onsubmit="return checkNumberOfLinks()">
+					<form method="post" action="version_edit.php" onsubmit="return checkNumberOfLinks()">
 						<div class="form-group">
 							<label for="form-series" class="mandatory">Sèrie</label>
 							<div id="form-series" class="font-weight-bold form-control"><?php echo htmlspecialchars($series['name']); ?></div>
@@ -378,7 +380,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
 ?>
-										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>0 && $fansubs[0]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
+										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>0 && $fansubs[0][0]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
 <?php
 	}
 	mysqli_free_result($result);
@@ -395,7 +397,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
 ?>
-										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>1 && $fansubs[1]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
+										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>1 && $fansubs[1][0]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
 <?php
 	}
 	mysqli_free_result($result);
@@ -412,12 +414,32 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
 ?>
-										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>2 && $fansubs[2]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
+										<option value="<?php echo $frow['id']; ?>" <?php echo (count($fansubs)>2 && $fansubs[2][0]==$frow['id']) ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
 <?php
 	}
 	mysqli_free_result($result);
 ?>
 									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-downloads_url_1">Enllaç de baixada dels fitxers originals 1<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
+									<input id="form-downloads_url_1" name="downloads_url_1" type="url" class="form-control" value="<?php echo (count($fansubs)>0 ? htmlspecialchars($fansubs[0][1]) : ''); ?>" maxlength="200"/>
+								</div>
+							</div>
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-downloads_url_2">Enllaç de baixada dels fitxers originals 2<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
+									<input id="form-downloads_url_2" name="downloads_url_2" type="url" class="form-control" value="<?php echo (count($fansubs)>1 ? htmlspecialchars($fansubs[1][1]) : ''); ?>" maxlength="200"/>
+								</div>
+							</div>
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-downloads_url_3">Enllaç de baixada dels fitxers originals 3<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
+									<input id="form-downloads_url_3" name="downloads_url_3" type="url" class="form-control" value="<?php echo (count($fansubs)>2 ? htmlspecialchars($fansubs[2][1]) : ''); ?>" maxlength="200"/>
 								</div>
 							</div>
 						</div>
@@ -454,29 +476,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<label class="form-check-label" for="form-is_always_featured">Mostra-la sempre com a recomanada</label>
 										</div>
 									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-8">
-								<div class="form-group">
-									<label for="form-featured_image">Imatge per a la recomanació <small class="text-muted">(obligatori si és recomanable, JPEG, mida aprox. 1104x256px)</small></label>
-									<input class="form-control" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" maxlength="200" onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-image-preview').prop('src',e.target.result);$('#form-image-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="form-group">
-									<a id="form-image-preview-link" href="../images/versions/<?php echo $row['id']; ?>.jpg" target="_blank">
-										<img id="form-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="../images/versions/<?php echo $row['id']; ?>.jpg" alt="">
-									</a>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm">
-								<div class="form-group">
-									<label for="form-downloads_url">Enllaç a la carpeta de baixades dels fitxers originals <small class="text-muted">(o fitxa del fansub, si es prefereix; si n'hi ha més d'un, separa'ls amb un punt i coma)</small></label>
-									<input id="form-downloads_url" name="downloads_url" type="url" class="form-control" value="<?php echo htmlspecialchars($row['downloads_url']); ?>" maxlength="200"/>
 								</div>
 							</div>
 						</div>

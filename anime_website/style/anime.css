@@ -467,11 +467,35 @@ a:hover {
 	transition: all .6s ease;
 }
 
-.recommendation img {
+.recommendation img, .series_header img {
 	display: block;
 	width: 100%; 
 	height: 100%;
 	object-fit: cover;
+}
+
+.series_header img {
+	mask-image: linear-gradient(transparent, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0), transparent);
+	-webkit-mask-image: linear-gradient(transparent, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0), transparent);
+	position: absolute;
+}
+
+.series_header {
+	width: 100%;
+	height: 256px;
+	padding-top: 1em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.series_title_container {
+	padding: 1em;
+	background-color: rgba(2,2,2,0.4);
+	text-align: center;
+	z-index: 2;
+	border-radius: 0.5em;
 }
 
 .recommendation .status {
@@ -940,7 +964,18 @@ a:hover {
 	order: 1;
 	margin: 2em;
 	text-align: center;
-	width: 350px;
+	display: flex;
+	flex-direction: column;
+}
+
+.series_sidebar .section-title {
+	padding-top: 1em;
+}
+
+.series_sidebar_inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .main_content {
@@ -951,24 +986,33 @@ a:hover {
 
 .sidebar_data {
 	font-size: 1.1em;
-	justify-content: center;
+	text-align: left;
+	padding-bottom: 1em;
 }
 
 .sidebar_data div {
-	padding: 0.4em;
+	padding: 0.2em 0;
+	padding-left: 1.5em;
+	text-indent: -1em;
 }
 
-.sidebar_alternate_names {
-	color: #BBB;
-	font-size: 1em;
-	margin-top: -1em;
-	margin-bottom: 1em;
+.series_title {
+	color: #FFF;
+	font-size: 1.8em;
+	margin-top: 0.2em;
+}
+
+.series_alternate_names {
+	color: #DDD;
+	font-size: 1.1em;
+	margin-top: 0.2em;
 }
 
 .sidebar_thumbnail {
-	width: 338px; 
-	height: 478px;
+	width: 300px; 
+	height: 424px;
 	object-fit: cover;
+	border: 1px solid white;
 }
 
 .fansub-buttons {
@@ -984,7 +1028,10 @@ a:hover {
 }
 
 .parts-licensed {
-	color: rgb(200,255,200);
+	color: rgb(220,255,220);
+	background: rgb(0,60,0);
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
 }
 
 .episodes-missing {
@@ -1029,16 +1076,66 @@ a:hover {
 	background: rgb(52, 127, 61);
 }
 
+.fansub-list {
+	margin-top: 1em;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.fansub-list img {
+	vertical-align: middle;
+}
+
+.fansub-list tbody tr {
+	border-bottom: 1px solid #555;
+}
+
+.fansub-list tbody tr:last-child {
+	border-bottom: none;
+}
+
+.fansub-info {
+	background: rgba(255,255,0,0.05);
+	border-radius: 0.5em;
+	border: 1px solid #550;
+	padding: 1em;
+}
+
+.fansub-icon {
+	width: 28px;
+}
+
+.fansub-name {
+	font-weight: bold;
+	font-size: 1em;
+	vertical-align: middle;
+}
+
+.fansub-inactive {
+	font-weight: normal;
+	font-size: 0.9em;
+}
+
+.fansub-icon img {
+	width: 24px;
+	height: 24px;
+	border-radius: 0.25em;
+	vertical-align: middle;
+}
+
+.fansub-links {
+	text-align: right;
+}
+
 .fansub-website {
 	color: #FFF;
 	text-decoration: none !important;
-	font-size: 1em;
+	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-right: 0.4em;
 	margin-top: 0.2em;
 	margin-bottom: 0.2em;
-	padding: 0.3em 0.5em;
+	padding: 0.2em 0.5em;
 	background: rgb(12, 87, 21);
 	white-space: nowrap;
 	display: inline-block;
@@ -1051,13 +1148,12 @@ a:hover {
 .fansub-twitter {
 	color: #FFF;
 	text-decoration: none !important;
-	font-size: 1em;
+	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-right: 0.4em;
 	margin-top: 0.2em;
 	margin-bottom: 0.2em;
-	padding: 0.3em 0.5em;
+	padding: 0.2em 0.5em;
 	background: rgb(14, 87, 142);
 	white-space: nowrap;
 	display: inline-block;
@@ -1067,22 +1163,21 @@ a:hover {
 	background: rgb(34, 107, 162);
 }
 
-.fansub-downloads {
+.fansub-downloads, .fansub-series-page {
 	color: #FFF;
 	text-decoration: none !important;
-	font-size: 1em;
+	font-size: 0.9em;
 	font-weight: bold;
 	border-radius: 4px;
-	margin-right: 0.4em;
 	margin-top: 0.2em;
 	margin-bottom: 0.2em;
-	padding: 0.3em 0.5em;
+	padding: 0.2em 0.5em;
 	background: rgb(145,55,0);
 	white-space: nowrap;
 	display: inline-block;
 }
 
-.fansub-downloads:hover {
+.fansub-downloads:hover, .fansub-series-page:hover {
 	background: rgb(165,75,20);
 }
 
@@ -1099,6 +1194,7 @@ a:hover {
 	background: rgb(50, 50, 114);
 	white-space: nowrap;
 	display: inline-block;
+	width: 100%;
 }
 
 .mal-button:hover {
@@ -1118,6 +1214,7 @@ a:hover {
 	background: rgb(90, 30, 30);
 	white-space: nowrap;
 	display: inline-block;
+	width: 100%;
 }
 
 .tadaima-button:hover {
@@ -1193,8 +1290,12 @@ a:hover {
 	padding-left: 2em;
 }
 
-.icon {
+.icon, .mobileicon {
 	padding-right: 0.3em;
+}
+
+.dataicon {
+	margin-right: -0.2em;
 }
 
 .icon-pr {
@@ -1480,6 +1581,8 @@ a:hover {
 		width: 100%;
 		min-width: 0;
 		margin: 1em;
+		display: flex;
+		align-items: center;
 	}
 
 	.sidebar_thumbnail {
@@ -1523,6 +1626,14 @@ a:hover {
 	#options-overlay-content {
 		max-width: 100%;
 		padding: 1em;
+	}
+
+	.mobilehide {
+		display: none;
+	}
+
+	.mobileicon {
+		padding-right: 0;
 	}
 
 	.tabs {
@@ -1639,5 +1750,9 @@ a:hover {
 
 	.user-options, .search-form {
 		margin-top: 0;
+	}
+
+	.series_header {
+		height: 128px;
 	}
 }

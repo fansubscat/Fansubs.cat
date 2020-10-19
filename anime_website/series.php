@@ -79,93 +79,111 @@ $header_series_page=TRUE;
 
 require_once('header.inc.php');
 ?>
-				<div class="flex mobilewrappable">
-					<div class="series_sidebar">
-						<h2 class="section-title"><?php echo htmlspecialchars($series['name']); ?></h2>
+				<div class="series_header">
 <?php
-if (!empty($series['alternate_names'])) {
+if (file_exists('images/featured/'.$series['id'].'.jpg')) {
 ?>
-						<div class="sidebar_alternate_names"><?php echo htmlspecialchars($series['alternate_names']); ?></div>
+					<img src="/images/featured/<?php echo $series['id']; ?>.jpg" alt="" />
+<?php
+} else {
+?>
+					<img src="/images/series/<?php echo $series['id']; ?>.jpg" alt="" />
 <?php
 }
 ?>
-						<img class="sidebar_thumbnail" src="/images/series/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
-						<div class="sidebar_data flex wrappable">
+					<div class="series_title_container">
+						<h2 class="series_title"><?php echo htmlspecialchars($series['name']); ?></h2>
+<?php
+if (!empty($series['alternate_names'])) {
+?>
+						<div class="series_alternate_names"><?php echo htmlspecialchars($series['alternate_names']); ?></div>
+<?php
+}
+?>
+					</div>
+				</div>
+				<div class="flex mobilewrappable">
+					<div class="series_sidebar">
+						<div class="series_sidebar_inner">
+							<img class="sidebar_thumbnail" src="/images/series/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
+							<h2 class="section-title">Fitxa tècnica</h2>
+							<div class="sidebar_data">
 <?php
 if (!empty($series['air_date'])) {
 ?>
-							<div><span title="Any"><span class="fa fa-calendar icon"></span><?php echo date('Y',strtotime($series['air_date'])); ?></span></div>
+								<div><span class="fa fa-fw fa-calendar dataicon"></span><strong>Any:</strong> <?php echo date('Y',strtotime($series['air_date'])); ?></div>
 <?php
 }
 if (!empty($series['author'])) {
 ?>
-							<div><span title="Autor"><span class="fa fa-book icon"></span><?php echo htmlspecialchars($series['author']); ?></span></div>
+								<div><span class="fa fa-fw fa-book dataicon"></span><strong>Autor:</strong> <?php echo htmlspecialchars($series['author']); ?></div>
 <?php
 }
 if (!empty($series['director'])) {
 ?>
-							<div><span title="Director"><span class="fa fa-bullhorn icon"></span><?php echo htmlspecialchars($series['director']); ?></span></div>
+								<div><span class="fa fa-fw fa-bullhorn dataicon"></span><strong>Director:</strong> <?php echo htmlspecialchars($series['director']); ?></div>
 <?php
 }
 if (!empty($series['studio'])) {
 ?>
-							<div><span title="Estudi"><span class="fa fa-video icon"></span><?php echo htmlspecialchars($series['studio']); ?></span></div>
+								<div><span class="fa fa-fw fa-video dataicon"></span><strong>Estudi:</strong> <?php echo htmlspecialchars($series['studio']); ?></div>
 <?php
 }
 if (!empty($series['rating'])) {
 ?>
-							<div><span title="Edat recomanada"><span class="fa fa-star icon"></span><?php echo htmlspecialchars(get_rating($series['rating'])); ?></span></div>
+								<div><span class="fa fa-fw fa-star dataicon"></span><strong>Edat:</strong> <?php echo htmlspecialchars(get_rating($series['rating'])); ?></div>
 <?php
 }
 if ($series['episodes']>1) {
 ?>
-							<div><span title="Nombre de capítols"><span class="fa fa-ruler icon"></span><?php echo $series['episodes'].' capítols'; ?></span></div>
+								<div><span class="fa fa-fw fa-ruler dataicon"></span><strong>Capítols:</strong> <?php echo $series['episodes'].' capítols'; ?></div>
 <?php
 }
 if ($series['seasons']>1 && $series['show_seasons']==1) {
 ?>
-							<div><span title="Nombre de temporades"><span class="fa fa-th-large icon"></span><?php echo $series['seasons'].' temporades'; ?></span></div>
+								<div><span class="fa fa-fw fa-th-large dataicon"></span><strong>Temporades:</strong> <?php echo $series['seasons'].' temporades'; ?></div>
 <?php
 }
 if (!empty($series['duration'])) {
 ?>
-							<div><span title="Durada"><span class="fa fa-clock icon"></span><?php echo $series['duration']; ?></span></div>
+								<div><span class="fa fa-fw fa-clock dataicon"></span><strong>Durada:</strong> <?php echo $series['duration']; ?></div>
 <?php
 }
 if (!empty($series['score'])) {
 ?>
-							<div><span title="Puntuació a MyAnimeList"><span class="fa fa-smile icon"></span><?php echo number_format($series['score'],2,","," "); ?>/10</span></div>
+								<div><span class="fa fa-fw fa-smile dataicon"></span><strong>Puntuació a MyAnimeList:</strong> <?php echo number_format($series['score'],2,","," "); ?>/10</div>
 <?php
 }
 if (!empty($series['genres'])) {
 ?>
-							<div><span title="Gèneres"><span class="fa fa-tags icon"></span><?php echo htmlspecialchars($series['genres']); ?></span></div>
+								<div><span class="fa fa-fw fa-tags dataicon"></span><strong>Gèneres:</strong> <?php echo htmlspecialchars($series['genres']); ?></div>
 <?php
 }
 ?>
-						</div>
+							</div>
 <?php
 if (!empty($series['myanimelist_id'])) {
 ?>
-						<a class="mal-button" href="https://myanimelist.net/anime/<?php echo $series['myanimelist_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>MyAnimeList</a>
+							<a class="mal-button" href="https://myanimelist.net/anime/<?php echo $series['myanimelist_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra'n la fitxa a MyAnimeList</a>
 <?php
 }
 if (!empty($series['tadaima_id'])) {
 ?>
-						<a class="tadaima-button" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><span class="fa fa-comments icon"></span><?php echo get_tadaima_info($series['tadaima_id']); ?></a>
+							<a class="tadaima-button" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><span class="fa fa-comments icon"></span><?php echo get_tadaima_info($series['tadaima_id']); ?></a>
 <?php
 } else {
 	if ($series['type']=='movie') {
 ?>
-						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=14" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
+							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=14" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
 <?php
 	} else {
 ?>
-						<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=10" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
+							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=10" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
 <?php
 	}
 }
 ?>
+						</div>
 					</div>
 					<div class="main_content">
 						<div class="section">
@@ -183,7 +201,7 @@ if (!empty($series['tadaima_id'])) {
 if ($series['has_licensed_parts']==1) {
 ?>
 							<div class="section-content padding-top parts-licensed">
-								<span class="fa fa-exclamation-triangle icon"></span>Part d'aquesta obra ha estat llicenciada o editada en català. Se'n mostren només les parts no llicenciades.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d'aquesta obra ha estat llicenciada o editada en català. Se'n mostren només les parts no llicenciades.
 							</div>
 <?php
 }
@@ -276,84 +294,57 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="version_content<?php echo $count>1 ? ' version_content_multi' : ''; ?><?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version_content_<?php echo $version['id']; ?>">
 <?php
-		$resultf = query("SELECT f.* FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE vf.version_id=".$version['id']." ORDER BY f.name ASC");
+		$resultf = query("SELECT f.*, vf.downloads_url FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE vf.version_id=".$version['id']." ORDER BY f.name ASC");
 		$fansubs = array();
 		while ($fansub = mysqli_fetch_assoc($resultf)) {
 			array_push($fansubs, $fansub);
 		}
 		mysqli_free_result($resultf);
 
-		$any_active = ($fansubs[0]['status']==1);
-		$conjunctioned_names = get_fansub_with_url($fansubs[0]);
-		for ($j=1;$j<count($fansubs);$j++) {
-			if ($j==count($fansubs)-1) {
-				$conjunctioned_names.=' i ';
-			} else {
-				$conjunctioned_names.=', ';
-			}
-			$conjunctioned_names.=get_fansub_with_url($fansubs[$j]);
-			if ($fansubs[$j]['status']==1) {
-				$any_active = TRUE;
-			}
-		}
-
-		$web_buttons = '';
-		$web_buttons_count=0;
-		for ($j=0;$j<count($fansubs);$j++) {
-			if (!empty($fansubs[$j]['url'])) {
-				$web_buttons.='<a class="fansub-website" href="'.$fansubs[$j]['url'].'" target="_blank"><span class="fa fa-globe icon"></span>Web '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
-				$web_buttons_count++;
-			}
-		}
-		$twitter_buttons = '';
-		$twitter_buttons_count=0;
-		for ($j=0;$j<count($fansubs);$j++) {
-			if (!empty($fansubs[$j]['twitter_url'])) {
-				$twitter_buttons.='<a class="fansub-twitter" href="'.$fansubs[$j]['twitter_url'].'" target="_blank"><span class="fab fa-twitter icon"></span>Twitter '.get_fansub_preposition_name($fansubs[$j]['name']).'</a>';
-				$twitter_buttons_count++;
-			}
-		}
-
-		$fansub_buttons='';
-		if (!empty($version['downloads_url'])) {
-			$url_arr=explode(';', $version['downloads_url']);
-			if (count($url_arr)==1) {
-				$fansub_buttons.='<a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($version['downloads_url'])).'"><span class="fa fa-download icon"></span>'.(preg_match(REGEXP_MEGA,$version['downloads_url']) ? 'Baixa el fitxer original' : (preg_match(REGEXP_DL_LINK,$version['downloads_url']) ? 'Baixa els fitxers originals' : 'Baixades (fitxa del fansub)')).'</a>';
-			} else {
-				$cnt=1;
-				foreach ($url_arr as $url) {
-					$fansub_buttons.='<a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($url)).'"><span class="fa fa-download icon"></span>Baixa els fitxers originals ('.$cnt.')</a>';
-					$cnt++;
-				}
-			}
-		}
-
-		if ($web_buttons!='' && $twitter_buttons!='' && ($web_buttons_count>1 || $twitter_buttons_count>1)) {
-			$fansub_buttons.=(!empty($version['downloads_url']) ? '<br />' : '').$web_buttons.'<br />'.$twitter_buttons;
-		} else {
-			$fansub_buttons.=$web_buttons.$twitter_buttons;
-		}
-
 		$plurals = array(
-				"active" => array("Si la vols veure amb màxima qualitat, al seu lloc web trobaràs la manera de baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!","Si la vols veure amb màxima qualitat, als seus llocs web trobaràs la manera de baixar-la. Si t'ha agradat, no oblidis deixar-los un comentari!"),
-				"inactive" => array("Actualment, aquest fansub ja no està actiu.","Actualment, aquests fansubs ja no estan actius."),
+				"active" => array("Aquest web només recopila el material editat. L'autoria dels subtítols és del grup següent. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat.", "Aquest web només recopila el material editat. L'autoria dels subtítols és dels grups següents. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat."),
 				"abandoned" => array("Aquesta obra es considera abandonada pel fansub, segurament no se'n llançaran més capítols.","Aquesta obra es considera abandonada pels fansubs, segurament no se'n llançaran més capítols."),
 				"cancelled" => array("Aquesta obra ha estat cancel·lada pel fansub, no se'n llançaran més capítols.","Aquesta obra ha estat cancel·lada pels fansubs, no se'n llançaran més capítols.")
 		);
 ?>
 							<div class="section">
-								<h2 class="section-title"><?php echo count($fansubs)>1 ? 'Fansubs' : 'Fansub'; ?></h2>
-								<div class="section-content">
-									Aquesta obra ha estat subtitulada per <?php echo $conjunctioned_names; ?>. <?php echo $any_active ? (count($fansubs)>1 ? $plurals['active'][1] : $plurals['active'][0]) : (count($fansubs)>1 ? $plurals['inactive'][1] : ($fansubs[0]['name']=='Fansub independent' ? '' : $plurals['inactive'][0]));?>
-
-								</div>
+								<div class="section-content fansub-info">
+									<div><?php echo count($fansubs)>1 ? $plurals['active'][1] : $plurals['active'][0];?></div>
+									<table class="fansub-list">
+										<tbody>
 <?php
-		if (!empty($fansub_buttons)) {
+		foreach ($fansubs as $fansub) {
 ?>
-								<div class="fansub-buttons"><?php echo $fansub_buttons; ?></div>
+											<tr>
+												<td class="fansub-icon"><img src="/images/fansubs/<?php echo $fansub['id']; ?>.png" alt="" /></td>
+												<td class="fansub-name"><?php echo !empty($fansub['url']) ? ('<a href="'.$fansub['url'].'" target="_blank">'.$fansub['name'].'</a>') : $fansub['name']; ?><?php if ($fansub['status']==0 && $fansub['name']!='Fansub independent') { echo '<span class="fansub-inactive"> (actualment inactiu)</span>'; } ?></td>
+												<td class="fansub-links">
+<?php
+			if (!empty($fansub['downloads_url'])) {
+				$url_arr=explode(';', $fansub['downloads_url']);
+				foreach ($url_arr as $url) {
+					if (preg_match(REGEXP_DL_LINK,$url)) {
+						echo ' <a class="fansub-downloads" data-url="'.htmlspecialchars(base64_encode($url)).'"><span class="fa fa-fw fa-download mobileicon"></span><span class="mobilehide">'.(preg_match(REGEXP_MEGA,$url) ? 'Baixada' : 'Baixades').'</span></a>';
+					} else {
+						echo ' <a class="fansub-series-page" href="'.$url.'" target="_blank"><span class="fa fa-fw fa-download mobileicon"></span><span class="mobilehide">Baixades</span></a>';
+					}
+				}
+			}
+			if (!empty($fansub['url'])) {
+				echo ' <a class="fansub-website" href="'.$fansub['url'].'" target="_blank"><span class="fa fa-fw fa-globe mobileicon"></span><span class="mobilehide">Web</span></a>';
+			}
+			if (!empty($fansub['twitter_url'])) {
+				echo ' <a class="fansub-twitter" href="'.$fansub['twitter_url'].'" target="_blank"><span class="fab fa-fw fa-twitter mobileicon"></span><span class="mobilehide">Twitter</span></a>';
+			}
+?>
+												</td>
+											</tr>
 <?php
 		}
 ?>
+										</tbody>
+									</table>
+								</div>
 							</div>
 <?php
 		$resulte = query("SELECT e.*, et.title, ss.number season_number, ss.name season_name FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".$series['id']." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, IFNULL(et.title,e.name) ASC");
