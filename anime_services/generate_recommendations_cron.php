@@ -18,7 +18,8 @@ query("DELETE FROM recommendation");
 //-Hentai
 //-Movies which have more than one episode and more than one version, because these tend to be a mix of fansubs and we could end up recommending movie 4 from a set of 8.
 //-Recommendations from the previous set
-query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE (sr.type<>'movie' OR (sr.type='movie' AND sr.episodes=1) OR (sr.type='movie' AND (SELECT COUNT(vr2.id) FROM version vr2 WHERE vr2.series_id=vr.series_id)<=1)) AND sr.rating<>'XXX' AND vr.is_featurable=1 AND vr.is_always_featured=0 AND vr.featured_image_url IS NOT NULL AND vr.status IN (1,3) AND vr.episodes_missing=0 AND vr.id NOT IN (".implode(',', $previous_ids).") ORDER BY RAND() LIMIT 5");
+//-Series with a score below 6.0
+query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE (sr.type<>'movie' OR (sr.type='movie' AND sr.episodes=1) OR (sr.type='movie' AND (SELECT COUNT(vr2.id) FROM version vr2 WHERE vr2.series_id=vr.series_id)<=1)) AND sr.rating<>'XXX' AND sr.score>=6 AND vr.is_featurable=1 AND vr.is_always_featured=0 AND vr.status IN (1,3) AND vr.episodes_missing=0 AND vr.id NOT IN (".implode(',', $previous_ids).") ORDER BY RAND() LIMIT 5");
 
 log_action('cron-recommendations-finished', "S'ha completat l'actualització quinzenal de recomanacions");
 
