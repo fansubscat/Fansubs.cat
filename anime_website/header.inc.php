@@ -30,7 +30,7 @@ if (!empty($header_social)) {
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=1" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=2" media="screen" />
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-14"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>

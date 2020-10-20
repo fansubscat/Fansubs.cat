@@ -83,11 +83,11 @@ require_once('header.inc.php');
 <?php
 if (file_exists('images/featured/'.$series['id'].'.jpg')) {
 ?>
-					<img src="/images/featured/<?php echo $series['id']; ?>.jpg" alt="" />
+					<div class="img" style="background: url('/images/featured/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
 <?php
 } else {
 ?>
-					<img src="/images/series/<?php echo $series['id']; ?>.jpg" alt="" />
+					<div class="img" style="background: url('/images/series/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
 <?php
 }
 ?>
