@@ -1584,6 +1584,7 @@ a:hover {
 		width: 100%;
 		min-width: 0;
 		margin: 1em;
+		padding-top: 2em;
 		display: flex;
 		align-items: center;
 	}
@@ -1745,6 +1746,10 @@ a:hover {
 	.warning{
 		margin-right: 1em;
 		margin-left: 1em;
+	}
+
+	.series_sidebar {
+		padding-top: 1em;
 	}
 
 	.main_content .section {
