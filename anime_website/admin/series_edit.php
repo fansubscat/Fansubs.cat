@@ -515,7 +515,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-8">
 								<div class="form-group">
-									<label for="form-featured_image"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge per a la capçalera i les recomanacions <small class="text-muted">(JPEG, mida aprox. 1104x256px)</small></label>
+									<label for="form-featured_image"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge per a la capçalera i les recomanacions <small class="text-muted">(JPEG, mida aprox. 1200x256px)</small></label>
 									<input class="form-control" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200" onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-featured-image-preview').prop('src',e.target.result);$('#form-featured-image-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
 								</div>
 							</div>

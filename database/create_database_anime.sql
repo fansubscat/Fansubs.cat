@@ -78,6 +78,13 @@ CREATE TABLE `link` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `play_session` (
+  `play_id` varchar(20) NOT NULL,
+  `link_id` int(11) NOT NULL,
+  `time_spent` int(11) NOT NULL,
+  `last_update` timestamp NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `recommendation` (
   `version_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -216,6 +223,8 @@ ALTER TABLE `link`
   ADD PRIMARY KEY (`id`),
   ADD KEY `link_ibfk_1` (`episode_id`) USING BTREE,
   ADD KEY `link_ibfk_2` (`version_id`) USING BTREE;
+ALTER TABLE `play_session`
+  ADD PRIMARY KEY (`play_id`);
 ALTER TABLE `recommendation`
   ADD PRIMARY KEY (`version_id`);
 ALTER TABLE `related_series`
@@ -283,6 +292,8 @@ ALTER TABLE `folder_failed_files`
 ALTER TABLE `link`
   ADD CONSTRAINT `link_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `link_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `play_session`
+  ADD CONSTRAINT `play_session_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `recommendation`
   ADD CONSTRAINT `recommendation_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `related_manga`

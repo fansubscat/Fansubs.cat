@@ -1,7 +1,9 @@
 var currentLinkId=-1;
+var currentPlayId="";
 var currentStartTime=-1;
 var lastWindowWidth=0;
 var baseUrl='';
+var timer;
 
 var cookieOptions = {
 	expires: 3650,
@@ -11,26 +13,30 @@ var cookieOptions = {
 
 function sendAjaxViewEnd(){
 	if (currentLinkId!=-1){
+		clearInterval(timer);
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", baseUrl+'/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
+		xmlHttp.open("GET", baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
 		xmlHttp.send(null);
 		gtag('event', 'Close link', {
 			'event_category': "Playback",
 			'event_label': currentLinkId + " / " + (Math.floor(new Date().getTime()/1000)-currentStartTime)
 		});
 		currentLinkId=-1;
+		currentPlayId="";
 		currentStartTime=-1;
 	}
 }
 
 function sendBeaconViewEnd(){
 	if (currentLinkId!=-1){
-		navigator.sendBeacon(baseUrl+'/counter.php?link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime));
+		clearInterval(timer);
+		navigator.sendBeacon(baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime));
 		gtag('event', 'Close link', {
 			'event_category': "Playback",
 			'event_label': currentLinkId + " / " + (Math.floor(new Date().getTime()/1000)-currentStartTime)
 		});
 		currentLinkId=-1;
+		currentPlayId="";
 		currentStartTime=-1;
 	}
 }
@@ -122,16 +128,22 @@ $(document).ready(function() {
 			$('body').addClass('no-overflow');
 			$('#overlay').removeClass('hidden');
 			$('#overlay-content').html(getSource($(this).attr('data-method'), atob($(this).attr('data-url'))));
+			currentLinkId=$(this).attr('data-link-id');
+			//The chances of collision of this is so low that if we get a collision, it's no problem at all.
+			currentPlayId=Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5);
+			currentStartTime=Math.floor(new Date().getTime()/1000);
 			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("GET", baseUrl+'/counter.php?link_id='+$(this).attr('data-link-id')+"&action=open", true);
+			xmlHttp.open("GET", baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+$(this).attr('data-link-id')+"&action=open", true);
 			xmlHttp.send(null);
 			gtag('event', 'Open link', {
 				'event_category': "Playback",
 				'event_label': currentLinkId
 			});
-			currentLinkId=$(this).attr('data-link-id');
-			currentStartTime=Math.floor(new Date().getTime()/1000);
 			markLinkAsViewed($(this).attr('data-link-id'));
+			timer = setInterval(function myTimer() {
+				xmlHttp.open("GET", baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
+				xmlHttp.send(null);
+			}, 60000);
 		});
 		$(".viewed-indicator").click(function(){
 			if ($(this).hasClass('not-viewed')){
@@ -446,12 +458,19 @@ $(document).ready(function() {
 	} else {
 		$('body').addClass('no-overflow');
 		$('#overlay-content').html(getSource($('#data-method').val(), atob($('#data-url').val())));
+		//The chances of collision of this is so low that if we get a collision, it's no problem at all.
+		currentPlayId=Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5);
+		currentStartTime=Math.floor(new Date().getTime()/1000);
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", baseUrl+'/counter.php?link_id='+$('#data-link-id').val()+"&action=open", true);
+		xmlHttp.open("GET", baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+$(this).attr('data-link-id')+"&action=open", true);
 		xmlHttp.send(null);
 		currentLinkId=$('#data-link-id').val();
 		currentStartTime=Math.floor(new Date().getTime()/1000);
 		markLinkAsViewed($('#data-link-id').val());
+		timer = setInterval(function myTimer() {
+			xmlHttp.open("GET", baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentStartTime), true);
+			xmlHttp.send(null);
+		}, 60000);
 	}
 
 	$(window).on('unload', function() {

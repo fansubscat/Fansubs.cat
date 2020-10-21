@@ -14,5 +14,4 @@
 0 0 * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php score_updater_cron.php
 
 # Fansubs.cat - Anime - Update recommended series
-0 0 1 * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php
-0 0 16 * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php
+0 0 * * 1 cd /srv/services/anime.fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php
