@@ -274,40 +274,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Darreres 10 visualitzacions</h4>
-								<hr>
-								<div class="row">
-									<table class="table table-hover table-striped">
-										<thead class="thead-dark">
-											<tr>
-												<th scope="col">Sèrie</th>
-												<th scope="col">Capítol</th>
-												<th scope="col" style="width: 20%;">Data</th>
-											</tr>
-										</thead>
-										<tbody>
-<?php
-$result = query("SELECT IFNULL(s.name,'(enllaç esborrat)') series_name, IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(se.name,CONCAT('Temporada ',se.number)),' - Capítol ',e.number,': ',et.title),'-'),IF(e.number IS NOT NULL,CONCAT(IFNULL(se.name,CONCAT('Temporada ',se.number)),' - Capítol ',e.number),'-')) episode_name, vl.date FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id ORDER BY vl.date DESC LIMIT 10");
-while ($row = mysqli_fetch_assoc($result)) {
-?>
-											<tr>
-												<td scope="col"><?php echo $row['series_name']; ?></td>
-												<td scope="col"><?php echo $row['episode_name']; ?></td>
-												<td class="text-center"><?php echo $row['date']; ?></td>
-											</tr>
-<?php
-}
-mysqli_free_result($result);
-?>
-										</tbody>
-									</table>
-								</div>
-							</article>
-						</div>
-					</div>
-					<div class="container d-flex justify-content-center p-4">
-						<div class="card w-100">
-							<article class="card-body">
 								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions</h4>
 								<hr>
 <?php
@@ -646,40 +612,6 @@ mysqli_free_result($result);
 											</tbody>
 										</table>
 									</div>
-								</div>
-							</article>
-						</div>
-					</div>
-					<div class="container d-flex justify-content-center p-4">
-						<div class="card w-100">
-							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Darreres 10 visualitzacions</h4>
-								<hr>
-								<div class="row">
-									<table class="table table-hover table-striped">
-										<thead class="thead-dark">
-											<tr>
-												<th scope="col">Sèrie</th>
-												<th scope="col">Capítol</th>
-												<th scope="col" style="width: 20%;">Data</th>
-											</tr>
-										</thead>
-										<tbody>
-<?php
-$result = query("SELECT IFNULL(s.name,'(enllaç esborrat)') series_name, IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(se.name,CONCAT('Temporada ',se.number)),' - Capítol ',e.number,': ',et.title),'-'),IF(e.number IS NOT NULL,CONCAT(IFNULL(se.name,CONCAT('Temporada ',se.number)),' - Capítol ',e.number),'-')) episode_name, vl.date FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY vl.date DESC LIMIT 10");
-while ($row = mysqli_fetch_assoc($result)) {
-?>
-											<tr>
-												<td scope="col"><?php echo $row['series_name']; ?></td>
-												<td scope="col"><?php echo $row['episode_name']; ?></td>
-												<td class="text-center"><?php echo $row['date']; ?></td>
-											</tr>
-<?php
-}
-mysqli_free_result($result);
-?>
-										</tbody>
-									</table>
 								</div>
 							</article>
 						</div>
