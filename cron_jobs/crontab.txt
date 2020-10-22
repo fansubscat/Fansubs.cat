@@ -13,5 +13,8 @@
 # Fansubs.cat - Anime - Update MyAnimeList score for all series
 0 0 * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php score_updater_cron.php
 
+# Fansubs.cat - Anime - Update lost views
+0 * * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php lost_views_updater_cron.php
+
 # Fansubs.cat - Anime - Update recommended series
 0 0 * * 1 cd /srv/services/anime.fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php

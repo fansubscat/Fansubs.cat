@@ -48,7 +48,7 @@ if ($link_id>0 && !empty($_GET['action']) && !empty($play_id)) {
 					} else {
 						$time_spent = escape($_GET['time_spent']);
 					}
-					query("REPLACE INTO play_session VALUES ('$play_id', $link_id, $time_spent, CURRENT_TIMESTAMP)");
+					query("UPDATE play_session SET link_id=$link_id, time_spent=$time_spent, last_update=CURRENT_TIMESTAMP WHERE play_id='$play_id'");
 				}
 				//Else, invalid request, discard it
 				break;
