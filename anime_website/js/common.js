@@ -462,7 +462,7 @@ $(document).ready(function() {
 		currentPlayId=Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5);
 		currentStartTime=Math.floor(new Date().getTime()/1000);
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+$(this).attr('data-link-id')+"&action=open", true);
+		xmlHttp.open("GET", baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+$('#data-link-id').val()+"&action=open", true);
 		xmlHttp.send(null);
 		currentLinkId=$('#data-link-id').val();
 		currentStartTime=Math.floor(new Date().getTime()/1000);
