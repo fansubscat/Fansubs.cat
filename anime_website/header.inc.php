@@ -54,7 +54,7 @@ if (!empty($header_social)) {
 					</div>
 					<div class="options-item">
 						<input id="show_missing" type="checkbox"<?php echo !empty($_COOKIE['show_missing']) ? ' checked' : ''; ?>>
-					  	<label for="show_missing">Mostra les sèries amb capítols sense cap enllaç vàlid</label>
+					  	<label for="show_missing">Mostra les sèries amb algun capítol sense enllaç</label>
 					</div>
 					<div class="options-item">
 						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
