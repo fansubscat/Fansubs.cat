@@ -553,7 +553,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 10%;" class="mandatory">Núm.</th>
-													<th>Nom <small class="text-muted">(només es mostra si n'hi ha més d'una i la casella de dalt està marcada)</small></th>
+													<th>Nom <small class="text-muted">(només es mostra si n'hi ha més d'una i la casella "Separa per temporades" està marcada)</small></th>
 													<th class="mandatory" style="width: 15%;">Capítols</th>
 													<th style="width: 15%;">Id. MyAnimeList</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -628,7 +628,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<th style="width: 10%;">Núm.</th>
 													<th>Títol <small class="text-muted">(informatiu, només es mostra públicament en el cas dels especials)</small></th>
 													<th style="width: 12%;" class="mandatory">Durada (min)</th>
-													<th style="width: 5%;">Llicenciat</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>

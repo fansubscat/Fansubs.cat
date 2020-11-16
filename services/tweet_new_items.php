@@ -3,6 +3,19 @@ require_once('db.inc.php');
 require_once('common.inc.php');
 require_once("libs/codebird.php");
 
+function publish_tweet($tweet){
+	global $twitter_consumer_key, $twitter_consumer_secret, $twitter_access_token, $twitter_access_token_secret;
+
+	\Codebird\Codebird::setConsumerKey($twitter_consumer_key, $twitter_consumer_secret);
+	$cb = \Codebird\Codebird::getInstance();
+	$cb->setToken($twitter_access_token, $twitter_access_token_secret);
+
+	$params = array(
+		'status' => $tweet //Assuming that it will not exceed 280 characters... maybe assuming too much, heh
+	);
+	$cb->statuses_update($params);
+}
+
 function exists_more_than_one_version($series_id){
 	global $db_connection_anime;
 	$result = mysqli_query($db_connection_anime, "SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id") or die(mysqli_error($db_connection_anime));
@@ -84,8 +97,6 @@ $new_episodes_tweets = array(
 	'Ja podeu mirar %2$d capítols nous de «%1$s» (%3$s) al web d\'anime.fansubs.cat!'
 );
 
-$tweets = array();
-
 $result = mysqli_query($db_connection_manga, "SELECT * FROM piwigo_categories c WHERE id>$last_tweeted_manga_id ORDER BY id_uppercat IS NULL DESC, id ASC") or die(mysqli_error($db_connection_manga));
 $new_mangas = array();
 while ($row = mysqli_fetch_assoc($result)){
@@ -123,12 +134,20 @@ while ($row = mysqli_fetch_assoc($result)){
 		}
 		if (!empty($fansub_handle)) {
 			$random = array_rand($new_manga_tweets, 1);
-			$tweet = sprintf($new_manga_tweets[$random], $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
-			array_push($tweets, $tweet);
+			try{
+				publish_tweet(sprintf($new_manga_tweets[$random], $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
+				file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+			} catch(Exception $e) {
+				break;
+			}
 		} else {
 			$random = array_rand($new_manga_tweets_no_fansub, 1);
-			$tweet = sprintf($new_manga_tweets_no_fansub[$random], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
-			array_push($tweets, $tweet);
+			try{
+				publish_tweet(sprintf($new_manga_tweets_no_fansub[$random], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
+				file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+			} catch(Exception $e) {
+				break;
+			}
 		}
 	} else { // Get only the last branches of the tree
 		$cntres = mysqli_query($db_connection_manga, "SELECT COUNT(*) cnt FROM piwigo_categories c WHERE id_uppercat=".$row['id']) or die(mysqli_error($db_connection_manga));
@@ -175,17 +194,24 @@ while ($row = mysqli_fetch_assoc($result)){
 				}
 				if (!empty($fansub_handle)) {
 					$random = array_rand($new_chapter_tweets, 1);
-					$tweet = sprintf($new_chapter_tweets[$random], $parentrow['name'], $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
-					array_push($tweets, $tweet);
+					try{
+						publish_tweet(sprintf($new_chapter_tweets[$random], $parentrow['name'], $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
+						file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+					} catch(Exception $e) {
+						break;
+					}
 				} else {
 					$random = array_rand($new_chapter_tweets_no_fansub, 1);
-					$tweet = sprintf($new_chapter_tweets_no_fansub[$random], $parentrow['name'], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name']));
-					array_push($tweets, $tweet);
+					try{
+						publish_tweet(sprintf($new_chapter_tweets_no_fansub[$random], $parentrow['name'], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
+						file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+					} catch(Exception $e) {
+						break;
+					}
 				}
 			}
 		}
 	}
-	file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 }
 
 mysqli_free_result($result);
@@ -203,45 +229,57 @@ WHERE l.id>$last_tweeted_anime_id AND l.url IS NOT NULL AND l.episode_id IS NOT 
 while ($row = mysqli_fetch_assoc($result)){
 	if ($row['new_series']==1) {
 		$random = array_rand($new_anime_tweets, 1);
-		$tweet = sprintf($new_anime_tweets[$random], $row['name'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
-		array_push($tweets, $tweet);
+		try{
+			publish_tweet(sprintf($new_anime_tweets[$random], $row['name'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+			file_put_contents('last_tweeted_anime_id.txt', $row['id']);
+		} catch(Exception $e) {
+			break;
+		}
 	} else if ($row['cnt']>1){ //Multiple episodes
 		$random = array_rand($new_episodes_tweets, 1);
-		$tweet = sprintf($new_episodes_tweets[$random], $row['name'], $row['cnt'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
-		array_push($tweets, $tweet);
+		try{
+			publish_tweet(sprintf($new_episodes_tweets[$random], $row['name'], $row['cnt'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+			file_put_contents('last_tweeted_anime_id.txt', $row['id']);
+		} catch(Exception $e) {
+			break;
+		}
 	} else { //Single episode
 		if ($row['show_episode_numbers']==1) {
 			if (!empty($row['title']) && empty($row['number'])) {
 				$random = array_rand($new_episode_no_number_tweets, 1);
-				$tweet = sprintf($new_episode_no_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
-				array_push($tweets, $tweet);
+				try{
+					publish_tweet(sprintf($new_episode_no_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+					file_put_contents('last_tweeted_anime_id.txt', $row['id']);
+				} catch(Exception $e) {
+					break;
+				}
 			} else if (!empty($row['title'])) { //and has a number (normal case)
 				$random = array_rand($new_episode_number_tweets, 1);
-				$tweet = sprintf($new_episode_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
-				array_push($tweets, $tweet);
+				try{
+					publish_tweet(sprintf($new_episode_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+					file_put_contents('last_tweeted_anime_id.txt', $row['id']);
+				} catch(Exception $e) {
+					break;
+				}
 			} else {
 				$random = array_rand($new_episode_number_no_name_tweets, 1);
-				$tweet = sprintf($new_episode_number_no_name_tweets[$random], $row['name'], '', $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
-				array_push($tweets, $tweet);
+				try{
+					publish_tweet(sprintf($new_episode_number_no_name_tweets[$random], $row['name'], '', $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+					file_put_contents('last_tweeted_anime_id.txt', $row['id']);
+				} catch(Exception $e) {
+					break;
+				}
 			}
 		} else {
 			$random = array_rand($new_episode_no_number_tweets, 1);
-			$tweet = sprintf($new_episode_no_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
-			array_push($tweets, $tweet);
+			try{
+				publish_tweet(sprintf($new_episode_no_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+				file_put_contents('last_tweeted_anime_id.txt', $row['id']);
+			} catch(Exception $e) {
+				break;
+			}
 		}
 	}
-	file_put_contents('last_tweeted_anime_id.txt', $row['id']);
-}
-
-foreach ($tweets as $tweet) {
-	\Codebird\Codebird::setConsumerKey($twitter_consumer_key, $twitter_consumer_secret);
-	$cb = \Codebird\Codebird::getInstance();
-	$cb->setToken($twitter_access_token, $twitter_access_token_secret);
-
-	$params = array(
-		'status' => $tweet //Assuming that it will not exceed 280 characters... maybe assuming too much, heh
-	);
-	$cb->statuses_update($params);
 }
 
 mysqli_free_result($result);
