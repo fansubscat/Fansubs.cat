@@ -109,22 +109,37 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 			$in_clause.=','.$row['series_id'];
 		}
 		mysqli_free_result($result);
-		$sections=array("<span class=\"iconsm fa fa-fw fa-star\"></span> Obres destacades", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorades");
+		$sections=array("<span class=\"iconsm fa fa-fw fa-gift\"></span> Calendari d'advent", "<span class=\"iconsm fa fa-fw fa-star\"></span> Obres destacades", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorades");
 		$descriptions=array("Aquí tens la tria d'obres recomanades d'aquesta setmana! T'animes a mirar-ne alguna?", "Aquestes són les darreres novetats d'anime subtitulades en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
 		$queries=array(
+			NULL,
 			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation UNION SELECT id FROM version WHERE is_always_featured=1)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY RAND() LIMIT $max_items",
 			$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.air_date DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
-		$specific_version=array(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
-		$type=array('recommendations', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel');
-		$tracking_classes=array('featured', 'latest', 'random', 'popular', 'newest', 'toprated');
+		$specific_version=array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
+		$type=array('advent','recommendations', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel');
+		$tracking_classes=array('advent', 'featured', 'latest', 'random', 'popular', 'newest', 'toprated');
 		break;
 }
 
 for ($i=0;$i<count($sections);$i++){
+	if ($type[$i]=='advent') {
+		if (strcmp(date('Y-m-d'),'2020-12-01')>=0){
+?>
+				<div class="section">
+					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
+					<h3 class="section-subtitle">Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones Festes!</h3>
+					<div class="section-content fake-carousel">
+						<a class="advent" href="https://www.fansubs.cat/nadal/" target="_blank"><img src="/images/advent.jpg" alt="Calendari d'advent dels fansubs en català" /></a>
+					</div>
+				</div>
+<?php
+		}
+		continue;
+	}
 	$result = query($queries[$i]);
 ?>
 				<div class="section">

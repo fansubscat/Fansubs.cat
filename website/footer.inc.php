@@ -2,6 +2,15 @@
 			</div>
 
 			<div id="sidebar" class="aside">
+<?php
+if (strcmp(date('Y-m-d'),'2020-12-01')>=0){
+?>
+				<div class="section promo">
+					<a href="https://www.fansubs.cat/nadal/"><img src="/style/images/advent_promo.png" alt="Calendari d'advent dels fansubs en català" /></a>
+				</div>
+<?php
+}
+?>
 				<div class="section promo">
 					<a href="https://anime.fansubs.cat/"><img src="/style/images/anime_promo.png" alt="Mira tot l'anime dels fansubs en català!" /></a>
 				</div>
