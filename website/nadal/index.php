@@ -28,9 +28,12 @@ $releases = array(
 
 function is_day_ready($day) {
 	global $releases;
-	$today = date('Y-m-d');
-	$target = '2020-12-'.sprintf('%02d', $day);
-	return ((strcmp($today,$target)>=0 || !empty($_GET['forcedays'])) && !empty($releases[$day]));
+	$today = date('Y-m-d H:i:s');
+	if (!empty($_GET['currentday'])) {
+		$today = '2020-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
+	}
+	$target = '2020-12-'.sprintf('%02d', $day).' 12:00:00';
+	return (strcmp($today,$target)>=0 && !empty($releases[$day]));
 }
 
 if (!empty($_COOKIE['advent_2020'])) {
@@ -63,7 +66,24 @@ if (!empty($_COOKIE['advent_2020'])) {
 					}).join(',');
 					Cookies.set('advent_2020', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
 				});
+<?php
+if (!empty($_GET['currentday'])) {
+?>
+				$('.link').click(function () {
+					var par=$(this).parent().parent().parent().parent();
+					var tc = $(window).height() / 2 - $(par).height() / 2 - $(par).offset().top;
+					var lc = $(window).width() / 2 - $(par).width() / 2 - $(par).offset().left;
+
+					$(par).css({
+						"z-index": "999",
+						"transition": "1s linear",
+						"transform": "translate("+lc+"px,"+tc+"px) scale(7)"
+					});
+				});
 			});
+<?php
+}
+?>
 		</script>
 		<style>
 			html, body {
@@ -155,8 +175,8 @@ if (!empty($_COOKIE['advent_2020'])) {
 				width: 100%;
 				transform-style: preserve-3d;
 				transition: all 300ms;
-				border: 2px dashed transparent;
-				border-radius: 10px;
+				border: 2px solid transparent;
+				border-radius: 8px;
 			}
 
 			.door span {
@@ -172,11 +192,11 @@ if (!empty($_COOKIE['advent_2020'])) {
 				color: white;
 				font-size: 2.5em;
 				font-weight: bold;
-				text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.2);
+				text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
 			}
 
 			.door .front {
-				background-color: rgba(255,255,255,0.05);
+				background-color: rgba(255,255,255,0.2);
 			}
 
 			.door .front:active {
@@ -185,7 +205,7 @@ if (!empty($_COOKIE['advent_2020'])) {
 			}
 
 			.front.available, .front.available:active {
-				background-color: rgba(255, 255, 255, 0.25);
+				background-color: rgba(255, 255, 255, 0.6);
 				color: #FFFFFF;
 			}
 
@@ -198,8 +218,16 @@ if (!empty($_COOKIE['advent_2020'])) {
 				overflow: hidden;
 			}
 
+			label .door {
+				border-color: rgba(0,0,0,0.2);
+			}
+
 			label:hover .door {
 				border-color: rgba(255,255,255,0.5);
+			}
+
+			label:hover .door.dooravailable {
+				border-color: rgba(255,255,255,0.7);
 			}
 
 			:checked + .door {
@@ -224,6 +252,7 @@ if (!empty($_COOKIE['advent_2020'])) {
 for ($i=1;$i<25;$i++){
 ?>
 			.day-<?php echo $i; ?> {
+				position: relative;
 				grid-area: d<?php echo $i; ?>;
 			}
 			.day-<?php echo $i; ?> .back {
@@ -244,14 +273,14 @@ for ($i=1;$i<25;$i++){
 ?>
 			<div class="day-<?php echo $i; ?>">
 				<label>
-					<input type="checkbox"<?php echo is_day_ready($i) ? ' class="checkavailable"' : 'disabled'; ?> value="<?php echo $i; ?>"<?php echo (is_day_ready($i) && in_array($i,$cookie)) ? ' checked' : ''; ?> />
-					<span class="door">
+					<input type="checkbox"<?php echo is_day_ready($i) ? ' class="checkavailable"' : 'disabled'; ?> value="<?php echo $i; ?>"<?php echo (is_day_ready($i) && in_array($i,$cookie) && empty($_GET['currentday'])) ? ' checked' : ''; ?> />
+					<span class="door<?php echo is_day_ready($i) ? ' dooravailable' : ''; ?>">
 						<span class="front<?php echo is_day_ready($i) ? ' available' : ''; ?>"><?php echo $i; ?></span>
 						<span class="back" id="<?php echo $i; ?>">
 <?php
 	if (is_day_ready($i) && empty($_GET['hidelinks'])) {
 ?>
-							<a class="link" href="<?php echo $releases[$i]; ?>" target="_blank"></a>
+							<a class="link" href="<?php echo empty($_GET['currentday']) ? $releases[$i] : '#'; ?>"<?php echo empty($_GET['currentday']) ? ' target="_blank"' : ''; ?>></a>
 <?php
 	}
 ?>
