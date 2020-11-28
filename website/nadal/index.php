@@ -278,7 +278,7 @@ for ($i=1;$i<25;$i++){
 						<span class="front<?php echo is_day_ready($i) ? ' available' : ''; ?>"><?php echo $i; ?></span>
 						<span class="back" id="<?php echo $i; ?>">
 <?php
-	if (is_day_ready($i) && empty($_GET['hidelinks'])) {
+	if (is_day_ready($i)) {
 ?>
 							<a class="link" href="<?php echo empty($_GET['currentday']) ? $releases[$i] : '#'; ?>"<?php echo empty($_GET['currentday']) ? ' target="_blank"' : ''; ?>></a>
 <?php
