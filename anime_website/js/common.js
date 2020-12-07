@@ -386,6 +386,10 @@ $(document).ready(function() {
 				type="Click manga";
 				event="Click related manga";
 				label=$(this).attr('data-name');
+			} else if ($(this).hasClass('trackable-advent')){
+				type="Click advent calendar";
+				event="Click advent calendar";
+				label="Click advent calendar";
 			}
 			if (type!='' && event!='' && label!='') {
 				gtag('event', event, {

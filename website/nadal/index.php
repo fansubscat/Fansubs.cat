@@ -59,31 +59,46 @@ if (!empty($_COOKIE['advent_2020'])) {
 		<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'UA-628107-13');
+
 			$(document).ready(function() {
 				$('input').change(function() {
 					var openedDays = $.map($('.checkavailable:checked'), function(n, i){
 						return n.value;
 					}).join(',');
 					Cookies.set('advent_2020', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
-				});
 <?php
-if (!empty($_GET['currentday'])) {
+if (!empty($_GET['twitter'])) {
 ?>
-				$('.link').click(function () {
-					var par=$(this).parent().parent().parent().parent();
-					var tc = $(window).height() / 2 - $(par).height() / 2 - $(par).offset().top;
-					var lc = $(window).width() / 2 - $(par).width() / 2 - $(par).offset().left;
+					setTimeout(function(that){
+						var par=$(that).parent().parent();
+						var tc = $(window).height() / 2 - $(par).height() * <?php echo $_GET['currentday']==24 ? 3.175 : 7; ?> / 2 - $(par).offset().top;
+						var lc = $(window).width() / 2 - $(par).width() * <?php echo $_GET['currentday']==24 ? 3.175 : 7; ?> / 2 - $(par).offset().left;
 
-					$(par).css({
-						"z-index": "999",
-						"transition": "1s linear",
-						"transform": "translate("+lc+"px,"+tc+"px) scale(7)"
-					});
-				});
-			});
+						//Ugly as fuck, but it works
+						var style = document.createElement('style');
+						var keyFrames = '\
+						@keyframes expand {\
+						  from   {width: 100%; height: 100%; left: 0px; top: 0px;}\
+						  to {width: <?php echo $_GET['currentday']==24 ? 317.5 : 700; ?>%; height: <?php echo $_GET['currentday']==24 ? 317.5 : 700; ?>%; left: LEFTVALUEpx; top:TOPVALUEpx;}\
+						}';
+						style.innerHTML = keyFrames.replace(/LEFTVALUE/g, lc).replace(/TOPVALUE/g, tc);
+						document.getElementsByTagName('head')[0].appendChild(style);
+
+						$(par).css({
+							"backface-visibility": "hidden",
+							"z-index": "999",
+							"animation": "expand 1s forwards"
+						});
+					}, 1000, this);
 <?php
 }
 ?>
+				});
+			});
 		</script>
 		<style>
 			html, body {
@@ -175,7 +190,7 @@ if (!empty($_GET['currentday'])) {
 				width: 100%;
 				transform-style: preserve-3d;
 				transition: all 300ms;
-				border: 2px solid transparent;
+				border: 3px solid transparent;
 				border-radius: 8px;
 			}
 
@@ -213,6 +228,7 @@ if (!empty($_GET['currentday'])) {
 				background-size: cover;
 				background-position: center center;
 				background-repeat: no-repeat;
+				background-color: black;
 				transform: rotateY(180deg);
 				display: flex;
 				overflow: hidden;
@@ -266,21 +282,21 @@ for ($i=1;$i<25;$i++){
 	<body>
 		<div class="grid-1">
 			<div class="title">
-				<img src="images/logo.png" alt="Bon Nadal!">
+				<img src="images/logo.png" alt="Calendari d'advent dels fansubs en català">
 			</div>
 <?php
 for ($i=1;$i<25;$i++){
 ?>
 			<div class="day-<?php echo $i; ?>">
 				<label>
-					<input type="checkbox"<?php echo is_day_ready($i) ? ' class="checkavailable"' : 'disabled'; ?> value="<?php echo $i; ?>"<?php echo (is_day_ready($i) && in_array($i,$cookie) && empty($_GET['currentday'])) ? ' checked' : ''; ?> />
+					<input type="checkbox"<?php echo is_day_ready($i) ? ' class="checkavailable"' : 'disabled'; ?> value="<?php echo $i; ?>"<?php echo ((is_day_ready($i) && in_array($i,$cookie) && empty($_GET['currentday'])) || !empty($_GET['twitter']) && $_GET['currentday']>$i) ? ' checked' : ''; ?> />
 					<span class="door<?php echo is_day_ready($i) ? ' dooravailable' : ''; ?>">
 						<span class="front<?php echo is_day_ready($i) ? ' available' : ''; ?>"><?php echo $i; ?></span>
 						<span class="back" id="<?php echo $i; ?>">
 <?php
 	if (is_day_ready($i)) {
 ?>
-							<a class="link" href="<?php echo empty($_GET['currentday']) ? $releases[$i] : '#'; ?>"<?php echo empty($_GET['currentday']) ? ' target="_blank"' : ''; ?>></a>
+							<a class="link" href="<?php echo empty($_GET['twitter']) ? $releases[$i] : '#'; ?>"<?php echo empty($_GET['twitter']) ? ' target="_blank"' : ''; ?>></a>
 <?php
 	}
 ?>

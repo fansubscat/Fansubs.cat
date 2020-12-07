@@ -127,13 +127,13 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 
 for ($i=0;$i<count($sections);$i++){
 	if ($type[$i]=='advent') {
-		if (strcmp(date('Y-m-d'),'2020-12-01')>=0){
+		if (strcmp(date('Y-m-d H:i:s'),'2020-12-01 12:00:00')>=0){
 ?>
 				<div class="section">
 					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
 					<h3 class="section-subtitle"><?php echo $descriptions[$i]; ?></h3>
 					<div class="section-content fake-carousel">
-						<a class="advent" href="https://www.fansubs.cat/nadal/" target="_blank"><img src="/images/advent.jpg" alt="Calendari d'advent dels fansubs en català" /></a>
+						<a class="advent trackable-advent" href="https://www.fansubs.cat/nadal/" target="_blank"><img src="/images/advent.jpg" alt="Calendari d'advent dels fansubs en català" /></a>
 					</div>
 				</div>
 <?php

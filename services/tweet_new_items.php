@@ -97,7 +97,7 @@ $new_episodes_tweets = array(
 	'Ja podeu mirar %2$d capítols nous de «%1$s» (%3$s) al web d\'anime.fansubs.cat!'
 );
 
-$result = mysqli_query($db_connection_manga, "SELECT * FROM piwigo_categories c WHERE id>$last_tweeted_manga_id ORDER BY id_uppercat IS NULL DESC, id ASC") or die(mysqli_error($db_connection_manga));
+$result = mysqli_query($db_connection_manga, "SELECT * FROM piwigo_categories c WHERE id>$last_tweeted_manga_id AND (SELECT COUNT(*) FROM piwigo_image_category ic WHERE ic.category_id=c.id)>0 ORDER BY id_uppercat IS NULL DESC, id ASC") or die(mysqli_error($db_connection_manga));
 $new_mangas = array();
 while ($row = mysqli_fetch_assoc($result)){
 	if (empty($row['id_uppercat'])) {
