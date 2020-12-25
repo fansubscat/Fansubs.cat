@@ -3,7 +3,7 @@
 
 			<div id="sidebar" class="aside">
 <?php
-if (strcmp(date('Y-m-d'),'2020-12-01')>=0){
+if (strcmp(date('Y-m-d'),'2020-12-01')>=0 && strcmp(date('Y-m-d'),'2020-12-25')<=0){
 ?>
 				<div class="section promo">
 					<a href="https://www.fansubs.cat/nadal/"><img src="/style/images/advent_promo.png" alt="Calendari d'advent dels fansubs en català" /></a>
