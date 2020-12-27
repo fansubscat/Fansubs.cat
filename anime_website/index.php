@@ -40,10 +40,10 @@ $header_social = array(
 
 require_once('header.inc.php');
 
-if (!empty($site_message)){
+if (!empty($site_message) || !empty($is_fools_day)){
 ?>
 				<div data-nosnippet class="section">
-					<div class="site-message"><?php echo $site_message; ?></div>
+					<div class="site-message"><?php echo !empty($is_fools_day) ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="/images/innocents.png" target="_blank" style="color: black">Més informació</a>' : $site_message; ?></div>
 				</div>
 <?php
 }
