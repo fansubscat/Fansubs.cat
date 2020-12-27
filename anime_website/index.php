@@ -113,7 +113,7 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 		$descriptions=array("Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones Festes!", "Aquí tens la tria d'obres recomanades d'aquesta setmana! T'animes a mirar-ne alguna?", "Aquestes són les darreres novetats d'anime subtitulades en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquestes són les obres més noves que tenim subtitulades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió subtitulada en català.");
 		$queries=array(
 			NULL,
-			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation UNION SELECT id FROM version WHERE is_always_featured=1)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
+			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE 1$cookie_extra_conditions GROUP BY s.id ORDER BY RAND() LIMIT $max_items",
 			$base_query . " WHERE s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
