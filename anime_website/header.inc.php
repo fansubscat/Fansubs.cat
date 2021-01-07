@@ -44,7 +44,7 @@ if ($is_fools_day){
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=3"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js?v=4"></script>
 	</head>
 	<body>
 		<div data-nosnippet id="overlay" class="hidden">

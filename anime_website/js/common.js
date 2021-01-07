@@ -366,6 +366,7 @@ $(document).ready(function() {
 			} else if ($(this).hasClass('trackable-random')){
 				type="Click series";
 				event="Click series on random section";
+				label=$(this).attr('data-series-id');
 			} else if ($(this).hasClass('trackable-popular')){
 				type="Click series";
 				event="Click series on most popular section";

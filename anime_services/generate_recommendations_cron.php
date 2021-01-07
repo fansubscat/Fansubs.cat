@@ -19,7 +19,7 @@ query("DELETE FROM recommendation");
 //-Movies which have more than one episode and more than one version, because these tend to be a mix of fansubs and we could end up recommending movie 4 from a set of 8.
 //-Recommendations from the previous set
 //-Series with a score below 6.0
-query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE (sr.type<>'movie' OR (sr.type='movie' AND sr.episodes=1) OR (sr.type='movie' AND (SELECT COUNT(vr2.id) FROM version vr2 WHERE vr2.series_id=vr.series_id)<=1)) AND sr.rating<>'XXX' AND sr.score>=6 AND vr.is_featurable=1 AND (vr.status IN (1,3) OR vr.is_always_featured=1) AND vr.episodes_missing=0 AND vr.id NOT IN (".implode(',', $previous_ids).") ORDER BY vr.is_always_featured DESC, RAND() LIMIT 10");
+query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE (sr.type<>'movie' OR (sr.type='movie' AND sr.episodes=1) OR (sr.type='movie' AND (SELECT COUNT(vr2.id) FROM version vr2 WHERE vr2.series_id=vr.series_id)<=1)) AND sr.rating<>'XXX' AND sr.score>=6 AND vr.is_featurable=1 AND ((vr.status IN (1,3) AND vr.id NOT IN (".implode(',', $previous_ids).")) OR vr.is_always_featured=1) AND vr.episodes_missing=0 ORDER BY vr.is_always_featured DESC, RAND() LIMIT 10");
 
 log_action('cron-recommendations-finished', "S'ha completat l'actualització periòdica de recomanacions");
 

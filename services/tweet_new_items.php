@@ -154,11 +154,17 @@ while ($row = mysqli_fetch_assoc($result)){
 		$cntrow = mysqli_fetch_assoc($cntres);
 		mysqli_free_result($cntres);
 		if ($cntrow['cnt']==0) {
+			$parentname='';
 			$parentrow = array();
 			$parentrow['id_uppercat']=$row['id_uppercat'];
 			do {
 				$parentres = mysqli_query($db_connection_manga, "SELECT * FROM piwigo_categories c WHERE id=".$parentrow['id_uppercat']) or die(mysqli_error($db_connection_manga));
 				$parentrow = mysqli_fetch_assoc($parentres);
+				if (!empty($parentname)) {
+					$parentname=$parentrow['name'].' - '.$parentname;
+				} else {
+					$parentname=$parentrow['name'];
+				}
 				mysqli_free_result($parentres);
 			} while (!empty($parentrow['id_uppercat']));
 
@@ -195,7 +201,7 @@ while ($row = mysqli_fetch_assoc($result)){
 				if (!empty($fansub_handle)) {
 					$random = array_rand($new_chapter_tweets, 1);
 					try{
-						publish_tweet(sprintf($new_chapter_tweets[$random], $parentrow['name'], $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
+						publish_tweet(sprintf($new_chapter_tweets[$random], $parentname, $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
 						file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 					} catch(Exception $e) {
 						break;
@@ -203,7 +209,7 @@ while ($row = mysqli_fetch_assoc($result)){
 				} else {
 					$random = array_rand($new_chapter_tweets_no_fansub, 1);
 					try{
-						publish_tweet(sprintf($new_chapter_tweets_no_fansub[$random], $parentrow['name'], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
+						publish_tweet(sprintf($new_chapter_tweets_no_fansub[$random], $parentname, $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
 						file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 					} catch(Exception $e) {
 						break;
