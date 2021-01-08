@@ -16,8 +16,8 @@ function get_status_description_short($id){
 	}
 }
 
-$header_title="Versions";
-$page="version";
+$header_title="Llista de versions d'anime - Anime";
+$page="anime";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
@@ -51,7 +51,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<thead class="thead-dark">
 							<tr>
 								<th scope="col">Fansub</th>
-								<th scope="col">Sèrie</th>
+								<th scope="col">Anime</th>
 								<th class="text-center" scope="col">Estat</th>
 								<th class="text-center" scope="col"><span title="Obtenció automàtica d'enllaços activada">OA</span></th>
 								<th class="text-center" scope="col"><span title="Recomanable pel sistema de recomanacions">R</span></th>
@@ -77,7 +77,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center"><?php echo $row['autofetch']==1 ? 'OA' : '-'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['is_featurable']==1 ? 'R'.($row['is_always_featured']==1 ? 'S' : '') : '-'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['links']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="version_stats.php?id=<?php echo $row['id']; ?>" title="Estadístiques" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de la sèrie '".$row['series_name']."' de ".$row['fansub_name']." i tots els seus enllaços? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="version_stats.php?id=<?php echo $row['id']; ?>" title="Estadístiques" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de l'anime '".$row['series_name']."' de ".$row['fansub_name']." i tots els seus enllaços? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}

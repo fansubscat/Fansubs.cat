@@ -1,6 +1,6 @@
 <?php
-$header_title="Eines";
-$page="tools";
+$header_title="Estadístiques - Anàlisi";
+$page="analytics";
 include("header.inc.php");
 require_once("common.inc.php");
 
@@ -44,7 +44,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		?>
 								<div class="row">
 									<div class="col-sm-4 text-center"><b>Fansubs:</b> <?php echo $totals['total_fansubs']; ?></div>
-									<div class="col-sm-4 text-center"><b>Sèries:</b> <?php echo $totals['total_series']; ?> <small>(duplicades: <?php echo $totals['total_duplicity']; ?>)</small></div>
+									<div class="col-sm-4 text-center"><b>Animes:</b> <?php echo $totals['total_series']; ?> <small>(duplicats: <?php echo $totals['total_duplicity']; ?>)</small></div>
 									<div class="col-sm-4 text-center"><b>Versions:</b> <?php echo $totals['total_versions']; ?></div>
 								</div>
 								<div class="row">
@@ -216,14 +216,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Les 10 sèries més vistes (darrers 14 dies / sempre)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els 10 animes més vistos (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
 									<div class="w-50 pr-1">
 										<table class="table table-hover table-striped">
 											<thead class="thead-dark">
 												<tr>
-													<th scope="col">Sèrie</th>
+													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
 												</tr>
 											</thead>
@@ -247,7 +247,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-hover table-striped">
 											<thead class="thead-dark">
 												<tr>
-													<th scope="col">Sèrie</th>
+													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
 												</tr>
 											</thead>
@@ -389,7 +389,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		?>
 								<div class="row">
 									<div class="col-sm-4 text-center"><b>Col·laboracions:</b> <?php echo $totals['total_collabs']; ?></div>
-									<div class="col-sm-4 text-center"><b>Sèries:</b> <?php echo $totals['total_series']; ?> <small>(duplicades: <?php echo $totals['total_duplicity']; ?>)</small></div>
+									<div class="col-sm-4 text-center"><b>Animes:</b> <?php echo $totals['total_series']; ?> <small>(duplicats: <?php echo $totals['total_duplicity']; ?>)</small></div>
 									<div class="col-sm-4 text-center"><b>Versions:</b> <?php echo $totals['total_versions']; ?></div>
 								</div>
 								<div class="row">
@@ -561,14 +561,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Les 10 sèries més vistes (darrers 14 dies / sempre)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els 10 animes més vistos (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
 									<div class="w-50 pr-1">
 										<table class="table table-hover table-striped">
 											<thead class="thead-dark">
 												<tr>
-													<th scope="col">Sèrie</th>
+													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
 												</tr>
 											</thead>
@@ -592,7 +592,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-hover table-striped">
 											<thead class="thead-dark">
 												<tr>
-													<th scope="col">Sèrie</th>
+													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
 												</tr>
 											</thead>

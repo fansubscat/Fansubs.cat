@@ -1,6 +1,6 @@
 <?php
-$header_title="Versions";
-$page="version";
+$header_title="Estadístiques de la versió d'anime - Anime";
+$page="anime";
 include("header.inc.php");
 require_once("common.inc.php");
 

@@ -1,5 +1,5 @@
 <?php
-$header_title="Usuaris";
+$header_title="Edició d'usuaris - Usuaris";
 $page="user";
 include("header.inc.php");
 
@@ -94,7 +94,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<select class="form-control" name="admin_level" id="form-admin-level" required>
 								<option value="">- Selecciona un nivell -</option>
 								<option value="1"<?php echo $row['admin_level']==1 ? " selected" : ""; ?>>1: Gestor de versions</option>
-								<option value="2"<?php echo $row['admin_level']==2 ? " selected" : ""; ?>>2: Gestor de sèries i versions</option>
+								<option value="2"<?php echo $row['admin_level']==2 ? " selected" : ""; ?>>2: Gestor de fitxes i versions</option>
 								<option value="3"<?php echo $row['admin_level']==3 ? " selected" : ""; ?>>3: Administrador</option>
 							</select>
 						</div>

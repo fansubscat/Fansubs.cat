@@ -1,5 +1,5 @@
 <?php
-$header_title="Fansubs";
+$header_title="Llista de fansubs - Fansubs";
 $page="fansub";
 include("header.inc.php");
 

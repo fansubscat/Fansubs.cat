@@ -68,7 +68,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 											query("UPDATE folder SET active=0 WHERE version_id=".$version['id']);
 										}
 									} else {
-										log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': la sèrie no existeix");
+										log_action("cron-match-failed","No s'ha pogut associar l'enllaç del fitxer '$filename': l'anime no existeix");
 									}
 									mysqli_free_result($results);
 									mysqli_free_result($resultl);

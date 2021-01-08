@@ -1,6 +1,6 @@
 <?php
-$header_title="Sèries";
-$page="series";
+$header_title="Edició d'anime - Anime";
+$page="anime";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
@@ -209,7 +209,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (is_numeric($_POST['form-related-list-related_series_id-'.$i])) {
 				array_push($related_series,escape($_POST['form-related-list-related_series_id-'.$i]));
 			} else {
-				crash("Dades invàlides: id de sèrie relacionada no numèric");
+				crash("Dades invàlides: id d'anime relacionat no numèric");
 			}
 			$i++;
 		}
@@ -230,7 +230,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-series", "S'ha actualitzat la sèrie amb nom '".$data['name']."' (id. de sèrie: ".$data['id'].")");
+			log_action("update-series", "S'ha actualitzat l'anime amb nom '".$data['name']."' (id. d'anime: ".$data['id'].")");
 			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",score=".$data['score'].",type='".$data['type']."',air_date=".$data['air_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",episodes=".$data['episodes'].",synopsis='".$data['synopsis']."',duration=".$data['duration'].",myanimelist_id=".$data['myanimelist_id'].",tadaima_id=".$data['tadaima_id'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",has_licensed_parts=".$data['has_licensed_parts'].",order_type=".$data['order_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
@@ -285,7 +285,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
-			log_action("create-series", "S'ha creat una sèrie amb nom '".$data['name']."'");
+			log_action("create-series", "S'ha creat un anime amb nom '".$data['name']."'");
 			query("INSERT INTO series (slug,name,alternate_names,keywords,type,air_date,author,director,studio,rating,episodes,synopsis,duration,myanimelist_id,tadaima_id,score,show_seasons,show_expanded_seasons,show_episode_numbers,show_unavailable_episodes,has_licensed_parts,order_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."',".$data['air_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['episodes'].",'".$data['synopsis']."',".$data['duration'].",".$data['myanimelist_id'].",".$data['tadaima_id'].",".$data['score'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['has_licensed_parts'].",".$data['order_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
@@ -360,7 +360,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la sèrie" : "Afegeix una sèrie"; ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita l'anime" : "Afegeix un anime"; ?></h4>
 					<hr>
 					<form method="post" action="series_edit.php" enctype="multipart/form-data" onsubmit="return checkNumberOfEpisodes()">
 						<div class="row align-items-end">
@@ -697,7 +697,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="form-related-list">Sèries relacionades <small class="text-muted">(es mostraran a la fitxa pública)</small></label>
+							<label for="form-related-list">Anime relacionat <small class="text-muted">(es mostrarà a la fitxa pública)</small></label>
 							<div class="container" id="form-related-list">
 <?php
 
@@ -715,7 +715,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="row mb-3">
 									<div class="w-100 column">
 										<select id="form-related-list-related_series_id-XXX" name="form-related-list-related_series_id-XXX" class="form-control d-none">
-											<option value="">- Selecciona una sèrie -</option>
+											<option value="">- Selecciona un anime -</option>
 <?php
 		$results = query("SELECT s.* FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.name ASC");
 		while ($srow = mysqli_fetch_assoc($results)) {
@@ -729,13 +729,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="related-list-table" data-count="<?php echo count($related_series); ?>">
 											<thead>
 												<tr>
-													<th class="mandatory">Sèrie</th>
+													<th class="mandatory">Anime</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr id="related-list-table-empty" class="<?php echo count($related_series)>0 ? 'd-none' : ''; ?>">
-													<td colspan="2" class="text-center">- No hi ha cap sèrie relacionada -</td>
+													<td colspan="2" class="text-center">- No hi ha cap anime relacionat -</td>
 												</tr>
 <?php
 	for ($j=0;$j<count($related_series);$j++) {
@@ -743,7 +743,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<tr id="form-related-list-row-<?php echo $j+1; ?>">
 													<td>
 														<select id="form-related-list-related_series_id-<?php echo $j+1; ?>" name="form-related-list-related_series_id-<?php echo $j+1; ?>" class="form-control" required>
-															<option value="">- Selecciona una sèrie -</option>
+															<option value="">- Selecciona un anime -</option>
 <?php
 		$results = query("SELECT s.* FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.name ASC");
 		while ($srow = mysqli_fetch_assoc($results)) {
@@ -767,7 +767,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</div>
 									<div class="form-group row w-100 ml-0">
 										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
-											<button onclick="addRelatedSeriesRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una sèrie relacionada</button>
+											<button onclick="addRelatedSeriesRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un anime relacionat</button>
 										</div>
 									</div>
 								</div>
@@ -852,7 +852,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="has_licensed_parts" id="form-has_licensed_parts" value="1"<?php echo $row['has_licensed_parts']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-has_licensed_parts">La sèrie té parts llicenciades <small class="text-muted">(es mostrarà un avís indicant que sols hi ha les parts no llicenciades)</small></label>
+									<label class="form-check-label" for="form-has_licensed_parts">L'anime té parts llicenciades <small class="text-muted">(es mostrarà un avís indicant que sols hi ha les parts no llicenciades)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_standard" value="0"<?php echo $row['order_type']==0 ? " checked" : ""; ?>>
@@ -869,7 +869,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group text-center pt-2">
-							<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la sèrie"; ?></button>
+							<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix l'anime"; ?></button>
 						</div>
 					</form>
 				</article>

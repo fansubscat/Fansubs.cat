@@ -11,7 +11,8 @@ session_start();
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title><?php echo $header_title; ?> - Tauler d'administració de Fansubs.cat - Anime</title>
+		<title><?php echo $header_title; ?> - Tauler d'administració de Fansubs.cat</title>
+		<link rel="shortcut icon" href="/favicon.png" />
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
@@ -24,6 +25,10 @@ session_start();
 			a{text-decoration: none !important;}
 			.form-group label{font-weight: bold;}
 			.mandatory:after {padding-left: 0.2em; content:"*"; color:red;}
+			.fa-stack { font-size: 0.5em; vertical-align: middle; margin-bottom: 0.5em; }
+			.fa-custom-anime:before { font-family: Arial; font-weight: bold; content: 'A'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
+			.fa-custom-manga:before { font-family: Arial; font-weight: bold; content: 'M'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
+			.fa-custom-news:before { font-family: Arial; font-weight: bold; content: 'N'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
 		</style>
 	</head>
 	<body>
@@ -31,30 +36,58 @@ session_start();
 if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 ?>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			<a class="navbar-brand" href="<?php echo $base_url; ?>/admin/">Tauler d'administració</a>
+			<a class="navbar-brand" href="<?php echo $base_url; ?>/">Tauler d'administració</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Commuta la navegació">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
+					<li class="nav-item dropdown<?php echo $page=='anime' ? ' active' : ''; ?>">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSeries" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Anime</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
-					<li class="nav-item dropdown<?php echo $page=='series' ? ' active' : ''; ?>">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSeries" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sèries</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
-							<a class="dropdown-item" href="series_list.php">Llista de sèries</a>
-							<a class="dropdown-item" href="series_edit.php">Afegeix una sèrie nova</a>
-						</div>
-					</li>
+							<a class="dropdown-item" href="series_list.php">Llista d'anime</a>
+							<a class="dropdown-item" href="series_edit.php">Afegeix un anime nou</a>
+							<div class="dropdown-divider"></div>
 <?php
 	}
 ?>
-					<li class="nav-item dropdown<?php echo $page=='version' ? ' active' : ''; ?>">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownVersions" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Versions</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownVersions">
-							<a class="dropdown-item" href="version_list.php">Llista de versions</a>
+							<a class="dropdown-item" href="version_list.php">Llista de versions d'anime</a>
 							<a class="dropdown-item" href="series_choose.php">Afegeix una versió nova</a>
+						</div>
+					</li>
+					<li class="nav-item dropdown<?php echo $page=='manga' ? ' active' : ''; ?>">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSeries" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manga</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
+<?php
+	if ($_SESSION['admin_level']>=2) {
+?>
+							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Llista de manga</a>
+							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Afegeix un manga nou</a>
+							<div class="dropdown-divider"></div>
+<?php
+	}
+?>
+							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Llista de versions de manga</a>
+							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Afegeix una versió nova</a>
+						</div>
+					</li>
+					<li class="nav-item dropdown<?php echo $page=='news' ? ' active' : ''; ?>">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSeries" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Notícies</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
+<?php
+	if ($_SESSION['admin_level']>=2) {
+?>
+							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Llista de notícies</a>
+							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Afegeix una notícia nova</a>
+							<div class="dropdown-divider"></div>
+<?php
+	}
+?>
+							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Llista de recollidors</a>
+							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Afegeix un recollidor nou</a>
 						</div>
 					</li>
 <?php
@@ -89,12 +122,17 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 	}
 	if ($_SESSION['admin_level']>=1) {
 ?>
-					<li class="nav-item dropdown<?php echo $page=='tools' ? ' active' : ''; ?>">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Eines</a>
+					<li class="nav-item dropdown<?php echo $page=='analytics' ? ' active' : ''; ?>">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Anàlisi</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
 							<a class="dropdown-item" href="stats.php">Estadístiques</a>
 							<a class="dropdown-item" href="views.php">Darreres visualitzacions</a>
 							<a class="dropdown-item" href="search_history.php">Historial de cerques</a>
+						</div>
+					</li>
+					<li class="nav-item dropdown<?php echo $page=='tools' ? ' active' : ''; ?>">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Eines</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
 							<a class="dropdown-item" href="link_verifier.php">Verificador d'enllaços</a>
 <?php
 		if ($_SESSION['admin_level']>=3) {
@@ -111,7 +149,9 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 	}
 ?>
 				</ul>
-				<a class="text-light pr-4" href="https://anime.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic"><span class="fa fa-globe"></span></a>
+				<a class="text-light pr-4" href="https://anime.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (anime.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-anime fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
+				<a class="text-light pr-4" href="https://manga.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (manga.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+				<a class="text-light pr-4" href="https://www.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (www.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-news fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
 				<a class="text-light pr-4" href="https://docs.google.com/document/d/10EMgWjVqrmDFUpxLI44cq4n5iOPHRKL3vZfL59Tt3SA/edit?usp=sharing" target="_blank" title="Ajuda"><span class="fa fa-question-circle"></span></a>
 				<a class="text-light" href="logout.php" title="Tanca la sessió"><?php echo htmlspecialchars($_SESSION['username']); ?><span class="fa fa-sign-out-alt ml-2"></span></a>
 			</div>

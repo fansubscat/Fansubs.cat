@@ -1,5 +1,5 @@
 <?php
-$header_title="Eines";
+$header_title="Verificador d'enllaços - Eines";
 $page="tools";
 include("header.inc.php");
 

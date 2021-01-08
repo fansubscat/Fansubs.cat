@@ -1,5 +1,5 @@
 <?php
-$header_title="Eines";
+$header_title="Canvia la contrasenya - Eines";
 $page="tools";
 include("header.inc.php");
 

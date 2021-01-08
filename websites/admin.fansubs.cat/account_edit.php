@@ -1,5 +1,5 @@
 <?php
-$header_title="Comptes";
+$header_title="Edició de comptes - Comptes";
 $page="account";
 include("header.inc.php");
 

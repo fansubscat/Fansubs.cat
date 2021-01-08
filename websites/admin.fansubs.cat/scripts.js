@@ -215,7 +215,7 @@ function addRow(extra) {
 function deleteRow(id) {
 	var i = parseInt($('#episode-list-table').attr('data-count'));
 	if(i==1) {
-		alert('La sèrie ha de tenir un capítol, com a mínim!');
+		alert('L\'anime ha de tenir un capítol, com a mínim!');
 	}
 	else {
 		$("#form-episode-list-row-"+id).remove();
@@ -247,7 +247,7 @@ function addSeasonRow() {
 function deleteSeasonRow(id) {
 	var i = parseInt($('#season-list-table').attr('data-count'));
 	if(i==1) {
-		alert('La sèrie ha de tenir una temporada, com a mínim!');
+		alert('L\'anime ha de tenir una temporada, com a mínim!');
 	}
 	else {
 		$("#form-season-list-row-"+id).remove();

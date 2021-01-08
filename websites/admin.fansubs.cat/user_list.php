@@ -1,5 +1,5 @@
 <?php
-$header_title="Usuaris";
+$header_title="Llista d'usuaris - Usuaris";
 $page="user";
 include("header.inc.php");
 

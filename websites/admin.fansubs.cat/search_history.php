@@ -1,6 +1,6 @@
 <?php
-$header_title="Eines";
-$page="tools";
+$header_title="Historial de cerques - Anàlisi";
+$page="analytics";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {

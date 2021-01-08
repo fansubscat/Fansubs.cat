@@ -1,6 +1,6 @@
 <?php
-$header_title="Eines";
-$page="tools";
+$header_title="Darreres visualitzacions - Anàlisi";
+$page="analytics";
 include("header.inc.php");
 require_once("common.inc.php");
 
@@ -44,7 +44,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<table class="table table-hover table-striped">
 										<thead class="thead-dark">
 											<tr>
-												<th scope="col">Sèrie</th>
+												<th scope="col">Anime</th>
 												<th scope="col">Capítol</th>
 												<th scope="col" style="width: 30%;">Progrés</th>
 											</tr>
@@ -79,7 +79,7 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="thead-dark">
 											<tr>
-												<th scope="col">Sèrie</th>
+												<th scope="col">Anime</th>
 												<th scope="col">Capítol</th>
 												<th scope="col" style="width: 20%;">Data</th>
 											</tr>
@@ -121,7 +121,7 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="thead-dark">
 											<tr>
-												<th scope="col">Sèrie</th>
+												<th scope="col">Anime</th>
 												<th scope="col">Capítol</th>
 												<th scope="col" style="width: 30%;">Progrés</th>
 											</tr>
@@ -156,7 +156,7 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="thead-dark">
 											<tr>
-												<th scope="col">Sèrie</th>
+												<th scope="col">Anime</th>
 												<th scope="col">Capítol</th>
 												<th scope="col" style="width: 20%;">Data</th>
 											</tr>

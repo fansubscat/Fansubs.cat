@@ -1,6 +1,6 @@
 <?php
-$header_title="Versions";
-$page="version";
+$header_title="Edició de versions d'anime - Anime";
+$page="anime";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
@@ -191,7 +191,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-version", "S'ha actualitzat la versió de la sèrie (id. de sèrie: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
+			log_action("update-version", "S'ha actualitzat la versió de l'anime (id. d'anime: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
 			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
@@ -285,7 +285,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
-			log_action("create-version", "S'ha creat una versió de la sèrie (id. de sèrie: ".$data['series_id'].")");
+			log_action("create-version", "S'ha creat una versió de l'anime (id. d'anime: ".$data['series_id'].")");
 			query("INSERT INTO version (series_id,status,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
@@ -365,7 +365,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<form method="post" action="version_edit.php" onsubmit="return checkNumberOfLinks()">
 						<div class="form-group">
-							<label for="form-series" class="mandatory">Sèrie</label>
+							<label for="form-series" class="mandatory">Anime</label>
 							<div id="form-series" class="font-weight-bold form-control"><?php echo htmlspecialchars($series['name']); ?></div>
 							<input name="series_id" type="hidden" value="<?php echo $series['id']; ?>"/>
 							<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
@@ -618,7 +618,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="d-none alert alert-warning" id="import-failed-results">
-							<div><span class="fa fa-exclamation-triangle mr-2"></span> Els següents elements no s'han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa de la sèrie. Afegeix-los a mà on correspongui. Recorda que els fitxers només s'importen automàticament si tenen el format "<i>text</i><u><b> - 123</b></u><i>text</i>.mp4".</div>
+							<div><span class="fa fa-exclamation-triangle mr-2"></span> Els següents elements no s'han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa de l'anime. Afegeix-los a mà on correspongui. Recorda que els fitxers només s'importen automàticament si tenen el format "<i>text</i><u><b> - 123</b></u><i>text</i>.mp4".</div>
 							<table class="table-hover table-sm mt-2 small w-100" id="import-failed-results-table">
 								<thead>
 									<tr>
@@ -644,13 +644,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($series['show_episode_numbers']==0 && $series['order_type']!=0) {
 ?>
 								<div class="alert alert-warning">
-									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquesta sèrie <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $series['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest anime <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $series['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
 <?php
 	} else if ($series['show_episode_numbers']==0) {
 ?>
 								<div class="alert alert-warning">
-									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquesta sèrie <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.</div>
+									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest anime <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.</div>
 								</div>
 <?php
 	} else if ($series['order_type']!=0) {

@@ -1,6 +1,6 @@
 <?php
-$header_title="Versions";
-$page="version";
+$header_title="Edició de versions - Anime";
+$page="anime";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
@@ -8,7 +8,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">De quina sèrie vols crear una versió?</h4>
+					<h4 class="card-title text-center mb-4 mt-1">De quina anime vols crear una versió?</h4>
 					<hr>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
@@ -42,7 +42,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($_SESSION['admin_level']>=2) {
 ?>
 					<div class="text-center">
-						<a href="series_edit.php" class="btn btn-primary">No hi és? Afegeix una sèrie nova</a>
+						<a href="series_edit.php" class="btn btn-primary">No hi és? Afegeix un anime nou</a>
 					</div>
 <?php
 	}
