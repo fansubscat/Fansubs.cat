@@ -28,7 +28,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM rel_version_fansub WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE id=".escape($_GET['delete_id']));
-		@unlink('../images/versions/'.$_GET['delete_id'].'.jpg');
+		@unlink('../anime.fansubs.cat/images/versions/'.$_GET['delete_id'].'.jpg');
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}
 ?>

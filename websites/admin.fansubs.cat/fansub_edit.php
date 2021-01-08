@@ -42,7 +42,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("UPDATE fansub SET name='".$data['name']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',status=".$data['status'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
-				move_uploaded_file($_FILES['icon']["tmp_name"], '../images/fansubs/'.$data['id'].'.png');
+				move_uploaded_file($_FILES['icon']["tmp_name"], '../anime.fansubs.cat/images/fansubs/'.$data['id'].'.png');
 			}
 		}
 		else {
@@ -50,7 +50,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("INSERT INTO fansub (name,url,twitter_url,twitter_handle,status,created,created_by,updated,updated_by) VALUES ('".$data['name']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['status'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['icon'])) {
-				move_uploaded_file($_FILES['icon']["tmp_name"], '../images/fansubs/'.mysqli_insert_id($db_connection).'.png');
+				move_uploaded_file($_FILES['icon']["tmp_name"], '../anime.fansubs.cat/images/fansubs/'.mysqli_insert_id($db_connection).'.png');
 			}
 		}
 

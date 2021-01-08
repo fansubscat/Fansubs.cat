@@ -275,11 +275,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			if (!empty($_POST['image'])) {
-				copy($_POST['image'],'../images/series/'.$data['id'].'.jpg');
+				copy($_POST['image'],'../anime.fansubs.cat/images/series/'.$data['id'].'.jpg');
 			}
 
 			if (!empty($_FILES['featured_image'])) {
-				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../images/featured/'.$data['id'].'.jpg');
+				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../anime.fansubs.cat/images/featured/'.$data['id'].'.jpg');
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.";
@@ -305,11 +305,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			if (!empty($_POST['image'])) {
-				copy($_POST['image'],'../images/series/'.$inserted_id.'.jpg');
+				copy($_POST['image'],'../anime.fansubs.cat/images/series/'.$inserted_id.'.jpg');
 			}
 
 			if (!empty($_FILES['featured_image'])) {
-				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../images/featured/'.$inserted_id.'.jpg');
+				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../anime.fansubs.cat/images/featured/'.$inserted_id.'.jpg');
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?series_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
@@ -506,8 +506,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-1">
 								<div class="form-group">
-									<a id="form-image-preview-link" href="../images/series/<?php echo $row['id']; ?>.jpg" target="_blank">
-										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="../images/series/<?php echo $row['id']; ?>.jpg" alt="">
+									<a id="form-image-preview-link" href="https://anime.fansubs.cat/images/series/<?php echo $row['id']; ?>.jpg" target="_blank">
+										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="https://anime.fansubs.cat/images/series/<?php echo $row['id']; ?>.jpg" alt="">
 									</a>
 								</div>
 							</div>
@@ -521,8 +521,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
-									<a id="form-featured-image-preview-link" href="../images/featured/<?php echo $row['id']; ?>.jpg" target="_blank">
-										<img id="form-featured-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="../images/featured/<?php echo $row['id']; ?>.jpg" alt="">
+									<a id="form-featured-image-preview-link" href="https://anime.fansubs.cat/images/featured/<?php echo $row['id']; ?>.jpg" target="_blank">
+										<img id="form-featured-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="https://anime.fansubs.cat/images/featured/<?php echo $row['id']; ?>.jpg" alt="">
 									</a>
 								</div>
 							</div>

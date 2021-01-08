@@ -1,5 +1,5 @@
 <?php
-require_once("../db.inc.php");
+require_once("db.inc.php");
 require_once("/srv/services/anime.fansubs.cat/googledrive.inc.php");
 
 session_set_cookie_params(3600 * 24 * 30); // 30 days

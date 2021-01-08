@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 ob_start();
-require_once("../db.inc.php");
+require_once("db.inc.php");
 
 session_set_cookie_params(3600 * 24 * 30); // 30 days
 session_start();
