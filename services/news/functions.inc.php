@@ -60,6 +60,9 @@ function fetch_and_parse_image($fansub_slug, $url, $description){
 	}
 
 	if ($first_image_url!=NULL){
+		if (substr($first_image_url,0,2)=="//"){
+			$first_image_url="https:".$first_image_url;
+		}
 		if (strpos($first_image_url,"://")===FALSE){
 			$first_image_url=$url.$first_image_url;
 		}
