@@ -85,7 +85,7 @@ mysqli_free_result($resultf);
 ?>
 					</div>
 					<div id="options-select-buttons">
-						<a id="options-select-all">Selecciona'ls tots</a> / <a id="options-unselect-all">Deselecciona'ls tots</a>
+						<a id="options-select-all">Selecciona'ls tots</a> / <a id="options-unselect-all">Desselecciona'ls tots</a>
 					</div>
 				</form>
 				<div id="options-buttonbar">

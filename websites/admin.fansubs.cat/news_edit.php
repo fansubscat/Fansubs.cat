@@ -3,100 +3,101 @@ $header_title="Edició de notícies - Notícies";
 $page="news";
 include("header.inc.php");
 
-if (!empty($_POST['action'])) {
-	$data=array();
-	if (!empty($_POST['id'])) {
-		$data['id']=escape($_POST['id']);
-	} else if ($_POST['action']=='edit') {
-		crash("Dades invàlides: manca id");
-	}
-	if (!empty($_POST['fansub_id']) && is_numeric($_POST['fansub_id'])) {
-		$data['fansub_id']=escape($_POST['fansub_id']);
-	} else {
-		$data['fansub_id']='NULL';
-	}
-	if (!empty($_POST['title'])) {
-		$data['title']=escape($_POST['title']);
-	} else {
-		crash("Dades invàlides: manca title");
-	}
-	if (!empty($_POST['url'])) {
-		$data['url']="'".escape($_POST['url'])."'";
-	} else {
-		$data['url']="NULL";
-	}
-	if (!empty($_POST['contents'])) {
-		$data['contents']=escape($_POST['contents']);
-	} else {
-		crash("Dades invàlides: manca contents");
-	}
-	if (!empty($_POST['date'])) {
-		$data['date']=date('Y-m-d H:i:s', strtotime($_POST['date']));
-	} else {
-		crash("Dades invàlides: manca date");
-	}
-	
-	if ($_POST['action']=='edit') {
-		$toupdate_result = query("SELECT n.*, f.name fansub_name, f.slug fansub_slug FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE MD5(CONCAT(n.title, n.date))='".$data['id']."'");
-		if (mysqli_num_rows($toupdate_result)>1) {
-			crash("No es pot editar la notícia: més d'una notícia amb el mateix MD5!");
-		} else if (mysqli_num_rows($toupdate_result)==1) {
-			$toupdate_row = mysqli_fetch_assoc($toupdate_result);
-			log_action("update-news", "S'ha actualitzat la notícia '".escape($toupdate_row['title'])."' del fansub '".escape($toupdate_row['fansub_name'])."'");
+if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
+	if (!empty($_POST['action'])) {
+		$data=array();
+		if (!empty($_POST['id'])) {
+			$data['id']=escape($_POST['id']);
+		} else if ($_POST['action']=='edit') {
+			crash("Dades invàlides: manca id");
+		}
+		if (!empty($_POST['fansub_id']) && is_numeric($_POST['fansub_id'])) {
+			$data['fansub_id']=escape($_POST['fansub_id']);
+		} else {
+			$data['fansub_id']='NULL';
+		}
+		if (!empty($_POST['title'])) {
+			$data['title']=escape($_POST['title']);
+		} else {
+			crash("Dades invàlides: manca title");
+		}
+		if (!empty($_POST['url'])) {
+			$data['url']="'".escape($_POST['url'])."'";
+		} else {
+			$data['url']="NULL";
+		}
+		if (!empty($_POST['contents'])) {
+			$data['contents']=escape($_POST['contents']);
+		} else {
+			crash("Dades invàlides: manca contents");
+		}
+		if (!empty($_POST['date'])) {
+			$data['date']=date('Y-m-d H:i:s', strtotime($_POST['date']));
+		} else {
+			crash("Dades invàlides: manca date");
+		}
+		
+		if ($_POST['action']=='edit') {
+			$toupdate_result = query("SELECT n.*, f.name fansub_name, f.slug fansub_slug FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE MD5(CONCAT(n.title, n.date))='".$data['id']."'");
+			if (mysqli_num_rows($toupdate_result)>1) {
+				crash("No es pot editar la notícia: més d'una notícia amb el mateix MD5!");
+			} else if (mysqli_num_rows($toupdate_result)==1) {
+				$toupdate_row = mysqli_fetch_assoc($toupdate_result);
+				log_action("update-news", "S'ha actualitzat la notícia '".escape($toupdate_row['title'])."' del fansub '".escape($toupdate_row['fansub_name'])."'");
+				if (!empty($_FILES['image'])) {
+					move_uploaded_file($_FILES['image']["tmp_name"], '../www.fansubs.cat/images/news/'.$toupdate_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
+					$data['image'] = "'".md5($data['title'].$data['date'])."'";
+				} else if (!empty($toupdate_row['image'])) {
+					$data['image'] = "'".$toupdate_row['image']."'";
+				} else {
+					$data['image'] = 'NULL';
+				}
+				query("UPDATE news SET fansub_id=".$data['fansub_id'].",url=".$data['url'].",contents='".$data['contents']."',title='".$data['title']."',date='".$data['date']."',image=".$data['image']." WHERE MD5(CONCAT(title, date))='".$data['id']."'");
+			}
+		}
+		else {
+			$fansub_result = query("SELECT f.name fansub_name, f.slug fansub_slug FROM fansub f WHERE f.id=".$data['fansub_id']);
+			$fansub_row = mysqli_fetch_assoc($fansub_result);
 			if (!empty($_FILES['image'])) {
-				move_uploaded_file($_FILES['image']["tmp_name"], '../www.fansubs.cat/images/news/'.$toupdate_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
+				move_uploaded_file($_FILES['image']["tmp_name"], '../www.fansubs.cat/images/news/'.$fansub_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
 				$data['image'] = "'".md5($data['title'].$data['date'])."'";
-			} else if (!empty($toupdate_row['image'])) {
-				$data['image'] = "'".$toupdate_row['image']."'";
 			} else {
 				$data['image'] = 'NULL';
 			}
-			query("UPDATE news SET fansub_id=".$data['fansub_id'].",url=".$data['url'].",contents='".$data['contents']."',title='".$data['title']."',date='".$data['date']."',image=".$data['image']." WHERE MD5(CONCAT(title, date))='".$data['id']."'");
+			if (isset($_POST['import_pending_id'])) {
+				log_action("import-pending-news", "S'ha importat la notícia proposada amb id. ".escape($_POST['import_pending_id']));
+				query("DELETE FROM pending_news WHERE id=".escape($_POST['import_pending_id']));
+			}
+			log_action("create-news", "S'ha creat la notícia '".$data['title']."' de '".escape($fansub_row['fansub_name'])."'");
+			query("INSERT INTO news (fansub_id,fetcher_id,title,contents,original_contents,date,url,image) VALUES (".$data['fansub_id'].",NULL,'".$data['title']."','".$data['contents']."','".$data['contents']."','".$data['date']."',".$data['url'].",".$data['image'].")");
 		}
-	}
-	else {
-		$fansub_result = query("SELECT f.name fansub_name, f.slug fansub_slug FROM fansub f WHERE f.id=".$data['fansub_id']);
-		$fansub_row = mysqli_fetch_assoc($fansub_result);
-		if (!empty($_FILES['image'])) {
-			move_uploaded_file($_FILES['image']["tmp_name"], '../www.fansubs.cat/images/news/'.$fansub_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
-			$data['image'] = "'".md5($data['title'].$data['date'])."'";
-		} else {
-			$data['image'] = 'NULL';
-		}
-		if (isset($_POST['import_pending_id'])) {
-			log_action("import-pending-news", "S'ha importat la notícia proposada amb id. ".escape($_POST['import_pending_id']));
-			query("DELETE FROM pending_news WHERE id=".escape($_POST['import_pending_id']));
-		}
-		log_action("create-news", "S'ha creat la notícia '".$data['title']."' de '".escape($fansub_row['fansub_name'])."'");
-		query("INSERT INTO news (fansub_id,fetcher_id,title,contents,original_contents,date,url,image) VALUES (".$data['fansub_id'].",NULL,'".$data['title']."','".$data['contents']."','".$data['contents']."','".$data['date']."',".$data['url'].",".$data['image'].")");
+
+		$_SESSION['message']="S'han desat les dades correctament.";
+
+		header("Location: news_list.php");
+		die();
 	}
 
-	$_SESSION['message']="S'han desat les dades correctament.";
-
-	header("Location: news_list.php");
-	die();
-}
-
-if (isset($_GET['id'])) {
-	$result = query("SELECT MD5(CONCAT(n.title, n.date)) id, n.*, f.slug fansub_slug FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE MD5(CONCAT(n.title, n.date))='".escape($_GET['id'])."'");
-	$row = mysqli_fetch_assoc($result) or crash('News not found');
-	mysqli_free_result($result);
-} else {
-	$row = array();
-	if (!empty($_GET['import_pending_id'])) {
-		$pending_result = query("SELECT pn.* FROM pending_news pn WHERE pn.id=".escape($_GET['import_pending_id']));
-		$prow = mysqli_fetch_assoc($pending_result) or crash('Pending news not found');
-		$row['fansub_id']=28; //Fansub independent
-		$row['title']=$prow['title'];
-		$row['contents']=$prow['contents'];
-		$row['url']=$prow['url'];
-		$row['pending_id']=$prow['id'];
-		$row['pending_author']=$prow['sender_name'];
-		$row['pending_email']=$prow['sender_email'];
-		$row['pending_image']=$prow['image_url'];
-		$row['pending_comments']=$prow['comments'];
+	if (isset($_GET['id'])) {
+		$result = query("SELECT MD5(CONCAT(n.title, n.date)) id, n.*, f.slug fansub_slug FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE MD5(CONCAT(n.title, n.date))='".escape($_GET['id'])."'");
+		$row = mysqli_fetch_assoc($result) or crash('News not found');
+		mysqli_free_result($result);
+	} else {
+		$row = array();
+		if (!empty($_GET['import_pending_id'])) {
+			$pending_result = query("SELECT pn.* FROM pending_news pn WHERE pn.id=".escape($_GET['import_pending_id']));
+			$prow = mysqli_fetch_assoc($pending_result) or crash('Pending news not found');
+			$row['fansub_id']=28; //Fansub independent
+			$row['title']=$prow['title'];
+			$row['contents']=$prow['contents'];
+			$row['url']=$prow['url'];
+			$row['pending_id']=$prow['id'];
+			$row['pending_author']=$prow['sender_name'];
+			$row['pending_email']=$prow['sender_email'];
+			$row['pending_image']=$prow['image_url'];
+			$row['pending_comments']=$prow['comments'];
+		}
 	}
-}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
@@ -105,7 +106,7 @@ if (isset($_GET['id'])) {
 				<hr>
 				<form method="post" action="news_edit.php" enctype="multipart/form-data">
 <?php
-if(isset($_GET['import_pending_id'])) {
+	if(isset($_GET['import_pending_id'])) {
 ?>
 					<div class="form-group">
 						<label for="form-pending_author">Autor que ha proposat la notícia</label>
@@ -131,13 +132,13 @@ if(isset($_GET['import_pending_id'])) {
 						<select name="fansub_id" class="form-control" id="form-fansub_id"<?php echo isset($_GET['id']) ? ' disabled' : ''; ?>>
 							<option value="">- Notícia en nom de Fansubs.cat (tria un altre fansub, si no és així) -</option>
 <?php
-$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
-while ($frow = mysqli_fetch_assoc($result)) {
+	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
+	while ($frow = mysqli_fetch_assoc($result)) {
 ?>
 							<option value="<?php echo $frow['id']; ?>"<?php echo $row['fansub_id']==$frow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
 <?php
-}
-mysqli_free_result($result);
+	}
+	mysqli_free_result($result);
 ?>
 						</select>
 						<?php echo isset($_GET['id']) ? '<input type="hidden" name="fansub_id" value="'.$row['fansub_id'].'">' : ''; ?>
@@ -183,6 +184,9 @@ mysqli_free_result($result);
 			</div>
 		</div>
 <?php
+} else {
+	header("Location: login.php");
+}
 
 include("footer.inc.php");
 ?>

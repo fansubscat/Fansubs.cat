@@ -109,10 +109,6 @@ else{
 							<img src="/style/images/icon_stats.png" alt="" height="14" width="14" />
 							<a href="/estadistiques">Estadístiques</a>
 						</li>
-						<li>
-							<img src="/style/images/icon_status.png" alt="" height="14" width="14" />
-							<a href="/estat-del-sistema">Estat del sistema</a>
-						</li>
 					</ul>
 				</div>
 			</div>

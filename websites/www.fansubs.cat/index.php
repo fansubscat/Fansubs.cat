@@ -92,7 +92,7 @@ while ($row = mysqli_fetch_assoc($result)){
 mysqli_free_result($result);
 ?>
 							<div id="filter-footer">
-								<span class="filter-select-all">Selecciona'ls tots</span> / <span class="filter-select-none">Deselecciona'ls tots</span>
+								<span class="filter-select-all">Selecciona'ls tots</span> / <span class="filter-select-none">Desselecciona'ls tots</span>
 							</div>
 						</div>
 					</div>

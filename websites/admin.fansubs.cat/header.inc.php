@@ -134,6 +134,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Eines</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
 							<a class="dropdown-item" href="link_verifier.php">Verificador d'enllaços</a>
+							<a class="dropdown-item" href="fetcher_status.php">Estat dels recollidors</a>
 <?php
 		if ($_SESSION['admin_level']>=3) {
 ?>

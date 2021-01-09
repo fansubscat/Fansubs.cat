@@ -28,5 +28,7 @@ foreach ($csv->data as $element){
 	mysqli_query($db_connection, "INSERT INTO news (fansub_id, fetcher_id, title, contents, original_contents, date, url, image) VALUES ($fansub_id, NULL, '".mysqli_real_escape_string($db_connection, $element['title'])."','".mysqli_real_escape_string($db_connection, str_replace("\n","<br />",$element['contents']))."','".mysqli_real_escape_string($db_connection, $element['contents'])."','".$element['date']."','".mysqli_real_escape_string($db_connection, $element['url'])."',".($element['image']!=NULL ? "'".mysqli_real_escape_string($db_connection, $element['image'])."'" : 'NULL').")") or (mysqli_rollback($db_connection) && die('SQL error'.mysqli_error($db_connection)));
 }
 
+mysqli_query($db_connection, "INSERT INTO action_log (action, text, author, date) VALUES ('load-static-data','S\'han carregat notícies via CSV', '(Servei intern)', CURRENT_TIMESTAMP)") or (mysqli_rollback($db_connection) && die('SQL error'.mysqli_error($db_connection)));
+
 mysqli_close($db_connection);
 ?>

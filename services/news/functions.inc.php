@@ -223,7 +223,11 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 		//Hello 2016, we are now in the future 2018. We will send it via FCM so the Android app receives it ;)
 		//Hello 2018, we are now in the future 2020. We will send some tweets too... ;)
 		//Hello 2020, 2020 still. Maybe we will disable the news tweets, they are a bit annoying... And replace them with a cron job that tweets new manga/anime added to the DB.
+		//Hello 2020, we are now in the future 2021. We will report the increments to the action log
 		global $firebase_api_key;
+
+		
+		mysqli_query($db_connection, "INSERT INTO action_log (action, text, author, date) VALUES ('fetch-news-changes','Detectades $increment noves notícies del fansub $fansub_slug', '(Servei intern)', CURRENT_TIMESTAMP)") or die(mysqli_error($db_connection));
 
 		$push_result = mysqli_query($db_connection, "SELECT n.title, f.slug fansub_slug, n.url, f.name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.fetcher_id=$fetcher_id ORDER BY n.date DESC LIMIT $increment") or die(mysqli_error($db_connection));
 		while ($push_row = mysqli_fetch_assoc($push_result)){
@@ -261,7 +265,7 @@ function fetch_via_animugen($fansub_slug, $url, $last_fetched_item_date){
 	$tidy_config = "tidy.conf";
 	$error_connect=FALSE;
 
-	$html_text = file_get_contents($url.'/'.date('Y')) or $error_connect=TRUE;
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
 	if ($error_connect){
 		return array('error_connect',array());
 	}
@@ -274,7 +278,7 @@ function fetch_via_animugen($fansub_slug, $url, $last_fetched_item_date){
 	while ($go_on){
 		//parse through the HTML and build up the elements feed as we go along
 		$cur_count = 0;
-		foreach($html->find('article') as $article) {
+		foreach($html->find('.mg-posts-sec-inner article') as $article) {
 			$tries=1;
 			while ($tries<=3){
 				$error=FALSE;
@@ -316,7 +320,7 @@ function fetch_via_animugen($fansub_slug, $url, $last_fetched_item_date){
 					else{
 						$item[5]=NULL;
 					}
-					
+
 					//If the text is empty, we assume Spanish
 					if ($item[2]!='' && is_catalan($item[2])){
 						$elements[]=$item;

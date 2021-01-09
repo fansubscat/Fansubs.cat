@@ -25,5 +25,7 @@ while ($row_fansubs=mysqli_fetch_assoc($res_fansubs)){
 	}
 }
 
+mysqli_query($db_connection, "INSERT INTO action_log (action, text, author, date) VALUES ('cleanup-images','S\'han netejat les imatges no utilitzades a les notícies', '(Servei intern)', CURRENT_TIMESTAMP)") or (mysqli_rollback($db_connection) && die('SQL error'.mysqli_error($db_connection)));
+
 mysqli_close($db_connection);
 ?>

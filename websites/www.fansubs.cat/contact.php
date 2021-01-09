@@ -14,57 +14,62 @@ require_once('header.inc.php');
 //We must validate everything even with HTML5 validation, we never know what evil people will do.
 if (isset($_POST['reason']) && $_POST['reason']!=NULL){
 	$valid = FALSE;
-	if ($_POST['reason']=='add_news'){
-		//Add news
-		if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255
-			&& isset($_POST['add_news_title']) && $_POST['add_news_title']!=NULL && isset($_POST['add_news_contents']) && $_POST['add_news_contents']!=NULL 
-			&& isset($_POST['add_news_url']) && $_POST['add_news_url']!=NULL){
-			$message = "";
-			$message .= "Nou correu mitjançant Fansubs.cat - Notícia nova.\n\n";
-			$message .= "Nom: {$_POST['name']}\n";
-			$message .= "Adreça electrònica: {$_POST['email']}\n";
-			$message .= "Títol: {$_POST['add_news_title']}\n";
-			$message .= "Contingut: {$_POST['add_news_contents']}\n";
-			$message .= "URL de la notícia: {$_POST['add_news_url']}\n";
-			$message .= "URL de la imatge: {$_POST['add_news_image_url']}\n";
-			if (isset($_POST['comments'])){
-				$message .= "Comentaris: {$_POST['comments']}\n";
+
+	$security_responses = array("català", "catala", "valencià", "valencia", "valensia", "valensià", "catalá", "valenciá");
+
+	if (isset($_POST['security_question']) && in_array(strtolower($_POST['security_question']), $security_responses)) {
+		if ($_POST['reason']=='add_news'){
+			//Add news
+			if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255
+				&& isset($_POST['add_news_title']) && $_POST['add_news_title']!=NULL && isset($_POST['add_news_contents']) && $_POST['add_news_contents']!=NULL 
+				&& isset($_POST['add_news_url']) && $_POST['add_news_url']!=NULL){
+				$message = "";
+				$message .= "Nou correu mitjançant Fansubs.cat - Notícia nova.\n\n";
+				$message .= "Nom: {$_POST['name']}\n";
+				$message .= "Adreça electrònica: {$_POST['email']}\n";
+				$message .= "Títol: {$_POST['add_news_title']}\n";
+				$message .= "Contingut: {$_POST['add_news_contents']}\n";
+				$message .= "URL de la notícia: {$_POST['add_news_url']}\n";
+				$message .= "URL de la imatge: {$_POST['add_news_image_url']}\n";
+				if (isset($_POST['comments'])){
+					$message .= "Comentaris: {$_POST['comments']}\n";
+				}
+				mail($contact_email,'Fansubs.cat - Notícia nova', $message,'','-f info@fansubs.cat -F Fansubs.cat');
+				mysqli_query($db_connection, "INSERT INTO pending_news (title, contents, url, image_url, sender_name, sender_email, comments) VALUES ('".mysqli_real_escape_string($db_connection, $_POST['add_news_title'])."','".mysqli_real_escape_string($db_connection, $_POST['add_news_contents'])."','".mysqli_real_escape_string($db_connection, $_POST['add_news_url'])."',".($_POST['add_news_image_url']!=NULL ? "'".mysqli_real_escape_string($db_connection, $_POST['add_news_image_url'])."'" : '').",'".mysqli_real_escape_string($db_connection, $_POST['name'])."','".mysqli_real_escape_string($db_connection, $_POST['email'])."',".($_POST['comments']!=NULL ? "'".mysqli_real_escape_string($db_connection, $_POST['comments'])."'" : 'NULL').")") or crash(mysqli_error($db_connection));
+				$valid = TRUE;
 			}
-			mail($contact_email,'Fansubs.cat - Notícia nova', $message,'','-f info@fansubs.cat -F Fansubs.cat');
-			mysqli_query($db_connection, "INSERT INTO pending_news (title, contents, url, image_url, sender_name, sender_email, comments) VALUES ('".mysqli_real_escape_string($db_connection, $_POST['add_news_title'])."','".mysqli_real_escape_string($db_connection, $_POST['add_news_contents'])."','".mysqli_real_escape_string($db_connection, $_POST['add_news_url'])."',".($_POST['add_news_image_url']!=NULL ? "'".mysqli_real_escape_string($db_connection, $_POST['add_news_image_url'])."'" : '').",'".mysqli_real_escape_string($db_connection, $_POST['name'])."','".mysqli_real_escape_string($db_connection, $_POST['email'])."',".($_POST['comments']!=NULL ? "'".mysqli_real_escape_string($db_connection, $_POST['comments'])."'" : 'NULL').")") or crash(mysqli_error($db_connection));
-			$valid = TRUE;
 		}
-	}
-	else if ($_POST['reason']=='new_fansub'){
-		//New fansub
-		if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255
-			&& isset($_POST['new_fansub_name']) && $_POST['new_fansub_name']!=NULL && strlen($_POST['new_fansub_name'])<=255 && isset($_POST['new_fansub_url'])
-			&& $_POST['new_fansub_url']!=NULL && strlen($_POST['new_fansub_url'])<=255){
-			$message = "";
-			$message .= "Nou correu mitjançant Fansubs.cat - Fansub nou.\n\n";
-			$message .= "Nom: {$_POST['name']}\n";
-			$message .= "Adreça electrònica: {$_POST['email']}\n";
-			$message .= "Nom del fansub: {$_POST['new_fansub_name']}\n";
-			$message .= "URL del fansub: {$_POST['new_fansub_url']}\n";
-			if (isset($_POST['comments'])){
-				$message .= "Comentaris: {$_POST['comments']}\n";
+		else if ($_POST['reason']=='new_fansub'){
+			//New fansub
+			if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255
+				&& isset($_POST['new_fansub_name']) && $_POST['new_fansub_name']!=NULL && strlen($_POST['new_fansub_name'])<=255 && isset($_POST['new_fansub_url'])
+				&& $_POST['new_fansub_url']!=NULL && strlen($_POST['new_fansub_url'])<=255){
+				$message = "";
+				$message .= "Nou correu mitjançant Fansubs.cat - Fansub nou.\n\n";
+				$message .= "Nom: {$_POST['name']}\n";
+				$message .= "Adreça electrònica: {$_POST['email']}\n";
+				$message .= "Nom del fansub: {$_POST['new_fansub_name']}\n";
+				$message .= "URL del fansub: {$_POST['new_fansub_url']}\n";
+				if (isset($_POST['comments'])){
+					$message .= "Comentaris: {$_POST['comments']}\n";
+				}
+				mail($contact_email,'Fansubs.cat - Fansub nou', $message,'','-f info@fansubs.cat -F Fansubs.cat');
+				$valid = TRUE;
 			}
-			mail($contact_email,'Fansubs.cat - Fansub nou', $message,'','-f info@fansubs.cat -F Fansubs.cat');
-			$valid = TRUE;
 		}
-	}
-	else{
-		//Others
-		if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255){
-			$message = "";
-			$message .= "Nou correu mitjançant Fansubs.cat - Comentaris (altres).\n\n";
-			$message .= "Nom: {$_POST['name']}\n";
-			$message .= "Adreça electrònica: {$_POST['email']}\n";
-			if (isset($_POST['comments'])){
-				$message .= "Comentaris: {$_POST['comments']}\n";
+		else{
+			//Others
+			if (isset($_POST['name']) && $_POST['name']!=NULL && strlen($_POST['name'])<=255 && isset($_POST['email']) && $_POST['email']!=NULL && strlen($_POST['email'])<=255){
+				$message = "";
+				$message .= "Nou correu mitjançant Fansubs.cat - Comentaris (altres).\n\n";
+				$message .= "Nom: {$_POST['name']}\n";
+				$message .= "Adreça electrònica: {$_POST['email']}\n";
+				if (isset($_POST['comments'])){
+					$message .= "Comentaris: {$_POST['comments']}\n";
+				}
+				mail($contact_email,'Fansubs.cat - Comentaris', $message,'','-f info@fansubs.cat -F Fansubs.cat');
+				$valid = TRUE;
 			}
-			mail($contact_email,'Fansubs.cat - Comentaris', $message,'','-f info@fansubs.cat -F Fansubs.cat');
-			$valid = TRUE;
 		}
 	}
 
@@ -78,7 +83,7 @@ if (isset($_POST['reason']) && $_POST['reason']!=NULL){
 	else{
 ?>
 						<div style="text-align: center; width: 100%;">
-							<p>Hi ha algun error en les dades enviades, torna-ho a provar.<br /><br /><strong><a href="/">Torna a la pàgina principal</a></strong></p>
+							<p>Hi ha algun error en les dades enviades o no has respost bé la qüestió de seguretat, torna endarrere i torna-ho a provar.<br /><br /><strong><a href="/">Torna a la pàgina principal</a></strong></p>
 						</div>
 <?php
 	}
@@ -133,6 +138,10 @@ else{
 									<tr>
 										<td><strong>Comentaris</strong><br /><small><small>Comenta'ns el que vulguis, si et sembla apropiat.</small></small></td>
 										<td><textarea class="notsotall wide" name="comments"></textarea></td>
+									</tr>
+									<tr>
+										<td><strong>Qüestió de seguretat</strong><br /><small><small>Escriu el nom de la llengua en què està escrita aquesta pàgina. És necessari per a evitar correu brossa.</small></small></td>
+										<td><input type="text" class="wide" required name="security_question"></td>
 									</tr>
 								</tbody>
 							</table>
