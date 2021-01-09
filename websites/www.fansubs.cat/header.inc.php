@@ -53,7 +53,7 @@ if ($header_current_page=='main'){
 		<script src="/js/common.js"></script>
 <?php
 if ($header_current_page=='stats'){
-	$result = mysqli_query($db_connection, "SELECT name FROM fansubs WHERE is_own=0 ORDER BY is_visible DESC, name ASC");
+	$result = mysqli_query($db_connection, "SELECT name FROM fansub ORDER BY name ASC");
 	$fansubs_names = "";
 	while ($row = mysqli_fetch_assoc($result)){
 		if ($fansubs_names!=""){
@@ -72,7 +72,7 @@ if ($header_current_page=='stats'){
 			  ['Any', <?php echo $fansubs_names; ?>],
 <?php
 	for ($i=2003;$i<=date('Y');$i++){
-		$result = mysqli_query($db_connection, "SELECT f.name, COUNT(n.fansub_id) count FROM fansubs f LEFT JOIN news n ON f.id=n.fansub_id AND n.date>='$i-01-01 00:00:00' AND n.date<='$i-12-31 23:59:59' WHERE f.is_own=0 GROUP BY f.id ORDER BY f.is_visible DESC, f.name ASC");
+		$result = mysqli_query($db_connection, "SELECT f.name, COUNT(n.fansub_id) count FROM fansub f LEFT JOIN news n ON f.id=n.fansub_id AND n.date>='$i-01-01 00:00:00' AND n.date<='$i-12-31 23:59:59' GROUP BY f.id ORDER BY f.name ASC");
 		$fansubs_data = "";
 		while ($row = mysqli_fetch_assoc($result)){
 			if ($fansubs_data!=""){

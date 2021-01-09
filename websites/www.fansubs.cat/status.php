@@ -68,7 +68,7 @@ require_once('header.inc.php');
 						<h2>Estat del sistema</h2>
 					</div>
 <?php
-$result = mysqli_query($db_connection, "SELECT fe.*,fa.name FROM fetchers fe LEFT JOIN fansubs fa ON fe.fansub_id=fa.id ORDER BY fetch_type DESC, fa.name ASC, fe.url ASC") or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT fe.*,fa.name FROM fetcher fe LEFT JOIN fansub fa ON fe.fansub_id=fa.id ORDER BY fetch_type DESC, fa.name ASC, fe.url ASC") or crash(mysqli_error($db_connection));
 ?>
 					<div class="article">
 						<p style="margin-top: 0px;">Aquí pots veure l'estat del sistema d'obtenció de dades dels diferents fansubs i quan s'han obtingut les dades per darrer cop.<br />Les dades s'obtenen automàticament dels diferents fansubs cada 15 minuts. En alguns casos, els fansubs notifiquen que hi ha hagut un canvi i llavors el refresc és quasi immediat.</p>

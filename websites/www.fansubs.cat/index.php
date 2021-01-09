@@ -14,16 +14,17 @@ else{
 
 //Or a fansub? (or both)
 if (isset($_GET['fansub_id']) && $_GET['fansub_id']!=NULL){
-	$fansub_id = str_replace('/','',$_GET['fansub_id']);
+	$fansub_slug = str_replace('/','',$_GET['fansub_id']);
 }
 else{
-	$fansub_id = NULL;
+	$fansub_slug = NULL;
 }
 
 //Check if the fansub exists
-$result = mysqli_query($db_connection, "SELECT name FROM fansubs WHERE id='".mysqli_real_escape_string($db_connection, $fansub_id)."'") or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT id,name FROM fansub WHERE slug='".mysqli_real_escape_string($db_connection, $fansub_slug)."'") or crash(mysqli_error($db_connection));
 
 if ($row = mysqli_fetch_assoc($result)){
+	$fansub_id = $row['id'];
 	$fansub_name = $row['name'];
 	$header_page_title='Fansubs.cat - '.$fansub_name;
 }
@@ -37,13 +38,13 @@ mysqli_free_result($result);
 require_once('header.inc.php');
 
 //Begin ugly logic to handle user's cookie-selected fansubs
-$result = mysqli_query($db_connection, "SELECT id,favicon_image,name FROM fansubs ORDER BY is_own ASC, is_visible DESC, name ASC") or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT id,slug,name FROM fansub UNION SELECT NULL id,'fansubs-cat' slug,'Fansubs.cat' name ORDER BY IF(slug='fansubs-cat',1,0) ASC, name ASC") or crash(mysqli_error($db_connection));
 
 $all_fansubs = array();
 $selected_fansubs = array();
 
 while ($row = mysqli_fetch_assoc($result)){
-	$all_fansubs[]=$row['id'];
+	$all_fansubs[]=$row['slug'];
 }
 mysqli_data_seek($result, 0);
 
@@ -85,7 +86,7 @@ else{
 
 while ($row = mysqli_fetch_assoc($result)){
 ?>
-						<div class="filter-fansub<?php echo (in_array($row['id'], $selected_fansubs) ? ' filter-selected' : ''); ?>" id="filter-fansub-<?php echo $row['id']; ?>"><?php echo ($row['favicon_image']!=NULL ? '<img alt="" src="/images/fansubs/favicons/'.$row['favicon_image'].'" />' : ''); ?><span><?php echo $row['name']; ?></span></div>
+						<div class="filter-fansub<?php echo (in_array($row['slug'], $selected_fansubs) ? ' filter-selected' : ''); ?>" id="filter-fansub-<?php echo $row['slug']; ?>"><img alt="" width="16" height="16" src="<?php echo !empty($row['id']) ? ('/images/fansub_icons/'.$row['id'].'.png') : '/favicon.ico'; ?>" /><span><?php echo $row['name']; ?></span></div>
 <?php
 }
 mysqli_free_result($result);
@@ -98,7 +99,7 @@ mysqli_free_result($result);
 <?php
 $query_fansubs = implode("','",$selected_fansubs);
 
-$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name,f.url fansub_url,f.logo_image fansub_logo_image, f.is_visible, f.archive_url FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fansub_id IN ('".($fansub_id!=NULL ? mysqli_real_escape_string($db_connection, $fansub_id) : $query_fansubs)."') ORDER BY date DESC LIMIT 20 OFFSET ".(($page-1)*20)) or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT n.*, f.name fansub_name, IFNULL(f.slug,'fansubs-cat') fansub_slug, f.url fansub_url, IF(f.name='Fansub independent' OR n.fansub_id IS NULL, 0, 1) is_visible, f.archive_url FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE ".($fansub_id!=NULL ? "n.fansub_id=$fansub_id" : "IFNULL(f.slug,'fansubs-cat') IN ('".$query_fansubs."')")." ORDER BY n.date DESC LIMIT 20 OFFSET ".(($page-1)*20)) or crash(mysqli_error($db_connection));
 
 if (mysqli_num_rows($result)==0){
 ?>	
@@ -113,10 +114,10 @@ else{
 ?>
 					<div class="article">
 <?php
-		if ($row['fansub_logo_image']!=NULL){
+		if (file_exists('images/fansub_logos/'.$row['fansub_id'].'.png')){
 ?>
-						<a class="article-logo" href="<?php echo ($row['fansub_url']!=NULL ? $row['fansub_url'] : $row['archive_url']); ?>" title="<?php echo $row['fansub_name']; ?>">
-							<img src="/images/fansubs/logos/<?php echo $row['fansub_logo_image']; ?>" alt="<?php echo $row['fansub_name']; ?>" />
+						<a class="article-logo" href="<?php echo (!empty($row['fansub_url']) && empty($row['archive_url']) ? $row['fansub_url'] : (!empty($row['archive_url']) ? $row['archive_url'] : '#')); ?>" title="<?php echo $row['fansub_name']; ?>">
+							<img src="/images/fansub_logos/<?php echo $row['fansub_id']; ?>.png" alt="<?php echo $row['fansub_name']; ?>" />
 						</a>
 <?php
 		}
@@ -142,7 +143,7 @@ else{
 <?php
 		if ($row['image']!=NULL){
 ?>
-							<img class="article-image" src="/images/news/<?php echo $row['fansub_id']; ?>/<?php echo $row['image']; ?>" alt=""/>
+							<img class="article-image" src="/images/news/<?php echo $row['fansub_slug']; ?>/<?php echo $row['image']; ?>" alt=""/>
 <?php
 		}
 ?>
@@ -169,17 +170,17 @@ else{
 <?php
 if ($page>1 && mysqli_num_rows($result)>0){
 ?>
-<a id="nav-newer" href="<?php echo ($page==2 ? ($fansub_id!=NULL ? '/fansub/'.$fansub_id : '').'/' : ($fansub_id!=NULL ? '/fansub/'.$fansub_id : '').'/pagina/'.($page-1)); ?>">← Notícies més noves</a>
+<a id="nav-newer" href="<?php echo ($page==2 ? ($fansub_id!=NULL ? '/fansub/'.$fansub_slug : '').'/' : ($fansub_id!=NULL ? '/fansub/'.$fansub_slug : '').'/pagina/'.($page-1)); ?>">← Notícies més noves</a>
 <?php
 }
 mysqli_free_result($result);
 
 //Do the same query but for the next page, to know if it exists
-$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name,f.url fansub_url,f.logo_image fansub_logo_image FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fansub_id IN ('".($fansub_id!=NULL ? mysqli_real_escape_string($db_connection, $fansub_id) : $query_fansubs)."') ORDER BY date DESC LIMIT 20 OFFSET ".(($page)*20)) or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT n.* FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE ".($fansub_id!=NULL ? "n.fansub_id=$fansub_id" : "IFNULL(f.slug,'fansubs-cat') IN ('".$query_fansubs."')")." ORDER BY date DESC LIMIT 20 OFFSET ".(($page)*20)) or crash(mysqli_error($db_connection));
 
 if (mysqli_num_rows($result)>0){
 ?>
-<a id="nav-older" href="<?php echo ($fansub_id!=NULL ? '/fansub/'.$fansub_id : '').'/pagina/'.($page+1); ?>">Notícies més antigues →</a>
+<a id="nav-older" href="<?php echo ($fansub_id!=NULL ? '/fansub/'.$fansub_slug : '').'/pagina/'.($page+1); ?>">Notícies més antigues →</a>
 <?php
 }
 ?>

@@ -27,7 +27,7 @@ require_once('header.inc.php');
 						<span id="filter-title">Resultats de la cerca: </span><span id="filter-data">Es mostren només les notícies que contenen "<?php echo $query; ?>"</span>
 					</div>
 <?php
-$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name,f.url fansub_url,f.logo_image fansub_logo_image, f.is_visible, f.archive_url FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE contents LIKE '%" . mysqli_real_escape_string($db_connection, $query) . "%' OR title LIKE '%" . mysqli_real_escape_string($db_connection, $query) . "%' ORDER BY date DESC LIMIT 20 OFFSET ".(($page-1)*20)) or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT n.*, f.name fansub_name, f.slug fansub_slug, f.url fansub_url, IF(f.name='Fansub independent' OR n.fansub_id IS NULL, 0, 1) is_visible, f.archive_url FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.contents LIKE '%" . mysqli_real_escape_string($db_connection, $query) . "%' OR n.title LIKE '%" . mysqli_real_escape_string($db_connection, $query) . "%' ORDER BY n.date DESC LIMIT 20 OFFSET ".(($page-1)*20)) or crash(mysqli_error($db_connection));
 
 if (mysqli_num_rows($result)==0){
 ?>	
@@ -42,10 +42,10 @@ else{
 ?>
 					<div class="article">
 <?php
-		if ($row['fansub_logo_image']!=NULL){
+		if (file_exists('images/fansub_logos/'.$row['fansub_id'].'.png')){
 ?>
-						<a class="article-logo" href="<?php echo ($row['fansub_url']!=NULL ? $row['fansub_url'] : $row['archive_url']); ?>" title="<?php echo $row['fansub_name']; ?>">
-							<img src="/images/fansubs/logos/<?php echo $row['fansub_logo_image']; ?>" alt="<?php echo $row['fansub_name']; ?>" />
+						<a class="article-logo" href="<?php echo (!empty($row['fansub_url']) && empty($row['archive_url']) ? $row['fansub_url'] : (!empty($row['archive_url']) ? $row['archive_url'] : '#')); ?>" title="<?php echo $row['fansub_name']; ?>">
+							<img src="/images/fansub_logos/<?php echo $row['fansub_id']; ?>.png" alt="<?php echo $row['fansub_name']; ?>" />
 						</a>
 <?php
 		}
@@ -71,7 +71,7 @@ else{
 <?php
 		if ($row['image']!=NULL){
 ?>
-							<img class="article-image" src="/images/news/<?php echo $row['fansub_id']; ?>/<?php echo $row['image']; ?>" alt=""/>
+							<img class="article-image" src="/images/news/<?php echo $row['fansub_slug']; ?>/<?php echo $row['image']; ?>" alt=""/>
 <?php
 		}
 ?>
@@ -104,7 +104,7 @@ if ($page>1 && mysqli_num_rows($result)>0){
 mysqli_free_result($result);
 
 //Do the same query but for the next page, to know if it exists
-$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name,f.url fansub_url,f.logo_image fansub_logo_image FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE contents LIKE '%" . mysqli_real_escape_string($db_connection, $query) . "%' OR title LIKE '%" . mysqli_real_escape_string($db_connection, $query) . "%' ORDER BY date DESC LIMIT 20 OFFSET ".(($page)*20)) or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT n.* FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.contents LIKE '%" . mysqli_real_escape_string($db_connection, $query) . "%' OR n.title LIKE '%" . mysqli_real_escape_string($db_connection, $query) . "%' ORDER BY n.date DESC LIMIT 20 OFFSET ".(($page)*20)) or crash(mysqli_error($db_connection));
 
 if (mysqli_num_rows($result)>0){
 ?>

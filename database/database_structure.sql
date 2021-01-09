@@ -39,11 +39,26 @@ CREATE TABLE `fansub` (
   `url` varchar(200) DEFAULT NULL,
   `twitter_url` varchar(200) DEFAULT NULL,
   `twitter_handle` varchar(200) NOT NULL,
+  `twitter_handle` varchar(200) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
+  `ping_token` varchar(200) DEFAULT NULL,
+  `historical` tinyint(1) NOT NULL DEFAULT 0,
+  `archive_url` varchar(200) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `fetcher` (
+  `id` int(11) NOT NULL,
+  `fansub_id` int(11) NOT NULL,
+  `url` text NOT NULL,
+  `method` varchar(255) NOT NULL,
+  `fetch_type` varchar(255) NOT NULL DEFAULT 'periodic',
+  `status` varchar(255) NOT NULL DEFAULT 'idle',
+  `last_fetch_result` varchar(255) DEFAULT NULL,
+  `last_fetch_date` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `folder` (
@@ -76,6 +91,27 @@ CREATE TABLE `link` (
   `resolution` varchar(200) DEFAULT NULL,
   `comments` varchar(200) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `news` (
+  `fansub_id` int(11) DEFAULT NULL,
+  `fetcher_id` int(11) DEFAULT NULL,
+  `title` text NOT NULL,
+  `contents` text NOT NULL,
+  `original_contents` text NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `url` text,
+  `image` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `pending_news` (
+  `title` text NOT NULL,
+  `contents` text NOT NULL,
+  `url` text NOT NULL,
+  `image_url` text,
+  `sender_name` varchar(255) NOT NULL,
+  `sender_email` varchar(255) NOT NULL,
+  `comments` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `play_session` (
@@ -209,6 +245,9 @@ ALTER TABLE `episode_title`
   ADD KEY `episode_title_ibfk_1` (`episode_id`) USING BTREE;
 ALTER TABLE `fansub`
   ADD PRIMARY KEY (`id`);
+ALTER TABLE `fetcher`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_fetcher_fansub` (`fansub_id`);
 ALTER TABLE `folder`
   ADD PRIMARY KEY (`id`),
   ADD KEY `folder_ibfk_1` (`account_id`),
@@ -223,6 +262,9 @@ ALTER TABLE `link`
   ADD PRIMARY KEY (`id`),
   ADD KEY `link_ibfk_1` (`episode_id`) USING BTREE,
   ADD KEY `link_ibfk_2` (`version_id`) USING BTREE;
+ALTER TABLE `news`
+  ADD KEY `fk_news_fansub` (`fansub_id`),
+  ADD KEY `fk_news_fetcher` (`fetcher_id`);
 ALTER TABLE `play_session`
   ADD PRIMARY KEY (`play_id`);
 ALTER TABLE `recommendation`
@@ -259,6 +301,8 @@ ALTER TABLE `episode`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `fansub`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `fetcher`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `folder`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `folder_failed_files`
@@ -283,6 +327,8 @@ ALTER TABLE `episode`
 ALTER TABLE `episode_title`
   ADD CONSTRAINT `episode_title_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `episode_title_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `fetcher`
+  ADD CONSTRAINT `fk_fetcher_fansub` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `folder`
   ADD CONSTRAINT `folder_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `folder_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -292,6 +338,9 @@ ALTER TABLE `folder_failed_files`
 ALTER TABLE `link`
   ADD CONSTRAINT `link_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `link_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `news`
+  ADD CONSTRAINT `fk_news_fansub` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_news_fetcher` FOREIGN KEY (`fetcher_id`) REFERENCES `fetcher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `play_session`
   ADD CONSTRAINT `play_session_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `recommendation`

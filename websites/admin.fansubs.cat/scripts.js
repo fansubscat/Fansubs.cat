@@ -915,4 +915,14 @@ $(document).ready(function() {
 			$("#form-episodes").prop('disabled', false);
 		}
 	});
+	$("#form-historical").change(function() {
+		if ($(this).prop('checked')) {
+			$("#form-archive_url").prop('disabled', false);
+			$("#form-archive_url").prop('required', true);
+		} else {
+			$("#form-archive_url").val('');
+			$("#form-archive_url").prop('disabled', true);
+			$("#form-archive_url").prop('required', false);
+		}
+	});
 });

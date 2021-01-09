@@ -72,7 +72,7 @@ if ($is_fools_day){
 					<div id="options-fansubs">
 <?php
 $cookie_fansub_ids = get_cookie_fansub_ids();
-$resultf = query("SELECT id, IF(name='Fansub independent','Fansubs independents',name) name FROM fansub ORDER BY IF(name='Fansub independent','Fansubs independents',name)");
+$resultf = query("SELECT f.id, IF(f.name='Fansub independent','Fansubs independents',f.name) name FROM fansub f WHERE EXISTS (SELECT vf.version_id FROM rel_version_fansub vf WHERE vf.fansub_id=f.id) ORDER BY IF(f.name='Fansub independent','Fansubs independents',f.name)");
 while ($row = mysqli_fetch_assoc($resultf)) {
 ?>
 						<div class="options-item options-fansub">

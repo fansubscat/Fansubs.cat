@@ -38,58 +38,30 @@ if (!isset($fansub_id) || $fansub_id==NULL){
 					<h2>Fansubs actius</h2>
 					<ul>
 <?php
-$result = mysqli_query($db_connection, "SELECT DISTINCT f.* FROM fansubs f LEFT JOIN news n ON f.id=n.fansub_id WHERE f.is_visible=1 AND f.is_historical=0 AND n.date>='".date('Y-m-d H:i:s', time()-3600*24*180)."' ORDER BY name ASC") or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT DISTINCT f.* FROM fansub f LEFT JOIN news n ON f.id=n.fansub_id WHERE f.status=1 AND f.name<>'Fansub independent' ORDER BY name ASC") or crash(mysqli_error($db_connection));
 
 while ($row = mysqli_fetch_assoc($result)){
 ?>
 						<li>
-							<img src="/images/fansubs/favicons/<?php echo $row['favicon_image']; ?>" alt="" height="14" width="14" />
-							<a href="<?php echo $row['url']; ?>"><?php echo $row['name']; ?></a>
+							<img src="/images/fansub_icons/<?php echo $row['id']; ?>.png" alt="" height="14" width="14" />
+							<a<?php echo $row['archive_url']!=NULL ? ' class="archive-org-link" title="Versió històrica a Archive.org"' : ''; ?> href="<?php echo $row['archive_url']!=NULL ? $row['archive_url'] : (!empty($row['url']) ? $row['url'] : '#'); ?>"><?php echo $row['name']; ?></a>
 						</li>
 <?php
 }
 ?>
 					</ul>
 				</div>
-
-<?php
-mysqli_free_result($result);
-$result = mysqli_query($db_connection, "SELECT * FROM fansubs WHERE id NOT IN (SELECT DISTINCT f.id FROM fansubs f LEFT JOIN news n ON f.id=n.fansub_id WHERE f.is_visible=1 AND f.is_historical=0 AND n.date>='".date('Y-m-d H:i:s', time()-3600*24*180)."') AND id IN (SELECT DISTINCT f.id FROM fansubs f LEFT JOIN news n ON f.id=n.fansub_id WHERE f.is_visible=1 AND f.is_historical=0 AND n.date>='".date('Y-m-d H:i:s', time()-3600*24*365*2)."') AND is_visible=1 AND is_historical=0 ORDER BY name ASC") or crash(mysqli_error($db_connection));
-
-if (mysqli_num_rows($result)>0) {
-?>
-				<div class="section">
-					<h2>Fansubs inactius</h2>
-					<ul>
-<?php
-
-	while ($row = mysqli_fetch_assoc($result)){
-?>
-						<li>
-							<img src="/images/fansubs/favicons/<?php echo $row['favicon_image']; ?>" alt="" height="14" width="14" />
-							<a href="<?php echo $row['url']; ?>"><?php echo $row['name']; ?></a>
-						</li>
-<?php
-	}
-	mysqli_free_result($result);
-?>
-					</ul>
-				</div>
-<?php
-}
-?>
-
 				<div class="section">
 					<h2>Fansubs històrics</h2>
 					<ul>
 <?php
-$result = mysqli_query($db_connection, "SELECT * FROM fansubs WHERE is_visible=1 AND (is_historical=1 OR id NOT IN (SELECT DISTINCT f.id FROM fansubs f LEFT JOIN news n ON f.id=n.fansub_id WHERE f.is_visible=1 AND f.is_historical=0 AND n.date>='".date('Y-m-d H:i:s', time()-3600*24*365*2)."')) ORDER BY name ASC") or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT * FROM fansub WHERE status=0 AND name<>'Fansub independent' ORDER BY name ASC") or crash(mysqli_error($db_connection));
 
 while ($row = mysqli_fetch_assoc($result)){
 ?>
 						<li>
-							<img src="/images/fansubs/favicons/<?php echo $row['favicon_image']; ?>" alt="" height="14" width="14" />
-							<a<?php echo $row['archive_url']!=NULL ? ' class="archive-org-link" title="Versió històrica a Archive.org"' : ''; ?> href="<?php echo $row['archive_url']!=NULL ? $row['archive_url'] : $row['url']; ?>"><?php echo $row['name']; ?></a>
+							<img src="/images/fansub_icons/<?php echo $row['id']; ?>.png" alt="" height="14" width="14" />
+							<a<?php echo $row['archive_url']!=NULL ? ' class="archive-org-link" title="Versió històrica a Archive.org"' : ''; ?> href="<?php echo $row['archive_url']!=NULL ? $row['archive_url'] : (!empty($row['url']) ? $row['url'] : '#'); ?>"><?php echo $row['name']; ?></a>
 						</li>
 <?php
 }

@@ -17,17 +17,12 @@ function publish_tweet($tweet){
 }
 
 function exists_more_than_one_version($series_id){
-	global $db_connection_anime;
-	$result = mysqli_query($db_connection_anime, "SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id") or die(mysqli_error($db_connection_anime));
+	global $db_connection;
+	$result = mysqli_query($db_connection, "SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id") or die(mysqli_error($db_connection));
 	$row = mysqli_fetch_assoc($result);
 	mysqli_free_result($result);	
 	return ($row['cnt']>1);
 }
-
-//Connect to the anime database too
-$db_connection_anime = mysqli_connect($db_host_anime,$db_user_anime,$db_passwd_anime, $db_name_anime) or die('Could not connect to anime database');
-unset($db_host_anime, $db_name_anime, $db_user_anime, $db_passwd_anime);
-mysqli_set_charset($db_connection_anime, 'utf8mb4') or crash(mysqli_error($db_connection_anime));
 
 //Connect to the manga database too
 $db_connection_manga = mysqli_connect($db_host_manga,$db_user_manga,$db_passwd_manga, $db_name_manga) or die('Could not connect to manga database');
@@ -222,7 +217,7 @@ while ($row = mysqli_fetch_assoc($result)){
 
 mysqli_free_result($result);
 
-$result = mysqli_query($db_connection_anime, "SELECT IF(s.show_seasons=1, IFNULL(se.name,s.name), s.name) name, v.series_id, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(DISTINCT l.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.url IS NOT NULL) new_series
+$result = mysqli_query($db_connection, "SELECT IF(s.show_seasons=1, IFNULL(se.name,s.name), s.name) name, v.series_id, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(DISTINCT l.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.url IS NOT NULL) new_series
 FROM link l
 LEFT JOIN version v ON l.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -231,7 +226,7 @@ LEFT JOIN series s ON v.series_id=s.id
 LEFT JOIN episode_title et ON l.episode_id=et.episode_id AND et.version_id=l.version_id
 LEFT JOIN episode e ON l.episode_id=e.id
 LEFT JOIN season se ON se.id=e.season_id
-WHERE l.id>$last_tweeted_anime_id AND l.url IS NOT NULL AND l.episode_id IS NOT NULL GROUP BY l.version_id ORDER BY MAX(l.id) ASC") or die(mysqli_error($db_connection_anime));
+WHERE l.id>$last_tweeted_anime_id AND l.url IS NOT NULL AND l.episode_id IS NOT NULL GROUP BY l.version_id ORDER BY MAX(l.id) ASC") or die(mysqli_error($db_connection));
 while ($row = mysqli_fetch_assoc($result)){
 	if ($row['new_series']==1) {
 		$random = array_rand($new_anime_tweets, 1);
@@ -290,7 +285,7 @@ while ($row = mysqli_fetch_assoc($result)){
 
 mysqli_free_result($result);
 
-mysqli_close($db_connection_anime);
+mysqli_close($db_connection);
 mysqli_close($db_connection_manga);
 mysqli_close($db_connection);
 ?>

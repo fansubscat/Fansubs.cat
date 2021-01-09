@@ -10,7 +10,7 @@ require_once('header.inc.php');
 					<h2>Arxiu de notícies</h2>
 				</div>
 <?php
-$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name,f.url fansub_url,f.logo_image fansub_logo_image FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id ORDER BY date DESC") or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT n.*, f.name fansub_name, f.url fansub_url, f.archive_url FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id ORDER BY n.date DESC") or crash(mysqli_error($db_connection));
 
 if (mysqli_num_rows($result)==0){
 ?>	
@@ -52,7 +52,7 @@ else{
 		foreach ($today as $item) {
 ?>
 						<li>
-							<?php echo ($item['fansub_url']!=NULL ? '<a class="source" href="'.$item['fansub_url'].'">'.$item['fansub_name'].'</a>' : $item['fansub_name']); ?>:
+							<a<?php echo $item['archive_url']!=NULL ? ' class="archive-org-link source" title="Versió històrica a Archive.org"' : ' class="source"'; ?> href="<?php echo $item['archive_url']!=NULL ? $item['archive_url'] : (!empty($item['fansub_url']) ? $item['fansub_url'] : '#'); ?>"><?php echo $item['fansub_name']; ?></a>:
 							<a href="<?php echo $item['url']; ?>"><?php echo $item['title']; ?></a>
 						</li>
 <?php
@@ -72,7 +72,7 @@ else{
 		foreach ($week as $item) {
 ?>
 						<li>
-							<?php echo ($item['fansub_url']!=NULL ? '<a class="source" href="'.$item['fansub_url'].'">'.$item['fansub_name'].'</a>' : $item['fansub_name']); ?>:
+							<a<?php echo $item['archive_url']!=NULL ? ' class="archive-org-link source" title="Versió històrica a Archive.org"' : ' class="source"'; ?> href="<?php echo $item['archive_url']!=NULL ? $item['archive_url'] : (!empty($item['fansub_url']) ? $item['fansub_url'] : '#'); ?>"><?php echo $item['fansub_name']; ?></a>:
 							<a href="<?php echo $item['url']; ?>"><?php echo $item['title']; ?></a>
 						</li>
 <?php
@@ -94,7 +94,7 @@ else{
 		foreach ($month as $item) {
 ?>
 						<li>
-							<?php echo ($item['fansub_url']!=NULL ? '<a class="source" href="'.$item['fansub_url'].'">'.$item['fansub_name'].'</a>' : $item['fansub_name']); ?>:
+							<a<?php echo $item['archive_url']!=NULL ? ' class="archive-org-link source" title="Versió històrica a Archive.org"' : ' class="source"'; ?> href="<?php echo $item['archive_url']!=NULL ? $item['archive_url'] : (!empty($item['fansub_url']) ? $item['fansub_url'] : '#'); ?>"><?php echo $item['fansub_name']; ?></a>:
 							<a href="<?php echo $item['url']; ?>"><?php echo $item['title']; ?></a>
 						</li>
 <?php
@@ -115,7 +115,7 @@ else{
 			foreach ($arritems as $item) {
 ?>
 						<li>
-							<?php echo ($item['fansub_url']!=NULL ? '<a class="source" href="'.$item['fansub_url'].'">'.$item['fansub_name'].'</a>' : $item['fansub_name']); ?>:
+							<a<?php echo $item['archive_url']!=NULL ? ' class="archive-org-link source" title="Versió històrica a Archive.org"' : ' class="source"'; ?> href="<?php echo $item['archive_url']!=NULL ? $item['archive_url'] : (!empty($item['fansub_url']) ? $item['fansub_url'] : '#'); ?>"><?php echo $item['fansub_name']; ?></a>:
 							<a href="<?php echo $item['url']; ?>"><?php echo $item['title']; ?></a>
 						</li>
 <?php

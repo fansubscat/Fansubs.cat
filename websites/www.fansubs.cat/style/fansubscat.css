@@ -319,7 +319,7 @@ div#top .page-title-block a:hover {
 	line-height: 1.5em;
 }
 
-#sidebar a.archive-org-link {
+a.archive-org-link {
 	border-bottom: 1px dotted #000;
 	text-decoration: none;
 }

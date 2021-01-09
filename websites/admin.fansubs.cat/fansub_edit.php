@@ -16,6 +16,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca name");
 		}
+		if (!empty($_POST['slug'])) {
+			$data['slug']=escape($_POST['slug']);
+		} else {
+			crash("Dades invàlides: manca slug");
+		}
 		if (!empty($_POST['url'])) {
 			$data['url']="'".escape($_POST['url'])."'";
 		} else {
@@ -31,26 +36,47 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca twitter_handle");
 		}
+		if (!empty($_POST['ping_token'])) {
+			$data['ping_token']="'".escape($_POST['ping_token'])."'";
+		} else {
+			$data['ping_token']="NULL";
+		}
 		if (!empty($_POST['status']) && $_POST['status']==1) {
 			$data['status']=1;
 		} else {
 			$data['status']=0;
 		}
+		if (!empty($_POST['historical']) && $_POST['historical']==1) {
+			$data['historical']=1;
+		} else {
+			$data['historical']=0;
+		}
+		if (!empty($_POST['archive_url'])) {
+			$data['archive_url']="'".escape($_POST['archive_url'])."'";
+		} else {
+			$data['archive_url']="NULL";
+		}
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-fansub", "S'ha actualitzat el fansub amb nom '".$data['name']."' (id. de fansub: ".$data['id'].")");
-			query("UPDATE fansub SET name='".$data['name']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',status=".$data['status'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",historical=".$data['historical'].",archive_url=".$data['archive_url'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
-				move_uploaded_file($_FILES['icon']["tmp_name"], '../anime.fansubs.cat/images/fansubs/'.$data['id'].'.png');
+				move_uploaded_file($_FILES['icon']["tmp_name"], '../www.fansubs.cat/images/fansub_icons/'.$data['id'].'.png');
+			}
+			if (!empty($_FILES['logo'])) {
+				move_uploaded_file($_FILES['logo']["tmp_name"], '../www.fansubs.cat/images/fansub_logos/'.$data['id'].'.png');
 			}
 		}
 		else {
 			log_action("create-fansub", "S'ha creat un fansub amb nom '".$data['name']."'");
-			query("INSERT INTO fansub (name,url,twitter_url,twitter_handle,status,created,created_by,updated,updated_by) VALUES ('".$data['name']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['status'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO fansub (name,slug,url,twitter_url,twitter_handle,status,ping_token,historical,archive_url,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['status'].",".$data['ping_token'].",".$data['historical'].",".$data['archive_url'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['icon'])) {
-				move_uploaded_file($_FILES['icon']["tmp_name"], '../anime.fansubs.cat/images/fansubs/'.mysqli_insert_id($db_connection).'.png');
+				move_uploaded_file($_FILES['icon']["tmp_name"], '../www.fansubs.cat/images/fansub_icons/'.mysqli_insert_id($db_connection).'.png');
+			}
+			if (!empty($_FILES['logo'])) {
+				move_uploaded_file($_FILES['logo']["tmp_name"], '../www.fansubs.cat/images/fansub_logos/'.mysqli_insert_id($db_connection).'.png');
 			}
 		}
 
@@ -75,13 +101,43 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<hr>
 				<form method="post" action="fansub_edit.php" enctype="multipart/form-data">
 					<div class="form-group">
-						<label for="form-name" class="mandatory">Nom</label>
-						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
+						<label for="form-name-with-autocomplete" class="mandatory">Nom</label>
+						<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-icon"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Icona <small class="text-muted">(PNG, mida 24x24px)</small></label>
-						<input class="form-control" name="icon" type="file" accept="image/png" id="form-icon"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200">
+						<label for="form-slug" class="mandatory">Identificador <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>
+						<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
+					</div>
+					<div class="row">
+						<div class="col-sm-10">
+							<div class="form-group">
+								<label for="form-icon"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Icona <small class="text-muted">(PNG, mida 24x24px)</small></label>
+								<input class="form-control" name="icon" type="file" accept="image/png" id="form-icon"<?php empty($row['id']) ? ' required' : ''; ?> onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-icon-preview').prop('src',e.target.result);$('#form-icon-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
+							</div>
+						</div>
+						<div class="col-sm-2" style="align-self: center;">
+							<div class="form-group">
+								<a id="form-icon-preview-link" href="https://www.fansubs.cat/images/fansub_icons/<?php echo $row['id']; ?>.png" target="_blank">
+									<img id="form-icon-preview" style="width: 24px; height: 24px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;" src="https://www.fansubs.cat/images/fansub_icons/<?php echo $row['id']; ?>.png" alt="">
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-10">
+							<div class="form-group">
+								<label for="form-logo"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Logo <small class="text-muted">(PNG, mida màxima de visualització 140x40px)</small></label>
+								<input class="form-control" name="logo" type="file" accept="image/png" id="form-icon"<?php empty($row['id']) ? ' required' : ''; ?> onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-logo-preview').prop('src',e.target.result);$('#form-logo-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
+							</div>
+						</div>
+						<div class="col-sm-2" style="align-self: center;">
+							<div class="form-group">
+								<a id="form-logo-preview-link" href="https://www.fansubs.cat/images/fansub_logos/<?php echo $row['id']; ?>.png" target="_blank">
+									<img id="form-logo-preview" style="width: 140px; height: 40px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;" src="https://www.fansubs.cat/images/fansub_logos/<?php echo $row['id']; ?>.png" alt="">
+								</a>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<label for="form-url">URL</label>
@@ -102,7 +158,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<input class="form-check-input" type="checkbox" name="status" id="form-active" value="1"<?php echo $row['status']==1? " checked" : ""; ?>>
 								<label class="form-check-label" for="form-active">Actiu</label>
 							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="historical" id="form-historical" value="1"<?php echo $row['historical']==1? " checked" : ""; ?>>
+								<label class="form-check-label" for="form-historical">Històric</label>
+							</div>
 						</div>
+					</div>
+					<div class="form-group">
+						<label for="form-archive_url">URL d'Archive.org <small class="text-muted">(obligatori si és històric)</small></label>
+						<input class="form-control" type="url" name="archive_url" id="form-archive_url" maxlength="200"<?php echo $row['historical']==0? " disabled" : ""; ?> value="<?php echo htmlspecialchars($row['archive_url']); ?>">
+					</div>
+					<div class="form-group">
+						<label for="form-ping_token">Testimoni per a fer ping <small class="text-muted">(si es fa una petició a https://api.fansubs.cat/refresh/&lt;testimoni&gt;, s'actualitzaran les notícies al moment)</small></label>
+						<input class="form-control" name="ping_token" id="form-ping_token" maxlength="200" value="<?php echo htmlspecialchars($row['ping_token']); ?>">
 					</div>
 					<div class="form-group text-center pt-2">
 						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el fansub"; ?></button>

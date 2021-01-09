@@ -13,20 +13,20 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Fansubs.cat</title>
-		<link>http://www.fansubs.cat/</link>
+		<link>https://www.fansubs.cat/</link>
 		<description>Les notícies dels fansubs en català</description>
-		<atom:link href="http://www.fansubs.cat/rss" rel="self" type="application/rss+xml" />
+		<atom:link href="https://www.fansubs.cat/rss" rel="self" type="application/rss+xml" />
 <?php
 
-$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name,f.url fansub_url,f.logo_image fansub_logo_image FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id ORDER BY date DESC LIMIT 20") or crash(mysqli_error($db_connection));
+$result = mysqli_query($db_connection, "SELECT n.*, f.name fansub_name, f.slug fansub_slug, f.url fansub_url FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id ORDER BY n.date DESC LIMIT 20") or crash(mysqli_error($db_connection));
 while ($row = mysqli_fetch_assoc($result)){
 ?>
 		<item>
 			<title><?php echo $row['fansub_name']; ?>: <?php echo $row['title']; ?></title>
-			<link><?php echo $row['url']!=NULL ? $row['url'] : 'http://www.fansubs.cat/'; ?></link>
+			<link><?php echo $row['url']!=NULL ? $row['url'] : 'https://www.fansubs.cat/'; ?></link>
 			<description><![CDATA[<?php
 	if ($row['image']!=NULL){
-			echo '<img src="http://www.fansubs.cat/images/news/'.$row['fansub_id'].'/'.$row['image'].'" alt="" /><br /><br />';
+			echo '<img src="https://www.fansubs.cat/images/news/'.$row['fansub_slug'].'/'.$row['image'].'" alt="" /><br /><br />';
 	}
 	echo $row['contents']; 
 ?>]]></description>

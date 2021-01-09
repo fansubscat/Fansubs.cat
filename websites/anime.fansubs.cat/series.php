@@ -316,8 +316,8 @@ if ($count_unfiltered==0) {
 		foreach ($fansubs as $fansub) {
 ?>
 											<tr>
-												<td class="fansub-icon"><img src="/images/fansubs/<?php echo $fansub['id']; ?>.png" alt="" /></td>
-												<td class="fansub-name"><?php echo !empty($fansub['url']) ? ('<a href="'.$fansub['url'].'" target="_blank">'.$fansub['name'].'</a>') : $fansub['name']; ?><?php if ($fansub['status']==0 && $fansub['name']!='Fansub independent') { echo '<span class="fansub-inactive"> (actualment inactiu)</span>'; } ?></td>
+												<td class="fansub-icon"><img src="https://www.fansubs.cat/images/fansub_icons/<?php echo $fansub['id']; ?>.png" alt="" /></td>
+												<td class="fansub-name"><?php echo !empty($fansub['url'] && $fansub['historical']==0) ? ('<a href="'.$fansub['url'].'" target="_blank">'.$fansub['name'].'</a>') : $fansub['name']; ?><?php if ($fansub['status']==0 && $fansub['name']!='Fansub independent') { echo '<span class="fansub-inactive"> (actualment inactiu)</span>'; } ?></td>
 												<td class="fansub-links">
 <?php
 			if (!empty($fansub['downloads_url'])) {
@@ -330,8 +330,10 @@ if ($count_unfiltered==0) {
 					}
 				}
 			}
-			if (!empty($fansub['url'])) {
+			if ($fansub['historical']==0 && !empty($fansub['url'])) {
 				echo ' <a class="fansub-website" href="'.$fansub['url'].'" target="_blank"><span class="fa fa-fw fa-globe mobileicon"></span><span class="mobilehide">Web</span></a>';
+			} else if ($fansub['historical']==1 && !empty($fansub['archive_url'])) {
+				echo ' <a class="fansub-website" href="'.$fansub['archive_url'].'" target="_blank"><span class="fa fa-fw fa-globe mobileicon"></span><span class="mobilehide">Web històrica</span></a>';
 			}
 			if (!empty($fansub['twitter_url'])) {
 				echo ' <a class="fansub-twitter" href="'.$fansub['twitter_url'].'" target="_blank"><span class="fab fa-fw fa-twitter mobileicon"></span><span class="mobilehide">Twitter</span></a>';
