@@ -12,9 +12,9 @@ $method = array_shift($request);
 if ($method == 'refresh') {
 	$token = array_shift($request);
 	if ($token!=NULL){
-		$result = mysqli_query($db_connection, "SELECT id FROM fansubs WHERE ping_token='".mysqli_real_escape_string($db_connection, $token)."'") or crash('Internal error: '.mysqli_error($db_connection));
+		$result = mysqli_query($db_connection, "SELECT slug FROM fansub WHERE ping_token='".mysqli_real_escape_string($db_connection, $token)."'") or crash('Internal error: '.mysqli_error($db_connection));
 		if ($row = mysqli_fetch_assoc($result)){
-			system("cd $services_path && /usr/bin/php fetch.php {$row['id']} > /dev/null &");
+			system("cd $services_path && /usr/bin/php fetch.php {$row['slug']} > /dev/null &");
 			$response = array(
 				'status' => 'ok',
 				'result' => 'A refresh operation has been scheduled for your fansub.'
@@ -46,25 +46,25 @@ if ($method == 'refresh') {
 	}
 }
 else if ($method == 'fansubs'){
-	$active_result = mysqli_query($db_connection, "SELECT DISTINCT f.id FROM fansubs f LEFT JOIN news n ON f.id=n.fansub_id WHERE f.is_visible=1 AND f.is_historical=0 AND n.date>='".date('Y-m-d H:i:s', time()-3600*24*180)."'") or crash('Internal error: '.mysqli_error($db_connection));
+	$active_result = mysqli_query($db_connection, "SELECT DISTINCT f.id FROM fansub f WHERE f.status=1 AND f.name<>'Fansub independent'") or crash('Internal error: '.mysqli_error($db_connection));
 	$active_fansubs = array();
 	while($row = mysqli_fetch_assoc($active_result)){
 		$active_fansubs[] = $row['id'];
 	}
 
-	$result = mysqli_query($db_connection, "SELECT * FROM fansubs ORDER BY name ASC") or crash('Internal error: '.mysqli_error($db_connection));
+	$result = mysqli_query($db_connection, "SELECT id, slug, name, url, historical, archive_url FROM fansub UNION SELECT NULL id, 'fansubs-cat' slug, 'Fansubs.cat' name, NULL, 0, NULL ORDER BY name ASC") or crash('Internal error: '.mysqli_error($db_connection));
 	$elements = array();
 	while($row = mysqli_fetch_assoc($result)){
 		$elements[] = array(
-			'id' => $row['id'],
+			'id' => $row['slug'],
 			'name' => $row['name'],
 			'url' => $row['url'],
-			'logo_url' => 'http://www.fansubs.cat/images/fansubs/logos/'.$row['logo_image'],
-			'icon_url' => 'http://www.fansubs.cat/images/fansubs/favicons/'.$row['favicon_image'],
-			'is_historical' => ($row['is_historical']==1),
+			'logo_url' => 'https://www.fansubs.cat/images/fansub_logos/'.$row['id'].'.png',
+			'icon_url' => ($row['slug']=='fansubs-cat' ? 'https://www.fansubs.cat/favicon.ico' : 'https://www.fansubs.cat/images/fansub_icons/'.$row['id'].'.png'),
+			'is_historical' => ($row['historical']==1),
 			'is_active' => (in_array($row['id'], $active_fansubs)),
-			'is_visible' => ($row['is_visible']==1),
-			'is_own' => ($row['is_own']==1),
+			'is_visible' => ($row['slug']!='fansubs-cat' && $row['slug']!='fansubs-independents'),
+			'is_own' => ($row['slug']=='fansubs-cat'),
 			'archive_url' => $row['archive_url']
 		);
 	}
@@ -94,20 +94,20 @@ else if (substr($method, 0, 4) === "news"){
 			foreach ($fansub_ids as &$fansub_id){
 				$fansub_id = mysqli_real_escape_string($db_connection, $fansub_id);
 			}
-			$fansub_ids_extra = " AND n.fansub_id IN ('" . implode("', '", $fansub_ids) . "')";
+			$fansub_ids_extra = " AND IFNULL(f.slug,'fansubs-cat') IN ('" . implode("', '", $fansub_ids) . "')";
 		}
 
-		$result = mysqli_query($db_connection, "SELECT n.*,f.name fansub_name FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE 1" . $search_extra . $fansub_ids_extra . " ORDER BY n.date DESC LIMIT 25 OFFSET $page") or crash('Internal error: ' . mysqli_error($db_connection));
+		$result = mysqli_query($db_connection, "SELECT n.*, IFNULL(f.slug,'fansubs-cat') fansub_slug, f.name fansub_name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE 1" . $search_extra . $fansub_ids_extra . " ORDER BY n.date DESC LIMIT 25 OFFSET $page") or crash('Internal error: ' . mysqli_error($db_connection));
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
 				'date' => date_create_from_format('Y-m-d H:i:s', $row['date'])->getTimestamp(),
-				'fansub_id' => $row['fansub_id'],
+				'fansub_id' => $row['fansub_slug'],
 				'fansub_name' => $row['fansub_name'],
 				'title' => $row['title'],
 				'contents' => $row['contents'],
 				'url' => $row['url'],
-				'image_url' => $row['image']!=NULL ? 'http://www.fansubs.cat/images/news/'.$row['fansub_id'].'/'.$row['image'] : NULL
+				'image_url' => $row['image']!=NULL ? 'https://www.fansubs.cat/images/news/'.$row['fansub_slug'].'/'.$row['image'] : NULL
 			);
 		}
 
