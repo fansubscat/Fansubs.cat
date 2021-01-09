@@ -93,9 +93,18 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
-					<li class="nav-item dropdown<?php echo $page=='account' ? ' active' : ''; ?>">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAccounts" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Comptes</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownAccounts">
+					<li class="nav-item dropdown<?php echo $page=='fansub' ? ' active' : ''; ?>">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFansubs" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fansubs</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownFansubs">
+<?php
+		if ($_SESSION['admin_level']>=3) {
+?>
+							<a class="dropdown-item" href="fansub_list.php">Llista de fansubs</a>
+							<a class="dropdown-item" href="fansub_edit.php">Afegeix un fansub nou</a>
+							<div class="dropdown-divider"></div>
+<?php
+		}
+?>
 							<a class="dropdown-item" href="account_list.php">Llista de comptes</a>
 							<a class="dropdown-item" href="account_edit.php">Afegeix un compte nou</a>
 						</div>
@@ -104,13 +113,6 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 	}
 	if ($_SESSION['admin_level']>=3) {
 ?>
-					<li class="nav-item dropdown<?php echo $page=='fansub' ? ' active' : ''; ?>">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFansubs" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fansubs</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownFansubs">
-							<a class="dropdown-item" href="fansub_list.php">Llista de fansubs</a>
-							<a class="dropdown-item" href="fansub_edit.php">Afegeix un fansub nou</a>
-						</div>
-					</li>
 					<li class="nav-item dropdown<?php echo $page=='user' ? ' active' : ''; ?>">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Usuaris</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">

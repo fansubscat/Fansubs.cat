@@ -1,6 +1,6 @@
 <?php
 $header_title="Edició de comptes - Comptes";
-$page="account";
+$page="fansub";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {

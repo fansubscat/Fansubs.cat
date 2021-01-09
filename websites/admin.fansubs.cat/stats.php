@@ -17,39 +17,44 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 		<div class="container justify-content-center p-4">
 			<ul class="nav nav-tabs" id="stats_tabs" role="tablist">
-				<li class="nav-item">
-					<a class="nav-link active" id="totals-tab" data-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Estadístiques totals</a>
-				</li>
 <?php
 	if (!empty($fansub)) {
 ?>
 				<li class="nav-item">
-					<a class="nav-link" id="fansub-tab" data-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
+					<a class="nav-link active" id="fansub-tab" data-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
 				</li>
 <?php
 	}
 ?>
+				<li class="nav-item">
+					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Estadístiques totals</a>
+				</li>
 			</ul>
 			<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
-				<div class="tab-pane fade show active" id="totals" role="tabpanel" aria-labelledby="totals-tab">
+				<div class="tab-pane fade<?php echo empty($fansub) ? ' show active' : ''; ?>" id="totals" role="tabpanel" aria-labelledby="totals-tab">
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques totals</h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM series) total_series, (SELECT COUNT(*) FROM version) total_versions, (SELECT COUNT(*) FROM link WHERE url IS NOT NULL) total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND url IS NOT NULL) total_linked_episodes, (SELECT SUM(e.duration) FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.url IS NOT NULL) total_duration");
+			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM news) total_news, (SELECT COUNT(*) FROM series) total_series, (SELECT COUNT(*) FROM version) total_versions, (SELECT COUNT(*) FROM link WHERE url IS NOT NULL) total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND url IS NOT NULL) total_linked_episodes, (SELECT SUM(e.duration) FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.url IS NOT NULL) total_duration");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
 								<div class="row">
-									<div class="col-sm-4 text-center"><b>Fansubs:</b> <?php echo $totals['total_fansubs']; ?></div>
 									<div class="col-sm-4 text-center"><b>Animes:</b> <?php echo $totals['total_series']; ?> <small>(duplicats: <?php echo $totals['total_duplicity']; ?>)</small></div>
-									<div class="col-sm-4 text-center"><b>Versions:</b> <?php echo $totals['total_versions']; ?></div>
+									<div class="col-sm-4 text-center"><b>Mangues:</b> - <small>(duplicats: -)</small></div>
+									<div class="col-sm-4 text-center"><b>Notícies:</b> <?php echo $totals['total_news']; ?></div>
 								</div>
 								<div class="row">
-									<div class="col-sm-4 text-center"><b>Capítols amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
-									<div class="col-sm-4 text-center"><b>Enllaços:</b> <?php echo $totals['total_links']; ?></div>
+									<div class="col-sm-4 text-center"><b>Versions d'anime:</b> <?php echo $totals['total_versions']; ?></div>
+									<div class="col-sm-4 text-center"><b>Versions de manga:</b> -</div>
+									<div class="col-sm-4 text-center"><b>Fansubs:</b> <?php echo $totals['total_fansubs']; ?></div>
+								</div>
+								<div class="row">
+									<div class="col-sm-4 text-center"><b>Capítols d'anime amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
+									<div class="col-sm-4 text-center"><b>Enllaços d'anime:</b> <?php echo $totals['total_links']; ?></div>
 									<div class="col-sm-4 text-center"><b>Durada total:</b> <?php echo get_hours_or_minutes_formatted($totals['total_duration']*60); ?></div>
 								</div>
 								<div class="row">
@@ -376,25 +381,30 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	if (!empty($fansub)) {
 ?>
-				<div class="tab-pane fade" id="fansub" role="tabpanel" aria-labelledby="fansub-tab">
+				<div class="tab-pane fade show active" id="fansub" role="tabpanel" aria-labelledby="fansub-tab">
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id WHERE vf.fansub_id=".$fansub['id'].") total_series, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id'].") total_versions, (SELECT COUNT(DISTINCT l.id) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id WHERE l.url IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND url IS NOT NULL AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_episodes, (SELECT SUM(e.duration) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id LEFT JOIN episode e ON l.episode_id=e.id WHERE l.url IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_duration");
+			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(*) FROM news WHERE fansub_id=".$fansub['id'].") total_news, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id WHERE vf.fansub_id=".$fansub['id'].") total_series, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id'].") total_versions, (SELECT COUNT(DISTINCT l.id) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id WHERE l.url IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_links, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND url IS NOT NULL AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_episodes, (SELECT SUM(e.duration) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id LEFT JOIN episode e ON l.episode_id=e.id WHERE l.url IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_duration");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
 								<div class="row">
-									<div class="col-sm-4 text-center"><b>Col·laboracions:</b> <?php echo $totals['total_collabs']; ?></div>
 									<div class="col-sm-4 text-center"><b>Animes:</b> <?php echo $totals['total_series']; ?> <small>(duplicats: <?php echo $totals['total_duplicity']; ?>)</small></div>
-									<div class="col-sm-4 text-center"><b>Versions:</b> <?php echo $totals['total_versions']; ?></div>
+									<div class="col-sm-4 text-center"><b>Mangues:</b> - <small>(duplicats: -)</small></div>
+									<div class="col-sm-4 text-center"><b>Notícies:</b> <?php echo $totals['total_news']; ?></div>
 								</div>
 								<div class="row">
-									<div class="col-sm-4 text-center"><b>Capítols amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
-									<div class="col-sm-4 text-center"><b>Enllaços:</b> <?php echo $totals['total_links']; ?></div>
+									<div class="col-sm-4 text-center"><b>Versions d'anime:</b> <?php echo $totals['total_versions']; ?></div>
+									<div class="col-sm-4 text-center"><b>Versions de manga:</b> -</div>
+									<div class="col-sm-4 text-center"><b>Col·laboracions:</b> <?php echo $totals['total_collabs']; ?></div>
+								</div>
+								<div class="row">
+									<div class="col-sm-4 text-center"><b>Capítols d'anime amb enllaç:</b> <?php echo $totals['total_linked_episodes']; ?></div>
+									<div class="col-sm-4 text-center"><b>Enllaços d'anime:</b> <?php echo $totals['total_links']; ?></div>
 									<div class="col-sm-4 text-center"><b>Durada total:</b> <?php echo get_hours_or_minutes_formatted($totals['total_duration']*60); ?></div>
 								</div>
 								<div class="row">
