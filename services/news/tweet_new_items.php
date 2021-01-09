@@ -287,5 +287,4 @@ mysqli_free_result($result);
 
 mysqli_close($db_connection);
 mysqli_close($db_connection_manga);
-mysqli_close($db_connection);
 ?>

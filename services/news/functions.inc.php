@@ -45,7 +45,7 @@ function get_prepositioned_text($text, $twitter=FALSE){
 
 //Gets the first image in the news content that is not a SVG, if available.
 //Then copies it to our website directory
-function fetch_and_parse_image($fansub_id, $url, $description){
+function fetch_and_parse_image($fansub_slug, $url, $description){
 	global $website_directory;
 	preg_match_all('/<img [^>]*src=["|\']([^"|\']+)/i', $description, $matches);
 
@@ -63,13 +63,13 @@ function fetch_and_parse_image($fansub_id, $url, $description){
 		if (strpos($first_image_url,"://")===FALSE){
 			$first_image_url=$url.$first_image_url;
 		}
-		if (!is_dir("$website_directory/images/news/$fansub_id/")){
-			mkdir("$website_directory/images/news/$fansub_id/");
+		if (!is_dir("$website_directory/images/news/$fansub_slug/")){
+			mkdir("$website_directory/images/news/$fansub_slug/");
 		}
-		if (@copy($first_image_url, "$website_directory/images/news/$fansub_id/".slugify_short($first_image_url))){
+		if (@copy($first_image_url, "$website_directory/images/news/$fansub_slug/".slugify_short($first_image_url))){
 			return slugify_short($first_image_url);
 		}
-		else if (file_exists("$website_directory/images/news/$fansub_id/".slugify_short($first_image_url))){
+		else if (file_exists("$website_directory/images/news/$fansub_slug/".slugify_short($first_image_url))){
 			//This means that the file is no longer accessible, but we already have it locally!
 			return slugify_short($first_image_url);
 		}
@@ -86,76 +86,76 @@ function fetch_and_parse_image($fansub_id, $url, $description){
 //  3 - date (formatted as Y-m-d H:i:s)
 //  4 - url
 //  5 - image URL
-function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, $url, $last_fetched_item_date){
-	mysqli_query($db_connection, "UPDATE fetchers SET status='fetching' WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
+function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher_id, $method, $url, $last_fetched_item_date){
+	mysqli_query($db_connection, "UPDATE fetcher SET status='fetching' WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
 	$old_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
 	$old_count = mysqli_fetch_assoc($old_count_result)['count'];
 	switch($method){
 		case 'animugen':
-			$result = fetch_via_animugen($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_animugen($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot':
-			$result = fetch_via_blogspot($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_2nf':
-			$result = fetch_via_blogspot_2nf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_2nf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_as':
-			$result = fetch_via_blogspot_as($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_as($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_bsc':
-			$result = fetch_via_blogspot_bsc($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_bsc($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_dnf':
-			$result = fetch_via_blogspot_dnf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_dnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_llpnf':
-			$result = fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_llpnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_mnf':
-			$result = fetch_via_blogspot_mnf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_mnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_snf':
-			$result = fetch_via_blogspot_snf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_snf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_shinsengumi':
-			$result = fetch_via_blogspot_shinsengumi($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_shinsengumi($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_teqma':
-			$result = fetch_via_blogspot_teqma($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_teqma($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_tnf':
-			$result = fetch_via_blogspot_tnf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_blogspot_tnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'catsub':
-			$result = fetch_via_catsub($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_catsub($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'mangadex_edcec':
-			$result = fetch_via_mangadex_edcec($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_mangadex_edcec($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'phpbb_dnf':
-			$result = fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_phpbb_dnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'phpbb_llpnf':
-			$result = fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_phpbb_llpnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'roninfansub':
-			$result = fetch_via_roninfansub($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_roninfansub($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'weebly_rnnf':
-			$result = fetch_via_weebly_rnnf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_weebly_rnnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'wordpress_ddc':
-			$result = fetch_via_wordpress_ddc($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_wordpress_ddc($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'wordpress_mdcf':
-			$result = fetch_via_wordpress_mdcf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_wordpress_mdcf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'wordpress_xf':
-			$result = fetch_via_wordpress_xf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_wordpress_xf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'wordpress_ynf':
-			$result = fetch_via_wordpress_ynf($fansub_id, $url, $last_fetched_item_date);
+			$result = fetch_via_wordpress_ynf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		default:
 			$result = array('error_invalid_method',array());
@@ -192,7 +192,7 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 			//And then insert them if everything goes well
 			if ($result[0]=='ok'){
 				foreach ($result[1] as $element){
-					mysqli_query($db_connection, "INSERT INTO news (fansub_id, fetcher_id, title, original_contents, contents, date, url, image) VALUES ('$fansub_id', $fetcher_id, '".mysqli_real_escape_string($db_connection, $element[0])."','".mysqli_real_escape_string($db_connection, $element[1])."','".mysqli_real_escape_string($db_connection, $element[2])."','".$element[3]."','".mysqli_real_escape_string($db_connection, $element[4])."',".($element[5]!=NULL ? "'".mysqli_real_escape_string($db_connection, $element[5])."'" : 'NULL').")") or (mysqli_rollback($db_connection) && $result[0]='error_mysql');
+					mysqli_query($db_connection, "INSERT INTO news (fansub_id, fetcher_id, title, original_contents, contents, date, url, image) VALUES ($fansub_id, $fetcher_id, '".mysqli_real_escape_string($db_connection, $element[0])."','".mysqli_real_escape_string($db_connection, $element[1])."','".mysqli_real_escape_string($db_connection, $element[2])."','".$element[3]."','".mysqli_real_escape_string($db_connection, $element[4])."',".($element[5]!=NULL ? "'".mysqli_real_escape_string($db_connection, $element[5])."'" : 'NULL').")") or (mysqli_rollback($db_connection) && $result[0]='error_mysql');
 				}
 			}
 			
@@ -213,7 +213,7 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 	}
 	
 	//Update fetch status
-	mysqli_query($db_connection, "UPDATE fetchers SET status='idle',last_fetch_result='".$result[0]."',last_fetch_date='".date('Y-m-d H:i:s')."',last_fetch_increment=".($increment!==NULL ? $increment : 'NULL')." WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
+	mysqli_query($db_connection, "UPDATE fetcher SET status='idle',last_fetch_result='".$result[0]."',last_fetch_date='".date('Y-m-d H:i:s')."',last_fetch_increment=".($increment!==NULL ? $increment : 'NULL')." WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
 
 	if ($increment>0){
 		//TODO: In the future, do things here, i.e, post to Twitter/Facebook accounts indicating that we have news from a certain fansub
@@ -225,14 +225,14 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 		//Hello 2020, 2020 still. Maybe we will disable the news tweets, they are a bit annoying... And replace them with a cron job that tweets new manga/anime added to the DB.
 		global $firebase_api_key;
 
-		$push_result = mysqli_query($db_connection, "SELECT n.title, n.fansub_id, n.url, f.name, f.twitter FROM news n LEFT JOIN fansubs f ON n.fansub_id=f.id WHERE fetcher_id=$fetcher_id ORDER BY date DESC LIMIT $increment") or die(mysqli_error($db_connection));
+		$push_result = mysqli_query($db_connection, "SELECT n.title, f.slug fansub_slug, n.url, f.name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.fetcher_id=$fetcher_id ORDER BY n.date DESC LIMIT $increment") or die(mysqli_error($db_connection));
 		while ($push_row = mysqli_fetch_assoc($push_result)){
 			$notification = array(
 				'to' => '/topics/all',
 				'data' => array(
 					'title' => $push_row['title'],
 					'fansub' => $push_row['name'],
-					'fansub_id' => $push_row['fansub_id']
+					'fansub_id' => $push_row['fansub_slug']
 				)
 			);
 			$headers = array('Content-Type: application/json', 'Authorization: key=' . $firebase_api_key);
@@ -255,7 +255,7 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fetcher_id, $method, 
 /** BELOW HERE ARE ALL INDIVIDUAL METHODS OF FETCHING **/
 /** THE CODE IS ULTRA UGLY AND HACKY, BUT IT WORKS (as of July 2016). BEWARE! **/
 
-function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_animugen($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -311,7 +311,7 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 					$item[3]= $date->format('Y-m-d H:i:s');
 					$item[4]=$article->find('a', 0)->href;
 					if ($article_html->find('article figure', 0)!==NULL){
-						$item[5]=fetch_and_parse_image($fansub_id, $url, $article_html->find('article figure', 0)->innertext);
+						$item[5]=fetch_and_parse_image($fansub_slug, $url, $article_html->find('article figure', 0)->innertext);
 					}
 					else{
 						$item[5]=NULL;
@@ -337,7 +337,7 @@ function fetch_via_animugen($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -369,7 +369,7 @@ function fetch_via_blogspot($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body', 0)->innertext);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $article->find('div.post-body', 0)->innertext);
 
 				$elements[]=$item;
 			}
@@ -409,7 +409,7 @@ function fetch_via_blogspot($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_2nf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_2nf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -446,7 +446,7 @@ function fetch_via_blogspot_2nf($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
@@ -486,7 +486,7 @@ function fetch_via_blogspot_2nf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_as($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_as($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -533,7 +533,7 @@ function fetch_via_blogspot_as($fansub_id, $url, $last_fetched_item_date){
 					$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 					$item[3]= $date->format('Y-m-d H:i:s');
 					$item[4]=str_replace('?m=1','',$article->href);
-					$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+					$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 					$elements[]=$item;
 					break;
@@ -551,7 +551,7 @@ function fetch_via_blogspot_as($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_bsc($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_bsc($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -583,7 +583,7 @@ function fetch_via_blogspot_bsc($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body', 0)->innertext);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $article->find('div.post-body', 0)->innertext);
 
 				$elements[]=$item;
 			}
@@ -623,7 +623,7 @@ function fetch_via_blogspot_bsc($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_dnf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_dnf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -664,7 +664,7 @@ function fetch_via_blogspot_dnf($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
@@ -704,7 +704,7 @@ function fetch_via_blogspot_dnf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_llpnf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -780,7 +780,7 @@ function fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
@@ -819,7 +819,7 @@ function fetch_via_blogspot_llpnf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_mnf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_mnf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -851,7 +851,7 @@ function fetch_via_blogspot_mnf($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body', 0)->innertext);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $article->find('div.post-body', 0)->innertext);
 
 				$elements[]=$item;
 			}
@@ -891,7 +891,7 @@ function fetch_via_blogspot_mnf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_shinsengumi($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_shinsengumi($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -934,7 +934,7 @@ function fetch_via_blogspot_shinsengumi($fansub_id, $url, $last_fetched_item_dat
 					$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 					$item[3]=$date->format('Y-m-d H:i:s');
 					$item[4]=$url;
-					$item[5]=fetch_and_parse_image($fansub_id, $url, $inner_html->find('div.post-body', 0)->innertext);
+					$item[5]=fetch_and_parse_image($fansub_slug, $url, $inner_html->find('div.post-body', 0)->innertext);
 					break;
 				}
 				else{
@@ -982,7 +982,7 @@ function fetch_via_blogspot_shinsengumi($fansub_id, $url, $last_fetched_item_dat
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_snf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_snf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1020,7 +1020,7 @@ function fetch_via_blogspot_snf($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
@@ -1060,7 +1060,7 @@ function fetch_via_blogspot_snf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_teqma($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_teqma($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1093,7 +1093,7 @@ function fetch_via_blogspot_teqma($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body', 0)->innertext);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $article->find('div.post-body', 0)->innertext);
 
 				$elements[]=$item;
 			}
@@ -1133,7 +1133,7 @@ function fetch_via_blogspot_teqma($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_blogspot_tnf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_blogspot_tnf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1166,7 +1166,7 @@ function fetch_via_blogspot_tnf($fansub_id, $url, $last_fetched_item_date){
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body', 0)->innertext);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $article->find('div.post-body', 0)->innertext);
 
 				$elements[]=$item;
 			}
@@ -1206,7 +1206,7 @@ function fetch_via_blogspot_tnf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_catsub($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_catsub($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1248,7 +1248,7 @@ function fetch_via_catsub($fansub_id, $url, $last_fetched_item_date){
 
 			$item[3]=$date->format('Y-m-d H:i:s');
 			$item[4]=$url . substr($article->find('div.cs_newstitle a', 0)->href, 1);
-			$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+			$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 			$elements[]=$item;
 		}
@@ -1275,7 +1275,7 @@ function fetch_via_catsub($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_mangadex_edcec($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_mangadex_edcec($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1312,7 +1312,7 @@ function fetch_via_mangadex_edcec($fansub_id, $url, $last_fetched_item_date){
 		$item[3]= $date->format('Y-m-d H:i:s');
 		$item[4]='https://mangadex.org' . $title->href;
 		if ($article->find('div.post-body figure', 0)!==NULL){
-			$item[5]=fetch_and_parse_image($fansub_id, $url, $article->find('div.post-body figure', 0)->innertext);
+			$item[5]=fetch_and_parse_image($fansub_slug, $url, $article->find('div.post-body figure', 0)->innertext);
 		}
 		else{
 			$item[5]=NULL;
@@ -1328,7 +1328,7 @@ function fetch_via_mangadex_edcec($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_phpbb_dnf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$base_url=substr($url,0,strrpos($url,'/'));
@@ -1397,7 +1397,7 @@ function fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date){
 			$date = date_create_from_format('D F d, Y H:i a', $datetext);
 			$item[3]= $date->format('Y-m-d H:i:s');
 			$item[4]=$base_url.$topic->href;
-			$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+			$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 			$elements[]=$item;
 		}
@@ -1419,7 +1419,7 @@ function fetch_via_phpbb_dnf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_phpbb_llpnf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$base_url=substr($url,0,strrpos($url,'/'));
@@ -1507,7 +1507,7 @@ function fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date){
 					$date = date_create_from_format('D d F Y, H:i', $datetext);
 					$item[3]= $date->format('Y-m-d H:i:s');
 					$item[4]= $base_url.$topic->href;
-					$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+					$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 					$elements[]=$item;
 				}
@@ -1532,7 +1532,7 @@ function fetch_via_phpbb_llpnf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_roninfansub($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_roninfansub($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1568,7 +1568,7 @@ function fetch_via_roninfansub($fansub_id, $url, $last_fetched_item_date){
 
 			$item[3]=$date->format('Y-m-d H:i:s');
 			$item[4]=$url . ($article->find('a', 0)!==NULL ? $article->find('a', 0)->href : '');
-			$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+			$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 			$elements[]=$item;
 		}
@@ -1576,7 +1576,7 @@ function fetch_via_roninfansub($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_weebly_rnnf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_weebly_rnnf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1615,7 +1615,7 @@ function fetch_via_weebly_rnnf($fansub_id, $url, $last_fetched_item_date){
 
 				$item[3]=$date->format('Y-m-d H:i:s');
 				$item[4]=$url . substr($title->href, 1);
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
@@ -1643,7 +1643,7 @@ function fetch_via_weebly_rnnf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_wordpress_ddc($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_wordpress_ddc($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1687,7 +1687,7 @@ function fetch_via_wordpress_ddc($fansub_id, $url, $last_fetched_item_date){
 
 				$item[3]=$date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
@@ -1715,7 +1715,7 @@ function fetch_via_wordpress_ddc($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_wordpress_mdcf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_wordpress_mdcf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1767,7 +1767,7 @@ function fetch_via_wordpress_mdcf($fansub_id, $url, $last_fetched_item_date){
 
 				$item[3]=$date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
@@ -1795,7 +1795,7 @@ function fetch_via_wordpress_mdcf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_wordpress_xf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_wordpress_xf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1852,7 +1852,7 @@ function fetch_via_wordpress_xf($fansub_id, $url, $last_fetched_item_date){
 
 				$item[3]=$date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
@@ -1880,7 +1880,7 @@ function fetch_via_wordpress_xf($fansub_id, $url, $last_fetched_item_date){
 	return array('ok', $elements);
 }
 
-function fetch_via_wordpress_ynf($fansub_id, $url, $last_fetched_item_date){
+function fetch_via_wordpress_ynf($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
 	$tidy_config = "tidy.conf";
@@ -1920,7 +1920,7 @@ function fetch_via_wordpress_ynf($fansub_id, $url, $last_fetched_item_date){
 
 				$item[3]=$date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
-				$item[5]=fetch_and_parse_image($fansub_id, $url, $description);
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
 
 				$elements[]=$item;
 			}
