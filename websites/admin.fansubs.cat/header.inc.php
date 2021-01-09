@@ -77,17 +77,17 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					<li class="nav-item dropdown<?php echo $page=='news' ? ' active' : ''; ?>">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSeries" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Notícies</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
+							<a class="dropdown-item" href="news_list.php">Llista de notícies</a>
+							<a class="dropdown-item" href="news_edit.php">Afegeix una notícia a mà</a>
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
-							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Llista de notícies</a>
-							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Afegeix una notícia nova</a>
 							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="fetcher_list.php">Llista de recollidors</a>
+							<a class="dropdown-item" href="fetcher_edit.php">Afegeix un recollidor nou</a>
 <?php
 	}
 ?>
-							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Llista de recollidors</a>
-							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Afegeix un recollidor nou</a>
 						</div>
 					</li>
 <?php

@@ -58,7 +58,11 @@ CREATE TABLE `fetcher` (
   `fetch_type` varchar(255) NOT NULL DEFAULT 'periodic',
   `status` varchar(255) NOT NULL DEFAULT 'idle',
   `last_fetch_result` varchar(255) DEFAULT NULL,
-  `last_fetch_date` timestamp NULL DEFAULT NULL
+  `last_fetch_date` timestamp NULL DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(200) NOT NULL,
+  `updated` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `folder` (
@@ -105,6 +109,7 @@ CREATE TABLE `news` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `pending_news` (
+  `id` int(11) NOT NULL,
   `title` text NOT NULL,
   `contents` text NOT NULL,
   `url` text NOT NULL,
@@ -310,6 +315,8 @@ ALTER TABLE `folder_failed_files`
 ALTER TABLE `genre`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `link`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pending_news`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `season`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

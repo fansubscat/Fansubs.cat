@@ -38,7 +38,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT f.id, f.name, f.url, f.status, f.historical, f.twitter_url, f.archive_url, '-' news, COUNT(DISTINCT vf.version_id) anime_versions, '-' manga_versions FROM fansub f LEFT JOIN rel_version_fansub vf ON f.id=vf.fansub_id GROUP BY f.id ORDER BY f.status DESC, f.name ASC");
+	$result = query("SELECT f.id, f.name, f.url, f.status, f.historical, f.twitter_url, f.archive_url, (SELECT COUNT(*) FROM news WHERE fansub_id=f.id) news, COUNT(DISTINCT vf.version_id) anime_versions, '-' manga_versions FROM fansub f LEFT JOIN rel_version_fansub vf ON f.id=vf.fansub_id GROUP BY f.id ORDER BY f.status DESC, f.name ASC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
