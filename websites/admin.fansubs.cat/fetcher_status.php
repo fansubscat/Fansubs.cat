@@ -1,0 +1,120 @@
+<?php
+$header_title="Estat dels recollidors - Eines";
+$page="tools";
+include("header.inc.php");
+include("common.inc.php");
+
+//Helper functions to show better strings for possible values on the DB
+
+function show_fetch_type($fetch_type){
+	switch ($fetch_type){
+		case 'periodic':
+			return 'Periòdic<br />(cada 15&nbsp;min.)';
+		case 'onrequest':
+			return 'A&nbsp;petició';
+		case 'onetime_retired':
+			return 'Una&nbsp;vegada<br />(retirat)';
+		case 'onetime_inactive':
+			return 'Una&nbsp;vegada<br />(inactiu)';
+		default:
+			return $fetch_type;
+	}
+}
+
+function show_status($status){
+	switch ($status){
+		case 'idle':
+			return 'En&nbsp;repòs';
+		case 'fetching':
+			return 'Obtenint&nbsp;dades';
+		default:
+			return $status;
+	}
+}
+
+function show_last_result($last_result, $last_increment){
+	switch ($last_result){
+		case 'ok':
+			if ($last_increment===NULL){
+				return '<span style="color: #008800"><span class="fa fa-check"></span>&nbsp;Correcte</span>';
+			}
+			else if ($last_increment==0){
+				return '<span style="color: #008800"><span class="fa fa-check"></span>&nbsp;Correcte&nbsp;(±0)</span>';
+			}
+			else if ($last_increment>0){
+				return '<span style="color: #008800"><span class="fa fa-check"></span>&nbsp;Correcte&nbsp;(+'.$last_increment.')</span>';
+			}
+			else{
+				return '<span style="color: #008800"><span class="fa fa-check"></span>&nbsp;Correcte&nbsp;('.$last_increment.')</span>';
+			}
+		case 'error_mysql':
+			return '<span style="color: #880000"><span class="fa fa-times"></span>&nbsp;Error&nbsp;(BD)</span>';
+		case 'error_empty':
+			return '<span style="color: #880000"><span class="fa fa-times"></span>&nbsp;Error&nbsp;(buit)</span>';
+		case 'error_connect':
+			return '<span style="color: #880000"><span class="fa fa-times"></span>&nbsp;Error&nbsp;(connexió)</span>';
+		case 'error_invalid_method':
+			return '<span style="color: #880000"><span class="fa fa-times"></span>&nbsp;Error&nbsp;(desconegut)</span>';
+		case '':
+			return "-";
+		default:
+			return $last_result;
+	}
+}
+
+if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
+?>
+		<div class="container d-flex justify-content-center p-4">
+			<div class="card w-100">
+				<article class="card-body">
+					<h4 class="card-title text-center mb-4 mt-1">Estat dels recollidors</h4>
+					<hr>
+					<p class="text-center">Aquí es mostra l'estat dels recollidors de notícies dels diferents fansubs i quan se n'han obtingut dades per darrer cop.<br />Les dades s'obtenen automàticament dels diferents fansubs cada 15 minuts.</p>
+					<div class="text-center pb-3">
+						<a href="fetcher_status.php" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
+					</div>
+					<table class="table table-hover table-striped">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col" style="width: 18%;">Fansub / URL</th>
+								<th scope="col" style="width: 12%;" class="text-center">Freqüència</th>
+								<th scope="col" style="width: 12%;" class="text-center">Estat</th>
+								<th scope="col" style="width: 12%;" class="text-center">Darrera connexió</th>
+								<th scope="col" style="width: 12%;" class="text-center">Darrer resultat</th>
+							</tr>
+						</thead>
+						<tbody>
+<?php
+	$result = query("SELECT fe.*,fa.name FROM fetcher fe LEFT JOIN fansub fa ON fe.fansub_id=fa.id ORDER BY fetch_type DESC, fa.name ASC, fe.url ASC");
+	if (mysqli_num_rows($result)==0) {
+?>
+							<tr>
+								<td colspan="5" class="text-center">- No hi ha cap recollidor -</td>
+							</tr>
+<?php
+	}
+	while ($row = mysqli_fetch_assoc($result)) {
+?>
+							<tr>
+								<th scope="row" class="align-middle"><strong><?php echo $row['name']; ?></strong><br />&nbsp;&nbsp;&nbsp;<small><?php echo $row['url']; ?></small></th>
+								<td class="align-middle text-center"><?php echo show_fetch_type($row['fetch_type']); ?></td>
+								<td class="align-middle text-center"><?php echo show_status($row['status']); ?></td>
+								<td class="align-middle text-center"><?php echo ($row['last_fetch_date']!=NULL ? relative_time(strtotime($row['last_fetch_date'])) : 'Mai'); ?></td>
+								<td class="align-middle text-center"><strong><?php echo show_last_result($row['last_fetch_result'], $row['last_fetch_increment']); ?></strong></td>
+							</tr>
+<?php
+	}
+	mysqli_free_result($result);
+?>
+						</tbody>
+					</table>
+				</article>
+			</div>
+		</div>
+<?php
+} else {
+	header("Location: login.php");
+}
+
+include("footer.inc.php");
+?>
