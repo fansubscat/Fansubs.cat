@@ -1,0 +1,1791 @@
+html {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #FFF;
+	background-color: #000000;
+	font-size: 62.5%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 1.3em;
+	line-height: 1.5em;
+}
+
+a {
+	color: #CCC;
+	cursor: pointer;
+}
+
+/* Hide dots in Firefox... screws accessibility though */
+:focus {
+	outline:none;
+}
+::-moz-focus-inner {
+	border:0;
+}
+
+/* Hover effect for links and other things that appear to be links */
+a:hover {
+	color: #FFF;
+}
+
+a img {
+	border: none;
+}
+
+h2, h3 {
+	margin: 0;
+}
+
+/* Header */
+
+#page {
+	max-width: 1156px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,1);
+	z-index: 2000;
+}
+
+#options-overlay, #contact-overlay {
+	justify-content: center;
+	align-items: center;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.75);
+	z-index: 2000;
+}
+
+#options-overlay-content, #contact-overlay-content {
+	max-width: 660px;
+	background-color: #000;
+	padding: 2em;
+	border-radius: 12px;
+	border: 1px solid #CCC;
+	overflow: auto;
+	box-sizing: border-box;
+	margin: 1em;
+	max-height: 100%;
+	width: 100%;
+}
+
+#options-buttonbar, #contact-buttonbar {
+	text-align: center;
+	width: 100%;
+	margin-top: 1.5em;
+	display: flex;
+	justify-content: space-between;
+}
+
+#options-fansubs {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#options-tooltip-base {
+	position: relative;
+	display: inline-block;
+}
+
+#options-tooltip {
+	width: 150px;
+	font-size: 0.8em;
+	line-height: 1.1em;
+	background-color: beige;
+	color: black;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px;
+	box-sizing: border-box;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	top: 100%;
+	left: 50%;
+	margin-left: -75px; /* Use half of the width (120/2 = 60), to center the tooltip */
+	margin-top: 10px;
+}
+
+#options-tooltip::after {
+	content: " ";
+	position: absolute;
+	bottom: 100%;  /* At the top of the tooltip */
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent beige transparent;
+}
+
+.options-item {
+	display: flex;
+	align-items: center;
+}
+
+.options-fansub {
+	max-width: 200px;
+	min-width: 200px;
+}
+
+.options-fansub label {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.options-section-divider {
+	 margin-top: 1.5em;
+}
+
+#options-save-button, #contact-send-button {
+	color: #FFF;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-right: 0.5em;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+	padding: 0.5em;
+	background: rgb(12, 87, 21);
+	white-space: nowrap;
+	border: none;
+	cursor: pointer;
+}
+
+#contact-send-button-loading, #contact-send-button-done {
+	color: #FFF;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-right: 0.5em;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+	padding: 0.5em;
+	background: rgb(42, 117, 51);
+	white-space: nowrap;
+	border: none;
+}
+
+#contact-explanation {
+	margin-bottom: 1em;
+}
+
+#options-save-button:hover, #contact-send-button:hover {
+	background: rgb(32, 107, 41);
+}
+
+#options-cancel-button, #contact-cancel-button {
+	color: #FFF;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 0.1em;
+	margin-bottom: 0.1em;
+	padding: 0.5em;
+	background: rgb(80, 80, 80);
+	border: none;
+	cursor: pointer;
+}
+
+#options-cancel-button:hover {
+	background: rgb(100, 100, 100);
+}
+
+#options-select-buttons {
+	margin-top: 0.5em;
+	font-size: 0.9em;
+}
+
+#contact_address,#contact_message {
+	width: 100%;
+}
+
+#contact_message {
+	height: 12em;
+}
+
+#overlay-close {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-size: 2em;
+	padding: 0.5em;
+	z-index: 2000;
+	background-color: #000;
+}
+
+#overlay-mask {
+	position: absolute;
+	width: 100%;
+	height: 52px;
+	cursor: pointer;
+	z-index: 1999;
+}
+
+#overlay-content {
+	width: 100%;
+	height: 100%;
+}
+
+.no-overflow {
+	overflow: hidden;
+}
+
+#header {
+	margin-left: 2em;
+	margin-right: 2em;
+	display: flex;
+	align-items: flex-end;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#header > div {
+	font-size: 1.2em;
+}
+
+a,
+a:visited, 
+#header a:hover {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.page-title-block {
+	padding: 1em 1em 1em 0em;
+	text-align: center;
+}
+
+.page-title {
+	color: #FFF;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+.page-links {
+	margin-top: 0.2em;
+}
+
+.site-message {
+	padding: .75em 1.25em;
+	border: 1px solid #fff3cd;
+	border-radius: .25em;
+	border-color: #ffeeba;
+	background-color: #fff3cd;
+	color: #856404;
+	text-align: center;
+	font-size: 1.2em;
+}
+
+.tabs {
+	padding: 0 1em;
+	flex-grow: 1;
+	display: flex;
+}
+
+.tab {
+	padding: 0.5em 1em;
+	margin: 0 0.1em;
+	font-size: 1.25em;
+	font-weight: bold;
+	color: #BBB;
+	background-color: #000;
+	flex-grow: 1;
+	text-align: center;
+	border-top-left-radius: 0.4em;
+	border-top-right-radius: 0.4em;
+	border: 1px solid #333;
+	border-bottom: none;
+}
+
+.tab .fa {
+	padding-right: 0.4em;
+	font-size: 0.8em;
+	vertical-align: middle;
+	margin-top: -0.2em;
+}
+
+.iconbutton {
+	padding: 0 0.5em;
+	font-size: 1.4em;
+	font-weight: bold;
+	color: #BBB;
+	background: none !important;
+	border: none !important;
+}
+
+.selectedtab {
+	color: #FFF !important;
+	background-color: #222;
+}
+
+.separator {
+	flex-grow: 0;
+}
+
+.user-options {
+	margin: 0.5em;
+	display: flex;
+}
+
+.search-form {
+	margin: 0.5em;
+}
+
+#search_query {
+	width: 9em;
+	margin-right: 4px;
+	vertical-align: middle;
+	height: 1.7em;
+	border-radius: 4px;
+	border: 1px solid white;
+	padding: 0em 0.5em;
+	font-size: 0.9em;
+}
+
+#search_button {
+	vertical-align: middle;
+	cursor: pointer;
+	font-size: 1.4em;
+}
+
+/* Content: articles and so */
+
+#content {
+	background-color: #222;
+	overflow: hidden;
+	width: 100%;
+}
+
+#content.series-page {
+	overflow: visible;
+}
+
+.flex {
+	display: flex;
+}
+
+.wrappable {
+	flex-wrap: wrap;
+}
+
+.section {
+	padding: 1.5em 2em 1em 2em;
+}
+
+.section-title-main,
+.section-title-main a {
+	color: #FFF;
+	text-decoration: none;
+	padding-bottom: 0.25em;
+	padding-left: 0.1em;
+	margin-top: -0.5em;
+}
+
+#content .section:first-child .section-title-main {
+	margin-top: 0;
+}
+
+.section-title,
+.section-title a {
+	color: #FFF;
+	text-decoration: none;
+	padding-bottom: 1em;
+}
+
+.iconsm {
+	font-size: 0.8em;
+	vertical-align: top;
+	margin-top: 0.1em;
+}
+
+.section-subtitle {
+	color: #BBB;
+	font-weight: normal;
+	font-size: 1em;
+	padding-bottom: 1em;
+	line-height: 1em;
+	padding-left: 0.2em;
+}
+
+.section-content {
+	font-size: 1.1em;
+}
+
+.new-paragraph {
+	margin-top: 1em;
+}
+
+/* Main screen */
+
+.recommendation {
+	display: block;
+	width: 100%; 
+	height: 256px;
+	max-height: 256px;
+	background-color: #888;
+	position: relative;
+	margin: 2px;
+	transform: scale(0.98);
+	transition: all .6s ease;
+	filter: grayscale(70%) brightness(60%);
+	overflow: hidden;
+}
+
+.advent {
+	display: block;
+	width: 100%; 
+	height: 256px;
+	max-height: 256px;
+	background-color: #888;
+	position: relative;
+	margin: 2px;
+	transition: all .6s ease;
+	overflow: hidden;
+}
+
+.advent img {
+	transform: scale(1);
+	transition: all .6s ease;
+	height: 100%;
+}
+
+.advent:hover img {
+	transform: scale(1.1);
+	transition: all .6s ease;
+}
+
+.slick-active .recommendation {
+	transform: scale(1);
+	filter: grayscale(0%) brightness(100%);
+}
+
+.slick-active .recommendation img {
+	transform: scale(1);
+	transition: all .6s ease;
+}
+
+.slick-active .recommendation:hover img {
+	transform: scale(1.1);
+	transition: all .6s ease;
+}
+
+.recommendation img, .series_header img {
+	display: block;
+	width: 100%; 
+	height: 100%;
+	object-fit: cover;
+}
+
+.series_header .img {
+	width: 100%;
+	height: 100%;
+	margin-top: 2em;
+	mask-image: linear-gradient(transparent, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0), transparent);
+	-webkit-mask-image: linear-gradient(transparent, rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0),rgba(0, 0, 0, 1.0), rgba(0, 0, 0, 1.0), transparent);
+	position: absolute;
+}
+
+.series_header {
+	width: 100%;
+	height: 256px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.series_title_container {
+	padding: 1em;
+	background-color: rgba(2,2,2,0.4);
+	text-align: center;
+	z-index: 2;
+	border-radius: 0.5em;
+	margin-top: 2em;
+}
+
+.recommendation .status {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	color: white;
+	font-size: 1em;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	font-weight: bold;
+	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 90%;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+	
+}
+
+.recommendation .seasons {
+	background-color: rgba(0,0,100,0.6);
+	color: white;
+	font-weight: bold;
+	font-size: 1em;
+	text-align: right;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+	position: absolute;
+	bottom: 5em;
+	right: 0;
+}
+
+.recommendation .new {
+	background-color: rgba(255,0,0,0.6);
+	color: white;
+	font-weight: bold;
+	font-size: 1em;
+	text-align: left;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+	position: absolute;
+	bottom: 5em;
+	left: 0;
+}
+
+.recommendation .infoholder {
+	width: 100%;
+	height: 5em;
+	position: absolute;
+	bottom: 0;
+	background-color: rgba(0,0,100,0.6);
+	color: white;
+	padding: 0.75em;
+	box-sizing: border-box;
+}
+
+.recommendation .watchbutton {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	transition: opacity .5s ease-in-out;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.5em;
+	font-size: 1.25em;
+	background: rgba(30, 105, 30, 0.8);
+	white-space: nowrap;
+}
+
+.recommendation:hover .watchbutton {
+	opacity: 1;
+}
+
+.recommendation .title {
+	font-weight: bold;
+	font-size: 1.25em;
+}
+
+.recommendation .synopsis {
+	font-size: 0.9em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin-top: 0.3em;
+	line-height: normal;
+	/* For ellipsizing and max 2 lines */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.recommendation .fansub {
+	background-color: rgba(30, 105, 30, 0.6);
+	color: white;
+	position: absolute;
+	top: 0;
+	right: 0;
+	text-overflow: ellipsis;
+	font-size: 1em;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	font-weight: bold;
+	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 90%;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+}
+
+.thumbnail {
+	display: block;
+	width: 180px; 
+	height: 256px;
+	max-width: 180px;
+	max-height: 256px;
+	background-color: #888;
+	position: relative;
+	transition: all .2s;
+	margin: 2px;
+}
+
+.thumbnail:hover {
+	transform: scale(1.1);
+	filter: grayscale(0%) brightness(100%);
+	z-index: 99;
+}
+
+.status-abandoned .thumbnail:hover img {
+	filter: grayscale(0%) brightness(100%);
+}
+
+.status-cancelled .thumbnail:hover img {
+	filter: grayscale(0%) brightness(100%);
+}
+
+.select-genre {
+	display: block;
+	width: 100px;
+	max-width: 100px;
+	height: 40px;
+	max-height: 40px;
+	padding: 4px;
+	box-sizing: border-box;
+}
+
+.select-genre-selected a {
+	background-color: #374 !important;
+	font-weight: bold;
+}
+
+.select-genre a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	font-size: 0.9em;
+	background-color: #333;
+	color: #FFF;
+	border-radius: 999px;
+	line-height: 1.1em;
+	text-decoration: none;
+}
+
+.slick-list {
+	overflow: visible !important;
+}
+
+.slick-prev, .slick-next {
+	z-index: 100;
+	border-radius: 999px;
+	background: #222 !important;
+	width: 26px !important;
+	height: 26px !important;
+}
+
+.slick-disabled {
+	visibility: hidden;
+}
+
+.slick-dots {
+	bottom: unset;
+	top: 0;
+}
+
+.slick-dotted.slick-slider {
+	margin-bottom: unset;
+}
+
+.carousel, .recommendations {
+	opacity: 0;
+/*	min-height: 256px;
+	max-height: 256px;*/
+}
+
+.fake-carousel {
+	min-height: 260px;
+	max-height: 260px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #BBB;
+}
+
+.fake-carousel div {
+	text-align: center;
+}
+
+.empty-icon {
+	font-size: 4em;
+}
+
+.carousel.slick-initialized, .genres-carousel.slick-initialized, .recommendations.slick-initialized {
+	opacity: 1;
+	position: relative;
+}
+
+.genres-carousel {
+	opacity: 0;
+	min-height: 40px;
+	max-height: 40px;
+	margin-bottom: 0.75em;
+}
+
+.thumbnail img {
+	display: block;
+	width: 100%; 
+	height: 100%;
+	object-fit: cover;
+}
+
+.thumbnail .seasons {
+	background-color: rgba(0,0,100,0.7);
+	color: white;
+	font-weight: bold;
+	font-size: 0.8em;
+	text-align: right;
+	margin-left: auto;
+	float: right;
+	width: fit-content;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+}
+
+.thumbnail .new {
+	background-color: rgba(255,0,0,0.7);
+	color: white;
+	font-weight: bold;
+	font-size: 0.8em;
+	text-align: left;
+	margin-right: auto;
+	float: left;
+	width: fit-content;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+}
+
+.thumbnail .infoholder {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+}
+
+.thumbnail .title {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	background-color: rgba(0,0,100,0.8);
+	color: white;
+	font-weight: bold;
+	font-size: 0.9em;
+	text-align: center;
+	line-height: 1.2em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 2.4em;
+	clear: both;
+}
+
+.thumbnail .title .ellipsized-title {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	/* For ellipsizing and max 2 lines */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.thumbnail .fansub {
+	background-color: rgba(30, 105, 30, 0.7);
+	color: white;
+	position: absolute;
+	top: 0;
+	right: 0;
+	text-overflow: ellipsis;
+	font-size: 0.75em;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	font-weight: bold;
+	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 90%;
+	line-height: 1.4em;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+}
+
+.status-indicator-tab {
+	align-self: flex-start;
+}
+
+.status-completed .status-indicator, .status-completed.status-indicator-tab {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-top: 20px solid green;
+	border-right: 20px solid transparent;
+	z-index: 1;
+}
+
+.status-in-progress .status-indicator, .status-in-progress.status-indicator-tab {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-top: 20px solid yellow;
+	border-right: 20px solid transparent;
+	z-index: 1;
+}
+
+.status-partially-completed .status-indicator, .status-partially-completed.status-indicator-tab {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-top: 20px solid greenyellow;
+	border-right: 20px solid transparent;
+	z-index: 1;
+}
+
+.status-cancelled .status-indicator, .status-cancelled.status-indicator-tab {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-top: 20px solid red;
+	border-right: 20px solid transparent;
+	z-index: 1;
+}
+
+.status-abandoned .status-indicator, .status-abandoned.status-indicator-tab {
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-top: 20px solid coral;
+	border-right: 20px solid transparent;
+	z-index: 1;
+}
+
+.status-completed .status {
+	background-color: rgba(0,128,0,0.8);
+}
+
+.status-in-progress .status {
+	background-color: rgba(255,255,0,0.8);
+	color: #222;
+}
+
+.status-partially-completed .status {
+	background-color: rgba(173,255,47,0.8);
+	color: #222;
+}
+
+.status-cancelled .status {
+	background-color: rgba(255,0,0,0.8);
+}
+
+.status-abandoned .status {
+	background-color: rgba(255,127,80,0.8);
+}
+
+.status-abandoned .thumbnail img {
+	filter: grayscale(70%) brightness(60%);
+	transition: all .2s;
+}
+
+.status-cancelled .thumbnail img {
+	filter: grayscale(70%) brightness(60%);
+	transition: all .2s;
+}
+
+/* Series screen */
+
+.white-popup {
+	position: relative;
+	background: #000;
+	height: 100%;
+	width: auto;
+	text-align: center;
+}
+
+
+.mfp-content {
+	height: 100%;
+}
+
+.mfp-close {
+	color: #FFF !important;
+	background-color: #000 !important;
+	opacity: 1 !important;
+}
+
+.warning {
+	background-color: #444;
+	text-align: center;
+	margin-right: 2em;
+	padding-left: 1em !important;
+	padding-right: 1em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.warning-small {
+	background-color: #444;
+	margin-right: 2em;
+	padding-left: 1em !important;
+	padding-right: 1em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	padding: 0.5em;
+	display: flex;
+}
+
+.warning-small .force-display {
+	margin-top: 0;
+	font-size: 1em;
+	align-self: center;
+}
+
+.warning-small > .fa {
+	font-size: 1.3em;
+	align-self: center;
+}
+
+.warning-small .section-content {
+	padding-left: 0.8em;
+	padding-right: 0.5em;
+}
+
+.warning > span {
+	font-size: 2.5em;
+	margin-bottom: 0.5em;
+}
+
+.series_sidebar {
+	order: 1;
+	margin: 2em;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+}
+
+.series_sidebar .section-title {
+	padding-top: 1em;
+}
+
+.series_sidebar_inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.main_content {
+	order: 2;
+	flex-grow: 1;
+	margin-top: 0.5em;
+}
+
+.sidebar_data {
+	font-size: 1.1em;
+	text-align: left;
+	padding-bottom: 1em;
+}
+
+.sidebar_data div {
+	padding: 0.2em 0;
+	padding-left: 1.5em;
+	text-indent: -1em;
+}
+
+.series_title {
+	color: #FFF;
+	font-size: 1.8em;
+	margin-top: 0.2em;
+}
+
+.series_alternate_names {
+	color: #DDD;
+	font-size: 1.1em;
+	margin-top: 0.2em;
+}
+
+.sidebar_thumbnail {
+	width: 300px; 
+	height: 424px;
+	object-fit: cover;
+	border: 1px solid white;
+}
+
+.fansub-buttons {
+	margin-top: 0.8em;
+}
+
+.padding-top {
+	margin-top: 1em;
+}
+
+.padding-bottom {
+	margin-bottom: 1.2em;
+}
+
+.parts-licensed {
+	color: rgb(220,255,220);
+	background: rgb(0,60,0);
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
+}
+
+.episodes-missing {
+	color: rgb(255,200,0);
+	background: rgb(80,80,0);
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
+}
+
+.cancelled-warning {
+	color: rgb(250,200,200);
+	background: rgb(100,00,0);
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
+}
+
+.episodes-missing a {
+	color: rgb(255,230,30);
+}
+
+.series-on-air {
+	color: rgb(200,200,255);
+	background: rgb(0,0,55);
+	padding: 0.5em 1em;
+	border-radius: 0.5em;
+}
+
+.force-display {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1.2em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 1em;
+	padding: 0.3em 0.5em;
+	background: rgb(32, 107, 41);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.force-display:hover {
+	background: rgb(52, 127, 61);
+}
+
+.fansub-list {
+	margin-top: 1em;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.fansub-list img {
+	vertical-align: middle;
+}
+
+.fansub-list tbody tr {
+	border-bottom: 1px solid #555;
+}
+
+.fansub-list tbody tr:last-child {
+	border-bottom: none;
+}
+
+.fansub-info {
+	background: rgba(255,255,0,0.05);
+	border-radius: 0.5em;
+	border: 1px solid #550;
+	padding: 1em;
+}
+
+.fansub-icon {
+	width: 28px;
+}
+
+.fansub-name {
+	font-weight: bold;
+	font-size: 1em;
+	vertical-align: middle;
+}
+
+.fansub-inactive {
+	font-weight: normal;
+	font-size: 0.9em;
+}
+
+.fansub-icon img {
+	width: 24px;
+	height: 24px;
+	border-radius: 0.25em;
+	vertical-align: middle;
+}
+
+.fansub-links {
+	text-align: right;
+}
+
+.fansub-website {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	padding: 0.2em 0.5em;
+	background: rgb(12, 87, 21);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.fansub-website:hover {
+	background: rgb(32, 107, 41);
+}
+
+.fansub-twitter {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	padding: 0.2em 0.5em;
+	background: rgb(14, 87, 142);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.fansub-twitter:hover {
+	background: rgb(34, 107, 162);
+}
+
+.fansub-downloads, .fansub-series-page {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	padding: 0.2em 0.5em;
+	background: rgb(145,55,0);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.fansub-downloads:hover, .fansub-series-page:hover {
+	background: rgb(165,75,20);
+}
+
+.mal-button {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 0.2em;
+	margin-bottom: 0.1em;
+	padding: 0.3em 0.5em;
+	background: rgb(50, 50, 114);
+	white-space: nowrap;
+	display: inline-block;
+	width: 100%;
+}
+
+.mal-button:hover {
+	background: rgb(70, 70, 134);
+}
+
+.tadaima-button {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 1em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 0.2em;
+	margin-bottom: 0.1em;
+	padding: 0.3em 0.5em;
+	background: rgb(90, 30, 30);
+	white-space: nowrap;
+	display: inline-block;
+	width: 100%;
+}
+
+.tadaima-button:hover {
+	background: rgb(110, 50, 50);
+}
+
+.hidden {
+	display: none;
+}
+
+.version_tab_container {
+	display: flex;
+	padding: 0em 2em 0em 0em;
+}
+
+.main_content .section {
+	padding-left: 0;
+}
+
+.synopsis-content {
+	overflow: hidden;
+}
+
+.show-more {
+	padding: 0;
+	text-align: right;
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+.show-more a {
+	color: #FFF;
+}
+
+.expandable-content-hidden {
+	line-height: 1.35em;
+	height: 10.80em;
+	text-overflow: ellipsis;
+}
+
+.expandable-content-shown {
+	line-height: 1.35em;
+	height: auto;
+}
+
+.version_tab {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	font-weight: bold;
+	font-size: 1.2em;
+	background-color: #282828;
+	cursor: pointer;
+	text-align: center;
+	flex-basis: 400px;
+}
+
+.version_tab_selected {
+	background-color: #333333;
+}
+
+.version_tab_text {
+	padding: 0.5em;
+	width: 100%;
+}
+
+.version_content_multi {
+	margin: 0em 2em 2em 0em;
+	background-color: #333333;
+}
+
+.version_content_multi .section {
+	padding-left: 2em;
+}
+
+.icon, .mobileicon {
+	padding-right: 0.3em;
+}
+
+.dataicon {
+	margin-right: -0.2em;
+}
+
+.icon-pr {
+	padding-right: 0.5em;
+}
+
+.icon-play {
+	margin-right: -0.3em;
+}
+
+.episode-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.episode-table .right {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.episode-table td {
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+}
+
+.episode-table tr.episode-multiple td {
+	padding-bottom: 0;
+}
+
+.episode-table thead tr {
+	text-align: left;
+	border-bottom: 1px solid white;
+}
+
+.episode-table thead th.episode-seen-head {
+	width: 1px;
+	white-space: nowrap;
+	padding-right: 0.5em;
+}
+
+.episode-table thead th.episode-info-head {
+	width: 1px;
+	white-space: nowrap;
+	padding-left: 0.5em;
+}
+
+.episode-table tbody tr {
+	text-align: left;
+	vertical-align: top;
+	border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.episode-table tbody tr:last-child {
+	border-bottom: none;
+}
+
+.episode-table tbody tr.episode-multiple {
+	text-align: left;
+	border-bottom: 1px solid transparent;
+}
+
+.episode-title {
+	font-weight: bold;
+	margin-left: 1.5em;
+	text-indent: -1em;
+}
+
+.episode-title.no-indent {
+	margin-left: 0;
+	text-indent: 0;
+}
+
+.season {
+	margin-bottom: 1em;
+	margin-left: 1.2em;
+}
+
+.extra-content {
+	margin-bottom: 1em;
+	margin-left: 1.2em;
+}
+
+.extra-content.extra-content-single-season {
+	margin-left: 0;
+	margin-top: 2em;
+}
+
+.extra-content.extra-content-single-season .season_name {
+	margin-left: 0;
+}
+
+.season_name {
+	font-weight: bold;
+	margin-bottom: 0.5em;
+	cursor: pointer;
+	outline: none;
+	font-size: 1.2em;
+	margin-left: -1em;
+}
+
+.season_name:hover {
+	color: #FFD;
+}
+
+.episode-unavailable {
+	color: #888;
+	font-weight: bold;
+}
+
+.version {
+	margin-left: 2.5em;
+	text-indent: -1em;
+}
+
+.video-player {
+	font-weight:bold;
+	color: #E0E0E0;
+}
+
+.nowrap {	
+	white-space: nowrap;
+}
+
+.viewed-indicator {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.viewed {
+	background: rgb(140, 140, 140);
+	color: #FFF;
+}
+
+.not-viewed {
+	background: rgb(140, 140, 140);
+	color: #000;
+}
+
+.version-resolution-4k {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(0, 80, 0);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.version-resolution-hd1080 {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(0, 80, 0);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.version-resolution-hd720 {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(70, 120, 0);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.version-resolution-sd {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(120, 100, 0);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.version-info {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(0, 80, 140);
+	white-space: nowrap;
+	cursor: pointer;
+	margin-right: 0.2em;
+}
+
+.version-unavailable {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(80, 80, 80);
+	white-space: nowrap;
+	cursor: pointer;
+	color: #DDD;
+}
+
+.version-lost {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(80, 80, 80);
+	white-space: nowrap;
+	cursor: pointer;
+	color: #DDD;
+}
+
+.new-episode {
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 0.1em 0.4em;
+	background: rgb(155, 0, 0);
+	white-space: nowrap;
+	cursor: pointer;
+	margin-left: 0.4em;
+}
+
+.tooltip-container {
+	position: relative;
+}
+
+.tooltip-container .tooltip {
+	position: absolute;
+	top: 15px; /*must overlap parent element otherwise pop-up doesn't stay open when rolloing over '*/
+	background: #333;
+	border: 1px solid #fff;
+	padding: 4px 8px;
+	z-index: 100;
+	margin-top: 6px;
+	overflow: hidden;
+	font-weight: normal;
+	font-size: 1.1em;
+	text-align: left;
+}
+
+.tooltip.tooltip-left {
+	right: 0;
+}
+
+.tooltip.tooltip-right {
+	left: 0;
+}
+
+/* Footer */
+
+#footer {
+	color: #FFF;
+	clear: both;
+	padding: 0 30px;
+}
+
+#footer p {
+	text-align: center;
+	font-size: 1em;
+}
+
+/* MOBILE */
+@media screen and (max-width: 1000px){
+	.separator {
+		width: 100%;
+	}
+
+	.tabs {
+		width: 100%;
+		order: 999;
+		padding: 0;
+	}
+
+	.mobilewrappable {
+		flex-wrap: wrap;
+	}
+
+	.series_sidebar {
+		width: 100%;
+		min-width: 0;
+		margin: 1em;
+		padding-top: 2em;
+		display: flex;
+		align-items: center;
+	}
+
+	.sidebar_thumbnail {
+		width: 169px; 
+		height: 239px;
+		object-fit: cover;
+	}
+
+	.episode {
+		width: 100%;
+	}
+
+	.season .episode {
+		margin-left: 1.5em;
+		width: 100%;
+	}
+
+	.main_content .section {
+		padding-left: 2em;
+	}
+	
+	.version_content_multi {
+		margin: 0em 2em 2em 2em;
+	}
+	
+	.version_tab_container {
+		padding: 0em 2em;
+	}
+
+	.user-options, .search-form {
+		margin-top: -0.5em;
+	}
+}
+
+@media screen and (max-width: 650px){
+	#header {
+		margin-left: 1em;
+		margin-right: 1em;
+	}
+
+	#options-overlay-content {
+		max-width: 100%;
+		padding: 1em;
+	}
+
+	.mobilehide {
+		display: none;
+	}
+
+	.mobileicon {
+		padding-right: 0;
+	}
+
+	.tabs {
+		margin-left: -0.75em;
+		margin-right: -0.75em;
+	}
+
+	.tab {
+		padding: 0.5em 0.5em;
+	}
+
+	.options-fansub {
+		max-width: 150px;
+		min-width: 150px;
+	}
+
+	.options-section-divider {
+		 margin-top: 1em;
+	}
+
+	.page-title-block {
+		padding: 0.5em 0.5em 0.5em 0em;
+	}
+
+	.page-title {
+		font-size: 1.75em;
+	}
+
+	.thumbnail {
+		width: 120px;
+		height: 170px;
+		margin: 1px;
+	}
+
+	.recommendation .synopsis {
+		margin-top: 0;
+	}
+
+	.recommendation .title {
+		margin-top: -0.2em;
+	}
+
+	.recommendation {
+		height: 170px;
+		font-size: 0.8em;
+	}
+
+	.advent {
+		height: 170px;
+	}
+
+	.carousel {
+		/*min-height: 170px;
+		min-height: 170px;*/
+	}
+
+	.fake-carousel {
+		min-height: 170px;
+		max-height: 170px;
+	}
+
+	.section {
+		padding: 1em 1em 1em 0.75em;
+	}
+
+	.slick-prev, .slick-next {
+		visibility: hidden;
+	}
+
+	.season .episode {
+		margin-left: 1em;
+	}
+
+	.thumbnail .fansub {
+		font-size: 0.6em;
+		line-height: 1.2em;
+	}
+
+	.thumbnail .new {
+		font-size: 0.6em;
+		line-height: 1.2em;
+	}
+
+	.thumbnail .seasons {
+		font-size: 0.6em;
+		line-height: 1.2em;
+	}
+
+	.thumbnail .title {
+		font-size: 0.65em;
+	}
+
+	.version_tab_container {
+		padding: 0em 1em;
+	}
+
+	.version_content_multi {
+		margin: 0em 1em 1em 1em;
+	}
+
+	.version_content_multi .section {
+		padding-left: 1em;
+	}
+
+	.warning-small {
+		margin-left: 1em;
+		margin-right: 1em;
+	}
+
+	.warning{
+		margin-right: 1em;
+		margin-left: 1em;
+	}
+
+	.series_sidebar {
+		padding-top: 1em;
+	}
+
+	.main_content .section {
+		padding-left: 1em;
+	}
+
+	.user-options, .search-form {
+		margin-top: 0;
+	}
+
+	.series_header {
+		height: 128px;
+	}
+}

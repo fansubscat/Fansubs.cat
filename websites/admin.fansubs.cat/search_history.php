@@ -1,5 +1,5 @@
 <?php
-$header_title="Historial de cerques - Anàlisi";
+$header_title="Cerques d'anime - Anàlisi";
 $page="analytics";
 include("header.inc.php");
 
@@ -8,9 +8,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Historial de cerques</h4>
+					<h4 class="card-title text-center mb-4 mt-1">Cerques d'anime</h4>
 					<hr>
-					<p class="text-center">Aquestes són les cerques més populars al web.</p>
+					<p class="text-center">Aquestes són les cerques més populars al web d'anime.</p>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
 							<tr>

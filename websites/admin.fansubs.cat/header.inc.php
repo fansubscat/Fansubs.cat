@@ -19,7 +19,8 @@ session_start();
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-		<script src="scripts.js"></script>
+		<script src="js/adminfansubscat.js"></script>
+		<script src="js/uncompress.js"></script>
 		<style>
 			html,body{height: 100%;}
 			a{text-decoration: none !important;}
@@ -60,18 +61,19 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					</li>
 					<li class="nav-item dropdown<?php echo $page=='manga' ? ' active' : ''; ?>">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSeries" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manga</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries" style="background-color: #f8d7da;">
+							<div class="alert text-center mb-0 mt-0"><span class="fa fa-exclamation-triangle pr-2"></span>Zona en proves<span class="fa fa-exclamation-triangle pl-2"></span></div>
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
-							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Llista de manga</a>
-							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Afegeix un manga nou</a>
+							<a class="dropdown-item" href="manga_list.php">Llista de manga</a>
+							<a class="dropdown-item" href="manga_edit.php">Afegeix un manga nou</a>
 							<div class="dropdown-divider"></div>
 <?php
 	}
 ?>
-							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Llista de versions de manga</a>
-							<a class="dropdown-item disabled" href="javascript:alert('Encara no està disponible.');">Afegeix una versió nova</a>
+							<a class="dropdown-item" href="manga_version_list.php">Llista de versions de manga</a>
+							<a class="dropdown-item" href="manga_choose.php">Afegeix una versió nova</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown<?php echo $page=='news' ? ' active' : ''; ?>">
@@ -80,7 +82,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 							<a class="dropdown-item" href="news_list.php">Llista de notícies</a>
 							<a class="dropdown-item" href="news_edit.php">Afegeix una notícia a mà</a>
 <?php
-	if ($_SESSION['admin_level']>=2) {
+	if ($_SESSION['admin_level']>=3) {
 ?>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="fetcher_list.php">Llista de recollidors</a>
@@ -128,8 +130,10 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Anàlisi</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
 							<a class="dropdown-item" href="stats.php">Estadístiques</a>
-							<a class="dropdown-item" href="views.php">Darreres visualitzacions</a>
-							<a class="dropdown-item" href="search_history.php">Historial de cerques</a>
+							<a class="dropdown-item" href="manga_views.php">Darreres lectures de manga</a>
+							<a class="dropdown-item" href="views.php">Darreres visualitzacions d'anime</a>
+							<a class="dropdown-item" href="search_history.php">Cerques d'anime</a>
+							<a class="dropdown-item" href="manga_search_history.php">Cerques de manga</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown<?php echo $page=='tools' ? ' active' : ''; ?>">

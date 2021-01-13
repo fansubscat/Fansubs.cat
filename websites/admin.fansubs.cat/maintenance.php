@@ -7,14 +7,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($_GET['action'])) {
 		switch ($_GET['action']) {
 			case 'clear-views':
-				log_action("clear-views","S'han buidat totes les visualitzacions");
+				log_action("clear-views","S'han buidat totes les visualitzacions i lectures");
 				query("DELETE FROM views");
-				$_SESSION['message']="S'han buidat les visualitzacions correctament.";
+				query("DELETE FROM manga_views");
+				$_SESSION['message']="S'han buidat les visualitzacions i lectures correctament.";
 				break;
 			case 'clear-search-history':
-				log_action("clear-search-history","S'ha buidat l'historial de cerques");
+				log_action("clear-search-history","S'han buidat els historials de cerques");
 				query("DELETE FROM search_history");
-				$_SESSION['message']="S'ha buidat l'historial de cerques correctament.";
+				query("DELETE FROM manga_search_history");
+				$_SESSION['message']="S'han buidat els historials de cerques correctament.";
 				break;
 			case 'clear-logs':
 				query("DELETE FROM action_log");
@@ -42,10 +44,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<a href="maintenance.php?action=clear-logs" class="btn btn-warning" onclick="return confirm('Segur que vols buidar el registre d\'accions? Es perdrà l\'historial de canvis. L\'acció no es pot desfer.')" onauxclick="return false;">Buida el registre d'accions</a>
 					</div>
 					<div class="text-center p-2">
-						<a href="maintenance.php?action=clear-search-history" class="btn btn-warning" onclick="return confirm('Segur que vols buidar l\'historial de cerques? L\'acció no es pot desfer.')" onauxclick="return false;">Buida l'historial de cerques</a>
+						<a href="maintenance.php?action=clear-search-history" class="btn btn-warning" onclick="return confirm('Segur que vols buidar l\'historial de cerques? L\'acció no es pot desfer.')" onauxclick="return false;">Buida els historials de cerques</a>
 					</div>
 					<div class="text-center p-2">
-						<a href="maintenance.php?action=clear-views" class="btn btn-danger" onclick="return confirm('Segur que vols esborrar totes les visualitzacions? Es perdran totes les estadístiques i l\'apartat \'Més populars\' apareixerà buit fins que no hi hagi visualitzacions noves. L\'acció no es pot desfer.')" onauxclick="return false;">Esborra totes les visualitzacions</a>
+						<a href="maintenance.php?action=clear-views" class="btn btn-danger" onclick="return confirm('Segur que vols esborrar totes les visualitzacions i lectures? Es perdran totes les estadístiques i l\'apartat \'Més populars\' apareixerà buit fins que no hi hagi visualitzacions o lectures noves. L\'acció no es pot desfer.')" onauxclick="return false;">Esborra totes les visualitzacions i lectures</a>
 					</div>
 				</article>
 			</div>

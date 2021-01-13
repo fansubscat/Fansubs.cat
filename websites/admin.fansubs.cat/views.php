@@ -1,5 +1,5 @@
 <?php
-$header_title="Darreres visualitzacions - Anàlisi";
+$header_title="Darreres visualitzacions d'anime - Anàlisi";
 $page="analytics";
 include("header.inc.php");
 require_once("common.inc.php");
@@ -14,28 +14,33 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$fansub = mysqli_fetch_assoc($resultf);
 		mysqli_free_result($resultf);
 	}
+
+	$limit = 25;
+	if (!empty($_GET['limit']) && is_numeric($_GET['limit'])){
+		$limit = escape($_GET['limit']);
+	}
 ?>
 		<div class="container justify-content-center p-4">
 			<ul class="nav nav-tabs" id="stats_tabs" role="tablist">
-				<li class="nav-item">
-					<a class="nav-link active" id="totals-tab" data-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Visualitzacions globals</a>
-				</li>
 <?php
 	if (!empty($fansub)) {
 ?>
 				<li class="nav-item">
-					<a class="nav-link" id="fansub-tab" data-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Visualitzacions <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
+					<a class="nav-link active" id="fansub-tab" data-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Visualitzacions <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
 				</li>
 <?php
 	}
 ?>
+				<li class="nav-item">
+					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Visualitzacions globals</a>
+				</li>
 			</ul>
 			<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
-				<div class="tab-pane fade show active" id="totals" role="tabpanel" aria-labelledby="totals-tab">
+				<div class="tab-pane fade<?php echo empty($fansub) ? ' show active' : ''; ?>" id="totals" role="tabpanel" aria-labelledby="totals-tab">
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Visualitzacions en curs</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Visualitzacions d'anime en curs</h4>
 								<hr>
 								<div class="text-center pb-3">
 									<a href="views.php" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
@@ -51,7 +56,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',e.number,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',e.number),'(Capítol sense nom)')) episode_name, ((ps.time_spent/60)/IF(IFNULL(e.duration,1)=0,1,IFNULL(e.duration,1)))*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update FROM play_session ps LEFT JOIN link l ON ps.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id ORDER BY UNIX_TIMESTAMP(ps.last_update)<".(date('U')-120)." ASC, ps.play_id ASC");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',e.number,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',e.number),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, ((ps.time_spent/60)/IF(IFNULL(e.duration,1)=0,1,IFNULL(e.duration,1)))*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update FROM play_session ps LEFT JOIN link l ON ps.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id ORDER BY UNIX_TIMESTAMP(ps.last_update)<".(date('U')-120)." ASC, ps.play_id ASC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
@@ -73,7 +78,7 @@ mysqli_free_result($result);
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Darreres 25 visualitzacions</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Darreres <?php echo $limit; ?> visualitzacions d'anime</h4>
 								<hr>
 								<div class="row">
 									<table class="table table-hover table-striped">
@@ -86,7 +91,7 @@ mysqli_free_result($result);
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',e.number,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',e.number),'(Capítol sense nom)')) episode_name, vl.date FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id ORDER BY vl.date DESC LIMIT 25");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',e.number,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',e.number),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, vl.date FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id ORDER BY vl.date DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
@@ -108,11 +113,11 @@ mysqli_free_result($result);
 <?php
 	if (!empty($fansub)) {
 ?>
-				<div class="tab-pane fade" id="fansub" role="tabpanel" aria-labelledby="fansub-tab">
+				<div class="tab-pane fade show active" id="fansub" role="tabpanel" aria-labelledby="fansub-tab">
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Visualitzacions en curs</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Visualitzacions d'anime en curs</h4>
 								<hr>
 								<div class="text-center pb-3">
 									<a href="views.php" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
@@ -150,7 +155,7 @@ mysqli_free_result($result);
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Darreres 25 visualitzacions</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Darreres <?php echo $limit; ?> visualitzacions d'anime</h4>
 								<hr>
 								<div class="row">
 									<table class="table table-hover table-striped">
@@ -163,7 +168,7 @@ mysqli_free_result($result);
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',e.number,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',e.number),'(Capítol sense nom)')) episode_name, vl.date FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY vl.date DESC LIMIT 25");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',e.number,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',e.number),'(Capítol sense nom)')) episode_name, vl.date FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY vl.date DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>

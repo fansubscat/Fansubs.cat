@@ -69,7 +69,7 @@ function get_fetch_type($fetch_type){
 	}
 }
 
-if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
+if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
 		log_action("delete-fetcher", "S'ha suprimit el recollidor (id. de recollidor: ".$_GET['delete_id'].")");
 		query("UPDATE news SET fetcher_id=NULL WHERE fetcher_id=".escape($_GET['delete_id']));

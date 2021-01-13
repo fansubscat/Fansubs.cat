@@ -20,5 +20,5 @@ RewriteRule ^cerca/(.*)/pagina/(.*)$ search.php?query=$1&page=$2
 RewriteRule ^cerca/(.*)/$ search.php?query=$1
 RewriteRule ^cerca/(.*)$ search.php?query=$1
 RewriteRule ^.*\.inc\.php$ error.php?code=404
-RewriteRule ^nadal/(.*)/$ https://nadal.fansubs.cat/$1/
-RewriteRule ^nadal/(.*)$ https://nadal.fansubs.cat/$1
+RewriteRule ^nadal/$ https://nadal.fansubs.cat/
+RewriteRule ^nadal$ https://nadal.fansubs.cat/

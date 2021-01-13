@@ -16,7 +16,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	if ($_SESSION['admin_level']<2) {
 ?>
-			<p class="text-center alert alert-warning">No tens permisos per a crear anime, manga ni notícies. Si et cal, demana a algú altre que ho faci.</p>
+			<p class="text-center alert alert-warning">No tens permisos per a crear fitxes d'anime ni de manga. Si et cal, demana a algú altre que ho faci.</p>
 <?php
 	}
 ?>

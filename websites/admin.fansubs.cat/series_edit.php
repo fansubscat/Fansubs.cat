@@ -74,7 +74,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['rating'])) {
 			$data['rating']="'".escape($_POST['rating'])."'";
 		} else {
-			$data['rating']="NULL";
+			crash("Dades invàlides: manca rating");
 		}
 		if (!empty($_POST['synopsis'])) {
 			$data['synopsis']=escape($_POST['synopsis']);
@@ -474,9 +474,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="form-group">
-									<label for="form-rating">Valoració per edats</label>
-									<select class="form-control" name="rating" id="form-rating">
-										<option value="">- Sense valoració -</option>
+									<label for="form-rating" class="mandatory">Valoració per edats</label>
+									<select class="form-control" name="rating" id="form-rating" required>
+										<option value="">- Selecciona una valoració -</option>
 										<option value="TP"<?php echo $row['rating']=='TP' ? " selected" : ""; ?>>Tots els públics</option>
 										<option value="+7"<?php echo $row['rating']=='+7' ? " selected" : ""; ?>>Majors de 7 anys</option>
 										<option value="+13"<?php echo $row['rating']=='+13' ? " selected" : ""; ?>>Majors de 13 anys</option>
@@ -609,7 +609,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<button onclick="addSeasonRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una temporada</button>
+									<div class="w-100 text-center"><button onclick="addSeasonRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una temporada</button></div>
 								</div>
 							</div>
 						</div>
@@ -766,7 +766,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										</table>
 									</div>
 									<div class="form-group row w-100 ml-0">
-										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
+										<div class="col-sm text-center" style="padding-left: 0; padding-right: 0">
 											<button onclick="addRelatedSeriesRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un anime relacionat</button>
 										</div>
 									</div>
@@ -824,7 +824,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										</table>
 									</div>
 									<div class="form-group row w-100 ml-0">
-										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
+										<div class="col-sm text-center" style="padding-left: 0; padding-right: 0">
 											<button onclick="addRelatedMangaRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un manga relacionat</button>
 										</div>
 									</div>

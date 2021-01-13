@@ -17,4 +17,5 @@ RewriteRule ^qui-som$ about.php
 RewriteRule ^embed/(.*)/$ embed.php?link_id=$1
 RewriteRule ^embed/(.*)$ embed.php?link_id=$1
 RewriteRule ^admin/(.*)/$ https://admin.fansubs.cat/$1/
-RewriteRule ^admin/(.*)$ https://admin.fansubs.cat/$1
+RewriteRule ^admin/$ https://admin.fansubs.cat/
+RewriteRule ^admin$ https://admin.fansubs.cat/

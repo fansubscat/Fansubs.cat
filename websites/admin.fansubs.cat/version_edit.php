@@ -754,7 +754,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+											<div class="w-100 text-center"><button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre enllaç</button></div>
 										</div>
 									</div>
 								</div>
@@ -824,7 +824,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<button onclick="addVersionExtraRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+											<div class="w-100 text-center"><button onclick="addVersionExtraRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre enllaç extra</button></div>
 										</div>
 									</div>
 								</div>

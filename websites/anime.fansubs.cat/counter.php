@@ -17,11 +17,11 @@ if ($link_id>0 && !empty($_GET['action']) && !empty($play_id)) {
 					//	Minimum: X/2 (values lower are not counted as real views)
 					//	Maximum: X (values higher are truncated to X)
 					//If the episode DOES NOT have a duration defined, to be counted as a real view, it must be inside this range:
-					//In real life, this should only happen for extra content links (usually waaay shorter than an hour).
+					//In real life, this should only happen for extra content links (usually waaay shorter than 10 minutes).
 					//	Minimum: 30 seconds (values lower are not counted as real views)
-					//	Maximum: 1 hour (values higher are truncated to 1 hour)
+					//	Maximum: 10 minutes (values higher are truncated to 10 minutes)
 					$min_time = !empty($row['duration']) ? ($row['duration']*60/2) : 30;
-					$max_time = !empty($row['duration']) ? ($row['duration']*60) : (3*60*60);
+					$max_time = !empty($row['duration']) ? ($row['duration']*60) : (10*60);
 
 					if (!empty($_GET['time_spent']) && is_numeric($_GET['time_spent']) && $_GET['time_spent']>=$min_time) {
 						if ($_GET['time_spent']>$max_time) {
@@ -44,7 +44,7 @@ if ($link_id>0 && !empty($_GET['action']) && !empty($play_id)) {
 				break;
 			case 'notify':
 				//Same logic but only for max time...
-				$max_time = !empty($row['duration']) ? ($row['duration']*60) : (3*60*60);
+				$max_time = !empty($row['duration']) ? ($row['duration']*60) : (10*60);
 
 				if (!empty($_GET['time_spent']) && is_numeric($_GET['time_spent'])){
 					if ($_GET['time_spent']>$max_time) {

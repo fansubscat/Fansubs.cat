@@ -161,6 +161,96 @@ function populateMalData(data, staff) {
 	}
 }
 
+function populateMalDataManga(data) {
+	if ($("#form-name-with-autocomplete").val()=='') {
+		$("#form-name-with-autocomplete").val(data.title);
+	}
+	if ($("#form-slug").val()=='') {
+		$("#form-slug").val(string_to_slug(data.title));
+	}
+	if ($("#form-alternate_names").val()=='') {
+		if (data.title && data.title_english && data.title_english!=data.title) {
+			$("#form-alternate_names").val(data.title+', '+data.title_english);
+		} else if (data.title) {
+			$("#form-alternate_names").val(data.title);
+		} else if (data.title_english) {
+			$("#form-alternate_names").val(data.title_english);
+		}
+	}
+	if ($("#form-score").val()=='') {
+		$("#form-score").val(data.score ? data.score : '');
+	}
+	if ($("#form-type").val()=='') {
+		$("#form-type").val(data.type=='One-shot' ? 'oneshot' : 'manga');
+	}
+	if ($("#form-publish_date").val()=='') {
+		$("#form-publish_date").val(data.published.from.substr(0, 10));
+	}
+	if ($("#form-synopsis").val()=='') {
+		$("#form-synopsis").val(data.synopsis);
+	}
+	if ($("#form-image").val()=='' || $("#form-image").val().startsWith("https://cdn.myanimelist.net")) {
+		var url = data.image_url ? data.image_url.replace(".jpg","l.jpg") : data.image_url;
+		$("#form-image").val(url);
+		$('#form-image-preview').prop('src', url);
+		$('#form-image-preview-link').prop('href', url);
+	}
+	if ($("#form-chapters").val()=='' || $("#form-chapters").val()=='0') {
+		if (data.chapters) {
+			$("#form-chapters").val(data.chapters);
+			$("#form-is_open").prop('checked', false);
+			$("#form-chapters").prop('disabled', false);
+		} else {
+			$("#form-chapters").val('');
+			$("#form-is_open").prop('checked', true);
+			$("#form-chapters").prop('disabled', true);
+		}
+	}
+
+	if (data.chapters==1) {
+		//One-shot, populate first chapter and uncheck show chapter numbers
+		$('#form-show_chapter_numbers').prop('checked', false);
+		if ($('#form-chapter-list-name-1').val()=='') {
+			$('#form-chapter-list-name-1').val($("#form-name-with-autocomplete").val());
+		}
+	}
+
+	var textAuthors = "";
+	for (var i = 0; i < data.authors.length; i++) {
+		var authorName;
+		if (data.authors[i].name.includes(', ')) {
+			authorName=data.authors[i].name.split(', ')[1]+" "+data.authors[i].name.split(', ')[0];
+		} else {
+			authorName=data.authors[i].name;
+		}
+
+		if (textAuthors!='') {
+			textAuthors+=', ';
+		}
+		textAuthors+=authorName;
+	}
+
+	$("#form-author").val(textAuthors);
+
+	$("[name='genres[]']").each(function() {
+		$(this).prop('checked', false);
+	});
+	
+	for (var i = 0; i < data.genres.length; i++) {
+		$("[data-myanimelist-id='"+data.genres[i].mal_id+"']").prop('checked', true);
+	}
+
+	if ($("#form-volume-list-chapters-1").val()=='') {
+		if (data.chapters) {
+			$("#form-volume-list-chapters-1").val(data.chapters);
+		}
+	}
+
+	if ($("#form-volume-list-myanimelist_id-1").val()=='') {
+		$("#form-volume-list-myanimelist_id-1").val(data.mal_id);
+	}
+}
+
 function populateMalEpisodes(season_line, episodes) {
 	if (season_line==1) {
 		var i = parseInt($('#episode-list-table').attr('data-count'));
@@ -238,6 +328,41 @@ function deleteRow(id) {
 	}
 }
 
+function addChapterRow(extra) {
+	var i = parseInt($('#chapter-list-table').attr('data-count'))+1;
+	$('#chapter-list-table').append('<tr id="form-chapter-list-row-'+i+'"><td><input id="form-chapter-list-volume-'+i+'" name="form-chapter-list-volume-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-chapter-list-num-'+i+'" name="form-chapter-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)"/><input id="form-chapter-list-id-'+i+'" name="form-chapter-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-chapter-list-name-'+i+'" name="form-chapter-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td class="text-center align-middle"><button id="form-chapter-list-delete-'+i+'" onclick="deleteChapterRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#chapter-list-table').attr('data-count', i);
+
+	if (!extra) {
+		$('#form-chapter-list-volume-'+i).val($('#form-chapter-list-volume-'+(i-1)).val()!='' ? $('#form-chapter-list-volume-'+(i-1)).val() : 1);
+		$('#form-chapter-list-num-'+i).val($('#form-chapter-list-num-'+(i-1)).val()!='' ? parseInt($('#form-chapter-list-num-'+(i-1)).val())+1 : 1);
+	}
+}
+
+function deleteChapterRow(id) {
+	var i = parseInt($('#chapter-list-table').attr('data-count'));
+	if(i==1) {
+		alert('El manga ha de tenir un capítol, com a mínim!');
+	}
+	else {
+		$("#form-chapter-list-row-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-chapter-list-row-"+j).attr('id','form-chapter-list-row-'+(j-1));
+			$("#form-chapter-list-id-"+j).attr('name','form-chapter-list-id-'+(j-1));
+			$("#form-chapter-list-id-"+j).attr('id','form-chapter-list-id-'+(j-1));
+			$("#form-chapter-list-volume-"+j).attr('name','form-chapter-list-volume-'+(j-1));
+			$("#form-chapter-list-volume-"+j).attr('id','form-chapter-list-volume-'+(j-1));
+			$("#form-chapter-list-num-"+j).attr('name','form-chapter-list-num-'+(j-1));
+			$("#form-chapter-list-num-"+j).attr('id','form-chapter-list-num-'+(j-1));
+			$("#form-chapter-list-name-"+j).attr('name','form-chapter-list-name-'+(j-1));
+			$("#form-chapter-list-name-"+j).attr('id','form-chapter-list-name-'+(j-1));
+			$("#form-chapter-list-delete-"+j).attr('onclick','deleteChapterRow('+(j-1)+');');
+			$("#form-chapter-list-delete-"+j).attr('id','form-chapter-list-delete-'+(j-1));
+		}
+		$('#chapter-list-table').attr('data-count', i-1);
+	}
+}
+
 function addSeasonRow() {
 	var i = parseInt($('#season-list-table').attr('data-count'))+1;
 	$('#season-list-table').append('<tr id="form-season-list-row-'+i+'"><td><input id="form-season-list-number-'+i+'" name="form-season-list-number-'+i+'" type="number" class="form-control" value="'+(parseInt($('#form-season-list-number-'+(i-1)).val())+1)+'" required/><input id="form-season-list-id-'+i+'" name="form-season-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-season-list-name-'+i+'" name="form-season-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense nom)"/></td><td><input id="form-season-list-episodes-'+i+'" name="form-season-list-episodes-'+i+'" type="number" class="form-control" value="" required/></td><td><input id="form-season-list-myanimelist_id-'+i+'" name="form-season-list-myanimelist_id-'+i+'" type="number" class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-season-list-delete-'+i+'" onclick="deleteSeasonRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
@@ -270,6 +395,38 @@ function deleteSeasonRow(id) {
 	}
 }
 
+function addVolumeRow() {
+	var i = parseInt($('#volume-list-table').attr('data-count'))+1;
+	$('#volume-list-table').append('<tr id="form-volume-list-row-'+i+'"><td><input id="form-volume-list-number-'+i+'" name="form-volume-list-number-'+i+'" type="number" class="form-control" value="'+(parseInt($('#form-volume-list-number-'+(i-1)).val())+1)+'" required/><input id="form-volume-list-id-'+i+'" name="form-volume-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-volume-list-name-'+i+'" name="form-volume-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense nom)"/></td><td><input id="form-volume-list-chapters-'+i+'" name="form-volume-list-chapters-'+i+'" type="number" class="form-control" value="" required/></td><td><input id="form-volume-list-myanimelist_id-'+i+'" name="form-volume-list-myanimelist_id-'+i+'" type="number" class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-volume-list-delete-'+i+'" onclick="deleteVolumeRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#volume-list-table').attr('data-count', i);
+}
+
+function deleteVolumeRow(id) {
+	var i = parseInt($('#volume-list-table').attr('data-count'));
+	if(i==1) {
+		alert('El manga ha de tenir un volum, com a mínim!');
+	}
+	else {
+		$("#form-volume-list-row-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-volume-list-row-"+j).attr('id','form-volume-list-row-'+(j-1));
+			$("#form-volume-list-id-"+j).attr('name','form-volume-list-id-'+(j-1));
+			$("#form-volume-list-id-"+j).attr('id','form-volume-list-id-'+(j-1));
+			$("#form-volume-list-number-"+j).attr('name','form-volume-list-number-'+(j-1));
+			$("#form-volume-list-number-"+j).attr('id','form-volume-list-number-'+(j-1));
+			$("#form-volume-list-name-"+j).attr('name','form-volume-list-name-'+(j-1));
+			$("#form-volume-list-name-"+j).attr('id','form-volume-list-name-'+(j-1));
+			$("#form-volume-list-chapters-"+j).attr('name','form-volume-list-chapters-'+(j-1));
+			$("#form-volume-list-chapters-"+j).attr('id','form-volume-list-chapters-'+(j-1));
+			$("#form-volume-list-myanimelist_id-"+j).attr('name','form-volume-list-myanimelist_id-'+(j-1));
+			$("#form-volume-list-myanimelist_id-"+j).attr('id','form-volume-list-myanimelist_id-'+(j-1));
+			$("#form-volume-list-delete-"+j).attr('onclick','deleteVolumeRow('+(j-1)+');');
+			$("#form-volume-list-delete-"+j).attr('id','form-volume-list-delete-'+(j-1));
+		}
+		$('#volume-list-table').attr('data-count', i-1);
+	}
+}
+
 function addVersionRow(episode_id) {
 	if (isAutoFetchActive()){
 		alert("Si hi ha activada la sincronització automàtica de carpetes de MEGA, no és possible afegir més d'un enllaç per capítol. Abans has de desactivar-la.");
@@ -285,6 +442,76 @@ function addVersionExtraRow() {
 	$('#extras-list-table').append('<tr id="form-extras-list-row-'+i+'"><td><input id="form-extras-list-name-'+i+'" name="form-extras-list-name-'+i+'" type="text" class="form-control" value="" maxlength="200" required placeholder="- Introdueix un nom -"/><input id="form-extras-list-id-'+i+'" name="form-extras-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-extras-list-link-'+i+'" name="form-extras-list-link-'+i+'" type="url" class="form-control" value="" maxlength="200" required placeholder="- Introdueix un enllaç -"/></td><td><input id="form-extras-list-resolution-'+i+'" name="form-extras-list-resolution-'+i+'" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><button id="form-extras-list-delete-'+i+'" onclick="deleteVersionExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#extras-list-table').attr('data-count', i);
 	$('#extras-list-table-empty').addClass('d-none');
+}
+
+function addFileRow(chapter_id) {
+	var i = parseInt($('#files-list-table-'+chapter_id).attr('data-count'))+1;
+	$('#files-list-table-'+chapter_id).append('<tr id="form-files-list-'+chapter_id+'-row-'+i+'"><td class="align-middle"><div id="form-files-list-'+chapter_id+'-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-files-list-'+chapter_id+'-file-'+i+'" class="btn btn-sm btn-info w-100"><span class="fa fa-upload pr-2"></span>Puja un fitxer...</label><input id="form-files-list-'+chapter_id+'-file-'+i+'" name="form-files-list-'+chapter_id+'-file-'+i+'" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/><input id="form-files-list-'+chapter_id+'-id-'+i+'" name="form-files-list-'+chapter_id+'-id-'+i+'" type="hidden" value="-1"/><input id="form-files-list-'+chapter_id+'-number_of_files-'+i+'" name="form-files-list-'+chapter_id+'-number_of_files-'+i+'" type="hidden" value="0"/></td><td class="align-middle"><input id="form-files-list-'+chapter_id+'-comments-'+i+'" name="form-files-list-'+chapter_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><input id="form-files-list-'+chapter_id+'-lost-'+i+'" name="form-files-list-'+chapter_id+'-lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-files-list-'+chapter_id+'-delete-'+i+'" onclick="deleteFileRow('+chapter_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#files-list-table-'+chapter_id).attr('data-count', i);
+}
+
+function addFileExtraRow() {
+	var i = parseInt($('#extras-list-table').attr('data-count'))+1;
+	$('#extras-list-table').append('<tr id="form-extras-list-row-'+i+'"><td class="align-middle"><input id="form-extras-list-name-'+i+'" name="form-extras-list-name-'+i+'" type="text" class="form-control" value="" maxlength="200" required placeholder="- Introdueix un nom -"/><input id="form-extras-list-id-'+i+'" name="form-extras-list-id-'+i+'" type="hidden" value="-1"/><input id="form-extras-list-number_of_files-'+i+'" name="form-extras-list-number_of_files-'+i+'" type="hidden" value="-1"/></td><td class="align-middle"><div id="form-extras-list-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-extras-list-file-'+i+'" class="btn btn-sm btn-info w-100"><span class="fa fa-upload pr-2"></span>Puja un fitxer...</label><input id="form-extras-list-file-'+i+'" name="form-extras-list-file-'+i+'" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);" required/></td><td class="align-middle"><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><button id="form-extras-list-delete-'+i+'" onclick="deleteFileExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#extras-list-table').attr('data-count', i);
+	$('#extras-list-table-empty').addClass('d-none');
+}
+
+function uncompressFile(fileInput) {
+	var detailsElement=$(document.getElementById(fileInput.id.replace("file-", "file_details-")));
+	var numberOfPagesElement=$(document.getElementById(fileInput.id.replace("file-", "number_of_pages-")));
+	// Just return if there is no file selected
+	if (fileInput.files.length === 0) {
+		detailsElement.html("<span style=\"color: gray;\"><span class=\"fa fa-times fa-fw\"></span> No s'ha seleccionat cap fitxer, no es faran canvis.</span>");
+		numberOfPagesElement.val(0);
+		return;
+	}
+
+	// Get the selected file
+	let file = fileInput.files[0];
+
+	// Open the file as an archive
+	archiveOpenFile(file, '', function(archive, err) {
+		if (archive) {
+			console.info('Uncompressing ' + archive.archive_type + ' ...');
+			var count=0;
+			var countImages=0;
+			var countRepeated=0;
+			var foundNames = [];
+			archive.entries.forEach(function(entry) {
+			if (entry.is_file) {
+				if (entry.name.toLowerCase().endsWith(".jpg") || entry.name.toLowerCase().endsWith(".png") || entry.name.toLowerCase().endsWith(".jpeg")) {
+					countImages++;
+				}
+				var shortName = entry.name.split('/').pop().replace(/[^0-9a-zA-Z_\.]/g,'_');
+				if (foundNames.includes(shortName)){
+					countRepeated++;
+				}
+				foundNames.push(shortName);
+				count++;
+			}
+
+			if (countImages==count && countRepeated==0) {
+				detailsElement.html("<span style=\"color: #1e7e34;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L'arxiu consta de <strong>"+countImages+" imatges</strong> en total.</span>");
+				numberOfPagesElement.val(countImages);
+			} else if (countRepeated>0) {
+				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L'arxiu conté "+countRepeated+" fitxers amb noms repetits. Recorda que no hi poden haver subcarpetes.</span>");
+				fileInput.value="";
+				numberOfPagesElement.val(0);
+			} else if (countImages==0) {
+				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L'arxiu no conté cap fitxer d'imatge JPEG ni PNG.</span>");
+				numberOfPagesElement.val(countImages);
+			} else {
+				detailsElement.html("<span style=\"color: #d39e00;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L'arxiu consta de <strong>"+countImages+" imatges</strong> en total.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>Compte: L'arxiu conté "+(count-countImages)+" fitxers que no són imatges i es descartaran.</span>");
+				numberOfPagesElement.val(countImages);
+			}
+		});
+		} else {
+			detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>El fitxer no és vàlid</strong> (ha de ser un arxiu ZIP o RAR).</span>");
+			fileInput.value="";
+			numberOfPagesElement.val(0);
+		}
+	});
 }
 
 function addRelatedSeriesRow() {
@@ -338,6 +565,60 @@ function deleteRelatedMangaRow(id) {
 
 	if (i-1==0) {
 		$('#relatedmanga-list-table-empty').removeClass('d-none');
+	}
+}
+
+function addRelatedMangaMangaRow() {
+	var i = parseInt($('#relatedmangamanga-list-table').attr('data-count'))+1;
+
+	var htmlAcc = $('#form-relatedmangamanga-list-related_manga_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
+
+	$('#relatedmangamanga-list-table').append('<tr id="form-related-list-row-'+i+'"><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-relatedmangamanga-list-delete-'+i+'" onclick="deleteRelatedMangaMangaRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#relatedmangamanga-list-table').attr('data-count', i);
+	$('#relatedmangamanga-list-table-empty').addClass('d-none');
+}
+
+function deleteRelatedMangaMangaRow(id) {
+	var i = parseInt($('#relatedmangamanga-list-table').attr('data-count'));
+	$("#form-relatedmangamanga-list-row-"+id).remove();
+	for (var j=id+1;j<i+1;j++) {
+		$("#form-relatedmangamanga-list-row-"+j).attr('id','form-relatedmangamanga-list-row-'+(j-1));
+		$("#form-relatedmangamanga-list-related_manga_id-"+j).attr('name','form-relatedmangamanga-list-related_manga_id-'+(j-1));
+		$("#form-relatedmangamanga-list-related_manga_id-"+j).attr('id','form-relatedmangamanga-list-related_manga_id-'+(j-1));
+		$("#form-relatedmangamanga-list-delete-"+j).attr('onclick','deleteRelatedMangaMangaRow('+(j-1)+');');
+		$("#form-relatedmangamanga-list-delete-"+j).attr('id','form-relatedmangamanga-list-delete-'+(j-1));
+	}
+	$('#relatedmangamanga-list-table').attr('data-count', i-1);
+
+	if (i-1==0) {
+		$('#relatedmangamanga-list-table-empty').removeClass('d-none');
+	}
+}
+
+function addRelatedMangaAnimeRow() {
+	var i = parseInt($('#relatedmangaanime-list-table').attr('data-count'))+1;
+
+	var htmlAcc = $('#form-relatedmangaanime-list-related_anime_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
+
+	$('#relatedmangaanime-list-table').append('<tr id="form-related-list-row-'+i+'"><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-relatedmangaanime-list-delete-'+i+'" onclick="deleteRelatedMangaAnimeRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#relatedmangaanime-list-table').attr('data-count', i);
+	$('#relatedmangaanime-list-table-empty').addClass('d-none');
+}
+
+function deleteRelatedMangaAnimeRow(id) {
+	var i = parseInt($('#relatedmangaanime-list-table').attr('data-count'));
+	$("#form-relatedmangaanime-list-row-"+id).remove();
+	for (var j=id+1;j<i+1;j++) {
+		$("#form-relatedmangaanime-list-row-"+j).attr('id','form-relatedmangaanime-list-row-'+(j-1));
+		$("#form-relatedmangaanime-list-related_manga_id-"+j).attr('name','form-relatedmangaanime-list-related_anime_id-'+(j-1));
+		$("#form-relatedmangaanime-list-related_manga_id-"+j).attr('id','form-relatedmangaanime-list-related_anime_id-'+(j-1));
+		$("#form-relatedmangaanime-list-delete-"+j).attr('onclick','deleteRelatedMangaAnimeRow('+(j-1)+');');
+		$("#form-relatedmangaanime-list-delete-"+j).attr('id','form-relatedmangaanime-list-delete-'+(j-1));
+	}
+	$('#relatedmangaanime-list-table').attr('data-count', i-1);
+
+	if (i-1==0) {
+		$('#relatedmangaanime-list-table-empty').removeClass('d-none');
 	}
 }
 
@@ -399,6 +680,64 @@ function deleteVersionExtraRow(id) {
 		$("#form-extras-list-comments-"+j).attr('name','form-extras-list-comments-'+(j-1));
 		$("#form-extras-list-comments-"+j).attr('id','form-extras-list-comments-'+(j-1));
 		$("#form-extras-list-delete-"+j).attr('onclick','deleteVersionExtraRow('+(j-1)+');');
+		$("#form-extras-list-delete-"+j).attr('id','form-extras-list-delete-'+(j-1));
+	}
+	$('#extras-list-table').attr('data-count', i-1);
+
+	if (i-1==0) {
+		$('#extras-list-table-empty').removeClass('d-none');
+	}
+}
+
+function deleteFileRow(chapter_id, id) {
+	var i = parseInt($('#files-list-table-'+chapter_id).attr('data-count'));
+	if(i==1) {
+		$("#form-files-list-"+chapter_id+"-id-1").val("-1");
+		$("#form-files-list-"+chapter_id+"-file-1").val("");
+		$('label[for="form-files-list-'+chapter_id+'-file-1"]').removeClass("btn-warning");
+		$('label[for="form-files-list-'+chapter_id+'-file-1"]').addClass("btn-info");
+		$('label[for="form-files-list-'+chapter_id+'-file-1"]').html('<span class="fa fa-upload pr-2"></span> Puja un fitxer...');
+		$("#form-files-list-"+chapter_id+"-file_details-1").html('<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>');
+		$("#form-files-list-"+chapter_id+"-comments-1").val("");
+		$("#form-files-list-"+chapter_id+"-lost-1").prop('checked',false);
+	}
+	else {
+		$("#form-files-list-"+chapter_id+"-row-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-files-list-"+chapter_id+"-row-"+j).attr('id','form-files-list-'+chapter_id+'-row-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-id-"+j).attr('name','form-files-list-'+chapter_id+'-id-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-id-"+j).attr('id','form-files-list-'+chapter_id+'-id-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-file-"+j).attr('name','form-files-list-'+chapter_id+'-file-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-file-"+j).attr('id','form-files-list-'+chapter_id+'-file-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-file_details-"+j).attr('name','form-files-list-'+chapter_id+'-file_details-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-file_details-"+j).attr('id','form-files-list-'+chapter_id+'-file_details-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-comments-"+j).attr('name','form-files-list-'+chapter_id+'-comments-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-comments-"+j).attr('id','form-files-list-'+chapter_id+'-comments-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-lost-"+j).attr('name','form-files-list-'+chapter_id+'-lost-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-lost-"+j).attr('id','form-files-list-'+chapter_id+'-lost-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-delete-"+j).attr('onclick','deleteFileRow('+chapter_id+','+(j-1)+');');
+			$("#form-files-list-"+chapter_id+"-delete-"+j).attr('id','form-files-list-'+chapter_id+'-delete-'+(j-1));
+		}
+		$('#files-list-table-'+chapter_id).attr('data-count', i-1);
+	}
+}
+
+function deleteFileExtraRow(id) {
+	var i = parseInt($('#extras-list-table').attr('data-count'));
+	$("#form-extras-list-row-"+id).remove();
+	for (var j=id+1;j<i+1;j++) {
+		$("#form-extras-list-row-"+j).attr('id','form-extras-list-row-'+(j-1));
+		$("#form-extras-list-id-"+j).attr('name','form-extras-list-id-'+(j-1));
+		$("#form-extras-list-id-"+j).attr('id','form-extras-list-id-'+(j-1));
+		$("#form-extras-list-name-"+j).attr('name','form-extras-list-name-'+(j-1));
+		$("#form-extras-list-name-"+j).attr('id','form-extras-list-name-'+(j-1));
+		$("#form-extras-list-file-"+j).attr('name','form-extras-list-file-'+(j-1));
+		$("#form-extras-list-file-"+j).attr('id','form-extras-list-file-'+(j-1));
+		$("#form-extras-list-file_details-"+j).attr('name','form-extras-list-file_details-'+(j-1));
+		$("#form-extras-list-file_details-"+j).attr('id','form-extras-list-file_details-'+(j-1));
+		$("#form-extras-list-comments-"+j).attr('name','form-extras-list-comments-'+(j-1));
+		$("#form-extras-list-comments-"+j).attr('id','form-extras-list-comments-'+(j-1));
+		$("#form-extras-list-delete-"+j).attr('onclick','deleteFileExtraRow('+(j-1)+');');
 		$("#form-extras-list-delete-"+j).attr('id','form-extras-list-delete-'+(j-1));
 	}
 	$('#extras-list-table').attr('data-count', i-1);
@@ -541,6 +880,55 @@ function checkNumberOfEpisodes() {
 			return false;
 		}
 		if ($('#form-episode-list-num-'+i).val()>episodeCount){
+			alert('Hi ha números de capítol més alts que el nombre total de capítols. Corregeix-ho.');
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function checkNumberOfChapters() {
+	var volumes = $('[id^=form-volume-list-chapters-]');
+	var volumesChapterCount=0;
+	for (var i=0;i<volumes.length;i++){
+		if ($(volumes[i]).val()!='' && $(volumes[i]).val()>0) {
+			volumesChapterCount+=parseInt($(volumes[i]).val());
+		}
+	}
+	var chapterCount = parseInt($('#chapter-list-table').attr('data-count'));
+	var normalChapterCount = 0;
+
+	for (var i=1;i<=chapterCount;i++){
+		if ($('#form-chapter-list-num-'+i).val()!=''){
+			normalChapterCount++;
+		}
+	}
+	if (normalChapterCount!=volumesChapterCount){
+		alert('El nombre de capítols numerats de la llista ha de coincidir amb el nombre de capítols indicat als volums.');
+		return false;
+	}
+	for (var i=1;i<=chapterCount;i++){
+		if ($('#form-chapter-list-num-'+i).val()=='' && $('#form-chapter-list-name-'+i).val()==''){
+			alert('Hi ha capítols sense número ni nom. Els capítols normals han de tenir com a mínim número, i els capítols especials han de tenir com a mínim nom.');
+			return false;
+		}
+	}
+
+	var volumeNumbers = [];
+	for (var i=0;i<volumes.length;i++){
+		volumeNumbers.push($('#form-volume-list-number-'+(i+1)).val());
+	}
+	for (var i=1;i<=chapterCount;i++){
+		if ($('#form-chapter-list-volume-'+i).val()!='' && !volumeNumbers.includes($('#form-chapter-list-volume-'+i).val())){
+			alert('Hi ha capítols de volums inexistents. Corregeix-ho.');
+			return false;
+		}
+		if ($('#form-chapter-list-num-'+i).val()!='' && $('#form-chapter-list-num-'+i).val()==0){
+			alert('0 no és un número de capítol vàlid. Corregeix-ho.');
+			return false;
+		}
+		if ($('#form-chapter-list-num-'+i).val()>chapterCount){
 			alert('Hi ha números de capítol més alts que el nombre total de capítols. Corregeix-ho.');
 			return false;
 		}
@@ -705,13 +1093,46 @@ function isAutoFetchActive() {
 	return $('[id^=form-folders-list-active-]:checked').length>0;
 }
 
+function checkImageUpload(fileInput, previewImageId, previewLinkId) {
+	if (fileInput.files && fileInput.files[0]) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			$('#'+previewImageId).prop('src',e.target.result);
+			if (previewLinkId) {
+				$('#'+previewLinkId).prop('href',e.target.result);
+			}
+			$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
+			$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
+			$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+			$('label[for="'+fileInput.id+'"]').addClass("btn-success");
+			$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pr-2"></span>Es pujarà');
+		};
+		reader.readAsDataURL(fileInput.files[0]);
+	} else {
+		$('#'+previewImageId).prop('src','');
+		if (previewLinkId) {
+			$('#'+previewLinkId).prop('href','');
+		}
+		$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
+		$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+		$('label[for="'+fileInput.id+'"]').removeClass("btn-success");
+		$('label[for="'+fileInput.id+'"]').addClass("btn-secondary");
+		$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-times pr-2"></span>Sense canvis');
+	}
+}
+
 var malData;
 var malDataStaff;
 var malDataSeasonsEpisodes;
 var malDataEpisodes;
 var malDataMessages;
+var uncompressReady = false;
 
 $(document).ready(function() {
+	loadArchiveFormats(['rar', 'zip'], function() {
+		uncompressReady = true;
+	});
+
 	$("#form-name-with-autocomplete").on('input', function() {
 		$("#form-slug").val(string_to_slug($("#form-name-with-autocomplete").val()));
 	});
@@ -848,6 +1269,88 @@ $(document).ready(function() {
 				rowNumber++;
 			}
 		}
+	});
+
+	$("#generate-chapters").click(function() {
+		var volumes = $('[id^=form-volume-list-chapters-]');
+		var with_chapters=0;
+		for (var i=0;i<volumes.length;i++){
+			if ($(volumes[i]).val()!='' && $(volumes[i]).val()>0) {
+				with_chapters++;
+			}
+		}
+		if (with_chapters!=volumes.length) {
+			alert("Per a poder-los generar, cal que introdueixis el nombre de capítols de cada volum.");
+			return;
+		}
+
+		if ((parseInt($('#chapter-list-table').attr('data-count'))>1 || $('#form-chapter-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots i es tornaran a crear. Totes les versions que continguin aquests capítols i tots els fitxers d'aquests capítols desapareixeran i no es podrà desfer l'acció un cop hagis desat els canvis. Vols continuar?")) {
+			return;
+		}
+
+		var restart = (volumes.length==1 || confirm("Vols reiniciar la numeració de capítols a cada volum? Si és així, prem 'D'acord', en cas contrari, prem 'Cancel·la'."));
+
+		var i = parseInt($('#chapter-list-table').attr('data-count'));
+		for (var id=1;id<i+1;id++) {
+			$("#form-chapter-list-row-"+id).remove();
+		}
+		$('#chapter-list-table').attr('data-count', 0);
+
+		var rowNumber=1;
+
+		for (var i=0;i<volumes.length;i++) {
+			for (var j=0;j<$(volumes[i]).val();j++) {
+				addChapterRow(false);
+				$("#form-chapter-list-volume-"+rowNumber).val($('#form-volume-list-number-'+(i+1)).val());
+				$("#form-chapter-list-num-"+rowNumber).val(restart ? j+1 : rowNumber);
+				$("#form-chapter-list-name-"+rowNumber).val('');
+				rowNumber++;
+			}
+		}
+	});
+
+	$("#import-from-mal-manga").click(function() {
+		if ($("#form-myanimelist_id").val()=='') {
+			var result = prompt("Introdueix l'URL del manga a MyAnimeList per a importar-ne la fitxa.");
+			if (!result) {
+				return;
+			} else if (result.match(/https?:\/\/.*myanimelist.net\/manga\/(\d+)\//i)) {
+				$("#form-myanimelist_id").val(result.match(/https?:\/\/.*myanimelist.net\/manga\/(\d*)\//i)[1]);
+			} else {
+				alert("L'URL no és vàlida.");
+				return;
+			}
+		}
+		if (($("#form-name-with-autocomplete").val()!='' || $("#form-synopsis").val()!='') && !confirm("ATENCIÓ! La fitxa ja conté dades. Si continues, se sobreescriuran les dades d'autor, valoració per edats i gèneres, i també s'ompliran els camps que siguin buits.\nL'acció no es podrà desfer un cop hagis desat els canvis. Vols continuar?")) {
+			return;
+		}
+		$("#import-from-mal-manga").prop('disabled', true);
+		$("#import-from-mal-loading").removeClass("d-none");
+		$("#import-from-mal-not-loading").addClass("d-none");
+		var xmlhttp = new XMLHttpRequest();
+		var url = "https://api.jikan.moe/v3/manga/"+$("#form-myanimelist_id").val();
+
+		xmlhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				malData = JSON.parse(this.responseText);
+				populateMalDataManga(malData);
+				$("#import-from-mal-loading").addClass("d-none");
+				$("#import-from-mal-not-loading").removeClass("d-none");
+				setTimeout(function() {
+					$("#import-from-mal-manga").prop('disabled', false);
+				}, 4000);
+				$("#import-from-mal-done").removeClass("d-none");
+			} else if (this.readyState == 4) {
+				alert("S'ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
+				$("#import-from-mal-loading").addClass("d-none");
+				$("#import-from-mal-not-loading").removeClass("d-none");
+				setTimeout(function() {
+					$("#import-from-mal-manga").prop('disabled', false);
+				}, 4000);
+			}
+		};
+		xmlhttp.open("GET", url, true);
+		xmlhttp.send();
 	});
 
 	$("#import-from-mega").click(function() {

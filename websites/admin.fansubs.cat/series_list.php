@@ -48,7 +48,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="5" class="text-center">- No hi ha cap anime -</td>
+								<td colspan="6" class="text-center">- No hi ha cap anime -</td>
 							</tr>
 <?php
 	}

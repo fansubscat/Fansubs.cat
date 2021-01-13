@@ -94,7 +94,7 @@ CREATE TABLE `link` (
   `url` varchar(200) DEFAULT NULL,
   `resolution` varchar(200) DEFAULT NULL,
   `comments` varchar(200) DEFAULT NULL,
-  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `news` (

@@ -400,4 +400,75 @@ function relative_time($date){
 	}
 	return $ago;
 }
+
+function rrmdir($dir) {
+	if (is_dir($dir)) {
+		$objects = scandir($dir);
+		foreach ($objects as $object) {
+			if ($object != "." && $object != "..") {
+				if (filetype($dir."/".$object) == "dir") {
+					rrmdir($dir."/".$object);
+				}
+				else {
+					unlink($dir."/".$object);
+				}
+			}
+		}
+		reset($objects);
+		rmdir($dir);
+	}
+}
+
+function flatten_directories_and_move_to_storage($file_id, $temp_path){
+	if (file_exists("../mangav2.fansubs.cat/images/storage/$file_id/")) {
+		rrmdir("../mangav2.fansubs.cat/images/storage/$file_id/");
+	}
+
+	mkdir("../mangav2.fansubs.cat/images/storage/$file_id/");
+
+	$directory = new RecursiveDirectoryIterator($temp_path);
+	$iterator = new RecursiveIteratorIterator($directory);
+	foreach ($iterator as $file){
+		$ext = pathinfo(strtolower(basename($file)), PATHINFO_EXTENSION);
+		if ($ext=='jpg' || $ext=='jpeg' || $ext=='png') {
+			copy($file, "../mangav2.fansubs.cat/images/storage/$file_id/".preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower(basename($file))));
+		}
+	}
+}
+
+function decompress_manga_file($file_id, $temporary_filename, $original_filename){
+	log_action("debug-log", "Descomprimint el fitxer i movent-lo al directori amb id: $file_id");
+	$temp_path="/tmp/decompress_$file_id/";
+	$extension = pathinfo($original_filename, PATHINFO_EXTENSION);
+	if ($extension=='rar'){
+		//Extract RAR
+		$rar = RarArchive::open($temporary_filename);
+		if ($rar!==FALSE) {
+			$entries = $rar->getEntries();
+			if ($entries!==FALSE) {
+				foreach($entries as $entry) {
+					$entry->extract($temp_path);
+				}
+				$rar->close();
+				flatten_directories_and_move_to_storage($file_id, $temp_path);
+			} else {
+				crash("RAR extract error when extracting: $original_filename");
+			}
+		} else {
+			crash("RAR extract error when extracting: $original_filename");
+		}
+	} else if ($extension=='zip' || $extension=='cbz') {
+		//Extract ZIP/CBZ
+		$zip = new ZipArchive;
+		if ($zip->open($temporary_filename) === TRUE) {
+			$zip->extractTo($temp_path);
+			$zip->close();
+			flatten_directories_and_move_to_storage($file_id, $temp_path);
+		} else {
+			crash("ZIP extract error when extracting: $original_filename");
+		}
+	} else {
+		crash("Unknown file type uploaded to manga version: $original_filename");
+	}
+}
 ?>

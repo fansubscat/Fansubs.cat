@@ -28,14 +28,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM rel_version_fansub WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE id=".escape($_GET['delete_id']));
-		@unlink('../anime.fansubs.cat/images/versions/'.$_GET['delete_id'].'.jpg');
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Llista de versions</h4>
+					<h4 class="card-title text-center mb-4 mt-1">Llista de versions d'anime</h4>
 					<hr>
 
 <?php

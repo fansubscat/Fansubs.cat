@@ -1,0 +1,21 @@
+RewriteEngine on
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 403 /error.php?code=403
+RewriteRule ^.*\.inc\.php$ error.php?code=404
+RewriteRule ^one-shots/$ index.php?page=oneshots
+RewriteRule ^one-shots$ index.php?page=oneshots
+RewriteRule ^one-shots/(.*)/$ manga.php?page=oneshots&slug=$1 [QSA]
+RewriteRule ^one-shots/(.*)$ manga.php?page=oneshots&slug=$1 [QSA]
+RewriteRule ^manga/$ index.php?page=manga [QSA]
+RewriteRule ^manga$ index.php?page=manga [QSA]
+RewriteRule ^manga/(.*)/$ manga.php?page=manga&slug=$1 [QSA]
+RewriteRule ^manga/(.*)$ manga.php?page=manga&slug=$1 [QSA]
+RewriteRule ^cerca/(.*)/$ index.php?page=search&query=$1
+RewriteRule ^cerca/(.*)$ index.php?page=search&query=$1
+RewriteRule ^qui-som/$ about.php
+RewriteRule ^qui-som$ about.php
+RewriteRule ^embed/(.*)/$ embed.php?file_id=$1
+RewriteRule ^embed/(.*)$ embed.php?file_id=$1
+RewriteRule ^admin/(.*)/$ https://admin.fansubs.cat/$1/
+RewriteRule ^admin/$ https://admin.fansubs.cat/
+RewriteRule ^admin$ https://admin.fansubs.cat/

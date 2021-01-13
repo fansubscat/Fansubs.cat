@@ -3,7 +3,7 @@ $header_title="Edició de recollidors - Notícies";
 $page="news";
 include("header.inc.php");
 
-if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
+if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_POST['action'])) {
 		$data=array();
 		if (!empty($_POST['id']) && is_numeric($_POST['id'])) {

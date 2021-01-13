@@ -8,7 +8,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">De quina anime vols crear una versió?</h4>
+					<h4 class="card-title text-center mb-4 mt-1">De quin anime vols crear una versió?</h4>
 					<hr>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
