@@ -43,10 +43,10 @@
     Zoom.prototype.init = function() {
 
         var _this = this;
-        var zoomIcons = '<button type="button" aria-label="Zoom in" id="lg-zoom-in" class="lg-icon"></button><button type="button" aria-label="Zoom out" id="lg-zoom-out" class="lg-icon"></button>';
+        var zoomIcons = '';//'<button type="button" aria-label="Zoom in" id="lg-zoom-in" class="lg-icon"></button><button type="button" aria-label="Zoom out" id="lg-zoom-out" class="lg-icon"></button>';
 
         if (_this.core.s.actualSize) {
-            zoomIcons += '<button type="button" aria-label="Actual size" id="lg-actual-size" class="lg-icon"></button>';
+            zoomIcons += '<button type="button" aria-label="Actual size" id="lg-actual-size" class="lg-icon lg-custom-zoom-in-icon"></button>';
         }
 
         if (_this.core.s.useLeftForZoom) {
@@ -117,7 +117,11 @@
         var callScale = function() {
             if (scale > 1) {
                 _this.core.$outer.addClass('lg-zoomed');
+                $('#lg-actual-size').removeClass('lg-custom-zoom-in-icon');
+                $('#lg-actual-size').addClass('lg-custom-zoom-out-icon');
             } else {
+                $('#lg-actual-size').removeClass('lg-custom-zoom-out-icon');
+                $('#lg-actual-size').addClass('lg-custom-zoom-in-icon');
                 _this.resetZoom();
             }
 
@@ -139,7 +143,7 @@
 
             var _scale;
 
-            if (_this.core.$outer.hasClass('lg-zoomed')) {
+            if (fromIcon && _this.core.$outer.hasClass('lg-zoomed')) {
                 scale = 1;
             } else {
                 if (nw > w) {
@@ -148,13 +152,8 @@
                 }
             }
 
-            if (fromIcon) {
-                _this.pageX = $(window).width() / 2;
-                _this.pageY = ($(window).height() / 2) + $(window).scrollTop();
-            } else {
-                _this.pageX = event.pageX || event.originalEvent.targetTouches[0].pageX;
-                _this.pageY = event.pageY || event.originalEvent.targetTouches[0].pageY;
-            }
+            _this.pageX = $(window).width() / 2;
+            _this.pageY = 0 + $(window).scrollTop();
 
             callScale();
             setTimeout(function() {
@@ -163,7 +162,8 @@
         };
 
         var tapped = false;
-
+//COMMENTED FOR MANGA.FANSUBS.CAT
+/*
         // event triggered after appending slide content
         _this.core.$el.on('onAferAppendSlide.lg.tm.zoom', function(event, index) {
 
@@ -189,6 +189,7 @@
             });
 
         });
+*/
 
         // Update zoom on resize and orientationchange
         $(window).on('resize.lg.zoom scroll.lg.zoom orientationchange.lg.zoom', function() {
@@ -215,10 +216,18 @@
             actualSize(event, _this.core.$slide.eq(_this.core.index).find('.lg-image'), _this.core.index, true);
         });
 
+/*
         // Reset zoom on slide change
         _this.core.$el.on('onBeforeSlide.lg.tm', function() {
             scale = 1;
             _this.resetZoom();
+        });
+*/
+        // Reset zoom on slide change
+        _this.core.$el.on('onAfterSlide.lg.tm', function() {
+            if (scale>1) {
+                actualSize(event, _this.core.$slide.eq(_this.core.index).find('.lg-image'), _this.core.index, false);
+            }
         });
 
         // Drag option after zoom
