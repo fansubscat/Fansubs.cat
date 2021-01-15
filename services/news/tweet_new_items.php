@@ -257,7 +257,7 @@ while ($row = mysqli_fetch_assoc($result)){
 			} else if (!empty($row['title'])) { //and has a number (normal case)
 				$random = array_rand($new_episode_number_tweets, 1);
 				try{
-					publish_tweet(sprintf($new_episode_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+					publish_tweet(sprintf($new_episode_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'], str_replace('.',',',floatval($row['number'])))."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
 					file_put_contents('last_tweeted_anime_id.txt', $row['id']);
 				} catch(Exception $e) {
 					break;
@@ -265,7 +265,7 @@ while ($row = mysqli_fetch_assoc($result)){
 			} else {
 				$random = array_rand($new_episode_number_no_name_tweets, 1);
 				try{
-					publish_tweet(sprintf($new_episode_number_no_name_tweets[$random], $row['name'], '', $row['fansub_handles'], $row['number'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+					publish_tweet(sprintf($new_episode_number_no_name_tweets[$random], $row['name'], '', $row['fansub_handles'], str_replace('.',',',floatval($row['number'])))."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
 					file_put_contents('last_tweeted_anime_id.txt', $row['id']);
 				} catch(Exception $e) {
 					break;
