@@ -101,18 +101,6 @@ function showContactScreen(reason) {
 	}
 }
 
-function initTooltip(tooltip, target) {
-	var total_width = target.offset().left + tooltip.outerWidth();
-
-	if( total_width > $(window).width()) {
-		tooltip.removeClass('tooltip-right');
-		tooltip.addClass('tooltip-left');
-	} else {
-		tooltip.removeClass('tooltip-left');
-		tooltip.addClass('tooltip-right');
-	}
-}
-
 $(document).ready(function() {
 	if ($('#embed-page').length==0) {
 		$('#overlay-close').click(function(){
@@ -326,16 +314,6 @@ $(document).ready(function() {
 			});
 		}
 
-		$(".tooltip-container").click(function () {
-			var $title = $(this).find(".tooltip");
-			if (!$title.hasClass("hidden")) {
-				$title.addClass("hidden");
-			} else {
-				$(".tooltip").addClass("hidden");
-				$title.removeClass("hidden");
-			}
-		});
-
 		//TODO
 		/*$("[class*='trackable-']").click(function () {
 			var type="";
@@ -398,24 +376,6 @@ $(document).ready(function() {
 			}
 		});*/
 
-		//Clumsy detection for mobile OS... They break tooltips due to bad mouseenter/leave handling
-		if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-			$(".tooltip-container").mouseenter(function () {
-				var $title = $(this).find(".tooltip");
-				$title.removeClass("hidden");
-			});
-			$(".tooltip-container").mouseleave(function () {
-				var $title = $(this).find(".tooltip");
-				$title.addClass("hidden");
-			});
-		}
-
-		$(".tooltip").css('max-width', $(window).width()/2);
-
-		$(".tooltip").each(function (){
-			initTooltip($(this), $(this).parent());
-		});
-
 		if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
 			$("#options-tooltip").fadeIn("slow");
 		}
@@ -448,12 +408,6 @@ $(document).ready(function() {
 				});
 
 				lastWindowWidth=$(window).width();
-
-				$(".tooltip").css('max-width', $(window).width()/2);
-
-				$(".tooltip").each(function (){
-					initTooltip($(this), $(this).parent());
-				});
 			}
 		});
 

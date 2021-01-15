@@ -101,10 +101,10 @@ function print_chapter($row,$version_id,$manga){
 	
 	if ($manga['show_chapter_numbers']==1 && !empty($row['number'])) {
 		if (!empty($row['title'])){
-			$chapter_title.='Capítol '.$row['number'].': '.htmlspecialchars($row['title']);
+			$chapter_title.='Capítol '.str_replace('.',',',floatval($row['number'])).': '.htmlspecialchars($row['title']);
 		}
 		else {
-			$chapter_title.='Capítol '.$row['number'];
+			$chapter_title.='Capítol '.str_replace('.',',',floatval($row['number']));
 		}
 	} else {
 		if (!empty($row['title'])){
@@ -135,11 +135,8 @@ function internal_print_chapter($chapter_title, $result) {
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-times-circle icon-play"></span>'.$chapter_title."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-ban icon-play"></span>'.$chapter_title."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-unavailable" title="Aquest capítol no està disponible">No disponible</span>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 	} else if (mysqli_num_rows($result)>1) {
@@ -148,7 +145,6 @@ function internal_print_chapter($chapter_title, $result) {
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title no-indent">'.$chapter_title."</div>\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right"></td>'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 
 		while ($vrow = mysqli_fetch_assoc($result)){
@@ -156,27 +152,30 @@ function internal_print_chapter($chapter_title, $result) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode">'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				if (in_array($vrow['id'], get_cookie_viewed_files_ids())) {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-file-id="'.$vrow['id'].'" title="Ja l\'has llegit: prem per a marcar-lo com a no llegit"><span class="fa fa-fw fa-eye"></span></span>'."\n";
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-file-id="'.$vrow['id'].'" title="Ja l\'has llegit"><span class="fa fa-fw fa-eye"></span></span>'."\n";
 				} else {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-file-id="'.$vrow['id'].'" title="Encara no l\'has llegit: prem per a marcar-lo com a llegit"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-file-id="'.$vrow['id'].'" title="Encara no l\'has llegit"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
 				}
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Llegeix-lo').'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-book-open icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Llegeix-lo').'</a> '."\n";
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode'.(in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : '').'" data-file-id="'.$vrow['id'].'" title="Publicat durant la darrera setmana">Novetat!</span>'."\n";
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode tooltip'.(in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : '').'" data-file-id="'.$vrow['id'].'" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>'."\n";
 				}
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 			} else { //Empty file name -> lost file
-				echo "\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-unavailable">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-times-circle icon-play"></span>Llegeix-lo'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-lost" title="Aquest capítol està editat, però no està disponible enlloc. Si ens pots ajudar a trobar-lo, prem aquí i envia\'ns un comentari!">Perdut: ajuda\'ns!</span>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t</div>\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode episode-unavailable">'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-ban icon-play"></span>'.htmlspecialchars($vrow['comments'])."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-lost tooltip" title="Perdut, ens ajudes?"><span class="fa fa-fw fa-ghost"></span></span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 			}
 		}
 	} else { //Only one file
@@ -186,23 +185,21 @@ function internal_print_chapter($chapter_title, $result) {
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode">'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			if (in_array($vrow['id'], get_cookie_viewed_files_ids())) {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-file-id="'.$vrow['id'].'" title="Ja l\'has llegit: prem per a marcar-lo com a no llegit"><span class="fa fa-fw fa-eye"></span></span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-file-id="'.$vrow['id'].'" title="Ja l\'has llegit"><span class="fa fa-fw fa-eye"></span></span>'."\n";
 			} else {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-file-id="'.$vrow['id'].'" title="Encara no l\'has llegit: prem per a marcar-lo com a llegit"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-file-id="'.$vrow['id'].'" title="Encara no l\'has llegit"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
 			}
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-play icon-play"></span>'.$chapter_title.'</a> '."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-book-open icon-play"></span>'.$chapter_title.'</a> '."\n";
+			if (!empty($vrow['comments'])){
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
+			}
 			if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode'.(in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : '').'" data-file-id="'.$vrow['id'].'" title="Publicat durant la darrera setmana">Novetat!</span>'."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode tooltip'.(in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : '').'" data-file-id="'.$vrow['id'].'" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>'."\n";
 			}
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-			if (!empty($vrow['comments'])){
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip-container"><span class="fa fa-fw fa-info-circle"></span><span class="tooltip hidden">'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'</span></span>'."\n";
-			}
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 		} else { //Empty file name -> lost file
@@ -210,11 +207,9 @@ function internal_print_chapter($chapter_title, $result) {
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-times-circle icon-play"></span>'.$chapter_title."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-ban icon-play"></span>'.$chapter_title."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-lost tooltip" title="Perdut, ens ajudes?"><span class="fa fa-fw fa-ghost"></span></span>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-lost" title="Aquest capítol està editat, però no està disponible enlloc. Si ens pots ajudar a trobar-lo, prem aquí i envia\'ns un comentari!">Perdut: ajuda\'ns!</span>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 		}

@@ -119,8 +119,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<thead class="thead-dark">
 							<tr>
 								<th scope="col">Capítol</th>
-								<th class="text-center" scope="col" style="width: 12%;">Visualitzacions</th>
-								<th class="text-center" scope="col" style="width: 12%;">Clics sense v.</th>
+								<th class="text-center" scope="col" style="width: 12%;">Lectures</th>
+								<th class="text-center" scope="col" style="width: 12%;">Clics sense ll.</th>
 								<th class="text-center" scope="col" style="width: 12%;">Temps total</th>
 								<th class="text-center" scope="col" style="width: 12%;">Temps mitjà</th>
 								<th class="text-center" scope="col" style="width: 12%;">Pàg. totals</th>
@@ -139,14 +139,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					if ($row['manga_episodes']==1){
 						$chapter_title.=htmlspecialchars($row['title']);
 					} else {
-						$chapter_title.='Capítol '.$row['number'].': '.htmlspecialchars($row['title']);
+						$chapter_title.='Capítol '.floatval($row['number']).': '.htmlspecialchars($row['title']);
 					}
 				}
 				else {
 					if ($row['manga_episodes']==1){
 						$chapter_title.=htmlspecialchars($row['series_name']);
 					} else {
-						$chapter_title.='Capítol '.$row['number'];
+						$chapter_title.='Capítol '.floatval($row['number']);
 					}
 				}
 			} else {

@@ -69,8 +69,8 @@ $Parsedown = new Parsedown();
 $synopsis = $Parsedown->setBreaksEnabled(true)->line($manga['synopsis']);
 
 $header_social = array(
-	'title' => $manga['name'].' - Fansubs.cat - Manga',
-	'url' => 'https://manga.fansubs.cat/'.($manga['type']=='oneshot' ? 'one-shots/' : 'manga/').$manga['slug'],
+	'title' => $manga['name'].' | Fansubs.cat - Manga en català',
+	'url' => 'https://manga.fansubs.cat/'.($manga['type']=='oneshot' ? 'one-shots/' : 'serialitzats/').$manga['slug'],
 	'description' => strip_tags($synopsis),
 	'image' => 'https://manga.fansubs.cat/images/manga/'.$manga['id'].'.jpg'
 );
@@ -180,7 +180,7 @@ if (!empty($manga['tadaima_id'])) {
 if ($manga['has_licensed_parts']==1) {
 ?>
 							<div class="section-content padding-top parts-licensed">
-								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d'aquesta obra ha estat llicenciada o editada en català. Se'n mostren només les parts no llicenciades.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d'aquest manga ha estat llicenciat o editat oficialment en català. Se'n mostren només les parts no llicenciades.
 							</div>
 <?php
 }
@@ -202,7 +202,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquesta obra encara no disposa de cap versió editada en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
+							<div class="section-content">Aquest manga encara no disposa de cap versió editada en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
 						</div>
 <?php
 } else if ($count==0) {
@@ -210,14 +210,14 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquesta obra és només per a majors d'edat. Si ets major d'edat i vols veure-la, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
+							<div class="section-content">Aquest manga és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
 						</div>
 <?php
 	} else {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquesta obra disposa d'alguna versió editada en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Aquest manga disposa d'alguna versió editada en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -227,7 +227,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning-small">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Hi ha alguna altra versió d'aquesta obra. La pots veure canviant el teu filtre d'usuari a la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Hi ha alguna altra versió d'aquest manga. La pots veure canviant el teu filtre d'usuari a la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -282,8 +282,8 @@ if ($count_unfiltered==0) {
 
 		$plurals = array(
 				"active" => array("Aquest web només recopila el material editat. L'autoria de l'edició és del grup següent. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat.", "Aquest web només recopila el material editat. L'autoria de l'edició és dels grups següents. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat."),
-				"abandoned" => array("Aquesta obra es considera abandonada pel fansub, segurament no se'n llançaran més capítols.","Aquesta obra es considera abandonada pels fansubs, segurament no se'n llançaran més capítols."),
-				"cancelled" => array("Aquesta obra ha estat cancel·lada pel fansub, no se'n llançaran més capítols.","Aquesta obra ha estat cancel·lada pels fansubs, no se'n llançaran més capítols.")
+				"abandoned" => array("Aquest manga es considera abandonat pel fansub, segurament no se'n llançaran més capítols.","Aquest manga es considera abandonat pels fansubs, segurament no se'n llançaran més capítols."),
+				"cancelled" => array("Aquest manga ha estat cancel·lat pel fansub, no se'n llançaran més capítols.","Aquest manga ha estat cancel·lat pels fansubs, no se'n llançaran més capítols.")
 		);
 ?>
 							<div class="section">
@@ -328,7 +328,7 @@ if ($count_unfiltered==0) {
 								</div>
 							</div>
 <?php
-		$resultc = query("SELECT c.*, ct.title, v.number volume_number, v.name volume_name FROM chapter c LEFT JOIN chapter_title ct ON c.id=ct.chapter_id AND ct.manga_version_id=".$version['id']." LEFT JOIN volume v ON c.volume_id=v.id WHERE c.manga_id=".$manga['id']." ORDER BY v.number IS NULL ASC, v.number ASC, c.number IS NULL ASC, c.number ASC, IFNULL(ct.title,c.name) ASC");
+		$resultc = query("SELECT c.*, ct.title, v.id volume_id, v.number volume_number, v.name volume_name FROM chapter c LEFT JOIN chapter_title ct ON c.id=ct.chapter_id AND ct.manga_version_id=".$version['id']." LEFT JOIN volume v ON c.volume_id=v.id WHERE c.manga_id=".$manga['id']." ORDER BY v.number IS NULL ASC, v.number ASC, c.number IS NULL ASC, c.number ASC, IFNULL(ct.title,c.name) ASC");
 		$chapters = array();
 		while ($row = mysqli_fetch_assoc($resultc)) {
 			array_push($chapters, $row);
@@ -374,18 +374,21 @@ if ($count_unfiltered==0) {
 <?php
 			$volumes = array();
 			$last_volume_number = -1;
+			$last_volume_id = -1;
 			$last_volume_name = "";
 			$current_volume_chapters = array();
 			foreach ($chapters as $row) {
 				if ($row['volume_number']!=$last_volume_number && ($manga['show_volumes']==1 || empty($row['volume_number']))){
 					if ($last_volume_number!=-1) {
 						array_push($volumes, array(
+							'volume_id' => $last_volume_id,
 							'volume_number' => $last_volume_number,
 							'volume_name' => $last_volume_name,
 							'chapters' => apply_sort($manga['order_type'],$current_volume_chapters)
 						));
 					}
 					$last_volume_number=$row['volume_number'];
+					$last_volume_id=$row['volume_id'];
 					$last_volume_name=$row['volume_name'];
 					$current_volume_chapters = array();
 				}
@@ -393,56 +396,43 @@ if ($count_unfiltered==0) {
 				array_push($current_volume_chapters, $row);
 			}
 			array_push($volumes, array(
+				'volume_id' => $last_volume_id,
 				'volume_number' => $last_volume_number,
 				'volume_name' => $last_volume_name,
 				'chapters' => apply_sort($manga['order_type'],$current_volume_chapters)
 			));
 
-//print_r($volumes);
-
-			if (count($volumes)<2) {
-				foreach ($volumes as $volume) {
-?>
-									<table class="episode-table">
-										<thead>
-											<tr>
-												<th class="episode-seen-head">Vist</th>
-												<th>Nom</th>
-												<th class="episode-info-head right">Notes</th></tr>
-										</thead>
-										<tbody>
-<?php
-					foreach ($volume['chapters'] as $chapter) {
-						print_chapter($chapter, $version['id'], $manga);
-					}
-?>
-										</tbody>
-									</table>
-<?php
-				}
-			} else { //Multiple volumes
-				foreach ($volumes as $volume) {
+			foreach ($volumes as $volume) {
 ?>
 									<details class="season"<?php echo $manga['show_expanded_volumes']==1 ? ' open' : ''; ?>>
-										<summary class="season_name"><?php echo !empty($volume['volume_number']) ? (($manga['show_volumes']!=1 || (count($volumes)==2 && empty($last_volume_number))) ? 'Capítols normals' : (!empty($volume['volume_name']) ? 'Volum '.$volume['volume_number'].': '.$volume['volume_name'] : 'Volum '.$volume['volume_number'])) : 'Altres'; ?></summary>
-										<table class="episode-table" rules="rows">
-											<thead>
-												<tr>
-													<th class="episode-seen-head">Vist</th>
-													<th>Nom</th>
-													<th class="episode-info-head right">Notes</th></tr>
-											</thead>
-											<tbody>
+										<summary class="season_name"><?php echo !empty($volume['volume_number']) ? (($manga['show_volumes']!=1 || (count($volumes)==2 && empty($last_volume_number))) ? 'Volum únic' : (!empty($volume['volume_name']) ? $volume['volume_name'] : (count($volumes)>1 ? 'Volum '.$volume['volume_number'] : 'Volum únic'))) : 'Altres'; ?></summary>
+										<div class="volume-container">
 <?php
-					foreach ($volume['chapters'] as $chapter) {
-						print_chapter($chapter, $version['id'], $manga);
-					}
+				if (file_exists('images/covers/'.$version['id'].'/'.$volume['volume_id'].'.jpg')) {
 ?>
-											</tbody>
-										</table>
-									</details>
+											<div class="volume-image-container">
+												<img class="volume-cover" src="<?php echo '/images/covers/'.$version['id'].'/'.$volume['volume_id'].'.jpg'; ?>" alt="">
+											</div>
 <?php
 				}
+?>
+											<table class="episode-table" rules="rows">
+												<thead>
+													<tr>
+														<th class="episode-seen-head">Vist</th>
+														<th>Títol</th>
+												</thead>
+												<tbody>
+<?php
+				foreach ($volume['chapters'] as $chapter) {
+					print_chapter($chapter, $version['id'], $manga);
+				}
+?>
+												</tbody>
+											</table>
+										</div>
+									</details>
+<?php
 			}
 		}
 		$resultc = query("SELECT DISTINCT f.extra_name FROM file f WHERE manga_version_id=".$version['id']." AND f.chapter_id IS NULL ORDER BY extra_name ASC");
@@ -461,7 +451,6 @@ if ($count_unfiltered==0) {
 												<tr>
 													<th class="episode-seen-head">Vist</th>
 													<th>Nom</th>
-													<th class="episode-info-head right">Notes</th></tr>
 											</thead>
 											<tbody>
 <?php
@@ -499,7 +488,7 @@ if (mysqli_num_rows($resultrm)>0) {
 			echo "\t\t\t\t\t\t\t\t";
 			$first = FALSE;
 		}
-		echo '<a class="trackable-related-manga" data-series-id="'.$row['slug'].'" href="'.$base_url.'/'.($row['type']=='oneshot' ? 'one-shots' : 'manga').'/'.$row['slug'].'">'.$row['name'].'</a>';
+		echo '<a class="trackable-related-manga" data-series-id="'.$row['slug'].'" href="'.$base_url.'/'.($row['type']=='oneshot' ? 'one-shots' : 'serialitzats').'/'.$row['slug'].'">'.$row['name'].'</a>';
 	}
 ?>
 

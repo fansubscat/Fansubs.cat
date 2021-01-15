@@ -26,7 +26,7 @@ if (!file_exists($base_path)) {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Fansubs.cat - Manga</title>
+		<title>Fansubs.cat - Manga en català</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<style>
 			* {
@@ -66,9 +66,6 @@ if (!file_exists($base_path)) {
 			var firstTouch;
 			var lastTouch;
 
-			$(window).click(function(m){
-				window.parent.showOrHideBars();
-			});
 			$(window).on('touchstart', function(m){
 				firstTouch=m.originalEvent.touches[0] || m.originalEvent.changedTouches[0];
 				lastTouch=m.originalEvent.touches[0] || m.originalEvent.changedTouches[0];

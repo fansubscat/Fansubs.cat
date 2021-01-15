@@ -2,7 +2,7 @@ CREATE TABLE `chapter` (
   `id` int(11) NOT NULL,
   `manga_id` int(11) NOT NULL,
   `volume_id` int(11) DEFAULT NULL,
-  `number` int(11) DEFAULT NULL,
+  `number` decimal(10,2) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

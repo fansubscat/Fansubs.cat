@@ -149,7 +149,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				$season['name']="NULL";
 			}
-			if (!empty($_POST['form-season-list-episodes-'.$i]) && is_numeric($_POST['form-season-list-episodes-'.$i])) {
+			if ((!empty($_POST['form-season-list-episodes-'.$i]) && is_numeric($_POST['form-season-list-episodes-'.$i])) || $_POST['form-season-list-episodes-'.$i]==='0') {
 				$season['episodes']=escape($_POST['form-season-list-episodes-'.$i]);
 				$total_eps+=$_POST['form-season-list-episodes-'.$i];
 			} else {
@@ -274,11 +274,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("REPLACE INTO related_manga (series_id,name,url) VALUES (".$data['id'].",'".$related_manga_item['name']."','".$related_manga_item['url']."')");
 			}
 
-			if (!empty($_POST['image'])) {
-				copy($_POST['image'],'../anime.fansubs.cat/images/series/'.$data['id'].'.jpg');
+			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
+				move_uploaded_file($_FILES['image']["tmp_name"], '../anime.fansubs.cat/images/series/'.$data['id'].'.jpg');
+			} else if (!empty($_POST['image_url'])){
+				copy($_POST['image_url'],'../anime.fansubs.cat/images/series/'.$data['id'].'.jpg');
 			}
 
-			if (!empty($_FILES['featured_image'])) {
+			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../anime.fansubs.cat/images/featured/'.$data['id'].'.jpg');
 			}
 
@@ -304,11 +306,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("REPLACE INTO related_manga (series_id,name,url) VALUES (".$inserted_id.",'".$related_manga_item['name']."','".$related_manga_item['url']."')");
 			}
 
-			if (!empty($_POST['image'])) {
-				copy($_POST['image'],'../anime.fansubs.cat/images/series/'.$inserted_id.'.jpg');
+			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
+				move_uploaded_file($_FILES['image']["tmp_name"], '../anime.fansubs.cat/images/series/'.$inserted_id.'.jpg');
+			} else if (!empty($_POST['image_url'])){
+				copy($_POST['image_url'],'../anime.fansubs.cat/images/series/'.$inserted_id.'.jpg');
 			}
 
-			if (!empty($_FILES['featured_image'])) {
+			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../anime.fansubs.cat/images/featured/'.$inserted_id.'.jpg');
 			}
 
@@ -498,31 +502,40 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<input class="form-control" name="duration" id="form-duration" maxlength="200" value="<?php echo htmlspecialchars($row['duration']); ?>">
 								</div>
 							</div>
-							<div class="col-sm-7">
+						</div>
+						<div class="row">
+							<div class="col-sm-3">
 								<div class="form-group">
-									<label for="form-image"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>URL de la imatge de portada <?php echo empty($row['id']) ? '<small class="text-muted">(JPEG, es copiarà al servidor)</small>' : '<small class="text-muted">(només si la vols canviar; JPEG, es copiarà al servidor)</small>'; ?></label>
-									<input class="form-control" name="image" type="url" id="form-image"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200" value="" oninput="$('#form-image-preview').prop('src',$(this).val());$('#form-image-preview-link').prop('href',$(this).val());">
+									<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge de portada<br><small class="text-muted">(JPEG, aprox. 300x424px)</small></label><br>
+<?php
+	$file_exists = !empty($row['id']) && file_exists('../anime.fansubs.cat/images/series/'.$row['id'].'.jpg');
+?>
+									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 'form-image-preview', 'form-image-preview-link','form-image_url');">
+									<input class="form-control" name="image_url" type="hidden" id="form-image_url" value="">
 								</div>
 							</div>
 							<div class="col-sm-1">
 								<div class="form-group">
-									<a id="form-image-preview-link" href="https://anime.fansubs.cat/images/series/<?php echo $row['id']; ?>.jpg" target="_blank">
-										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="https://anime.fansubs.cat/images/series/<?php echo $row['id']; ?>.jpg" alt="">
+									<a id="form-image-preview-link"<?php echo $file_exists ? ' href="https://anime.fansubs.cat/images/series/'.$row['id'].'.jpg" data-original="https://anime.fansubs.cat/images/series/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
+										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://anime.fansubs.cat/images/series/'.$row['id'].'.jpg" data-original="https://anime.fansubs.cat/images/series/'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-8">
+							<div class="col-sm-3">
 								<div class="form-group">
-									<label for="form-featured_image"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge per a la capçalera i les recomanacions <small class="text-muted">(JPEG, mida aprox. 1200x256px)</small></label>
-									<input class="form-control" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200" onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-featured-image-preview').prop('src',e.target.result);$('#form-featured-image-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
+									<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge de capçalera<br><small class="text-muted">(JPEG, aprox. 1200x256px)</small></label><br>
+<?php
+	$file_exists = !empty($row['id']) && file_exists('../anime.fansubs.cat/images/featured/'.$row['id'].'.jpg');
+?>
+									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 'form-featured-image-preview', 'form-featured-image-preview-link');">
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
-									<a id="form-featured-image-preview-link" href="https://anime.fansubs.cat/images/featured/<?php echo $row['id']; ?>.jpg" target="_blank">
-										<img id="form-featured-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="https://anime.fansubs.cat/images/featured/<?php echo $row['id']; ?>.jpg" alt="">
+									<a id="form-featured-image-preview-link"<?php echo $file_exists ? ' href="https://anime.fansubs.cat/images/featured/'.$row['id'].'.jpg" data-original="https://anime.fansubs.cat/images/featured/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
+										<img id="form-featured-image-preview" style="width: 400px; height: 85px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://anime.fansubs.cat/images/featured/'.$row['id'].'.jpg" data-original="https://anime.fansubs.cat/images/featured/'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>
@@ -640,7 +653,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-episode-list-season-<?php echo $i+1; ?>" name="form-episode-list-season-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['season']; ?>" placeholder="(Altres)"/>
 													</td>
 													<td>
-														<input id="form-episode-list-num-<?php echo $i+1; ?>" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']; ?>" placeholder="(Esp.)"/>
+														<input id="form-episode-list-num-<?php echo $i+1; ?>" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']!=NULL ? floatval($episodes[$i]['number']) : ''; ?>" placeholder="(Esp.)" step="any"/>
 														<input id="form-episode-list-id-<?php echo $i+1; ?>" name="form-episode-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $episodes[$i]['id']; ?>"/>
 													</td>
 													<td>
@@ -662,7 +675,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-episode-list-season-1" name="form-episode-list-season-1" type="number" class="form-control" value="1" placeholder="(Altres)"/>
 													</td>
 													<td>
-														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)"/>
+														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)" step="any"/>
 														<input id="form-episode-list-id-1" name="form-episode-list-id-1" type="hidden" value="-1"/>
 													</td>
 													<td>

@@ -1,24 +1,8 @@
 <?php
-function get_status_description_short($id){
-	switch ($id){
-		case 1:
-			return "Completat";
-		case 2:
-			return "En procés";
-		case 3:
-			return "Parcialment completat";
-		case 4:
-			return "Abandonat";
-		case 5:
-			return "Cancel·lat";
-		default:
-			return "Desconegut";
-	}
-}
-
 $header_title="Llista de versions de manga - Manga";
 $page="manga";
 include("header.inc.php");
+require_once("common.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {

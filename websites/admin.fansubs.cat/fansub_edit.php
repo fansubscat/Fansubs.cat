@@ -99,7 +99,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			<article class="card-body">
 				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita el fansub" : "Afegeix un fansub"; ?></h4>
 				<hr>
-				<form method="post" action="fansub_edit.php" enctype="multipart/form-data">
+				<form method="post" action="fansub_edit.php" enctype="multipart/form-data" onsubmit="return checkFansub()">
 					<div class="form-group">
 						<label for="form-name-with-autocomplete" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
@@ -110,31 +110,39 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
 					</div>
 					<div class="row">
-						<div class="col-sm-10">
+						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="form-icon"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Icona <small class="text-muted">(PNG, mida 24x24px)</small></label>
-								<input class="form-control" name="icon" type="file" accept="image/png" id="form-icon"<?php empty($row['id']) ? ' required' : ''; ?> onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-icon-preview').prop('src',e.target.result);$('#form-icon-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
+								<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Icona <small class="text-muted">(PNG, mida 24x24px)</small></label><br>
+<?php
+	$file_exists = !empty($row['id']) && file_exists('../www.fansubs.cat/images/fansub_icons/'.$row['id'].'.png');
+?>
+								<label for="form-icon" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<input class="form-control d-none" name="icon" type="file" accept="image/png" id="form-icon" onchange="checkImageUpload(this, 'form-icon-preview', 'form-icon-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
 							<div class="form-group">
-								<a id="form-icon-preview-link" href="https://www.fansubs.cat/images/fansub_icons/<?php echo $row['id']; ?>.png" target="_blank">
-									<img id="form-icon-preview" style="width: 24px; height: 24px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;" src="https://www.fansubs.cat/images/fansub_icons/<?php echo $row['id']; ?>.png" alt="">
+								<a id="form-icon-preview-link"<?php echo $file_exists ? ' href="https://www.fansubs.cat/images/fansub_icons/'.$row['id'].'.png" data-original="https://www.fansubs.cat/images/fansub_icons/'.$row['id'].'.png"' : ''; ?> target="_blank">
+									<img id="form-icon-preview" style="width: 24px; height: 24px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://www.fansubs.cat/images/fansub_icons/'.$row['id'].'.png" data-original="https://www.fansubs.cat/images/fansub_icons/'.$row['id'].'.png"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-sm-10">
+						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="form-logo"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Logo <small class="text-muted">(PNG, mida màxima de visualització 140x40px)</small></label>
-								<input class="form-control" name="logo" type="file" accept="image/png" id="form-icon"<?php empty($row['id']) ? ' required' : ''; ?> onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-logo-preview').prop('src',e.target.result);$('#form-logo-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
+								<label>Logo <small class="text-muted">(PNG, aprox. 140x40px)</small></label><br>
+<?php
+	$file_exists = !empty($row['id']) && file_exists('../www.fansubs.cat/images/fansub_logos/'.$row['id'].'.png');
+?>
+								<label for="form-logo" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, 'form-logo-preview', 'form-logo-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
 							<div class="form-group">
-								<a id="form-logo-preview-link" href="https://www.fansubs.cat/images/fansub_logos/<?php echo $row['id']; ?>.png" target="_blank">
-									<img id="form-logo-preview" style="width: 140px; height: 40px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;" src="https://www.fansubs.cat/images/fansub_logos/<?php echo $row['id']; ?>.png" alt="">
+								<a id="form-logo-preview-link"<?php echo $file_exists ? ' href="https://www.fansubs.cat/images/fansub_logos/'.$row['id'].'.png" data-original="https://www.fansubs.cat/images/fansub_logos/'.$row['id'].'.png"' : ''; ?> target="_blank">
+									<img id="form-logo-preview" style="width: 140px; height: 60px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://www.fansubs.cat/images/fansub_logos/'.$row['id'].'.png" data-original="https://www.fansubs.cat/images/fansub_logos/'.$row['id'].'.png"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>

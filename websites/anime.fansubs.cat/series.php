@@ -69,7 +69,7 @@ $Parsedown = new Parsedown();
 $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
 $header_social = array(
-	'title' => $series['name'].' - Fansubs.cat - Anime',
+	'title' => $series['name'].' | Fansubs.cat - Anime en català',
 	'url' => 'https://anime.fansubs.cat/'.($series['type']=='movie' ? 'films/' : 'series/').$series['slug'],
 	'description' => strip_tags($synopsis),
 	'image' => 'https://anime.fansubs.cat/images/series/'.$series['id'].'.jpg'
@@ -201,7 +201,7 @@ if (!empty($series['tadaima_id'])) {
 if ($series['has_licensed_parts']==1) {
 ?>
 							<div class="section-content padding-top parts-licensed">
-								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d'aquesta obra ha estat llicenciada o editada en català. Se'n mostren només les parts no llicenciades.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d'aquest anime ha estat llicenciat o editat oficialment en català. Se'n mostren només les parts no llicenciades.
 							</div>
 <?php
 }
@@ -223,7 +223,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquesta obra encara no disposa de cap versió amb subtítols en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
+							<div class="section-content">Aquest anime encara no disposa de cap versió amb subtítols en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
 						</div>
 <?php
 } else if ($count==0) {
@@ -231,14 +231,14 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquesta obra és només per a majors d'edat. Si ets major d'edat i vols veure-la, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
+							<div class="section-content">Aquest anime és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
 						</div>
 <?php
 	} else {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquesta obra disposa d'alguna versió amb subtítols en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Aquest anime disposa d'alguna versió amb subtítols en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -248,7 +248,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning-small">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Hi ha alguna altra versió d'aquesta obra. La pots veure canviant el teu filtre d'usuari a la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Hi ha alguna altra versió d'aquest anime. La pots veure canviant el teu filtre d'usuari a la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -303,8 +303,8 @@ if ($count_unfiltered==0) {
 
 		$plurals = array(
 				"active" => array("Aquest web només recopila el material editat. L'autoria dels subtítols és del grup següent. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat.", "Aquest web només recopila el material editat. L'autoria dels subtítols és dels grups següents. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat."),
-				"abandoned" => array("Aquesta obra es considera abandonada pel fansub, segurament no se'n llançaran més capítols.","Aquesta obra es considera abandonada pels fansubs, segurament no se'n llançaran més capítols."),
-				"cancelled" => array("Aquesta obra ha estat cancel·lada pel fansub, no se'n llançaran més capítols.","Aquesta obra ha estat cancel·lada pels fansubs, no se'n llançaran més capítols.")
+				"abandoned" => array("Aquest anime es considera abandonat pel fansub, segurament no se'n llançaran més capítols.","Aquest anime es considera abandonat pels fansubs, segurament no se'n llançaran més capítols."),
+				"cancelled" => array("Aquest anime ha estat cancel·lat pel fansub, no se'n llançaran més capítols.","Aquest anime ha estat cancel·lat pels fansubs, no se'n llançaran més capítols.")
 		);
 ?>
 							<div class="section">
@@ -418,8 +418,6 @@ if ($count_unfiltered==0) {
 				'season_name' => $last_season_name,
 				'episodes' => apply_sort($series['order_type'],$current_season_episodes)
 			));
-
-//print_r($seasons);
 
 			if (count($seasons)<2) {
 				foreach ($seasons as $season) {

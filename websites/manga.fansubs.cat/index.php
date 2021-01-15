@@ -17,9 +17,9 @@ switch ($header_tab) {
 		$header_page_title='One-shots';
 		$header_url='one-shots/';
 		break;
-	case 'manga':
-		$header_page_title='Manga';
-		$header_url='manga/';
+	case 'serialized':
+		$header_page_title='Serialitzats';
+		$header_url='serialitzats/';
 		break;
 	case 'search':
 		$header_page_title='Resultats de la cerca';
@@ -32,7 +32,7 @@ switch ($header_tab) {
 }
 
 $header_social = array(
-	'title' => (!empty($header_page_title) ? $header_page_title.' - ' : '').'Fansubs.cat - Manga',
+	'title' => (!empty($header_page_title) ? $header_page_title.' | ' : '').'Fansubs.cat - Manga en català',
 	'url' => 'https://manga.fansubs.cat'.$base_url.'/'.$header_url,
 	'description' => "Aquí podràs llegir en línia tot el manga editat pels fansubs en català!",
 	'image' => 'https://manga.fansubs.cat'.$base_url.'/style/og_image.jpg'
@@ -51,7 +51,7 @@ if (!empty($site_message) || !empty($is_fools_day)){
 if (is_robot()){
 ?>
 				<div class="section">
-					<div class="site-message">Fansubs.cat et permet llegir en línia més de 250 obres de manga editades en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.</div>
+					<div class="site-message">Fansubs.cat et permet llegir en línia més de 250 mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.</div>
 				</div>
 <?php
 }
@@ -69,21 +69,21 @@ $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ?
 switch ($header_tab){
 	case 'oneshots':
 		$sections=array("Catàleg de one-shots");
-		$descriptions=array("Tria i remena entre un catàleg de %%% mangues de volum únic!");
+		$descriptions=array("Tria i remena entre un catàleg de %%% mangues de curta durada!");
 		$queries=array(
 			$base_query . " WHERE s.type='oneshot'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
-		$tracking_classes=array('films-catalog');
+		$tracking_classes=array('oneshots-catalog');
 		break;
-	case 'manga':
-		$sections=array("Catàleg de manga");
-		$descriptions=array("Tria i remena entre un catàleg de %%% mangues!");
+	case 'serialized':
+		$sections=array("Catàleg de mangues serialitzats");
+		$descriptions=array("Tria i remena entre un catàleg de %%% mangues serialitzats!");
 		$queries=array(
-			$base_query . " WHERE s.type='manga'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
+			$base_query . " WHERE s.type='serialized'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
-		$tracking_classes=array('series-catalog');
+		$tracking_classes=array('serialized-catalog');
 		break;
 	case 'search':
 		$query = (!empty($_GET['query']) ? escape($_GET['query']) : "");
@@ -109,8 +109,8 @@ ORDER BY MAX(a.views) DESC, a.manga_id ASC");
 			$in_clause.=','.$row['manga_id'];
 		}
 		mysqli_free_result($result);
-		$sections=array("<span class=\"iconsm fa fa-fw fa-gift\"></span> Calendari d'advent", "<span class=\"iconsm fa fa-fw fa-star\"></span> Obres destacades", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorades");
-		$descriptions=array("Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones Festes!", "Aquí tens la tria d'obres recomanades d'aquesta setmana! T'animes a llegir-ne alguna?", "Aquestes són les darreres novetats de manga editades en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'obres triades a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquestes són les obres que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada el manga d'actualitat? Aquestes són les obres més noves que tenim editades.", "Les obres més ben puntuades pels usuaris de MyAnimeList amb versió editada en català.");
+		$sections=array("<span class=\"iconsm fa fa-fw fa-gift\"></span> Calendari d'advent", "<span class=\"iconsm fa fa-fw fa-star\"></span> Mangues destacats", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorats");
+		$descriptions=array("Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones festes!", "Aquí tens la tria de mangues recomanats d'aquesta setmana! T'animes a llegir-ne algun?", "Aquestes són les darreres novetats de manga editat en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit de mangues triats a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquests són els mangues que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada el manga d'actualitat? Aquests són els mangues més nous que tenim editats.", "Els mangues més ben puntuats pels usuaris de MyAnimeList amb versió editada en català.");
 		$queries=array(
 			NULL,
 			$base_query . " WHERE v.id IN (SELECT manga_version_id FROM manga_recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
@@ -211,7 +211,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 			if ($type[$i]=='recommendations') {
 ?>
-							<a class="recommendation trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "manga"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
+							<a class="recommendation trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "serialitzats"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
 								<img src="/images/featured/<?php echo $row['id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
 								<div class="status" title="<?php echo get_status_description($row['best_status']); ?>"><?php echo get_status_description_short($row['best_status']); ?></div>
 <?php
@@ -256,7 +256,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php			
 			} else {
 ?>
-							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "manga"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
+							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "serialitzats"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="/images/manga/<?php echo $row['id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">
@@ -271,6 +271,14 @@ for ($i=0;$i<count($sections);$i++){
 				if ($row['volumes']>1 && $row['show_volumes']==1) {
 ?>
 									<div class="seasons"><?php echo $row['volumes']; ?> volums</div>
+<?php
+				} else if ($row['type']=='oneshot') {
+?>
+									<div class="seasons">One-shot</div>
+<?php
+				} else {
+?>
+									<div class="seasons">1 volum</div>
 <?php
 				}
 ?>

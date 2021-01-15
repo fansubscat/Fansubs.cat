@@ -486,14 +486,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	foreach ($volumes as $volume) {
 ?>
-								<div class="col-sm-2 text-center">
+								<div class="col-sm-2 text-center pr-1 pl-1">
 										<label><?php echo "Volum ".$volume['number'].(!empty($volume['name']) ? " (".$volume['name'].")" : ""); ?></label>
 <?php
 		$file_exists = !empty($row['id']) && file_exists('../mangav2.fansubs.cat/images/covers/'.$row['id'].'/'.$volume['id'].'.jpg');
 ?>
-										<img id="form-volume_cover_<?php echo $volume['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="https://mangav2.fansubs.cat/images/covers/'.$row['id'].'/'.$volume['id'].'.jpg"' : ''; ?> alt=""><br />
-										<label for="form-volume_cover_<?php echo $volume['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Torna-la a pujar...' : 'Puja una imatge...' ; ?></label>
-										<input id="form-volume_cover_<?php echo $volume['id']; ?>" name="volume_cover_<?php echo $volume['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, this.id+'_preview');"/>
+										<img id="form-volume_cover_<?php echo $volume['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="https://mangav2.fansubs.cat/images/covers/'.$row['id'].'/'.$volume['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/covers/'.$row['id'].'/'.$volume['id'].'.jpg"' : ''; ?> alt=""><br />
+										<label for="form-volume_cover_<?php echo $volume['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+										<input id="form-volume_cover_<?php echo $volume['id']; ?>" name="volume_cover_<?php echo $volume['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 'form-volume_cover_<?php echo $volume['id']; ?>_preview');"/>
 								</div>
 <?php
 	}
@@ -532,9 +532,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		if (!empty($chapters[$i]['number'])) {
 			if (!empty($chapters[$i]['name'])) {
-				$chapter_name.='Capítol '.$chapters[$i]['number'].' <small class="text-muted">(Títol intern: '.htmlspecialchars($chapters[$i]['name']).')</small>';
+				$chapter_name.='Capítol '.floatval($chapters[$i]['number']).' <small class="text-muted">(Títol intern: '.htmlspecialchars($chapters[$i]['name']).')</small>';
 			} else {
-				$chapter_name.='Capítol '.$chapters[$i]['number'];
+				$chapter_name.='Capítol '.floatval($chapters[$i]['number']);
 			}
 		} else {
 			$chapter_name.=$chapters[$i]['name'].' <small class="text-muted">(Aquest títol NO és intern: es mostrarà si no introdueixes cap títol!)</small>';
@@ -576,7 +576,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<div id="form-files-list-<?php echo $chapters[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat el fitxer <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>'; ?></div>
 															</td>
 															<td class="align-middle">
-																<label style="margin-bottom: 0;" for="form-files-list-<?php echo $chapters[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'info' ; ?> w-100"><span class="fa fa-upload pr-2"></span><?php echo !empty($files[$j]['original_filename']) ? 'Torna\'l a pujar...' : 'Puja un fitxer...' ; ?></label>
+																<label style="margin-bottom: 0;" for="form-files-list-<?php echo $chapters[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'info' ; ?> w-100"><span class="fa fa-upload pr-2"></span><?php echo !empty($files[$j]['original_filename']) ? 'Canvia el fitxer...' : 'Puja un fitxer...' ; ?></label>
 																<input id="form-files-list-<?php echo $chapters[$i]['id']; ?>-file-<?php echo $j+1; ?>" name="form-files-list-<?php echo $chapters[$i]['id']; ?>-file-<?php echo $j+1; ?>" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/>
 																<input id="form-files-list-<?php echo $chapters[$i]['id']; ?>-id-<?php echo $j+1; ?>" name="form-files-list-<?php echo $chapters[$i]['id']; ?>-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['id']; ?>"/>
 																<input id="form-files-list-<?php echo $chapters[$i]['id']; ?>-number_of_pages-<?php echo $j+1; ?>" name="form-files-list-<?php echo $chapters[$i]['id']; ?>-number_of_pages-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['number_of_pages']; ?>"/>
@@ -677,7 +677,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<div id="form-extras-list-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($extras[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat el fitxer <strong>'.htmlspecialchars($extras[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>'; ?></div>
 															</td>
 															<td class="align-middle">
-																<label style="margin-bottom: 0;" for="form-extras-list-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($extras[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pr-2"></span><?php echo !empty($extras[$j]['original_filename']) ? 'Torna\'l a pujar...' : 'Puja un fitxer...' ; ?></label>
+																<label style="margin-bottom: 0;" for="form-extras-list-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($extras[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pr-2"></span><?php echo !empty($extras[$j]['original_filename']) ? 'Canvia el fitxer...' : 'Puja un fitxer...' ; ?></label>
 																<input id="form-extras-list-file-<?php echo $j+1; ?>" name="form-extras-list-file-<?php echo $j+1; ?>" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/>
 															</td>
 															<td class="align-middle">

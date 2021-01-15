@@ -126,14 +126,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					if ($row['series_episodes']==1){
 						$episode_title.=htmlspecialchars($row['title']);
 					} else {
-						$episode_title.='Capítol '.$row['number'].': '.htmlspecialchars($row['title']);
+						$episode_title.='Capítol '.floatval($row['number']).': '.htmlspecialchars($row['title']);
 					}
 				}
 				else {
 					if ($row['series_episodes']==1){
 						$episode_title.=htmlspecialchars($row['series_name']);
 					} else {
-						$episode_title.='Capítol '.$row['number'];
+						$episode_title.='Capítol '.floatval($row['number']);
 					}
 				}
 			} else {

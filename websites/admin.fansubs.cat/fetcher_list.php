@@ -41,6 +41,8 @@ function get_method($method){
 			return "Rōnin Fansub";
 		case 'weebly_rnnf':
 			return "Weebly (RuffyNatsu no Fansub)";
+		case 'wordpress_arf':
+			return "Wordpress (ARFansub)";
 		case 'wordpress_ddc':
 			return "Wordpress (Dengeki Daisy Cat)";
 		case 'wordpress_mdcf':

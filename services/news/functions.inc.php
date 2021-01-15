@@ -148,6 +148,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 		case 'weebly_rnnf':
 			$result = fetch_via_weebly_rnnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
+		case 'wordpress_arf':
+			$result = fetch_via_wordpress_arf($fansub_slug, $url, $last_fetched_item_date);
+			break;
 		case 'wordpress_ddc':
 			$result = fetch_via_wordpress_ddc($fansub_slug, $url, $last_fetched_item_date);
 			break;
@@ -1645,6 +1648,84 @@ function fetch_via_weebly_rnnf($fansub_slug, $url, $last_fetched_item_date){
 					break;
 				}
 			}
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_wordpress_arf($fansub_slug, $url, $last_fetched_item_date){
+	//To be used only for initial import: this theme uses Ajax
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url.'page/1/') or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+	$current_page=1;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('.post') as $article) {
+			if ($article->find('h2.post-title a', 0)!==NULL){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('h2.post-title a', 0);
+				$item[0]=$title->innertext;
+				$item[1]=$article->find('div.post-content', 0)->innertext;
+
+				$description = $article->find('div.post-content', 0)->innertext;
+
+				$item[2]=parse_description($description);
+
+				//The format is: 2013-09-02T14:43:43+00:00
+				$datetext = $article->find('p.post-date', 0)->innertext;
+
+				$datetext = str_ireplace('gener', 'January', $datetext);
+				$datetext = str_ireplace('febrer', 'February', $datetext);
+				$datetext = str_ireplace('març', 'March', $datetext);
+				$datetext = str_ireplace('abril', 'April', $datetext);
+				$datetext = str_ireplace('maig', 'May', $datetext);
+				$datetext = str_ireplace('juny', 'June', $datetext);
+				$datetext = str_ireplace('juliol', 'July', $datetext);
+				$datetext = str_ireplace('agost', 'August', $datetext);
+				$datetext = str_ireplace('setembre', 'September', $datetext);
+				$datetext = str_ireplace('octubre', 'October', $datetext);
+				$datetext = str_ireplace('novembre', 'November', $datetext);
+				$datetext = str_ireplace('desembre', 'December', $datetext);
+
+				$date = date_create_from_format('F d, Y H:i:s', $datetext . ' 00:00:00');
+				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+
+				$item[3]=$date->format('Y-m-d H:i:s');
+				$item[4]=$title->href;
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
+
+				$elements[]=$item;
+			}
+		}
+
+		$go_on = FALSE;
+		$current_page++;
+		if ($current_page<=15){
+			//Not sleeping, Wordpress.com does not appear to be rate-limited
+			$html_text = file_get_contents($url.'page/'.$current_page.'/') or $error_connect=TRUE;
+			if ($error_connect){
+				return array('error_connect',array());
+			}
+			$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+			tidy_clean_repair($tidy);
+			$html = str_get_html(tidy_get_output($tidy));
+			$go_on = TRUE;
 		}
 	}
 	return array('ok', $elements);

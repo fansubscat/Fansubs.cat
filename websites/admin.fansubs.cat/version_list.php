@@ -1,24 +1,8 @@
 <?php
-function get_status_description_short($id){
-	switch ($id){
-		case 1:
-			return "Completada";
-		case 2:
-			return "En procés";
-		case 3:
-			return "Parcialment completada";
-		case 4:
-			return "Abandonada";
-		case 5:
-			return "Cancel·lada";
-		default:
-			return "Desconegut";
-	}
-}
-
 $header_title="Llista de versions d'anime - Anime";
 $page="anime";
 include("header.inc.php");
+require_once("common.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {

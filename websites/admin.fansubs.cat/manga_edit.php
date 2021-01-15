@@ -139,7 +139,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				$volume['name']="NULL";
 			}
-			if (!empty($_POST['form-volume-list-chapters-'.$i]) && is_numeric($_POST['form-volume-list-chapters-'.$i])) {
+			if ((!empty($_POST['form-volume-list-chapters-'.$i]) && is_numeric($_POST['form-volume-list-chapters-'.$i])) || $_POST['form-volume-list-chapters-'.$i]==='0') {
 				$volume['chapters']=escape($_POST['form-volume-list-chapters-'.$i]);
 				$total_eps+=$_POST['form-volume-list-chapters-'.$i];
 			} else {
@@ -255,11 +255,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("REPLACE INTO related_manga_anime (manga_id,related_anime_id) VALUES (".$data['id'].",".$related_anime_id.")");
 			}
 
-			if (!empty($_POST['image'])) {
-				copy($_POST['image'],'../mangav2.fansubs.cat/images/manga/'.$data['id'].'.jpg');
+			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
+				move_uploaded_file($_FILES['image']["tmp_name"], '../mangav2.fansubs.cat/images/manga/'.$data['id'].'.jpg');
+			} else if (!empty($_POST['image_url'])){
+				copy($_POST['image_url'],'../mangav2.fansubs.cat/images/manga/'.$data['id'].'.jpg');
 			}
 
-			if (!empty($_FILES['featured_image'])) {
+			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../mangav2.fansubs.cat/images/featured/'.$data['id'].'.jpg');
 			}
 
@@ -285,11 +287,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("REPLACE INTO related_manga_anime (manga_id,related_anime_id) VALUES (".$inserted_id.",".$related_anime_id.")");
 			}
 
-			if (!empty($_POST['image'])) {
-				copy($_POST['image'],'../mangav2.fansubs.cat/images/manga/'.$inserted_id.'.jpg');
+			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
+				move_uploaded_file($_FILES['image']["tmp_name"], '../mangav2.fansubs.cat/images/manga/'.$inserted_id.'.jpg');
+			} else if (!empty($_POST['image_url'])){
+				copy($_POST['image_url'],'../mangav2.fansubs.cat/images/manga/'.$inserted_id.'.jpg');
 			}
 
-			if (!empty($_FILES['featured_image'])) {
+			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../mangav2.fansubs.cat/images/featured/'.$inserted_id.'.jpg');
 			}
 
@@ -423,7 +427,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<select class="form-control" name="type" id="form-type" required>
 										<option value="">- Selecciona un tipus -</option>
 										<option value="oneshot"<?php echo $row['type']=='oneshot' ? " selected" : ""; ?>>One-shot</option>
-										<option value="manga"<?php echo $row['type']=='manga' ? " selected" : ""; ?>>Manga</option>
+										<option value="serialized"<?php echo $row['type']=='serialized' ? " selected" : ""; ?>>Serialitzat</option>
 									</select>
 								</div>
 							</div>
@@ -468,31 +472,40 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</select>
 								</div>
 							</div>
-							<div class="col-sm-7">
+						</div>
+						<div class="row">
+							<div class="col-sm-3">
 								<div class="form-group">
-									<label for="form-image"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>URL de la imatge de portada <?php echo empty($row['id']) ? '<small class="text-muted">(JPEG, es copiarà al servidor)</small>' : '<small class="text-muted">(només si la vols canviar; JPEG, es copiarà al servidor)</small>'; ?></label>
-									<input class="form-control" name="image" type="url" id="form-image"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200" value="" oninput="$('#form-image-preview').prop('src',$(this).val());$('#form-image-preview-link').prop('href',$(this).val());">
+									<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge de portada<br><small class="text-muted">(JPEG, aprox. 300x424px)</small></label><br>
+<?php
+	$file_exists = !empty($row['id']) && file_exists('../mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg');
+?>
+									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 'form-image-preview', 'form-image-preview-link','form-image_url');">
+									<input class="form-control" name="image_url" type="hidden" id="form-image_url" value="">
 								</div>
 							</div>
 							<div class="col-sm-1">
 								<div class="form-group">
-									<a id="form-image-preview-link" href="https://mangav2.fansubs.cat/images/manga/<?php echo $row['id']; ?>.jpg" target="_blank">
-										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="https://mangav2.fansubs.cat/images/manga/<?php echo $row['id']; ?>.jpg" alt="">
+									<a id="form-image-preview-link"<?php echo $file_exists ? ' href="https://mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
+										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-8">
+							<div class="col-sm-3">
 								<div class="form-group">
-									<label for="form-featured_image"<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge per a la capçalera i les recomanacions <small class="text-muted">(JPEG, mida aprox. 1200x256px)</small></label>
-									<input class="form-control" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image"<?php empty($row['id']) ? ' required' : ''; ?> maxlength="200" onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-featured-image-preview').prop('src',e.target.result);$('#form-featured-image-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
+									<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge de capçalera<br><small class="text-muted">(JPEG, aprox. 1200x256px)</small></label><br>
+<?php
+	$file_exists = !empty($row['id']) && file_exists('../mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg');
+?>
+									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 'form-featured-image-preview', 'form-featured-image-preview-link');">
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
-									<a id="form-featured-image-preview-link" href="https://mangav2.fansubs.cat/images/featured/<?php echo $row['id']; ?>.jpg" target="_blank">
-										<img id="form-featured-image-preview" style="width: 301px; height: 70px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;" src="https://mangav2.fansubs.cat/images/featured/<?php echo $row['id']; ?>.jpg" alt="">
+									<a id="form-featured-image-preview-link"<?php echo $file_exists ? ' href="https://mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
+										<img id="form-featured-image-preview" style="width: 400px; height: 85px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>
@@ -609,7 +622,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-chapter-list-volume-<?php echo $i+1; ?>" name="form-chapter-list-volume-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $chapters[$i]['volume']; ?>" placeholder="(Altres)"/>
 													</td>
 													<td>
-														<input id="form-chapter-list-num-<?php echo $i+1; ?>" name="form-chapter-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $chapters[$i]['number']; ?>" placeholder="(Esp.)"/>
+														<input id="form-chapter-list-num-<?php echo $i+1; ?>" name="form-chapter-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $chapters[$i]['number']!=NULL ? floatval($chapters[$i]['number']) : ''; ?>" placeholder="(Esp.)" step="any"/>
 														<input id="form-chapter-list-id-<?php echo $i+1; ?>" name="form-chapter-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $chapters[$i]['id']; ?>"/>
 													</td>
 													<td>
@@ -625,7 +638,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-chapter-list-row-1">
 													<td>
-														<input id="form-chapter-list-volume-1" name="form-chapter-list-volume-1" type="number" class="form-control" value="1" placeholder="(Altres)"/>
+														<input id="form-chapter-list-volume-1" name="form-chapter-list-volume-1" type="number" class="form-control" value="1" placeholder="(Altres)" step="any"/>
 													</td>
 													<td>
 														<input id="form-chapter-list-num-1" name="form-chapter-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)"/>

@@ -310,7 +310,7 @@ a:hover {
 	font-weight: bold;
 	color: #BBB;
 	background-color: #000;
-	flex-grow: 1;
+	width: 33.33333%;
 	text-align: center;
 	border-top-left-radius: 0.4em;
 	border-top-right-radius: 0.4em;
@@ -319,7 +319,6 @@ a:hover {
 }
 
 .tab .fa {
-	padding-right: 0.4em;
 	font-size: 0.8em;
 	vertical-align: middle;
 	margin-top: -0.2em;
@@ -1327,7 +1326,7 @@ a:hover {
 }
 
 .icon-play {
-	margin-right: -0.3em;
+	margin-right: -0.2em;
 }
 
 .episode-table {
@@ -1372,6 +1371,10 @@ a:hover {
 	border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
+.episode-table tbody tr:nth-child(odd) {
+	background-color: rgba(255,255,255,0.01);
+}
+
 .episode-table tbody tr:last-child {
 	border-bottom: none;
 }
@@ -1383,8 +1386,8 @@ a:hover {
 
 .episode-title {
 	font-weight: bold;
-	margin-left: 1.5em;
-	text-indent: -1em;
+	margin-left: 1.6em;
+	text-indent: -1.1em;
 }
 
 .episode-title.no-indent {
@@ -1462,114 +1465,56 @@ a:hover {
 	color: #000;
 }
 
-.version-resolution-4k {
-	font-size: 0.9em;
-	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
-	background: rgb(0, 80, 0);
-	white-space: nowrap;
-	cursor: pointer;
-}
-
-.version-resolution-hd1080 {
-	font-size: 0.9em;
-	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
-	background: rgb(0, 80, 0);
-	white-space: nowrap;
-	cursor: pointer;
-}
-
-.version-resolution-hd720 {
-	font-size: 0.9em;
-	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
-	background: rgb(70, 120, 0);
-	white-space: nowrap;
-	cursor: pointer;
-}
-
-.version-resolution-sd {
-	font-size: 0.9em;
-	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
-	background: rgb(120, 100, 0);
-	white-space: nowrap;
-	cursor: pointer;
-}
-
 .version-info {
 	font-size: 0.9em;
 	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
+	border-radius: 40px;
+	padding: 0.1em 0.3em;
 	background: rgb(0, 80, 140);
-	white-space: nowrap;
-	cursor: pointer;
-	margin-right: 0.2em;
-}
-
-.version-unavailable {
-	font-size: 0.9em;
-	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
-	background: rgb(80, 80, 80);
-	white-space: nowrap;
-	cursor: pointer;
-	color: #DDD;
+	margin-left: 0.3em;
+	text-indent: initial;
 }
 
 .version-lost {
 	font-size: 0.9em;
 	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
+	border-radius: 40px;
+	padding: 0.1em 0.3em;
 	background: rgb(80, 80, 80);
-	white-space: nowrap;
 	cursor: pointer;
 	color: #DDD;
+	margin-left: 0.3em;
+	text-indent: initial;
 }
 
 .new-episode {
 	font-size: 0.9em;
 	font-weight: bold;
-	border-radius: 4px;
-	padding: 0.1em 0.4em;
+	border-radius: 40px;
+	padding: 0.1em 0.3em;
 	background: rgb(155, 0, 0);
-	white-space: nowrap;
-	cursor: pointer;
-	margin-left: 0.4em;
+	margin-left: 0.3em;
+	text-indent: initial;
 }
 
-.tooltip-container {
-	position: relative;
+.volume-container {
+	display: flex;
 }
 
-.tooltip-container .tooltip {
-	position: absolute;
-	top: 15px; /*must overlap parent element otherwise pop-up doesn't stay open when rolloing over '*/
-	background: #333;
-	border: 1px solid #fff;
-	padding: 4px 8px;
-	z-index: 100;
-	margin-top: 6px;
-	overflow: hidden;
-	font-weight: normal;
-	font-size: 1.1em;
-	text-align: left;
+.volume-image-container {
+	height: 100%;
+	width: 200px;
+	margin-right: 10px;
 }
 
-.tooltip.tooltip-left {
-	right: 0;
+.volume-cover {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
 }
 
-.tooltip.tooltip-right {
-	left: 0;
+h2{
+	font-size: 1.4em;
 }
 
 /* Footer */
@@ -1586,7 +1531,40 @@ a:hover {
 }
 
 /* MOBILE */
-@media screen and (max-width: 1000px){
+
+/* Tooltips */
+@media (pointer: coarse), (hover: none) {
+	.tooltip {
+		position: relative;
+		display: inline-flex;
+		justify-content: center;
+	}
+	.tooltip:hover::after {
+		content: attr(title);
+		position: absolute;
+		top: 100%;
+		color: #000;
+		background-color: #fff;
+		border: 1px solid;
+		width: max-content;
+		padding: 3px;
+		text-indent: initial;
+		font-weight: normal;
+		z-index: 999;
+	}
+}
+
+@media screen and (max-width: 1170px){
+	.catalog {
+		justify-content: center;
+	}
+}
+
+@media screen and (max-width: 1100px){
+	.tab .fa {
+		margin-bottom: 0.4em;
+		display: block;
+	}
 	.separator {
 		width: 100%;
 	}
@@ -1597,10 +1575,12 @@ a:hover {
 		padding: 0;
 	}
 
-	.mobilewrappable {
-		flex-wrap: wrap;
+	.user-options, .search-form {
+		margin-top: -0.5em;
 	}
+}
 
+@media screen and (max-width: 900px){
 	.series_sidebar {
 		width: 100%;
 		min-width: 0;
@@ -1637,8 +1617,8 @@ a:hover {
 		padding: 0em 2em;
 	}
 
-	.user-options, .search-form {
-		margin-top: -0.5em;
+	.mobilewrappable {
+		flex-wrap: wrap;
 	}
 }
 
@@ -1787,5 +1767,19 @@ a:hover {
 
 	.series_header {
 		height: 128px;
+	}
+
+	.volume-container {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.volume-image-container {
+		width: auto;
+		margin-right: 0;
+	}
+
+	.volume-cover {
+		width: 100px;
 	}
 }

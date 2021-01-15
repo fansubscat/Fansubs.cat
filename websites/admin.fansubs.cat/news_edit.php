@@ -162,16 +162,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input class="form-control" name="date" type="datetime-local" id="form-date" required step="1" value="<?php echo !empty($row['date']) ? date('Y-m-d\TH:i:s', strtotime($row['date'])) : date('Y-m-d\TH:i:s'); ?>">
 					</div>
 					<div class="row">
-						<div class="col-sm-8">
+						<div class="col-sm-3">
 							<div class="form-group">
-								<label for="form-image">Imatge <small class="text-muted">(qualsevol format d'imatge habitual)</small></label>
-								<input class="form-control" name="image" type="file" accept="image/jpeg,image/png" id="form-image" onchange="if (this.files && this.files[0]) { var reader = new FileReader(); reader.onload = function(e) { $('#form-image-preview').prop('src',e.target.result);$('#form-image-preview-link').prop('href',e.target.result); }; reader.readAsDataURL(this.files[0]); }">
+								<label>Imatge<br><small class="text-muted">(format JPEG o PNG)</small></label><br>
+<?php
+	$file_exists = !empty($row['id']) && file_exists('../www.fansubs.cat/images/news/'.$row['fansub_slug'].'/'.$row['image']);
+?>
+								<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<input class="form-control d-none" name="image" type="file" accept="image/jpeg,image/png" id="form-image" onchange="checkImageUpload(this, 'form-image-preview', 'form-image-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<a id="form-image-preview-link" href="https://www.fansubs.cat/images/news/<?php echo $row['fansub_slug']; ?>/<?php echo $row['image']; ?>" target="_blank">
-									<img id="form-image-preview" style="width: 301px; height: 70px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;" src="https://www.fansubs.cat/images/news/<?php echo $row['fansub_slug']; ?>/<?php echo $row['image']; ?>" alt="">
+								<a id="form-image-preview-link"<?php echo $file_exists ? ' href="https://www.fansubs.cat/images/news/'.$row['fansub_slug'].'/'.$row['image'].'" data-original="https://www.fansubs.cat/images/news/'.$row['fansub_slud'].'/'.$row['image'].'"' : ''; ?> target="_blank">
+									<img id="form-image-preview" style="width: 140px; height: 90px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://www.fansubs.cat/images/news/'.$row['fansub_slud'].'/'.$row['image'].'" data-original="https://www.fansubs.cat/images/news/'.$row['fansub_slug'].'/'.$row['image'].'"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>

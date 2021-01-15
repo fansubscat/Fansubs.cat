@@ -24,13 +24,13 @@ if (!empty($header_social)) {
 <?php
 }
 ?>
-		<title><?php echo !empty($header_page_title) ? $header_page_title.' - Fansubs.cat - Anime' : 'Fansubs.cat - Anime'; ?></title>
+		<title><?php echo !empty($header_page_title) ? $header_page_title.' | Fansubs.cat - Anime en català' : 'Fansubs.cat - Anime en català'; ?></title>
 		<link rel="shortcut icon" href="/favicon.png" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=2" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=3" media="screen" />
 <?php
 $is_fools_day = (date('d')==28 && date('m')==12);
 if ($is_fools_day){
@@ -44,7 +44,7 @@ if ($is_fools_day){
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=4"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js?v=5"></script>
 	</head>
 	<body>
 		<div data-nosnippet id="overlay" class="hidden">
@@ -58,11 +58,11 @@ if ($is_fools_day){
 					<h2 class="section-title">Opcions de visualització</h2>
 					<div class="options-item">
 						<input id="show_cancelled" type="checkbox"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
-					  	<label for="show_cancelled">Mostra les sèries cancel·lades o abandonades</label>
+					  	<label for="show_cancelled">Mostra els animes cancel·lats o abandonats pels fansubs</label>
 					</div>
 					<div class="options-item">
 						<input id="show_missing" type="checkbox"<?php echo !empty($_COOKIE['show_missing']) ? ' checked' : ''; ?>>
-					  	<label for="show_missing">Mostra les sèries amb algun capítol sense enllaç</label>
+					  	<label for="show_missing">Mostra els animes amb algun capítol sense enllaç vàlid</label>
 					</div>
 					<div class="options-item">
 						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
@@ -125,15 +125,15 @@ mysqli_free_result($resultf);
 					</div>
 				</div>
 				<div class="tabs">
-					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/"><span class="fa fa-star"></span>Destacat</a>
-					<a class="tab<?php if ($header_tab=='movies') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/films"><span class="fa fa-video"></span>Films</a>
-					<a class="tab<?php if ($header_tab=='series') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/series"><span class="fa fa-tv"></span>Sèries</a>
+					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/"><span class="fa fa-star"></span> Destacats</a>
+					<a class="tab<?php if ($header_tab=='movies') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/films"><span class="fa fa-video"></span> Films</a>
+					<a class="tab<?php if ($header_tab=='series') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/series"><span class="fa fa-tv"></span> Sèries</a>
 				</div>
 				<div class="separator"></div>
 				<div class="user-options">
 					<div id="options-tooltip-base">
 						<a id="options-button" class="iconbutton" title="Opcions"><span class="fa fa-cogs"></span></a>
-						<span id="options-tooltip" class="hidden"><a id="options-tooltip-close" class="fa fa-times" style="float: right; color: black;"></a>Si canvies les opcions, veuràs més sèries</span>
+						<span id="options-tooltip" class="hidden"><a id="options-tooltip-close" class="fa fa-times" style="float: right; color: black;"></a>Si canvies opcions, veuràs més animes</span>
 					</div>
 					<a id="about-button" class="iconbutton<?php if ($header_tab=='about') echo ' selectedtab'; ?>" title="Qui som?" href="<?php echo $base_url; ?>/qui-som"><span class="fa fa-info-circle"></span></a>
 				</div>

@@ -3,7 +3,7 @@ ob_start();
 require_once("db.inc.php");
 require_once('common.inc.php');
 
-if ($header_tab!='oneshots' && $header_tab!='manga' && $header_tab!='search' && $header_tab!='error' && $header_tab!='about'){
+if ($header_tab!='oneshots' && $header_tab!='serialized' && $header_tab!='search' && $header_tab!='error' && $header_tab!='about'){
 	$header_tab='main';
 }
 ?>
@@ -24,7 +24,7 @@ if (!empty($header_social)) {
 <?php
 }
 ?>
-		<title><?php echo !empty($header_page_title) ? $header_page_title.' - Fansubs.cat - Manga' : 'Fansubs.cat - Manga'; ?></title>
+		<title><?php echo !empty($header_page_title) ? $header_page_title.' | Fansubs.cat - Manga en català' : 'Fansubs.cat - Manga en català'; ?></title>
 		<link rel="shortcut icon" href="/favicon.png" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -57,11 +57,11 @@ if ($is_fools_day){
 					<h2 class="section-title">Opcions de visualització</h2>
 					<div class="options-item">
 						<input id="show_cancelled" type="checkbox"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
-					  	<label for="show_cancelled">Mostra els mangues cancel·lats o abandonats</label>
+					  	<label for="show_cancelled">Mostra els mangues cancel·lats o abandonats pels fansubs</label>
 					</div>
 					<div class="options-item">
 						<input id="show_missing" type="checkbox"<?php echo !empty($_COOKIE['show_missing']) ? ' checked' : ''; ?>>
-					  	<label for="show_missing">Mostra els mangues amb algun capítol sense enllaç</label>
+					  	<label for="show_missing">Mostra els mangues amb algun capítol sense enllaç vàlid</label>
 					</div>
 					<div class="options-item">
 						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
@@ -124,15 +124,15 @@ mysqli_free_result($resultf);
 					</div>
 				</div>
 				<div class="tabs">
-					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/"><span class="fa fa-star"></span>Destacat</a>
-					<a class="tab<?php if ($header_tab=='oneshots') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/one-shots"><span class="fa fa-book-open"></span>One-shots</a>
-					<a class="tab<?php if ($header_tab=='manga') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/manga"><span class="fa fa-book"></span>Manga</a>
+					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/"><span class="fa fa-star"></span> Destacats</a>
+					<a class="tab<?php if ($header_tab=='oneshots') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/one-shots"><span class="fa fa-book-open"></span> One&#8209;shots</a>
+					<a class="tab<?php if ($header_tab=='serialized') echo ' selectedtab'; ?>" href="<?php echo $base_url; ?>/serialitzats"><span class="fa fa-book"></span> Serialitzats</a>
 				</div>
 				<div class="separator"></div>
 				<div class="user-options">
 					<div id="options-tooltip-base">
 						<a id="options-button" class="iconbutton" title="Opcions"><span class="fa fa-cogs"></span></a>
-						<span id="options-tooltip" class="hidden"><a id="options-tooltip-close" class="fa fa-times" style="float: right; color: black;"></a>Si canvies les opcions, veuràs més manga</span>
+						<span id="options-tooltip" class="hidden"><a id="options-tooltip-close" class="fa fa-times" style="float: right; color: black;"></a>Si canvies opcions, veuràs més mangues</span>
 					</div>
 					<a id="about-button" class="iconbutton<?php if ($header_tab=='about') echo ' selectedtab'; ?>" title="Qui som?" href="<?php echo $base_url; ?>/qui-som"><span class="fa fa-info-circle"></span></a>
 				</div>

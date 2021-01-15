@@ -6,10 +6,10 @@ RewriteRule ^one-shots/$ index.php?page=oneshots
 RewriteRule ^one-shots$ index.php?page=oneshots
 RewriteRule ^one-shots/(.*)/$ manga.php?page=oneshots&slug=$1 [QSA]
 RewriteRule ^one-shots/(.*)$ manga.php?page=oneshots&slug=$1 [QSA]
-RewriteRule ^manga/$ index.php?page=manga [QSA]
-RewriteRule ^manga$ index.php?page=manga [QSA]
-RewriteRule ^manga/(.*)/$ manga.php?page=manga&slug=$1 [QSA]
-RewriteRule ^manga/(.*)$ manga.php?page=manga&slug=$1 [QSA]
+RewriteRule ^serialitzats/$ index.php?page=serialized [QSA]
+RewriteRule ^serialitzats$ index.php?page=serialized [QSA]
+RewriteRule ^serialitzats/(.*)/$ manga.php?page=serialized&slug=$1 [QSA]
+RewriteRule ^serialitzats/(.*)$ manga.php?page=serialized&slug=$1 [QSA]
 RewriteRule ^cerca/(.*)/$ index.php?page=search&query=$1
 RewriteRule ^cerca/(.*)$ index.php?page=search&query=$1
 RewriteRule ^qui-som/$ about.php
@@ -19,3 +19,5 @@ RewriteRule ^embed/(.*)$ embed.php?file_id=$1
 RewriteRule ^admin/(.*)/$ https://admin.fansubs.cat/$1/
 RewriteRule ^admin/$ https://admin.fansubs.cat/
 RewriteRule ^admin$ https://admin.fansubs.cat/
+RewriteRule ^index/category/(.*)-(.*)$ migration.php?id=$1
+

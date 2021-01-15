@@ -669,9 +669,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		if (!empty($episodes[$i]['number'])) {
 			if (!empty($episodes[$i]['name'])) {
-				$episode_name.='Capítol '.$episodes[$i]['number'].' <small class="text-muted">(Títol intern: '.htmlspecialchars($episodes[$i]['name']).')</small>';
+				$episode_name.='Capítol '.floatval($episodes[$i]['number']).' <small class="text-muted">(Títol intern: '.htmlspecialchars($episodes[$i]['name']).')</small>';
 			} else {
-				$episode_name.='Capítol '.$episodes[$i]['number'];
+				$episode_name.='Capítol '.floatval($episodes[$i]['number']);
 			}
 		} else {
 			$episode_name.=$episodes[$i]['name'].' <small class="text-muted">(Aquest títol NO és intern: es mostrarà si no introdueixes cap títol!)</small>';

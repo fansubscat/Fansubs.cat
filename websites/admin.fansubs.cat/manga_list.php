@@ -56,7 +56,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<tr>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
-								<td class="align-middle text-center"><?php echo $row['type']=='oneshot' ? 'One-shot' : 'Manga'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['type']=='oneshot' ? 'One-shot' : 'Serialitzat'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['volumes']; ?></td>
 								<td class="align-middle text-center"><?php echo ($row['chapters']!=-1 ? $row['chapters'] : 'Oberta').($row['specials']>0 ? '<small>+'.$row['specials'].'</small>' : ''); ?></td>
 								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>

@@ -23,7 +23,7 @@ if ($code==403){
 <?php
 } else {
 ?>
-						<strong>És possible que hagis seguit un enllaç antic o que l'anime ja no estigui disponible.</strong><br />Qui sap, potser l'han llicenciat en català i tot! O potser no i només és un error...<br /><br />Et recomanem que tornis a la <a href="<?php echo $base_url; ?>/">pàgina principal</a> i provis de trobar el que cerques allà!
+						<strong>És possible que hagis seguit un enllaç antic o que el manga ja no estigui disponible.</strong><br />Qui sap, potser l'han llicenciat en català i tot! O potser no i només és un error...<br /><br />Et recomanem que tornis a la <a href="<?php echo $base_url; ?>/">pàgina principal</a> i provis de trobar el que cerques allà!
 <?php
 }
 ?>

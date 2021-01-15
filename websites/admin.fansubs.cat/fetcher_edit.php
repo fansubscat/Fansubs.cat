@@ -103,6 +103,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="phpbb_llpnf"<?php echo $row['method']=='phpbb_llpnf' ? " selected" : ""; ?>>phpBB (Lluna Plena no Fansub)</option>
 							<option value="roninfansub"<?php echo $row['method']=='roninfansub' ? " selected" : ""; ?>>Rōnin Fansub</option>
 							<option value="weebly_rnnf"<?php echo $row['method']=='weebly_rnnf' ? " selected" : ""; ?>>Weebly (RuffyNatsu no Fansub)</option>
+							<option value="wordpress_arf"<?php echo $row['method']=='wordpress_arf' ? " selected" : ""; ?>>Wordpress (ARFansub)</option>
 							<option value="wordpress_ddc"<?php echo $row['method']=='wordpress_ddc' ? " selected" : ""; ?>>Wordpress (Dengeki Daisy Cat)</option>
 							<option value="wordpress_mdcf"<?php echo $row['method']=='wordpress_mdcf' ? " selected" : ""; ?>>Wordpress (Món Detectiu Conan Fansub)</option>
 							<option value="wordpress_xf"<?php echo $row['method']=='wordpress_xf' ? " selected" : ""; ?>>Wordpress (XOP Fansub)</option>

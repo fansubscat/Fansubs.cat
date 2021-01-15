@@ -28,7 +28,7 @@ if (!file_exists($base_path)) {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Fansubs.cat - Manga</title>
+		<title>Fansubs.cat - Manga en català</title>
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -113,10 +113,6 @@ if ($mode!='strip'){
 			var lastTouch;
 			$(window).mousemove(function(m){
 				showBars();
-			});
-
-			$(window).click(function(m){
-				showOrHideBars();
 			});
 			$(window).on('touchstart', function(m){
 				firstTouch=m.originalEvent.touches[0] || m.originalEvent.changedTouches[0];
