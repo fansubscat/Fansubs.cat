@@ -164,6 +164,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												options: {
 													legend: {
 														position: 'bottom'
+													},
+													scales: {
+														yAxes: [{
+															ticks: {
+																beginAtZero: true
+															}
+														}]
 													}
 												}
 											});
@@ -233,6 +240,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												options: {
 													legend: {
 														position: 'bottom'
+													},
+													scales: {
+														yAxes: [{
+															ticks: {
+																beginAtZero: true
+															}
+														}]
 													}
 												}
 											});
@@ -331,6 +345,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												options: {
 													legend: {
 														position: 'bottom'
+													},
+													scales: {
+														yAxes: [{
+															ticks: {
+																beginAtZero: true
+															}
+														}]
 													}
 												}
 											});
@@ -410,6 +431,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												options: {
 													legend: {
 														position: 'bottom'
+													},
+													scales: {
+														yAxes: [{
+															ticks: {
+																beginAtZero: true
+															}
+														}]
 													}
 												}
 											});
@@ -874,6 +902,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												options: {
 													legend: {
 														position: 'bottom'
+													},
+													scales: {
+														yAxes: [{
+															ticks: {
+																beginAtZero: true
+															}
+														}]
 													}
 												}
 											});
@@ -943,6 +978,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												options: {
 													legend: {
 														position: 'bottom'
+													},
+													scales: {
+														yAxes: [{
+															ticks: {
+																beginAtZero: true
+															}
+														}]
 													}
 												}
 											});
@@ -1041,6 +1083,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												options: {
 													legend: {
 														position: 'bottom'
+													},
+													scales: {
+														yAxes: [{
+															ticks: {
+																beginAtZero: true
+															}
+														}]
 													}
 												}
 											});
@@ -1120,6 +1169,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												options: {
 													legend: {
 														position: 'bottom'
+													},
+													scales: {
+														yAxes: [{
+															ticks: {
+																beginAtZero: true
+															}
+														}]
 													}
 												}
 											});

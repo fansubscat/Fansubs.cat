@@ -93,7 +93,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									data: [<?php echo implode(',',$time_values); ?>]
 								}]
 							},
-							options: {}
+							options: {
+								legend: {
+									position: 'bottom'
+								},
+								scales: {
+									yAxes: [{
+										ticks: {
+											beginAtZero: true
+										}
+									}]
+								}
+							}
 						});
 					</script>
 				</article>
