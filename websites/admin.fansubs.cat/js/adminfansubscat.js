@@ -936,6 +936,17 @@ function checkNumberOfEpisodes() {
 
 	if ($('#form-name-with-autocomplete').val()==$('#form-alternate_names').val()) {
 		alert('El nom i el camp "altres noms" no poden ser iguals. Si no se\'n tradueix el nom, el camp "altres noms" ha de romandre buit o amb altres noms diferents, si s\'escau (en anglès, per exemple).');
+		return false;
+	}
+
+	if (document.getElementById('form-image-preview').naturalWidth>450 || document.getElementById('form-image-preview').naturalHeight>600) {
+		alert('La imatge de portada té unes dimensions massa grosses. El màxim són 450x600 píxels.');
+		return false;
+	}
+
+	if (document.getElementById('form-featured-image-preview').naturalWidth>1200 || document.getElementById('form-featured-image-preview').naturalHeight>400) {
+		alert('La imatge de capçalera té unes dimensions massa grosses. El màxim són 1200x400 píxels.');
+		return false;
 	}
 
 	return true;
@@ -1007,10 +1018,35 @@ function checkNumberOfChapters() {
 		return false;
 	}
 
+	if (document.getElementById('form-image-preview').naturalWidth>450 || document.getElementById('form-image-preview').naturalHeight>600) {
+		alert('La imatge de portada té unes dimensions massa grosses. El màxim són 450x600 píxels.');
+		return false;
+	}
+
+	if (document.getElementById('form-featured-image-preview').naturalWidth>1200 || document.getElementById('form-featured-image-preview').naturalHeight>400) {
+		alert('La imatge de capçalera té unes dimensions massa grosses. El màxim són 1200x400 píxels.');
+		return false;
+	}
+
 	return true;
 }
 
+function checkCoverListImages() {
+	var covers = $('[id$=_preview]');
+	var affectedCovers='';
+	for (var i=0;i<covers.length;i++){
+		if (covers[i].naturalWidth>450 || covers[i].naturalHeight>600) {
+			affectedCovers+=("\n- "+$($(covers[i].parentElement).find('label')[0]).text());
+		}
+	}
 
+	if (affectedCovers!='') {
+		alert('Les imatges de portada següents tenen unes dimensions massa grosses (el màxim són 450x600 píxels):'+affectedCovers);
+		return false;
+	}
+
+	return true;
+}
 
 function checkFansub() {
 	if (!$('#id').val() && !$('#form-icon').val()) {
@@ -1177,43 +1213,48 @@ function isAutoFetchActive() {
 	return $('[id^=form-folders-list-active-]:checked').length>0;
 }
 
-function checkImageUpload(fileInput, previewImageId, previewLinkId, optionalUrlId) {
+function checkImageUpload(fileInput, maxBytes, previewImageId, previewLinkId, optionalUrlId) {
 	if (fileInput.files && fileInput.files[0]) {
-		var reader = new FileReader();
-		reader.onload = function(e) {
-			$('#'+previewImageId).attr('src',e.target.result);
-			if (previewLinkId) {
-				$('#'+previewLinkId).attr('href',e.target.result);
-			}
-			if (optionalUrlId) {
-				$('#'+optionalUrlId).val('');
-			}
-			$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
-			$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
-			$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
-			$('label[for="'+fileInput.id+'"]').addClass("btn-success");
-			$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pr-2"></span>Es pujarà');
-		};
-		reader.readAsDataURL(fileInput.files[0]);
-	} else {
-		if (optionalUrlId && $('#'+optionalUrlId).val()) {
-			$('#'+previewImageId).prop('src',$('#'+previewImageId).attr('data-original'));
-		} else if ($('#'+previewImageId).attr('data-original')) {
-			$('#'+previewImageId).prop('src',$('#'+previewImageId).attr('data-original'));
+		if (maxBytes!=-1 && fileInput.files[0].size>maxBytes) {
+			alert('El fitxer que has seleccionat és massa gros. Com a màxim ha de fer '+(maxBytes/1024)+' KiB.');
 		} else {
-			$('#'+previewImageId).prop('src','');
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$('#'+previewImageId).attr('src',e.target.result);
+				if (previewLinkId) {
+					$('#'+previewLinkId).attr('href',e.target.result);
+				}
+				if (optionalUrlId) {
+					$('#'+optionalUrlId).val('');
+				}
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+				$('label[for="'+fileInput.id+'"]').addClass("btn-success");
+				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pr-2"></span>Es pujarà');
+			};
+			reader.readAsDataURL(fileInput.files[0]);
+			return;
 		}
-		if (previewLinkId) {
-			if (optionalUrlId && $('#'+optionalUrlId).val()) {
-				$('#'+previewLinkId).attr('href',$('#'+previewImageId).attr('data-original'));
-			} else if ($('#'+previewLinkId).attr('data-original')) {
-				$('#'+previewLinkId).attr('href',$('#'+previewLinkId).attr('data-original'));
-			} else {
-				$('#'+previewLinkId).attr('href','');
-			}
-		}
-		resetFileInput($(fileInput));
 	}
+	//Non-success cases: reset input
+	if (optionalUrlId && $('#'+optionalUrlId).val()) {
+		$('#'+previewImageId).prop('src',$('#'+previewImageId).attr('data-original'));
+	} else if ($('#'+previewImageId).attr('data-original')) {
+		$('#'+previewImageId).prop('src',$('#'+previewImageId).attr('data-original'));
+	} else {
+		$('#'+previewImageId).prop('src','');
+	}
+	if (previewLinkId) {
+		if (optionalUrlId && $('#'+optionalUrlId).val()) {
+			$('#'+previewLinkId).attr('href',$('#'+previewImageId).attr('data-original'));
+		} else if ($('#'+previewLinkId).attr('data-original')) {
+			$('#'+previewLinkId).attr('href',$('#'+previewLinkId).attr('data-original'));
+		} else {
+			$('#'+previewLinkId).attr('href','');
+		}
+	}
+	resetFileInput($(fileInput));
 }
 
 function resetFileInput(fileInput) {

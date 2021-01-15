@@ -27,15 +27,15 @@ function get_status($id){
 function get_status_description_short($id){
 	switch ($id){
 		case 1:
-			return "Completada";
+			return "Completat";
 		case 2:
 			return "En procés";
 		case 3:
-			return "Parcialment completada";
+			return "Parcialment completat";
 		case 4:
-			return "Abandonada";
+			return "Abandonat";
 		case 5:
-			return "Cancel·lada";
+			return "Cancel·lat";
 		default:
 			return "Estat desconegut";
 	}
@@ -44,15 +44,15 @@ function get_status_description_short($id){
 function get_status_description($id){
 	switch ($id){
 		case 1:
-			return "Completada";
+			return "Completat";
 		case 2:
 			return "En procés: No hi ha tots els capítols disponibles";
 		case 3:
-			return "Parcialment completada: Almenys una part de l'obra està completada";
+			return "Parcialment completat: Almenys una part de l'anime està completat";
 		case 4:
-			return "Abandonada: No hi ha tots els capítols disponibles";
+			return "Abandonat: No hi ha tots els capítols disponibles";
 		case 5:
-			return "Cancel·lada: No hi ha tots els capítols disponibles";
+			return "Cancel·lat: No hi ha tots els capítols disponibles";
 		default:
 			return "Estat desconegut";
 	}

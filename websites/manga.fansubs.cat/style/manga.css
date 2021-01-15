@@ -1503,7 +1503,8 @@ a:hover {
 
 .volume-image-container {
 	height: 100%;
-	width: 200px;
+	min-width: 156px;
+	max-width: 156px;
 	margin-right: 10px;
 }
 
@@ -1775,7 +1776,8 @@ h2{
 	}
 
 	.volume-image-container {
-		width: auto;
+		min-width: auto;
+		max-width: auto;
 		margin-right: 0;
 	}
 

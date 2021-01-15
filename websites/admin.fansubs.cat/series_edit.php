@@ -506,12 +506,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-3">
 								<div class="form-group">
-									<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge de portada<br><small class="text-muted">(JPEG, aprox. 300x424px)</small></label><br>
+									<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge de portada<br><small class="text-muted">(JPEG, ~300x424, ≤450x600, ≤150 KiB)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists('../anime.fansubs.cat/images/series/'.$row['id'].'.jpg');
 ?>
 									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 'form-image-preview', 'form-image-preview-link','form-image_url');">
+									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 153600, 'form-image-preview', 'form-image-preview-link','form-image_url');">
 									<input class="form-control" name="image_url" type="hidden" id="form-image_url" value="">
 								</div>
 							</div>
@@ -524,12 +524,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-3">
 								<div class="form-group">
-									<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge de capçalera<br><small class="text-muted">(JPEG, aprox. 1200x256px)</small></label><br>
+									<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Imatge de capçalera<br><small class="text-muted">(JPEG, ~1104x256, ≤1200x400, ≤300 KiB)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists('../anime.fansubs.cat/images/featured/'.$row['id'].'.jpg');
 ?>
 									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 'form-featured-image-preview', 'form-featured-image-preview-link');">
+									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 307200, 'form-featured-image-preview', 'form-featured-image-preview-link');">
 								</div>
 							</div>
 							<div class="col-sm-4">

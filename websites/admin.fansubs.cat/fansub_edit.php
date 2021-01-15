@@ -117,7 +117,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$file_exists = !empty($row['id']) && file_exists('../www.fansubs.cat/images/fansub_icons/'.$row['id'].'.png');
 ?>
 								<label for="form-icon" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="icon" type="file" accept="image/png" id="form-icon" onchange="checkImageUpload(this, 'form-icon-preview', 'form-icon-preview-link');">
+								<input class="form-control d-none" name="icon" type="file" accept="image/png" id="form-icon" onchange="checkImageUpload(this, -1, 'form-icon-preview', 'form-icon-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
@@ -136,7 +136,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$file_exists = !empty($row['id']) && file_exists('../www.fansubs.cat/images/fansub_logos/'.$row['id'].'.png');
 ?>
 								<label for="form-logo" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, 'form-logo-preview', 'form-logo-preview-link');">
+								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, -1, 'form-logo-preview', 'form-logo-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
