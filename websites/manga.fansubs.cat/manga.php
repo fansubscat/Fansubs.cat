@@ -404,7 +404,7 @@ if ($count_unfiltered==0) {
 
 			foreach ($volumes as $volume) {
 ?>
-									<details class="season"<?php echo $manga['show_expanded_volumes']==1 ? ' open' : ''; ?>>
+									<details id="volum-<?php echo !empty($volume['volume_number']) ? $volume['volume_number'] : 'altres'; ?>" class="season"<?php echo $manga['show_expanded_volumes']==1 ? ' open' : ''; ?>>
 										<summary class="season_name"><?php echo !empty($volume['volume_number']) ? (($manga['show_volumes']!=1 || (count($volumes)==2 && empty($last_volume_number))) ? 'Volum únic' : (!empty($volume['volume_name']) ? $volume['volume_name'] : (count($volumes)>1 ? 'Volum '.$volume['volume_number'] : 'Volum únic'))) : 'Altres'; ?></summary>
 										<div class="volume-container">
 <?php
