@@ -1036,8 +1036,8 @@ a:hover {
 .sidebar_thumbnail {
 	width: 300px; 
 	height: 424px;
-	object-fit: cover;
 	border: 1px solid white;
+	border-radius: 4px;
 }
 
 .fansub-buttons {
@@ -1614,7 +1614,6 @@ h2{
 	.sidebar_thumbnail {
 		width: 169px; 
 		height: 239px;
-		object-fit: cover;
 	}
 
 	.episode {

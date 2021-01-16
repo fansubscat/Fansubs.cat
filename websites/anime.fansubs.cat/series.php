@@ -105,7 +105,7 @@ if (!empty($series['alternate_names'])) {
 				<div class="flex mobilewrappable">
 					<div class="series_sidebar">
 						<div class="series_sidebar_inner">
-							<img class="sidebar_thumbnail" src="/images/series/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
+							<div class="sidebar_thumbnail" style="background: url('/images/series/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
 							<h2 class="section-title">Fitxa tècnica</h2>
 							<div class="sidebar_data">
 <?php

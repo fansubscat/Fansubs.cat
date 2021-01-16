@@ -105,7 +105,7 @@ if (!empty($manga['alternate_names'])) {
 				<div class="flex mobilewrappable">
 					<div class="series_sidebar">
 						<div class="series_sidebar_inner">
-							<img class="sidebar_thumbnail" src="/images/manga/<?php echo $manga['id']; ?>.jpg" alt="<?php echo htmlspecialchars($manga['name']); ?>">
+							<div class="sidebar_thumbnail" style="background: url('/images/manga/<?php echo $manga['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
 							<h2 class="section-title">Fitxa tècnica</h2>
 							<div class="sidebar_data">
 <?php

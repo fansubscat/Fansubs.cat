@@ -223,11 +223,13 @@ function populateMalDataManga(data) {
 	}
 
 	if (data.volumes && data.volumes>1) {
-		for (var i=0;i<data.volumes-1;i++){
-			addVolumeRow();
+		for (var i=0;i<data.volumes;i++){
+			if ((i+1)>$('#volume-list-table').attr('data-count')){
+				addVolumeRow();
+			}
 		}
 		if (data.chapters) {
-			var howMany = prompt("S'importaran els volums, però no sabem quants capítols té cadascun. Segons MyAnimeList, en total n'hi ha "+data.chapters+" repartits en "+data.volumes+" volums (aprox. uns "+Math.floor(data.chapters/data.volumes)+" capítols per volum). Amb l'objectiu de facilitar introduir les dades, podem assignar-ne una quantitat fixa a cada volum: introdueix-la. Si ho cancel·les, s'assignaran tots al primer volum. En qualsevol cas, assegura't de revisar que tot sigui correcte abans d'afegir el manga.");
+			var howMany = prompt("S'importaran els volums, però no sabem quants capítols té cadascun. Segons MyAnimeList, en total n'hi ha "+data.chapters+" repartits en "+data.volumes+" volums (aprox. uns "+Math.floor(data.chapters/data.volumes)+" capítols per volum). Amb l'objectiu de facilitar introduir les dades, podem assignar-ne una quantitat fixa a cada volum: introdueix-la. Si ho cancel·les o no introdueixes res, s'assignaran tots al primer volum. En qualsevol cas, assegura't de revisar que tot sigui correcte abans d'afegir el manga.");
 			if (!howMany || !howMany.match(/^-?[0-9]+$/)) {
 				$("#form-volume-list-chapters-1").val(data.chapters);
 			} else {
