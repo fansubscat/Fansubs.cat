@@ -241,7 +241,7 @@ for ($i=0;$i<count($sections);$i++){
 				}
 ?>
 								<div class="watchbutton">
-									<span class="fa fa-fw fa-play"></span> Mira-la ara
+									<span class="fa fa-fw fa-play"></span> Mira'l ara
 								</div>
 								<div class="infoholder">
 									<div class="title">
@@ -263,6 +263,9 @@ for ($i=0;$i<count($sections);$i++){
 							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='movie' ? "films" : "series"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['version_id'] : ""?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="/images/series/<?php echo $row['id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
+								<div class="watchbutton">
+									<span class="fa fa-fw fa-play"></span>
+								</div>
 								<div class="infoholder">
 <?php
 				if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {

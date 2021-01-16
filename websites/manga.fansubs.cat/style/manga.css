@@ -590,14 +590,34 @@ a:hover {
 	opacity: 0;
 	transition: opacity .5s ease-in-out;
 	font-weight: bold;
-	border-radius: 4px;
+	border-radius: 8px;
 	padding: 0.5em;
 	font-size: 1.25em;
 	background: rgba(30, 105, 30, 0.8);
 	white-space: nowrap;
 }
 
-.recommendation:hover .watchbutton {
+.thumbnail .watchbutton {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	transition: opacity .5s ease-in-out;
+	font-weight: bold;
+	border-radius: 999px;
+	padding: 0.5em;
+	font-size: 1.25em;
+	width: 36px;
+	height: 36px;
+	background: rgba(30, 105, 30, 0.8);
+	white-space: nowrap;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.recommendation:hover .watchbutton, .thumbnail:hover .watchbutton {
 	opacity: 1;
 }
 
@@ -1782,5 +1802,11 @@ h2{
 
 	.volume-cover {
 		width: 100px;
+	}
+
+	.thumbnail .watchbutton {
+		font-size: 0.83em;
+		width: 24px;
+		height: 24px;
 	}
 }

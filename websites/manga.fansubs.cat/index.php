@@ -237,7 +237,7 @@ for ($i=0;$i<count($sections);$i++){
 				}
 ?>
 								<div class="watchbutton">
-									<span class="fa fa-fw fa-play"></span> Llegeix-lo ara
+									<span class="fa fa-fw fa-book-open"></span> Llegeix-lo ara
 								</div>
 								<div class="infoholder">
 									<div class="title">
@@ -259,6 +259,9 @@ for ($i=0;$i<count($sections);$i++){
 							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-manga-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "serialitzats"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="/images/manga/<?php echo $row['id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
+								<div class="watchbutton">
+									<span class="fa fa-fw fa-book-open"></span>
+								</div>
 								<div class="infoholder">
 <?php
 				if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
