@@ -1047,6 +1047,19 @@ function checkCoverListImages() {
 		return false;
 	}
 
+	var files = $("[type=file]");
+	var totalBytes = 0;
+	for (var i=0;i<files.length;i++){
+		if (files[i].files && files[i].files.length>0) {
+			totalBytes+=files[i].files[0].size;
+		}
+	}
+
+	if (totalBytes>262144000) {
+		alert('La mida total dels fitxers pujats no pot excedir de 250 MiB. Si us plau, puja\'ls en diverses tandes.');
+		return false;
+	}
+
 	return true;
 }
 
