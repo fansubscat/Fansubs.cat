@@ -211,7 +211,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 			if ($type[$i]=='recommendations') {
 ?>
-							<a class="recommendation trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "serialitzats"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
+							<a class="recommendation trackable-<?php echo $tracking_classes[$i]; ?>" data-manga-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "serialitzats"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
 								<img src="/images/featured/<?php echo $row['id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
 								<div class="status" title="<?php echo get_status_description($row['best_status']); ?>"><?php echo get_status_description_short($row['best_status']); ?></div>
 <?php
@@ -256,7 +256,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php			
 			} else {
 ?>
-							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-series-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "serialitzats"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
+							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-manga-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "serialitzats"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
 								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
 								<img src="/images/manga/<?php echo $row['id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
 								<div class="infoholder">

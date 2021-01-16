@@ -488,7 +488,7 @@ if (mysqli_num_rows($resultrm)>0) {
 			echo "\t\t\t\t\t\t\t\t";
 			$first = FALSE;
 		}
-		echo '<a class="trackable-related-manga" data-series-id="'.$row['slug'].'" href="'.$base_url.'/'.($row['type']=='oneshot' ? 'one-shots' : 'serialitzats').'/'.$row['slug'].'">'.$row['name'].'</a>';
+		echo '<a class="trackable-related-manga" data-manga-id="'.$row['slug'].'" href="'.$base_url.'/'.($row['type']=='oneshot' ? 'one-shots' : 'serialitzats').'/'.$row['slug'].'">'.$row['name'].'</a>';
 	}
 ?>
 
@@ -515,7 +515,7 @@ if (mysqli_num_rows($resultra)>0) {
 			echo "\t\t\t\t\t\t\t\t";
 			$first = FALSE;
 		}
-		echo '<a class="trackable-related-anime" data-series-id="'.$row['slug'].'" href="https://anime.fansubs.cat/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
+		echo '<a class="trackable-related-anime" data-anime-id="'.$row['slug'].'" href="https://anime.fansubs.cat/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
 	}
 ?>
 

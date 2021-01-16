@@ -315,55 +315,54 @@ $(document).ready(function() {
 			});
 		}
 
-		//TODO
-		/*$("[class*='trackable-']").click(function () {
+		$("[class*='trackable-']").click(function () {
 			var type="";
 			var event="";
 			var label="";
-			if ($(this).hasClass('trackable-films-catalog')){
-				type="Click series";
-				event="Click series on films catalog";
-				label=$(this).attr('data-series-id');
-			} else if ($(this).hasClass('trackable-series-catalog')){
-				type="Click series";
-				event="Click series on series catalog";
-				label=$(this).attr('data-series-id');
+			if ($(this).hasClass('trackable-oneshots-catalog')){
+				type="Click manga";
+				event="Click manga on one-shots catalog";
+				label=$(this).attr('data-manga-id');
+			} else if ($(this).hasClass('trackable-serialized-catalog')){
+				type="Click manga";
+				event="Click manga on serialized catalog";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-search-results')){
-				type="Click series";
-				event="Click series on search results";
-				label=$(this).attr('data-series-id');
+				type="Click manga";
+				event="Click manga on search results";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-featured')){
-				type="Click series";
-				event="Click series on featured section";
-				label=$(this).attr('data-series-id');
+				type="Click manga";
+				event="Click manga on featured section";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-latest')){
-				type="Click series";
-				event="Click series on latest updates section";
-				label=$(this).attr('data-series-id');
+				type="Click manga";
+				event="Click manga on latest updates section";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-random')){
-				type="Click series";
-				event="Click series on random section";
-				label=$(this).attr('data-series-id');
+				type="Click manga";
+				event="Click manga on random section";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-popular')){
-				type="Click series";
-				event="Click series on most popular section";
-				label=$(this).attr('data-series-id');
+				type="Click manga";
+				event="Click manga on most popular section";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-newest')){
-				type="Click series";
-				event="Click series on newest section";
-				label=$(this).attr('data-series-id');
+				type="Click manga";
+				event="Click manga on newest section";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-toprated')){
-				type="Click series";
-				event="Click series on top rated section";
-				label=$(this).attr('data-series-id');
+				type="Click manga";
+				event="Click manga on top rated section";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-related-anime')){
-				type="Click series";
-				event="Click series on related anime";
-				label=$(this).attr('data-series-id');
+				type="Click anime";
+				event="Click anime on related anime";
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-related-manga')){
 				type="Click manga";
-				event="Click related manga";
-				label=$(this).attr('data-name');
+				event="Click manga on related manga";
+				label=$(this).attr('data-anime-id');
 			} else if ($(this).hasClass('trackable-advent')){
 				type="Click advent calendar";
 				event="Click advent calendar";
@@ -375,7 +374,7 @@ $(document).ready(function() {
 					'event_label': label
 				});
 			}
-		});*/
+		});
 
 		if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
 			$("#options-tooltip").fadeIn("slow");
