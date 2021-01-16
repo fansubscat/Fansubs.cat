@@ -150,7 +150,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input class="form-control" name="title" id="form-title" required value="<?php echo htmlspecialchars($row['title']); ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-contents" class="mandatory">Contingut <small class="text-muted">(compte, en format HTML!)</small></label>
+						<label for="form-contents">Contingut<span class="mandatory"></span> <small class="text-muted">(compte, en format HTML!)</small></label>
 						<textarea class="form-control" name="contents" id="form-contents" required style="height: 150px;"><?php echo htmlspecialchars($row['contents']); ?></textarea>
 					</div>
 					<div class="form-group">

@@ -106,13 +106,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-slug" class="mandatory">Identificador <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>
+						<label for="form-slug">Identificador<span class="mandatory"></span> <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>
 						<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
 					</div>
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label<?php echo empty($row['id']) ? ' class="mandatory"' : ''; ?>>Icona <small class="text-muted">(PNG, mida 24x24px)</small></label><br>
+								<label>Icona<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted">(PNG, mida 24x24px)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists('../www.fansubs.cat/images/fansub_icons/'.$row['id'].'.png');
 ?>
@@ -156,7 +156,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input class="form-control" type="url" name="twitter_url" id="form-twitter_url" maxlength="200" value="<?php echo htmlspecialchars($row['twitter_url']); ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-twitter_handle" class="mandatory">Nom a Twitter <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
+						<label for="form-twitter_handle">Nom a Twitter<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
 						<input class="form-control" name="twitter_handle" id="form-twitter_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['twitter_handle']); ?>">
 					</div>
 					<div class="form-group">
