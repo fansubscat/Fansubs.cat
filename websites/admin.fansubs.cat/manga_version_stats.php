@@ -179,7 +179,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="text-center"><?php echo get_hours_or_minutes_formatted($row['total_time_spent']); ?></td>
 								<td class="text-center"><?php echo $row['total_views']!=0 ? get_hours_or_minutes_formatted($row['total_time_spent']/$row['total_views']) : 0; ?></td>
 								<td class="text-center"><?php echo $row['total_pages_read']; ?></td>
-								<td class="text-center"><?php echo $row['total_views']!=0 ? intval($row['total_pages_read']/$row['total_views']) : 0; ?></td>
+								<td class="text-center"><?php echo $row['total_views']!=0 ? intval(round($row['total_pages_read']/$row['total_views'])) : 0; ?></td>
 							</tr>
 <?php
 	}

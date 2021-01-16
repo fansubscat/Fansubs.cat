@@ -15,7 +15,7 @@ if ($file_id>0 && !empty($_GET['action']) && !empty($read_id)) {
 					//We set a minimum and maximum read time and pages.
 					$min_time = $row['number_of_pages'] * 5;
 					$max_time = $row['number_of_pages'] * 60;
-					$min_pages = intval($row['number_of_pages']/2);
+					$min_pages = intval(round($row['number_of_pages']/2));
 					$max_pages = $row['number_of_pages'];
 
 					if (!empty($_GET['time_spent']) && is_numeric($_GET['time_spent']) && $_GET['time_spent']>=$min_time && !empty($_GET['pages_read']) && is_numeric($_GET['pages_read']) && $_GET['pages_read']>=$min_pages) {
