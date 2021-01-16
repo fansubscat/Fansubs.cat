@@ -83,7 +83,8 @@ CREATE TABLE `folder_failed_files` (
 CREATE TABLE `genre` (
   `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
-  `myanimelist_id` int(11) NOT NULL
+  `myanimelist_id_anime` int(11) DEFAULT NULL,
+  `myanimelist_id_manga` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `link` (
