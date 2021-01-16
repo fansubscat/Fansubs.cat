@@ -74,7 +74,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['rating'])) {
 			$data['rating']="'".escape($_POST['rating'])."'";
 		} else {
-			crash("Dades invàlides: manca rating");
+			$data['rating']="NULL";
 		}
 		if (!empty($_POST['synopsis'])) {
 			$data['synopsis']=escape($_POST['synopsis']);
@@ -478,8 +478,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="form-group">
-									<label for="form-rating" class="mandatory">Valoració per edats</label>
-									<select class="form-control" name="rating" id="form-rating" required>
+									<label for="form-rating">Valoració per edats</label>
+									<select class="form-control" name="rating" id="form-rating">
 										<option value="">- Selecciona una valoració -</option>
 										<option value="TP"<?php echo $row['rating']=='TP' ? " selected" : ""; ?>>Tots els públics</option>
 										<option value="+7"<?php echo $row['rating']=='+7' ? " selected" : ""; ?>>Majors de 7 anys</option>
