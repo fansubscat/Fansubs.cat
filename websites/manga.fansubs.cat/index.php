@@ -51,7 +51,7 @@ if (!empty($site_message) || !empty($is_fools_day)){
 if (is_robot()){
 ?>
 				<div class="section">
-					<div class="site-message">Fansubs.cat et permet llegir en línia més de 250 mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.</div>
+					<div class="site-message">Fansubs.cat et permet llegir en línia més de 100 mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.</div>
 				</div>
 <?php
 }

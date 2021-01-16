@@ -257,11 +257,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			foreach ($volumes as $volume) {
-				if (!file_exists("../mangav2.fansubs.cat/images/covers/".$data['id'])) {
-					mkdir("../mangav2.fansubs.cat/images/covers/".$data['id']);
-				}
 				if (is_uploaded_file($_FILES['volume_cover_'.$volume['id']]['tmp_name'])) {
-					move_uploaded_file($_FILES['volume_cover_'.$volume['id']]['tmp_name'], "../mangav2.fansubs.cat/images/covers/".$data['id']."/".$volume['id'].".jpg");
+					move_uploaded_file($_FILES['volume_cover_'.$volume['id']]['tmp_name'], "../mangav2.fansubs.cat/images/covers/".$data['id']."_".$volume['id'].".jpg");
 				}
 			}
 
@@ -297,11 +294,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			foreach ($volumes as $volume) {
-				if (!file_exists("../mangav2.fansubs.cat/images/covers/".$inserted_id)) {
-					mkdir("../mangav2.fansubs.cat/images/covers/".$inserted_id);
-				}
 				if (is_uploaded_file($_FILES['volume_cover_'.$volume['id']]['tmp_name'])) {
-					move_uploaded_file($_FILES['volume_cover_'.$volume['id']]['tmp_name'], "../mangav2.fansubs.cat/images/covers/".$inserted_id."/".$volume['id'].".jpg");
+					move_uploaded_file($_FILES['volume_cover_'.$volume['id']]['tmp_name'], "../mangav2.fansubs.cat/images/covers/".$inserted_id."_".$volume['id'].".jpg");
 				}
 			}
 
@@ -481,7 +475,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="form-volume-list">Portades dels volums <small class="text-muted">(JPEG, ~156x220, ≤450x600, ≤150 KiB)</small></label>
+							<label for="form-volume-list">Portades dels volums <small class="text-muted">(JPEG, ~156x220, ≤300x400, ≤100 KiB)</small></label>
 							<div class="row flex" id="form-volume-list">
 <?php
 	foreach ($volumes as $volume) {
@@ -489,11 +483,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="col-sm-2 text-center pr-1 pl-1">
 										<label><?php echo "Volum ".$volume['number'].(!empty($volume['name']) ? " (".$volume['name'].")" : ""); ?></label>
 <?php
-		$file_exists = !empty($row['id']) && file_exists('../mangav2.fansubs.cat/images/covers/'.$row['id'].'/'.$volume['id'].'.jpg');
+		$file_exists = !empty($row['id']) && file_exists('../mangav2.fansubs.cat/images/covers/'.$row['id'].'_'.$volume['id'].'.jpg');
 ?>
-										<img id="form-volume_cover_<?php echo $volume['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="https://mangav2.fansubs.cat/images/covers/'.$row['id'].'/'.$volume['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/covers/'.$row['id'].'/'.$volume['id'].'.jpg"' : ''; ?> alt=""><br />
+										<img id="form-volume_cover_<?php echo $volume['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="https://mangav2.fansubs.cat/images/covers/'.$row['id'].'_'.$volume['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/covers/'.$row['id'].'_'.$volume['id'].'.jpg"' : ''; ?> alt=""><br />
 										<label for="form-volume_cover_<?php echo $volume['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-										<input id="form-volume_cover_<?php echo $volume['id']; ?>" name="volume_cover_<?php echo $volume['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 153600, 'form-volume_cover_<?php echo $volume['id']; ?>_preview');"/>
+										<input id="form-volume_cover_<?php echo $volume['id']; ?>" name="volume_cover_<?php echo $volume['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 102400, 'form-volume_cover_<?php echo $volume['id']; ?>_preview');"/>
 								</div>
 <?php
 	}

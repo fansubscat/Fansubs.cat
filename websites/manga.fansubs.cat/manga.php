@@ -408,10 +408,10 @@ if ($count_unfiltered==0) {
 										<summary class="season_name"><?php echo !empty($volume['volume_number']) ? (($manga['show_volumes']!=1 || (count($volumes)==2 && empty($last_volume_number))) ? 'Volum únic' : (!empty($volume['volume_name']) ? $volume['volume_name'] : (count($volumes)>1 ? 'Volum '.$volume['volume_number'] : 'Volum únic'))) : 'Altres'; ?></summary>
 										<div class="volume-container">
 <?php
-				if (file_exists('images/covers/'.$version['id'].'/'.$volume['volume_id'].'.jpg')) {
+				if (file_exists('images/covers/'.$version['id'].'_'.$volume['volume_id'].'.jpg')) {
 ?>
 											<div class="volume-image-container">
-												<img class="volume-cover" src="<?php echo '/images/covers/'.$version['id'].'/'.$volume['volume_id'].'.jpg'; ?>" alt="">
+												<img class="volume-cover" src="<?php echo '/images/covers/'.$version['id'].'_'.$volume['volume_id'].'.jpg'; ?>" alt="">
 											</div>
 <?php
 				}

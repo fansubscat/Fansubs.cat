@@ -1035,7 +1035,7 @@ function checkCoverListImages() {
 	var covers = $('[id$=_preview]');
 	var affectedCovers='';
 	for (var i=0;i<covers.length;i++){
-		if (covers[i].naturalWidth>450 || covers[i].naturalHeight>600) {
+		if (covers[i].naturalWidth>300 || covers[i].naturalHeight>400) {
 			affectedCovers+=("\n- "+$($(covers[i].parentElement).find('label')[0]).text());
 		}
 	}

@@ -75,17 +75,14 @@ function import_images($piwigo_category_id, $volume_cover_image_id, $manga_id, $
 			$first_upload_date = $image['date_available'];
 		}
 		if ($image['id']==$volume_cover_image_id) {
-			if (!file_exists("{$base_path_manga}covers/{$manga_id}")) {
-				create_dir("{$base_path_manga}covers/{$manga_id}");
-			}
-			copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}covers/{$manga_id}/{$volume_id}.jpg");
+			copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}covers/{$manga_id}_{$volume_id}.jpg");
 		}
-		/*if (!file_exists("{$base_path_manga}storage/{$manga_id}")) {
-			create_dir("{$base_path_manga}storage/{$manga_id}");
+		/*if (!file_exists("{$base_path_manga}storage/{$piwigo_category_id}")) {
+			create_dir("{$base_path_manga}storage/{$piwigo_category_id}");
 		}
 		$filename=preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower($image['file']));
 		//TODO Change to move when definitive
-		copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}storage/{$manga_id}/{$filename}");*/
+		copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}storage/{$piwigo_category_id}/{$filename}");*/
 		
 		$number_of_pages++;
 	}
@@ -300,10 +297,7 @@ while ($manga = mysqli_fetch_assoc($resultm)){
 						if (!empty($manga['representative_picture_id'])) {
 							$resulti = query_piwigo("SELECT i.* FROM piwigo_images i WHERE i.id={$manga['representative_picture_id']}");
 							if ($image = mysqli_fetch_assoc($resulti)) {
-								if (!file_exists("{$base_path_manga}covers/{$manga['id']}")) {
-									create_dir("{$base_path_manga}covers/{$manga['id']}");
-								}
-								copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}covers/{$manga['id']}/{$manga['id']}.jpg");
+								copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}covers/{$manga['id']}_{$manga['id']}.jpg");
 							}
 							mysqli_free_result($resulti);
 						}
@@ -459,7 +453,6 @@ while ($manga = mysqli_fetch_assoc($resultm)){
 
 				//Repeat logic to set chapter numbers
 				if (is_numeric($number) && $number!=0){
-					echo "Found volume (id={$album['id']},num={$number}) {$manga['name']} -> {$album['name']}\n";
 					$volumes[] = array(
 						'id' => $album['id'],
 						'number' => $number,
@@ -467,7 +460,6 @@ while ($manga = mysqli_fetch_assoc($resultm)){
 						'chapters' => $num_chapters
 					);
 				} else {
-					echo "Found EXTRA volume (id={$album['id']},num=999,name='{$album['name']}') {$manga['name']} -> {$album['name']}\n";
 					$volumes[] = array(
 						'id' => $album['id'],
 						'number' => 999,
@@ -480,10 +472,7 @@ while ($manga = mysqli_fetch_assoc($resultm)){
 				if (!empty($album['representative_picture_id'])) {
 					$resulti = query_piwigo("SELECT i.* FROM piwigo_images i WHERE i.id={$album['representative_picture_id']}");
 					if ($image = mysqli_fetch_assoc($resulti)) {
-						if (!file_exists("{$base_path_manga}covers/{$manga['id']}")) {
-							create_dir("{$base_path_manga}covers/{$manga['id']}");
-						}
-						copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}covers/{$manga['id']}/{$album['id']}.jpg");
+						copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}covers/{$manga['id']}_{$album['id']}.jpg");
 					}
 					mysqli_free_result($resulti);
 				}
