@@ -13,7 +13,11 @@ if (isset($failed)) {
 	die();
 }
 
-$mode = $file['reader_type'];
+if (!empty($_COOKIE['force_long_strip'])){
+	$mode = 'strip';
+} else {
+	$mode = $file['reader_type'];
+}
 
 $base_path="images/storage/$file_id/";
 

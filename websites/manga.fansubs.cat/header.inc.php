@@ -67,6 +67,11 @@ if ($is_fools_day){
 						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
 					  	<label for="show_hentai">Mostra el hentai (confirmes que ets major d'edat)</label>
 					</div>
+					<h2 class="section-title options-section-divider">Opcions de lectura</h2>
+					<div class="options-item">
+						<input id="force_long_strip" type="checkbox"<?php echo !empty($_COOKIE['force_long_strip']) ? ' checked' : ''; ?>>
+					  	<label for="force_long_strip">Utilitza sempre el lector de manga en mode tira vertical</label>
+					</div>
 					<h2 class="section-title options-section-divider">Fansubs que es mostren</h2>
 					<div id="options-fansubs">
 <?php
