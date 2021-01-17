@@ -77,12 +77,11 @@ function import_images($piwigo_category_id, $volume_cover_image_id, $manga_id, $
 		if ($image['id']==$volume_cover_image_id) {
 			copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}covers/{$manga_id}_{$volume_id}.jpg");
 		}
-		/*if (!file_exists("{$base_path_manga}storage/{$piwigo_category_id}")) {
+		if (!file_exists("{$base_path_manga}storage/{$piwigo_category_id}")) {
 			create_dir("{$base_path_manga}storage/{$piwigo_category_id}");
 		}
 		$filename=preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower($image['file']));
-		//TODO Change to move when definitive
-		copy_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}storage/{$piwigo_category_id}/{$filename}");*/
+		move_file("{$base_path_piwigo}{$image['path']}", "{$base_path_manga}storage/{$piwigo_category_id}/{$filename}");
 		
 		$number_of_pages++;
 	}
@@ -147,7 +146,7 @@ while ($manga = mysqli_fetch_assoc($resultm)){
 		$first_upload_date = $copy_result['first_upload_date'];
 		$last_upload_date = $copy_result['last_upload_date'];
 
-		query("INSERT INTO manga (id, slug, name, alternate_names, keywords, type, publish_date, author, rating, chapters, synopsis, myanimelist_id, tadaima_id, score, reader_type, show_volumes, show_expanded_volumes, show_chapter_numbers, show_unavailable_chapters, has_licensed_parts, order_type, created, created_by, updated, updated_by) VALUES ({$manga['id']}, '{$slug}', '{$name}',NULL,NULL,'oneshot',NULL,NULL,'TP',1,'{$description}',NULL,NULL,NULL,'paged',1,1,0,1,0,0,'{$first_upload_date}','PiwigoImport','{$last_upload_date}','PiwigoImport')");
+		query("INSERT INTO manga (id, slug, name, alternate_names, keywords, type, publish_date, author, rating, chapters, synopsis, myanimelist_id, tadaima_id, score, reader_type, show_volumes, show_expanded_volumes, show_chapter_numbers, show_unavailable_chapters, has_licensed_parts, order_type, created, created_by, updated, updated_by) VALUES ({$manga['id']}, '{$slug}', '{$name}',NULL,NULL,'oneshot',NULL,NULL,NULL,1,'{$description}',NULL,NULL,NULL,'paged',1,1,0,1,0,0,'{$first_upload_date}','PiwigoImport','{$last_upload_date}','PiwigoImport')");
 		query("INSERT INTO manga_version (id, manga_id, status, chapters_missing, created, created_by, updated, updated_by, files_updated, files_updated_by, is_featurable, is_always_featured) VALUES ({$manga['id']}, {$manga['id']}, 1, 0, '{$first_upload_date}', 'PiwigoImport', '{$last_upload_date}', 'PiwigoImport', '{$last_upload_date}', 'PiwigoImport', 1, 0)");
 		foreach ($fansubs as $fansub_id) {
 			query("INSERT INTO rel_manga_version_fansub (manga_version_id, fansub_id, downloads_url) VALUES ({$manga['id']}, {$fansub_id}, NULL)");
@@ -504,7 +503,7 @@ while ($manga = mysqli_fetch_assoc($resultm)){
 			echo "NOTICE: Manga {$manga['id']} has $album_orphaned_images orphaned images, they will be lost!\n";
 		}
 
-		query("INSERT INTO manga (id, slug, name, alternate_names, keywords, type, publish_date, author, rating, chapters, synopsis, myanimelist_id, tadaima_id, score, reader_type, show_volumes, show_expanded_volumes, show_chapter_numbers, show_unavailable_chapters, has_licensed_parts, order_type, created, created_by, updated, updated_by) VALUES ({$manga['id']}, '{$slug}', '{$name}',NULL,NULL,'serialized',NULL,NULL,'TP',{$total_num_chapters},'{$description}',NULL,NULL,NULL,'paged',1,1,1,1,0,0,'{$first_upload_date}','PiwigoImport','{$last_upload_date}','PiwigoImport')");
+		query("INSERT INTO manga (id, slug, name, alternate_names, keywords, type, publish_date, author, rating, chapters, synopsis, myanimelist_id, tadaima_id, score, reader_type, show_volumes, show_expanded_volumes, show_chapter_numbers, show_unavailable_chapters, has_licensed_parts, order_type, created, created_by, updated, updated_by) VALUES ({$manga['id']}, '{$slug}', '{$name}',NULL,NULL,'serialized',NULL,NULL,NULL,{$total_num_chapters},'{$description}',NULL,NULL,NULL,'paged',1,1,1,1,0,0,'{$first_upload_date}','PiwigoImport','{$last_upload_date}','PiwigoImport')");
 		query("INSERT INTO manga_version (id, manga_id, status, chapters_missing, created, created_by, updated, updated_by, files_updated, files_updated_by, is_featurable, is_always_featured) VALUES ({$manga['id']}, {$manga['id']}, 1, 0, '{$first_upload_date}', 'PiwigoImport', '{$last_upload_date}', 'PiwigoImport', '{$last_upload_date}', 'PiwigoImport', 1, 0)");
 		foreach ($fansubs as $fansub_id) {
 			query("INSERT INTO rel_manga_version_fansub (manga_version_id, fansub_id, downloads_url) VALUES ({$manga['id']}, {$fansub_id}, NULL)");

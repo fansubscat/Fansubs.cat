@@ -530,19 +530,27 @@ if (mysqli_num_rows($resultrm)>0) {
 ?>
 					</div>
 				</div>
-				<div>
+				<div class="bottom-recommendations">
 <?php
 //Begin copy from index.php
 $max_items=24;
 $base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 //End copy from index.php
-$related_query="SELECT rs.related_series_id FROM related_series rs WHERE rs.series_id=".$series['id'];
-$resultra = query($base_query . " WHERE s.id IN ($related_query) GROUP BY s.id ORDER BY s.name ASC");
+//1. Related, 2. Same author, 3. Half of genres or more in common
+$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series WHERE id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre WHERE series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".count(explode(', ', max(1,intval(round($series['genres']))/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
+$resultin = query($related_query);
+$in = array(-1);
+while ($row = mysqli_fetch_assoc($resultin)) {
+	$in[]=$row['id'];
+}
+mysqli_free_result($resultin);
+$resultra = query($base_query . " WHERE s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
 
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title">Animes relacionats</h2>
+						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-tv"></span> Animes relacionats</h2>
+						<h3 class="section-subtitle">Si t'agrada aquest anime, és possible que també t'agradin els d'aquesta llista:</h3>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultra)) {
@@ -576,7 +584,8 @@ $resultrm = query($base_query . " WHERE s.id IN ($related_query) GROUP BY s.id O
 if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title">Mangues relacionats</h2>
+						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-book-open"></span> Mangues relacionats</h2>
+						<h3 class="section-subtitle">Si t'agrada aquest anime, és possible que també t'agradin aquests mangues:</h3>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultrm)) {
