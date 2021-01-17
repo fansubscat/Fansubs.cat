@@ -13,7 +13,7 @@ if ($file_id>0 && !empty($_GET['action']) && !empty($read_id)) {
 				$exists = query("SELECT * FROM read_session WHERE read_id='$read_id'");
 				if (mysqli_fetch_assoc($exists)){
 					//We set a minimum and maximum read time and pages.
-					$min_time = $row['number_of_pages'] * 5;
+					$min_time = $row['number_of_pages'] * 3;
 					$max_time = $row['number_of_pages'] * 60;
 					$min_pages = intval(round($row['number_of_pages']/2));
 					$max_pages = $row['number_of_pages'];

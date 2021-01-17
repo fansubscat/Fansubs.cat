@@ -29,7 +29,7 @@ $countr = 0;
 while ($row = mysqli_fetch_assoc($result)) {
 	//Treat
 	// -- ADAPTATION FROM counter.php close case --
-	$min_time = $row['number_of_pages']*5;
+	$min_time = $row['number_of_pages']*3;
 	$min_pages = intval(round($row['number_of_pages']/2));
 
 	if (!empty($row['time_spent']) && is_numeric($row['time_spent']) && $row['time_spent']>=$min_time && $row['pages_read']>=$min_pages) {
