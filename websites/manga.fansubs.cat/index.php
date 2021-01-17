@@ -2,13 +2,6 @@
 require_once("db.inc.php");
 require_once("parsedown.inc.php");
 
-function exists_more_than_one_version($series_id){
-	$result = query("SELECT COUNT(*) cnt FROM manga_version WHERE manga_id=$series_id");
-	$row = mysqli_fetch_assoc($result);
-	mysqli_free_result($result);	
-	return ($row['cnt']>1);
-}
-
 $header_tab=(!empty($_GET['page']) ? $_GET['page'] : '');
 $header_page_title='';
 
@@ -255,43 +248,7 @@ for ($i=0;$i<count($sections);$i++){
 							</a>
 <?php			
 			} else {
-?>
-							<a class="thumbnail trackable-<?php echo $tracking_classes[$i]; ?>" data-manga-id="<?php echo $row['slug']; ?>" href="<?php echo $base_url; ?>/<?php echo $row['type']=='oneshot' ? "one-shots" : "serialitzats"; ?>/<?php echo $row['slug']; ?><?php echo ($specific_version[$i] && exists_more_than_one_version($row['id'])) ? "?v=".$row['manga_version_id'] : ""?>">
-								<div class="status-indicator" title="<?php echo get_status_description($row['best_status']); ?>"></div>
-								<img src="/images/manga/<?php echo $row['id']; ?>.jpg" alt="<?php echo $row['name']; ?>" />
-								<div class="watchbutton">
-									<span class="fa fa-fw fa-book-open"></span>
-								</div>
-								<div class="infoholder">
-<?php
-				if (!empty($row['last_link_created']) && $row['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
-?>
-									<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>
-<?php
-				}
-?>
-<?php
-				if ($row['volumes']>1 && $row['show_volumes']==1) {
-?>
-									<div class="seasons"><?php echo $row['volumes']; ?> volums</div>
-<?php
-				} else if ($row['type']=='oneshot') {
-?>
-									<div class="seasons">One-shot</div>
-<?php
-				} else {
-?>
-									<div class="seasons">1 volum</div>
-<?php
-				}
-?>
-									<div class="title">
-										<div class="ellipsized-title"><?php echo $row['name']; ?></div>
-									</div>
-								</div>
-								<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $row['fansub_name']; ?></div>
-							</a>
-<?php
+				print_carousel_item_manga($row, $tracking_classes[$i], $specific_version[$i]);
 			}
 ?>
 						</div>

@@ -471,62 +471,74 @@ if ($count_unfiltered==0) {
 		$i++;
 	}
 }
+?>
+					</div>
+				</div>
+				<div>
+<?php
+//Begin copy from index.php
+$max_items=24;
+$base_query="SELECT s.*, (SELECT nv.id FROM manga_version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.manga_id=s.id LIMIT 1) manga_version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(ss.id) FROM volume ss WHERE ss.manga_id=s.id) volumes, s.chapters, (SELECT MAX(ls.created) FROM file ls LEFT JOIN manga_version vs ON ls.manga_version_id=vs.id WHERE vs.manga_id=s.id) last_link_created FROM manga s LEFT JOIN manga_version v ON s.id=v.manga_id LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_manga_genre sg ON s.id=sg.manga_id LEFT JOIN genre g ON sg.genre_id = g.id";
+//End copy from index.php
 
-$resultrm = query("SELECT m.* FROM related_manga_manga rm LEFT JOIN manga m ON rm.related_manga_id=m.id WHERE rm.manga_id=".$manga['id']." ORDER BY m.name ASC");
+$related_query="SELECT rm.related_manga_id FROM related_manga_manga rm WHERE rm.manga_id=".$manga['id'];
+$resultrm = query($base_query . " WHERE s.id IN ($related_query) GROUP BY s.id ORDER BY s.name ASC");
 
 if (mysqli_num_rows($resultrm)>0) {
 ?>
-						<div class="section" style="padding-top: 1em;">
-							<h2 class="section-title">Manga relacionat</h2>
-							<div class="section-content">
+					<div class="section">
+						<h2 class="section-title">Mangues relacionats</h2>
+						<div class="section-content carousel">
 <?php
-	$first = TRUE;
 	while ($row = mysqli_fetch_assoc($resultrm)) {
-		if (!$first) {
-			echo ", ";
-		} else {
-			echo "\t\t\t\t\t\t\t\t";
-			$first = FALSE;
-		}
-		echo '<a class="trackable-related-manga" data-manga-id="'.$row['slug'].'" href="'.$base_url.'/'.($row['type']=='oneshot' ? 'one-shots' : 'serialitzats').'/'.$row['slug'].'">'.$row['name'].'</a>';
+?>
+							<div class="status-<?php echo get_status($row['best_status']); ?>">
+<?php
+		print_carousel_item_manga($row, 'related-manga', FALSE, FALSE);
+?>
+							</div>
+<?php
 	}
 ?>
 
-							</div>
 						</div>
+					</div>
 <?php
 }
 
 mysqli_free_result($resultrm);
 
-$resultra = query("SELECT a.* FROM related_manga_anime ra LEFT JOIN series a ON ra.related_anime_id=a.id WHERE ra.manga_id=".$manga['id']." ORDER BY a.name ASC");
+//Begin copy from index.php
+$max_items=24;
+$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+//End copy from index.php
+$related_query="SELECT rm.related_anime_id FROM related_manga_anime rm WHERE rm.manga_id=".$manga['id'];
+$resultra = query($base_query . " WHERE s.id IN ($related_query) GROUP BY s.id ORDER BY s.name ASC");
 
 if (mysqli_num_rows($resultra)>0) {
 ?>
-						<div class="section" style="padding-top: 1em;">
-							<h2 class="section-title">Anime relacionat</h2>
-							<div class="section-content">
+					<div class="section">
+						<h2 class="section-title">Animes relacionats</h2>
+						<div class="section-content carousel">
 <?php
-	$first = TRUE;
 	while ($row = mysqli_fetch_assoc($resultra)) {
-		if (!$first) {
-			echo ", ";
-		} else {
-			echo "\t\t\t\t\t\t\t\t";
-			$first = FALSE;
-		}
-		echo '<a class="trackable-related-anime" data-anime-id="'.$row['slug'].'" href="https://anime.fansubs.cat/'.($row['type']=='movie' ? 'films' : 'series').'/'.$row['slug'].'">'.$row['name'].'</a>';
+?>
+							<div class="status-<?php echo get_status($row['best_status']); ?>">
+<?php
+		print_carousel_item_anime($row, 'related-anime', FALSE, FALSE);
+?>
+							</div>
+<?php
 	}
 ?>
 
-							</div>
 						</div>
+					</div>
 <?php
 }
 
 mysqli_free_result($resultra);
 ?>
-					</div>
 				</div>
 <?php
 mysqli_free_result($result);

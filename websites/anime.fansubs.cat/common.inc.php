@@ -292,6 +292,74 @@ function internal_print_episode($episode_title, $result) {
 	}
 }
 
+function exists_more_than_one_version($series_id){
+	$result = query("SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id");
+	$row = mysqli_fetch_assoc($result);
+	mysqli_free_result($result);	
+	return ($row['cnt']>1);
+}
+
+function exists_more_than_one_version_manga($series_id){
+	$result = query("SELECT COUNT(*) cnt FROM manga_version WHERE manga_id=$series_id");
+	$row = mysqli_fetch_assoc($result);
+	mysqli_free_result($result);	
+	return ($row['cnt']>1);
+}
+
+function print_carousel_item_anime($anime, $tracking_class, $specific_version, $show_new=TRUE) {
+	global $base_url;
+	echo "\t\t\t\t\t\t\t".'<a class="thumbnail trackable-'.$tracking_class.'" data-series-id="'.$anime['slug'].'" href="'.$base_url.'/'.($anime['type']=='movie' ? "films" : "series").'/'.$anime['slug'].(($specific_version && exists_more_than_one_version($anime['id'])) ? "?v=".$anime['version_id'] : "").'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($anime['best_status']).'"></div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img src="'.$base_url.'/images/series/'.$anime['id'].'.jpg" alt="'.$anime['name'].'" />'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="watchbutton">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-play"></span>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
+	if ($show_new && !empty($anime['last_link_created']) && $anime['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>'."\n";
+	}
+	if ($anime['type']=='movie' && $anime['episodes']>1) {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">'.$anime['episodes'].' films</div>'."\n";
+	} else if ($anime['type']=='movie') {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">Film</div>'."\n";
+	} else if ($anime['seasons']>1 && $anime['show_seasons']==1) {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">'.$anime['seasons'].' temporades</div>'."\n";
+	}
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="title">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="ellipsized-title">'.$anime['name'].'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="fansub">'.(strpos($anime['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $anime['fansub_name']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t".'</a>';
+}
+
+function print_carousel_item_manga($manga, $tracking_class, $specific_version, $show_new=TRUE) {
+	$base_url='https://manga.fansubs.cat';
+	echo "\t\t\t\t\t\t\t".'<a class="thumbnail trackable-'.$tracking_class.'" data-manga-id="'.$manga['slug'].'" href="'.$base_url.'/'.($manga['type']=='oneshot' ? "one-shots" : "serialitzats").'/'.$manga['slug'].(($specific_version && exists_more_than_one_version_manga($manga['id'])) ? "?v=".$manga['manga_version_id'] : "").'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($manga['best_status']).'"></div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img src="/images/manga/'.$manga['id'].'.jpg" alt="'.$manga['name'].'" />'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="watchbutton">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-book-open"></span>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
+	if ($show_new && !empty($manga['last_link_created']) && $manga['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>'."\n";
+	}
+	if ($manga['volumes']>1 && $manga['show_volumes']==1) {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">'.$manga['volumes'].' volums</div>'."\n";
+	} else if ($manga['type']=='oneshot') {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">One-shot</div>'."\n";
+	} else {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">1 volum</div>'."\n";
+	}
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="title">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="ellipsized-title">'.$manga['name'].'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="fansub">'.(strpos($manga['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $manga['fansub_name']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t".'</a>'."\n";
+}
+
 function get_cookie_fansub_ids() {
 	$fansub_ids = array();
 	if (!empty($_COOKIE['hidden_fansubs'])) {

@@ -364,7 +364,7 @@ $(document).ready(function() {
 			} else if ($(this).hasClass('trackable-related-manga')){
 				type="Click manga";
 				event="Click related manga";
-				label=$(this).attr('data-name');
+				label=$(this).attr('data-name'); //TODO Change when mangav2 is available
 			} else if ($(this).hasClass('trackable-advent')){
 				type="Click advent calendar";
 				event="Click advent calendar";
