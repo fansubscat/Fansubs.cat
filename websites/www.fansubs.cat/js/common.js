@@ -1,3 +1,15 @@
+function toggleMobileMenu(){
+  if ($("#sidebar").hasClass('forcemenu')) {
+    $("#sidebar").removeClass('forcemenu');
+    $("#mobilemenu img").attr('src','/style/images/menu.png');
+    $("#mobilemenu img").attr('alt','Obre el menú');
+  } else {
+    $("#sidebar").addClass('forcemenu');
+    $("#mobilemenu img").attr('src','/style/images/menu_close.png');
+    $("#mobilemenu img").attr('alt','Tanca el menú');
+  }
+}
+
 $(document).ready(function() {
 
   //We setup magnific popups for all fansub images

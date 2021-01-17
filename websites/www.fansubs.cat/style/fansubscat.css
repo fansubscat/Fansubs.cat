@@ -116,6 +116,21 @@ h2 {
 	position: relative;
 }
 
+.forcemenu{
+	display: block !important;
+}
+
+#mobilemenu{
+	display: none;
+	cursor: pointer;
+}
+
+#mobilemenu img{
+	background-color: rgba(255,255,255,0.6);
+	border-radius: 4px;
+	margin: 10px 8px;
+}
+
 div#top a,
 div#top a:visited, 
 div#top a:hover {
@@ -433,8 +448,23 @@ table.contact-us tbody tr > :first-child {
 		width: 100%;
 	}
 
+	#mobilemenu{
+		display: block !important;
+		position: absolute;
+		z-index: 1000;
+		right: 0px;
+	}
+
 	#sidebar{
 		display: none;
+		width: 244px;
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: #EEE;
+		border-left: 1px solid #888;
+		border-bottom: 1px solid #888;
+		padding-top: 72px;
 	}
 
 	#top{
@@ -454,6 +484,10 @@ table.contact-us tbody tr > :first-child {
 		padding-top: 12px;
 		padding-bottom: 6px;
 	}
+
+	table.contact-us tbody tr > :first-child {
+		width: 120px;
+	}
 }
 
 @media screen and (max-width: 650px){
@@ -464,6 +498,7 @@ table.contact-us tbody tr > :first-child {
 		margin-left: -8px;
 		margin-right: -8px;
 	}
+
 	.article-logo img {
 		max-height: 20px;
 		max-width: 200px;

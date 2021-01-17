@@ -112,6 +112,7 @@ if ($header_current_page=='stats'){
 	<body>
 		<div id="page">
 			<div id="header">
+				<div id="mobilemenu" onclick="toggleMobileMenu();"><img src="/style/images/menu.png" alt="Obre el menú"></div>
 				<div id="top" style="background-image: url('/style/images/header<?php echo rand(1, 8); ?>.jpg')">
 					<div id="toppadding">
 						<div class="page-title-block">
