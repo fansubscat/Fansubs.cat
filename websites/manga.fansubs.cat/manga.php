@@ -496,7 +496,7 @@ $resultrm = query($base_query . " WHERE s.id IN (".implode(',',$in).") GROUP BY 
 if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-book-open"></span> Mangues relacionats</h2>
+						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-book-open"></span> Mangues recomanats</h2>
 						<h3 class="section-subtitle">Si t'agrada aquest manga, és possible que també t'agradin els d'aquesta llista:</h3>
 						<div class="section-content carousel">
 <?php
@@ -535,7 +535,7 @@ $resultra = query($base_query . " WHERE s.id IN (".implode(',',$in).") GROUP BY 
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-tv"></span> Animes relacionats</h2>
+						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-tv"></span> Animes recomanats</h2>
 						<h3 class="section-subtitle">Si t'agrada aquest manga, és possible que també t'agradin aquests animes:</h3>
 						<div class="section-content carousel">
 <?php

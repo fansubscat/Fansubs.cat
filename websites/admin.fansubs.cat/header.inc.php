@@ -61,8 +61,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					</li>
 					<li class="nav-item dropdown<?php echo $page=='manga' ? ' active' : ''; ?>">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSeries" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manga</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries" style="background-color: #f8d7da;">
-							<div class="alert text-center mb-0 mt-0"><span class="fa fa-exclamation-triangle pr-2"></span>Zona en proves<span class="fa fa-exclamation-triangle pl-2"></span></div>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
@@ -157,7 +156,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 ?>
 				</ul>
 				<a class="text-light pr-4" href="https://anime.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (anime.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-anime fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
-				<a class="text-light pr-4" href="https://manga.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (manga.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+				<a class="text-light pr-4" href="https://mangav2.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (mangav2.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
 				<a class="text-light pr-4" href="https://www.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (www.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-news fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
 				<a class="text-light pr-4" href="https://docs.google.com/document/d/10EMgWjVqrmDFUpxLI44cq4n5iOPHRKL3vZfL59Tt3SA/edit?usp=sharing" target="_blank" title="Ajuda"><span class="fa fa-question-circle"></span></a>
 				<a class="text-light" href="logout.php" title="Tanca la sessió"><?php echo htmlspecialchars($_SESSION['username']); ?><span class="fa fa-sign-out-alt ml-2"></span></a>

@@ -44,24 +44,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					</div>
 					<div class="col-sm">
 						<h5 class="card-title text-center mb-3 mt-2">Manga</h5>
-<!--
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
 						<div class="text-center p-2">
-							<a href="javascript:alert('Encara no està disponible.');" class="btn btn-primary disabled"><span class="fa fa-plus pr-2"></span>Afegeix un manga nou</a> 
+							<a href="manga_edit.php" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix un manga nou</a> 
 						</div>
 <?php
 	}
 ?>
 						<div class="text-center p-2">
-							<a href="javascript:alert('Encara no està disponible.');" class="btn btn-primary disabled"><span class="fa fa-plus pr-2"></span>Afegeix una versió nova</a>
+							<a href="manga_choose.php" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix una versió nova</a>
 						</div>
 						<div class="text-center p-2">
-							<a href="javascript:alert('Encara no està disponible.');" class="btn btn-primary disabled"><span class="fa fa-edit pr-2"></span>Edita una versió existent</a>
+							<a href="manga_version_list.php" class="btn btn-primary"><span class="fa fa-edit pr-2"></span>Edita una versió existent</a>
 						</div>
--->
-					<p class="text-center alert alert-warning"><span class="fa fa-exclamation-triangle mb-3" style="font-size: 1.5em;"></span><br />L'edició de manga encara no està disponible en aquesta versió del tauler d'administració.<br />Pots gestionar el manga <a href="https://manga.fansubs.cat/admin.php">aquí</a>.</p>
 					</div>
 					<div class="col-sm">
 						<h5 class="card-title text-center mb-3 mt-2">Notícies</h5>

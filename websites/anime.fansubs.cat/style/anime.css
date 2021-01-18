@@ -1041,6 +1041,7 @@ a:hover {
 	font-size: 1.1em;
 	text-align: left;
 	padding-bottom: 1em;
+	max-width: 300px;
 }
 
 .sidebar_data div {

@@ -40,13 +40,14 @@ function create_dir($name){
 }
 
 function copy_file($origin, $destination){
-	global $dry_run;
+	/*global $dry_run;
 	if ($dry_run) {
 		echo "Copy file from '$origin' to '$destination'\n";
 		return TRUE;
 	} else {
 		return copy($origin, $destination);
-	}
+	}*/
+	return TRUE;
 }
 
 function move_file($origin, $destination){

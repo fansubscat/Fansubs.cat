@@ -221,11 +221,11 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 				} else if ($row['volumes']>1 && $row['show_volumes']==1) {
 ?>
-									<div class="seasons">Manga de <?php echo $row['volumes']; ?> volums, <?php echo $row['chapters']==-1 ? 'en edició' : $row['chapters'].' capítols'; ?></div>
+									<div class="seasons">Manga <?php echo $row['volumes']==1 ? "d'1 volum" : 'de '.$row['volumes'].' volums'; ?>, <?php echo $row['chapters']==-1 ? 'en edició' : $row['chapters'].' capítols'; ?></div>
 <?php
 				} else {
 ?>
-									<div class="seasons">Manga <?php echo $row['chapters']==-1 ? 'en edició' : 'de '.$row['volumes'].' volums'; ?></div>
+									<div class="seasons">Manga <?php echo $row['chapters']==-1 ? 'en edició' : ($row['volumes']==1 ? "d'1 volum" : 'de '.$row['volumes'].' volums'); ?></div>
 <?php
 				}
 ?>

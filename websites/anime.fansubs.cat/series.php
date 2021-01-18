@@ -501,32 +501,6 @@ if ($count_unfiltered==0) {
 		$i++;
 	}
 }
-
-//TODO Remove when mangav2 is available
-$resultrm = query("SELECT rm.* FROM related_manga rm WHERE rm.series_id=".$series['id']." ORDER BY rm.name ASC");
-
-if (mysqli_num_rows($resultrm)>0) {
-?>
-						<div class="section" style="padding-top: 1em;">
-							<h2 class="section-title">Manga relacionat</h2>
-							<div class="section-content">
-<?php
-	$first = TRUE;
-	while ($row = mysqli_fetch_assoc($resultrm)) {
-		if (!$first) {
-			echo ", ";
-		} else {
-			echo "\t\t\t\t\t\t\t\t";
-			$first = FALSE;
-		}
-		echo '<a class="trackable-related-manga" data-name="'.$row['name'].'" href="'.$row['url'].'">'.$row['name'].'</a>';
-	}
-?>
-
-							</div>
-						</div>
-<?php
-}
 ?>
 					</div>
 				</div>
@@ -549,7 +523,7 @@ $resultra = query($base_query . " WHERE s.id IN (".implode(',',$in).") GROUP BY 
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-tv"></span> Animes relacionats</h2>
+						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-tv"></span> Animes recomanats</h2>
 						<h3 class="section-subtitle">Si t'agrada aquest anime, és possible que també t'agradin els d'aquesta llista:</h3>
 						<div class="section-content carousel">
 <?php
@@ -575,16 +549,20 @@ mysqli_free_result($resultra);
 $max_items=24;
 $base_query="SELECT s.*, (SELECT nv.id FROM manga_version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.manga_id=s.id LIMIT 1) manga_version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(ss.id) FROM volume ss WHERE ss.manga_id=s.id) volumes, s.chapters, (SELECT MAX(ls.created) FROM file ls LEFT JOIN manga_version vs ON ls.manga_version_id=vs.id WHERE vs.manga_id=s.id) last_link_created FROM manga s LEFT JOIN manga_version v ON s.id=v.manga_id LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_manga_genre sg ON s.id=sg.manga_id LEFT JOIN genre g ON sg.genre_id = g.id";
 //End copy from index.php
-
-//TODO Fix when mangav2 is available
-//$related_query="SELECT rm.related_manga_id FROM related_manga rm WHERE rm.series_id=".$series['id'];
-$related_query="-1";
-$resultrm = query($base_query . " WHERE s.id IN ($related_query) GROUP BY s.id ORDER BY s.name ASC");
+//1. Related, 2. Same author, 3. Half of genres or more in common
+$related_query="SELECT rm.related_manga_id id, m.name FROM related_manga rm LEFT JOIN manga m ON rm.related_manga_id=m.id WHERE rm.series_id=".$series['id']." UNION SELECT id, NULL FROM manga WHERE author='".escape($series['author'])."' UNION (SELECT manga_id id, NULL FROM rel_manga_genre GROUP BY manga_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".count(explode(', ', max(1, intval(round($series['genres']))/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
+$resultin = query($related_query);
+$in = array(-1);
+while ($row = mysqli_fetch_assoc($resultin)) {
+	$in[]=$row['id'];
+}
+mysqli_free_result($resultin);
+$resultrm = query($base_query . " WHERE s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
 
 if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-book-open"></span> Mangues relacionats</h2>
+						<h2 class="section-title-main"><span class="iconsm fa fa-fw fa-book-open"></span> Mangues recomanats</h2>
 						<h3 class="section-subtitle">Si t'agrada aquest anime, és possible que també t'agradin aquests mangues:</h3>
 						<div class="section-content carousel">
 <?php
