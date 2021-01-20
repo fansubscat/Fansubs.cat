@@ -402,22 +402,33 @@ if ($count_unfiltered==0) {
 				'chapters' => apply_sort($manga['order_type'],$current_volume_chapters)
 			));
 
+			$volume_available_chapters=array();
+
 			foreach ($volumes as $volume) {
-				$show_volume=TRUE;
 				$ids=array(-1);
 				foreach ($volume['chapters'] as $chapter) {
 					$ids[]=$chapter['id'];
 				}
 				$result_chapters = query("SELECT f.* FROM file f WHERE f.chapter_id IN (".implode(',',$ids).") AND f.manga_version_id=".$version['id']." ORDER BY f.id ASC");
-
-				if (mysqli_num_rows($result_chapters)==0){
-					$show_volume=FALSE;
-				}
+				$volume_available_chapters[] = mysqli_num_rows($result_chapters);
 				mysqli_free_result($result_chapters);
-				if ($manga['show_unavailable_chapters']==1 || $show_volume) {
+			}
+
+			foreach ($volumes as $index => $volume) {
+				$is_inside_empty_batch = ($volume_available_chapters[$index]==0 && (($index>0 && $volume_available_chapters[$index-1]==0) || ($index<(count($volume_available_chapters)-1) && $volume_available_chapters[$index+1]==0)));
+				$is_first_in_empty_batch = $is_inside_empty_batch && ($index==0 || ($index>0 && $volume_available_chapters[$index-1]!=0));
+
+				if ($is_first_in_empty_batch && $manga['show_unavailable_chapters']==1) {
 ?>
-									<details id="volum-<?php echo !empty($volume['volume_number']) ? $volume['volume_number'] : 'altres'; ?>" class="season"<?php echo ($manga['show_expanded_volumes']==1 && $show_volume) ? ' open' : ''; ?>>
-										<summary class="season_name"><?php echo !empty($volume['volume_number']) ? (($manga['show_volumes']!=1 || (count($volumes)==2 && empty($last_volume_number))) ? 'Volum únic' : (!empty($volume['volume_name']) ? $volume['volume_name'] : (count($volumes)>1 ? 'Volum '.$volume['volume_number'] : 'Volum únic'))) : 'Altres'; ?><?php echo !$show_volume ? ' <small style="color: #888;">(no hi ha contingut disponible)</small>' : ''; ?></summary>
+									<div class="empty-volumes"<?php echo ($index==0 ? ' style="margin-top: 0;"' : '') ?>>
+										<a onclick="$(this.parentNode.parentNode).find('.season').removeClass('hidden');$(this.parentNode).addClass('hidden');">Hi ha més volums sense contingut disponible. Prem per a mostrar-los tots.</a>
+									</div>
+<?php
+				}
+				if ($manga['show_unavailable_chapters']==1 || $volume_available_chapters[$index]>0) {
+?>
+									<details id="volum-<?php echo !empty($volume['volume_number']) ? $volume['volume_number'] : 'altres'; ?>" class="season<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($manga['show_expanded_volumes']==1 && $volume_available_chapters[$index]>0) ? ' open' : ''; ?>>
+										<summary class="season_name"><?php echo !empty($volume['volume_number']) ? (($manga['show_volumes']!=1 || (count($volumes)==2 && empty($last_volume_number))) ? 'Volum únic' : (!empty($volume['volume_name']) ? $volume['volume_name'] : (count($volumes)>1 ? 'Volum '.$volume['volume_number'] : 'Volum únic'))) : 'Altres'; ?><?php echo $volume_available_chapters[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
 										<div class="volume-container">
 <?php
 					if (file_exists('images/covers/'.$version['id'].'_'.$volume['volume_id'].'.jpg')) {

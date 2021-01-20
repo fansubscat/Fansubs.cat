@@ -977,6 +977,19 @@ a:hover {
 	margin-bottom: 1em;
 }
 
+.empty-volumes {
+	background-color: #444;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	padding: 0.5em;
+	display: flex;
+}
+
+.empty-volumes a {
+	width: 100%;
+	text-align: center;
+}
+
 .warning-small {
 	background-color: #444;
 	margin-right: 2em;
