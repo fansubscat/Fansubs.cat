@@ -13,8 +13,15 @@ if (isset($failed)) {
 	die();
 }
 
+if (!empty($_COOKIE['force_reader_ltr'])){
+	$direction = 'reader-ltr';
+} else {
+	$direction = 'reader-rtl';
+}
+
 if (!empty($_COOKIE['force_long_strip'])){
 	$mode = 'strip';
+	$direction = 'reader-ltr'; //Force direction (one element only)
 } else {
 	$mode = $file['reader_type'];
 }
@@ -36,7 +43,7 @@ if (!file_exists($base_path)) {
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js"></script>
+		<script src="/js/lightgallery.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/lg-fullscreen@1.2.1/dist/lg-fullscreen.min.js"></script>
 		<script src="/js/lg-zoom-custom.js"></script>
 		<style>
@@ -88,7 +95,7 @@ if ($mode=='strip'){
 		</style>
 	</head>
 	<body style="margin: 0;">
-		<div id="overlay">
+		<div id="overlay" class="<?php echo $direction; ?>">
 		</div>
 		<script>
 			var barsTimeout=null;
@@ -165,6 +172,9 @@ if ($mode=='strip'){
 } else {
 	$files = scandir($base_path);
 	natsort($files);
+	if ($direction=='reader-rtl') {
+		$files = array_reverse($files);
+	}
 
 	$first = TRUE;
 	foreach ($files as $file) {
@@ -180,7 +190,9 @@ if ($mode=='strip'){
 	}
 }
 ?>
-]
+],
+					index: <?php echo $direction=='reader-rtl' ? (max(count($files)-3, 0)) : 0; ?>
+
 				});
 				showBars();
 				lg.on('onCloseAfter.lg', function(event){

@@ -191,6 +191,7 @@ $(document).ready(function() {
 			Cookies.set('show_cancelled', $('#show_cancelled').prop('checked') ? '1' : '0', cookieOptions);
 			Cookies.set('show_hentai', $('#show_hentai').prop('checked') ? '1' : '0', cookieOptions);
 			Cookies.set('force_long_strip', $('#force_long_strip').prop('checked') ? '1' : '0', cookieOptions);
+			Cookies.set('force_reader_ltr', $('#force_reader_ltr').prop('checked') ? '1' : '0', cookieOptions);
 			var hiddenFansubs = $('#options-fansubs input:not(:checked)');
 			var values = [];
 			

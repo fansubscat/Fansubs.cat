@@ -492,7 +492,8 @@
      */
     Plugin.prototype.counter = function() {
         if (this.s.counter) {
-            $(this.s.appendCounterTo).append('<div id="lg-counter" role="status" aria-live="polite"><span id="lg-counter-current">' + (parseInt(this.index, 10) + 1) + '</span> / <span id="lg-counter-all">' + this.$items.length + '</span></div>');
+            //MODIFIED MANGA.FANSUBS.CAT (to allow reversing reader mode)
+            $(this.s.appendCounterTo).append('<div id="lg-counter" role="status" aria-live="polite"><span id="lg-counter-current">' + (parseInt(($('.reader-rtl').length>0 ? (this.$items.length-this.index-1): this.index), 10) + 1) + '</span> / <span id="lg-counter-all">' + this.$items.length + '</span></div>');
         }
     };
 
@@ -937,7 +938,8 @@
             _this.lGalleryOn = true;
 
             if (this.s.counter) {
-                $('#lg-counter-current').text(index + 1);
+                //MODIFIED MANGA.FANSUBS.CAT (to allow reversing reader mode)
+                $('#lg-counter-current').text(($('.reader-rtl').length>0 ? (this.$items.length-index-1): index) + 1);
             }
 
         }
