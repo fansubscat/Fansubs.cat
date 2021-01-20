@@ -638,10 +638,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-chapter-list-row-1">
 													<td>
-														<input id="form-chapter-list-volume-1" name="form-chapter-list-volume-1" type="number" class="form-control" value="1" placeholder="(Altres)" step="any"/>
+														<input id="form-chapter-list-volume-1" name="form-chapter-list-volume-1" type="number" class="form-control" value="1" placeholder="(Altres)"/>
 													</td>
 													<td>
-														<input id="form-chapter-list-num-1" name="form-chapter-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)"/>
+														<input id="form-chapter-list-num-1" name="form-chapter-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)" step="any"/>
 														<input id="form-chapter-list-id-1" name="form-chapter-list-id-1" type="hidden" value="-1"/>
 													</td>
 													<td>

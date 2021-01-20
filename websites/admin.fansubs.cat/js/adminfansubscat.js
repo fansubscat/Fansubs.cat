@@ -172,7 +172,7 @@ function populateMalDataManga(data) {
 		$("#form-score").val(data.score ? data.score : '');
 	}
 	if ($("#form-type").val()=='') {
-		$("#form-type").val(data.type=='One-shot' ? 'oneshot' : 'manga');
+		$("#form-type").val(data.type=='One-shot' ? 'oneshot' : 'serialized');
 	}
 	if ($("#form-publish_date").val()=='') {
 		$("#form-publish_date").val(data.published.from.substr(0, 10));

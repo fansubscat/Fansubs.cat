@@ -421,7 +421,7 @@ if ($count_unfiltered==0) {
 				if ($is_first_in_empty_batch && $manga['show_unavailable_chapters']==1) {
 ?>
 									<div class="empty-volumes"<?php echo ($index==0 ? ' style="margin-top: 0;"' : '') ?>>
-										<a onclick="$(this.parentNode.parentNode).find('.season').removeClass('hidden');$(this.parentNode).addClass('hidden');">Hi ha més volums sense contingut disponible. Prem per a mostrar-los tots.</a>
+										<a onclick="$(this.parentNode.parentNode).find('.season').removeClass('hidden');$(this.parentNode.parentNode).find('.empty-volumes').addClass('hidden');">Hi ha més volums sense contingut disponible. Prem per a mostrar-los tots.</a>
 									</div>
 <?php
 				}
