@@ -106,7 +106,7 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 	$iterator = new RecursiveIteratorIterator($directory);
 	foreach ($iterator as $file){
 		$ext = pathinfo(strtolower(basename($file)), PATHINFO_EXTENSION);
-		if ($ext=='jpg' || $ext=='jpeg' || $ext=='png') {
+		if (strpos($file, '__MACOSX')===FALSE && ($ext=='jpg' || $ext=='jpeg' || $ext=='png')) {
 			copy($file, "../manga.fansubs.cat/images/storage/$file_id/".preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower(basename($file))));
 		}
 	}

@@ -486,15 +486,17 @@ function uncompressFile(fileInput) {
 			var foundNames = [];
 			archive.entries.forEach(function(entry) {
 				if (entry.is_file) {
-					if (entry.name.toLowerCase().endsWith(".jpg") || entry.name.toLowerCase().endsWith(".png") || entry.name.toLowerCase().endsWith(".jpeg")) {
-						countImages++;
+					if (!entry.name.includes('__MACOSX') ) {
+						if (entry.name.toLowerCase().endsWith(".jpg") || entry.name.toLowerCase().endsWith(".png") || entry.name.toLowerCase().endsWith(".jpeg")) {
+							countImages++;
+						}
+						var shortName = entry.name.split('/').pop().replace(/[^0-9a-zA-Z_\.]/g,'_');
+						if (foundNames.includes(shortName)){
+							countRepeated++;
+						}
+						foundNames.push(shortName);
+						count++;
 					}
-					var shortName = entry.name.split('/').pop().replace(/[^0-9a-zA-Z_\.]/g,'_');
-					if (foundNames.includes(shortName)){
-						countRepeated++;
-					}
-					foundNames.push(shortName);
-					count++;
 				}
 			});
 
