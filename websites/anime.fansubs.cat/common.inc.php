@@ -337,7 +337,7 @@ function print_carousel_item_manga($manga, $tracking_class, $specific_version, $
 	$base_url='https://manga.fansubs.cat';
 	echo "\t\t\t\t\t\t\t".'<a class="thumbnail trackable-'.$tracking_class.'" data-manga-id="'.$manga['slug'].'" href="'.$base_url.'/'.($manga['type']=='oneshot' ? "one-shots" : "serialitzats").'/'.$manga['slug'].(($specific_version && exists_more_than_one_version_manga($manga['id'])) ? "?v=".$manga['manga_version_id'] : "").'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($manga['best_status']).'"></div>'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<img src="/images/manga/'.$manga['id'].'.jpg" alt="'.$manga['name'].'" />'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img src="'.$base_url.'/images/manga/'.$manga['id'].'.jpg" alt="'.$manga['name'].'" />'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="watchbutton">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-book-open"></span>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";

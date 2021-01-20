@@ -485,17 +485,18 @@ function uncompressFile(fileInput) {
 			var countRepeated=0;
 			var foundNames = [];
 			archive.entries.forEach(function(entry) {
-			if (entry.is_file) {
-				if (entry.name.toLowerCase().endsWith(".jpg") || entry.name.toLowerCase().endsWith(".png") || entry.name.toLowerCase().endsWith(".jpeg")) {
-					countImages++;
+				if (entry.is_file) {
+					if (entry.name.toLowerCase().endsWith(".jpg") || entry.name.toLowerCase().endsWith(".png") || entry.name.toLowerCase().endsWith(".jpeg")) {
+						countImages++;
+					}
+					var shortName = entry.name.split('/').pop().replace(/[^0-9a-zA-Z_\.]/g,'_');
+					if (foundNames.includes(shortName)){
+						countRepeated++;
+					}
+					foundNames.push(shortName);
+					count++;
 				}
-				var shortName = entry.name.split('/').pop().replace(/[^0-9a-zA-Z_\.]/g,'_');
-				if (foundNames.includes(shortName)){
-					countRepeated++;
-				}
-				foundNames.push(shortName);
-				count++;
-			}
+			});
 
 			if (countImages==count && countRepeated==0) {
 				detailsElement.html("<span style=\"color: #1e7e34;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L'arxiu consta de <strong>"+countImages+" imatges</strong> en total.</span>");
@@ -536,7 +537,6 @@ function uncompressFile(fileInput) {
 				$('label[for="'+fileInput.id+'"]').addClass("btn-warning");
 				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-exclamation-triangle pr-2"></span>Es pujarà');
 			}
-		});
 		} else {
 			detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>El fitxer no és vàlid</strong> (ha de ser un arxiu ZIP o RAR).</span>");
 			fileInput.value="";
@@ -581,7 +581,9 @@ function deleteRelatedSeriesRow(id) {
 function addRelatedMangaRow() {
 	var i = parseInt($('#relatedmanga-list-table').attr('data-count'))+1;
 
-	$('#relatedmanga-list-table').append('<tr id="form-relatedmanga-list-row-'+i+'"><td><input type="text" id="form-relatedmanga-list-name-'+i+'" name="form-relatedmanga-list-name-'+i+'" class="form-control" required value="" /></td><td><input type="url" id="form-relatedmanga-list-url-'+i+'" name="form-relatedmanga-list-url-'+i+'" class="form-control" required value="" /></td><td class="text-center align-middle"><button id="form-relatedmanga-list-delete-'+i+'" onclick="deleteRelatedMangaRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	var htmlAcc = $('#form-relatedmanga-list-related_manga_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
+
+	$('#relatedmanga-list-table').append('<tr id="form-relatedmanga-list-row-'+i+'"><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-relatedmanga-list-delete-'+i+'" onclick="deleteRelatedMangaRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#relatedmanga-list-table').attr('data-count', i);
 	$('#relatedmanga-list-table-empty').addClass('d-none');
 }
@@ -591,10 +593,8 @@ function deleteRelatedMangaRow(id) {
 	$("#form-relatedmanga-list-row-"+id).remove();
 	for (var j=id+1;j<i+1;j++) {
 		$("#form-relatedmanga-list-row-"+j).attr('id','form-relatedmanga-list-row-'+(j-1));
-		$("#form-relatedmanga-list-name-"+j).attr('name','form-relatedmanga-list-name-'+(j-1));
-		$("#form-relatedmanga-list-name-"+j).attr('id','form-relatedmanga-list-name-'+(j-1));
-		$("#form-relatedmanga-list-url-"+j).attr('name','form-relatedmanga-list-url-'+(j-1));
-		$("#form-relatedmanga-list-url-"+j).attr('id','form-relatedmanga-list-url-'+(j-1));
+		$("#form-relatedmanga-list-related_manga_id-"+j).attr('name','form-relatedmanga-list-related_manga_id-'+(j-1));
+		$("#form-relatedmanga-list-related_manga_id-"+j).attr('id','form-relatedmanga-list-related_manga_id-'+(j-1));
 		$("#form-relatedmanga-list-delete-"+j).attr('onclick','deleteRelatedMangaRow('+(j-1)+');');
 		$("#form-relatedmanga-list-delete-"+j).attr('id','form-relatedmanga-list-delete-'+(j-1));
 	}
@@ -1043,7 +1043,7 @@ function checkCoverListImages() {
 	}
 
 	if (affectedCovers!='') {
-		alert('Les imatges de portada següents tenen unes dimensions massa grosses (el màxim són 450x600 píxels):'+affectedCovers);
+		alert('Les imatges de portada següents tenen unes dimensions massa grosses (el màxim són 300x400 píxels):'+affectedCovers);
 		return false;
 	}
 
@@ -1064,7 +1064,7 @@ function checkCoverListImages() {
 }
 
 function checkFansub() {
-	if (!$('#id').val() && !$('#form-icon').val()) {
+	if (!$('#form-id').val() && !$('#form-icon').val()) {
 		alert('Cal que pugis una icona.');
 		return false;
 	}

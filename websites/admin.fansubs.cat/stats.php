@@ -278,13 +278,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$current_day = strtotime(date('Y-m-d'));
 	$i=60;
 	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
-		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
+		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0, 0);
 		$i--;
 	}
 
 	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v WHERE DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-60 days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
-		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent'], $row['total_pages_read']);
+		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
 	}
 	mysqli_free_result($result);
 
@@ -364,28 +364,28 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$current_month = strtotime(date('Y-m-01'));
 	$i=0;
 	while (strtotime(date('2020-06-01')."+$i months")<=$current_month) {
-		$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0);
+		$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0, 0);
 		$i++;
 	}
 
 	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
-		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent'], $row['total_pages_read']);
+		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
 	}
 	mysqli_free_result($result);
 
 	$month_values=array();
 	$click_values=array();
 	$view_values=array();
-	$page_values=array();
 	$time_values=array();
+	$page_values=array();
 
 	foreach ($months as $month => $values) {
 		array_push($month_values, "'".$month."'");
 		array_push($click_values, $values[0]);
 		array_push($view_values, $values[1]);
-		array_push($page_values, $values[2]);
 		array_push($time_values, $values[3]);
+		array_push($page_values, $values[2]);
 	}
 ?>
 										<canvas id="manga_monthly_chart"></canvas>
@@ -1016,13 +1016,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$current_day = strtotime(date('Y-m-d'));
 	$i=60;
 	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
-		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
+		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0, 0);
 		$i--;
 	}
 
 	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-60 days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
-		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent'], $row['total_pages_read']);
+		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
 	}
 	mysqli_free_result($result);
 
@@ -1102,13 +1102,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$current_month = strtotime(date('Y-m-01'));
 		$i=0;
 		while (strtotime(date('2020-06-01')."+$i months")<=$current_month) {
-			$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0);
+			$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0, 0);
 			$i++;
 		}
 
 		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 		while ($row = mysqli_fetch_assoc($result)) {
-			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent'], $row['total_pages_read']);
+			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
 		}
 		mysqli_free_result($result);
 

@@ -96,18 +96,18 @@ function rrmdir($dir) {
 }
 
 function flatten_directories_and_move_to_storage($file_id, $temp_path){
-	if (file_exists("../mangav2.fansubs.cat/images/storage/$file_id/")) {
-		rrmdir("../mangav2.fansubs.cat/images/storage/$file_id/");
+	if (file_exists("../manga.fansubs.cat/images/storage/$file_id/")) {
+		rrmdir("../manga.fansubs.cat/images/storage/$file_id/");
 	}
 
-	mkdir("../mangav2.fansubs.cat/images/storage/$file_id/");
+	mkdir("../manga.fansubs.cat/images/storage/$file_id/");
 
 	$directory = new RecursiveDirectoryIterator($temp_path);
 	$iterator = new RecursiveIteratorIterator($directory);
 	foreach ($iterator as $file){
 		$ext = pathinfo(strtolower(basename($file)), PATHINFO_EXTENSION);
 		if ($ext=='jpg' || $ext=='jpeg' || $ext=='png') {
-			copy($file, "../mangav2.fansubs.cat/images/storage/$file_id/".preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower(basename($file))));
+			copy($file, "../manga.fansubs.cat/images/storage/$file_id/".preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower(basename($file))));
 		}
 	}
 	rrmdir($temp_path);

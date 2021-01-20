@@ -9,7 +9,7 @@ var timer;
 var cookieOptions = {
 	expires: 3650,
 	path: baseUrl+'/',
-	domain: 'mangav2.fansubs.cat'
+	domain: 'manga.fansubs.cat'
 };
 
 function getSource(file_id){

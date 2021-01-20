@@ -20,4 +20,6 @@ RewriteRule ^admin/(.*)/$ https://admin.fansubs.cat/$1/
 RewriteRule ^admin/$ https://admin.fansubs.cat/
 RewriteRule ^admin$ https://admin.fansubs.cat/
 RewriteRule ^index/category/(.*)-(.*)$ migration.php?id=$1
+RewriteRule ^index/category/(.*)$ migration.php?id=$1
+RewriteRule ^picture/(.*)/category/(.*)-(.*)$ migration.php?id=$2
 

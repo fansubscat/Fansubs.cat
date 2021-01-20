@@ -24,10 +24,13 @@ function exists_more_than_one_version($series_id){
 	return ($row['cnt']>1);
 }
 
-//Connect to the manga database too
-$db_connection_manga = mysqli_connect($db_host_manga,$db_user_manga,$db_passwd_manga, $db_name_manga) or die('Could not connect to manga database');
-unset($db_host_manga, $db_name_manga, $db_user_manga, $db_passwd_manga);
-mysqli_set_charset($db_connection_manga, 'utf8mb4') or crash(mysqli_error($db_connection_manga));
+function exists_more_than_one_version_manga($manga_id){
+	global $db_connection;
+	$result = mysqli_query($db_connection, "SELECT COUNT(*) cnt FROM manga_version WHERE manga_id=$manga_id") or die(mysqli_error($db_connection));
+	$row = mysqli_fetch_assoc($result);
+	mysqli_free_result($result);	
+	return ($row['cnt']>1);
+}
 
 $last_tweeted_manga_id=(int)file_get_contents('last_tweeted_manga_id.txt');
 $last_tweeted_anime_id=(int)file_get_contents('last_tweeted_anime_id.txt');
@@ -48,16 +51,28 @@ $new_manga_tweets_no_fansub = array(
 	'Nou manga: «%1$s»! Seguiu-lo a manga.fansubs.cat!'
 );
 
-$new_chapter_tweets = array(
-	'Ja hi ha disponible «%1$s - %2$s» (%3$s) al web de manga.fansubs.cat!',
-	'S\'ha afegit «%1$s - %2$s» (%3$s) al web de manga.fansubs.cat!',
-	'Ja podeu llegir «%1$s - %2$s» (%3$s) al web de manga.fansubs.cat!'
+$new_chapter_number_tweets = array(
+	'Ja hi ha disponible el capítol %4$d del manga «%1$s» (%3$s), «%2$s» al web de manga.fansubs.cat!',
+	'S\'ha afegit el capítol %4$d del manga «%1$s» (%3$s), «%2$s» al web de manga.fansubs.cat!',
+	'Ja podeu llegir el capítol %4$d del manga «%1$s» (%3$s), «%2$s». al web de manga.fansubs.cat!'
 );
 
-$new_chapter_tweets_no_fansub = array(
-	'Ja hi ha disponible «%1$s - %2$s» al web de manga.fansubs.cat!',
-	'S\'ha afegit «%1$s - %2$s» al web de manga.fansubs.cat!',
-	'Ja podeu llegir «%1$s - %2$s» al web de manga.fansubs.cat!'
+$new_chapter_number_no_name_tweets = array(
+	'Ja hi ha disponible el capítol %4$d del manga «%1$s» (%3$s) al web de manga.fansubs.cat!',
+	'Hem afegit el capítol %4$d del manga «%1$s» (%3$s) al web de manga.fansubs.cat!',
+	'Ja podeu llegir el capítol %4$d del manga «%1$s» (%3$s) al web de manga.fansubs.cat!'
+);
+
+$new_chapter_no_number_tweets = array(
+	'Ja hi ha disponible un nou capítol del manga «%1$s» (%3$s) a manga.fansubs.cat: «%2$s».',
+	'Hem afegit un nou capítol del manga «%1$s» (%3$s) al web de manga.fansubs.cat: «%2$s».',
+	'Ja podeu mirar un nou capítol del manga «%1$s» (%3$s) a manga.fansubs.cat: «%2$s».'
+);
+
+$new_chapters_tweets = array(
+	'Ja hi ha disponibles %2$d capítols nous del manga «%1$s» (%3$s) al web de manga.fansubs.cat!',
+	'Hem afegit %2$d capítols nous del manga «%1$s» (%3$s) al web de manga.fansubs.cat!',
+	'Ja podeu mirar %2$d capítols nous del manga «%1$s» (%3$s) al web de manga.fansubs.cat!'
 );
 
 $new_anime_tweets = array(
@@ -69,147 +84,90 @@ $new_anime_tweets = array(
 );
 
 $new_episode_number_tweets = array(
-	'Ja hi ha disponible el capítol %4$d de «%1$s» (%3$s), «%2$s». El trobareu a anime.fansubs.cat!',
-	'Hem afegit el capítol %4$d de «%1$s» (%3$s), «%2$s». Mireu-lo al web d\'anime.fansubs.cat!',
-	'Ja podeu mirar el capítol %4$d de «%1$s» (%3$s), «%2$s». El teniu al web d\'anime.fansubs.cat!'
+	'Ja hi ha disponible el capítol %4$d de l\'anime «%1$s» (%3$s), «%2$s». El trobareu a anime.fansubs.cat!',
+	'Hem afegit el capítol %4$d de l\'anime «%1$s» (%3$s), «%2$s». Mireu-lo al web d\'anime.fansubs.cat!',
+	'Ja podeu mirar el capítol %4$d de l\'anime «%1$s» (%3$s), «%2$s». El teniu al web d\'anime.fansubs.cat!'
 );
 
 $new_episode_number_no_name_tweets = array(
-	'Ja hi ha disponible el capítol %4$d de «%1$s» (%3$s). El trobareu a anime.fansubs.cat!',
-	'Hem afegit el capítol %4$d de «%1$s» (%3$s). Mireu-lo al web d\'anime.fansubs.cat!',
-	'Ja podeu mirar el capítol %4$d de «%1$s» (%3$s). El teniu al web d\'anime.fansubs.cat!'
+	'Ja hi ha disponible el capítol %4$d de l\'anime «%1$s» (%3$s). El trobareu a anime.fansubs.cat!',
+	'Hem afegit el capítol %4$d de l\'anime «%1$s» (%3$s). Mireu-lo al web d\'anime.fansubs.cat!',
+	'Ja podeu mirar el capítol %4$d de l\'anime «%1$s» (%3$s). El teniu al web d\'anime.fansubs.cat!'
 );
 
 $new_episode_no_number_tweets = array(
-	'Ja hi ha disponible un nou capítol de «%1$s» (%3$s) a anime.fansubs.cat: «%2$s».',
-	'Hem afegit un nou capítol de «%1$s» (%3$s) al web d\'anime.fansubs.cat: «%2$s».',
-	'Ja podeu mirar un nou capítol de «%1$s» (%3$s) a anime.fansubs.cat: «%2$s».'
+	'Ja hi ha disponible un nou capítol de l\'anime «%1$s» (%3$s) a anime.fansubs.cat: «%2$s».',
+	'Hem afegit un nou capítol de l\'anime «%1$s» (%3$s) al web d\'anime.fansubs.cat: «%2$s».',
+	'Ja podeu mirar un nou capítol de l\'anime «%1$s» (%3$s) a anime.fansubs.cat: «%2$s».'
 );
 
 $new_episodes_tweets = array(
-	'Ja hi ha disponibles %2$d capítols nous de «%1$s» (%3$s) al web d\'anime.fansubs.cat!',
-	'Hem afegit %2$d capítols nous de «%1$s» (%3$s) al web d\'anime.fansubs.cat!',
-	'Ja podeu mirar %2$d capítols nous de «%1$s» (%3$s) al web d\'anime.fansubs.cat!'
+	'Ja hi ha disponibles %2$d capítols nous de l\'anime «%1$s» (%3$s) al web d\'anime.fansubs.cat!',
+	'Hem afegit %2$d capítols nous de l\'anime «%1$s» (%3$s) al web d\'anime.fansubs.cat!',
+	'Ja podeu mirar %2$d capítols nous de l\'anime «%1$s» (%3$s) al web d\'anime.fansubs.cat!'
 );
 
-$result = mysqli_query($db_connection_manga, "SELECT * FROM piwigo_categories c WHERE id>$last_tweeted_manga_id AND (SELECT COUNT(*) FROM piwigo_image_category ic WHERE ic.category_id=c.id)>0 ORDER BY id_uppercat IS NULL DESC, id ASC") or die(mysqli_error($db_connection_manga));
-$new_mangas = array();
+$result = mysqli_query($db_connection, "SELECT IF(m.show_volumes=1,vo.name,NULL), m.name, v.manga_id, m.type, m.slug, MAX(fi.id) id, fi.manga_version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, c.number, ct.title, m.show_chapter_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_manga_id AND fi2.manga_version_id=fi.manga_version_id AND fi2.original_filename IS NOT NULL) new_manga
+FROM file fi
+LEFT JOIN manga_version v ON fi.manga_version_id=v.id
+LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id
+LEFT JOIN fansub f ON vf.fansub_id=f.id
+LEFT JOIN manga m ON v.manga_id=m.id
+LEFT JOIN chapter_title ct ON fi.chapter_id=ct.chapter_id AND ct.manga_version_id=fi.manga_version_id
+LEFT JOIN chapter c ON fi.chapter_id=c.id
+LEFT JOIN volume vo ON vo.id=c.volume_id
+WHERE fi.id>$last_tweeted_manga_id AND fi.original_filename IS NOT NULL AND fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id ORDER BY MAX(fi.id) ASC") or die(mysqli_error($db_connection));
 while ($row = mysqli_fetch_assoc($result)){
-	if (empty($row['id_uppercat'])) {
-		array_push($new_mangas, $row['id']);
-
-		//YES, THIS IS UGLY
-		//Find which fansub uploaded this (max 5 levels)
-		$fansubres = mysqli_query($db_connection_manga, "SELECT GROUP_CONCAT(DISTINCT u.username SEPARATOR '|') fansub_name FROM piwigo_image_category ic LEFT JOIN piwigo_images i ON ic.image_id=i.id LEFT JOIN piwigo_users u ON i.added_by=u.id WHERE category_id IN (SELECT DISTINCT IFNULL(c4.id,IFNULL(c3.id,IFNULL(c2.id,c1.id))) id FROM piwigo_categories c1 LEFT JOIN piwigo_categories c2 ON c2.id_uppercat=c1.id LEFT JOIN piwigo_categories c3 ON c3.id_uppercat=c2.id LEFT JOIN piwigo_categories c4 ON c4.id_uppercat=c3.id WHERE c1.id_uppercat=".$row['id']." UNION SELECT ".$row['id'].")") or die(mysqli_error($db_connection_manga));
-		$fansub_names = explode('|', mysqli_fetch_assoc($fansubres)['fansub_name']);
-		$fansub_handle='';
-		foreach ($fansub_names as $fansub_name) {
-			switch ($fansub_name){
-				case 'CatSub':
-					if (!empty($fansub_handle)) {
-						$fansub_handle.=' + ';
-					}
-					$fansub_handle.='@CatSubFansub';
-					break;
-				case 'El Detectiu Conan':
-					if (!empty($fansub_handle)) {
-						$fansub_handle.=' + ';
-					}
-					$fansub_handle.='@ElDetectiuConan';
-					break;
-				case 'Lluna Plena no Fansub':
-					if (!empty($fansub_handle)) {
-						$fansub_handle.=' + ';
-					}
-					$fansub_handle.='@LlPnF';
-					break;
-				default:
-					break;
-			}
+	if ($row['new_manga']==1) {
+		$random = array_rand($new_manga_tweets, 1);
+		try{
+			publish_tweet(sprintf($new_manga_tweets[$random], $row['name'], $row['fansub_handles'])."\nhttps://manga.fansubs.cat/".($row['type']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version_manga($row['manga_id']) ? "?v=".$row['manga_version_id'] : ""));
+			file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+		} catch(Exception $e) {
+			break;
 		}
-		if (!empty($fansub_handle)) {
-			$random = array_rand($new_manga_tweets, 1);
-			try{
-				publish_tweet(sprintf($new_manga_tweets[$random], $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
-				file_put_contents('last_tweeted_manga_id.txt', $row['id']);
-			} catch(Exception $e) {
-				break;
+	} else if ($row['cnt']>1){ //Multiple chapters
+		$random = array_rand($new_chapters_tweets, 1);
+		try{
+			publish_tweet(sprintf($new_chapters_tweets[$random], $row['name'], $row['cnt'], $row['fansub_handles'])."\nhttps://manga.fansubs.cat/".($row['type']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version_manga($row['manga_id']) ? "?v=".$row['manga_version_id'] : ""));
+			file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+		} catch(Exception $e) {
+			break;
+		}
+	} else { //Single chapter
+		if ($row['show_chapter_numbers']==1) {
+			if (!empty($row['title']) && empty($row['number'])) {
+				$random = array_rand($new_chapter_no_number_tweets, 1);
+				try{
+					publish_tweet(sprintf($new_chapter_no_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'])."\nhttps://manga.fansubs.cat/".($row['type']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version_manga($row['manga_id']) ? "?v=".$row['manga_version_id'] : ""));
+					file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+				} catch(Exception $e) {
+					break;
+				}
+			} else if (!empty($row['title'])) { //and has a number (normal case)
+				$random = array_rand($new_chapter_number_tweets, 1);
+				try{
+					publish_tweet(sprintf($new_chapter_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'], str_replace('.',',',floatval($row['number'])))."\nhttps://manga.fansubs.cat/".($row['type']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version_manga($row['manga_id']) ? "?v=".$row['manga_version_id'] : ""));
+					file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+				} catch(Exception $e) {
+					break;
+				}
+			} else {
+				$random = array_rand($new_chapter_number_no_name_tweets, 1);
+				try{
+					publish_tweet(sprintf($new_chapter_number_no_name_tweets[$random], $row['name'], '', $row['fansub_handles'], str_replace('.',',',floatval($row['number'])))."\nhttps://manga.fansubs.cat/".($row['type']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version_manga($row['manga_id']) ? "?v=".$row['manga_version_id'] : ""));
+					file_put_contents('last_tweeted_manga_id.txt', $row['id']);
+				} catch(Exception $e) {
+					break;
+				}
 			}
 		} else {
-			$random = array_rand($new_manga_tweets_no_fansub, 1);
+			$random = array_rand($new_chapter_no_number_tweets, 1);
 			try{
-				publish_tweet(sprintf($new_manga_tweets_no_fansub[$random], $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
+				publish_tweet(sprintf($new_chapter_no_number_tweets[$random], $row['name'], $row['title'], $row['fansub_handles'])."\nhttps://manga.fansubs.cat/".($row['type']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version_manga($row['manga_id']) ? "?v=".$row['manga_version_id'] : ""));
 				file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 			} catch(Exception $e) {
 				break;
-			}
-		}
-	} else { // Get only the last branches of the tree
-		$cntres = mysqli_query($db_connection_manga, "SELECT COUNT(*) cnt FROM piwigo_categories c WHERE id_uppercat=".$row['id']) or die(mysqli_error($db_connection_manga));
-		$cntrow = mysqli_fetch_assoc($cntres);
-		mysqli_free_result($cntres);
-		if ($cntrow['cnt']==0) {
-			$parentname='';
-			$parentrow = array();
-			$parentrow['id_uppercat']=$row['id_uppercat'];
-			do {
-				$parentres = mysqli_query($db_connection_manga, "SELECT * FROM piwigo_categories c WHERE id=".$parentrow['id_uppercat']) or die(mysqli_error($db_connection_manga));
-				$parentrow = mysqli_fetch_assoc($parentres);
-				if (!empty($parentname)) {
-					$parentname=$parentrow['name'].' - '.$parentname;
-				} else {
-					$parentname=$parentrow['name'];
-				}
-				mysqli_free_result($parentres);
-			} while (!empty($parentrow['id_uppercat']));
-
-			if (!in_array($parentrow['id'], $new_mangas)) { //Ignore if already reported as new manga
-				//YES, THIS IS UGLY
-				//Find which fansub uploaded this (max 5 levels)
-				$fansubres = mysqli_query($db_connection_manga, "SELECT GROUP_CONCAT(DISTINCT u.username SEPARATOR '|') fansub_name FROM piwigo_image_category ic LEFT JOIN piwigo_images i ON ic.image_id=i.id LEFT JOIN piwigo_users u ON i.added_by=u.id WHERE category_id IN (SELECT DISTINCT IFNULL(c4.id,IFNULL(c3.id,IFNULL(c2.id,c1.id))) id FROM piwigo_categories c1 LEFT JOIN piwigo_categories c2 ON c2.id_uppercat=c1.id LEFT JOIN piwigo_categories c3 ON c3.id_uppercat=c2.id LEFT JOIN piwigo_categories c4 ON c4.id_uppercat=c3.id WHERE c1.id_uppercat=".$parentrow['id'].")") or die(mysqli_error($db_connection_manga));
-				$fansub_names = explode('|', mysqli_fetch_assoc($fansubres)['fansub_name']);
-				$fansub_handle='';
-				foreach ($fansub_names as $fansub_name) {
-					switch ($fansub_name){
-						case 'CatSub':
-							if (!empty($fansub_handle)) {
-								$fansub_handle.=' + ';
-							}
-							$fansub_handle.='@CatSubFansub';
-							break;
-						case 'El Detectiu Conan':
-							if (!empty($fansub_handle)) {
-								$fansub_handle.=' + ';
-							}
-							$fansub_handle.='@ElDetectiuConan';
-							break;
-						case 'Lluna Plena no Fansub':
-							if (!empty($fansub_handle)) {
-								$fansub_handle.=' + ';
-							}
-							$fansub_handle.='@LlPnF';
-							break;
-						default:
-							break;
-					}
-				}
-				if (!empty($fansub_handle)) {
-					$random = array_rand($new_chapter_tweets, 1);
-					try{
-						publish_tweet(sprintf($new_chapter_tweets[$random], $parentname, $row['name'], $fansub_handle)."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
-						file_put_contents('last_tweeted_manga_id.txt', $row['id']);
-					} catch(Exception $e) {
-						break;
-					}
-				} else {
-					$random = array_rand($new_chapter_tweets_no_fansub, 1);
-					try{
-						publish_tweet(sprintf($new_chapter_tweets_no_fansub[$random], $parentname, $row['name'])."\nhttps://manga.fansubs.cat/index/category/".$row['id']."-".str_replace('-','_',slugify($row['name'])));
-						file_put_contents('last_tweeted_manga_id.txt', $row['id']);
-					} catch(Exception $e) {
-						break;
-					}
-				}
 			}
 		}
 	}
@@ -286,5 +244,4 @@ while ($row = mysqli_fetch_assoc($result)){
 mysqli_free_result($result);
 
 mysqli_close($db_connection);
-mysqli_close($db_connection_manga);
 ?>

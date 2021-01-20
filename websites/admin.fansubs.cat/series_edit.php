@@ -216,15 +216,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$related_manga=array();
 		$i=1;
-		while (!empty($_POST['form-relatedmanga-list-name-'.$i])) {
-			if (!empty($_POST['form-relatedmanga-list-url-'.$i])) {
-				array_push($related_manga,array(
-					'name' => escape($_POST['form-relatedmanga-list-name-'.$i]),
-					'url' => escape($_POST['form-relatedmanga-list-url-'.$i]),
-					)
-				);
+		while (!empty($_POST['form-relatedmanga-list-related_manga_id-'.$i])) {
+			if (is_numeric($_POST['form-relatedmanga-list-related_manga_id-'.$i])) {
+				array_push($related_manga,escape($_POST['form-relatedmanga-list-related_manga_id-'.$i]));
 			} else {
-				crash("Dades invàlides: manca url de manga relacionat");
+				crash("Dades invàlides: id de manga relacionat no numèric");
 			}
 			$i++;
 		}
@@ -270,8 +266,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("REPLACE INTO related_series (series_id,related_series_id) VALUES (".$data['id'].",".$related_series_id.")");
 			}
 			query("DELETE FROM related_manga WHERE series_id=".$data['id']);
-			foreach ($related_manga as $related_manga_item) {
-				query("REPLACE INTO related_manga (series_id,name,url) VALUES (".$data['id'].",'".$related_manga_item['name']."','".$related_manga_item['url']."')");
+			foreach ($related_manga as $related_manga_id) {
+				query("REPLACE INTO related_manga (series_id,related_manga_id) VALUES (".$data['id'].",".$related_manga_id.")");
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
@@ -302,8 +298,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			foreach ($related_series as $related_series_id) {
 				query("REPLACE INTO related_series (series_id,related_series_id) VALUES (".$inserted_id.",".$related_series_id.")");
 			}
-			foreach ($related_manga as $related_manga_item) {
-				query("REPLACE INTO related_manga (series_id,name,url) VALUES (".$inserted_id.",'".$related_manga_item['name']."','".$related_manga_item['url']."')");
+			foreach ($related_manga as $related_manga) {
+				query("REPLACE INTO related_manga (series_id,related_manga_id) VALUES (".$inserted_id.",".$related_manga_id.")");
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
@@ -792,7 +788,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 
 	if (!empty($row['id'])) {
-		$resultrm = query("SELECT rm.* FROM related_manga rm WHERE rm.series_id=".escape($_GET['id'])." ORDER BY rm.name ASC");
+		$resultrm = query("SELECT rm.* FROM related_manga rm LEFT JOIN manga m ON rm.related_manga_id=m.id WHERE rm.series_id=".escape($_GET['id'])." ORDER BY m.name ASC");
 		$related_manga = array();
 		while ($rowrm = mysqli_fetch_assoc($resultrm)) {
 			array_push($related_manga, $rowrm);
@@ -804,27 +800,46 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 								<div class="row mb-3">
 									<div class="w-100 column">
+										<select id="form-relatedmanga-list-related_manga_id-XXX" name="form-relatedmanga-list-related_manga_id-XXX" class="form-control d-none">
+											<option value="">- Selecciona un manga -</option>
+<?php
+		$resultm = query("SELECT m.* FROM manga m ORDER BY m.name ASC");
+		while ($mrow = mysqli_fetch_assoc($resultm)) {
+?>
+											<option value="<?php echo $mrow['id']; ?>"><?php echo htmlspecialchars($mrow['name']); ?></option>
+<?php
+		}
+		mysqli_free_result($resultm);
+?>
+										</select>
 										<table class="table table-bordered table-hover table-sm" id="relatedmanga-list-table" data-count="<?php echo count($related_manga); ?>">
 											<thead>
 												<tr>
-													<th class="mandatory">Nom</th>
-													<th class="mandatory">URL</th>
+													<th class="mandatory">Manga</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr id="relatedmanga-list-table-empty" class="<?php echo count($related_manga)>0 ? 'd-none' : ''; ?>">
-													<td colspan="3" class="text-center">- No hi ha cap manga relacionat -</td>
+													<td colspan="2" class="text-center">- No hi ha cap manga relacionat -</td>
 												</tr>
 <?php
 	for ($j=0;$j<count($related_manga);$j++) {
 ?>
 												<tr id="form-relatedmanga-list-row-<?php echo $j+1; ?>">
 													<td>
-														<input type="text" id="form-relatedmanga-list-name-<?php echo $j+1; ?>" name="form-relatedmanga-list-name-<?php echo $j+1; ?>" class="form-control" required value="<?php echo $related_manga[$j]['name']; ?>" />
-													</td>
-													<td>
-														<input type="url" id="form-relatedmanga-list-url-<?php echo $j+1; ?>" name="form-relatedmanga-list-url-<?php echo $j+1; ?>" class="form-control" required value="<?php echo $related_manga[$j]['url']; ?>" />
+														<select id="form-relatedmanga-list-related_manga_id-<?php echo $j+1; ?>" name="form-relatedmanga-list-related_manga_id-<?php echo $j+1; ?>" class="form-control" required>
+															<option value="">- Selecciona un manga -</option>
+<?php
+		$resultm = query("SELECT m.* FROM manga m ORDER BY m.name ASC");
+		while ($mrow = mysqli_fetch_assoc($resultm)) {
+?>
+															<option value="<?php echo $mrow['id']; ?>"<?php echo $related_manga[$j]['related_manga_id']==$mrow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($mrow['name']); ?></option>
+<?php
+		}
+		mysqli_free_result($resultm);
+?>
+														</select>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-relatedmanga-list-delete-<?php echo $j+1; ?>" onclick="deleteRelatedMangaRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>

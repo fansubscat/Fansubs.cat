@@ -103,7 +103,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="form-group">
 						<label for="form-name-with-autocomplete" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
-						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+						<input type="hidden" id="form-id" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="form-group">
 						<label for="form-slug">Identificador<span class="mandatory"></span> <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>

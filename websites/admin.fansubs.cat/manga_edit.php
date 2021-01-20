@@ -256,13 +256,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
-				move_uploaded_file($_FILES['image']["tmp_name"], '../mangav2.fansubs.cat/images/manga/'.$data['id'].'.jpg');
+				move_uploaded_file($_FILES['image']["tmp_name"], '../manga.fansubs.cat/images/manga/'.$data['id'].'.jpg');
 			} else if (!empty($_POST['image_url'])){
-				copy($_POST['image_url'],'../mangav2.fansubs.cat/images/manga/'.$data['id'].'.jpg');
+				copy($_POST['image_url'],'../manga.fansubs.cat/images/manga/'.$data['id'].'.jpg');
 			}
 
 			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
-				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../mangav2.fansubs.cat/images/featured/'.$data['id'].'.jpg');
+				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../manga.fansubs.cat/images/featured/'.$data['id'].'.jpg');
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.";
@@ -288,13 +288,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
-				move_uploaded_file($_FILES['image']["tmp_name"], '../mangav2.fansubs.cat/images/manga/'.$inserted_id.'.jpg');
+				move_uploaded_file($_FILES['image']["tmp_name"], '../manga.fansubs.cat/images/manga/'.$inserted_id.'.jpg');
 			} else if (!empty($_POST['image_url'])){
-				copy($_POST['image_url'],'../mangav2.fansubs.cat/images/manga/'.$inserted_id.'.jpg');
+				copy($_POST['image_url'],'../manga.fansubs.cat/images/manga/'.$inserted_id.'.jpg');
 			}
 
 			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
-				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../mangav2.fansubs.cat/images/featured/'.$inserted_id.'.jpg');
+				move_uploaded_file($_FILES['featured_image']["tmp_name"], '../manga.fansubs.cat/images/featured/'.$inserted_id.'.jpg');
 			}
 
 			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"manga_version_edit.php?manga_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
@@ -478,7 +478,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="form-group">
 									<label>Imatge de portada<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ~300x424, ≤450x600, ≤150 KiB)</small></label><br>
 <?php
-	$file_exists = !empty($row['id']) && file_exists('../mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg');
+	$file_exists = !empty($row['id']) && file_exists('../manga.fansubs.cat/images/manga/'.$row['id'].'.jpg');
 ?>
 									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 153600, 'form-image-preview', 'form-image-preview-link','form-image_url');">
@@ -487,8 +487,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-1">
 								<div class="form-group">
-									<a id="form-image-preview-link"<?php echo $file_exists ? ' href="https://mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
-										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/manga/'.$row['id'].'.jpg"' : ''; ?> alt="">
+									<a id="form-image-preview-link"<?php echo $file_exists ? ' href="https://manga.fansubs.cat/images/manga/'.$row['id'].'.jpg" data-original="https://manga.fansubs.cat/images/manga/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
+										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://manga.fansubs.cat/images/manga/'.$row['id'].'.jpg" data-original="https://manga.fansubs.cat/images/manga/'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>
@@ -496,7 +496,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="form-group">
 									<label>Imatge de capçalera<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ~1104x256, ≤1200x400, ≤300 KiB)</small></label><br>
 <?php
-	$file_exists = !empty($row['id']) && file_exists('../mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg');
+	$file_exists = !empty($row['id']) && file_exists('../manga.fansubs.cat/images/featured/'.$row['id'].'.jpg');
 ?>
 									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 307200, 'form-featured-image-preview', 'form-featured-image-preview-link');">
@@ -504,8 +504,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-4">
 								<div class="form-group">
-									<a id="form-featured-image-preview-link"<?php echo $file_exists ? ' href="https://mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
-										<img id="form-featured-image-preview" style="width: 400px; height: 85px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg" data-original="https://mangav2.fansubs.cat/images/featured/'.$row['id'].'.jpg"' : ''; ?> alt="">
+									<a id="form-featured-image-preview-link"<?php echo $file_exists ? ' href="https://manga.fansubs.cat/images/featured/'.$row['id'].'.jpg" data-original="https://manga.fansubs.cat/images/featured/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
+										<img id="form-featured-image-preview" style="width: 400px; height: 85px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="https://manga.fansubs.cat/images/featured/'.$row['id'].'.jpg" data-original="https://manga.fansubs.cat/images/featured/'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>

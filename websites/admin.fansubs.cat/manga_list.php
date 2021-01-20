@@ -10,8 +10,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		query("DELETE FROM chapter WHERE manga_id=".escape($_GET['delete_id']));
 		query("DELETE FROM manga_version WHERE manga_id=".escape($_GET['delete_id']));
 		query("DELETE FROM manga WHERE id=".escape($_GET['delete_id']));
-		@unlink('../mangav2.fansubs.cat/images/manga/'.$_GET['delete_id'].'.jpg');
-		@unlink('../mangav2.fansubs.cat/images/featured/'.$_GET['delete_id'].'.jpg');
+		@unlink('../manga.fansubs.cat/images/manga/'.$_GET['delete_id'].'.jpg');
+		@unlink('../manga.fansubs.cat/images/featured/'.$_GET['delete_id'].'.jpg');
 		//Cascaded deletions: link, rel_version_fansub, views
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}
