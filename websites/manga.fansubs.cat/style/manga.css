@@ -544,7 +544,7 @@ a:hover {
 	line-height: 1.4em;
 	padding-left: 0.4em;
 	padding-right: 0.4em;
-	
+	border-bottom-right-radius: 0.4em;
 }
 
 .recommendation .seasons {
@@ -559,6 +559,7 @@ a:hover {
 	position: absolute;
 	bottom: 5em;
 	right: 0;
+	border-top-left-radius: 0.4em;
 }
 
 .recommendation .new {
@@ -573,6 +574,7 @@ a:hover {
 	position: absolute;
 	bottom: 5em;
 	left: 0;
+	border-top-right-radius: 0.4em;
 }
 
 .recommendation .infoholder {
@@ -660,6 +662,7 @@ a:hover {
 	line-height: 1.4em;
 	padding-left: 0.4em;
 	padding-right: 0.4em;
+	border-bottom-left-radius: 0.4em;
 }
 
 .thumbnail {
@@ -797,6 +800,7 @@ a:hover {
 	line-height: 1.4em;
 	padding-left: 0.4em;
 	padding-right: 0.4em;
+	border-top-left-radius: 0.4em;
 }
 
 .thumbnail .new {
@@ -809,8 +813,9 @@ a:hover {
 	float: left;
 	width: fit-content;
 	line-height: 1.4em;
-	padding-left: 0.4em;
-	padding-right: 0.4em;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	border-top-right-radius: 0.2em;
 }
 
 .thumbnail .infoholder {
@@ -863,6 +868,11 @@ a:hover {
 	line-height: 1.4em;
 	padding-left: 0.4em;
 	padding-right: 0.4em;
+	border-bottom-left-radius: 0.4em;
+}
+
+.thumbnail .fansub-type {
+	margin-right: -0.4em;
 }
 
 .status-indicator-tab {

@@ -296,10 +296,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO episode (series_id,season_id,number,name,duration) VALUES (".$inserted_id.",(SELECT id FROM season WHERE number=".$episode['season']." AND series_id=".$inserted_id."),".$episode['number'].",".$episode['name'].",".$episode['duration'].")");
 			}
 			foreach ($related_series as $related_series_id) {
-				query("REPLACE INTO related_series (series_id,related_series_id) VALUES (".$inserted_id.",".$related_series_id.")");
+				query("INSERT INTO related_series (series_id,related_series_id) VALUES (".$inserted_id.",".$related_series_id.")");
 			}
 			foreach ($related_manga as $related_manga) {
-				query("REPLACE INTO related_manga (series_id,related_manga_id) VALUES (".$inserted_id.",".$related_manga_id.")");
+				query("INSERT INTO related_manga (series_id,related_manga_id) VALUES (".$inserted_id.",".$related_manga_id.")");
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {

@@ -53,7 +53,7 @@ $max_items=24;
 
 $cookie_viewed_links = get_cookie_viewed_links_ids();
 
-$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND ls.id NOT IN (".(count($cookie_viewed_links)>0 ? implode(',',$cookie_viewed_links) : '0').")) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
@@ -103,7 +103,7 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 		}
 		mysqli_free_result($result);
 		$sections=array("<span class=\"iconsm fa fa-fw fa-gift\"></span> Calendari d'advent", "<span class=\"iconsm fa fa-fw fa-star\"></span> Animes destacats", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorats");
-		$descriptions=array("Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones festes!", "Aquí tens la tria d'animes recomanats d'aquesta setmana! T'animes a mirar-ne algun?", "Aquestes són les darreres novetats d'anime subtitulat en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'animes triats a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquests són els animes que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquests són els animes més nous que tenim subtitulats.", "Els animes més ben puntuats pels usuaris de MyAnimeList amb versió subtitulada en català.");
+		$descriptions=array("Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones festes!", "Aquí tens la tria d'animes recomanats d'aquesta setmana! T'animes a mirar-ne algun?", "Aquestes són les darreres novetats d'anime versionat en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'animes triats a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquests són els animes que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquests són els animes més nous que tenim editats en català.", "Els animes més ben puntuats pels usuaris de MyAnimeList amb alguna versió feta en català.");
 		$queries=array(
 			NULL,
 			$base_query . " WHERE v.id IN (SELECT version_id FROM recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
@@ -248,7 +248,7 @@ for ($i=0;$i<count($sections);$i++){
 										<?php echo $synopsis; ?>
 									</div>
 								</div>
-								<div class="fansub"><?php echo strpos($row['fansub_name'],"|")!==FALSE ? 'Subtítols de diversos fansubs' : 'Subtítols '.get_fansub_preposition_name($row['fansub_name']); ?></div>
+								<div class="fansub"><?php echo get_recommended_fansub_info($row['fansub_name'], $row['fansub_type']); ?></div>
 							</a>
 <?php			
 			} else {

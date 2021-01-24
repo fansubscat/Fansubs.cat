@@ -359,11 +359,11 @@ $(document).ready(function() {
 			} else if ($(this).hasClass('trackable-related-anime')){
 				type="Click anime";
 				event="Click anime on related anime";
-				label=$(this).attr('data-manga-id');
+				label=$(this).attr('data-anime-id');
 			} else if ($(this).hasClass('trackable-related-manga')){
 				type="Click manga";
 				event="Click manga on related manga";
-				label=$(this).attr('data-anime-id');
+				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-advent')){
 				type="Click advent calendar";
 				event="Click advent calendar";

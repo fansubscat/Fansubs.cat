@@ -36,6 +36,7 @@ CREATE TABLE `episode_title` (
 CREATE TABLE `fansub` (
   `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
+  `type` varchar(200) NOT NULL DEFAULT 'fansub',
   `url` varchar(200) DEFAULT NULL,
   `twitter_url` varchar(200) DEFAULT NULL,
   `twitter_handle` varchar(200) NOT NULL,

@@ -21,6 +21,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca slug");
 		}
+		if (!empty($_POST['type'])) {
+			$data['type']=escape($_POST['type']);
+		} else {
+			crash("Dades invàlides: manca type");
+		}
 		if (!empty($_POST['url'])) {
 			$data['url']="'".escape($_POST['url'])."'";
 		} else {
@@ -59,7 +64,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-fansub", "S'ha actualitzat el fansub amb nom '".$data['name']."' (id. de fansub: ".$data['id'].")");
-			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",historical=".$data['historical'].",archive_url=".$data['archive_url'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",historical=".$data['historical'].",archive_url=".$data['archive_url'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], '../www.fansubs.cat/images/fansub_icons/'.$data['id'].'.png');
@@ -70,7 +75,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-fansub", "S'ha creat un fansub amb nom '".$data['name']."'");
-			query("INSERT INTO fansub (name,slug,url,twitter_url,twitter_handle,status,ping_token,historical,archive_url,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['status'].",".$data['ping_token'].",".$data['historical'].",".$data['archive_url'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,status,ping_token,historical,archive_url,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['status'].",".$data['ping_token'].",".$data['historical'].",".$data['archive_url'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], '../www.fansubs.cat/images/fansub_icons/'.mysqli_insert_id($db_connection).'.png');
@@ -108,6 +113,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="form-group">
 						<label for="form-slug">Identificador<span class="mandatory"></span> <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>
 						<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
+					</div>
+					<div class="form-group">
+						<label for="form-type">Tipus</label>
+						<select class="form-control" name="type" id="form-type" required>
+							<option value="">- Selecciona un tipus -</option>
+							<option value="fansub"<?php echo $row['type']=='fansub' ? " selected" : ""; ?>>Fansub</option>
+							<option value="fandub"<?php echo $row['type']=='fandub' ? " selected" : ""; ?>>Fandub</option>
+						</select>
 					</div>
 					<div class="row">
 						<div class="col-sm-3">

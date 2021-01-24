@@ -306,6 +306,22 @@ function exists_more_than_one_version_manga($series_id){
 	return ($row['cnt']>1);
 }
 
+function get_recommended_fansub_info($fansub_name, $fansub_type) {
+	if (strpos($fansub_name,"|")!==FALSE){
+		if (strpos($fansub_type,"|")!==FALSE) {
+			return 'Versions de diversos fansubs';
+		} else if ($fansub_type=='fandub') {
+			return 'Doblatge de diversos fansubs';
+		} else {
+			return 'Subtítols de diversos fansubs';
+		}
+	} else if ($fansub_type=='fandub') {
+		return 'Doblatge '.get_fansub_preposition_name($fansub_name);
+	} else {
+		return 'Subtítols '.get_fansub_preposition_name($fansub_name);
+	}
+}
+
 function print_carousel_item_anime($anime, $tracking_class, $specific_version, $show_new=TRUE) {
 	global $base_url;
 	echo "\t\t\t\t\t\t\t".'<a class="thumbnail trackable-'.$tracking_class.'" data-series-id="'.$anime['slug'].'" href="'.$base_url.'/'.($anime['type']=='movie' ? "films" : "series").'/'.$anime['slug'].(($specific_version && exists_more_than_one_version($anime['id'])) ? "?v=".$anime['version_id'] : "").'">'."\n";
@@ -316,7 +332,7 @@ function print_carousel_item_anime($anime, $tracking_class, $specific_version, $
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
 	if ($show_new && !empty($anime['last_link_created']) && $anime['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat fa poc"><span class="fa fa-fw fa-certificate"></span></div>'."\n";
 	}
 	if ($anime['type']=='movie' && $anime['episodes']>1) {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">'.$anime['episodes'].' films</div>'."\n";
@@ -329,7 +345,13 @@ function print_carousel_item_anime($anime, $tracking_class, $specific_version, $
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="ellipsized-title">'.$anime['name'].'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="fansub">'.(strpos($anime['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $anime['fansub_name']).'</div>'."\n";
+	$fansub_type='';
+	if ($anime['fansub_type']=='fandub') {
+		$fansub_type = '<span class="fansub-type" title="Versió doblada"><span class="fa fa-fw fa-microphone"></span></span>'."\n";
+	} else if ($anime['fansub_type']=='fansub') {
+		//$fansub_type = '<span class="fansub-type" title="Versió subtitulada"><span class="fa-stack" style="font-size:0.63em;"><span class="far fa-fw fa-square fa-stack-2x"></span><span class="fa fa-fw fa-minus fa-stack-1x" style="margin-top: 0.2em;"></span></span></span>'."\n";
+	}
+	echo "\t\t\t\t\t\t\t\t".'<div class="fansub">'.(strpos($anime['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $anime['fansub_name']).(!empty($fansub_type) ? ' '.$fansub_type : '').'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</a>';
 }
 
@@ -343,7 +365,7 @@ function print_carousel_item_manga($manga, $tracking_class, $specific_version, $
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
 	if ($show_new && !empty($manga['last_link_created']) && $manga['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat fa poc"><span class="fa fa-fw fa-certificate"></span></div>'."\n";
 	}
 	if ($manga['volumes']>1 && $manga['show_volumes']==1) {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">'.$manga['volumes'].' volums</div>'."\n";

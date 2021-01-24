@@ -223,7 +223,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest anime encara no disposa de cap versió amb subtítols en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
+							<div class="section-content">Aquest anime encara no disposa de cap versió editada en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
 						</div>
 <?php
 } else if ($count==0) {
@@ -238,7 +238,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest anime disposa d'alguna versió amb subtítols en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Aquest anime disposa d'alguna versió editada en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -302,7 +302,7 @@ if ($count_unfiltered==0) {
 		mysqli_free_result($resultf);
 
 		$plurals = array(
-				"active" => array("Aquest web només recopila el material editat. L'autoria dels subtítols és del grup següent. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat.", "Aquest web només recopila el material editat. L'autoria dels subtítols és dels grups següents. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat."),
+				"active" => array("Aquest web només recopila el material editat. L'autoria de la versió en català és del grup següent. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! Al seu web també trobaràs els fitxers originals amb màxima qualitat.", "Aquest web només recopila el material editat. L'autoria de la versió en català és dels grups següents. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! Al seu web també trobaràs els fitxers originals amb màxima qualitat."),
 				"abandoned" => array("Aquest anime es considera abandonat pel fansub, segurament no se'n llançaran més capítols.","Aquest anime es considera abandonat pels fansubs, segurament no se'n llançaran més capítols."),
 				"cancelled" => array("Aquest anime ha estat cancel·lat pel fansub, no se'n llançaran més capítols.","Aquest anime ha estat cancel·lat pels fansubs, no se'n llançaran més capítols.")
 		);
@@ -379,7 +379,14 @@ if ($count_unfiltered==0) {
 			if ($version['episodes_missing']==1) {
 ?>
 								<div class="section-content padding-bottom episodes-missing">
-									<span class="fa fa-exclamation-triangle icon-pr"></span>Hi ha capítols subtitulats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
+									<span class="fa fa-exclamation-triangle icon-pr"></span>Hi ha capítols editats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
+								</div>
+<?php
+			}
+			if ($fansub['type']=='fandub') {
+?>
+								<div class="section-content padding-bottom fandub-warning">
+									<span class="fa fa-exclamation-triangle icon-pr"></span>Aquesta sèrie ha estat doblada per fans. L'àudio és en català i no disposa de subtítols.
 								</div>
 <?php
 			}
@@ -508,7 +515,7 @@ if ($count_unfiltered==0) {
 <?php
 //Begin copy from index.php
 $max_items=24;
-$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 //End copy from index.php
 //1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $series['genres']));
