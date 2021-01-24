@@ -860,7 +860,9 @@ a:hover {
 	position: absolute;
 	top: 0;
 	right: 0;
-	text-overflow: ellipsis;
+	display: flex;
+	overflow: hidden;
+	justify-content: center;
 	font-size: 0.75em;
 	padding-left: 0.2em;
 	padding-right: 0.2em;
@@ -868,11 +870,17 @@ a:hover {
 	text-align: right;
 	white-space: nowrap;
 	overflow: hidden;
-	max-width: 90%;
+	max-width: 85%;
 	line-height: 1.4em;
 	padding-left: 0.4em;
 	padding-right: 0.4em;
 	border-bottom-left-radius: 0.4em;
+}
+
+.thumbnail .fansub .fansub-name-th {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .thumbnail .fansub-type {
@@ -1125,7 +1133,7 @@ a:hover {
 
 .series-on-air {
 	color: rgb(200,200,255);
-	background: rgb(0,0,55);
+	background: rgb(50,50,100);
 	padding: 0.5em 1em;
 	border-radius: 0.5em;
 }

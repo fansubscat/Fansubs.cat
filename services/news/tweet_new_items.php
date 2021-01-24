@@ -83,6 +83,14 @@ $new_anime_tweets = array(
 	'Nou anime: «%1$s», subtitulat per %2$s! Seguiu-lo a anime.fansubs.cat!'
 );
 
+$new_anime_dubbed_tweets = array(
+	'Tenim un nou anime doblat per %2$s a anime.fansubs.cat: «%1$s»!',
+	'Hi ha disponible un nou anime doblat per %2$s a anime.fansubs.cat: «%1$s»!',
+	'Ja podeu mirar l\'anime «%1$s» doblat per %2$s a anime.fansubs.cat!',
+	'Hem afegit un nou anime doblat per %2$s a anime.fansubs.cat: «%1$s»!',
+	'Nou anime: «%1$s», doblat per %2$s! Seguiu-lo a anime.fansubs.cat!'
+);
+
 $new_episode_number_tweets = array(
 	'Ja hi ha disponible el capítol %4$d de l\'anime «%1$s» (%3$s), «%2$s». El trobareu a anime.fansubs.cat!',
 	'Hem afegit el capítol %4$d de l\'anime «%1$s» (%3$s), «%2$s». Mireu-lo al web d\'anime.fansubs.cat!',
@@ -175,7 +183,7 @@ while ($row = mysqli_fetch_assoc($result)){
 
 mysqli_free_result($result);
 
-$result = mysqli_query($db_connection, "SELECT IF(s.show_seasons=1, IFNULL(se.name,s.name), s.name) name, v.series_id, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(DISTINCT l.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.url IS NOT NULL) new_series
+$result = mysqli_query($db_connection, "SELECT IF(s.show_seasons=1, IFNULL(se.name,s.name), s.name) name, v.series_id, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(DISTINCT l.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.url IS NOT NULL) new_series
 FROM link l
 LEFT JOIN version v ON l.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -187,12 +195,22 @@ LEFT JOIN season se ON se.id=e.season_id
 WHERE l.id>$last_tweeted_anime_id AND l.url IS NOT NULL AND l.episode_id IS NOT NULL GROUP BY l.version_id ORDER BY MAX(l.id) ASC") or die(mysqli_error($db_connection));
 while ($row = mysqli_fetch_assoc($result)){
 	if ($row['new_series']==1) {
-		$random = array_rand($new_anime_tweets, 1);
-		try{
-			publish_tweet(sprintf($new_anime_tweets[$random], $row['name'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-			file_put_contents('last_tweeted_anime_id.txt', $row['id']);
-		} catch(Exception $e) {
-			break;
+		if ($row['fansub_type']=='fandub') {
+			$random = array_rand($new_anime_dubbed_tweets, 1);
+			try{
+				publish_tweet(sprintf($new_anime_dubbed_tweets[$random], $row['name'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+				file_put_contents('last_tweeted_anime_id.txt', $row['id']);
+			} catch(Exception $e) {
+				break;
+			}
+		} else {
+			$random = array_rand($new_anime_tweets, 1);
+			try{
+				publish_tweet(sprintf($new_anime_tweets[$random], $row['name'], $row['fansub_handles'])."\nhttps://anime.fansubs.cat/".($row['type']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+				file_put_contents('last_tweeted_anime_id.txt', $row['id']);
+			} catch(Exception $e) {
+				break;
+			}
 		}
 	} else if ($row['cnt']>1){ //Multiple episodes
 		$random = array_rand($new_episodes_tweets, 1);

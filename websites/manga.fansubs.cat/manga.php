@@ -343,14 +343,14 @@ if ($count_unfiltered==0) {
 			if ($version['status']==4) {
 ?>
 								<div class="section-content padding-bottom cancelled-warning">
-									<span class="fa fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
+									<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
 
 								</div>
 <?php
 			} else if ($version['status']==5) {
 ?>
 								<div class="section-content padding-bottom cancelled-warning">
-									<span class="fa fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
+									<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
 
 								</div>
 <?php
@@ -358,14 +358,14 @@ if ($count_unfiltered==0) {
 			if ($version['chapters_missing']==1) {
 ?>
 								<div class="section-content padding-bottom episodes-missing">
-									<span class="fa fa-exclamation-triangle icon-pr"></span>Hi ha capítols editats que no hem pogut recuperar. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
+									<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Hi ha capítols editats que no hem pogut recuperar. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
 								</div>
 <?php
 			}
 			if ($manga['chapters']==-1) {
 ?>
 							<div class="section-content padding-bottom series-on-air">
-								<span class="fa fa-exclamation-triangle icon-pr"></span>Aquest manga encara està en publicació. És possible que tingui més capítols que els que hi ha a la llista.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Aquest manga encara està en publicació. És possible que tingui més capítols que els que hi ha a la llista.
 							</div>
 <?php
 			}

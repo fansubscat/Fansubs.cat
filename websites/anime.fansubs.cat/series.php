@@ -364,14 +364,14 @@ if ($count_unfiltered==0) {
 			if ($version['status']==4) {
 ?>
 								<div class="section-content padding-bottom cancelled-warning">
-									<span class="fa fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
+									<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['abandoned'][1] : $plurals['abandoned'][0]; ?>
 
 								</div>
 <?php
 			} else if ($version['status']==5) {
 ?>
 								<div class="section-content padding-bottom cancelled-warning">
-									<span class="fa fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
+									<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span><?php echo count($fansubs)>1 ? $plurals['cancelled'][1] : $plurals['cancelled'][0]; ?>
 
 								</div>
 <?php
@@ -379,21 +379,21 @@ if ($count_unfiltered==0) {
 			if ($version['episodes_missing']==1) {
 ?>
 								<div class="section-content padding-bottom episodes-missing">
-									<span class="fa fa-exclamation-triangle icon-pr"></span>Hi ha capítols editats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
+									<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Hi ha capítols editats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
 								</div>
 <?php
 			}
 			if ($fansub['type']=='fandub') {
 ?>
 								<div class="section-content padding-bottom fandub-warning">
-									<span class="fa fa-exclamation-triangle icon-pr"></span>Aquesta sèrie ha estat doblada per fans. L'àudio és en català i no disposa de subtítols.
+									<span class="fa fa-fw fa-microphone icon-pr"></span>Aquest anime ha estat doblat per fans. L'àudio és únicament en català i no disposa de subtítols.
 								</div>
 <?php
 			}
 			if ($series['episodes']==-1) {
 ?>
 							<div class="section-content padding-bottom series-on-air">
-								<span class="fa fa-exclamation-triangle icon-pr"></span>Aquesta sèrie encara està en emissió. És possible que tingui més capítols que els que hi ha a la llista.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Aquesta sèrie encara està en emissió. És possible que tingui més capítols que els que hi ha a la llista.
 							</div>
 <?php
 			}

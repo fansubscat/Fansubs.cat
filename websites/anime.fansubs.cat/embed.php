@@ -19,10 +19,10 @@ if (isset($failed)) {
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Fansubs.cat - Anime en català</title>
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=9" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=10" media="screen" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=9"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js?v=10"></script>
 	</head>
 	<body>
 		<input type="hidden" id="embed-page" value="1" />

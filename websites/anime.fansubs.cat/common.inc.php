@@ -351,7 +351,7 @@ function print_carousel_item_anime($anime, $tracking_class, $specific_version, $
 	} else if ($anime['fansub_type']=='fansub') {
 		//$fansub_type = '<span class="fansub-type" title="Versió subtitulada"><span class="fa-stack" style="font-size:0.63em;"><span class="far fa-fw fa-square fa-stack-2x"></span><span class="fa fa-fw fa-minus fa-stack-1x" style="margin-top: 0.2em;"></span></span></span>'."\n";
 	}
-	echo "\t\t\t\t\t\t\t\t".'<div class="fansub">'.(strpos($anime['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $anime['fansub_name']).(!empty($fansub_type) ? ' '.$fansub_type : '').'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="fansub"><span class="fansub-name-th">'.(strpos($anime['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $anime['fansub_name']).'</span>'.(!empty($fansub_type) ? ' '.$fansub_type : '').'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</a>';
 }
 
@@ -378,7 +378,7 @@ function print_carousel_item_manga($manga, $tracking_class, $specific_version, $
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="ellipsized-title">'.$manga['name'].'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="fansub">'.(strpos($manga['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $manga['fansub_name']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="fansub"><span class="fansub-name-th">'.(strpos($manga['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $manga['fansub_name']).'</span></div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</a>'."\n";
 }
 
