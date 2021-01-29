@@ -87,7 +87,7 @@ switch ($header_tab){
 		$descriptions=array("La cerca de \"$query\" ha obtingut %%% resultats.");
 		$query = str_replace(" ", "%", $query);
 		$queries=array(
-			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%') GROUP BY s.id ORDER BY s.name ASC");
+			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%') OR s.id IN (SELECT mg.manga_id FROM rel_manga_genre mg LEFT JOIN genre g ON mg.genre_id=g.id WHERE g.name='$query') GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
 		$tracking_classes=array('search-results');
@@ -221,11 +221,11 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 				} else if ($row['volumes']>1 && $row['show_volumes']==1) {
 ?>
-									<div class="seasons">Manga <?php echo $row['volumes']==1 ? "d'1 volum" : 'de '.$row['volumes'].' volums'; ?>, <?php echo $row['chapters']==-1 ? 'en edició' : $row['chapters'].' capítols'; ?></div>
+									<div class="seasons">Manga <?php echo $row['volumes']==1 ? "d'1 volum" : ($row['volumes']==11 ? "d'11 volums" : 'de '.$row['volumes'].' volums'); ?>, <?php echo $row['chapters']==-1 ? 'en edició' : $row['chapters'].' capítols'; ?></div>
 <?php
 				} else {
 ?>
-									<div class="seasons">Manga <?php echo $row['chapters']==-1 ? 'en edició' : ($row['volumes']==1 ? "d'1 volum" : 'de '.$row['volumes'].' volums'); ?></div>
+									<div class="seasons">Manga <?php echo $row['chapters']==-1 ? 'en edició' : ($row['volumes']==1 ? "d'1 volum" : ($row['volumes']==11 ? "d'11 volums" : 'de '.$row['volumes'].' volums')); ?></div>
 <?php
 				}
 ?>

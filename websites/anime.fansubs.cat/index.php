@@ -87,7 +87,7 @@ switch ($header_tab){
 		$descriptions=array("La cerca de \"$query\" ha obtingut %%% resultats.");
 		$query = str_replace(" ", "%", $query);
 		$queries=array(
-			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords LIKE '%$query%') GROUP BY s.id ORDER BY s.name ASC");
+			$base_query . " WHERE (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords LIKE '%$query%') OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$query') GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
 		$tracking_classes=array('search-results');
@@ -225,11 +225,11 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 				} else if ($row['seasons']>1 && $row['show_seasons']==1) {
 ?>
-									<div class="seasons">Sèrie de <?php echo $row['seasons']; ?> temporades, <?php echo $row['episodes']==-1 ? 'en emissió' : $row['episodes'].' capítols'; ?></div>
+									<div class="seasons">Sèrie <?php echo $row['seasons']==11 ? "d'11" : 'de '.$row['seasons']; ?> temporades, <?php echo $row['episodes']==-1 ? 'en emissió' : $row['episodes'].' capítols'; ?></div>
 <?php
 				} else {
 ?>
-									<div class="seasons">Sèrie <?php echo $row['episodes']==-1 ? 'en emissió' : 'de '.$row['episodes'].' capítols'; ?></div>
+									<div class="seasons">Sèrie <?php echo $row['episodes']==-1 ? 'en emissió' : ($row['episodes']==1 ? "d'1 capítol" : ($row['episodes']==11 ? "d'11 capítols" : 'de '.$row['episodes'].' capítols')); ?></div>
 <?php
 				}
 ?>
