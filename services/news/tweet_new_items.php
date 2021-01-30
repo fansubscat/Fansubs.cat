@@ -66,13 +66,13 @@ $new_chapter_number_no_name_tweets = array(
 $new_chapter_no_number_tweets = array(
 	'Ja hi ha disponible un nou capítol del manga «%1$s» (%3$s) a manga.fansubs.cat: «%2$s».',
 	'Hem afegit un nou capítol del manga «%1$s» (%3$s) al web de manga.fansubs.cat: «%2$s».',
-	'Ja podeu mirar un nou capítol del manga «%1$s» (%3$s) a manga.fansubs.cat: «%2$s».'
+	'Ja podeu llegir un nou capítol del manga «%1$s» (%3$s) a manga.fansubs.cat: «%2$s».'
 );
 
 $new_chapters_tweets = array(
 	'Ja hi ha disponibles %2$d capítols nous del manga «%1$s» (%3$s) al web de manga.fansubs.cat!',
 	'Hem afegit %2$d capítols nous del manga «%1$s» (%3$s) al web de manga.fansubs.cat!',
-	'Ja podeu mirar %2$d capítols nous del manga «%1$s» (%3$s) al web de manga.fansubs.cat!'
+	'Ja podeu llegir %2$d capítols nous del manga «%1$s» (%3$s) al web de manga.fansubs.cat!'
 );
 
 $new_anime_tweets = array(
