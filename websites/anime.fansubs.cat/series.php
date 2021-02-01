@@ -80,17 +80,7 @@ $header_series_page=TRUE;
 require_once('header.inc.php');
 ?>
 				<div class="series_header">
-<?php
-if (file_exists('images/featured/'.$series['id'].'.jpg')) {
-?>
 					<div class="img" style="background: url('/images/featured/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
-<?php
-} else {
-?>
-					<div class="img" style="background: url('/images/series/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
-<?php
-}
-?>
 					<div class="series_title_container">
 						<h2 class="series_title"><?php echo htmlspecialchars($series['name']); ?></h2>
 <?php
