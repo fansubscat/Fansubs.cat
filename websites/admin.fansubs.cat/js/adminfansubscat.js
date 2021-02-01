@@ -292,7 +292,7 @@ function string_to_slug(str) {
 
 function addRow(extra) {
 	var i = parseInt($('#episode-list-table').attr('data-count'))+1;
-	$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-season-'+i+'" name="form-episode-list-season-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-episode-list-name-'+i+'" name="form-episode-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td><input id="form-episode-list-duration-'+i+'" name="form-episode-list-duration-'+i+'" type="number" class="form-control" value="" required/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-season-'+i+'" name="form-episode-list-season-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/><input id="form-episode-list-has_version-'+i+'" type="hidden" value="0"/></td><td><input id="form-episode-list-name-'+i+'" name="form-episode-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td><input id="form-episode-list-duration-'+i+'" name="form-episode-list-duration-'+i+'" type="number" class="form-control" value="" required/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#episode-list-table').attr('data-count', i);
 
 	if (!extra) {
@@ -307,12 +307,15 @@ function deleteRow(id) {
 	if(i==1) {
 		alert('L\'anime ha de tenir un capítol, com a mínim!');
 	}
-	else {
+	else if ($('#form-episode-list-has_version-'+id).val()==1) {
+		alert('Aquest capítol ja té enllaços en alguna versió d\'algun fansub. No es pot suprimir perquè els enllaços d\'aquella versió deixarien de funcionar. Si realment el vols suprimir, primer caldria que suprimissis els enllaços de la versió. Si tens dubtes, contacta amb un administrador.');
+	} else {
 		$("#form-episode-list-row-"+id).remove();
 		for (var j=id+1;j<i+1;j++) {
 			$("#form-episode-list-row-"+j).attr('id','form-episode-list-row-'+(j-1));
 			$("#form-episode-list-id-"+j).attr('name','form-episode-list-id-'+(j-1));
 			$("#form-episode-list-id-"+j).attr('id','form-episode-list-id-'+(j-1));
+			$("#form-episode-list-has_version-"+j).attr('id','form-episode-list-has_version-'+(j-1));
 			$("#form-episode-list-season-"+j).attr('name','form-episode-list-season-'+(j-1));
 			$("#form-episode-list-season-"+j).attr('id','form-episode-list-season-'+(j-1));
 			$("#form-episode-list-num-"+j).attr('name','form-episode-list-num-'+(j-1));
@@ -323,6 +326,7 @@ function deleteRow(id) {
 			$("#form-episode-list-duration-"+j).attr('id','form-episode-list-duration-'+(j-1));
 			$("#form-episode-list-delete-"+j).attr('onclick','deleteRow('+(j-1)+');');
 			$("#form-episode-list-delete-"+j).attr('id','form-episode-list-delete-'+(j-1));
+			$("#form-episode-list-delete-"+j).attr('class',$('form-episode-list-delete-'+(j-1)).attr('class'));
 		}
 		$('#episode-list-table').attr('data-count', i-1);
 	}
@@ -330,7 +334,7 @@ function deleteRow(id) {
 
 function addChapterRow(extra) {
 	var i = parseInt($('#chapter-list-table').attr('data-count'))+1;
-	$('#chapter-list-table').append('<tr id="form-chapter-list-row-'+i+'"><td><input id="form-chapter-list-volume-'+i+'" name="form-chapter-list-volume-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-chapter-list-num-'+i+'" name="form-chapter-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)" step="any"/><input id="form-chapter-list-id-'+i+'" name="form-chapter-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-chapter-list-name-'+i+'" name="form-chapter-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td class="text-center align-middle"><button id="form-chapter-list-delete-'+i+'" onclick="deleteChapterRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#chapter-list-table').append('<tr id="form-chapter-list-row-'+i+'"><td><input id="form-chapter-list-volume-'+i+'" name="form-chapter-list-volume-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-chapter-list-num-'+i+'" name="form-chapter-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)" step="any"/><input id="form-chapter-list-id-'+i+'" name="form-chapter-list-id-'+i+'" type="hidden" value="-1"/><input id="form-chapter-list-has_version-'+i+'" type="hidden" value="0"/></td><td><input id="form-chapter-list-name-'+i+'" name="form-chapter-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense títol)"/></td><td class="text-center align-middle"><button id="form-chapter-list-delete-'+i+'" onclick="deleteChapterRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#chapter-list-table').attr('data-count', i);
 
 	if (!extra) {
@@ -344,12 +348,15 @@ function deleteChapterRow(id) {
 	if(i==1) {
 		alert('El manga ha de tenir un capítol, com a mínim!');
 	}
-	else {
+	else if ($('#form-chapter-list-has_version-'+id).val()==1) {
+		alert('Aquest capítol ja té fitxers en alguna versió d\'algun fansub. No es pot suprimir perquè els fitxers d\'aquella versió deixarien de funcionar. Si realment el vols suprimir, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+	} else {
 		$("#form-chapter-list-row-"+id).remove();
 		for (var j=id+1;j<i+1;j++) {
 			$("#form-chapter-list-row-"+j).attr('id','form-chapter-list-row-'+(j-1));
 			$("#form-chapter-list-id-"+j).attr('name','form-chapter-list-id-'+(j-1));
 			$("#form-chapter-list-id-"+j).attr('id','form-chapter-list-id-'+(j-1));
+			$("#form-chapter-list-has_version-"+j).attr('id','form-chapter-list-has_version-'+(j-1));
 			$("#form-chapter-list-volume-"+j).attr('name','form-chapter-list-volume-'+(j-1));
 			$("#form-chapter-list-volume-"+j).attr('id','form-chapter-list-volume-'+(j-1));
 			$("#form-chapter-list-num-"+j).attr('name','form-chapter-list-num-'+(j-1));
@@ -358,6 +365,7 @@ function deleteChapterRow(id) {
 			$("#form-chapter-list-name-"+j).attr('id','form-chapter-list-name-'+(j-1));
 			$("#form-chapter-list-delete-"+j).attr('onclick','deleteChapterRow('+(j-1)+');');
 			$("#form-chapter-list-delete-"+j).attr('id','form-chapter-list-delete-'+(j-1));
+			$("#form-chapter-list-delete-"+j).attr('class',$('form-chapter-list-delete-'+(j-1)).attr('class'));
 		}
 		$('#chapter-list-table').attr('data-count', i-1);
 	}
@@ -1367,6 +1375,10 @@ $(document).ready(function() {
 	});
 
 	$("#import-from-mal-episodes").click(function() {
+		if ($("#import-from-mal-episodes").hasClass('disabled')) {
+			alert('Aquest anime ja té capítols amb enllaços en alguna versió d\'algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els enllaços d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els enllaços de la versió. Si tens dubtes, contacta amb un administrador.');
+			return false;
+		}
 		var seasons = $('[id^=form-season-list-myanimelist_id-]');
 		var with_id=0;
 		for (var i=0;i<seasons.length;i++){
@@ -1381,7 +1393,7 @@ $(document).ready(function() {
 			alert("Hi ha temporades sense identificador de MyAnimeList. Cal que especifiquis l'identificador de totes.");
 			return;
 		}
-		if ((parseInt($('#episode-list-table').attr('data-count'))>1 || $('#form-episode-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots i es tornaran a crear. Totes les versions que continguin aquests capítols i tots els enllaços d'aquests capítols desapareixeran i no es podrà desfer l'acció un cop hagis desat els canvis. Vols continuar?")) {
+		if ((parseInt($('#episode-list-table').attr('data-count'))>1 || $('#form-episode-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots els de la llista i es tornaran a crear. Vols continuar?")) {
 			return;
 		}
 
@@ -1394,6 +1406,10 @@ $(document).ready(function() {
 	});
 
 	$("#generate-episodes").click(function() {
+		if ($("#generate-episodes").hasClass('disabled')) {
+			alert('Aquest anime ja té capítols amb enllaços en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els enllaços d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els enllaços de la versió. Si tens dubtes, contacta amb un administrador.');
+			return false;
+		}
 		var seasons = $('[id^=form-season-list-episodes-]');
 		var with_episodes=0;
 		for (var i=0;i<seasons.length;i++){
@@ -1406,7 +1422,7 @@ $(document).ready(function() {
 			return;
 		}
 
-		if ((parseInt($('#episode-list-table').attr('data-count'))>1 || $('#form-episode-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots i es tornaran a crear. Totes les versions que continguin aquests capítols i tots els enllaços d'aquests capítols desapareixeran i no es podrà desfer l'acció un cop hagis desat els canvis. Vols continuar?")) {
+		if ((parseInt($('#episode-list-table').attr('data-count'))>1 || $('#form-episode-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots els de la llista i es tornaran a crear. Vols continuar?")) {
 			return;
 		}
 
@@ -1433,6 +1449,10 @@ $(document).ready(function() {
 	});
 
 	$("#generate-chapters").click(function() {
+		if ($("#generate-chapters").hasClass('disabled')) {
+			alert('Aquest manga ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+			return false;
+		}
 		var volumes = $('[id^=form-volume-list-chapters-]');
 		var with_chapters=0;
 		for (var i=0;i<volumes.length;i++){
@@ -1445,7 +1465,7 @@ $(document).ready(function() {
 			return;
 		}
 
-		if ((parseInt($('#chapter-list-table').attr('data-count'))>1 || $('#form-chapter-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots i es tornaran a crear. Totes les versions que continguin aquests capítols i tots els fitxers d'aquests capítols desapareixeran i no es podrà desfer l'acció un cop hagis desat els canvis. Vols continuar?")) {
+		if ((parseInt($('#chapter-list-table').attr('data-count'))>1 || $('#form-chapter-list-name-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots els de la llista i es tornaran a crear. Vols continuar?")) {
 			return;
 		}
 

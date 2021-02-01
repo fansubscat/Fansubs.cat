@@ -125,7 +125,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input class="form-control" id="form-pending_image" disabled value="<?php echo htmlspecialchars($row['pending_image']); ?>">
 					</div>
 <?php
-}
+	} else if (empty($row['id'])) {
+?>
+					<p class="alert alert-warning"><span class="fa fa-exclamation-triangle mr-2"></span>Normalment, no és necessari afegir manualment notícies de fansubs, ja que s'obtenen automàticament mitjançant els recollidors. Assegura't que realment és això el que vols fer, i en cas de dubte, contacta amb un administrador.</p>
+<?php
+	}
 ?>
 					<div class="form-group">
 						<label for="form-fansub_id">Fansub</label>

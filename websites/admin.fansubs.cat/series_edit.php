@@ -338,7 +338,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultss);
 
-		$resulte = query("SELECT e.*,ss.number season FROM episode e LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".escape($_GET['id'])." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, e.name ASC");
+		$resulte = query("SELECT e.*,ss.number season, EXISTS(SELECT * FROM link l WHERE l.episode_id=e.id AND l.url IS NOT NULL) has_version FROM episode e LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".escape($_GET['id'])." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, e.name ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -642,7 +642,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
+	$some_has_version = FALSE;
 	for ($i=0;$i<count($episodes);$i++) {
+		if ($episodes[$i]['has_version']) {
+			$some_has_version = TRUE;
+		}
 ?>
 												<tr id="form-episode-list-row-<?php echo $i+1; ?>">
 													<td>
@@ -651,6 +655,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<td>
 														<input id="form-episode-list-num-<?php echo $i+1; ?>" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']!=NULL ? floatval($episodes[$i]['number']) : ''; ?>" placeholder="(Esp.)" step="any"/>
 														<input id="form-episode-list-id-<?php echo $i+1; ?>" name="form-episode-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $episodes[$i]['id']; ?>"/>
+														<input id="form-episode-list-has_version-<?php echo $i+1; ?>" type="hidden" value="<?php echo $episodes[$i]['has_version']; ?>"/>
 													</td>
 													<td>
 														<input id="form-episode-list-name-<?php echo $i+1; ?>" name="form-episode-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['name']); ?>" placeholder="(Sense títol)"/>
@@ -659,7 +664,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-episode-list-duration-<?php echo $i+1; ?>" name="form-episode-list-duration-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['duration']; ?>" required/>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-episode-list-delete-<?php echo $i+1; ?>" onclick="deleteRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+														<button id="form-episode-list-delete-<?php echo $i+1; ?>" onclick="deleteRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger<?php echo $episodes[$i]['has_version'] ? ' disabled' : ''; ?>"></button>
 													</td>
 												</tr>
 <?php
@@ -673,6 +678,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<td>
 														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)" step="any"/>
 														<input id="form-episode-list-id-1" name="form-episode-list-id-1" type="hidden" value="-1"/>
+														<input id="form-episode-list-has_version-1" type="hidden" value="0"/>
 													</td>
 													<td>
 														<input id="form-episode-list-name-1" name="form-episode-list-name-1" type="text" class="form-control" value="" placeholder="(Sense títol)"/>
@@ -693,12 +699,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<button onclick="addRow(false);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un capítol</button>
 									<button onclick="addRow(true);" type="button" class="btn btn-success btn-sm ml-2"><span class="fa fa-plus pr-2"></span>Afegeix un especial</button>
 									<span style="flex-grow: 1;"></span>
-									<button type="button" id="import-from-mal-episodes" class="btn btn-primary btn-sm">
+									<button type="button" id="import-from-mal-episodes" class="btn btn-primary btn-sm<?php echo $some_has_version ? ' disabled' : ''; ?>">
 										<span id="import-from-mal-episodes-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
 										<span id="import-from-mal-episodes-not-loading" class="fa fa-th-list pr-2"></span>
 										Importa els capítols de MyAnimeList
 									</button>
-									<button type="button" id="generate-episodes" class="btn btn-primary btn-sm ml-2">
+									<button type="button" id="generate-episodes" class="btn btn-primary btn-sm ml-2<?php echo $some_has_version ? ' disabled' : ''; ?>">
 										<span class="fa fa-sort-numeric-down pr-2"></span>
 										Genera els capítols automàticament
 									</button>

@@ -323,7 +323,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultv);
 
-		$resultc = query("SELECT c.*,v.number volume FROM chapter c LEFT JOIN volume v ON c.volume_id=v.id WHERE c.manga_id=".escape($_GET['id'])." ORDER BY v.number IS NULL ASC, v.number ASC, c.number IS NULL ASC, c.number ASC, c.name ASC");
+		$resultc = query("SELECT c.*,v.number volume, EXISTS(SELECT * FROM file fi WHERE fi.chapter_id=c.id AND fi.original_filename IS NOT NULL) has_version FROM chapter c LEFT JOIN volume v ON c.volume_id=v.id WHERE c.manga_id=".escape($_GET['id'])." ORDER BY v.number IS NULL ASC, v.number ASC, c.number IS NULL ASC, c.number ASC, c.name ASC");
 		$chapters = array();
 		while ($rowc = mysqli_fetch_assoc($resultc)) {
 			array_push($chapters, $rowc);
@@ -615,7 +615,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
+	$some_has_version = FALSE;
 	for ($i=0;$i<count($chapters);$i++) {
+		if ($chapters[$i]['has_version']) {
+			$some_has_version = TRUE;
+		}
 ?>
 												<tr id="form-chapter-list-row-<?php echo $i+1; ?>">
 													<td>
@@ -624,12 +628,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<td>
 														<input id="form-chapter-list-num-<?php echo $i+1; ?>" name="form-chapter-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $chapters[$i]['number']!=NULL ? floatval($chapters[$i]['number']) : ''; ?>" placeholder="(Esp.)" step="any"/>
 														<input id="form-chapter-list-id-<?php echo $i+1; ?>" name="form-chapter-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $chapters[$i]['id']; ?>"/>
+														<input id="form-chapter-list-has_version-<?php echo $i+1; ?>" type="hidden" value="<?php echo $chapters[$i]['has_version']; ?>"/>
 													</td>
 													<td>
 														<input id="form-chapter-list-name-<?php echo $i+1; ?>" name="form-chapter-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($chapters[$i]['name']); ?>" placeholder="(Sense títol)"/>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-chapter-list-delete-<?php echo $i+1; ?>" onclick="deleteChapterRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+														<button id="form-chapter-list-delete-<?php echo $i+1; ?>" onclick="deleteChapterRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger<?php echo $chapters[$i]['has_version'] ? ' disabled' : ''; ?>"></button>
 													</td>
 												</tr>
 <?php
@@ -643,6 +648,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<td>
 														<input id="form-chapter-list-num-1" name="form-chapter-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)" step="any"/>
 														<input id="form-chapter-list-id-1" name="form-chapter-list-id-1" type="hidden" value="-1"/>
+														<input id="form-chapter-list-has_version-1" type="hidden" value="0"/>
 													</td>
 													<td>
 														<input id="form-chapter-list-name-1" name="form-chapter-list-name-1" type="text" class="form-control" value="" placeholder="(Sense títol)"/>
@@ -660,7 +666,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<button onclick="addChapterRow(false);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un capítol</button>
 									<button onclick="addChapterRow(true);" type="button" class="btn btn-success btn-sm ml-2"><span class="fa fa-plus pr-2"></span>Afegeix un especial</button>
 									<span style="flex-grow: 1;"></span>
-									<button type="button" id="generate-chapters" class="btn btn-primary btn-sm ml-2">
+									<button type="button" id="generate-chapters" class="btn btn-primary btn-sm ml-2<?php echo $some_has_version ? ' disabled' : ''; ?>">
 										<span class="fa fa-sort-numeric-down pr-2"></span>
 										Genera els capítols automàticament
 									</button>
