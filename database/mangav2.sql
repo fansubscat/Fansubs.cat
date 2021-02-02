@@ -111,13 +111,15 @@ CREATE TABLE `manga_views` (
   `clicks` int(11) NOT NULL DEFAULT 0,
   `views` int(11) NOT NULL DEFAULT 0,
   `time_spent` int(11) NOT NULL DEFAULT 0,
-  `pages_read` int(11) NOT NULL DEFAULT 0
+  `pages_read` int(11) NOT NULL DEFAULT 0,
+  `api_views` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `manga_view_log` (
   `id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `api_user_agent` text DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `read_session` (

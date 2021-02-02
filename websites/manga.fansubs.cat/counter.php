@@ -29,7 +29,7 @@ if ($file_id>0 && !empty($_GET['action']) && !empty($read_id)) {
 						} else {
 							$pages_read = escape($_GET['pages_read']);
 						}
-						query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT time_spent+$time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$time_spent), IFNULL((SELECT pages_read+$pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$pages_read)");
+						query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT time_spent+$time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$time_spent), IFNULL((SELECT pages_read+$pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$pages_read), IFNULL((SELECT api_views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0)");
 						query("INSERT INTO manga_view_log (file_id, date) VALUES ($file_id, CURRENT_TIMESTAMP)");
 					}
 					//Else, discard and not even report it: opened and closed in too little time (less than min)
@@ -40,7 +40,7 @@ if ($file_id>0 && !empty($_GET['action']) && !empty($read_id)) {
 			case 'open':
 				//Replace in the remote case we get a collision...
 				query("REPLACE INTO read_session VALUES ('$read_id', $file_id, 0, 1, CURRENT_TIMESTAMP)");
-				query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0)");
+				query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT api_views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0)");
 				break;
 			case 'notify':
 				//Same logic but only for max time/pages...

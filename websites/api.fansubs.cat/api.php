@@ -187,6 +187,7 @@ else if ($method === 'manga'){
 		}
 	} else if ($submethod=='search') {
 		$page = array_shift($request);
+		$page = explode('?', $page)[0];
 		$query = mysqli_real_escape_string($db_connection, $_GET['query']);
 		if ($page>0) {
 			if (!empty($query)){
@@ -273,8 +274,9 @@ else if ($method === 'manga'){
 			if ($row = mysqli_fetch_assoc($result)) {
 				$time_spent=$row['number_of_pages'] * 3;
 				$pages_read=$row['number_of_pages'];
-				mysqli_query($db_connection, "REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT time_spent+$time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$time_spent), IFNULL((SELECT pages_read+$pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$pages_read)");
-				mysqli_query($db_connection, "INSERT INTO manga_view_log (file_id, date) VALUES ($file_id, CURRENT_TIMESTAMP)");
+				mysqli_query($db_connection, "REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT time_spent+$time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$time_spent), IFNULL((SELECT pages_read+$pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$pages_read), IFNULL((SELECT api_views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1)");
+				$user_agent = mysqli_real_escape_string($db_connection, $_SERVER['HTTP_USER_AGENT']);
+				mysqli_query($db_connection, "INSERT INTO manga_view_log (file_id, date, api_user_agent) VALUES ($file_id, CURRENT_TIMESTAMP, '$user_agent')");
 			}
 			$files = scandir($base_path);
 			natsort($files);
