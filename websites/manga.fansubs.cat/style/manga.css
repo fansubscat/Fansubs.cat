@@ -113,6 +113,7 @@ h2, h3 {
 	border-radius: 6px;
 	padding: 5px;
 	box-sizing: border-box;
+	border: 1px solid black;
 
 	/* Position the tooltip */
 	position: absolute;
@@ -132,6 +133,29 @@ h2, h3 {
 	border-width: 5px;
 	border-style: solid;
 	border-color: transparent transparent beige transparent;
+}
+
+#tachiyomi-message {
+	display: block;
+	padding: 1em 2em 0em 2em;
+}
+
+#tachiyomi-message-real {
+	display: block;
+	background-color: beige;
+	color: black;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+#tachiyomi-message a {
+	color: #008;
+}
+
+#tachiyomi-message a:hover {
+	color: #44C;
 }
 
 .options-item {
@@ -263,7 +287,8 @@ h2, h3 {
 
 a,
 a:visited, 
-#header a:hover {
+#header a:hover, 
+#tachiyomi-message a:hover {
 	text-decoration: none;
 }
 
@@ -405,7 +430,7 @@ a:hover {
 	margin-top: -0.5em;
 }
 
-#content .section:first-child .section-title-main {
+#content div.section:first-of-type .section-title-main {
 	margin-top: 0;
 }
 
@@ -1687,6 +1712,10 @@ h2{
 	#options-overlay-content {
 		max-width: 100%;
 		padding: 1em;
+	}
+
+	#tachiyomi-message {
+		padding: 1em 1em 0em 1em;
 	}
 
 	.mobilehide {

@@ -30,7 +30,7 @@ if (!empty($header_social)) {
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/manga.css?v=6" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/manga.css?v=7" media="screen" />
 <?php
 $is_fools_day = (date('d')==28 && date('m')==12);
 if ($is_fools_day){
@@ -44,7 +44,7 @@ if ($is_fools_day){
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=6"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js?v=7"></script>
 	</head>
 	<body>
 		<div data-nosnippet id="overlay" class="hidden">
@@ -153,3 +153,15 @@ mysqli_free_result($resultf);
 				</div>
 			</div>
 			<div id="content"<?php echo !empty($header_series_page) ? ' class="series-page"' : ''; ?>>
+<?php
+//Show app layout if we are being accessed from an Android browser (rely on the User-Agent)
+if ((!isset($_COOKIE['tachiyomi_message_closed']) || $_COOKIE['tachiyomi_message_closed']!='1') && stripos(strtolower($_SERVER['HTTP_USER_AGENT']),'android')!==FALSE){
+?>
+				<span id="tachiyomi-message">
+					<span id="tachiyomi-message-real">
+						<a id="tachiyomi-message-close" class="fa fa-times" style="float: right; color: black;" title="Amaga aquest missatge"></a>Sabies que a Android també pots llegir tots els mangues amb el Tachiyomi? <a href="https://www.tachiyomi.org" target="_blank">Baixa'l aquí</a> i instal·la-hi l'extensió «Fansubs.cat»!
+					</span>
+				</span>
+<?php
+}
+?>

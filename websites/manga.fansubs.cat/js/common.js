@@ -181,6 +181,10 @@ $(document).ready(function() {
 			$('#options-tooltip').attr('style','');
 			Cookies.set('tooltip_closed', '1', cookieOptions);
 		});
+		$('#tachiyomi-message-close').click(function(){
+			$('#tachiyomi-message').attr('style','display: none;');
+			Cookies.set('tachiyomi_message_closed', '1', cookieOptions);
+		});
 		$('#options-cancel-button').click(function(){
 			$('#options-form').trigger("reset");
 			$('#options-overlay').addClass('hidden');
@@ -379,6 +383,10 @@ $(document).ready(function() {
 
 		if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
 			$("#options-tooltip").fadeIn("slow");
+		}
+
+		if (Cookies.get('tachiyomi_message_closed', cookieOptions)=='1') {
+			$("#tachiyomi-message").attr('style','display: none;');
 		}
 
 		$(window).resize(function() {
