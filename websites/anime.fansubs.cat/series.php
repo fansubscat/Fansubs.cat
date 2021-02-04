@@ -392,18 +392,21 @@ if ($count_unfiltered==0) {
 <?php
 			$seasons = array();
 			$last_season_number = -1;
+			$last_season_id = -1;
 			$last_season_name = "";
 			$current_season_episodes = array();
 			foreach ($episodes as $row) {
 				if ($row['season_number']!=$last_season_number && ($series['show_seasons']==1 || empty($row['season_number']))){
 					if ($last_season_number!=-1) {
 						array_push($seasons, array(
+							'season_id' => $last_season_id,
 							'season_number' => $last_season_number,
 							'season_name' => $last_season_name,
 							'episodes' => apply_sort($series['order_type'],$current_season_episodes)
 						));
 					}
 					$last_season_number=$row['season_number'];
+					$last_season_id=$row['season_id'];
 					$last_season_name=$row['season_name'];
 					$current_season_episodes = array();
 				}
@@ -411,10 +414,23 @@ if ($count_unfiltered==0) {
 				array_push($current_season_episodes, $row);
 			}
 			array_push($seasons, array(
+				'season_id' => $last_season_id,
 				'season_number' => $last_season_number,
 				'season_name' => $last_season_name,
 				'episodes' => apply_sort($series['order_type'],$current_season_episodes)
 			));
+
+			$season_available_episodes=array();
+
+			foreach ($seasons as $season) {
+				$ids=array(-1);
+				foreach ($season['episodes'] as $episode) {
+					$ids[]=$episode['id'];
+				}
+				$result_episodes = query("SELECT l.* FROM link l WHERE l.episode_id IN (".implode(',',$ids).") AND l.version_id=".$version['id']." ORDER BY l.id ASC");
+				$season_available_episodes[] = mysqli_num_rows($result_episodes);
+				mysqli_free_result($result_episodes);
+			}
 
 			if (count($seasons)<2) {
 				foreach ($seasons as $season) {
@@ -437,10 +453,21 @@ if ($count_unfiltered==0) {
 <?php
 				}
 			} else { //Multiple seasons
-				foreach ($seasons as $season) {
+
+				foreach ($seasons as $index => $season) {
+					$is_inside_empty_batch = ($season_available_episodes[$index]==0 && (($index>0 && $season_available_episodes[$index-1]==0) || ($index<(count($season_available_episodes)-1) && $season_available_episodes[$index+1]==0)));
+					$is_first_in_empty_batch = $is_inside_empty_batch && ($index==0 || ($index>0 && $season_available_episodes[$index-1]!=0));
+
+					if ($is_first_in_empty_batch && $series['show_unavailable_episodes']==1) {
+	?>
+										<div class="empty-seasons"<?php echo ($index==0 ? ' style="margin-top: 0;"' : '') ?>>
+											<a onclick="$(this.parentNode.parentNode).find('.season').removeClass('hidden');$(this.parentNode.parentNode).find('.empty-seasons').addClass('hidden');">Hi ha més temporades sense contingut disponible. Prem per a mostrar-les totes.</a>
+										</div>
+	<?php
+					}
 ?>
-									<details class="season"<?php echo $series['show_expanded_seasons']==1 ? ' open' : ''; ?>>
-										<summary class="season_name"><?php echo !empty($season['season_number']) ? (($series['show_seasons']!=1 || (count($seasons)==2 && empty($last_season_number))) ? 'Capítols normals' : ('Temporada '.$season['season_number'].(!empty($season['season_name']) ? ': '.$season['season_name'] : ''))) : 'Altres'; ?></summary>
+									<details class="season<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($series['show_expanded_seasons']==1 && $season_available_episodes[$index]>0) ? ' open' : ''; ?>>
+										<summary class="season_name"><?php echo !empty($season['season_number']) ? (($series['show_seasons']!=1 || (count($seasons)==2 && empty($last_season_number))) ? 'Capítols normals' : ('Temporada '.$season['season_number'].(!empty($season['season_name']) ? ': '.$season['season_name'] : ''))) : 'Altres'; ?><?php echo $season_available_episodes[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
 										<table class="episode-table" rules="rows">
 											<thead>
 												<tr>
