@@ -427,7 +427,7 @@ if ($count_unfiltered==0) {
 				foreach ($season['episodes'] as $episode) {
 					$ids[]=$episode['id'];
 				}
-				$result_episodes = query("SELECT l.* FROM link l WHERE l.episode_id IN (".implode(',',$ids).") AND l.version_id=".$version['id']." ORDER BY l.id ASC");
+				$result_episodes = query("SELECT l.* FROM link l WHERE l.episode_id IN (".implode(',',$ids).") AND l.url IS NOT NULL AND l.version_id=".$version['id']." ORDER BY l.id ASC");
 				$season_available_episodes[] = mysqli_num_rows($result_episodes);
 				mysqli_free_result($result_episodes);
 			}

@@ -409,7 +409,7 @@ if ($count_unfiltered==0) {
 				foreach ($volume['chapters'] as $chapter) {
 					$ids[]=$chapter['id'];
 				}
-				$result_chapters = query("SELECT f.* FROM file f WHERE f.chapter_id IN (".implode(',',$ids).") AND f.manga_version_id=".$version['id']." ORDER BY f.id ASC");
+				$result_chapters = query("SELECT f.* FROM file f WHERE f.chapter_id IN (".implode(',',$ids).") AND f.original_filename IS NOT NULL AND f.manga_version_id=".$version['id']." ORDER BY f.id ASC");
 				$volume_available_chapters[] = mysqli_num_rows($result_chapters);
 				mysqli_free_result($result_chapters);
 			}
