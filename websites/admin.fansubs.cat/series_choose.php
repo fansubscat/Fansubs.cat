@@ -28,7 +28,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle text-center"><?php echo $row['type']=='movie' ? 'Film' : 'Sèrie'; ?></td>
-								<td class="align-middle text-center"><?php echo $row['episodes']!=NULL ? $row['episodes'] : '-'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['episodes']!=NULL ? ($row['episodes']==-1 ? 'Oberta' : $row['episodes']) : '-'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
 								<td class="align-middle text-center"><a href="version_edit.php?series_id=<?php echo $row['id']; ?>" title="Crea'n una versió" class="fa fa-plus-square p-1 text-success"></a></td>
 							</tr>

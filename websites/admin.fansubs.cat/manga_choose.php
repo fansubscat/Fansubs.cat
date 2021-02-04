@@ -28,7 +28,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle text-center"><?php echo $row['type']=='oneshot' ? 'One-shot' : 'Serialitzat'; ?></td>
-								<td class="align-middle text-center"><?php echo $row['chapters']!=NULL ? $row['chapters'] : '-'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['chapters']!=NULL ? ($row['chapters']==-1 ? 'Obert' : $row['chapters']) : '-'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
 								<td class="align-middle text-center"><a href="manga_version_edit.php?manga_id=<?php echo $row['id']; ?>" title="Crea'n una versió" class="fa fa-plus-square p-1 text-success"></a></td>
 							</tr>
