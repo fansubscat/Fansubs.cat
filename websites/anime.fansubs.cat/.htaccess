@@ -22,6 +22,7 @@ RewriteRule ^series/kono-oto-tomare-1a-temporada/?$ /series/kono-oto-tomare [R=3
 RewriteRule ^series/dies-irae-1a-temporada/?$ /series/dies-irae [R=301]
 RewriteRule ^series/gakkatsu-1a-temporada/?$ /series/gakkatsu [R=301]
 RewriteRule ^series/log-horizon-3a-temporada/?$ /series/log-horizon [R=301]
+RewriteRule ^series/3-gatsu-no-lion-2a-temporada/?$ /series/3-gatsu-no-lion [R=301]
 
 #Normal redirects
 RewriteRule ^films/?$ index.php?page=movies
