@@ -155,7 +155,7 @@ mysqli_free_result($resultf);
 			<div id="content"<?php echo !empty($header_series_page) ? ' class="series-page"' : ''; ?>>
 <?php
 //Show app layout if we are being accessed from an Android browser (rely on the User-Agent)
-if ((!isset($_COOKIE['tachiyomi_message_closed']) || $_COOKIE['tachiyomi_message_closed']!='1') && stripos(strtolower($_SERVER['HTTP_USER_AGENT']),'android')!==FALSE){
+if ((!isset($_COOKIE['tachiyomi_message_closed']) || $_COOKIE['tachiyomi_message_closed']!='1') && !empty($_SERVER['HTTP_USER_AGENT']) && stripos(strtolower($_SERVER['HTTP_USER_AGENT']),'android')!==FALSE){
 ?>
 				<span id="tachiyomi-message">
 					<span id="tachiyomi-message-real">

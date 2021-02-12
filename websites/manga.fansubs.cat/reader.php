@@ -166,6 +166,7 @@ if ($mode=='strip'){
 					dynamicEl: [
 <?php
 if ($mode=='strip'){
+	$files = array();
 ?>
 						{"src": "strip_reader.php?file_id=<?php echo $file['id']; ?>", "iframe": true}
 <?php
