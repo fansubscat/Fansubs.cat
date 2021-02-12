@@ -143,7 +143,7 @@ function initializePlayer(title, method, url){
 		case 'mega':
 			$('#overlay-content').html(start+'<video id="player" playsinline controls></video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
-				parsePlayerError('E_MEGA_VIDEO_ERROR', true);
+				parsePlayerError('E_MEGA_PLAYER_ERROR', true);
 			}, true);
 			break;
 		case 'youtube':
@@ -154,7 +154,7 @@ function initializePlayer(title, method, url){
 		default:
 			$('#overlay-content').html(start+'<video id="player" playsinline controls><source type="video/mp4" src="'+url+'" /></video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
-				parsePlayerError('E_DIRECT_VIDEO_ERROR', true);
+				parsePlayerError('E_DIRECT_LOAD_ERROR', true);
 			}, true);
 			break;
 	}
@@ -292,7 +292,16 @@ function parsePlayerError(error, critical){
 			}
 			reportErrorToServer('mega-quota-exceeded', error);
 			break;
-		case /E_MEGA_VIDEO_ERROR/.test(error):
+		case /E_MEGA_PLAYER_ERROR/.test(error):
+			critical = true;
+			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>S'ha produït un error"
+			message = "S'ha produït un error durant la reproducció del vídeo.<br>Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+			if (!isEmbedPage()) {
+				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
+			}
+			reportErrorToServer('mega-player-failed', error);
+			break;
+		case /E_MEGA_LOAD_ERROR/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
 			message = "Ha fallat la càrrega inicial del vídeo.<br>És possible que se n'hagi superat el límit de visualitzacions o que el vídeo ja no existeixi.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
@@ -301,7 +310,7 @@ function parsePlayerError(error, critical){
 			}
 			reportErrorToServer('mega-load-failed', error);
 			break;
-		case /E_DIRECT_VIDEO_ERROR/.test(error):
+		case /E_DIRECT_LOAD_ERROR/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
 			message = "Ha fallat la càrrega inicial del vídeo.<br>És possible que se n'hagi superat el límit de visualitzacions o que el vídeo ja no existeixi.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
@@ -334,7 +343,7 @@ function loadMegaStream(url){
 	currentMegaFile = mega.file(url);
 	currentMegaFile.loadAttributes((error, file) => {
 		if (error){
-			parsePlayerError('E_MEGA_VIDEO_ERROR', true);
+			parsePlayerError('E_MEGA_LOAD_ERROR', true);
 		} else {
 			console.debug(file.name); // 'Readme.txt'
 			console.debug(file.size); // 1125 (bytes)

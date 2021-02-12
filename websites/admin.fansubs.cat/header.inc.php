@@ -133,6 +133,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 							<a class="dropdown-item" href="views.php">Darreres visualitzacions d'anime</a>
 							<a class="dropdown-item" href="search_history.php">Cerques d'anime</a>
 							<a class="dropdown-item" href="manga_search_history.php">Cerques de manga</a>
+							<a class="dropdown-item" href="error_list.php">Errors de reproducció</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown<?php echo $page=='tools' ? ' active' : ''; ?>">
