@@ -93,7 +93,7 @@ CREATE TABLE `link` (
   `version_id` int(11) NOT NULL,
   `episode_id` int(11) DEFAULT NULL,
   `extra_name` varchar(200) DEFAULT NULL,
-  `url` varchar(200) DEFAULT NULL,
+  `url` varchar(2048) DEFAULT NULL,
   `resolution` varchar(200) DEFAULT NULL,
   `comments` varchar(200) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp()
@@ -151,6 +151,16 @@ CREATE TABLE `rel_version_fansub` (
   `version_id` int(11) NOT NULL,
   `fansub_id` int(11) NOT NULL,
   `downloads_url` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `reported_error` (
+  `id` int(11) NOT NULL,
+  `link_id` int(11) NOT NULL,
+  `play_time` int(11) NOT NULL,
+  `type` varchar(200) NOT NULL,
+  `text` text NOT NULL,
+  `ip` varchar(200) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `search_history` (
@@ -284,6 +294,8 @@ ALTER TABLE `rel_series_genre`
 ALTER TABLE `rel_version_fansub`
   ADD PRIMARY KEY (`version_id`,`fansub_id`),
   ADD KEY `rel_version_fansub_ibfk_1` (`fansub_id`);
+ALTER TABLE `reported_error`
+  ADD PRIMARY KEY (`id`);
 ALTER TABLE `season`
   ADD PRIMARY KEY (`id`),
   ADD KEY `season_ibfk_1` (`series_id`) USING BTREE;
@@ -318,6 +330,8 @@ ALTER TABLE `genre`
 ALTER TABLE `link`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `pending_news`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `reported_error`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `season`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

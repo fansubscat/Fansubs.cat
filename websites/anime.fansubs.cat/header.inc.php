@@ -26,11 +26,12 @@ if (!empty($header_social)) {
 ?>
 		<title><?php echo !empty($header_page_title) ? $header_page_title.' | Fansubs.cat - Anime en català' : 'Fansubs.cat - Anime en català'; ?></title>
 		<link rel="shortcut icon" href="/favicon.png" />
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
-		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=11" media="screen" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" />
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+		<link rel="stylesheet" href="https://cdn.plyr.io/3.6.4/plyr.css" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=15" media="screen" />
 <?php
 $is_fools_day = (date('d')==28 && date('m')==12);
 if ($is_fools_day){
@@ -44,12 +45,13 @@ if ($is_fools_day){
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=11"></script>
+		<script src="https://cdn.plyr.io/3.6.4/plyr.js"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js?v=15"></script>
+		<script src="<?php echo $base_url; ?>/js/megajs.js"></script>
+		<script src="<?php echo $base_url; ?>/js/videostream.js"></script>
 	</head>
 	<body>
 		<div data-nosnippet id="overlay" class="hidden">
-			<a id="overlay-close"><span class="fa fa-times"></span></a>
-			<div id="overlay-mask"></div>
 			<div id="overlay-content"></div>
 		</div>
 		<div data-nosnippet id="options-overlay" class="hidden flex">

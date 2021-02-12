@@ -13,6 +13,9 @@ $memcached_host='YOUR_MEMCACHED_HOST_HERE';
 $memcached_port=YOUR_MEMCACHED_PORT_HERE;
 $memcached_expiry_time=12*3600;
 
+//Google Drive API key
+$google_drive_api_key='YOUR_GOOGLE_DRIVE_API_KEYE_HERE';
+
 //Lock file for MEGA sync processes
 $mega_lock_file='/tmp/mega_fetch.lock';
 

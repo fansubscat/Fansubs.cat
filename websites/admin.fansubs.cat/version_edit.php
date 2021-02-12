@@ -710,7 +710,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 														<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>">
 															<td>
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($links[$j]['url']); ?>" maxlength="200" placeholder="(Sense enllaç)"/>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($links[$j]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)"/>
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $links[$j]['id']; ?>"/>
 															</td>
 															<td>
@@ -732,7 +732,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 														<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1">
 															<td>
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1" type="url" class="form-control" value="" maxlength="200" placeholder="(Sense enllaç)"/>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)"/>
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-1" type="hidden" value="-1"/>
 															</td>
 															<td>
@@ -806,7 +806,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-extras-list-id-<?php echo $j+1; ?>" name="form-extras-list-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $extras[$j]['id']; ?>"/>
 															</td>
 															<td>
-																<input id="form-extras-list-link-<?php echo $j+1; ?>" name="form-extras-list-link-<?php echo $j+1; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['url']); ?>" maxlength="200" required placeholder="- Introdueix un enllaç -"/>
+																<input id="form-extras-list-link-<?php echo $j+1; ?>" name="form-extras-list-link-<?php echo $j+1; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['url']); ?>" maxlength="2048" required placeholder="- Introdueix un enllaç -"/>
 															</td>
 															<td>
 																<input id="form-extras-list-resolution-<?php echo $j+1; ?>" name="form-extras-list-resolution-<?php echo $j+1; ?>" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($extras[$j]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>

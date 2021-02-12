@@ -120,27 +120,41 @@ function get_resolution_css($resolution){
 
 function get_display_method($url){
 	if (preg_match(REGEXP_MEGA,$url)){
-		return "embed";
+		return "mega";
 	}
 	if (preg_match(REGEXP_GOOGLE_DRIVE,$url)){
-		return "embed";
+		return "google-drive";
 	}
 	if (preg_match(REGEXP_YOUTUBE,$url)){
-		return "embed";
+		return "youtube";
 	}
 	return "direct-video";
 }
 
+function get_episode_player_title($fansub_name, $series, $episode_title, $is_extra){
+	if ($series['name']==$episode_title || ($series['type']=='movie' && !$is_extra)){
+		if (!empty($episode_title)) {
+			return $fansub_name . ' - ' . $episode_title;
+		} else {
+			return $fansub_name . ' - ' . $series['name'];
+		}
+	} else {
+		return $fansub_name . ' - ' . $series['name'] . ' - '. $episode_title;
+	}
+}
+
 function get_display_url($url){
+	global $google_drive_api_key;
 	$matches = array();
 	if (preg_match(REGEXP_MEGA,$url,$matches)){
-		return "https://mega.nz/embed/".$matches[1]."#".$matches[2];
+		//Use older format (the one supported by videostream.js)
+		return "https://mega.nz/#!".$matches[1]."!".$matches[2];
 	}
 	if (preg_match(REGEXP_GOOGLE_DRIVE,$url,$matches)){
-		return "https://drive.google.com/file/d/".$matches[1]."/preview";
+		return "https://www.googleapis.com/drive/v3/files/".$matches[1]."?key=".$google_drive_api_key."&alt=media";
 	}
 	if (preg_match(REGEXP_YOUTUBE,$url,$matches)){
-		return "https://www.youtube.com/embed/".$matches[1]."?autoplay=1";
+		return "https://www.youtube.com/embed/".$matches[1]."?origin=https://anime.fansubs.cat&iv_load_policy=3&modestbranding=1&playsinline=1showinfo=0&rel=0&enablejsapi=1";
 	}
 	return $url;
 }
@@ -155,7 +169,7 @@ function get_hours_or_minutes_formatted($time){
 	}
 }
 
-function print_episode($row,$version_id,$series){
+function print_episode($fansub_names, $row, $version_id, $series){
 	$result = query("SELECT l.* FROM link l WHERE l.episode_id=".$row['id']." AND l.version_id=$version_id ORDER BY l.resolution ASC, l.id ASC");
 
 	if (mysqli_num_rows($result)==0 && $series['show_unavailable_episodes']!=1){
@@ -181,20 +195,20 @@ function print_episode($row,$version_id,$series){
 		}
 	}
 
-	internal_print_episode($episode_title, $result);
+	internal_print_episode($fansub_names, $episode_title, $result, $series, FALSE);
 	mysqli_free_result($result);
 }
 
-function print_extra($row,$version_id){
+function print_extra($fansub_names, $row, $version_id, $series){
 	$result = query("SELECT l.* FROM link l WHERE l.episode_id IS NULL AND l.extra_name='".escape($row['extra_name'])."' AND l.version_id=$version_id ORDER BY l.resolution ASC, l.id ASC");
 
 	$episode_title=htmlspecialchars($row['extra_name']);
 	
-	internal_print_episode($episode_title, $result);
+	internal_print_episode($fansub_names, $episode_title, $result, $series, TRUE);
 	mysqli_free_result($result);
 }
 
-function internal_print_episode($episode_title, $result) {
+function internal_print_episode($fansub_names, $episode_title, $result, $series, $is_extra) {
 	if (mysqli_num_rows($result)==0){
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode episode-unavailable">'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
@@ -226,7 +240,7 @@ function internal_print_episode($episode_title, $result) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Reprodueix-lo').'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $vrow['comments'], $is_extra)).'" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Reprodueix-lo').'</a> '."\n";
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode tooltip'.(in_array($vrow['id'], get_cookie_viewed_links_ids()) ? ' hidden' : '').'" data-link-id="'.$vrow['id'].'" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>'."\n";
 				}
@@ -264,7 +278,7 @@ function internal_print_episode($episode_title, $result) {
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 			if (!empty($vrow['comments'])){
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.htmlspecialchars($vrow['comments']).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
 			}

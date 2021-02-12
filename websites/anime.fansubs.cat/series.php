@@ -445,7 +445,7 @@ if ($count_unfiltered==0) {
 										<tbody>
 <?php
 					foreach ($season['episodes'] as $episode) {
-						print_episode($episode, $version['id'], $series);
+						print_episode($version['fansub_name'], $episode, $version['id'], $series);
 					}
 ?>
 										</tbody>
@@ -478,7 +478,7 @@ if ($count_unfiltered==0) {
 											<tbody>
 <?php
 					foreach ($season['episodes'] as $episode) {
-						print_episode($episode, $version['id'], $series);
+						print_episode($version['fansub_name'], $episode, $version['id'], $series);
 					}
 ?>
 											</tbody>
@@ -509,7 +509,7 @@ if ($count_unfiltered==0) {
 											<tbody>
 <?php
 			foreach ($extras as $row) {
-				print_extra($row, $version['id']);
+				print_extra($version['fansub_name'], $row, $version['id'], $series);
 			}
 ?>
 											</tbody>
