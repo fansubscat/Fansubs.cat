@@ -1133,6 +1133,7 @@ function verifyLinks(i) {
 	
 	var matchesMega = links[i].link.match(/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/);
 	var matchesGoogleDrive = links[i].link.match(/https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)?([^\/]*)(?:preview|view)?/);
+	var matchesYouTube = links[i].link.match(/(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})?/);
 	if (matchesMega && matchesMega.length>1 && matchesMega[1]!=''){
 		//MEGA link
 		$.post("https://eu.api.mega.co.nz/cs", "[{\"a\":\"g\", \"g\":1, \"ssl\":0, \"p\":\""+matchesMega[1]+"\"}]", function(data, status){
@@ -1213,10 +1214,49 @@ function verifyLinks(i) {
 				verifyLinks(i+1);
 			}
 		});
-	} else {
+	} else if (matchesYouTube && matchesYouTube.length>1 && matchesYouTube[1]!='') {
+		//YouTube not verifiable for now
 		unknownLinks++;
 		updateVerifyLinksResult(i+1);
 		verifyLinks(i+1);
+	} else {
+		//Direct link
+		$.post("check_direct_link.php?link="+encodeURIComponent(links[i].link), function(data, status){
+			if (data=='OK') {
+				//valid
+				validLinks++;
+				updateVerifyLinksResult(i+1);
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			} else if (data=='KO') {
+				//invalid
+				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				invalidLinks++;
+				updateVerifyLinksResult(i+1);
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			} else {
+				if (linkVerifyRetries<5){
+					linkVerifyRetries++;
+					verifyLinks(i);
+				} else {
+					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+					failedLinks++;
+					linkVerifyRetries=0;
+					verifyLinks(i+1);
+				}
+			}
+		}).fail(function() {
+			if (linkVerifyRetries<5){
+				linkVerifyRetries++;
+				verifyLinks(i);
+			} else {
+				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				failedLinks++;
+				linkVerifyRetries=0;
+				verifyLinks(i+1);
+			}
+		});
 	}
 }
 

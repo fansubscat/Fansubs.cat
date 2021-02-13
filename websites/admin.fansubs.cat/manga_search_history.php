@@ -21,7 +21,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT LOWER(query) query,COUNT(*) cnt,(SELECT COUNT(*) FROM manga m WHERE m.name LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.alternate_names LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.author LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.keywords LIKE CONCAT('%',REPLACE(query,' ','%'),'%')) results FROM manga_search_history GROUP BY LOWER(query) ORDER BY cnt DESC");
+	$result = query("SELECT LOWER(query) query,COUNT(*) cnt,(SELECT COUNT(*) FROM manga m WHERE m.name LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.alternate_names LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.author LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.keywords LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.id IN (SELECT mg.manga_id FROM rel_manga_genre mg LEFT JOIN genre g ON mg.genre_id=g.id WHERE g.name=query)) results FROM manga_search_history GROUP BY LOWER(query) ORDER BY cnt DESC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>

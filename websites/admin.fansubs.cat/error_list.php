@@ -51,15 +51,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Errors de reproducció</h4>
 					<hr>
-					<p class="text-center">Aquests són els darrers errors de reproducció que han tingut els usuaris.</p>
+					<p class="text-center">Aquests són els darrers 100 errors de reproducció que han tingut els usuaris.</p>
 					<div class="text-center pb-3">
 						<a href="error_list.php" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
 					</div>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
 							<tr>
-								<th scope="col" style="width: 40%;">Anime i capítol</th>
-								<th scope="col" style="width: 20%;" class="text-center">Error</th>
+								<th scope="col" style="width: 35%;">Anime i capítol</th>
+								<th scope="col" style="width: 25%;" class="text-center">Error</th>
 								<th scope="col" style="width: 5%;" class="text-center">Segon</th>
 								<th scope="col" style="width: 10%;" class="text-center">Usuari</th>
 								<th scope="col" style="width: 20%;" class="text-center">Data</th>
@@ -73,7 +73,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	} else {
 		$where = '';
 	}
-	$result = query("SELECT s.name series, IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, re.date, re.ip, re.type, re.text, l.id link_id, l.url link, re.play_time, ve.id version_id FROM reported_error re LEFT JOIN link l ON re.link_id=l.id LEFT JOIN version ve ON l.version_id=ve.id LEFT JOIN rel_version_fansub vf ON vf.version_id=ve.id LEFT JOIN series s ON ve.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id$where ORDER BY date DESC");
+	$result = query("SELECT s.name series, IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, re.date, re.ip, re.type, re.text, l.id link_id, l.url link, re.play_time, ve.id version_id FROM reported_error re LEFT JOIN link l ON re.link_id=l.id LEFT JOIN version ve ON l.version_id=ve.id LEFT JOIN rel_version_fansub vf ON vf.version_id=ve.id LEFT JOIN series s ON ve.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id$where ORDER BY date DESC LIMIT 100");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>

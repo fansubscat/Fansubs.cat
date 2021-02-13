@@ -240,7 +240,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $vrow['comments'], $is_extra)).'" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Reprodueix-lo').'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Reprodueix-lo').'</a> '."\n";
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode tooltip'.(in_array($vrow['id'], get_cookie_viewed_links_ids()) ? ' hidden' : '').'" data-link-id="'.$vrow['id'].'" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>'."\n";
 				}
