@@ -26,6 +26,9 @@ $twitter_access_token_secret='YOUR_TWITTER_ACCESS_SECRET_HERE';
 //Files
 $lock_file='/tmp/fansubscat_fetch_lock';
 
+//Lock file for MEGA sync processes
+$mega_lock_file='/tmp/mega_fetch.lock';
+
 //Paths
 $website_directory='/srv/websites/www.fansubs.cat/';
 ?>
