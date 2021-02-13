@@ -1,8 +1,0 @@
--- Més vist del mes:
-SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views, SUM(a.views) total_views, SUM(a.time_spent)/3600 time_spent FROM (SELECT SUM(vi.views) views,  SUM(vi.time_spent) time_spent, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='2021-01-01' AND vi.day<'2021-02-01' AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, total_views DESC, a.series_name ASC LIMIT 20;
-
--- Més vist de l'any:
-SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views, SUM(a.views) total_views, SUM(a.time_spent)/3600 time_spent FROM (SELECT SUM(vi.views) views,  SUM(vi.time_spent) time_spent, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='2021-01-01' AND vi.day<'2022-01-01' AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY time_spent DESC, a.series_name ASC LIMIT 20;
-
--- Recomanacions innocents:
-INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE sr.rating<>'XXX' AND vr.status IN (1,3) AND sr.score IS NOT NULL AND vr.episodes_missing=0 ORDER BY sr.score ASC LIMIT 10

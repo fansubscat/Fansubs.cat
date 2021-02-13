@@ -7,14 +7,14 @@
 # Fansubs.cat - Post tweets with newly added items
 */12 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php tweet_new_items.php
 
-# Fansubs.cat - Anime - Update Mega links from accounts
-*/30 * * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php links_updater_cron.php
+# Fansubs.cat - Update Mega links from accounts
+*/30 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php links_updater_cron.php
 
-# Fansubs.cat - Anime - Update MyAnimeList score for all series
-0 0 * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php score_updater_cron.php
+# Fansubs.cat - Update MyAnimeList score for all anime and manga
+0 0 * * * cd /srv/services/fansubs.cat/ && /usr/bin/php score_updater_cron.php
 
-# Fansubs.cat - Anime - Update lost views
-0 * * * * cd /srv/services/anime.fansubs.cat/ && /usr/bin/php lost_views_updater_cron.php
+# Fansubs.cat - Update lost views
+0 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php lost_views_updater_cron.php
 
-# Fansubs.cat - Anime - Update recommended series
-0 0 * * 1 cd /srv/services/anime.fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php
+# Fansubs.cat - Update recommended series
+0 0 * * 1 cd /srv/services/fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php
