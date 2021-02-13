@@ -30,7 +30,7 @@ if ($file_id>0 && !empty($_GET['action']) && !empty($read_id)) {
 							$pages_read = escape($_GET['pages_read']);
 						}
 						query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT time_spent+$time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$time_spent), IFNULL((SELECT pages_read+$pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$pages_read), IFNULL((SELECT api_views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0)");
-						query("INSERT INTO manga_view_log (file_id, date) VALUES ($file_id, CURRENT_TIMESTAMP)");
+						query("INSERT INTO manga_view_log (file_id, date, ip) VALUES ($file_id, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."')");
 					}
 					//Else, discard and not even report it: opened and closed in too little time (less than min)
 					query("DELETE FROM read_session WHERE read_id='$read_id'");

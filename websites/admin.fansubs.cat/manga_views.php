@@ -89,18 +89,20 @@ mysqli_free_result($result);
 												<th scope="col" class="text-center" style="width: 5%;">Origen</th>
 												<th scope="col">Manga</th>
 												<th scope="col">Capítol</th>
-												<th scope="col" style="width: 20%;">Data</th>
+												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
+												<th scope="col" class="text-center" style="width: 20%;">Data</th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.title IS NOT NULL,IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(m.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),IF(m.show_chapter_numbers=1,CONCAT('Capítol ',TRIM(c.number)+0,': '),''),ct.title),c.name),IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(m.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),'Capítol ',TRIM(c.number)+0),IF(fi.chapter_id IS NULL,CONCAT('Extra: ', fi.extra_name), '(Capítol sense nom)'))) chapter_name, vl.date, vl.api_user_agent FROM manga_view_log vl LEFT JOIN file fi ON vl.file_id=fi.id LEFT JOIN manga_version v ON fi.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON fi.manga_version_id=ct.manga_version_id AND fi.chapter_id=ct.chapter_id ORDER BY vl.date DESC LIMIT $limit");
+$result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.title IS NOT NULL,IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(m.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),IF(m.show_chapter_numbers=1,CONCAT('Capítol ',TRIM(c.number)+0,': '),''),ct.title),c.name),IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(m.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),'Capítol ',TRIM(c.number)+0),IF(fi.chapter_id IS NULL,CONCAT('Extra: ', fi.extra_name), '(Capítol sense nom)'))) chapter_name, vl.date, vl.ip, vl.api_user_agent FROM manga_view_log vl LEFT JOIN file fi ON vl.file_id=fi.id LEFT JOIN manga_version v ON fi.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON fi.manga_version_id=ct.manga_version_id AND fi.chapter_id=ct.chapter_id ORDER BY vl.date DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col" class="text-center"><?php echo strpos($row['api_user_agent'], 'Tachiyomi')!==FALSE ? '<span class="badge badge-primary ml-2" title="'.htmlentities($row['api_user_agent']).'">Tachiyomi</span>' : (!empty($row['api_user_agent']) ? '<span class="badge badge-warning ml-2" title="'.htmlentities($row['api_user_agent']).'">API</span>' : '<span class="badge badge-success ml-2">Web</span>'); ?></td>
 												<td scope="col"><?php echo $row['manga_name']; ?></td>
 												<td scope="col"><?php echo $row['chapter_name']; ?></td>
+												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip']); ?></td>
 												<td class="text-center"><?php echo $row['date']; ?></td>
 											</tr>
 <?php
@@ -167,19 +169,23 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="thead-dark">
 											<tr>
+												<th scope="col" class="text-center" style="width: 5%;">Origen</th>
 												<th scope="col">Manga</th>
 												<th scope="col">Capítol</th>
-												<th scope="col" style="width: 20%;">Data</th>
+												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
+												<th scope="col" class="text-center" style="width: 20%;">Data</th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.title IS NOT NULL,IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(m.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),IF(m.show_chapter_numbers=1,CONCAT('Capítol ',TRIM(c.number)+0,': '),''),ct.title),c.name),IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(m.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),'Capítol ',TRIM(c.number)+0),IF(fi.chapter_id IS NULL,CONCAT('Extra: ', fi.extra_name), '(Capítol sense nom)'))) chapter_name, vl.date FROM manga_view_log vl LEFT JOIN file fi ON vl.file_id=fi.id LEFT JOIN manga_version v ON fi.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON fi.manga_version_id=ct.manga_version_id AND fi.chapter_id=ct.chapter_id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY vl.date DESC LIMIT $limit");
+$result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.title IS NOT NULL,IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(m.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),IF(m.show_chapter_numbers=1,CONCAT('Capítol ',TRIM(c.number)+0,': '),''),ct.title),c.name),IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(m.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),'Capítol ',TRIM(c.number)+0),IF(fi.chapter_id IS NULL,CONCAT('Extra: ', fi.extra_name), '(Capítol sense nom)'))) chapter_name, vl.date, vl.ip, vl.api_user_agent FROM manga_view_log vl LEFT JOIN file fi ON vl.file_id=fi.id LEFT JOIN manga_version v ON fi.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON fi.manga_version_id=ct.manga_version_id AND fi.chapter_id=ct.chapter_id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY vl.date DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
+												<td scope="col" class="text-center"><?php echo strpos($row['api_user_agent'], 'Tachiyomi')!==FALSE ? '<span class="badge badge-primary ml-2" title="'.htmlentities($row['api_user_agent']).'">Tachiyomi</span>' : (!empty($row['api_user_agent']) ? '<span class="badge badge-warning ml-2" title="'.htmlentities($row['api_user_agent']).'">API</span>' : '<span class="badge badge-success ml-2">Web</span>'); ?></td>
 												<td scope="col"><?php echo $row['manga_name']; ?></td>
 												<td scope="col"><?php echo $row['chapter_name']; ?></td>
+												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip']); ?></td>
 												<td class="text-center"><?php echo $row['date']; ?></td>
 											</tr>
 <?php

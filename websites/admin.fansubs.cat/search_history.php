@@ -10,7 +10,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Cerques d'anime</h4>
 					<hr>
-					<p class="text-center">Aquestes són les cerques més populars al web d'anime.</p>
+					<p class="text-center">Aquestes són les cerques més populars al web d'anime durant els darrers 30 dies.</p>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
 							<tr>
@@ -21,7 +21,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT LOWER(query) query,COUNT(*) cnt,(SELECT COUNT(*) FROM series s WHERE s.name LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.alternate_names LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.studio LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.keywords LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name=query)) results FROM search_history GROUP BY LOWER(query) ORDER BY cnt DESC");
+	$result = query("SELECT LOWER(query) query,COUNT(*) cnt,(SELECT COUNT(*) FROM series s WHERE s.name LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.alternate_names LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.studio LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.keywords LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name=query)) results FROM search_history WHERE day>='".date('Y-m-d', strtotime('-30 days'))."' GROUP BY LOWER(query) ORDER BY cnt DESC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>

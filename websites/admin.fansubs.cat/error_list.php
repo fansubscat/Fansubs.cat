@@ -4,23 +4,6 @@ $page="analytics";
 include("header.inc.php");
 include("common.inc.php");
 
-function get_username($ip) {
-	srand(crc32($ip));
-	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	$charactersLength = strlen($characters);
-	$randomString = '';
-	for ($i = 0; $i < 8; $i++) {
-		$randomString .= $characters[rand(0, $charactersLength - 1)];
-	}
-	$colors = '012345678';
-	$colorsLength = strlen($colors);
-	$randomColor = '';
-	for ($i = 0; $i < 6; $i++) {
-		$randomColor .= $colors[rand(0, $colorsLength - 1)];
-	}
-	return '<span style="color: #' . $randomColor . '">' . $randomString . '</span>';
-}
-
 function get_error_type($type) {
 	switch ($type) {
 		case 'mega-unknown':
@@ -87,7 +70,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><strong><?php echo $row['series']; ?></strong><br /><small><?php echo $row['episode_name']; ?></small></th>
 								<td class="align-middle text-center"><span style="cursor: help;" title="<?php echo htmlentities($row['text']); ?>"><?php echo get_error_type($row['type']); ?></span></td>
 								<td class="align-middle text-center"><?php echo get_time($row['play_time']); ?></td>
-								<td class="align-middle text-center"><?php echo get_username($row['ip']); ?></td>
+								<td class="align-middle text-center"><?php echo get_anonymized_username($row['ip']); ?></td>
 								<td class="align-middle text-center"><strong><?php echo $row['date']; ?></strong></td>
 								<td class="align-middle text-center text-nowrap">
 <?php

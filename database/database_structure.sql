@@ -179,6 +179,7 @@ CREATE TABLE `manga_search_history` (
 CREATE TABLE `manga_view_log` (
   `id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL,
+  `ip` varchar(200) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
   `api_user_agent` text DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -368,6 +369,7 @@ CREATE TABLE `views` (
 CREATE TABLE `view_log` (
   `id` int(11) NOT NULL,
   `link_id` int(11) NOT NULL,
+  `ip` varchar(200) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

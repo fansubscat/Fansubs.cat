@@ -88,18 +88,20 @@ mysqli_free_result($result);
 											<tr>
 												<th scope="col">Anime</th>
 												<th scope="col">Capítol</th>
-												<th scope="col" style="width: 20%;">Data</th>
+												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
+												<th scope="col" class="text-center" style="width: 20%;">Data</th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, vl.date FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id ORDER BY vl.date DESC LIMIT $limit");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, vl.date, vl.ip FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id ORDER BY vl.date DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col"><?php echo $row['series_name']; ?></td>
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
-												<td class="text-center"><?php echo $row['date']; ?></td>
+												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip']); ?></td>
+												<td class="text-center" class="text-center"><?php echo $row['date']; ?></td>
 											</tr>
 <?php
 }
@@ -167,17 +169,19 @@ mysqli_free_result($result);
 											<tr>
 												<th scope="col">Anime</th>
 												<th scope="col">Capítol</th>
-												<th scope="col" style="width: 20%;">Data</th>
+												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
+												<th scope="col" class="text-center" style="width: 20%;">Data</th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, vl.date FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY vl.date DESC LIMIT $limit");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, vl.date, vl.ip FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY vl.date DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col"><?php echo $row['series_name']; ?></td>
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
+												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip']); ?></td>
 												<td class="text-center"><?php echo $row['date']; ?></td>
 											</tr>
 <?php

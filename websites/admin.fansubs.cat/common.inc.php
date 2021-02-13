@@ -148,4 +148,26 @@ function decompress_manga_file($file_id, $temporary_filename, $original_filename
 		crash("Unknown file type uploaded to manga version: $original_filename");
 	}
 }
+
+function get_anonymized_username($ip) {
+	if (empty($ip)) {
+		return '<span style="color: #000000;">N/A</span>';
+	} else if ($ip=='(recovered view)') {
+		return '<span style="color: #333333;">N/D</span>';
+	}
+	srand(crc32($ip));
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$charactersLength = strlen($characters);
+	$randomString = '';
+	for ($i = 0; $i < 8; $i++) {
+		$randomString .= $characters[rand(0, $charactersLength - 1)];
+	}
+	$colors = '012345678';
+	$colorsLength = strlen($colors);
+	$randomColor = '';
+	for ($i = 0; $i < 6; $i++) {
+		$randomColor .= $colors[rand(0, $colorsLength - 1)];
+	}
+	return '<span style="color: #' . $randomColor . ';">' . $randomString . '</span>';
+}
 ?>
