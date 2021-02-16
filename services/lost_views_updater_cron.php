@@ -14,7 +14,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 	if (!empty($row['time_spent']) && is_numeric($row['time_spent']) && $row['time_spent']>=$min_time) {
 		//No need to check max as it's already done in counter.php
 		query("REPLACE INTO views SELECT ".$row['link_id'].", '".date('Y-m-d', $row['last_update'])."', IFNULL((SELECT clicks FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),0), IFNULL((SELECT views+1 FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),1), IFNULL((SELECT time_spent+".$row['time_spent']." FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),".$row['time_spent'].")");
-		query("INSERT INTO view_log (link_id, date, ip) VALUES (".$row['link_id'].", '".$row['last_update_date']."', '(recovered view)')");
+		query("INSERT INTO view_log (link_id, date, ip, user_agent) VALUES (".$row['link_id'].", '".$row['last_update_date']."', '(recovered view)', NULL)");
 		$count++;
 	}
 	//Else, discard and not even report it: opened and closed in too little time (less than min)
@@ -35,7 +35,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 	if (!empty($row['time_spent']) && is_numeric($row['time_spent']) && $row['time_spent']>=$min_time && $row['pages_read']>=$min_pages) {
 		//No need to check max as it's already done in counter.php
 		query("REPLACE INTO manga_views SELECT ".$row['file_id'].", '".date('Y-m-d', $row['last_update'])."', IFNULL((SELECT clicks FROM manga_views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),0), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),1), IFNULL((SELECT time_spent+".$row['time_spent']." FROM manga_views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),".$row['time_spent']."), IFNULL((SELECT pages_read+".$row['pages_read']." FROM manga_views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),".$row['pages_read']."), IFNULL((SELECT api_views FROM manga_views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),0)");
-		query("INSERT INTO manga_view_log (file_id, date, ip) VALUES (".$row['file_id'].", '".$row['last_update_date']."', '(recovered view)')");
+		query("INSERT INTO manga_view_log (file_id, date, ip, user_agent) VALUES (".$row['file_id'].", '".$row['last_update_date']."', '(recovered view)', NULL)");
 		$countr++;
 	}
 	//Else, discard and not even report it: opened and closed in too little time (less than min)

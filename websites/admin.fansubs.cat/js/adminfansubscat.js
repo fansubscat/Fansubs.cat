@@ -1107,6 +1107,7 @@ var invalidLinks=0;
 var failedLinks=0;
 var unknownLinks=0;
 var linkVerifyRetries=0;
+var totalSize=0;
 
 function verifyLinks(i) {
 	if (i==links.length){
@@ -1147,6 +1148,8 @@ function verifyLinks(i) {
 			} else if (status=='success') {
 				//valid
 				validLinks++;
+				totalSize+=data[0].s;
+				console.debug("Total file size: " + totalSize);
 				updateVerifyLinksResult(i+1);
 				linkVerifyRetries=0;
 				verifyLinks(i+1);

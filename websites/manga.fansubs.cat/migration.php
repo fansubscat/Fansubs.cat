@@ -8,6 +8,9 @@ $file_id = (!empty($_GET['id']) ? intval($_GET['id']) : 0);
 
 if ($file_id>0 && $file_id<=$highest_piwigo_category_id) {
 	switch ($file_id) {
+		case 1172:
+			$file_id=1171;
+			break;
 		case 1718:
 			$file_id=2376;
 			break;
@@ -40,8 +43,10 @@ if ($file_id>0 && $file_id<=$highest_piwigo_category_id) {
 				mysqli_free_result($result);
 			} else {
 				mysqli_free_result($result);
+				log_action('manga-migration-invalid-id', "No s'ha trobat el manga/volum/capítol migrat amb l'identificador $file_id");
 				http_response_code(404);
 				include('error.php');
+				die(); //Avoids error because mysqli is already closed
 			}
 		}
 	}

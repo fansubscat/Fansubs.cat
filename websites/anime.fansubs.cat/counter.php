@@ -30,7 +30,7 @@ if ($link_id>0 && !empty($_GET['action']) && !empty($play_id)) {
 							$time_spent = escape($_GET['time_spent']);
 						}
 						query("REPLACE INTO views SELECT $link_id, '".date('Y-m-d')."', IFNULL((SELECT clicks FROM views WHERE link_id=$link_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT views+1 FROM views WHERE link_id=$link_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT time_spent+$time_spent FROM views WHERE link_id=$link_id AND day='".date('Y-m-d')."'),$time_spent)");
-						query("INSERT INTO view_log (link_id, date, ip) VALUES ($link_id, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."')");
+						query("INSERT INTO view_log (link_id, date, ip, user_agent) VALUES ($link_id, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."', '".escape($_SERVER['HTTP_USER_AGENT'])."')");
 					}
 					//Else, discard and not even report it: opened and closed in too little time (less than min)
 					query("DELETE FROM play_session WHERE play_id='$play_id'");

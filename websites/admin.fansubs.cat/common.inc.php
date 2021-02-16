@@ -149,11 +149,14 @@ function decompress_manga_file($file_id, $temporary_filename, $original_filename
 	}
 }
 
-function get_anonymized_username($ip) {
+function get_anonymized_username($ip, $ua) {
+	if (empty($ua)) {
+		$ua = ""; //Fix nulls
+	}
 	if (empty($ip)) {
-		return '<span style="color: #000000;">N/A</span>';
+		return '<span style="color: #000000;" title="' . $ua . '">N/A</span>';
 	} else if ($ip=='(recovered view)') {
-		return '<span style="color: #333333;">N/D</span>';
+		return '<span style="color: #333333;" title="' . $ua . '">N/D</span>';
 	}
 	srand(crc32($ip));
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -168,6 +171,6 @@ function get_anonymized_username($ip) {
 	for ($i = 0; $i < 6; $i++) {
 		$randomColor .= $colors[rand(0, $colorsLength - 1)];
 	}
-	return '<span style="color: #' . $randomColor . ';">' . $randomString . '</span>';
+	return '<span style="color: #' . $randomColor . ';" title="' . $ua . '">' . $randomString . '</span>';
 }
 ?>

@@ -181,7 +181,7 @@ CREATE TABLE `manga_view_log` (
   `file_id` int(11) NOT NULL,
   `ip` varchar(200) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `api_user_agent` text DEFAULT NULL,
+  `user_agent` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `manga_views` (
@@ -284,7 +284,8 @@ CREATE TABLE `reported_error` (
   `type` varchar(200) NOT NULL,
   `text` text NOT NULL,
   `ip` varchar(200) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `user_agent` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `search_history` (
@@ -370,7 +371,8 @@ CREATE TABLE `view_log` (
   `id` int(11) NOT NULL,
   `link_id` int(11) NOT NULL,
   `ip` varchar(200) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `user_agent` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `volume` (
