@@ -85,28 +85,70 @@ function get_rating($text){
 	}
 }
 
-function get_provider($url){
-	if (preg_match(REGEXP_MEGA,$url)){
-		return "MEGA";
+function get_provider($link_instances){
+	$methods = array();
+	foreach ($link_instances as $link_instance) {
+		if (preg_match(REGEXP_MEGA,$link_instance['url'])){
+			array_push($methods, 'mega');
+		} else if (preg_match(REGEXP_GOOGLE_DRIVE,$link_instance['url'])){
+			array_push($methods, 'google-drive');
+		} else if (preg_match(REGEXP_YOUTUBE,$link_instance['url'])){
+			array_push($methods, 'youtube');
+		} else {
+			array_push($methods, 'direct-video');
+		}
 	}
-	if (preg_match(REGEXP_GOOGLE_DRIVE,$url)){
+	if (in_array('direct-video', $methods)){
+		return "Vídeo incrustat";
+	}
+	if (in_array('google-drive', $methods)){
 		return "Google Drive";
 	}
-	if (preg_match(REGEXP_YOUTUBE,$url)){
+	if (in_array('mega', $methods)){
+		return "MEGA";
+	}
+	if (in_array('youtube', $methods)){
 		return "YouTube";
 	}
 	return "Vídeo incrustat";
 }
 
-function get_resolution_short($resolution){
-	if (count(explode('x',$resolution))>1) {
-		return explode('x',$resolution)[1]."p";
-	} else {
-		return $resolution;
+function get_resolution($link_instances){
+	$max_res=0;
+	$max_res_text = "";
+	foreach ($link_instances as $link_instance) {
+		if (count(explode('x',$link_instance['resolution']))>1) {
+			$cur_res = explode('x',$link_instance['resolution'])[1];
+		} else {
+			$cur_res=preg_replace("/[^0-9]/", '', $link_instance['resolution']);
+		}
+		if ($cur_res>$max_res) {
+			$max_res = $cur_res;
+			$max_res_text = $link_instance['resolution'];
+		}
 	}
+	return $max_res_text;
 }
 
-function get_resolution_css($resolution){
+function get_resolution_short($link_instances){
+	$max_res=0;
+	$max_res_text = "";
+	foreach ($link_instances as $link_instance) {
+		if (count(explode('x',$link_instance['resolution']))>1) {
+			$cur_res = explode('x',$link_instance['resolution'])[1];
+		} else {
+			$cur_res=preg_replace("/[^0-9]/", '', $link_instance['resolution']);
+		}
+		if ($cur_res>$max_res) {
+			$max_res = $cur_res;
+			$max_res_text = $link_instance['resolution'];
+		}
+	}
+	return $max_res.'p';
+}
+
+function get_resolution_css($link_instances){
+	$resolution = get_resolution_short($link_instances);
 	if ($resolution=='2160p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=2000) {
 		return "4k";
 	} else if ($resolution=='1080p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=1000) {
@@ -170,7 +212,7 @@ function get_hours_or_minutes_formatted($time){
 }
 
 function print_episode($fansub_names, $row, $version_id, $series){
-	$result = query("SELECT l.* FROM link l WHERE l.episode_id=".$row['id']." AND l.version_id=$version_id ORDER BY l.resolution ASC, l.id ASC");
+	$result = query("SELECT l.* FROM link l WHERE l.episode_id=".$row['id']." AND l.version_id=$version_id ORDER BY l.variant_name ASC, l.id ASC");
 
 	if (mysqli_num_rows($result)==0 && $series['show_unavailable_episodes']!=1){
 		return;
@@ -200,7 +242,7 @@ function print_episode($fansub_names, $row, $version_id, $series){
 }
 
 function print_extra($fansub_names, $row, $version_id, $series){
-	$result = query("SELECT l.* FROM link l WHERE l.episode_id IS NULL AND l.extra_name='".escape($row['extra_name'])."' AND l.version_id=$version_id ORDER BY l.resolution ASC, l.id ASC");
+	$result = query("SELECT l.* FROM link l WHERE l.episode_id IS NULL AND l.extra_name='".escape($row['extra_name'])."' AND l.version_id=$version_id ORDER BY l.id ASC");
 
 	$episode_title=htmlspecialchars($row['extra_name']);
 	
@@ -229,7 +271,14 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 		echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 
 		while ($vrow = mysqli_fetch_assoc($result)){
-			if (!empty($vrow['url'])) {
+			if ($vrow['lost']==0) {
+				$link_instances = array();
+				$resulti = query("SELECT li.* FROM link_instance li WHERE li.link_id=${vrow['id']} ORDER BY li.url ASC");
+				while ($lirow = mysqli_fetch_assoc($resulti)){
+					array_push($link_instances, $lirow);
+				}
+				mysqli_free_result($resulti);
+				
 				echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode">'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
@@ -240,16 +289,17 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Reprodueix-lo').'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($link_instances[0]['url']))).'" data-method="'.htmlspecialchars(get_display_method($link_instances[0]['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
+				if (!empty($vrow['comments'])){
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.htmlspecialchars($vrow['comments']).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
+				}
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode tooltip'.(in_array($vrow['id'], get_cookie_viewed_links_ids()) ? ' hidden' : '').'" data-link-id="'.$vrow['id'].'" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>'."\n";
 				}
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-				if (!empty($vrow['resolution'])) {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip tooltip-right" title="'."Vídeo: ".$vrow['resolution'].", servei: ".get_provider($vrow['url']).'">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'</span>'."\n";
-				}
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($link_instances).' tooltip tooltip-right" title="'."Vídeo: ".get_resolution($link_instances).", servei: ".get_provider($link_instances).'">'.htmlspecialchars(get_resolution_short($link_instances)).'</span>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 			} else { //Empty link -> lost link
@@ -267,7 +317,14 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 	} else { //Only one link
 		$vrow = mysqli_fetch_assoc($result);
 
-		if (!empty($vrow['url'])) {
+		if ($vrow['lost']==0) {
+			$link_instances = array();
+			$resulti = query("SELECT li.* FROM link_instance li WHERE li.link_id=${vrow['id']} ORDER BY li.url ASC");
+			while ($lirow = mysqli_fetch_assoc($resulti)){
+				array_push($link_instances, $lirow);
+			}
+			mysqli_free_result($resulti);
+
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode">'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			if (in_array($vrow['id'], get_cookie_viewed_links_ids())) {
@@ -278,7 +335,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($vrow['url']))).'" data-method="'.htmlspecialchars(get_display_method($vrow['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-url="'.htmlspecialchars(base64_encode(get_display_url($link_instances[0]['url']))).'" data-method="'.htmlspecialchars(get_display_method($link_instances[0]['url'])).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 			if (!empty($vrow['comments'])){
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.htmlspecialchars($vrow['comments']).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
 			}
@@ -288,7 +345,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($vrow['resolution']).' tooltip tooltip-right" title="'."Vídeo: ".$vrow['resolution'].", servei: ".get_provider($vrow['url']).'">'.htmlspecialchars(get_resolution_short($vrow['resolution'])).'</span>'."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($link_instances).' tooltip tooltip-right" title="'."Vídeo: ".get_resolution($link_instances).", servei: ".get_provider($link_instances).'">'.htmlspecialchars(get_resolution_short($link_instances)).'</span>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 		} else { //Empty link -> lost link

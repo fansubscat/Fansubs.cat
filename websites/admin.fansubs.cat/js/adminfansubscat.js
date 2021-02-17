@@ -435,26 +435,38 @@ function deleteVolumeRow(id) {
 	}
 }
 
+function addLinkInstanceRow(episode_id, variant_number) {
+	var i = parseInt($('#links-instance-list-table-'+episode_id+'-'+variant_number).attr('data-count'))+1;
+	$('#links-instance-list-table-'+episode_id+'-'+variant_number+' tbody').append('<tr id="form-instance-links-list-'+episode_id+'-row-'+variant_number+'-'+i+'" style="background: none;"><td class="pl-0 pt-0 pb-0 border-0"><input id="form-links-list-'+episode_id+'-link-'+variant_number+'-instance-'+i+'-url" name="form-links-list-'+episode_id+'-link-'+variant_number+'-instance-'+i+'-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)"/><input id="form-links-list-'+episode_id+'-link-'+variant_number+'-instance-'+i+'-id" name="form-links-list-'+episode_id+'-link-'+variant_number+'-instance-'+i+'-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-links-list-'+episode_id+'-link-'+variant_number+'-instance-'+i+'-resolution" name="form-links-list-'+episode_id+'-link-'+variant_number+'-instance-'+i+'-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-links-list-'+episode_id+'-link-'+variant_number+'-instance-'+i+'-delete" onclick="deleteLinkInstanceRow('+episode_id+','+variant_number+','+i+');" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr>');
+	$('#links-instance-list-table-'+episode_id+'-'+variant_number).attr('data-count', i);
+}
+
+function addExtraLinkInstanceRow(extra_number) {
+	var i = parseInt($('#extras-instance-list-table-'+extra_number).attr('data-count'))+1;
+	$('#extras-instance-list-table-'+extra_number+' tbody').append('<tr id="form-instance-extras-list-row-'+extra_number+'-'+i+'" style="background: none;"><td class="pl-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+extra_number+'-instance-'+i+'-url" name="form-extras-list-'+extra_number+'-instance-'+i+'-url" type="url" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" required/><input id="form-extras-list-'+extra_number+'-instance-'+i+'-id" name="form-extras-list-'+extra_number+'-instance-'+i+'-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+extra_number+'-instance-'+i+'-resolution" name="form-extras-list-'+extra_number+'-instance-'+i+'-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+extra_number+'-instance-'+i+'-delete" onclick="deleteExtraLinkInstanceRow('+extra_number+','+i+');" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr>');
+	$('#extras-instance-list-table-'+extra_number).attr('data-count', i);
+}
+
 function addVersionRow(episode_id) {
 	if (isAutoFetchActive()){
-		alert("Si hi ha activada la sincronització automàtica de carpetes de MEGA, no és possible afegir més d'un enllaç per capítol. Abans has de desactivar-la.");
+		alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d'una variant per capítol. Abans has de desactivar-la.");
 		return;
 	}
 	var i = parseInt($('#links-list-table-'+episode_id).attr('data-count'))+1;
-	$('#links-list-table-'+episode_id).append('<tr id="form-links-list-'+episode_id+'-row-'+i+'"><td><input id="form-links-list-'+episode_id+'-link-'+i+'" name="form-links-list-'+episode_id+'-link-'+i+'" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)"/><input id="form-links-list-'+episode_id+'-id-'+i+'" name="form-links-list-'+episode_id+'-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-links-list-'+episode_id+'-resolution-'+i+'" name="form-links-list-'+episode_id+'-resolution-'+i+'" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td><input id="form-links-list-'+episode_id+'-comments-'+i+'" name="form-links-list-'+episode_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><input id="form-links-list-'+episode_id+'-lost-'+i+'" name="form-links-list-'+episode_id+'-lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-links-list-'+episode_id+'-delete-'+i+'" onclick="deleteVersionRow('+episode_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#links-list-table-'+episode_id).append('<tr id="form-links-list-'+episode_id+'-row-'+i+'"><td><input id="form-links-list-'+episode_id+'-variant_name-'+i+'" name="form-links-list-'+episode_id+'-variant_name-'+i+'" type="text" class="form-control" value="" maxlength="200" placeholder="- Variant -" required/><input id="form-links-list-'+episode_id+'-id-'+i+'" name="form-links-list-'+episode_id+'-id-'+i+'" type="hidden" value="-1"/></td><td><table class="w-100" id="links-instance-list-table-'+episode_id+'-'+i+'" data-count="1"><tbody><tr id="form-instance-links-list-'+episode_id+'-row-'+i+'-1" style="background: none;"><td class="pl-0 pt-0 pb-0 border-0"><input id="form-links-list-'+episode_id+'-link-'+i+'-instance-1-url" name="form-links-list-'+episode_id+'-link-'+i+'-instance-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)"/><input id="form-links-list-'+episode_id+'-link-'+i+'-instance-1-id" name="form-links-list-'+episode_id+'-link-'+i+'-instance-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-links-list-'+episode_id+'-link-'+i+'-instance-1-resolution" name="form-links-list-'+episode_id+'-link-'+i+'-instance-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder=" - Tria - "/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-links-list-'+episode_id+'-link-'+i+'-instance-1-delete" onclick="deleteLinkInstanceRow('+episode_id+','+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody><tfoot><tr style="background: none;"><td colspan="3" class="text-center p-0 border-0"><button onclick="addLinkInstanceRow('+episode_id+','+i+');" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button></td></tr></tfoot></table></td><td><input id="form-links-list-'+episode_id+'-comments-'+i+'" name="form-links-list-'+episode_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center" style="padding-top: .75rem;"><input id="form-links-list-'+episode_id+'-lost-'+i+'" name="form-links-list-'+episode_id+'-lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center pt-2"><button id="form-links-list-'+episode_id+'-delete-'+i+'" onclick="deleteVersionRow('+episode_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#links-list-table-'+episode_id).attr('data-count', i);
 }
 
 function addVersionExtraRow() {
 	var i = parseInt($('#extras-list-table').attr('data-count'))+1;
-	$('#extras-list-table').append('<tr id="form-extras-list-row-'+i+'"><td><input id="form-extras-list-name-'+i+'" name="form-extras-list-name-'+i+'" type="text" class="form-control" value="" maxlength="200" required placeholder="- Introdueix un nom -"/><input id="form-extras-list-id-'+i+'" name="form-extras-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-extras-list-link-'+i+'" name="form-extras-list-link-'+i+'" type="url" class="form-control" value="" maxlength="2048" required placeholder="- Introdueix un enllaç -"/></td><td><input id="form-extras-list-resolution-'+i+'" name="form-extras-list-resolution-'+i+'" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><button id="form-extras-list-delete-'+i+'" onclick="deleteVersionExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#extras-list-table').append('<tr id="form-extras-list-row-'+i+'"><td><input id="form-extras-list-name-'+i+'" name="form-extras-list-name-'+i+'" type="text" class="form-control" value="" maxlength="200" required placeholder="- Introdueix un nom -"/><input id="form-extras-list-id-'+i+'" name="form-extras-list-id-'+i+'" type="hidden" value="-1"/></td><td><table class="w-100" id="extras-instance-list-table-'+i+'" data-count="1"><tbody><tr id="form-instance-extras-list-row-'+i+'-1" style="background: none;"><td class="pl-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+i+'-instance-1-url" name="form-extras-list-'+i+'-instance-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" required/><input id="form-extras-list-'+i+'-instance-1-id" name="form-extras-list-'+i+'-instance-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+i+'-instance-1-resolution" name="form-extras-list-'+i+'-instance-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+i+'-instance-1-delete" onclick="deleteExtraLinkInstanceRow('+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody><tfoot><tr style="background: none;"><td colspan="3" class="text-center p-0 border-0"><button onclick="addExtraLinkInstanceRow('+i+');" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button></td></tr></tfoot></table></td><td><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center pt-2"><button id="form-extras-list-delete-'+i+'" onclick="deleteVersionExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#extras-list-table').attr('data-count', i);
 	$('#extras-list-table-empty').addClass('d-none');
 }
 
 function addFileRow(chapter_id) {
 	var i = parseInt($('#files-list-table-'+chapter_id).attr('data-count'))+1;
-	$('#files-list-table-'+chapter_id).append('<tr id="form-files-list-'+chapter_id+'-row-'+i+'"><td class="align-middle"><div id="form-files-list-'+chapter_id+'-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-files-list-'+chapter_id+'-file-'+i+'" class="btn btn-sm btn-info w-100"><span class="fa fa-upload pr-2"></span>Puja un fitxer...</label><input id="form-files-list-'+chapter_id+'-file-'+i+'" name="form-files-list-'+chapter_id+'-file-'+i+'" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/><input id="form-files-list-'+chapter_id+'-id-'+i+'" name="form-files-list-'+chapter_id+'-id-'+i+'" type="hidden" value="-1"/><input id="form-files-list-'+chapter_id+'-number_of_files-'+i+'" name="form-files-list-'+chapter_id+'-number_of_files-'+i+'" type="hidden" value="0"/></td><td class="align-middle"><input id="form-files-list-'+chapter_id+'-comments-'+i+'" name="form-files-list-'+chapter_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><input id="form-files-list-'+chapter_id+'-lost-'+i+'" name="form-files-list-'+chapter_id+'-lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-files-list-'+chapter_id+'-delete-'+i+'" onclick="deleteFileRow('+chapter_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#files-list-table-'+chapter_id).append('<tr id="form-files-list-'+chapter_id+'-row-'+i+'"><td class="align-middle"><input id="form-files-list-'+chapter_id+'-variant_name-'+i+'" name="form-files-list-'+chapter_id+'-variant_name-'+i+'" type="text" class="form-control" value="" maxlength="200" placeholder="- Variant -"/></td><td class="align-middle"><div id="form-files-list-'+chapter_id+'-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-files-list-'+chapter_id+'-file-'+i+'" class="btn btn-sm btn-info w-100"><span class="fa fa-upload pr-2"></span>Puja un fitxer...</label><input id="form-files-list-'+chapter_id+'-file-'+i+'" name="form-files-list-'+chapter_id+'-file-'+i+'" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/><input id="form-files-list-'+chapter_id+'-id-'+i+'" name="form-files-list-'+chapter_id+'-id-'+i+'" type="hidden" value="-1"/><input id="form-files-list-'+chapter_id+'-number_of_files-'+i+'" name="form-files-list-'+chapter_id+'-number_of_files-'+i+'" type="hidden" value="0"/></td><td class="align-middle"><input id="form-files-list-'+chapter_id+'-comments-'+i+'" name="form-files-list-'+chapter_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center align-middle"><input id="form-files-list-'+chapter_id+'-lost-'+i+'" name="form-files-list-'+chapter_id+'-lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-files-list-'+chapter_id+'-delete-'+i+'" onclick="deleteFileRow('+chapter_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#files-list-table-'+chapter_id).attr('data-count', i);
 }
 
@@ -696,18 +708,77 @@ function deleteVersionRow(episode_id, id) {
 			$("#form-links-list-"+episode_id+"-row-"+j).attr('id','form-links-list-'+episode_id+'-row-'+(j-1));
 			$("#form-links-list-"+episode_id+"-id-"+j).attr('name','form-links-list-'+episode_id+'-id-'+(j-1));
 			$("#form-links-list-"+episode_id+"-id-"+j).attr('id','form-links-list-'+episode_id+'-id-'+(j-1));
-			$("#form-links-list-"+episode_id+"-link-"+j).attr('name','form-links-list-'+episode_id+'-link-'+(j-1));
-			$("#form-links-list-"+episode_id+"-link-"+j).attr('id','form-links-list-'+episode_id+'-link-'+(j-1));
-			$("#form-links-list-"+episode_id+"-resolution-"+j).attr('name','form-links-list-'+episode_id+'-resolution-'+(j-1));
-			$("#form-links-list-"+episode_id+"-resolution-"+j).attr('id','form-links-list-'+episode_id+'-resolution-'+(j-1));
+			$("#form-links-list-"+episode_id+"-variant_name-"+j).attr('name','form-links-list-'+episode_id+'-variant_name-'+(j-1));
+			$("#form-links-list-"+episode_id+"-variant_name-"+j).attr('id','form-links-list-'+episode_id+'-variant_name-'+(j-1));
 			$("#form-links-list-"+episode_id+"-comments-"+j).attr('name','form-links-list-'+episode_id+'-comments-'+(j-1));
 			$("#form-links-list-"+episode_id+"-comments-"+j).attr('id','form-links-list-'+episode_id+'-comments-'+(j-1));
 			$("#form-links-list-"+episode_id+"-lost-"+j).attr('name','form-links-list-'+episode_id+'-lost-'+(j-1));
 			$("#form-links-list-"+episode_id+"-lost-"+j).attr('id','form-links-list-'+episode_id+'-lost-'+(j-1));
 			$("#form-links-list-"+episode_id+"-delete-"+j).attr('onclick','deleteVersionRow('+episode_id+','+(j-1)+');');
 			$("#form-links-list-"+episode_id+"-delete-"+j).attr('id','form-links-list-'+episode_id+'-delete-'+(j-1));
+			$("#links-instance-list-table-"+episode_id+"-"+j).attr('id','links-instance-list-table-'+episode_id+'-'+(j-1));
+			var numInstances = parseInt($('#links-instance-list-table-'+episode_id+'-'+(j-1)).attr('data-count'));
+			for (var k=1;k<numInstances+1;k++) {
+				$("#form-instance-links-list-"+episode_id+"-row-"+j+"-"+k).attr('id','form-instance-links-list-'+episode_id+'-row-'+(j-1)+'-'+k);
+				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-url").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-url");
+				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-url").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-url");
+				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-id").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-id");
+				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-id").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-id");
+				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-resolution").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-resolution");
+				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-resolution").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-resolution");
+				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-delete").attr('onclick','deleteLinkInstanceRow('+episode_id+','+(j-1)+','+k+');');
+				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-delete").attr('id','form-links-list-'+episode_id+"-link-"+(j-1)+"-instance-"+k+"-delete");
+			}
 		}
 		$('#links-list-table-'+episode_id).attr('data-count', i-1);
+	}
+}
+
+function deleteLinkInstanceRow(episode_id, variant_number, id) {
+	var i = parseInt($('#links-instance-list-table-'+episode_id+'-'+variant_number).attr('data-count'));
+	if(i==1) {
+		$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-1-url").val("");
+		$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-1-id").val("-1");
+		$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-1-resolution").val("");
+	}
+	else {
+		$("#form-instance-links-list-"+episode_id+"-row-"+variant_number+"-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-instance-links-list-"+episode_id+"-row-"+variant_number+"-"+j).attr('id','form-instance-links-list-'+episode_id+'-row-'+variant_number+'-'+(j-1));
+			$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+j+"-url").attr('name', "form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+(j-1)+"-url");
+			$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+j+"-url").attr('id', "form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+(j-1)+"-url");
+			$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+j+"-id").attr('name', "form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+(j-1)+"-id");
+			$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+j+"-id").attr('id', "form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+(j-1)+"-id");
+			$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+j+"-resolution").attr('name', "form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+(j-1)+"-resolution");
+			$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+j+"-resolution").attr('id', "form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+(j-1)+"-resolution");
+			$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+j+"-delete").attr('onclick','deleteLinkInstanceRow('+episode_id+','+variant_number+','+(j-1)+');');
+			$("#form-links-list-"+episode_id+"-link-"+variant_number+"-instance-"+j+"-delete").attr('id','form-links-list-'+episode_id+"-link-"+variant_number+"-instance-"+(j-1)+"-delete");
+		}
+		$('#links-instance-list-table-'+episode_id+'-'+variant_number).attr('data-count', i-1);
+	}
+}
+
+function deleteExtraLinkInstanceRow(extra_number, id) {
+	var i = parseInt($('#extras-instance-list-table-'+extra_number).attr('data-count'));
+	if(i==1) {
+		$("#form-extras-list-"+extra_number+"-instance-1-url").val("");
+		$("#form-extras-list-"+extra_number+"-instance-1-id").val("-1");
+		$("#form-extras-list-"+extra_number+"-instance-1-resolution").val("");
+	}
+	else {
+		$("#form-instance-extras-list-row-"+extra_number+"-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-instance-extras-list-row-"+extra_number+"-"+j).attr('id','form-instance-extras-list-row-'+extra_number+'-'+(j-1));
+			$("#form-extras-list-"+extra_number+"-instance-"+j+"-url").attr('name', "form-extras-list-"+extra_number+"-instance-"+(j-1)+"-url");
+			$("#form-extras-list-"+extra_number+"-instance-"+j+"-url").attr('id', "form-extras-list-"+extra_number+"-instance-"+(j-1)+"-url");
+			$("#form-extras-list-"+extra_number+"-instance-"+j+"-id").attr('name', "form-extras-list-"+extra_number+"-instance-"+(j-1)+"-id");
+			$("#form-extras-list-"+extra_number+"-instance-"+j+"-id").attr('id', "form-extras-list-"+extra_number+"-instance-"+(j-1)+"-id");
+			$("#form-extras-list-"+extra_number+"-instance-"+j+"-resolution").attr('name', "form-extras-list-"+extra_number+"-instance-"+(j-1)+"-resolution");
+			$("#form-extras-list-"+extra_number+"-instance-"+j+"-resolution").attr('id', "form-extras-list-"+extra_number+"-instance-"+(j-1)+"-resolution");
+			$("#form-extras-list-"+extra_number+"-instance-"+j+"-delete").attr('onclick','deleteExtraLinkInstanceRow('+extra_number+','+(j-1)+');');
+			$("#form-extras-list-"+extra_number+"-instance-"+j+"-delete").attr('id','form-extras-list-'+extra_number+"-instance-"+(j-1)+"-delete");
+		}
+		$('#extras-instance-list-table-'+extra_number).attr('data-count', i-1);
 	}
 }
 
@@ -720,14 +791,23 @@ function deleteVersionExtraRow(id) {
 		$("#form-extras-list-id-"+j).attr('id','form-extras-list-id-'+(j-1));
 		$("#form-extras-list-name-"+j).attr('name','form-extras-list-name-'+(j-1));
 		$("#form-extras-list-name-"+j).attr('id','form-extras-list-name-'+(j-1));
-		$("#form-extras-list-link-"+j).attr('name','form-extras-list-link-'+(j-1));
-		$("#form-extras-list-link-"+j).attr('id','form-extras-list-link-'+(j-1));
-		$("#form-extras-list-resolution-"+j).attr('name','form-extras-list-resolution-'+(j-1));
-		$("#form-extras-list-resolution-"+j).attr('id','form-extras-list-resolution-'+(j-1));
 		$("#form-extras-list-comments-"+j).attr('name','form-extras-list-comments-'+(j-1));
 		$("#form-extras-list-comments-"+j).attr('id','form-extras-list-comments-'+(j-1));
 		$("#form-extras-list-delete-"+j).attr('onclick','deleteVersionExtraRow('+(j-1)+');');
 		$("#form-extras-list-delete-"+j).attr('id','form-extras-list-delete-'+(j-1));
+		$("#extras-instance-list-table-"+j).attr('id','extras-instance-list-table-'+(j-1));
+		var numInstances = parseInt($('#extras-instance-list-table-'+(j-1)).attr('data-count'));
+		for (var k=1;k<numInstances+1;k++) {
+			$("#form-instance-extras-list-row-"+j+"-"+k).attr('id','form-instance-extras-list-row-'+(j-1)+'-'+k);
+			$("#form-extras-list-"+j+"-instance-"+k+"-url").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-url");
+			$("#form-extras-list-"+j+"-instance-"+k+"-url").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-url");
+			$("#form-extras-list-"+j+"-instance-"+k+"-id").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-id");
+			$("#form-extras-list-"+j+"-instance-"+k+"-id").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-id");
+			$("#form-extras-list-"+j+"-instance-"+k+"-resolution").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-resolution");
+			$("#form-extras-list-"+j+"-instance-"+k+"-resolution").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-resolution");
+			$("#form-extras-list-"+j+"-instance-"+k+"-delete").attr('onclick','deleteExtraLinkInstanceRow('+(j-1)+','+k+');');
+			$("#form-extras-list-"+j+"-instance-"+k+"-delete").attr('id',"form-extras-list-"+(j-1)+"-instance-"+k+"-delete");
+		}
 	}
 	$('#extras-list-table').attr('data-count', i-1);
 
@@ -741,6 +821,7 @@ function deleteFileRow(chapter_id, id) {
 	if(i==1) {
 		$("#form-files-list-"+chapter_id+"-id-1").val("-1");
 		$("#form-files-list-"+chapter_id+"-file-1").val("");
+		$("#form-files-list-"+chapter_id+"-variant_name-1").val("");
 		$('label[for="form-files-list-'+chapter_id+'-file-1"]').removeClass("btn-warning");
 		$('label[for="form-files-list-'+chapter_id+'-file-1"]').addClass("btn-info");
 		$('label[for="form-files-list-'+chapter_id+'-file-1"]').html('<span class="fa fa-upload pr-2"></span> Puja un fitxer...');
@@ -754,6 +835,8 @@ function deleteFileRow(chapter_id, id) {
 			$("#form-files-list-"+chapter_id+"-row-"+j).attr('id','form-files-list-'+chapter_id+'-row-'+(j-1));
 			$("#form-files-list-"+chapter_id+"-id-"+j).attr('name','form-files-list-'+chapter_id+'-id-'+(j-1));
 			$("#form-files-list-"+chapter_id+"-id-"+j).attr('id','form-files-list-'+chapter_id+'-id-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-variant_name-"+j).attr('name','form-files-list-'+chapter_id+'-variant_name-'+(j-1));
+			$("#form-files-list-"+chapter_id+"-variant_name-"+j).attr('id','form-files-list-'+chapter_id+'-variant_name-'+(j-1));
 			$("#form-files-list-"+chapter_id+"-file-"+j).attr('name','form-files-list-'+chapter_id+'-file-'+(j-1));
 			$("#form-files-list-"+chapter_id+"-file-"+j).attr('id','form-files-list-'+chapter_id+'-file-'+(j-1));
 			$("#form-files-list-"+chapter_id+"-file_details-"+j).attr('name','form-files-list-'+chapter_id+'-file_details-'+(j-1));
@@ -1094,7 +1177,7 @@ function checkNumberOfLinks() {
 		}
 
 		if (multipleLinks) {
-			alert("Si hi ha activada la sincronització automàtica de carpetes de MEGA, no és possible afegir més d'un enllaç per capítol. Has de desactivar-la o bé eliminar els enllaços addicionals dels capítols.");
+			alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d'una variant per capítol. Has de desactivar-la o bé eliminar els enllaços addicionals dels capítols.");
 			return false;
 		}
 	}
@@ -1140,7 +1223,7 @@ function verifyLinks(i) {
 		$.post("https://eu.api.mega.co.nz/cs", "[{\"a\":\"g\", \"g\":1, \"ssl\":0, \"p\":\""+matchesMega[1]+"\"}]", function(data, status){
 			if (Array.isArray(data) && data[0]<0) {
 				//invalid
-				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 				invalidLinks++;
 				updateVerifyLinksResult(i+1);
 				linkVerifyRetries=0;
@@ -1160,7 +1243,7 @@ function verifyLinks(i) {
 						verifyLinks(i);
 					}, 5000);
 				} else {
-					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 					failedLinks++;
 					linkVerifyRetries=0;
 					verifyLinks(i+1);
@@ -1173,7 +1256,7 @@ function verifyLinks(i) {
 					verifyLinks(i);
 				}, 5000);
 			} else {
-				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 				failedLinks++;
 				linkVerifyRetries=0;
 				verifyLinks(i+1);
@@ -1190,7 +1273,7 @@ function verifyLinks(i) {
 				verifyLinks(i+1);
 			} else if (data=='KO') {
 				//invalid
-				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 				invalidLinks++;
 				updateVerifyLinksResult(i+1);
 				linkVerifyRetries=0;
@@ -1200,7 +1283,7 @@ function verifyLinks(i) {
 					linkVerifyRetries++;
 					verifyLinks(i);
 				} else {
-					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 					failedLinks++;
 					linkVerifyRetries=0;
 					verifyLinks(i+1);
@@ -1211,7 +1294,7 @@ function verifyLinks(i) {
 				linkVerifyRetries++;
 				verifyLinks(i);
 			} else {
-				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 				failedLinks++;
 				linkVerifyRetries=0;
 				verifyLinks(i+1);
@@ -1233,7 +1316,7 @@ function verifyLinks(i) {
 				verifyLinks(i+1);
 			} else if (data=='KO') {
 				//invalid
-				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 				invalidLinks++;
 				updateVerifyLinksResult(i+1);
 				linkVerifyRetries=0;
@@ -1243,7 +1326,7 @@ function verifyLinks(i) {
 					linkVerifyRetries++;
 					verifyLinks(i);
 				} else {
-					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+					$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 					failedLinks++;
 					linkVerifyRetries=0;
 					verifyLinks(i+1);
@@ -1254,7 +1337,7 @@ function verifyLinks(i) {
 				linkVerifyRetries++;
 				verifyLinks(i);
 			} else {
-				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8">'+links[i].link+'</p></div>');
+				$('#link-verifier-failed-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 				failedLinks++;
 				linkVerifyRetries=0;
 				verifyLinks(i+1);
@@ -1610,15 +1693,64 @@ $(document).ready(function() {
 				if (data.status=='ko') {
 					alert("S'ha produït un error:\n"+data.error);
 				} else {
+					var moreThanOne = false;
 					for (var i = 0; i < data.results.length; i++) {
-						$("[id^=form-links-list-"+data.results[i].id+"-link-]").val(data.results[i].link);
-						$("[id^=form-links-list-"+data.results[i].id+"-resolution-]").val($('#form-default_resolution').val());
+						var start = '';
+						if (data.results[i].link.startsWith('https://mega.nz/')) {
+							start = 'https://mega.nz/';
+						} else if (data.results[i].link.startsWith('https://drive.google.com/')) {
+							start = 'https://drive.google.com/';
+						} else {
+							continue; //Not MEGA nor Drive
+						}
+						var found = false;
+						$("[id^=form-links-list-"+data.results[i].id+"-link-][id$=url]").each(function (pos,e) {
+							if (found) {
+								moreThanOne=true;
+								return;
+							}
+							if ($(e).val().startsWith(start)) {
+								$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
+								$(e).val(data.results[i].link);
+								found = true;
+							}
+						});
+						if (!found) {
+							found = false;
+							$("[id^=form-links-list-"+data.results[i].id+"-link-][id$=url]").each(function (pos,e) {
+								if (found) {
+									return;
+								}
+								if ($(e).val()=='') {
+									$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
+									$(e).val(data.results[i].link);
+									found = true;
+								}
+							});
+							if (!found) {
+								addLinkInstanceRow(data.results[i].id,1);
+								$("[id^=form-links-list-"+data.results[i].id+"-link-][id$=url]").each(function (pos,e) {
+									if (found) {
+										return;
+									}
+									if ($(e).val()=='') {
+										$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
+										$(e).val(data.results[i].link);
+										found = true;
+									}
+								});
+							}
+						}
 					}
 					if (data.unmatched_results.length>0) {
 						$('#import-failed-results').removeClass('d-none');
 						for (var i = 0; i < data.unmatched_results.length; i++) {
 							$('#import-failed-results-table').append('<tr><td>'+data.unmatched_results[i].file+'</td><td>'+data.unmatched_results[i].link+'</td><td title="'+data.unmatched_results[i].reason_description+'" style="white-space: nowrap;">'+data.unmatched_results[i].reason+'<span class="fa fa-question-circle ml-1"></span></td></tr>');
 						}
+					}
+
+					if (moreThanOne) {
+						alert("ALERTA! Hi havia més d'un enllaç del tipus importat en algun capítol. La importació només ha subtituït el primer de cada capítol.");
 					}
 				}
 				$("#import-from-mega-loading").addClass("d-none");

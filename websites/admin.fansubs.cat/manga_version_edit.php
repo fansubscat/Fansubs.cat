@@ -113,6 +113,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				} else {
 					$file['number_of_pages']=0;
 				}
+				if (!empty($_POST['form-files-list-'.$chapter_id.'-variant_name-'.$i])) {
+					$file['variant_name']="'".escape($_POST['form-files-list-'.$chapter_id.'-variant_name-'.$i])."'";
+				} else {
+					$file['variant_name']="NULL";
+				}
 				if (!empty($_POST['form-files-list-'.$chapter_id.'-comments-'.$i])) {
 					$file['comments']="'".escape($_POST['form-files-list-'.$chapter_id.'-comments-'.$i])."'";
 				} else {
@@ -201,7 +206,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			//We do not count removing files as updating them, only insertions and real updates
 			foreach ($files as $file) {
 				if ($file['id']==-1) {
-					query("INSERT INTO file (manga_version_id,chapter_id,extra_name,original_filename,number_of_pages,comments,created) VALUES (".$data['id'].",".$file['chapter_id'].",NULL,".$file['original_filename'].",".$file['number_of_pages'].",".$file['comments'].",CURRENT_TIMESTAMP)");
+					query("INSERT INTO file (manga_version_id,chapter_id,variant_name,extra_name,original_filename,number_of_pages,comments,created) VALUES (".$data['id'].",".$file['chapter_id'].",".$file['variant_name'].",NULL,".$file['original_filename'].",".$file['number_of_pages'].",".$file['comments'].",CURRENT_TIMESTAMP)");
 					if ($file['original_filename']!='NULL') {
 						decompress_manga_file(mysqli_insert_id($db_connection), $file['temporary_filename'], $file['original_filename_unescaped']);
 					}
@@ -211,7 +216,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				} else {
 					$resultcr = query("SELECT * FROM file WHERE id=".$file['id']);
 					if ($current_file = mysqli_fetch_assoc($resultcr)) {
-						query("UPDATE file SET ".($file['original_filename']!='NULL' ? "original_filename=".$file['original_filename'].",number_of_pages=".$file['number_of_pages']."," : "")."comments=".$file['comments']." WHERE id=".$file['id']);
+						query("UPDATE file SET ".($file['original_filename']!='NULL' ? "original_filename=".$file['original_filename'].",number_of_pages=".$file['number_of_pages']."," : "")."variant_name=".$file['variant_name'].",comments=".$file['comments']." WHERE id=".$file['id']);
 						if (empty($_POST['do_not_count_as_update']) && (empty($current_file['original_filename']) ? "NULL" : "'".escape($current_file['original_filename'])."'")!=$file['original_filename']) {
 							query("UPDATE manga_version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 							if (empty($current_file['original_filename']) && $file['original_filename']!='NULL') {
@@ -236,7 +241,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM file WHERE manga_version_id=".$data['id']." AND chapter_id IS NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($extras as $extra) {
 				if ($extra['id']==-1) {
-					query("INSERT INTO file (manga_version_id,chapter_id,extra_name,original_filename,number_of_pages,comments,created) VALUES (".$data['id'].",NULL,'".$extra['name']."','".$extra['original_filename']."',".$extra['number_of_pages'].",".$extra['comments'].",CURRENT_TIMESTAMP)");
+					query("INSERT INTO file (manga_version_id,chapter_id,variant_name,extra_name,original_filename,number_of_pages,comments,created) VALUES (".$data['id'].",NULL,NULL,'".$extra['name']."','".$extra['original_filename']."',".$extra['number_of_pages'].",".$extra['comments'].",CURRENT_TIMESTAMP)");
 					decompress_manga_file(mysqli_insert_id($db_connection), $extra['temporary_filename'], $extra['original_filename_unescaped']);
 					if (empty($_POST['do_not_count_as_update'])) {
 						query("UPDATE manga_version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
@@ -283,13 +288,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 			foreach ($files as $file) {
-				query("INSERT INTO file (manga_version_id,chapter_id,extra_name,original_filename,number_of_pages,comments,created) VALUES (".$inserted_id.",".$file['chapter_id'].",NULL,".$file['original_filename'].",".$file['number_of_pages'].",".$file['comments'].",CURRENT_TIMESTAMP)");
+				query("INSERT INTO file (manga_version_id,chapter_id,variant_name,extra_name,original_filename,number_of_pages,comments,created) VALUES (".$inserted_id.",".$file['chapter_id'].",".$file['variant_name'].",NULL,".$file['original_filename'].",".$file['number_of_pages'].",".$file['comments'].",CURRENT_TIMESTAMP)");
 				if ($file['original_filename']!='NULL') {
 					decompress_manga_file(mysqli_insert_id($db_connection), $file['temporary_filename'], $file['original_filename_unescaped']);
 				}
 			}
 			foreach ($extras as $extra) {
-				query("INSERT INTO file (manga_version_id,chapter_id,extra_name,original_filename,number_of_pages,comments,created) VALUES (".$inserted_id.",NULL,'".$extra['name']."','".$extra['original_filename']."',".$extra['number_of_pages'].",".$extra['comments'].",CURRENT_TIMESTAMP)");
+				query("INSERT INTO file (manga_version_id,chapter_id,variant_name,extra_name,original_filename,number_of_pages,comments,created) VALUES (".$inserted_id.",NULL,NULL,'".$extra['name']."','".$extra['original_filename']."',".$extra['number_of_pages'].",".$extra['comments'].",CURRENT_TIMESTAMP)");
 				decompress_manga_file(mysqli_insert_id($db_connection), $extra['temporary_filename'], $extra['original_filename_unescaped']);
 			}
 
@@ -481,7 +486,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	foreach ($volumes as $volume) {
 ?>
 								<div class="col-sm-2 text-center pr-1 pl-1">
-										<label><?php echo "Volum ".$volume['number'].(!empty($volume['name']) ? " (".$volume['name'].")" : ""); ?></label>
+										<label><?php echo "Volum ".$volume['number'].(!empty($volume['name']) ? " (".$volume['name'].")" : ""); ?>:</label>
 <?php
 		$file_exists = !empty($row['id']) && file_exists('../manga.fansubs.cat/images/covers/'.$row['id'].'_'.$volume['id'].'.jpg');
 ?>
@@ -495,7 +500,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="form-chapter-list">Capítols i fitxers</label>
+							<label for="form-chapter-list">Capítols, variants i fitxers</label>
 							<div class="container" id="form-chapter-list">
 <?php
 	if ($manga['show_chapter_numbers']==0 && $manga['order_type']!=0) {
@@ -554,10 +559,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="files-list-table-<?php echo $chapters[$i]['id']; ?>" data-count="<?php echo max(count($files),1); ?>">
 													<thead>
 														<tr>
+															<th style="width: 12%;"><span class="mandatory">Variant</span> <span class="fa fa-question-circle small text-secondary" style="cursor: help;" title="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.), però normalment només n'hi ha una ('Única')"></span></th>
 															<th>Fitxer</th>
 															<th style="width: 15%;">Pujada</th>
-															<th style="width: 22%;">Comentaris</th>
-															<th class="text-center" style="width: 5%;">Perdut</th>
+															<th style="width: 15%;">Comentaris</th>
+															<th class="text-center" style="width: 5%;">Perduda</th>
 															<th class="text-center" style="width: 5%;">Acció</th>
 														</tr>
 													</thead>
@@ -566,6 +572,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		for ($j=0;$j<count($files);$j++) {
 ?>
 														<tr id="form-files-list-<?php echo $chapters[$i]['id']; ?>-row-<?php echo $j+1; ?>">
+															<td class="align-middle">
+																<input id="form-files-list-<?php echo $chapters[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" name="form-files-list-<?php echo $chapters[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($files[$j]['variant_name']); ?>" required maxlength="200" placeholder="- Variant -"/>
+															</td>
 															<td class="align-middle">
 																<div id="form-files-list-<?php echo $chapters[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat el fitxer <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>'; ?></div>
 															</td>
@@ -591,6 +600,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 														<tr id="form-files-list-<?php echo $chapters[$i]['id']; ?>-row-1">
 															<td class="align-middle">
+																<input id="form-files-list-<?php echo $chapters[$i]['id']; ?>-variant_name-1" name="form-files-list-<?php echo $chapters[$i]['id']; ?>-variant_name-1" type="text" class="form-control" value="Única" required maxlength="200" placeholder="- Variant -"/>
+															</td>
+															<td class="align-middle">
 																<div id="form-files-list-<?php echo $chapters[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div>
 															</td>
 															<td class="align-middle">
@@ -615,7 +627,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<div class="w-100 text-center"><button onclick="addFileRow(<?php echo $chapters[$i]['id']; ?>);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre fitxer per a aquest capítol</button></div>
+											<div class="w-100 text-center"><button onclick="addFileRow(<?php echo $chapters[$i]['id']; ?>);" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una altra variant per a aquest capítol</button></div>
 										</div>
 									</div>
 								</div>
@@ -687,7 +699,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<div class="w-100 text-center"><button onclick="addFileExtraRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre fitxer extra</button></div>
+											<div class="w-100 text-center"><button onclick="addFileExtraRow();" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre fitxer extra</button></div>
 										</div>
 									</div>
 								</div>

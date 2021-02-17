@@ -56,7 +56,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	} else {
 		$where = '';
 	}
-	$result = query("SELECT s.name series, IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, re.date, re.ip, re.user_agent, re.type, re.text, l.id link_id, l.url link, re.play_time, ve.id version_id FROM reported_error re LEFT JOIN link l ON re.link_id=l.id LEFT JOIN version ve ON l.version_id=ve.id LEFT JOIN rel_version_fansub vf ON vf.version_id=ve.id LEFT JOIN series s ON ve.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id$where ORDER BY date DESC LIMIT 100");
+	$result = query("SELECT s.name series, IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(s.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(s.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, re.date, re.ip, re.user_agent, re.type, re.text, l.id link_id, re.play_time, ve.id version_id FROM reported_error re LEFT JOIN link l ON re.link_id=l.id LEFT JOIN version ve ON l.version_id=ve.id LEFT JOIN rel_version_fansub vf ON vf.version_id=ve.id LEFT JOIN series s ON ve.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id$where ORDER BY date DESC LIMIT 100");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -74,10 +74,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center"><strong><?php echo $row['date']; ?></strong></td>
 								<td class="align-middle text-center text-nowrap">
 <?php
-		if (!empty($row['link'])) {
+		if (!empty($row['link_id'])) {
 ?>
-<a href="version_edit.php?id=<?php echo $row['version_id']; ?>" title="Edita la versió" class="fa fa-edit p-1"></a> <a href="<?php echo $row['link']; ?>" target="_blank" title="Obre l'enllaç" class="fa fa-external-link-alt p-1 text-success"></a>
+<a href="version_edit.php?id=<?php echo $row['version_id']; ?>" title="Edita la versió" class="fa fa-edit p-1"></a> 
 <?php
+			$resultli = query("SELECT * FROM link_instance WHERE link_id=${row['link_id']}");
+			$count=0;
+			while ($link_instance = mysqli_fetch_assoc($resultli)) {
+				if ($count==0) {
+					echo "<br>";
+				}
+				echo '	<a href="'.$link_instance['url'].'" target="_blank" title="Obre l\'enllaç" class="fa fa-external-link-alt p-1 text-success"></a>';
+				$count++;
+			}
+			mysqli_free_result($resultli);
 		}
 ?></td>
 							</tr>

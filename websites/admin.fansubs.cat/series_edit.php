@@ -338,7 +338,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultss);
 
-		$resulte = query("SELECT e.*,ss.number season, EXISTS(SELECT * FROM link l WHERE l.episode_id=e.id AND l.url IS NOT NULL) has_version FROM episode e LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".escape($_GET['id'])." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, e.name ASC");
+		$resulte = query("SELECT e.*,ss.number season, EXISTS(SELECT * FROM link l WHERE l.episode_id=e.id AND l.lost=0) has_version FROM episode e LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".escape($_GET['id'])." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, e.name ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);

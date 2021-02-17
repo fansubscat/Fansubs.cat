@@ -162,7 +162,10 @@ function internal_print_chapter($chapter_title, $result) {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-book-open icon-play"></span>'.(!empty($vrow['comments']) ? htmlspecialchars($vrow['comments']) : 'Llegeix-lo').'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-book-open icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Llegeix-lo').'</a> '."\n";
+				if (!empty($vrow['comments'])){
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
+				}
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode tooltip'.(in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : '').'" data-file-id="'.$vrow['id'].'" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>'."\n";
 				}

@@ -84,6 +84,7 @@ CREATE TABLE `file` (
   `id` int(11) NOT NULL,
   `manga_version_id` int(11) NOT NULL,
   `chapter_id` int(11) DEFAULT NULL,
+  `variant_name` varchar(200) DEFAULT NULL,
   `extra_name` varchar(200) DEFAULT NULL,
   `original_filename` varchar(200) DEFAULT NULL,
   `number_of_pages` int(11) NOT NULL,
@@ -117,10 +118,18 @@ CREATE TABLE `link` (
   `id` int(11) NOT NULL,
   `version_id` int(11) NOT NULL,
   `episode_id` int(11) DEFAULT NULL,
+  `variant_name` varchar(200) DEFAULT NULL,
   `extra_name` varchar(200) DEFAULT NULL,
+  `lost` tinyint(1) DEFAULT 0,
+  `comments` varchar(200) DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `link_instance` (
+  `id` int(11) NOT NULL,
+  `link_id` int(11) NOT NULL,
   `url` varchar(2048) DEFAULT NULL,
   `resolution` varchar(200) DEFAULT NULL,
-  `comments` varchar(200) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -424,6 +433,9 @@ ALTER TABLE `link`
   ADD PRIMARY KEY (`id`),
   ADD KEY `link_ibfk_1` (`episode_id`) USING BTREE,
   ADD KEY `link_ibfk_2` (`version_id`) USING BTREE;
+ALTER TABLE `link_instance`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `link_instance_ibfk_1` (`link_id`) USING BTREE;
 ALTER TABLE `manga`
   ADD PRIMARY KEY (`id`);
 ALTER TABLE `manga_recommendation`
@@ -510,6 +522,8 @@ ALTER TABLE `genre`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `link`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `link_instance`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `manga`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `manga_version`
@@ -557,6 +571,8 @@ ALTER TABLE `folder_failed_files`
 ALTER TABLE `link`
   ADD CONSTRAINT `link_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `link_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `link_instance`
+  ADD CONSTRAINT `link_instance_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `manga_recommendation`
   ADD CONSTRAINT `manga_recommendation_ibfk_1` FOREIGN KEY (`manga_version_id`) REFERENCES `manga_version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `manga_version`

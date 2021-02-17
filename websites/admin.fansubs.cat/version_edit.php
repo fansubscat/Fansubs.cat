@@ -95,15 +95,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				} else {
 					crash("Dades invàlides: manca id del capítol");
 				}
-				if (!empty($_POST['form-links-list-'.$episode_id.'-link-'.$i])) {
-					$link['url']="'".escape($_POST['form-links-list-'.$episode_id.'-link-'.$i])."'";
+				if (!empty($_POST['form-links-list-'.$episode_id.'-variant_name-'.$i])) {
+					$link['variant_name']="'".escape($_POST['form-links-list-'.$episode_id.'-variant_name-'.$i])."'";
 				} else {
-					$link['url']="NULL";
-				}
-				if (!empty($_POST['form-links-list-'.$episode_id.'-resolution-'.$i])) {
-					$link['resolution']="'".escape($_POST['form-links-list-'.$episode_id.'-resolution-'.$i])."'";
-				} else {
-					$link['resolution']="NULL";
+					$link['variant_name']="NULL";
 				}
 				if (!empty($_POST['form-links-list-'.$episode_id.'-comments-'.$i])) {
 					$link['comments']="'".escape($_POST['form-links-list-'.$episode_id.'-comments-'.$i])."'";
@@ -112,11 +107,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 				$link['episode_id']=$episode_id;
 
-				if ($link['url']=="NULL" && !empty($_POST['form-links-list-'.$episode_id.'-lost-'.$i])) {
-					$data['episodes_missing']=1;
+				$link['instances'] = array();
+				$j=1;
+				$has_url=FALSE;
+				while (!empty($_POST['form-links-list-'.$episode_id.'-link-'.$i.'-instance-'.$j.'-id'])) {
+					$instance = array();
+					$instance['id'] = $_POST['form-links-list-'.$episode_id.'-link-'.$i.'-instance-'.$j.'-id'];
+					if (!empty($_POST['form-links-list-'.$episode_id.'-link-'.$i.'-instance-'.$j.'-id'])) {
+						$instance['url']="'".escape($_POST['form-links-list-'.$episode_id.'-link-'.$i.'-instance-'.$j.'-url'])."'";
+					} else {
+						$instance['url']="NULL";
+					}
+					if (!empty($_POST['form-links-list-'.$episode_id.'-link-'.$i.'-instance-'.$j.'-resolution'])) {
+						$instance['resolution']="'".escape($_POST['form-links-list-'.$episode_id.'-link-'.$i.'-instance-'.$j.'-resolution'])."'";
+					} else {
+						$instance['resolution']="NULL";
+					}
+
+					if ($instance['url']!="NULL") {
+						array_push($link['instances'], $instance);
+						$has_url=TRUE;
+					}
+					$j++;
 				}
 
-				if ($link['url']!="NULL" || !empty($_POST['form-links-list-'.$episode_id.'-lost-'.$i])) {
+				if (!empty($_POST['form-links-list-'.$episode_id.'-lost-'.$i]) && !$has_url) {
+					$link['lost']=1;
+					$data['episodes_missing']=1;
+				} else {
+					$link['lost']=0;
+				}
+
+				if ($has_url || $link['lost']==1) {
 					array_push($links, $link);
 				}
 				$i++;
@@ -138,22 +160,39 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				crash("Dades invàlides: manca name de l'extra");
 			}
-			if (!empty($_POST['form-extras-list-link-'.$i])) {
-				$extra['url']=escape($_POST['form-extras-list-link-'.$i]);
-			} else {
-				crash("Dades invàlides: manca url de l'extra");
-			}
-			if (!empty($_POST['form-extras-list-resolution-'.$i])) {
-				$extra['resolution']="'".escape($_POST['form-extras-list-resolution-'.$i])."'";
-			} else {
-				$extra['resolution']="NULL";
-			}
 			if (!empty($_POST['form-extras-list-comments-'.$i])) {
 				$extra['comments']="'".escape($_POST['form-extras-list-comments-'.$i])."'";
 			} else {
 				$extra['comments']="NULL";
 			}
-			array_push($extras, $extra);
+
+			$extra['instances'] = array();
+			$j=1;
+			$has_url=FALSE;
+			while (!empty($_POST['form-extras-list-'.$i.'-instance-'.$j.'-id'])) {
+				$instance = array();
+				$instance['id'] = $_POST['form-extras-list-'.$i.'-instance-'.$j.'-id'];
+				if (!empty($_POST['form-extras-list-'.$i.'-instance-'.$j.'-id'])) {
+					$instance['url']="'".escape($_POST['form-extras-list-'.$i.'-instance-'.$j.'-url'])."'";
+				} else {
+					$instance['url']="NULL";
+				}
+				if (!empty($_POST['form-extras-list-'.$i.'-instance-'.$j.'-resolution'])) {
+					$instance['resolution']="'".escape($_POST['form-extras-list-'.$i.'-instance-'.$j.'-resolution'])."'";
+				} else {
+					$instance['resolution']="NULL";
+				}
+
+				if ($instance['url']!="NULL") {
+					array_push($extra['instances'], $instance);
+					$has_url=TRUE;
+				}
+				$j++;
+			}
+
+			if ($has_url) {
+				array_push($extras, $extra);
+			}
 			$i++;
 		}
 
@@ -217,27 +256,39 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					array_push($ids,$link['id']);
 				}
 			}
-			//Views will be removed too because their FK is set to cascade
+			//Views and link instances will be removed too because their FK is set to cascade
 			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NOT NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			//We do not count removing links as updating them, only insertions and real updates
 			foreach ($links as $link) {
 				if ($link['id']==-1) {
-					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES (".$data['id'].",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].",CURRENT_TIMESTAMP)");
+					query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES (".$data['id'].",".$link['episode_id'].",".$link['variant_name'].",NULL,".$link['comments'].",CURRENT_TIMESTAMP)");
+					$inserted_link_id=mysqli_insert_id($db_connection);
+					foreach ($link['instances'] as $instance) {
+						query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES ($inserted_link_id,".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
+					}
 					if (empty($_POST['do_not_count_as_update'])) {
 						query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
 				} else {
-					$resultcr = query("SELECT * FROM link WHERE id=".$link['id']);
-					if ($current_link = mysqli_fetch_assoc($resultcr)) {
-						query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",comments=".$link['comments']." WHERE id=".$link['id']);
-						if (empty($_POST['do_not_count_as_update']) && (empty($current_link['url']) ? "NULL" : "'".escape($current_link['url'])."'")!=$link['url']) {
-							query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
-							if (empty($current_link['url']) && $link['url']!='NULL') {
-								query("UPDATE link SET created=CURRENT_TIMESTAMP WHERE id=".$link['id']);
-							}
+					query("UPDATE link SET variant_name=".$link['variant_name'].",comments=".$link['comments']." WHERE id=".$link['id']);
+					$has_updated_links = FALSE;
+
+					$instance_ids=array();
+					foreach ($link['instances'] as $instance) {
+						if ($instance['id']==-1) {
+							query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES (".$link['id'].",".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
+							array_push($instance_ids,mysqli_insert_id($db_connection));
+							$has_updated_links = TRUE;
+						} else {
+							query("UPDATE link_instance SET url=".$instance['url'].",resolution=".$instance['resolution']." WHERE id=".$instance['id']);
 						}
+						array_push($instance_ids,$instance['id']);
 					}
-					mysqli_free_result($resultcr);
+					//Remove the ones that are no more in the form
+					query("DELETE FROM link_instance WHERE link_id=".$link['id']." AND id NOT IN (".(count($instance_ids)>0 ? implode(',',$instance_ids) : "-1").")");
+					if (empty($_POST['do_not_count_as_update']) && $has_updated_links) {
+						query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+					}
 				}
 			}
 
@@ -247,23 +298,35 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					array_push($ids,$extra['id']);
 				}
 			}
-			//Views will be removed too because their FK is set to cascade
+			//Views and link instances will be removed too because their FK is set to cascade
 			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($extras as $extra) {
 				if ($extra['id']==-1) {
-					query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES (".$data['id'].",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].",CURRENT_TIMESTAMP)");
+					query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES (".$data['id'].",NULL,NULL,'".$extra['name']."',".$extra['comments'].",CURRENT_TIMESTAMP)");
+					$inserted_link_id=mysqli_insert_id($db_connection);
+					foreach ($extra['instances'] as $instance) {
+						query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES ($inserted_link_id,".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
+					}
 					if (empty($_POST['do_not_count_as_update'])) {
 						query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
 				} else {
-					$resultcr = query("SELECT * FROM link WHERE id=".$extra['id']);
-					if ($current_extra = mysqli_fetch_assoc($resultcr)) {
-						query("UPDATE link SET extra_name='".$extra['name']."',url='".$extra['url']."',resolution=".$extra['resolution'].",comments=".$extra['comments']." WHERE id=".$extra['id']);
-						if (empty($_POST['do_not_count_as_update']) && escape($current_extra['url'])!=$extra['url']) {
-							query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+					query("UPDATE link SET extra_name='".$extra['name']."',comments=".$extra['comments']." WHERE id=".$extra['id']);
+					$has_updated_links = FALSE;
+
+					$instance_ids=array();
+					foreach ($extra['instances'] as $instance) {
+						if ($instance['id']==-1) {
+							query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES (".$extra['id'].",".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
+							array_push($instance_ids,mysqli_insert_id($db_connection));
+							$has_updated_links = TRUE;
+						} else {
+							query("UPDATE link_instance SET url=".$instance['url'].",resolution=".$instance['resolution']." WHERE id=".$instance['id']);
+							array_push($instance_ids,$instance['id']);
 						}
 					}
-					mysqli_free_result($resultcr);
+					//Remove the ones that are no more in the form
+					query("DELETE FROM link_instance WHERE link_id=".$extra['id']." AND id NOT IN (".(count($instance_ids)>0 ? implode(',',$instance_ids) : "-1").")");
 				}
 			}
 
@@ -303,10 +366,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 			foreach ($links as $link) {
-				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES (".$inserted_id.",".$link['episode_id'].",NULL,".$link['url'].",".$link['resolution'].",".$link['comments'].",CURRENT_TIMESTAMP)");
+				query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES (".$inserted_id.",".$link['episode_id'].",".$link['variant_name'].",NULL,".$link['comments'].",CURRENT_TIMESTAMP)");
+				$inserted_link_id=mysqli_insert_id($db_connection);
+				foreach ($link['instances'] as $instance) {
+					query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES (".$inserted_link_id.",".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
+				}
 			}
 			foreach ($extras as $extra) {
-				query("INSERT INTO link (version_id,episode_id,extra_name,url,resolution,comments,created) VALUES (".$inserted_id.",NULL,'".$extra['name']."','".$extra['url']."',".$extra['resolution'].",".$extra['comments'].",CURRENT_TIMESTAMP)");
+				query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES (".$inserted_id.",NULL,NULL,'".$extra['name']."',".$extra['comments'].",CURRENT_TIMESTAMP)");
+				$inserted_link_id=mysqli_insert_id($db_connection);
+				foreach ($extra['instances'] as $instance) {
+					query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES (".$inserted_link_id.",".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
+				}
 			}
 			foreach ($folders as $folder) {
 				query("INSERT INTO folder (version_id,account_id,folder,season_id,active) VALUES (".$inserted_id.",".$folder['account_id'].",'".$folder['folder']."',".$folder['season_id'].",".$folder['active'].")");
@@ -632,7 +703,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</table>
 						</div>
 						<div class="form-group">
-							<label for="form-episode-list">Capítols i enllaços</label>
+							<label for="form-episode-list">Capítols, variants i enllaços</label>
 							<div class="container" id="form-episode-list">
 								<datalist id="resolution-options">
 									<option value="1080p">
@@ -678,10 +749,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
-			$resultl = query("SELECT l.* FROM link l WHERE l.version_id=".escape($_GET['id'])." AND l.episode_id=".$episodes[$i]['id']." ORDER BY l.id ASC");
+			$resultl = query("SELECT l.* FROM link l WHERE l.version_id=".escape($_GET['id'])." AND l.episode_id=".$episodes[$i]['id']." ORDER BY l.variant_name ASC, l.id ASC");
 			$links = array();
 			while ($rowl = mysqli_fetch_assoc($resultl)) {
+				$resultli = query("SELECT li.* FROM link_instance li WHERE li.link_id=".$rowl['id']." ORDER BY li.url ASC");
+				$link_instances = array();
+				while ($rowli = mysqli_fetch_assoc($resultli)) {
+					array_push($link_instances, $rowli);
+				}
+				$rowl['link_instances']=$link_instances;
 				array_push($links, $rowl);
+				mysqli_free_result($resultli);
 			}
 			mysqli_free_result($resultl);
 		} else {
@@ -697,10 +775,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="links-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($links),1); ?>">
 													<thead>
 														<tr>
-															<th>Enllaç de streaming</th>
-															<th style="width: 15%;">Resolució</th>
+															<th style="width: 12%;"><span class="mandatory">Variant</span> <span class="fa fa-question-circle small text-secondary" style="cursor: help;" title="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.), però normalment només n'hi ha una ('Única')"></span></th>
+															<th>Enllaços de streaming / Resolució</th>
 															<th style="width: 15%;">Comentaris</th>
-															<th class="text-center" style="width: 5%;">Perdut</th>
+															<th class="text-center" style="width: 5%;">Perduda</th>
 															<th class="text-center" style="width: 5%;">Acció</th>
 														</tr>
 													</thead>
@@ -710,19 +788,47 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 														<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>">
 															<td>
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($links[$j]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)"/>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($links[$j]['variant_name']); ?>" maxlength="200" placeholder="- Variant -" required/>
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $links[$j]['id']; ?>"/>
 															</td>
 															<td>
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-resolution-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-resolution-<?php echo $j+1; ?>" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($links[$j]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
+																<table class="w-100" id="links-instance-list-table-<?php echo $episodes[$i]['id']; ?>-<?php echo $j+1; ?>" data-count="<?php echo max(count($links[$j]['link_instances']),1); ?>">
+																	<tbody>
+<?php
+			for ($k=0;$k<count($links[$j]['link_instances']);$k++) {
+?>
+																		<tr id="form-instance-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
+																			<td class="pl-0 pt-0 pb-0 border-0">
+																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($links[$j]['link_instances'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)"/>
+																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-id" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($links[$j]['link_instances'][$k]['id']); ?>"/>
+																			</td>
+																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
+																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-resolution" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($links[$j]['link_instances'][$k]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
+																			</td>
+																			<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
+																				<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-delete" onclick="deleteLinkInstanceRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																			</td>
+																		</tr>
+<?php
+			}
+?>
+																	</tbody>
+																	<tfoot>
+																		<tr style="background: none;">
+																			<td colspan="3" class="text-center p-0 border-0">
+																				<button onclick="addLinkInstanceRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+																			</td>
+																		</tr>
+																	</tfoot>
+																</table>
 															</td>
 															<td>
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($links[$j]['comments']); ?>" maxlength="200"/>
 															</td>
-															<td class="text-center align-middle">
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-<?php echo $j+1; ?>" type="checkbox" value="1""<?php echo empty($links[$j]['url']) ? ' checked' : ''; ?>/>
+															<td class="text-center" style="padding-top: .75rem;">
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-<?php echo $j+1; ?>" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $links[$j]['lost'] ? ' checked' : ''; ?>/>
 															</td>
-															<td class="text-center align-middle">
+															<td class="text-center pt-2">
 																<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
 															</td>
 														</tr>
@@ -732,19 +838,41 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 														<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1">
 															<td>
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)"/>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" type="text" class="form-control" value="Única" maxlength="200" placeholder="- Variant -" required/>
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-id-1" type="hidden" value="-1"/>
 															</td>
 															<td>
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-resolution-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-resolution-1" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
+																<table class="w-100" id="links-instance-list-table-<?php echo $episodes[$i]['id']; ?>-1" data-count="1">
+																	<tbody>
+																		<tr id="form-instance-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
+																			<td class="pl-0 pt-0 pb-0 border-0">
+																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-url" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)"/>
+																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-id" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-id" type="hidden" value="-1"/>
+																			</td>
+																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
+																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-resolution" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
+																			</td>
+																			<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
+																				<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-delete" onclick="deleteLinkInstanceRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																			</td>
+																		</tr>
+																	</tbody>
+																	<tfoot>
+																		<tr style="background: none;">
+																			<td colspan="3" class="text-center p-0 border-0">
+																				<button onclick="addLinkInstanceRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+																			</td>
+																		</tr>
+																	</tfoot>
+																</table>
 															</td>
 															<td>
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-1" type="text" class="form-control" value="" maxlength="200"/>
 															</td>
-															<td class="text-center align-middle">
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" type="checkbox" value="1"/>
+															<td class="text-center" style="padding-top: .75rem;">
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" type="checkbox" value="0"/>
 															</td>
-															<td class="text-center align-middle">
+															<td class="text-center pt-2">
 																<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
 															</td>
 														</tr>
@@ -754,7 +882,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<div class="w-100 text-center"><button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre enllaç</button></div>
+											<div class="w-100 text-center"><button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una altra variant per a aquest capítol</button></div>
 										</div>
 									</div>
 								</div>
@@ -764,15 +892,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="form-extras-list">Enllaços extra</label>
+							<label for="form-extras-list">Material extra</label>
 							<div class="container" id="form-extras-list">
 <?php
 
 	if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
-		$resultex = query("SELECT l.* FROM link l WHERE l.version_id=".escape($_GET['id'])." AND l.episode_id IS NULL ORDER BY l.extra_name ASC, l.resolution ASC");
+		$resultex = query("SELECT l.* FROM link l WHERE l.version_id=".escape($_GET['id'])." AND l.episode_id IS NULL ORDER BY l.extra_name ASC, l.id ASC");
 		$extras = array();
 		while ($rowex = mysqli_fetch_assoc($resultex)) {
+			$resultli = query("SELECT li.* FROM link_instance li WHERE li.link_id=".$rowex['id']." ORDER BY li.url ASC");
+			$link_instances = array();
+			while ($rowli = mysqli_fetch_assoc($resultli)) {
+				array_push($link_instances, $rowli);
+			}
+			$rowex['link_instances']=$link_instances;
 			array_push($extras, $rowex);
+			mysqli_free_result($resultli);
 		}
 		mysqli_free_result($resultex);
 	} else {
@@ -787,8 +922,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													<thead>
 														<tr>
 															<th style="width: 20%;" class="mandatory">Nom</th>
-															<th class="mandatory">Enllaç de streaming</th>
-															<th style="width: 15%;">Resolució</th>
+															<th class="mandatory">Enllaços de streaming / Resolució</th>
 															<th style="width: 15%;">Comentaris</th>
 															<th class="text-center" style="width: 5%;">Acció</th>
 														</tr>
@@ -806,15 +940,40 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-extras-list-id-<?php echo $j+1; ?>" name="form-extras-list-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $extras[$j]['id']; ?>"/>
 															</td>
 															<td>
-																<input id="form-extras-list-link-<?php echo $j+1; ?>" name="form-extras-list-link-<?php echo $j+1; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['url']); ?>" maxlength="2048" required placeholder="- Introdueix un enllaç -"/>
-															</td>
-															<td>
-																<input id="form-extras-list-resolution-<?php echo $j+1; ?>" name="form-extras-list-resolution-<?php echo $j+1; ?>" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($extras[$j]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
+																<table class="w-100" id="extras-instance-list-table-<?php echo $j+1; ?>" data-count="<?php echo max(count($extras[$j]['link_instances']),1); ?>">
+																	<tbody>
+<?php
+			for ($k=0;$k<count($extras[$j]['link_instances']);$k++) {
+?>
+																		<tr id="form-instance-extras-list-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
+																			<td class="pl-0 pt-0 pb-0 border-0">
+																				<input id="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" name="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['link_instances'][$k]['url']); ?>" maxlength="2048" placeholder="- Introdueix un enllaç -" required/>
+																				<input id="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-id" name="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($extras[$j]['link_instances'][$k]['id']); ?>"/>
+																			</td>
+																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
+																				<input id="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-resolution" name="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($extras[$j]['link_instances'][$k]['resolution']); ?>" maxlength="200" placeholder="- Tria -" required/>
+																			</td>
+																			<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
+																				<button id="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-delete" onclick="deleteExtraLinkInstanceRow(<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																			</td>
+																		</tr>
+<?php
+			}
+?>
+																	</tbody>
+																	<tfoot>
+																		<tr style="background: none;">
+																			<td colspan="3" class="text-center p-0 border-0">
+																				<button onclick="addExtraLinkInstanceRow(<?php echo $j+1; ?>);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+																			</td>
+																		</tr>
+																	</tfoot>
+																</table>
 															</td>
 															<td>
 																<input id="form-extras-list-comments-<?php echo $j+1; ?>" name="form-extras-list-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['comments']); ?>" maxlength="200"/>
 															</td>
-															<td class="text-center align-middle">
+															<td class="text-center pt-2">
 																<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionExtraRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
 															</td>
 														</tr>
@@ -824,7 +983,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<div class="w-100 text-center"><button onclick="addVersionExtraRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre enllaç extra</button></div>
+											<div class="w-100 text-center"><button onclick="addVersionExtraRow();" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre material extra</button></div>
 										</div>
 									</div>
 								</div>
