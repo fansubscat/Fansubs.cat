@@ -339,7 +339,7 @@ if ($count_unfiltered==0) {
 								</div>
 							</div>
 <?php
-		$resulte = query("SELECT e.*, et.title, ss.number season_number, ss.name season_name FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".$series['id']." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, IFNULL(et.title,e.name) ASC");
+		$resulte = query("SELECT e.*, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.name,et.title)) title, ss.number season_number, ss.name season_name FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".$series['id']." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, IFNULL(et.title,e.name) ASC");
 		$episodes = array();
 		while ($row = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $row);
@@ -497,7 +497,7 @@ if ($count_unfiltered==0) {
 
 		if (count($extras)>0) {
 ?>
-									<details class="extra-content<?php echo count($seasons)<2 ? ' extra-content-single-season' : ''; ?>">
+									<details class="extra-content<?php echo count($seasons)<2 ? ' extra-content-single-season' : ''; ?>"<?php echo $version['show_expanded_extras']==1 ? ' open' : ''; ?>>
 										<summary class="season_name">Contingut extra</summary>
 										<table class="episode-table" rules="rows">
 											<thead>

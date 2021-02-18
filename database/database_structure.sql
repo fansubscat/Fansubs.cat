@@ -156,6 +156,15 @@ CREATE TABLE `manga` (
   `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `manga_recommendation` (
+  `manga_version_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `manga_search_history` (
+  `query` varchar(200) NOT NULL,
+  `day` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `manga_version` (
   `id` int(11) NOT NULL,
   `manga_id` int(11) NOT NULL,
@@ -173,16 +182,8 @@ CREATE TABLE `manga_version` (
   `show_expanded_volumes` tinyint(1) NOT NULL DEFAULT 1,
   `show_chapter_numbers` tinyint(1) NOT NULL DEFAULT 1,
   `show_unavailable_chapters` tinyint(1) NOT NULL DEFAULT 1,
+  `show_expanded_extras` tinyint(1) NOT NULL DEFAULT 1,
   `order_type` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `manga_recommendation` (
-  `manga_version_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `manga_search_history` (
-  `query` varchar(200) NOT NULL,
-  `day` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `manga_view_log` (
@@ -365,6 +366,7 @@ CREATE TABLE `version` (
   `show_expanded_seasons` tinyint(1) NOT NULL DEFAULT 1,
   `show_episode_numbers` tinyint(1) NOT NULL DEFAULT 1,
   `show_unavailable_episodes` tinyint(1) NOT NULL DEFAULT 1,
+  `show_expanded_extras` tinyint(1) NOT NULL DEFAULT 1,
   `order_type` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

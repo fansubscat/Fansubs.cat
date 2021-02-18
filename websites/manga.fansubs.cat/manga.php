@@ -328,7 +328,7 @@ if ($count_unfiltered==0) {
 								</div>
 							</div>
 <?php
-		$resultc = query("SELECT c.*, ct.title, v.id volume_id, v.number volume_number, v.name volume_name FROM chapter c LEFT JOIN chapter_title ct ON c.id=ct.chapter_id AND ct.manga_version_id=".$version['id']." LEFT JOIN volume v ON c.volume_id=v.id WHERE c.manga_id=".$manga['id']." ORDER BY v.number IS NULL ASC, v.number ASC, c.number IS NULL ASC, c.number ASC, IFNULL(ct.title,c.name) ASC");
+		$resultc = query("SELECT c.*, IF(ct.title IS NOT NULL, ct.title, IF(c.number IS NULL,c.name,ct.title)) title, v.id volume_id, v.number volume_number, v.name volume_name FROM chapter c LEFT JOIN chapter_title ct ON c.id=ct.chapter_id AND ct.manga_version_id=".$version['id']." LEFT JOIN volume v ON c.volume_id=v.id WHERE c.manga_id=".$manga['id']." ORDER BY v.number IS NULL ASC, v.number ASC, c.number IS NULL ASC, c.number ASC, IFNULL(ct.title,c.name) ASC");
 		$chapters = array();
 		while ($row = mysqli_fetch_assoc($resultc)) {
 			array_push($chapters, $row);
@@ -469,7 +469,7 @@ if ($count_unfiltered==0) {
 
 		if (count($extras)>0) {
 ?>
-									<details class="extra-content<?php echo count($volumes)<2 ? ' extra-content-single-season' : ''; ?>">
+									<details class="extra-content<?php echo count($volumes)<2 ? ' extra-content-single-season' : ''; ?>"<?php echo $version['show_expanded_extras']==1 ? ' open' : ''; ?>>
 										<summary class="season_name">Contingut extra</summary>
 										<div style="width: 100%;">
 											<table class="episode-table" rules="rows">

@@ -86,6 +86,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['show_unavailable_episodes']=0;
 		}
+		if (!empty($_POST['show_expanded_extras'])){
+			$data['show_expanded_extras']=1;
+		} else {
+			$data['show_expanded_extras']=0;
+		}
 		if (!empty($_POST['order_type'])){
 			$data['order_type']=escape($_POST['order_type']);
 		} else {
@@ -256,7 +261,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-version", "S'ha actualitzat la versió de l'anime (id. d'anime: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",order_type=".$data['order_type']." WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -374,7 +379,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de l'anime (id. d'anime: ".$data['series_id'].")");
-			query("INSERT INTO version (series_id,status,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured,show_seasons,show_expanded_seasons,show_episode_numbers,show_unavailable_episodes,order_type) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['order_type'].")");
+			query("INSERT INTO version (series_id,status,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured,show_seasons,show_expanded_seasons,show_episode_numbers,show_unavailable_episodes,show_expanded_extras,order_type) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['show_expanded_extras'].",".$data['order_type'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -447,11 +452,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if ($series['type']=='movie') {
 			$row['show_seasons']=1;
 			$row['show_expanded_seasons']=1;
+			$row['show_expanded_extras']=1;
 			$row['show_episode_numbers']=0;
 			$row['show_unavailable_episodes']=1;
 		} else {
 			$row['show_seasons']=1;
 			$row['show_expanded_seasons']=1;
+			$row['show_expanded_extras']=1;
 			$row['show_episode_numbers']=1;
 			$row['show_unavailable_episodes']=1;
 		}
@@ -1055,6 +1062,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_expanded_seasons" id="form-show_expanded_seasons" value="1"<?php echo $row['show_expanded_seasons']==1 ? " checked" : ""; ?>>
 									<label class="form-check-label" for="form-show_expanded_seasons">Mostra les temporades desplegades per defecte <small class="text-muted">(normalment activat; si n'hi ha moltes, es pot desmarcar)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_expanded_extras" id="form-show_expanded_extras" value="1"<?php echo $row['show_expanded_extras']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_expanded_extras">Mostra els extres desplegats per defecte <small class="text-muted">(normalment activat; si n'hi ha molts o poc rellevants, es pot desmarcar)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_unavailable_episodes" id="form-show_unavailable_episodes" value="1"<?php echo $row['show_unavailable_episodes']==1 ? " checked" : ""; ?>>

@@ -82,6 +82,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['show_unavailable_chapters']=0;
 		}
+		if (!empty($_POST['show_expanded_extras'])){
+			$data['show_expanded_extras']=1;
+		} else {
+			$data['show_expanded_extras']=0;
+		}
 		if (!empty($_POST['order_type'])){
 			$data['order_type']=escape($_POST['order_type']);
 		} else {
@@ -201,7 +206,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-manga-version", "S'ha actualitzat la versió del manga (id. de manga: ".$data['manga_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE manga_version SET status=".$data['status'].",chapters_missing=".$data['chapters_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_volumes=".$data['show_volumes'].",show_expanded_volumes=".$data['show_expanded_volumes'].",show_chapter_numbers=".$data['show_chapter_numbers'].",show_unavailable_chapters=".$data['show_unavailable_chapters'].",order_type=".$data['order_type']." WHERE id=".$data['id']);
+			query("UPDATE manga_version SET status=".$data['status'].",chapters_missing=".$data['chapters_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_volumes=".$data['show_volumes'].",show_expanded_volumes=".$data['show_expanded_volumes'].",show_chapter_numbers=".$data['show_chapter_numbers'].",show_unavailable_chapters=".$data['show_unavailable_chapters'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_manga_version_fansub WHERE manga_version_id=".$data['id']);
 			query("DELETE FROM chapter_title WHERE manga_version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -296,7 +301,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-manga-version", "S'ha creat una versió del manga (id. de manga: ".$data['manga_id'].")");
-			query("INSERT INTO manga_version (manga_id,status,chapters_missing,created,created_by,updated,updated_by,files_updated,files_updated_by,is_featurable,is_always_featured,show_volumes,show_expanded_volumes,show_chapter_numbers,show_unavailable_chapters,order_type) VALUES (".$data['manga_id'].",".$data['status'].",".$data['chapters_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_volumes'].",".$data['show_expanded_volumes'].",".$data['show_chapter_numbers'].",".$data['show_unavailable_chapters'].",".$data['order_type'].")");
+			query("INSERT INTO manga_version (manga_id,status,chapters_missing,created,created_by,updated,updated_by,files_updated,files_updated_by,is_featurable,is_always_featured,show_volumes,show_expanded_volumes,show_chapter_numbers,show_unavailable_chapters,show_expanded_extras,order_type) VALUES (".$data['manga_id'].",".$data['status'].",".$data['chapters_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_volumes'].",".$data['show_expanded_volumes'].",".$data['show_chapter_numbers'].",".$data['show_unavailable_chapters'].",".$data['show_expanded_extras'].",".$data['order_type'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_manga_version_fansub (manga_version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -375,16 +380,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if ($manga['type']=='oneshot') {
 			$row['show_volumes']=1;
 			$row['show_expanded_volumes']=1;
+			$row['show_expanded_extras']=1;
 			$row['show_chapter_numbers']=0;
 			$row['show_unavailable_chapters']=1;
-			$row['order_type']=0;
 		} else {
 			$row['show_volumes']=1;
 			$row['show_expanded_volumes']=1;
+			$row['show_expanded_extras']=1;
 			$row['show_chapter_numbers']=1;
 			$row['show_unavailable_chapters']=1;
-			$row['order_type']=0;
 		}
+		$row['order_type']=0;
 
 		$fansubs = array();
 
@@ -758,6 +764,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_expanded_volumes" id="form-show_expanded_volumes" value="1"<?php echo $row['show_expanded_volumes']==1 ? " checked" : ""; ?>>
 									<label class="form-check-label" for="form-show_expanded_volumes">Mostra els volums desplegats per defecte <small class="text-muted">(normalment activat; si n'hi ha molts, es pot desmarcar)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_expanded_extras" id="form-show_expanded_extras" value="1"<?php echo $row['show_expanded_extras']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_expanded_extras">Mostra els extres desplegats per defecte <small class="text-muted">(normalment activat; si n'hi ha molts o poc rellevants, es pot desmarcar)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_unavailable_chapters" id="form-show_unavailable_chapters" value="1"<?php echo $row['show_unavailable_chapters']==1 ? " checked" : ""; ?>>
