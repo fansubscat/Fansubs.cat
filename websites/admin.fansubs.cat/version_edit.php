@@ -1034,20 +1034,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 						</div>
-						<div class="form-group text-center pt-2">
-<?php
-	if (!empty($row['id'])) {
-?>
-							<div class="form-check form-check-inline mb-2">
-								<input class="form-check-input" type="checkbox" name="do_not_count_as_update" id="form-do_not_count_as_update" value="1">
-								<label class="form-check-label" for="form-do_not_count_as_update">No moguis a "Darreres actualitzacions"</label>
-							</div>
-							<br />
-<?php
-	}
-?>
-							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
-						</div>
 						<div class="form-group">
 							<label for="form-view-options">Opcions de visualització de la fitxa pública</label>
 							<div id="form-view-options" class="row pl-3 pr-3">
@@ -1084,6 +1070,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<label class="form-check-label" for="form-order_type_natural">Aplica l'ordenació alfabètica natural <small class="text-muted">(capítols i especials barrejats, ordre: 1, 2, 3... 10, 11, 12...)</small></label>
 								</div>
 							</div>
+						</div>
+						<div class="form-group text-center pt-2">
+<?php
+	if (!empty($row['id'])) {
+?>
+							<div class="form-check form-check-inline mb-2">
+								<input class="form-check-input" type="checkbox" name="do_not_count_as_update" id="form-do_not_count_as_update" value="1">
+								<label class="form-check-label" for="form-do_not_count_as_update">No moguis a "Darreres actualitzacions"</label>
+							</div>
+							<br />
+<?php
+	}
+?>
+							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
 						</div>
 					</form>
 				</article>

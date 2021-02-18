@@ -548,22 +548,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<label for="form-chapter-list">Capítols, variants i fitxers</label>
 							<div class="container" id="form-chapter-list">
 <?php
-	if ($manga['show_chapter_numbers']==0 && $manga['order_type']!=0) {
+	if ($row['show_chapter_numbers']==0 && $row['order_type']!=0) {
 ?>
 								<div class="alert alert-warning">
-									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest manga <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $manga['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest manga <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
 <?php
-	} else if ($manga['show_chapter_numbers']==0) {
+	} else if ($row['show_chapter_numbers']==0) {
 ?>
 								<div class="alert alert-warning">
 									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest manga <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.</div>
 								</div>
 <?php
-	} else if ($manga['order_type']!=0) {
+	} else if ($row['order_type']!=0) {
 ?>
 								<div class="alert alert-warning">
-									<div><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $manga['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+									<div><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
 <?php
 	}
@@ -682,7 +682,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="form-extras-list">Fitxers extra</label>
+							<label for="form-extras-list">Material extra</label>
 							<div class="container" id="form-extras-list">
 <?php
 
@@ -744,7 +744,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<div class="w-100 text-center"><button onclick="addFileExtraRow();" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre fitxer extra</button></div>
+											<div class="w-100 text-center"><button onclick="addFileExtraRow();" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre material extra</button></div>
 										</div>
 									</div>
 								</div>
