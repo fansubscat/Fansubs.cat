@@ -93,16 +93,16 @@ function get_hours_or_minutes_formatted($time){
 	}
 }
 
-function print_chapter($row,$version_id,$manga){
+function print_chapter($row,$version_id,$manga,$version){
 	$result = query("SELECT f.* FROM file f WHERE f.chapter_id=".$row['id']." AND f.manga_version_id=$version_id ORDER BY f.id ASC");
 
-	if (mysqli_num_rows($result)==0 && $manga['show_unavailable_chapters']!=1){
+	if (mysqli_num_rows($result)==0 && $version['show_unavailable_chapters']!=1){
 		return;
 	}
 
 	$chapter_title='';
 	
-	if ($manga['show_chapter_numbers']==1 && !empty($row['number'])) {
+	if ($version['show_chapter_numbers']==1 && !empty($row['number'])) {
 		if (!empty($row['title'])){
 			$chapter_title.='Capítol '.str_replace('.',',',floatval($row['number'])).': '.htmlspecialchars($row['title']);
 		}
@@ -248,7 +248,7 @@ function print_carousel_item_manga($manga, $tracking_class, $specific_version, $
 	if ($show_new && !empty($manga['last_link_created']) && $manga['last_link_created']>=date('Y-m-d', strtotime("-1 week"))) {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat fa poc"><span class="fa fa-fw fa-certificate"></span></div>'."\n";
 	}
-	if ($manga['volumes']>1 && $manga['show_volumes']==1) {
+	if ($manga['volumes']>1) {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">'.$manga['volumes'].' volums</div>'."\n";
 	} else if ($manga['type']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">One-shot</div>'."\n";
@@ -279,8 +279,10 @@ function print_carousel_item_anime($anime, $tracking_class, $specific_version, $
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">'.$anime['episodes'].' films</div>'."\n";
 	} else if ($anime['type']=='movie') {
 		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">Film</div>'."\n";
-	} else if ($anime['seasons']>1 && $anime['show_seasons']==1) {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">'.$anime['seasons'].' temporades</div>'."\n";
+	} else if ($anime['seasons']>1) {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">Sèrie, '.$anime['seasons'].' temporades</div>'."\n";
+	} else {
+		echo "\t\t\t\t\t\t\t\t\t".'<div class="seasons">Sèrie</div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="title">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="ellipsized-title">'.$anime['name'].'</div>'."\n";

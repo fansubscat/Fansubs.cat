@@ -111,7 +111,7 @@ $new_episodes_tweets = array(
 	'Ja podeu mirar %2$d capítols nous de l\'anime «%1$s» (%TYPE% per %3$s) al web d\'anime.fansubs.cat!'
 );
 
-$result = mysqli_query($db_connection, "SELECT IF(m.show_volumes=1,vo.name,NULL), m.name, v.manga_id, m.type, m.slug, MAX(fi.id) id, fi.manga_version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, c.number, ct.title, m.show_chapter_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_manga_id AND fi2.manga_version_id=fi.manga_version_id AND fi2.original_filename IS NOT NULL) new_manga
+$result = mysqli_query($db_connection, "SELECT IF(v.show_volumes=1,vo.name,NULL), m.name, v.manga_id, m.type, m.slug, MAX(fi.id) id, fi.manga_version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, c.number, ct.title, v.show_chapter_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_manga_id AND fi2.manga_version_id=fi.manga_version_id AND fi2.original_filename IS NOT NULL) new_manga
 FROM file fi
 LEFT JOIN manga_version v ON fi.manga_version_id=v.id
 LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id
@@ -179,7 +179,7 @@ while ($row = mysqli_fetch_assoc($result)){
 
 mysqli_free_result($result);
 
-$result = mysqli_query($db_connection, "SELECT IF(s.show_seasons=1, IFNULL(se.name,s.name), s.name) name, v.series_id, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(DISTINCT l.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, et.title, s.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.lost=0) new_series
+$result = mysqli_query($db_connection, "SELECT IF(v.show_seasons=1, IFNULL(se.name,s.name), s.name) name, v.series_id, s.type, s.slug, MAX(l.id) id, l.version_id, COUNT(DISTINCT l.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, et.title, v.show_episode_numbers, NOT EXISTS(SELECT l2.id FROM link l2 WHERE l2.id<=$last_tweeted_anime_id AND l2.version_id=l.version_id AND l2.lost=0) new_series
 FROM link l
 LEFT JOIN version v ON l.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id

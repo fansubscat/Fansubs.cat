@@ -135,8 +135,9 @@ function markLinkAsNotViewed(link_id){
 	$('.new-episode[data-link-id='+link_id+']').removeClass('hidden');
 }
 
-function initializePlayer(title, method, url){
+function initializePlayer(title, method, sourceData){
 	currentVideoTitle = title;
+	var sources = JSON.parse(sourceData);
 	var start='<div class="white-popup"><div style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center;">';
 	var end='</div></div>';
 	switch (method) {
@@ -147,17 +148,38 @@ function initializePlayer(title, method, url){
 			}, true);
 			break;
 		case 'youtube':
-			$('#overlay-content').html(start+'<div class="plyr__video-embed" id="player"><iframe src="'+url+'" allowfullscreen allowtransparency></iframe></div>'+end);
+			//No multi-stream support: show the first one
+			$('#overlay-content').html(start+'<div class="plyr__video-embed" id="player"><iframe src="'+sources[0].url+'" allowfullscreen allowtransparency></iframe></div>'+end);
 			break;
 		case 'google-drive':
 		case 'direct-video':
 		default:
-			$('#overlay-content').html(start+'<video id="player" playsinline controls><source type="video/mp4" src="'+url+'" /></video>'+end);
+			var sourcesCode = "";
+			for(var i=0;i<sources.length;i++) {
+				if (sourcesCode!='') {
+					sourcesCode+="\n";
+				}
+				sourcesCode+='<source type="video/mp4" src="'+sources[i].url+'" size="'+sources[i].resolution+'"/>';
+			}
+			$('#overlay-content').html(start+'<video id="player" playsinline controls>'+sourcesCode+'</video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
 				parsePlayerError('E_DIRECT_LOAD_ERROR', true);
 			}, true);
 			break;
 	}
+
+	var highestQuality = 0;
+	var allQualities = [];
+	for(var i=0;i<sources.length;i++) {
+		if (!allQualities.includes(sources[i].resolution)) {
+			allQualities.push(parseInt(sources[i].resolution));
+		}
+		if (sources[i].resolution>highestQuality){
+			highestQuality=sources[i].resolution;
+		}
+	}
+
+	allQualities = allQualities.sort(function(a, b){return b-a});
 
 	player = new Plyr('#player', {
 		title: currentVideoTitle,
@@ -174,6 +196,10 @@ function initializePlayer(title, method, url){
 		],
 		keyboard: {keyboard: true, global: true},
 		tooltips: {controls: true, seek: true},
+		quality: {
+			default: highestQuality,
+			options: allQualities
+		},
 		i18n: {
 			restart: 'Reinicia',
 			rewind: 'Rebobina {seektime} s',
@@ -240,7 +266,8 @@ function initializePlayer(title, method, url){
 	});
 
 	if (method=='mega') {
-		loadMegaStream(url);
+		//No multi-stream support: show the first one
+		loadMegaStream(sources[0].url);
 	}
 }
 
@@ -343,7 +370,7 @@ function loadMegaStream(url){
 	currentMegaFile = mega.file(url);
 	currentMegaFile.loadAttributes((error, file) => {
 		if (error){
-			parsePlayerError('E_MEGA_LOAD_ERROR', true);
+			parsePlayerError('E_MEGA_LOAD_ERROR: '+error, true);
 		} else {
 			console.debug(file.name); // 'Readme.txt'
 			console.debug(file.size); // 1125 (bytes)
@@ -393,7 +420,7 @@ $(document).ready(function() {
 		$(".video-player").click(function(){
 			$('body').addClass('no-overflow');
 			$('#overlay').removeClass('hidden');
-			initializePlayer($(this).attr('data-title'), $(this).attr('data-method'), atob($(this).attr('data-url')));
+			initializePlayer($(this).attr('data-title'), $(this).attr('data-method'), atob($(this).attr('data-sources')));
 			beginVideoTracking($(this).attr('data-link-id'));
 		});
 		$(".viewed-indicator").click(function(){
@@ -679,7 +706,7 @@ $(document).ready(function() {
 		lastWindowWidth=$(window).width();
 	} else {
 		$('body').addClass('no-overflow');
-		initializePlayer($('#data-title').val(), $('#data-method').val(), atob($('#data-url').val()));
+		initializePlayer($('#data-title').val(), $('#data-method').val(), atob($('#data-sources').val()));
 		beginVideoTracking($('#data-link-id').val());
 	}
 

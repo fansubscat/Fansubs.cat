@@ -219,7 +219,7 @@ for ($i=0;$i<count($sections);$i++){
 ?>
 									<div class="seasons">One-shot</div>
 <?php
-				} else if ($row['volumes']>1 && $row['show_volumes']==1) {
+				} else if ($row['volumes']>1) {
 ?>
 									<div class="seasons">Manga <?php echo $row['volumes']==1 ? "d'1 volum" : ($row['volumes']==11 ? "d'11 volums" : 'de '.$row['volumes'].' volums'); ?>, <?php echo $row['chapters']==-1 ? 'en edició' : $row['chapters'].' capítols'; ?></div>
 <?php

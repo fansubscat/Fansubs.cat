@@ -62,6 +62,31 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['is_always_featured']=0;
 		}
+		if (!empty($_POST['show_volumes'])){
+			$data['show_volumes']=1;
+		} else {
+			$data['show_volumes']=0;
+		}
+		if (!empty($_POST['show_expanded_volumes'])){
+			$data['show_expanded_volumes']=1;
+		} else {
+			$data['show_expanded_volumes']=0;
+		}
+		if (!empty($_POST['show_chapter_numbers'])){
+			$data['show_chapter_numbers']=1;
+		} else {
+			$data['show_chapter_numbers']=0;
+		}
+		if (!empty($_POST['show_unavailable_chapters'])){
+			$data['show_unavailable_chapters']=1;
+		} else {
+			$data['show_unavailable_chapters']=0;
+		}
+		if (!empty($_POST['order_type'])){
+			$data['order_type']=escape($_POST['order_type']);
+		} else {
+			$data['order_type']=0;
+		}
 
 		$volumes=array();
 
@@ -176,7 +201,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-manga-version", "S'ha actualitzat la versió del manga (id. de manga: ".$data['manga_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE manga_version SET status=".$data['status'].",chapters_missing=".$data['chapters_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured']." WHERE id=".$data['id']);
+			query("UPDATE manga_version SET status=".$data['status'].",chapters_missing=".$data['chapters_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_volumes=".$data['show_volumes'].",show_expanded_volumes=".$data['show_expanded_volumes'].",show_chapter_numbers=".$data['show_chapter_numbers'].",show_unavailable_chapters=".$data['show_unavailable_chapters'].",order_type=".$data['order_type']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_manga_version_fansub WHERE manga_version_id=".$data['id']);
 			query("DELETE FROM chapter_title WHERE manga_version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -271,7 +296,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-manga-version", "S'ha creat una versió del manga (id. de manga: ".$data['manga_id'].")");
-			query("INSERT INTO manga_version (manga_id,status,chapters_missing,created,created_by,updated,updated_by,files_updated,files_updated_by,is_featurable,is_always_featured) VALUES (".$data['manga_id'].",".$data['status'].",".$data['chapters_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].")");
+			query("INSERT INTO manga_version (manga_id,status,chapters_missing,created,created_by,updated,updated_by,files_updated,files_updated_by,is_featurable,is_always_featured,show_volumes,show_expanded_volumes,show_chapter_numbers,show_unavailable_chapters,order_type) VALUES (".$data['manga_id'].",".$data['status'].",".$data['chapters_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_volumes'].",".$data['show_expanded_volumes'].",".$data['show_chapter_numbers'].",".$data['show_unavailable_chapters'].",".$data['order_type'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_manga_version_fansub (manga_version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -346,6 +371,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$resultm = query("SELECT m.* FROM manga m WHERE id=".escape($_GET['manga_id']));
 		$manga = mysqli_fetch_assoc($resultm) or crash('Manga not found');
 		mysqli_free_result($resultm);
+
+		if ($manga['type']=='oneshot') {
+			$row['show_volumes']=1;
+			$row['show_expanded_volumes']=1;
+			$row['show_chapter_numbers']=0;
+			$row['show_unavailable_chapters']=1;
+			$row['order_type']=0;
+		} else {
+			$row['show_volumes']=1;
+			$row['show_expanded_volumes']=1;
+			$row['show_chapter_numbers']=1;
+			$row['show_unavailable_chapters']=1;
+			$row['order_type']=0;
+		}
 
 		$fansubs = array();
 
@@ -702,6 +741,39 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<div class="w-100 text-center"><button onclick="addFileExtraRow();" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre fitxer extra</button></div>
 										</div>
 									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-view-options">Opcions de visualització de la fitxa pública</label>
+							<div id="form-view-options" class="row pl-3 pr-3">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_chapter_numbers" id="form-show_chapter_numbers" value="1"<?php echo $row['show_chapter_numbers']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_chapter_numbers">Mostra el número dels capítols <small class="text-muted">(normalment activat només en serialitzats; afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_volumes" id="form-show_volumes" value="1"<?php echo $row['show_volumes']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_volumes">Separa per volums i mostra'n els noms <small class="text-muted">(normalment activat; si només n'hi ha un, no es mostrarà)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_expanded_volumes" id="form-show_expanded_volumes" value="1"<?php echo $row['show_expanded_volumes']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_expanded_volumes">Mostra els volums desplegats per defecte <small class="text-muted">(normalment activat; si n'hi ha molts, es pot desmarcar)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="show_unavailable_chapters" id="form-show_unavailable_chapters" value="1"<?php echo $row['show_unavailable_chapters']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-show_unavailable_chapters">Mostra els capítols que no tinguin cap enllaç <small class="text-muted">(normalment activat; apareixen en gris)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_standard" value="0"<?php echo $row['order_type']==0 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-order_type_standard">Aplica l'ordenació estàndard <small class="text-muted">(primer capítols normals per ordre numèric, després especials per ordre alfabètic estricte)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_alphabetic" value="1"<?php echo $row['order_type']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-order_type_alphabetic">Aplica l'ordenació alfabètica estricta <small class="text-muted">(capítols i especials barrejats, ordre: 1, 10, 11, 12..., 2, 3...)</small></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_natural" value="2"<?php echo $row['order_type']==2 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-order_type_natural">Aplica l'ordenació alfabètica natural <small class="text-muted">(capítols i especials barrejats, ordre: 1, 2, 3... 10, 11, 12...)</small></label>
 								</div>
 							</div>
 						</div>

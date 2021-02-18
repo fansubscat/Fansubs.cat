@@ -129,7 +129,7 @@ if ($manga['chapters']>1) {
 								<div><span class="fa fa-fw fa-ruler dataicon"></span><strong>Capítols:</strong> <?php echo $manga['chapters'].' capítols'; ?></div>
 <?php
 }
-if ($manga['volumes']>1 && $manga['show_volumes']==1) {
+if ($manga['volumes']>1) {
 ?>
 								<div><span class="fa fa-fw fa-th-large dataicon"></span><strong>Volums:</strong> <?php echo $manga['volumes'].' volums'; ?></div>
 <?php
@@ -378,13 +378,13 @@ if ($count_unfiltered==0) {
 			$last_volume_name = "";
 			$current_volume_chapters = array();
 			foreach ($chapters as $row) {
-				if ($row['volume_number']!=$last_volume_number && ($manga['show_volumes']==1 || empty($row['volume_number']))){
+				if ($row['volume_number']!=$last_volume_number && ($version['show_volumes']==1 || empty($row['volume_number']))){
 					if ($last_volume_number!=-1) {
 						array_push($volumes, array(
 							'volume_id' => $last_volume_id,
 							'volume_number' => $last_volume_number,
 							'volume_name' => $last_volume_name,
-							'chapters' => apply_sort($manga['order_type'],$current_volume_chapters)
+							'chapters' => apply_sort($version['order_type'],$current_volume_chapters)
 						));
 					}
 					$last_volume_number=$row['volume_number'];
@@ -399,7 +399,7 @@ if ($count_unfiltered==0) {
 				'volume_id' => $last_volume_id,
 				'volume_number' => $last_volume_number,
 				'volume_name' => $last_volume_name,
-				'chapters' => apply_sort($manga['order_type'],$current_volume_chapters)
+				'chapters' => apply_sort($version['order_type'],$current_volume_chapters)
 			));
 
 			$volume_available_chapters=array();
@@ -418,17 +418,17 @@ if ($count_unfiltered==0) {
 				$is_inside_empty_batch = ($volume_available_chapters[$index]==0 && (($index>0 && $volume_available_chapters[$index-1]==0) || ($index<(count($volume_available_chapters)-1) && $volume_available_chapters[$index+1]==0)));
 				$is_first_in_empty_batch = $is_inside_empty_batch && ($index==0 || ($index>0 && $volume_available_chapters[$index-1]!=0));
 
-				if ($is_first_in_empty_batch && $manga['show_unavailable_chapters']==1) {
+				if ($is_first_in_empty_batch && $version['show_unavailable_chapters']==1) {
 ?>
 									<div class="empty-volumes"<?php echo ($index==0 ? ' style="margin-top: 0;"' : '') ?>>
 										<a onclick="$(this.parentNode.parentNode).find('.season').removeClass('hidden');$(this.parentNode.parentNode).find('.empty-volumes').addClass('hidden');">Hi ha més volums sense contingut disponible. Prem per a mostrar-los tots.</a>
 									</div>
 <?php
 				}
-				if ($manga['show_unavailable_chapters']==1 || $volume_available_chapters[$index]>0) {
+				if ($version['show_unavailable_chapters']==1 || $volume_available_chapters[$index]>0) {
 ?>
-									<details id="volum-<?php echo !empty($volume['volume_number']) ? $volume['volume_number'] : 'altres'; ?>" class="season<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($manga['show_expanded_volumes']==1 && $volume_available_chapters[$index]>0) ? ' open' : ''; ?>>
-										<summary class="season_name"><?php echo !empty($volume['volume_number']) ? (($manga['show_volumes']!=1 || (count($volumes)==2 && empty($last_volume_number))) ? 'Volum únic' : (!empty($volume['volume_name']) ? $volume['volume_name'] : (count($volumes)>1 ? 'Volum '.$volume['volume_number'] : 'Volum únic'))) : 'Altres'; ?><?php echo $volume_available_chapters[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
+									<details id="volum-<?php echo !empty($volume['volume_number']) ? $volume['volume_number'] : 'altres'; ?>" class="season<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_volumes']==1 && $volume_available_chapters[$index]>0) ? ' open' : ''; ?>>
+										<summary class="season_name"><?php echo !empty($volume['volume_number']) ? (($version['show_volumes']!=1 || (count($volumes)==2 && empty($last_volume_number))) ? 'Volum únic' : (!empty($volume['volume_name']) ? $volume['volume_name'] : (count($volumes)>1 ? 'Volum '.$volume['volume_number'] : 'Volum únic'))) : 'Altres'; ?><?php echo $volume_available_chapters[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
 										<div class="volume-container">
 <?php
 					if (file_exists('images/covers/'.$version['id'].'_'.$volume['volume_id'].'.jpg')) {
@@ -449,7 +449,7 @@ if ($count_unfiltered==0) {
 													<tbody>
 <?php
 					foreach ($volume['chapters'] as $chapter) {
-						print_chapter($chapter, $version['id'], $manga);
+						print_chapter($chapter, $version['id'], $manga, $version);
 					}
 ?>
 													</tbody>
@@ -545,7 +545,7 @@ mysqli_free_result($resultrm);
 
 //Begin copy from index.php
 $max_items=24;
-$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id AND ss.episodes>0) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 //End copy from index.php
 //1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $manga['genres']));

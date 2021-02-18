@@ -76,35 +76,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca synopsis");
 		}
-		if (!empty($_POST['show_volumes'])){
-			$data['show_volumes']=1;
-		} else {
-			$data['show_volumes']=0;
-		}
-		if (!empty($_POST['show_expanded_volumes'])){
-			$data['show_expanded_volumes']=1;
-		} else {
-			$data['show_expanded_volumes']=0;
-		}
-		if (!empty($_POST['show_chapter_numbers'])){
-			$data['show_chapter_numbers']=1;
-		} else {
-			$data['show_chapter_numbers']=0;
-		}
-		if (!empty($_POST['show_unavailable_chapters'])){
-			$data['show_unavailable_chapters']=1;
-		} else {
-			$data['show_unavailable_chapters']=0;
-		}
 		if (!empty($_POST['has_licensed_parts'])){
 			$data['has_licensed_parts']=1;
 		} else {
 			$data['has_licensed_parts']=0;
-		}
-		if (!empty($_POST['order_type'])){
-			$data['order_type']=escape($_POST['order_type']);
-		} else {
-			$data['order_type']=0;
 		}
 
 		$genres=array();
@@ -212,7 +187,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-manga", "S'ha actualitzat el manga amb nom '".$data['name']."' (id. de manga: ".$data['id'].")");
-			query("UPDATE manga SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",score=".$data['score'].",reader_type='".$data['reader_type']."',type='".$data['type']."',publish_date=".$data['publish_date'].",author=".$data['author'].",rating=".$data['rating'].",chapters=".$data['chapters'].",synopsis='".$data['synopsis']."',myanimelist_id=".$data['myanimelist_id'].",tadaima_id=".$data['tadaima_id'].",show_volumes=".$data['show_volumes'].",show_expanded_volumes=".$data['show_expanded_volumes'].",show_chapter_numbers=".$data['show_chapter_numbers'].",show_unavailable_chapters=".$data['show_unavailable_chapters'].",has_licensed_parts=".$data['has_licensed_parts'].",order_type=".$data['order_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE manga SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",score=".$data['score'].",reader_type='".$data['reader_type']."',type='".$data['type']."',publish_date=".$data['publish_date'].",author=".$data['author'].",rating=".$data['rating'].",chapters=".$data['chapters'].",synopsis='".$data['synopsis']."',myanimelist_id=".$data['myanimelist_id'].",tadaima_id=".$data['tadaima_id'].",has_licensed_parts=".$data['has_licensed_parts'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_manga_genre WHERE manga_id=".$data['id']);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_manga_genre (manga_id,genre_id) VALUES (".$data['id'].",".$genre.")");
@@ -269,7 +244,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-manga", "S'ha creat un manga amb nom '".$data['name']."'");
-			query("INSERT INTO manga (slug,name,alternate_names,keywords,type,publish_date,author,rating,chapters,synopsis,myanimelist_id,tadaima_id,score,reader_type,show_volumes,show_expanded_volumes,show_chapter_numbers,show_unavailable_chapters,has_licensed_parts,order_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."',".$data['publish_date'].",".$data['author'].",".$data['rating'].",".$data['chapters'].",'".$data['synopsis']."',".$data['myanimelist_id'].",".$data['tadaima_id'].",".$data['score'].",'".$data['reader_type']."',".$data['show_volumes'].",".$data['show_expanded_volumes'].",".$data['show_chapter_numbers'].",".$data['show_unavailable_chapters'].",".$data['has_licensed_parts'].",".$data['order_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO manga (slug,name,alternate_names,keywords,type,publish_date,author,rating,chapters,synopsis,myanimelist_id,tadaima_id,score,reader_type,has_licensed_parts,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."',".$data['publish_date'].",".$data['author'].",".$data['rating'].",".$data['chapters'].",'".$data['synopsis']."',".$data['myanimelist_id'].",".$data['tadaima_id'].",".$data['score'].",'".$data['reader_type']."',".$data['has_licensed_parts'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_manga_genre (manga_id,genre_id) VALUES (".$inserted_id.",".$genre.")");
@@ -334,12 +309,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$genres = array();
 		$volumes = array();
 		$chapters = array();
-		$row['show_volumes']=1;
-		$row['show_expanded_volumes']=1;
-		$row['show_chapter_numbers']=1;
-		$row['show_unavailable_chapters']=1;
 		$row['has_licensed_parts']=0;
-		$row['order_type']=0;
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -393,6 +363,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="form-check form-check-inline">
 											<input class="form-check-input" type="checkbox" name="is_open" id="form-is_open" value="1"<?php echo $row['chapters']==-1? " checked" : ""; ?>>
 											<label class="form-check-label" for="form-is_open">En edició (manga obert)</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="checkbox" name="has_licensed_parts" id="form-has_licensed_parts" value="1"<?php echo $row['has_licensed_parts']==1 ? " checked" : ""; ?>>
+											<label class="form-check-label" for="form-has_licensed_parts">Té parts llicenciades</label>
 										</div>
 									</div>
 								</div>
@@ -536,7 +510,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 10%;" class="mandatory">Núm.</th>
-													<th>Nom <small class="text-muted">(només es mostra si n'hi ha més d'un i la casella "Separa per volums" està marcada)</small></th>
+													<th>Nom <small class="text-muted">(només es mostra si n'hi ha més d'un)</small></th>
 													<th class="mandatory" style="width: 15%;">Capítols</th>
 													<th style="width: 15%;">Id. MyAnimeList</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -609,7 +583,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<tr>
 													<th style="width: 10%;">Vol.</th>
 													<th style="width: 10%;">Núm.</th>
-													<th>Títol <small class="text-muted">(informatiu, només es mostra públicament en el cas dels especials)</small></th>
+													<th>Títol <small class="text-muted">(només informatiu, només es mostra públicament en especials si no tenen títol específic a la versió)</small></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
@@ -824,43 +798,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<button onclick="addRelatedMangaAnimeRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un anime relacionat</button>
 										</div>
 									</div>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="form-view-options">Opcions de visualització de la fitxa pública</label>
-							<div id="form-view-options" class="row pl-3 pr-3">
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="show_volumes" id="form-show_volumes" value="1"<?php echo $row['show_volumes']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_volumes">Separa per volums i mostra'n els noms <small class="text-muted">(si només n'hi ha un, no es mostrarà)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="show_expanded_volumes" id="form-show_expanded_volumes" value="1"<?php echo $row['show_expanded_volumes']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_expanded_volumes">Mostra els volums desplegats per defecte <small class="text-muted">(si n'hi ha molts o amb molts capítols, és recomanable desmarcar-ho)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="show_chapter_numbers" id="form-show_chapter_numbers" value="1"<?php echo $row['show_chapter_numbers']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_chapter_numbers">Mostra el número dels capítols normals <small class="text-muted">(afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="show_unavailable_chapters" id="form-show_unavailable_chapters" value="1"<?php echo $row['show_unavailable_chapters']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_unavailable_chapters">Mostra els capítols que no tinguin cap enllaç <small class="text-muted">(apareixen en gris i amb una nota "No disponible")</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="has_licensed_parts" id="form-has_licensed_parts" value="1"<?php echo $row['has_licensed_parts']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-has_licensed_parts">El manga té parts llicenciades <small class="text-muted">(es mostrarà un avís indicant que sols hi ha les parts no llicenciades)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_standard" value="0"<?php echo $row['order_type']==0 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-order_type_standard">Aplica l'ordenació estàndard <small class="text-muted">(primer capítols normals per ordre numèric, després especials per ordre alfabètic estricte)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_alphabetic" value="1"<?php echo $row['order_type']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-order_type_alphabetic">Aplica l'ordenació alfabètica estricta <small class="text-muted">(capítols i especials barrejats, ordre: 1, 10, 11, 12..., 2, 3...)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_natural" value="2"<?php echo $row['order_type']==2 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-order_type_natural">Aplica l'ordenació alfabètica natural <small class="text-muted">(capítols i especials barrejats, ordre: 1, 2, 3... 10, 11, 12...)</small></label>
 								</div>
 							</div>
 						</div>

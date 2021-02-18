@@ -149,12 +149,7 @@ CREATE TABLE `manga` (
   `tadaima_id` int(11) DEFAULT NULL,
   `score` float DEFAULT NULL,
   `reader_type` varchar(200) NOT NULL DEFAULT 'paged',
-  `show_volumes` tinyint(1) NOT NULL DEFAULT 1,
-  `show_expanded_volumes` tinyint(1) NOT NULL DEFAULT 1,
-  `show_chapter_numbers` tinyint(1) NOT NULL DEFAULT 1,
-  `show_unavailable_chapters` tinyint(1) NOT NULL DEFAULT 1,
   `has_licensed_parts` tinyint(1) NOT NULL DEFAULT 0,
-  `order_type` int(11) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -173,7 +168,12 @@ CREATE TABLE `manga_version` (
   `files_updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `files_updated_by` varchar(200) NOT NULL,
   `is_featurable` tinyint(1) NOT NULL DEFAULT 0,
-  `is_always_featured` tinyint(1) NOT NULL DEFAULT 0
+  `is_always_featured` tinyint(1) NOT NULL DEFAULT 0,
+  `show_volumes` tinyint(1) NOT NULL DEFAULT 1,
+  `show_expanded_volumes` tinyint(1) NOT NULL DEFAULT 1,
+  `show_chapter_numbers` tinyint(1) NOT NULL DEFAULT 1,
+  `show_unavailable_chapters` tinyint(1) NOT NULL DEFAULT 1,
+  `order_type` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `manga_recommendation` (
@@ -329,12 +329,7 @@ CREATE TABLE `series` (
   `myanimelist_id` int(11) DEFAULT NULL,
   `tadaima_id` int(11) DEFAULT NULL,
   `score` float DEFAULT NULL,
-  `show_seasons` tinyint(1) NOT NULL DEFAULT 1,
-  `show_expanded_seasons` tinyint(1) NOT NULL DEFAULT 1,
-  `show_episode_numbers` tinyint(1) NOT NULL DEFAULT 1,
-  `show_unavailable_episodes` tinyint(1) NOT NULL DEFAULT 1,
   `has_licensed_parts` tinyint(1) NOT NULL DEFAULT 0,
-  `order_type` int(11) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -365,7 +360,12 @@ CREATE TABLE `version` (
   `links_updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `links_updated_by` varchar(200) NOT NULL,
   `is_featurable` tinyint(1) NOT NULL DEFAULT 0,
-  `is_always_featured` tinyint(1) NOT NULL DEFAULT 0
+  `is_always_featured` tinyint(1) NOT NULL DEFAULT 0,
+  `show_seasons` tinyint(1) NOT NULL DEFAULT 1,
+  `show_expanded_seasons` tinyint(1) NOT NULL DEFAULT 1,
+  `show_episode_numbers` tinyint(1) NOT NULL DEFAULT 1,
+  `show_unavailable_episodes` tinyint(1) NOT NULL DEFAULT 1,
+  `order_type` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `views` (

@@ -70,8 +70,7 @@ function populateMalData(data, staff) {
 	$('#form-image-preview-link').prop('href', url);
 
 	if (data.episodes==1) {
-		//Movie, populate first episode and uncheck show episode numbers
-		$('#form-show_episode_numbers').prop('checked', false);
+		//Movie, populate first episode
 		if ($('#form-episode-list-name-1').val()=='') {
 			$('#form-episode-list-name-1').val($("#form-name-with-autocomplete").val());
 		}
@@ -190,8 +189,7 @@ function populateMalDataManga(data) {
 	$('#form-image-preview-link').prop('href', url);
 
 	if (data.chapters==1) {
-		//One-shot, populate first chapter and uncheck show chapter numbers
-		$('#form-show_chapter_numbers').prop('checked', false);
+		//One-shot, populate first chapter
 		if ($('#form-chapter-list-name-1').val()=='') {
 			$('#form-chapter-list-name-1').val($("#form-name-with-autocomplete").val());
 		}

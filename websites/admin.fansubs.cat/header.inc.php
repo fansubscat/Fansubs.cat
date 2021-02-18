@@ -19,7 +19,7 @@ session_start();
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-		<script src="js/adminfansubscat.js?v=1"></script>
+		<script src="js/adminfansubscat.js?v=3"></script>
 		<script src="js/uncompress.js"></script>
 		<style>
 			html,body{height: 100%;}
@@ -30,6 +30,7 @@ session_start();
 			.fa-custom-anime:before { font-family: Arial; font-weight: bold; content: 'A'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
 			.fa-custom-manga:before { font-family: Arial; font-weight: bold; content: 'M'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
 			.fa-custom-news:before { font-family: Arial; font-weight: bold; content: 'N'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
+			.fa-custom-resources:before { font-family: Arial; font-weight: bold; content: 'R'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
 		</style>
 	</head>
 	<body>
@@ -156,9 +157,10 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 	}
 ?>
 				</ul>
-				<a class="text-light pr-4" href="https://anime.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (anime.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-anime fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
-				<a class="text-light pr-4" href="https://manga.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (manga.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
-				<a class="text-light pr-4" href="https://www.fansubs.cat<?php echo $base_url; ?>/" target="_blank" title="Mostra el web públic (www.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-news fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+				<a class="text-light pr-4" href="https://anime.fansubs.cat/" target="_blank" title="Anime - Web públic (anime.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-anime fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
+				<a class="text-light pr-4" href="https://manga.fansubs.cat/" target="_blank" title="Manga - Web públic (manga.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+				<a class="text-light pr-4" href="https://www.fansubs.cat/" target="_blank" title="Notícies - Web públic (www.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-news fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+				<!--<a class="text-light pr-4" href="https://recursos.fansubs.cat/" target="_blank" title="Recursos - Web públic (recursos.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-resources fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>-->
 				<a class="text-light pr-4" href="https://docs.google.com/document/d/10EMgWjVqrmDFUpxLI44cq4n5iOPHRKL3vZfL59Tt3SA/edit?usp=sharing" target="_blank" title="Ajuda"><span class="fa fa-question-circle"></span></a>
 				<a class="text-light" href="logout.php" title="Tanca la sessió"><?php echo htmlspecialchars($_SESSION['username']); ?><span class="fa fa-sign-out-alt ml-2"></span></a>
 			</div>
