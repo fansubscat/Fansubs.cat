@@ -368,6 +368,10 @@ $(document).ready(function() {
 				type="Click manga";
 				event="Click manga on related manga";
 				label=$(this).attr('data-manga-id');
+			} else if ($(this).hasClass('trackable-search-results-anime')){
+				type="Click anime";
+				event="Click anime on search results";
+				label=$(this).attr('data-anime-id');
 			} else if ($(this).hasClass('trackable-advent')){
 				type="Click advent calendar";
 				event="Click advent calendar";

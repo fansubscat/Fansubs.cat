@@ -223,14 +223,14 @@ function internal_print_chapter($chapter_title, $result) {
 }
 
 function exists_more_than_one_version($series_id){
-	$result = query("SELECT COUNT(*) cnt FROM manga_version WHERE manga_id=$series_id");
+	$result = query("SELECT COUNT(*) cnt FROM manga_version WHERE manga_id=$series_id AND hidden=0");
 	$row = mysqli_fetch_assoc($result);
 	mysqli_free_result($result);	
 	return ($row['cnt']>1);
 }
 
 function exists_more_than_one_version_anime($series_id){
-	$result = query("SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id");
+	$result = query("SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id AND hidden=0");
 	$row = mysqli_fetch_assoc($result);
 	mysqli_free_result($result);	
 	return ($row['cnt']>1);

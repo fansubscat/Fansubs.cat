@@ -62,6 +62,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['is_always_featured']=0;
 		}
+		if (!empty($_POST['hidden'])){
+			$data['hidden']=1;
+		} else {
+			$data['hidden']=0;
+		}
 		if (!empty($_POST['show_volumes'])){
 			$data['show_volumes']=1;
 		} else {
@@ -165,6 +170,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$i++;
 			}
 		}
+		if (!empty($links)) {
+			$data['hidden']=0;
+		}
 		mysqli_free_result($resultc);
 
 		$extras=array();
@@ -206,7 +214,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-manga-version", "S'ha actualitzat la versió del manga (id. de manga: ".$data['manga_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE manga_version SET status=".$data['status'].",chapters_missing=".$data['chapters_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_volumes=".$data['show_volumes'].",show_expanded_volumes=".$data['show_expanded_volumes'].",show_chapter_numbers=".$data['show_chapter_numbers'].",show_unavailable_chapters=".$data['show_unavailable_chapters'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type']." WHERE id=".$data['id']);
+			query("UPDATE manga_version SET status=".$data['status'].",chapters_missing=".$data['chapters_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_volumes=".$data['show_volumes'].",show_expanded_volumes=".$data['show_expanded_volumes'].",show_chapter_numbers=".$data['show_chapter_numbers'].",show_unavailable_chapters=".$data['show_unavailable_chapters'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type'].",hidden=".$data['hidden']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_manga_version_fansub WHERE manga_version_id=".$data['id']);
 			query("DELETE FROM chapter_title WHERE manga_version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -301,7 +309,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-manga-version", "S'ha creat una versió del manga (id. de manga: ".$data['manga_id'].")");
-			query("INSERT INTO manga_version (manga_id,status,chapters_missing,created,created_by,updated,updated_by,files_updated,files_updated_by,is_featurable,is_always_featured,show_volumes,show_expanded_volumes,show_chapter_numbers,show_unavailable_chapters,show_expanded_extras,order_type) VALUES (".$data['manga_id'].",".$data['status'].",".$data['chapters_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_volumes'].",".$data['show_expanded_volumes'].",".$data['show_chapter_numbers'].",".$data['show_unavailable_chapters'].",".$data['show_expanded_extras'].",".$data['order_type'].")");
+			query("INSERT INTO manga_version (manga_id,status,chapters_missing,created,created_by,updated,updated_by,files_updated,files_updated_by,is_featurable,is_always_featured,show_volumes,show_expanded_volumes,show_chapter_numbers,show_unavailable_chapters,show_expanded_extras,order_type,hidden) VALUES (".$data['manga_id'].",".$data['status'].",".$data['chapters_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_volumes'].",".$data['show_expanded_volumes'].",".$data['show_chapter_numbers'].",".$data['show_unavailable_chapters'].",".$data['show_expanded_extras'].",".$data['order_type'].",".$data['hidden'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_manga_version_fansub (manga_version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -378,19 +386,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resultm);
 
 		if ($manga['type']=='oneshot') {
+			$row['hidden']=0;
 			$row['show_volumes']=1;
 			$row['show_expanded_volumes']=1;
 			$row['show_expanded_extras']=1;
 			$row['show_chapter_numbers']=0;
 			$row['show_unavailable_chapters']=1;
+			$row['order_type']=0;
 		} else {
+			$row['hidden']=0;
 			$row['show_volumes']=1;
 			$row['show_expanded_volumes']=1;
 			$row['show_expanded_extras']=1;
 			$row['show_chapter_numbers']=1;
 			$row['show_unavailable_chapters']=1;
+			$row['order_type']=0;
 		}
-		$row['order_type']=0;
 
 		$fansubs = array();
 
@@ -753,6 +764,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="form-group">
 							<label for="form-view-options">Opcions de visualització de la fitxa pública</label>
 							<div id="form-view-options" class="row pl-3 pr-3">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="checkbox" name="hidden" id="form-hidden" value="1"<?php echo $row['hidden']==1 ? " checked" : ""; ?>>
+									<label class="form-check-label" for="form-hidden">Amaga aquesta versió mentre sigui buida <small class="text-muted">(no es mostrarà enlloc fins que no tingui fitxers; si en té, es desmarcarà automàticament)</small></label>
+								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_chapter_numbers" id="form-show_chapter_numbers" value="1"<?php echo $row['show_chapter_numbers']==1 ? " checked" : ""; ?>>
 									<label class="form-check-label" for="form-show_chapter_numbers">Mostra el número dels capítols <small class="text-muted">(normalment activat només en serialitzats; afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>

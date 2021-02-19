@@ -30,7 +30,7 @@ function get_shortened_tweet($tweet){
 
 function exists_more_than_one_version($series_id){
 	global $db_connection;
-	$result = mysqli_query($db_connection, "SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id") or die(mysqli_error($db_connection));
+	$result = mysqli_query($db_connection, "SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id AND hidden=0") or die(mysqli_error($db_connection));
 	$row = mysqli_fetch_assoc($result);
 	mysqli_free_result($result);	
 	return ($row['cnt']>1);
@@ -38,7 +38,7 @@ function exists_more_than_one_version($series_id){
 
 function exists_more_than_one_version_manga($manga_id){
 	global $db_connection;
-	$result = mysqli_query($db_connection, "SELECT COUNT(*) cnt FROM manga_version WHERE manga_id=$manga_id") or die(mysqli_error($db_connection));
+	$result = mysqli_query($db_connection, "SELECT COUNT(*) cnt FROM manga_version WHERE manga_id=$manga_id AND hidden=0") or die(mysqli_error($db_connection));
 	$row = mysqli_fetch_assoc($result);
 	mysqli_free_result($result);	
 	return ($row['cnt']>1);

@@ -30,7 +30,7 @@ if (!empty($header_social)) {
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/manga.css?v=7" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/manga.css?v=8" media="screen" />
 <?php
 $is_fools_day = (date('d')==28 && date('m')==12);
 if ($is_fools_day){
@@ -44,7 +44,7 @@ if ($is_fools_day){
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=7"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js?v=8"></script>
 	</head>
 	<body>
 		<div data-nosnippet id="overlay" class="hidden">
@@ -80,7 +80,7 @@ if ($is_fools_day){
 					<div id="options-fansubs">
 <?php
 $cookie_fansub_ids = get_cookie_fansub_ids();
-$resultf = query("SELECT f.id, IF(f.name='Fansub independent','Fansubs independents',f.name) name FROM fansub f WHERE EXISTS (SELECT vf.manga_version_id FROM rel_manga_version_fansub vf WHERE vf.fansub_id=f.id) ORDER BY IF(f.name='Fansub independent','Fansubs independents',f.name)");
+$resultf = query("SELECT f.id, IF(f.name='Fansub independent','Fansubs independents',f.name) name FROM fansub f WHERE EXISTS (SELECT vf.manga_version_id FROM rel_manga_version_fansub vf LEFT JOIN manga_version v ON vf.manga_version_id=v.id WHERE vf.fansub_id=f.id AND v.hidden=0) ORDER BY IF(f.name='Fansub independent','Fansubs independents',f.name)");
 while ($row = mysqli_fetch_assoc($resultf)) {
 ?>
 						<div class="options-item options-fansub">

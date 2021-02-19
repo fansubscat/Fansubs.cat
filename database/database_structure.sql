@@ -183,7 +183,8 @@ CREATE TABLE `manga_version` (
   `show_chapter_numbers` tinyint(1) NOT NULL DEFAULT 1,
   `show_unavailable_chapters` tinyint(1) NOT NULL DEFAULT 1,
   `show_expanded_extras` tinyint(1) NOT NULL DEFAULT 1,
-  `order_type` int(11) NOT NULL DEFAULT 0
+  `order_type` int(11) NOT NULL DEFAULT 0,
+  `hidden` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `manga_view_log` (
@@ -367,7 +368,8 @@ CREATE TABLE `version` (
   `show_episode_numbers` tinyint(1) NOT NULL DEFAULT 1,
   `show_unavailable_episodes` tinyint(1) NOT NULL DEFAULT 1,
   `show_expanded_extras` tinyint(1) NOT NULL DEFAULT 1,
-  `order_type` int(11) NOT NULL DEFAULT 0
+  `order_type` int(11) NOT NULL DEFAULT 0,
+  `hidden` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `views` (

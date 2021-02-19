@@ -31,7 +31,7 @@ if (!empty($header_social)) {
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
 		<link rel="stylesheet" href="https://cdn.plyr.io/3.6.4/plyr.css" />
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=19" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=20" media="screen" />
 <?php
 $is_fools_day = (date('d')==28 && date('m')==12);
 if ($is_fools_day){
@@ -46,7 +46,7 @@ if ($is_fools_day){
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 		<script src="https://cdn.plyr.io/3.6.4/plyr.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=19"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js?v=20"></script>
 		<script src="<?php echo $base_url; ?>/js/megajs.js"></script>
 		<script src="<?php echo $base_url; ?>/js/videostream.js"></script>
 	</head>
@@ -74,7 +74,7 @@ if ($is_fools_day){
 					<div id="options-fansubs">
 <?php
 $cookie_fansub_ids = get_cookie_fansub_ids();
-$resultf = query("SELECT f.id, IF(f.name='Fansub independent','Fansubs independents',f.name) name FROM fansub f WHERE EXISTS (SELECT vf.version_id FROM rel_version_fansub vf WHERE vf.fansub_id=f.id) ORDER BY IF(f.name='Fansub independent','Fansubs independents',f.name)");
+$resultf = query("SELECT f.id, IF(f.name='Fansub independent','Fansubs independents',f.name) name FROM fansub f WHERE EXISTS (SELECT vf.version_id FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id WHERE vf.fansub_id=f.id AND v.hidden=0) ORDER BY IF(f.name='Fansub independent','Fansubs independents',f.name)");
 while ($row = mysqli_fetch_assoc($resultf)) {
 ?>
 						<div class="options-item options-fansub">

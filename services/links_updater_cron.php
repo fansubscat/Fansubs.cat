@@ -60,15 +60,14 @@ if (flock($lock_pointer, LOCK_EX)) {
 											//We do not update the links_updated field because we don't want the series to show in "last updated"
 										}
 									} else {
-										query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES(".$folder['version_id'].",".$row['id'].",'Única',NULL,NULL,CURRENT_TIMESTAMP)");
-										query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES(".mysqli_insert_id($db_connection).",'".escape($real_link)."',$resolution,CURRENT_TIMESTAMP)");
+										query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES(".$link['id'].",'".escape($real_link)."',$resolution,CURRENT_TIMESTAMP)");
 										query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='Cron' WHERE id=".$folder['version_id']);
 										log_action("cron-create-link","S'ha inserit automàticament l'enllaç del fitxer '$filename' (id. de versió: ".$folder['version_id'].") i s'ha actualitzat la data de modificació de la versió");
 									}
 								} else {
 									query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES(".$folder['version_id'].",".$row['id'].",'Única',NULL,NULL,CURRENT_TIMESTAMP)");
 									query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES(".mysqli_insert_id($db_connection).",'".escape($real_link)."',$resolution,CURRENT_TIMESTAMP)");
-									query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='Cron' WHERE id=".$folder['version_id']);
+									query("UPDATE version SET hidden=0,links_updated=CURRENT_TIMESTAMP,links_updated_by='Cron' WHERE id=".$folder['version_id']);
 									log_action("cron-create-link","S'ha inserit automàticament l'enllaç del fitxer '$filename' (id. de versió: ".$folder['version_id'].") i s'ha actualitzat la data de modificació de la versió");
 								}
 								//Now check if we need to upgrade in progress -> complete

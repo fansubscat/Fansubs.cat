@@ -187,7 +187,7 @@ if ($manga['has_licensed_parts']==1) {
 ?>
 						</div>
 <?php
-$result_unfiltered = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM manga_version v LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.manga_id=".$manga['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
+$result_unfiltered = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM manga_version v LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.hidden=0 AND v.manga_id=".$manga['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
 $count_unfiltered = mysqli_num_rows($result_unfiltered);
 mysqli_free_result($result_unfiltered);
 
@@ -195,7 +195,7 @@ $cookie_fansub_ids = (empty($_GET['f']) ? get_cookie_fansub_ids() : array());
 
 $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot() && empty($_GET['f'])) ? " AND v.status<>5 AND v.status<>4" : "").((!empty($_COOKIE['show_missing']) || !empty($_GET['f'])) ? "" : " AND v.chapters_missing=0").((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND (m.rating<>'XXX' OR m.rating IS NULL)" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM manga_version v2 LEFT JOIN rel_manga_version_fansub vf2 ON v2.id=vf2.manga_version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.manga_version_id FROM rel_manga_version_fansub vf3 WHERE vf3.manga_version_id=vf2.manga_version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
-$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM manga_version v LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN manga m ON v.manga_id=m.id WHERE v.manga_id=".$manga['id']."$cookie_extra_conditions GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
+$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM manga_version v LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN manga m ON v.manga_id=m.id WHERE v.hidden=0 AND v.manga_id=".$manga['id']."$cookie_extra_conditions GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
 $count = mysqli_num_rows($result);
 
 if ($count_unfiltered==0) {
@@ -505,18 +505,18 @@ if ($count_unfiltered==0) {
 <?php
 //Begin copy from index.php
 $max_items=24;
-$base_query="SELECT s.*, (SELECT nv.id FROM manga_version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.manga_id=s.id LIMIT 1) manga_version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(ss.id) FROM volume ss WHERE ss.manga_id=s.id) volumes, s.chapters, (SELECT MAX(ls.created) FROM file ls LEFT JOIN manga_version vs ON ls.manga_version_id=vs.id WHERE vs.manga_id=s.id) last_link_created FROM manga s LEFT JOIN manga_version v ON s.id=v.manga_id LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_manga_genre sg ON s.id=sg.manga_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, (SELECT nv.id FROM manga_version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.manga_id=s.id AND nv.hidden=0 LIMIT 1) manga_version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(ss.id) FROM volume ss WHERE ss.manga_id=s.id) volumes, s.chapters, (SELECT MAX(ls.created) FROM file ls LEFT JOIN manga_version vs ON ls.manga_version_id=vs.id WHERE vs.manga_id=s.id AND vs.hidden=0) last_link_created FROM manga s LEFT JOIN manga_version v ON s.id=v.manga_id LEFT JOIN rel_manga_version_fansub vf ON v.id=vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_manga_genre sg ON s.id=sg.manga_id LEFT JOIN genre g ON sg.genre_id = g.id";
 //End copy from index.php
 //1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $manga['genres']));
-$related_query="SELECT rm.related_manga_id id, m.name FROM related_manga_manga rm LEFT JOIN manga m ON rm.related_manga_id=m.id WHERE rm.manga_id=".$manga['id']." UNION SELECT id, NULL FROM manga WHERE id<>".$manga['id']." AND author='".escape($manga['author'])."' UNION (SELECT manga_id id, NULL FROM rel_manga_genre WHERE manga_id<>".$manga['id']." GROUP BY manga_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_manga_genre WHERE manga_id=".$manga['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
+$related_query="SELECT rm.related_manga_id id, m.name FROM related_manga_manga rm LEFT JOIN manga m ON rm.related_manga_id=m.id WHERE (SELECT COUNT(*) FROM manga_version v WHERE v.manga_id=m.id AND v.hidden=0)>0 AND rm.manga_id=".$manga['id']." UNION SELECT id, NULL FROM manga m WHERE (SELECT COUNT(*) FROM manga_version v WHERE v.manga_id=m.id AND v.hidden=0)>0 AND id<>".$manga['id']." AND author='".escape($manga['author'])."' UNION (SELECT manga_id id, NULL FROM rel_manga_genre mg WHERE (SELECT COUNT(*) FROM manga_version v WHERE v.manga_id=mg.manga_id AND v.hidden=0)>0 AND manga_id<>".$manga['id']." GROUP BY manga_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_manga_genre WHERE manga_id=".$manga['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
 $resultin = query($related_query);
 $in = array(-1);
 while ($row = mysqli_fetch_assoc($resultin)) {
 	$in[]=$row['id'];
 }
 mysqli_free_result($resultin);
-$resultrm = query($base_query . " WHERE s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
+$resultrm = query($base_query . " WHERE (SELECT COUNT(*) FROM manga_version v WHERE v.manga_id=s.id AND v.hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
 
 if (mysqli_num_rows($resultrm)>0) {
 ?>
@@ -545,18 +545,18 @@ mysqli_free_result($resultrm);
 
 //Begin copy from index.php
 $max_items=24;
-$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id AND ss.episodes>0) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id AND nv.hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id AND ss.episodes>0) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.hidden=0) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 //End copy from index.php
 //1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $manga['genres']));
-$related_query="SELECT ra.related_anime_id id, s.name FROM related_manga_anime ra LEFT JOIN series s ON ra.related_anime_id=s.id WHERE ra.manga_id=".$manga['id']." UNION SELECT id, NULL FROM series WHERE author='".escape($manga['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_manga_genre WHERE manga_id=".$manga['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
+$related_query="SELECT ra.related_anime_id id, s.name FROM related_manga_anime ra LEFT JOIN series s ON ra.related_anime_id=s.id WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.hidden=0)>0 AND ra.manga_id=".$manga['id']." UNION SELECT id, NULL FROM series s WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.hidden=0)>0 AND author='".escape($manga['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.hidden=0)>0 GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_manga_genre WHERE manga_id=".$manga['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
 $resultin = query($related_query);
 $in = array(-1);
 while ($row = mysqli_fetch_assoc($resultin)) {
 	$in[]=$row['id'];
 }
 mysqli_free_result($resultin);
-$resultra = query($base_query . " WHERE s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
+$resultra = query($base_query . " WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
 
 if (mysqli_num_rows($resultra)>0) {
 ?>

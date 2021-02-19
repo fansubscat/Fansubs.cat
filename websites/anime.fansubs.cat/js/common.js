@@ -331,7 +331,7 @@ function parsePlayerError(error, critical){
 		case /E_MEGA_LOAD_ERROR/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
-			message = "Ha fallat la càrrega inicial del vídeo.<br>És possible que se n'hagi superat el límit de visualitzacions o que el vídeo ja no existeixi.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+			message = "Ha fallat la càrrega inicial del vídeo.<br>És possible que el vídeo ja no existeixi o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
 			if (!isEmbedPage()) {
 				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			}
@@ -654,6 +654,10 @@ $(document).ready(function() {
 			} else if ($(this).hasClass('trackable-related-manga')){
 				type="Click manga";
 				event="Click related manga";
+				label=$(this).attr('data-manga-id');
+			} else if ($(this).hasClass('trackable-search-results-manga')){
+				type="Click manga";
+				event="Click manga on search results";
 				label=$(this).attr('data-manga-id');
 			} else if ($(this).hasClass('trackable-advent')){
 				type="Click advent calendar";
