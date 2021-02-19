@@ -170,7 +170,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$i++;
 			}
 		}
-		if (!empty($links)) {
+		if (!empty($files)) {
 			$data['hidden']=0;
 		}
 		mysqli_free_result($resultc);
