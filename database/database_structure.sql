@@ -247,23 +247,18 @@ CREATE TABLE `recommendation` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `related_manga` (
-  `series_id` int(11) NOT NULL,
-  `related_manga_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `related_manga_manga` (
   `manga_id` int(11) NOT NULL,
   `related_manga_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `related_manga_anime` (
   `manga_id` int(11) NOT NULL,
-  `related_anime_id` int(11) NOT NULL
+  `anime_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `related_series` (
-  `series_id` int(11) NOT NULL,
-  `related_series_id` int(11) NOT NULL
+CREATE TABLE `related_anime` (
+  `anime_id` int(11) NOT NULL,
+  `related_anime_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `rel_manga_genre` (
@@ -461,17 +456,14 @@ ALTER TABLE `read_session`
 ALTER TABLE `recommendation`
   ADD PRIMARY KEY (`version_id`);
 ALTER TABLE `related_manga`
-  ADD PRIMARY KEY (`series_id`,`related_manga_id`),
-  ADD KEY `related_manga_id` (`related_manga_id`);
-ALTER TABLE `related_manga_manga`
   ADD PRIMARY KEY (`manga_id`,`related_manga_id`),
   ADD KEY `related_manga_id` (`related_manga_id`);
 ALTER TABLE `related_manga_anime`
-  ADD PRIMARY KEY (`manga_id`,`related_anime_id`),
+  ADD PRIMARY KEY (`manga_id`,`anime_id`),
+  ADD KEY `related_anime_id` (`anime_id`);
+ALTER TABLE `related_anime`
+  ADD PRIMARY KEY (`anime_id`,`related_anime_id`),
   ADD KEY `related_anime_id` (`related_anime_id`);
-ALTER TABLE `related_series`
-  ADD PRIMARY KEY (`series_id`,`related_series_id`),
-  ADD KEY `related_series_id` (`related_series_id`);
 ALTER TABLE `rel_manga_genre`
   ADD PRIMARY KEY (`manga_id`,`genre_id`),
   ADD KEY `rel_manga_genre_ibfk_1` (`genre_id`);
@@ -591,17 +583,14 @@ ALTER TABLE `read_session`
 ALTER TABLE `recommendation`
   ADD CONSTRAINT `recommendation_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `related_manga`
-  ADD CONSTRAINT `related_manga_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `related_manga_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `related_manga_ibfk_2` FOREIGN KEY (`related_manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `related_manga_manga`
-  ADD CONSTRAINT `related_manga_manga_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `related_manga_manga_ibfk_2` FOREIGN KEY (`related_manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `related_manga_anime`
   ADD CONSTRAINT `related_manga_anime_ibfk_1` FOREIGN KEY (`manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `related_manga_anime_ibfk_2` FOREIGN KEY (`related_anime_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `related_series`
-  ADD CONSTRAINT `related_series_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `related_series_ibfk_2` FOREIGN KEY (`related_series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `related_manga_anime_ibfk_2` FOREIGN KEY (`anime_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `related_anime`
+  ADD CONSTRAINT `related_anime_ibfk_1` FOREIGN KEY (`anime_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `related_anime_ibfk_2` FOREIGN KEY (`related_anime_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `rel_manga_genre`
   ADD CONSTRAINT `rel_manga_genre_ibfk_1` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`),
   ADD CONSTRAINT `rel_manga_genre_ibfk_2` FOREIGN KEY (`manga_id`) REFERENCES `manga` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

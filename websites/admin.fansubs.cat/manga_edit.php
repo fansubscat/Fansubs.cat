@@ -221,13 +221,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					query("UPDATE chapter SET volume_id=(SELECT id FROM volume WHERE number=".$chapter['volume']." AND manga_id=".$data['id']."),number=".$chapter['number'].",name=".$chapter['name']." WHERE id=".$chapter['id']);
 				}
 			}
-			query("DELETE FROM related_manga_manga WHERE manga_id=".$data['id']);
+			query("DELETE FROM related_manga WHERE manga_id=".$data['id']." OR related_manga_id=".$data['id']);
 			foreach ($related_manga as $related_manga_id) {
-				query("REPLACE INTO related_manga_manga (manga_id,related_manga_id) VALUES (".$data['id'].",".$related_manga_id.")");
+				query("REPLACE INTO related_manga (manga_id,related_manga_id) VALUES (".$data['id'].",".$related_manga_id.")");
+				query("REPLACE INTO related_manga (manga_id,related_manga_id) VALUES (".$related_manga_id.",".$data['id'].")");
 			}
 			query("DELETE FROM related_manga_anime WHERE manga_id=".$data['id']);
 			foreach ($related_anime as $related_anime_id) {
-				query("REPLACE INTO related_manga_anime (manga_id,related_anime_id) VALUES (".$data['id'].",".$related_anime_id.")");
+				query("REPLACE INTO related_manga_anime (manga_id,anime_id) VALUES (".$data['id'].",".$related_anime_id.")");
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
@@ -256,10 +257,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO chapter (manga_id,volume_id,number,name) VALUES (".$inserted_id.",(SELECT id FROM volume WHERE number=".$chapter['volume']." AND manga_id=".$inserted_id."),".$chapter['number'].",".$chapter['name'].")");
 			}
 			foreach ($related_manga as $related_manga_id) {
-				query("REPLACE INTO related_manga_manga (manga_id,related_manga_id) VALUES (".$inserted_id.",".$related_manga_id.")");
+				query("REPLACE INTO related_manga (manga_id,related_manga_id) VALUES (".$inserted_id.",".$related_manga_id.")");
+				query("REPLACE INTO related_manga (manga_id,related_manga_id) VALUES (".$related_manga_id.",".$inserted_id.")");
 			}
 			foreach ($related_anime as $related_anime_id) {
-				query("REPLACE INTO related_manga_anime (manga_id,related_anime_id) VALUES (".$inserted_id.",".$related_anime_id.")");
+				query("REPLACE INTO related_manga_anime (manga_id,anime_id) VALUES (".$inserted_id.",".$related_anime_id.")");
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
@@ -653,7 +655,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 
 	if (!empty($row['id'])) {
-		$resultrm = query("SELECT rm.* FROM related_manga_manga rm WHERE rm.manga_id=".escape($_GET['id'])." ORDER BY rm.related_manga_id ASC");
+		$resultrm = query("SELECT DISTINCT t.manga_id, m.name FROM (SELECT rm.related_manga_id manga_id FROM related_manga rm WHERE rm.manga_id=".escape($_GET['id'])." UNION SELECT rm.manga_id manga_id FROM related_manga rm WHERE rm.related_manga_id=".escape($_GET['id']).") t LEFT JOIN manga m ON m.id=t.manga_id ORDER BY m.name ASC");
 		$related_manga = array();
 		while ($rowrm = mysqli_fetch_assoc($resultrm)) {
 			array_push($related_manga, $rowrm);
@@ -694,12 +696,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<tr id="form-relatedmangamanga-list-row-<?php echo $j+1; ?>">
 													<td>
 														<select id="form-relatedmangamanga-list-related_manga_id-<?php echo $j+1; ?>" name="form-relatedmangamanga-list-related_manga_id-<?php echo $j+1; ?>" class="form-control" required>
-															<option value="">- Selecciona un anime -</option>
+															<option value="">- Selecciona un manga -</option>
 <?php
 		$resultm = query("SELECT m.* FROM manga m WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY m.name ASC");
 		while ($mrow = mysqli_fetch_assoc($resultm)) {
 ?>
-															<option value="<?php echo $mrow['id']; ?>"<?php echo $related_manga[$j]['related_manga_id']==$mrow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($mrow['name']); ?></option>
+															<option value="<?php echo $mrow['id']; ?>"<?php echo $related_manga[$j]['manga_id']==$mrow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($mrow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($results);
@@ -730,7 +732,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 
 	if (!empty($row['id'])) {
-		$resultra = query("SELECT ra.* FROM related_manga_anime ra WHERE ra.manga_id=".escape($_GET['id'])." ORDER BY ra.related_anime_id ASC");
+		$resultra = query("SELECT ra.* FROM related_manga_anime ra LEFT JOIN series s ON ra.anime_id=s.id WHERE ra.manga_id=".escape($_GET['id'])." ORDER BY s.name ASC");
 		$related_anime = array();
 		while ($rowra = mysqli_fetch_assoc($resultra)) {
 			array_push($related_anime, $rowra);
@@ -776,7 +778,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$results = query("SELECT s.* FROM series s ORDER BY s.name ASC");
 		while ($srow = mysqli_fetch_assoc($results)) {
 ?>
-															<option value="<?php echo $srow['id']; ?>"<?php echo $related_anime[$j]['related_anime_id']==$srow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($srow['name']); ?></option>
+															<option value="<?php echo $srow['id']; ?>"<?php echo $related_anime[$j]['anime_id']==$srow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($srow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($results);
