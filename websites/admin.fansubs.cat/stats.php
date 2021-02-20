@@ -88,7 +88,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució (anime)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Evolució de l'anime</h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs" role="tablist">
@@ -259,7 +259,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució (manga)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Evolució del manga</h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs_manga" role="tablist">
@@ -566,7 +566,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions (anime)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d'anime</h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -626,7 +626,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions (manga)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions de manga</h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -693,9 +693,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$fansub_colors=array();
 	$link_count_values=array();
 	$result = query("SELECT b.fansub_name,SUM(b.link_count) link_count FROM (SELECT IF(COUNT(a.id)>20,a.fansub_name,'Altres') fansub_name, COUNT(a.id) link_count FROM (SELECT l.id, l.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE l.lost=0 GROUP BY l.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, link_count DESC");
-	mt_srand(0); //To always get the same values from the random colors
 	while ($row = mysqli_fetch_assoc($result)) {
-		array_push($fansub_values, "'".$row['fansub_name']."'");
+		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
+		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
 		array_push($fansub_colors, "'".sprintf('#%06X', mt_rand(0, 0xFFFFFF))."'");
 		array_push($link_count_values, $row['link_count']);
 	}
@@ -734,9 +734,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$fansub_colors=array();
 	$file_count_values=array();
 	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>20,a.fansub_name,'Altres') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.manga_version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_manga_version_fansub vf ON fi.manga_version_id = vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE fi.original_filename IS NOT NULL GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
-	mt_srand(0); //To always get the same values from the random colors
 	while ($row = mysqli_fetch_assoc($result)) {
-		array_push($fansub_values, "'".$row['fansub_name']."'");
+		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
+		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
 		array_push($fansub_colors, "'".sprintf('#%06X', mt_rand(0, 0xFFFFFF))."'");
 		array_push($file_count_values, $row['file_count']);
 	}
@@ -753,6 +753,42 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											{
 												data: [<?php echo implode(',',$file_count_values); ?>],
 												backgroundColor: [<?php echo implode(',',$fansub_colors); ?>]
+											}]
+										},
+										options: {
+											legend: {
+												position: 'right'
+											}
+										}
+									});
+								</script>
+							</article>
+						</div>
+					</div>
+					<div class="container d-flex justify-content-center p-4">
+						<div class="card w-100">
+							<article class="card-body">
+								<h4 class="card-title text-center mb-4 mt-1">Origen de les lectures de manga</h4>
+								<hr>
+<?php
+	$origin_labels=array("'Web'","'Tachiyomi'");
+	$origin_colors=array("'#28a745'","'#007bff'");
+	$result = query("SELECT (SELECT COUNT(*) FROM manga_view_log WHERE user_agent LIKE '%Tachiyomi%') tachiyomi, (SELECT COUNT(*) FROM `manga_view_log` WHERE user_agent NOT LIKE '%[via API]%') web");
+	$row = mysqli_fetch_assoc($result);
+	$origin_values=array($row['web'], $row['tachiyomi']);
+	mysqli_free_result($result);
+?>
+								<canvas id="manga_origin_chart"></canvas>
+								<script>
+									var ctx = document.getElementById('manga_origin_chart').getContext('2d');
+									var chart = new Chart(ctx, {
+										type: 'pie',
+										data: {
+											labels: [<?php echo implode(',',$origin_labels); ?>],
+											datasets: [
+											{
+												data: [<?php echo implode(',',$origin_values); ?>],
+												backgroundColor: [<?php echo implode(',',$origin_colors); ?>]
 											}]
 										},
 										options: {
@@ -826,7 +862,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució (anime)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Evolució de l'anime <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs_fansub" role="tablist">
@@ -997,7 +1033,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució (manga)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Evolució del manga <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs_fansub_manga" role="tablist">
@@ -1188,7 +1224,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els 10 animes més vistos (darrers 14 dies / sempre)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els 10 animes més vistos <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
 									<div class="w-50 pr-1">
@@ -1246,7 +1282,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els 10 mangues més llegits (darrers 14 dies / sempre)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els 10 mangues més llegits <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
 									<div class="w-50 pr-1">
@@ -1304,7 +1340,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions (anime)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d'anime <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -1364,7 +1400,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions (manga)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions de manga <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -1409,6 +1445,124 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											{
 												data: [<?php echo implode(',',$status_count_values); ?>],
 												backgroundColor: [<?php echo implode(',',$status_colors); ?>]
+											}]
+										},
+										options: {
+											legend: {
+												position: 'right'
+											}
+										}
+									});
+								</script>
+							</article>
+						</div>
+					</div>
+					<div class="container d-flex justify-content-center p-4">
+						<div class="card w-100">
+							<article class="card-body">
+								<h4 class="card-title text-center mb-4 mt-1">Nombre d'enllaços d'anime amb participació <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<hr>
+<?php
+	$fansub_values=array();
+	$fansub_colors=array();
+	$link_count_values=array();
+	$result = query("SELECT b.fansub_name,SUM(b.link_count) link_count FROM (SELECT a.fansub_name, COUNT(a.id) link_count FROM (SELECT l.id, l.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE l.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND l.lost=0 GROUP BY l.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, link_count DESC");
+	while ($row = mysqli_fetch_assoc($result)) {
+		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
+		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
+		array_push($fansub_colors, "'".sprintf('#%06X', mt_rand(0, 0xFFFFFF))."'");
+		array_push($link_count_values, $row['link_count']);
+	}
+	mysqli_free_result($result);
+?>
+								<canvas id="fansub_fansub_links_chart"></canvas>
+								<script>
+									var ctx = document.getElementById('fansub_fansub_links_chart').getContext('2d');
+									var chart = new Chart(ctx, {
+										type: 'pie',
+										data: {
+											labels: [<?php echo implode(',',$fansub_values); ?>],
+											datasets: [
+											{
+												data: [<?php echo implode(',',$link_count_values); ?>],
+												backgroundColor: [<?php echo implode(',',$fansub_colors); ?>]
+											}]
+										},
+										options: {
+											legend: {
+												position: 'right'
+											}
+										}
+									});
+								</script>
+							</article>
+						</div>
+					</div>
+					<div class="container d-flex justify-content-center p-4">
+						<div class="card w-100">
+							<article class="card-body">
+								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers de manga amb participació <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<hr>
+<?php
+	$fansub_values=array();
+	$fansub_colors=array();
+	$file_count_values=array();
+	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT a.fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.manga_version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_manga_version_fansub vf ON fi.manga_version_id = vf.manga_version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE fi.manga_version_id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND fi.original_filename IS NOT NULL GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, file_count DESC");
+	while ($row = mysqli_fetch_assoc($result)) {
+		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
+		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
+		array_push($fansub_colors, "'".sprintf('#%06X', mt_rand(0, 0xFFFFFF))."'");
+		array_push($file_count_values, $row['file_count']);
+	}
+	mysqli_free_result($result);
+?>
+								<canvas id="fansub_fansub_files_chart"></canvas>
+								<script>
+									var ctx = document.getElementById('fansub_fansub_files_chart').getContext('2d');
+									var chart = new Chart(ctx, {
+										type: 'pie',
+										data: {
+											labels: [<?php echo implode(',',$fansub_values); ?>],
+											datasets: [
+											{
+												data: [<?php echo implode(',',$file_count_values); ?>],
+												backgroundColor: [<?php echo implode(',',$fansub_colors); ?>]
+											}]
+										},
+										options: {
+											legend: {
+												position: 'right'
+											}
+										}
+									});
+								</script>
+							</article>
+						</div>
+					</div>
+					<div class="container d-flex justify-content-center p-4">
+						<div class="card w-100">
+							<article class="card-body">
+								<h4 class="card-title text-center mb-4 mt-1">Origen de les lectures de manga <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<hr>
+<?php
+	$origin_labels=array("'Web'","'Tachiyomi'");
+	$origin_colors=array("'#28a745'","'#007bff'");
+	$result = query("SELECT (SELECT COUNT(*) FROM manga_view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN manga_version v ON f.manga_version_id=v.id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND user_agent LIKE '%Tachiyomi%') tachiyomi, (SELECT COUNT(*) FROM manga_view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN manga_version v ON f.manga_version_id=v.id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND user_agent NOT LIKE '%[via API]%') web");
+	$row = mysqli_fetch_assoc($result);
+	$origin_values=array($row['web'], $row['tachiyomi']);
+	mysqli_free_result($result);
+?>
+								<canvas id="fansub_manga_origin_chart"></canvas>
+								<script>
+									var ctx = document.getElementById('fansub_manga_origin_chart').getContext('2d');
+									var chart = new Chart(ctx, {
+										type: 'pie',
+										data: {
+											labels: [<?php echo implode(',',$origin_labels); ?>],
+											datasets: [
+											{
+												data: [<?php echo implode(',',$origin_values); ?>],
+												backgroundColor: [<?php echo implode(',',$origin_colors); ?>]
 											}]
 										},
 										options: {

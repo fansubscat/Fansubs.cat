@@ -704,7 +704,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															<option value="<?php echo $mrow['id']; ?>"<?php echo $related_manga[$j]['manga_id']==$mrow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($mrow['name']); ?></option>
 <?php
 		}
-		mysqli_free_result($results);
+		mysqli_free_result($resultm);
 ?>
 														</select>
 													</td>

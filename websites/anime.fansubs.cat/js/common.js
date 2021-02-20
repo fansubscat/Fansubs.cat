@@ -144,7 +144,7 @@ function initializePlayer(title, method, sourceData){
 		case 'mega':
 			$('#overlay-content').html(start+'<video id="player" playsinline controls></video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
-				parsePlayerError('E_MEGA_PLAYER_ERROR', true);
+				parsePlayerError('E_MEGA_PLAYER_ERROR: '+e, true);
 			}, true);
 			break;
 		case 'youtube':
@@ -163,7 +163,7 @@ function initializePlayer(title, method, sourceData){
 			}
 			$('#overlay-content').html(start+'<video id="player" playsinline controls>'+sourcesCode+'</video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
-				parsePlayerError('E_DIRECT_LOAD_ERROR', true);
+				parsePlayerError('E_DIRECT_LOAD_ERROR: '+e, true);
 			}, true);
 			break;
 	}
@@ -313,7 +313,7 @@ function parsePlayerError(error, critical){
 		case /Bandwidth limit reached/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No es pot continuar"
-			message = "S'ha superat el límit de visualització del proveïdor del vídeo (MEGA).<br>Cal que esperis al voltant de 6 hores perquè es restableixi el límit.<br>Treballem per trobar un proveïdor que no tingui aquests límits, però ara per ara no hi podem fer res.<br><br>Mentre esperes, pots llegir manga en català a <a href=\"https://manga.fansubs.cat/\" style=\"font-weight: bold;\" target=\"_blank\">manga.fansubs.cat</a>: allà no hi ha límits!";
+			message = "S'ha superat el límit de visualització del proveïdor del vídeo (MEGA).<br>Cal que esperis al voltant de 6 hores perquè es restableixi el límit.<br>Estem mirant de trobar un proveïdor que no tingui aquests límits, però ara per ara no hi podem fer res.<br><br>Mentre esperes, pots llegir manga en català a <a href=\"https://manga.fansubs.cat/\" style=\"font-weight: bold;\" target=\"_blank\">manga.fansubs.cat</a>: allà no hi ha límits!";
 			if (!isEmbedPage()) {
 				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			}
@@ -331,7 +331,13 @@ function parsePlayerError(error, critical){
 		case /E_MEGA_LOAD_ERROR/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
-			message = "Ha fallat la càrrega inicial del vídeo.<br>És possible que el vídeo ja no existeixi o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+			if (/web browser lacks/.test(error) || /Streamer is not defined/.test(error)) {
+				message = "Sembla que el teu navegador no és compatible amb el reproductor.<br>Prova de fer servir un altre navegador o un altre dispositiu.";
+			} else if (/NetworkError/.test(error)){
+				message = "Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+			} else {
+				message = "És possible que hi hagi algun problema amb el fitxer o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.<br>Si continua sense funcionar, prova de fer servir un altre navegador o un altre dispositiu.";
+			}
 			if (!isEmbedPage()) {
 				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			}
@@ -340,7 +346,7 @@ function parsePlayerError(error, critical){
 		case /E_DIRECT_LOAD_ERROR/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
-			message = "Ha fallat la càrrega inicial del vídeo.<br>És possible que se n'hagi superat el límit de visualitzacions o que el vídeo ja no existeixi.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+			message = "És possible que hi hagi algun problema amb el fitxer o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.<br>Si continua sense funcionar, prova de fer servir un altre navegador o un altre dispositiu.";
 			if (!isEmbedPage()) {
 				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			}
@@ -348,6 +354,7 @@ function parsePlayerError(error, critical){
 			break;
 		default:
 			message = 'Error desconegut ('+error+')';
+			reportErrorToServer('mega-load-error', error);
 			break;
 	}
 
