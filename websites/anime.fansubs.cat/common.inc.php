@@ -403,6 +403,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 				array_push($link_instances, $lirow);
 			}
 			mysqli_free_result($resulti);
+			$link_instances = filter_link_instances($link_instances);
 
 			echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode">'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";

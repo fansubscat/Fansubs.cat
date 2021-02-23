@@ -14,6 +14,10 @@ function get_error_type($type) {
 			return '<span class="text-info">MEGA: Límit superat</span>';
 		case 'mega-player-failed':
 			return 'MEGA: Error de reproducció';
+		case 'mega-incompatible-browser':
+			return 'MEGA: Navegador no compatible';
+		case 'mega-connection-error':
+			return 'MEGA: Error de connexió';
 		case 'mega-load-failed':
 			return 'MEGA: Error de càrrega';
 		case 'direct-load-failed':

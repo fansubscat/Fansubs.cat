@@ -1,15 +1,28 @@
 <?php
 session_start();
-if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
-	file_get_contents($_GET['link'], false, stream_context_create(['http' => ['ignore_errors' => true, 'header' => 'Range: bytes=0-16']]));
 
-	$status_line = $http_response_header[0];
-	preg_match('{HTTP\/\S*\s(\d{3})}', $status_line, $match);
-	$status = $match[1];
-	if ($status !== "200" && $status!=="206") {
-		echo "KO";
+function retrieve_remote_file_size($url){
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);
+        curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+
+        $data = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+
+        curl_close($ch);
+        return array($code, $size);
+}
+
+
+if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
+	$response = retrieve_remote_file_size($_GET['link']);
+	if ($response[0] != "200" && $response[0]!="206") {
+		echo "KO,0";
 	} else {
-		echo "OK";
+		echo "OK,".$response[1];
 	}
 }
 ?>

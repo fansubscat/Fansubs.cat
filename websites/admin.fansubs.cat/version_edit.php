@@ -633,10 +633,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$where = '';
 		}
 
-		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type ASC, a.name ASC");
+		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type='server' DESC, a.type='googledrive' DESC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Google Drive').': '.htmlspecialchars($arow['name']); ?></option>
+											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : ($arow['type']=='googledrive' ? 'Google Drive' : 'Servidor propi')).': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);
@@ -658,7 +658,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 25%;" class="mandatory">Compte</th>
-													<th class="mandatory">Carpeta (MEGA) / Id. de carpeta (Google Drive)</th>
+													<th class="mandatory">Id. de carpeta (Google Drive) / Carpeta (resta)</th>
 													<th style="width: 15%;">Temporada</th>
 													<th class="text-center" style="width: 10%;">Sincronitza</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -682,10 +682,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$where = '';
 		}
 
-		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type ASC, a.name ASC");
+		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type='server' DESC, a.type='googledrive' DESC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-															<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Google Drive').': '.htmlspecialchars($arow['name']); ?></option>
+															<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : ($arow['type']=='googledrive' ? 'Google Drive' : 'Servidor propi')).': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);

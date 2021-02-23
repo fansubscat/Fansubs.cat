@@ -1306,13 +1306,15 @@ function verifyLinks(i) {
 	} else {
 		//Direct link
 		$.post("check_direct_link.php?link="+encodeURIComponent(links[i].link), function(data, status){
-			if (data=='OK') {
+			if (data.lastIndexOf('OK', 0)===0) {
 				//valid
 				validLinks++;
+				totalSize+=parseInt(data.split(',')[1]);
+				console.debug("Total file size: " + totalSize);
 				updateVerifyLinksResult(i+1);
 				linkVerifyRetries=0;
 				verifyLinks(i+1);
-			} else if (data=='KO') {
+			} else if (data.lastIndexOf('KO', 0)===0) {
 				//invalid
 				$('#link-verifier-wrong-links-list').append('<div class="row w-100"><p class="col-sm-4 font-weight-bold">'+links[i].text+'</p><p class="col-sm-8"><a href="'+links[i].link+'">'+links[i].link+'</a></p></div>');
 				invalidLinks++;
@@ -1693,14 +1695,8 @@ $(document).ready(function() {
 				} else {
 					var moreThanOne = false;
 					for (var i = 0; i < data.results.length; i++) {
-						var start = '';
-						if (data.results[i].link.startsWith('https://mega.nz/')) {
-							start = 'https://mega.nz/';
-						} else if (data.results[i].link.startsWith('https://drive.google.com/')) {
-							start = 'https://drive.google.com/';
-						} else {
-							continue; //Not MEGA nor Drive
-						}
+						var splitted = data.results[i].link.split('/');
+						start = splitted[0]+"//"+splitted[2]+"/";
 						var found = false;
 						$("[id^=form-links-list-"+data.results[i].id+"-link-][id$=url]").each(function (pos,e) {
 							if (found) {

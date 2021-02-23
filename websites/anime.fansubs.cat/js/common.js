@@ -135,6 +135,17 @@ function markLinkAsNotViewed(link_id){
 	$('.new-episode[data-link-id='+link_id+']').removeClass('hidden');
 }
 
+function getPlayerErrorEvent(e) {
+	var error = "";
+	var player =  document.getElementById('player')
+	if (player && player.error && player.error.code && player.error.message) {
+		error+=player.error.code+"-"+player.error.message;
+	} else {
+		error+="?";
+	}
+	return error;
+}
+
 function initializePlayer(title, method, sourceData){
 	currentVideoTitle = title;
 	var sources = JSON.parse(sourceData);
@@ -144,7 +155,7 @@ function initializePlayer(title, method, sourceData){
 		case 'mega':
 			$('#overlay-content').html(start+'<video id="player" playsinline controls></video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
-				parsePlayerError('E_MEGA_PLAYER_ERROR: '+e, true);
+				parsePlayerError('E_MEGA_PLAYER_ERROR: '+getPlayerErrorEvent(e), true);
 			}, true);
 			break;
 		case 'youtube':
@@ -163,7 +174,7 @@ function initializePlayer(title, method, sourceData){
 			}
 			$('#overlay-content').html(start+'<video id="player" playsinline controls>'+sourcesCode+'</video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
-				parsePlayerError('E_DIRECT_LOAD_ERROR: '+e, true);
+				parsePlayerError('E_DIRECT_LOAD_ERROR: '+getPlayerErrorEvent(e), true);
 			}, true);
 			break;
 	}
@@ -333,15 +344,17 @@ function parsePlayerError(error, critical){
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
 			if (/web browser lacks/.test(error) || /Streamer is not defined/.test(error)) {
 				message = "Sembla que el teu navegador no és compatible amb el reproductor.<br>Prova de fer servir un altre navegador o un altre dispositiu.";
+				reportErrorToServer('mega-incompatible-browser', error);
 			} else if (/NetworkError/.test(error)){
 				message = "Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+				reportErrorToServer('mega-connection-error', error);
 			} else {
 				message = "És possible que hi hagi algun problema amb el fitxer o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.<br>Si continua sense funcionar, prova de fer servir un altre navegador o un altre dispositiu.";
+				reportErrorToServer('mega-load-failed', error);
 			}
 			if (!isEmbedPage()) {
 				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			}
-			reportErrorToServer('mega-load-failed', error);
 			break;
 		case /E_DIRECT_LOAD_ERROR/.test(error):
 			critical = true;
@@ -353,8 +366,8 @@ function parsePlayerError(error, critical){
 			reportErrorToServer('direct-load-failed', error);
 			break;
 		default:
-			message = 'Error desconegut ('+error+')';
-			reportErrorToServer('mega-load-error', error);
+			message = 'Error no informat al servidor ('+error+')';
+			console.log();
 			break;
 	}
 

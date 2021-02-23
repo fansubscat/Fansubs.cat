@@ -2,6 +2,28 @@
 require_once("db.inc.php");
 require_once("/srv/services/fansubs.cat/googledrive.inc.php");
 
+function get_custom_server_files($base_url, $folder) {
+	try {
+		$results = file_get_contents($base_url.$folder);
+	} catch (Exception $e) {
+		return array('status' => 'ko', 'code' => 1);
+	}
+
+	$files = array();
+	foreach (explode(PHP_EOL, $results) as $line) {
+		preg_match('/.*href="(.*)".*/', $line, $matches, PREG_OFFSET_CAPTURE);
+		$filename = '';
+		if (count($matches)>1) {
+			$filename = urldecode($matches[1][0]);
+		}
+
+		if (!empty($filename) && $filename!='../') {
+			array_push($files, $filename.':::'.$base_url.$folder.'/'.$filename);
+		}
+	}
+	return array('status' => 'ok', 'files' => $files);
+}
+
 session_set_cookie_params(3600 * 24 * 30); // 30 days
 session_start();
 
@@ -116,6 +138,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				echo json_encode(array(
 					"status" => 'ko',
 					"error" => "Error en accedir a Google Drive. (codi: ".$res['code'].")"
+				));
+				die();
+			} else {
+				foreach ($res['files'] as $file) {
+					array_push($links,$account_folder['season_id'].':::'.$file);
+				}
+			}
+		} else if ($account_folder['type']=='server') {
+			$res = get_custom_server_files($account_folder['session_id'], $account_folder['folder']);
+			if ($res['status']=='ko') {
+				echo json_encode(array(
+					"status" => 'ko',
+					"error" => "Error en accedir al servidor propi. (codi: ".$res['code'].")"
 				));
 				die();
 			} else {
