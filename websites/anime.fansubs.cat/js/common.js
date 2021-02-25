@@ -137,7 +137,7 @@ function markLinkAsNotViewed(link_id){
 
 function getPlayerErrorEvent(e) {
 	var error = "";
-	var player =  document.getElementById('player')
+	var player =  document.getElementById('player');
 	if (player && player.error && player.error.code && player.error.message) {
 		error+=player.error.code+"-"+player.error.message;
 	} else {

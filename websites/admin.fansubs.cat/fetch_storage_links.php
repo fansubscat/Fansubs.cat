@@ -176,19 +176,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$number = $matches[1];
 				$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND number=$number".($season_id!=-1 ? " AND season_id=$season_id" : ''));
 				if ($row = mysqli_fetch_assoc($result)) {
-					if (!in_array($row['id'], $processed_episode_ids)) {
+					$splitted = explode('/', $real_link);
+					$start = $splitted[0].'//'.$splitted[2].'/';
+					if (!in_array($row['id'].'-'.$start, $processed_episode_ids)) {
 						$element = array();
 						$element['id'] = $row['id'];
 						$element['link'] = $real_link;
 						array_push($response, $element);
-						array_push($processed_episode_ids, $row['id']);
+						array_push($processed_episode_ids, $row['id'].'-'.$start);
 					} else {
 						//More than one link per episode - only first gets accepted
 						$element = array();
 						$element['file'] = $filename;
 						$element['link'] = $real_link;
 						$element['reason'] = "Múltiples enllaços";
-						$element['reason_description'] = "Hi ha més d'un enllaç per a aquest capítol, s'ha importat només el primer.";
+						$element['reason_description'] = "Hi ha més d'un enllaç del mateix tipus per a aquest capítol, s'ha importat només el primer.";
 						array_push($unmatched_results, $element);
 					}
 				} else {

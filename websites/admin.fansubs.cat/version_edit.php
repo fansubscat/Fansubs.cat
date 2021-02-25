@@ -709,7 +709,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resultss);
 ?>
 														</select>
-														<input id="form-folders-list-id-<?php echo $j+1; ?>" name="form-folders-list-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $folders[$j]['id']; ?>"/>
 													</td>
 													<td class="text-center align-middle">
 														<input id="form-folders-list-active-<?php echo $j+1; ?>" name="form-folders-list-active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $folders[$j]['active']==1? " checked" : ""; ?>/>
@@ -730,9 +729,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										</div>
 										<div class="col-sm text-right" style="padding-left: 0; padding-right: 0">
 											<select id="import-type" class="form-control form-control-sm form-inline" title="Indica el tipus de streaming preferit en aquesta actualització d'enllaços. Si trieu un tipus de compte, només s'utilitzarà aquell tipus. Si no n'hi ha cap d'aquell tipus, s'utilitzaran tots. Si hi ha alguns capítols a MEGA i altres a Google Drive, cal marcar 'Utilitza tots els comptes'." style="width: auto; display: inline; font-size: 78%;">
-												<option value="all">Utilitza tots els comptes</option>
+												<option value="all" selected>Utilitza tots els comptes</option>
 												<option value="googledrive">Prefereix Google Drive</option>
-												<option value="mega" selected>Prefereix MEGA</option>
+												<option value="mega">Prefereix MEGA</option>
 												<option value="sync">Només sincronitzats</option>
 											</select> →
 											<button type="button" id="import-from-mega" class="btn btn-primary btn-sm">

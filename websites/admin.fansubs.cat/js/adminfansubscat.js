@@ -14,6 +14,35 @@ function getDurationFromString(str) {
 	}
 }
 
+function copyToClipboard(text, el) {
+	var copyTest = document.queryCommandSupported('copy');
+	var elOriginalText = el.attr('data-original-title');
+
+	if (copyTest === true) {
+		var copyTextArea = document.createElement("textarea");
+		copyTextArea.value = text;
+		document.body.appendChild(copyTextArea);
+		copyTextArea.select();
+		try {
+			var successful = document.execCommand('copy');
+			var msg = successful ? 'Copiat!' : 'No s\'ha pogut copiar!';
+			el.attr('data-original-title', msg).tooltip({trigger: 'manual'});
+			el.attr('data-original-title', msg).tooltip('show');
+
+			setTimeout(function(){
+				el.tooltip('hide');
+			}, 2000);
+		} catch (err) {
+			console.log('Oops, unable to copy');
+		}
+		document.body.removeChild(copyTextArea);
+		el.attr('data-original-title', elOriginalText);
+	} else {
+		// Fallback if browser doesn't support .execCommand('copy')
+		window.prompt("Copia al porta-retalls: Control+C i prem Intro.", text);
+	}
+}
+
 function populateMalData(data, staff) {
 	if ($("#form-name-with-autocomplete").val()=='') {
 		$("#form-name-with-autocomplete").val(data.title);
@@ -1699,11 +1728,11 @@ $(document).ready(function() {
 						start = splitted[0]+"//"+splitted[2]+"/";
 						var found = false;
 						$("[id^=form-links-list-"+data.results[i].id+"-link-][id$=url]").each(function (pos,e) {
-							if (found) {
-								moreThanOne=true;
-								return;
-							}
 							if ($(e).val().startsWith(start)) {
+								if (found) {
+									moreThanOne=true;
+									return;
+								}
 								$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
 								$(e).val(data.results[i].link);
 								found = true;

@@ -12,10 +12,10 @@ var cookieOptions = {
 	domain: 'manga.fansubs.cat'
 };
 
-function getSource(file_id){
+function getSource(file_id, embed){
 	var start='<div class="white-popup"><div style="display: flex; height: 100%;">';
 	var end='</div></div>';
-	return start+'<iframe style="flex-grow: 1;" frameborder="0" src="/reader.php?file_id='+file_id+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>'+end;
+	return start+'<iframe style="flex-grow: 1;" frameborder="0" src="/reader.php?file_id='+file_id+(embed ? '&embed=1' : '')+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>'+end;
 }
 
 function sendAjaxViewEnd(){
@@ -112,7 +112,7 @@ $(document).ready(function() {
 		$(".manga-reader").click(function(){
 			$('body').addClass('no-overflow');
 			$('#overlay').removeClass('hidden');
-			$('#overlay-content').html(getSource($(this).attr('data-file-id')));
+			$('#overlay-content').html(getSource($(this).attr('data-file-id'), false));
 			currentFileId=$(this).attr('data-file-id');
 			//The chances of collision of this is so low that if we get a collision, it's no problem at all.
 			currentReadId=Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5);
@@ -427,7 +427,7 @@ $(document).ready(function() {
 		lastWindowWidth=$(window).width();
 	} else {
 		$('body').addClass('no-overflow');
-		$('#overlay-content').html(getSource($('#data-file-id')));
+		$('#overlay-content').html(getSource($('#data-file-id').val(), true));
 		//The chances of collision of this is so low that if we get a collision, it's no problem at all.
 		currentReadId=Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5);
 		currentStartTime=Math.floor(new Date().getTime()/1000);

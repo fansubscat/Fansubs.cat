@@ -596,7 +596,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
-			$resultf = query("SELECT f.* FROM file f WHERE f.manga_version_id=".escape($_GET['id'])." AND f.chapter_id=".$chapters[$i]['id']." ORDER BY f.id ASC");
+			$resultf = query("SELECT f.* FROM file f WHERE f.manga_version_id=".escape($_GET['id'])." AND f.chapter_id=".$chapters[$i]['id']." ORDER BY f.variant_name ASC, f.id ASC");
 			$files = array();
 			while ($rowf = mysqli_fetch_assoc($resultf)) {
 				array_push($files, $rowf);
