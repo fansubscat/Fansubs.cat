@@ -46,6 +46,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['downloads_url_3']="NULL";
 		}
+		if (!empty($_POST['storage_folder'])) {
+			$data['storage_folder']=escape($_POST['storage_folder']);
+		} else {
+			crash("Dades invàlides: manca storage_folder");
+		}
 		if (!empty($_POST['default_resolution'])) {
 			$data['default_resolution']="'".escape($_POST['default_resolution'])."'";
 		} else {
@@ -269,7 +274,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-version", "S'ha actualitzat la versió de l'anime (id. d'anime: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type'].",hidden=".$data['hidden']." WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",storage_folder='".$data['storage_folder']."',default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type'].",hidden=".$data['hidden']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -387,7 +392,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de l'anime (id. d'anime: ".$data['series_id'].")");
-			query("INSERT INTO version (series_id,status,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured,show_seasons,show_expanded_seasons,show_episode_numbers,show_unavailable_episodes,show_expanded_extras,order_type,hidden) VALUES (".$data['series_id'].",".$data['status'].",".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['show_expanded_extras'].",".$data['order_type'].",".$data['hidden'].")");
+			query("INSERT INTO version (series_id,status,storage_folder,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured,show_seasons,show_expanded_seasons,show_episode_numbers,show_unavailable_episodes,show_expanded_extras,order_type,hidden) VALUES (".$data['series_id'].",".$data['status'].",'".$data['storage_folder']."',".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['show_expanded_extras'].",".$data['order_type'].",".$data['hidden'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -495,6 +500,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<label for="form-series" class="mandatory">Anime</label>
 							<div id="form-series" class="font-weight-bold form-control"><?php echo htmlspecialchars($series['name']); ?></div>
 							<input name="series_id" type="hidden" value="<?php echo $series['id']; ?>"/>
+							<input id="series_type" type="hidden" value="<?php echo $series['type']; ?>"/>
 							<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 						</div>
 						<div class="row align-items-end">
@@ -606,8 +612,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col-sm">
+								<div class="form-group">
+									<label for="form-storage_folder"><span class="mandatory">Carpeta d'emmagatzematge</span> <small class="text-muted">(s'hi baixaran els fitxers; canvia-la només si saps què fas; el material extra es baixarà a la subcarpeta "Extres")</small></label>
+									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo $row['storage_folder']; ?>" maxlength="200"/>
+								</div>
+							</div>
+						</div>
 						<div class="form-group">
-							<label for="form-folders-list">Carpetes d'emmagatzematge <small class="text-muted">(per a l'obtenció automàtica d'enllaços)</small></label>
+							<label for="form-folders-list">Carpetes remotes <small class="text-muted">(per a l'obtenció automàtica d'enllaços)</small></label>
 							<div class="container" id="form-folders-list">
 <?php
 

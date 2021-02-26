@@ -7,4 +7,7 @@ $db_passwd="YOUR_DB_PASS_HERE";
 
 //Paths
 $services_path='/srv/services/fansubs.cat/';
+
+//Used to check internal calls only
+$internal_token='YOUR_INTERNAL_TOKEN_HERE';
 ?>

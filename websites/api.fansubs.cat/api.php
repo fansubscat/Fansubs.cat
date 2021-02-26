@@ -300,6 +300,44 @@ else if ($method === 'manga'){
 		show_invalid('No valid submethod specified.');
 	}
 }
+else if ($method === 'internal' && $_GET['token']===$internal_token){
+	$submethod = array_shift($request);
+	if ($submethod=='get_unconverted_links') {
+		$result = mysqli_query($db_connection, "SELECT li.*,v.storage_folder FROM link_instance li LEFT JOIN link l ON li.link_id=l.id LEFT JOIN version v ON l.version_id=v.id WHERE url LIKE 'https://mega.nz/%' AND NOT EXISTS (SELECT * FROM link_instance li2 WHERE li2.link_id=li.link_id AND li2.url NOT LIKE 'https://mega.nz/%')") or crash('Internal error: ' . mysqli_error($db_connection));
+		$elements = array();
+		while($row = mysqli_fetch_assoc($result)){
+			$elements[] = array(
+				'link_id' => $row['link_id'],
+				'url' => $row['url'],
+				'resolution' => $row['resolution'],
+				'storage_folder' => $row['storage_folder']
+			);
+		}
+
+		$response = array(
+			'status' => 'ok',
+			'result' => $elements
+		);
+		echo json_encode($response);
+	} else if ($submethod=='insert_converted_link') {
+		if (!empty($_GET['link_id']) && is_numeric($_GET['link_id']) && !empty($_GET['url']) && !empty($_GET['resolution'])) {
+			$link_id=$_GET['link_id'];
+			$url=mysqli_real_escape_string($db_connection, $_GET['url']);
+			$resolution=mysqli_real_escape_string($db_connection, $_GET['resolution']);
+			$result = mysqli_query($db_connection, "INSERT INTO link_instance (link_id, url, resolution, created) VALUES ($link_id, '$url', '$resolution', CURRENT_TIMESTAMP)") or crash('Internal error: ' . mysqli_error($db_connection));
+			
+			$response = array(
+				'status' => 'ok'
+			);
+			echo json_encode($response);
+		}
+		else {
+			show_invalid('No valid input provided.');
+		}
+	} else {
+		show_invalid('No valid submethod specified.');
+	}
+}
 else{
 	show_invalid('No valid method specified.');
 }

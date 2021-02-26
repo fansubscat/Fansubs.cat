@@ -85,7 +85,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (!empty($link_instances)) {
 ?>
 						<tr>
-							<td style="width: 80%;"><?php echo $episode_name . ' (Variant "'.$rowl['variant_name'].'")'; ?></td>
+							<td style="width: 85%;"><?php echo $episode_name . ' (Variant "'.$rowl['variant_name'].'")'; ?></td>
 							<td class="text-center"><button onclick="copyToClipboard('<?php echo 'https://anime.fansubs.cat/embed/'.$rowl['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
 						</tr>
 <?php
@@ -131,7 +131,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($link_instances)) {
 ?>
 					<tr>
-						<td style="width: 80%;"><strong><?php echo $rowex['extra_name']; ?></strong></td>
+						<td style="width: 85%;"><strong><?php echo $rowex['extra_name']; ?></strong></td>
 						<td class="text-center"><button onclick="copyToClipboard('<?php echo 'https://anime.fansubs.cat/embed/'.$rowex['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
 					</tr>
 <?php

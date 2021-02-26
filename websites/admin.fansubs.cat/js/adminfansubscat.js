@@ -1445,6 +1445,34 @@ function resetFileInput(fileInput) {
 	$('label[for="'+fileInput.attr('id')+'"]').html('<span class="fa fa-times pr-2"></span>Sense canvis');
 }
 
+function generateStorageFolder() {
+	var string = '';
+	var fansubs = [];
+	if ($('#form-fansub-1').val()>0) {
+		fansubs.push($('#form-fansub-1').find('option:selected').text());
+	}
+	if ($('#form-fansub-2').val()>0) {
+		fansubs.push($('#form-fansub-2').find('option:selected').text());
+	}
+	if ($('#form-fansub-3').val()>0) {
+		fansubs.push($('#form-fansub-3').find('option:selected').text());
+	}
+	fansubs.sort();
+	for(var i=0;i<fansubs.length;i++) {
+		if (string!='') {
+			string+=' + ';
+		}
+		string+=fansubs[i].replaceAll('/','-').replaceAll(' +','');
+	}
+	string+='/';
+	if ($('#series_type').val()=='movie') {
+		string+='Films';
+	} else {
+		string+=$('#form-series').text().replaceAll('/','-').replaceAll(':',' -').replaceAll('?','').replaceAll('♡',' ').replaceAll(';',' ').replaceAll('★',' ');
+	}
+	$('#form-storage_folder').val(string);
+}
+
 var malData;
 var malDataStaff;
 var malDataSeasonsEpisodes;
@@ -1455,6 +1483,19 @@ var uncompressReady = false;
 $(document).ready(function() {
 	loadArchiveFormats(['rar', 'zip'], function() {
 		uncompressReady = true;
+	});
+
+	if ($('#form-storage_folder').length==1) {
+		$('#form-fansub-1').on('change', generateStorageFolder);
+		$('#form-fansub-2').on('change', generateStorageFolder);
+		$('#form-fansub-3').on('change', generateStorageFolder);
+		if ($('#form-storage_folder').val()=='') {
+			generateStorageFolder();
+		}
+	}
+
+	$("#form-name-with-autocomplete").on('input', function() {
+		$("#form-slug").val(string_to_slug($("#form-name-with-autocomplete").val()));
 	});
 
 	$("#form-name-with-autocomplete").on('input', function() {

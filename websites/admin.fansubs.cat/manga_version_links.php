@@ -53,7 +53,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<thead>
 							<tr>
 								<th>Volum</th>
-								<th class="text-center">Enllaç</th>
+								<th class="text-center">Enllaços</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -61,8 +61,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		foreach ($volumes as $volume) {
 ?>
 						<tr>
-							<td style="width: 80%;"><strong><?php echo "Volum ".$volume['number'].(!empty($volume['name']) ? " (".$volume['name'].")" : ""); ?></strong></td>
-							<td class="text-center"><button onclick="copyToClipboard('<?php echo 'https://manga.fansubs.cat/'.($manga['type']=='oneshot' ? "one-shots" : "serialitzats").'/'.$manga['slug'].'#volum-'.$volume['number']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
+							<td style="width: 70%;"><strong><?php echo "Volum ".$volume['number'].(!empty($volume['name']) ? " (".$volume['name'].")" : ""); ?></strong></td>
+							<td class="text-center"><button onclick="copyToClipboard('<?php echo 'https://manga.fansubs.cat/'.($manga['type']=='oneshot' ? "one-shots" : "serialitzats").'/'.$manga['slug'].'#volum-'.$volume['number']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button> <button onclick="copyToClipboard('<?php echo 'https://manga.fansubs.cat/'.($manga['type']=='oneshot' ? "one-shots" : "serialitzats").'/'.$manga['slug'].'?v='.$_GET['id'].'#volum-'.$volume['number']; ?>', $(this));" class="btn btn-sm btn-info"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
 						</tr>
 <?php
 		}
@@ -113,7 +113,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($files, $rowf);
 ?>
 							<tr>
-								<td style="width: 80%;"><?php echo $chapter_name . ' (Variant "'.$rowf['variant_name'].'")'; ?></td>
+								<td style="width: 85%;"><?php echo $chapter_name . ' (Variant "'.$rowf['variant_name'].'")'; ?></td>
 								<td class="text-center"><button onclick="copyToClipboard('<?php echo 'https://manga.fansubs.cat/embed/'.$rowf['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
 							</tr>
 <?php
@@ -158,7 +158,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($link_instances)) {
 ?>
 					<tr>
-						<td style="width: 80%;"><strong><?php echo $rowex['extra_name']; ?></strong></td>
+						<td style="width: 85%;"><strong><?php echo $rowex['extra_name']; ?></strong></td>
 						<td class="text-center"><button onclick="copyToClipboard('<?php echo 'https://anime.fansubs.cat/embed/'.$rowex['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
 					</tr>
 <?php
