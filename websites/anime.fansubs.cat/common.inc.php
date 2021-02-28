@@ -3,6 +3,7 @@ const REGEXP_MEGA='/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?(
 const REGEXP_GOOGLE_DRIVE='/https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)?([^\/]*)(?:preview|view)?/';
 const REGEXP_YOUTUBE='/(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})?/';
 const REGEXP_DL_LINK='/^https:\/\/(?:drive\.google\.com|mega\.nz|mega\.co\.nz).*/';
+const REGEXP_STORAGE='/^storage:\/\/.*/';
 
 function is_robot(){
 	return !empty($_SERVER['HTTP_USER_AGENT']) && preg_match('/bot|crawl|slurp|spider|mediapartners/i', $_SERVER['HTTP_USER_AGENT']);
@@ -126,11 +127,22 @@ function get_provider($link_instances){
 	return $output;
 }
 
+function get_storage_url($url) {
+	global $storages;
+	if (count($storages)>0 && strpos($url, "storage://")===0) {
+		$rand = rand(0, count($storages)-1);
+		return str_replace("storage://", $storages[$rand], $url);
+	} else {
+		return $url;
+	}
+}
+
 function filter_link_instances($link_instances){
 	$methods = array();
 	$links_mega = array();
 	$links_googledrive = array();
 	$links_youtube = array();
+	$links_storage = array();
 	$links_direct = array();
 	foreach ($link_instances as $link_instance) {
 		if (preg_match(REGEXP_MEGA,$link_instance['url'])){
@@ -139,13 +151,19 @@ function filter_link_instances($link_instances){
 			array_push($links_googledrive, $link_instance);
 		} else if (preg_match(REGEXP_YOUTUBE,$link_instance['url'])){
 			array_push($links_youtube, $link_instance);
+		} else if (preg_match(REGEXP_STORAGE,$link_instance['url'])){
+			array_push($links_storage, $link_instance);
 		} else {
 			array_push($links_direct, $link_instance);
 		}
 	}
 
 	//This establishes the preferences order:
-	//Direct video > Google Drive > YouTube > MEGA
+	//Storage > Direct video > Google Drive > YouTube > MEGA
+
+	if (count($links_storage)>0) {
+		return $links_storage;
+	}
 
 	if (count($links_direct)>0) {
 		return $links_direct;
@@ -258,19 +276,21 @@ function get_video_sources($link_instances){
 			);
 		} else if (preg_match(REGEXP_GOOGLE_DRIVE,$link_instance['url'],$matches)){
 			$elements[]=array(
-				//Use older MEGA URL format (the one supported by mega.js)
 				'url' => "https://www.googleapis.com/drive/v3/files/".$matches[1]."?key=".$google_drive_api_key."&alt=media",
 				'resolution' => get_resolution_single($link_instance['resolution'])
 			);
 		} else if (preg_match(REGEXP_YOUTUBE,$link_instance['url'],$matches)){
 			$elements[]=array(
-				//Use older MEGA URL format (the one supported by mega.js)
 				'url' => "https://www.youtube.com/embed/".$matches[1]."?origin=https://anime.fansubs.cat&iv_load_policy=3&modestbranding=1&playsinline=1showinfo=0&rel=0&enablejsapi=1",
+				'resolution' => get_resolution_single($link_instance['resolution'])
+			);
+		} else if (preg_match(REGEXP_STORAGE,$link_instance['url'],$matches)){
+			$elements[]=array(
+				'url' => get_storage_url($link_instance['url']),
 				'resolution' => get_resolution_single($link_instance['resolution'])
 			);
 		} else {
 			$elements[]=array(
-				//Use older MEGA URL format (the one supported by mega.js)
 				'url' => $link_instance['url'],
 				'resolution' => get_resolution_single($link_instance['resolution'])
 			);

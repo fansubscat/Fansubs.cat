@@ -4,7 +4,7 @@ require_once("/srv/services/fansubs.cat/googledrive.inc.php");
 
 function get_custom_server_files($base_url, $folder) {
 	try {
-		$results = file_get_contents($base_url.str_replace(" ", "%20", $folder));
+		$results = file_get_contents($base_url.str_replace(" ", "%20", $folder).'/');
 	} catch (Exception $e) {
 		return array('status' => 'ko', 'code' => 1);
 	}
@@ -18,7 +18,7 @@ function get_custom_server_files($base_url, $folder) {
 		}
 
 		if (!empty($filename) && $filename!='../') {
-			array_push($files, $filename.':::'.$base_url.$folder.'/'.$filename);
+			array_push($files, $filename.':::'.'storage://'.$folder.'/'.$filename);
 		}
 	}
 	return array('status' => 'ok', 'files' => $files);
@@ -145,12 +145,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					array_push($links,$account_folder['season_id'].':::'.$file);
 				}
 			}
-		} else if ($account_folder['type']=='server') {
+		} else if ($account_folder['type']=='storage') {
 			$res = get_custom_server_files($account_folder['session_id'], $account_folder['folder']);
 			if ($res['status']=='ko') {
 				echo json_encode(array(
 					"status" => 'ko',
-					"error" => "Error en accedir al servidor propi. (codi: ".$res['code'].")"
+					"error" => "Error en accedir a l'emmagatzematge. (codi: ".$res['code'].")"
 				));
 				die();
 			} else {

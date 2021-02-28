@@ -647,10 +647,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$where = '';
 		}
 
-		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type='server' DESC, a.type='googledrive' DESC, a.name ASC");
+		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type='storage' DESC, a.type='googledrive' DESC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : ($arow['type']=='googledrive' ? 'Google Drive' : 'Servidor propi')).': '.htmlspecialchars($arow['name']); ?></option>
+											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : ($arow['type']=='googledrive' ? 'Google Drive' : 'Emmagatzematge')).': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);
@@ -696,10 +696,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$where = '';
 		}
 
-		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type='server' DESC, a.type='googledrive' DESC, a.name ASC");
+		$resulta = query("SELECT a.* FROM account a$where ORDER BY a.type='storage' DESC, a.type='googledrive' DESC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-															<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : ($arow['type']=='googledrive' ? 'Google Drive' : 'Servidor propi')).': '.htmlspecialchars($arow['name']); ?></option>
+															<option value="<?php echo $arow['id']; ?>"<?php echo $folders[$j]['account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : ($arow['type']=='googledrive' ? 'Google Drive' : 'Emmagatzematge')).': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);

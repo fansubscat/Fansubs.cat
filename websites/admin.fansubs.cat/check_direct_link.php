@@ -1,8 +1,20 @@
 <?php
+require_once("config.inc.php");
+
+function get_storage_url($url) {
+	global $storages;
+	if (count($storages)>0 && strpos($url, "storage://")===0) {
+		//Always the first storage
+		return str_replace("storage://", $storages[0], $url);
+	} else {
+		return $url;
+	}
+}
+
 session_start();
 
 function retrieve_remote_file_size($url){
-	$ch = curl_init(str_replace(" ", "%20", $url));
+	$ch = curl_init(str_replace(" ", "%20", get_storage_url($url)));
 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, TRUE);

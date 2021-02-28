@@ -72,11 +72,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="">- Selecciona -</option>
 							<option value="googledrive"<?php echo $row['type']=='googledrive' ? " selected" : ""; ?>>Google Drive</option>
 							<option value="mega"<?php echo $row['type']=='mega' ? " selected" : ""; ?>>MEGA</option>
-							<option value="server"<?php echo $row['type']=='server' ? " selected" : ""; ?>>Servidor propi</option>
+							<option value="storage"<?php echo $row['type']=='storage' ? " selected" : ""; ?>>Emmagatzematge</option>
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="form-session_id" class="mandatory">Id. de sessió (MEGA) / Id. d'unitat compartida (Google Drive) / URL base (servidor propi)</label>
+						<label for="form-session_id" class="mandatory">Id. de sessió (MEGA) / Id. d'unitat compartida (Google Drive) / URL base (emmagatzematge)</label>
 						<input class="form-control" name="session_id" id="form-session_id" required maxlength="200" value="<?php echo htmlspecialchars($row['session_id']); ?>">
 					</div>
 					<div class="form-group">
