@@ -4,7 +4,7 @@ require_once("/srv/services/fansubs.cat/googledrive.inc.php");
 
 function get_custom_server_files($base_url, $folder) {
 	try {
-		$results = file_get_contents($base_url.$folder);
+		$results = file_get_contents($base_url.str_replace(" ", "%20", $folder));
 	} catch (Exception $e) {
 		return array('status' => 'ko', 'code' => 1);
 	}

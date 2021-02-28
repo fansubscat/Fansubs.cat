@@ -303,13 +303,14 @@ else if ($method === 'manga'){
 else if ($method === 'internal' && $_GET['token']===$internal_token){
 	$submethod = array_shift($request);
 	if ($submethod=='get_unconverted_links') {
-		$result = mysqli_query($db_connection, "SELECT li.*,v.storage_folder FROM link_instance li LEFT JOIN link l ON li.link_id=l.id LEFT JOIN version v ON l.version_id=v.id WHERE url LIKE 'https://mega.nz/%' AND NOT EXISTS (SELECT * FROM link_instance li2 WHERE li2.link_id=li.link_id AND li2.url NOT LIKE 'https://mega.nz/%')") or crash('Internal error: ' . mysqli_error($db_connection));
+		$result = mysqli_query($db_connection, "SELECT li.*,v.storage_folder, IF(l.extra_name IS NULL,FALSE,TRUE) is_extra FROM link_instance li LEFT JOIN link l ON li.link_id=l.id LEFT JOIN version v ON l.version_id=v.id WHERE url LIKE 'https://mega.nz/%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND l.id>=".$_GET['from_id'] : '')." AND NOT EXISTS (SELECT * FROM link_instance li2 WHERE li2.link_id=li.link_id AND li2.url NOT LIKE 'https://mega.nz/%')") or crash('Internal error: ' . mysqli_error($db_connection));
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
 				'link_id' => $row['link_id'],
 				'url' => $row['url'],
 				'resolution' => $row['resolution'],
+				'is_extra' => $row['is_extra'] ? TRUE : FALSE,
 				'storage_folder' => $row['storage_folder']
 			);
 		}
@@ -320,10 +321,10 @@ else if ($method === 'internal' && $_GET['token']===$internal_token){
 		);
 		echo json_encode($response);
 	} else if ($submethod=='insert_converted_link') {
-		if (!empty($_GET['link_id']) && is_numeric($_GET['link_id']) && !empty($_GET['url']) && !empty($_GET['resolution'])) {
-			$link_id=$_GET['link_id'];
-			$url=mysqli_real_escape_string($db_connection, $_GET['url']);
-			$resolution=mysqli_real_escape_string($db_connection, $_GET['resolution']);
+		if (!empty($_POST['link_id']) && is_numeric($_POST['link_id']) && !empty($_POST['url']) && !empty($_POST['resolution'])) {
+			$link_id=$_POST['link_id'];
+			$url=mysqli_real_escape_string($db_connection, $_POST['url']);
+			$resolution=mysqli_real_escape_string($db_connection, $_POST['resolution']);
 			$result = mysqli_query($db_connection, "INSERT INTO link_instance (link_id, url, resolution, created) VALUES ($link_id, '$url', '$resolution', CURRENT_TIMESTAMP)") or crash('Internal error: ' . mysqli_error($db_connection));
 			
 			$response = array(
