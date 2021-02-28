@@ -14,7 +14,7 @@ $memcached_port=YOUR_MEMCACHED_PORT_HERE;
 $memcached_expiry_time=12*3600;
 
 //Google Drive API key
-$google_drive_api_key='YOUR_GOOGLE_DRIVE_API_KEYE_HERE';
+$google_drive_api_key='YOUR_GOOGLE_DRIVE_API_KEY_HERE';
 
 //Lock file for MEGA sync processes
 $mega_lock_file='/tmp/mega_fetch.lock';
@@ -24,4 +24,7 @@ $password_salt='YOUR_PASSWORD_SALT_HERE';
 
 //Populate this variable if you want to display a message on all listing pages
 $site_message="";
+
+//Storages
+$storages = array();
 ?>

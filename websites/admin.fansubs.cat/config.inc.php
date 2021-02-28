@@ -21,4 +21,7 @@ $password_salt='YOUR_PASSWORD_SALT_HERE';
 
 //Populate this variable if you want to display a message on all listing pages
 $site_message="";
+
+//Storages
+$storages = array();
 ?>
