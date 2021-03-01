@@ -136,6 +136,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 		case 'mangadex_edcec':
 			$result = fetch_via_mangadex_edcec($fansub_slug, $url, $last_fetched_item_date);
 			break;
+		case 'ouferrat':
+			$result = fetch_via_ouferrat($fansub_slug, $url, $last_fetched_item_date);
+			break;
 		case 'phpbb_dnf':
 			$result = fetch_via_phpbb_dnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
@@ -1334,6 +1337,47 @@ function fetch_via_mangadex_edcec($fansub_slug, $url, $last_fetched_item_date){
 		} else {
 			$elements[]=$item;
 		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_ouferrat($fansub_slug, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	//parse through the HTML and build up the elements feed as we go along
+	foreach($html->find('article') as $article) {
+		//Create an empty item
+		$item = array();
+
+		//Look up and add elements to the item   
+		$item[0]=preg_replace("/<br\W*?\/>/", " - ", $article->find('header h2 a', 0)->innertext);
+
+		$description = $article->innertext;
+		$description = preg_replace("/\<header(.*)\<\/header\>/i", '', trim($description));
+		$item[1]=$description;
+
+		$item[2]=parse_description($description);
+
+		//We have to explode because the format is: 05/07/2015 a les 19:48 / Ereza
+
+		$date = date_create_from_format('Y-m-d H:i', $article->find('time', 0)->innertext);
+
+		$item[3]=$date->format('Y-m-d H:i:s');
+		$item[4]=$url . substr($article->find('header h2 a', 0)->href, 1);
+		$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
+
+		$elements[]=$item;
 	}
 	return array('ok', $elements);
 }

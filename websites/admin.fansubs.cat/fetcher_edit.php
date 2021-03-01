@@ -99,6 +99,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="blogspot_tnf"<?php echo $row['method']=='blogspot_tnf' ? " selected" : ""; ?>>Blogspot (Tohoshinki no Fansub)</option>
 							<option value="catsub"<?php echo $row['method']=='catsub' ? " selected" : ""; ?>>CatSub</option>
 							<option value="mangadex_edcec"<?php echo $row['method']=='mangadex_edcec' ? " selected" : ""; ?>>Mangadex (El Detectiu Conan en català)</option>
+							<option value="ouferrat"<?php echo $row['method']=='ouferrat' ? " selected" : ""; ?>>Ou ferrat</option>
 							<option value="phpbb_dnf"<?php echo $row['method']=='phpbb_dnf' ? " selected" : ""; ?>>phpBB (Dragon no Fansub)</option>
 							<option value="phpbb_llpnf"<?php echo $row['method']=='phpbb_llpnf' ? " selected" : ""; ?>>phpBB (Lluna Plena no Fansub)</option>
 							<option value="roninfansub"<?php echo $row['method']=='roninfansub' ? " selected" : ""; ?>>Rōnin Fansub</option>

@@ -33,6 +33,8 @@ function get_method($method){
 			return "CatSub";
 		case 'mangadex_edcec':
 			return "Mangadex (El Detectiu Conan en català)";
+		case 'ouferrat':
+			return "Ou ferrat";
 		case 'phpbb_dnf':
 			return "phpBB (Dragon no Fansub)";
 		case 'phpbb_llpnf':
