@@ -917,6 +917,8 @@ function deleteVersionFolderRow(id) {
 		$("#form-folders-list-folder-"+j).attr('id','form-folders-list-folder-'+(j-1));
 		$("#form-folders-list-season_id-"+j).attr('name','form-folders-list-season_id-'+(j-1));
 		$("#form-folders-list-season_id-"+j).attr('id','form-folders-list-season_id-'+(j-1));
+		$("#form-folders-list-active-"+j).attr('name','form-folders-list-active-'+(j-1));
+		$("#form-folders-list-active-"+j).attr('id','form-folders-list-active-'+(j-1));
 		$("#form-folders-list-delete-"+j).attr('onclick','deleteVersionFolderRow('+(j-1)+');');
 		$("#form-folders-list-delete-"+j).attr('id','form-folders-list-delete-'+(j-1));
 	}
@@ -1334,7 +1336,7 @@ function verifyLinks(i) {
 		verifyLinks(i+1);
 	} else {
 		//Direct link
-		$.post("check_direct_link.php?link="+encodeURIComponent(links[i].link), function(data, status){
+		$.post("check_direct_link.php?link="+encodeURIComponent(links[i].link.replaceAll('&amp;','&')), function(data, status){
 			if (data.lastIndexOf('OK', 0)===0) {
 				//valid
 				validLinks++;

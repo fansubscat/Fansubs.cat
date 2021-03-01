@@ -50,7 +50,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$where = '';
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT l.id) links, (SELECT COUNT(*) FROM folder fo WHERE fo.active=1 AND fo.version_id=v.id) autofetch FROM version v LEFT JOIN link l ON v.id=l.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id$where GROUP BY v.id ORDER BY f.name, s.name");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT l.id) links, (SELECT COUNT(*) FROM folder fo WHERE fo.active=1 AND fo.version_id=v.id) autofetch FROM version v LEFT JOIN link l ON v.id=l.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id$where GROUP BY v.id ORDER BY fansub_name, s.name");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>

@@ -18,6 +18,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$where .= ' AND l.version_id='.$_GET['version_id'];
 	}
 
+	if (!empty($_GET['type']) && $_GET['type']=='storage') {
+		$where .= " AND li.url LIKE 'storage://%'";
+	}
+
 	$resultl = query("SELECT li.*,s.name series_name, e.number episode_number, e.name episode_name, ss.number season_number FROM link_instance li LEFT JOIN link l ON li.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season ss ON e.season_id=ss.id$where ORDER BY s.name ASC, ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, extra_name ASC");
 	while ($row = mysqli_fetch_assoc($resultl)) {
 		if (!empty($row['episode_id'])){
