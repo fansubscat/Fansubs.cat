@@ -138,10 +138,29 @@ function markLinkAsNotViewed(link_id){
 function getPlayerErrorEvent(e) {
 	var error = "";
 	var player =  document.getElementById('player');
-	if (player && player.error && player.error.code && player.error.message) {
-		error+=player.error.code+"-"+player.error.message;
+	if (player && player.error && player.error.code) {
+		var message = "";
+		if (player.error.message) {
+			message = " - "+player.error.message;
+		}
+		switch (player.error.code) {
+			case 1:
+				error+='1/ABORTED'+message;
+				break;
+			case 2:
+				error+='2/ABORTED'+message;
+				break;
+			case 3:
+				error+='3/ABORTED'+message;
+				break;
+			case 4:
+				error+='4/ABORTED'+message;
+				break;
+			default:
+				error+=player.error.code+'/UNKNOWN'+message;
+		}
 	} else {
-		error+="?";
+		error+="Error desconegut";
 	}
 	return error;
 }
