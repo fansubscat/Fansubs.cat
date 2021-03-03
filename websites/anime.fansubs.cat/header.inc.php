@@ -13,6 +13,7 @@ if ($header_tab!='movies' && $header_tab!='series' && $header_tab!='search' && $
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#000000" />
+		<meta name="referrer" content="origin" />
 <?php
 if (!empty($header_social)) {
 ?>
