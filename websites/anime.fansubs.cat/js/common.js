@@ -145,19 +145,19 @@ function getPlayerErrorEvent(e) {
 		}
 		switch (player.error.code) {
 			case 1:
-				error+='1/ABORTED'+message;
+				error+='1/ABORTED_BY_USER'+message;
 				break;
 			case 2:
-				error+='2/ABORTED'+message;
+				error+='2/NETWORK_ERROR'+message;
 				break;
 			case 3:
-				error+='3/ABORTED'+message;
+				error+='3/DECODER_ERROR'+message;
 				break;
 			case 4:
-				error+='4/ABORTED'+message;
+				error+='4/NOT_SUPPORTED'+message;
 				break;
 			default:
-				error+=player.error.code+'/UNKNOWN'+message;
+				error+=player.error.code+'/UNKNOWN_ERROR'+message;
 		}
 	} else {
 		error+="Error desconegut";

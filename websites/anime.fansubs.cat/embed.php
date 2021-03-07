@@ -64,12 +64,12 @@ $link_instances = filter_link_instances($link_instances);
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title><?php ?><?php echo $page_title; ?> | Fansubs.cat - Anime en català</title>
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" />
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=24" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=25" media="screen" />
 		<link rel="stylesheet" href="https://cdn.plyr.io/3.6.4/plyr.css" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.plyr.io/3.6.4/plyr.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=24"></script>
+		<script src="<?php echo $base_url; ?>/js/common.js?v=25"></script>
 		<script src="<?php echo $base_url; ?>/js/megajs.js"></script>
 		<script src="<?php echo $base_url; ?>/js/videostream.js"></script>
 	</head>

@@ -4,7 +4,14 @@ require_once("/srv/services/fansubs.cat/googledrive.inc.php");
 
 function get_custom_server_files($base_url, $folder) {
 	try {
-		$results = file_get_contents($base_url.str_replace("&", "%26", str_replace(" ", "%20", $folder)).'/');
+		$opts = array(
+			'http' => array(
+				'method' => "GET",
+				'header' => "Referer: https://anime.fansubs.cat/\r\n"
+			)
+		);
+		$context = stream_context_create($opts);
+		$results = file_get_contents($base_url.str_replace("&", "%26", str_replace(" ", "%20", $folder)).'/', FALSE, $context);
 	} catch (Exception $e) {
 		return array('status' => 'ko', 'code' => 1);
 	}

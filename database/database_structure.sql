@@ -349,6 +349,7 @@ CREATE TABLE `version` (
   `series_id` int(11) NOT NULL,
   `status` int(11) NOT NULL,
   `storage_folder` varchar(2048) NOT NULL,
+  `storage_processing` int(11) NOT NULL DEFAULT 0,
   `default_resolution` varchar(200) DEFAULT NULL,
   `episodes_missing` tinyint(1) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
