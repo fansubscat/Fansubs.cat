@@ -7,11 +7,11 @@ function get_custom_server_files($base_url, $folder) {
 		$opts = array(
 			'http' => array(
 				'method' => "GET",
-				'header' => "Referer: https://anime.fansubs.cat/\r\n"
+				'header' => "Referer: https://admin.fansubs.cat/\r\n"
 			)
 		);
 		$context = stream_context_create($opts);
-		$results = file_get_contents($base_url.str_replace("&", "%26", str_replace(" ", "%20", $folder)).'/', FALSE, $context);
+		$results = file_get_contents(generate_storage_url($base_url.str_replace("&", "%26", str_replace(" ", "%20", $folder)).'/'), FALSE, $context);
 	} catch (Exception $e) {
 		return array('status' => 'ko', 'code' => 1);
 	}

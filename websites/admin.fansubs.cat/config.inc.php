@@ -24,4 +24,9 @@ $site_message="";
 
 //Storages
 $storages = array();
+
+//Storage URL customization
+function generate_storage_url($url) {
+	return $url;
+}
 ?>

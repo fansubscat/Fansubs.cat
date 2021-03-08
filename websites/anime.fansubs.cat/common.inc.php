@@ -131,7 +131,7 @@ function get_storage_url($url) {
 	global $storages;
 	if (count($storages)>0 && strpos($url, "storage://")===0) {
 		$rand = rand(0, count($storages)-1);
-		return str_replace("storage://", $storages[$rand], $url);
+		return generate_storage_url(str_replace("storage://", $storages[$rand], $url));
 	} else {
 		return $url;
 	}

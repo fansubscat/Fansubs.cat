@@ -5,7 +5,7 @@ function get_storage_url($url) {
 	global $storages;
 	if (count($storages)>0 && strpos($url, "storage://")===0) {
 		//Always the first storage
-		return str_replace("storage://", $storages[0], $url);
+		return generate_storage_url(str_replace("storage://", $storages[0], $url));
 	} else {
 		return $url;
 	}
@@ -19,7 +19,7 @@ function retrieve_remote_file_size($url){
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, TRUE);
 	curl_setopt($ch, CURLOPT_NOBODY, TRUE);
-	curl_setopt($ch, CURLOPT_REFERER, "https://anime.fansubs.cat/");
+	curl_setopt($ch, CURLOPT_REFERER, "https://admin.fansubs.cat/");
 
 	$data = curl_exec($ch);
 	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
