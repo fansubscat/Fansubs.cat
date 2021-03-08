@@ -1,7 +1,7 @@
 <?php
 //Versions to avoid site caching
 const JS_VER=28;
-const CS_VER=15;
+const CS_VER=16;
 const MG_VER=1;
 const VS_VER=2;
 

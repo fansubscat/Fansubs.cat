@@ -290,6 +290,10 @@ h2, h3 {
 	pointer-events: auto;
 }
 
+.plyr--hide-controls {
+	cursor: none;
+}
+
 .plyr--hide-controls .plyr_extra_upper {
 	opacity: 0;
 	pointer-events: none;
