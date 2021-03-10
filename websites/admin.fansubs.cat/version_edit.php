@@ -322,16 +322,41 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$has_updated_links = FALSE;
 
 					$instance_ids=array();
+					$has_updated_mega_link=FALSE;
+					$has_updated_storage_link=FALSE;
 					foreach ($link['instances'] as $instance) {
 						if ($instance['id']==-1) {
 							query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES (".$link['id'].",".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
 							array_push($instance_ids,mysqli_insert_id($db_connection));
 							$has_updated_links = TRUE;
+							if (strpos($instance['url'], 'https://mega.nz/')!==FALSE) {
+								$has_updated_mega_link=TRUE;
+							} else if (strpos($instance['url'], 'storage://')!==FALSE) {
+								$has_updated_storage_link=TRUE;
+							} 
 						} else {
-							query("UPDATE link_instance SET url=".$instance['url'].",resolution=".$instance['resolution']." WHERE id=".$instance['id']);
+							$resoi = query("SELECT * FROM link_instance WHERE id=".$instance['id']);
+							$old_instance = mysqli_fetch_assoc($resoi);
+							mysqli_free_result($resoi);
+							if ($old_instance) {
+								query("UPDATE link_instance SET url=".$instance['url'].",resolution=".$instance['resolution']." WHERE id=".$instance['id']);
+								array_push($instance_ids,$instance['id']);
+								if ("'".escape($old_instance['url'])."'"!=$instance['url']) {
+									if (strpos($instance['url'], 'https://mega.nz/')!==FALSE) {
+										$has_updated_mega_link=TRUE;
+									} else if (strpos($instance['url'], 'storage://')!==FALSE) {
+										$has_updated_storage_link=TRUE;
+									} 
+								}
+							}
 						}
-						array_push($instance_ids,$instance['id']);
 					}
+
+					//If there is any new MEGA link and storage has been updated (no new link or no changes), delete all storages so they are recreated
+					if ($has_updated_mega_link && !$has_updated_storage_link) {
+						query("DELETE FROM link_instance WHERE link_id=".$link['id']." AND url LIKE 'storage://%'");
+					}
+
 					//Remove the ones that are no more in the form
 					query("DELETE FROM link_instance WHERE link_id=".$link['id']." AND id NOT IN (".(count($instance_ids)>0 ? implode(',',$instance_ids) : "-1").")");
 					if (empty($_POST['do_not_count_as_update']) && $has_updated_links) {
@@ -363,16 +388,41 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$has_updated_links = FALSE;
 
 					$instance_ids=array();
+					$has_updated_mega_link=FALSE;
+					$has_updated_storage_link=FALSE;
 					foreach ($extra['instances'] as $instance) {
 						if ($instance['id']==-1) {
 							query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES (".$extra['id'].",".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
 							array_push($instance_ids,mysqli_insert_id($db_connection));
 							$has_updated_links = TRUE;
+							if (strpos($instance['url'], 'https://mega.nz/')!==FALSE) {
+								$has_updated_mega_link=TRUE;
+							} else if (strpos($instance['url'], 'storage://')!==FALSE) {
+								$has_updated_storage_link=TRUE;
+							} 
 						} else {
-							query("UPDATE link_instance SET url=".$instance['url'].",resolution=".$instance['resolution']." WHERE id=".$instance['id']);
-							array_push($instance_ids,$instance['id']);
+							$resoi = query("SELECT * FROM link_instance WHERE id=".$instance['id']);
+							$old_instance = mysqli_fetch_assoc($resoi);
+							mysqli_free_result($resoi);
+							if ($old_instance) {
+								query("UPDATE link_instance SET url=".$instance['url'].",resolution=".$instance['resolution']." WHERE id=".$instance['id']);
+								array_push($instance_ids,$instance['id']);
+								if ("'".escape($old_instance['url'])."'"!=$instance['url']) {
+									if (strpos($instance['url'], 'https://mega.nz/')!==FALSE) {
+										$has_updated_mega_link=TRUE;
+									} else if (strpos($instance['url'], 'storage://')!==FALSE) {
+										$has_updated_storage_link=TRUE;
+									} 
+								}
+							}
 						}
 					}
+
+					//If there is any new MEGA link and storage has been updated (no new link or no changes), delete all storages so they are recreated
+					if ($has_updated_mega_link && !$has_updated_storage_link) {
+						query("DELETE FROM link_instance WHERE link_id=".$extra['id']." AND url LIKE 'storage://%'");
+					}
+
 					//Remove the ones that are no more in the form
 					query("DELETE FROM link_instance WHERE link_id=".$extra['id']." AND id NOT IN (".(count($instance_ids)>0 ? implode(',',$instance_ids) : "-1").")");
 				}
