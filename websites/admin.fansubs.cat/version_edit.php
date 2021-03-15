@@ -678,9 +678,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="form-group">
 									<label for="form-storage_processing"><span class="mandatory">Processament previ</span><br /><small class="text-muted">(com s'importen els fitxers a l'emmagatzematge)</small></label>
 									<select name="storage_processing" class="form-control">
-										<option value="0"<?php echo empty($row['storage_processing']) ? " selected" : ""; ?>>Converteix-ne el vídeo</option>
-										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Converteix-ne el vídeo i l'àudio</option>
-										<option value="2"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>No converteixis res</option>
+										<option value="0"<?php echo empty($row['storage_processing']) ? " selected" : ""; ?>>Converteix el vídeo, copia l'àudio</option>
+										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Converteix el vídeo i l'àudio</option>
+										<option value="1"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>Converteix l'àudio, copia el vídeo</option>
+										<option value="2"<?php echo $row['storage_processing']==3 ? " selected" : ""; ?>>No converteixis res (copia-ho tot)</option>
 									</select>
 								</div>
 							</div>
