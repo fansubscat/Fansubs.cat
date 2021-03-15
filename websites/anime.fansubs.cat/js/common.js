@@ -264,12 +264,8 @@ function initializePlayer(title, method, sourceData){
 		}
 	});
 	player.on('ready', () => {
-		if (!isEmbedPage()) {
-			$('<div class="plyr_extra_upper"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg><span class="plyr__tooltip">Tanca</span></button></div>').appendTo(".plyr--video");
-			player.play();
-		} else {
-			$('<div class="plyr_extra_upper"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div></div>').appendTo(".plyr--video");
-		}
+		$('<div class="plyr_extra_upper"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg><span class="plyr__tooltip">Tanca</span></button></div>').appendTo(".plyr--video");
+		player.play();
 	});
 	player.on('playing', () => {
 		console.log('Playing');
@@ -325,18 +321,14 @@ function parsePlayerError(error, critical){
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>S'ha produït un error"
 			message = "No es pot carregar el vídeo perquè s'ha produït un error no controlat.<br>Torna-ho a provar més tard.<br><br>Detalls de l'error:<br>"+new Option(error).innerHTML;
-			if (!isEmbedPage()) {
-				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
-			}
+			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			reportErrorToServer('mega-unknown', error);
 			break;
 		case /ENOENT \(\-9\)/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
 			message = "El fitxer ja no existeix al proveïdor de vídeo.<br>Mirarem de corregir-ho ben aviat, disculpa les molèsties.";
-			if (!isEmbedPage()) {
-				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
-			}
+			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			reportErrorToServer('mega-unavailable', error);
 			break;
 		case /EOVERQUOTA \(\-17\)/.test(error):
@@ -344,18 +336,14 @@ function parsePlayerError(error, critical){
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No es pot continuar"
 			message = "S'ha superat el límit de visualització del proveïdor del vídeo (MEGA).<br>Cal que esperis al voltant de 6 hores perquè es restableixi el límit.<br>Estem mirant de trobar un proveïdor que no tingui aquests límits, però ara per ara no hi podem fer res.<br><br>Mentre esperes, pots llegir manga en català a <a href=\"https://manga.fansubs.cat/\" style=\"font-weight: bold;\" target=\"_blank\">manga.fansubs.cat</a>: allà no hi ha límits!";
-			if (!isEmbedPage()) {
-				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
-			}
+			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			reportErrorToServer('mega-quota-exceeded', error);
 			break;
 		case /E_MEGA_PLAYER_ERROR/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>S'ha produït un error"
 			message = "S'ha produït un error durant la reproducció del vídeo.<br>Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
-			if (!isEmbedPage()) {
-				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
-			}
+			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			reportErrorToServer('mega-player-failed', error);
 			break;
 		case /E_MEGA_LOAD_ERROR/.test(error):
@@ -371,17 +359,13 @@ function parsePlayerError(error, critical){
 				message = "És possible que hi hagi algun problema amb el fitxer o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.<br>Si continua sense funcionar, prova de fer servir un altre navegador o un altre dispositiu.";
 				reportErrorToServer('mega-load-failed', error);
 			}
-			if (!isEmbedPage()) {
-				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
-			}
+			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			break;
 		case /E_DIRECT_LOAD_ERROR/.test(error):
 			critical = true;
 			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
 			message = "És possible que hi hagi algun problema amb el fitxer o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.<br>Si continua sense funcionar, prova de fer servir un altre navegador o un altre dispositiu.";
-			if (!isEmbedPage()) {
-				buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
-			}
+			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			reportErrorToServer('direct-load-failed', error);
 			break;
 		default:
@@ -392,12 +376,7 @@ function parsePlayerError(error, critical){
 
 	if (critical) {
 		shutdownVideoPlayer();
-		var start = null;
-		if (!isEmbedPage()) {
-			start='<div class="white-popup"><div style="justify-content: center; align-items: center;" class="plyr plyr--video"><div class="plyr_extra_upper" style="box-sizing: border-box;"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg><span class="plyr__tooltip">Tanca</span></button></div>';
-		} else {
-			start='<div class="white-popup"><div style="justify-content: center; align-items: center;" class="plyr plyr--video"><div class="plyr_extra_upper" style="box-sizing: border-box;"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div></div>';
-		}
+		var start = '<div class="white-popup"><div style="justify-content: center; align-items: center;" class="plyr plyr--video"><div class="plyr_extra_upper" style="box-sizing: border-box;"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg><span class="plyr__tooltip">Tanca</span></button></div>';
 		var end='</div></div>';
 		$('#overlay-content').html(start + '<div class="player_error_title">' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + end);
 	} else {
@@ -450,8 +429,12 @@ function showContactScreen(reason) {
 function closeOverlay() {
 	shutdownVideoPlayer();
 	sendVideoTrackingEndAjax();
-	$('#overlay').addClass('hidden');
-	$('body').removeClass('no-overflow');
+	if (!isEmbedPage()) {
+		$('#overlay').addClass('hidden');
+		$('body').removeClass('no-overflow');
+	} else {
+		window.parent.postMessage('embedClosed', '*');
+	}
 }
 
 $(document).ready(function() {
@@ -751,6 +734,7 @@ $(document).ready(function() {
 		$('body').addClass('no-overflow');
 		initializePlayer($('#data-title').val(), $('#data-method').val(), atob($('#data-sources').val()));
 		beginVideoTracking($('#data-link-id').val());
+		window.parent.postMessage('embedInitialized', '*');
 	}
 
 	$(window).on('unload', function() {

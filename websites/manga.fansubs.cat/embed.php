@@ -28,6 +28,7 @@ if (isset($failed)) {
 		<input type="hidden" id="embed-page" value="1" />
 		<input type="hidden" id="data-file-id" value="<?php echo $file['id']; ?>" />
 		<div id="overlay">
+			<a id="overlay-close" style="display: none;"><span class="fa fa-times"></span></a>
 			<div id="overlay-content"></div>
 		</div>
 	</body>

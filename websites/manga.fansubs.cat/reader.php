@@ -4,8 +4,6 @@ require_once("common.inc.php");
 
 $file_id = (!empty($_GET['file_id']) ? intval($_GET['file_id']) : 0);
 
-$from_embed = (!empty($_GET['embed']) ? intval($_GET['embed']) : 0);
-
 $result = query("SELECT f.*,m.reader_type, CONCAT(m.name,' - Volum ', vo.number, ' - ', IF(v.show_chapter_numbers AND c.number IS NOT NULL,CONCAT('Capítol ', c.number,': ',ct.title),ct.title)) chapter_name FROM file f LEFT JOIN manga_version v ON f.manga_version_id=v.id LEFT JOIN chapter c ON f.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON c.id=ct.chapter_id AND v.id=ct.manga_version_id LEFT JOIN manga m ON v.manga_id=m.id WHERE f.id=$file_id AND f.original_filename IS NOT NULL");
 $file = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
@@ -86,15 +84,6 @@ if ($mode=='strip'){
 }
 ?>
 			}
-<?php
-if ($from_embed===1) {
-?>
-			.lg-close {
-				display: none;
-			}
-<?php
-}
-?>
 			.lg-custom-zoom-out-icon:after {
 				content: "\e312" !important;
 				font-size: 24px !important;
