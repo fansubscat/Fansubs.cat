@@ -20,8 +20,10 @@ function get_error_type($type) {
 			return 'MEGA: Error de connexió';
 		case 'mega-load-failed':
 			return 'MEGA: Error de càrrega';
-		case 'direct-load-failed':
+		case 'direct-load-failed': //No longer exists, kept for old logs
 			return 'Vídeo: Error de càrrega';
+		case 'direct-player-failed':
+			return 'Vídeo: Error de reproducció';
 		default:
 			return $type;
 	}

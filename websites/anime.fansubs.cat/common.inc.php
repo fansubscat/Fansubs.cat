@@ -1,9 +1,9 @@
 <?php
 //Versions to avoid site caching
-const JS_VER=30;
+const JS_VER=31;
 const CS_VER=16;
 const MG_VER=1;
-const VS_VER=2;
+const VS_VER=3;
 
 //Regexp used for determining types of links
 const REGEXP_MEGA='/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/';

@@ -8,6 +8,10 @@ var player = null;
 var streamer = null;
 var currentMegaFile = null;
 var currentVideoTitle = null;
+var currentMethod = null;
+var currentSourceData = null;
+var lastErrorTimestamp = null;
+var lastErrorReported = null;
 var playedMediaTimer = null;
 var playedMediaSeconds = 0;
 var enableDebug = false;
@@ -36,24 +40,33 @@ function beginVideoTracking(linkId){
 			'event_label': currentLinkId
 		});
 	} else {
-		console.log('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+linkId+"&action=open");
+		console.debug('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+linkId+"&action=open");
 	}
 	reportTimer = setInterval(function tick() {
 		if (!enableDebug) {
 			xmlHttp.open("GET", baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=notify&time_spent="+Math.floor(playedMediaSeconds), true);
 			xmlHttp.send(null);
 		} else {
-			console.log('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=notify&time_spent="+Math.floor(playedMediaSeconds));
+			console.debug('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=notify&time_spent="+Math.floor(playedMediaSeconds));
 		}
 	}, 60000);
 }
 
 function reportErrorToServer(error_type, error_text){
 	if (currentLinkId!=-1){
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", baseUrl+'/report_error.php', true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send("link_id="+currentLinkId+"&play_time="+playedMediaSeconds+"&type="+encodeURIComponent(error_type)+"&text="+encodeURIComponent(error_text));
+		if (!lastErrorReported || lastErrorReported<=Date.now()-2000) {
+			lastErrorReported = Date.now();
+			if (!enableDebug) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", baseUrl+'/report_error.php', true);
+				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+				xhr.send("link_id="+currentLinkId+"&play_time="+playedMediaSeconds+"&type="+encodeURIComponent(error_type)+"&text="+encodeURIComponent(error_text));
+			} else {
+				console.debug('Would have sent error via POST: '+"link_id="+currentLinkId+"&play_time="+playedMediaSeconds+"&type="+encodeURIComponent(error_type)+"&text="+encodeURIComponent(error_text));
+			}
+		} else {
+			console.log("Received an error less than 2s from the last one: not reporting to server as this will probably be a duplicate.");
+		}
 	}
 }
 
@@ -69,10 +82,11 @@ function sendVideoTrackingEndAjax(){
 				'event_label': currentLinkId + " / " + Math.floor(playedMediaSeconds)
 			});
 		} else {
-			console.log('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
+			console.debug('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
 		}
 		currentLinkId=-1;
 		currentPlayId="";
+		lastErrorReported=null;
 		playedMediaSeconds=0;
 	}
 }
@@ -87,10 +101,11 @@ function sendVideoTrackingEndBeacon(){
 				'event_label': currentLinkId + " / " + Math.floor(playedMediaSeconds)
 			});
 		} else {
-			console.log('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
+			console.debug('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
 		}
 		currentLinkId=-1;
 		currentPlayId="";
+		lastErrorReported=null;
 		playedMediaSeconds=0;
 	}
 }
@@ -167,6 +182,8 @@ function getPlayerErrorEvent(e) {
 
 function initializePlayer(title, method, sourceData){
 	currentVideoTitle = title;
+	currentMethod = method;
+	currentSourceData = sourceData;
 	var sources = JSON.parse(sourceData);
 	var start='<div class="white-popup"><div style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center;">';
 	var end='</div></div>';
@@ -174,7 +191,7 @@ function initializePlayer(title, method, sourceData){
 		case 'mega':
 			$('#overlay-content').html(start+'<video id="player" playsinline controls></video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
-				parsePlayerError('E_MEGA_PLAYER_ERROR: '+getPlayerErrorEvent(e), true);
+				parsePlayerError('E_MEGA_PLAYER_ERROR: '+getPlayerErrorEvent(e));
 			}, true);
 			break;
 		case 'youtube':
@@ -193,7 +210,7 @@ function initializePlayer(title, method, sourceData){
 			}
 			$('#overlay-content').html(start+'<video id="player" playsinline controls>'+sourcesCode+'</video>'+end);
 			document.getElementById('player').addEventListener('error', function (e){
-				parsePlayerError('E_DIRECT_LOAD_ERROR: '+getPlayerErrorEvent(e), true);
+				parsePlayerError('E_DIRECT_PLAYER_ERROR: '+getPlayerErrorEvent(e));
 			}, true);
 			break;
 	}
@@ -263,31 +280,40 @@ function initializePlayer(title, method, sourceData){
 			advertisement: 'Anunci'
 		}
 	});
+	//Recover from errors if needed
+	player.once('canplay', event => {
+		if (lastErrorTimestamp) {
+			player.currentTime = lastErrorTimestamp;
+			lastErrorTimestamp = null;
+		}
+	});
 	player.on('ready', () => {
 		$('<div class="plyr_extra_upper"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg><span class="plyr__tooltip">Tanca</span></button></div>').appendTo(".plyr--video");
 		player.play();
 	});
 	player.on('playing', () => {
-		console.log('Playing');
+		console.debug('Player status: Playing');
 		playedMediaTimer = setInterval(function tick() {
-			playedMediaSeconds+=player.speed;
-			console.log('playedMediaSeconds: '+playedMediaSeconds);
+			if (player) {
+				playedMediaSeconds+=player.speed;
+				console.log('playedMediaSeconds: '+playedMediaSeconds);
+			}
 		}, 1000);
 	});
 	player.on('pause', () => {
-		console.log('Paused');
+		console.debug('Player status: Paused');
 		clearInterval(playedMediaTimer);
 	});
 	player.on('ended', () => {
-		console.log('Ended');
+		console.debug('Player status: Ended');
 		clearInterval(playedMediaTimer);
 	});
 	player.on('stalled', () => {
-		console.log('Stalled');
+		console.debug('Player status: Stalled');
 		clearInterval(playedMediaTimer);
 	});
 	player.on('waiting', () => {
-		console.log('Waiting');
+		console.debug('Player status: Waiting');
 		clearInterval(playedMediaTimer);
 	});
 
@@ -297,10 +323,10 @@ function initializePlayer(title, method, sourceData){
 	}
 }
 
-function parsePlayerError(error, critical){
+function parsePlayerError(error){
 	var title = null;
 	var message = null;
-	var buttons = '';
+	var critical = false;
 	switch (true) {
 		case /EINTERNAL \(\-1\)/.test(error):
 		case /EARGS \(\-2\)/.test(error):
@@ -318,83 +344,81 @@ function parsePlayerError(error, critical){
 		case /ESID \(\-15\)/.test(error):
 		case /EBLOCKED \(\-16\)/.test(error):
 		case /ETEMPUNAVAIL \(\-18\)/.test(error):
-			critical = true;
-			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>S'ha produït un error"
-			message = "No es pot carregar el vídeo perquè s'ha produït un error no controlat.<br>Torna-ho a provar més tard.<br><br>Detalls de l'error:<br>"+new Option(error).innerHTML;
-			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
+			title = "S'ha produït un error";
+			message = "S'ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 			reportErrorToServer('mega-unknown', error);
 			break;
 		case /ENOENT \(\-9\)/.test(error):
 			critical = true;
-			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
-			message = "El fitxer ja no existeix al proveïdor de vídeo.<br>Mirarem de corregir-ho ben aviat, disculpa les molèsties.";
-			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
+			title = "El fitxer no existeix";
+			message = "Sembla que el fitxer ja no existeix al proveïdor de streaming.<br>Mirarem de corregir-ho ben aviat, disculpa les molèsties.";
 			reportErrorToServer('mega-unavailable', error);
 			break;
 		case /EOVERQUOTA \(\-17\)/.test(error):
 		case /Bandwidth limit reached/.test(error):
-			critical = true;
-			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No es pot continuar"
-			message = "S'ha superat el límit de visualització del proveïdor del vídeo (MEGA).<br>Cal que esperis al voltant de 6 hores perquè es restableixi el límit.<br>Estem mirant de trobar un proveïdor que no tingui aquests límits, però ara per ara no hi podem fer res.<br><br>Mentre esperes, pots llegir manga en català a <a href=\"https://manga.fansubs.cat/\" style=\"font-weight: bold;\" target=\"_blank\">manga.fansubs.cat</a>: allà no hi ha límits!";
-			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
+			title = "Límit de MEGA superat";
+			message = "S'ha superat el límit d'ample de banda del proveïdor de streaming (MEGA).<br>Si és la primera vegada que veus aquest error, cal que esperis al voltant de 6 hores perquè es restableixi el límit.<br>Estem mirant de trobar un proveïdor que no tingui aquests límits, però de moment, no hi podem fer res.<br>Mentre esperes, pots llegir manga en català a <a href=\"https://manga.fansubs.cat/\" style=\"font-weight: bold;\" target=\"_blank\">manga.fansubs.cat</a>: allà no hi ha límits!";
 			reportErrorToServer('mega-quota-exceeded', error);
 			break;
-		case /E_MEGA_PLAYER_ERROR/.test(error):
-			critical = true;
-			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>S'ha produït un error"
-			message = "S'ha produït un error durant la reproducció del vídeo.<br>Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
-			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
-			reportErrorToServer('mega-player-failed', error);
-			break;
 		case /E_MEGA_LOAD_ERROR/.test(error):
-			critical = true;
-			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
 			if (/web browser lacks/.test(error) || /Streamer is not defined/.test(error)) {
-				message = "Sembla que el teu navegador no és compatible amb el reproductor.<br>Prova de fer servir un altre navegador o un altre dispositiu.";
+				critical = true;
+				title = "Navegador no compatible";
+				message = "Sembla que el teu navegador no és compatible amb el reproductor.<br>Els dispositius iPhone i iPad no admeten la reproducció de vídeos de MEGA.<br>Prova de fer servir un altre navegador o un altre dispositiu.";
 				reportErrorToServer('mega-incompatible-browser', error);
 			} else if (/NetworkError/.test(error)){
-				message = "Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+				title = "No hi ha connexió";
+				message = "S'ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
 				reportErrorToServer('mega-connection-error', error);
 			} else {
-				message = "És possible que hi hagi algun problema amb el fitxer o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.<br>Si continua sense funcionar, prova de fer servir un altre navegador o un altre dispositiu.";
+				title = "No s'ha pogut carregar";
+				message = "S'ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 				reportErrorToServer('mega-load-failed', error);
 			}
-			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
 			break;
-		case /E_DIRECT_LOAD_ERROR/.test(error):
-			critical = true;
-			title = "<span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>No s'ha pogut carregar"
-			message = "És possible que hi hagi algun problema amb el fitxer o que el teu navegador no sigui compatible.<br>Per si de cas, assegura't que tinguis una connexió estable a Internet i torna-ho a provar.<br>Si continua sense funcionar, prova de fer servir un altre navegador o un altre dispositiu.";
-			buttons = '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>';
-			reportErrorToServer('direct-load-failed', error);
+		case /PLAYER_ERROR/.test(error):
+			switch (true) {
+				case /NETWORK_ERROR/.test(error):
+					title = "No hi ha connexió";
+					message = "S'ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+					break;
+				case /DECODER_ERROR/.test(error):
+					title = "S'ha produït un error";
+					message = "S'ha produït un error durant la decodificació del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+					break;
+				case /NOT_SUPPORTED/.test(error):
+					title = "No s'ha pogut carregar";
+					message = "S'ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+					break;
+				case /ABORTED_BY_USER/.test(error):
+				default:
+					title = "S'ha produït un error";
+					message = "S'ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+			}
+			reportErrorToServer(/E_MEGA_PLAYER_ERROR/.test(error) ? 'mega-player-failed' : 'direct-player-failed', error);
 			break;
 		default:
-			message = 'Error no informat al servidor ('+error+')';
-			console.log();
+			title = "S'ha produït un error";
+			message = "S'ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+			reportErrorToServer('unknown', error);
 			break;
 	}
 
-	if (critical) {
-		shutdownVideoPlayer();
-		var start = '<div class="white-popup"><div style="justify-content: center; align-items: center;" class="plyr plyr--video"><div class="plyr_extra_upper" style="box-sizing: border-box;"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg><span class="plyr__tooltip">Tanca</span></button></div>';
-		var end='</div></div>';
-		$('#overlay-content').html(start + '<div class="player_error_title">' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + end);
-	} else {
-		console.error("ERROR NO CONTROLAT: " + message);
-	}
+	lastErrorTimestamp = player.currentTime;
+	shutdownVideoPlayer();
+	var start = '<div class="white-popup"><div style="justify-content: center; align-items: center;" class="plyr plyr--video"><div class="plyr_extra_upper" style="box-sizing: border-box;"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg><span class="plyr__tooltip">Tanca</span></button></div>';
+	var buttons = critical ? '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>' : '<div class="player_error_buttons"><button class="error-close-button" onclick="initializePlayer(currentVideoTitle, currentMethod, currentSourceData);">Torna-ho a provar</button></div>';
+	var end='</div></div>';
+	$('#overlay-content').html(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details style="color: #888;"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>Reproducció / Enllaç / Instant: ' + currentPlayId + ' / ' + currentLinkId + ' / ' + lastErrorTimestamp + '</details>' + end);
 }
 
 function loadMegaStream(url){
 	currentMegaFile = mega.file(url);
 	currentMegaFile.loadAttributes((error, file) => {
 		if (error){
-			parsePlayerError('E_MEGA_LOAD_ERROR: '+error, true);
+			parsePlayerError('E_MEGA_LOAD_ERROR: '+error);
 		} else {
-			console.debug(file.name); // 'Readme.txt'
-			console.debug(file.size); // 1125 (bytes)
-
-			console.debug('MEGA file initialized');
-			//var videoStream = new VideoStream(new file(), video);
+			console.debug('MEGA file loaded: ' + file.name + ', size: ' + file.size);
 			streamer = new Streamer(file.downloadId, document.getElementById('player'), {type: 'isom'});
 			streamer.play();
 		}

@@ -129,7 +129,10 @@ M.gfsfetch = function(data, byteOffset, byteLength){
 		console.debug('Request chunk '+start+'-'+end);
 		currentMegaFile.download({'start': start, 'end': end, 'initialChunkSize': chunkSize, 'chunkSizeIncrement': chunkSize, 'maxChunkSize': chunkSize}, (err, data) => {
 			if (err){
-				parsePlayerError(err, false);
+				//Ignore "Failed to fetch" as it will be refetched if connection is restored
+				if (!/Failed to fetch/.test(err)) {
+					parsePlayerError(err);
+				}
 				if (/EOVERQUOTA \(\-17\)/.test(err) || /Bandwidth limit reached/.test(err)) {
 					myAttributes.failFn({target: {status: 509}}, null);
 				} else {
