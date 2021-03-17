@@ -934,7 +934,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																		<tr id="form-instance-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
 																			<td class="pl-0 pt-0 pb-0 border-0">
-																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($links[$j]['link_instances'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)"/>
+																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($links[$j]['link_instances'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
 																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-id" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($links[$j]['link_instances'][$k]['id']); ?>"/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
@@ -981,7 +981,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																	<tbody>
 																		<tr id="form-instance-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
 																			<td class="pl-0 pt-0 pb-0 border-0">
-																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-url" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)"/>
+																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-url" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
 																				<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-id" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-link-1-instance-1-id" type="hidden" value="-1"/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
@@ -1082,7 +1082,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																		<tr id="form-instance-extras-list-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
 																			<td class="pl-0 pt-0 pb-0 border-0">
-																				<input id="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" name="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['link_instances'][$k]['url']); ?>" maxlength="2048" placeholder="- Introdueix un enllaç -" required/>
+																				<input id="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" name="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['link_instances'][$k]['url']); ?>" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr('value',$(this).val());" required/>
 																				<input id="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-id" name="form-extras-list-<?php echo $j+1; ?>-instance-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($extras[$j]['link_instances'][$k]['id']); ?>"/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0" style="width: 22%;">

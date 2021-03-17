@@ -19,7 +19,7 @@ session_start();
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-		<script src="js/adminfansubscat.js?v=5"></script>
+		<script src="js/adminfansubscat.js?v=8"></script>
 		<script src="js/uncompress.js"></script>
 		<style>
 			html,body{height: 100%;}
@@ -31,6 +31,12 @@ session_start();
 			.fa-custom-manga:before { font-family: Arial; font-weight: bold; content: 'M'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
 			.fa-custom-news:before { font-family: Arial; font-weight: bold; content: 'N'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
 			.fa-custom-resources:before { font-family: Arial; font-weight: bold; content: 'R'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
+			tr[id^="form-instance-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] { padding-left: 24px; }
+			tr[id^="form-instance-links-list-"] input[type="url"][value^="http://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="http://"], tr[id^="form-instance-links-list-"] input[type="url"][value^="https://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://"] { background: url("images/unknown.png") no-repeat scroll 4px center; }
+			tr[id^="form-instance-links-list-"] input[type="url"][value^="https://mega.nz/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://mega.nz/"] { background: url("images/mega.png") no-repeat scroll 4px center !important; }
+			tr[id^="form-instance-links-list-"] input[type="url"][value^="storage://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="storage://"] { background: url("images/storage.png") no-repeat scroll 4px center !important; }
+			tr[id^="form-instance-links-list-"] input[type="url"][value^="https://drive.google.com/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://drive.google.com/"] { background: url("images/drive.png") no-repeat scroll 4px center !important; }
+			tr[id^="form-instance-links-list-"] input[type="url"][value^="https://www.youtube.com/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://www.youtube.com/"] { background: url("images/youtube.png") no-repeat scroll 4px center !important; }
 		</style>
 	</head>
 	<body>
