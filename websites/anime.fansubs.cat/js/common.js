@@ -180,6 +180,38 @@ function getPlayerErrorEvent(e) {
 	return error;
 }
 
+function replayCurrentVideo() {
+	$('.plyr__control--overlaid[data-plyr="play"]').removeClass('hidden');
+	$('.plyr_extra_ended').addClass('hidden');
+	player.currentTime=0;
+	player.play();
+}
+
+function hasNextVideo() {
+	var position  = parseInt($('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-position'));
+	var results = $('.video-player').filter(function(){
+		return parseInt($(this).attr('data-position')) > position;
+	});
+
+	if (results.length>0) {
+		return true;
+	}
+	return false;
+}
+
+function playNextVideo() {
+	var position  = parseInt($('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-position'));
+	var results = $('.video-player').filter(function(){
+		return parseInt($(this).attr('data-position')) > position;
+	});
+
+	if (results.length>0) {
+		//In case of multiple links for one episode, only the first will be played
+		closeOverlay();
+		results.first().click();
+	}
+}
+
 function initializePlayer(title, method, sourceData){
 	currentVideoTitle = title;
 	currentMethod = method;
@@ -288,7 +320,7 @@ function initializePlayer(title, method, sourceData){
 		}
 	});
 	player.on('ready', () => {
-		$('<div class="plyr_extra_upper"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg><span class="plyr__tooltip">Tanca</span></button></div>').appendTo(".plyr--video");
+		$('<div class="plyr_extra_upper"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg><span class="plyr__tooltip">Tanca</span></button></div><div class="plyr_extra_ended hidden"><div id="plyr_extra_ended_buttons"><button id="plyr_extra_ended_replay" class="plyr__control plyr_extra_ended_button" onclick="replayCurrentVideo();"><span class="fa fa-undo"></span></button>' + (hasNextVideo() ? '<button id="plyr_extra_ended_next" class="plyr__control plyr_extra_ended_button" onclick="playNextVideo();"><span class="fa fa-step-forward"></span></button>' : '') + '</div></div>').appendTo(".plyr--video");
 		player.play();
 	});
 	player.on('playing', () => {
@@ -307,6 +339,8 @@ function initializePlayer(title, method, sourceData){
 	player.on('ended', () => {
 		console.debug('Player status: Ended');
 		clearInterval(playedMediaTimer);
+		$('.plyr_extra_ended').removeClass('hidden');
+		$('.plyr__control--overlaid[data-plyr="play"]').addClass('hidden');
 	});
 	player.on('stalled', () => {
 		console.debug('Player status: Stalled');

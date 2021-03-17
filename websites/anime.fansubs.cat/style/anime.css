@@ -255,7 +255,6 @@ h2, h3 {
 }
 
 .plyr__control--overlaid {
-	opacity: 1;
 	transform: translate(-50%,-50%) scale(1.6);
 }
 
@@ -288,6 +287,40 @@ h2, h3 {
 	font-size: 1.2em;
 	font-weight: bold;
 	pointer-events: auto;
+}
+
+.plyr_extra_ended {
+	display: flex;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	z-index: 1999;
+	background: rgba(0,0,0,0.5);
+	align-items: center;
+	justify-content: center;
+}
+
+.plyr_extra_ended_button {
+	background: #00b3ff;
+	background: var(--plyr-video-control-background-hover,var(--plyr-color-main,var(--plyr-color-main,#00b3ff)));
+	border: 0;
+	border-radius: 100%;
+	color: #fff;
+	color: var(--plyr-video-control-color,#fff);
+	opacity: .9;
+	padding: calc(10px * 1.5);
+	padding: calc(var(--plyr-control-spacing,10px) * 1.5);
+	transition: .3s;
+	z-index: 2;
+	width: 76px !important;
+	height: 76px;
+	font-size: 2em !important;
+	margin-left: 0.25em;
+	margin-right: 0.25em;
+}
+
+.plyr_extra_ended_button:hover {
+	opacity: 1;
 }
 
 .plyr--hide-controls {
@@ -1432,7 +1465,7 @@ a:hover {
 }
 
 .hidden {
-	display: none;
+	display: none !important;
 }
 
 .version_tab_container {
@@ -1830,6 +1863,14 @@ h2{
 
 	.plyr__control--overlaid {
 		transform: translate(-50%,-50%) scale(1.2);
+	}
+
+	.plyr_extra_ended_button {
+		width: 57px !important;
+		height: 57px;
+		font-size: 1.5em !important;
+		margin-left: 0.2em;
+		margin-right: 0.2em;
 	}
 
 	.player_error_icon {

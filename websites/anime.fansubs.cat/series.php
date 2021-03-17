@@ -339,6 +339,7 @@ if ($count_unfiltered==0) {
 								</div>
 							</div>
 <?php
+		$position = 1;
 		$resulte = query("SELECT e.*, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.name,et.title)) title, ss.number season_number, ss.name season_name FROM episode e LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".$version['id']." LEFT JOIN season ss ON e.season_id=ss.id WHERE e.series_id=".$series['id']." ORDER BY ss.number IS NULL ASC, ss.number ASC, e.number IS NULL ASC, e.number ASC, IFNULL(et.title,e.name) ASC");
 		$episodes = array();
 		while ($row = mysqli_fetch_assoc($resulte)) {
@@ -445,7 +446,8 @@ if ($count_unfiltered==0) {
 										<tbody>
 <?php
 					foreach ($season['episodes'] as $episode) {
-						print_episode($version['fansub_name'], $episode, $version['id'], $series, $version);
+						print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
+						$position++;
 					}
 ?>
 										</tbody>
@@ -478,7 +480,8 @@ if ($count_unfiltered==0) {
 											<tbody>
 <?php
 					foreach ($season['episodes'] as $episode) {
-						print_episode($version['fansub_name'], $episode, $version['id'], $series, $version);
+						print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
+						$position++;
 					}
 ?>
 											</tbody>
@@ -509,7 +512,8 @@ if ($count_unfiltered==0) {
 											<tbody>
 <?php
 			foreach ($extras as $row) {
-				print_extra($version['fansub_name'], $row, $version['id'], $series);
+				print_extra($version['fansub_name'], $row, $version['id'], $series, $position);
+				$position++;
 			}
 ?>
 											</tbody>

@@ -1,7 +1,7 @@
 <?php
 //Versions to avoid site caching
-const JS_VER=31;
-const CS_VER=16;
+const JS_VER=32;
+const CS_VER=17;
 const MG_VER=1;
 const VS_VER=4;
 
@@ -316,7 +316,7 @@ function get_hours_or_minutes_formatted($time){
 	}
 }
 
-function print_episode($fansub_names, $row, $version_id, $series, $version){
+function print_episode($fansub_names, $row, $version_id, $series, $version, $position){
 	$result = query("SELECT l.* FROM link l WHERE l.episode_id=".$row['id']." AND l.version_id=$version_id ORDER BY l.variant_name ASC, l.id ASC");
 
 	if (mysqli_num_rows($result)==0 && $version['show_unavailable_episodes']!=1){
@@ -342,20 +342,20 @@ function print_episode($fansub_names, $row, $version_id, $series, $version){
 		}
 	}
 
-	internal_print_episode($fansub_names, $episode_title, $result, $series, FALSE);
+	internal_print_episode($fansub_names, $episode_title, $result, $series, FALSE, $position);
 	mysqli_free_result($result);
 }
 
-function print_extra($fansub_names, $row, $version_id, $series){
+function print_extra($fansub_names, $row, $version_id, $series, $position){
 	$result = query("SELECT l.* FROM link l WHERE l.episode_id IS NULL AND l.extra_name='".escape($row['extra_name'])."' AND l.version_id=$version_id ORDER BY l.id ASC");
 
 	$episode_title=htmlspecialchars($row['extra_name']);
 	
-	internal_print_episode($fansub_names, $episode_title, $result, $series, TRUE);
+	internal_print_episode($fansub_names, $episode_title, $result, $series, TRUE, $position);
 	mysqli_free_result($result);
 }
 
-function internal_print_episode($fansub_names, $episode_title, $result, $series, $is_extra) {
+function internal_print_episode($fansub_names, $episode_title, $result, $series, $is_extra, $position) {
 	if (mysqli_num_rows($result)==0){
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode episode-unavailable">'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
@@ -395,7 +395,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($link_instances))).'" data-method="'.htmlspecialchars(get_display_method($link_instances)).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-position="'.$position.'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($link_instances))).'" data-method="'.htmlspecialchars(get_display_method($link_instances)).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
 				if (!empty($vrow['comments'])){
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.htmlspecialchars($vrow['comments']).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
 				}
@@ -442,7 +442,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($link_instances))).'" data-method="'.htmlspecialchars(get_display_method($link_instances)).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-position="'.$position.'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($link_instances))).'" data-method="'.htmlspecialchars(get_display_method($link_instances)).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 			if (!empty($vrow['comments'])){
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.htmlspecialchars($vrow['comments']).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
 			}
