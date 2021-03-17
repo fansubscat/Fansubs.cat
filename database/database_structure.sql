@@ -231,7 +231,9 @@ CREATE TABLE `play_session` (
   `play_id` varchar(20) NOT NULL,
   `link_id` int(11) NOT NULL,
   `time_spent` int(11) NOT NULL,
-  `last_update` timestamp NOT NULL
+  `last_update` timestamp NOT NULL,
+  `ip` varchar(200) NOT NULL,
+  `user_agent` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `read_session` (
@@ -239,7 +241,9 @@ CREATE TABLE `read_session` (
   `file_id` int(11) NOT NULL,
   `time_spent` int(11) NOT NULL,
   `pages_read` int(11) NOT NULL,
-  `last_update` timestamp NOT NULL
+  `last_update` timestamp NOT NULL,
+  `ip` varchar(200) NOT NULL,
+  `user_agent` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `recommendation` (

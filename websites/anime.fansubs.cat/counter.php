@@ -39,7 +39,7 @@ if ($link_id>0 && !empty($_GET['action']) && !empty($play_id)) {
 				break;
 			case 'open':
 				//Replace in the remote case we get a collision...
-				query("REPLACE INTO play_session VALUES ('$play_id', $link_id, 0, CURRENT_TIMESTAMP)");
+				query("REPLACE INTO play_session VALUES ('$play_id', $link_id, 0, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."', '".escape($_SERVER['HTTP_USER_AGENT'])."')");
 				query("REPLACE INTO views SELECT $link_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM views WHERE link_id=$link_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views FROM views WHERE link_id=$link_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT time_spent FROM views WHERE link_id=$link_id AND day='".date('Y-m-d')."'),0)");
 				break;
 			case 'notify':
@@ -52,7 +52,7 @@ if ($link_id>0 && !empty($_GET['action']) && !empty($play_id)) {
 					} else {
 						$time_spent = escape($_GET['time_spent']);
 					}
-					query("UPDATE play_session SET link_id=$link_id, time_spent=$time_spent, last_update=CURRENT_TIMESTAMP WHERE play_id='$play_id'");
+					query("UPDATE play_session SET link_id=$link_id, time_spent=$time_spent, last_update=CURRENT_TIMESTAMP, ip='".escape($_SERVER['REMOTE_ADDR'])."', user_agent='".escape($_SERVER['HTTP_USER_AGENT'])."' WHERE play_id='$play_id'");
 				}
 				//Else, invalid request, discard it
 				break;

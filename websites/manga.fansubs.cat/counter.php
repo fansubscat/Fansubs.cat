@@ -39,7 +39,7 @@ if ($file_id>0 && !empty($_GET['action']) && !empty($read_id)) {
 				break;
 			case 'open':
 				//Replace in the remote case we get a collision...
-				query("REPLACE INTO read_session VALUES ('$read_id', $file_id, 0, 1, CURRENT_TIMESTAMP)");
+				query("REPLACE INTO read_session VALUES ('$read_id', $file_id, 0, 1, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."', '".escape($_SERVER['HTTP_USER_AGENT'])."')");
 				query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT api_views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0)");
 				break;
 			case 'notify':
@@ -58,7 +58,7 @@ if ($file_id>0 && !empty($_GET['action']) && !empty($read_id)) {
 					} else {
 						$pages_read = escape($_GET['pages_read']);
 					}
-					query("UPDATE read_session SET file_id=$file_id, time_spent=$time_spent, pages_read=$pages_read, last_update=CURRENT_TIMESTAMP WHERE read_id='$read_id'");
+					query("UPDATE read_session SET file_id=$file_id, time_spent=$time_spent, pages_read=$pages_read, last_update=CURRENT_TIMESTAMP, ip='".escape($_SERVER['REMOTE_ADDR'])."', user_agent='".escape($_SERVER['HTTP_USER_AGENT'])."' WHERE read_id='$read_id'");
 				}
 				//Else, invalid request, discard it
 				break;
