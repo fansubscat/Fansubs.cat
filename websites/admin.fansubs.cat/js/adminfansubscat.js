@@ -1782,6 +1782,7 @@ $(document).ready(function() {
 								}
 								$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
 								$(e).val(data.results[i].link);
+								$(e).attr('value', data.results[i].link);
 								found = true;
 							}
 						});
@@ -1794,6 +1795,7 @@ $(document).ready(function() {
 								if ($(e).val()=='') {
 									$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
 									$(e).val(data.results[i].link);
+									$(e).attr('value', data.results[i].link);
 									found = true;
 								}
 							});
@@ -1806,6 +1808,7 @@ $(document).ready(function() {
 									if ($(e).val()=='') {
 										$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
 										$(e).val(data.results[i].link);
+										$(e).attr('value', data.results[i].link);
 										found = true;
 									}
 								});
