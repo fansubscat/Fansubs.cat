@@ -131,7 +131,7 @@ M.gfsfetch = function(data, byteOffset, byteLength){
 			if (err){
 				//Ignore "Failed to fetch" as it will be refetched if connection is restored
 				if (!/Failed to fetch/.test(err)) {
-					parsePlayerError(err);
+					parsePlayerError('E_MEGA_LOAD_ERROR: '+err);
 				}
 				if (/EOVERQUOTA \(\-17\)/.test(err) || /Bandwidth limit reached/.test(err)) {
 					myAttributes.failFn({target: {status: 509}}, null);
