@@ -1,6 +1,6 @@
 <?php
 //Versions to avoid site caching
-const JS_VER=32;
+const JS_VER=37;
 const CS_VER=17;
 const MG_VER=1;
 const VS_VER=4;
@@ -232,12 +232,12 @@ function get_resolution_single($resolution){
 }
 
 function get_resolution_css($link_instances){
-	$resolution = get_resolution_short($link_instances);
-	if ($resolution=='2160p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=2000) {
+	$resolution = str_replace('p', '', get_resolution_short($link_instances));
+	if ($resolution>=1800) {
 		return "4k";
-	} else if ($resolution=='1080p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=1000) {
+	} else if ($resolution>=900) {
 		return "hd1080";
-	} else if ($resolution=='720p' || count(explode('x',$resolution))>1 && intval(explode('x',$resolution)[1])>=700) {
+	} else if ($resolution>=650) {
 		return "hd720";
 	} else {
 		return "sd";

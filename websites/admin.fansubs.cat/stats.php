@@ -5,6 +5,7 @@ include("header.inc.php");
 require_once("common.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
+	$max_days = 60;
 	if (!empty($_SESSION['fansub_id'])) {
 		$resultf = query("SELECT * FROM fansub WHERE id=".escape($_SESSION['fansub_id']));
 		$fansub = mysqli_fetch_assoc($resultf);
@@ -13,6 +14,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$resultf = query("SELECT * FROM fansub WHERE id=".escape($_GET['fansub_id']));
 		$fansub = mysqli_fetch_assoc($resultf);
 		mysqli_free_result($resultf);
+	}
+
+	if (!empty($_GET['max_days']) && is_numeric($_GET['max_days'])) {
+		$max_days = intval($_GET['max_days']);
 	}
 ?>
 		<div class="container justify-content-center p-4">
@@ -93,7 +98,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="chart_tabs" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="daily-tab" data-toggle="tab" href="#daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers 60 dies)</a>
+										<a class="nav-link active" id="daily-tab" data-toggle="tab" href="#daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" id="monthly-tab" data-toggle="tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
@@ -105,13 +110,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$days = array();
 
 	$current_day = strtotime(date('Y-m-d'));
-	$i=60;
+	$i=$max_days;
 	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v WHERE DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-60 days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v WHERE DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
@@ -264,7 +269,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="chart_tabs_manga" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="manga-daily-tab" data-toggle="tab" href="#manga-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers 60 dies)</a>
+										<a class="nav-link active" id="manga-daily-tab" data-toggle="tab" href="#manga-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" id="manga-monthly-tab" data-toggle="tab" href="#manga-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
@@ -276,13 +281,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$days = array();
 
 	$current_day = strtotime(date('Y-m-d'));
-	$i=60;
+	$i=$max_days;
 	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0, 0);
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v WHERE DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-60 days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v WHERE DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
 	}
@@ -867,7 +872,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="chart_tabs_fansub" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="daily_fansub-tab" data-toggle="tab" href="#daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true">Evolució diària (darrers 60 dies)</a>
+										<a class="nav-link active" id="daily_fansub-tab" data-toggle="tab" href="#daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" id="monthly_fansub-tab" data-toggle="tab" href="#monthly_fansub" role="tab" aria-controls="monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
@@ -879,13 +884,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$days = array();
 
 	$current_day = strtotime(date('Y-m-d'));
-	$i=60;
+	$i=$max_days;
 	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-60 days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
@@ -1038,7 +1043,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="chart_tabs_fansub_manga" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="manga_daily_fansub-tab" data-toggle="tab" href="#manga_daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true">Evolució diària (darrers 60 dies)</a>
+										<a class="nav-link active" id="manga_daily_fansub-tab" data-toggle="tab" href="#manga_daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" id="manga_monthly_fansub-tab" data-toggle="tab" href="#manga_monthly_fansub" role="tab" aria-controls="manga_monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
@@ -1050,13 +1055,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$days = array();
 
 	$current_day = strtotime(date('Y-m-d'));
-	$i=60;
+	$i=$max_days;
 	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0, 0);
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-60 days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
 	}

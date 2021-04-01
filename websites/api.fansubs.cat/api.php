@@ -303,7 +303,7 @@ else if ($method === 'manga'){
 else if ($method === 'internal' && $_GET['token']===$internal_token){
 	$submethod = array_shift($request);
 	if ($submethod=='get_unconverted_links') {
-		$result = mysqli_query($db_connection, "SELECT li.*, v.storage_folder, v.storage_processing, IF(l.extra_name IS NULL,FALSE,TRUE) is_extra FROM link_instance li LEFT JOIN link l ON li.link_id=l.id LEFT JOIN version v ON l.version_id=v.id WHERE url NOT LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND l.id>=".$_GET['from_id'] : '')." AND NOT EXISTS (SELECT * FROM link_instance li2 WHERE li2.link_id=li.link_id AND li2.url LIKE 'storage://%') ORDER BY s.name ASC") or crash('Internal error: ' . mysqli_error($db_connection));
+		$result = mysqli_query($db_connection, "SELECT li.*, v.storage_folder, v.storage_processing, IF(l.extra_name IS NULL,FALSE,TRUE) is_extra FROM link_instance li LEFT JOIN link l ON li.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url NOT LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND l.id>=".$_GET['from_id'] : '')." AND NOT EXISTS (SELECT * FROM link_instance li2 WHERE li2.link_id=li.link_id AND li2.url LIKE 'storage://%') ORDER BY s.name ASC, l.id ASC") or crash('Internal error: ' . mysqli_error($db_connection));
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
@@ -321,12 +321,45 @@ else if ($method === 'internal' && $_GET['token']===$internal_token){
 			'result' => $elements
 		);
 		echo json_encode($response);
+	} else if ($submethod=='get_converted_links') {
+		$result = mysqli_query($db_connection, "SELECT li.*, v.storage_folder, v.storage_processing, IF(l.extra_name IS NULL,FALSE,TRUE) is_extra, e.duration,(SELECT COUNT(*) FROM link WHERE episode_id=e.id)<2 is_unique FROM link_instance li LEFT JOIN link l ON li.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id WHERE url LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND l.id>=".$_GET['from_id'] : '')." ORDER BY s.name ASC, l.id ASC") or crash('Internal error: ' . mysqli_error($db_connection));
+		$elements = array();
+		while($row = mysqli_fetch_assoc($result)){
+			$elements[] = array(
+				'link_id' => $row['link_id'],
+				'url' => $row['url'],
+				'resolution' => $row['resolution'],
+				'is_extra' => $row['is_extra'] ? TRUE : FALSE,
+				'is_unique' => $row['is_unique'] ? TRUE : FALSE,
+				'duration_in_minutes' => !empty($row['duration']) ? $row['duration'] : 0
+			);
+		}
+
+		$response = array(
+			'status' => 'ok',
+			'result' => $elements
+		);
+		echo json_encode($response);
 	} else if ($submethod=='insert_converted_link') {
 		if (!empty($_POST['link_id']) && is_numeric($_POST['link_id']) && !empty($_POST['url']) && !empty($_POST['resolution'])) {
 			$link_id=$_POST['link_id'];
 			$url=mysqli_real_escape_string($db_connection, $_POST['url']);
 			$resolution=mysqli_real_escape_string($db_connection, $_POST['resolution']);
 			$result = mysqli_query($db_connection, "INSERT INTO link_instance (link_id, url, resolution, created) VALUES ($link_id, '$url', '$resolution', CURRENT_TIMESTAMP)") or crash('Internal error: ' . mysqli_error($db_connection));
+			
+			$response = array(
+				'status' => 'ok'
+			);
+			echo json_encode($response);
+		}
+		else {
+			show_invalid('No valid input provided.');
+		}
+	} else if ($submethod=='change_link_episode_duration') {
+		if (!empty($_POST['link_id']) && is_numeric($_POST['link_id']) && !empty($_POST['duration']) && is_numeric($_POST['duration'])) {
+			$link_id=$_POST['link_id'];
+			$duration=$_POST['duration'];
+			$result = mysqli_query($db_connection, "UPDATE episode e SET duration=$duration WHERE e.id=(SELECT episode_id FROM link WHERE id=$link_id)") or crash('Internal error: ' . mysqli_error($db_connection));
 			
 			$response = array(
 				'status' => 'ok'

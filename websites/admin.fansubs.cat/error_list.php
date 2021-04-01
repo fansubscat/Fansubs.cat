@@ -24,6 +24,8 @@ function get_error_type($type) {
 			return 'Vídeo: Error de càrrega';
 		case 'direct-player-failed':
 			return 'Vídeo: Error de reproducció';
+		case 'page-too-old':
+			return 'Vídeo: Pàgina massa antiga';
 		case 'unknown':
 			return 'Error desconegut';
 		default:
