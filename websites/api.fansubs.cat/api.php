@@ -346,6 +346,7 @@ else if ($method === 'internal' && $_GET['token']===$internal_token){
 			$url=mysqli_real_escape_string($db_connection, $_POST['url']);
 			$resolution=mysqli_real_escape_string($db_connection, $_POST['resolution']);
 			$result = mysqli_query($db_connection, "INSERT INTO link_instance (link_id, url, resolution, created) VALUES ($link_id, '$url', '$resolution', CURRENT_TIMESTAMP)") or crash('Internal error: ' . mysqli_error($db_connection));
+			log_action('api-insert-converted-link', "S'ha inserit l'enllaç convertit '$url' a l'enllaç amb id. $link_id");
 			
 			$response = array(
 				'status' => 'ok'
@@ -360,6 +361,7 @@ else if ($method === 'internal' && $_GET['token']===$internal_token){
 			$link_id=$_POST['link_id'];
 			$duration=$_POST['duration'];
 			$result = mysqli_query($db_connection, "UPDATE episode e SET duration=$duration WHERE e.id=(SELECT episode_id FROM link WHERE id=$link_id)") or crash('Internal error: ' . mysqli_error($db_connection));
+			log_action('api-change-episode-duration', "S'ha canviat la durada del capítol d'anime propi de l'enllaç amb id. $link_id a $duration minuts");
 			
 			$response = array(
 				'status' => 'ok'
