@@ -252,7 +252,7 @@ function initializePlayer(title, method, sourceData){
 					if (sourcesCode!='') {
 						sourcesCode+="\n";
 					}
-					sourcesCode+='<source type="video/mp4" src="'+sources[i].url+'" size="'+sources[i].resolution+'"/>';
+					sourcesCode+='<source type="video/mp4" src="'+sources[i].url+(sources[i].url.includes('?') ? '&play_id=' : '?play_id=')+currentPlayId+'" size="'+sources[i].resolution+'"/>';
 				}
 				$('#overlay-content').html(start+'<video id="player" playsinline controls>'+sourcesCode+'</video>'+end);
 				document.getElementById('player').addEventListener('error', function (e){
