@@ -53,12 +53,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<th scope="col" style="width: 45%;">Capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
 												<th scope="col" class="text-center" style="width: 20%;">Progrés</th>
+												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-thumbs-up"></span></th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(v.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(v.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, ((ps.time_spent/60)/IF(IFNULL(e.duration,1)=0,1,IFNULL(e.duration,1)))*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent FROM play_session ps LEFT JOIN link l ON ps.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id ORDER BY UNIX_TIMESTAMP(ps.last_update)<".(date('U')-120)." ASC, ps.play_id ASC");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(v.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(v.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, ps.method, (IF(ps.method='size', ps.bytes_read/ps.total_bytes, ps.time_spent/ps.total_time))*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent, ps.user_agent_read FROM play_session ps LEFT JOIN link l ON ps.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id WHERE ps.archived=0 AND ps.player_closed=0 AND UNIX_TIMESTAMP(ps.last_update)>=".(date('U')-120)." ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
@@ -66,7 +67,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
-												<td class="text-center"><div<?php echo min(100,$row['progress'])>=50 ? ' class="fa fa-thumbs-up" style="color: green;" title="És una visualització vàlida"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no és una visualització vàlida"'; ?>></div></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
+												<td class="text-center"><div<?php echo $row['progress']>=($row['method']=='time' ? 50 : 65) ? ' class="fa fa-thumbs-up" style="color: green;" title="És una visualització vàlida"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no és una visualització vàlida"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -75,7 +77,7 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Les visualitzacions que romanguin encallades durant més de 2 hores seran descartades (&lt;50%) o incorporades com a visualització real (≥50%).</p>
+								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les visualitzacions de navegadors, la resta poden fluctuar i s'incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
 							</article>
 						</div>
 					</div>
@@ -136,12 +138,13 @@ mysqli_free_result($result);
 												<th scope="col" style="width: 45%;">Capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
 												<th scope="col" class="text-center" style="width: 20%;">Progrés</th>
+												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-thumbs-up"></span></th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(v.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(v.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, ((ps.time_spent/60)/IF(IFNULL(e.duration,1)=0,1,IFNULL(e.duration,1)))*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent FROM play_session ps LEFT JOIN link l ON ps.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY UNIX_TIMESTAMP(ps.last_update)<".(date('U')-120)." ASC, ps.play_id ASC");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(v.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.name),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(se.name IS NULL,NULL,CONCAT(se.name,' - ')),IF(v.show_seasons=1 AND (SELECT COUNT(*) FROM season se2 WHERE se2.series_id=s.id)>1,CONCAT('Temporada ', se.number, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(l.episode_id IS NULL,CONCAT('Extra: ', l.extra_name), '(Capítol sense nom)'))) episode_name, ps.method, (IF(ps.method='size', ps.bytes_read/ps.total_bytes, ps.time_spent/ps.total_time))*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent, ps.user_agent_read FROM play_session ps LEFT JOIN link l ON ps.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN season se ON e.season_id=se.id LEFT JOIN episode_title et ON l.version_id=et.version_id AND l.episode_id=et.episode_id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND ps.archived=0 AND ps.player_closed=0 AND UNIX_TIMESTAMP(ps.last_update)>=".(date('U')-120)." ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
@@ -149,7 +152,8 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
-												<td class="text-center"><div<?php echo min(100,$row['progress'])>=50 ? ' class="fa fa-thumbs-up" style="color: green;" title="És una visualització vàlida"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no és una visualització vàlida"'; ?>></div></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
+												<td class="text-center"><div<?php echo $row['progress']>=($row['method']=='time' ? 50 : 65) ? ' class="fa fa-thumbs-up" style="color: green;" title="És una visualització vàlida"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no és una visualització vàlida"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -158,7 +162,7 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Les visualitzacions que romanguin encallades durant més de 2 hores seran descartades (&lt;50%) o incorporades com a visualització real (≥50%).</p>
+								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les visualitzacions de navegadors, la resta poden fluctuar i s'incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
 							</article>
 						</div>
 					</div>

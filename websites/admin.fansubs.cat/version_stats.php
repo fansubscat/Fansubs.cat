@@ -228,7 +228,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th class="text-center" scope="col" style="width: 12%;">Visualitzacions</th>
 								<th class="text-center" scope="col" style="width: 12%;">Clics sense v.</th>
 								<th class="text-center" scope="col" style="width: 12%;">Temps total</th>
-								<th class="text-center" scope="col" style="width: 12%;">Temps mitjà</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -270,7 +269,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="text-center"><?php echo $row['total_views']; ?></td>
 								<td class="text-center"><?php echo max(0, $row['total_clicks']-$row['total_views']); ?></td>
 								<td class="text-center"><?php echo get_hours_or_minutes_formatted($row['total_time_spent']); ?></td>
-								<td class="text-center"><?php echo $row['total_views']!=0 ? get_hours_or_minutes_formatted($row['total_time_spent']/$row['total_views']) : 0; ?></td>
 							</tr>
 <?php
 	}

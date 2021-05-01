@@ -371,6 +371,24 @@ else if ($method === 'internal' && $_GET['token']===$internal_token){
 		else {
 			show_invalid('No valid input provided.');
 		}
+	} else if ($submethod=='report_tracking') {
+		if (!empty($_POST['play_id']) && !empty($_POST['link_id']) && is_numeric($_POST['link_id']) && !empty($_POST['bytes_read']) && is_numeric($_POST['bytes_read']) && !empty($_POST['total_bytes']) && is_numeric($_POST['total_bytes'])) {
+			$play_id=mysqli_real_escape_string($db_connection, $_POST['play_id']);
+			$link_id=mysqli_real_escape_string($db_connection, $_POST['link_id']);
+			$bytes_read=mysqli_real_escape_string($db_connection, $_POST['bytes_read']);
+			$total_bytes=mysqli_real_escape_string($db_connection, $_POST['total_bytes']);
+			$ip=mysqli_real_escape_string($db_connection, $_POST['ip']);
+			$user_agent=mysqli_real_escape_string($db_connection, $_POST['user_agent']);
+			$result = mysqli_query($db_connection, "INSERT INTO play_session VALUES ('$play_id', 'size', $link_id, 0, (SELECT IFNULL((SELECT IF(e.id IS NULL,60,e.duration*60) total_time FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE l.id=$link_id),0)), $bytes_read, $total_bytes, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '$ip', NULL, '$user_agent', 0, 0, 0, NULL) ON DUPLICATE KEY UPDATE bytes_read=bytes_read+$bytes_read, total_bytes=$total_bytes, ip='$ip', user_agent_read='$user_agent', last_update=CURRENT_TIMESTAMP") or crash('Internal error: ' . mysqli_error($db_connection));
+			
+			$response = array(
+				'status' => 'ok'
+			);
+			echo json_encode($response);
+		}
+		else {
+			show_invalid('No valid input provided.');
+		}
 	} else {
 		show_invalid('No valid submethod specified.');
 	}

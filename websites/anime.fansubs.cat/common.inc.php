@@ -1,6 +1,6 @@
 <?php
 //Versions to avoid site caching
-const JS_VER=38;
+const JS_VER=50;
 const CS_VER=17;
 const MG_VER=1;
 const VS_VER=5;
@@ -102,6 +102,8 @@ function get_provider($link_instances){
 			array_push($methods, 'google-drive');
 		} else if (preg_match(REGEXP_YOUTUBE,$link_instance['url'])){
 			array_push($methods, 'youtube');
+		} else if (preg_match(REGEXP_STORAGE,$link_instance['url'])) {
+			array_push($methods, 'storage');
 		} else {
 			array_push($methods, 'direct-video');
 		}
@@ -125,7 +127,7 @@ function get_provider($link_instances){
 		}
 		$output.="YouTube";
 	}
-	if (in_array('direct-video', $methods)){
+	if (in_array('direct-video', $methods) || in_array('storage', $methods)){
 		if ($output!='') {
 			$output.=", ";
 		}
@@ -254,6 +256,9 @@ function get_display_method($link_instances){
 	}
 	if (preg_match(REGEXP_YOUTUBE,$link_instances[0]['url'])){
 		return "youtube";
+	}
+	if (preg_match(REGEXP_STORAGE,$link_instances[0]['url'])){
+		return "storage";
 	}
 	return "direct-video";
 }
@@ -395,7 +400,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-position="'.$position.'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($link_instances))).'" data-method="'.htmlspecialchars(get_display_method($link_instances)).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-fansub="'.htmlspecialchars($fansub_names).'" data-cover="https://anime.fansubs.cat/images/series/'.$series['id'].'.jpg" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-position="'.$position.'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($link_instances))).'" data-method="'.htmlspecialchars(get_display_method($link_instances)).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
 				if (!empty($vrow['comments'])){
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.htmlspecialchars($vrow['comments']).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
 				}
@@ -442,7 +447,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-position="'.$position.'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($link_instances))).'" data-method="'.htmlspecialchars(get_display_method($link_instances)).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
+			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-fansub="'.htmlspecialchars($fansub_names).'" data-cover="https://anime.fansubs.cat/images/series/'.$series['id'].'.jpg" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series, $episode_title, $is_extra)).'" data-link-id="'.$vrow['id'].'" data-position="'.$position.'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($link_instances))).'" data-method="'.htmlspecialchars(get_display_method($link_instances)).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 			if (!empty($vrow['comments'])){
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.htmlspecialchars($vrow['comments']).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
 			}

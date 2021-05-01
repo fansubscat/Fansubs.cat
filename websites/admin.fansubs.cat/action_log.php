@@ -18,7 +18,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<p class="text-center">Es mostren les darreres 200 accions (les més noves primer).</p>
 					<div class="text-center pb-3">
 						<select onchange="location.href='action_log.php?filter='+this.value;">
-							<option value="">No filtris els esdeveniments</option>
+							<option value="">Mostra els esdeveniments més rellevants</option>
+							<option value="ALL"<?php echo $_GET['filter']=='ALL' ? ' selected' : ''; ?>>Mostra tots els esdeveniments</option>
 <?php
 	$result = query("SELECT action, COUNT(*) count FROM action_log GROUP BY action ORDER BY action ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
@@ -44,7 +45,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT * FROM action_log".(!empty($filter) ? " WHERE action='$filter'" : '')." ORDER BY id DESC LIMIT 200");
+	$result = query("SELECT * FROM action_log".(!empty($filter) ? ( $filter=='ALL' ? '' : " WHERE action='$filter'") : " WHERE action NOT IN ('fetch-news-finished', 'fetch-news-started', 'cron-updater-finished', 'cron-updater-started', 'lost-views-updater-finished', 'lost-views-updater-started', 'cron-scores-finished', 'cron-scores-started', 'cron-recommendations-started', 'cron-recommendations-finished')")." ORDER BY id DESC LIMIT 200");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>

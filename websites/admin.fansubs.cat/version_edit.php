@@ -309,7 +309,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			//We do not count removing links as updating them, only insertions and real updates
 			foreach ($links as $link) {
 				if ($link['id']==-1) {
-					query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES (".$data['id'].",".$link['episode_id'].",".$link['variant_name'].",NULL,".$link['comments'].",CURRENT_TIMESTAMP)");
+					query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created,lost) VALUES (".$data['id'].",".$link['episode_id'].",".$link['variant_name'].",NULL,".$link['comments'].",CURRENT_TIMESTAMP,".$link['lost'].")");
 					$inserted_link_id=mysqli_insert_id($db_connection);
 					foreach ($link['instances'] as $instance) {
 						query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES ($inserted_link_id,".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
@@ -318,7 +318,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						query("UPDATE version SET links_updated=CURRENT_TIMESTAMP,links_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
 				} else {
-					query("UPDATE link SET variant_name=".$link['variant_name'].",comments=".$link['comments']." WHERE id=".$link['id']);
+					query("UPDATE link SET variant_name=".$link['variant_name'].",comments=".$link['comments'].",lost=".$link['lost']." WHERE id=".$link['id']);
 					$has_updated_links = FALSE;
 
 					$instance_ids=array();
@@ -375,7 +375,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($extras as $extra) {
 				if ($extra['id']==-1) {
-					query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES (".$data['id'].",NULL,NULL,'".$extra['name']."',".$extra['comments'].",CURRENT_TIMESTAMP)");
+					query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created,lost) VALUES (".$data['id'].",NULL,NULL,'".$extra['name']."',".$extra['comments'].",CURRENT_TIMESTAMP,".$link['lost'].")");
 					$inserted_link_id=mysqli_insert_id($db_connection);
 					foreach ($extra['instances'] as $instance) {
 						query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES ($inserted_link_id,".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
@@ -453,10 +453,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
 			}
 			if ($data['fansub_2']!=NULL) {
-				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_2'].",".$data['downloads_url_1'].")");
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_2'].",".$data['downloads_url_2'].")");
 			}
 			if ($data['fansub_3']!=NULL) {
-				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_3'].",".$data['downloads_url_1'].")");
+				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_3'].",".$data['downloads_url_3'].")");
 			}
 			foreach ($episodes as $episode) {
 				if ($episode['title']!="NULL") {
@@ -1006,7 +1006,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-comments-1" type="text" class="form-control" value="" maxlength="200"/>
 															</td>
 															<td class="text-center" style="padding-top: .75rem;">
-																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" type="checkbox" value="0"/>
+																<input id="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" name="form-links-list-<?php echo $episodes[$i]['id']; ?>-lost-1" type="checkbox" value="1"/>
 															</td>
 															<td class="text-center pt-2">
 																<button id="form-links-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>

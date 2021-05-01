@@ -86,9 +86,10 @@ switch ($header_tab){
 		}
 		$sections=array("Resultats de la cerca");
 		$descriptions=array("La cerca de \"$query\" ha obtingut %%% resultats a la nostra base de dades de manga.");
+		$spaced_query = $query;
 		$query = str_replace(" ", "%", $query);
 		$queries=array(
-			$base_query . " WHERE $query_portion_limit_to_non_hidden AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%') OR s.id IN (SELECT mg.manga_id FROM rel_manga_genre mg LEFT JOIN genre g ON mg.genre_id=g.id WHERE g.name='$query') GROUP BY s.id ORDER BY s.name ASC");
+			$base_query . " WHERE $query_portion_limit_to_non_hidden AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%') OR s.id IN (SELECT mg.manga_id FROM rel_manga_genre mg LEFT JOIN genre g ON mg.genre_id=g.id WHERE g.name='$spaced_query') GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
 		$tracking_classes=array('search-results');
@@ -105,9 +106,29 @@ ORDER BY MAX(a.views) DESC, a.manga_id ASC");
 		mysqli_free_result($result);
 		$sections=array("<span class=\"iconsm fa fa-fw fa-gift\"></span> Calendari d'advent", "<span class=\"iconsm fa fa-fw fa-star\"></span> Mangues destacats", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorats");
 		$descriptions=array("Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones festes!", "Aquí tens la tria de mangues recomanats d'aquesta setmana! T'animes a llegir-ne algun?", "Aquestes són les darreres novetats de manga editat en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit de mangues triats a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquests són els mangues que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada el manga d'actualitat? Aquests són els mangues més nous que tenim editats.", "Els mangues més ben puntuats pels usuaris de MyAnimeList amb versió editada en català.");
+		$recommendations_subquery = "SELECT manga_version_id FROM manga_recommendation";
+		if ($is_fools_day) {
+			$sections[1]="<span class=\"iconsm fa fa-fw fa-star\"></span> Obres mestres";
+			$descriptions[1]="Que no t'enganyin, aquests són els millors mangues de la història. Si encara no els has llegit, què esperes?";
+			$fools_day_result = query("SELECT vr.id FROM manga_version vr LEFT JOIN manga sr ON vr.manga_id=sr.id WHERE (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status IN (1,3) AND sr.score IS NOT NULL AND vr.chapters_missing=0 ORDER BY sr.score ASC LIMIT 10");
+			$fools_day_items = array();
+			while ($rowfd = mysqli_fetch_assoc($fools_day_result)) {
+				$fools_day_items[] = $rowfd['id'];
+			}
+			$recommendations_subquery = implode(',',$fools_day_items);
+		} else if (date('m-d')=='04-23') { // Sant Jordi
+			$sections[1]="<span class=\"iconsm fa fa-fw fa-star\"></span> Especial Sant Jordi";
+			$descriptions[1]="Mangues ben valorats amb components romàntics. T'animes a llegir-ne algun?";
+			$sant_jordi_result = query("SELECT DISTINCT vr.id FROM manga_version vr LEFT JOIN manga sr ON vr.manga_id=sr.id WHERE (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status=1 AND vr.is_featurable=1 AND sr.score IS NOT NULL AND vr.chapters_missing=0 AND sr.id IN (SELECT rsg.manga_id FROM rel_manga_genre rsg WHERE rsg.genre_id IN (7,16,23)) ORDER BY sr.score DESC LIMIT 10");
+			$sant_jordi_items = array();
+			while ($rowsj = mysqli_fetch_assoc($sant_jordi_result)) {
+				$sant_jordi_items[] = $rowsj['id'];
+			}
+			$recommendations_subquery = implode(',',$sant_jordi_items);
+		}
 		$queries=array(
 			NULL,
-			$base_query . " WHERE $query_portion_limit_to_non_hidden AND v.id IN (SELECT manga_version_id FROM manga_recommendation)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
+			$base_query . " WHERE $query_portion_limit_to_non_hidden AND v.id IN ($recommendations_subquery)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
 			$base_query . " WHERE $query_portion_limit_to_non_hidden AND 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
 			$base_query . " WHERE $query_portion_limit_to_non_hidden AND 1$cookie_extra_conditions GROUP BY s.id ORDER BY RAND() LIMIT $max_items",
 			$base_query . " WHERE $query_portion_limit_to_non_hidden AND s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
@@ -265,7 +286,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 	//Search case: add anime
 	if ($header_tab=='search') {
-		$result = query("SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id AND nv.hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id AND ss.episodes>0) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.hidden=0) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.hidden=0)>0 AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords LIKE '%$query%') OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$query') GROUP BY s.id ORDER BY s.name ASC");
+		$result = query("SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.links_updated=MAX(v.links_updated) AND v.series_id=s.id AND nv.hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.links_updated) last_updated, (SELECT COUNT(ss.id) FROM season ss WHERE ss.series_id=s.id AND ss.episodes>0) seasons, s.episodes episodes, (SELECT MAX(ls.created) FROM link ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.hidden=0) last_link_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.hidden=0)>0 AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords LIKE '%$query%') OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$spaced_query') GROUP BY s.id ORDER BY s.name ASC");
 		if (mysqli_num_rows($result)>0){
 ?>
 				<div class="section">

@@ -4,16 +4,11 @@ require_once('config.inc.php');
 function log_action($action, $text=NULL){
 	global $db_connection;
 	if (!empty($text)){
-		$text = "'".escape($text)."'";
+		$text = "'".mysqli_real_escape_string($db_connection, $text)."'";
 	} else {
 		$text = "NULL";
 	}
-	if (!empty($_SESSION['username'])){
-		$username = "'".escape($_SESSION['username'])."'";
-	} else {
-		$username = "NULL";
-	}
-	query("INSERT INTO action_log (action, text, author, date) VALUES ('".escape($action)."',$text,$username, CURRENT_TIMESTAMP)", TRUE);
+	mysqli_query($db_connection, "INSERT INTO action_log (action, text, author, date) VALUES ('".mysqli_real_escape_string($db_connection, $action)."',$text,'API', CURRENT_TIMESTAMP)");
 }
 
 function crash($string){

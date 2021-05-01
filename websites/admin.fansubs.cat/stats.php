@@ -43,7 +43,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques totals</h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM news) total_news, (SELECT COUNT(*) FROM series) total_series, (SELECT COUNT(*) FROM version) total_versions, (SELECT COUNT(*) FROM manga) total_manga, (SELECT COUNT(*) FROM manga_version) total_manga_versions, (SELECT COUNT(*) FROM link WHERE lost=0) total_links, (SELECT COUNT(*) FROM file WHERE original_filename IS NOT NULL) total_files, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT COUNT(DISTINCT manga_id) FROM manga_version v WHERE EXISTS (SELECT * FROM manga_version v2 WHERE v2.id<>v.id AND v2.manga_id=v.manga_id)) total_manga_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views) total_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM manga_views) total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM manga_views) total_reads, (SELECT IFNULL(SUM(time_spent),0) FROM manga_views) total_manga_time_spent, (SELECT IFNULL(SUM(pages_read),0) FROM manga_views) total_pages_read, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND lost=0) total_linked_episodes, (SELECT COUNT(DISTINCT chapter_id) FROM file WHERE chapter_id IS NOT NULL AND original_filename IS NOT NULL) total_linked_chapters, (SELECT SUM(e.duration) FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE lost=0) total_duration, (SELECT SUM(f.number_of_pages) FROM file f WHERE f.original_filename IS NOT NULL) total_number_of_pages");
+			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM news) total_news, (SELECT COUNT(*) FROM series) total_series, (SELECT COUNT(*) FROM version) total_versions, (SELECT COUNT(*) FROM manga) total_manga, (SELECT COUNT(*) FROM manga_version) total_manga_versions, (SELECT COUNT(*) FROM link WHERE lost=0) total_links, (SELECT COUNT(*) FROM file WHERE original_filename IS NOT NULL) total_files, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT COUNT(DISTINCT manga_id) FROM manga_version v WHERE EXISTS (SELECT * FROM manga_version v2 WHERE v2.id<>v.id AND v2.manga_id=v.manga_id)) total_manga_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views) total_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM manga_views) total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM manga_views) total_reads, (SELECT IFNULL(SUM(pages_read),0) FROM manga_views) total_pages_read, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND lost=0) total_linked_episodes, (SELECT COUNT(DISTINCT chapter_id) FROM file WHERE chapter_id IS NOT NULL AND original_filename IS NOT NULL) total_linked_chapters, (SELECT SUM(e.duration) FROM link l LEFT JOIN episode e ON l.episode_id=e.id WHERE lost=0) total_duration, (SELECT SUM(f.number_of_pages) FROM file f WHERE f.original_filename IS NOT NULL) total_number_of_pages");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
@@ -69,7 +69,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<div class="w-100 d-flex">
 										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_views']; ?></div>
 										<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b><br><?php echo max(0, $totals['total_clicks']-$totals['total_views']); ?></div>
-										<div class="col-sm-4 text-center"><b>Temps de visualització:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_time_spent']); ?></div>
+										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_time_spent']); ?></div>
 									</div>
 								</div>
 								<hr>
@@ -81,10 +81,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-4 text-center"><b>Pàgines totals:</b><br><?php echo $totals['total_number_of_pages']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-3 text-center"><b>Lectures:</b><br><?php echo $totals['total_reads']; ?></div>
-										<div class="col-sm-3 text-center"><b>Clics sense llegir:</b><br><?php echo max(0, $totals['total_manga_clicks']-$totals['total_reads']); ?></div>
-										<div class="col-sm-3 text-center"><b>Temps de lectura:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_manga_time_spent']); ?></div>
-										<div class="col-sm-3 text-center"><b>Pàgines llegides:</b><br><?php echo $totals['total_pages_read']; ?></div>
+										<div class="col-sm-4 text-center"><b>Lectures:</b><br><?php echo $totals['total_reads']; ?></div>
+										<div class="col-sm-4 text-center"><b>Clics sense llegir:</b><br><?php echo max(0, $totals['total_manga_clicks']-$totals['total_reads']); ?></div>
+										<div class="col-sm-4 text-center"><b>Pàgines totals llegides:</b><br><?php echo $totals['total_pages_read']; ?></div>
 									</div>
 								</div>
 							</article>
@@ -283,13 +282,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$current_day = strtotime(date('Y-m-d'));
 	$i=$max_days;
 	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
-		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0, 0);
+		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v WHERE DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v WHERE DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
-		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
+		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read']);
 	}
 	mysqli_free_result($result);
 
@@ -297,14 +296,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$click_values=array();
 	$view_values=array();
 	$page_values=array();
-	$time_values=array();
 
 	foreach ($days as $day => $values) {
 		array_push($day_values, "'".$day."'");
 		array_push($click_values, $values[0]);
 		array_push($view_values, $values[1]);
 		array_push($page_values, $values[2]);
-		array_push($time_values, $values[3]);
 	}
 ?>
 										<canvas id="manga_daily_chart"></canvas>
@@ -330,14 +327,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														fill: false,
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>]
-													},
-													{
-														label: 'Temps de lectura (h)',
-														backgroundColor: 'rgb(40, 167, 69)',
-														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														hidden: true,
-														data: [<?php echo implode(',',$time_values); ?>]
 													},
 													{
 														label: 'Pàgines llegides',
@@ -369,27 +358,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$current_month = strtotime(date('Y-m-01'));
 	$i=0;
 	while (strtotime(date('2020-06-01')."+$i months")<=$current_month) {
-		$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0, 0);
+		$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0);
 		$i++;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
-		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
+		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read']);
 	}
 	mysqli_free_result($result);
 
 	$month_values=array();
 	$click_values=array();
 	$view_values=array();
-	$time_values=array();
 	$page_values=array();
 
 	foreach ($months as $month => $values) {
 		array_push($month_values, "'".$month."'");
 		array_push($click_values, $values[0]);
 		array_push($view_values, $values[1]);
-		array_push($time_values, $values[3]);
 		array_push($page_values, $values[2]);
 	}
 ?>
@@ -416,14 +403,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														fill: false,
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>]
-													},
-													{
-														label: 'Temps de lectura (h)',
-														backgroundColor: 'rgb(40, 167, 69)',
-														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														hidden: true,
-														data: [<?php echo implode(',',$time_values); ?>]
 													},
 													{
 														label: 'Pàgines llegides',
@@ -817,7 +796,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(*) FROM news WHERE fansub_id=".$fansub['id'].") total_news, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id WHERE vf.fansub_id=".$fansub['id'].") total_series, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id'].") total_versions, (SELECT COUNT(DISTINCT v.manga_id) FROM rel_manga_version_fansub vf LEFT JOIN manga_version v ON vf.manga_version_id=v.id WHERE vf.fansub_id=".$fansub['id'].") total_manga, (SELECT COUNT(DISTINCT vf.manga_version_id) FROM rel_manga_version_fansub vf WHERE fansub_id=".$fansub['id'].") total_manga_versions, (SELECT COUNT(DISTINCT l.id) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id WHERE l.lost=0 AND vf.fansub_id=".$fansub['id'].") total_links, (SELECT COUNT(*) FROM file f LEFT JOIN rel_manga_version_fansub vf ON f.manga_version_id=vf.manga_version_id WHERE original_filename IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_files, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT COUNT(DISTINCT manga_id) FROM manga_version v WHERE v.id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM manga_version v2 WHERE v2.id<>v.id AND v2.manga_id=v.manga_id)) total_manga_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_reads, (SELECT IFNULL(SUM(time_spent),0) FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_time_spent, (SELECT IFNULL(SUM(pages_read),0) FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_pages_read, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_episodes, (SELECT COUNT(DISTINCT chapter_id) FROM file WHERE chapter_id IS NOT NULL AND original_filename IS NOT NULL AND manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_chapters, (SELECT SUM(e.duration) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id LEFT JOIN episode e ON l.episode_id=e.id WHERE l.lost=0 AND vf.fansub_id=".$fansub['id'].") total_duration, (SELECT SUM(f.number_of_pages) FROM file f LEFT JOIN rel_manga_version_fansub vf ON f.manga_version_id=vf.manga_version_id WHERE f.original_filename IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_number_of_pages");
+			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(*) FROM news WHERE fansub_id=".$fansub['id'].") total_news, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id WHERE vf.fansub_id=".$fansub['id'].") total_series, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id'].") total_versions, (SELECT COUNT(DISTINCT v.manga_id) FROM rel_manga_version_fansub vf LEFT JOIN manga_version v ON vf.manga_version_id=v.id WHERE vf.fansub_id=".$fansub['id'].") total_manga, (SELECT COUNT(DISTINCT vf.manga_version_id) FROM rel_manga_version_fansub vf WHERE fansub_id=".$fansub['id'].") total_manga_versions, (SELECT COUNT(DISTINCT l.id) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id WHERE l.lost=0 AND vf.fansub_id=".$fansub['id'].") total_links, (SELECT COUNT(*) FROM file f LEFT JOIN rel_manga_version_fansub vf ON f.manga_version_id=vf.manga_version_id WHERE original_filename IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_files, (SELECT COUNT(DISTINCT series_id) FROM version v WHERE v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_duplicity, (SELECT COUNT(DISTINCT manga_id) FROM manga_version v WHERE v.id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM manga_version v2 WHERE v2.id<>v.id AND v2.manga_id=v.manga_id)) total_manga_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_views, (SELECT IFNULL(SUM(time_spent),0) FROM views v LEFT JOIN link l ON v.link_id=l.id WHERE l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_reads, (SELECT IFNULL(SUM(pages_read),0) FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_pages_read, (SELECT COUNT(DISTINCT episode_id) FROM link WHERE episode_id IS NOT NULL AND lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_episodes, (SELECT COUNT(DISTINCT chapter_id) FROM file WHERE chapter_id IS NOT NULL AND original_filename IS NOT NULL AND manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_chapters, (SELECT SUM(e.duration) FROM link l LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id LEFT JOIN episode e ON l.episode_id=e.id WHERE l.lost=0 AND vf.fansub_id=".$fansub['id'].") total_duration, (SELECT SUM(f.number_of_pages) FROM file f LEFT JOIN rel_manga_version_fansub vf ON f.manga_version_id=vf.manga_version_id WHERE f.original_filename IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_number_of_pages");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
@@ -843,7 +822,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<div class="w-100 d-flex">
 										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_views']; ?></div>
 										<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b><br><?php echo max(0, $totals['total_clicks']-$totals['total_views']); ?></div>
-										<div class="col-sm-4 text-center"><b>Temps de visualització:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_time_spent']); ?></div>
+										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_time_spent']); ?></div>
 									</div>
 								</div>
 								<hr>
@@ -855,10 +834,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-4 text-center"><b>Pàgines totals:</b><br><?php echo $totals['total_number_of_pages']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-3 text-center"><b>Lectures:</b><br><?php echo $totals['total_reads']; ?></div>
-										<div class="col-sm-3 text-center"><b>Clics sense llegir:</b><br><?php echo max(0, $totals['total_manga_clicks']-$totals['total_reads']); ?></div>
-										<div class="col-sm-3 text-center"><b>Temps de lectura:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_manga_time_spent']); ?></div>
-										<div class="col-sm-3 text-center"><b>Pàgines llegides:</b><br><?php echo $totals['total_pages_read']; ?></div>
+										<div class="col-sm-4 text-center"><b>Lectures:</b><br><?php echo $totals['total_reads']; ?></div>
+										<div class="col-sm-4 text-center"><b>Clics sense llegir:</b><br><?php echo max(0, $totals['total_manga_clicks']-$totals['total_reads']); ?></div>
+										<div class="col-sm-4 text-center"><b>Pàgines totals llegides:</b><br><?php echo $totals['total_pages_read']; ?></div>
 									</div>
 								</div>
 							</article>
@@ -1057,13 +1035,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$current_day = strtotime(date('Y-m-d'));
 	$i=$max_days;
 	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
-		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0, 0);
+		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
-		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
+		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read']);
 	}
 	mysqli_free_result($result);
 
@@ -1071,14 +1049,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$click_values=array();
 	$view_values=array();
 	$page_values=array();
-	$time_values=array();
 
 	foreach ($days as $day => $values) {
 		array_push($day_values, "'".$day."'");
 		array_push($click_values, $values[0]);
 		array_push($view_values, $values[1]);
 		array_push($page_values, $values[2]);
-		array_push($time_values, $values[3]);
 	}
 ?>
 										<canvas id="manga_daily_chart_fansub"></canvas>
@@ -1104,14 +1080,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														fill: false,
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>]
-													},
-													{
-														label: 'Temps de lectura (h)',
-														backgroundColor: 'rgb(40, 167, 69)',
-														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														hidden: true,
-														data: [<?php echo implode(',',$time_values); ?>]
 													},
 													{
 														label: 'Pàgines llegides',
@@ -1143,13 +1111,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$current_month = strtotime(date('Y-m-01'));
 		$i=0;
 		while (strtotime(date('2020-06-01')."+$i months")<=$current_month) {
-			$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0, 0);
+			$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0);
 			$i++;
 		}
 
-		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(pages_read),0) total_pages_read FROM manga_views v LEFT JOIN file f ON v.file_id=f.id WHERE f.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 		while ($row = mysqli_fetch_assoc($result)) {
-			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read'], $row['total_time_spent']);
+			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read']);
 		}
 		mysqli_free_result($result);
 
@@ -1157,14 +1125,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$click_values=array();
 		$view_values=array();
 		$page_values=array();
-		$time_values=array();
 
 		foreach ($months as $month => $values) {
 			array_push($month_values, "'".$month."'");
 			array_push($click_values, $values[0]);
 			array_push($view_values, $values[1]);
 			array_push($page_values, $values[2]);
-			array_push($time_values, $values[3]);
 		}
 ?>
 										<canvas id="manga_monthly_chart_fansub"></canvas>
@@ -1190,14 +1156,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														fill: false,
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>]
-													},
-													{
-														label: 'Temps de lectura (h)',
-														backgroundColor: 'rgb(40, 167, 69)',
-														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														hidden: true,
-														data: [<?php echo implode(',',$time_values); ?>]
 													},
 													{
 														label: 'Pàgines llegides',

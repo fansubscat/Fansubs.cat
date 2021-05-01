@@ -13,8 +13,8 @@
 # Fansubs.cat - Update MyAnimeList score for all anime and manga
 0 0 * * * cd /srv/services/fansubs.cat/ && /usr/bin/php score_updater_cron.php
 
-# Fansubs.cat - Update lost views and reads
-0 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php lost_views_updater_cron.php
+# Fansubs.cat - Process views and reads (each minute)
+* * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php process_views_cron.php
 
 # Fansubs.cat - Update recommended anime and manga
 0 0 * * 1 cd /srv/services/fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php

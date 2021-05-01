@@ -315,10 +315,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO rel_manga_version_fansub (manga_version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
 			}
 			if ($data['fansub_2']!=NULL) {
-				query("INSERT INTO rel_manga_version_fansub (manga_version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_2'].",".$data['downloads_url_1'].")");
+				query("INSERT INTO rel_manga_version_fansub (manga_version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_2'].",".$data['downloads_url_2'].")");
 			}
 			if ($data['fansub_3']!=NULL) {
-				query("INSERT INTO rel_manga_version_fansub (manga_version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_3'].",".$data['downloads_url_1'].")");
+				query("INSERT INTO rel_manga_version_fansub (manga_version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_3'].",".$data['downloads_url_3'].")");
 			}
 			foreach ($chapters as $chapter) {
 				if ($chapter['title']!="NULL") {
