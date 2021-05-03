@@ -58,7 +58,7 @@ h2, h3 {
 	z-index: 2000;
 }
 
-#options-overlay, #contact-overlay {
+#options-overlay, #contact-overlay, #alert-overlay {
 	justify-content: center;
 	align-items: center;
 	position: fixed;
@@ -72,7 +72,7 @@ h2, h3 {
 	z-index: 2000;
 }
 
-#options-overlay-content, #contact-overlay-content {
+#options-overlay-content, #contact-overlay-content, #alert-overlay-content {
 	max-width: 660px;
 	background-color: #000;
 	padding: 2em;
@@ -91,6 +91,18 @@ h2, h3 {
 	margin-top: 1.5em;
 	display: flex;
 	justify-content: space-between;
+}
+
+#alert-title, #alert-message {
+	text-align: center;
+}
+
+#alert-buttonbar {
+	text-align: center;
+	width: 100%;
+	margin-top: 1.5em;
+	display: flex;
+	justify-content: center;
 }
 
 #options-fansubs {
@@ -191,7 +203,7 @@ h2, h3 {
 	background: rgb(32, 107, 41);
 }
 
-#options-cancel-button, #contact-cancel-button {
+#options-cancel-button, #contact-cancel-button, #alert-ok-button {
 	color: #FFF;
 	font-size: 1em;
 	font-weight: bold;
@@ -204,7 +216,7 @@ h2, h3 {
 	cursor: pointer;
 }
 
-#options-cancel-button:hover {
+#options-cancel-button:hover, #contact-cancel-button:hover, #alert-ok-button:hover {
 	background: rgb(100, 100, 100);
 }
 
@@ -244,38 +256,37 @@ h2, h3 {
 	height: 100%;
 }
 
-.plyr--video {
+.video-js {
 	width: 100%;
 	height: 100%;
 }
 
-.plyr__video-embed, .plyr__video-wrapper--fixed-ratio {
-	height: 100% !important;
-	padding-bottom: 0 !important;
+.video-js .vjs-control-bar {
+	background: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.75));
+	height: 5em;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	font-size: 1.1em;
+	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
 }
 
-.plyr__control--overlaid {
-	transform: translate(-50%,-50%) scale(1.6);
-}
-
-.plyr_extra_upper {
+.player_extra_upper {
 	position: absolute;
 	top: 0;
 	left: 0;
 	display: flex;
 	width: 100%;
 	padding: 10px;
-	padding: var(--plyr-control-spacing,10px);
 	z-index: 2000;
 	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
 	background: linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,0));
-	background: var(--plyr-video-controls-background, linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,0)));
 	pointer-events: none;
 	align-items: center;
 }
 
-.plyr_extra_upper .plyr_extra_title {
-	font-size: 1.3em;
+.player_extra_upper .player_extra_title {
+	font-size: 1.65em;
+	line-height: 1.8em;
 	flex-grow: 1;
 	text-align: left;
 	text-overflow: ellipsis;
@@ -283,14 +294,22 @@ h2, h3 {
 	white-space: nowrap;
 }
 
-.plyr_extra_upper .plyr_extra_close {
+.player_extra_upper .player_extra_close {
 	font-size: 1.2em;
 	font-weight: bold;
 	pointer-events: auto;
+	cursor: pointer;
+	padding: 0.5em 0.6em;
 }
 
-.plyr_extra_ended {
-	display: flex;
+.player_extra_upper .player_extra_close svg {
+	fill: currentColor;
+	height: 18px;
+	width: 18px;
+}
+
+.player_extra_ended {
+	display: none;
 	position: absolute;
 	height: 100%;
 	width: 100%;
@@ -300,64 +319,179 @@ h2, h3 {
 	justify-content: center;
 }
 
-.plyr_extra_ended_button {
-	background: #00b3ff;
-	background: var(--plyr-video-control-background-hover,var(--plyr-color-main,var(--plyr-color-main,#00b3ff)));
-	border: 0;
+.video-js.vjs-ended .vjs-big-play-button {
+	display: none !important;
+}
+
+.video-js.vjs-ended .player_extra_ended {
+	display: flex;
+}
+
+.video-js .vjs-progress-control .vjs-progress-holder {
+	font-size: 1.6666666667em;
+}
+
+.video-js .vjs-play-progress, .video-js .vjs-volume-level {
+	background-color: #00b3ff;
+}
+
+.video-js .vjs-progress-control .vjs-slider-bar .vjs-time-tooltip {
+	display: none !important;
+}
+
+.player_extra_ended_button {
+	background: #00b3ff !important;
+	border: 0 !important;
 	border-radius: 100%;
 	color: #fff;
-	color: var(--plyr-video-control-color,#fff);
 	opacity: .9;
 	padding: calc(10px * 1.5);
-	padding: calc(var(--plyr-control-spacing,10px) * 1.5);
-	transition: .3s;
+	transition: .3s !important;
 	z-index: 2;
 	width: 76px !important;
 	height: 76px;
 	font-size: 2em !important;
 	margin-left: 0.25em;
 	margin-right: 0.25em;
+	cursor: pointer;
 }
 
-.plyr_extra_ended_button:hover {
+.player_extra_ended_button:hover {
 	opacity: 1;
 }
 
-.plyr--hide-controls {
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing {
 	cursor: none;
 }
 
-.plyr--hide-controls .plyr_extra_upper {
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing .player_extra_upper {
 	opacity: 0;
 	pointer-events: none;
 	transform: translateY(-100%);
 }
 
-.plyr_extra_close .plyr__tooltip {
-	/* From .plyr__tooltip (modified) */
-	top: 100%;
-	margin-top: calc(calc(10px / 2) * 2);
-	margin-top: calc(calc(var(--plyr-control-spacing,10px)/ 2) * 2);
-	transform: translate(-50%,-10px) scale(.8);
-	transform-origin: 50% 0%;
-	bottom: auto;
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing.vjs-casting .player_extra_upper {
+	visibility: visible;
+	opacity: 1;
+	transform: none;
 }
 
-.plyr_extra_close .plyr__tooltip::before {
-	/* From .plyr__controls>.plyr__control:last-child .plyr__tooltip */
-	transform-origin: 100% 100%;	
-	/* From .plyr__controls>.plyr__control:last-child .plyr__tooltip::before */
-	left: auto;
-	right: calc((18px / 2) + calc(10px * .7));
-	right: calc((var(--plyr-control-icon-size,18px)/ 2) + calc(var(--plyr-control-spacing,10px) * .7));
-	transform: translateX(50%);
-	/* From .plyr__tooltip::before (modified) */
-	border-top: 0;
-	border-bottom: 4px solid rgba(255,255,255,.9);
-	border-bottom: var(--plyr-tooltip-arrow-size,4px) solid var(--plyr-tooltip-background,rgba(255,255,255,.9));
-	top: calc(4px * -1);
-	top: calc(var(--plyr-tooltip-arrow-size,4px) * -1);
-	bottom: auto;
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {
+	transform: translateY(100%);
+	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
+}
+
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing.vjs-casting .vjs-control-bar {
+	opacity: 1;
+	transform: none;
+}
+
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing.vjs-casting .vjs-control-bar{
+	visibility: visible;
+	opacity: 1;
+	transform: none;
+}
+
+.video-js .vjs-current-time, .video-js .vjs-time-divider, .video-js .vjs-duration {
+	display: block;
+}
+
+.video-js .vjs-time-control {
+	padding-left: 0;
+	padding-right: 0;
+	min-width: 1em;
+	font-size: 1.2em;
+	line-height: 2.4em;
+}
+
+.video-js.vjs-paused.vjs-has-started .vjs-big-play-button {
+	display: block;
+}
+
+.video-js .vjs-playback-rate .vjs-playback-rate-value {
+	padding-top: 0.3em;
+	font-size: 1.1em;
+}
+
+.video-js .vjs-big-play-button {
+	display: none;
+	font-weight: 900;
+	font-family: "Font Awesome 5 Free";
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	font-style: normal;
+	font-variant: normal;
+	text-rendering: auto;
+	line-height: 1;
+	/* end FA */
+	transition: .3s;
+	font-size: 2.5em;
+	width: 3em;
+	height: 3em;
+	background-color: #00b3ff !important;
+	border: none;
+	border-radius: 100%;
+	padding-left: 0.2em;
+	z-index: 2; /* Higher than Cast screen */
+}
+.video-js .vjs-big-play-button:before {
+	content: "\f04b";
+}
+
+.video-js.vjs-paused .vjs-big-play-button {
+	display: inline-block;
+}
+
+.video-js .vjs-big-play-button:hover {
+	background-color: #10c3ff !important;
+}
+.video-js.vjs-paused .vjs-big-play-button .vjs-icon-placeholder:before{
+	display: none;
+}
+
+.video-js.vjs-casting .vjs-big-play-button {
+	display: none !important;
+}
+
+.video-js.vjs-big-play-centered .vjs-big-play-button {
+	margin-top: -1.5em !important;
+}
+
+.vjs-loading-spinner {
+	z-index: 2; /* Higher than Cast screen */
+}
+
+.video-js .vjs-button{
+	transition: .3s;
+}
+
+.video-js .vjs-control {
+	width: 3em;
+	margin-left: 0.1em;
+	margin-right: 0.1em;
+}
+
+.video-js .vjs-button .vjs-icon-placeholder:before, .video-js .vjs-chromecast-button .vjs-icon-placeholder{
+	font-size: 2.25em;
+	line-height: 1.3em
+}
+
+.video-js .vjs-chromecast-button .vjs-icon-placeholder {
+	width: 0.9em;
+	height: 0.9em;
+}
+
+.video-js .vjs-mute-control, .video-js .vjs-current-time {
+	margin-right: 0;
+}
+
+.video-js .vjs-volume-control, .video-js .vjs-duration {
+	margin-left: 0;
+}
+
+.video-js .vjs-progress-control {
+	margin-right: 0;
+	margin-left: 0;
 }
 
 .player_error_icon {
@@ -365,35 +499,42 @@ h2, h3 {
 	color: #F88;
 }
 
-.player_error_title {
-	font-size: 2em;
+.video-js .player_error_title {
+	font-size: 2.5em;
+	line-height: normal;
 	font-weight: bold;
 }
 
-.player_error_details {
-	margin-top: 0.5em;
-	font-size: 1.3em;
+.video-js .player_error_icon {
+	margin-bottom: 0.2em;
+	line-height: normal;
 }
 
-.player_error_buttons {
-	margin-top: 1em;
+.video-js .player_error_details {
+	margin-top: 0.75em;
+	line-height: normal;
+	font-size: 1.5em;
 }
 
-.error-close-button {
-	color: #FFF;
-	font-size: 1.3em !important;
+.video-js .player_error_buttons {
+	margin-top: 1.25em;
+}
+
+.video-js .error-close-button {
+	color: #FFF !important;
+	font-size: 1.5em !important;
 	font-weight: bold !important;
 	border-radius: 4px;
-	margin-top: 0.1em;
-	margin-bottom: 0.1em;
-	padding: 0.2em 1em;
-	background: rgb(80, 80, 80);
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
+	padding: 0.5em 1em;
+	background: rgb(80, 80, 80) !important;
 	white-space: nowrap;
-	border: none;
+	border: none !important;
 	cursor: pointer;
 }
 
-.error-close-button:hover {
+.video-js .error-close-button:hover {
 	background: rgb(100, 100, 100);
 }
 
@@ -1795,6 +1936,13 @@ h2{
 	}
 }
 
+@media (hover: hover) {
+	.video-js .vjs-button:hover, .video-js .vjs-chromecast-button:hover{
+		background-color: #10c3ff;
+		border-radius: 0.2em;
+	}
+}
+
 @media screen and (max-width: 1170px){
 	.catalog {
 		justify-content: center;
@@ -1861,18 +2009,6 @@ h2{
 		flex-wrap: wrap;
 	}
 
-	.plyr__control--overlaid {
-		transform: translate(-50%,-50%) scale(1.2);
-	}
-
-	.plyr_extra_ended_button {
-		width: 57px !important;
-		height: 57px;
-		font-size: 1.5em !important;
-		margin-left: 0.2em;
-		margin-right: 0.2em;
-	}
-
 	.player_error_icon {
 		font-size: 1.6em;
 		color: #F88;
@@ -1888,7 +2024,7 @@ h2{
 		font-size: 1em;
 	}
 
-	.plyr_extra_upper .plyr_extra_title {
+	.player_extra_upper .player_extra_title {
 		font-size: 1.2em;
 	}
 }
@@ -2044,5 +2180,9 @@ h2{
 		font-size: 0.83em;
 		width: 24px;
 		height: 24px;
+	}
+
+	.video-js .vjs-duration, .video-js .vjs-time-divider {
+		display: none !important;
 	}
 }

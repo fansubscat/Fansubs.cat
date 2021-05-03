@@ -405,7 +405,8 @@ CREATE TABLE `view_log` (
   `link_id` int(11) NOT NULL,
   `ip` varchar(200) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `user_agent` text DEFAULT NULL
+  `user_agent` text DEFAULT NULL,
+  `user_agent_read` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `volume` (

@@ -17,6 +17,7 @@ var playedMediaSeconds = 0;
 var enableDebug = false;
 var loggedMessages = "";
 var pageLoadedDate = Date.now();
+var playerWasFullscreen = false;
 
 var cookieOptions = {
 	expires: 3650,
@@ -42,11 +43,11 @@ function addLog(message){
 	console.debug(message);
 	var playerTime = '--:--:--';
 	try{
-		if (player && (player.currentTime || player.currentTime===0)) {
-			playerTime = Math.floor(player.currentTime);
-			var ptHours = Math.floor(player.currentTime / 3600);
-			var ptMinutes = Math.floor(player.currentTime / 60) - (ptHours * 60);
-			var ptSeconds = Math.floor(player.currentTime) % 60;
+		if (player && (player.currentTime() || player.currentTime()===0)) {
+			playerTime = Math.floor(player.currentTime());
+			var ptHours = Math.floor(player.currentTime() / 3600);
+			var ptMinutes = Math.floor(player.currentTime() / 60) - (ptHours * 60);
+			var ptSeconds = Math.floor(player.currentTime()) % 60;
 			playerTime = ptHours.toString().padStart(2, '0') + ':' + ptMinutes.toString().padStart(2, '0') + ':' + ptSeconds.toString().padStart(2, '0');
 		}
 	} catch (error) {
@@ -91,8 +92,8 @@ function reportErrorToServer(error_type, error_text){
 			lastErrorReported = Date.now();
 			var playerTime = 0;
 			try {
-				if (player && (player.currentTime || player.currentTime===0)) {
-					playerTime = player.currentTime;
+				if (player && (player.currentTime() || player.currentTime()===0)) {
+					playerTime = player.currentTime();
 				}
 			} catch (error) {
 				playerTime = 0;
@@ -195,15 +196,14 @@ function markLinkAsNotViewed(link_id){
 	$('.new-episode[data-link-id='+link_id+']').removeClass('hidden');
 }
 
-function getPlayerErrorEvent(e) {
+function getPlayerErrorEvent() {
 	var error = "";
-	var player =  document.getElementById('player');
-	if (player && player.error && player.error.code) {
+	if (player && player.error() && player.error().code) {
 		var message = "";
-		if (player.error.message) {
-			message = " - "+player.error.message;
+		if (player.error().message) {
+			message = " - "+player.error().message;
 		}
-		switch (player.error.code) {
+		switch (player.error().code) {
 			case 1:
 				error+='1/ABORTED_BY_USER'+message;
 				break;
@@ -217,7 +217,7 @@ function getPlayerErrorEvent(e) {
 				error+='4/NOT_SUPPORTED'+message;
 				break;
 			default:
-				error+=player.error.code+'/UNKNOWN_ERROR'+message;
+				error+=player.error().code+'/UNKNOWN_ERROR'+message;
 		}
 	} else {
 		error+="Error desconegut";
@@ -226,9 +226,6 @@ function getPlayerErrorEvent(e) {
 }
 
 function replayCurrentVideo() {
-	$('.plyr__control--overlaid[data-plyr="play"]').removeClass('hidden');
-	$('.plyr_extra_ended').addClass('hidden');
-	player.currentTime=0;
 	player.play();
 }
 
@@ -245,6 +242,7 @@ function hasNextVideo() {
 }
 
 function playNextVideo() {
+	playerWasFullscreen = player.isFullscreen();
 	var position  = parseInt($('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-position'));
 	var results = $('.video-player').filter(function(){
 		return parseInt($(this).attr('data-position')) > position;
@@ -255,6 +253,18 @@ function playNextVideo() {
 		closeOverlay();
 		results.first().click();
 	}
+}
+
+function getTitleForChromecast() {
+	return $('.series_title').first().text();
+}
+
+function getSubtitleForChromecast() {
+	return $('.video-player[data-link-id="'+currentLinkId+'"]').first().text() + " | " + $('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-fansub');
+}
+
+function getCoverImageUrlForChromecast() {
+	return $('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-cover');
 }
 
 function initializePlayer(title, method, sourceData){
@@ -269,15 +279,9 @@ function initializePlayer(title, method, sourceData){
 	} else {
 		switch (method) {
 			case 'mega':
-				$('#overlay-content').html(start+'<video id="player" playsinline controls></video>'+end);
-				document.getElementById('player').addEventListener('error', function (e){
-					parsePlayerError('E_MEGA_PLAYER_ERROR: '+getPlayerErrorEvent(e));
-				}, true);
+				$('#overlay-content').html(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered"></video>'+end);
 				break;
 			case 'youtube':
-				//No multi-stream support: show the first one
-				$('#overlay-content').html(start+'<div class="plyr__video-embed" id="player"><iframe src="'+sources[0].url+'" allowfullscreen allowtransparency></iframe></div>'+end);
-				break;
 			case 'google-drive':
 			case 'direct-video':
 			case 'storage':
@@ -287,12 +291,13 @@ function initializePlayer(title, method, sourceData){
 					if (sourcesCode!='') {
 						sourcesCode+="\n";
 					}
-					sourcesCode+='<source type="video/mp4" src="'+sources[i].url+(sources[i].url.includes('?') ? '&amp;play_id=' : '?play_id=')+currentPlayId+'&amp;link_id='+currentLinkId+'" size="'+sources[i].resolution+'"/>';
+					if (!enableDebug) {
+						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+(sources[i].url.includes('?') ? '&amp;play_id=' : '?play_id=')+currentPlayId+'&amp;link_id='+currentLinkId+'" size="'+sources[i].resolution+'"/>';
+					} else {
+						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+'"/>';
+					}
 				}
-				$('#overlay-content').html(start+'<video id="player" playsinline controls>'+sourcesCode+'</video>'+end);
-				document.getElementById('player').addEventListener('error', function (e){
-					parsePlayerError('E_DIRECT_PLAYER_ERROR: '+getPlayerErrorEvent(e));
-				}, true);
+				$('#overlay-content').html(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered">'+sourcesCode+'</video>'+end);
 				break;
 		}
 	}
@@ -310,100 +315,131 @@ function initializePlayer(title, method, sourceData){
 
 	allQualities = allQualities.sort(function(a, b){return b-a});
 
-	player = new Plyr('#player', {
-		title: currentVideoTitle,
-		controls: [
-			'play-large', // The large play button in the center
-			'play', // Play/pause playback
-			'progress', // The progress bar and scrubber for playback and buffering
-			'current-time', // The current time of playback
-			'duration', // The full duration of the media
-			'mute', // Toggle mute
-			'volume', // Volume control
-			'settings', // Settings menu
-			'fullscreen', // Toggle fullscreen
-		],
-		keyboard: {keyboard: true, global: true},
-		tooltips: {controls: true, seek: true},
-		quality: {
-			default: highestQuality,
-			options: allQualities
+	var techOrders = ['chromecast', 'html5'];
+
+	if (method=='mega') {
+		if (window.chrome && window.chrome.cast && window.cast) {
+			cast.framework.CastContext.getInstance().endCurrentSession(true);
+		}
+		techOrders = ['html5'];
+	} else if (method=='youtube') {
+		if (window.chrome && window.chrome.cast && window.cast) {
+			cast.framework.CastContext.getInstance().endCurrentSession(true);
+		}
+		techOrders = ['youtube'];
+	}
+
+	var options = {
+		controls: true,
+		language: 'ca',
+		errorDisplay: false,
+		controlBar: {
+			children: [
+				"playToggle",
+				"progressControl",
+				"currentTimeDisplay",
+				"timeDivider",
+				"durationDisplay",
+				"muteToggle",
+				"volumeControl",
+				"fullscreenToggle"
+			]
 		},
-		i18n: {
-			restart: 'Reinicia',
-			rewind: 'Rebobina {seektime} s',
-			play: 'Reprodueix',
-			pause: 'Pausa',
-			fastForward: 'Avança {seektime} s',
-			seek: 'Mou a la posició',
-			played: 'Reproduït',
-			buffered: 'Precarregat',
-			currentTime: 'Temps actual',
-			duration: 'Durada',
-			volume: 'Volum',
-			mute: 'Silencia',
-			unmute: 'Deixa de silenciar',
-			enableCaptions: 'Activa els subtítols',
-			disableCaptions: 'Desactiva els subtítols',
-			enterFullscreen: 'Pantalla completa',
-			exitFullscreen: 'Surt de la pantalla completa',
-			frameTitle: 'Reproductor per a {title}',
-			captions: 'Subtítols',
-			settings: 'Configuració',
-			speed: 'Velocitat',
-			normal: 'Normal',
-			quality: 'Qualitat',
-			loop: 'Bucle',
-			start: 'Inici',
-			end: 'Fi',
-			all: 'Tot',
-			reset: 'Restableix',
-			disabled: 'Desactivat',
-			advertisement: 'Anunci'
+		techOrder: techOrders,
+		chromecast: {
+			requestTitleFn: getTitleForChromecast,
+			requestSubtitleFn: getSubtitleForChromecast,
+			requestCoverImageUrlFn: getCoverImageUrlForChromecast
+		},
+		youtube: {
+			modestbranding: 1,
+			iv_load_policy: 3
+		},
+		plugins: {
+			chromecast: {
+				buttonPositionIndex: -1
+			},
+			landscapeFullscreen: {
+				fullscreen: {
+					enterOnRotate: true,
+					alwaysInLandscapeMode: true,
+					iOS: true
+				}
+			},
+			hotkeys: {
+				enableModifiersForNumbers: false
+			}
+		}
+	};
+	$('video').on('contextmenu', function(e) {
+		e.preventDefault();
+	});
+	player = videojs("player", options, function(){
+		// Player (this) is initialized and ready.
+		if (method=='mega') {
+			this.currentSrc = function() {
+				return 'mega';
+			};
 		}
 	});
+
 	//Recover from errors if needed
-	player.once('canplay', event => {
+	player.one('canplay', event => {
 		if (lastErrorTimestamp) {
-			player.currentTime = lastErrorTimestamp;
+			player.currentTime(lastErrorTimestamp);
 			lastErrorTimestamp = null;
 		}
 	});
-	player.on('ready', () => {
-		$('<div class="plyr_extra_upper"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg><span class="plyr__tooltip">Tanca</span></button></div><div class="plyr_extra_ended hidden"><div id="plyr_extra_ended_buttons"><button id="plyr_extra_ended_replay" class="plyr__control plyr_extra_ended_button" onclick="replayCurrentVideo();"><span class="fa fa-undo"></span></button>' + (hasNextVideo() ? '<button id="plyr_extra_ended_next" class="plyr__control plyr_extra_ended_button" onclick="playNextVideo();"><span class="fa fa-step-forward"></span></button>' : '') + '</div></div>').appendTo(".plyr--video");
-		player.play();
+	setTimeout(function(){
+		if (playerWasFullscreen) {
+			playerWasFullscreen = false;
+			player.requestFullscreen();
+		}
+	}, 0);
+	player.on('ready', function(){
+		if ($('.player_extra_upper').length==0) {
+			$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="player_extra_close vjs-button" title="Tanca" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button></div><div class="player_extra_ended"><div id="player_extra_ended_buttons"><button id="player_extra_ended_replay" class="player_extra_ended_button" onclick="replayCurrentVideo();"><span class="fa fa-undo"></span></button>' + (hasNextVideo() ? '<button id="player_extra_ended_next" class="player_extra_ended_button" onclick="playNextVideo();"><span class="fa fa-step-forward"></span></button>' : '') + '</div></div>').appendTo(".video-js");
+			if (player.techName_=='Html5') {
+				setTimeout(function(){
+					if (player) {
+						player.play();
+					}
+				}, 0);
+			}
+		}
 	});
-	player.on('playing', () => {
+	
+	player.on('playing', function(){
 		addLog('Playing');
 		playedMediaTimer = setInterval(function tick() {
 			if (player) {
-				playedMediaSeconds+=player.speed;
+				playedMediaSeconds+=player.playbackRate();
 				//addLog('playedMediaSeconds: '+playedMediaSeconds);
 			}
 		}, 1000);
 	});
-	player.on('pause', () => {
+	player.on('pause', function(){
 		addLog('Paused');
 		clearInterval(playedMediaTimer);
 	});
-	player.on('ended', () => {
+	player.on('ended', function(){
 		addLog('Ended');
 		clearInterval(playedMediaTimer);
-		$('.plyr_extra_ended').removeClass('hidden');
-		$('.plyr__control--overlaid[data-plyr="play"]').addClass('hidden');
 	});
-	player.on('stalled', () => {
+	player.on('stalled', function(){
 		addLog('Stalled (informative)');
 		//Do not clear: on iOS, this is triggered while the video keeps playing...
-		//clearInterval(playedMediaTimer);
 	});
-	player.on('waiting', () => {
+	player.on('waiting', function(){
 		addLog('Waiting');
 		clearInterval(playedMediaTimer);
 	});
+	player.on('error', function(){
+		parsePlayerError((currentMethod=='mega' ? 'E_MEGA_PLAYER_ERROR' : 'E_DIRECT_PLAYER_ERROR')+': '+getPlayerErrorEvent());
+	});
 
 	if (method=='mega') {
-		//No multi-stream support: show the first one
+		//No multi-source support: show the first one
 		loadMegaStream(sources[0].url);
 	}
 }
@@ -496,12 +532,12 @@ function parsePlayerError(error){
 			reportErrorToServer('unknown', error);
 			break;
 	}
-	lastErrorTimestamp = player ? player.currentTime : 0;
+	lastErrorTimestamp = player ? player.currentTime() : 0;
 	shutdownVideoPlayer();
-	var start = '<div class="white-popup"><div style="justify-content: center; align-items: center;" class="plyr plyr--video"><div class="plyr_extra_upper" style="box-sizing: border-box;"><div class="plyr_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="plyr_extra_close plyr__controls__item plyr__control" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg><span class="plyr__tooltip">Tanca</span></button></div>';
+	var start = '<div class="white-popup"><div style="justify-content: center; align-items: center; width: 100%; height: 100%; display: flex; flex-direction: column;" class="video-js"><div class="player_extra_upper" style="box-sizing: border-box;"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="player_extra_close vjs-button" title="Tanca" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button></div>';
 	var buttons = forceRefresh ? '<div class="player_error_buttons"><button class="error-close-button" onclick="location.reload();">Torna a carregar la pàgina</button></div>' : (critical ? '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>' : '<div class="player_error_buttons"><button class="error-close-button" onclick="initializePlayer(currentVideoTitle, currentMethod, currentSourceData);">Torna-ho a provar</button></div>');
 	var end='</div></div>';
-	$('#overlay-content').html(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details style="color: #888;"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>Reproducció / Enllaç / Instant: ' + currentPlayId + ' / ' + currentLinkId + ' / ' + lastErrorTimestamp + '</details>' + end);
+	$('#overlay-content').html(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details style="color: #888; font-size: 1.3em; line-height: normal;"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>Reproducció / Enllaç / Instant: ' + currentPlayId + ' / ' + currentLinkId + ' / ' + lastErrorTimestamp + '</details>' + end);
 }
 
 function loadMegaStream(url){
@@ -511,7 +547,7 @@ function loadMegaStream(url){
 			parsePlayerError('E_MEGA_LOAD_ERROR: '+error);
 		} else {
 			addLog('MEGA file loaded: ' + file.name + ', size: ' + file.size);
-			streamer = new Streamer(file.downloadId, document.getElementById('player'), {type: 'isom'});
+			streamer = new Streamer(file.downloadId, document.getElementById('player_html5_api'), {type: 'isom'});
 			streamer.play();
 		}
 	});
@@ -521,8 +557,7 @@ function shutdownVideoPlayer() {
 	clearInterval(playedMediaTimer);
 	if (player!=null){
 		try {
-			player.stop();
-			player.destroy();
+			player.dispose();
 		} catch (error) {
 			console.log("Error while stopping player: "+error);
 		}
@@ -544,6 +579,12 @@ function showContactScreen(reason) {
 	} else {
 		$('#contact-explanation').text("Per a temes relacionats amb els fansubs, és recomanable que escriguis directament al fansub en qüestió fent servir el seu web o Twitter. En cas contrari, ens pots fer arribar comentaris, avisar-nos d'errors o de qualsevol problema o suggeriment per al web fent servir aquest formulari:");
 	}
+}
+
+function showAlert(title, message) {
+	$('#alert-overlay').removeClass('hidden');
+	$('#alert-title').text(title);
+	$('#alert-message').text(message);
 }
 
 function closeOverlay() {
@@ -650,6 +691,9 @@ $(document).ready(function() {
 			$('#contact-form').trigger("reset");
 			$('#contact-overlay').addClass('hidden');
 			$('body').removeClass('no-overflow');
+		});
+		$('#alert-ok-button').click(function(){
+			$('#alert-overlay').addClass('hidden');
 		});
 		$('#contact-send-button').click(function(){
 			if (!/\S+@\S+\.\S+/.test($('#contact_address').val())) {

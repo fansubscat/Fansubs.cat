@@ -31,25 +31,37 @@ if (!empty($header_social)) {
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-		<link rel="stylesheet" href="https://cdn.plyr.io/3.6.4/plyr.css" />
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=<?php echo CS_VER; ?>" media="screen" />
+		<link rel="stylesheet" href="/js/videojs/video-js.css?v=<?php echo PL_VER; ?>" />
+		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo PL_VER; ?>" />
+		<link rel="stylesheet" href="/style/anime.css?v=<?php echo CS_VER; ?>" />
 <?php
 $is_fools_day = (date('d')==28 && date('m')==12);
 if ($is_fools_day){
 ?>
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/28dec.css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/28dec.css" />
 <?php
 }
 ?>
+		<script>
+			window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = {
+				preloadWebComponents: true,
+			};
+		</script>
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-14"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="https://cdn.plyr.io/3.6.4/plyr.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=<?php echo JS_VER; ?>"></script>
-		<script src="<?php echo $base_url; ?>/js/megajs.js?v=<?php echo MG_VER; ?>"></script>
-		<script src="<?php echo $base_url; ?>/js/videostream.js?v=<?php echo VS_VER; ?>"></script>
+		<script src="/js/videojs/video.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/common.js?v=<?php echo JS_VER; ?>"></script>
+		<script src="/js/megajs.js?v=<?php echo MG_VER; ?>"></script>
+		<script src="/js/videostream.js?v=<?php echo VS_VER; ?>"></script>
+		<script src="/js/videojs/lang_ca.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-youtube.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-hotkeys.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 	</head>
 	<body>
 		<div data-nosnippet id="overlay" class="hidden">
@@ -116,6 +128,15 @@ mysqli_free_result($resultf);
 					<button id="contact-send-button-loading" class="hidden">S'està enviant...</button>
 					<button id="contact-send-button-done" class="hidden">Missatge enviat!</button>
 					<button id="contact-cancel-button"><span class="fa fa-times icon"></span>Cancel·la</button>
+				</div>
+			</div>
+		</div>
+		<div data-nosnippet id="alert-overlay" class="hidden flex">
+			<div id="alert-overlay-content">
+				<h2 class="section-title" id="alert-title">S'ha produït un error</h2>
+				<div id="alert-message">S'ha produït un error desconegut.</div>
+				<div id="alert-buttonbar">
+					<button id="alert-ok-button">D'acord</button>
 				</div>
 			</div>
 		</div>

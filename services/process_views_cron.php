@@ -1,7 +1,7 @@
 <?php
 require_once('db.inc.php');
 
-$result = query("SELECT ps.play_id, ps.link_id, ps.method, ps.time_spent, ps.total_time, ps.bytes_read, ps.total_bytes, UNIX_TIMESTAMP(ps.created) created, UNIX_TIMESTAMP(ps.last_update) last_update, ps.last_update last_update_date, ps.ip, IF(ps.user_agent_read<>0 AND ps.user_agent_read IS NOT NULL, ps.user_agent_read, ps.user_agent) user_agent, ps.view_counted FROM play_session ps WHERE archived=0 AND IF(ps.method='time',ps.total_time>0,ps.total_bytes>0)");
+$result = query("SELECT ps.play_id, ps.link_id, ps.method, ps.time_spent, ps.total_time, ps.bytes_read, ps.total_bytes, UNIX_TIMESTAMP(ps.created) created, UNIX_TIMESTAMP(ps.last_update) last_update, ps.last_update last_update_date, ps.ip, ps.user_agent, ps.user_agent_read, ps.view_counted FROM play_session ps WHERE archived=0 AND IF(ps.method='time',ps.total_time>0,ps.total_bytes>0)");
 
 $count = 0;
 while ($row = mysqli_fetch_assoc($result)) {
@@ -14,7 +14,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 		if ($valid_view) {
 			query("UPDATE play_session SET view_counted=1 WHERE play_id='".escape($row['play_id'])."'");
 			query("REPLACE INTO views SELECT ".$row['link_id'].", '".date('Y-m-d', $row['last_update'])."', IFNULL((SELECT clicks FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),0), IFNULL((SELECT views+1 FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),1), IFNULL((SELECT time_spent+".$row['total_time']." FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),".$row['total_time'].")");
-			query("INSERT INTO view_log (link_id, date, ip, user_agent) VALUES (".$row['link_id'].", '".$row['last_update_date']."', '".escape($row['ip'])."', '".escape($row['user_agent'])."')");
+			query("INSERT INTO view_log (link_id, date, ip, user_agent, user_agent_read) VALUES (".$row['link_id'].", '".$row['last_update_date']."', '".escape($row['ip'])."', '".escape($row['user_agent'])."', '".escape($row['user_agent_read'])."')");
 			$count++;
 		}
 	}

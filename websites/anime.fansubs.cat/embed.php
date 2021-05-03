@@ -64,14 +64,26 @@ $link_instances = filter_link_instances($link_instances);
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title><?php ?><?php echo $page_title; ?> | Fansubs.cat - Anime en català</title>
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" />
-		<link rel="stylesheet" href="<?php echo $base_url; ?>/style/anime.css?v=<?php echo CS_VER; ?>" media="screen" />
-		<link rel="stylesheet" href="https://cdn.plyr.io/3.6.4/plyr.css" />
+		<link rel="stylesheet" href="/js/videojs/video-js.css?v=<?php echo PL_VER; ?>" />
+		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo PL_VER; ?>" />
+		<link rel="stylesheet" href="/style/anime.css?v=<?php echo CS_VER; ?>" />
+		<script>
+			window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = {
+				preloadWebComponents: true,
+			};
+		</script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-14"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
-		<script src="https://cdn.plyr.io/3.6.4/plyr.js"></script>
-		<script src="<?php echo $base_url; ?>/js/common.js?v=<?php echo JS_VER; ?>"></script>
-		<script src="<?php echo $base_url; ?>/js/megajs.js?v=<?php echo MG_VER; ?>"></script>
-		<script src="<?php echo $base_url; ?>/js/videostream.js?v=<?php echo VS_VER; ?>"></script>
+		<script src="/js/videojs/video.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/common.js?v=<?php echo JS_VER; ?>"></script>
+		<script src="/js/megajs.js?v=<?php echo MG_VER; ?>"></script>
+		<script src="/js/videostream.js?v=<?php echo VS_VER; ?>"></script>
+		<script src="/js/videojs/lang_ca.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-youtube.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-hotkeys.js?v=<?php echo PL_VER; ?>"></script>
 	</head>
 	<body>
 		<input type="hidden" id="embed-page" value="1" />
