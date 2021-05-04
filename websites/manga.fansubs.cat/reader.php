@@ -92,6 +92,15 @@ if ($mode=='strip'){
 				content: "\e311" !important;
 				font-size: 24px !important;
 			}
+<?php
+if (!empty($_GET['hide_close'])){
+?>
+			.lg-close {
+				display: none;
+			}
+<?php
+}
+?>
 		</style>
 	</head>
 	<body style="margin: 0;">

@@ -16,7 +16,7 @@ function get_embed_episode_name($episode_number, $episode_title, $series_name, $
 		if (!empty($episode_title)){
 			$final_episode_title.=htmlspecialchars($episode_title);
 		} else if ($series_type=='movie') {
-			$final_episode_title.=$series_name;
+			$final_episode_title.=htmlspecialchars($series_name);
 		} else {
 			$final_episode_title.='Capítol sense nom';
 		}
@@ -38,7 +38,7 @@ function get_embed_episode_player_title($fansub_name, $episode_title, $series_na
 
 $link_id = (!empty($_GET['link_id']) ? intval($_GET['link_id']) : 0);
 
-$result = query("SELECT l.* , IF(l.episode_id IS NULL,1,0) is_extra, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_name, s.name series_name, s.type series_type, ve.show_episode_numbers, et.title episode_title, e.number FROM link l LEFT JOIN version ve ON l.version_id=ve.id LEFT JOIN rel_version_fansub vf ON ve.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON ve.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN episode_title et ON l.episode_id=et.episode_id AND ve.id=et.version_id WHERE l.id=$link_id AND l.lost=0 GROUP BY vf.fansub_id");
+$result = query("SELECT l.* , IF(l.episode_id IS NULL,1,0) is_extra, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_name, s.name series_name, s.type series_type, ve.show_episode_numbers, et.title episode_title, e.number, s.id series_id FROM link l LEFT JOIN version ve ON l.version_id=ve.id LEFT JOIN rel_version_fansub vf ON ve.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON ve.series_id=s.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN episode_title et ON l.episode_id=et.episode_id AND ve.id=et.version_id WHERE l.id=$link_id AND l.lost=0 GROUP BY vf.fansub_id");
 $link = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
@@ -84,6 +84,7 @@ $link_instances = filter_link_instances($link_instances);
 		<script src="/js/videojs/videojs-youtube.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/videojs/videojs-hotkeys.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 	</head>
 	<body>
 		<input type="hidden" id="embed-page" value="1" />
@@ -91,8 +92,21 @@ $link_instances = filter_link_instances($link_instances);
 		<input type="hidden" id="data-link-id" value="<?php echo $link['id']; ?>" />
 		<input type="hidden" id="data-method" value="<?php echo htmlspecialchars(get_display_method($link_instances)); ?>" />
 		<input type="hidden" id="data-sources" value="<?php echo htmlspecialchars(base64_encode(get_video_sources($link_instances))); ?>" />
+		<input type="hidden" id="data-series" value="<?php echo $link['series_name']; ?>" />
+		<input type="hidden" id="data-episode-title" value="<?php echo $link['is_extra'] ? htmlspecialchars($link['extra_name']) : get_embed_episode_name($link['number'], $link['episode_title'], $link['series_name'], $link['series_type'], $link['show_episode_numbers']); ?>" />
+		<input type="hidden" id="data-cover" value="<?php echo 'https://anime.fansubs.cat/images/series/'.$link['series_id'].'.jpg'; ?>" />
+		<input type="hidden" id="data-fansub" value="<?php echo htmlspecialchars($link['fansub_name']); ?>" />
 		<div id="overlay">
 			<div id="overlay-content"></div>
+		</div>
+		<div data-nosnippet id="alert-overlay" class="hidden flex">
+			<div id="alert-overlay-content">
+				<h2 class="section-title" id="alert-title">S'ha produït un error</h2>
+				<div id="alert-message">S'ha produït un error desconegut.</div>
+				<div id="alert-buttonbar">
+					<button id="alert-ok-button">D'acord</button>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

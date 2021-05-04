@@ -230,6 +230,9 @@ function replayCurrentVideo() {
 }
 
 function hasNextVideo() {
+	if (isEmbedPage()) {
+		return false;
+	}
 	var position  = parseInt($('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-position'));
 	var results = $('.video-player').filter(function(){
 		return parseInt($(this).attr('data-position')) > position;
@@ -256,15 +259,27 @@ function playNextVideo() {
 }
 
 function getTitleForChromecast() {
-	return $('.series_title').first().text();
+	if (isEmbedPage()) {
+		return $('#data-series').val();
+	} else {
+		return $('.series_title').first().text();
+	}
 }
 
 function getSubtitleForChromecast() {
-	return $('.video-player[data-link-id="'+currentLinkId+'"]').first().text() + " | " + $('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-fansub');
+	if (isEmbedPage()) {
+		return $('#data-episode-title').val() + " | " + $('#data-fansub').val();
+	} else {
+		return $('.video-player[data-link-id="'+currentLinkId+'"]').first().text() + " | " + $('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-fansub');
+	}
 }
 
 function getCoverImageUrlForChromecast() {
-	return $('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-cover');
+	if (isEmbedPage()) {
+		return $('#data-cover').val();
+	} else {
+		return $('.video-player[data-link-id="'+currentLinkId+'"]').first().attr('data-cover');
+	}
 }
 
 function initializePlayer(title, method, sourceData){
@@ -398,7 +413,7 @@ function initializePlayer(title, method, sourceData){
 	}, 0);
 	player.on('ready', function(){
 		if ($('.player_extra_upper').length==0) {
-			$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="player_extra_close vjs-button" title="Tanca" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button></div><div class="player_extra_ended"><div id="player_extra_ended_buttons"><button id="player_extra_ended_replay" class="player_extra_ended_button" onclick="replayCurrentVideo();"><span class="fa fa-undo"></span></button>' + (hasNextVideo() ? '<button id="player_extra_ended_next" class="player_extra_ended_button" onclick="playNextVideo();"><span class="fa fa-step-forward"></span></button>' : '') + '</div></div>').appendTo(".video-js");
+			$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close vjs-button" title="Tanca" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>')+'</div><div class="player_extra_ended"><div id="player_extra_ended_buttons"><button id="player_extra_ended_replay" class="player_extra_ended_button" onclick="replayCurrentVideo();"><span class="fa fa-undo"></span></button>' + (hasNextVideo() ? '<button id="player_extra_ended_next" class="player_extra_ended_button" onclick="playNextVideo();"><span class="fa fa-step-forward"></span></button>' : '') + '</div></div>').appendTo(".video-js");
 			if (player.techName_=='Html5') {
 				setTimeout(function(){
 					if (player) {
