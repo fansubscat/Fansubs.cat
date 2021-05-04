@@ -213,7 +213,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-manga-version", "S'ha actualitzat la versió del manga (id. de manga: ".$data['manga_id'].") (id. de versió: ".$data['id'].")");
+			log_action("update-manga-version", "S'ha actualitzat una versió del manga '".query_single("SELECT name FROM manga WHERE id=".$data['manga_id'])."' (id. de versió: ".$data['id'].")");
 			query("UPDATE manga_version SET status=".$data['status'].",chapters_missing=".$data['chapters_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_volumes=".$data['show_volumes'].",show_expanded_volumes=".$data['show_expanded_volumes'].",show_chapter_numbers=".$data['show_chapter_numbers'].",show_unavailable_chapters=".$data['show_unavailable_chapters'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type'].",hidden=".$data['hidden']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_manga_version_fansub WHERE manga_version_id=".$data['id']);
 			query("DELETE FROM chapter_title WHERE manga_version_id=".$data['id']);
@@ -308,7 +308,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
-			log_action("create-manga-version", "S'ha creat una versió del manga (id. de manga: ".$data['manga_id'].")");
+			log_action("create-manga-version", "S'ha creat una versió del manga '".query_single("SELECT name FROM manga WHERE id=".$data['manga_id'])."'");
 			query("INSERT INTO manga_version (manga_id,status,chapters_missing,created,created_by,updated,updated_by,files_updated,files_updated_by,is_featurable,is_always_featured,show_volumes,show_expanded_volumes,show_chapter_numbers,show_unavailable_chapters,show_expanded_extras,order_type,hidden) VALUES (".$data['manga_id'].",".$data['status'].",".$data['chapters_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_volumes'].",".$data['show_expanded_volumes'].",".$data['show_chapter_numbers'].",".$data['show_unavailable_chapters'].",".$data['show_expanded_extras'].",".$data['order_type'].",".$data['hidden'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {

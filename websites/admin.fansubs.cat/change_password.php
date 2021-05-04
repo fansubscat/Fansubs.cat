@@ -13,7 +13,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			crash("Dades invàlides");
 		}
 		
-		log_action("change-password", "S'ha canviat la contrasenya de l'usuari amb nom '".$data['username']."'");
+		log_action("change-password", "S'ha canviat la contrasenya de l'usuari '".$data['username']."'");
 		query("UPDATE user SET password='".$data['password']."' WHERE username='".$data['username']."'");
 
 		$changed=TRUE;

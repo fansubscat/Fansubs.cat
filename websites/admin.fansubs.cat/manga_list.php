@@ -5,7 +5,7 @@ include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-manga", "S'ha suprimit el manga (id. de manga: ".$_GET['delete_id'].")");
+		log_action("delete-manga", "S'ha suprimit el manga '".query_single("SELECT name FROM manga WHERE id=".escape($_GET['delete_id']))."' (id. de manga: ".$_GET['delete_id'].")");
 		query("DELETE FROM rel_manga_genre WHERE manga_id=".escape($_GET['delete_id']));
 		query("DELETE FROM chapter WHERE manga_id=".escape($_GET['delete_id']));
 		query("DELETE FROM manga_version WHERE manga_id=".escape($_GET['delete_id']));

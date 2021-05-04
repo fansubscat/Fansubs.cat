@@ -186,7 +186,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-manga", "S'ha actualitzat el manga amb nom '".$data['name']."' (id. de manga: ".$data['id'].")");
+			log_action("update-manga", "S'ha actualitzat el manga '".$data['name']."' (id. de manga: ".$data['id'].")");
 			query("UPDATE manga SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",score=".$data['score'].",reader_type='".$data['reader_type']."',type='".$data['type']."',publish_date=".$data['publish_date'].",author=".$data['author'].",rating=".$data['rating'].",chapters=".$data['chapters'].",synopsis='".$data['synopsis']."',myanimelist_id=".$data['myanimelist_id'].",tadaima_id=".$data['tadaima_id'].",has_licensed_parts=".$data['has_licensed_parts'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_manga_genre WHERE manga_id=".$data['id']);
 			foreach ($genres as $genre) {
@@ -244,7 +244,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
-			log_action("create-manga", "S'ha creat un manga amb nom '".$data['name']."'");
+			log_action("create-manga", "S'ha creat el manga '".$data['name']."'");
 			query("INSERT INTO manga (slug,name,alternate_names,keywords,type,publish_date,author,rating,chapters,synopsis,myanimelist_id,tadaima_id,score,reader_type,has_licensed_parts,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."',".$data['publish_date'].",".$data['author'].",".$data['rating'].",".$data['chapters'].",'".$data['synopsis']."',".$data['myanimelist_id'].",".$data['tadaima_id'].",".$data['score'].",'".$data['reader_type']."',".$data['has_licensed_parts'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {

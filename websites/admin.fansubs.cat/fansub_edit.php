@@ -63,7 +63,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-fansub", "S'ha actualitzat el fansub amb nom '".$data['name']."' (id. de fansub: ".$data['id'].")");
+			log_action("update-fansub", "S'ha actualitzat el fansub '".$data['name']."' (id. de fansub: ".$data['id'].")");
 			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",historical=".$data['historical'].",archive_url=".$data['archive_url'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
@@ -74,7 +74,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 		else {
-			log_action("create-fansub", "S'ha creat un fansub amb nom '".$data['name']."'");
+			log_action("create-fansub", "S'ha creat el fansub '".$data['name']."'");
 			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,status,ping_token,historical,archive_url,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['status'].",".$data['ping_token'].",".$data['historical'].",".$data['archive_url'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['icon'])) {

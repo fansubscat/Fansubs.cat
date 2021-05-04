@@ -37,7 +37,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-user", "S'ha actualitzat l'usuari amb nom '".$data['username']."'");
+			log_action("update-user", "S'ha actualitzat l'usuari '".$data['username']."'");
 			if ($data['password']!=NULL) {
 				query("UPDATE user SET username='".$data['username']."',password='".$data['password']."',admin_level=".$data['admin_level'].",fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE username='".$data['username_old']."'");
 			} else {
@@ -45,7 +45,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 		else {
-			log_action("create-user", "S'ha creat l'usuari amb nom '".$data['username']."'");
+			log_action("create-user", "S'ha creat l'usuari '".$data['username']."'");
 			query("INSERT INTO user (username,password,admin_level,fansub_id,created,created_by,updated,updated_by) VALUES ('".$data['username']."','".$data['password']."',".$data['admin_level'].",".$data['fansub_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 

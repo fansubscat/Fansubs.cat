@@ -278,7 +278,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-version", "S'ha actualitzat la versió de l'anime (id. d'anime: ".$data['series_id'].") (id. de versió: ".$data['id'].")");
+			log_action("update-version", "S'ha actualitzat una versió de l'anime '".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."' (id. de versió: ".$data['id'].")");
 			query("UPDATE version SET status=".$data['status'].",storage_folder='".$data['storage_folder']."',storage_processing=".$data['storage_processing'].",default_resolution=".$data['default_resolution'].",episodes_missing=".$data['episodes_missing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."',is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_seasons=".$data['show_seasons'].",show_expanded_seasons=".$data['show_expanded_seasons'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type'].",hidden=".$data['hidden']." WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
@@ -446,7 +446,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$_SESSION['message']="S'han desat les dades correctament.";
 		}
 		else {
-			log_action("create-version", "S'ha creat una versió de l'anime (id. d'anime: ".$data['series_id'].")");
+			log_action("create-version", "S'ha creat una versió de l'anime '".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."'");
 			query("INSERT INTO version (series_id,status,storage_folder,storage_processing,default_resolution,episodes_missing,created,created_by,updated,updated_by,links_updated,links_updated_by,is_featurable,is_always_featured,show_seasons,show_expanded_seasons,show_episode_numbers,show_unavailable_episodes,show_expanded_extras,order_type,hidden) VALUES (".$data['series_id'].",".$data['status'].",'".$data['storage_folder']."',".$data['storage_processing'].",".$data['default_resolution'].",".$data['episodes_missing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_seasons'].",".$data['show_expanded_seasons'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['show_expanded_extras'].",".$data['order_type'].",".$data['hidden'].")");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {

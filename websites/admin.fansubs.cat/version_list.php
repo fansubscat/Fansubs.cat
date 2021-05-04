@@ -6,7 +6,7 @@ require_once("common.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-version", "S'ha suprimit la versió (id. de versió: ".$_GET['delete_id'].")");
+		log_action("delete-version", "S'ha suprimit una versió de l'anime '".query_single("SELECT s.name FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".escape($_GET['delete_id']))."' (id. de versió: ".$_GET['delete_id'].")");
 		query("DELETE FROM link WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM folder WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));

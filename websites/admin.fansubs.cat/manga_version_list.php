@@ -6,7 +6,7 @@ require_once("common.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-manga-version", "S'ha suprimit la versió de manga (id. de versió: ".$_GET['delete_id'].")");
+		log_action("delete-manga-version", "S'ha suprimit una versió del manga '".query_single("SELECT m.name FROM manga_version v LEFT JOIN manga m ON v.manga_id=m.id WHERE v.id=".escape($_GET['delete_id']))."' (id. de versió: ".$_GET['delete_id'].")");
 		query("DELETE FROM file WHERE manga_version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM chapter_title WHERE manga_version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM rel_manga_version_fansub WHERE manga_version_id=".escape($_GET['delete_id']));

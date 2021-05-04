@@ -114,7 +114,7 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 }
 
 function decompress_manga_file($file_id, $temporary_filename, $original_filename){
-	log_action("debug-log", "Descomprimint el fitxer $original_filename i movent-lo al directori amb id: $file_id");
+	//log_action("debug-log", "Descomprimint el fitxer $original_filename i movent-lo al directori amb id: $file_id");
 	$temp_path="/tmp/decompress_$file_id/";
 	$extension = pathinfo($original_filename, PATHINFO_EXTENSION);
 	if ($extension=='rar'){
