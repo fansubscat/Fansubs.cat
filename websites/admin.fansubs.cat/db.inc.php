@@ -37,6 +37,20 @@ function query($query, $ignore_crash=FALSE){
 	return $result;
 }
 
+function query_single($query, $ignore_crash=FALSE){
+	global $db_connection;
+	if ($ignore_crash){
+		$result = mysqli_query($db_connection, $query);
+	} else {
+		$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");
+	}
+	$row = mysqli_fetch_array($result);
+	if ($row!==FALSE) {
+		return $row[0];
+	}
+	return NULL;
+}
+
 $db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash("No s'ha pogut connectar a la base de dades.");
 
 $memcached = new Memcached();
