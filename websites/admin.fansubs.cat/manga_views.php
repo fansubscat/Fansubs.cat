@@ -53,20 +53,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<th scope="col" style="width: 45%;">Capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
 												<th scope="col" class="text-center" style="width: 20%;">Progrés</th>
+												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-thumbs-up"></span></th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.title IS NOT NULL,IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(v.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),IF(v.show_chapter_numbers=1,CONCAT('Capítol ',TRIM(c.number)+0,': '),''),ct.title),c.name),IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(v.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),'Capítol ',TRIM(c.number)+0),IF(fi.chapter_id IS NULL,CONCAT('Extra: ', fi.extra_name), '(Capítol sense nom)'))) chapter_name, (ps.pages_read/fi.number_of_pages)*100 progress, (ps.time_spent/(fi.number_of_pages*3))*100 min_time_progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent FROM read_session ps LEFT JOIN file fi ON ps.file_id=fi.id LEFT JOIN manga_version v ON fi.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON fi.manga_version_id=ct.manga_version_id AND fi.chapter_id=ct.chapter_id ORDER BY UNIX_TIMESTAMP(ps.last_update)<".(date('U')-120)." ASC, ps.file_id ASC");
+$result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.title IS NOT NULL,IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(v.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),IF(v.show_chapter_numbers=1,CONCAT('Capítol ',TRIM(c.number)+0,': '),''),ct.title),c.name),IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(v.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),'Capítol ',TRIM(c.number)+0),IF(fi.chapter_id IS NULL,CONCAT('Extra: ', fi.extra_name), '(Capítol sense nom)'))) chapter_name, (ps.pages_read/fi.number_of_pages)*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent, ps.read_counted FROM read_session ps LEFT JOIN file fi ON ps.file_id=fi.id LEFT JOIN manga_version v ON fi.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON fi.manga_version_id=ct.manga_version_id AND fi.chapter_id=ct.chapter_id WHERE ps.archived=0 AND ps.reader_closed=0 AND UNIX_TIMESTAMP(ps.last_update)>=".(date('U')-120)." ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col"><?php echo $row['manga_name']; ?></td>
 												<td scope="col"><?php echo $row['chapter_name']; ?></td>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
-												<td class="text-center"><div style="display: flex; margin-top: 0.25em;"><div class="progress" style="width: 100%;"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div><div class="<?php echo min(100,round($row['min_time_progress'],1))>=50 ? 'fa' : 'far'; ?> fa-clock" style="margin-left: 0.2em;" title="<?php echo 'Temps mínim de lectura: '.min(100,round($row['min_time_progress'],1)).'%'; ?>"></div></div></td>
-												<td class="text-center"><div<?php echo (min(100,$row['progress'])>=50 && min(100,$row['min_time_progress'])>=50) ? ' class="fa fa-thumbs-up" style="color: green;" title="És una lectura vàlida"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no és una lectura vàlida"'; ?>></div></td>
+												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_type_manga($row['user_agent']); ?>></div></td>
+												<td class="text-center"><div<?php echo $row['read_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a lectura"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a lectura"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -75,7 +77,7 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Les lectures que romanguin encallades durant més de 2 hores seran descartades o incorporades com a lectura real depenent del seu progrés.</p>
+								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les lectures de navegadors, la resta poden fluctuar i s'incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
 							</article>
 						</div>
 					</div>
@@ -88,10 +90,10 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="thead-dark">
 											<tr>
-												<th scope="col" class="text-center" style="width: 5%;">Origen</th>
 												<th scope="col">Manga</th>
 												<th scope="col">Capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
+												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" class="text-center" style="width: 20%;">Data</th>
 											</tr>
 										</thead>
@@ -101,22 +103,10 @@ $result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.ti
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
-												<td scope="col" class="text-center">
-<?php
-	if (!empty($row['user_agent']) && strpos($row['user_agent'], ' [via API]')!==FALSE) {
-		if (strpos($row['user_agent'], 'Tachiyomi')!==FALSE) {
-			echo '<span class="badge badge-primary ml-2">Tachiyomi</span>';
-		} else {
-			echo '<span class="badge badge-warning ml-2">API</span>';
-		}
-	} else {
-		echo '<span class="badge badge-success ml-2">Web</span>';
-	}
-?>
-												</td>
 												<td scope="col"><?php echo $row['manga_name']; ?></td>
 												<td scope="col"><?php echo $row['chapter_name']; ?></td>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_type_manga($row['user_agent']); ?>></div></td>
 												<td class="text-center"><?php echo $row['date']; ?></td>
 											</tr>
 <?php
@@ -150,20 +140,22 @@ mysqli_free_result($result);
 												<th scope="col" style="width: 45%;">Capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
 												<th scope="col" class="text-center" style="width: 20%;">Progrés</th>
+												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-thumbs-up"></span></th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.title IS NOT NULL,IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(v.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),IF(v.show_chapter_numbers=1,CONCAT('Capítol ',TRIM(c.number)+0,': '),''),ct.title),c.name),IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(v.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),'Capítol ',TRIM(c.number)+0),IF(fi.chapter_id IS NULL,CONCAT('Extra: ', fi.extra_name), '(Capítol sense nom)'))) chapter_name, (ps.pages_read/fi.number_of_pages)*100 progress, (ps.time_spent/(fi.number_of_pages*3))*100 min_time_progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent FROM read_session ps LEFT JOIN file fi ON ps.file_id=fi.id LEFT JOIN manga_version v ON fi.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON fi.manga_version_id=ct.manga_version_id AND fi.chapter_id=ct.chapter_id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY UNIX_TIMESTAMP(ps.last_update)<".(date('U')-120)." ASC, ps.file_id ASC");
+$result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.title IS NOT NULL,IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(v.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),IF(v.show_chapter_numbers=1,CONCAT('Capítol ',TRIM(c.number)+0,': '),''),ct.title),c.name),IF(c.number IS NOT NULL,CONCAT(IFNULL(IF(vo.name IS NULL,NULL,CONCAT(vo.name,' - ')),IF(v.show_volumes=1 AND (SELECT COUNT(*) FROM volume vo2 WHERE vo2.manga_id=m.id)>1,CONCAT('Volum ', vo.number, ' - '),'')),'Capítol ',TRIM(c.number)+0),IF(fi.chapter_id IS NULL,CONCAT('Extra: ', fi.extra_name), '(Capítol sense nom)'))) chapter_name, (ps.pages_read/fi.number_of_pages)*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent, ps.read_counted FROM read_session ps LEFT JOIN file fi ON ps.file_id=fi.id LEFT JOIN manga_version v ON fi.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON fi.manga_version_id=ct.manga_version_id AND fi.chapter_id=ct.chapter_id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND ps.archived=0 AND ps.reader_closed=0 AND UNIX_TIMESTAMP(ps.last_update)>=".(date('U')-120)." ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col"><?php echo $row['manga_name']; ?></td>
 												<td scope="col"><?php echo $row['chapter_name']; ?></td>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
-												<td class="text-center"><div style="display: flex; margin-top: 0.25em;"><div class="progress" style="width: 100%;"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div><div class="<?php echo min(100,round($row['min_time_progress'],1))>=50 ? 'fa' : 'far'; ?> fa-clock" style="margin-left: 0.2em;" title="<?php echo 'Temps mínim de lectura: '.min(100,round($row['min_time_progress'],1)).'%'; ?>"></div></div></td>
-												<td class="text-center"><div<?php echo (min(100,$row['progress'])>=50 && min(100,$row['min_time_progress'])>=50) ? ' class="fa fa-thumbs-up" style="color: green;" title="És una lectura vàlida"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no és una lectura vàlida"'; ?>></div></td>
+												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_type_manga($row['user_agent']); ?>></div></td>
+												<td class="text-center"><div<?php echo $row['read_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a lectura"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a lectura"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -172,7 +164,7 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Les lectures que romanguin encallades durant més de 2 hores seran descartades o incorporades com a lectura real depenent del seu progrés.</p>
+								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les lectures de navegadors, la resta poden fluctuar i s'incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
 							</article>
 						</div>
 					</div>
@@ -185,10 +177,10 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="thead-dark">
 											<tr>
-												<th scope="col" class="text-center" style="width: 5%;">Origen</th>
 												<th scope="col">Manga</th>
 												<th scope="col">Capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
+												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" class="text-center" style="width: 20%;">Data</th>
 											</tr>
 										</thead>
@@ -198,22 +190,10 @@ $result = query("SELECT IFNULL(m.name, '(enllaç esborrat)') manga_name,IF(ct.ti
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
-												<td scope="col" class="text-center">
-<?php
-	if (!empty($row['user_agent']) && strpos($row['user_agent'], ' [via API]')!==FALSE) {
-		if (strpos($row['user_agent'], 'Tachiyomi')!==FALSE) {
-			echo '<span class="badge badge-primary ml-2">Tachiyomi</span>';
-		} else {
-			echo '<span class="badge badge-warning ml-2">API</span>';
-		}
-	} else {
-		echo '<span class="badge badge-success ml-2">Web</span>';
-	}
-?>
-												</td>
 												<td scope="col"><?php echo $row['manga_name']; ?></td>
 												<td scope="col"><?php echo $row['chapter_name']; ?></td>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_type_manga($row['user_agent']); ?>></div></td>
 												<td class="text-center"><?php echo $row['date']; ?></td>
 											</tr>
 <?php

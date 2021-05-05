@@ -12,6 +12,16 @@ var cookieOptions = {
 	domain: 'manga.fansubs.cat'
 };
 
+nanoid=(t=21)=>{let e="",r=crypto.getRandomValues(new Uint8Array(t));for(;t--;){let n=63&r[t];e+=n<36?n.toString(36):n<62?(n-26).toString(36).toUpperCase():n<63?"_":"-"}return e};
+
+function getNewReadId(){
+	if (crypto) {
+		return nanoid(24);
+	} else {
+		return 'JSR-'+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36);
+	}
+}
+
 function isEmbedPage(){
 	return $('#embed-page').length!=0;
 }
@@ -123,7 +133,7 @@ $(document).ready(function() {
 			$('#overlay-content').html(getSource($(this).attr('data-file-id')));
 			currentFileId=$(this).attr('data-file-id');
 			//The chances of collision of this is so low that if we get a collision, it's no problem at all.
-			currentReadId=Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5)+Math.random().toString(36).substr(2, 5);
+			currentReadId=getNewReadId();
 			currentStartTime=Math.floor(new Date().getTime()/1000);
 			var xmlHttp = new XMLHttpRequest();
 			xmlHttp.open("GET", baseUrl+'/counter.php?read_id='+currentReadId+'&file_id='+$(this).attr('data-file-id')+"&action=open", true);

@@ -752,14 +752,50 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les lectures de manga</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d'anime (darrers <?php echo $max_days; ?> dies)</h4>
 								<hr>
 <?php
-	$origin_labels=array("'Web'","'Tachiyomi'");
-	$origin_colors=array("'#28a745'","'#007bff'");
-	$result = query("SELECT (SELECT COUNT(*) FROM manga_view_log WHERE user_agent LIKE '%Tachiyomi%') tachiyomi, (SELECT COUNT(*) FROM `manga_view_log` WHERE user_agent NOT LIKE '%[via API]%') web");
+	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
+	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
+	$result = query("SELECT (SELECT COUNT(*) FROM view_log WHERE view_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_log WHERE view_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_log WHERE view_type='cast' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
-	$origin_values=array($row['web'], $row['tachiyomi']);
+	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
+	mysqli_free_result($result);
+?>
+								<canvas id="anime_origin_chart"></canvas>
+								<script>
+									var ctx = document.getElementById('anime_origin_chart').getContext('2d');
+									var chart = new Chart(ctx, {
+										type: 'pie',
+										data: {
+											labels: [<?php echo implode(',',$origin_labels); ?>],
+											datasets: [
+											{
+												data: [<?php echo implode(',',$origin_values); ?>],
+												backgroundColor: [<?php echo implode(',',$origin_colors); ?>]
+											}]
+										},
+										options: {
+											legend: {
+												position: 'right'
+											}
+										}
+									});
+								</script>
+							</article>
+						</div>
+					</div>
+					<div class="container d-flex justify-content-center p-4">
+						<div class="card w-100">
+							<article class="card-body">
+								<h4 class="card-title text-center mb-4 mt-1">Origen de les lectures de manga (darrers <?php echo $max_days; ?> dies)</h4>
+								<hr>
+<?php
+	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Tachiyomi'");
+	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
+	$result = query("SELECT (SELECT COUNT(*) FROM manga_view_log WHERE read_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM manga_view_log WHERE read_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM manga_view_log WHERE read_type='api' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') api");
+	$row = mysqli_fetch_assoc($result);
+	$origin_values=array($row['desktop'], $row['mobile'], $row['api']);
 	mysqli_free_result($result);
 ?>
 								<canvas id="manga_origin_chart"></canvas>
@@ -1505,14 +1541,50 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les lectures de manga <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d'anime <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers <?php echo $max_days; ?> dies)</h4>
 								<hr>
 <?php
-	$origin_labels=array("'Web'","'Tachiyomi'");
-	$origin_colors=array("'#28a745'","'#007bff'");
-	$result = query("SELECT (SELECT COUNT(*) FROM manga_view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN manga_version v ON f.manga_version_id=v.id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND user_agent LIKE '%Tachiyomi%') tachiyomi, (SELECT COUNT(*) FROM manga_view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN manga_version v ON f.manga_version_id=v.id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND user_agent NOT LIKE '%[via API]%') web");
+	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
+	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
+	$result = query("SELECT (SELECT COUNT(*) FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND view_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND view_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_log vl LEFT JOIN link l ON vl.link_id=l.id LEFT JOIN version v ON l.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND view_type='cast' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
-	$origin_values=array($row['web'], $row['tachiyomi']);
+	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
+	mysqli_free_result($result);
+?>
+								<canvas id="fansub_anime_origin_chart"></canvas>
+								<script>
+									var ctx = document.getElementById('fansub_anime_origin_chart').getContext('2d');
+									var chart = new Chart(ctx, {
+										type: 'pie',
+										data: {
+											labels: [<?php echo implode(',',$origin_labels); ?>],
+											datasets: [
+											{
+												data: [<?php echo implode(',',$origin_values); ?>],
+												backgroundColor: [<?php echo implode(',',$origin_colors); ?>]
+											}]
+										},
+										options: {
+											legend: {
+												position: 'right'
+											}
+										}
+									});
+								</script>
+							</article>
+						</div>
+					</div>
+					<div class="container d-flex justify-content-center p-4">
+						<div class="card w-100">
+							<article class="card-body">
+								<h4 class="card-title text-center mb-4 mt-1">Origen de les lectures de manga <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers <?php echo $max_days; ?> dies)</h4>
+								<hr>
+<?php
+	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Tachiyomi'");
+	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
+	$result = query("SELECT (SELECT COUNT(*) FROM manga_view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN manga_version v ON f.manga_version_id=v.id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND read_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM manga_view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN manga_version v ON f.manga_version_id=v.id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND read_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM manga_view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN manga_version v ON f.manga_version_id=v.id WHERE v.id IN (SELECT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") AND read_type='api' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') api");
+	$row = mysqli_fetch_assoc($result);
+	$origin_values=array($row['desktop'], $row['mobile'], $row['api']);
 	mysqli_free_result($result);
 ?>
 								<canvas id="fansub_manga_origin_chart"></canvas>

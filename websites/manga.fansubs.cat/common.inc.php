@@ -1,6 +1,6 @@
 <?php
 //Versions to avoid site caching
-const JS_VER=12;
+const JS_VER=13;
 const CS_VER=7;
 
 //Regexp used for determining types of links

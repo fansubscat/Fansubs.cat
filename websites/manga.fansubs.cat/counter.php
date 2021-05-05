@@ -10,57 +10,22 @@ if ($file_id>0 && !empty($_GET['action']) && !empty($read_id)) {
 	if ($row = mysqli_fetch_assoc($result)) {
 		switch($_GET['action']) {
 			case 'close':
-				$exists = query("SELECT * FROM read_session WHERE read_id='$read_id'");
-				if (mysqli_fetch_assoc($exists)){
-					//We set a minimum and maximum read time and pages.
-					$min_time = $row['number_of_pages'] * 3;
-					$max_time = $row['number_of_pages'] * 60;
-					$min_pages = intval(round($row['number_of_pages']/2));
-					$max_pages = $row['number_of_pages'];
-
-					if (!empty($_GET['time_spent']) && is_numeric($_GET['time_spent']) && $_GET['time_spent']>=$min_time && !empty($_GET['pages_read']) && is_numeric($_GET['pages_read']) && $_GET['pages_read']>=$min_pages) {
-						if ($_GET['time_spent']>$max_time) {
-							$time_spent = $max_time; // Left open for too long, adjust to max
-						} else {
-							$time_spent = escape($_GET['time_spent']);
-						}
-						if ($_GET['pages_read']>$max_pages) {
-							$pages_read = $max_pages; //Should not happen normally
-						} else {
-							$pages_read = escape($_GET['pages_read']);
-						}
-						query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT time_spent+$time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$time_spent), IFNULL((SELECT pages_read+$pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$pages_read), IFNULL((SELECT api_views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0)");
-						query("INSERT INTO manga_view_log (file_id, date, ip, user_agent) VALUES ($file_id, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."', '".escape($_SERVER['HTTP_USER_AGENT'])."')");
-					}
-					//Else, discard and not even report it: opened and closed in too little time (less than min)
-					query("DELETE FROM read_session WHERE read_id='$read_id'");
+				$pages_read = 0;
+				if (!empty($_GET['pages_read']) && is_numeric($_GET['pages_read'])){
+					$pages_read = escape($_GET['pages_read']);
 				}
-				//If it doesn't exist, just discard this request...
+				query("INSERT INTO read_session VALUES ('$read_id', $file_id, $pages_read, (SELECT number_of_pages total_pages FROM file WHERE id=$file_id), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."', '".escape($_SERVER['HTTP_USER_AGENT'])."', 1, 0, 0) ON DUPLICATE KEY UPDATE pages_read=$pages_read, last_update=CURRENT_TIMESTAMP, ip='".escape($_SERVER['REMOTE_ADDR'])."', user_agent='".escape($_SERVER['HTTP_USER_AGENT'])."', reader_closed=1");
 				break;
 			case 'open':
-				//Replace in the remote case we get a collision...
-				query("REPLACE INTO read_session VALUES ('$read_id', $file_id, 0, 1, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."', '".escape($_SERVER['HTTP_USER_AGENT'])."')");
-				query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT time_spent FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT api_views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0)");
+				query("REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0), IFNULL((SELECT pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),0)");
+				query("INSERT INTO read_session VALUES ('$read_id', $file_id, 0, (SELECT number_of_pages total_pages FROM file WHERE id=$file_id), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."', '".escape($_SERVER['HTTP_USER_AGENT'])."', 0, 0, 0) ON DUPLICATE KEY UPDATE last_update=CURRENT_TIMESTAMP, ip='".escape($_SERVER['REMOTE_ADDR'])."', user_agent='".escape($_SERVER['HTTP_USER_AGENT'])."'");
 				break;
 			case 'notify':
-				//Same logic but only for max time/pages...
-				$max_time = $row['number_of_pages'] * 60;
-				$max_pages = $row['number_of_pages'];
-
-				if (!empty($_GET['time_spent']) && is_numeric($_GET['time_spent']) && !empty($_GET['pages_read']) && is_numeric($_GET['pages_read'])){
-					if ($_GET['time_spent']>$max_time) {
-						$time_spent = $max_time; // Left open for too long, adjust to max
-					} else {
-						$time_spent = escape($_GET['time_spent']);
-					}
-					if ($_GET['pages_read']>$max_pages) {
-						$pages_read = $max_pages; //Should not happen normally
-					} else {
-						$pages_read = escape($_GET['pages_read']);
-					}
-					query("UPDATE read_session SET file_id=$file_id, time_spent=$time_spent, pages_read=$pages_read, last_update=CURRENT_TIMESTAMP, ip='".escape($_SERVER['REMOTE_ADDR'])."', user_agent='".escape($_SERVER['HTTP_USER_AGENT'])."' WHERE read_id='$read_id'");
+				$pages_read = 0;
+				if (!empty($_GET['pages_read']) && is_numeric($_GET['pages_read'])){
+					$pages_read = escape($_GET['pages_read']);
 				}
-				//Else, invalid request, discard it
+				query("INSERT INTO read_session VALUES ('$read_id', $file_id, $pages_read, (SELECT number_of_pages total_pages FROM file WHERE id=$file_id), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '".escape($_SERVER['REMOTE_ADDR'])."', '".escape($_SERVER['HTTP_USER_AGENT'])."', 0, 0, 0) ON DUPLICATE KEY UPDATE pages_read=$pages_read, last_update=CURRENT_TIMESTAMP, ip='".escape($_SERVER['REMOTE_ADDR'])."', user_agent='".escape($_SERVER['HTTP_USER_AGENT'])."'");
 				break;
 			default:
 				break;

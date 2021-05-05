@@ -192,7 +192,8 @@ CREATE TABLE `manga_view_log` (
   `file_id` int(11) NOT NULL,
   `ip` varchar(200) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `user_agent` text DEFAULT NULL
+  `user_agent` text DEFAULT NULL,
+  `read_type` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `manga_views` (
@@ -227,15 +228,6 @@ CREATE TABLE `pending_news` (
   `comments` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `play_session_old` (
-  `play_id` varchar(24) NOT NULL,
-  `link_id` int(11) NOT NULL,
-  `time_spent` int(11) NOT NULL,
-  `last_update` timestamp NOT NULL,
-  `ip` varchar(200) NOT NULL,
-  `user_agent` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE TABLE `play_session` (
   `play_id` varchar(24) NOT NULL,
   `method` varchar(200) NOT NULL,
@@ -258,11 +250,15 @@ CREATE TABLE `play_session` (
 CREATE TABLE `read_session` (
   `read_id` varchar(20) NOT NULL,
   `file_id` int(11) NOT NULL,
-  `time_spent` int(11) NOT NULL,
   `pages_read` int(11) NOT NULL,
+  `total_pages` int(11) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `last_update` timestamp NOT NULL,
   `ip` varchar(200) NOT NULL,
-  `user_agent` text DEFAULT NULL
+  `user_agent` text DEFAULT NULL,
+  `reader_closed` tinyint(1) NOT NULL DEFAULT 0,
+  `read_counted` tinyint(1) NOT NULL DEFAULT 0,
+  `archived` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `recommendation` (
@@ -406,7 +402,8 @@ CREATE TABLE `view_log` (
   `ip` varchar(200) NOT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
   `user_agent` text DEFAULT NULL,
-  `user_agent_read` text DEFAULT NULL
+  `user_agent_read` text DEFAULT NULL,
+  `view_type` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `volume` (
@@ -479,8 +476,6 @@ ALTER TABLE `play_session`
   ADD PRIMARY KEY (`play_id`),
   ADD KEY `archived` (`archived`),
   ADD KEY `created` (`created`);
-ALTER TABLE `play_session_old`
-  ADD PRIMARY KEY (`play_id`);
 ALTER TABLE `read_session`
   ADD PRIMARY KEY (`read_id`);
 ALTER TABLE `recommendation`
@@ -606,8 +601,6 @@ ALTER TABLE `manga_version`
 ALTER TABLE `news`
   ADD CONSTRAINT `fk_news_fansub` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_news_fetcher` FOREIGN KEY (`fetcher_id`) REFERENCES `fetcher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `play_session_old`
-  ADD CONSTRAINT `play_session_old_ibfk_1` FOREIGN KEY (`link_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `read_session`
   ADD CONSTRAINT `read_session_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `file` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `recommendation`
