@@ -299,7 +299,7 @@ else if ($method === 'manga'){
 		show_invalid('No valid submethod specified.');
 	}
 }
-else if ($method === 'internal' && $_GET['token']===$internal_token){
+else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$internal_token){
 	$submethod = array_shift($request);
 	if ($submethod=='get_unconverted_links') {
 		$result = mysqli_query($db_connection, "SELECT li.*, v.storage_folder, v.storage_processing, IF(l.extra_name IS NULL,FALSE,TRUE) is_extra FROM link_instance li LEFT JOIN link l ON li.link_id=l.id LEFT JOIN version v ON l.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url NOT LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND l.id>=".$_GET['from_id'] : '')." AND NOT EXISTS (SELECT * FROM link_instance li2 WHERE li2.link_id=li.link_id AND li2.url LIKE 'storage://%') ORDER BY s.name ASC, l.id ASC") or crash('Internal error: ' . mysqli_error($db_connection));
