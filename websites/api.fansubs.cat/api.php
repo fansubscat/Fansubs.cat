@@ -272,10 +272,16 @@ else if ($method === 'manga'){
 		} else {
 			$result = mysqli_query($db_connection, "SELECT f.* FROM file f WHERE f.id=$file_id");
 			if ($row = mysqli_fetch_assoc($result)) {
-				$pages_read=$row['number_of_pages'];
-				mysqli_query($db_connection, "REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT pages_read+$pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$pages_read)");
 				$user_agent = mysqli_real_escape_string($db_connection, $_SERVER['HTTP_USER_AGENT']);
-				mysqli_query($db_connection, "INSERT INTO manga_view_log (file_id, date, ip, user_agent, read_type) VALUES ($file_id, CURRENT_TIMESTAMP, '".mysqli_real_escape_string($db_connection, $_SERVER['REMOTE_ADDR'])."', '$user_agent [via API]', 'api')");
+
+				//Check if this view is already in the database: same user agent, same IP and same file in the last hour
+				$exists_result = mysqli_query($db_connection, "SELECT * FROM manga_view_log WHERE file_id=$file_id AND ip='".mysqli_real_escape_string($db_connection, $_SERVER['REMOTE_ADDR'])."' AND user_agent='$user_agent [via API]' AND date>= (NOW() - INTERVAL 1 HOUR)");
+				if (mysqli_num_rows($exists_result)==0) {
+					$pages_read=$row['number_of_pages'];
+					mysqli_query($db_connection, "REPLACE INTO manga_views SELECT $file_id, '".date('Y-m-d')."', IFNULL((SELECT clicks+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),1), IFNULL((SELECT pages_read+$pages_read FROM manga_views WHERE file_id=$file_id AND day='".date('Y-m-d')."'),$pages_read)");
+					mysqli_query($db_connection, "INSERT INTO manga_view_log (file_id, date, ip, user_agent, read_type) VALUES ($file_id, CURRENT_TIMESTAMP, '".mysqli_real_escape_string($db_connection, $_SERVER['REMOTE_ADDR'])."', '$user_agent [via API]', 'api')");
+				}
+				mysqli_free_result($exists_result);
 			}
 			$files = scandir($base_path);
 			natsort($files);
