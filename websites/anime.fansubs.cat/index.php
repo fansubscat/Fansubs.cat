@@ -44,7 +44,7 @@ if (!empty($site_message) || !empty($is_fools_day)){
 if (is_robot()){
 ?>
 				<div class="section">
-					<div class="site-message">Fansubs.cat et permet veure en streaming més de 300 animes subtitulats en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.</div>
+					<div class="site-message">Fansubs.cat et permet veure en streaming més de 350 animes subtitulats en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.</div>
 				</div>
 <?php
 }
