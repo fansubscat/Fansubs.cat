@@ -42,9 +42,12 @@ if (!empty($site_message) || !empty($is_fools_day)){
 }
 
 if (is_robot()){
+	$restotalnumber = query("SELECT FLOOR((COUNT(*)-1)/50)*50 cnt FROM series s WHERE EXISTS (SELECT id FROM version v WHERE v.series_id=s.id AND v.hidden=0)");
+	$totalnumber = mysqli_fetch_assoc($restotalnumber)['cnt'];
+	mysqli_free_result($restotalnumber);
 ?>
 				<div class="section">
-					<div class="site-message">Fansubs.cat et permet veure en streaming més de 350 animes subtitulats en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.</div>
+					<div class="site-message">Fansubs.cat et permet veure en streaming més de <?php echo $totalnumber; ?> animes subtitulats en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.</div>
 				</div>
 <?php
 }
