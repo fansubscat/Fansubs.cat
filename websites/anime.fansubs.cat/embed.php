@@ -104,6 +104,7 @@ $link_instances = filter_link_instances($link_instances);
 				<h2 class="section-title" id="alert-title">S'ha produït un error</h2>
 				<div id="alert-message">S'ha produït un error desconegut.</div>
 				<div id="alert-buttonbar">
+					<button id="alert-refresh-button" class="hidden">Actualitza</button>
 					<button id="alert-ok-button">D'acord</button>
 				</div>
 			</div>

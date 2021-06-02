@@ -166,7 +166,7 @@ h2, h3 {
 	 margin-top: 1.5em;
 }
 
-#options-save-button, #contact-send-button {
+#options-save-button, #contact-send-button, #alert-refresh-button {
 	color: #FFF;
 	font-size: 1em;
 	font-weight: bold;
@@ -199,7 +199,7 @@ h2, h3 {
 	margin-bottom: 1em;
 }
 
-#options-save-button:hover, #contact-send-button:hover {
+#options-save-button:hover, #contact-send-button:hover, #alert-refresh-button:hover {
 	background: rgb(32, 107, 41);
 }
 

@@ -141,13 +141,13 @@ function sendVideoTrackingEndBeacon(){
 		if (!enableDebug) {
 			var formData = new FormData();
 			formData.append("log", loggedMessages);
-			navigator.sendBeacon(baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=close&time_spent="+Math.floor(playedMediaSeconds), formData);
+			navigator.sendBeacon(baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds), formData);
 			gtag('event', 'Close link', {
 				'event_category': "Playback",
 				'event_label': currentLinkId + " / " + Math.floor(playedMediaSeconds)
 			});
 		} else {
-			console.debug('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
+			console.debug('Would have requested: '+baseUrl+'/counter.php?play_id='+currentPlayId+'&link_id='+currentLinkId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
 		}
 		currentLinkId=-1;
 		currentPlayId="";
@@ -596,10 +596,17 @@ function showContactScreen(reason) {
 	}
 }
 
-function showAlert(title, message) {
+function showAlert(title, message, showRefresh=false) {
 	$('#alert-overlay').removeClass('hidden');
 	$('#alert-title').text(title);
 	$('#alert-message').text(message);
+	if (showRefresh) {
+		$('#alert-refresh-button').removeClass('hidden');
+		$('#alert-ok-button').text('Ignora');
+	} else {
+		$('#alert-refresh-button').addClass('hidden');
+		$('#alert-ok-button').text('D\'acord');
+	}
 }
 
 function closeOverlay() {
@@ -709,6 +716,9 @@ $(document).ready(function() {
 		});
 		$('#alert-ok-button').click(function(){
 			$('#alert-overlay').addClass('hidden');
+		});
+		$('#alert-refresh-button').click(function(){
+			window.location.reload();
 		});
 		$('#contact-send-button').click(function(){
 			if (!/\S+@\S+\.\S+/.test($('#contact_address').val())) {
