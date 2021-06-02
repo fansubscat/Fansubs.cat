@@ -597,6 +597,9 @@ function showContactScreen(reason) {
 }
 
 function showAlert(title, message, showRefresh=false) {
+	if (document.fullscreenElement) {
+		document.exitFullscreen();
+	}
 	$('#alert-overlay').removeClass('hidden');
 	$('#alert-title').text(title);
 	$('#alert-message').text(message);
