@@ -108,6 +108,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="wordpress_ddc"<?php echo $row['method']=='wordpress_ddc' ? " selected" : ""; ?>>Wordpress (Dengeki Daisy Cat)</option>
 							<option value="wordpress_mdcf"<?php echo $row['method']=='wordpress_mdcf' ? " selected" : ""; ?>>Wordpress (Món Detectiu Conan Fansub)</option>
 							<option value="wordpress_xf"<?php echo $row['method']=='wordpress_xf' ? " selected" : ""; ?>>Wordpress (XOP Fansub)</option>
+							<option value="wordpress_ys"<?php echo $row['method']=='wordpress_ys' ? " selected" : ""; ?>>Wordpress (YacchySubs)</option>
 							<option value="wordpress_ynf"<?php echo $row['method']=='wordpress_ynf' ? " selected" : ""; ?>>Wordpress (Yoshiwara no Fansub)</option>
 						</select>
 					</div>

@@ -32,7 +32,7 @@ mysqli_free_result($resultnews);
 $resultactive = mysqli_query($db_connection, "SELECT COUNT(*) count,f.name,f.url FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE CAST(date AS CHAR)>'".date('Y-m')."' GROUP BY fansub_id ORDER BY count DESC, f.name ASC LIMIT 1") or crash(mysqli_error($db_connection));
 if ($row = mysqli_fetch_assoc($resultactive)){
 ?>
-							<a href="<?php echo $row['url']; ?>"><?php echo $row['name']; ?></a></strong>. L'enhorabona!
+							<a href="<?php echo $row['url']; ?>"><?php echo $row['name']; ?></a></strong>. Enhorabona!
 <?php
 }
 else{

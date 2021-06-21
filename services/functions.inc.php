@@ -166,6 +166,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 		case 'wordpress_ynf':
 			$result = fetch_via_wordpress_ynf($fansub_slug, $url, $last_fetched_item_date);
 			break;
+		case 'wordpress_ys':
+			$result = fetch_via_wordpress_ys($fansub_slug, $url, $last_fetched_item_date);
+			break;
 		default:
 			$result = array('error_invalid_method',array());
 	}
@@ -2058,6 +2061,89 @@ function fetch_via_wordpress_ynf($fansub_slug, $url, $last_fetched_item_date){
 			}
 		}
 
+		$texts = $html->find('text');
+		$go_on = FALSE;
+		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
+			foreach ($texts as $text){
+				if ($text->plaintext==' Entrades més antigues'){
+					//Not sleeping, Wordpress.com does not appear to be rate-limited
+					$html_text = file_get_contents($text->parent->href) or $error_connect=TRUE;
+					if ($error_connect){
+						return array('error_connect',array());
+					}
+					$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+					tidy_clean_repair($tidy);
+					$html = str_get_html(tidy_get_output($tidy));
+					$go_on = TRUE;
+					break;
+				}
+			}
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_wordpress_ys($fansub_slug, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('article') as $article) {
+			if ($article->find('h2.entry-title a', 0)!==NULL){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('h2.entry-title a', 0);
+				$item[0]=$title->innertext;
+
+				$html_text_article = file_get_contents($title->href) or $error_connect=TRUE;
+				if ($error_connect){
+					return array('error_connect',array());
+				}
+				$tidy = tidy_parse_string($html_text_article, $tidy_config, 'UTF8');
+				tidy_clean_repair($tidy);
+				$html_article = str_get_html(tidy_get_output($tidy));
+
+				$item[1]=$html_article->find('div.entry-content', 0)->innertext;
+
+				$description = $html_article->find('div.entry-content', 0)->innertext;
+
+				$parts = explode('<div id="atatags', $description);
+				if (count($parts)>1) {
+					$description = $parts[0];
+				}
+
+				$item[2]=parse_description($description);
+
+				//The format is: 2013-09-02T14:43:43+00:00
+				$datetext = $article->find('time', 0)->datetime;
+
+				$date = date_create_from_format('Y-m-d\TH:i:sP', $datetext);
+				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+
+				$item[3]=$date->format('Y-m-d H:i:s');
+				$item[4]=$title->href;
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $description);
+
+				$elements[]=$item;
+			}
+		}
+
+		//This is untested: no paging as of now, copy/paste from another fetcher
 		$texts = $html->find('text');
 		$go_on = FALSE;
 		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){

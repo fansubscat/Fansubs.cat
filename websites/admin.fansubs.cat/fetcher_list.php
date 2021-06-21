@@ -53,6 +53,8 @@ function get_method($method){
 			return "Wordpress (XOP Fansub)";
 		case 'wordpress_ynf':
 			return "Wordpress (Yoshiwara no Fansub)";
+		case 'wordpress_ys':
+			return "Wordpress (YacchySubs)";
 		default:
 			return $method;
 	}
