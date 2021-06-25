@@ -118,6 +118,9 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 		case 'blogspot_mnf':
 			$result = fetch_via_blogspot_mnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
+		case 'blogspot_pnm':
+			$result = fetch_via_blogspot_pnm($fansub_slug, $url, $last_fetched_item_date);
+			break;
 		case 'blogspot_snf':
 			$result = fetch_via_blogspot_snf($fansub_slug, $url, $last_fetched_item_date);
 			break;
@@ -864,6 +867,94 @@ function fetch_via_blogspot_mnf($fansub_slug, $url, $last_fetched_item_date){
 				$item[1]=$article->find('div.post-body', 0)->innertext;
 				$item[2]=parse_description($article->find('div.post-body', 0)->innertext);
 				$date = date_create_from_format('Y-m-d\TH:i:sP', $article->find('abbr.published', 0)->title);
+				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+				$item[3]= $date->format('Y-m-d H:i:s');
+				$item[4]=$title->href;
+				$item[5]=fetch_and_parse_image($fansub_slug, $url, $article->find('div.post-body', 0)->innertext);
+
+				$elements[]=$item;
+			}
+		}
+
+		$texts = $html->find('text');
+		$go_on = FALSE;
+		if (count($elements)>0 && $elements[count($elements)-1][3]>=$last_fetched_item_date){
+			foreach ($texts as $text){
+				if ($text->plaintext=='Missatges més antics'){
+					$tries=1;
+					while ($tries<=3){
+						sleep($tries*$tries); //Seems to help get rid of 503 errors... probably Blogger is rate-limited
+						$error=FALSE;
+
+						$html_text = file_get_contents($text->parent->href) or $error=TRUE;
+
+						if (!$error){
+							$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+							tidy_clean_repair($tidy);
+							$html = str_get_html(tidy_get_output($tidy));
+							break;
+						}
+						else{
+							$tries++;
+						}
+					}
+					if ($tries>3){
+						return array('error_connect',array());
+					}
+					$go_on = TRUE;
+					break;
+				}
+			}
+		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_blogspot_pnm($fansub_slug, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	$go_on = TRUE;
+
+	while ($go_on){
+		//parse through the HTML and build up the elements feed as we go along
+		foreach($html->find('div.post') as $article) {
+			if ($article->find('h3.post-title a', 0)!==NULL){
+				//Create an empty item
+				$item = array();
+
+				//Look up and add elements to the item
+				$title = $article->find('h3.post-title a', 0);
+				$item[0]=$title->innertext;
+				$item[1]=$article->find('div.post-body', 0)->innertext;
+				$item[2]=parse_description($article->find('div.post-body', 0)->innertext);
+
+				//Date is: 25 de juny 2021
+				$datetext = $article->parent()->parent()->parent()->find('.date-header span', 0)->innertext;
+				$datetext = str_ireplace('de gener', 'January', $datetext);
+				$datetext = str_ireplace('de febrer', 'February', $datetext);
+				$datetext = str_ireplace('de març', 'March', $datetext);
+				$datetext = str_ireplace('d\'abril', 'April', $datetext);
+				$datetext = str_ireplace('de maig', 'May', $datetext);
+				$datetext = str_ireplace('de juny', 'June', $datetext);
+				$datetext = str_ireplace('de juliol', 'July', $datetext);
+				$datetext = str_ireplace('d\'agost', 'August', $datetext);
+				$datetext = str_ireplace('de setembre', 'September', $datetext);
+				$datetext = str_ireplace('d\'octubre', 'October', $datetext);
+				$datetext = str_ireplace('de novembre', 'November', $datetext);
+				$datetext = str_ireplace('de desembre', 'December', $datetext);
+
+				$date = date_create_from_format('d F Y H:i:s', $datetext . ' 00:00:00');
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;

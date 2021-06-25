@@ -275,8 +275,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO related_anime (anime_id,related_anime_id) VALUES (".$inserted_id.",".$related_series_id.")");
 				query("INSERT INTO related_anime (anime_id,related_anime_id) VALUES (".$related_series_id.",".$inserted_id.")");
 			}
-			foreach ($related_manga as $related_manga) {
-				query("INSERT INTO related_manga (manga_id,anime_id) VALUES (".$related_manga_id.",".$inserted_id.")");
+			foreach ($related_manga as $related_manga_id) {
+				query("INSERT INTO related_manga_anime (manga_id,anime_id) VALUES (".$related_manga_id.",".$inserted_id.")");
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {

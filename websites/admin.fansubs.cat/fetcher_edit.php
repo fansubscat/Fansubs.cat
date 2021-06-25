@@ -93,6 +93,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="blogspot_dnf"<?php echo $row['method']=='blogspot_dnf' ? " selected" : ""; ?>>Blogspot (Dragon no Fansub)</option>
 							<option value="blogspot_llpnf"<?php echo $row['method']=='blogspot_llpnf' ? " selected" : ""; ?>>Blogspot (Lluna Plena no Fansub)</option>
 							<option value="blogspot_mnf"<?php echo $row['method']=='blogspot_mnf' ? " selected" : ""; ?>>Blogspot (Manga no Fansub)</option>
+							<option value="blogspot_pnm"<?php echo $row['method']=='blogspot_pnm' ? " selected" : ""; ?>>Blogspot (Projecte Nou Món)</option>
 							<option value="blogspot_snf"<?php echo $row['method']=='blogspot_snf' ? " selected" : ""; ?>>Blogspot (Seireitei no Fansub)</option>
 							<option value="blogspot_shinsengumi"<?php echo $row['method']=='blogspot_shinsengumi' ? " selected" : ""; ?>>Blogspot (Shinsengumi no Fansub)</option>
 							<option value="blogspot_teqma"<?php echo $row['method']=='blogspot_teqma' ? " selected" : ""; ?>>Blogspot (Tot el que m'agrada)</option>

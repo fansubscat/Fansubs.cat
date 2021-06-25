@@ -21,6 +21,8 @@ function get_method($method){
 			return "Blogspot (Lluna Plena no Fansub)";
 		case 'blogspot_mnf':
 			return "Blogspot (Manga no Fansub)";
+		case 'blogspot_pnm':
+			return "Blogspot (Projecte Nou Món)";
 		case 'blogspot_snf':
 			return "Blogspot (Seireitei no Fansub)";
 		case 'blogspot_shinsengumi':
