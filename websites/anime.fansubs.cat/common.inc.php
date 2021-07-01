@@ -4,7 +4,7 @@ const JS_VER=54;
 const CS_VER=19;
 const MG_VER=1;
 const VS_VER=5;
-const PL_VER=3;
+const PL_VER=5;
 
 //Regexp used for determining types of links
 const REGEXP_MEGA='/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/';
