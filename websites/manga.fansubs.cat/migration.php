@@ -26,6 +26,9 @@ if ($file_id>0 && $file_id<=$highest_piwigo_category_id) {
 		case 2723:
 			$file_id=2703;
 			break;
+		case 2516:
+			$file_id=3377;
+			break;
 	}
 
 	$result = query("SELECT m.type,m.slug,IF(m.type='oneshot',NULL,vo.number) volume_number FROM file f LEFT JOIN chapter c ON f.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN manga_version v ON f.manga_version_id=v.id LEFT JOIN manga m ON v.manga_id=m.id WHERE f.id=$file_id");
