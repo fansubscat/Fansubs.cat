@@ -930,6 +930,20 @@ function fetch_via_blogspot_pnm($fansub_slug, $url, $last_fetched_item_date){
 		//parse through the HTML and build up the elements feed as we go along
 		foreach($html->find('div.post') as $article) {
 			if ($article->find('h3.post-title a', 0)!==NULL){
+				//Filter news with the "Fansub" tag"
+				$tags = $article->find('a[rel="tag"]');
+				$is_valid=FALSE;
+				if (count($tags)>0) {
+					foreach ($tags as $tag) {
+						if ($tag->innertext=='Fansub') {
+							$is_valid=TRUE;
+						}
+					}
+				}
+				if (!$is_valid){
+					continue;
+				}
+
 				//Create an empty item
 				$item = array();
 
