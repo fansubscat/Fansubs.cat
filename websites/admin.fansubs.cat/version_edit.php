@@ -375,7 +375,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM link WHERE version_id=".$data['id']." AND episode_id IS NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($extras as $extra) {
 				if ($extra['id']==-1) {
-					query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created,lost) VALUES (".$data['id'].",NULL,NULL,'".$extra['name']."',".$extra['comments'].",CURRENT_TIMESTAMP,".$link['lost'].")");
+					query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES (".$data['id'].",NULL,NULL,'".$extra['name']."',".$extra['comments'].",CURRENT_TIMESTAMP)");
 					$inserted_link_id=mysqli_insert_id($db_connection);
 					foreach ($extra['instances'] as $instance) {
 						query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES ($inserted_link_id,".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
@@ -464,7 +464,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 			foreach ($links as $link) {
-				query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created) VALUES (".$inserted_id.",".$link['episode_id'].",".$link['variant_name'].",NULL,".$link['comments'].",CURRENT_TIMESTAMP)");
+				query("INSERT INTO link (version_id,episode_id,variant_name,extra_name,comments,created,lost) VALUES (".$inserted_id.",".$link['episode_id'].",".$link['variant_name'].",NULL,".$link['comments'].",CURRENT_TIMESTAMP,".$link['lost'].")");
 				$inserted_link_id=mysqli_insert_id($db_connection);
 				foreach ($link['instances'] as $instance) {
 					query("INSERT INTO link_instance (link_id,url,resolution,created) VALUES (".$inserted_link_id.",".$instance['url'].",".$instance['resolution'].",CURRENT_TIMESTAMP)");
