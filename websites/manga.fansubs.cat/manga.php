@@ -210,7 +210,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest manga és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
+							<div class="section-content">Aquest manga conté contingut pornogràfic i és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
 						</div>
 <?php
 	} else {
@@ -280,8 +280,19 @@ if ($count_unfiltered==0) {
 		}
 		mysqli_free_result($resultf);
 
+		$has_web = FALSE;
+		$has_download = FALSE;
+		foreach ($fansubs as $fansub) {
+			if (($fansub['historical']==0 && !empty($fansub['url'])) || ($fansub['historical']==1 && !empty($fansub['archive_url']))) {
+				$has_web = TRUE;
+			}
+			if (!empty($fansub['downloads_url'])) {
+				$has_download = TRUE;
+			}
+		}
+
 		$plurals = array(
-				"active" => array("Aquest web només recopila el material editat. L'autoria de l'edició és del grup següent. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat.", "Aquest web només recopila el material editat. L'autoria de l'edició és dels grups següents. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! També pots baixar-ne els fitxers originals amb màxima qualitat."),
+				"active" => array("Aquest web només recopila el material editat. L'autoria de l'edició és del fansub següent-".($has_web ? " Al seu web també trobaràs els fitxers originals amb màxima qualitat. Si t'agrada la seva feina, deixa-hi un comentari d'agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : "")), "Aquest web només recopila el material editat. L'autoria de l'edició és dels fansubs següents.".($has_web ? " Als seus web també trobaràs els fitxers originals amb màxima qualitat. Si t'agrada la seva feina, deixa-hi un comentari d'agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : ""))),
 				"abandoned" => array("Aquest manga es considera abandonat pel fansub, segurament no se'n llançaran més capítols.","Aquest manga es considera abandonat pels fansubs, segurament no se'n llançaran més capítols."),
 				"cancelled" => array("Aquest manga ha estat cancel·lat pel fansub, no se'n llançaran més capítols.","Aquest manga ha estat cancel·lat pels fansubs, no se'n llançaran més capítols.")
 		);

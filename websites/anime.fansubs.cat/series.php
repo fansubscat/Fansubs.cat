@@ -221,7 +221,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest anime és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
+							<div class="section-content">Aquest anime conté contingut pornogràfic i és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
 						</div>
 <?php
 	} else {
@@ -291,10 +291,27 @@ if ($count_unfiltered==0) {
 		}
 		mysqli_free_result($resultf);
 
+		$is_fandub = FALSE;
+		$has_web = FALSE;
+		$has_download = FALSE;
+		foreach ($fansubs as $fansub) {
+			if ($fansub['type']=='fandub') {
+				$is_fandub = TRUE;
+			}
+			if (($fansub['historical']==0 && !empty($fansub['url'])) || ($fansub['historical']==1 && !empty($fansub['archive_url']))) {
+				$has_web = TRUE;
+			}
+			if (!empty($fansub['downloads_url'])) {
+				$has_download = TRUE;
+			}
+		}
+		
+		
+
 		$plurals = array(
-				"active" => array("Aquest web només recopila el material editat. L'autoria de la versió en català és del grup següent. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! Al seu web també trobaràs els fitxers originals amb màxima qualitat.", "Aquest web només recopila el material editat. L'autoria de la versió en català és dels grups següents. Si t'agrada la seva feina, deixa'ls un comentari d'agraïment! Al seu web també trobaràs els fitxers originals amb màxima qualitat."),
-				"abandoned" => array("Aquest anime es considera abandonat pel fansub, segurament no se'n llançaran més capítols.","Aquest anime es considera abandonat pels fansubs, segurament no se'n llançaran més capítols."),
-				"cancelled" => array("Aquest anime ha estat cancel·lat pel fansub, no se'n llançaran més capítols.","Aquest anime ha estat cancel·lat pels fansubs, no se'n llançaran més capítols.")
+				"active" => array("Aquest web només recopila el material editat. L'autoria de la versió en català és del ".($is_fandub ? 'fandub' : 'fansub')." següent.".($has_web ? " Al seu web també trobaràs els fitxers originals amb màxima qualitat. Si t'agrada la seva feina, deixa-hi un comentari d'agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : "")), "Aquest web només recopila el material editat. L'autoria de la versió en català és dels ".($is_fandub ? 'fandub' : 'fansub')."s següents.".($has_web ? " Als seus web també trobaràs els fitxers originals amb màxima qualitat. Si t'agrada la seva feina, deixa-hi un comentari d'agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : ""))),
+				"abandoned" => array("Aquest anime es considera abandonat pel ".($is_fandub ? 'fandub' : 'fansub').", segurament no se'n llançaran més capítols.","Aquest anime es considera abandonat pels ".($is_fandub ? 'fandub' : 'fansub')."s, segurament no se'n llançaran més capítols."),
+				"cancelled" => array("Aquest anime ha estat cancel·lat pel ".($is_fandub ? 'fandub' : 'fansub').", no se'n llançaran més capítols.","Aquest anime ha estat cancel·lat pels ".($is_fandub ? 'fandub' : 'fansub')."s, no se'n llançaran més capítols.")
 		);
 ?>
 							<div class="section">
@@ -384,7 +401,7 @@ if ($count_unfiltered==0) {
 			if ($series['episodes']==-1) {
 ?>
 							<div class="section-content padding-bottom series-on-air">
-								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Aquesta sèrie encara està en emissió. És possible que tingui més capítols que els que hi ha a la llista.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Aquest anime està en emissió. Hi ha la possibilitat que acabi tenint més capítols que els que hi ha a la llista.
 							</div>
 <?php
 			}
