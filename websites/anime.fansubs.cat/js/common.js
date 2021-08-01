@@ -677,10 +677,12 @@ $(document).ready(function() {
 			$('body').addClass('no-overflow');
 			$('#options-overlay').removeClass('hidden');
 			$('#options-tooltip').attr('style','');
+			$('#options-tooltip').addClass('hidden');
 			Cookies.set('tooltip_closed', '1', cookieOptions);
 		});
 		$('#options-tooltip-close').click(function(){
 			$('#options-tooltip').attr('style','');
+			$('#options-tooltip').addClass('hidden');
 			Cookies.set('tooltip_closed', '1', cookieOptions);
 		});
 		$('#options-cancel-button').click(function(){
@@ -888,6 +890,7 @@ $(document).ready(function() {
 		});
 
 		if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
+			$("#options-tooltip").removeClass('hidden');
 			$("#options-tooltip").fadeIn("slow");
 		}
 

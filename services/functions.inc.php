@@ -954,21 +954,7 @@ function fetch_via_blogspot_pnm($fansub_slug, $url, $last_fetched_item_date){
 				$item[2]=parse_description($article->find('div.post-body', 0)->innertext);
 
 				//Date is: 25 de juny 2021
-				$datetext = $article->parent()->parent()->parent()->find('.date-header span', 0)->innertext;
-				$datetext = str_ireplace('de gener', 'January', $datetext);
-				$datetext = str_ireplace('de febrer', 'February', $datetext);
-				$datetext = str_ireplace('de març', 'March', $datetext);
-				$datetext = str_ireplace('d\'abril', 'April', $datetext);
-				$datetext = str_ireplace('de maig', 'May', $datetext);
-				$datetext = str_ireplace('de juny', 'June', $datetext);
-				$datetext = str_ireplace('de juliol', 'July', $datetext);
-				$datetext = str_ireplace('d\'agost', 'August', $datetext);
-				$datetext = str_ireplace('de setembre', 'September', $datetext);
-				$datetext = str_ireplace('d\'octubre', 'October', $datetext);
-				$datetext = str_ireplace('de novembre', 'November', $datetext);
-				$datetext = str_ireplace('de desembre', 'December', $datetext);
-
-				$date = date_create_from_format('d F Y H:i:s', $datetext . ' 00:00:00');
+				$date = date_create_from_format('Y-m-d\TH:i:sP', $article->find('abbr.published', 0)->title);
 				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 				$item[3]= $date->format('Y-m-d H:i:s');
 				$item[4]=$title->href;
