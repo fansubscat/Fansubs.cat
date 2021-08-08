@@ -31,6 +31,8 @@ function get_method($method){
 			return "Blogspot (Tot el que m'agrada)";
 		case 'blogspot_tnf':
 			return "Blogspot (Tohoshinki no Fansub)";
+		case 'blogspot_uto':
+			return "Blogspot (Un Tortosí Otaku)";
 		case 'catsub':
 			return "CatSub";
 		case 'mangadex_edcec':
