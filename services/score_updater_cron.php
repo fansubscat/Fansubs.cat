@@ -14,7 +14,7 @@ while ($series = mysqli_fetch_assoc($result)) {
 	$seasonscoresum = 0;
 	$error = FALSE;
 	while ($season = mysqli_fetch_assoc($resultss)) {
-		sleep(4); //4s for Jikan request limits
+		sleep(10); //At least 4s for Jikan request limits
 		$url = 'https://api.jikan.moe/v3/anime/'.$season['myanimelist_id'];
 		$response = json_decode(file_get_contents($url));
 		
@@ -60,7 +60,7 @@ while ($manga = mysqli_fetch_assoc($result)) {
 	$seasonscoresum = 0;
 	$error = FALSE;
 	while ($season = mysqli_fetch_assoc($resultss)) {
-		sleep(4); //4s for Jikan request limits
+		sleep(10); //At least 4s for Jikan request limits
 		$url = 'https://api.jikan.moe/v3/manga/'.$season['myanimelist_id'];
 		$response = json_decode(file_get_contents($url));
 		
