@@ -114,10 +114,8 @@ do
 			mkdir -p "$orig_dir/$storage_folder"
 			mkdir -p "$dest_dir/$storage_folder"
 			mkdir Temporal
+			rm -rf Temporal/*
 			cd Temporal
-			# Convert to old format
-			url=${url/\#/\!}
-			url=${url/file\//\#\!}
 			ready=0
 
 			while [ $ready -eq 0 ]
@@ -148,7 +146,7 @@ do
 						cp "$file" "$dest_dir/$storage_folder/$output"
 					fi
 					rsync -avzhW --chmod=u=rwX,go=rX "$dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --delete
-					curl --data-urlencode "url=storage://$storage_folder/$output" --data-urlencode "link_id=$link_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null
+					curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$storage_folder/$output" --data-urlencode "link_id=$link_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null
 					ready=1
 				else
 					echo "Error downloading: $?, waiting 30 minutes... Now at `date -Iseconds`."
