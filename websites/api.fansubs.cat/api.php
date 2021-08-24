@@ -346,12 +346,17 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$i
 		);
 		echo json_encode($response);
 	} else if ($submethod=='insert_converted_link') {
-		if (!empty($_POST['link_id']) && is_numeric($_POST['link_id']) && !empty($_POST['url']) && !empty($_POST['resolution'])) {
+		if (!empty($_POST['link_id']) && is_numeric($_POST['link_id']) && !empty($_POST['url']) && !empty($_POST['original_url']) && !empty($_POST['resolution'])) {
 			$link_id=$_POST['link_id'];
 			$url=mysqli_real_escape_string($db_connection, $_POST['url']);
+			$original_url=mysqli_real_escape_string($db_connection, $_POST['original_url']);
 			$resolution=mysqli_real_escape_string($db_connection, $_POST['resolution']);
-			$result = mysqli_query($db_connection, "INSERT INTO link_instance (link_id, url, resolution, created) VALUES ($link_id, '$url', '$resolution', CURRENT_TIMESTAMP)") or crash('Internal error: ' . mysqli_error($db_connection));
-			log_action('api-insert-converted-link', "S'ha inserit l'enllaç convertit '$url' a l'enllaç amb id. $link_id");
+			$result = mysqli_query($db_connection, "INSERT INTO link_instance (link_id, url, resolution, created) SELECT $link_id, '$url', '$resolution', CURRENT_TIMESTAMP FROM link_instance WHERE EXISTS (SELECT url FROM link_instance WHERE url='".$original_url."' AND link_id=".$link_id.") LIMIT 1") or crash('Internal error: ' . mysqli_error($db_connection));
+			if (mysqli_affected_rows($db_connection)>0) {
+				log_action('api-insert-converted-link', "S'ha inserit l'enllaç convertit '$url' a l'enllaç amb id. $link_id");
+			} else {
+				log_action('api-discard-converted-link', "S'ha descartat l'enllaç convertit '$url' a l'enllaç amb id. $link_id, segurament s'ha actualitzat mentre es convertia");
+			}
 			
 			$response = array(
 				'status' => 'ok'
