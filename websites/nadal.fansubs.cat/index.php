@@ -5,14 +5,14 @@ function is_day_ready($day) {
 	global $releases;
 	$today = date('Y-m-d H:i:s');
 	if (!empty($_GET['currentday'])) {
-		$today = '2020-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
+		$today = '2021-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
 	}
-	$target = '2020-12-'.sprintf('%02d', $day).' 12:00:00';
+	$target = '2021-12-'.sprintf('%02d', $day).' 12:00:00';
 	return (strcmp($today,$target)>=0 && !empty($releases[$day]));
 }
 
-if (!empty($_COOKIE['advent_2020'])) {
-	$cookie=explode(',',$_COOKIE['advent_2020']);
+if (!empty($_COOKIE['advent_2021'])) {
+	$cookie=explode(',',$_COOKIE['advent_2021']);
 } else {
 	$cookie=array();
 }
@@ -44,7 +44,7 @@ if (!empty($_COOKIE['advent_2020'])) {
 					var openedDays = $.map($('.checkavailable:checked'), function(n, i){
 						return n.value;
 					}).join(',');
-					Cookies.set('advent_2020', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
+					Cookies.set('advent_2021', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
 <?php
 if (!empty($_GET['twitter'])) {
 ?>
@@ -239,6 +239,23 @@ if (!empty($_GET['twitter'])) {
 				color: #222266;
 			}
 
+			.previous{
+				text-align: center;
+				color: white;
+				font-family: sans-serif;
+				font-size: 0.8em;
+				font-weight: bold;
+				text-shadow: 0 0.1em black;
+			}
+
+			.previous a{
+				color: white;
+			}
+
+			.previous a:hover{
+				color: #DDDDDD;
+			}
+
 <?php
 for ($i=1;$i<25;$i++){
 ?>
@@ -282,6 +299,9 @@ for ($i=1;$i<25;$i++){
 <?php
 }
 ?>
+		</div>
+		<div class="previous">
+			Edicions anteriors: <a href="/2020/">2020</a>
 		</div>
 	</body>
 </html>
