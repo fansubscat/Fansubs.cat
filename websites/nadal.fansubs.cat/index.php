@@ -4,11 +4,11 @@ require_once('config.inc.php');
 function is_day_ready($day) {
 	global $releases;
 	$today = date('Y-m-d H:i:s');
-	if (!empty($_GET['currentday'])) {
+	if (!empty($_GET['twitter']) && !empty($_GET['currentday'])) {
 		$today = '2021-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
 	}
 	$target = '2021-12-'.sprintf('%02d', $day).' 12:00:00';
-	return (strcmp($today,$target)>=0 && !empty($releases[$day]));
+	return (strcmp($today,$target)>=0 && (!empty($releases[$day]) || !empty($_GET['twitter'])));
 }
 
 if (!empty($_COOKIE['advent_2021'])) {
@@ -300,8 +300,14 @@ for ($i=1;$i<25;$i++){
 }
 ?>
 		</div>
+<?php
+if (empty($_GET['twitter'])){
+?>
 		<div class="previous">
 			Edicions anteriors: <a href="/2020/">2020</a>
 		</div>
+<?php
+}
+?>
 	</body>
 </html>
