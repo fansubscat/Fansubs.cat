@@ -353,7 +353,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					}
 
 					//If there is any new MEGA link and storage has been updated (no new link or no changes), delete all storages so they are recreated
-					if ($has_updated_mega_link && !$has_updated_storage_link) {
+					if (empty($_POST['do_not_recreate_storage_links']) && $has_updated_mega_link && !$has_updated_storage_link) {
 						query("DELETE FROM link_instance WHERE link_id=".$link['id']." AND url LIKE 'storage://%'");
 					}
 
@@ -1176,6 +1176,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<br />
 <?php
+		if ($_SESSION['username']=='Administrador') {
+?>
+							<div class="form-check form-check-inline mb-2">
+								<input class="form-check-input" type="checkbox" name="do_not_recreate_storage_links" id="form-do_not_recreate_storage_links" value="1" onchange="if($(this).prop('checked')){$('#form-do_not_count_as_update').prop('checked',true);}">
+								<label class="form-check-label" for="form-do_not_recreate_storage_links">No recreïs els enllaços d'emmagatzematge</label>
+							</div>
+							<br />
+<?php
+		}
 	}
 ?>
 							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
