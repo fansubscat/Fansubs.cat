@@ -1,5 +1,5 @@
 <?php
-$header_title="Estadístiques - Els més populars del mes";
+$header_title="Estadístiques - Els més populars";
 $page="analytics";
 include("header.inc.php");
 require_once("common.inc.php");
@@ -18,8 +18,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$months = array_reverse($months, TRUE);
 
 	$selected_month = date('Y-m');
-	if (isset($_GET['month']) && preg_match('/\d\d\d\d-\d\d/', $_GET['month'])) {
-		$selected_month = $_GET['month'];
+	$first_month = $selected_month;
+	$last_month = $selected_month;
+	$selected_year = FALSE;
+	if (isset($_GET['month'])) {
+		if (preg_match('/^\d\d\d\d$/', $_GET['month'])) {
+			$selected_year = $_GET['month'];
+			$first_month = $_GET['month'].'-01';
+			$last_month = $_GET['month'].'-12';
+		} else if (preg_match('/^\d\d\d\d-\d\d$/', $_GET['month'])) {
+			$selected_month = $_GET['month'];
+			$first_month = $selected_month;
+			$last_month = $selected_month;
+		}
 	}
 	if (isset($_GET['amount']) && preg_match('/\d+/', $_GET['amount'])) {
 		$amount = $_GET['amount'];
@@ -39,18 +50,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Els més populars del mes</h4>
+					<h4 class="card-title text-center mb-4 mt-1">Els més populars</h4>
 					<hr>
-					<p class="text-center">Aquests són els animes i mangues més populars als portals, ordenats per nombre de visualitzacions.</p>
+					<p class="text-center">Aquests són els animes i mangues més populars als portals.</p>
 
 					<div class="row justify-content-center">
 						<div class="form-group p-3 mb-0">
-							<label for="month">Mes:</label>
+							<label for="month">Període:</label>
 							<select id="month" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;hide_hentai='+($('#hide_hentai').prop('checked') ? 1 : 0)+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val();">
 <?php
+	$current_year=0;
 	foreach ($months as $month => $values) {
+		if (explode('-',$month)[0]!=$current_year) {
+			$current_year=explode('-',$month)[0];
 ?>
-								<option value="<?php echo $month; ?>"<?php echo ($selected_month==$month) ? ' selected' : ''; ?>><?php echo $values; ?></option>
+								<option value="<?php echo $current_year; ?>"<?php echo ($selected_year==$current_year) ? ' selected' : ''; ?> style="font-weight: bold;">Any complet <?php echo $current_year; ?></option>
+<?php
+		}
+?>
+								<option value="<?php echo $month; ?>"<?php echo (empty($selected_year) && $selected_month==$month) ? ' selected' : ''; ?>><?php echo $values; ?></option>
 <?php
 	}
 ?>
@@ -82,7 +100,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))); ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo empty($selected_year) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : "Any complet ".$selected_year; ?></h4>
 					<hr>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
@@ -95,7 +113,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, l.version_id, s.id series_id, s.name series_name, s.rating rating FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id LEFT JOIN rel_version_fansub vf ON l.version_id=vf.version_id LEFT JOIN fansub f ON f.id=vf.fansub_id WHERE vi.day>='$selected_month-01' AND vi.day<='$selected_month-31' AND vi.views>0".($hide_hentai ? " AND (s.rating IS NULL OR s.rating<>'XXX')" : '')." AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY $type DESC, total_views DESC, a.series_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM  rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=l.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, l.version_id, s.id series_id, s.name series_name, s.rating rating FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($hide_hentai ? " AND (s.rating IS NULL OR s.rating<>'XXX')" : '')." AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY $type DESC, total_views DESC, a.series_name ASC LIMIT $amount");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -133,7 +151,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))); ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo empty($selected_year) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : "Any complet ".$selected_year; ?></h4>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
 							<tr>
@@ -145,7 +163,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.manga_id, a.manga_name, IFNULL(MAX(a.views),0) max_views, SUM(a.views) total_views, SUM(a.pages_read) time_spent, a.rating FROM (SELECT GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansubs, SUM(vi.views) views, SUM(vi.pages_read) pages_read, fi.manga_version_id, m.id manga_id, m.name manga_name, m.rating rating FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id LEFT JOIN rel_manga_version_fansub vf ON fi.manga_version_id=vf.manga_version_id LEFT JOIN fansub f ON f.id=vf.fansub_id WHERE vi.day>='$selected_month-01' AND vi.day<='$selected_month-31' AND vi.views>0".($hide_hentai ? " AND (m.rating IS NULL OR m.rating<>'XXX')" : '')." AND fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.manga_id ORDER BY $type DESC, total_views DESC, a.manga_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.manga_id, a.manga_name, IFNULL(MAX(a.views),0) max_views, SUM(a.views) total_views, SUM(a.pages_read) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_manga_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.manga_version_id=fi.manga_version_id) fansubs, SUM(vi.views) views, SUM(vi.pages_read) pages_read, fi.manga_version_id, m.id manga_id, m.name manga_name, m.rating rating FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id LEFT JOIN rel_manga_version_fansub vf ON fi.manga_version_id=vf.manga_version_id LEFT JOIN fansub f ON f.id=vf.fansub_id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($hide_hentai ? " AND (m.rating IS NULL OR m.rating<>'XXX')" : '')." AND fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.manga_id ORDER BY $type DESC, total_views DESC, a.manga_name ASC LIMIT $amount");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
