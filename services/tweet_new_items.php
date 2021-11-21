@@ -56,9 +56,9 @@ $new_manga_tweets = array(
 );
 
 $new_chapter_number_tweets = array(
-	'Ja hi ha disponible el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s» al web de manga.fansubs.cat!',
-	'S\'ha afegit el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s» al web de manga.fansubs.cat!',
-	'Ja podeu llegir el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s». al web de manga.fansubs.cat!'
+	'Ja hi ha disponible el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
+	'S\'ha afegit el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
+	'Ja podeu llegir el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!'
 );
 
 $new_chapter_number_no_name_tweets = array(
