@@ -145,7 +145,7 @@ ORDER BY MAX(a.views) DESC, a.manga_id ASC");
 
 for ($i=0;$i<count($sections);$i++){
 	if ($type[$i]=='advent') {
-		if (strcmp(date('Y-m-d H:i:s'),'2020-12-01 12:00:00')>=0 && strcmp(date('Y-m-d H:i:s'),'2020-12-25 23:59:59')<=0){
+		if (strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 23:59:59')<=0){
 ?>
 				<div class="section">
 					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
