@@ -1,18 +1,20 @@
 <?php
 require_once('config.inc.php');
 
+$year = 2021;
+
 function is_day_ready($day) {
 	global $releases;
 	$today = date('Y-m-d H:i:s');
 	if (!empty($_GET['twitter']) && !empty($_GET['currentday'])) {
-		$today = '2021-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
+		$today = $year.'-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
 	}
-	$target = '2021-12-'.sprintf('%02d', $day).' 12:00:00';
+	$target = $year.'-12-'.sprintf('%02d', $day).' 12:00:00';
 	return (strcmp($today,$target)>=0 && (!empty($releases[$day]) || !empty($_GET['twitter'])));
 }
 
-if (!empty($_COOKIE['advent_2021'])) {
-	$cookie=explode(',',$_COOKIE['advent_2021']);
+if (!empty($_COOKIE['advent_'.$year])) {
+	$cookie=explode(',',$_COOKIE['advent_'.$year]);
 } else {
 	$cookie=array();
 }
@@ -21,15 +23,16 @@ if (!empty($_COOKIE['advent_2021'])) {
 <html lang="ca">
 	<head>
 		<meta charset="UTF-8">
-		<title>Calendari d'advent - Fansubs.cat</title>
+		<title>Calendari d'advent <?php echo $year; ?> - Fansubs.cat</title>
 		<link href="https://fonts.googleapis.com/css?family=Kalam" rel="stylesheet">
 		<link rel="shortcut icon" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#888888" />
-		<meta property="og:title" content="Calendari d'advent - Fansubs.cat" />
-		<meta property="og:url" content="https://www.fansubs.cat/nadal/" />
-		<meta property="og:description" content="" />
-		<meta property="og:image" content="" />
+		<meta property="og:title" content="Calendari d'advent <?php echo $year; ?> - Fansubs.cat" />
+		<meta property="og:url" content="https://nadal.fansubs.cat/" />
+		<meta property="og:description" content="Segueix el calendari d'advent dels fansubs en català! Cada dia hi trobaràs un petit regalet en forma d'anime o manga editat en català!" />
+		<meta property="og:image" content="https://nadal.fansubs.cat/images/preview.jpg" />
+		<meta name="twitter:card" content="summary_large_image" />
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-13"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
@@ -44,7 +47,7 @@ if (!empty($_COOKIE['advent_2021'])) {
 					var openedDays = $.map($('.checkavailable:checked'), function(n, i){
 						return n.value;
 					}).join(',');
-					Cookies.set('advent_2021', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
+					Cookies.set('advent_<?php echo $year; ?>', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
 <?php
 if (!empty($_GET['twitter'])) {
 ?>
@@ -77,13 +80,13 @@ if (!empty($_GET['twitter'])) {
 		</script>
 		<style>
 			html, body {
-				min-height: 100%;
+				min-height: 100vh;
 			}
 			body {
 				background-image: url(images/background.jpg);
 				background-position: center center;
 				background-repeat: no-repeat;
-				background-color: #275e98;
+				background-color: #d7d7d7;
 				background-size: cover;
 				-webkit-touch-callout: none;
 				-webkit-user-select: none;
@@ -91,18 +94,32 @@ if (!empty($_GET['twitter'])) {
 				-moz-user-select: none;
 				-ms-user-select: none;
 				user-select: none;
+				margin: 0;
+				display: flex;
+			}
+
+			.container {
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				box-sizing: border-box;
+				padding: 0 8px;
 			}
 
 			/* title graphic */
 			.title {
 				display: flex;
-				align-items: center;
+				align-items: end;
 				justify-content: center;
 			}
 
 			.title img {
 				width: 100%;
 				height: auto;
+				margin-bottom: 0;
+				margin-top: auto;
 			}
 
 			/* mobile first grid layout */
@@ -110,7 +127,7 @@ if (!empty($_GET['twitter'])) {
 				display: grid;
 				width: 96%;
 				max-width: 900px;
-				margin: 2% auto;
+				margin: 2em auto;
 
 				grid-template-columns: repeat(3, 1fr);
 				grid-template-rows: auto;
@@ -125,19 +142,21 @@ if (!empty($_GET['twitter'])) {
 					"d13      d3      d15"
 					"d6       d17     d8"
 					"d19      d24     d21";
+			}
+
+			/* media query */
+			@media only screen and (min-width: 720px) {
+				body {
+					background-size: unset;
 				}
-
-				/* media query */
-				@media only screen and (min-width: 600px) {
-
 				.grid-1 {
-				grid-template-columns: repeat(6, 1fr);
-				grid-template-areas: "t     t     t     d2      d7      d8"
-					"t     t     t     d4      d11     d12"
-					"t     t     t     d19     d9      d13"
-					"d6    d1    d24   d24     d21     d20"
-					"d17   d18   d24   d24     d5      d22"
-					"d3    d23   d16   d14     d10     d15";
+					grid-template-columns: repeat(6, 1fr);
+					grid-template-areas: "d9      d23      d15     t     t     t"
+						"d8      d18     d11     t     t     t"
+						"d16     d12      d17     t     t     t"
+						"d3    d14    d24   d24     d21     d6"
+						"d5   d10   d24   d24     d4      d20"
+						"d19    d7   d2   d13     d1     d22";
 				}
 
 			}
@@ -243,9 +262,10 @@ if (!empty($_GET['twitter'])) {
 				text-align: center;
 				color: white;
 				font-family: sans-serif;
-				font-size: 0.8em;
+				font-size: 1em;
 				font-weight: bold;
-				text-shadow: 0 0.1em black;
+				text-shadow: 0.1em 0.1em black;
+				padding-bottom: 8px;
 			}
 
 			.previous a{
@@ -272,42 +292,44 @@ for ($i=1;$i<25;$i++){
 		</style>
 	</head>
 	<body>
-		<div class="grid-1">
-			<div class="title">
-				<img src="images/logo.png" alt="Calendari d'advent dels fansubs en català">
-			</div>
+		<div class="container">
+			<div class="grid-1">
+				<div class="title">
+					<img src="images/logo.png" alt="Calendari d'advent dels fansubs en català">
+				</div>
 <?php
 for ($i=1;$i<25;$i++){
 ?>
-			<div class="day-<?php echo $i; ?>">
-				<label>
-					<input type="checkbox"<?php echo is_day_ready($i) ? ' class="checkavailable"' : 'disabled'; ?> value="<?php echo $i; ?>"<?php echo ((is_day_ready($i) && in_array($i,$cookie) && empty($_GET['currentday'])) || !empty($_GET['twitter']) && $_GET['currentday']>$i) ? ' checked' : ''; ?> />
-					<span class="door<?php echo is_day_ready($i) ? ' dooravailable' : ''; ?>">
-						<span class="front<?php echo is_day_ready($i) ? ' available' : ''; ?>"><?php echo $i; ?></span>
-						<span class="back" id="<?php echo $i; ?>">
+				<div class="day-<?php echo $i; ?>">
+					<label>
+						<input type="checkbox"<?php echo is_day_ready($i) ? ' class="checkavailable"' : 'disabled'; ?> value="<?php echo $i; ?>"<?php echo ((is_day_ready($i) && in_array($i,$cookie) && empty($_GET['currentday'])) || !empty($_GET['twitter']) && $_GET['currentday']>$i) ? ' checked' : ''; ?> />
+						<span class="door<?php echo is_day_ready($i) ? ' dooravailable' : ''; ?>">
+							<span class="front<?php echo is_day_ready($i) ? ' available' : ''; ?>"><?php echo $i; ?></span>
+							<span class="back" id="<?php echo $i; ?>">
 <?php
 	if (is_day_ready($i)) {
 ?>
-							<a class="link" href="<?php echo empty($_GET['twitter']) ? $releases[$i] : '#'; ?>"<?php echo empty($_GET['twitter']) ? ' target="_blank"' : ''; ?>></a>
+								<a class="link" href="<?php echo empty($_GET['twitter']) ? $releases[$i] : '#'; ?>"<?php echo empty($_GET['twitter']) ? ' target="_blank"' : ''; ?>></a>
 <?php
 	}
 ?>
+							</span>
 						</span>
-					</span>
-				</label>
+					</label>
+				</div>
+<?php
+}
+?>
+			</div>
+<?php
+if (empty($_GET['twitter'])){
+?>
+			<div class="previous">
+				Edicions anteriors: <a href="/2020/">2020</a>
 			</div>
 <?php
 }
 ?>
 		</div>
-<?php
-if (empty($_GET['twitter'])){
-?>
-		<div class="previous">
-			Edicions anteriors: <a href="/2020/">2020</a>
-		</div>
-<?php
-}
-?>
 	</body>
 </html>
