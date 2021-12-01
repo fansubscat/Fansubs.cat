@@ -4,7 +4,7 @@ require_once('config.inc.php');
 $year = 2021;
 
 function is_day_ready($day) {
-	global $releases;
+	global $releases, $year;
 	$today = date('Y-m-d H:i:s');
 	if (!empty($_GET['twitter']) && !empty($_GET['currentday'])) {
 		$today = $year.'-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
