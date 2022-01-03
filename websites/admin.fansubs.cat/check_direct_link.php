@@ -5,7 +5,7 @@ function get_storage_url($url) {
 	global $storages;
 	if (count($storages)>0 && strpos($url, "storage://")===0) {
 		//Always the first storage
-		return generate_storage_url(str_replace("storage://", $storages[0], $url));
+		return generate_storage_url(str_replace("storage://", $storages[0]['base_url'], $url));
 	} else {
 		return $url;
 	}

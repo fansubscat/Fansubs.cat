@@ -23,7 +23,16 @@ $password_salt='YOUR_PASSWORD_SALT_HERE';
 $site_message="";
 
 //Storages
-$storages = array();
+$storages = array(
+	//Array of arrays, example:
+//	array(
+//		'hostname' => 'whatever.xyz',
+//		'base_url' => 'https://www.whatever.xyz/files/',
+//		'api_url' => 'https://whatever.api/endpoint/',
+//		'api_username' => 'my_user',
+//		'api_password' => 'my_password'
+//	)
+);
 
 //Storage URL customization
 function generate_storage_url($url) {
