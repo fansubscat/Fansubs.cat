@@ -309,7 +309,7 @@ for ($i=1;$i<25;$i++){
 <?php
 	if (is_day_ready($i)) {
 ?>
-								<a class="link" href="<?php echo empty($_GET['twitter']) ? $releases[$i] : '#'; ?>"<?php echo empty($_GET['twitter']) ? ' target="_blank"' : ''; ?>></a>
+								<a class="link" href="<?php echo empty($_GET['twitter']) ? $releases[$i] : '#'; ?>"<?php echo (empty($_GET['twitter']) || strpos($releases[$day],'javascript:')!==0) ? ' target="_blank"' : ''; ?>></a>
 <?php
 	}
 ?>
