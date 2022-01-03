@@ -148,6 +148,7 @@ function get_storage_url($url) {
 }
 
 function filter_link_instances($link_instances){
+	global $storages;
 	$methods = array();
 	$links_mega = array();
 	$links_googledrive = array();
@@ -171,7 +172,7 @@ function filter_link_instances($link_instances){
 	//This establishes the preferences order:
 	//Storage > Direct video > Google Drive > YouTube > MEGA
 
-	if (count($links_storage)>0) {
+	if (count($links_storage)>0 && count($storages)>0) {
 		return $links_storage;
 	}
 
