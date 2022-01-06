@@ -1215,6 +1215,17 @@ function checkNumberOfLinks() {
 		}
 	}
 
+	var urls = $('[id$=-url]');
+	for (var i=0;i<urls.length;i++) {
+		if (urls[i].value!='') {
+			var resolution = $('#'+urls[i].id.replace('-url','-resolution'));
+			if (resolution.val()=='' || resolution.val()=='null' || (!resolution.val().includes('p') && !resolution.val().includes('x'))) {
+				alert("Si introdueixes una URL per a un capítol, cal que també n'especifiquis la resolució.\nLa resolució ha de tenir format '1234p' o '1234x1234'.");
+				return false;
+			}
+		}
+	}
+
 	return true;
 }
 
