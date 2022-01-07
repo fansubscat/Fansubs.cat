@@ -721,45 +721,47 @@ function addVersionFolderRow() {
 }
 
 function deleteVersionRow(episode_id, id) {
-	var i = parseInt($('#links-list-table-'+episode_id).attr('data-count'));
-	if(i==1) {
-		$("#form-links-list-"+episode_id+"-id-1").val("-1");
-		$("#form-links-list-"+episode_id+"-comments-1").val("");
-		$("#form-links-list-"+episode_id+"-lost-1").prop('checked',false);
-		var numInstances = parseInt($('#links-instance-list-table-'+episode_id+'-1').attr('data-count'));
-		for (var k=numInstances;k>0;k--) {
-			deleteLinkInstanceRow(episode_id,1,k);
-		}
-	}
-	else {
-		$("#form-links-list-"+episode_id+"-row-"+id).remove();
-		for (var j=id+1;j<i+1;j++) {
-			$("#form-links-list-"+episode_id+"-row-"+j).attr('id','form-links-list-'+episode_id+'-row-'+(j-1));
-			$("#form-links-list-"+episode_id+"-id-"+j).attr('name','form-links-list-'+episode_id+'-id-'+(j-1));
-			$("#form-links-list-"+episode_id+"-id-"+j).attr('id','form-links-list-'+episode_id+'-id-'+(j-1));
-			$("#form-links-list-"+episode_id+"-variant_name-"+j).attr('name','form-links-list-'+episode_id+'-variant_name-'+(j-1));
-			$("#form-links-list-"+episode_id+"-variant_name-"+j).attr('id','form-links-list-'+episode_id+'-variant_name-'+(j-1));
-			$("#form-links-list-"+episode_id+"-comments-"+j).attr('name','form-links-list-'+episode_id+'-comments-'+(j-1));
-			$("#form-links-list-"+episode_id+"-comments-"+j).attr('id','form-links-list-'+episode_id+'-comments-'+(j-1));
-			$("#form-links-list-"+episode_id+"-lost-"+j).attr('name','form-links-list-'+episode_id+'-lost-'+(j-1));
-			$("#form-links-list-"+episode_id+"-lost-"+j).attr('id','form-links-list-'+episode_id+'-lost-'+(j-1));
-			$("#form-links-list-"+episode_id+"-delete-"+j).attr('onclick','deleteVersionRow('+episode_id+','+(j-1)+');');
-			$("#form-links-list-"+episode_id+"-delete-"+j).attr('id','form-links-list-'+episode_id+'-delete-'+(j-1));
-			$("#links-instance-list-table-"+episode_id+"-"+j).attr('id','links-instance-list-table-'+episode_id+'-'+(j-1));
-			var numInstances = parseInt($('#links-instance-list-table-'+episode_id+'-'+(j-1)).attr('data-count'));
-			for (var k=1;k<numInstances+1;k++) {
-				$("#form-instance-links-list-"+episode_id+"-row-"+j+"-"+k).attr('id','form-instance-links-list-'+episode_id+'-row-'+(j-1)+'-'+k);
-				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-url").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-url");
-				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-url").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-url");
-				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-id").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-id");
-				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-id").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-id");
-				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-resolution").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-resolution");
-				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-resolution").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-resolution");
-				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-delete").attr('onclick','deleteLinkInstanceRow('+episode_id+','+(j-1)+','+k+');');
-				$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-delete").attr('id','form-links-list-'+episode_id+"-link-"+(j-1)+"-instance-"+k+"-delete");
+	if ($("#form-links-list-"+episode_id+"-id-"+id).val()=='-1' || ($("#form-links-list-"+episode_id+"-id-"+id).val()!='-1' && confirm("Segur que vols esborrar aquest capítol? Se'n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, simplement canvia'n l'enllaç."))) {
+		var i = parseInt($('#links-list-table-'+episode_id).attr('data-count'));
+		if(i==1) {
+			$("#form-links-list-"+episode_id+"-id-1").val("-1");
+			$("#form-links-list-"+episode_id+"-comments-1").val("");
+			$("#form-links-list-"+episode_id+"-lost-1").prop('checked',false);
+			var numInstances = parseInt($('#links-instance-list-table-'+episode_id+'-1').attr('data-count'));
+			for (var k=numInstances;k>0;k--) {
+				deleteLinkInstanceRow(episode_id,1,k);
 			}
 		}
-		$('#links-list-table-'+episode_id).attr('data-count', i-1);
+		else {
+			$("#form-links-list-"+episode_id+"-row-"+id).remove();
+			for (var j=id+1;j<i+1;j++) {
+				$("#form-links-list-"+episode_id+"-row-"+j).attr('id','form-links-list-'+episode_id+'-row-'+(j-1));
+				$("#form-links-list-"+episode_id+"-id-"+j).attr('name','form-links-list-'+episode_id+'-id-'+(j-1));
+				$("#form-links-list-"+episode_id+"-id-"+j).attr('id','form-links-list-'+episode_id+'-id-'+(j-1));
+				$("#form-links-list-"+episode_id+"-variant_name-"+j).attr('name','form-links-list-'+episode_id+'-variant_name-'+(j-1));
+				$("#form-links-list-"+episode_id+"-variant_name-"+j).attr('id','form-links-list-'+episode_id+'-variant_name-'+(j-1));
+				$("#form-links-list-"+episode_id+"-comments-"+j).attr('name','form-links-list-'+episode_id+'-comments-'+(j-1));
+				$("#form-links-list-"+episode_id+"-comments-"+j).attr('id','form-links-list-'+episode_id+'-comments-'+(j-1));
+				$("#form-links-list-"+episode_id+"-lost-"+j).attr('name','form-links-list-'+episode_id+'-lost-'+(j-1));
+				$("#form-links-list-"+episode_id+"-lost-"+j).attr('id','form-links-list-'+episode_id+'-lost-'+(j-1));
+				$("#form-links-list-"+episode_id+"-delete-"+j).attr('onclick','deleteVersionRow('+episode_id+','+(j-1)+');');
+				$("#form-links-list-"+episode_id+"-delete-"+j).attr('id','form-links-list-'+episode_id+'-delete-'+(j-1));
+				$("#links-instance-list-table-"+episode_id+"-"+j).attr('id','links-instance-list-table-'+episode_id+'-'+(j-1));
+				var numInstances = parseInt($('#links-instance-list-table-'+episode_id+'-'+(j-1)).attr('data-count'));
+				for (var k=1;k<numInstances+1;k++) {
+					$("#form-instance-links-list-"+episode_id+"-row-"+j+"-"+k).attr('id','form-instance-links-list-'+episode_id+'-row-'+(j-1)+'-'+k);
+					$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-url").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-url");
+					$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-url").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-url");
+					$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-id").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-id");
+					$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-id").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-id");
+					$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-resolution").attr('name', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-resolution");
+					$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-resolution").attr('id', "form-links-list-"+episode_id+"-link-"+(j-1)+"-instance-"+k+"-resolution");
+					$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-delete").attr('onclick','deleteLinkInstanceRow('+episode_id+','+(j-1)+','+k+');');
+					$("#form-links-list-"+episode_id+"-link-"+j+"-instance-"+k+"-delete").attr('id','form-links-list-'+episode_id+"-link-"+(j-1)+"-instance-"+k+"-delete");
+				}
+			}
+			$('#links-list-table-'+episode_id).attr('data-count', i-1);
+		}
 	}
 }
 
@@ -814,97 +816,103 @@ function deleteExtraLinkInstanceRow(extra_number, id) {
 }
 
 function deleteVersionExtraRow(id) {
-	var i = parseInt($('#extras-list-table').attr('data-count'));
-	$("#form-extras-list-row-"+id).remove();
-	for (var j=id+1;j<i+1;j++) {
-		$("#form-extras-list-row-"+j).attr('id','form-extras-list-row-'+(j-1));
-		$("#form-extras-list-id-"+j).attr('name','form-extras-list-id-'+(j-1));
-		$("#form-extras-list-id-"+j).attr('id','form-extras-list-id-'+(j-1));
-		$("#form-extras-list-name-"+j).attr('name','form-extras-list-name-'+(j-1));
-		$("#form-extras-list-name-"+j).attr('id','form-extras-list-name-'+(j-1));
-		$("#form-extras-list-comments-"+j).attr('name','form-extras-list-comments-'+(j-1));
-		$("#form-extras-list-comments-"+j).attr('id','form-extras-list-comments-'+(j-1));
-		$("#form-extras-list-delete-"+j).attr('onclick','deleteVersionExtraRow('+(j-1)+');');
-		$("#form-extras-list-delete-"+j).attr('id','form-extras-list-delete-'+(j-1));
-		$("#extras-instance-list-table-"+j).attr('id','extras-instance-list-table-'+(j-1));
-		var numInstances = parseInt($('#extras-instance-list-table-'+(j-1)).attr('data-count'));
-		for (var k=1;k<numInstances+1;k++) {
-			$("#form-instance-extras-list-row-"+j+"-"+k).attr('id','form-instance-extras-list-row-'+(j-1)+'-'+k);
-			$("#form-extras-list-"+j+"-instance-"+k+"-url").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-url");
-			$("#form-extras-list-"+j+"-instance-"+k+"-url").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-url");
-			$("#form-extras-list-"+j+"-instance-"+k+"-id").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-id");
-			$("#form-extras-list-"+j+"-instance-"+k+"-id").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-id");
-			$("#form-extras-list-"+j+"-instance-"+k+"-resolution").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-resolution");
-			$("#form-extras-list-"+j+"-instance-"+k+"-resolution").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-resolution");
-			$("#form-extras-list-"+j+"-instance-"+k+"-delete").attr('onclick','deleteExtraLinkInstanceRow('+(j-1)+','+k+');');
-			$("#form-extras-list-"+j+"-instance-"+k+"-delete").attr('id',"form-extras-list-"+(j-1)+"-instance-"+k+"-delete");
+	if ($("#form-extras-list-id-"+id).val()=='-1' || ($("#form-extras-list-id-"+id).val()!='-1' && confirm("Segur que vols esborrar aquest extra? Se'n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, simplement canvia'n l'enllaç."))) {
+		var i = parseInt($('#extras-list-table').attr('data-count'));
+		$("#form-extras-list-row-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-extras-list-row-"+j).attr('id','form-extras-list-row-'+(j-1));
+			$("#form-extras-list-id-"+j).attr('name','form-extras-list-id-'+(j-1));
+			$("#form-extras-list-id-"+j).attr('id','form-extras-list-id-'+(j-1));
+			$("#form-extras-list-name-"+j).attr('name','form-extras-list-name-'+(j-1));
+			$("#form-extras-list-name-"+j).attr('id','form-extras-list-name-'+(j-1));
+			$("#form-extras-list-comments-"+j).attr('name','form-extras-list-comments-'+(j-1));
+			$("#form-extras-list-comments-"+j).attr('id','form-extras-list-comments-'+(j-1));
+			$("#form-extras-list-delete-"+j).attr('onclick','deleteVersionExtraRow('+(j-1)+');');
+			$("#form-extras-list-delete-"+j).attr('id','form-extras-list-delete-'+(j-1));
+			$("#extras-instance-list-table-"+j).attr('id','extras-instance-list-table-'+(j-1));
+			var numInstances = parseInt($('#extras-instance-list-table-'+(j-1)).attr('data-count'));
+			for (var k=1;k<numInstances+1;k++) {
+				$("#form-instance-extras-list-row-"+j+"-"+k).attr('id','form-instance-extras-list-row-'+(j-1)+'-'+k);
+				$("#form-extras-list-"+j+"-instance-"+k+"-url").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-url");
+				$("#form-extras-list-"+j+"-instance-"+k+"-url").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-url");
+				$("#form-extras-list-"+j+"-instance-"+k+"-id").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-id");
+				$("#form-extras-list-"+j+"-instance-"+k+"-id").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-id");
+				$("#form-extras-list-"+j+"-instance-"+k+"-resolution").attr('name', "form-extras-list-"+(j-1)+"-instance-"+k+"-resolution");
+				$("#form-extras-list-"+j+"-instance-"+k+"-resolution").attr('id', "form-extras-list-"+(j-1)+"-instance-"+k+"-resolution");
+				$("#form-extras-list-"+j+"-instance-"+k+"-delete").attr('onclick','deleteExtraLinkInstanceRow('+(j-1)+','+k+');');
+				$("#form-extras-list-"+j+"-instance-"+k+"-delete").attr('id',"form-extras-list-"+(j-1)+"-instance-"+k+"-delete");
+			}
 		}
-	}
-	$('#extras-list-table').attr('data-count', i-1);
+		$('#extras-list-table').attr('data-count', i-1);
 
-	if (i-1==0) {
-		$('#extras-list-table-empty').removeClass('d-none');
+		if (i-1==0) {
+			$('#extras-list-table-empty').removeClass('d-none');
+		}
 	}
 }
 
 function deleteFileRow(chapter_id, id) {
-	var i = parseInt($('#files-list-table-'+chapter_id).attr('data-count'));
-	if(i==1) {
-		$("#form-files-list-"+chapter_id+"-id-1").val("-1");
-		$("#form-files-list-"+chapter_id+"-file-1").val("");
-		$("#form-files-list-"+chapter_id+"-variant_name-1").val("");
-		$('label[for="form-files-list-'+chapter_id+'-file-1"]').removeClass("btn-warning");
-		$('label[for="form-files-list-'+chapter_id+'-file-1"]').addClass("btn-info");
-		$('label[for="form-files-list-'+chapter_id+'-file-1"]').html('<span class="fa fa-upload pr-2"></span> Puja un fitxer...');
-		$("#form-files-list-"+chapter_id+"-file_details-1").html('<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>');
-		$("#form-files-list-"+chapter_id+"-comments-1").val("");
-		$("#form-files-list-"+chapter_id+"-lost-1").prop('checked',false);
-	}
-	else {
-		$("#form-files-list-"+chapter_id+"-row-"+id).remove();
-		for (var j=id+1;j<i+1;j++) {
-			$("#form-files-list-"+chapter_id+"-row-"+j).attr('id','form-files-list-'+chapter_id+'-row-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-id-"+j).attr('name','form-files-list-'+chapter_id+'-id-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-id-"+j).attr('id','form-files-list-'+chapter_id+'-id-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-variant_name-"+j).attr('name','form-files-list-'+chapter_id+'-variant_name-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-variant_name-"+j).attr('id','form-files-list-'+chapter_id+'-variant_name-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-file-"+j).attr('name','form-files-list-'+chapter_id+'-file-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-file-"+j).attr('id','form-files-list-'+chapter_id+'-file-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-file_details-"+j).attr('name','form-files-list-'+chapter_id+'-file_details-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-file_details-"+j).attr('id','form-files-list-'+chapter_id+'-file_details-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-comments-"+j).attr('name','form-files-list-'+chapter_id+'-comments-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-comments-"+j).attr('id','form-files-list-'+chapter_id+'-comments-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-lost-"+j).attr('name','form-files-list-'+chapter_id+'-lost-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-lost-"+j).attr('id','form-files-list-'+chapter_id+'-lost-'+(j-1));
-			$("#form-files-list-"+chapter_id+"-delete-"+j).attr('onclick','deleteFileRow('+chapter_id+','+(j-1)+');');
-			$("#form-files-list-"+chapter_id+"-delete-"+j).attr('id','form-files-list-'+chapter_id+'-delete-'+(j-1));
+	if ($("#form-files-list-"+chapter_id+"-id-"+id).val()=='-1' || ($("#form-files-list-"+chapter_id+"-id-"+id).val()!='-1' && confirm("Segur que vols esborrar aquest fitxer? Se'n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, fes servir el botó 'Canvia el fitxer'."))) {
+		var i = parseInt($('#files-list-table-'+chapter_id).attr('data-count'));
+		if(i==1) {
+			$("#form-files-list-"+chapter_id+"-id-1").val("-1");
+			$("#form-files-list-"+chapter_id+"-file-1").val("");
+			$("#form-files-list-"+chapter_id+"-variant_name-1").val("");
+			$('label[for="form-files-list-'+chapter_id+'-file-1"]').removeClass("btn-warning");
+			$('label[for="form-files-list-'+chapter_id+'-file-1"]').addClass("btn-info");
+			$('label[for="form-files-list-'+chapter_id+'-file-1"]').html('<span class="fa fa-upload pr-2"></span> Puja un fitxer...');
+			$("#form-files-list-"+chapter_id+"-file_details-1").html('<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>');
+			$("#form-files-list-"+chapter_id+"-comments-1").val("");
+			$("#form-files-list-"+chapter_id+"-lost-1").prop('checked',false);
 		}
-		$('#files-list-table-'+chapter_id).attr('data-count', i-1);
+		else {
+			$("#form-files-list-"+chapter_id+"-row-"+id).remove();
+			for (var j=id+1;j<i+1;j++) {
+				$("#form-files-list-"+chapter_id+"-row-"+j).attr('id','form-files-list-'+chapter_id+'-row-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-id-"+j).attr('name','form-files-list-'+chapter_id+'-id-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-id-"+j).attr('id','form-files-list-'+chapter_id+'-id-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-variant_name-"+j).attr('name','form-files-list-'+chapter_id+'-variant_name-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-variant_name-"+j).attr('id','form-files-list-'+chapter_id+'-variant_name-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-file-"+j).attr('name','form-files-list-'+chapter_id+'-file-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-file-"+j).attr('id','form-files-list-'+chapter_id+'-file-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-file_details-"+j).attr('name','form-files-list-'+chapter_id+'-file_details-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-file_details-"+j).attr('id','form-files-list-'+chapter_id+'-file_details-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-comments-"+j).attr('name','form-files-list-'+chapter_id+'-comments-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-comments-"+j).attr('id','form-files-list-'+chapter_id+'-comments-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-lost-"+j).attr('name','form-files-list-'+chapter_id+'-lost-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-lost-"+j).attr('id','form-files-list-'+chapter_id+'-lost-'+(j-1));
+				$("#form-files-list-"+chapter_id+"-delete-"+j).attr('onclick','deleteFileRow('+chapter_id+','+(j-1)+');');
+				$("#form-files-list-"+chapter_id+"-delete-"+j).attr('id','form-files-list-'+chapter_id+'-delete-'+(j-1));
+			}
+			$('#files-list-table-'+chapter_id).attr('data-count', i-1);
+		}
 	}
 }
 
 function deleteFileExtraRow(id) {
-	var i = parseInt($('#extras-list-table').attr('data-count'));
-	$("#form-extras-list-row-"+id).remove();
-	for (var j=id+1;j<i+1;j++) {
-		$("#form-extras-list-row-"+j).attr('id','form-extras-list-row-'+(j-1));
-		$("#form-extras-list-id-"+j).attr('name','form-extras-list-id-'+(j-1));
-		$("#form-extras-list-id-"+j).attr('id','form-extras-list-id-'+(j-1));
-		$("#form-extras-list-name-"+j).attr('name','form-extras-list-name-'+(j-1));
-		$("#form-extras-list-name-"+j).attr('id','form-extras-list-name-'+(j-1));
-		$("#form-extras-list-file-"+j).attr('name','form-extras-list-file-'+(j-1));
-		$("#form-extras-list-file-"+j).attr('id','form-extras-list-file-'+(j-1));
-		$("#form-extras-list-file_details-"+j).attr('name','form-extras-list-file_details-'+(j-1));
-		$("#form-extras-list-file_details-"+j).attr('id','form-extras-list-file_details-'+(j-1));
-		$("#form-extras-list-comments-"+j).attr('name','form-extras-list-comments-'+(j-1));
-		$("#form-extras-list-comments-"+j).attr('id','form-extras-list-comments-'+(j-1));
-		$("#form-extras-list-delete-"+j).attr('onclick','deleteFileExtraRow('+(j-1)+');');
-		$("#form-extras-list-delete-"+j).attr('id','form-extras-list-delete-'+(j-1));
-	}
-	$('#extras-list-table').attr('data-count', i-1);
+	if ($("#form-extras-list-id-"+id).val()=='-1' || ($("#form-extras-list-id-"+id).val()!='-1' && confirm("Segur que vols esborrar aquest fitxer extra? Se'n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, fes servir el botó 'Canvia el fitxer'."))) {
+		var i = parseInt($('#extras-list-table').attr('data-count'));
+		$("#form-extras-list-row-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-extras-list-row-"+j).attr('id','form-extras-list-row-'+(j-1));
+			$("#form-extras-list-id-"+j).attr('name','form-extras-list-id-'+(j-1));
+			$("#form-extras-list-id-"+j).attr('id','form-extras-list-id-'+(j-1));
+			$("#form-extras-list-name-"+j).attr('name','form-extras-list-name-'+(j-1));
+			$("#form-extras-list-name-"+j).attr('id','form-extras-list-name-'+(j-1));
+			$("#form-extras-list-file-"+j).attr('name','form-extras-list-file-'+(j-1));
+			$("#form-extras-list-file-"+j).attr('id','form-extras-list-file-'+(j-1));
+			$("#form-extras-list-file_details-"+j).attr('name','form-extras-list-file_details-'+(j-1));
+			$("#form-extras-list-file_details-"+j).attr('id','form-extras-list-file_details-'+(j-1));
+			$("#form-extras-list-comments-"+j).attr('name','form-extras-list-comments-'+(j-1));
+			$("#form-extras-list-comments-"+j).attr('id','form-extras-list-comments-'+(j-1));
+			$("#form-extras-list-delete-"+j).attr('onclick','deleteFileExtraRow('+(j-1)+');');
+			$("#form-extras-list-delete-"+j).attr('id','form-extras-list-delete-'+(j-1));
+		}
+		$('#extras-list-table').attr('data-count', i-1);
 
-	if (i-1==0) {
-		$('#extras-list-table-empty').removeClass('d-none');
+		if (i-1==0) {
+			$('#extras-list-table-empty').removeClass('d-none');
+		}
 	}
 }
 
