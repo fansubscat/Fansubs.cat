@@ -255,7 +255,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$resultcr = query("SELECT * FROM file WHERE id=".$file['id']);
 					if ($current_file = mysqli_fetch_assoc($resultcr)) {
 						query("UPDATE file SET ".($file['original_filename']!='NULL' ? "original_filename=".$file['original_filename'].",number_of_pages=".$file['number_of_pages']."," : "")."variant_name=".$file['variant_name'].",comments=".$file['comments']." WHERE id=".$file['id']);
-						if (empty($_POST['do_not_count_as_update']) && (empty($current_file['original_filename']) ? "NULL" : "'".escape($current_file['original_filename'])."'")!=$file['original_filename']) {
+						if (empty($_POST['do_not_count_as_update']) && $file['original_filename']!='NULL' && (empty($current_file['original_filename']) ? "NULL" : "'".escape($current_file['original_filename'])."'")!=$file['original_filename']) {
 							query("UPDATE manga_version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 							if (empty($current_file['original_filename']) && $file['original_filename']!='NULL') {
 								query("UPDATE file SET created=CURRENT_TIMESTAMP WHERE id=".$file['id']);
@@ -288,7 +288,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$resultcr = query("SELECT * FROM file WHERE id=".$extra['id']);
 					if ($current_extra = mysqli_fetch_assoc($resultcr)) {
 						query("UPDATE file SET extra_name='".$extra['name']."',".($extra['original_filename']!=NULL ? "original_filename='".$extra['original_filename']."'," : "")."number_of_pages=".$extra['number_of_pages'].",comments=".$extra['comments']." WHERE id=".$extra['id']);
-						if (empty($_POST['do_not_count_as_update']) && (empty($current_extra['original_filename']) ? NULL : escape($current_extra['original_filename']))!=$extra['original_filename']) {
+						if (empty($_POST['do_not_count_as_update']) && $extra['original_filename']!='NULL'  && (empty($current_extra['original_filename']) ? NULL : escape($current_extra['original_filename']))!=$extra['original_filename']) {
 							query("UPDATE manga_version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 						}
 					}
