@@ -50,7 +50,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo $row['username']; ?></th>
 								<td class="align-middle text-center"><?php echo $row['admin_level']; ?></td>
 								<td class="align-middle text-center"><?php echo $row['fansub_name']!=NULL ? $row['fansub_name'] : '-'; ?></td>
-								<td class="align-middle text-center"><a href="user_edit.php?id=<?php echo $row['username']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="user_list.php?delete_id=<?php echo $row['username']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir l'usuari '".$row['username']."'? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="user_edit.php?id=<?php echo $row['username']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="user_list.php?delete_id=<?php echo $row['username']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir l'usuari '".$row['username']."'? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}
