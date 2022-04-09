@@ -43,54 +43,54 @@ function copyToClipboard(text, el) {
 	}
 }
 
-function populateMalData(data, staff) {
+function populateMalData(response, staffResponse) {
 	if ($("#form-name-with-autocomplete").val()=='') {
-		$("#form-name-with-autocomplete").val(data.title);
+		$("#form-name-with-autocomplete").val(response.data.title);
 	}
 	if ($("#form-slug").val()=='') {
-		$("#form-slug").val(string_to_slug(data.title));
+		$("#form-slug").val(string_to_slug(response.data.title));
 	}
 	if ($("#form-alternate_names").val()=='') {
-		if (data.title && data.title_english && data.title_english!=data.title) {
-			$("#form-alternate_names").val(data.title+', '+data.title_english);
-		} else if (data.title) {
-			$("#form-alternate_names").val(data.title);
-		} else if (data.title_english) {
-			$("#form-alternate_names").val(data.title_english);
+		if (response.data.title && response.data.title_english && response.data.title_english!=response.data.title) {
+			$("#form-alternate_names").val(response.data.title+', '+response.data.title_english);
+		} else if (response.data.title) {
+			$("#form-alternate_names").val(response.data.title);
+		} else if (response.data.title_english) {
+			$("#form-alternate_names").val(response.data.title_english);
 		}
 	}
 	if ($("#form-score").val()=='') {
-		$("#form-score").val(data.score ? data.score : '');
+		$("#form-score").val(response.data.score ? response.data.score : '');
 	}
 	if ($("#form-type").val()=='') {
-		$("#form-type").val(data.episodes==1 ? 'movie' : 'series');
+		$("#form-type").val(response.data.episodes==1 ? 'movie' : 'series');
 	}
 	if ($("#form-air_date").val()=='') {
-		$("#form-air_date").val(data.aired.from.substr(0, 10));
+		$("#form-air_date").val(response.data.aired.from.substr(0, 10));
 	}
-	if (data.rating=='G - All Ages') {
+	if (response.data.rating=='G - All Ages') {
 		$("#form-rating").val('TP');
-	} else if (data.rating=='PG - Children') {
+	} else if (response.data.rating=='PG - Children') {
 		$("#form-rating").val('+7');
-	} else if (data.rating=='PG-13 - Teens 13 or older') {
+	} else if (response.data.rating=='PG-13 - Teens 13 or older') {
 		$("#form-rating").val('+13');
-	} else if (data.rating=='R - 17+ (violence & profanity)') {
+	} else if (response.data.rating=='R - 17+ (violence & profanity)') {
 		$("#form-rating").val('+16');
-	} else if (data.rating=='R+ - Mild Nudity') {
+	} else if (response.data.rating=='R+ - Mild Nudity') {
 		$("#form-rating").val('+18');
-	} else if (data.rating=='Rx - Hentai') {
+	} else if (response.data.rating=='Rx - Hentai') {
 		$("#form-rating").val('XXX');
 	} else {
 		$("#form-rating").val('');
 	}
 	if ($("#form-synopsis").val()=='') {
-		$("#form-synopsis").val(data.synopsis);
+		$("#form-synopsis").val(response.data.synopsis);
 	}
 	if ($("#form-duration").val()=='') {
-		$("#form-duration").val(data.duration ? data.duration.replace('per ep','per capítol').replace('hr','h') : data.duration);
+		$("#form-duration").val(response.data.duration ? response.data.duration.replace('per ep','per capítol').replace('hr','h').replace('Unknown','') : null);
 	}
 
-	var url = data.image_url ? data.image_url.replace(".jpg","l.jpg") : data.image_url;
+	var url = (response.data.images && response.data.images.jpg && response.data.images.jpg.large_image_url) ? response.data.images.jpg.large_image_url : null;
 	if (document.getElementById('form-image').files.length>0) {
 		resetFileInput($("#form-image"));
 	}
@@ -98,7 +98,7 @@ function populateMalData(data, staff) {
 	$('#form-image-preview').prop('src', url);
 	$('#form-image-preview-link').prop('href', url);
 
-	if (data.episodes==1) {
+	if (response.data.episodes==1) {
 		//Movie, populate first episode
 		if ($('#form-episode-list-name-1').val()=='') {
 			$('#form-episode-list-name-1').val($("#form-name-with-autocomplete").val());
@@ -109,17 +109,17 @@ function populateMalData(data, staff) {
 		$('#form-episode-list-duration-1').val(getDurationFromString($("#form-duration").val()));
 	}
 
-	var authors = staff.staff.filter(function(value, index, array) {
+	var authors = staffResponse.data.filter(function(value, index, array) {
 		return value.positions.includes("Original Creator");
 	});
 
 	var textAuthors = "";
 	for (var i = 0; i < authors.length; i++) {
 		var authorName;
-		if (authors[i].name.includes(', ')) {
-			authorName=authors[i].name.split(', ')[1]+" "+authors[i].name.split(', ')[0];
+		if (authors[i].person.name.includes(', ')) {
+			authorName=authors[i].person.name.split(', ')[1]+" "+authors[i].person.name.split(', ')[0];
 		} else {
-			authorName=authors[i].name;
+			authorName=authors[i].person.name;
 		}
 
 		if (textAuthors!='') {
@@ -130,17 +130,17 @@ function populateMalData(data, staff) {
 
 	$("#form-author").val(textAuthors);
 
-	var directors = staff.staff.filter(function(value, index, array) {
+	var directors = staffResponse.data.filter(function(value, index, array) {
 		return value.positions.includes("Director");
 	});
 
 	var textDirectors = "";
 	for (var i = 0; i < directors.length; i++) {
 		var directorName;
-		if (directors[i].name.includes(', ')) {
-			directorName=directors[i].name.split(', ')[1]+" "+directors[i].name.split(', ')[0];
+		if (directors[i].person.name.includes(', ')) {
+			directorName=directors[i].person.name.split(', ')[1]+" "+directors[i].person.name.split(', ')[0];
 		} else {
-			directorName=directors[i].name;
+			directorName=directors[i].person.name;
 		}
 
 		if (textDirectors!='') {
@@ -152,11 +152,11 @@ function populateMalData(data, staff) {
 	$("#form-director").val(textDirectors);
 
 	var textStudios = "";
-	for (var i = 0; i < data.studios.length; i++) {
+	for (var i = 0; i < response.data.studios.length; i++) {
 		if (textStudios!='') {
 			textStudios+=', ';
 		}
-		textStudios+=data.studios[i].name;
+		textStudios+=response.data.studios[i].name;
 	}
 
 	$("#form-studio").val(textStudios);
@@ -165,51 +165,63 @@ function populateMalData(data, staff) {
 		$(this).prop('checked', false);
 	});
 	
-	for (var i = 0; i < data.genres.length; i++) {
-		$("[data-myanimelist-id='"+data.genres[i].mal_id+"']").prop('checked', true);
+	for (var i = 0; i < response.data.genres.length; i++) {
+		$("[data-myanimelist-id='"+response.data.genres[i].mal_id+"']").prop('checked', true);
+	}
+	
+	for (var i = 0; i < response.data.explicit_genres.length; i++) {
+		$("[data-myanimelist-id='"+response.data.explicit_genres[i].mal_id+"']").prop('checked', true);
+	}
+	
+	for (var i = 0; i < response.data.themes.length; i++) {
+		$("[data-myanimelist-id='"+response.data.themes[i].mal_id+"']").prop('checked', true);
+	}
+	
+	for (var i = 0; i < response.data.demographics.length; i++) {
+		$("[data-myanimelist-id='"+response.data.demographics[i].mal_id+"']").prop('checked', true);
 	}
 
 	if ($("#form-season-list-episodes-1").val()=='') {
-		if (data.episodes) {
-			$("#form-season-list-episodes-1").val(data.episodes);
+		if (response.data.episodes) {
+			$("#form-season-list-episodes-1").val(response.data.episodes);
 		}
 	}
 
 	if ($("#form-season-list-myanimelist_id-1").val()=='') {
-		$("#form-season-list-myanimelist_id-1").val(data.mal_id);
+		$("#form-season-list-myanimelist_id-1").val(response.data.mal_id);
 	}
 }
 
-function populateMalDataManga(data) {
+function populateMalDataManga(response) {
 	if ($("#form-name-with-autocomplete").val()=='') {
-		$("#form-name-with-autocomplete").val(data.title);
+		$("#form-name-with-autocomplete").val(response.data.title);
 	}
 	if ($("#form-slug").val()=='') {
-		$("#form-slug").val(string_to_slug(data.title));
+		$("#form-slug").val(string_to_slug(response.data.title));
 	}
 	if ($("#form-alternate_names").val()=='') {
-		if (data.title && data.title_english && data.title_english!=data.title) {
-			$("#form-alternate_names").val(data.title+', '+data.title_english);
-		} else if (data.title) {
-			$("#form-alternate_names").val(data.title);
-		} else if (data.title_english) {
-			$("#form-alternate_names").val(data.title_english);
+		if (response.data.title && response.data.title_english && response.data.title_english!=response.data.title) {
+			$("#form-alternate_names").val(response.data.title+', '+response.data.title_english);
+		} else if (response.data.title) {
+			$("#form-alternate_names").val(response.data.title);
+		} else if (response.data.title_english) {
+			$("#form-alternate_names").val(response.data.title_english);
 		}
 	}
 	if ($("#form-score").val()=='') {
-		$("#form-score").val(data.score ? data.score : '');
+		$("#form-score").val(response.data.score ? response.data.score : '');
 	}
 	if ($("#form-type").val()=='') {
-		$("#form-type").val(data.type=='One-shot' ? 'oneshot' : 'serialized');
+		$("#form-type").val(response.data.type=='One-shot' ? 'oneshot' : 'serialized');
 	}
 	if ($("#form-publish_date").val()=='') {
-		$("#form-publish_date").val(data.published.from.substr(0, 10));
+		$("#form-publish_date").val(response.data.published.from.substr(0, 10));
 	}
 	if ($("#form-synopsis").val()=='') {
-		$("#form-synopsis").val(data.synopsis);
+		$("#form-synopsis").val(response.data.synopsis);
 	}
 
-	var url = data.image_url ? data.image_url.replace(".jpg","l.jpg") : data.image_url;
+	var url = (response.data.images && response.data.images.jpg && response.data.images.jpg.large_image_url) ? response.data.images.jpg.large_image_url : null;
 	if (document.getElementById('form-image').files.length>0) {
 		resetFileInput($("#form-image"));
 	}
@@ -217,7 +229,7 @@ function populateMalDataManga(data) {
 	$('#form-image-preview').prop('src', url);
 	$('#form-image-preview-link').prop('href', url);
 
-	if (data.chapters==1) {
+	if (response.data.chapters==1) {
 		//One-shot, populate first chapter
 		if ($('#form-chapter-list-name-1').val()=='') {
 			$('#form-chapter-list-name-1').val($("#form-name-with-autocomplete").val());
@@ -225,12 +237,12 @@ function populateMalDataManga(data) {
 	}
 
 	var textAuthors = "";
-	for (var i = 0; i < data.authors.length; i++) {
+	for (var i = 0; i < response.data.authors.length; i++) {
 		var authorName;
-		if (data.authors[i].name.includes(', ')) {
-			authorName=data.authors[i].name.split(', ')[1]+" "+data.authors[i].name.split(', ')[0];
+		if (response.data.authors[i].name.includes(', ')) {
+			authorName=response.data.authors[i].name.split(', ')[1]+" "+response.data.authors[i].name.split(', ')[0];
 		} else {
-			authorName=data.authors[i].name;
+			authorName=response.data.authors[i].name;
 		}
 
 		if (textAuthors!='') {
@@ -245,22 +257,34 @@ function populateMalDataManga(data) {
 		$(this).prop('checked', false);
 	});
 	
-	for (var i = 0; i < data.genres.length; i++) {
-		$("[data-myanimelist-id='"+data.genres[i].mal_id+"']").prop('checked', true);
+	for (var i = 0; i < response.data.genres.length; i++) {
+		$("[data-myanimelist-id='"+response.data.genres[i].mal_id+"']").prop('checked', true);
+	}
+	
+	for (var i = 0; i < response.data.explicit_genres.length; i++) {
+		$("[data-myanimelist-id='"+response.data.explicit_genres[i].mal_id+"']").prop('checked', true);
+	}
+	
+	for (var i = 0; i < response.data.themes.length; i++) {
+		$("[data-myanimelist-id='"+response.data.themes[i].mal_id+"']").prop('checked', true);
+	}
+	
+	for (var i = 0; i < response.data.demographics.length; i++) {
+		$("[data-myanimelist-id='"+response.data.demographics[i].mal_id+"']").prop('checked', true);
 	}
 
-	if (data.volumes && data.volumes>1) {
-		for (var i=0;i<data.volumes;i++){
+	if (response.data.volumes && response.data.volumes>1) {
+		for (var i=0;i<response.data.volumes;i++){
 			if ((i+1)>$('#volume-list-table').attr('data-count')){
 				addVolumeRow();
 			}
 		}
-		if (data.chapters) {
-			var howMany = prompt("S'importaran els volums, però no sabem quants capítols té cadascun. Segons MyAnimeList, en total n'hi ha "+data.chapters+" repartits en "+data.volumes+" volums (aprox. uns "+Math.floor(data.chapters/data.volumes)+" capítols per volum). Amb l'objectiu de facilitar introduir les dades, podem assignar-ne una quantitat fixa a cada volum: introdueix-la. Si ho cancel·les o no introdueixes res, s'assignaran tots al primer volum. En qualsevol cas, assegura't de revisar que tot sigui correcte abans d'afegir el manga.");
+		if (response.data.chapters) {
+			var howMany = prompt("S'importaran els volums, però no sabem quants capítols té cadascun. Segons MyAnimeList, en total n'hi ha "+response.data.chapters+" repartits en "+response.data.volumes+" volums (aprox. uns "+Math.floor(response.data.chapters/response.data.volumes)+" capítols per volum). Amb l'objectiu de facilitar introduir les dades, podem assignar-ne una quantitat fixa a cada volum: introdueix-la. Si ho cancel·les o no introdueixes res, s'assignaran tots al primer volum. En qualsevol cas, assegura't de revisar que tot sigui correcte abans d'afegir el manga.");
 			if (!howMany || !howMany.match(/^-?[0-9]+$/)) {
-				$("#form-volume-list-chapters-1").val(data.chapters);
+				$("#form-volume-list-chapters-1").val(response.data.chapters);
 			} else {
-				for (var i=1;i<=data.volumes;i++){
+				for (var i=1;i<=response.data.volumes;i++){
 					$("#form-volume-list-chapters-"+i).val(howMany);
 				}
 			}
@@ -268,13 +292,13 @@ function populateMalDataManga(data) {
 	}
 
 	if ($("#form-volume-list-chapters-1").val()=='') {
-		if (data.chapters) {
-			$("#form-volume-list-chapters-1").val(data.chapters);
+		if (response.data.chapters) {
+			$("#form-volume-list-chapters-1").val(response.data.chapters);
 		}
 	}
 
 	if ($("#form-volume-list-myanimelist_id-1").val()=='') {
-		$("#form-volume-list-myanimelist_id-1").val(data.mal_id);
+		$("#form-volume-list-myanimelist_id-1").val(response.data.mal_id);
 	}
 }
 
@@ -289,11 +313,11 @@ function populateMalEpisodes(season_line, episodes) {
 
 	initialNumber = parseInt($('#episode-list-table').attr('data-count'))+1;
 
-	for (var i=0;i<episodes.episodes.length;i++) {
+	for (var i=0;i<episodes.length;i++) {
 		addRow(false);
 		$("#form-episode-list-season-"+(i+initialNumber)).val($('#form-season-list-number-'+season_line).val());
-		$("#form-episode-list-num-"+(i+initialNumber)).val(episodes.episodes[i].episode_id);
-		$("#form-episode-list-name-"+(i+initialNumber)).val(episodes.episodes[i].title);
+		$("#form-episode-list-num-"+(i+initialNumber)).val(episodes[i].mal_id);
+		$("#form-episode-list-name-"+(i+initialNumber)).val(episodes[i].title);
 		$("#form-episode-list-duration-"+(i+initialNumber)).val(getDurationFromString($("#form-duration").val()));
 	}
 }
@@ -949,24 +973,24 @@ function fetchMalEpisodes(current_season, total_seasons, page) {
 	}
 
 	var xmlhttp = new XMLHttpRequest();
-	var url = "https://api.jikan.moe/v3/anime/"+$("#form-season-list-myanimelist_id-"+current_season).val()+"/episodes/"+page;
+	var url = "https://api.jikan.moe/v4/anime/"+$("#form-season-list-myanimelist_id-"+current_season).val()+"/episodes?page="+page;
 
 	xmlhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			var malDataEpisodesPage = JSON.parse(this.responseText);
 			if (page==1) {
-				malDataEpisodes=malDataEpisodesPage;
+				malDataEpisodes=malDataEpisodesPage.data;
 			} else {
-				malDataEpisodes.episodes=malDataEpisodes.episodes.concat(malDataEpisodesPage.episodes);
+				malDataEpisodes=malDataEpisodes.concat(malDataEpisodesPage.data);
 			}
-			if (page<malDataEpisodesPage.episodes_last_page) {
+			if (malDataEpisodesPage.pagination.has_next_page) {
 				setTimeout(function() {
 					fetchMalEpisodes(current_season, total_seasons, page+1);
 				}, 4000);
 			} else{
-				if (malDataEpisodes.episodes.length>0) {
+				if (malDataEpisodes.length>0) {
 					malDataSeasonsEpisodes.push(malDataEpisodes);
-					malDataSeasonsEpisodesCount+=malDataEpisodes.episodes.length;
+					malDataSeasonsEpisodesCount+=malDataEpisodes.length;
 				}
 				else{
 					malDataMessages+="\nLa temporada "+$("#form-season-list-number-"+current_season).val()+" no té capítols donats d'alta a MyAnimeList. Caldrà que els introdueixis a mà.";
@@ -1498,6 +1522,170 @@ function generateStorageFolder() {
 	$('#form-storage_folder').val(string);
 }
 
+function checkAnimeGenres(currentElement, currentMalIdElement, currentGenres) {
+	if (currentElement==0 && currentMalIdElement==0) {
+		$('#output').text("S'ha iniciat la comprovació de gèneres dels animes. Tingues paciència...");
+	}
+
+	var xmlhttp = new XMLHttpRequest();
+	var url = "https://api.jikan.moe/v4/anime/"+animes[currentElement].mal_ids[currentMalIdElement];
+
+	xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				response = JSON.parse(this.responseText);				
+				for (var i = 0; i < response.data.genres.length; i++) {
+					currentGenres.push(response.data.genres[i].mal_id);
+				}
+				for (var i = 0; i < response.data.explicit_genres.length; i++) {
+					currentGenres.push(response.data.explicit_genres[i].mal_id);
+				}
+				for (var i = 0; i < response.data.themes.length; i++) {
+					currentGenres.push(response.data.themes[i].mal_id);
+				}
+				for (var i = 0; i < response.data.demographics.length; i++) {
+					currentGenres.push(response.data.demographics[i].mal_id);
+				}
+
+				if (currentMalIdElement<animes[currentElement].mal_ids.length-1) {
+					setTimeout(function() {
+						checkAnimeGenres(currentElement, currentMalIdElement+1, currentGenres);
+					}, 4000);
+				} else {
+					//Finished elements, check genres and go to next
+					var difference = $($.unique(currentGenres)).not(animes[currentElement].genres).get();
+					for (var i = 0; i < difference.length; i++) {
+						$('#output').append("<br />A l'anime «"+animes[currentElement].name+"» li manca el gènere "+getAnimeGenreName(difference[i]));
+					}
+
+					difference = $(animes[currentElement].genres).not(currentGenres).get();
+					for (var i = 0; i < difference.length; i++) {
+						$('#output').append("<br />A l'anime «"+animes[currentElement].name+"» li sobra el gènere "+getAnimeGenreName(difference[i]));
+					}
+		
+					if (currentElement<animes.length-1) {
+						setTimeout(function() {
+							checkAnimeGenres(currentElement+1, 0, []);
+						}, 4000);
+					} else {
+						$('#output').append("<br />El procés ha finalitzat!");
+					}
+				}
+			} else {
+				$('#output').append("<br />No s'han pogut obtenir les dades de l'anime «"+animes[currentElement].name+"»");
+		
+				if (currentElement<animes.length-1) {
+					setTimeout(function() {
+						checkAnimeGenres(currentElement+1, 0, []);
+					}, 4000);
+				} else {
+					$('#output').append("<br />El procés ha finalitzat!");
+				}
+			}
+		}
+	};
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+}
+
+function checkMangaGenres(currentElement, currentMalIdElement, currentGenres) {
+	if (currentElement==0 && currentMalIdElement==0) {
+		$('#output').text("S'ha iniciat la comprovació de gèneres dels mangues. Tingues paciència...");
+	}
+
+	var xmlhttp = new XMLHttpRequest();
+	var url = "https://api.jikan.moe/v4/manga/"+mangas[currentElement].mal_ids[currentMalIdElement];
+
+	xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				response = JSON.parse(this.responseText);				
+				for (var i = 0; i < response.data.genres.length; i++) {
+					currentGenres.push(response.data.genres[i].mal_id);
+				}
+				for (var i = 0; i < response.data.explicit_genres.length; i++) {
+					currentGenres.push(response.data.explicit_genres[i].mal_id);
+				}
+				for (var i = 0; i < response.data.themes.length; i++) {
+					currentGenres.push(response.data.themes[i].mal_id);
+				}
+				for (var i = 0; i < response.data.demographics.length; i++) {
+					currentGenres.push(response.data.demographics[i].mal_id);
+				}
+
+				if (currentMalIdElement<mangas[currentElement].mal_ids.length-1) {
+					setTimeout(function() {
+						checkMangaGenres(currentElement, currentMalIdElement+1, currentGenres);
+					}, 4000);
+				} else {
+					//Finished elements, check genres and go to next
+					var difference = $($.unique(currentGenres)).not(mangas[currentElement].genres).get();
+					for (var i = 0; i < difference.length; i++) {
+						$('#output').append("<br />Al manga «"+mangas[currentElement].name+"» li manca el gènere "+getMangaGenreName(difference[i]));
+					}
+
+					difference = $(mangas[currentElement].genres).not(currentGenres).get();
+					for (var i = 0; i < difference.length; i++) {
+						$('#output').append("<br />Al manga «"+mangas[currentElement].name+"» li sobra el gènere "+getMangaGenreName(difference[i]));
+					}
+		
+					if (currentElement<mangas.length-1) {
+						setTimeout(function() {
+							checkMangaGenres(currentElement+1, 0, []);
+						}, 4000);
+					} else {
+						$('#output').append("<br />El procés ha finalitzat!");
+					}
+				}
+			} else {
+				$('#output').append("<br />No s'han pogut obtenir les dades del manga «"+mangas[currentElement].name+"»");
+		
+				if (currentElement<mangas.length-1) {
+					setTimeout(function() {
+						checkMangaGenres(currentElement+1, 0, []);
+					}, 4000);
+				} else {
+					$('#output').append("<br />El procés ha finalitzat!");
+				}
+			}
+		}
+	};
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+}
+
+function getAnimeGenreName(id){
+	for (var i = 0; i < animeGenres.length; i++) {
+		if (animeGenres[i].mal_id==id) {
+			return animeGenres[i].name;
+		}
+	}
+	return "Gènere desconegut "+id;
+}
+
+function getMangaGenreName(id) {
+	for (var i = 0; i < mangaGenres.length; i++) {
+		if (mangaGenres[i].mal_id==id) {
+			return mangaGenres[i].name;
+		}
+	}
+	return "Gènere desconegut "+id;
+}
+
+function showAnimeWithNoMal() {
+	$('#output').text("Animes sense enllaç a MAL:");
+	for (var i = 0; i < noMalAnime.length; i++) {
+		$('#output').append("<br />«"+noMalAnime[i]+"»");
+	}
+}
+
+function showMangaWithNoMal() {
+	$('#output').text("Mangues sense enllaç a MAL:");
+	for (var i = 0; i < noMalManga.length; i++) {
+		$('#output').append("<br />«"+noMalManga[i]+"»");
+	}
+}
+
 var malData;
 var malDataStaff;
 var malDataSeasonsEpisodes;
@@ -1547,7 +1735,7 @@ $(document).ready(function() {
 		$("#import-from-mal-loading").removeClass("d-none");
 		$("#import-from-mal-not-loading").addClass("d-none");
 		var xmlhttp = new XMLHttpRequest();
-		var url = "https://api.jikan.moe/v3/anime/"+$("#form-myanimelist_id").val();
+		var url = "https://api.jikan.moe/v4/anime/"+$("#form-myanimelist_id").val();
 
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
@@ -1555,7 +1743,7 @@ $(document).ready(function() {
 
 				setTimeout(function() {
 					var xmlhttp2 = new XMLHttpRequest();
-					var url2 = "https://api.jikan.moe/v3/anime/"+$("#form-myanimelist_id").val()+"/characters_staff";
+					var url2 = "https://api.jikan.moe/v4/anime/"+$("#form-myanimelist_id").val()+"/staff";
 
 					xmlhttp2.onreadystatechange = function() {
 						if (this.readyState == 4 && this.status == 200) {
@@ -1730,7 +1918,7 @@ $(document).ready(function() {
 		$("#import-from-mal-loading").removeClass("d-none");
 		$("#import-from-mal-not-loading").addClass("d-none");
 		var xmlhttp = new XMLHttpRequest();
-		var url = "https://api.jikan.moe/v3/manga/"+$("#form-myanimelist_id").val();
+		var url = "https://api.jikan.moe/v4/manga/"+$("#form-myanimelist_id").val();
 
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {

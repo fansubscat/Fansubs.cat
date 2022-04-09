@@ -450,8 +450,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="form-group">
-									<label for="form-rating">Valoració per edats</label>
-									<select class="form-control" name="rating" id="form-rating">
+									<label for="form-rating" class="mandatory">Valoració per edats</label>
+									<select class="form-control" name="rating" id="form-rating" required>
 										<option value="">- Selecciona una valoració -</option>
 										<option value="TP"<?php echo $row['rating']=='TP' ? " selected" : ""; ?>>Tots els públics</option>
 										<option value="+7"<?php echo $row['rating']=='+7' ? " selected" : ""; ?>>Majors de 7 anys</option>
@@ -513,13 +513,64 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="form-genres">Gèneres</label>
-							<div id="form-genres" class="row pl-3 pr-3">
+							<label for="form-demographics">Demografia</label>
+							<div id="form-demographics" class="row pl-3 pr-3">
 <?php
-	$resultg = query("SELECT g.* FROM genre g ORDER BY g.name");
+	$resultg = query("SELECT g.* FROM genre g WHERE type='demographics' ORDER BY g.name");
 	while ($rowg = mysqli_fetch_assoc($resultg)) {
 ?>
 								<div class="form-check col-sm-2">
+									<input class="form-check-input" type="checkbox" name="genres[]" id="form-genre-<?php echo $rowg['id']; ?>" data-myanimelist-id="<?php echo $rowg['myanimelist_id_anime']; ?>" value="<?php echo $rowg['id']; ?>"<?php echo in_array($rowg['id'],$genres)? "checked" : ""; ?>>
+									<label class="form-check-label" for="form-genre-<?php echo $rowg['id']; ?>"><?php echo htmlspecialchars($rowg['name']); ?></label>
+								</div>
+<?php
+	}
+	mysqli_free_result($resultg);
+?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-genres">Gèneres</label>
+							<div id="form-genres" class="row pl-3 pr-3">
+<?php
+	$resultg = query("SELECT g.* FROM genre g WHERE type='genre' ORDER BY g.name");
+	while ($rowg = mysqli_fetch_assoc($resultg)) {
+?>
+								<div class="form-check col-sm-2">
+									<input class="form-check-input" type="checkbox" name="genres[]" id="form-genre-<?php echo $rowg['id']; ?>" data-myanimelist-id="<?php echo $rowg['myanimelist_id_anime']; ?>" value="<?php echo $rowg['id']; ?>"<?php echo in_array($rowg['id'],$genres)? "checked" : ""; ?>>
+									<label class="form-check-label" for="form-genre-<?php echo $rowg['id']; ?>"><?php echo htmlspecialchars($rowg['name']); ?></label>
+								</div>
+<?php
+	}
+	mysqli_free_result($resultg);
+?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-explicit">Nivell d'erotisme <small>(si n'hi ha; marca només el més alt; ecchi &lt; erotisme &lt; hentai)</small></label>
+							<div id="form-explicit" class="row pl-3 pr-3">
+<?php
+	$resultg = query("SELECT g.* FROM genre g WHERE type='explicit' ORDER BY g.name");
+	while ($rowg = mysqli_fetch_assoc($resultg)) {
+?>
+								<div class="form-check col-sm-2">
+									<input class="form-check-input" type="checkbox" name="genres[]" id="form-genre-<?php echo $rowg['id']; ?>" data-myanimelist-id="<?php echo $rowg['myanimelist_id_anime']; ?>" value="<?php echo $rowg['id']; ?>"<?php echo in_array($rowg['id'],$genres)? "checked" : ""; ?>>
+									<label class="form-check-label" for="form-genre-<?php echo $rowg['id']; ?>"><?php echo htmlspecialchars($rowg['name']); ?></label>
+								</div>
+<?php
+	}
+	mysqli_free_result($resultg);
+?>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="form-themes">Temàtiques</label>
+							<div id="form-themes" class="row pl-3 pr-3">
+<?php
+	$resultg = query("SELECT g.* FROM genre g WHERE type='theme' ORDER BY g.name");
+	while ($rowg = mysqli_fetch_assoc($resultg)) {
+?>
+								<div class="form-check col-sm-3">
 									<input class="form-check-input" type="checkbox" name="genres[]" id="form-genre-<?php echo $rowg['id']; ?>" data-myanimelist-id="<?php echo $rowg['myanimelist_id_anime']; ?>" value="<?php echo $rowg['id']; ?>"<?php echo in_array($rowg['id'],$genres)? "checked" : ""; ?>>
 									<label class="form-check-label" for="form-genre-<?php echo $rowg['id']; ?>"><?php echo htmlspecialchars($rowg['name']); ?></label>
 								</div>

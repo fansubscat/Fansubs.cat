@@ -8,21 +8,21 @@ $result = query("SELECT * FROM series ORDER BY name ASC");
 while ($series = mysqli_fetch_assoc($result)) {
 	echo "Updating score for anime ".$series['name']."\n";
 
-	$resultss = query("SELECT * FROM season WHERE series_id=".$series['id']." AND myanimelist_id IS NOT NULL ORDER BY number ASC");
+	$resultss = query("SELECT DISTINCT sq.myanimelist_id FROM (SELECT myanimelist_id FROM season WHERE series_id=".$series['id']." AND myanimelist_id IS NOT NULL UNION SELECT myanimelist_id FROM series a WHERE a.id=".$series['id']." AND myanimelist_id IS NOT NULL) sq");
 
 	$seasoncount = 0;
 	$seasonscoresum = 0;
 	$error = FALSE;
 	while ($season = mysqli_fetch_assoc($resultss)) {
 		sleep(10); //At least 4s for Jikan request limits
-		$url = 'https://api.jikan.moe/v3/anime/'.$season['myanimelist_id'];
+		$url = 'https://api.jikan.moe/v4/anime/'.$season['myanimelist_id'];
 		$response = json_decode(file_get_contents($url));
 		
-		if (!$response){
+		if (!$response || !$response->data){
 			$error = TRUE;
 			break;
 		} else {
-			$score = $response->score;
+			$score = $response->data->score;
 			if ($score && is_numeric($score)) {
 				$seasonscoresum+=$score;
 			} else { //Skip this season: no score
@@ -54,21 +54,21 @@ $result = query("SELECT * FROM manga ORDER BY name ASC");
 while ($manga = mysqli_fetch_assoc($result)) {
 	echo "Updating score for manga ".$manga['name']."\n";
 
-	$resultss = query("SELECT * FROM volume WHERE manga_id=".$manga['id']." AND myanimelist_id IS NOT NULL ORDER BY number ASC");
+	$resultss = query("SELECT DISTINCT sq.myanimelist_id FROM (SELECT myanimelist_id FROM volume WHERE manga_id=".$manga['id']." AND myanimelist_id IS NOT NULL UNION SELECT myanimelist_id FROM manga m WHERE m.id=".$manga['id']." AND myanimelist_id IS NOT NULL) sq");
 
 	$seasoncount = 0;
 	$seasonscoresum = 0;
 	$error = FALSE;
 	while ($season = mysqli_fetch_assoc($resultss)) {
 		sleep(10); //At least 4s for Jikan request limits
-		$url = 'https://api.jikan.moe/v3/manga/'.$season['myanimelist_id'];
+		$url = 'https://api.jikan.moe/v4/manga/'.$season['myanimelist_id'];
 		$response = json_decode(file_get_contents($url));
 		
-		if (!$response){
+		if (!$response || !$response->data){
 			$error = TRUE;
 			break;
 		} else {
-			$score = $response->score;
+			$score = $response->data->score;
 			if ($score && is_numeric($score)) {
 				$seasonscoresum+=$score;
 			} else { //Skip this season: no score
