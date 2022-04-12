@@ -107,8 +107,8 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 			$in_clause.=','.$row['series_id'];
 		}
 		mysqli_free_result($result);
-		$sections=array("<span class=\"iconsm fa fa-fw fa-gift\"></span> Calendari d'advent", "<span class=\"iconsm fa fa-fw fa-star\"></span> Animes destacats", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorats");
-		$descriptions=array("Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones festes!", "Aquí tens la tria d'animes recomanats d'aquesta setmana! T'animes a mirar-ne algun?", "Aquestes són les darreres novetats d'anime versionat en català pels diferents fansubs.", "T'agrada provar sort? Aquí tens un seguit d'animes triats a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquests són els animes que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquests són els animes més nous que tenim editats en català.", "Els animes més ben puntuats pels usuaris de MyAnimeList amb alguna versió feta en català.");
+		$sections=array("<span class=\"iconsm fa fa-fw fa-gift\"></span> Calendari d'advent", "<span class=\"iconsm fa fa-fw fa-star\"></span> Animes destacats", "<span class=\"iconsm fa fa-fw fa-clock\"></span> Darreres actualitzacions", "<span class=\"iconsm fa fa-fw fa-check\"></span> Finalitzats recentment", "<span class=\"iconsm fa fa-fw fa-dice\"></span> A l'atzar", "<span class=\"iconsm fa fa-fw fa-fire\"></span> Més populars", "<span class=\"iconsm fa fa-fw fa-stopwatch\"></span> Més actuals", "<span class=\"iconsm fa fa-fw fa-heart\"></span> Més ben valorats");
+		$descriptions=array("Enguany, tots els fansubs en català s'uneixen per a dur-vos cada dia una novetat! Bones festes!", "Aquí tens la tria d'animes recomanats d'aquesta setmana! T'animes a mirar-ne algun?", "Aquestes són les darreres novetats d'anime versionat en català pels diferents fansubs.", "Vet aquí els darrers animes completats. Si els mires, no et caldrà esperar-ne nous capítols!", "T'agrada provar sort? Aquí tens un seguit d'animes triats a l'atzar. Si no te'n convenç cap, actualitza la pàgina i torna-hi!", "Aquests són els animes que més han vist els nostres usuaris durant la darrera quinzena.", "T'agrada l'anime d'actualitat? Aquests són els animes més nous que tenim editats en català.", "Els animes més ben puntuats pels usuaris de MyAnimeList amb alguna versió feta en català.");
 		$recommendations_subquery = "SELECT version_id FROM recommendation";
 		if ($is_fools_day) {
 			$sections[1]="<span class=\"iconsm fa fa-fw fa-star\"></span> Obres mestres";
@@ -131,15 +131,16 @@ ORDER BY MAX(a.views) DESC, a.series_id ASC");
 		}
 		$queries=array(
 			NULL,
-			$base_query . " WHERE $query_portion_limit_to_non_hidden AND v.id IN ($recommendations_subquery)$cookie_extra_conditions GROUP BY s.id ORDER BY RAND()",
-			$base_query . " WHERE $query_portion_limit_to_non_hidden AND 1$cookie_extra_conditions GROUP BY s.id ORDER BY last_updated DESC LIMIT $max_items",
+			$base_query . " WHERE $query_portion_limit_to_non_hidden AND v.id IN ($recommendations_subquery)$cookie_extra_conditions GROUP BY v.id ORDER BY RAND()",
+			$base_query . " WHERE $query_portion_limit_to_non_hidden AND 1$cookie_extra_conditions GROUP BY v.id ORDER BY last_updated DESC LIMIT $max_items",
+			$base_query . " WHERE $query_portion_limit_to_non_hidden AND completed_on IS NOT NULL AND 1$cookie_extra_conditions GROUP BY v.id ORDER BY completed_on DESC LIMIT $max_items",
 			$base_query . " WHERE $query_portion_limit_to_non_hidden AND 1$cookie_extra_conditions GROUP BY s.id ORDER BY RAND() LIMIT $max_items",
 			$base_query . " WHERE $query_portion_limit_to_non_hidden AND s.id IN ($in_clause)$cookie_extra_conditions GROUP BY s.id ORDER BY FIELD(s.id,$in_clause) LIMIT $max_items",
 			$base_query . " WHERE $query_portion_limit_to_non_hidden AND 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.air_date DESC LIMIT $max_items",
 			$base_query . " WHERE $query_portion_limit_to_non_hidden AND 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
-		$specific_version=array(FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
-		$type=array('advent','recommendations', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel');
-		$tracking_classes=array('advent', 'featured', 'latest', 'random', 'popular', 'newest', 'toprated');
+		$specific_version=array(FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
+		$type=array('advent','recommendations', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel');
+		$tracking_classes=array('advent', 'featured', 'latest', 'completed', 'random', 'popular', 'newest', 'toprated');
 		break;
 }
 
