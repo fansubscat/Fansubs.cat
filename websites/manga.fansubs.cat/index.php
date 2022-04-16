@@ -98,10 +98,7 @@ switch ($header_tab){
 		$tracking_classes=array('search-results');
 		break;
 	default:
-		$result = query("SELECT a.manga_id
-FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id FROM manga_views vi LEFT JOIN file fi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE (SELECT COUNT(*) FROM manga_version mv WHERE mv.manga_id=m.id AND mv.hidden=0)>0 AND fi.chapter_id IS NOT NULL AND vi.views>0 AND vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' GROUP BY fi.manga_version_id, fi.chapter_id) a
-GROUP BY a.manga_id
-ORDER BY MAX(a.views) DESC, a.manga_id ASC");
+		$result = query("SELECT b.manga_id, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.manga_id, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, fi.chapter_id FROM manga_views vi LEFT JOIN file fi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE (SELECT COUNT(*) FROM manga_version mv WHERE mv.manga_id=m.id AND mv.hidden=0)>0 AND fi.chapter_id IS NOT NULL AND vi.views>0 AND vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.chapter_id) b GROUP BY b.manga_id ORDER BY max_views DESC, b.manga_id DESC");
 		$in_clause='0';
 		while ($row = mysqli_fetch_assoc($result)){
 			$in_clause.=','.$row['manga_id'];

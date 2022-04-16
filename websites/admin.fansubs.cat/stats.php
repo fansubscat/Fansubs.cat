@@ -447,7 +447,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
-	$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
+	$result = query("SELECT b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.series_id, a.series_name, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name, l.episode_id FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_name ASC LIMIT 10");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 												<tr>
@@ -471,7 +471,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
-	$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
+	$result = query("SELECT b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.series_id, a.series_name, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name, l.episode_id FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_name ASC LIMIT 10");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 												<tr>
@@ -505,7 +505,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
-	$result = query("SELECT a.manga_id, a.manga_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, m.name manga_name FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' AND fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.manga_id ORDER BY max_views DESC, a.manga_name ASC LIMIT 10");
+	$result = query("SELECT b.manga_id, b.manga_name, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.manga_id, a.manga_name, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, m.name manga_name, fi.chapter_id FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' AND fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.chapter_id) b GROUP BY b.manga_id ORDER BY max_views DESC, b.manga_name ASC LIMIT 10");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 												<tr>
@@ -529,7 +529,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
-	$result = query("SELECT a.manga_id, a.manga_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, m.name manga_name FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.manga_id ORDER BY max_views DESC, a.manga_name ASC LIMIT 10");
+	$result = query("SELECT b.manga_id, b.manga_name, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.manga_id, a.manga_name, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, m.name manga_name, fi.chapter_id FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.chapter_id) b GROUP BY b.manga_id ORDER BY max_views DESC, b.manga_name ASC LIMIT 10");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 												<tr>
@@ -1236,7 +1236,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
-		$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' AND l.episode_id IS NOT NULL AND l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
+		$result = query("SELECT b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.series_id, a.series_name, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name, l.episode_id FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' AND l.episode_id IS NOT NULL AND l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY l.version_id, l.episode_id) a GROUP BY episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_name ASC LIMIT 10");
 		while ($row = mysqli_fetch_assoc($result)) {
 ?>
 												<tr>
@@ -1260,7 +1260,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
-		$result = query("SELECT a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL AND l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY max_views DESC, a.series_name ASC LIMIT 10");
+		$result = query("SELECT b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.series_id, a.series_name, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, s.name series_name, l.episode_id FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE l.episode_id IS NOT NULL AND l.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY l.version_id, l.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_name ASC LIMIT 10");
 		while ($row = mysqli_fetch_assoc($result)) {
 ?>
 												<tr>
@@ -1294,7 +1294,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
-		$result = query("SELECT a.manga_id, a.manga_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, m.name manga_name FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' AND fi.chapter_id IS NOT NULL AND fi.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.manga_id ORDER BY max_views DESC, a.manga_name ASC LIMIT 10");
+		$result = query("SELECT b.manga_id, b.manga_name, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.manga_id, a.manga_name, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, m.name manga_name, fi.chapter_id FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' AND fi.chapter_id IS NOT NULL AND fi.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.chapter_id) b GROUP BY b.manga_id ORDER BY max_views DESC, b.manga_name ASC LIMIT 10");
 		while ($row = mysqli_fetch_assoc($result)) {
 ?>
 												<tr>
@@ -1318,7 +1318,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 <?php
-		$result = query("SELECT a.manga_id, a.manga_name, IFNULL(MAX(a.views),0) max_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, m.name manga_name FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE fi.chapter_id IS NOT NULL AND fi.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.manga_id ORDER BY max_views DESC, a.manga_name ASC LIMIT 10");
+		$result = query("SELECT b.manga_id, b.manga_name, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.manga_id, a.manga_name, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, fi.manga_version_id, m.id manga_id, m.name manga_name, fi.chapter_id FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id WHERE fi.chapter_id IS NOT NULL AND fi.manga_version_id IN (SELECT DISTINCT manga_version_id FROM rel_manga_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.chapter_id) b GROUP BY b.manga_id ORDER BY max_views DESC, b.manga_name ASC LIMIT 10");
 		while ($row = mysqli_fetch_assoc($result)) {
 ?>
 												<tr>

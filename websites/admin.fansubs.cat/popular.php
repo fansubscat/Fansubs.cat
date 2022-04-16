@@ -113,7 +113,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, IFNULL(MAX(a.views),0) max_views, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM  rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=l.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, l.version_id, s.id series_id, s.name series_name, s.rating rating FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($hide_hentai ? " AND (s.rating IS NULL OR s.rating<>'XXX')" : '')." AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.series_id ORDER BY $type DESC, total_views DESC, a.series_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=l.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, l.version_id, l.episode_id, s.id series_id, s.name series_name, s.rating rating FROM link l LEFT JOIN views vi ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($hide_hentai ? " AND (s.rating IS NULL OR s.rating<>'XXX')" : '')." AND l.episode_id IS NOT NULL GROUP BY l.version_id, l.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
+
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -136,7 +137,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr<?php echo $row['rating']=='XXX' ? ' class="text-danger"' : ''; ?>>
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
-								<td class="align-middle"><?php echo htmlspecialchars($row['fansubs']); ?></td>
+								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>
 								<td class="align-middle text-center"><?php echo htmlspecialchars($type=='time_spent' ? get_hours_or_minutes_formatted($row[$type]) : $row[$type]); ?></td>
 							</tr>
 <?php
@@ -163,7 +164,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.manga_id, a.manga_name, IFNULL(MAX(a.views),0) max_views, SUM(a.views) total_views, SUM(a.pages_read) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_manga_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.manga_version_id=fi.manga_version_id) fansubs, SUM(vi.views) views, SUM(vi.pages_read) pages_read, fi.manga_version_id, m.id manga_id, m.name manga_name, m.rating rating FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id LEFT JOIN rel_manga_version_fansub vf ON fi.manga_version_id=vf.manga_version_id LEFT JOIN fansub f ON f.id=vf.fansub_id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($hide_hentai ? " AND (m.rating IS NULL OR m.rating<>'XXX')" : '')." AND fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.manga_id ORDER BY $type DESC, total_views DESC, a.manga_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.manga_id, b.manga_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.manga_id, a.manga_name, a.chapter_id, SUM(a.views) total_views, SUM(a.pages_read) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_manga_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.manga_version_id=fi.manga_version_id) fansubs, SUM(vi.views) views, SUM(vi.pages_read) pages_read, fi.manga_version_id, fi.chapter_id, m.id manga_id, m.name manga_name, m.rating rating FROM file fi LEFT JOIN manga_views vi ON vi.file_id=fi.id LEFT JOIN chapter c ON fi.chapter_id=c.id LEFT JOIN manga m ON c.manga_id=m.id LEFT JOIN rel_manga_version_fansub vf ON fi.manga_version_id=vf.manga_version_id LEFT JOIN fansub f ON f.id=vf.fansub_id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($hide_hentai ? " AND (m.rating IS NULL OR m.rating<>'XXX')" : '')." AND fi.chapter_id IS NOT NULL GROUP BY fi.manga_version_id, fi.chapter_id) a GROUP BY a.chapter_id) b GROUP BY b.manga_id ORDER BY $type DESC, b.manga_name ASC LIMIT $amount");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -186,7 +187,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr<?php echo $row['rating']=='XXX' ? ' class="text-danger"' : ''; ?>>
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['manga_name']); ?></th>
-								<td class="align-middle"><?php echo htmlspecialchars($row['fansubs']); ?></td>
+								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>
 								<td class="align-middle text-center"><?php echo htmlspecialchars($row[$type]); ?></td>
 							</tr>
 <?php

@@ -98,10 +98,7 @@ switch ($header_tab){
 		$tracking_classes=array('search-results');
 		break;
 	default:
-		$result = query("SELECT a.series_id
-FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id FROM views vi LEFT JOIN link l ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE $query_portion_limit_to_non_hidden AND l.episode_id IS NOT NULL AND vi.views>0 AND vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' GROUP BY l.version_id, l.episode_id) a
-GROUP BY a.series_id
-ORDER BY MAX(a.views) DESC, a.series_id ASC");
+		$result = query("SELECT b.series_id, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.series_id, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, l.version_id, s.id series_id, l.episode_id FROM views vi LEFT JOIN link l ON vi.link_id=l.id LEFT JOIN episode e ON l.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.hidden=0)>0 AND l.episode_id IS NOT NULL AND vi.views>0 AND vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' GROUP BY l.version_id, l.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_id DESC");
 		$in_clause='0';
 		while ($row = mysqli_fetch_assoc($result)){
 			$in_clause.=','.$row['series_id'];
