@@ -21,6 +21,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$first_month = $selected_month;
 	$last_month = $selected_month;
 	$selected_year = FALSE;
+	$selected_all = FALSE;
 	if (isset($_GET['month'])) {
 		if (preg_match('/^\d\d\d\d$/', $_GET['month'])) {
 			$selected_year = $_GET['month'];
@@ -30,6 +31,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$selected_month = $_GET['month'];
 			$first_month = $selected_month;
 			$last_month = $selected_month;
+		} else if ($_GET['month']=='ALL') {
+			$selected_all = TRUE;
+			$first_month = '2020-01';
+			$last_month = date('Y-m');
 		}
 	}
 	if (isset($_GET['amount']) && preg_match('/\d+/', $_GET['amount'])) {
@@ -58,17 +63,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="form-group p-3 mb-0">
 							<label for="month">Període:</label>
 							<select id="month" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;hide_hentai='+($('#hide_hentai').prop('checked') ? 1 : 0)+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val();">
+								<option value="ALL"<?php echo ($selected_all) ? ' selected' : ''; ?> style="font-weight: bold;">TOTAL 2020-<?php echo date('Y'); ?></option>
 <?php
 	$current_year=0;
 	foreach ($months as $month => $values) {
 		if (explode('-',$month)[0]!=$current_year) {
 			$current_year=explode('-',$month)[0];
 ?>
-								<option value="<?php echo $current_year; ?>"<?php echo ($selected_year==$current_year) ? ' selected' : ''; ?> style="font-weight: bold;">Any complet <?php echo $current_year; ?></option>
+								<option value="<?php echo $current_year; ?>"<?php echo (!$selected_all && $selected_year==$current_year) ? ' selected' : ''; ?> style="font-weight: bold;">Any complet <?php echo $current_year; ?></option>
 <?php
 		}
 ?>
-								<option value="<?php echo $month; ?>"<?php echo (empty($selected_year) && $selected_month==$month) ? ' selected' : ''; ?>><?php echo $values; ?></option>
+								<option value="<?php echo $month; ?>"<?php echo (!$selected_all && empty($selected_year) && $selected_month==$month) ? ' selected' : ''; ?>><?php echo $values; ?></option>
 <?php
 	}
 ?>
@@ -100,7 +106,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo empty($selected_year) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : "Any complet ".$selected_year; ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo empty($selected_year) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
 					<hr>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
@@ -152,7 +158,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo empty($selected_year) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : "Any complet ".$selected_year; ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo empty($selected_year) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
 					<table class="table table-hover table-striped">
 						<thead class="thead-dark">
 							<tr>
