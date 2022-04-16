@@ -110,6 +110,7 @@ switch ($header_tab){
 		if ($is_fools_day) {
 			$sections[1]="<span class=\"iconsm fa fa-fw fa-star\"></span> Obres mestres";
 			$descriptions[1]="Que no t'enganyin, aquests són els millors animes de la història. Si encara no els has vist, què esperes?";
+			//Worst rated completed or semi completed animes
 			$fools_day_result = query("SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status IN (1,3) AND sr.score IS NOT NULL AND vr.episodes_missing=0 ORDER BY sr.score ASC LIMIT 10");
 			$fools_day_items = array();
 			while ($rowfd = mysqli_fetch_assoc($fools_day_result)) {
@@ -119,7 +120,8 @@ switch ($header_tab){
 		} else if (date('m-d')=='04-23') { // Sant Jordi
 			$sections[1]="<span class=\"iconsm fa fa-fw fa-star\"></span> Especial Sant Jordi";
 			$descriptions[1]="Animes ben valorats amb components romàntics. T'animes a mirar-ne algun?";
-			$sant_jordi_result = query("SELECT DISTINCT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status=1 AND vr.is_featurable=1 AND sr.score IS NOT NULL AND vr.episodes_missing=0 AND sr.id IN (SELECT rsg.series_id FROM rel_series_genre rsg WHERE rsg.genre_id IN (7,16,23)) ORDER BY sr.score DESC LIMIT 10");
+			//Best rated completed and featurable animes of genres Romance, Boys Love and Girls Love
+			$sant_jordi_result = query("SELECT DISTINCT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status=1 AND vr.is_featurable=1 AND sr.score IS NOT NULL AND vr.episodes_missing=0 AND sr.id IN (SELECT rsg.series_id FROM rel_series_genre rsg WHERE rsg.genre_id IN (7,23,38)) ORDER BY sr.score DESC LIMIT 10");
 			$sant_jordi_items = array();
 			while ($rowsj = mysqli_fetch_assoc($sant_jordi_result)) {
 				$sant_jordi_items[] = $rowsj['id'];
