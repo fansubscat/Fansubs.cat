@@ -72,7 +72,7 @@ $header_social = array(
 	'title' => $manga['name'].' | Fansubs.cat - Manga en català',
 	'url' => 'https://manga.fansubs.cat/'.($manga['type']=='oneshot' ? 'one-shots/' : 'serialitzats/').$manga['slug'],
 	'description' => strip_tags($synopsis),
-	'image' => 'https://manga.fansubs.cat/images/manga/'.$manga['id'].'.jpg'
+	'image' => 'https://manga.fansubs.cat/preview/'.$manga['slug'].'.jpg'
 );
 
 $header_series_page=TRUE;

@@ -22,6 +22,7 @@ if (!empty($header_social)) {
 		<meta property="og:url" content="<?php echo htmlspecialchars($header_social['url']); ?>" />
 		<meta property="og:description" content="<?php echo htmlspecialchars($header_social['description']); ?>" />
 		<meta property="og:image" content="<?php echo htmlspecialchars($header_social['image']); ?>" />
+		<meta property="og:image:type" content="image/jpeg" />
 <?php
 }
 ?>

@@ -72,7 +72,7 @@ $header_social = array(
 	'title' => $series['name'].' | Fansubs.cat - Anime en català',
 	'url' => 'https://anime.fansubs.cat/'.($series['type']=='movie' ? 'films/' : 'series/').$series['slug'],
 	'description' => strip_tags($synopsis),
-	'image' => 'https://anime.fansubs.cat/images/series/'.$series['id'].'.jpg'
+	'image' => 'https://anime.fansubs.cat/preview/'.$series['slug'].'.jpg'
 );
 
 $header_series_page=TRUE;

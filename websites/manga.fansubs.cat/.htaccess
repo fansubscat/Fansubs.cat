@@ -2,6 +2,7 @@ RewriteEngine on
 ErrorDocument 404 /error.php?code=404
 ErrorDocument 403 /error.php?code=403
 RewriteRule ^.*\.inc\.php$ error.php?code=404
+RewriteRule ^preview/(.*)\.jpg$ preview_image.php?slug=$1
 RewriteRule ^one-shots/?$ index.php?page=oneshots
 RewriteRule ^one-shots/(.*)/$ manga.php?page=oneshots&slug=$1 [QSA]
 RewriteRule ^one-shots/(.*)$ manga.php?page=oneshots&slug=$1 [QSA]
