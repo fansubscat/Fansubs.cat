@@ -19,29 +19,38 @@ function generate_streaming {
 	
 	author="Recompressió per a anime.fansubs.cat"
 	title="No baixeu aquest fitxer, baixeu l'original!"
+	script_id="AutomaticBatchProcessor"
 	crf_fullhd="23"
 	crf_hd="21"
 	crf_sd="19"
 	crf_ssd="17"
+	max_bitrate_fullhd="8192k"
+	max_bitrate_hd="4096k"
+	max_bitrate_sd="2048k"
+	max_bitrate_ssd="1536k"
 
 	resolution=`../ffprobe -v error -select_streams v:$video_stream -show_entries stream=height -of csv=s=x:p=0 "$original_file"`
 
 	if [ $resolution -le 360 ]
 	then
 		crf=$crf_ssd
+		max_bitrate=$max_bitrate_ssd
 	elif [ $resolution -le 480 ]
 	then
 		crf=$crf_sd
+		max_bitrate=$max_bitrate_sd
 	elif [ $resolution -le 720 ]
 	then
 		crf=$crf_hd
+		max_bitrate=$max_bitrate_hd
 	else
 		crf=$crf_fullhd
+		max_bitrate=$max_bitrate_fullhd
 	fi
 
 	if [[ "$subtitle_stream" =~ ^-?[0-9]+$ ]]
 	then
-		if [ $subtitle_stream -eq -1 ]
+		if [ $subtitle_stream -ne -1 ]
 		then
 			filter_opts=""
 		else
@@ -55,7 +64,7 @@ function generate_streaming {
 	then
 		video_opts="-c:v copy"
 	else
-		video_opts="-c:v libx264 -preset slower -profile:v high -level 4.1 -crf $crf"
+		video_opts="-c:v libx264 -preset slower -profile:v high -level 4.1 -crf $crf -maxrate $max_bitrate -bufsize $max_bitrate"
 	fi
 
 	if [ "$action_audio" = "COPY" ]
@@ -65,11 +74,13 @@ function generate_streaming {
 		audio_opts="-ac 2 -c:a aac -b:a 128k"
 	fi
 
+	comment="Codificador: $script_id"$'\n'"Paràmetres: $video_opts $audio_opts"
+
 	if [ "$action_video" = "COPY" ]
 	then
-		../ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream $video_opts $audio_opts -metadata title="$title" -metadata artist="$author" -movflags faststart "$output_file"
+		../ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream $video_opts $audio_opts -metadata title="$title" -metadata artist="$author" -metadata comment="$comment" -movflags faststart "$output_file"
 	else
-		../ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream -pix_fmt yuv420p -vf "${filter_opts}null" $video_opts $audio_opts -metadata title="$title" -metadata artist="$author" -movflags faststart "$output_file"
+		../ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream -pix_fmt yuv420p -vf "${filter_opts}null" $video_opts $audio_opts -metadata title="$title" -metadata artist="$author" -metadata comment="$comment" -movflags faststart "$output_file"
 	fi
 }
 
