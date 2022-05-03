@@ -74,7 +74,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			var animes = [
 <?php
 	//Get all animes and their tags, format for JavaScript:
-	$result = query("SELECT * FROM (SELECT IF(a.myanimelist_id IS NOT NULL,CONCAT(a.myanimelist_id, ',', GROUP_CONCAT(DISTINCT s.myanimelist_id)),GROUP_CONCAT(DISTINCT s.myanimelist_id)) myanimelist_ids, a.name, GROUP_CONCAT(DISTINCT g.myanimelist_id_anime) genre_ids FROM rel_series_genre ag LEFT JOIN series a ON ag.series_id=a.id LEFT JOIN genre g ON ag.genre_id=g.id LEFT JOIN season s ON s.series_id=ag.series_id WHERE a.myanimelist_id IS NOT NULL OR s.myanimelist_id IS NOT NULL GROUP BY ag.series_id ORDER BY a.name) subquery WHERE myanimelist_ids IS NOT NULL");
+	$result = query("SELECT * FROM (SELECT IF(a.myanimelist_id IS NOT NULL,CONCAT(a.myanimelist_id, ',', GROUP_CONCAT(DISTINCT IFNULL(s.myanimelist_id,-1))),GROUP_CONCAT(DISTINCT IFNULL(s.myanimelist_id,-1))) myanimelist_ids, a.name, GROUP_CONCAT(DISTINCT g.myanimelist_id_anime) genre_ids FROM series a LEFT JOIN rel_series_genre ag ON ag.series_id=a.id LEFT JOIN genre g ON ag.genre_id=g.id LEFT JOIN season s ON s.series_id=ag.series_id WHERE a.myanimelist_id IS NOT NULL OR s.myanimelist_id IS NOT NULL GROUP BY a.id ORDER BY a.name) subquery WHERE myanimelist_ids IS NOT NULL");
 	$first = TRUE;
 	while ($row = mysqli_fetch_assoc($result)) {
 		if (!$first) {
@@ -82,7 +82,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$first = FALSE;
 		}
-		echo "\t\t\t\t".'{"mal_ids": ['.implode(',',array_unique(explode(',',$row['myanimelist_ids']))).'], "name": "'.htmlspecialchars($row['name']).'", "genres": ['.$row['genre_ids'].']}';
+		echo "\t\t\t\t".'{"mal_ids": ['.implode(',',array_diff(array_unique(explode(',',$row['myanimelist_ids'])), [-1])).'], "name": "'.htmlspecialchars($row['name']).'", "genres": ['.$row['genre_ids'].']}';
 	}
 	mysqli_free_result($result);
 ?>
@@ -91,7 +91,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			var mangas = [
 <?php
 	//Get all mangas and their tags, format for JavaScript:
-	$result = query("SELECT * FROM (SELECT IF(m.myanimelist_id IS NOT NULL,CONCAT(m.myanimelist_id, ',', GROUP_CONCAT(DISTINCT v.myanimelist_id)),GROUP_CONCAT(DISTINCT v.myanimelist_id)) myanimelist_ids, m.name, GROUP_CONCAT(DISTINCT g.myanimelist_id_manga) genre_ids FROM rel_manga_genre mg LEFT JOIN manga m ON mg.manga_id=m.id LEFT JOIN genre g ON mg.genre_id=g.id LEFT JOIN volume v ON v.manga_id=mg.manga_id WHERE m.myanimelist_id IS NOT NULL OR v.myanimelist_id IS NOT NULL GROUP BY mg.manga_id ORDER BY m.name) subquery WHERE myanimelist_ids IS NOT NULL");
+	$result = query("SELECT * FROM (SELECT IF(m.myanimelist_id IS NOT NULL,CONCAT(m.myanimelist_id, ',', GROUP_CONCAT(DISTINCT IFNULL(v.myanimelist_id,-1))),GROUP_CONCAT(DISTINCT IFNULL(v.myanimelist_id,-1))) myanimelist_ids, m.name, GROUP_CONCAT(DISTINCT g.myanimelist_id_manga) genre_ids FROM manga m LEFT JOIN rel_manga_genre mg ON mg.manga_id=m.id LEFT JOIN genre g ON mg.genre_id=g.id LEFT JOIN volume v ON v.manga_id=mg.manga_id WHERE m.myanimelist_id IS NOT NULL OR v.myanimelist_id IS NOT NULL GROUP BY m.id ORDER BY m.name) subquery WHERE myanimelist_ids IS NOT NULL");
 	$first = TRUE;
 	while ($row = mysqli_fetch_assoc($result)) {
 		if (!$first) {
@@ -99,7 +99,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$first = FALSE;
 		}
-		echo "\t\t\t\t".'{"mal_ids": ['.implode(',',array_unique(explode(',',$row['myanimelist_ids']))).'], "name": "'.htmlspecialchars($row['name']).'", "genres": ['.$row['genre_ids'].']}';
+		echo "\t\t\t\t".'{"mal_ids": ['.implode(',',array_diff(array_unique(explode(',',$row['myanimelist_ids'])), [-1])).'], "name": "'.htmlspecialchars($row['name']).'", "genres": ['.$row['genre_ids'].']}';
 	}
 	mysqli_free_result($result);
 ?>
