@@ -16,17 +16,27 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="col">Cerca</th>
 								<th scope="col" style="width: 12%;" class="text-center">Repeticions</th>
+<?php
+	if (!empty($_GET['show_results'])) {
+?>
 								<th scope="col" style="width: 12%;" class="text-center">Resultats d'anime (ara)</th>
 								<th scope="col" style="width: 12%;" class="text-center">Resultats de manga (ara)</th>
+<?php
+	}
+?>
 							</tr>
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT LOWER(query) query,COUNT(*) cnt,(SELECT COUNT(*) FROM series s WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.hidden=0)>0 AND s.name LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.alternate_names LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.studio LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.keywords LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name=query)) results_anime,(SELECT COUNT(*) FROM manga m WHERE (SELECT COUNT(*) FROM manga_version mv WHERE mv.manga_id=m.id AND mv.hidden=0)>0 AND m.name LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.alternate_names LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.author LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.keywords LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.id IN (SELECT mg.manga_id FROM rel_manga_genre mg LEFT JOIN genre g ON mg.genre_id=g.id WHERE g.name=query)) results_manga FROM search_history WHERE day>='".date('Y-m-d', strtotime('-30 days'))."' GROUP BY LOWER(query) ORDER BY cnt DESC");
+	$extra_query="";
+	if (!empty($_GET['show_results'])) {
+		$extra_query=",(SELECT COUNT(*) FROM series s WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.hidden=0)>0 AND s.name LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.alternate_names LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.studio LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.keywords LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name=query)) results_anime,(SELECT COUNT(*) FROM manga m WHERE (SELECT COUNT(*) FROM manga_version mv WHERE mv.manga_id=m.id AND mv.hidden=0)>0 AND m.name LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.alternate_names LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.author LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.keywords LIKE CONCAT('%',REPLACE(query,' ','%'),'%') OR m.id IN (SELECT mg.manga_id FROM rel_manga_genre mg LEFT JOIN genre g ON mg.genre_id=g.id WHERE g.name=query)) results_manga";
+	}
+	$result = query("SELECT LOWER(query) query,COUNT(*) cnt$extra_query FROM search_history WHERE day>='".date('Y-m-d', strtotime('-30 days'))."' GROUP BY LOWER(query) ORDER BY cnt DESC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="5" class="text-center">- No hi ha cap cerca -</td>
+								<td colspan="4" class="text-center">- No hi ha cap cerca -</td>
 							</tr>
 <?php
 	}
@@ -35,8 +45,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<td class="align-middle"><?php echo htmlspecialchars($row['query']); ?></td>
 								<td class="align-middle text-center"><?php echo htmlspecialchars($row['cnt']); ?></td>
+<?php
+		if (!empty($_GET['show_results'])) {
+?>
 								<td class="align-middle text-center"><?php echo htmlspecialchars($row['results_anime']); ?></td>
 								<td class="align-middle text-center"><?php echo htmlspecialchars($row['results_manga']); ?></td>
+<?php
+		}
+?>
 							</tr>
 <?php
 	}
