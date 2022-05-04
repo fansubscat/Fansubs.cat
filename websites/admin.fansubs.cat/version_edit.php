@@ -537,6 +537,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$row['show_episode_numbers']=0;
 			$row['show_unavailable_episodes']=1;
 			$row['order_type']=0;
+			$row['storage_processing']=1;
 		} else {
 			$row['hidden']=0;
 			$row['show_seasons']=1;
@@ -545,6 +546,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$row['show_episode_numbers']=1;
 			$row['show_unavailable_episodes']=1;
 			$row['order_type']=0;
+			$row['storage_processing']=1;
 		}
 
 		$fansubs = array();
@@ -690,8 +692,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="form-group">
 									<label for="form-storage_processing"><span class="mandatory">Processament previ</span><br /><small class="text-muted">(com s'importen els fitxers a l'emmagatzematge)</small></label>
 									<select name="storage_processing" class="form-control">
-										<option value="0"<?php echo empty($row['storage_processing']) ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l'àudio</option>
 										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Recomprimeix el vídeo i l'àudio</option>
+										<option value="0"<?php echo empty($row['storage_processing']) ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l'àudio</option>
 										<option value="2"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>Recomprimeix l'àudio, copia el vídeo</option>
 										<option value="3"<?php echo $row['storage_processing']==3 ? " selected" : ""; ?>>No recomprimeixis res (regenera l'MP4)</option>
 										<option value="4"<?php echo $row['storage_processing']==4 ? " selected" : ""; ?>>Copia sense cap canvi (còpia 1:1)</option>
