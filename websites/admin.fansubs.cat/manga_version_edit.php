@@ -62,11 +62,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['is_always_featured']=0;
 		}
-		if (!empty($_POST['hidden'])){
-			$data['hidden']=1;
-		} else {
-			$data['hidden']=0;
-		}
 		if (!empty($_POST['show_volumes'])){
 			$data['show_volumes']=1;
 		} else {
@@ -172,6 +167,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		if (!empty($files)) {
 			$data['hidden']=0;
+		} else {
+			$data['hidden']=1;
 		}
 		mysqli_free_result($resultc);
 
@@ -397,7 +394,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resultm);
 
 		if ($manga['type']=='oneshot') {
-			$row['hidden']=0;
 			$row['show_volumes']=1;
 			$row['show_expanded_volumes']=1;
 			$row['show_expanded_extras']=1;
@@ -405,7 +401,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$row['show_unavailable_chapters']=1;
 			$row['order_type']=0;
 		} else {
-			$row['hidden']=0;
 			$row['show_volumes']=1;
 			$row['show_expanded_volumes']=1;
 			$row['show_expanded_extras']=1;
@@ -775,10 +770,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="form-group">
 							<label for="form-view-options">Opcions de visualització de la fitxa pública</label>
 							<div id="form-view-options" class="row pl-3 pr-3">
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="hidden" id="form-hidden" value="1"<?php echo $row['hidden']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-hidden">Amaga aquesta versió mentre sigui buida <small class="text-muted">(no es mostrarà enlloc fins que no tingui fitxers; si en té, es desmarcarà automàticament)</small></label>
-								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_chapter_numbers" id="form-show_chapter_numbers" value="1"<?php echo $row['show_chapter_numbers']==1 ? " checked" : ""; ?>>
 									<label class="form-check-label" for="form-show_chapter_numbers">Mostra el número dels capítols <small class="text-muted">(normalment activat només en serialitzats; afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>
