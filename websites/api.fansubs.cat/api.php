@@ -366,6 +366,20 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$i
 		else {
 			show_invalid('No valid input provided.');
 		}
+	} else if ($submethod=='change_link_thumbnail') {
+		if (!empty($_POST['link_id']) && is_numeric($_POST['link_id']) && !empty($_FILES['thumbnail']) && is_uploaded_file($_FILES['thumbnail']['tmp_name'])) {
+			$link_id=$_POST['link_id'];
+			move_uploaded_file($_FILES['thumbnail']["tmp_name"], '../anime.fansubs.cat/images/links/'.$link_id.'.jpg');
+			log_action('api-change-link-thumbnail', "S'ha canviat la miniatura del capítol d'anime propi de l'enllaç amb id. $link_id");
+			
+			$response = array(
+				'status' => 'ok'
+			);
+			echo json_encode($response);
+		}
+		else {
+			show_invalid('No valid input provided.');
+		}
 	} else if ($submethod=='change_link_episode_duration') {
 		if (!empty($_POST['link_id']) && is_numeric($_POST['link_id']) && !empty($_POST['duration']) && is_numeric($_POST['duration'])) {
 			$link_id=$_POST['link_id'];

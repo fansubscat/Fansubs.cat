@@ -5,7 +5,7 @@ token="YOUR_TOKEN"
 json=`curl https://api.fansubs.cat/internal/get_converted_links/?token=$token 2> /dev/null`
 if [ $? -eq 0 ]
 then
-	array=`echo $json | jq -c '.result []'`
+	array=`echo $json | jq -c '.result|sort_by(.url) []'`
 	IFS=$'\n'
 	for element in $array
 	do

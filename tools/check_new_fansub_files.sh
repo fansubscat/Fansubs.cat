@@ -93,7 +93,7 @@ do
 	json=`curl https://api.fansubs.cat/internal/get_unconverted_links/?token=$token 2> /dev/null`
 	if [ $? -eq 0 ]
 	then
-		array=`echo $json | jq -c '.result []'`
+		array=`echo $json | jq -c '.result|sort_by(.link_id) []'`
 		IFS=$'\n'
 		for element in $array
 		do
@@ -141,6 +141,16 @@ do
 						notify_error "S'ha sobreescrit el fitxer original $storage_folder/$file i se'n sobreescriurà també la versió recomprimida, si existeix."
 					fi
 					cp "$file" "$orig_dir/$storage_folder/"
+
+					# Extract thumbnail
+					duration=`../ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$file" | awk -F'.' '{print $1}'`
+					../ffmpeg -i "$file" -ss $(((duration)/10)) -vframes 1 -filter:v scale="-1:240" thumbnail_$link_id.jpg
+					curl -F "thumbnail=@thumbnail_$link_id.jpg" -F "link_id=$link_id" https://api.fansubs.cat/internal/change_link_thumbnail/?token=$token 2> /dev/null
+
+					# Update duration
+					duration=$(((duration+30)/60))
+					curl --data-urlencode "duration=$duration" --data-urlencode "link_id=$link_id" https://api.fansubs.cat/internal/change_link_episode_duration/?token=$token 2> /dev/null
+
 					if [ $storage_processing -eq 0 ]
 					then
 						generate_streaming "$file" 0 0 -1 CONVERT COPY "$dest_dir/$storage_folder/$output"
@@ -157,6 +167,8 @@ do
 						cp "$file" "$dest_dir/$storage_folder/$output"
 					fi
 					rsync -avzhW --chmod=u=rwX,go=rX "$dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --delete
+
+					# Insert converted file
 					curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$storage_folder/$output" --data-urlencode "link_id=$link_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null
 					ready=1
 				else
