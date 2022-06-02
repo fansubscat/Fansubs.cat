@@ -157,6 +157,9 @@ if (!empty($series['myanimelist_id'])) {
 							<a class="mal-button" href="https://myanimelist.net/anime/<?php echo $series['myanimelist_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra'n la fitxa a MyAnimeList</a>
 <?php
 }
+?>
+							<a class="hitotsume-button" href="https://discord.com/invite/2Ksxb3wr3t" target="_blank"><span class="fab fa-discord icon"></span>Comenta-ho a HitotsumeCAT</a>
+<?php
 if (!empty($series['tadaima_id'])) {
 ?>
 							<a class="tadaima-button" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><span class="fa fa-comments icon"></span><?php echo get_tadaima_info($series['tadaima_id']); ?></a>

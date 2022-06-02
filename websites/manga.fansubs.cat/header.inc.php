@@ -27,7 +27,7 @@ if (!empty($header_social)) {
 ?>
 		<title><?php echo !empty($header_page_title) ? $header_page_title.' | Fansubs.cat - Manga en català' : 'Fansubs.cat - Manga en català'; ?></title>
 		<link rel="shortcut icon" href="/favicon.png" />
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css">
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>

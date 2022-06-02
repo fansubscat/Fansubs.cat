@@ -378,7 +378,7 @@ function initializePlayer(title, method, sourceData){
 				fullscreen: {
 					enterOnRotate: true,
 					alwaysInLandscapeMode: true,
-					iOS: true
+					iOS: false
 				}
 			},
 			hotkeys: {
