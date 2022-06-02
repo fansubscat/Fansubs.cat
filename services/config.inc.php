@@ -23,6 +23,12 @@ $twitter_consumer_secret='YOUR_TWITTER_SECRET_HERE';
 $twitter_access_token='YOUR_TWITTER_ACCESS_TOKEN_HERE';
 $twitter_access_token_secret='YOUR_TWITTER_ACCESS_SECRET_HERE';
 
+//Multiple Discord webhooks are possible
+$discord_webhooks = array(
+	'YOUR_DISCORD_WEBHOOK_1_HERE',
+	'YOUR_DISCORD_WEBHOOK_2_HERE'
+);
+
 //Files
 $lock_file='/tmp/fansubscat_fetch_lock';
 
