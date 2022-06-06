@@ -143,7 +143,7 @@ if "%action_video%" == "COPY" (
 ) else (
 	if %has_softsubs% equ 1 (
 		echo S'està comprovant que els tipus de lletra existeixin i s'identifiquin correctament ^(caldrà validació manual^)...
-		ffmpeg\bin\ffmpeg.exe -y -i "%original_file%" -map_metadata -1 -map_chapters -1 -map 0:v:%$video_stream% -map 0:a:%audio_stream% -vf %filter_opts% -f null - 2>&1| findstr fontselect
+		ffmpeg\bin\ffmpeg.exe -y -i "%original_file%" -map_metadata -1 -map_chapters -1 -map 0:v:%$video_stream% -map 0:a:%audio_stream% -vf %filter_opts% -f null - 2>&1| findstr fontselect 2> nul
 		set /p=Premeu Intro si tots els tipus de lletra estan correctament identificats o tanqueu la finestra si no és així.
 		setlocal EnableDelayedExpansion
 		ffmpeg\bin\ffmpeg.exe -y -i "%original_file%" -map_metadata -1 -map_chapters -1 -map 0:v:%video_stream% -map 0:a:%audio_stream% -pix_fmt yuv420p -vf %filter_opts% %video_opts% %audio_opts% -metadata title="%title%" -metadata artist="%author%" -metadata comment="Codificador: %script_id%!LF!Paràmetres: %video_opts% %audio_opts%" -movflags faststart "%output_dir%\%output_file%.mp4"
