@@ -526,7 +526,7 @@ function get_recommended_fansub_info($fansub_name, $fansub_type, $manga=FALSE) {
 	} else if ($fansub_type=='fandub') {
 		return 'Doblatge '.get_fansub_preposition_name($fansub_name);
 	} else if ($manga){
-		return 'Editat per '.get_fansub_preposition_name($fansub_name);
+		return 'Editat per '.$fansub_name;
 	} else {
 		return 'Subtítols '.get_fansub_preposition_name($fansub_name);
 	}
@@ -694,16 +694,16 @@ function get_cookie_fansub_ids() {
 }
 
 function get_cookie_viewed_files_ids() {
-	$link_ids = array();
+	$file_ids = array();
 	if (!empty($_COOKIE['viewed_files'])) {
 		$exploded = explode(',',$_COOKIE['viewed_files']);
 		foreach ($exploded as $id) {
 			if (intval($id)) {
-				array_push($link_ids, intval($id));
+				array_push($file_ids, intval($id));
 			}
 		}
 	}
-	return $link_ids;
+	return $file_ids;
 }
 
 function get_tadaima_info($thread_id) {

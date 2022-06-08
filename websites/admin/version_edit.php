@@ -35,7 +35,8 @@ switch ($type) {
 		$division_one="una";
 		$division_many="moltes";
 		$division_pl="temporades";
-		$division_pl_expanded="temporades desplegades";
+		$division_pl_expanded="les temporades desplegades";
+		$series_name="sèries";
 		break;
 	case 'manga':
 		$content="manga";
@@ -47,7 +48,8 @@ switch ($type) {
 		$division_one="un";
 		$division_many="molts";
 		$division_pl="volums";
-		$division_pl_expanded="volums desplegats";
+		$division_pl_expanded="els volums desplegats";
+		$series_name="serialitzats";
 		break;
 	case 'liveaction':
 		$content="contingut d'acció real";
@@ -59,7 +61,8 @@ switch ($type) {
 		$division_one="una";
 		$division_many="moltes";
 		$division_pl="temporades";
-		$division_pl_expanded="temporades desplegades";
+		$division_pl_expanded="les temporades desplegades";
+		$series_name="sèries";
 		break;
 }
 
@@ -846,7 +849,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<label class="form-check-label" for="form-is_featurable">Té qualitat per a ser recomanada</label>
 										</div>
 										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="is_always_featured" id="form-is_always_featured" value="1"<?php echo $row['is_always_featured']==1? " checked" : ""; ?>>
+											<input class="form-check-input" type="checkbox" name="is_always_featured" id="form-is_always_featured" value="1"<?php echo $row['is_always_featured']==1? " checked" : ""; ?> onchange="if (this.checked) {if (!confirm('Recorda que aquesta opció és només per a sèries de temporada o casos especials. No tindrà efecte fins al pròxim dilluns. Segur que la vols marcar com a “recomanada sempre“?')) this.checked=''; };">
 											<label class="form-check-label" for="form-is_always_featured">Mostra-la sempre com a recomanada</label>
 										</div>
 									</div>
@@ -866,12 +869,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm-4">
 								<div class="form-group">
 									<label for="form-storage_processing"><span class="mandatory">Processament previ</span><br /><small class="text-muted">(com s'importen els fitxers a l'emmagatzematge)</small></label>
-									<select name="storage_processing" class="form-control">
+									<select name="storage_processing" class="form-control" onchange="if(!confirm('Modificar aquesta opció pot provocar que els vídeos no es puguin reproduir correctament. Canvia-la només si tens el permís d‘un administrador. En cas contrari, deixa-la a “Recomprimeix el vídeo i l’àudio”. Vols mantenir el canvi?')) this.selectedIndex=0;">
 										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Recomprimeix el vídeo i l'àudio</option>
-										<option value="0"<?php echo empty($row['storage_processing']) ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l'àudio</option>
+										<option value="0"<?php echo $row['storage_processing']==0 ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l'àudio</option>
 										<option value="2"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>Recomprimeix l'àudio, copia el vídeo</option>
 										<option value="3"<?php echo $row['storage_processing']==3 ? " selected" : ""; ?>>No recomprimeixis res (regenera l'MP4)</option>
 										<option value="4"<?php echo $row['storage_processing']==4 ? " selected" : ""; ?>>Copia sense cap canvi (còpia 1:1)</option>
+										<option value="5"<?php echo $row['storage_processing']==5 ? " selected" : ""; ?>>Omet l'emmagatzematge local (còpia 1:1)</option>
 									</select>
 								</div>
 							</div>
@@ -1213,7 +1217,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																</table>
 															</td>
 															<td>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" pattern="^\d+:[0-5]\d:[0-5]\d$" class="form-control" value="<?php echo convert_to_hh_mm_ss($files[$j]['length']); ?>"/>
+																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="time" step="1" class="form-control" value="<?php echo convert_to_hh_mm_ss($files[$j]['length']); ?>"/>
 															</td>
 <?php
 			}
@@ -1276,7 +1280,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																</table>
 															</td>
 															<td>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" pattern="^\d+:[0-5]\d:[0-5]\d$" class="form-control"/>
+																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="time" step="1" class="form-control"/>
 															</td>
 <?php
 			}
@@ -1412,7 +1416,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																</table>
 															</td>
 															<td>
-																<input id="form-extras-list-length-<?php echo $j+1; ?>" name="form-extras-list-length-<?php echo $j+1; ?>" pattern="^\d+:[0-5]\d:[0-5]\d$" class="form-control" value="<?php echo convert_to_hh_mm_ss($extras[$j]['length']); ?>" required/>
+																<input id="form-extras-list-length-<?php echo $j+1; ?>" name="form-extras-list-length-<?php echo $j+1; ?>" type="time" step="1" class="form-control" value="<?php echo convert_to_hh_mm_ss($extras[$j]['length']); ?>" required/>
 															</td>
 <?php
 		}
@@ -1441,7 +1445,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div id="form-view-options" class="row pl-3 pr-3">
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols <small class="text-muted">(normalment activat només en sèries; afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>
+									<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols <small class="text-muted">(normalment activat només en <?php echo $series_name; ?>; afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_divisions" id="form-show_divisions" value="1"<?php echo $row['show_divisions']==1 ? " checked" : ""; ?>>
@@ -1449,7 +1453,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_expanded_divisions" id="form-show_expanded_divisions" value="1"<?php echo $row['show_expanded_divisions']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_expanded_divisions">Mostra les <?php echo $division_pl_expanded; ?> per defecte <small class="text-muted">(normalment activat; si n'hi ha <?php echo $division_many; ?>, es pot desmarcar)</small></label>
+									<label class="form-check-label" for="form-show_expanded_divisions">Mostra <?php echo $division_pl_expanded; ?> per defecte <small class="text-muted">(normalment activat; si n'hi ha <?php echo $division_many; ?>, es pot desmarcar)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_expanded_extras" id="form-show_expanded_extras" value="1"<?php echo $row['show_expanded_extras']==1 ? " checked" : ""; ?>>

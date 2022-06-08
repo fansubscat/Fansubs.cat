@@ -88,7 +88,7 @@ switch ($header_tab){
 			query("INSERT INTO search_history (query,day) VALUES ('".escape($_GET['query'])."','".date('Y-m-d')."')");
 		}
 		$sections=array($config['section_search_results']);
-		$descriptions=array(sprintf($config['section_search_results_desc'], $query));
+		$descriptions=array(sprintf($config['section_search_results_desc'], $query, "%s"));
 		$spaced_query=$query;
 		$query = str_replace(" ", "%", $query);
 		$queries=array(

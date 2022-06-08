@@ -308,11 +308,12 @@ else if ($method === 'manga'){
 else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$internal_token){
 	$submethod = array_shift($request);
 	if ($submethod=='get_unconverted_links') {
-		$result = mysqli_query($db_connection, "SELECT l.*, v.storage_folder, v.storage_processing, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url NOT LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND f.id>=".$_GET['from_id'] : '')." AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%') ORDER BY s.name ASC, f.id ASC") or crash('Internal error: ' . mysqli_error($db_connection));
+		$result = mysqli_query($db_connection, "SELECT l.*, s.type, v.storage_folder, v.storage_processing, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url NOT LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND f.id>=".$_GET['from_id'] : '')." AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%') ORDER BY s.name ASC, f.id ASC") or crash('Internal error: ' . mysqli_error($db_connection));
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
 				'file_id' => $row['file_id'],
+				'type' => $row['type'],
 				'url' => $row['url'],
 				'resolution' => $row['resolution'],
 				'is_extra' => $row['is_extra'] ? TRUE : FALSE,
@@ -327,15 +328,15 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$i
 		);
 		echo json_encode($response);
 	} else if ($submethod=='get_converted_links') {
-		$result = mysqli_query($db_connection, "SELECT l.*, v.storage_folder, v.storage_processing, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra, f.length,(SELECT COUNT(*) FROM file WHERE episode_id=f.episode_id)<2 is_unique FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND f.id>=".$_GET['from_id'] : '')." ORDER BY s.name ASC, f.id ASC") or crash('Internal error: ' . mysqli_error($db_connection));
+		$result = mysqli_query($db_connection, "SELECT l.*, s.type, v.storage_folder, v.storage_processing, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra, f.length FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND f.id>=".$_GET['from_id'] : '')." ORDER BY s.name ASC, f.id ASC") or crash('Internal error: ' . mysqli_error($db_connection));
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
 				'file_id' => $row['file_id'],
+				'type' => $row['type'],
 				'url' => $row['url'],
 				'resolution' => $row['resolution'],
 				'is_extra' => $row['is_extra'] ? TRUE : FALSE,
-				'is_unique' => $row['is_unique'] ? TRUE : FALSE,
 				'duration_in_seconds' => !empty($row['length']) ? $row['length'] : 0
 			);
 		}
@@ -353,9 +354,9 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$i
 			$resolution=mysqli_real_escape_string($db_connection, $_POST['resolution']);
 			$result = mysqli_query($db_connection, "INSERT INTO link (file_id, url, resolution, created,created_by,updated,updated_by) SELECT $file_id, '$url', '$resolution', CURRENT_TIMESTAMP, 'API', CURRENT_TIMESTAMP, 'API' FROM link WHERE EXISTS (SELECT url FROM link WHERE url='".$original_url."' AND file_id=".$file_id.") LIMIT 1") or crash('Internal error: ' . mysqli_error($db_connection));
 			if (mysqli_affected_rows($db_connection)>0) {
-				log_action('api-insert-converted-link', "S'ha inserit l'enllaç convertit '$url' al fitxer amb id. $file_id");
+				log_action('api-insert-converted-link', "S'ha inserit l'enllaç convertit '$url' del fitxer amb id. $file_id");
 			} else {
-				log_action('api-discard-converted-link', "S'ha descartat l'enllaç convertit '$url' al fitxer amb id. $file_id, segurament s'ha actualitzat mentre es convertia");
+				log_action('api-discard-converted-link', "S'ha descartat l'enllaç convertit '$url' del fitxer amb id. $file_id, segurament s'ha actualitzat mentre es convertia");
 			}
 			
 			$response = array(

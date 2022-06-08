@@ -485,7 +485,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="form-group">
-									<label for="form-air_date">Data d'estrena</label>
+									<label for="form-publish_date">Data d'estrena</label>
 									<input class="form-control" name="publish_date" type="date" id="form-publish_date" maxlength="200" value="<?php echo !empty($row['publish_date']) ? date('Y-m-d', strtotime($row['publish_date'])) : ""; ?>">
 								</div>
 							</div>

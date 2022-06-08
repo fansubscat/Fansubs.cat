@@ -64,11 +64,11 @@ $links = filter_links($links);
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title><?php ?><?php echo $page_title; ?> | <?php echo $config['site_title']; </title>
+		<title><?php ?><?php echo $page_title; ?> | <?php echo $config['site_title']; ?></title>
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" />
 		<link rel="stylesheet" href="/js/videojs/video-js.css?v=<?php echo PL_VER; ?>" />
 		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo PL_VER; ?>" />
-		<link rel="stylesheet" href="/style/anime.css?v=<?php echo CS_VER; ?>" />
+		<link rel="stylesheet" href="/style/main.css?v=<?php echo CS_VER; ?>" />
 		<script>
 			window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = {
 				preloadWebComponents: true,
@@ -97,7 +97,7 @@ $links = filter_links($links);
 		<input type="hidden" id="data-episode-title" value="<?php echo $file['is_extra'] ? htmlspecialchars($file['extra_name']) : get_embed_episode_name($file['number'], $file['episode_title'], $file['series_name'], $file['series_type'], $file['show_episode_numbers']); ?>" />
 		<input type="hidden" id="data-cover" value="<?php echo $static_url.'/images/covers/'.$file['series_id'].'.jpg'; ?>" />
 		<input type="hidden" id="data-fansub" value="<?php echo htmlspecialchars($file['fansub_name']); ?>" />
-		<input type="hidden" id="data-item-type" value="<?php echo $config['items_type']"; ?>" />
+		<input type="hidden" id="data-item-type" value="<?php echo $config['items_type']; ?>" />
 		<div id="overlay">
 			<a id="overlay-close" style="display: none;"><span class="fa fa-times"></span></a>
 			<div id="overlay-content"></div>

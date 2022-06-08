@@ -95,7 +95,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<option value="">- Selecciona un nivell -</option>
 								<option value="1"<?php echo $row['admin_level']==1 ? " selected" : ""; ?>>1: Gestor de versions</option>
 								<option value="2"<?php echo $row['admin_level']==2 ? " selected" : ""; ?>>2: Gestor de fitxes i versions</option>
-								<option value="3"<?php echo $row['admin_level']==3 ? " selected" : ""; ?>>3: Administrador</option>
+								<option value="3"<?php echo $row['admin_level']==3 ? " selected" : ""; ?>>3: Control total</option>
 							</select>
 						</div>
 						<div class="form-group">

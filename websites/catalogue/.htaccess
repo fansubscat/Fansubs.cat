@@ -26,6 +26,8 @@ RewriteRule ^favicon\.png$ images/favicon_liveaction.png [L]
 RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
 RewriteCond %{REQUEST_URI} !error\.php
 RewriteCond %{REQUEST_URI} !counter\.php
+RewriteCond %{REQUEST_URI} !reader\.php
+RewriteCond %{REQUEST_URI} !strip_reader\.php
 RewriteRule \.php$ - [F]
 
 #Preview image

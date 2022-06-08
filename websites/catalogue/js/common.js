@@ -50,7 +50,7 @@ function sendReadEndAjax(){
 	if (currentFileId!=-1){
 		clearInterval(reportTimer);
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", '/counter.php?view_id='+currentReadId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
+		xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
 		xmlHttp.send(null);
 		currentFileId=-1;
 		currentMethod=null;
@@ -63,7 +63,7 @@ function sendReadEndAjax(){
 function sendReadEndBeacon(){
 	if (currentFileId!=-1){
 		clearInterval(reportTimer);
-		navigator.sendBeacon('/counter.php?view_id='+currentReadId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
+		navigator.sendBeacon('/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
 		currentFileId=-1;
 		currentMethod=null;
 		currentViewId="";
@@ -119,10 +119,10 @@ function beginReaderTracking(fileId){
 	currentFileId=fileId;
 	currentMethod='pages';
 	//The chances of collision of this is so low that if we get a collision, it's no problem at all.
-	currentReadId=getNewViewId();
+	currentViewId=getNewViewId();
 	currentReadStartTime=Math.floor(new Date().getTime()/1000);
 	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("GET", baseUrl+'/counter.php?view_id='+currentViewId+'&file_id='+fileId+"&method=reader&action=open", true);
+	xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+fileId+"&method=reader&action=open", true);
 	xmlHttp.send(null);
 	reportTimer = setInterval(function tick() {
 		xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method=reader&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);

@@ -1,8 +1,7 @@
 #!/bin/bash
-orig_dir="/YOUR/ORIGINAL/FILES/DIR"
-dest_dir="/YOUR/CONVERTED/FILES/DIR"
 token="YOUR_TOKEN"
 dest_host="your.host.xyz"
+base_dest_dir="YOUR_DESTINATION_DIRECTORY"
 
 function notify_error {
 	php -r "mail('YOUR_EMAIL', \"Notificació del procés d'importació de fitxers a Fansubs.cat\", \"$1\");"
@@ -12,12 +11,12 @@ function generate_streaming {
 	original_file=$1
 	video_stream=$2
 	audio_stream=$3
-	subtitle_stream=$4
+	subtitle_stream=$4 #Unused in this script
 	action_video=$5
 	action_audio=$6
 	output_file=$7
 	
-	author="Recompressió per a anime.fansubs.cat"
+	author="Recompressió per a Fansubs.cat"
 	title="No baixeu aquest fitxer, baixeu l'original!"
 	script_id="AutomaticBatchProcessor"
 	crf_fullhd="23"
@@ -48,18 +47,6 @@ function generate_streaming {
 		max_bitrate=$max_bitrate_fullhd
 	fi
 
-	if [[ "$subtitle_stream" =~ ^-?[0-9]+$ ]]
-	then
-		if [ $subtitle_stream -ne -1 ]
-		then
-			filter_opts=""
-		else
-			filter_opts="subtitles='$original_file:si=$subtitle_stream',"
-		fi
-	else
-		filter_opts="subtitles='$subtitle_stream',"
-	fi
-
 	if [ "$action_video" = "COPY" ]
 	then
 		video_opts="-c:v copy"
@@ -80,11 +67,11 @@ function generate_streaming {
 	then
 		../ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream $video_opts $audio_opts -metadata title="$title" -metadata artist="$author" -metadata comment="$comment" -movflags faststart "$output_file"
 	else
-		../ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream -pix_fmt yuv420p -vf "${filter_opts}null" $video_opts $audio_opts -metadata title="$title" -metadata artist="$author" -metadata comment="$comment" -movflags faststart "$output_file"
+		../ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream -pix_fmt yuv420p $video_opts $audio_opts -metadata title="$title" -metadata artist="$author" -metadata comment="$comment" -movflags faststart "$output_file"
 	fi
 }
 
-treated_link_ids=()
+treated_file_ids=()
 
 mega-whoami
 
@@ -93,12 +80,13 @@ do
 	json=`curl https://api.fansubs.cat/internal/get_unconverted_links/?token=$token 2> /dev/null`
 	if [ $? -eq 0 ]
 	then
-		array=`echo $json | jq -c '.result|sort_by(.link_id) []'`
+		array=`echo $json | jq -c '.result|sort_by(.file_id) []'`
 		IFS=$'\n'
 		for element in $array
 		do
 			unset IFS
-			link_id=`echo $element | jq -r '.link_id'`
+			file_id=`echo $element | jq -r '.file_id'`
+			type=`echo $element | jq -r '.type'`
 			url=`echo $element | jq -r '.url'`
 			storage_folder=`echo $element | jq -r '.storage_folder'`
 			storage_processing=`echo $element | jq -r '.storage_processing'`
@@ -107,13 +95,24 @@ do
 
 			if [[ ! "$url" =~ ^https://mega\.nz.* ]]
 			then
-				if [[ ! " ${treated_link_ids[@]} " =~ " $link_id " ]]
+				if [[ ! " ${treated_file_ids[@]} " =~ " $file_id " ]]
 				then
 					#New - notify
-					treated_link_ids+=($link_id)
-					notify_error "Hi ha un enllaç que no és de MEGA pendent de conversió: id. $link_id, URL $url"
+					treated_file_ids+=($file_id)
+					notify_error "Hi ha un enllaç que no és de MEGA pendent de conversió: id. $file_id, URL $url"
 				fi
 				continue
+			fi
+
+			folder_type="Anime"
+			orig_dir="/volume1/Fansubs - Anime"
+			dest_dir="$base_dest_dir/Anime"
+
+			if [ $type = "liveaction" ]
+			then
+				folder_type="Acció real"
+				orig_dir="/volume1/Fansubs - Acció real"
+				dest_dir="$base_dest_dir/Acció real"
 			fi
 
 			if [ $is_extra = "true" ]
@@ -121,7 +120,7 @@ do
 				storage_folder="$storage_folder/Extres"
 			fi
 			
-			echo "Processing link id $link_id, folder: $storage_folder, URL: $url"
+			echo "Processing file id $file_id, folder: $storage_folder, URL: $url"
 			mkdir -p "$orig_dir/$storage_folder"
 			mkdir -p "$dest_dir/$storage_folder"
 			mkdir Temporal
@@ -136,20 +135,24 @@ do
 				then
 					file=`ls *.mp4`
 					output=`echo "$file" | sed -E "s/ \[.*\]//"`
-					if [ -f "$orig_dir/$storage_folder/$file" ]
+
+					# Copy to original folder, unless the method is only copy to storage
+					if [ $storage_processing -ne 5 ]
 					then
-						notify_error "S'ha sobreescrit el fitxer original $storage_folder/$file i se'n sobreescriurà també la versió recomprimida, si existeix."
+						if [ -f "$orig_dir/$storage_folder/$file" ]
+						then
+							notify_error "S'ha sobreescrit el fitxer original $folder_type/$storage_folder/$file i se'n sobreescriurà també la versió recomprimida, si existeix."
+						fi
+						cp "$file" "$orig_dir/$storage_folder/"
 					fi
-					cp "$file" "$orig_dir/$storage_folder/"
 
 					# Extract thumbnail
 					duration=`../ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$file" | awk -F'.' '{print $1}'`
 					../ffmpeg -i "$file" -ss $(((duration)/10)) -vframes 1 -filter:v scale="-1:240" thumbnail_$link_id.jpg
-					curl -F "thumbnail=@thumbnail_$link_id.jpg" -F "link_id=$link_id" https://api.fansubs.cat/internal/change_link_thumbnail/?token=$token 2> /dev/null
+					curl -F "thumbnail=@thumbnail_$file_id.jpg" -F "file_id=$file_id" https://api.fansubs.cat/internal/change_file_thumbnail/?token=$token 2> /dev/null
 
 					# Update duration
-					duration=$(((duration+30)/60))
-					curl --data-urlencode "duration=$duration" --data-urlencode "link_id=$link_id" https://api.fansubs.cat/internal/change_link_episode_duration/?token=$token 2> /dev/null
+					curl --data-urlencode "duration=$duration" --data-urlencode "file_id=$file_id" https://api.fansubs.cat/internal/change_file_duration/?token=$token 2> /dev/null
 
 					if [ $storage_processing -eq 0 ]
 					then
@@ -166,10 +169,10 @@ do
 					else
 						cp "$file" "$dest_dir/$storage_folder/$output"
 					fi
-					rsync -avzhW --chmod=u=rwX,go=rX "$dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --delete
+					rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --delete
 
 					# Insert converted file
-					curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$storage_folder/$output" --data-urlencode "link_id=$link_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null
+					curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$folder_type/$storage_folder/$output" --data-urlencode "file_id=$file_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null
 					ready=1
 				else
 					echo "Error downloading: $?, waiting 30 minutes... Now at `date -Iseconds`."

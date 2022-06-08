@@ -26,6 +26,19 @@ include("header.inc.php");
 
 switch ($type) {
 	case 'anime':
+		$viewed_content_field='time_spent';
+		$viewed_content_divide=3600;
+		$series_a='Visualitzacions reals';
+		$series_b='Clics sense visualitzar';
+		$series_c='Temps de visualització';
+		$series_a_graph='Visualitzacions reals';
+		$series_b_graph='Clics sense visualitzar';
+		$series_c_graph='Temps de visualització (h)';
+		$series_a_short='Visualitzacions';
+		$series_b_short='Clics sense v.';
+		$series_c_short='Temps total';
+		$series_c_color='rgb(40, 167, 69)';
+		$start_date='2020-06-01';
 	case 'liveaction':
 		$viewed_content_field='time_spent';
 		$viewed_content_divide=3600;
@@ -39,6 +52,7 @@ switch ($type) {
 		$series_b_short='Clics sense v.';
 		$series_c_short='Temps total';
 		$series_c_color='rgb(40, 167, 69)';
+		$start_date='2022-06-01';
 	break;
 	case 'manga':
 		$viewed_content_field='pages_read';
@@ -53,6 +67,7 @@ switch ($type) {
 		$series_b_short='Clics sense ll.';
 		$series_c_short='Pàg. totals';
 		$series_c_color='rgb(167, 167, 69)';
+		$start_date='2021-01-01';
 	break;
 }
 
@@ -107,8 +122,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	$current_month = strtotime(date('Y-m-01'));
 	$i=0;
-	while (strtotime(date('2020-06-01')."+$i months")<=$current_month) {
-		$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=array(0, 0, 0);
+	while (strtotime(date($start_date)."+$i months")<=$current_month) {
+		$months[date("Y-m", strtotime(date($start_date)."+$i months"))]=array(0, 0, 0);
 		$i++;
 	}
 

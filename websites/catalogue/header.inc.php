@@ -179,8 +179,8 @@ mysqli_free_result($resultf);
 				</div>
 				<div class="tabs">
 					<a class="tab<?php if ($header_tab=='main') echo ' selectedtab'; ?>" href="/"><span class="fa fa-star"></span> Destacats</a>
-					<a class="tab<?php if ($header_tab==$config['filmsoneshots_slug_internal']) echo ' selectedtab'; ?>" href="<?php echo '/'.$config['filmsoneshots_slug']; ?>"><span class="fa fa-video"></span> <?php echo $config['filmsoneshots']; ?></a>
-					<a class="tab<?php if ($header_tab==$config['serialized_slug_internal']) echo ' selectedtab'; ?>" href="<?php echo '/'.$config['serialized_slug']; ?>"><span class="fa fa-tv"></span> <?php echo $config['serialized']; ?></a>
+					<a class="tab<?php if ($header_tab==$config['filmsoneshots_slug_internal']) echo ' selectedtab'; ?>" href="<?php echo '/'.$config['filmsoneshots_slug']; ?>"><span class="fa <?php echo $config['filmsoneshots_icon']; ?>"></span> <?php echo $config['filmsoneshots']; ?></a>
+					<a class="tab<?php if ($header_tab==$config['serialized_slug_internal']) echo ' selectedtab'; ?>" href="<?php echo '/'.$config['serialized_slug']; ?>"><span class="fa <?php echo $config['serialized_icon']; ?>"></span> <?php echo $config['serialized']; ?></a>
 				</div>
 				<div class="separator"></div>
 				<div class="user-options">

@@ -472,7 +472,7 @@ if ($count_unfiltered==0) {
 										<thead>
 											<tr>
 												<th class="episode-seen-head">Vist</th>
-												<th>Nom</th>
+												<th>Títol</th>
 <?php
 					if ($config['items_type']!='manga') {
 ?>
@@ -507,7 +507,17 @@ if ($count_unfiltered==0) {
 					}
 ?>
 									<details id="<?php echo $config['division_name_lc']; ?>-<?php echo !empty($division['division_number']) ? $division['division_number'] : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
+<?php
+					if ($config['items_type']=='manga') {
+?>
+										<summary class="division_name"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Volum únic' : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? 'Volum '.$division['division_number'] : 'Volum únic'))) : 'Altres'; ?><?php echo $division_available_episodes[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
+<?php
+					} else {
+?>
 										<summary class="division_name"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : ($config['division_name'].' '.$division['division_number'].(!empty($division['division_name']) ? ': '.$division['division_name'] : ''))) : 'Altres'; ?><?php echo $division_available_episodes[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
+<?php
+					}
+?>
 										<div class="division-container">
 <?php
 					if (file_exists($static_directory.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg')) {
@@ -523,7 +533,7 @@ if ($count_unfiltered==0) {
 												<thead>
 													<tr>
 														<th class="episode-seen-head">Vist</th>
-														<th>Nom</th>
+														<th>Títol</th>
 <?php
 					if ($config['items_type']!='manga') {
 ?>

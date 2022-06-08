@@ -95,7 +95,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<tr>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
-								<td class="align-middle text-center"><?php echo $row['type']=='movie' ? 'Film' : 'Sèrie'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['subtype']=='movie' ? 'Film' : ($row['subtype']=='oneshot' ? 'One-shot' : ($row['subtype']=='serialized' ? 'Serialitzat' : 'Sèrie')); ?></td>
 								<td class="align-middle text-center"><?php echo $row['divisions']; ?></td>
 								<td class="align-middle text-center"><?php echo ($row['number_of_episodes']!=-1 ? $row['number_of_episodes'] : 'Oberta').($row['specials']>0 ? '<small>+'.$row['specials'].'</small>' : ''); ?></td>
 								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>

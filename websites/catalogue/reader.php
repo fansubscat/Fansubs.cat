@@ -4,7 +4,7 @@ require_once("common.inc.php");
 
 $file_id = (!empty($_GET['file_id']) ? intval($_GET['file_id']) : 0);
 
-$result = query("SELECT f.*,m.reader_type, CONCAT(m.name,' - Volum ', vo.number, ' - ', IF(v.show_chapter_numbers AND c.number IS NOT NULL,CONCAT('Capítol ', c.number,': ',ct.title),ct.title)) chapter_name FROM file f LEFT JOIN manga_version v ON f.manga_version_id=v.id LEFT JOIN chapter c ON f.chapter_id=c.id LEFT JOIN volume vo ON c.volume_id=vo.id LEFT JOIN chapter_title ct ON c.id=ct.chapter_id AND v.id=ct.manga_version_id LEFT JOIN manga m ON v.manga_id=m.id WHERE f.id=$file_id AND f.original_filename IS NOT NULL");
+$result = query("SELECT f.*,m.reader_type, CONCAT(m.name,' - Volum ', vo.number, ' - ', IF(v.show_episode_numbers AND c.number IS NOT NULL,CONCAT('Capítol ', c.number,': ',ct.title),ct.title)) episode_name FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN episode c ON f.episode_id=c.id LEFT JOIN division vo ON c.division_id=vo.id LEFT JOIN episode_title ct ON c.id=ct.episode_id AND v.id=ct.version_id LEFT JOIN series m ON v.series_id=m.id WHERE m.type='manga' AND f.id=$file_id AND f.is_lost=0");
 $file = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
@@ -39,7 +39,7 @@ if (!file_exists($base_path)) {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Fansubs.cat - Manga en català</title>
+		<title><?php echo $config['site_title']; ?></title>
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -196,7 +196,7 @@ if ($mode=='strip'){
 		} else {
 			$first=FALSE;
 		}
-		echo "\t\t\t\t\t\t".'{"src": "'.$base_path.'/'.$file.'"}';
+		echo "\t\t\t\t\t\t".'{"src": "'.$static_url.'/storage/'.$file_id.'/'.$file.'"}';
 	}
 }
 ?>

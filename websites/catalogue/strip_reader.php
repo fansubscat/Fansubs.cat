@@ -93,7 +93,7 @@ if (!file_exists($base_path)) {
 		if ($file=='.' || $file=='..') {
 			continue;
 		}
-		echo "\t\t\t".'<img style="display: block; max-width: 100%; width: auto; height: auto;" src="'.$base_path.'/'.$file.'" alt="" />';
+		echo "\t\t\t".'<img style="display: block; max-width: 100%; width: auto; height: auto;" src="'.$static_url.'/storage/'.$file_id.'/'.$file.'" alt="" />';
 	}
 ?>
 		</div>

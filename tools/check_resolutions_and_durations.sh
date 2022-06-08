@@ -10,10 +10,10 @@ then
 	for element in $array
 	do
 		unset IFS
-		link_id=`echo $element | jq -r '.link_id'`
+		file_id=`echo $element | jq -r '.file_id'`
 		url=`echo $element | jq -r '.url' | sed -E "s/^storage:\\\/\\\///"`
 		resolutionp=`echo $element | jq -r '.resolution' | sed -E "s/720p/1x720/" | sed -E "s/480p/1x480/" | sed -E "s/1080p/1x1080/" | sed -E "s/360p/1x360/" | sed -E "s/540p/1x540/" | sed -E "s/576p/1x576/" | sed -E "s/240p/1x240/" | awk -F'x' '{print $2}'`
-		durationp=`echo $element | jq -r '.duration_in_minutes'`
+		durationp=`echo $element | jq -r '.duration_in_seconds'`
 		is_extra=`echo $element | jq -r '.is_extra'`
 		is_unique=`echo $element | jq -r '.is_unique'`
 		resolutionr=`./ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=s=x:p=0 "$dest_dir/$url"`
@@ -42,26 +42,21 @@ then
 		fi
 
 		durationr=`./ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$dest_dir/$url" | awk -F'.' '{print $1}'`
-		durationr=$(((durationr+30)/60))
+		durationd=$((durationp-durationr))
 
-		if [ $is_extra = "false" ]
+		if [ $is_extra = "true" ]
 		then
-			durationd=$((durationp-durationr))
-
-			if [ $durationd -ne 0 ]
+			if [ $durationr -ge 10 ]
 			then
-				echo "Duration DOES NOT MATCH for file '$url': WEB:$durationp!=HDD:$durationr";
-				if [ $is_unique = "true" ]
-				then
-					curl --data-urlencode "duration=$durationr" --data-urlencode "link_id=$link_id" https://api.fansubs.cat/internal/change_link_episode_duration/?token=$token 2> /dev/null
-					echo "Setting duration to $durationr for link id $link_id"
-				else
-					echo "WARNING! Check duration for link id $link_id! It has multiple versions!"
-				fi
+				echo "WARNING! Extra '$url' is more than 10 minutes long: are you sure this is an extra?"
 			fi
-		elif [ $durationr -ge 10 ]
+		fi
+
+		if [ $durationd -ne 0 ]
 		then
-			echo "WARNING! Extra '$url' is more than 10 minutes long: are you sure this is an extra?"
+			echo "Duration DOES NOT MATCH for file '$url': WEB:$durationp!=HDD:$durationr";
+			curl --data-urlencode "duration=$durationr" --data-urlencode "file_id=$file_id" https://api.fansubs.cat/internal/change_file_duration/?token=$token 2> /dev/null
+			echo "Setting duration to $durationr for file id $file_id"
 		fi
 		
 		IFS=$'\n'

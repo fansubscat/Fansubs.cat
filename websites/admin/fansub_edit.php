@@ -67,10 +67,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
-				move_uploaded_file($_FILES['icon']["tmp_name"], $static_directory.'/icons/'.$data['id'].'.png');
+				move_uploaded_file($_FILES['icon']["tmp_name"], $static_directory.'/images/icons/'.$data['id'].'.png');
 			}
 			if (!empty($_FILES['logo'])) {
-				move_uploaded_file($_FILES['logo']["tmp_name"], $static_directory.'/logos/'.$data['id'].'.png');
+				move_uploaded_file($_FILES['logo']["tmp_name"], $static_directory.'/images/logos/'.$data['id'].'.png');
 			}
 		}
 		else {
@@ -78,10 +78,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,status,ping_token,is_historical,archive_url,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['icon'])) {
-				move_uploaded_file($_FILES['icon']["tmp_name"], $static_directory.'/icons/'.mysqli_insert_id($db_connection).'.png');
+				move_uploaded_file($_FILES['icon']["tmp_name"], $static_directory.'/images/icons/'.mysqli_insert_id($db_connection).'.png');
 			}
 			if (!empty($_FILES['logo'])) {
-				move_uploaded_file($_FILES['logo']["tmp_name"], $static_directory.'/logos/'.mysqli_insert_id($db_connection).'.png');
+				move_uploaded_file($_FILES['logo']["tmp_name"], $static_directory.'/images/logos/'.mysqli_insert_id($db_connection).'.png');
 			}
 		}
 
@@ -127,7 +127,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="form-group">
 								<label>Icona<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted">(PNG, mida 24x24px)</small></label><br>
 <?php
-	$file_exists = !empty($row['id']) && file_exists($static_directory.'/icons/'.$row['id'].'.png');
+	$file_exists = !empty($row['id']) && file_exists($static_directory.'/images/icons/'.$row['id'].'.png');
 ?>
 								<label for="form-icon" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="icon" type="file" accept="image/png" id="form-icon" onchange="checkImageUpload(this, -1, 'form-icon-preview', 'form-icon-preview-link');">
@@ -135,8 +135,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
 							<div class="form-group">
-								<a id="form-icon-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/icons/'.$row['id'].'.png" data-original="'.$static_url.'/icons/'.$row['id'].'.png"' : ''; ?> target="_blank">
-									<img id="form-icon-preview" style="width: 24px; height: 24px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/icons/'.$row['id'].'.png" data-original="'.$static_url.'/icons/'.$row['id'].'.png"' : ''; ?> alt="">
+								<a id="form-icon-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/images/icons/'.$row['id'].'.png" data-original="'.$static_url.'/images/icons/'.$row['id'].'.png"' : ''; ?> target="_blank">
+									<img id="form-icon-preview" style="width: 24px; height: 24px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/images/icons/'.$row['id'].'.png" data-original="'.$static_url.'/images/icons/'.$row['id'].'.png"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
@@ -146,7 +146,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="form-group">
 								<label>Logo <small class="text-muted">(PNG, aprox. 140x40px)</small></label><br>
 <?php
-	$file_exists = !empty($row['id']) && file_exists($static_directory.'/logos/'.$row['id'].'.png');
+	$file_exists = !empty($row['id']) && file_exists($static_directory.'/images/logos/'.$row['id'].'.png');
 ?>
 								<label for="form-logo" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, -1, 'form-logo-preview', 'form-logo-preview-link');">
@@ -154,8 +154,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
 							<div class="form-group">
-								<a id="form-logo-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/logos/'.$row['id'].'.png" data-original="'.$static_url.'/logos/'.$row['id'].'.png"' : ''; ?> target="_blank">
-									<img id="form-logo-preview" style="width: 140px; height: 60px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/logos/'.$row['id'].'.png" data-original="'.$static_url.'/logos/'.$row['id'].'.png"' : ''; ?> alt="">
+								<a id="form-logo-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/images/logos/'.$row['id'].'.png" data-original="'.$static_url.'/images/logos/'.$row['id'].'.png"' : ''; ?> target="_blank">
+									<img id="form-logo-preview" style="width: 140px; height: 60px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/images/logos/'.$row['id'].'.png" data-original="'.$static_url.'/images/logos/'.$row['id'].'.png"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
