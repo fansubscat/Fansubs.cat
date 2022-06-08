@@ -40,7 +40,7 @@ if (!file_exists($base_path)) {
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title><?php echo $config['site_title']; ?></title>
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="/js/lightgallery.js"></script>

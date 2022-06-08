@@ -65,7 +65,7 @@ $links = filter_links($links);
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title><?php ?><?php echo $page_title; ?> | <?php echo $config['site_title']; ?></title>
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css" />
 		<link rel="stylesheet" href="/js/videojs/video-js.css?v=<?php echo PL_VER; ?>" />
 		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo PL_VER; ?>" />
 		<link rel="stylesheet" href="/style/main.css?v=<?php echo CS_VER; ?>" />
