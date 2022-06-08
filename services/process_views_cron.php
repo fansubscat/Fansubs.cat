@@ -6,6 +6,9 @@ function is_mobile($user_agent) {
 }
 
 function get_view_type($user_agent, $user_agent_read) {
+	if(preg_match('/\[via API\]/',$user_agent)){
+		return 'api';
+	}
 	if (!empty($user_agent_read) && $user_agent!=$user_agent_read) {
 		return 'cast';
 	}
@@ -15,50 +18,25 @@ function get_view_type($user_agent, $user_agent_read) {
 	return 'desktop';
 }
 
-function get_read_type($user_agent) {
-	if(preg_match('/\[via API\]/',$user_agent)){
-		return 'api';
-	}
-	if(is_mobile($user_agent)){
-		return 'mobile';
-	}
-	return 'desktop';
-}
-
-$result = query("SELECT ps.play_id, ps.link_id, ps.method, ps.time_spent, ps.total_time, ps.bytes_read, ps.total_bytes, UNIX_TIMESTAMP(ps.created) created, UNIX_TIMESTAMP(ps.last_update) last_update, ps.last_update last_update_date, ps.ip, ps.user_agent, ps.user_agent_read, ps.view_counted FROM play_session ps WHERE archived=0 AND IF(ps.method='time',ps.total_time>0,ps.total_bytes>0)");
+$result = query("SELECT ps.view_id, ps.file_id, ps.method, ps.time_spent, ps.total_time, ps.bytes_read, ps.total_bytes, ps.pages_read, ps.total_pages, UNIX_TIMESTAMP(ps.created) created, UNIX_TIMESTAMP(ps.last_update) last_update, ps.last_update last_update_date, ps.ip, ps.user_agent, ps.user_agent_read, ps.is_view_counted FROM view_session ps WHERE is_archived=0 AND IF(ps.method='time',ps.total_time>0,IF(ps.method='size',ps.total_bytes>0,ps.total_pages>0))");
 
 while ($row = mysqli_fetch_assoc($result)) {
-	if ($row['view_counted']==0) {
+	if ($row['is_view_counted']==0) {
 		if ($row['method']=='time') {
 			$valid_view = ($row['time_spent']/$row['total_time']*100)>50;
+		} else if ($row['method']=='pages' {
+			$valid_view = ($row['pages_read']/$row['total_pages']*100)>50;
 		} else { //size
 			$valid_view = ($row['bytes_read']/$row['total_bytes']*100)>65;
 		}
 		if ($valid_view) {
-			query("UPDATE play_session SET view_counted=1 WHERE play_id='".escape($row['play_id'])."'");
-			query("REPLACE INTO views SELECT ".$row['link_id'].", '".date('Y-m-d', $row['last_update'])."', IFNULL((SELECT clicks FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),0), IFNULL((SELECT views+1 FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),1), IFNULL((SELECT time_spent+".$row['total_time']." FROM views WHERE link_id=".$row['link_id']." AND day='".date('Y-m-d', $row['last_update'])."'),".$row['total_time'].")");
-			query("INSERT INTO view_log (link_id, date, ip, user_agent, user_agent_read, view_type) VALUES (".$row['link_id'].", '".$row['last_update_date']."', '".escape($row['ip'])."', '".escape($row['user_agent'])."', '".escape($row['user_agent_read'])."', '".get_view_type($row['user_agent'], $row['user_agent_read'])."')");
+			query("UPDATE view_session SET is_view_counted=1 WHERE view_id='".escape($row['view_id'])."'");
+			query("REPLACE INTO views SELECT ".$row['file_id'].", '".date('Y-m-d', $row['last_update'])."', (SELECT s.type FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.id=".$row['file_id']."), IFNULL((SELECT clicks FROM views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),0), IFNULL((SELECT views+1 FROM views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),1), IFNULL((SELECT time_spent+".$row['total_time']." FROM views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),".$row['total_time']."), IFNULL((SELECT pages_read+".$row['total_pages']." FROM views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),".$row['total_pages'].")");
+			query("INSERT INTO view_log (type, file_id, ip, date, user_agent, user_agent_read, view_type) VALUES ((SELECT s.type FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.id=".$row['file_id']."), ".$row['file_id'].", '".escape($row['ip'])."', '".$row['last_update_date']."', '".escape($row['user_agent'])."', '".escape($row['user_agent_read'])."', '".get_view_type($row['user_agent'], $row['user_agent_read'])."')");
 		}
 	}
 	if ($row['created']<(date('U')-3600*24*3)){ //3 days
-		query("UPDATE play_session SET archived=1 WHERE play_id='".escape($row['play_id'])."'");
-	}
-}
-mysqli_free_result($result);
-
-$result = query("SELECT rs.read_id, rs.file_id, rs.pages_read, rs.total_pages, UNIX_TIMESTAMP(rs.created) created, UNIX_TIMESTAMP(rs.last_update) last_update, rs.last_update last_update_date, rs.ip, rs.user_agent, rs.read_counted, rs.reader_closed FROM read_session rs LEFT JOIN file fi ON rs.file_id=fi.id WHERE rs.archived=0");
-
-while ($row = mysqli_fetch_assoc($result)) {
-	if ($row['read_counted']==0) {
-		$valid_read = ($row['pages_read']/$row['total_pages']*100)>50;
-		if ($valid_read) {
-			query("UPDATE read_session SET read_counted=1 WHERE read_id='".escape($row['read_id'])."'");
-			query("REPLACE INTO manga_views SELECT ".$row['file_id'].", '".date('Y-m-d', $row['last_update'])."', IFNULL((SELECT clicks FROM manga_views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),0), IFNULL((SELECT views+1 FROM manga_views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),1), IFNULL((SELECT pages_read+".$row['total_pages']." FROM manga_views WHERE file_id=".$row['file_id']." AND day='".date('Y-m-d', $row['last_update'])."'),".$row['total_pages'].")");
-			query("INSERT INTO manga_view_log (file_id, date, ip, user_agent, read_type) VALUES (".$row['file_id'].", '".$row['last_update_date']."', '".escape($row['ip'])."', '".escape($row['user_agent'])."', '".get_read_type($row['user_agent'])."')");
-		}
-	}
-	if ($row['created']<(date('U')-3600*24*3) || $row['reader_closed']==1){ //3 days or player closed
-		query("UPDATE read_session SET archived=1 WHERE read_id='".escape($row['read_id'])."'");
+		query("UPDATE view_session SET is_archived=1 WHERE view_id='".escape($row['view_id'])."'");
 	}
 }
 mysqli_free_result($result);

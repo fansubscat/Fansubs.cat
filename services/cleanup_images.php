@@ -14,18 +14,18 @@ while ($row_fansubs=mysqli_fetch_assoc($res_fansubs)){
 		$values[] = $row['image'];
 	}
 
-	if (file_exists($website_directory.'images/news/'.$row_fansubs['slug'])){
-		$files = array_diff(scandir($website_directory.'images/news/'.$row_fansubs['slug']), array('..', '.'));
+	if (file_exists($static_directory.'/images/news/'.$row_fansubs['slug'])){
+		$files = array_diff(scandir($static_directory.'/images/news/'.$row_fansubs['slug']), array('..', '.'));
 		foreach ($files as $file){
 			if (!in_array($file, $values)){
-				echo "Removing ".$website_directory.'images/news/'.$row_fansubs['slug']."/$file\n";
-				unlink($website_directory.'images/news/'.$row_fansubs['slug']."/$file");
+				echo "Removing ".$static_directory.'/images/news/'.$row_fansubs['slug']."/$file\n";
+				unlink($static_directory.'/images/news/'.$row_fansubs['slug']."/$file");
 			}
 		}
 	}
 }
 
-mysqli_query($db_connection, "INSERT INTO action_log (action, text, author, date) VALUES ('cleanup-images','S\'han netejat les imatges no utilitzades a les notícies', '(Servei intern)', CURRENT_TIMESTAMP)") or (mysqli_rollback($db_connection) && die('SQL error'.mysqli_error($db_connection)));
+mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('cleanup-images','S\'han netejat les imatges no utilitzades a les notícies', '(Servei intern)', CURRENT_TIMESTAMP)") or (mysqli_rollback($db_connection) && die('SQL error'.mysqli_error($db_connection)));
 
 mysqli_close($db_connection);
 ?>

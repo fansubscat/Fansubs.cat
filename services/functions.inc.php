@@ -46,7 +46,7 @@ function get_prepositioned_text($text, $twitter=FALSE){
 //Gets the first image in the news content that is not a SVG, if available.
 //Then copies it to our website directory
 function fetch_and_parse_image($fansub_slug, $url, $description){
-	global $website_directory;
+	global $static_directory;
 	preg_match_all('/<img [^>]*src=["|\']([^"|\']+)/i', $description, $matches);
 
 	$first_image_url=NULL;
@@ -66,13 +66,13 @@ function fetch_and_parse_image($fansub_slug, $url, $description){
 		if (strpos($first_image_url,"://")===FALSE){
 			$first_image_url=$url.$first_image_url;
 		}
-		if (!is_dir("$website_directory/images/news/$fansub_slug/")){
-			mkdir("$website_directory/images/news/$fansub_slug/");
+		if (!is_dir("$static_directory/images/news/$fansub_slug/")){
+			mkdir("$static_directory/images/news/$fansub_slug/");
 		}
-		if (@copy($first_image_url, "$website_directory/images/news/$fansub_slug/".slugify_short($first_image_url))){
+		if (@copy($first_image_url, "$static_directory/images/news/$fansub_slug/".slugify_short($first_image_url))){
 			return slugify_short($first_image_url);
 		}
-		else if (file_exists("$website_directory/images/news/$fansub_slug/".slugify_short($first_image_url))){
+		else if (file_exists("$static_directory/images/news/$fansub_slug/".slugify_short($first_image_url))){
 			//This means that the file is no longer accessible, but we already have it locally!
 			return slugify_short($first_image_url);
 		}
@@ -245,7 +245,7 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 		global $firebase_api_key;
 
 		
-		mysqli_query($db_connection, "INSERT INTO action_log (action, text, author, date) VALUES ('fetch-news-changes','Detectades $increment noves notícies del fansub $fansub_slug', '(Servei intern)', CURRENT_TIMESTAMP)") or die(mysqli_error($db_connection));
+		mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('fetch-news-changes','Detectades $increment noves notícies del fansub $fansub_slug', '(Servei intern)', CURRENT_TIMESTAMP)") or die(mysqli_error($db_connection));
 
 		$push_result = mysqli_query($db_connection, "SELECT n.title, f.slug fansub_slug, n.url, f.name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.fetcher_id=$fetcher_id ORDER BY n.date DESC LIMIT $increment") or die(mysqli_error($db_connection));
 		while ($push_row = mysqli_fetch_assoc($push_result)){
