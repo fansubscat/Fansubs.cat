@@ -76,6 +76,7 @@ $links = filter_links($links);
 		</script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+		<script src="https://unpkg.com/megajs@1.0.4/dist/main.browser-umd.js"></script>
 		<script src="/js/videojs/video.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/common.js?v=<?php echo JS_VER; ?>"></script>
 		<script src="/js/megajs.js?v=<?php echo MG_VER; ?>"></script>

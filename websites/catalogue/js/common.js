@@ -599,7 +599,7 @@ function parsePlayerError(error){
 }
 
 function loadMegaStream(url){
-	currentMegaFile = mega.file(url);
+	currentMegaFile = window.mega.file(url);
 	currentMegaFile.loadAttributes((error, file) => {
 		if (error){
 			parsePlayerError('E_MEGA_LOAD_ERROR: '+error);
