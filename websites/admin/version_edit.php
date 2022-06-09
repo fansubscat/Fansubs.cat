@@ -863,7 +863,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm-8">
 								<div class="form-group">
 									<label for="form-storage_folder"><span class="mandatory">Carpeta d'emmagatzematge</span><br /><small class="text-muted">(canvia-la només si saps què fas; s'hi baixaran els fitxers; el material extra es baixarà a la subcarpeta "Extres")</small></label>
-									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo $row['storage_folder']; ?>" maxlength="200"/>
+									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo $row['storage_folder']; ?>" maxlength="200" required<?php echo (!empty($row['id']) && empty($row['is_hidden'])) ? ' readonly' : '' ; ?>/>
 								</div>
 							</div>
 							<div class="col-sm-4">

@@ -142,10 +142,12 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 	if ($_SESSION['admin_level']>=3) {
 ?>
 					<li class="nav-item dropdown<?php echo $page=='admin' ? ' active' : ''; ?>">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administradors</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOthers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Altres</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownOthers">
 							<a class="dropdown-item" href="admin_list.php">Llista d'administradors</a>
 							<a class="dropdown-item" href="admin_edit.php">Afegeix un administrador nou</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="advent_list.php">Llista de calendaris d'advent</a>
 						</div>
 					</li>
 <?php
@@ -153,8 +155,8 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 	if ($_SESSION['admin_level']>=1) {
 ?>
 					<li class="nav-item dropdown<?php echo $page=='analytics' ? ' active' : ''; ?>">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Anàlisi</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAnalytics" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Anàlisi</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownAnalytics">
 							<a class="dropdown-item" href="stats.php">Estadístiques</a>
 							<a class="dropdown-item" href="views.php?type=anime">Darreres visualitzacions d'anime</a>
 							<a class="dropdown-item" href="views.php?type=manga">Darreres lectures de manga</a>
@@ -166,8 +168,8 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 						</div>
 					</li>
 					<li class="nav-item dropdown<?php echo $page=='tools' ? ' active' : ''; ?>">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Eines</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTools" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Eines</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownTools">
 							<a class="dropdown-item" href="link_verifier.php">Verificador d'enllaços remots</a>
 							<a class="dropdown-item" href="news_fetcher_status.php">Estat dels recollidors de notícies</a>
 <?php

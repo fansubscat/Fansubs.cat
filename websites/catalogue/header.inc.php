@@ -160,19 +160,21 @@ mysqli_free_result($resultf);
 		<div id="page">
 			<div data-nosnippet id="header">
 				<div class="page-title-block">
-					<a class="page-title" href="/">Fansubs.cat</a>
+					<a class="page-title" href="<?php echo $news_url; ?>/">Fansubs.cat</a>
 					<div class="page-links">
 <?php
 	if ($config['items_type']=='anime') {
 ?>
-						<b>Anime</b> | <a href="<?php echo $manga_url; ?>/">Manga</a> | <a href="<?php echo $news_url; ?>/">Notícies</a>
+						<a class="current_portal" href="<?php echo $anime_url; ?>/">Anime</a> | <a href="<?php echo $manga_url; ?>/">Manga</a> | <a href="<?php echo $news_url; ?>/">Notícies</a>
 <?php
 	} else if ($config['items_type']=='manga') {
 ?>
-						<a href="<?php echo $anime_url; ?>/">Anime</a> | <b>Manga</b> | <a href="<?php echo $news_url; ?>/">Notícies</a>
+						<a href="<?php echo $anime_url; ?>/">Anime</a> | <a class="current_portal" href="<?php echo $manga_url; ?>/">Manga</a> | <a href="<?php echo $news_url; ?>/">Notícies</a>
 <?php
 	} else {
-		//LIVE ACTION - NOT YET
+?>
+						<a href="<?php echo $anime_url; ?>/">Anime</a> | <a href="<?php echo $manga_url; ?>/">Manga</a> | <a class="current_portal" href="<?php echo $liveaction_url; ?>/">Acció real</a>
+<?php
 	}
 ?>
 					</div>

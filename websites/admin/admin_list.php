@@ -1,6 +1,6 @@
 <?php
-$header_title="Llista d'administradors - Administradors";
-$page="admin";
+$header_title="Llista d'administradors - Altres";
+$page="other";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {

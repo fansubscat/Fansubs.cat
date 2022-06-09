@@ -605,6 +605,15 @@ a:hover {
 	margin-top: 0.2em;
 }
 
+.page-links a {
+	font-size: 0.9em;
+}
+
+.page-links a.current_portal {
+	color: #FFF !important;
+	font-weight: bold;
+}
+
 .site-message {
 	padding: .75em 1.25em;
 	border: 1px solid #fff3cd;

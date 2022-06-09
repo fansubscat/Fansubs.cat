@@ -31,7 +31,7 @@ RewriteCond %{REQUEST_URI} !strip_reader\.php
 RewriteRule \.php$ - [F]
 
 #Preview image
-RewriteRule ^preview/(.*)\.jpg$ preview_image.php?slug=$1 [L]
+RewriteRule ^preview/([^/]*)\.jpg$ preview_image.php?slug=$1 [L]
 
 #Normal pages - depending on host
 #Anime / Live action
@@ -49,12 +49,12 @@ RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^accioreal.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^acciorealv2.fansubs.cat$
-RewriteRule ^films/(.*)/?$ series.php?page=movies&slug=$1 [QSA,L]
+RewriteRule ^films/([^/]*)/?$ series.php?page=movies&slug=$1 [QSA,L]
 RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^accioreal.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^acciorealv2.fansubs.cat$
-RewriteRule ^series/(.*)/?$ series.php?page=series&slug=$1 [QSA,L]
+RewriteRule ^series/([^/]*)/?$ series.php?page=series&slug=$1 [QSA,L]
 
 #Manga
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
@@ -65,12 +65,12 @@ RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
 RewriteRule ^serialitzats/?$ index.php?page=serialized [L]
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
-RewriteRule ^one-shots/(.*)/?$ series.php?page=oneshots&slug=$1 [QSA,L]
+RewriteRule ^one-shots/([^/]*)/?$ series.php?page=oneshots&slug=$1 [QSA,L]
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
-RewriteRule ^serialitzats/(.*)/?$ series.php?page=serialized&slug=$1 [QSA,L]
+RewriteRule ^serialitzats/([^/]*)/?$ series.php?page=serialized&slug=$1 [QSA,L]
 
 #Generic pages
 RewriteRule ^cerca/(.*)/?$ index.php?page=search&query=$1 [QSA,L]
 RewriteRule ^qui-som/?$ about.php [L]
-RewriteRule ^embed/(.*)/?$ embed.php?file_id=$1 [L]
+RewriteRule ^embed/([^/]*)/?$ embed.php?file_id=$1 [L]

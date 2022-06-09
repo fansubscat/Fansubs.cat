@@ -96,7 +96,7 @@ if (empty($failed)) {
 			$text = $config['preview_prefix']." • Conjunt de ".$series['number_of_episodes']." films";
 		} else if ($series['subtype']=='movie') {
 			$text = $config['preview_prefix']." • Film";
-		} else if ($series['seasons']>1) {
+		} else if ($series['divisions']>1) {
 			$text = $config['preview_prefix']." • Sèrie • ".$series['divisions']." temporades • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols');
 		} else {
 			$text = $config['preview_prefix']." • Sèrie • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols');

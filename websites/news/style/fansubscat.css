@@ -197,6 +197,15 @@ div#top .page-title-block a:hover {
 	margin-top: 0.2em;
 }
 
+.page-links a {
+	font-size: 0.9em;
+}
+
+.page-links a.current_portal {
+	color: #000 !important;
+	font-weight: bold;
+}
+
 #welcome, #app {
 	margin-bottom: 1.3em;
 	padding: 5px;

@@ -286,8 +286,7 @@ function get_video_sources($links){
 		$matches = array();
 		if (preg_match(REGEXP_MEGA,$link['url'],$matches)){
 			$elements[]=array(
-				//Use older MEGA URL format (the one supported by mega.js)
-				'url' => "https://mega.nz/#!".$matches[1]."!".$matches[2],
+				'url' => $link['url'],
 				'resolution' => get_resolution_single($link['resolution'])
 			);
 		} else if (preg_match(REGEXP_GOOGLE_DRIVE,$link['url'],$matches)){

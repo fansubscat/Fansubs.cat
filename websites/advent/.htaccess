@@ -1,0 +1,8 @@
+RewriteEngine on
+
+#Hide internal files
+RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
+RewriteRule \.php$ - [F]
+
+#Redirects
+RewriteRule ^([^/]*)/?$ index.php?year=$1 [QSA,L]

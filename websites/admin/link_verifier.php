@@ -27,7 +27,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$resultl = query("SELECT l.*,s.name series_name, e.id episode_id, e.number episode_number, e.description episode_name, d.number division_number FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id$where ORDER BY s.name ASC, d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, extra_name ASC");
 	while ($row = mysqli_fetch_assoc($resultl)) {
 		if (!empty($row['episode_id'])){
-			if (!empty($row['season_number'])){
+			if (!empty($row['division_number'])){
 				$chapter_name=$row['series_name'].' - Temporada '.$row['division_number'].' - ';
 			} else {
 				$chapter_name=$row['series_name'].' - Diversos'.' - ';

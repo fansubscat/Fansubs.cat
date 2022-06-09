@@ -1,20 +1,54 @@
 <?php
-require_once('config.inc.php');
+ob_start();
+require_once('db.inc.php');
 
-$year = 2021;
-
-function is_day_ready($day) {
-	global $releases, $year;
-	$today = date('Y-m-d H:i:s');
-	if (!empty($_GET['twitter']) && !empty($_GET['currentday'])) {
-		$today = $year.'-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
+function seededShuffle(array &$array, $seed) {
+	mt_srand($seed);
+	$size = count($array);
+	for ($i = 0; $i < $size; ++$i) {
+		list($chunk) = array_splice($array, mt_rand(0, $size-1), 1);
+		array_push($array, $chunk);
 	}
-	$target = $year.'-12-'.sprintf('%02d', $day).' 12:00:00';
-	return (strcmp($today,$target)>=0 && (!empty($releases[$day]) || !empty($_GET['twitter'])));
 }
 
-if (!empty($_COOKIE['advent_'.$year])) {
-	$cookie=explode(',',$_COOKIE['advent_'.$year]);
+if (!empty($_GET['year']) && is_numeric($_GET['year'])) {
+	$result = query("SELECT * FROM advent_calendar ac WHERE year=".escape($_GET['year']));
+	$row = mysqli_fetch_assoc($result) or $failed=TRUE;
+	mysqli_free_result($result);
+	if (!empty($failed)) {
+		http_response_code(404);
+		die();
+	}
+} else {
+	$result = query("SELECT * FROM advent_calendar ac ORDER BY year DESC LIMIT 1");
+	$row = mysqli_fetch_assoc($result) or $failed=TRUE;
+	mysqli_free_result($result);
+	if (!empty($failed)) {
+		http_response_code(404);
+		die();
+	}
+}
+
+	
+$days = array();
+$resultd = query("SELECT * FROM advent_day WHERE year=".escape($row['year'])." ORDER BY day ASC");
+while ($rowd = mysqli_fetch_assoc($resultd)) {
+	$days[$rowd['day']]=$rowd;
+}
+mysqli_free_result($resultd);
+
+function is_day_ready($day) {
+	global $days, $row;
+	$today = date('Y-m-d H:i:s');
+	if (!empty($_GET['twitter']) && !empty($_GET['currentday'])) {
+		$today = $row['year'].'-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
+	}
+	$target = $row['year'].'-12-'.sprintf('%02d', $day).' 12:00:00';
+	return (strcmp($today,$target)>=0 && (!empty($days['link_url']) || !empty($_GET['twitter'])));
+}
+
+if (!empty($_COOKIE['advent_'.$row['year']])) {
+	$cookie=explode(',',$_COOKIE['advent_'.$row['year']]);
 } else {
 	$cookie=array();
 }
@@ -23,31 +57,25 @@ if (!empty($_COOKIE['advent_'.$year])) {
 <html lang="ca">
 	<head>
 		<meta charset="UTF-8">
-		<title>Calendari d'advent <?php echo $year; ?> - Fansubs.cat</title>
+		<title>Calendari d'advent <?php echo $row['year']; ?> - Fansubs.cat</title>
 		<link href="https://fonts.googleapis.com/css?family=Kalam" rel="stylesheet">
 		<link rel="shortcut icon" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#888888" />
-		<meta property="og:title" content="Calendari d'advent <?php echo $year; ?> - Fansubs.cat" />
-		<meta property="og:url" content="https://nadal.fansubs.cat/" />
+		<meta property="og:title" content="Calendari d'advent <?php echo $row['year']; ?> - Fansubs.cat" />
+		<meta property="og:url" content="<?php echo $base_url; ?>/" />
 		<meta property="og:description" content="Segueix el calendari d'advent dels fansubs en català! Cada dia hi trobaràs un petit regalet en forma d'anime o manga editat en català!" />
-		<meta property="og:image" content="https://nadal.fansubs.cat/images/preview.jpg" />
+		<meta property="og:image" content="<?php echo $static_url; ?>/images/advent/preview_<?php echo $row['year']; ?>.jpg" />
 		<meta name="twitter:card" content="summary_large_image" />
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-628107-13"></script>
-		<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-			gtag('config', 'UA-628107-13');
-
 			$(document).ready(function() {
 				$('input').change(function() {
 					var openedDays = $.map($('.checkavailable:checked'), function(n, i){
 						return n.value;
 					}).join(',');
-					Cookies.set('advent_<?php echo $year; ?>', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
+					Cookies.set('advent_<?php echo $row['year']; ?>', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
 <?php
 if (!empty($_GET['twitter'])) {
 ?>
@@ -74,6 +102,24 @@ if (!empty($_GET['twitter'])) {
 					}, 1000, this);
 <?php
 }
+
+switch ($row['year']) {
+	case 2020:
+		$grid_desktop = array(9,23,15,8,18,11,16,12,17,3,14,21,6,5,10,4,20,19,7,2,13,1,22);
+		$grid_mobile = array(23,20,12,2,14,4,5,22,16,1,7,9,10,11,18,13,3,15,6,17,8,19,24,21);
+		break;
+	case 2021:
+		$grid_desktop = array(9,23,15,8,18,11,16,12,17,3,14,21,6,5,10,4,20,19,7,2,13,1,22);
+		$grid_mobile = array(23,20,12,2,14,4,5,22,16,1,7,9,10,11,18,13,3,15,6,17,8,19,24,21);
+		break;
+	default:
+		//Desktop has one less because 24 is in a fixed position
+		$grid_desktop = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23);
+		seededShuffle($grid_desktop, $row['year']);
+		$grid_mobile = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24);
+		seededShuffle($grid_mobile, $row['year']+10000);
+		
+}
 ?>
 				});
 			});
@@ -83,7 +129,7 @@ if (!empty($_GET['twitter'])) {
 				min-height: 100vh;
 			}
 			body {
-				background-image: url(images/background.jpg);
+				background-image: url("<?php echo $static_url; ?>/images/advent/background_<?php echo $row['year']; ?>.jpg");
 				background-position: center center;
 				background-repeat: no-repeat;
 				background-color: #d7d7d7;
@@ -134,14 +180,14 @@ if (!empty($_GET['twitter'])) {
 				grid-gap: 25px;
 
 				grid-template-areas:    "t        t       t"
-					"d23      d20     d12"
-					"d2       d14     d4"
-					"d5       d22     d16"
-					"d1       d7      d9"
-					"d10      d11     d18"
-					"d13      d3      d15"
-					"d6       d17     d8"
-					"d19      d24     d21";
+					"d<?php echo $grid_mobile[0]; ?>      d<?php echo $grid_mobile[1]; ?>     d<?php echo $grid_mobile[2]; ?>"
+					"d<?php echo $grid_mobile[3]; ?>       d<?php echo $grid_mobile[4]; ?>     d<?php echo $grid_mobile[5]; ?>"
+					"d<?php echo $grid_mobile[6]; ?>       d<?php echo $grid_mobile[7]; ?>     d<?php echo $grid_mobile[8]; ?>"
+					"d<?php echo $grid_mobile[9]; ?>       d<?php echo $grid_mobile[10]; ?>      <?php echo $grid_mobile[11]; ?>"
+					"d<?php echo $grid_mobile[12]; ?>      d<?php echo $grid_mobile[13]; ?>     d<?php echo $grid_mobile[14]; ?>"
+					"d<?php echo $grid_mobile[15]; ?>      d<?php echo $grid_mobile[16]; ?>      d<?php echo $grid_mobile[17]; ?>"
+					"d<?php echo $grid_mobile[18]; ?>       d<?php echo $grid_mobile[19]; ?>     d<?php echo $grid_mobile[20]; ?>"
+					"d<?php echo $grid_mobile[21]; ?>      d<?php echo $grid_mobile[22]; ?>     d<?php echo $grid_mobile[23]; ?>";
 			}
 
 			/* media query */
@@ -151,12 +197,27 @@ if (!empty($_GET['twitter'])) {
 				}
 				.grid-1 {
 					grid-template-columns: repeat(6, 1fr);
-					grid-template-areas: "d9      d23      d15     t     t     t"
-						"d8      d18     d11     t     t     t"
-						"d16     d12      d17     t     t     t"
-						"d3    d14    d24   d24     d21     d6"
-						"d5   d10   d24   d24     d4      d20"
-						"d19    d7   d2   d13     d1     d22";
+<?php
+	if ($row['position']=='right') {
+?>
+					grid-template-areas: "d<?php echo $grid_desktop[0]; ?>      d<?php echo $grid_desktop[1]; ?>      d<?php echo $grid_desktop[2]; ?>     t     t     t"
+						"d<?php echo $grid_desktop[3]; ?>      d<?php echo $grid_desktop[4]; ?>     d<?php echo $grid_desktop[5]; ?>     t     t     t"
+						"d<?php echo $grid_desktop[6]; ?>     d<?php echo $grid_desktop[7]; ?>      d<?php echo $grid_desktop[8]; ?>     t     t     t"
+						"d<?php echo $grid_desktop[9]; ?>    d<?php echo $grid_desktop[10]; ?>    d24   d24     d<?php echo $grid_desktop[11]; ?>     d<?php echo $grid_desktop[12]; ?>"
+						"d<?php echo $grid_desktop[13]; ?>   d<?php echo $grid_desktop[14]; ?>   d24   d24     d<?php echo $grid_desktop[15]; ?>      d<?php echo $grid_desktop[16]; ?>"
+						"d<?php echo $grid_desktop[17]; ?>    d<?php echo $grid_desktop[18]; ?>   d<?php echo $grid_desktop[19]; ?>   d<?php echo $grid_desktop[20]; ?>     d<?php echo $grid_desktop[21]; ?>     d<?php echo $grid_desktop[22]; ?>";
+<?php
+	} else {
+?>
+					grid-template-areas: "t     t     t     d<?php echo $grid_desktop[0]; ?>      d<?php echo $grid_desktop[1]; ?>      d<?php echo $grid_desktop[2]; ?>"
+						"t     t     t     d<?php echo $grid_desktop[3]; ?>      d<?php echo $grid_desktop[4]; ?>     d<?php echo $grid_desktop[5]; ?>"
+						"t     t     t     d<?php echo $grid_desktop[6]; ?>     d<?php echo $grid_desktop[7]; ?>      d<?php echo $grid_desktop[8]; ?>"
+						"d<?php echo $grid_desktop[9]; ?>    d<?php echo $grid_desktop[10]; ?>    d24   d24     d<?php echo $grid_desktop[11]; ?>     d<?php echo $grid_desktop[12]; ?>"
+						"d<?php echo $grid_desktop[13]; ?>   d<?php echo $grid_desktop[14]; ?>   d24   d24     d<?php echo $grid_desktop[15]; ?>      d<?php echo $grid_desktop[16]; ?>"
+						"d<?php echo $grid_desktop[17]; ?>    d<?php echo $grid_desktop[18]; ?>   d<?php echo $grid_desktop[19]; ?>   d<?php echo $grid_desktop[20]; ?>     d<?php echo $grid_desktop[21]; ?>     d<?php echo $grid_desktop[22]; ?>";
+<?php
+	}
+?>
 				}
 
 			}
@@ -284,7 +345,7 @@ for ($i=1;$i<25;$i++){
 				grid-area: d<?php echo $i; ?>;
 			}
 			.day-<?php echo $i; ?> .back {
-				background-image: url(<?php echo is_day_ready($i) ? 'covers/'.$i.'.jpg' : 'images/empty.png'; ?>);
+				background-image: url("<?php echo is_day_ready($i) ? $static_url.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg' : '/images/empty.png'; ?>");
 			}
 <?php
 }
@@ -295,7 +356,7 @@ for ($i=1;$i<25;$i++){
 		<div class="container">
 			<div class="grid-1">
 				<div class="title">
-					<img src="images/logo.png" alt="Calendari d'advent dels fansubs en català">
+					<img src="/images/logo.png" alt="Calendari d'advent dels fansubs en català">
 				</div>
 <?php
 for ($i=1;$i<25;$i++){
@@ -309,7 +370,7 @@ for ($i=1;$i<25;$i++){
 <?php
 	if (is_day_ready($i)) {
 ?>
-								<a class="link" href="<?php echo empty($_GET['twitter']) ? $releases[$i] : '#'; ?>"<?php echo (empty($_GET['twitter']) || strpos($releases[$day],'javascript:')!==0) ? ' target="_blank"' : ''; ?>></a>
+								<a class="link" href="<?php echo empty($_GET['twitter']) ? $days[$i]['link_url'] : '#'; ?>"<?php echo empty($_GET['twitter']) ? ' target="_blank"' : ''; ?>></a>
 <?php
 	}
 ?>
@@ -325,7 +386,14 @@ for ($i=1;$i<25;$i++){
 if (empty($_GET['twitter'])){
 ?>
 			<div class="previous">
-				Edicions anteriors: <a href="/2020/">2020</a>
+				Altres edicions: 
+<?php
+	$resulto = query("SELECT * FROM advent_calendar WHERE year<>".escape($row['year'])." ORDER BY year DESC");
+	while ($rowo = mysqli_fetch_assoc($resulto)) {
+		echo ' <a href="/'.$rowo['year'].'/">'.$rowo['year'].'</a>';
+	}
+	mysqli_free_result($resulto);
+?>
 			</div>
 <?php
 }
@@ -333,3 +401,7 @@ if (empty($_GET['twitter'])){
 		</div>
 	</body>
 </html>
+<?php
+ob_flush();
+mysqli_close($db_connection);
+?>

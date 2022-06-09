@@ -1,6 +1,6 @@
 <?php
-$header_title="Edició d'administradors - Administradors";
-$page="admin";
+$header_title="Edició d'administradors - Altres";
+$page="other";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {

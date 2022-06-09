@@ -1261,6 +1261,10 @@ function resetFileInput(fileInput) {
 }
 
 function generateStorageFolder() {
+	if ($('#form-storage_folder').is('[readonly]')) {
+		return;
+	}
+	
 	var string = '';
 	var fansubs = [];
 	if ($('#form-fansub-1').val()>0) {

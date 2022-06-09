@@ -17,6 +17,18 @@ CREATE TABLE `admin_user` (
   `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `advent_calendar` (
+  `year` int(11) NOT NULL,
+  `position` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `advent_day` (
+  `year` int(11) NOT NULL,
+  `day` int(11) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `link_url` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `division` (
   `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
@@ -318,6 +330,12 @@ ALTER TABLE `admin_log`
 ALTER TABLE `admin_user`
   ADD PRIMARY KEY (`username`),
   ADD KEY `admin_user_ibfk_1` (`fansub_id`);
+
+ALTER TABLE `advent_calendar`
+  ADD PRIMARY KEY (`year`);
+
+ALTER TABLE `advent_day`
+  ADD PRIMARY KEY (`year`,`day`);
 
 ALTER TABLE `division`
   ADD PRIMARY KEY (`id`),

@@ -117,7 +117,7 @@ if ($header_current_page=='stats'){
 						<div class="page-title-block">
 							<a class="page-title-top" href="/">Fansubs.cat</a>
 							<div class="page-links">
-								<a href="https://anime.fansubs.cat/">Anime</a> | <a href="https://manga.fansubs.cat/">Manga</a> | <b>Notícies</b>
+								<a href="https://anime.fansubs.cat/">Anime</a> | <a href="https://manga.fansubs.cat/">Manga</a> | <a class="current_portal" href="https://www.fansubs.cat/">Notícies</ba>
 							</div>
 						</div>
 <?php
