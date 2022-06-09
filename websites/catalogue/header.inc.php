@@ -32,7 +32,7 @@ if (!empty($header_social)) {
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/smoothness/jquery-ui.css" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-		<link rel="stylesheet" href="/js/videojs/video-js.css?v=<?php echo PL_VER; ?>" />
+		<link rel="stylesheet" href="/js/videojs/video-js.min.css?v=<?php echo PL_VER; ?>" />
 		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo PL_VER; ?>" />
 		<link rel="stylesheet" href="/style/main.css?v=<?php echo CS_VER; ?>" />
 <?php
@@ -50,7 +50,7 @@ if ($is_fools_day){
 		</script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/jquery-ui.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 		<script src="/js/videojs/video.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/common.js?v=<?php echo JS_VER; ?>"></script>
@@ -58,9 +58,9 @@ if ($is_fools_day){
 		<script src="/js/videostream.js?v=<?php echo VS_VER; ?>"></script>
 		<script src="/js/videojs/lang_ca.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo PL_VER; ?>"></script>
-		<script src="/js/videojs/videojs-youtube.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-youtube.min.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo PL_VER; ?>"></script>
-		<script src="/js/videojs/videojs-hotkeys.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-hotkeys.min.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 	</head>
 	<body>

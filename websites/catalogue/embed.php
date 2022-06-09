@@ -66,7 +66,7 @@ $links = filter_links($links);
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title><?php ?><?php echo $page_title; ?> | <?php echo $config['site_title']; ?></title>
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css" />
-		<link rel="stylesheet" href="/js/videojs/video-js.css?v=<?php echo PL_VER; ?>" />
+		<link rel="stylesheet" href="/js/videojs/video-js.min.css?v=<?php echo PL_VER; ?>" />
 		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo PL_VER; ?>" />
 		<link rel="stylesheet" href="/style/main.css?v=<?php echo CS_VER; ?>" />
 		<script>
@@ -75,16 +75,16 @@ $links = filter_links($links);
 			};
 		</script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script src="/js/videojs/video.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/common.js?v=<?php echo JS_VER; ?>"></script>
 		<script src="/js/megajs.js?v=<?php echo MG_VER; ?>"></script>
 		<script src="/js/videostream.js?v=<?php echo VS_VER; ?>"></script>
 		<script src="/js/videojs/lang_ca.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo PL_VER; ?>"></script>
-		<script src="/js/videojs/videojs-youtube.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-youtube.min.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo PL_VER; ?>"></script>
-		<script src="/js/videojs/videojs-hotkeys.js?v=<?php echo PL_VER; ?>"></script>
+		<script src="/js/videojs/videojs-hotkeys.min.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 	</head>
 	<body>
