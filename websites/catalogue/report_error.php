@@ -1,8 +1,8 @@
 <?php
 require_once("db.inc.php");
 if (!empty($_POST['type']) && !empty($_POST['text']) && !empty($_POST['file_id'])) {
-	$link_id = escape((int)$_POST['link_id']);
-	$play_time = escape((int)$_POST['location']);
+	$file_id = escape((int)$_POST['file_id']);
+	$location = escape((int)$_POST['location']);
 	$type = escape($_POST['type']);
 	$text = escape($_POST['text']);
 	$ip = escape($_SERVER['REMOTE_ADDR']);

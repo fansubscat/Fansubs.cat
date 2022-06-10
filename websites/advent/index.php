@@ -44,7 +44,7 @@ function is_day_ready($day) {
 		$today = $row['year'].'-12-'.sprintf('%02d', intval($_GET['currentday'])).' 12:00:00';
 	}
 	$target = $row['year'].'-12-'.sprintf('%02d', $day).' 12:00:00';
-	return (strcmp($today,$target)>=0 && (!empty($days['link_url']) || !empty($_GET['twitter'])));
+	return (strcmp($today,$target)>=0 && (!empty($days[$day]['link_url']) || !empty($_GET['twitter'])));
 }
 
 if (!empty($_COOKIE['advent_'.$row['year']])) {
@@ -192,9 +192,15 @@ switch ($row['year']) {
 
 			/* media query */
 			@media only screen and (min-width: 720px) {
+<?php
+	if ($row['year']=='2021') {
+?>
 				body {
 					background-size: unset;
 				}
+<?php
+	}
+?>
 				.grid-1 {
 					grid-template-columns: repeat(6, 1fr);
 <?php
