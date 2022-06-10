@@ -257,7 +257,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$j++;
 				}
 
-				if (!empty($_POST['form-files-list-'.$episode_id.'-is_lost-'.$i]) && !($has_url || ($type=='manga' && ($file['original_filename']!='NULL' || $file['id']!=-1)))) {
+				if (!empty($_POST['form-files-list-'.$episode_id.'-is_lost-'.$i]) && !($has_url || ($type=='manga' && $file['length']!='NULL'))) {
 					$file['is_lost']=1;
 					$file['length']='NULL';
 					$data['is_missing_episodes']=1;
@@ -886,7 +886,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
-			$resultfo = query("SELECT f.* FROM remote_folder f WHERE f.version_id=".escape($_GET['id'])." ORDER BY f.id ASC");
+			$resultfo = query("SELECT f.*, ra.type FROM remote_folder f LEFT JOIN remote_account ra ON f.remote_account_id=ra.id WHERE f.version_id=".escape($_GET['id'])." ORDER BY f.id ASC");
 			$remote_folders = array();
 			while ($rowfo = mysqli_fetch_assoc($resultfo)) {
 				array_push($remote_folders, $rowfo);
@@ -898,19 +898,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 								<div class="row mb-3">
 									<div class="w-100 column">
-										<select id="form-remote_folders-list-remote_account_id-XXX" name="form-remote_folders-list-remote_account_id-XXX" class="form-control d-none">
+										<select id="form-remote_folders-list-remote_account_id-XXX" name="form-remote_folders-list-remote_account_id-XXX" onchange="if ($(this).find('option:selected').eq(0).hasClass('not-syncable')){$('#form-remote_folders-list-is_active-XXX').prop('disabled',true);} else { $('#form-remote_folders-list-is_active-XXX').prop('disabled',false); }" class="form-control d-none">
 											<option value="">- Selecciona un compte remot -</option>
 <?php
 		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-			$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
+			$extra_where = ' AND a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
 		} else {
-			$where = '';
+			$extra_where = '';
 		}
 
-		$resulta = query("SELECT a.* FROM remote_account a$where ORDER BY a.type='storage' DESC, a.name ASC");
+		$resulta = query("SELECT a.* FROM remote_account a WHERE a.type<>'storage'$extra_where ORDER BY a.type='storage' DESC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Emmagatzematge').': '.htmlspecialchars($arow['name']); ?></option>
+											<option value="<?php echo $arow['id']; ?>"<?php echo $arow['type']=='storage' ? ' class="not-syncable"' : ''; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Emmagatzematge').': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);
@@ -947,19 +947,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-remote_folders-list-row-<?php echo $j+1; ?>">
 													<td>
-														<select id="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" name="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" class="form-control" required>
+														<select id="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" name="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" onchange="if ($(this).find('option:selected').eq(0).hasClass('not-syncable')){$('#form-remote_folders-list-is_active-<?php echo $j+1; ?>').prop('disabled',true);} else { $('#form-remote_folders-list-is_active-<?php echo $j+1; ?>').prop('disabled',false); }" class="form-control" required>
 															<option value="">- Selecciona un compte remot -</option>
 <?php
 			if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-				$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
+				$extra_where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
 			} else {
-				$where = '';
+				$extra_where = '';
 			}
 
-			$resulta = query("SELECT a.* FROM remote_account a$where ORDER BY a.type='storage' DESC, a.name ASC");
+			$resulta = query("SELECT a.* FROM remote_account a WHERE a.type<>'storage'$extra_where ORDER BY a.type='storage' DESC, a.name ASC");
 			while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-															<option value="<?php echo $arow['id']; ?>"<?php echo $remote_folders[$j]['remote_account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Emmagatzematge').': '.htmlspecialchars($arow['name']); ?></option>
+															<option value="<?php echo $arow['id']; ?>"<?php echo $remote_folders[$j]['remote_account_id']==$arow['id'] ? " selected" : ""; ?><?php echo $arow['type']=='storage' ? ' class="not-syncable"' : ''; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Emmagatzematge').': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 			}
 			mysqli_free_result($resulta);
@@ -985,7 +985,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														</select>
 													</td>
 													<td class="text-center align-middle">
-														<input id="form-remote_folders-list-is_active-<?php echo $j+1; ?>" name="form-remote_folders-list-is_active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $remote_folders[$j]['is_active']==1? " checked" : ""; ?>/>
+														<input id="form-remote_folders-list-is_active-<?php echo $j+1; ?>" name="form-remote_folders-list-is_active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $remote_folders[$j]['is_active']==1? " checked" : ""; ?><?php echo $remote_folders[$j]['type']=='storage'? " disabled" : ""; ?>/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-remote_folders-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionRemoteFolderRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
@@ -1002,10 +1002,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<button onclick="addVersionRemoteFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una carpeta</button>
 										</div>
 										<div class="col-sm text-right" style="padding-left: 0; padding-right: 0">
-											<select id="import-type" class="form-control form-control-sm form-inline" title="Indica el tipus de streaming preferit en aquesta actualització d'enllaços. Si trieu un tipus de compte, només s'utilitzarà aquell tipus. Si no n'hi ha cap d'aquell tipus, s'utilitzaran tots." style="width: auto; display: inline; font-size: 78%;">
+											<select id="import-type" class="form-control form-control-sm form-inline" title="Indica el tipus de sinronització desitjada en aquesta actualització d'enllaços: tots els comptes o només els marcats." style="width: auto; display: inline; font-size: 78%;">
 												<option value="all" selected>Utilitza tots els comptes</option>
-												<option value="mega">Prefereix MEGA</option>
-												<option value="sync">Només sincronitzats</option>
+												<option value="sync">Només els sincronitzats</option>
 											</select> →
 											<button type="button" id="import-from-mega" class="btn btn-primary btn-sm">
 												<span id="import-from-mega-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>

@@ -48,6 +48,19 @@ function publish_to_discord($text, $title, $description, $url, $image, $rating){
 	}
 }
 
+function get_comic_type($comic_type){
+	switch ($comic_type) {
+		case 'manga':
+			return 'manga';
+		case 'manhwa':
+			return 'manhwa';
+		case 'manhua':
+			return 'manhua';
+		default:
+			return 'còmic';
+	}
+}
+
 function get_shortened_tweet($tweet){
 	//Check that it will not exceed 280 characters... and ellipsize if needed
 	//280: max tweet limit
@@ -75,84 +88,84 @@ $last_tweeted_anime_id=(int)file_get_contents('last_tweeted_anime_id.txt');
 //The first element in the inner array is the Twitter string, and the second element is the Discord string.
 $new_manga_tweets = array(
 	array(
-		'Tenim un nou manga editat per %2$s a manga.fansubs.cat: «%1$s»!',
-		':new: Tenim un **nou manga** editat per %2$s: **%1$s**!'
+		'Tenim un nou %COMIC_TYPE% editat per %2$s a manga.fansubs.cat: «%1$s»!',
+		':new: Tenim un **nou %COMIC_TYPE%** editat per %2$s: **%1$s**!'
 	),
 	array(
-		'Hi ha disponible un nou manga editat per %2$s a manga.fansubs.cat: «%1$s»!',
-		':new: Hi ha disponible un **nou manga** editat per %2$s: **%1$s**!'
+		'Hi ha disponible un nou %COMIC_TYPE% editat per %2$s a manga.fansubs.cat: «%1$s»!',
+		':new: Hi ha disponible un **nou %COMIC_TYPE%** editat per %2$s: **%1$s**!'
 	),
 	array(
-		'Ja podeu llegir el nou manga «%1$s» editat per %2$s a manga.fansubs.cat!',
-		':new: Ja podeu llegir el **nou manga** **%1$s** editat per %2$s!'
+		'Ja podeu llegir el nou %COMIC_TYPE% «%1$s» editat per %2$s a manga.fansubs.cat!',
+		':new: Ja podeu llegir el **nou %COMIC_TYPE%** **%1$s** editat per %2$s!'
 	),
 	array(
-		'Hem afegit un nou manga editat per %2$s a manga.fansubs.cat: «%1$s»!',
-		':new: Hem afegit un **nou manga** editat per %2$s: **%1$s**!'
+		'Hem afegit un nou %COMIC_TYPE% editat per %2$s a manga.fansubs.cat: «%1$s»!',
+		':new: Hem afegit un **nou %COMIC_TYPE%** editat per %2$s: **%1$s**!'
 	),
 	array(
-		'Nou manga: «%1$s», editat per %2$s! Seguiu-lo a manga.fansubs.cat!',
-		':new: **Nou manga:** **%1$s**, editat per %2$s! Seguiu-lo a Fansubs.cat!'
+		'Nou %COMIC_TYPE%: «%1$s», editat per %2$s! Seguiu-lo a manga.fansubs.cat!',
+		':new: **Nou %COMIC_TYPE%:** **%1$s**, editat per %2$s! Seguiu-lo a Fansubs.cat!'
 	)
 );
 
 $new_chapter_number_tweets = array(
 	array(
-		'Ja hi ha disponible el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
-		':orange_book: Ja hi ha disponible el **capítol %4$d** del manga **%1$s** (editat per %3$s), «%2$s»!'
+		'Ja hi ha disponible el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
+		':orange_book: Ja hi ha disponible el **capítol %4$d** del %COMIC_TYPE% **%1$s** (editat per %3$s), «%2$s»!'
 	),
 	array(
-		'S\'ha afegit el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
-		':orange_book: S\'ha afegit el **capítol %4$d** del manga **%1$s** (editat per %3$s), «%2$s»!'
+		'S\'ha afegit el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
+		':orange_book: S\'ha afegit el **capítol %4$d** del %COMIC_TYPE% **%1$s** (editat per %3$s), «%2$s»!'
 	),
 	array(
-		'Ja podeu llegir el capítol %4$d del manga «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
-		':orange_book: Ja podeu llegir el **capítol %4$d** del manga **%1$s** (editat per %3$s), «%2$s»!'
+		'Ja podeu llegir el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
+		':orange_book: Ja podeu llegir el **capítol %4$d** del %COMIC_TYPE% **%1$s** (editat per %3$s), «%2$s»!'
 	)
 );
 
 $new_chapter_number_no_name_tweets = array(
 	array(
-		'Ja hi ha disponible el capítol %4$d del manga «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
-		':orange_book: Ja hi ha disponible el **capítol %4$d** del manga **%1$s** (editat per %3$s)!'
+		'Ja hi ha disponible el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
+		':orange_book: Ja hi ha disponible el **capítol %4$d** del %COMIC_TYPE% **%1$s** (editat per %3$s)!'
 	),
 	array(
-		'Hem afegit el capítol %4$d del manga «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
-		':orange_book: Hem afegit el **capítol %4$d** del manga **%1$s** (editat per %3$s)!'
+		'Hem afegit el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
+		':orange_book: Hem afegit el **capítol %4$d** del %COMIC_TYPE% **%1$s** (editat per %3$s)!'
 	),
 	array(
-		'Ja podeu llegir el capítol %4$d del manga «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
-		':orange_book: Ja podeu llegir el **capítol %4$d** del manga **%1$s** (editat per %3$s)!'
+		'Ja podeu llegir el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
+		':orange_book: Ja podeu llegir el **capítol %4$d** del %COMIC_TYPE% **%1$s** (editat per %3$s)!'
 	)
 );
 
 $new_chapter_no_number_tweets = array(
 	array(
-		'Ja hi ha disponible un nou capítol del manga «%1$s» (editat per %3$s) a manga.fansubs.cat: «%2$s».',
-		':orange_book: Ja hi ha disponible un **nou capítol** del manga **%1$s** (editat per %3$s): «%2$s».'
+		'Ja hi ha disponible un nou capítol del %COMIC_TYPE% «%1$s» (editat per %3$s) a manga.fansubs.cat: «%2$s».',
+		':orange_book: Ja hi ha disponible un **nou capítol** del %COMIC_TYPE% **%1$s** (editat per %3$s): «%2$s».'
 	),
 	array(
-		'Hem afegit un nou capítol del manga «%1$s» (editat per %3$s) al web de manga.fansubs.cat: «%2$s».',
-		':orange_book: Hem afegit un **nou capítol** del manga **%1$s** (editat per %3$s): «%2$s».'
+		'Hem afegit un nou capítol del %COMIC_TYPE% «%1$s» (editat per %3$s) al web de manga.fansubs.cat: «%2$s».',
+		':orange_book: Hem afegit un **nou capítol** del %COMIC_TYPE% **%1$s** (editat per %3$s): «%2$s».'
 	),
 	array(
-		'Ja podeu llegir un nou capítol del manga «%1$s» (editat per %3$s) a manga.fansubs.cat: «%2$s».',
-		':orange_book: Ja podeu llegir un **nou capítol** del manga **%1$s** (editat per %3$s): «%2$s».'
+		'Ja podeu llegir un nou capítol del %COMIC_TYPE% «%1$s» (editat per %3$s) a manga.fansubs.cat: «%2$s».',
+		':orange_book: Ja podeu llegir un **nou capítol** del %COMIC_TYPE% **%1$s** (editat per %3$s): «%2$s».'
 	)
 );
 
 $new_chapters_tweets = array(
 	array(
-		'Ja hi ha disponibles %2$d capítols nous del manga «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
-		':orange_book: Ja hi ha disponibles **%2$d capítols nous** del manga **%1$s** (editat per %3$s)!'
+		'Ja hi ha disponibles %2$d capítols nous del %COMIC_TYPE% «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
+		':orange_book: Ja hi ha disponibles **%2$d capítols nous** del %COMIC_TYPE% **%1$s** (editat per %3$s)!'
 	),
 	array(
-		'Hem afegit %2$d capítols nous del manga «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
-		':orange_book: Hem afegit **%2$d capítols nous** del manga **%1$s** (editat per %3$s)!'
+		'Hem afegit %2$d capítols nous del %COMIC_TYPE% «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
+		':orange_book: Hem afegit **%2$d capítols nous** del %COMIC_TYPE% **%1$s** (editat per %3$s)!'
 	),
 	array(
-		'Ja podeu llegir %2$d capítols nous del manga «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
-		':orange_book: Ja podeu llegir **%2$d capítols nous** del manga **%1$s** (editat per %3$s)!'
+		'Ja podeu llegir %2$d capítols nous del %COMIC_TYPE% «%1$s» (editat per %3$s) al web de manga.fansubs.cat!',
+		':orange_book: Ja podeu llegir **%2$d capítols nous** del %COMIC_TYPE% **%1$s** (editat per %3$s)!'
 	)
 );
 
@@ -239,7 +252,7 @@ $new_episodes_tweets = array(
 	)
 );
 
-$result = mysqli_query($db_connection, "SELECT IF(v.show_divisions=1,vo.name,NULL), m.name, m.synopsis, m.rating, v.series_id, m.subtype, m.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, c.number, IF(ct.title IS NOT NULL, ct.title, IF(c.number IS NULL,c.description,ct.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_manga_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_manga
+$result = mysqli_query($db_connection, "SELECT IF(v.show_divisions=1,vo.name,NULL), m.name, m.synopsis, m.rating, v.series_id, m.subtype, m.comic_type, m.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, c.number, IF(ct.title IS NOT NULL, ct.title, IF(c.number IS NULL,c.description,ct.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_manga_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_manga
 FROM file fi
 LEFT JOIN version v ON fi.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -250,11 +263,12 @@ LEFT JOIN episode c ON fi.episode_id=c.id
 LEFT JOIN division vo ON vo.id=c.division_id
 WHERE m.type='manga' AND fi.id>$last_tweeted_manga_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC") or die(mysqli_error($db_connection));
 while ($row = mysqli_fetch_assoc($result)){
+	$comic_type = get_comic_type($row['comic_type']);
 	if ($row['new_manga']==1) {
 		$random = array_rand($new_manga_tweets, 1);
 		try{
-			publish_tweet(get_shortened_tweet(sprintf($new_manga_tweets[$random][0], $row['name'], $row['fansub_handles']))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-			publish_to_discord(sprintf($new_manga_tweets[$random][1], $row['name'], $row['fansub_names']), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'],"https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+			publish_tweet(get_shortened_tweet(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_manga_tweets[$random][0]), $row['name'], $row['fansub_handles']))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+			publish_to_discord(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_manga_tweets[$random][1]), $row['name'], $row['fansub_names']), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'],"https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 			file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 		} catch(Exception $e) {
 			break;
@@ -262,8 +276,8 @@ while ($row = mysqli_fetch_assoc($result)){
 	} else if ($row['cnt']>1){ //Multiple chapters
 		$random = array_rand($new_chapters_tweets, 1);
 		try{
-			publish_tweet(get_shortened_tweet(sprintf($new_chapters_tweets[$random][0], $row['name'], $row['cnt'], $row['fansub_handles']))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-			publish_to_discord(sprintf($new_chapters_tweets[$random][1], $row['name'], $row['cnt'], $row['fansub_names']), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+			publish_tweet(get_shortened_tweet(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapters_tweets[$random][0]), $row['name'], $row['cnt'], $row['fansub_handles']))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+			publish_to_discord(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapters_tweets[$random][1]), $row['name'], $row['cnt'], $row['fansub_names']), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 			file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 		} catch(Exception $e) {
 			break;
@@ -273,8 +287,8 @@ while ($row = mysqli_fetch_assoc($result)){
 			if (!empty($row['title']) && empty($row['number'])) {
 				$random = array_rand($new_chapter_no_number_tweets, 1);
 				try{
-					publish_tweet(get_shortened_tweet(sprintf($new_chapter_no_number_tweets[$random][0], $row['name'], $row['title'], $row['fansub_handles']))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-					publish_to_discord(sprintf($new_chapter_no_number_tweets[$random][1], $row['name'], $row['fansub_names']), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+					publish_tweet(get_shortened_tweet(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapter_no_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_handles']))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+					publish_to_discord(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapter_no_number_tweets[$random][1]), $row['name'], $row['fansub_names']), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 					file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 				} catch(Exception $e) {
 					break;
@@ -282,8 +296,8 @@ while ($row = mysqli_fetch_assoc($result)){
 			} else if (!empty($row['title'])) { //and has a number (normal case)
 				$random = array_rand($new_chapter_number_tweets, 1);
 				try{
-					publish_tweet(get_shortened_tweet(sprintf($new_chapter_number_tweets[$random][0], $row['name'], $row['title'], $row['fansub_handles'], str_replace('.',',',floatval($row['number']))))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-					publish_to_discord(sprintf($new_chapter_number_tweets[$random][1], $row['name'], $row['title'], $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+					publish_tweet(get_shortened_tweet(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapter_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_handles'], str_replace('.',',',floatval($row['number']))))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+					publish_to_discord(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapter_number_tweets[$random][1]), $row['name'], $row['title'], $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 					file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 				} catch(Exception $e) {
 					break;
@@ -291,8 +305,8 @@ while ($row = mysqli_fetch_assoc($result)){
 			} else {
 				$random = array_rand($new_chapter_number_no_name_tweets, 1);
 				try{
-					publish_tweet(get_shortened_tweet(sprintf($new_chapter_number_no_name_tweets[$random][0], $row['name'], '', $row['fansub_handles'], str_replace('.',',',floatval($row['number']))))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-					publish_to_discord(sprintf($new_chapter_number_no_name_tweets[$random][1], $row['name'], '', $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+					publish_tweet(get_shortened_tweet(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapter_number_no_name_tweets[$random][0]), $row['name'], '', $row['fansub_handles'], str_replace('.',',',floatval($row['number']))))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+					publish_to_discord(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapter_number_no_name_tweets[$random][1]), $row['name'], '', $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 					file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 				} catch(Exception $e) {
 					break;
@@ -301,8 +315,8 @@ while ($row = mysqli_fetch_assoc($result)){
 		} else {
 			$random = array_rand($new_chapter_no_number_tweets, 1);
 			try{
-				publish_tweet(get_shortened_tweet(sprintf($new_chapter_no_number_tweets[$random][0], $row['name'], $row['title'], $row['fansub_handles']))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-				publish_to_discord(sprintf($new_chapter_no_number_tweets[$random][1], $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+				publish_tweet(get_shortened_tweet(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapter_no_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_handles']))."\nhttps://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
+				publish_to_discord(sprintf(str_replace('%COMIC_TYPE%', $comic_type, $new_chapter_no_number_tweets[$random][1]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], "https://manga.fansubs.cat/".($row['subtype']=='oneshot' ? 'one-shots' : 'serialitzats')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://manga.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 				file_put_contents('last_tweeted_manga_id.txt', $row['id']);
 			} catch(Exception $e) {
 				break;

@@ -307,7 +307,25 @@ else if ($method === 'manga'){
 }
 else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$internal_token){
 	$submethod = array_shift($request);
-	if ($submethod=='get_unconverted_links') {
+	if ($submethod=='get_manga_files') {
+		$result = mysqli_query($db_connection, "SELECT f.*, s.slug, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0 ORDER BY s.name ASC, f.original_filename ASC") or crash('Internal error: ' . mysqli_error($db_connection));
+		$elements = array();
+		while($row = mysqli_fetch_assoc($result)){
+			$elements[] = array(
+				'file_id' => $row['id'],
+				'series' => $row['slug'],
+				'original_filename' => $row['original_filename'],
+				'length' => $row['length'],
+				'is_extra' => $row['is_extra'] ? TRUE : FALSE
+			);
+		}
+
+		$response = array(
+			'status' => 'ok',
+			'result' => $elements
+		);
+		echo json_encode($response);
+	} else if ($submethod=='get_unconverted_links') {
 		$result = mysqli_query($db_connection, "SELECT l.*, s.type, v.storage_folder, v.storage_processing, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url NOT LIKE 'storage://%'".((!empty($_GET['from_id']) && is_numeric($_GET['from_id'])) ? " AND f.id>=".$_GET['from_id'] : '')." AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%') ORDER BY s.name ASC, f.id ASC") or crash('Internal error: ' . mysqli_error($db_connection));
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){

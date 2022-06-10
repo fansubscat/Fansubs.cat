@@ -155,7 +155,7 @@ if ((!isset($_COOKIE['welcome_closed']) || $_COOKIE['welcome_closed']!='1') && $
 }
 
 //Show app layout if we are being accessed from an Android browser (rely on the User-Agent)
-if ((!isset($_COOKIE['app_closed']) || $_COOKIE['app_closed']!='1') && $header_current_page=='main' && stripos(strtolower($_SERVER['HTTP_USER_AGENT']),'android')!==FALSE){
+if ((!isset($_COOKIE['app_closed']) || $_COOKIE['app_closed']!='1') && $header_current_page=='main' && stripos(strtolower(!empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''),'android')!==FALSE){
 ?>
 				<div id="app">
 					<img id="appicon" src="/style/images/app.png" alt="" />

@@ -324,6 +324,7 @@ function get_hours_or_minutes_formatted($time){
 }
 
 function print_episode($fansub_names, $row, $version_id, $series, $version, $position){
+	global $config;
 	$result = query("SELECT f.* FROM file f WHERE f.episode_id=".$row['id']." AND f.version_id=$version_id ORDER BY f.variant_name ASC, f.id ASC");
 
 	if (mysqli_num_rows($result)==0 && $version['show_unavailable_episodes']!=1){

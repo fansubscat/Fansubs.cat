@@ -87,7 +87,7 @@ if (empty($failed)) {
 		if ($series['subtype']=='oneshot') {
 			$text = $config['preview_prefix']." • One-shot";
 		} else if ($series['divisions']>1) {
-			$text = $config['preview_prefix']." • Serialitzat • ".$series['divisions']." volums • ".($series['number_of_episodes']==-1 ? 'En publicació' : $manga['number_of_episodes'].' capítols');
+			$text = $config['preview_prefix']." • Serialitzat • ".$series['divisions']." volums • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
 		} else {
 			$text = $config['preview_prefix']." • Serialitzat • 1 volum • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
 		}

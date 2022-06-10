@@ -69,13 +69,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="form-group">
 						<label for="form-type" class="mandatory">Tipus</label>
 						<select name="type" class="form-control" id="form-type" required>
-							<option value="">- Selecciona -</option>
 							<option value="mega"<?php echo $row['type']=='mega' ? " selected" : ""; ?>>MEGA</option>
-							<option value="storage"<?php echo $row['type']=='storage' ? " selected" : ""; ?>>Emmagatzematge</option>
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="form-token" class="mandatory">Id. de sessió (MEGA) / URL base (emmagatzematge)</label>
+						<label for="form-token" class="mandatory">Id. de sessió (MEGA)</label>
 						<input class="form-control" name="token" id="form-token" required maxlength="200" value="<?php echo htmlspecialchars($row['token']); ?>">
 					</div>
 					<div class="form-group">
