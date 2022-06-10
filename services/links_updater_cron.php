@@ -1,6 +1,5 @@
 <?php
 require_once('db.inc.php');
-require_once("googledrive.inc.php");
 
 function guess_episode_duration($duration, $subtype){
 	//We have the task to deduce the episode duration. However, this is not always an easy task.
@@ -43,13 +42,8 @@ if (flock($lock_pointer, LOCK_EX)) {
 		$result = 0;
 		if ($folder['type']=='mega') {
 			exec("./mega_list_links.sh ".$folder['token']." \"".$folder['folder']."\"", $output, $result);
-		} else if ($folder['type']=='googledrive') {
-			$res = get_google_drive_files($folder['remote_account_id'], $folder['token'], $folder['folder']);
-			if ($res['status']=='ko') {
-				$result = $res['code'];
-			} else {
-				$output = $res['files'];
-			}
+		} else {
+			$result = 404;
 		}
 
 		if ($result!=0){
@@ -74,8 +68,6 @@ if (flock($lock_pointer, LOCK_EX)) {
 									//File exists, let's check the links and replace the first one...
 									if ($folder['type']=='mega') {
 										$pattern="https://mega.nz/%";
-									} else if ($folder['type']=='googledrive') {
-										$pattern="https://drive.google.com/%";
 									}
 									$links = query("SELECT * FROM link WHERE file_id=".$file['id']." AND url LIKE '$pattern'");
 									if ($link = mysqli_fetch_assoc($links)) {

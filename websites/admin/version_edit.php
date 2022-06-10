@@ -907,10 +907,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$where = '';
 		}
 
-		$resulta = query("SELECT a.* FROM remote_account a$where ORDER BY a.type='storage' DESC, a.type='googledrive' DESC, a.name ASC");
+		$resulta = query("SELECT a.* FROM remote_account a$where ORDER BY a.type='storage' DESC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : ($arow['type']=='googledrive' ? 'Google Drive' : 'Emmagatzematge')).': '.htmlspecialchars($arow['name']); ?></option>
+											<option value="<?php echo $arow['id']; ?>"><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Emmagatzematge').': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);
@@ -932,7 +932,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 25%;" class="mandatory">Compte</th>
-													<th class="mandatory">Id. de carpeta (Google Drive) / Carpeta (resta)</th>
+													<th class="mandatory">Carpeta</th>
 													<th style="width: 15%;"><?php echo $division_name; ?></th>
 													<th class="text-center" style="width: 10%;">Sincronitza</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -956,10 +956,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$where = '';
 			}
 
-			$resulta = query("SELECT a.* FROM remote_account a$where ORDER BY a.type='storage' DESC, a.type='googledrive' DESC, a.name ASC");
+			$resulta = query("SELECT a.* FROM remote_account a$where ORDER BY a.type='storage' DESC, a.name ASC");
 			while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-															<option value="<?php echo $arow['id']; ?>"<?php echo $remote_folders[$j]['remote_account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : ($arow['type']=='googledrive' ? 'Google Drive' : 'Emmagatzematge')).': '.htmlspecialchars($arow['name']); ?></option>
+															<option value="<?php echo $arow['id']; ?>"<?php echo $remote_folders[$j]['remote_account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Emmagatzematge').': '.htmlspecialchars($arow['name']); ?></option>
 <?php
 			}
 			mysqli_free_result($resulta);
@@ -1002,9 +1002,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<button onclick="addVersionRemoteFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una carpeta</button>
 										</div>
 										<div class="col-sm text-right" style="padding-left: 0; padding-right: 0">
-											<select id="import-type" class="form-control form-control-sm form-inline" title="Indica el tipus de streaming preferit en aquesta actualització d'enllaços. Si trieu un tipus de compte, només s'utilitzarà aquell tipus. Si no n'hi ha cap d'aquell tipus, s'utilitzaran tots. Si hi ha alguns capítols a MEGA i altres a Google Drive, cal marcar 'Utilitza tots els comptes'." style="width: auto; display: inline; font-size: 78%;">
+											<select id="import-type" class="form-control form-control-sm form-inline" title="Indica el tipus de streaming preferit en aquesta actualització d'enllaços. Si trieu un tipus de compte, només s'utilitzarà aquell tipus. Si no n'hi ha cap d'aquell tipus, s'utilitzaran tots." style="width: auto; display: inline; font-size: 78%;">
 												<option value="all" selected>Utilitza tots els comptes</option>
-												<option value="googledrive">Prefereix Google Drive</option>
 												<option value="mega">Prefereix MEGA</option>
 												<option value="sync">Només sincronitzats</option>
 											</select> →

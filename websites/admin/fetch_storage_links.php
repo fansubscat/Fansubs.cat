@@ -1,6 +1,5 @@
 <?php
 require_once("db.inc.php");
-require_once("/srv/services/fansubs.cat/googledrive.inc.php");
 
 function get_custom_server_files($server_base_url, $remote_folder) {
 	try {
@@ -42,7 +41,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	$remote_account_folders = array();
 	$count_mega = 0;
-	$count_google_drive = 0;
 	for($i=0;$i<count($remote_account_ids);$i++){
 		$remote_account_folder = array();
 
@@ -54,8 +52,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$remote_account_folder['type']=$row['type'];
 			if ($row['type']=='mega') {
 				$count_mega++;
-			} else if ($row['type']=='googledrive') {
-				$count_google_drive++;
 			}
 			$remote_account_folder['remote_folder']=$remote_folders[$i];
 			$remote_account_folder['division_id']=$division_ids[$i];
@@ -64,24 +60,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 
 	$import_type = $_GET['import_type'];
-	if ($import_type=='mega' && $count_google_drive>0) {
-		$new_remote_account_folders = array();
-		foreach ($remote_account_folders as $remote_account_folder) {
-			if ($remote_account_folder['type']=='mega') {
-				array_push($new_remote_account_folders, $remote_account_folder);
-			}
-		}
-		$remote_account_folders = $new_remote_account_folders;
-	} else if ($import_type=='googledrive' && $count_google_drive>0) {
-		$new_remote_account_folders = array();
-		foreach ($remote_account_folders as $remote_account_folder) {
-			if ($remote_account_folder['type']=='googledrive') {
-				array_push($new_remote_account_folders, $remote_account_folder);
-			}
-		}
-		$remote_account_folders = $new_remote_account_folders;
-	}
-
 	$links = array();
 
 	foreach ($remote_account_folders as $remote_account_folder) {
@@ -137,19 +115,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					if ($line!='') {
 						array_push($links,$remote_account_folder['division_id'].':::'.$line);
 					}
-				}
-			}
-		} else if ($remote_account_folder['type']=='googledrive') {
-			$res = get_google_drive_files($remote_account_folder['remote_account_id'], $remote_account_folder['division_id'], $remote_account_folder['remote_folder']);
-			if ($res['status']=='ko') {
-				echo json_encode(array(
-					"status" => 'ko',
-					"error" => "Error en accedir a Google Drive. (codi: ".$res['code'].")"
-				));
-				die();
-			} else {
-				foreach ($res['files'] as $file) {
-					array_push($links,$remote_account_folder['division_id'].':::'.$file);
 				}
 			}
 		} else if ($remote_account_folder['type']=='storage') {
