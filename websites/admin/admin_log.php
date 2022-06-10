@@ -17,7 +17,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<p class="text-center">Es mostren les darreres 200 accions (les més noves primer).</p>
 					<div class="text-center pb-3">
-						<select onchange="location.href='action_log.php?filter='+this.value;">
+						<select onchange="location.href='admin_log.php?filter='+this.value;">
 							<option value="">Mostra els esdeveniments més rellevants</option>
 							<option value="ALL"<?php echo $_GET['filter']=='ALL' ? ' selected' : ''; ?>>Mostra tots els esdeveniments</option>
 <?php

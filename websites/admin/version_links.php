@@ -26,20 +26,26 @@ include("header.inc.php");
 
 switch ($type) {
 	case 'anime':
-	case 'liveaction':
 		$divisions_name = "Temporada";
 		$divisions_short = "Temp.";
 		$divisions_plural = "temporades";
 		$divisions_anchor = "temporada";
 		$link_url=$anime_url;
-	break;
+		break;
+	case 'liveaction':
+		$divisions_name = "Temporada";
+		$divisions_short = "Temp.";
+		$divisions_plural = "temporades";
+		$divisions_anchor = "temporada";
+		$link_url=$liveaction_url;
+		break;
 	case 'manga':
 		$divisions_name = "Volum";
 		$divisions_short = "Vol.";
 		$divisions_plural = "volums";
 		$divisions_anchor = "volum";
 		$link_url=$manga_url;
-	break;
+		break;
 }
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1 && !empty($_GET['id']) && is_numeric($_GET['id'])) {

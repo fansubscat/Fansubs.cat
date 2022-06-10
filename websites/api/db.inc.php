@@ -8,7 +8,7 @@ function log_action($action, $text=NULL){
 	} else {
 		$text = "NULL";
 	}
-	mysqli_query($db_connection, "INSERT INTO action_log (action, text, author, date) VALUES ('".mysqli_real_escape_string($db_connection, $action)."',$text,'API', CURRENT_TIMESTAMP)");
+	mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('".mysqli_real_escape_string($db_connection, $action)."',$text,'API', CURRENT_TIMESTAMP)");
 }
 
 function crash($string){
