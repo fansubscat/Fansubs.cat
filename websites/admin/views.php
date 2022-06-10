@@ -13,7 +13,7 @@ switch ($type) {
 		$header_title="Darreres visualitzacions d'anime - Anàlisi";
 	break;
 	case 'manga':
-		$header_title="Darreres lectures de manga - Anàlisi";
+		$header_title="Darreres visualitzacions de manga - Anàlisi";
 	break;
 	case 'liveaction':
 		$header_title="Darreres visualitzacions d'acció real - Anàlisi";

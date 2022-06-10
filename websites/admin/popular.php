@@ -1,5 +1,5 @@
 <?php
-$header_title="Estadístiques - Els més populars";
+$header_title="Estadístiques - Continguts més populars";
 $page="analytics";
 include("header.inc.php");
 
@@ -54,9 +54,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Els més populars</h4>
+					<h4 class="card-title text-center mb-4 mt-1">Continguts més populars</h4>
 					<hr>
-					<p class="text-center">Aquests són els continguts més populars als portals.</p>
+					<p class="text-center">Aquests són els continguts més populars als diferents portals de Fansubs.cat.</p>
 
 					<div class="row justify-content-center">
 						<div class="form-group p-3 mb-0">

@@ -157,12 +157,14 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					<li class="nav-item dropdown<?php echo $page=='analytics' ? ' active' : ''; ?>">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAnalytics" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Anàlisi</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownAnalytics">
-							<a class="dropdown-item" href="stats.php">Estadístiques</a>
-							<a class="dropdown-item" href="views.php?type=anime">Darreres visualitzacions d'anime</a>
-							<a class="dropdown-item" href="views.php?type=manga">Darreres lectures de manga</a>
-							<a class="dropdown-item" href="views.php?type=liveaction">Darreres visualitzacions d'acció real</a>
+							<a class="dropdown-item" href="views.php?type=anime">Darreres visualitzacions - Anime</a>
+							<a class="dropdown-item" href="views.php?type=manga">Darreres visualitzacions - Manga</a>
+							<a class="dropdown-item" href="views.php?type=liveaction">Darreres visualitzacions - Acció real</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="popular.php">Continguts més populars</a>
 							<a class="dropdown-item" href="search_history.php">Historial de cerques</a>
-							<a class="dropdown-item" href="popular.php">Els més populars</a>
+							<a class="dropdown-item" href="stats.php">Estadístiques</a>
+							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="error_list.php">Errors de reproducció</a>
 							<a class="dropdown-item" href="storage_status.php">Servidors d'emmagatzematge</a>
 						</div>
