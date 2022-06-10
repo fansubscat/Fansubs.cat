@@ -79,7 +79,6 @@ $links = filter_links($links);
 		<script src="https://unpkg.com/megajs@1.0.4/dist/main.browser-umd.js"></script>
 		<script src="/js/videojs/video.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/common.js?v=<?php echo JS_VER; ?>"></script>
-		<script src="/js/megajs.js?v=<?php echo MG_VER; ?>"></script>
 		<script src="/js/videostream.js?v=<?php echo VS_VER; ?>"></script>
 		<script src="/js/videojs/lang_ca.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo PL_VER; ?>"></script>

@@ -82,7 +82,7 @@ if ($is_fools_day){
 					</div>
 					<div class="options-item">
 						<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
-					  	<label for="show_hentai">Mostra el hentai (confirmes que ets major d'edat)</label>
+					  	<label for="show_hentai">Mostra el contingut explícit (confirmes que ets major d'edat)</label>
 					</div>
 <?php
 if ($config['items_type']=='manga') {

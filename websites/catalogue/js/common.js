@@ -350,7 +350,7 @@ function initializePlayer(title, method, sourceData){
 						sourcesCode+="\n";
 					}
 					if (!enableDebug) {
-						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+(sources[i].url.includes('?') ? '&amp;play_id=' : '?play_id=')+currentViewId+'&amp;link_id='+currentFileId+'" size="'+sources[i].resolution+'"/>';
+						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+(sources[i].url.includes('?') ? '&amp;view_id=' : '?view_id=')+currentViewId+'&amp;file_id='+currentFileId+'" size="'+sources[i].resolution+'"/>';
 					} else {
 						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+'"/>';
 					}

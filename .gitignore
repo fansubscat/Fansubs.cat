@@ -1,4 +1,5 @@
-/internal/*
+internal/*
+services/config.inc.php
 websites/admin/config.inc.php
 websites/advent/config.inc.php
 websites/api/config.inc.php

@@ -352,7 +352,7 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$i
 			$url=mysqli_real_escape_string($db_connection, $_POST['url']);
 			$original_url=mysqli_real_escape_string($db_connection, $_POST['original_url']);
 			$resolution=mysqli_real_escape_string($db_connection, $_POST['resolution']);
-			$result = mysqli_query($db_connection, "INSERT INTO link (file_id, url, resolution, created,created_by,updated,updated_by) SELECT $file_id, '$url', '$resolution', CURRENT_TIMESTAMP, 'API', CURRENT_TIMESTAMP, 'API' FROM link WHERE EXISTS (SELECT url FROM link WHERE url='".$original_url."' AND file_id=".$file_id.") LIMIT 1") or crash('Internal error: ' . mysqli_error($db_connection));
+			$result = mysqli_query($db_connection, "INSERT INTO link (file_id, url, resolution, created, created_by, updated, updated_by) SELECT $file_id, '$url', '$resolution', CURRENT_TIMESTAMP, 'API', CURRENT_TIMESTAMP, 'API' FROM link WHERE EXISTS (SELECT url FROM link WHERE url='".$original_url."' AND file_id=".$file_id.") LIMIT 1") or crash('Internal error: ' . mysqli_error($db_connection));
 			if (mysqli_affected_rows($db_connection)>0) {
 				log_action('api-insert-converted-link', "S'ha inserit l'enllaç convertit '$url' del fitxer amb id. $file_id");
 			} else {
@@ -404,7 +404,7 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$i
 			$total_bytes=mysqli_real_escape_string($db_connection, $_POST['total_bytes']);
 			$ip=mysqli_real_escape_string($db_connection, $_POST['ip']);
 			$user_agent=mysqli_real_escape_string($db_connection, $_POST['user_agent']);
-			$result = mysqli_query($db_connection, "INSERT INTO view_session VALUES ('$view_id', 'size', $file_id, 0, (SELECT length FROM file f WHERE f.id=$link_id), $bytes_read, $total_bytes, NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '$ip', NULL, '$user_agent', 0, 0, 0, '') ON DUPLICATE KEY UPDATE bytes_read=bytes_read+$bytes_read, total_bytes=$total_bytes, ip='$ip', user_agent_read=IF(user_agent IS NULL OR user_agent_read IS NULL OR user_agent<>'$user_agent','$user_agent',user_agent_read), last_update=CURRENT_TIMESTAMP") or crash('Internal error: ' . mysqli_error($db_connection));
+			$result = mysqli_query($db_connection, "INSERT INTO view_session VALUES ('$view_id', 'size', $file_id, 0, (SELECT length FROM file f WHERE f.id=$file_id), $bytes_read, $total_bytes, NULL, NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '$ip', NULL, '$user_agent', 0, 0, 0, '') ON DUPLICATE KEY UPDATE bytes_read=IFNULL(bytes_read,0)+$bytes_read, total_bytes=$total_bytes, ip='$ip', user_agent_read=IF(user_agent IS NULL OR user_agent_read IS NULL OR user_agent<>'$user_agent','$user_agent',user_agent_read), last_update=CURRENT_TIMESTAMP") or crash('Internal error: ' . mysqli_error($db_connection));
 			
 			$response = array(
 				'status' => 'ok'

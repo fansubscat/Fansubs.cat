@@ -110,7 +110,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
-												<td class="text-center"><div<?php echo $row['view_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
+												<td class="text-center"><div<?php echo $row['is_view_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -197,7 +197,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
-												<td class="text-center"><div<?php echo $row['view_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
+												<td class="text-center"><div<?php echo $row['is_view_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
 											</tr>
 <?php
 }

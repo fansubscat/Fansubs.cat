@@ -93,7 +93,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 									}
 								} else {
 									$duration=guess_episode_duration($version['duration'], $version['subtype']);
-									query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,length,comments,created,created_by,updated,updated_by) VALUES(".$folder['version_id'].",".$row['id'].",'Única',NULL,".$duration",NULL,CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
+									query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,length,comments,created,created_by,updated,updated_by) VALUES(".$folder['version_id'].",".$row['id'].",'Única',NULL,".$duration.",NULL,CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
 									query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES(".mysqli_insert_id($db_connection).",'".escape($real_link)."',$resolution,CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
 									query("UPDATE version SET is_hidden=0,files_updated=CURRENT_TIMESTAMP,files_updated_by='Cron' WHERE id=".$folder['version_id']);
 									log_action("cron-create-link","S'ha inserit automàticament l'enllaç del fitxer '$filename' (id. de versió: ".$folder['version_id'].") i s'ha actualitzat la data de modificació de la versió");

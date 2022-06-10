@@ -2,7 +2,7 @@
 dest_dir="/YOUR/CONVERTED/FILES/DIR"
 token="YOUR_TOKEN"
 
-json=`curl https://api.fansubs.cat/internal/get_converted_links/?token=$token 2> /dev/null`
+json=`curl https://api.fansubs.cat/internal/get_converted_links/?token=$token\\&from_id=0 2> /dev/null`
 if [ $? -eq 0 ]
 then
 	array=`echo $json | jq -c '.result|sort_by(.url) []'`
@@ -33,7 +33,10 @@ then
 
 		if [ ! "$artist" == "Recompressió per a anime.fansubs.cat" ]
 		then
-			echo "Metadata is not correct for file '$url': WEB:Recompressió per a anime.fansubs.cat!=HDD:$artist";
+			if [ ! "$artist" == "Recompressió per a Fansubs.cat" ]
+			then
+				echo "Metadata is not correct for file '$url': WEB:Recompressió per a Fansubs.cat!=HDD:$artist";
+			fi
 		fi
 
 		if [ ! "$resolutionp" == "$resolutionr" ]
@@ -46,7 +49,7 @@ then
 
 		if [ $is_extra = "true" ]
 		then
-			if [ $durationr -ge 10 ]
+			if [ $durationr -ge 600 ]
 			then
 				echo "WARNING! Extra '$url' is more than 10 minutes long: are you sure this is an extra?"
 			fi

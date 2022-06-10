@@ -5,7 +5,7 @@ switch ($_SERVER['HTTP_HOST']) {
 	case 'manga.fansubs.cat':
 	case 'mangav2.fansubs.cat':
 		$config = array(
-			'base_url' => "https://mangav2.fansubs.cat",
+			'base_url' => "https://manga.fansubs.cat",
 			'preview_image' => "https://static.fansubs.cat/social/manga.jpg",
 			'site_title' => "Fansubs.cat - Manga en català",
 			'site_description' => "Aquí podràs veure en línia tot el manga editat pels fansubs en català!",
@@ -74,7 +74,7 @@ switch ($_SERVER['HTTP_HOST']) {
 	case 'accioreal.fansubs.cat':
 	case 'acciorealv2.fansubs.cat':
 		$config = array(
-			'base_url' => "https://acciorealv2.fansubs.cat",
+			'base_url' => "https://accioreal.fansubs.cat",
 			'preview_image' => "https://static.fansubs.cat/social/liveaction.jpg",
 			'site_title' => "Fansubs.cat - Acció real en català",
 			'site_description' => "Aquí podràs veure en línia tot el contingut d'acció real subtitulat pels fansubs en català!",
@@ -144,7 +144,7 @@ switch ($_SERVER['HTTP_HOST']) {
 	case 'animev2.fansubs.cat':
 	default:
 		$config = array(
-			'base_url' => "https://animev2.fansubs.cat",
+			'base_url' => "https://anime.fansubs.cat",
 			'preview_image' => "https://static.fansubs.cat/social/anime.jpg",
 			'site_title' => "Fansubs.cat - Anime en català",
 			'site_description' => "Aquí podràs veure en línia tot l'anime subtitulat pels fansubs en català!",

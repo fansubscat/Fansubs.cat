@@ -90,8 +90,8 @@ function fetch_and_parse_image($fansub_slug, $url, $description){
 //  4 - url
 //  5 - image URL
 function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher_id, $method, $url, $last_fetched_item_date){
-	mysqli_query($db_connection, "UPDATE fetcher SET status='fetching' WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
-	$old_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
+	mysqli_query($db_connection, "UPDATE news_fetcher SET status='fetching' WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
+	$old_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE news_fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
 	$old_count = mysqli_fetch_assoc($old_count_result)['count'];
 	switch($method){
 		case 'animugen':
@@ -205,12 +205,12 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 
 			//We delete the old ones (higher than the last one date)
 			mysqli_autocommit($db_connection, FALSE);
-			mysqli_query($db_connection, "DELETE FROM news WHERE fetcher_id=$fetcher_id AND date>'$last_fetched_item_date'") or (mysqli_rollback($db_connection) && $result[0]='error_mysql');
+			mysqli_query($db_connection, "DELETE FROM news WHERE news_fetcher_id=$fetcher_id AND date>'$last_fetched_item_date'") or (mysqli_rollback($db_connection) && $result[0]='error_mysql');
 
 			//And then insert them if everything goes well
 			if ($result[0]=='ok'){
 				foreach ($result[1] as $element){
-					mysqli_query($db_connection, "INSERT INTO news (fansub_id, fetcher_id, title, original_contents, contents, date, url, image) VALUES ($fansub_id, $fetcher_id, '".mysqli_real_escape_string($db_connection, $element[0])."','".mysqli_real_escape_string($db_connection, $element[1])."','".mysqli_real_escape_string($db_connection, $element[2])."','".$element[3]."','".mysqli_real_escape_string($db_connection, $element[4])."',".($element[5]!=NULL ? "'".mysqli_real_escape_string($db_connection, $element[5])."'" : 'NULL').")") or (mysqli_rollback($db_connection) && $result[0]='error_mysql');
+					mysqli_query($db_connection, "INSERT INTO news (fansub_id, news_fetcher_id, title, original_contents, contents, date, url, image) VALUES ($fansub_id, $fetcher_id, '".mysqli_real_escape_string($db_connection, $element[0])."','".mysqli_real_escape_string($db_connection, $element[1])."','".mysqli_real_escape_string($db_connection, $element[2])."','".$element[3]."','".mysqli_real_escape_string($db_connection, $element[4])."',".($element[5]!=NULL ? "'".mysqli_real_escape_string($db_connection, $element[5])."'" : 'NULL').")") or (mysqli_rollback($db_connection) && $result[0]='error_mysql');
 				}
 			}
 			
@@ -225,13 +225,13 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 	$increment=NULL;
 
 	if ($result[0]=='ok'){		
-		$new_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
+		$new_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE news_fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
 		$new_count = mysqli_fetch_assoc($new_count_result)['count'];
 		$increment = $new_count-$old_count;
 	}
 	
 	//Update fetch status
-	mysqli_query($db_connection, "UPDATE fetcher SET status='idle',last_fetch_result='".$result[0]."',last_fetch_date='".date('Y-m-d H:i:s')."',last_fetch_increment=".($increment!==NULL ? $increment : 'NULL')." WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
+	mysqli_query($db_connection, "UPDATE news_fetcher SET status='idle',last_fetch_result='".$result[0]."',last_fetch_date='".date('Y-m-d H:i:s')."',last_fetch_increment=".($increment!==NULL ? $increment : 'NULL')." WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
 
 	if ($increment>0){
 		//TODO: In the future, do things here, i.e, post to Twitter/Facebook accounts indicating that we have news from a certain fansub
@@ -247,7 +247,7 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 		
 		mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('fetch-news-changes','Detectades $increment noves notícies del fansub $fansub_slug', '(Servei intern)', CURRENT_TIMESTAMP)") or die(mysqli_error($db_connection));
 
-		$push_result = mysqli_query($db_connection, "SELECT n.title, f.slug fansub_slug, n.url, f.name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.fetcher_id=$fetcher_id ORDER BY n.date DESC LIMIT $increment") or die(mysqli_error($db_connection));
+		$push_result = mysqli_query($db_connection, "SELECT n.title, f.slug fansub_slug, n.url, f.name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.news_fetcher_id=$fetcher_id ORDER BY n.date DESC LIMIT $increment") or die(mysqli_error($db_connection));
 		while ($push_row = mysqli_fetch_assoc($push_result)){
 			$notification = array(
 				'to' => '/topics/all',

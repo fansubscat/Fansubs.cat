@@ -333,7 +333,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 
 				if ($link['url']!="NULL") {
-					array_push($extra['link'], $link);
+					array_push($extra['links'], $link);
 					$has_url=TRUE;
 				}
 				$j++;
@@ -1097,7 +1097,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$episode_name.='Capítol '.floatval($episodes[$i]['number']);
 			}
 		} else {
-			$episode_name.=$episodes[$i]['name'].' <small class="text-muted">(Aquesta descripció NO és intern: es mostrarà si no introdueixes cap títol!)</small>';
+			$episode_name.=$episodes[$i]['description'].' <small class="text-muted">(Aquesta descripció NO és intern: es mostrarà si no introdueixes cap títol!)</small>';
 		}
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {

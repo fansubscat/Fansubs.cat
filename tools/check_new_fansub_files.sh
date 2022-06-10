@@ -148,7 +148,7 @@ do
 
 					# Extract thumbnail
 					duration=`../ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$file" | awk -F'.' '{print $1}'`
-					../ffmpeg -i "$file" -ss $(((duration)/10)) -vframes 1 -filter:v scale="-1:240" thumbnail_$link_id.jpg
+					../ffmpeg -i "$file" -ss $(((duration)/6)) -vframes 1 -filter:v scale="-1:240" thumbnail_$file_id.jpg
 					curl -F "thumbnail=@thumbnail_$file_id.jpg" -F "file_id=$file_id" https://api.fansubs.cat/internal/change_file_thumbnail/?token=$token 2> /dev/null
 
 					# Update duration
@@ -169,7 +169,7 @@ do
 					else
 						cp "$file" "$dest_dir/$storage_folder/$output"
 					fi
-					rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --delete
+					rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --exclude "ZZZ_INTERNAL" --delete
 
 					# Insert converted file
 					curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$folder_type/$storage_folder/$output" --data-urlencode "file_id=$file_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null

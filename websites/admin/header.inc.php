@@ -25,7 +25,7 @@ session_start();
 		<style>
 			html,body{height: 100%;}
 			a{text-decoration: none !important;}
-			.bg-primary { background-color: darkred !important; } /* debug */
+			/* .bg-primary { background-color: darkred !important; } */
 			.form-group label{font-weight: bold;}
 			.mandatory:after {padding-left: 0.2em; content:"*"; color:red;}
 			.fa-stack { font-size: 0.5em; vertical-align: middle; margin-bottom: 0.5em; }

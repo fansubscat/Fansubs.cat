@@ -211,7 +211,7 @@ if ($mode=='strip'){
 <?php
 if ($mode=='strip'){
 ?>
-				window.parent.currentPagesRead=<?php echo $file['number_of_pages']; ?>;	
+				window.parent.currentPagesRead=<?php echo $file['length']; ?>;	
 <?php
 } else {
 ?>

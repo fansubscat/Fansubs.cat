@@ -15,7 +15,7 @@ while ($series = mysqli_fetch_assoc($result)) {
 	$error = FALSE;
 	while ($division = mysqli_fetch_assoc($resultss)) {
 		sleep(10); //At least 4s for Jikan request limits
-		$url = 'https://api.jikan.moe/v4/'.$series['type']'/'.$division['external_id'];
+		$url = 'https://api.jikan.moe/v4/'.$series['type'].'/'.$division['external_id'];
 		$response = json_decode(file_get_contents($url));
 		
 		if (!$response || !$response->data){

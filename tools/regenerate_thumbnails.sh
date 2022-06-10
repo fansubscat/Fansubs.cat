@@ -16,7 +16,7 @@ then
 		url=`echo $element | jq -r '.url' | sed -E "s/^storage:\\\/\\\///"`
 		duration=`../ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$dest_dir/$url" | awk -F'.' '{print $1}'`
 		echo "Regenerating thumbnail for file id $file_id ($dest_dir/$url)..."
-		../ffmpeg -i "$dest_dir/$url" -ss $(((duration)/10)) -vframes 1 -filter:v scale="-1:240" thumbnail_$file_id.jpg 2> /dev/null
+		../ffmpeg -i "$dest_dir/$url" -ss $(((duration)/6)) -vframes 1 -filter:v scale="-1:240" thumbnail_$file_id.jpg 2> /dev/null
 		curl -F "thumbnail=@thumbnail_$file_id.jpg" -F "file_id=$file_id" https://api.fansubs.cat/internal/change_file_thumbnail/?token=$token 2> /dev/null
 		#rm thumbnail_$file_id.jpg
 		IFS=$'\n'

@@ -248,7 +248,7 @@ LEFT JOIN series m ON v.series_id=m.id
 LEFT JOIN episode_title ct ON fi.episode_id=ct.episode_id AND ct.version_id=fi.version_id
 LEFT JOIN episode c ON fi.episode_id=c.id
 LEFT JOIN division vo ON vo.id=c.division_id
-WHERE s.type='manga' AND fi.id>$last_tweeted_manga_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC") or die(mysqli_error($db_connection));
+WHERE m.type='manga' AND fi.id>$last_tweeted_manga_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC") or die(mysqli_error($db_connection));
 while ($row = mysqli_fetch_assoc($result)){
 	if ($row['new_manga']==1) {
 		$random = array_rand($new_manga_tweets, 1);
