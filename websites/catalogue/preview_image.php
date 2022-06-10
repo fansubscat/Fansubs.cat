@@ -45,6 +45,19 @@ function get_status_color($image, $id){
 	}
 }
 
+function get_comic_type($comic_type){
+	switch ($comic_type) {
+		case 'manga':
+			return 'Manga';
+		case 'manhwa':
+			return 'Manhwa';
+		case 'manhua':
+			return 'Manhua';
+		default:
+			return 'Còmic';
+	}
+}
+
 $result = query("SELECT s.*, YEAR(s.publish_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='${config['items_type']}' AND slug='".escape(!empty($_GET['slug']) ? $_GET['slug'] : '')."' GROUP BY s.id");
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
@@ -85,11 +98,11 @@ if (empty($failed)) {
 	//Type
 	if ($series['type']=='manga') {
 		if ($series['subtype']=='oneshot') {
-			$text = $config['preview_prefix']." • One-shot";
+			$text = get_comic_type($series['comic_type'])." • One-shot";
 		} else if ($series['divisions']>1) {
-			$text = $config['preview_prefix']." • Serialitzat • ".$series['divisions']." volums • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
+			$text = get_comic_type($series['comic_type'])." • Serialitzat • ".$series['divisions']." volums • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
 		} else {
-			$text = $config['preview_prefix']." • Serialitzat • 1 volum • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
+			$text = get_comic_type($series['comic_type'])." • Serialitzat • 1 volum • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
 		}
 	} else {
 		if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
