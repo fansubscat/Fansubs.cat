@@ -1,7 +1,7 @@
 <?php
 //This file sets config depending on the hostname used to display the catalogue
 //This allows customization but keeping the same codebase
-switch ($_SERVER['HTTP_HOST']) {
+switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'anime.fansubs.cat') {
 	case 'manga.fansubs.cat':
 	case 'mangav2.fansubs.cat':
 		$config = array(
@@ -64,7 +64,7 @@ switch ($_SERVER['HTTP_HOST']) {
 			'section_search_other_results_desc_p' => "Hem trobat %d altres continguts que coincideixen amb la cerca.",
 			'section_related' => "<span class=\"iconsm fa fa-fw fa-book-open\"></span> Mangues recomanats",
 			'section_related_desc' => "Si t'agrada aquest manga, és possible que també t'agradin els d'aquesta llista:",
-			'section_related_other' => "<span class=\"iconsm fa fa-fw fa-tv\"></span> Altres continguts recomanats",
+			'section_related_other' => "<span class=\"iconsm fa fa-fw fa-square-plus\"></span> Altres continguts recomanats",
 			'section_related_other_desc' => "Si t'agrada aquest manga, és possible que també t'agradin aquests altres continguts:",
 			'view_now' => "Llegeix-lo ara",
 			'option_show_cancelled' => "Mostra els mangues cancel·lats o abandonats pels fansubs",
@@ -131,9 +131,9 @@ switch ($_SERVER['HTTP_HOST']) {
 			'section_search_other_results' => "Altres resultats",
 			'section_search_other_results_desc_s' => "Hem trobat %d altre contingut que coincideix amb la cerca.",
 			'section_search_other_results_desc_p' => "Hem trobat %d altres continguts que coincideixen amb la cerca.",
-			'section_related' => "<span class=\"iconsm fa fa-fw fa-tv\"></span> Animes recomanats",
+			'section_related' => "<span class=\"iconsm fa fa-fw fa-tv\"></span> Continguts d'acció real recomanats",
 			'section_related_desc' => "Si t'agrada aquest contingut d'acció real, és possible que també t'agradin els d'aquesta llista:",
-			'section_related_other' => "<span class=\"iconsm fa fa-fw fa-book-open\"></span> Altres continguts recomanats",
+			'section_related_other' => "<span class=\"iconsm fa fa-fw fa-square-plus\"></span> Altres continguts recomanats",
 			'section_related_other_desc' => "Si t'agrada aquest contingut d'acció real, és possible que també t'agradin aquests altres continguts:",
 			'view_now' => "Mira'l ara",
 			'option_show_cancelled' => "Mostra els continguts d'acció real cancel·lats o abandonats pels fansubs",
@@ -203,7 +203,7 @@ switch ($_SERVER['HTTP_HOST']) {
 			'section_search_other_results_desc_p' => "Hem trobat %d altres continguts que coincideixen amb la cerca.",
 			'section_related' => "<span class=\"iconsm fa fa-fw fa-tv\"></span> Animes recomanats",
 			'section_related_desc' => "Si t'agrada aquest anime, és possible que també t'agradin els d'aquesta llista:",
-			'section_related_other' => "<span class=\"iconsm fa fa-fw fa-book-open\"></span> Altres continguts recomanats",
+			'section_related_other' => "<span class=\"iconsm fa fa-fw fa-square-plus\"></span> Altres continguts recomanats",
 			'section_related_other_desc' => "Si t'agrada aquest anime, és possible que també t'agradin aquests altres continguts:",
 			'view_now' => "Mira'l ara",
 			'option_show_cancelled' => "Mostra els animes cancel·lats o abandonats pels fansubs",

@@ -64,23 +64,21 @@ $cookie_fansub_ids = get_cookie_fansub_ids();
 $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ? " AND v.status<>5 AND v.status<>4" : "").(!empty($_COOKIE['show_missing']) ? "" : " AND v.is_missing_episodes=0").((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND (s.rating<>'XXX' OR s.rating IS NULL)" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
 switch ($header_tab){
-	case 'movies':
+	case $config['filmsoneshots_slug_internal']:
 		$sections=array($config['section_moviesoneshots']);
 		$descriptions=array($config['section_moviesoneshots_desc']);
 		$queries=array(
 			$base_query . " WHERE s.type='${config['items_type']}' AND $query_portion_limit_to_non_hidden AND s.subtype='${config['filmsoneshots_db']}'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
-		$tracking_classes=array('films-catalog');
 		break;
-	case 'series':
+	case $config['serialized_slug_internal']:
 		$sections=array($config['section_serialized']);
 		$descriptions=array($config['section_serialized_desc']);
 		$queries=array(
 			$base_query . " WHERE s.type='${config['items_type']}' AND $query_portion_limit_to_non_hidden AND s.subtype='${config['serialized_db']}'$cookie_extra_conditions GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
-		$tracking_classes=array('series-catalog');
 		break;
 	case 'search':
 		$query = (!empty($_GET['query']) ? escape($_GET['query']) : "");
@@ -95,7 +93,6 @@ switch ($header_tab){
 			$base_query . " WHERE s.type='${config['items_type']}' AND $query_portion_limit_to_non_hidden AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%' OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$spaced_query')) GROUP BY s.id ORDER BY s.name ASC");
 		$specific_version=array(FALSE);
 		$type=array('static');
-		$tracking_classes=array('search-results');
 		break;
 	default:
 		$result = query("SELECT b.series_id, IFNULL(MAX(b.total_views),0) max_views FROM (SELECT a.series_id, SUM(a.views) total_views FROM (SELECT SUM(vi.views) views, f.version_id, s.id series_id, f.episode_id FROM views vi LEFT JOIN file f ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE (SELECT COUNT(*) FROM version v WHERE s.type='${config['items_type']}' AND v.series_id=s.id AND v.is_hidden=0)>0 AND f.episode_id IS NOT NULL AND vi.views>0 AND vi.day>='".date("Y-m-d",strtotime("-2 weeks"))."' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_id DESC");
@@ -139,7 +136,6 @@ switch ($header_tab){
 			$base_query . " WHERE s.type='${config['items_type']}' AND $query_portion_limit_to_non_hidden AND 1$cookie_extra_conditions GROUP BY s.id ORDER BY s.score DESC LIMIT $max_items");
 		$specific_version=array(FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE);
 		$type=array('advent','recommendations', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel', 'carousel');
-		$tracking_classes=array('advent', 'featured', 'latest', 'completed', 'random', 'popular', 'newest', 'toprated');
 		break;
 }
 
