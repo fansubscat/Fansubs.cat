@@ -951,7 +951,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															<option value="">- Selecciona un compte remot -</option>
 <?php
 			if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-				$extra_where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
+				$extra_where = ' AND a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
 			} else {
 				$extra_where = '';
 			}
