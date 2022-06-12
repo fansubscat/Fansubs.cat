@@ -224,21 +224,25 @@ else if ($method === 'manga'){
 		$slug = mysqli_real_escape_string($db_connection, $slug);
 		$result = mysqli_query($db_connection, "SELECT m.*, GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres FROM series m LEFT JOIN rel_series_genre mg ON m.id=mg.series_id LEFT JOIN genre g ON mg.genre_id = g.id WHERE m.type='manga' AND m.slug='".$slug."'") or crash('Internal error: ' . mysqli_error($db_connection));
 		if($row = mysqli_fetch_assoc($result)){
-			$element = array(
-				'slug' => ($row['subtype']=='oneshot' ? 'one-shots/' : 'serialitzats/').$row['slug'],
-				'name' => $row['name'],
-				'author' => $row['author'],
-				'synopsis' => $row['synopsis'],
+			if (is_numeric($row['id'])) {
+				$element = array(
+					'slug' => ($row['subtype']=='oneshot' ? 'one-shots/' : 'serialitzats/').$row['slug'],
+					'name' => $row['name'],
+					'author' => $row['author'],
+					'synopsis' => $row['synopsis'],
 					'genres' => $row['genres'],
-				'status' => $row['number_of_episodes']>=1 ? 'finished' : 'ongoing',
-				'thumbnail_url' => $static_url.'/images/covers/'.$row['id'].'.jpg'
-			);
+					'status' => $row['number_of_episodes']>=1 ? 'finished' : 'ongoing',
+					'thumbnail_url' => $static_url.'/images/covers/'.$row['id'].'.jpg'
+				);
 
-			$response = array(
-				'status' => 'ok',
-				'result' => $element
-			);
-			echo json_encode($response);
+				$response = array(
+					'status' => 'ok',
+					'result' => $element
+				);
+				echo json_encode($response);
+			} else {
+				show_invalid('No valid manga specified.');
+			}
 		} else {
 			show_invalid('No valid manga specified.');
 		}
@@ -264,6 +268,13 @@ else if ($method === 'manga'){
 		echo json_encode($response);
 	} else if ($submethod=='pages') {
 		$file_id = intval(array_shift($request));
+
+		//IMPORTANT: We add 10000 because when the unification of catalogues occurred,
+		//we added 10000 to the manga file ids. However, this has problems with Tachiyomi.
+		//We therefore use the original id from the request, and add 10000 to get the DB id if needed.
+		if ($file_id<=10000) {
+			$file_id+=10000;
+		}
 
 		$base_path="$static_directory/storage/$file_id/";
 

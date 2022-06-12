@@ -75,13 +75,19 @@ RewriteRule ^cerca/(.*)/?$ index.php?page=search&query=$1 [QSA,L]
 RewriteRule ^qui-som/?$ about.php [L]
 RewriteRule ^embed/([^/]*)/?$ embed.php?file_id=$1 [L]
 
-#Old migration for manga
+#Old migration for manga (Piwigo -> Catalogue) - Used by links at Lluna Plena
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
-RewriteRule ^index/category/(.*)-(.*)$ migration.php?id=$1
+RewriteRule ^index/category/(.*)-(.*)$ migration.php?migration_type=piwigo&id=$1
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
-RewriteRule ^index/category/(.*)$ migration.php?id=$1
+RewriteRule ^index/category/(.*)$ migration.php?migration_type=piwigo&id=$1
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
-RewriteRule ^picture/(.*)/category/(.*)-(.*)$ migration.php?id=$2
+RewriteRule ^picture/(.*)/category/(.*)-(.*)$ migration.php?migration_type=piwigo&id=$2
+
+#Migration for Tachiyomi image URLs: Tachiyomi keeps the cover URL in cache.
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^images/manga/(.*)\.jpg$ migration.php?migration_type=tachiyomi_cache&id=$1
+
