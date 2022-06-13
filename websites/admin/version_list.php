@@ -84,7 +84,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$extra_where = '';
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT fi.id) files FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, s.name");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT fi.id) files FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, s.name");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>

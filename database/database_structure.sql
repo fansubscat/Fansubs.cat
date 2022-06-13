@@ -274,6 +274,7 @@ CREATE TABLE `version` (
   `storage_folder` varchar(2048) DEFAULT NULL,
   `storage_processing` int(11) DEFAULT NULL,
   `default_resolution` varchar(200) DEFAULT NULL,
+  `version_author` varchar(200) DEFAULT NULL,
   `files_updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `files_updated_by` varchar(200) NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),

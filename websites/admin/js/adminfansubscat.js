@@ -1261,7 +1261,29 @@ function resetFileInput(fileInput) {
 }
 
 function generateStorageFolder() {
-	if ($('#form-storage_folder').is('[readonly]')) {
+	if ($('#form-fansub-1').val()==28 || $('#form-fansub-2').val()==28 || $('#form-fansub-3').val()==28) {
+		$('#form-version_author').prop("disabled", false);
+	} else {
+		$('#form-version_author').prop("disabled", true);
+	}
+
+	if ($('#form-fansub-1').val()>0) {
+		$('#form-downloads_url_1').prop("disabled", false);
+	} else {
+		$('#form-downloads_url_1').prop("disabled", true);
+	}
+	if ($('#form-fansub-2').val()>0) {
+		$('#form-downloads_url_2').prop("disabled", false);
+	} else {
+		$('#form-downloads_url_2').prop("disabled", true);
+	}
+	if ($('#form-fansub-3').val()>0) {
+		$('#form-downloads_url_3').prop("disabled", false);
+	} else {
+		$('#form-downloads_url_3').prop("disabled", true);
+	}
+
+	if ($('#form-storage_folder').length==0 || $('#form-storage_folder').is('[readonly]')) {
 		return;
 	}
 	
@@ -1475,11 +1497,11 @@ $(document).ready(function() {
 		uncompressReady = true;
 	});
 
-	if ($('#form-storage_folder').length==1) {
+	if ($('#form-fansub-1').length==1) {
 		$('#form-fansub-1').on('change', generateStorageFolder);
 		$('#form-fansub-2').on('change', generateStorageFolder);
 		$('#form-fansub-3').on('change', generateStorageFolder);
-		if ($('#form-storage_folder').val()=='') {
+		if ($('#form-storage_folder').length==1 && $('#form-storage_folder').val()=='') {
 			generateStorageFolder();
 		}
 	}

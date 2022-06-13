@@ -28,6 +28,9 @@ $memcached_expiry_time=12*3600;
 //Google Drive API key
 $google_drive_api_key='YOUR_GOOGLE_DRIVE_API_KEY_HERE';
 
+//Specific data
+$default_fansub_id=28; //"Fansub independent"
+
 //Populate this variable if you want to display a message on all listing pages
 $site_message="";
 

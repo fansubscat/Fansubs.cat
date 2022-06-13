@@ -64,7 +64,7 @@ mysqli_free_result($result);
 
 if (empty($failed)) {
 	$id = $series['id'];
-	$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE v.is_hidden=0 AND v.series_id=$id GROUP BY v.id ORDER BY v.status DESC, v.created DESC");
+	$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE v.is_hidden=0 AND v.series_id=$id GROUP BY v.id ORDER BY v.status DESC, v.created DESC");
 	$versions = array();
 	while ($version = mysqli_fetch_assoc($result)) {
 		$versions[] = $version;

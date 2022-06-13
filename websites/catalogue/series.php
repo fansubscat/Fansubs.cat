@@ -2,16 +2,6 @@
 require_once("db.inc.php");
 require_once("parsedown.inc.php");
 
-function get_fansub_with_url($fansub) {
-	if ($fansub['name']=='Fansub independent') {
-		return "<strong>un fansub independent</strong>";
-	} else if (!empty($fansub['url'])) {
-		return '<strong><a href="'.htmlspecialchars($fansub['url']).'" target="_blank">'.htmlspecialchars($fansub['name']).'</a></strong>';
-	} else {
-		return '<strong>'.htmlspecialchars($fansub['name']).'</strong>';
-	}
-}
-
 function apply_sort($order_type, $episodes) {
 	switch ($order_type){
 		case 1: // Alphabetic strict sort
@@ -213,7 +203,7 @@ if ($series['has_licensed_parts']==1) {
 ?>
 						</div>
 <?php
-$result_unfiltered = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE ".(!empty($_GET['show_hidden']) ? '1' : 'v.is_hidden=0')." AND v.series_id=".$series['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
+$result_unfiltered = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE ".(!empty($_GET['show_hidden']) ? '1' : 'v.is_hidden=0')." AND v.series_id=".$series['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
 $count_unfiltered = mysqli_num_rows($result_unfiltered);
 mysqli_free_result($result_unfiltered);
 
@@ -221,7 +211,7 @@ $cookie_fansub_ids = (empty($_GET['f']) ? get_cookie_fansub_ids() : array());
 
 $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot() && empty($_GET['f'])) ? " AND v.status<>5 AND v.status<>4" : "").((!empty($_COOKIE['show_missing']) || !empty($_GET['f'])) ? "" : " AND v.is_missing_episodes=0").((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND (s.rating<>'XXX' OR s.rating IS NULL)" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
-$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE ".(!empty($_GET['show_hidden']) ? '1' : 'v.is_hidden=0')." AND v.series_id=".$series['id']."$cookie_extra_conditions GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
+$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE ".(!empty($_GET['show_hidden']) ? '1' : 'v.is_hidden=0')." AND v.series_id=".$series['id']."$cookie_extra_conditions GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
 $count = mysqli_num_rows($result);
 
 if ($count_unfiltered==0) {
@@ -299,7 +289,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="version_content<?php echo $count>1 ? ' version_content_multi' : ''; ?><?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version_content_<?php echo $version['id']; ?>">
 <?php
-		$resultf = query("SELECT f.*, vf.downloads_url FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE vf.version_id=".$version['id']." ORDER BY f.name ASC");
+		$resultf = query("SELECT f.*, vf.downloads_url, v.version_author FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON vf.version_id=v.id WHERE vf.version_id=".$version['id']." ORDER BY f.name ASC");
 		$fansubs = array();
 		while ($fansub = mysqli_fetch_assoc($resultf)) {
 			array_push($fansubs, $fansub);
@@ -339,7 +329,7 @@ if ($count_unfiltered==0) {
 ?>
 											<tr>
 												<td class="fansub-icon"><img src="<?php echo $static_url; ?>/images/icons/<?php echo $fansub['id']; ?>.png" alt="" /></td>
-												<td class="fansub-name"><?php echo !empty($fansub['url'] && $fansub['is_historical']==0) ? ('<a href="'.$fansub['url'].'" target="_blank">'.$fansub['name'].'</a>') : $fansub['name']; ?><?php if ($fansub['status']==0 && $fansub['name']!='Fansub independent') { echo '<span class="fansub-inactive"> (actualment inactiu)</span>'; } ?></td>
+												<td class="fansub-name"><?php echo !empty($fansub['url'] && $fansub['is_historical']==0) ? ('<a href="'.$fansub['url'].'" target="_blank">'.$fansub['name'].(($fansub['id']==$default_fansub_id && !empty($fansub['version_author'])) ? ' ('.$fansub['version_author'].')' : '').'</a>') : $fansub['name'].(($fansub['id']==$default_fansub_id && !empty($fansub['version_author'])) ? ' ('.$fansub['version_author'].')' : ''); ?><?php if ($fansub['status']==0 && $fansub['id']!=$default_fansub_id) { echo '<span class="fansub-inactive"> (actualment inactiu)</span>'; } ?></td>
 												<td class="fansub-links">
 <?php
 			if (!empty($fansub['downloads_url'])) {

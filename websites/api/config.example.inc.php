@@ -14,6 +14,9 @@ $static_url="https://static.fansubs.cat";
 $services_directory='/srv/services/fansubs.cat';
 $static_directory='/srv/websites/static.fansubs.cat';
 
+//Specific data
+$default_fansub_id=28; //"Fansub independent"
+
 //Used to check internal calls only
 $internal_token='YOUR_INTERNAL_TOKEN_HERE';
 ?>

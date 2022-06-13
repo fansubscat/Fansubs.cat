@@ -169,6 +169,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['default_resolution']="NULL";
 		}
+		if (!empty($_POST['version_author'])) {
+			$data['version_author']="'".escape($_POST['version_author'])."'";
+		} else {
+			$data['version_author']="NULL";
+		}
 
 		$divisions=array();
 
@@ -392,7 +397,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			log_action("update-version", "S'ha actualitzat una versió de '".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."' (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_divisions=".$data['show_divisions'].",show_expanded_divisions=".$data['show_expanded_divisions'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder='".$data['storage_folder']."',storage_processing=".$data['storage_processing'].",default_resolution=".$data['default_resolution'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_divisions=".$data['show_divisions'].",show_expanded_divisions=".$data['show_expanded_divisions'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder='".$data['storage_folder']."',storage_processing=".$data['storage_processing'].",default_resolution=".$data['default_resolution'].",version_author=".$data['version_author'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -598,7 +603,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S'ha creat una versió de '".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."'");
-			query("INSERT INTO version (series_id,status,is_missing_episodes,is_featurable,is_always_featured,show_divisions,show_expanded_divisions,show_episode_numbers,show_unavailable_episodes,show_expanded_extras,order_type,is_hidden,completed_date,storage_folder,storage_processing,default_resolution,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_divisions'].",".$data['show_expanded_divisions'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['show_expanded_extras'].",".$data['order_type'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",'".$data['storage_folder']."',".$data['storage_processing'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,is_missing_episodes,is_featurable,is_always_featured,show_divisions,show_expanded_divisions,show_episode_numbers,show_unavailable_episodes,show_expanded_extras,order_type,is_hidden,completed_date,storage_folder,storage_processing,default_resolution,version_author,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_divisions'].",".$data['show_expanded_divisions'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['show_expanded_extras'].",".$data['order_type'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",'".$data['storage_folder']."',".$data['storage_processing'].",".$data['default_resolution'].",".$data['version_author'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -664,9 +669,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$series = mysqli_fetch_assoc($results) or crash('Series not found');
 		mysqli_free_result($results);
 
-		$resultf = query("SELECT fansub_id, downloads_url FROM rel_version_fansub vf WHERE vf.version_id=".$row['id']);
-		$fansubs = array();
-
 		$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".$row['series_id']." ORDER BY d.number ASC");
 		$divisions = array();
 		while ($rowd = mysqli_fetch_assoc($resultd)) {
@@ -674,8 +676,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultd);
 
+		$has_independent_fansub = FALSE;
+		$fansubs = array();
+
+		$resultf = query("SELECT fansub_id, downloads_url FROM rel_version_fansub vf WHERE vf.version_id=".$row['id']);
+
 		while ($rowf = mysqli_fetch_assoc($resultf)) {
 			array_push($fansubs, array($rowf['fansub_id'], $rowf['downloads_url']));
+			if ($rowf['fansub_id']==$default_fansub_id) {
+				$has_independent_fansub = TRUE;
+			}
 		}
 		mysqli_free_result($resultf);
 
@@ -710,6 +720,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$row['storage_processing']=1;
 		}
 
+		$has_independent_fansub = FALSE;
 		$fansubs = array();
 
 		$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".escape($_GET['series_id'])." ORDER BY d.number ASC");
@@ -804,18 +815,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm">
 								<div class="form-group">
 									<label for="form-downloads_url_2">Enllaç de baixada dels fitxers originals 2<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
-									<input id="form-downloads_url_2" name="downloads_url_2" type="url" class="form-control" value="<?php echo (count($fansubs)>1 ? htmlspecialchars($fansubs[1][1]) : ''); ?>" maxlength="200"/>
+									<input id="form-downloads_url_2" name="downloads_url_2" type="url" class="form-control" value="<?php echo (count($fansubs)>1 ? htmlspecialchars($fansubs[1][1]) : ''); ?>" maxlength="200" <?php echo (count($fansubs)>1 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
 							<div class="col-sm">
 								<div class="form-group">
 									<label for="form-downloads_url_3">Enllaç de baixada dels fitxers originals 3<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
-									<input id="form-downloads_url_3" name="downloads_url_3" type="url" class="form-control" value="<?php echo (count($fansubs)>2 ? htmlspecialchars($fansubs[2][1]) : ''); ?>" maxlength="200"/>
+									<input id="form-downloads_url_3" name="downloads_url_3" type="url" class="form-control" value="<?php echo (count($fansubs)>2 ? htmlspecialchars($fansubs[2][1]) : ''); ?>" maxlength="200" <?php echo (count($fansubs)>2 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-<?php echo $type=='manga' ? '8' : '4'; ?>">
+							<div class="col-sm-4">
 								<div class="form-group">
 									<label for="form-status" class="mandatory">Estat</label>
 									<select class="form-control" name="status" id="form-status" required>
@@ -828,18 +839,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</select>
 								</div>
 							</div>
-<?php
-	if ($type!='manga') {
-?>
 							<div class="col-sm-4">
 								<div class="form-group">
-									<label for="form-default_resolution">Resolució per defecte <small class="text-muted">(per a enllaços automàtics)</small></label>
-									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
+									<label for="form-version_author">Autor de la versió <small class="text-muted">(per a fansubs independents)</small></label>
+									<input id="form-version_author" name="version_author" type="text" class="form-control" value="<?php echo htmlspecialchars($row['version_author']); ?>" maxlength="200"<?php echo $has_independent_fansub ? '' : ' disabled'; ?>/>
 								</div>
 							</div>
-<?php
-	}
-?>
 							<div class="col-sm">
 								<div class="form-group">
 									<label for="form-featurable_check">Recomanacions</label>
@@ -860,10 +865,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($type!='manga') {
 ?>
 						<div class="row">
-							<div class="col-sm-8">
+							<div class="col-sm-4">
 								<div class="form-group">
-									<label for="form-storage_folder"><span class="mandatory">Carpeta d'emmagatzematge</span><br /><small class="text-muted">(canvia-la només si saps què fas; s'hi baixaran els fitxers; el material extra es baixarà a la subcarpeta "Extres")</small></label>
+									<label for="form-storage_folder"><span class="mandatory">Carpeta d'emmagatzematge</span><br /><small class="text-muted">(modifica-la només si saps què fas; s'hi copiaran els fitxers)</small></label>
 									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo $row['storage_folder']; ?>" maxlength="200" required<?php echo (!empty($row['id']) && empty($row['is_hidden'])) ? ' readonly' : '' ; ?>/>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group">
+									<label for="form-default_resolution">Resolució per defecte<br /><small class="text-muted">(per a la importació automàtica d'enllaços)</small></label>
+									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
 								</div>
 							</div>
 							<div class="col-sm-4">
@@ -1031,12 +1042,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 <?php
 	}
+	if ($type=='manga') {
 ?>
 						<div class="form-group">
 							<label for="form-division-list">Portades <?php echo $division_prep; ?> <small class="text-muted">(JPEG, ~156x220, ≤300x400, ≤100 KiB)</small></label>
 							<div class="row flex" id="form-division-list">
 <?php
-	foreach ($divisions as $division) {
+		foreach ($divisions as $division) {
 ?>
 								<div class="col-sm-2 text-center pr-1 pl-1">
 										<label><?php echo $division_name." ".$division['number'].(!empty($division['name']) ? " (".$division['name'].")" : ""); ?>:</label>
@@ -1048,10 +1060,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<input id="form-division_cover_<?php echo $division['id']; ?>" name="division_cover_<?php echo $division['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 102400, 'form-division_cover_<?php echo $division['id']; ?>_preview');"/>
 								</div>
 <?php
-	}
+		}
 ?>
 							</div>
 						</div>
+<?php
+	}
+?>
 						<div class="form-group">
 							<label for="form-episode-list">Capítols, variants i <?php echo $type=='manga' ? 'fitxers' : 'enllaços'; ?></label>
 							<div class="container" id="form-episode-list">
