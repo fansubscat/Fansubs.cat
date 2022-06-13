@@ -118,8 +118,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca synopsis");
 		}
-		if (!empty($_POST['external_id']) && is_numeric($_POST['external_id'])) {
-			$data['external_id']=escape($_POST['external_id']);
+		if (!empty($_POST['external_id'])) {
+			$data['external_id']="'".escape($_POST['external_id'])."'";
 		} else {
 			$data['external_id']="NULL";
 		}
@@ -192,8 +192,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				crash("Dades invàlides: número de capítols buit o no numèric");
 			}
-			if (!empty($_POST['form-division-list-external_id-'.$i]) && is_numeric($_POST['form-division-list-external_id-'.$i])) {
-				$division['external_id']=escape($_POST['form-division-list-external_id-'.$i]);
+			if (!empty($_POST['form-division-list-external_id-'.$i])) {
+				$division['external_id']="'".escape($_POST['form-division-list-external_id-'.$i])."'";
 			} else {
 				$division['external_id']="NULL";
 			}
@@ -381,7 +381,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm-3">
 								<div class="form-group">
 									<label for="form-external_id">Identificador de <?php echo $external_provider; ?></label>
-									<input class="form-control" name="external_id" id="form-external_id" type="number" value="<?php echo $row['external_id']; ?>">
+									<input class="form-control" name="external_id" id="form-external_id"<?php echo ($type!='liveaction' ? ' type="number"' : ''); ?> value="<?php echo $row['external_id']; ?>">
 								</div>
 							</div>
 							<div class="col-sm form-group">
@@ -701,7 +701,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-number_of_episodes-<?php echo $i+1; ?>" name="form-division-list-number_of_episodes-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $divisions[$i]['number_of_episodes']; ?>" required/>
 													</td>
 													<td>
-														<input id="form-division-list-external_id-<?php echo $i+1; ?>" name="form-division-list-external_id-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $divisions[$i]['external_id']; ?>"/>
+														<input id="form-division-list-external_id-<?php echo $i+1; ?>" name="form-division-list-external_id-<?php echo $i+1; ?>"<?php echo ($type!='liveaction' ? ' type="number"' : ''); ?> class="form-control" value="<?php echo $divisions[$i]['external_id']; ?>"/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-division-list-delete-<?php echo $i+1; ?>" onclick="deleteDivisionRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
@@ -723,7 +723,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-number_of_episodes-1" name="form-division-list-number_of_episodes-1" type="number" class="form-control" value="" required/>
 													</td>
 													<td>
-														<input id="form-division-list-external_id-1" name="form-division-list-external_id-1" type="number" class="form-control" value=""/>
+														<input id="form-division-list-external_id-1" name="form-division-list-external_id-1"<?php echo ($type!='liveaction' ? ' type="number"' : ''); ?> class="form-control" value=""/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-division-list-delete-1" onclick="deleteDivisionRow(1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>

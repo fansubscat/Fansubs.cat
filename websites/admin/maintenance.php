@@ -22,6 +22,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="text-center p-2">
 						<button type="button" class="btn btn-primary" onclick="return showMangaWithNoMal();" onauxclick="return false;">Mostra els mangues no enllaçats a MAL</a>
 					</div>
+					<div class="text-center p-2">
+						<button type="button" class="btn btn-primary" onclick="return showLiveActionWithNoMdl();" onauxclick="return false;">Mostra els continguts d'acció real no enllaçats a MDL</a>
+					</div>
 				</article>
 			</div>
 		</div>
@@ -126,6 +129,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			var noMalManga = [
 <?php
 	$result = query("SELECT s.name FROM series s WHERE external_id IS NULL AND NOT EXISTS (SELECT external_id FROM division d WHERE d.series_id=s.id AND d.external_id IS NOT NULL) AND s.type='manga' ORDER BY s.name");
+	$first = TRUE;
+	while ($row = mysqli_fetch_assoc($result)) {
+		if (!$first) {
+			echo ",\n";
+		} else {
+			$first = FALSE;
+		}
+		echo "\t\t\t\t".'"'.htmlspecialchars($row['name']).'"';
+	}
+	mysqli_free_result($result);
+?>
+
+			];
+
+			var noMdlLiveAction = [
+<?php
+	$result = query("SELECT s.name FROM series s WHERE external_id IS NULL AND NOT EXISTS (SELECT external_id FROM division d WHERE d.series_id=s.id AND d.external_id IS NOT NULL) AND s.type='liveaction' ORDER BY s.name");
 	$first = TRUE;
 	while ($row = mysqli_fetch_assoc($result)) {
 		if (!$first) {

@@ -1,9 +1,9 @@
 <?php
 require_once('db.inc.php');
 
-log_action('cron-scores-started', "S'ha iniciat l'actualització de la puntuació de l'anime i el manga");
+log_action('cron-scores-started', "S'ha iniciat l'actualització de la puntuació de les sèries");
 
-$result = query("SELECT * FROM series WHERE type<>'liveaction' ORDER BY name ASC");
+$result = query("SELECT * FROM series ORDER BY name ASC");
 
 while ($series = mysqli_fetch_assoc($result)) {
 	echo "Updating score for series ".$series['name']."\n";
@@ -15,21 +15,42 @@ while ($series = mysqli_fetch_assoc($result)) {
 	$error = FALSE;
 	while ($division = mysqli_fetch_assoc($resultss)) {
 		sleep(10); //At least 4s for Jikan request limits
-		$url = 'https://api.jikan.moe/v4/'.$series['type'].'/'.$division['external_id'];
-		$response = json_decode(file_get_contents($url));
-		
-		if (!$response || !$response->data){
-			$error = TRUE;
-			break;
-		} else {
-			$score = $response->data->score;
-			if ($score && is_numeric($score)) {
-				$divisionscoresum+=$score;
-			} else { //Skip this division: no score
-				echo "Series ".$series['name']." has division ".$division['external_id']." with no score.\n";
-				continue;
+		if ($series['type']=='liveaction') {
+			$url = 'https://mydramalist.com/'.$division['external_id'];
+
+			//There is no available API, so we have to do this the ugly way:
+			$html = file_get_contents($url);
+			preg_match('/<b class="inline">Score:<\/b> (\d+\.\d+|N\/A) <span/', $html, $matches);
+
+			if (count($matches)>1) {
+				$score = $matches[1];
+				if ($score && is_numeric($score)) {
+					$divisionscoresum+=$score;
+				} else { //Skip this division: no score
+					echo "Series ".$series['name']." has division ".$division['external_id']." with no score.\n";
+					continue;
+				}
+			} else {
+				$error = TRUE;
+				break;
 			}
-		}
+		} else {
+			$url = 'https://api.jikan.moe/v4/'.$series['type'].'/'.$division['external_id'];
+			$response = json_decode(file_get_contents($url));
+			
+			if (!$response || !$response->data){
+				$error = TRUE;
+				break;
+			} else {
+				$score = $response->data->score;
+				if ($score && is_numeric($score)) {
+					$divisionscoresum+=$score;
+				} else { //Skip this division: no score
+					echo "Series ".$series['name']." has division ".$division['external_id']." with no score.\n";
+					continue;
+				}
+			}
+		} 
 		$divisioncount++;
 	}
 
@@ -49,6 +70,6 @@ while ($series = mysqli_fetch_assoc($result)) {
 }
 mysqli_free_result($result);
 
-log_action('cron-scores-finished', "S'ha completat l'actualització de la puntuació de l'anime i el manga");
+log_action('cron-scores-finished', "S'ha completat l'actualització de la puntuació de les sèries");
 echo "All done!\n";
 ?>

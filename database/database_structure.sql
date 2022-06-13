@@ -35,7 +35,7 @@ CREATE TABLE `division` (
   `number` int(11) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
   `number_of_episodes` int(11) DEFAULT NULL,
-  `external_id` int(11) DEFAULT NULL
+  `external_id` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `episode` (
@@ -230,7 +230,7 @@ CREATE TABLE `series` (
   `rating` varchar(200) DEFAULT NULL,
   `number_of_episodes` int(11) NOT NULL,
   `synopsis` text NOT NULL,
-  `external_id` int(11) DEFAULT NULL,
+  `external_id` varchar(200) DEFAULT NULL,
   `tadaima_id` int(11) DEFAULT NULL,
   `score` float DEFAULT NULL,
   `has_licensed_parts` tinyint(1) NOT NULL DEFAULT 0,
