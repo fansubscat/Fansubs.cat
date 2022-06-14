@@ -277,7 +277,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM episode WHERE series_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($episodes as $episode) {
 				if ($episode['id']==-1) {
-					query("INSERT INTO episode (series_id,division_id,number,description,created,created_by,updated,updated_by) VALUES (".$data['id'].",(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$data['id']."),".$episode['number'].",".$episode['description'].",".$episode['duration'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+					query("INSERT INTO episode (series_id,division_id,number,description,created,created_by,updated,updated_by) VALUES (".$data['id'].",(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$data['id']."),".$episode['number'].",".$episode['description'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 				} else {
 					query("UPDATE episode SET division_id=(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$data['id']."),number=".$episode['number'].",description=".$episode['description'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$episode['id']);
 				}
