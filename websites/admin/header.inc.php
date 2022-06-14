@@ -49,7 +49,7 @@ session_start();
 if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 ?>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			<span class="navbar-brand"><a href="<?php echo $base_url; ?>/">Tauler d'administració</a> <small><small><a href="https://github.com/fansubscat/Fansubs.cat/blob/master/CHANGELOG.md#registre-de-canvis" target="_blank">v<?php echo $version_name; ?></a></small></small></span>
+			<span class="navbar-brand"><a href="<?php echo $base_url; ?>/">Tauler d'administració</a> <small><small><a href="https://github.com/fansubscat/Fansubs.cat/blob/master/CHANGELOG.md#registre-de-canvis" target="_blank" title="Registre de canvis">v<?php echo $version_name; ?></a></small></small></span>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Commuta la navegació">
 				<span class="navbar-toggler-icon"></span>
 			</button>

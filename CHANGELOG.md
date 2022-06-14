@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2022-06-15 - Versió 4.0.5
+- **Administració:**
+	- Correcció de «llegit» per «visualitzat» a les estadístiques d'acció real.
+
 ## 2022-06-14 - Versió 4.0.4
 - **General:**
 	- S'afegeix aquest registre de canvis.
