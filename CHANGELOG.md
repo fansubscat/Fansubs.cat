@@ -5,6 +5,7 @@
 	- S'afegeix aquest registre de canvis.
 - **Administració:**
 	- Solució a l'error que impedia afegir capítols a una fitxa.
+	- S'afegeix el número de versió dels portals a la capçalera.
 
 ## 2022-06-13 - Versió 4.0.3
 - **Catàleg:**

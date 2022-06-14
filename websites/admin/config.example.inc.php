@@ -1,6 +1,9 @@
 <?php
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 
+//Version shown in the main menu
+$version_name='VERSION';
+
 //Database access
 $db_host="YOUR_DB_HOST_HERE";
 $db_name="YOUR_DB_NAME_HERE";

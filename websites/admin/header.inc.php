@@ -20,7 +20,7 @@ session_start();
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-		<script src="js/adminfansubscat.js?v=15"></script>
+		<script src="js/adminfansubscat.js?v=<?php echo $version_name; ?>"></script>
 		<script src="js/uncompress.js"></script>
 		<style>
 			html,body{height: 100%;}
@@ -28,6 +28,7 @@ session_start();
 			/* .bg-primary { background-color: darkred !important; } */
 			.form-group label{font-weight: bold;}
 			.mandatory:after {padding-left: 0.2em; content:"*"; color:red;}
+			.navbar-brand a { color: #ffffff; }
 			.fa-stack { font-size: 0.5em; vertical-align: middle; margin-bottom: 0.5em; }
 			.fa-custom-main:before { font-family: Arial; font-weight: bold; content: 'P'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
 			.fa-custom-anime:before { font-family: Arial; font-weight: bold; content: 'A'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
@@ -48,7 +49,7 @@ session_start();
 if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 ?>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			<a class="navbar-brand" href="<?php echo $base_url; ?>/">Tauler d'administració</a>
+			<span class="navbar-brand"><a href="<?php echo $base_url; ?>/">Tauler d'administració</a> <small><small><a href="https://github.com/fansubscat/Fansubs.cat/blob/master/CHANGELOG.md#registre-de-canvis" target="_blank">v<?php echo $version_name; ?></a></small></small></span>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Commuta la navegació">
 				<span class="navbar-toggler-icon"></span>
 			</button>
