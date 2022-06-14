@@ -2,7 +2,7 @@
 
 ## 2022-06-15 - Versió 4.0.5
 - **Catàleg:**
-	- Els fitxers de previsualització es desen durant 8 hores. Així se sobrecarrega menys el servidor.
+	- Les imatges de previsualització per a xarxes socials es desen durant 8 hores. Així se sobrecarrega menys el servidor.
 - **Administració:**
 	- Correcció de «llegit» per «visualitzat» a les estadístiques d'acció real.
 
