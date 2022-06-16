@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2022-06-16 - Versió 4.0.6
+- **Catàleg:**
+	- La portada a les imatges de previsualització per a xarxes socials tenia una línia d'un píxel d'alçada a sota, s'ha solucionat.
+- **Administració:**
+	- S'ha corregit un error que indicava que hi havia múltiples variants de capítols quan no era així.
+	- S'ha afegit la generació d'imatges de rànquings mensuals d'anime/manga/acció real per al Twitter.
+
 ## 2022-06-15 - Versió 4.0.5
 - **Catàleg:**
 	- Les imatges de previsualització per a xarxes socials es desen durant 8 hores. Així se sobrecarrega menys el servidor.
