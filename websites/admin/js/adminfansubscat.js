@@ -957,10 +957,10 @@ function checkFansub() {
 
 function checkNumberOfLinks() {
 	if (isAutoFetchActive()){
-		var linkTables = $('[id^=links-list-table-]');
+		var linkTables = $('[id^=files-list-table-]');
 		var multipleLinks = false;
 		for (var i=0;i<linkTables.length;i++) {
-			if ($(linkTables).attr('data-count')>1){
+			if ($(linkTables[i]).attr('data-count')>1){
 				multipleLinks = true;
 				break;
 			}
