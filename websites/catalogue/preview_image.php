@@ -2,7 +2,7 @@
 const IMAGE_WIDTH = 1200;
 const IMAGE_HEIGHT = 628;
 const COVER_WIDTH = 444;
-const COVER_HEIGHT = 627;
+const COVER_HEIGHT = 628;
 const TEXT_MARGIN = 48;
 const FONT = 'style/patinio_neue.ttf';
 
