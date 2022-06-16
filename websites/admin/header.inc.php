@@ -16,33 +16,13 @@ session_start();
 		<link rel="shortcut icon" href="/favicon.png" />
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+		<link rel="stylesheet" href="/style/admin.css?v=<?php echo $version_name; ?>" />
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 		<script src="js/adminfansubscat.js?v=<?php echo $version_name; ?>"></script>
 		<script src="js/uncompress.js"></script>
-		<style>
-			html,body{height: 100%;}
-			a{text-decoration: none !important;}
-			/* .bg-primary { background-color: darkred !important; } */
-			.form-group label{font-weight: bold;}
-			.mandatory:after {padding-left: 0.2em; content:"*"; color:red;}
-			.navbar-brand a { color: #ffffff; }
-			.fa-stack { font-size: 0.5em; vertical-align: middle; margin-bottom: 0.5em; }
-			.fa-custom-main:before { font-family: Arial; font-weight: bold; content: 'P'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
-			.fa-custom-anime:before { font-family: Arial; font-weight: bold; content: 'A'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
-			.fa-custom-manga:before { font-family: Arial; font-weight: bold; content: 'M'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
-			.fa-custom-liveaction:before { font-family: Arial; font-weight: bold; content: 'AR'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
-			.fa-custom-news:before { font-family: Arial; font-weight: bold; content: 'N'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
-			.fa-custom-resources:before { font-family: Arial; font-weight: bold; content: 'R'; background-color: #007bff!important; padding-left: 0.25em; padding-right: 0.25em;}
-			tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] { padding-left: 24px; }
-			tr[id^="form-links-list-"] input[type="url"][value^="http://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="http://"], tr[id^="form-links-list-"] input[type="url"][value^="https://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://"] { background: url("images/unknown.png") no-repeat scroll 4px center; }
-			tr[id^="form-links-list-"] input[type="url"][value^="https://mega.nz/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://mega.nz/"] { background: url("images/mega.png") no-repeat scroll 4px center !important; }
-			tr[id^="form-links-list-"] input[type="url"][value^="storage://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="storage://"] { background: url("images/storage.png") no-repeat scroll 4px center !important; }
-			tr[id^="form-links-list-"] input[type="url"][value^="https://drive.google.com/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://drive.google.com/"] { background: url("images/drive.png") no-repeat scroll 4px center !important; }
-			tr[id^="form-links-list-"] input[type="url"][value^="https://www.youtube.com/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://www.youtube.com/"] { background: url("images/youtube.png") no-repeat scroll 4px center !important; }
-		</style>
 	</head>
 	<body>
 <?php

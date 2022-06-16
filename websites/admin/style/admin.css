@@ -1,0 +1,111 @@
+html, body {
+	height: 100%;
+}
+
+a {
+	text-decoration: none !important;
+}
+
+/*
+.bg-primary {
+	background-color: darkred !important;
+}
+*/
+
+.form-group label {
+	font-weight: bold;
+}
+
+.mandatory:after {
+	padding-left: 0.2em;
+	content:"*";
+	color:red;
+}
+
+.navbar-brand a {
+	color: #ffffff;
+}
+
+.fa-stack {
+	font-size: 0.5em;
+	vertical-align: middle;
+	margin-bottom: 0.5em;
+}
+
+.fa-custom-main:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'P';
+	background-color: #007bff !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
+.fa-custom-anime:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'A';
+	background-color: #007bff !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
+.fa-custom-manga:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'M';
+	background-color: #007bff !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
+.fa-custom-liveaction:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'AR';
+	background-color: #007bff !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
+.fa-custom-news:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'N';
+	background-color: #007bff !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
+.fa-custom-resources:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'R';
+	background-color: #007bff !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
+tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {
+	padding-left: 24px;
+}
+
+tr[id^="form-links-list-"] input[type="url"][value^="http://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="http://"], tr[id^="form-links-list-"] input[type="url"][value^="https://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://"] {
+	background: url("images/unknown.png") no-repeat scroll 4px center;
+}
+
+tr[id^="form-links-list-"] input[type="url"][value^="https://mega.nz/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://mega.nz/"] {
+	background: url("images/mega.png") no-repeat scroll 4px center !important;
+}
+
+tr[id^="form-links-list-"] input[type="url"][value^="storage://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="storage://"] {
+	background: url("images/storage.png") no-repeat scroll 4px center !important;
+}
+
+tr[id^="form-links-list-"] input[type="url"][value^="https://drive.google.com/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://drive.google.com/"] {
+	background: url("images/drive.png") no-repeat scroll 4px center !important;
+}
+
+tr[id^="form-links-list-"] input[type="url"][value^="https://www.youtube.com/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://www.youtube.com/"] {
+	background: url("images/youtube.png") no-repeat scroll 4px center !important;
+}
