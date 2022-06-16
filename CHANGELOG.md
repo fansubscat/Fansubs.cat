@@ -5,6 +5,8 @@
 	- Les imatges de previsualització per a xarxes socials es desen durant 8 hores. Així se sobrecarrega menys el servidor.
 - **Administració:**
 	- Correcció de «llegit» per «visualitzat» a les estadístiques d'acció real.
+- **Serveis:**
+	- Es generen tweets i missatges a Discord per a nous continguts d'acció real.
 
 ## 2022-06-14 - Versió 4.0.4
 - **General:**
