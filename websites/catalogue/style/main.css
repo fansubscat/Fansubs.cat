@@ -648,8 +648,7 @@ a:hover {
 
 .tab .fa {
 	font-size: 0.8em;
-	vertical-align: middle;
-	margin-top: -0.2em;
+	vertical-align: top;
 }
 
 .iconbutton {
@@ -747,7 +746,6 @@ a:hover {
 .iconsm {
 	font-size: 0.8em;
 	vertical-align: top;
-	margin-top: 0.1em;
 }
 
 .section-subtitle {

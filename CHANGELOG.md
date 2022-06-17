@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2022-06-17 - Versió 4.0.7
+- **Catàleg:**
+	- Canviades les imatges de previsualització per a xarxes socials de les pàgines principals.
+	- Canviat el CSS de les icones perquè apareguin correctament centrades.
+
 ## 2022-06-16 - Versió 4.0.6
 - **Catàleg:**
 	- La portada a les imatges de previsualització per a xarxes socials tenia una línia d'un píxel d'alçada a sota, s'ha solucionat.
