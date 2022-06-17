@@ -123,6 +123,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				'id' => $row['series_id'],
 				'name' => $row['series_name'],
 				'position' => $position,
+				'rating' => $row['rating'],
 				'fansubs' => implode(' / ',array_unique(explode(' / ',$row['fansubs']))),
 				'views' => $row['max_views'].($row['max_views']==1 ? ' seguidor' : ' seguidors'),
 				'change_in_position' => get_change_in_position_for_series($month, $row['series_id'], $position, $series_previous_month),
@@ -153,11 +154,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		switch ($type){
 			case 'manga':
 				$title="Els mangues més populars a Fansubs.cat - ";
+				break;
 			case 'liveaction':
 				$title="Els continguts d'acció real més populars a Fansubs.cat - ";
+				break;
 			case 'anime':
 			default:
 				$title="Els animes més populars a Fansubs.cat - ";
+				break;
 		}
 		setlocale(LC_ALL, 'ca_ES.utf8');
 		$title.=ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($month.'-01'))))));
@@ -173,6 +177,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$green = imagecolorallocate($image, 0x22, 0x99, 0x22);
 		$red = imagecolorallocate($image, 0xBB, 0x44, 0x44);
 		$yellow = imagecolorallocate($image, 0xBB, 0xBB, 0x44);
+		$reddish = imagecolorallocate($image, 0xFF, 0xAA, 0xAA);
 		$bbox = imageftbbox(32, 0, FONT, $title);
 		$center = (imagesx($image) / 2) - (($bbox[2] - $bbox[0]) / 2);
 		imagefttext($image, 32, 0, $center, $current_height, $gray, FONT, $title);
@@ -235,7 +240,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (substr_count($text, "\n")>0) {
 				$text = explode("\n", $text)[0].'...';
 			}
-			imagefttext($image, 28, 0, $i>4 ? 624+172 : 24+172, $current_height+40, $gray, FONT, $text);
+			imagefttext($image, 28, 0, $i>4 ? 624+172 : 24+172, $current_height+40, ($series[$i]['rating']=='XXX' ? $reddish : $gray), FONT, $text);
 			$text = \andrewgjohnson\linebreaks4imagettftext(22, 0, FONT, $series[$i]['fansubs'], 380);
 			if (substr_count($text, "\n")>0) {
 				$text = explode("\n", $text)[0].'...';

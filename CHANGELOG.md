@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2022-06-18 - Versió 4.0.8
+- **Catàleg:**
+	- Corregides les consultes de material relacionat, no filtraven per tipus quan calia i de vegades sortien buides en alguns casos o en canviava el nombre a cada execució.
+- **Administració:**
+	- El títol de les imatges de rànquings mensuals canvia segons el tipus.
+	- Els noms dels elements als rànquings mensuals es mostren d'un color diferent si són hentai.
+
 ## 2022-06-17 - Versió 4.0.7
 - **Catàleg:**
 	- Canviades les imatges de previsualització per a xarxes socials de les pàgines principals.

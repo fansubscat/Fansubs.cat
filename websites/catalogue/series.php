@@ -604,14 +604,14 @@ $base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MA
 //End copy from index.php
 //1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $series['genres']));
-$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
+$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE s.type='${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE s.type='${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg LEFT JOIN series s ON sg.series_id=s.id WHERE s.type='${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND sg.series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
 $resultin = query($related_query);
 $in = array(-1);
 while ($row = mysqli_fetch_assoc($resultin)) {
 	$in[]=$row['id'];
 }
 mysqli_free_result($resultin);
-$resultra = query($base_query . " WHERE s.type='${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
+$resultra = query($base_query . " WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
 
 if (mysqli_num_rows($resultra)>0) {
 ?>
@@ -644,14 +644,14 @@ $base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MA
 //End copy from index.php
 //1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $series['genres']));
-$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
+$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE s.type<>'${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE s.type<>'${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg LEFT JOIN series s ON sg.series_id=s.id WHERE s.type<>'${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND sg.series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
 $resultin = query($related_query);
 $in = array(-1);
 while ($row = mysqli_fetch_assoc($resultin)) {
 	$in[]=$row['id'];
 }
 mysqli_free_result($resultin);
-$resultrm = query($base_query . " WHERE s.type<>'${config['items_type']}' AND s.type<>'liveaction' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
+$resultrm = query($base_query . " WHERE s.type<>'liveaction' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
 
 if (mysqli_num_rows($resultrm)>0) {
 ?>
