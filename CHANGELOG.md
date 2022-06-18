@@ -7,6 +7,9 @@
 	- S'ha canviat el text de la portada afegint-hi referències a acció real i a l'ajuda.
 	- El títol de les imatges de rànquings mensuals canvia segons el tipus.
 	- Els noms dels elements als rànquings mensuals es mostren d'un color diferent si són hentai.
+	- Els avisos de capítols es mostren o s'amaguen en canviar les opcions de visualització i no després de desar.
+	- Corregit «Temp.» per «Vol.» a les versions de manga.
+	- Corregit un error a les estadístiques de les versions d'anime.
 
 ## 2022-06-17 - Versió 4.0.7
 - **Catàleg:**

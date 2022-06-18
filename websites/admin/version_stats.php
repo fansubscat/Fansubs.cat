@@ -39,6 +39,7 @@ switch ($type) {
 		$series_c_short='Temps total';
 		$series_c_color='rgb(40, 167, 69)';
 		$start_date='2020-06-01';
+	break;
 	case 'liveaction':
 		$viewed_content_field='time_spent';
 		$viewed_content_divide=3600;
