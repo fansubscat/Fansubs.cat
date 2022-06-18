@@ -27,6 +27,7 @@ include("header.inc.php");
 switch ($type) {
 	case 'anime':
 		$division_name='Temporades';
+		$division_name_short='Temp.';
 		$division_one="una temporada";
 		$more_than_one="més d'una";
 		$open_series="Encara en emissió";
@@ -36,6 +37,7 @@ switch ($type) {
 		break;
 	case 'manga':
 		$division_name='Volums';
+		$division_name_short='Vol.';
 		$division_one="un volum";
 		$more_than_one="més d'un";
 		$open_series="Encara en publicació";
@@ -45,6 +47,7 @@ switch ($type) {
 		break;
 	case 'liveaction':
 		$division_name='Temporades';
+		$division_name_short='Temp.';
 		$division_one="una temporada";
 		$more_than_one="més d'una";
 		$open_series="Encara en emissió";
@@ -750,7 +753,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="episode-list-table" data-count="<?php echo max(count($episodes),1); ?>">
 											<thead>
 												<tr>
-													<th style="width: 10%;">Temp.</th>
+													<th style="width: 10%;"><?php echo $division_name_short; ?></th>
 													<th style="width: 10%;">Núm.</th>
 													<th>Descripció <small class="text-muted">(només informativa, només es mostra públicament en especials si no tenen títol específic a la versió)</small></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
