@@ -4,6 +4,7 @@
 - **Catàleg:**
 	- Corregides les consultes de material relacionat, no filtraven per tipus quan calia i de vegades sortien buides en alguns casos o en canviava el nombre a cada execució.
 - **Administració:**
+	- S'ha canviat el text de la portada afegint-hi referències a acció real i a l'ajuda.
 	- El títol de les imatges de rànquings mensuals canvia segons el tipus.
 	- Els noms dels elements als rànquings mensuals es mostren d'un color diferent si són hentai.
 
