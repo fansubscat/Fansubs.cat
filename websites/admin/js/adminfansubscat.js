@@ -1485,6 +1485,21 @@ function showLiveActionWithNoMdl() {
 	}
 }
 
+function showHideEpisodeWarnings() {
+	var hidesEpisodeNumbers = !$('#form-show_episode_numbers').prop('checked');
+	var isAlphabetical = $('input[name="order_type"]:checked').val()!=0;
+	$("#warning-no-numbers-and-sort").addClass('d-none');
+	$("#warning-no-numbers").addClass('d-none');
+	$("#warning-sort").addClass('d-none');
+	if (hidesEpisodeNumbers && isAlphabetical) {
+		$("#warning-no-numbers-and-sort").removeClass('d-none');
+	} else if (hidesEpisodeNumbers) {
+		$("#warning-no-numbers").removeClass('d-none');
+	} else if (isAlphabetical) {
+		$("#warning-sort").removeClass('d-none');
+	}
+}
+
 var malData;
 var malDataStaff;
 var malDataDivisionsEpisodes;
@@ -1501,9 +1516,7 @@ $(document).ready(function() {
 		$('#form-fansub-1').on('change', generateStorageFolder);
 		$('#form-fansub-2').on('change', generateStorageFolder);
 		$('#form-fansub-3').on('change', generateStorageFolder);
-		if ($('#form-storage_folder').length==1 && $('#form-storage_folder').val()=='') {
-			generateStorageFolder();
-		}
+		generateStorageFolder();
 	}
 
 	$("#form-name-with-autocomplete").on('input', function() {
@@ -1814,4 +1827,8 @@ $(document).ready(function() {
 			$("#form-archive_url").prop('required', false);
 		}
 	});
+	$("#form-show_episode_numbers").change(showHideEpisodeWarnings);
+	$("#form-order_type_standard").change(showHideEpisodeWarnings);
+	$("#form-order_type_alphabetic").change(showHideEpisodeWarnings);
+	$("#form-order_type_natural").change(showHideEpisodeWarnings);
 });

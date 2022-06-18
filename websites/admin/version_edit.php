@@ -1076,26 +1076,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<option value="480p">
 									<option value="360p">
 								</datalist>
-<?php
-	if ($row['show_episode_numbers']==0 && $row['order_type']!=0) {
-?>
-								<div class="alert alert-warning">
+								<div id="warning-no-numbers-and-sort" class="alert alert-warning<?php echo $row['show_episode_numbers']==0 && $row['order_type']!=0 ? '' : ' d-none'; ?>">
 									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
-<?php
-	} else if ($row['show_episode_numbers']==0) {
-?>
-								<div class="alert alert-warning">
+								<div id="warning-no-numbers" class="alert alert-warning<?php echo $row['show_episode_numbers']==0 && $row['order_type']==0 ? '' : ' d-none'; ?>">
 									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.</div>
 								</div>
-<?php
-	} else if ($row['order_type']!=0) {
-?>
-								<div class="alert alert-warning">
+								<div id="warning-sort" class="alert alert-warning<?php echo $row['order_type']!=0 && $row['show_episode_numbers']!=0 ? '' : ' d-none'; ?>">
 									<div><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
 <?php
-	}
 	for ($i=0;$i<count($episodes);$i++) {
 		$episode_name='';
 		if (!empty($episodes[$i]['division_number'])) {
