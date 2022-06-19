@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2022-06-19 - Versió 4.0.9
+- **Administració:**
+	- S'ha corregit l'error en editar recollidors de notícies.
+	- Ara s'activa i desactiva el camp «URL d'Archive.org» segons si és un fansub històric o no.
+- **Serveis:**
+	- Es corregeix l'obtenció de notícies de Mangadex d'El detectiu Conan en català perquè es faci via API.
+
 ## 2022-06-18 - Versió 4.0.8
 - **Catàleg:**
 	- Corregides les consultes de material relacionat, no filtraven per tipus quan calia i de vegades sortien buides en alguns casos o en canviava el nombre a cada execució.

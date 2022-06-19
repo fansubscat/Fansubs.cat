@@ -43,7 +43,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$_SESSION['message']="S'han desat les dades correctament.";
 
-		header("Location: fetcher_list.php");
+		header("Location: news_fetcher_list.php");
 		die();
 	}
 

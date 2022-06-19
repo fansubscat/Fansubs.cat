@@ -1483,42 +1483,30 @@ function fetch_via_mangadex_edcec($fansub_slug, $url, $last_fetched_item_date){
 	$tidy_config = "tidy.conf";
 	$error_connect=FALSE;
 
-	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	$json_text = file_get_contents($url) or $error_connect=TRUE;
 	if ($error_connect){
 		return array('error_connect',array());
 	}
-	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
-	tidy_clean_repair($tidy);
-	$html = str_get_html(tidy_get_output($tidy));
 
-	//parse through the HTML and build up the elements feed as we go along
-	$has_parsed_first = FALSE;
-	foreach($html->find('div.chapter-row') as $article) {
-		if (!$has_parsed_first){
-			$has_parsed_first = TRUE;
-			continue;
-		}
+	$json = json_decode($json_text);
 
+	//parse through the JSON and build up the elements feed as we go along
+	foreach($json->data as $article) {
 		//Create an empty item
 		$item = array();
 
 		//Look up and add elements to the item
-		$title = $article->find('a', 0);
-		$item[0]='El Detectiu Conan - ' . $title->innertext;
-		$item[1]=$title->innertext;
-		$item[2]='El Detectiu Conan - ' . $title->innertext . ".<br />Capítol disponible a MangaDex.";
-		$datetext = $article->find('div.col-2', 0)->title;
+		$item[0]='El Detectiu Conan - Vol. ' . $article->attributes->volume . ' Cap. ' . $article->attributes->chapter . ': ' . $article->attributes->title;
+		$item[1]=$article->attributes->chapter . ': ' . $article->attributes->title;
+		$item[2]='El Detectiu Conan - Volum ' . $article->attributes->volume . ' - Capítol ' . $article->attributes->chapter . ': ' . $article->attributes->title . ".<br />Capítol disponible a MangaDex.";
+		$datetext = $article->attributes->publishAt;
 
-		$date = date_create_from_format('Y-m-d H:i:s e', $datetext);
+		$date = date_create_from_format('Y-m-d\TH:i:sP', $datetext);$date = date_create_from_format('Y-m-d\TH:i:sP', $datetext);
+				$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 		$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 		$item[3]= $date->format('Y-m-d H:i:s');
-		$item[4]='https://mangadex.org' . $title->href;
-		if ($article->find('div.post-body figure', 0)!==NULL){
-			$item[5]=fetch_and_parse_image($fansub_slug, $url, $article->find('div.post-body figure', 0)->innertext);
-		}
-		else{
-			$item[5]=NULL;
-		}
+		$item[4]='https://mangadex.org/chapter/'.$article->id;
+		$item[5]=NULL;
 		
 		//If the item is older than 2018-11-23 (switch from Facebook), reject it
 		if ($item[3]<'2018-11-23 00:00:00'){

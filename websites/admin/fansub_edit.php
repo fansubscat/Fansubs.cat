@@ -180,14 +180,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<label class="form-check-label" for="form-active">Actiu</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="is_historical" id="form-is_historical" value="1"<?php echo $row['is_historical']==1? " checked" : ""; ?>>
+								<input class="form-check-input" type="checkbox" name="is_historical" id="form-is_historical" value="1"<?php echo $row['is_historical']==1? " checked" : ""; ?> onchange="$('#form-archive_url').prop('disabled',!$(this).prop('checked'));">
 								<label class="form-check-label" for="form-is_historical">Històric</label>
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="form-archive_url">URL d'Archive.org <small class="text-muted">(obligatori si és històric)</small></label>
-						<input class="form-control" type="url" name="archive_url" id="form-archive_url" maxlength="200"<?php echo $row['is_historical']==0? " disabled" : ""; ?> value="<?php echo htmlspecialchars($row['archive_url']); ?>">
+						<input class="form-control" type="url" name="archive_url" id="form-archive_url" maxlength="200"<?php echo $row['is_historical']==0? " disabled" : ""; ?> value="<?php echo htmlspecialchars($row['archive_url']); ?>" required>
 					</div>
 					<div class="form-group">
 						<label for="form-ping_token">Testimoni per a fer ping <small class="text-muted">(si es fa una petició a https://api.fansubs.cat/refresh/&lt;testimoni&gt;, s'actualitzaran les notícies al moment)</small></label>
