@@ -29,6 +29,9 @@ $static_directory="/srv/websites/static.fansubs.cat";
 //Specific data
 $default_fansub_id=28; //"Fansub independent"
 
+//Token to bypass admin authentication in twitter_image.php
+$internal_token='YOUR_TOKEN';
+
 //Memcached access (for storing remote requests cache)
 $memcached_host='YOUR_MEMCACHED_HOST_HERE';
 $memcached_port=YOUR_MEMCACHED_PORT_HERE;

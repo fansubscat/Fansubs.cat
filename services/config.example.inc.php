@@ -7,12 +7,6 @@ $db_name="YOUR_DB_NAME_HERE";
 $db_user="YOUR_DB_USER_HERE";
 $db_passwd="YOUR_DB_PASS_HERE";
 
-//Manga database access
-$db_host_manga="YOUR_MANGA_DB_HOST_HERE";
-$db_name_manga="YOUR_MANGA_DB_NAME_HERE";
-$db_user_manga="YOUR_MANGA_DB_USER_HERE";
-$db_passwd_manga="YOUR_MANGA_DB_PASS_HERE";
-
 //Social network tokens
 $facebook_api_token='YOUR_APP_TOKEN_HERE';
 
@@ -30,6 +24,13 @@ $discord_webhooks = array(
 	'YOUR_DISCORD_WEBHOOK_1_HERE',
 	'YOUR_DISCORD_WEBHOOK_2_HERE'
 );
+
+//Telegram bot API key and chat id
+$telegram_bot_api_key='YOUR_API_KEY_HERE';
+$telegram_bot_chat_id='YOUR_CHAT_ID_HERE';
+
+//Token to bypass admin authentication in twitter_image.php
+$internal_token='YOUR_TOKEN';
 
 //Files
 $lock_file='/tmp/fansubscat_fetch_lock';

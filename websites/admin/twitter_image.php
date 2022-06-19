@@ -67,7 +67,7 @@ function get_change_in_views_for_series($current_month, $id, $new_views, $series
 
 session_start();
 
-if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
+if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) || $_GET['token']==$internal_token) {
 
 	$type = escape($_GET['type']);
 	$month = escape($_GET['month']);

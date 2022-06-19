@@ -18,3 +18,6 @@
 
 # Fansubs.cat - Update recommended anime and manga
 0 0 * * 1 cd /srv/services/fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php
+
+# Fansubs.cat - Publish monthly content rankings
+0 0 1 * * cd /srv/services/fansubs.cat/ && /usr/bin/php publish_monthly_rankings.php

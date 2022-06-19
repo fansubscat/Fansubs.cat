@@ -6,6 +6,7 @@
 	- Ara s'activa i desactiva el camp «URL d'Archive.org» segons si és un fansub històric o no.
 - **Serveis:**
 	- Es corregeix l'obtenció de notícies de Mangadex d'El detectiu Conan en català perquè es faci via API.
+	- S'afegeix un nou servei que publica els continguts més populars al Telegram en acabar el mes.
 
 ## 2022-06-18 - Versió 4.0.8
 - **Catàleg:**
