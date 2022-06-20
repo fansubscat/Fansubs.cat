@@ -32,7 +32,7 @@ function publish_to_discord($text, $title, $description, $url, $image, $rating){
 				                'image' => array(
 							'url' => $image
 						),
-				                'color' => (strpos($url, 'https://manga')===0 ? 16027660 : 3901635)
+				                'color' => (strpos($url, 'https://manga')===0 ? 16027660 : (strpos($url, 'https://accioreal')===0 ? 11348265 : 3901635))
 				        )
 				)
 			);

@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2022-06-21 - Versió 4.0.10
+- **Serveis:**
+	- S'afegeix un missatge amb les estadístiques del mes al resum mensual del Telegram.
+	- Es corregeix el color del contingut d'acció real per al Discord.
+
 ## 2022-06-19 - Versió 4.0.9
 - **Administració:**
 	- S'ha corregit l'error en editar recollidors de notícies.
