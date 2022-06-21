@@ -326,7 +326,8 @@ CREATE TABLE `view_session` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `admin_log`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `action` (`action`);
 
 ALTER TABLE `admin_user`
   ADD PRIMARY KEY (`username`),
@@ -533,4 +534,5 @@ ALTER TABLE `remote_folder_failed_files`
 
 ALTER TABLE `version`
   ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 COMMIT;
