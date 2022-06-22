@@ -100,7 +100,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<div class="w-100 d-flex">
 										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_liveaction_views']; ?></div>
 										<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b><br><?php echo max(0, $totals['total_liveaction_clicks']-$totals['total_liveaction_views']); ?></div>
-										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo $totals['total_liveaction_time_spent']; ?></div>
+										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_time_spent']); ?></div>
 									</div>
 								</div>
 							</article>
@@ -1273,7 +1273,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<div class="w-100 d-flex">
 										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_liveaction_views']; ?></div>
 										<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b><br><?php echo max(0, $totals['total_liveaction_clicks']-$totals['total_liveaction_views']); ?></div>
-										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo $totals['total_liveaction_time_spent']; ?></div>
+										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_time_spent']); ?></div>
 									</div>
 								</div>
 							</article>

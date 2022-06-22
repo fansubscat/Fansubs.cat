@@ -8,6 +8,8 @@
 	- Es canvia el recompte de «més de X continguts» a grups de 25 per al cas d'acció real.
 - **Notícies:**
 	- La capçalera enllaça a acció real.
+- **Administració:**
+	- Corregit el recompte de temps d'acció real, no mostrava hores i minuts.
 
 ## 2022-06-21 - Versió 4.0.10
 - **Administració:**
