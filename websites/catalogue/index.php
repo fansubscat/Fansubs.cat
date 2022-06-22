@@ -42,7 +42,12 @@ if (!empty($site_message) || !empty($is_fools_day)){
 }
 
 if (is_robot()){
-	$restotalnumber = query("SELECT FLOOR((COUNT(*)-1)/50)*50 cnt FROM series s WHERE s.type='${config['items_type']}' AND EXISTS (SELECT id FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)");
+	if ($config['items_type']=='liveaction') {
+		$number=25;
+	} else {
+		$number=50;
+	}
+	$restotalnumber = query("SELECT FLOOR((COUNT(*)-1)/$number)*$number cnt FROM series s WHERE s.type='${config['items_type']}' AND EXISTS (SELECT id FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)");
 	$totalnumber = mysqli_fetch_assoc($restotalnumber)['cnt'];
 	mysqli_free_result($restotalnumber);
 ?>

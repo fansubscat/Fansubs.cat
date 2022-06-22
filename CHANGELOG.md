@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2022-06-22 - Versió 4.1.0
+- **Catàleg:**
+	- Llançament públic del portal d'acció real.
+	- S'activen les recomanacions i elements relacionats d'acció real.
+	- La capçalera enllaça a acció real.
+	- Es canvia el recompte de «més de X continguts» a grups de 25 per al cas d'acció real.
+- **Notícies:**
+	- La capçalera enllaça a acció real.
+
 ## 2022-06-21 - Versió 4.0.10
 - **Administració:**
 	- Corregida l'ordenació dels especials a la pàgina d'estadístiques de la versió.

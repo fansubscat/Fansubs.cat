@@ -165,11 +165,11 @@ mysqli_free_result($resultf);
 <?php
 	if ($config['items_type']=='anime') {
 ?>
-						<a class="current_portal" href="<?php echo $anime_url; ?>/">Anime</a> | <a href="<?php echo $manga_url; ?>/">Manga</a> | <a href="<?php echo $news_url; ?>/">Notícies</a>
+						<a class="current_portal" href="<?php echo $anime_url; ?>/">Anime</a> | <a href="<?php echo $manga_url; ?>/">Manga</a> | <a href="<?php echo $liveaction_url; ?>/">Acció real</a>
 <?php
 	} else if ($config['items_type']=='manga') {
 ?>
-						<a href="<?php echo $anime_url; ?>/">Anime</a> | <a class="current_portal" href="<?php echo $manga_url; ?>/">Manga</a> | <a href="<?php echo $news_url; ?>/">Notícies</a>
+						<a href="<?php echo $anime_url; ?>/">Anime</a> | <a class="current_portal" href="<?php echo $manga_url; ?>/">Manga</a> | <a href="<?php echo $liveaction_url; ?>/">Acció real</a>
 <?php
 	} else {
 ?>

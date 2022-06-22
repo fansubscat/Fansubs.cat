@@ -651,7 +651,7 @@ while ($row = mysqli_fetch_assoc($resultin)) {
 	$in[]=$row['id'];
 }
 mysqli_free_result($resultin);
-$resultrm = query($base_query . " WHERE s.type<>'liveaction' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
+$resultrm = query($base_query . " WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
 
 if (mysqli_num_rows($resultrm)>0) {
 ?>
