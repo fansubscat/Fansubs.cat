@@ -146,7 +146,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$matches = array();
 			if (preg_match('/.* - (\d+).*\.(?:mp4|mkv|avi)/', $filename, $matches)) {
 				$number = $matches[1];
-				$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND number=$number".($division_id!=-1 ? " AND division_id=$division_id" : ''));
+				$result = query("SELECT e.id FROM episode e WHERE series_id=".escape($series_id)." AND linked_episode_id IS NULL AND number=$number".($division_id!=-1 ? " AND division_id=$division_id" : ''));
 				if ($row = mysqli_fetch_assoc($result)) {
 					$splitted = explode('/', $real_link);
 					$start = $splitted[0].'//'.$splitted[2].'/';

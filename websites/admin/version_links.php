@@ -57,14 +57,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$series = mysqli_fetch_assoc($results) or crash('Series not found');
 	mysqli_free_result($results);
 
-	$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".$row['series_id']." ORDER BY d.number ASC");
+	$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".$row['series_id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
 	$divisions = array();
 	while ($drow = mysqli_fetch_assoc($resultd)) {
 		array_push($divisions, $drow);
 	}
 	mysqli_free_result($resultd);
 
-	$resulte = query("SELECT e.*, et.title, d.number division_number FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
+	$resulte = query("SELECT e.*, et.title, d.number division_number, d.name division_name FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
 	$episodes = array();
 	while ($rowe = mysqli_fetch_assoc($resulte)) {
 		array_push($episodes, $rowe);
@@ -106,7 +106,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		foreach ($divisions as $division) {
 ?>
 						<tr>
-							<td style="width: 70%;"><strong><?php echo $divisions_name." ".$division['number'].(!empty($division['name']) ? " (".$division['name'].")" : ""); ?></strong></td>
+							<td style="width: 70%;"><strong><?php echo !empty($division['name']) ? $division['name'] : $divisions_name." ".$division['number']; ?></strong></td>
 							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.get_subtype_slug($series['subtype']).'/'.$series['slug'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button> <button onclick="copyToClipboard('<?php echo $link_url.'/'.get_subtype_slug($series['subtype']).'/'.$series['slug'].'?v='.$_GET['id'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-info"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
 						</tr>
 <?php
@@ -137,7 +137,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	for ($i=0;$i<count($episodes);$i++) {
 		$episode_name='';
-		if (!empty($episodes[$i]['division_number'])) {
+		if (!empty($episodes[$i]['division_name'])) {
+			$episode_name.='<strong>'.$episodes[$i]['division_name'].' - ';
+		} else if (!empty($episodes[$i]['division_number'])) {
 			$episode_name.='<strong>'.$divisions_short.' '.$episodes[$i]['division_number'].' - ';
 		} else {
 			$episode_name.='<strong>Altres - ';

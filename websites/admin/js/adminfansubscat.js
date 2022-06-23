@@ -317,7 +317,7 @@ function populateMalEpisodes(division_line, episodes) {
 	initialNumber = parseInt($('#episode-list-table').attr('data-count'))+1;
 
 	for (var i=0;i<episodes.length;i++) {
-		addRow(false);
+		addEpisodeRow(false, false);
 		$("#form-episode-list-division-"+(i+initialNumber)).val($('#form-division-list-number-'+division_line).val());
 		$("#form-episode-list-num-"+(i+initialNumber)).val(episodes[i].mal_id);
 		$("#form-episode-list-description-"+(i+initialNumber)).val(episodes[i].title);
@@ -343,9 +343,15 @@ function string_to_slug(str) {
 	return str;
 }
 
-function addRow(extra) {
+function addEpisodeRow(extra, linked) {
 	var i = parseInt($('#episode-list-table').attr('data-count'))+1;
-	$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-division-'+i+'" name="form-episode-list-division-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/><input id="form-episode-list-has_version-'+i+'" type="hidden" value="0"/></td><td><input id="form-episode-list-description-'+i+'" name="form-episode-list-description-'+i+'" type="text" class="form-control" value="" placeholder="(Sense descripció)"/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	if (!linked) {
+		$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-division-'+i+'" name="form-episode-list-division-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/><input id="form-episode-list-has_version-'+i+'" type="hidden" value="0"/></td><td><input id="form-episode-list-description-'+i+'" name="form-episode-list-description-'+i+'" type="text" class="form-control" value="" placeholder="(Sense descripció)"/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteEpìsodeRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	} else {
+		var htmlAcc = $('#form-episode-list-linked_episode_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
+
+		$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-division-'+i+'" name="form-episode-list-division-'+i+'" type="number" class="form-control" value="" placeholder="(Altres)"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="(Esp.)" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/><input id="form-episode-list-has_version-'+i+'" type="hidden" value="0"/></td><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteEpìsodeRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	}
 	$('#episode-list-table').attr('data-count', i);
 
 	if (!extra) {
@@ -354,7 +360,7 @@ function addRow(extra) {
 	}
 }
 
-function deleteRow(id) {
+function deleteEpìsodeRow(id) {
 	var i = parseInt($('#episode-list-table').attr('data-count'));
 	if(i==1) {
 		alert('La fitxa ha de tenir un capítol, com a mínim!');
@@ -372,9 +378,14 @@ function deleteRow(id) {
 			$("#form-episode-list-division-"+j).attr('id','form-episode-list-division-'+(j-1));
 			$("#form-episode-list-num-"+j).attr('name','form-episode-list-num-'+(j-1));
 			$("#form-episode-list-num-"+j).attr('id','form-episode-list-num-'+(j-1));
-			$("#form-episode-list-description-"+j).attr('name','form-episode-list-description-'+(j-1));
-			$("#form-episode-list-description-"+j).attr('id','form-episode-list-description-'+(j-1));
-			$("#form-episode-list-delete-"+j).attr('onclick','deleteRow('+(j-1)+');');
+			if ($("#form-episode-list-description-"+j).length>0) {
+				$("#form-episode-list-description-"+j).attr('name','form-episode-list-description-'+(j-1));
+				$("#form-episode-list-description-"+j).attr('id','form-episode-list-description-'+(j-1));
+			} else if ($("#form-episode-list-linked_episode_id-"+j).length>0) {
+				$("#form-episode-list-linked_episode_id-"+j).attr('name','form-episode-list-linked_episode_id-'+(j-1));
+				$("#form-episode-list-linked_episode_id-"+j).attr('id','form-episode-list-linked_episode_id-'+(j-1));
+			}
+			$("#form-episode-list-delete-"+j).attr('onclick','deleteEpìsodeRow('+(j-1)+');');
 			$("#form-episode-list-delete-"+j).attr('id','form-episode-list-delete-'+(j-1));
 			$("#form-episode-list-delete-"+j).attr('class',$('form-episode-list-delete-'+(j-1)).attr('class'));
 		}
@@ -868,7 +879,7 @@ function checkNumberOfEpisodes() {
 	var normalEpisodeCount = 0;
 
 	for (var i=1;i<=episodeCount;i++){
-		if ($('#form-episode-list-num-'+i).val()!=''){
+		if ($('#form-episode-list-num-'+i).val()!='' && $('#form-episode-list-linked_episode_id-'+i).length==0){
 			normalEpisodeCount++;
 		}
 	}
@@ -1705,7 +1716,7 @@ $(document).ready(function() {
 
 		for (var i=0;i<divisions.length;i++) {
 			for (var j=0;j<$(divisions[i]).val();j++) {
-				addRow(false);
+				addEpisodeRow(false, false);
 				$("#form-episode-list-division-"+rowNumber).val($('#form-division-list-number-'+(i+1)).val());
 				$("#form-episode-list-num-"+rowNumber).val(restart ? j+1 : rowNumber);
 				$("#form-episode-list-description-"+rowNumber).val('');

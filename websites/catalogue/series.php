@@ -447,10 +447,15 @@ if ($count_unfiltered==0) {
 
 			foreach ($divisions as $division) {
 				$ids=array(-1);
+				$linked_ids=array(-1);
 				foreach ($division['episodes'] as $episode) {
-					$ids[]=$episode['id'];
+					if (!empty($episode['linked_episode_id'])) {
+						$linked_ids[]=$episode['linked_episode_id'];
+					} else {
+						$ids[]=$episode['id'];
+					}
 				}
-				$result_episodes = query("SELECT f.* FROM file f WHERE f.episode_id IN (".implode(',',$ids).") AND f.is_lost=0 AND f.version_id=".$version['id']." ORDER BY f.id ASC");
+				$result_episodes = query("SELECT f.* FROM file f WHERE ((f.episode_id IN (".implode(',',$ids).") AND f.version_id=".$version['id'].") OR (f.episode_id IN (".implode(',',$linked_ids).") AND f.version_id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=${version['id']})))) AND f.is_lost=0 ORDER BY f.id ASC");
 				$division_available_episodes[] = mysqli_num_rows($result_episodes);
 				mysqli_free_result($result_episodes);
 			}
@@ -504,7 +509,7 @@ if ($count_unfiltered==0) {
 <?php
 					} else {
 ?>
-										<summary class="division_name"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : ($config['division_name'].' '.$division['division_number'].(!empty($division['division_name']) ? ': '.$division['division_name'] : ''))) : 'Altres'; ?><?php echo $division_available_episodes[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
+										<summary class="division_name"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : (!empty($division['division_name']) ? $division['division_name'] : $config['division_name'].' '.$division['division_number'])) : 'Altres'; ?><?php echo $division_available_episodes[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
 <?php
 					}
 ?>

@@ -44,6 +44,7 @@ CREATE TABLE `episode` (
   `division_id` int(11) DEFAULT NULL,
   `number` decimal(10,2) DEFAULT NULL,
   `description` varchar(200) DEFAULT NULL,
+  `linked_episode_id` int(11) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -345,7 +346,8 @@ ALTER TABLE `division`
 
 ALTER TABLE `episode`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `episode_ibfk_1` (`series_id`);
+  ADD KEY `episode_ibfk_1` (`series_id`),
+  ADD KEY `episode_ibfk_2` (`linked_episode_id`);
 
 ALTER TABLE `episode_title`
   ADD PRIMARY KEY (`version_id`,`episode_id`),
@@ -486,7 +488,8 @@ ALTER TABLE `division`
   ADD CONSTRAINT `division_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `episode`
-  ADD CONSTRAINT `episode_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `episode_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `episode_ibfk_2` FOREIGN KEY (`linked_episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `episode_title`
   ADD CONSTRAINT `episode_title_ibfk_1` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

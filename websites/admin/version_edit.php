@@ -689,7 +689,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultf);
 
-		$resulte = query("SELECT e.*, et.title, d.number division_number FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
+		$resulte = query("SELECT e.*, et.title, d.number division_number, d.name division_name FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -730,7 +730,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultd);
 
-		$resulte = query("SELECT e.*, NULL title, d.number division_number FROM episode e LEFT JOIN division d ON e.division_id=d.id WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
+		$resulte = query("SELECT e.*, NULL title, d.number division_number, d.name division_name FROM episode e LEFT JOIN division d ON e.division_id=d.id WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -1088,19 +1088,26 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	for ($i=0;$i<count($episodes);$i++) {
 		$episode_name='';
-		if (!empty($episodes[$i]['division_number'])) {
+		if (!empty($episodes[$i]['division_name'])) {
+			$episode_name.=$episodes[$i]['division_name'].' - ';
+		} else if (!empty($episodes[$i]['division_number'])) {
 			$episode_name.=$division_name.' '.$episodes[$i]['division_number'].' - ';
 		} else {
 			$episode_name.='Altres - ';
 		}
-		if (!empty($episodes[$i]['number'])) {
+		if (!empty($episodes[$i]['linked_episode_id'])){
+			$resultle=query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',d.number))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' AND e.id=".$episodes[$i]['linked_episode_id']);
+			$linked_episode = mysqli_fetch_assoc($resultle);
+			mysqli_free_result($resultle);
+			$episode_name.=$linked_episode['description'].' [FILM ENLLAÇAT] <span class="mandatory"></span> <small class="text-muted">(És obligatori introduir-ne el títol!)</small>';
+		} else if (!empty($episodes[$i]['number'])) {
 			if (!empty($episodes[$i]['description'])) {
 				$episode_name.='Capítol '.floatval($episodes[$i]['number']).' <small class="text-muted">(Descripció interna: '.htmlspecialchars($episodes[$i]['description']).')</small>';
 			} else {
 				$episode_name.='Capítol '.floatval($episodes[$i]['number']);
 			}
 		} else {
-			$episode_name.=$episodes[$i]['description'].' <small class="text-muted">(Aquesta descripció NO és intern: es mostrarà si no introdueixes cap títol!)</small>';
+			$episode_name.=$episodes[$i]['description'].' <small class="text-muted">(Aquesta descripció NO és interna: es mostrarà si no introdueixes cap títol!)</small>';
 		}
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
@@ -1123,7 +1130,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 								<div class="form-group">
 									<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title"><span class="fa fa-caret-square-right pr-2 text-primary"></span><?php echo $episode_name; ?></label>
-									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="200" placeholder="(Sense títol)"/>
+									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="200" placeholder="(Sense títol)"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
+<?php
+		if (empty($episodes[$i]['linked_episode_id'])) {
+?>
 									<div class="container" id="form-files-list-<?php echo $episodes[$i]['id']; ?>">
 										<div class="row mb-3">
 											<div class="w-100 column">
@@ -1132,17 +1142,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<tr>
 															<th style="width: 12%;"><span class="mandatory">Variant</span> <span class="fa fa-question-circle small text-secondary" style="cursor: help;" title="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.), però normalment només n'hi ha una ('Única')"></span></th>
 <?php
-		if ($type=='manga') {
+			if ($type=='manga') {
 ?>
 															<th>Fitxer</th>
 															<th style="width: 16%;">Pujada</th>
 <?php
-		} else {
+			} else {
 ?>
 															<th>Enllaços de streaming / Resolució</th>
 															<th style="width: 10%;"><span class="mandatory">Durada</span></th>
 <?php
-		}
+			}
 ?>
 															<th style="width: 15%;">Comentaris</th>
 															<th class="text-center" style="width: 5%;">Perduda</th>
@@ -1151,7 +1161,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</thead>
 													<tbody>
 <?php
-		for ($j=0;$j<count($files);$j++) {
+			for ($j=0;$j<count($files);$j++) {
 ?>
 														<tr id="form-files-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>">
 															<td>
@@ -1159,7 +1169,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['id']; ?>"/>
 															</td>
 <?php
-			if ($type=='manga') {
+				if ($type=='manga') {
 ?>
 															<td class="align-middle">
 																<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat el fitxer <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>'; ?></div>
@@ -1170,13 +1180,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['length']; ?>"/>
 															</td>
 <?php
-			} else {
+				} else {
 ?>
 															<td>
 																<table class="w-100" id="links-list-table-<?php echo $episodes[$i]['id']; ?>-<?php echo $j+1; ?>" data-count="<?php echo max(count($files[$j]['links']),1); ?>">
 																	<tbody>
 <?php
-				for ($k=0;$k<count($files[$j]['links']);$k++) {
+					for ($k=0;$k<count($files[$j]['links']);$k++) {
 ?>
 																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
 																			<td class="pl-0 pt-0 pb-0 border-0">
@@ -1191,8 +1201,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																			</td>
 																		</tr>
 <?php
-				}
-				if (count($files[$j]['links'])==0) {
+					}
+					if (count($files[$j]['links'])==0) {
 ?>
 																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
 																			<td class="pl-0 pt-0 pb-0 border-0">
@@ -1207,7 +1217,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																			</td>
 																		</tr>
 <?php
-				}
+					}
 ?>
 																	</tbody>
 																	<tfoot>
@@ -1223,7 +1233,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="time" step="1" class="form-control" value="<?php echo convert_to_hh_mm_ss($files[$j]['length']); ?>"/>
 															</td>
 <?php
-			}
+				}
 ?>
 															<td>
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($files[$j]['comments']); ?>" maxlength="200"/>
@@ -1236,8 +1246,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															</td>
 														</tr>
 <?php
-		}
-		if (count($files)==0) {
+			}
+			if (count($files)==0) {
 ?>
 														<tr id="form-files-list-<?php echo $episodes[$i]['id']; ?>-row-1">
 															<td>
@@ -1245,7 +1255,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-1" type="hidden" value="-1"/>
 															</td>
 <?php
-			if ($type=='manga') {
+				if ($type=='manga') {
 ?>
 															<td class="align-middle">
 																<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div>
@@ -1255,7 +1265,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/>
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="hidden" value="0"/>
 															</td>
-<?php			} else {
+<?php
+				} else {
 ?>
 															<td>
 																<table class="w-100" id="links-list-table-<?php echo $episodes[$i]['id']; ?>-1" data-count="1">
@@ -1286,7 +1297,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="time" step="1" class="form-control"/>
 															</td>
 <?php
-			}
+				}
 ?>
 															<td>
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-1" type="text" class="form-control" value="" maxlength="200"/>
@@ -1299,7 +1310,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															</td>
 														</tr>
 <?php
-		}
+			}
 ?>
 													</tbody>
 												</table>
@@ -1307,6 +1318,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<div class="w-100 text-center"><button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una altra variant per a aquest capítol</button></div>
 										</div>
 									</div>
+<?php
+		} else {
+?>
+									<div class="alert alert-warning">
+										<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest capítol és un film enllaçat. No se'n mostrarà el número de capítol, i el títol que es mostrarà serà el que introdueixis aquí.</div>
+									</div>
+<?php
+		}
+?>
 								</div>
 <?php
 	}

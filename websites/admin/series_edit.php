@@ -27,6 +27,7 @@ include("header.inc.php");
 switch ($type) {
 	case 'anime':
 		$division_name='Temporades';
+		$division_name_singular='Temporada';
 		$division_name_short='Temp.';
 		$division_one="una temporada";
 		$more_than_one="més d'una";
@@ -37,6 +38,7 @@ switch ($type) {
 		break;
 	case 'manga':
 		$division_name='Volums';
+		$division_name_singular='Volum';
 		$division_name_short='Vol.';
 		$division_one="un volum";
 		$more_than_one="més d'un";
@@ -47,6 +49,7 @@ switch ($type) {
 		break;
 	case 'liveaction':
 		$division_name='Temporades';
+		$division_name_singular='Temporada';
 		$division_name_short='Temp.';
 		$division_one="una temporada";
 		$more_than_one="més d'una";
@@ -234,6 +237,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				$episode['description']="NULL";
 			}
+			if (!empty($_POST['form-episode-list-linked_episode_id-'.$i]) && is_numeric($_POST['form-episode-list-linked_episode_id-'.$i])) {
+				$episode['linked_episode_id']=escape($_POST['form-episode-list-linked_episode_id-'.$i]);
+			} else {
+				$episode['linked_episode_id']="NULL";
+			}
 			array_push($episodes, $episode);
 			$i++;
 		}
@@ -280,9 +288,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM episode WHERE series_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($episodes as $episode) {
 				if ($episode['id']==-1) {
-					query("INSERT INTO episode (series_id,division_id,number,description,created,created_by,updated,updated_by) VALUES (".$data['id'].",(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$data['id']."),".$episode['number'].",".$episode['description'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+					query("INSERT INTO episode (series_id,division_id,number,description,linked_episode_id,created,created_by,updated,updated_by) VALUES (".$data['id'].",(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$data['id']."),".$episode['number'].",".$episode['description'].",".$episode['linked_episode_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 				} else {
-					query("UPDATE episode SET division_id=(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$data['id']."),number=".$episode['number'].",description=".$episode['description'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$episode['id']);
+					query("UPDATE episode SET division_id=(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$data['id']."),number=".$episode['number'].",description=".$episode['description'].",linked_episode_id=".$episode['linked_episode_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$episode['id']);
 				}
 			}
 			query("DELETE FROM related_series WHERE series_id=".$data['id']." OR related_series_id=".$data['id']);
@@ -314,7 +322,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				query("INSERT INTO division (series_id,number,name,number_of_episodes,external_id) VALUES (".$inserted_id.",".$division['number'].",".$division['name'].",".$division['number_of_episodes'].",".$division['external_id'].")");
 			}
 			foreach ($episodes as $episode) {
-				query("INSERT INTO episode (series_id,division_id,number,description,created,created_by,updated,updated_by) VALUES (".$inserted_id.",(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$inserted_id."),".$episode['number'].",".$episode['description'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+				query("INSERT INTO episode (series_id,division_id,number,description,linked_episode_id,created,created_by,updated,updated_by) VALUES (".$inserted_id.",(SELECT id FROM division WHERE number=".$episode['division']." AND series_id=".$inserted_id."),".$episode['number'].",".$episode['description'].",".$episode['linked_episode_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			}
 			foreach ($related_series as $related_series_id) {
 				query("INSERT INTO related_series (series_id,related_series_id) VALUES (".$inserted_id.",".$related_series_id.")");
@@ -682,7 +690,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 10%;" class="mandatory">Núm.</th>
-													<th>Nom <small class="text-muted">(només es mostra si n'hi ha més <?php echo $more_than_one; ?>)</small></th>
+													<th>Nom <small class="text-muted">(es mostra si n'hi ha més <?php echo $more_than_one; ?>; si està informat, no s'hi afegeix «<?php echo $division_name_singular; ?> X»)</small></th>
 													<th class="mandatory" style="width: 15%;">Capítols</th>
 													<th style="width: 15%;">Id. <?php echo $external_provider; ?></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -750,6 +758,24 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="container" id="form-episode-list">
 								<div class="row">
 									<div class="w-100 column">
+<?php
+		if ($type!='manga') {
+?>
+										<select id="form-episode-list-linked_episode_id-XXX" name="form-episode-list-linked_episode_id-XXX" class="form-control d-none">
+											<option value="">- Selecciona un film extern -</option>
+<?php
+			$resultle = query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',d.number))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' ORDER BY s.name, d.number, e.number IS NULL ASC, e.number ASC, e.description");
+			while ($lerow = mysqli_fetch_assoc($resultle)) {
+?>
+											<option value="<?php echo $lerow['id']; ?>"><?php echo htmlspecialchars($lerow['description']); ?></option>
+<?php
+			}
+			mysqli_free_result($resultle);
+?>
+										</select>
+<?php
+		}
+?>
 										<table class="table table-bordered table-hover table-sm" id="episode-list-table" data-count="<?php echo max(count($episodes),1); ?>">
 											<thead>
 												<tr>
@@ -777,10 +803,31 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-episode-list-has_version-<?php echo $i+1; ?>" type="hidden" value="<?php echo $episodes[$i]['has_version']; ?>"/>
 													</td>
 													<td>
+<?php
+		if (!empty($episodes[$i]['linked_episode_id'])) {
+?>
+														<select id="form-episode-list-linked_episode_id-<?php echo $i+1; ?>" name="form-episode-list-linked_episode_id-<?php echo $i+1; ?>" class="form-control" required>
+															<option value="">- Selecciona un film extern -</option>
+<?php
+			$resultle = query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',d.number))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' ORDER BY s.name, d.number, e.number IS NULL ASC, e.number ASC, e.description");
+			while ($lerow = mysqli_fetch_assoc($resultle)) {
+?>
+															<option value="<?php echo $lerow['id']; ?>"<?php echo $episodes[$i]['linked_episode_id']==$lerow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($lerow['description']); ?></option>
+<?php
+			}
+			mysqli_free_result($resultle);
+?>
+														</select>
+<?php
+		} else {
+?>
 														<input id="form-episode-list-description-<?php echo $i+1; ?>" name="form-episode-list-description-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['description']); ?>" placeholder="(Sense descripció)"/>
+<?php
+		}
+?>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-episode-list-delete-<?php echo $i+1; ?>" onclick="deleteRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger<?php echo $episodes[$i]['has_version'] ? ' disabled' : ''; ?>"></button>
+														<button id="form-episode-list-delete-<?php echo $i+1; ?>" onclick="deleteEpìsodeRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger<?php echo $episodes[$i]['has_version'] ? ' disabled' : ''; ?>"></button>
 													</td>
 												</tr>
 <?php
@@ -800,7 +847,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-episode-list-description-1" name="form-episode-list-description-1" type="text" class="form-control" value="" placeholder="(Sense descripció)"/>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-episode-list-delete-1" onclick="deleteRow(1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+														<button id="form-episode-list-delete-1" onclick="deleteEpìsodeRow(1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
 													</td>
 												</tr>
 <?php
@@ -809,8 +856,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<button onclick="addRow(false);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un capítol</button>
-									<button onclick="addRow(true);" type="button" class="btn btn-success btn-sm ml-2"><span class="fa fa-plus pr-2"></span>Afegeix un especial</button>
+									<button onclick="addEpisodeRow(false, false);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix capítol</button>
+									<button onclick="addEpisodeRow(true, false);" type="button" class="btn btn-success btn-sm ml-2"><span class="fa fa-plus pr-2"></span>Afegeix especial</button>
+<?php
+	if ($type!='manga') {
+?>
+									<button onclick="addEpisodeRow(true, true);" type="button" class="btn btn-success btn-sm ml-2"><span class="fa fa-plus pr-2"></span>Afegeix film enllaçat</button>
+<?php
+	}
+?>
 									<span style="flex-grow: 1;"></span>
 <?php
 	if ($type=='anime') {
