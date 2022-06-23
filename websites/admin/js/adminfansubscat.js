@@ -1734,7 +1734,7 @@ $(document).ready(function() {
 			if ($('#import-type').val()!='sync' || $('#form-remote_folders-list-is_active-'+i).prop('checked')) {
 				account_ids.push(encodeURIComponent($('#form-remote_folders-list-remote_account_id-'+i).val()));
 				folders.push(encodeURIComponent($('#form-remote_folders-list-folder-'+i).val()));
-				division_ids.push(encodeURIComponent($('#form-remote_folders-list-division_id-'+i).val()!='' ? $('#form-folders-list-division_id-'+i).val() : -1));
+				division_ids.push(encodeURIComponent($('#form-remote_folders-list-division_id-'+i).val()!='' ? $('#form-remote_folders-list-division_id-'+i).val() : -1));
 			}
 		}
 

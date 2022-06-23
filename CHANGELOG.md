@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2022-06-23 - Versió 4.1.1
+- **Administració:**
+	- Corregida l'obtenció d'enllaços de MEGA.
+
 ## 2022-06-22 - Versió 4.1.0
 - **Catàleg:**
 	- Llançament públic del portal d'acció real.
