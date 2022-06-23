@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2022-06-23 - Versió 4.1.2
+- **Catàleg:**
+	- Les fitxes permeten mostrar films enllaçats d'altres fitxes a la llista de capítols.
+	- Si una temporada té nom, ara ja no s'hi mostra «Temporada X» a davant.
+- **Administració:**
+	- Es permet introduir films enllaçats a les sèries d'anime i acció real (nou botó «Afegeix film enllaçat».
+	- A la versió, és obligatori introduir un títol per als films enllaçats (i s'hi mostra un avís en lloc dels enllaços).
+	- S'ha corregit l'adreça de les imatges de tipus d'enllaç (no es carregaven).
+	- No es mostren les divisions (temporades o volums) amb zero capítols a la secció d'enllaços de la versió.
+
 ## 2022-06-23 - Versió 4.1.1
 - **Administració:**
 	- Corregida l'obtenció d'enllaços de MEGA.
