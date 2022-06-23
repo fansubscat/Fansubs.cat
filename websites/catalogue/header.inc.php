@@ -52,7 +52,7 @@ if ($is_fools_day){
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="https://unpkg.com/megajs@1.0.4/dist/main.browser-umd.js"></script>
+		<script src="/js/megajs/main.browser-umd.js"></script>
 		<script src="/js/videojs/video.js?v=<?php echo PL_VER; ?>"></script>
 		<script src="/js/common.js?v=<?php echo JS_VER; ?>"></script>
 		<script src="/js/videostream.js?v=<?php echo VS_VER; ?>"></script>

@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2022-06-24 - Versió 4.1.3
+- **Catàleg:**
+	- S'ha solucionat el problema de MEGA amb navegadors Firefox (no carregaven els vídeos).
+
 ## 2022-06-23 - Versió 4.1.2
 - **Catàleg:**
 	- Les fitxes permeten mostrar films enllaçats d'altres fitxes a la llista de capítols.
