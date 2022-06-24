@@ -300,7 +300,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT f.episode_id, e.number, e.description, et.title, f.extra_name, s.number_of_episodes, s.name series_name, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM($viewed_content_field),0) total_$viewed_content_field FROM file f LEFT JOIN views v ON f.id=v.file_id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=f.version_id LEFT JOIN series s ON e.series_id=s.id WHERE f.version_id=".escape($_GET['id'])." GROUP BY IFNULL(f.episode_id,f.extra_name) ORDER BY f.episode_id IS NULL ASC, e.number IS NULL ASC, e.number ASC, et.title ASC, f.extra_name ASC");
+	$result = query("SELECT f.episode_id, e.number, e.description, et.title, f.extra_name, s.number_of_episodes, s.name series_name, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM($viewed_content_field),0) total_$viewed_content_field FROM file f LEFT JOIN views v ON f.id=v.file_id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=f.version_id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE f.version_id=".escape($_GET['id'])." GROUP BY IFNULL(f.episode_id,f.extra_name) ORDER BY d.number ASC, f.episode_id IS NULL ASC, e.number IS NULL ASC, e.number ASC, et.title ASC, f.extra_name ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$episode_title='';
 		
