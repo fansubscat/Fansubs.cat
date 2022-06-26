@@ -3,8 +3,8 @@ $header_title="Llista de fansubs - Fansubs";
 $page="fansub";
 include("header.inc.php");
 
-if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
-	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
+if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
+	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id']) && $_SESSION['admin_level']>=3) {
 		log_action("delete-fansub", "S'ha suprimit el fansub '".query_single("SELECT name FROM fansub WHERE id=".escape($_GET['delete_id']))."' (id. de fansub: ".$_GET['delete_id'].")");
 		query("DELETE FROM fansub WHERE id=".escape($_GET['delete_id']));
 		@unlink($static_directory.'/images/icons/'.$_GET['delete_id'].'.jpg');
@@ -41,7 +41,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT f.id, f.name, f.url, f.status, f.is_historical, f.twitter_url, f.archive_url, (SELECT COUNT(*) FROM news WHERE fansub_id=f.id) news, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND vf.fansub_id=f.id) anime_versions, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND vf.fansub_id=f.id) manga_versions, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND vf.fansub_id=f.id) liveaction_versions FROM fansub f ORDER BY f.status DESC, f.name ASC");
+	$result = query("SELECT f.id, f.name, f.url, f.status, f.is_historical, f.twitter_url, f.archive_url, (SELECT COUNT(*) FROM news WHERE fansub_id=f.id) news, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND vf.fansub_id=f.id) anime_versions, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND vf.fansub_id=f.id) manga_versions, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND vf.fansub_id=f.id) liveaction_versions FROM fansub f".(($_SESSION['admin_level']<3 && !empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) ? ' WHERE f.id='.$_SESSION['fansub_id'] : '')." ORDER BY f.status DESC, f.name ASC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -80,7 +80,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center"><?php echo $row['anime_versions']; ?></td>
 								<td class="align-middle text-center"><?php echo $row['manga_versions']; ?></td>
 								<td class="align-middle text-center"><?php echo $row['liveaction_versions']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="fansub_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="fansub_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el fansub '".$row['name']."' i tot el seu material? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="fansub_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a>
+<?php
+		if (empty($_SESSION['fansub_id']) || (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id']) && $_SESSION['fansub_id']!=$row['id']))  {
+?>
+<a href="fansub_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el fansub '".$row['name']."' i tot el seu material? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
+<?php
+		}
+?>
+</td>
 							</tr>
 <?php
 	}
@@ -88,9 +96,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						</tbody>
 					</table>
+<?php
+	if ($_SESSION['admin_level']>=3) {
+?>
 					<div class="text-center">
 						<a href="fansub_edit.php" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix un fansub</a>
 					</div>
+<?php
+	}
+?>
 				</article>
 			</div>
 		</div>

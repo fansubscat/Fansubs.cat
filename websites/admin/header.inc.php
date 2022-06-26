@@ -105,15 +105,15 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					<li class="nav-item dropdown<?php echo $page=='fansub' ? ' active' : ''; ?>">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFansubs" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fansubs</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownFansubs">
+							<a class="dropdown-item" href="fansub_list.php">Llista de fansubs</a>
 <?php
 		if ($_SESSION['admin_level']>=3) {
 ?>
-							<a class="dropdown-item" href="fansub_list.php">Llista de fansubs</a>
 							<a class="dropdown-item" href="fansub_edit.php">Afegeix un fansub nou</a>
-							<div class="dropdown-divider"></div>
 <?php
 		}
 ?>
+							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="remote_account_list.php">Llista de comptes remots</a>
 							<a class="dropdown-item" href="remote_account_edit.php">Afegeix un compte remot nou</a>
 						</div>

@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2022-06-26 - Versió 4.1.4
+- **Administració:**
+	- Si un usuari està associat a un fansub i té nivell 2, pot editar (només) el seu fansub.
+
 ## 2022-06-24 - Versió 4.1.3
 - **Catàleg:**
 	- S'ha solucionat el problema de MEGA amb navegadors Firefox (no carregaven els vídeos).
