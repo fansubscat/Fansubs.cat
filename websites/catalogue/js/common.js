@@ -286,7 +286,7 @@ function hasNextVideo() {
 function playNextVideo() {
 	playerWasFullscreen = player.isFullscreen();
 	var position  = parseInt($('.video-player[data-file-id="'+currentFileId+'"]').first().attr('data-position'));
-	var results = $('.video-player').filter(function(){
+	var results = $('.video-player[data-file-id="'+currentFileId+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
 		return parseInt($(this).attr('data-position')) > position;
 	});
 

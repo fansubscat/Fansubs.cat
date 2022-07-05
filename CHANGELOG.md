@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2022-07-05 - Versió 4.1.5
+- **Catàleg:**
+	- S'ha solucionat l'error que feia que en saltar al següent capítol es canviés de versió en alguns casos.
+
 ## 2022-06-26 - Versió 4.1.4
 - **Administració:**
 	- Si un usuari està associat a un fansub i té nivell 2, pot editar (només) el seu fansub.
