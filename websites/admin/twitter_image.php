@@ -61,7 +61,7 @@ function get_change_in_views_for_series($current_month, $id, $new_views, $series
 	if ($row['min']>=($current_month.'-01 00:00:00')) {
 		return "N/A";
 	} else {
-		return 0;
+		return 1;
 	}
 }
 

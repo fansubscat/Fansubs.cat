@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2022-07-08 - Versió 4.1.6
+- **Administració:**
+	- Solucionat l'error que mostrava seguidors iguals al mes anterior quan no n'hi havia cap.
+
 ## 2022-07-05 - Versió 4.1.5
 - **Catàleg:**
 	- S'ha solucionat l'error que feia que en saltar al següent capítol es canviés de versió en alguns casos.
