@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2022-07-12 - Versió 4.1.7
+- **Administració:**
+	- Corregida l'ordenació dels extres a les estadístiques de la versió (ara apareixen al final).
+	- Corregit el canvi de posició respecte del mes passat a les imatges per al Twitter.
+
 ## 2022-07-08 - Versió 4.1.6
 - **Administració:**
 	- Solucionat l'error que mostrava seguidors iguals al mes anterior quan no n'hi havia cap.

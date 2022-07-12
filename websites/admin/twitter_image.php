@@ -45,7 +45,7 @@ function get_change_in_position_for_series($current_month, $id, $new_position, $
 	if ($row['min']>=($current_month.'-01 00:00:00')) {
 		return "N/A";
 	} else {
-		return $max_pos+1;
+		return $max_pos;
 	}
 }
 
