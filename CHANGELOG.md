@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2022-08-01 - Versió 4.1.8
+- **Administració:**
+	- Les estadístiques d'acció real per fansub no tenen mínim (si es deixava a 20, quasi tot era «Altres»).
+- **Serveis:**
+	- Es canvia «hentai» per «contingut explícit» als missatges del Telegram.
+	- Es corregeix un camp erroni en una consulta a la base de dades (impedia que les versions es marquessin soles com a finalitzades).
+
 ## 2022-07-12 - Versió 4.1.7
 - **Administració:**
 	- Corregida l'ordenació dels extres a les estadístiques de la versió (ara apareixen al final).

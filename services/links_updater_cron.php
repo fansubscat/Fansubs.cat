@@ -97,7 +97,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 								if (($series = mysqli_fetch_assoc($results))) {
 									if ($series['number_of_episodes']==mysqli_num_rows($resultl) && $version['status']==2) {
 										log_action("cron-update-version","La versió (id. de versió: ".$version['id'].") s'ha marcat com a completada i se n'ha aturat la sincronització automàtica perquè ja té un fitxer per cada capítol");
-										query("UPDATE version SET status=1,updated=CURRENT_TIMESTAMP,updated_by='Cron',completed_on=CURRENT_TIMESTAMP WHERE id=".$version['id']);
+										query("UPDATE version SET status=1,updated=CURRENT_TIMESTAMP,updated_by='Cron',completed_date=CURRENT_TIMESTAMP WHERE id=".$version['id']);
 										query("UPDATE remote_folder SET is_active=0 WHERE version_id=".$version['id']);
 									}
 								} else {

@@ -1064,7 +1064,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$fansub_values=array();
 	$fansub_colors=array();
 	$file_count_values=array();
-	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>20,a.fansub_name,'Altres') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
+	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>0,a.fansub_name,'Altres') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
 		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");

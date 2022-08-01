@@ -46,7 +46,7 @@ foreach ($types as $type) {
 	$post_content = [
 		'chat_id' => $telegram_bot_chat_id,
 		'media' => json_encode([
-			['type' => 'photo', 'media' => 'attach://file_1', 'caption' => "*${type[2]} durant el mes passat*\n\\(incloent hentai / sense incloure'l\\)", 'parse_mode' => 'MarkdownV2' ],
+			['type' => 'photo', 'media' => 'attach://file_1', 'caption' => "*${type[2]} durant el mes passat*\n\\(incloent contingut explícit / sense incloure'l\\)", 'parse_mode' => 'MarkdownV2' ],
 			['type' => 'photo', 'media' => 'attach://file_2' ],
 		]),
 		'file_1' => new CURLFile(realpath("/tmp/fansubscat_monthly_rankings_1.png")),
