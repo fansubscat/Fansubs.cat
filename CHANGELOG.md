@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2022-09-12 - Versió 4.1.9
+- **Catàleg:**
+	- Es canvia «Contacta'ns» per «Contacta amb nosaltres».
+- **Notícies:**
+	- Es canvia «Contacta'ns» per «Contacta amb nosaltres».
+- **Administració:**
+	- Es modifica la generació de la carpeta d'emmagatzematge perquè no inclogui punts a l'inici ni al final.
+- **Serveis:**
+	- Es corregeix el nombre de versions noves d'acció real al resum mensual via Telegram.
+
 ## 2022-08-01 - Versió 4.1.8
 - **Administració:**
 	- Les estadístiques d'acció real per fansub no tenen mínim (si es deixava a 20, quasi tot era «Altres»).

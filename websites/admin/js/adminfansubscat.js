@@ -1322,6 +1322,13 @@ function generateStorageFolder() {
 	} else {
 		string+=$('#form-series').text().replaceAll('/','-').replaceAll(':',' -').replaceAll('?','').replaceAll('♡',' ').replaceAll(';',' ').replaceAll('★',' ');
 	}
+	string = string.replaceAll('/.','/');
+	if (string.startsWith('.')) {
+		string = string.substring(1, string.length);
+	}
+	if (string.endsWith('.')) {
+		string = string.substring(0, string.length-1);
+	}
 	$('#form-storage_folder').val(string);
 }
 
