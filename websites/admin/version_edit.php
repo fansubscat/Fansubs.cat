@@ -422,7 +422,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					array_push($ids,$file['id']);
 				}
 			}
-			//Views and links will be removed too because their FK is set to cascade
+			//Links will be removed too because their FK is set to cascade
+			//Views will NOT be removed in order to keep consistent stats history
 			query("DELETE FROM file WHERE version_id=".$data['id']." AND episode_id IS NOT NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			//We do not count removing files as updating them, only insertions and real updates
 			foreach ($files as $file) {

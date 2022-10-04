@@ -47,6 +47,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM rel_version_fansub WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE id=".escape($_GET['delete_id']));
+		//Views will NOT be removed in order to keep consistent stats history
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}
 ?>

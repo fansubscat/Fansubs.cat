@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2022-10-04 - Versió 4.1.10
+- **Catàleg:**
+	- Es corregeix l'error en enviar el formulari de contacte.
+
 ## 2022-09-12 - Versió 4.1.9
 - **Catàleg:**
 	- Es canvia «Contacta'ns» per «Contacta amb nosaltres».

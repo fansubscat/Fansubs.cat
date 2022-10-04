@@ -28,6 +28,7 @@ RewriteCond %{REQUEST_URI} !error\.php
 RewriteCond %{REQUEST_URI} !counter\.php
 RewriteCond %{REQUEST_URI} !reader\.php
 RewriteCond %{REQUEST_URI} !strip_reader\.php
+RewriteCond %{REQUEST_URI} !contact\.php
 RewriteRule \.php$ - [F]
 
 #Preview image

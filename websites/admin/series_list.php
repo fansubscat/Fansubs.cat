@@ -51,7 +51,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		query("DELETE FROM series WHERE id=".escape($_GET['delete_id']));
 		@unlink($static_directory.'/images/series/'.$_GET['delete_id'].'.jpg');
 		@unlink($static_directory.'/images/featured/'.$_GET['delete_id'].'.jpg');
-		//Cascaded deletions: file, link, rel_version_fansub, views
+		//Cascaded deletions: file, link, rel_version_fansub
+		//Views will NOT be removed in order to keep consistent stats history
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}
 ?>

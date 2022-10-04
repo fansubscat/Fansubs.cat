@@ -285,6 +285,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 			//Links and episode_titles will be removed too because their FK is set to cascade
+			//Views will NOT be removed in order to keep consistent stats history
 			query("DELETE FROM episode WHERE series_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($episodes as $episode) {
 				if ($episode['id']==-1) {
