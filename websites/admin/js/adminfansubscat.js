@@ -1320,7 +1320,7 @@ function generateStorageFolder() {
 	if ($('#series_subtype').val()=='movie') {
 		string+='Films';
 	} else {
-		string+=$('#form-series').text().replaceAll('/','-').replaceAll(':',' -').replaceAll('?','').replaceAll('♡',' ').replaceAll(';',' ').replaceAll('★',' ');
+		string+=$('#form-series').text().replaceAll('/','-').replaceAll(':',' -').replaceAll('?','').replaceAll('*','').replaceAll('♡',' ').replaceAll(';',' ').replaceAll('★',' ');
 	}
 	string = string.replaceAll('/.','/');
 	if (string.startsWith('.')) {

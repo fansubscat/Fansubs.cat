@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2022-10-07 - Versió 4.1.11
+- **Administració:**
+	- Es modifica la generació de la carpeta d'emmagatzematge perquè no inclogui asteriscos.
+
 ## 2022-10-04 - Versió 4.1.10
 - **Catàleg:**
 	- Es corregeix l'error en enviar el formulari de contacte.
