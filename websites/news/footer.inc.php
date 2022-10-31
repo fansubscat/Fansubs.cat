@@ -6,7 +6,7 @@
 if (strcmp(date('m-d'),'12-01')>=0 && strcmp(date('m-d'),'12-25')<=0){
 ?>
 				<div class="section promo">
-					<a href="https://nadal.fansubs.cat/"><img src="/style/images/advent_promo.png" alt="Calendari d'advent dels fansubs en català" /></a>
+					<a href="https://advent.fansubs.cat/"><img src="/style/images/advent_promo.png" alt="Calendari d'advent dels fansubs en català" /></a>
 				</div>
 <?php
 }

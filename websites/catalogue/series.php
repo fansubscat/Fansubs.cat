@@ -522,6 +522,7 @@ if ($count_unfiltered==0) {
 											</div>
 <?php
 					}
+					if ($division_available_episodes[$index]>0 || $version['show_unavailable_episodes']==1) {
 ?>
 											<div style="width: 100%;">
 											<table class="episode-table" rules="rows">
@@ -530,22 +531,26 @@ if ($count_unfiltered==0) {
 														<th class="episode-seen-head">Vist</th>
 														<th>Títol</th>
 <?php
-					if ($config['items_type']!='manga') {
+						if ($config['items_type']!='manga') {
 ?>
 														<th class="episode-info-head right">Notes</th></tr>
 <?php
-					}
+						}
 ?>
 												</thead>
 												<tbody>
 <?php
-					foreach ($division['episodes'] as $episode) {
-						print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
-						$position++;
-					}
+						foreach ($division['episodes'] as $episode) {
+							print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
+							$position++;
+						}
 ?>
 												</tbody>
 											</table>
+<?php
+
+					}
+?>
 										</div>
 									</details>
 <?php

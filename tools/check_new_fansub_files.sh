@@ -2,9 +2,10 @@
 token="YOUR_TOKEN"
 dest_host="your.host.xyz"
 base_dest_dir="YOUR_DESTINATION_DIRECTORY"
+sender_email="your@sender.email"
 
 function notify_error {
-	php -r "mail('YOUR_EMAIL', \"Notificació del procés d'importació de fitxers a Fansubs.cat\", \"$1\");"
+	php -r "mail('YOUR_EMAIL', \"Notificació del procés d'importació de fitxers a Fansubs.cat\", \"$1\", \"From: $sender_email\");"
 }
 
 function generate_streaming {

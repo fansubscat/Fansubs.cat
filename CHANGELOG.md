@@ -1,5 +1,16 @@
 # Registre de canvis
 
+## 2022-10-31 - Versió 4.1.12
+- **General:**
+	- Es canvia l'URL del calendari d'advent de nadal.fansubs.cat a advent.fansubs.cat i se'n fan les redireccions corresponents.
+- **Catàleg:**
+	- S'afegeix una nova secció de recomanacions per a Tots Sants (components de terror).
+	- Les capçaleres de les taules de capítols no es mostren si no n'hi ha cap.
+- **Administració:**
+	- Es corregeix el títol de l'apartat «Continguts més populars».
+- **Eines:**
+	- Els correus de notificació especifiquen el remitent correctament.
+
 ## 2022-10-07 - Versió 4.1.11
 - **Administració:**
 	- Es modifica la generació de la carpeta d'emmagatzematge perquè no inclogui asteriscos.

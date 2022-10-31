@@ -14,7 +14,7 @@ $static_directory='/srv/websites/static.fansubs.cat';
 
 //Website URLs (no final slash)
 $static_url='https://static.fansubs.cat';
-$advent_url='https://nadal.fansubs.cat';
+$advent_url='https://advent.fansubs.cat';
 $anime_url='https://anime.fansubs.cat';
 $manga_url='https://manga.fansubs.cat';
 $liveaction_url='https://accioreal.fansubs.cat';

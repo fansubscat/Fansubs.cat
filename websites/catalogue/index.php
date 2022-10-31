@@ -129,6 +129,16 @@ switch ($header_tab){
 				$sant_jordi_items[] = $rowsj['id'];
 			}
 			$recommendations_subquery = implode(',',$sant_jordi_items);
+		} else if (date('m-d')=='10-31' || date('m-d')=='11-01') { // Tots Sants
+			$sections[1]=$config['section_tots_sants'];
+			$descriptions[1]=$config['section_tots_sants_desc'];
+			//Best rated completed and featurable animes of genre Horror
+			$tots_sants_result = query("SELECT DISTINCT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE sr.type='${config['items_type']}' AND (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status=1 AND vr.is_featurable=1 AND sr.score IS NOT NULL AND vr.is_missing_episodes=0 AND sr.id IN (SELECT rsg.series_id FROM rel_series_genre rsg WHERE rsg.genre_id IN (21)) ORDER BY sr.score DESC LIMIT 10");
+			$tots_sants_items = array();
+			while ($rowsts = mysqli_fetch_assoc($tots_sants_result)) {
+				$tots_sants_items[] = $rowsts['id'];
+			}
+			$recommendations_subquery = implode(',',$tots_sants_items);
 		}
 		$queries=array(
 			NULL,

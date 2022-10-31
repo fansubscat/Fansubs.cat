@@ -1,5 +1,5 @@
 <?php
-$header_title="Estadístiques - Continguts més populars";
+$header_title="Continguts més populars - Anàlisi";
 $page="analytics";
 include("header.inc.php");
 
