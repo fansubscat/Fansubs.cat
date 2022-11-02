@@ -58,9 +58,9 @@ function get_hours_or_minutes_formatted($time){
 	if ($time>=3600) {
 		$hours = floor($time/3600);
 		$time = $time-$hours*3600;
-		echo $hours." h ".round($time/60)." min";
+		echo $hours." h ".min(59,round($time/60))." min";
 	} else {
-		echo round($time/60)." min";
+		echo min(59,round($time/60))." min";
 	}
 }
 

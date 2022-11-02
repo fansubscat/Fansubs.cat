@@ -172,7 +172,7 @@ mysqli_free_result($result);
 								<h4 class="card-title text-center mb-4 mt-1"><?php echo $view_name; ?> <?php echo $content_prep; ?> en curs</h4>
 								<hr>
 								<div class="text-center pb-3">
-									<a href="views.php" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
+									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
 								</div>
 								<div class="row">
 									<table class="table table-hover table-striped">

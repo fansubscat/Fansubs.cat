@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2022-11-02 - Versió 4.1.13
+- **Administració:**
+	- Es corregeix l'error que feia tornar a les darreres visualitzacions d'anime en refrescar les de manga/acció real en un usuari d'un fansub.
+	- Es corregeix l'arrodoniment del temps total a les estadístiques perquè no mostri mai «1 h 60 min».
+- **Serveis:**
+	- Es corregeix l'arrodoniment del temps total al resum mensual via Telegram perquè no mostri mai «1 h 60 min».
+
 ## 2022-10-31 - Versió 4.1.12
 - **General:**
 	- Es canvia l'URL del calendari d'advent de nadal.fansubs.cat a advent.fansubs.cat i se'n fan les redireccions corresponents.
