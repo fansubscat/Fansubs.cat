@@ -183,7 +183,7 @@ switch ($row['year']) {
 					"d<?php echo $grid_mobile[0]; ?>      d<?php echo $grid_mobile[1]; ?>     d<?php echo $grid_mobile[2]; ?>"
 					"d<?php echo $grid_mobile[3]; ?>       d<?php echo $grid_mobile[4]; ?>     d<?php echo $grid_mobile[5]; ?>"
 					"d<?php echo $grid_mobile[6]; ?>       d<?php echo $grid_mobile[7]; ?>     d<?php echo $grid_mobile[8]; ?>"
-					"d<?php echo $grid_mobile[9]; ?>       d<?php echo $grid_mobile[10]; ?>      <?php echo $grid_mobile[11]; ?>"
+					"d<?php echo $grid_mobile[9]; ?>       d<?php echo $grid_mobile[10]; ?>      d<?php echo $grid_mobile[11]; ?>"
 					"d<?php echo $grid_mobile[12]; ?>      d<?php echo $grid_mobile[13]; ?>     d<?php echo $grid_mobile[14]; ?>"
 					"d<?php echo $grid_mobile[15]; ?>      d<?php echo $grid_mobile[16]; ?>      d<?php echo $grid_mobile[17]; ?>"
 					"d<?php echo $grid_mobile[18]; ?>       d<?php echo $grid_mobile[19]; ?>     d<?php echo $grid_mobile[20]; ?>"

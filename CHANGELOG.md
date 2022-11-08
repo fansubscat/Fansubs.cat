@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2022-11-08 - Versió 4.1.14
+- **Advent:**
+	- Es corregeix que el dia 9 no es vegés correctament en mòbils.
+	- Es corregeix que no funcionés el favicon.
+- **Administració:**
+	- Es marquen com a obligatoris els camps d'imatge dels calendaris d'advent.
+- **Eines:**
+	- S'afegeix un nou script per a compressió de vídeo amb suport per a «drag-n-drop».
+	- S'omet el directori «Manga» en l'eina que cerca fitxers solts.
+
 ## 2022-11-02 - Versió 4.1.13
 - **Administració:**
 	- Es corregeix l'error que feia tornar a les darreres visualitzacions d'anime en refrescar les de manga/acció real en un usuari d'un fansub.

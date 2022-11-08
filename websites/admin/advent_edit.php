@@ -85,7 +85,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label>Imatge de fons <small class="text-muted">(JPEG, mida mínima 1024x768px, però millor si és superior)</small></label><br>
+								<label>Imatge de fons<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1024x768px, però millor si és superior)</small></label><br>
 <?php
 	$file_exists = file_exists($static_directory.'/images/advent/background_'.$row['year'].'.jpg');
 ?>
@@ -103,7 +103,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-3">
 							<div class="form-group">
-								<label>Imatge de previsualització <small class="text-muted">(JPEG, mida mínima 1024x768px, però millor si és superior)</small></label><br>
+								<label>Imatge de previsualització<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1024x768px, però millor si és superior)</small></label><br>
 <?php
 	$file_exists = file_exists($static_directory.'/images/advent/preview_'.$row['year'].'.jpg');
 ?>
