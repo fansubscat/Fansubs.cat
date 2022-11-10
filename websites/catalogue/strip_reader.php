@@ -13,9 +13,10 @@ if (isset($failed)) {
 	die();
 }
 
-$base_path=$static_directory."/storage/$file_id/";
+$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
+$files = list_remote_files($base_path);
 
-if (!file_exists($base_path)) {
+if (count($files)<1) {
 	http_response_code(404);
 	include('error.php');
 	die();
@@ -86,14 +87,10 @@ if (!file_exists($base_path)) {
 	<body style="margin: 0;">
 		<div id="root" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
 <?php
-	$files = scandir($base_path);
 	natsort($files);
 
 	foreach ($files as $file) {
-		if ($file=='.' || $file=='..') {
-			continue;
-		}
-		echo "\t\t\t".'<img style="display: block; max-width: 100%; width: auto; height: auto;" src="'.$static_url.'/storage/'.$file_id.'/'.$file.'" alt="" />';
+		echo "\t\t\t".'<img style="display: block; max-width: 100%; width: auto; height: auto;" src="'.$file.'" alt="" />';
 	}
 ?>
 		</div>

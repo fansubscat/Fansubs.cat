@@ -26,9 +26,10 @@ if (!empty($_COOKIE['force_long_strip'])){
 	$mode = $file['reader_type'];
 }
 
-$base_path=$static_directory."/storage/$file_id/";
+$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
+$files = list_remote_files($base_path);
 
-if (!file_exists($base_path)) {
+if (count($files)<1) {
 	http_response_code(404);
 	include('error.php');
 	die();
@@ -180,7 +181,6 @@ if ($mode=='strip'){
 						{"src": "strip_reader.php?file_id=<?php echo $file['id']; ?>", "iframe": true}
 <?php
 } else {
-	$files = scandir($base_path);
 	natsort($files);
 	if ($direction=='reader-rtl') {
 		$files = array_reverse($files);
@@ -188,20 +188,17 @@ if ($mode=='strip'){
 
 	$first = TRUE;
 	foreach ($files as $file) {
-		if ($file=='.' || $file=='..') {
-			continue;
-		}
 		if (!$first) {
 			echo ",\n";
 		} else {
 			$first=FALSE;
 		}
-		echo "\t\t\t\t\t\t".'{"src": "'.$static_url.'/storage/'.$file_id.'/'.$file.'"}';
+		echo "\t\t\t\t\t\t".'{"src": "'.$file.'"}';
 	}
 }
 ?>
 ],
-					index: <?php echo $direction=='reader-rtl' ? (max(count($files)-3, 0)) : 0; ?>
+					index: <?php echo $direction=='reader-rtl' ? (max(count($files)-1, 0)) : 0; ?>
 
 				});
 				showBars();

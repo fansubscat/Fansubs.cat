@@ -21,6 +21,32 @@ function show_invalid($reason) {
 	echo json_encode($response);
 }
 
+function get_storage_url($url, $clean=FALSE) {
+	global $storages;
+	if (count($storages)>0 && strpos($url, "storage://")===0) {
+		$rand = rand(0, count($storages)-1);
+		if ($clean) {
+			return str_replace("storage://", $storages[$rand], $url);
+		} else {
+			return generate_storage_url(str_replace("storage://", $storages[$rand], $url));
+		}
+	} else {
+		return $url;
+	}
+}
+
+function list_remote_files($url) {
+	$contents = @file_get_contents($url);
+	preg_match_all("|href=[\"'](.*?)[\"']|", $contents, $hrefs);
+	$hrefs = array_slice($hrefs[1], 1);
+	
+	$files = array();
+	foreach ($hrefs as $href) {
+		array_push($files, $url.$href);
+	}
+	return $files;
+}
+
 $method = array_shift($request);
 if ($method == 'refresh') {
 	$token = array_shift($request);
@@ -276,9 +302,10 @@ else if ($method === 'manga'){
 			$file_id+=10000;
 		}
 
-		$base_path="$static_directory/storage/$file_id/";
+		$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
+		$files = list_remote_files($base_path);
 
-		if (!file_exists($base_path)) {
+		if (count($files)<1) {
 			show_invalid('No valid file specified.');
 		} else {
 			$result = mysqli_query($db_connection, "SELECT f.* FROM file f WHERE f.id=$file_id");
@@ -294,15 +321,11 @@ else if ($method === 'manga'){
 				}
 				mysqli_free_result($exists_result);
 			}
-			$files = scandir($base_path);
 			natsort($files);
 			$elements = array();
 			foreach ($files as $file) {
-				if ($file=='.' || $file=='..') {
-					continue;
-				}
 				$elements[] = array(
-					'url' => $static_url.'/storage/'.$file_id.'/'.$file
+					'url' => $file
 				);
 			}
 

@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2022-11-10 - Versió 4.2.0
+- **General:**
+	- El manga s'emmagatzema correctament al servidor d'emmagatzematge.
+- **Catàleg:**
+	- Es modifica l'obtenció de les URLs d'imatges del manga.
+- **API:**
+	- Es modifica l'obtenció de les URLs d'imatges del manga.
+
 ## 2022-11-08 - Versió 4.1.14
 - **Advent:**
 	- Es corregeix que el dia 9 no es vegés correctament en mòbils.

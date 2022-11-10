@@ -19,4 +19,15 @@ $default_fansub_id=28; //"Fansub independent"
 
 //Used to check internal calls only
 $internal_token='YOUR_INTERNAL_TOKEN_HERE';
+
+//Storages
+$storages = array(
+	'https://YOUR_STORAGE_SERVERS/'
+);
+
+//Storage URL customization
+function generate_storage_url($url) {
+	//Your custom code
+	return $url;
+}
 ?>

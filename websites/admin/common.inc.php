@@ -143,23 +143,31 @@ function rrmdir($dir) {
 }
 
 function flatten_directories_and_move_to_storage($file_id, $temp_path){
-	global $static_directory;
-
-	if (file_exists($static_directory."/storage/$file_id/")) {
-		rrmdir($static_directory."/storage/$file_id/");
-	}
-
-	mkdir($static_directory."/storage/$file_id/");
-
+	global $storages;
+	$cleaned_path = "/tmp/cleaned_$file_id/";
+	mkdir($cleaned_path);
 	$directory = new RecursiveDirectoryIterator($temp_path);
 	$iterator = new RecursiveIteratorIterator($directory);
 	foreach ($iterator as $file){
 		$ext = pathinfo(strtolower(basename($file)), PATHINFO_EXTENSION);
 		if (strpos($file, '__MACOSX')===FALSE && ($ext=='jpg' || $ext=='jpeg' || $ext=='png')) {
-			copy($file, $static_directory."/storage/$file_id/".preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower(basename($file))));
+			copy($file, $cleaned_path.preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower(basename($file))));
 		}
 	}
+	//Clean temporary directory
 	rrmdir($temp_path);
+	//Create remote directory
+	//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
+	//log_action("debug-log", "Running: ssh root@".$storages[0]['hostname']." mkdir -p /home/storage/Manga/$file_id/");
+	exec("ssh root@".$storages[0]['hostname']." mkdir -p /home/storage/Manga/$file_id/");
+	//log_action("debug-log", "Result ($retval): ".print_r($output, TRUE));
+	//Copy to remote directory
+	//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
+	//log_action("debug-log", "Running: rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".$storages[0]['hostname'].":/home/storage/Manga/$file_id/ --delete");
+	exec("rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".$storages[0]['hostname'].":/home/storage/Manga/$file_id/ --delete");
+	//log_action("debug-log", "Result ($retval): ".print_r($output, TRUE));
+	//Clean cleaned directory
+	rrmdir($cleaned_path);
 }
 
 function decompress_manga_file($file_id, $temporary_filename, $original_filename){
