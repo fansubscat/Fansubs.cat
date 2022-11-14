@@ -86,6 +86,15 @@ a {
 	padding-right: 0.25em;
 }
 
+.fa-custom-advent:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'CA';
+	background-color: #007bff !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
 tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {
 	padding-left: 24px;
 }

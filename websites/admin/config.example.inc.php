@@ -20,6 +20,7 @@ $manga_url="https://manga.fansubs.cat";
 $liveaction_url="https://accioreal.fansubs.cat";
 $news_url="https://noticies.fansubs.cat";
 $resources_url="https://recursos.fansubs.cat";
+$advent_url="https://advent.fansubs.cat";
 $static_url="https://static.fansubs.cat";
 $tutorial_url="YOUR_TUTORIAL_URL";
 
