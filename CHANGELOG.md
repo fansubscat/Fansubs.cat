@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2022-11-14 - Versió 4.2.1
+- **General:**
+	- S'elimina el directory «storage».
+- **Administració:**
+	- S'afegeix un enllaç al calendari d'advent.
+
 ## 2022-11-10 - Versió 4.2.0
 - **General:**
 	- El manga s'emmagatzema correctament al servidor d'emmagatzematge.
