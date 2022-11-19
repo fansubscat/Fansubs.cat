@@ -130,7 +130,17 @@ switch ($row['year']) {
 			}
 			body {
 				background-image: url("<?php echo $static_url; ?>/images/advent/background_<?php echo $row['year']; ?>.jpg");
+<?php
+	if ($row['year']=='2022') {
+?>
+				background-position: 88% 50%;
+<?php
+	} else {
+?>
 				background-position: center center;
+<?php
+	}
+?>
 				background-repeat: no-repeat;
 				background-color: #d7d7d7;
 				background-size: cover;
@@ -197,6 +207,12 @@ switch ($row['year']) {
 ?>
 				body {
 					background-size: unset;
+				}
+<?php
+	} else if ($row['year']=='2022') {
+?>
+				body {
+					background-position: center center;
 				}
 <?php
 	}

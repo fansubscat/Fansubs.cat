@@ -19,6 +19,10 @@ $twitter_consumer_secret='YOUR_TWITTER_SECRET_HERE';
 $twitter_access_token='YOUR_TWITTER_ACCESS_TOKEN_HERE';
 $twitter_access_token_secret='YOUR_TWITTER_ACCESS_SECRET_HERE';
 
+//Mastodon keys
+$mastodon_host='YOUR_MASTODON_HOST_URL';
+$mastodon_access_token='YOUR_MASTODON_ACCESS_TOKEN';
+
 //Multiple Discord webhooks are possible
 $discord_webhooks = array(
 	'YOUR_DISCORD_WEBHOOK_1_HERE',

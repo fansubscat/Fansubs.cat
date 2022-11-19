@@ -1581,6 +1581,24 @@ a:hover {
 	background: rgb(34, 107, 162);
 }
 
+.fansub-mastodon {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	padding: 0.2em 0.5em;
+	background: rgb(49, 50, 205);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.fansub-mastodon:hover {
+	background: rgb(69, 60, 225);
+}
+
 .fansub-downloads, .fansub-series-page {
 	color: #FFF;
 	text-decoration: none !important;

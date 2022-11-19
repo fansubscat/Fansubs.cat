@@ -60,7 +60,7 @@ $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
 $header_social = array(
 	'title' => $series['name'].' | '.$config['site_title'],
-	'url' => $config['base_url'].'/'.($series['subtype']==$config['filmsoneshots_db'] ? $config['filmsoneshots_slug'].'/' : 'serialized_slug'.'/').$series['slug'],
+	'url' => $config['base_url'].'/'.($series['subtype']==$config['filmsoneshots_db'] ? $config['filmsoneshots_slug'].'/' : $config['serialized_slug'].'/').$series['slug'].(isset($_GET['v']) ? '?v='.(int)$_GET['v'] : ''),
 	'description' => strip_tags($synopsis),
 	'image' => $config['base_url'].'/preview/'.$series['slug'].'.jpg'
 );
@@ -349,6 +349,9 @@ if ($count_unfiltered==0) {
 			}
 			if (!empty($fansub['twitter_url'])) {
 				echo ' <a class="fansub-twitter" href="'.$fansub['twitter_url'].'" target="_blank"><span class="fab fa-fw fa-twitter mobileicon"></span><span class="mobilehide">Twitter</span></a>';
+			}
+			if (!empty($fansub['mastodon_url'])) {
+				echo ' <a class="fansub-mastodon" href="'.$fansub['mastodon_url'].'" target="_blank"><span class="fab fa-fw fa-mastodon mobileicon"></span><span class="mobilehide">Mastodon</span></a>';
 			}
 ?>
 												</td>

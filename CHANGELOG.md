@@ -1,8 +1,16 @@
 # Registre de canvis
 
+## 2022-11-20 - Versió 4.2.2
+- **General:**
+	- S'afegeix suport per a Mastodon.
+- **Advent:**
+	- Es corregeix la posició del fons per al calendari del 2022.
+- **Catàleg:**
+	- Es corregeix la generació de la og:url.
+
 ## 2022-11-14 - Versió 4.2.1
 - **General:**
-	- S'elimina el directory «storage».
+	- S'elimina el directori «storage».
 - **Administració:**
 	- S'afegeix un enllaç al calendari d'advent.
 
