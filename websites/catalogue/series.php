@@ -347,11 +347,14 @@ if ($count_unfiltered==0) {
 			} else if ($fansub['is_historical']==1 && !empty($fansub['archive_url'])) {
 				echo ' <a class="fansub-website" href="'.$fansub['archive_url'].'" target="_blank"><span class="fa fa-fw fa-globe mobileicon"></span><span class="mobilehide">Web històrica</span></a>';
 			}
-			if (!empty($fansub['twitter_url'])) {
-				echo ' <a class="fansub-twitter" href="'.$fansub['twitter_url'].'" target="_blank"><span class="fab fa-fw fa-twitter mobileicon"></span><span class="mobilehide">Twitter</span></a>';
+			if (!empty($fansub['discord_url'])) {
+				echo ' <a class="fansub-discord" href="'.$fansub['discord_url'].'" target="_blank"><span class="fab fa-fw fa-discord mobileicon"></span><span class="mobilehide">Discord</span></a>';
 			}
 			if (!empty($fansub['mastodon_url'])) {
 				echo ' <a class="fansub-mastodon" href="'.$fansub['mastodon_url'].'" target="_blank"><span class="fab fa-fw fa-mastodon mobileicon"></span><span class="mobilehide">Mastodon</span></a>';
+			}
+			if (!empty($fansub['twitter_url'])) {
+				echo ' <a class="fansub-twitter" href="'.$fansub['twitter_url'].'" target="_blank"><span class="fab fa-fw fa-twitter mobileicon"></span><span class="mobilehide">Twitter</span></a>';
 			}
 ?>
 												</td>

@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2022-11-20 - Versió 4.2.3
+- **General:**
+	- S'afegeix suport per a Discord.
+	- S'afegeix enllaç al Mastodon al peu de pàgina.
+
 ## 2022-11-20 - Versió 4.2.2
 - **General:**
 	- S'afegeix suport per a Mastodon.

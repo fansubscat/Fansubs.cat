@@ -1590,13 +1590,31 @@ a:hover {
 	margin-top: 0.2em;
 	margin-bottom: 0.2em;
 	padding: 0.2em 0.5em;
-	background: rgb(49, 50, 205);
+	background: rgb(39, 40, 165);
 	white-space: nowrap;
 	display: inline-block;
 }
 
 .fansub-mastodon:hover {
-	background: rgb(69, 60, 225);
+	background: rgb(59, 60, 185);
+}
+
+.fansub-discord {
+	color: #FFF;
+	text-decoration: none !important;
+	font-size: 0.9em;
+	font-weight: bold;
+	border-radius: 4px;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	padding: 0.2em 0.5em;
+	background: rgb(64, 87, 168);
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.fansub-discord:hover {
+	background: rgb(84, 107, 188);
 }
 
 .fansub-downloads, .fansub-series-page {

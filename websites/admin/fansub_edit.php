@@ -31,6 +31,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		} else {
 			$data['url']="NULL";
 		}
+		if (!empty($_POST['discord_url'])) {
+			$data['discord_url']="'".escape($_POST['discord_url'])."'";
+		} else {
+			$data['discord_url']="NULL";
+		}
+		if (!empty($_POST['mastodon_url'])) {
+			$data['mastodon_url']="'".escape($_POST['discord_url'])."'";
+		} else {
+			$data['mastodon_url']="NULL";
+		}
+		if (!empty($_POST['mastodon_handle'])) {
+			$data['mastodon_handle']=escape($_POST['mastodon_handle']);
+		} else {
+			crash("Dades invàlides: manca mastodon_handle");
+		}
 		if (!empty($_POST['twitter_url'])) {
 			$data['twitter_url']="'".escape($_POST['twitter_url'])."'";
 		} else {
@@ -40,16 +55,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			$data['twitter_handle']=escape($_POST['twitter_handle']);
 		} else {
 			crash("Dades invàlides: manca twitter_handle");
-		}
-		if (!empty($_POST['mastodon_url'])) {
-			$data['mastodon_url']="'".escape($_POST['mastodon_url'])."'";
-		} else {
-			$data['mastodon_url']="NULL";
-		}
-		if (!empty($_POST['mastodon_handle'])) {
-			$data['mastodon_handle']=escape($_POST['mastodon_handle']);
-		} else {
-			crash("Dades invàlides: manca mastodon_handle");
 		}
 		if (!empty($_POST['ping_token'])) {
 			$data['ping_token']="'".escape($_POST['ping_token'])."'";
@@ -74,7 +79,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-fansub", "S'ha actualitzat el fansub '".$data['name']."' (id. de fansub: ".$data['id'].")");
-			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',discord_url=".$data['discord_url'].",status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], $static_directory.'/images/icons/'.$data['id'].'.png');
@@ -85,7 +90,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		}
 		else {
 			log_action("create-fansub", "S'ha creat el fansub '".$data['name']."'");
-			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,mastodon_url,mastodon_handle,status,ping_token,is_historical,archive_url,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."',".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,mastodon_url,mastodon_handle,discord_url,status,ping_token,is_historical,archive_url,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."',".$data['discord_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], $static_directory.'/images/icons/'.mysqli_insert_id($db_connection).'.png');
@@ -175,12 +180,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 						<input class="form-control" type="url" name="url" id="form-url" maxlength="200" value="<?php echo htmlspecialchars($row['url']); ?>">
 					</div>
 					<div class="form-group">
-						<label for="form-twitter_url">URL del perfil de Twitter</label>
-						<input class="form-control" type="url" name="twitter_url" id="form-twitter_url" maxlength="200" value="<?php echo htmlspecialchars($row['twitter_url']); ?>">
-					</div>
-					<div class="form-group">
-						<label for="form-twitter_handle">Nom a Twitter<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
-						<input class="form-control" name="twitter_handle" id="form-twitter_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['twitter_handle']); ?>">
+						<label for="form-discord_url">URL del servidor de Discord públic del fansub</label>
+						<input class="form-control" type="url" name="discord_url" id="form-discord_url" maxlength="200" value="<?php echo htmlspecialchars($row['discord_url']); ?>">
 					</div>
 					<div class="form-group">
 						<label for="form-mastodon_url">URL del perfil de Mastodon</label>
@@ -189,6 +190,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 					<div class="form-group">
 						<label for="form-mastodon_handle">Nom a Mastodon<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
 						<input class="form-control" name="mastodon_handle" id="form-mastodon_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['mastodon_handle']); ?>">
+					</div>
+					<div class="form-group">
+						<label for="form-twitter_url">URL del perfil de Twitter</label>
+						<input class="form-control" type="url" name="twitter_url" id="form-twitter_url" maxlength="200" value="<?php echo htmlspecialchars($row['twitter_url']); ?>">
+					</div>
+					<div class="form-group">
+						<label for="form-twitter_handle">Nom a Twitter<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
+						<input class="form-control" name="twitter_handle" id="form-twitter_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['twitter_handle']); ?>">
 					</div>
 					<div class="form-group">
 						<label for="form-status">Estat</label>
