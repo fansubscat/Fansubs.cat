@@ -30,7 +30,7 @@ function publish_toot($toot){
 		        'content' => json_encode($post_data)
 		)
 	));
-	file_get_contents($mastodon_host.'/api/v1/statuses', FALSE, $context);
+	@file_get_contents($mastodon_host.'/api/v1/statuses', FALSE, $context);
 }
 
 function publish_to_discord($text, $title, $description, $url, $image, $rating){

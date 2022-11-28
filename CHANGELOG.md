@@ -1,5 +1,19 @@
 # Registre de canvis
 
+## 2022-11-28 - Versió 4.2.4
+- **Administració:**
+	- Es permet personalitzar les imatges de l'advent al menú i a la capçalera del catàleg.
+	- S'afegeixen traces per a verificar que la descompressió i còpia del manga es facin correctament.
+	- Es corregeix l'error que assignava l'URL de Discord a l'URL de Mastodon.
+- **Catàleg:**
+	- Es mostra la imatge del calendari d'advent d'aquest any automàticament.
+	- S'afegeix `rel="me"` als enllaços de Mastodon perquè es verifiquin.
+- **Notícies:**
+	- Es mostra la imatge del calendari d'advent d'aquest any automàticament.
+	- S'afegeix `rel="me"` als enllaços de Mastodon perquè es verifiquin.
+- **Serveis:**
+	- S'ignoren els errors en invocar l'API de Mastodon.
+
 ## 2022-11-20 - Versió 4.2.3
 - **General:**
 	- S'afegeix suport per a Discord.

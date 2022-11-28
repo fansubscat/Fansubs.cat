@@ -162,7 +162,7 @@ for ($i=0;$i<count($sections);$i++){
 					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
 					<h3 class="section-subtitle"><?php echo $descriptions[$i]; ?></h3>
 					<div class="section-content fake-carousel">
-						<a class="advent" href="<?php echo $advent_url; ?>" target="_blank"><img src="<?php echo $static_url; ?>/images/various/advent.jpg" alt="Calendari d'advent dels fansubs en català" /></a>
+						<a class="advent" href="<?php echo $advent_url; ?>" target="_blank"><img src="<?php echo $static_url; ?>/images/advent/header_<?php echo date('Y'); ?>.jpg" alt="Calendari d'advent dels fansubs en català" /></a>
 					</div>
 				</div>
 <?php

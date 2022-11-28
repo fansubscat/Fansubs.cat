@@ -37,7 +37,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			$data['discord_url']="NULL";
 		}
 		if (!empty($_POST['mastodon_url'])) {
-			$data['mastodon_url']="'".escape($_POST['discord_url'])."'";
+			$data['mastodon_url']="'".escape($_POST['mastodon_url'])."'";
 		} else {
 			$data['mastodon_url']="NULL";
 		}

@@ -6,7 +6,7 @@
 if (strcmp(date('m-d'),'12-01')>=0 && strcmp(date('m-d'),'12-25')<=0){
 ?>
 				<div class="section promo">
-					<a href="https://advent.fansubs.cat/"><img src="/style/images/advent_promo.png" alt="Calendari d'advent dels fansubs en català" /></a>
+					<a href="https://advent.fansubs.cat/"><img src="https://static.fansubs.cat/images/advent/menu_<?php echo date('Y'); ?>.png" alt="Calendari d'advent dels fansubs en català" /></a>
 				</div>
 <?php
 }
@@ -116,7 +116,7 @@ else{
 			<div id="footer">
 				<p>
 					Fansubs.cat sols recopila notícies dels webs esmentats. Tots els drets dels textos, imatges i obres esmentades pertanyen a llurs propietaris.<br />
-					Codi, disseny i contingut propi © 2015-<?php echo date('Y'); ?> Fansubs.cat. <a href="https://github.com/fansubscat/Fansubs.cat" target="_blank">És codi obert</a>. <a href="/envia-noticies-contacta">Contacta amb nosaltres</a>. Segueix-nos <a href="https://mastodont.cat/@fansubscat" target="_blank">al Mastodon</a> o <a href="https://twitter.com/fansubscat" target="_blank">al Twitter</a>.
+					Codi, disseny i contingut propi © 2015-<?php echo date('Y'); ?> Fansubs.cat. <a href="https://github.com/fansubscat/Fansubs.cat" target="_blank">És codi obert</a>. <a href="/envia-noticies-contacta">Contacta amb nosaltres</a>. Segueix-nos <a rel="me" href="https://mastodont.cat/@fansubscat" target="_blank">al Mastodon</a> o <a rel="me" href="https://twitter.com/fansubscat" target="_blank">al Twitter</a>.
 				</p>
 			</div>
 		</div>
