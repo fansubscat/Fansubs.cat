@@ -1,5 +1,18 @@
 # Registre de canvis
 
+## 2022-12-28 - Versió 4.2.5
+- **Administració:**
+	- S'informa correctament del «referrer» en validar URLs d'enllaços.
+- **Catàleg:**
+	- El calendari d'advent es deixa de mostrar el 25 de desembre a les 12:00:00.
+	- Es corregeixen les consultes mal formades que feien que el web donés error el 28 de desembre.
+- **Serveis:**
+	- Es corregeix un error que provocava que desapareguessin mangues en sincronitzar fitxers.
+	- Es corregeix el funcionament perquè no s'informi de les sèries precreades però sense cap fitxer.
+- **Eines:**
+	- Nova eina per a comprovar l'eliminació de mangues en la sincronització.
+	- Es corregeix una ordre a l'script de comprovació de llargada dels mangues.
+
 ## 2022-11-28 - Versió 4.2.4
 - **Administració:**
 	- Es permet personalitzar les imatges de l'advent al menú i a la capçalera del catàleg.
