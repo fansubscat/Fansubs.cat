@@ -36,7 +36,7 @@ require_once('header.inc.php');
 if (!empty($site_message) || !empty($is_fools_day)){
 ?>
 				<div data-nosnippet class="section">
-					<div class="site-message"><?php echo !empty($is_fools_day) ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.$static_url.'/images/various/innocents.png" target="_blank" style="color: black">Més informació</a>' : $site_message; ?></div>
+					<div class="site-message"><?php echo !empty($is_fools_day) ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.$static_url.'/various/innocents.png" target="_blank" style="color: black">Més informació</a>' : $site_message; ?></div>
 				</div>
 <?php
 }
@@ -113,7 +113,7 @@ switch ($header_tab){
 			$sections[1]=$config['section_fools'];
 			$descriptions[1]=$config['section_fools_desc'];
 			//Worst rated completed or semi completed animes
-			$fools_day_result = query("SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE s.type='${config['items_type']}' (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status IN (1,3) AND sr.score IS NOT NULL AND vr.is_missing_episodes=0 ORDER BY sr.score ASC LIMIT 10");
+			$fools_day_result = query("SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE sr.type='${config['items_type']}' AND (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status IN (1,3) AND sr.score IS NOT NULL AND vr.is_missing_episodes=0 ORDER BY sr.score ASC LIMIT 10");
 			$fools_day_items = array();
 			while ($rowfd = mysqli_fetch_assoc($fools_day_result)) {
 				$fools_day_items[] = $rowfd['id'];
@@ -156,7 +156,7 @@ switch ($header_tab){
 
 for ($i=0;$i<count($sections);$i++){
 	if ($type[$i]=='advent') {
-		if (strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 23:59:59')<=0){
+		if (strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0){
 ?>
 				<div class="section">
 					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
