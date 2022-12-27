@@ -14,12 +14,13 @@ function get_storage_url($url) {
 session_start();
 
 function retrieve_remote_file_size($url){
+	global $storages;
 	$ch = curl_init(str_replace("&", "%26", str_replace(" ", "%20", get_storage_url($url))));
 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, TRUE);
 	curl_setopt($ch, CURLOPT_NOBODY, TRUE);
-	curl_setopt($ch, CURLOPT_REFERER, $base_url.'/');
+	curl_setopt($ch, CURLOPT_REFERER, $storages[0]['base_url'].'/');
 
 	$data = curl_exec($ch);
 	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
