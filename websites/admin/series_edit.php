@@ -227,7 +227,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				$episode['division']="NULL";
 			}
-			if (!empty($_POST['form-episode-list-num-'.$i]) && is_numeric($_POST['form-episode-list-num-'.$i])) {
+			if ((!empty($_POST['form-episode-list-num-'.$i]) || $_POST['form-episode-list-num-'.$i]=='0') && is_numeric($_POST['form-episode-list-num-'.$i])) {
 				$episode['number']=escape($_POST['form-episode-list-num-'.$i]);
 			} else {
 				$episode['number']="NULL";

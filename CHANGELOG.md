@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2023-01-01 - Versió 4.2.6
+- **Administració:**
+	- Es permet donar d'alta capítols amb el número de capítol 0.
+
 ## 2022-12-28 - Versió 4.2.5
 - **Administració:**
 	- S'informa correctament del «referrer» en validar URLs d'enllaços.

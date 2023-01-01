@@ -912,10 +912,6 @@ function checkNumberOfEpisodes() {
 			}
 			return false;
 		}
-		if ($('#form-episode-list-num-'+i).val()!='' && $('#form-episode-list-num-'+i).val()==0){
-			alert('0 no és un número de capítol vàlid. Corregeix-ho.');
-			return false;
-		}
 		if ($('#form-episode-list-num-'+i).val()>episodeCount){
 			higherThanCount=true;
 		}
