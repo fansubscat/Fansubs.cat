@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2023-01-02 - Versió 4.2.7
+- **Serveis:**
+	- No es fan publicacions a les xarxes del contingut explícit.
+
 ## 2023-01-01 - Versió 4.2.6
 - **Administració:**
 	- Es permet donar d'alta capítols amb el número de capítol 0.
