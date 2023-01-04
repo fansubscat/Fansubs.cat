@@ -365,7 +365,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".escape($_GET['id'])." ORDER BY d.number ASC");
 		$divisions = array();
 		while ($rowd = mysqli_fetch_assoc($resultd)) {
-			array_push($divisions, $rowd);
+			array_push($divisions, $rowd);;
 		}
 		mysqli_free_result($resultd);
 
@@ -703,7 +703,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-division-list-row-<?php echo $i+1; ?>">
 													<td>
-														<input id="form-division-list-number-<?php echo $i+1; ?>" name="form-division-list-number-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $divisions[$i]['number']; ?>" required/>
+														<input id="form-division-list-number-<?php echo $i+1; ?>" name="form-division-list-number-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $divisions[$i]['number']!=NULL ? floatval($divisions[$i]['number']) : ''; ?>" step="any" required/>
 														<input id="form-division-list-id-<?php echo $i+1; ?>" name="form-division-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $divisions[$i]['id']; ?>"/>
 													</td>
 													<td>
@@ -725,7 +725,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-division-list-row-1">
 													<td>
-														<input id="form-division-list-number-1" name="form-division-list-number-1" type="number" class="form-control" value="1" required/>
+														<input id="form-division-list-number-1" name="form-division-list-number-1" type="number" class="form-control" value="1" step="any" required/>
 														<input id="form-division-list-id-1" name="form-division-list-id-1" type="hidden" value="-1"/>
 													</td>
 													<td>
@@ -765,7 +765,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<select id="form-episode-list-linked_episode_id-XXX" name="form-episode-list-linked_episode_id-XXX" class="form-control d-none">
 											<option value="">- Selecciona un film extern -</option>
 <?php
-			$resultle = query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',d.number))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' ORDER BY s.name, d.number, e.number IS NULL ASC, e.number ASC, e.description");
+			$resultle = query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',TRIM(d.number)+0))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' ORDER BY s.name, d.number, e.number IS NULL ASC, e.number ASC, e.description");
 			while ($lerow = mysqli_fetch_assoc($resultle)) {
 ?>
 											<option value="<?php echo $lerow['id']; ?>"><?php echo htmlspecialchars($lerow['description']); ?></option>
@@ -796,7 +796,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-episode-list-row-<?php echo $i+1; ?>">
 													<td>
-														<input id="form-episode-list-division-<?php echo $i+1; ?>" name="form-episode-list-division-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['division']; ?>" placeholder="(Altres)"/>
+														<input id="form-episode-list-division-<?php echo $i+1; ?>" name="form-episode-list-division-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['division']!=NULL ? floatval($episodes[$i]['division']) : ''; ?>" placeholder="(Altres)" step="any"/>
 													</td>
 													<td>
 														<input id="form-episode-list-num-<?php echo $i+1; ?>" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']!=NULL ? floatval($episodes[$i]['number']) : ''; ?>" placeholder="(Esp.)" step="any"/>
@@ -810,7 +810,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<select id="form-episode-list-linked_episode_id-<?php echo $i+1; ?>" name="form-episode-list-linked_episode_id-<?php echo $i+1; ?>" class="form-control" required>
 															<option value="">- Selecciona un film extern -</option>
 <?php
-			$resultle = query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',d.number))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' ORDER BY s.name, d.number, e.number IS NULL ASC, e.number ASC, e.description");
+			$resultle = query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',TRIM(d.number)+0))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' ORDER BY s.name, d.number, e.number IS NULL ASC, e.number ASC, e.description");
 			while ($lerow = mysqli_fetch_assoc($resultle)) {
 ?>
 															<option value="<?php echo $lerow['id']; ?>"<?php echo $episodes[$i]['linked_episode_id']==$lerow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($lerow['description']); ?></option>
@@ -837,7 +837,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-episode-list-row-1">
 													<td>
-														<input id="form-episode-list-division-1" name="form-episode-list-division-1" type="number" class="form-control" value="1" placeholder="(Altres)"/>
+														<input id="form-episode-list-division-1" name="form-episode-list-division-1" type="number" class="form-control" value="1" placeholder="(Altres)" step="any"/>
 													</td>
 													<td>
 														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)" step="any"/>

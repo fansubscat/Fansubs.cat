@@ -32,7 +32,7 @@ CREATE TABLE `advent_day` (
 CREATE TABLE `division` (
   `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
-  `number` int(11) NOT NULL,
+  `number` decimal(10,2) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
   `number_of_episodes` int(11) DEFAULT NULL,
   `external_id` varchar(200) DEFAULT NULL
