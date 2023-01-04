@@ -256,24 +256,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				</article>
 			</div>
 		</div>
-<?php
-	if (!$selected_year && !$selected_all) {
-?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Imatges per a les xarxes</h4>
 					<div class="text-center">
-						<a href="twitter_image.php?type=anime&amp;month=<?php echo $selected_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Anime</a>
-						<a href="twitter_image.php?type=manga&amp;month=<?php echo $selected_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Manga</a>
-						<a href="twitter_image.php?type=liveaction&amp;month=<?php echo $selected_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Acció real</a>
+						<a href="twitter_image.php?type=anime&amp;mode=<?php echo $selected_all ? "all" : (!empty($selected_year) ? 'year' : 'month'); ?>&amp;first_month=<?php echo $first_month; ?>&amp;last_month=<?php echo $last_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Anime</a>
+						<a href="twitter_image.php?type=manga&amp;mode=<?php echo $selected_all ? "all" : (!empty($selected_year) ? 'year' : 'month'); ?>&amp;first_month=<?php echo $first_month; ?>&amp;last_month=<?php echo $last_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Manga</a>
+						<a href="twitter_image.php?type=liveaction&amp;mode=<?php echo $selected_all ? "all" : (!empty($selected_year) ? 'year' : 'month'); ?>&amp;first_month=<?php echo $first_month; ?>&amp;last_month=<?php echo $last_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Acció real</a>
 					</div>
 				</article>
 			</div>
 		</div>
-<?php
-	}
-?>
 <?php
 } else {
 	header("Location: login.php");
