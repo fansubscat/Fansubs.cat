@@ -365,7 +365,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".escape($_GET['id'])." ORDER BY d.number ASC");
 		$divisions = array();
 		while ($rowd = mysqli_fetch_assoc($resultd)) {
-			array_push($divisions, $rowd);;
+			array_push($divisions, $rowd);
 		}
 		mysqli_free_result($resultd);
 
