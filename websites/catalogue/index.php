@@ -62,7 +62,7 @@ $max_items=24;
 $cookie_viewed_files = get_cookie_viewed_files_ids();
 
 $base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0 AND ls.id NOT IN (".(count($cookie_viewed_files)>0 ? implode(',',$cookie_viewed_files) : '0').")) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
-$query_portion_limit_to_non_hidden = "(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0";
+$query_portion_limit_to_non_hidden = "(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND v.is_hidden=0";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 

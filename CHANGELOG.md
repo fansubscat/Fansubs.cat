@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2023-01-04 - Versió 4.2.8
+- **General:**
+	- Es permet que les temporades i volums tinguin decimals.
+- **Administració:**
+	- Es permet generar imatges de continguts més vistos per a anys sencers i per al període total.
+	- Si una imatge de continguts més vistos no té cap element, es genera una imatge igualment i no un error com fins ara.
+- **Catàleg:**
+	- Es corregeix un bug que feia que es mostressin versions ocultes.
+
 ## 2023-01-02 - Versió 4.2.7
 - **Serveis:**
 	- No es fan publicacions a les xarxes del contingut explícit.
