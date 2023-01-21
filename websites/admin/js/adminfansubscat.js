@@ -987,6 +987,10 @@ function checkNumberOfLinks() {
 				alert("Si introdueixes una URL per a un capítol, cal que també n'especifiquis la resolució.\nLa resolució ha de tenir format '1234p' o '1234x1234'.");
 				return false;
 			}
+			if (urls[i].value.startsWith("https://mega.nz/") && !urls[i].value.match(/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/)) {
+				alert("La URL de MEGA següent és invàlida:\n"+urls[i].value+"\nAssegura't que l'has exportada correctament fent botó dret -> Copy link havent iniciat la sessió al compte.");
+				return false;
+			}
 		}
 	}
 

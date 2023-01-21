@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2023-01-21 - Versió 4.2.9
+- **Administració:**
+	- Es trunquen els decimals de les temporades quan són zero.
+	- Es valida que els enllaços de MEGA siguin vàlids en el moment de desar el formulari de la versió.
+
 ## 2023-01-04 - Versió 4.2.8
 - **General:**
 	- Es permet que les temporades i volums tinguin decimals.

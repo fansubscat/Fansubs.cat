@@ -690,7 +690,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultf);
 
-		$resulte = query("SELECT e.*, et.title, d.number division_number, d.name division_name FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
+		$resulte = query("SELECT e.*, et.title, TRIM(d.number)+0 division_number, d.name division_name FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -724,14 +724,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$has_independent_fansub = FALSE;
 		$fansubs = array();
 
-		$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".escape($_GET['series_id'])." ORDER BY d.number ASC");
+		$resultd = query("SELECT d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d WHERE d.series_id=".escape($_GET['series_id'])." ORDER BY d.number ASC");
 		$divisions = array();
 		while ($rowd = mysqli_fetch_assoc($resultd)) {
 			array_push($divisions, $rowd);
 		}
 		mysqli_free_result($resultd);
 
-		$resulte = query("SELECT e.*, NULL title, d.number division_number, d.name division_name FROM episode e LEFT JOIN division d ON e.division_id=d.id WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
+		$resulte = query("SELECT e.*, NULL title, TRIM(d.number)+0 division_number, d.name division_name FROM episode e LEFT JOIN division d ON e.division_id=d.id WHERE e.series_id=".escape($_GET['series_id'])." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
 		$episodes = array();
 		while ($rowe = mysqli_fetch_assoc($resulte)) {
 			array_push($episodes, $rowe);
@@ -931,7 +931,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<select id="form-remote_folders-list-division_id-XXX" name="form-remote_folders-list-division_id-XXX" class="form-control d-none">
 											<option value="">- Qualsevol -</option>
 <?php
-		$resultss = query("SELECT d.* FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
+		$resultss = query("SELECT d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
 		while ($ssrow = mysqli_fetch_assoc($resultss)) {
 ?>
 											<option value="<?php echo $ssrow['id']; ?>"><?php echo htmlspecialchars($ssrow['number'].(!empty($ssrow['name']) ? ' ('.$ssrow['name'].')' : '')); ?></option>
