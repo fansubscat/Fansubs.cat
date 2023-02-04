@@ -986,10 +986,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<select id="form-remote_folders-list-division_id-<?php echo $j+1; ?>" name="form-remote_folders-list-division_id-<?php echo $j+1; ?>" class="form-control">
 															<option value="">- Qualsevol -</option>
 <?php
-			$resultss = query("SELECT d.* FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
+			$resultss = query("SELECT d.*, TRIM(d.number)+0 number_formatted FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
 			while ($ssrow = mysqli_fetch_assoc($resultss)) {
 ?>
-															<option value="<?php echo $ssrow['id']; ?>"<?php echo $remote_folders[$j]['division_id']==$ssrow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($ssrow['number'].(!empty($ssrow['name']) ? ' ('.$ssrow['name'].')' : '')); ?></option>
+															<option value="<?php echo $ssrow['id']; ?>"<?php echo $remote_folders[$j]['division_id']==$ssrow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($ssrow['number_formatted'].(!empty($ssrow['name']) ? ' ('.$ssrow['name'].')' : '')); ?></option>
 <?php
 			}
 			mysqli_free_result($resultss);
