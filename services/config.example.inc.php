@@ -32,6 +32,7 @@ $discord_webhooks = array(
 //Telegram bot API key and chat id
 $telegram_bot_api_key='YOUR_API_KEY_HERE';
 $telegram_bot_chat_id='YOUR_CHAT_ID_HERE';
+$telegram_bot_channel_chat_id='YOUR_CHANNEL_CHAT_ID_HERE';
 
 //Token to bypass admin authentication in twitter_image.php
 $internal_token='YOUR_TOKEN';

@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2023-02-04 - Versió 4.2.10
+- **General:**
+	- S'afegeix suport per al canal de Telegram.
+	- S'afegeix enllaç al canal de Telegram al peu de pàgina.
+- **Administració:**
+	- Es trunquen els decimals de les temporades com cal a la pantalla d'edició de la versió.
+
 ## 2023-01-21 - Versió 4.2.9
 - **Administració:**
 	- Es trunquen els decimals de les temporades quan són zero.

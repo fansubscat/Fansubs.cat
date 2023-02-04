@@ -116,7 +116,7 @@ else{
 			<div id="footer">
 				<p>
 					Fansubs.cat sols recopila notícies dels webs esmentats. Tots els drets dels textos, imatges i obres esmentades pertanyen a llurs propietaris.<br />
-					Codi, disseny i contingut propi © 2015-<?php echo date('Y'); ?> Fansubs.cat. <a href="https://github.com/fansubscat/Fansubs.cat" target="_blank">És codi obert</a>. <a href="/envia-noticies-contacta">Contacta amb nosaltres</a>. Segueix-nos <a rel="me" href="https://mastodont.cat/@fansubscat" target="_blank">al Mastodon</a> o <a rel="me" href="https://twitter.com/fansubscat" target="_blank">al Twitter</a>.
+					Codi, disseny i contingut propi © 2015-<?php echo date('Y'); ?> Fansubs.cat. <a href="https://github.com/fansubscat/Fansubs.cat" target="_blank">És codi obert</a>. <a href="/envia-noticies-contacta">Contacta amb nosaltres</a>. Segueix-nos <a rel="me" href="https://mastodont.cat/@fansubscat" target="_blank">al Mastodon</a>, <a rel="me" href="https://t.me/fansubscat" target="_blank">al Telegram</a> o <a rel="me" href="https://twitter.com/fansubscat" target="_blank">al Twitter</a>.
 				</p>
 			</div>
 		</div>
