@@ -18,7 +18,7 @@ then
 
 	cat remote_urls_temp.txt | sort > remote_urls.txt
 	rm remote_urls_temp.txt
-	find "$dest_dir" -type f -printf "%p\n" | grep -v "ZZZ_INTERNAL" | grep -v "/Manga/" | sort > local_urls.txt
+	find "$dest_dir" -type f -printf "%p\n" | grep -v "ZZZ_INTERNAL" | grep -v "Denegat.mp4" | grep -v "favicon.ico" | grep -v "/Manga/" | sort > local_urls.txt
 
 	diff remote_urls.txt local_urls.txt
 	rm remote_urls.txt local_urls.txt
