@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2023-02-13 - Versió 4.2.11
+- **API:**
+	- S'amaguen els decimals (quan són zero) als números de volums.
+- **Catàleg:**
+	- S'amaga el hentai correctament segons l'opció de l'usuari en cercar.
+- **Eines:**
+	- S'ignoren els fitxers «Denegat.mp4» i «favicon.ico» en cercar fitxers no indexats.
+
 ## 2023-02-04 - Versió 4.2.10
 - **General:**
 	- S'afegeix suport per al canal de Telegram.
