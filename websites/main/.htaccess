@@ -1,0 +1,15 @@
+RewriteEngine on
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 403 /error.php?code=403
+
+#Hide internal files
+RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
+RewriteCond %{REQUEST_URI} !error\.php
+RewriteCond %{REQUEST_URI} !do_send_contact_email\.php
+RewriteRule \.php$ - [F]
+
+#Normal pages
+RewriteRule ^qui-som/?$ about.php [L]
+RewriteRule ^politica-de-privadesa/?$ privacy.php [L]
+RewriteRule ^contacte/?$ contact.php [L]
+

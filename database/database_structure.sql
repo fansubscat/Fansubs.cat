@@ -253,6 +253,7 @@ CREATE TABLE `user` (
   `password` varchar(200) NOT NULL,
   `email` varchar(200) NOT NULL,
   `birthdate` date NOT NULL,
+  `reset_password_code` varchar(200) NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -418,6 +419,9 @@ ALTER TABLE `series`
   ADD PRIMARY KEY (`id`),
   ADD KEY `type` (`type`);
 
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `version`
   ADD PRIMARY KEY (`id`),
   ADD KEY `version_ibfk_1` (`series_id`);
@@ -476,6 +480,9 @@ ALTER TABLE `reported_error`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `series`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `version`

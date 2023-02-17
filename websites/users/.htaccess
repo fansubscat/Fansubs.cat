@@ -1,0 +1,23 @@
+#SetEnvIf Origin ^(https://.+\.fansubs\.cat(?::\d{1,5})?)$ CORS_ALLOW_ORIGIN=$1
+#Header append Access-Control-Allow-Origin %{CORS_ALLOW_ORIGIN}e env=CORS_ALLOW_ORIGIN
+#Header append Access-Control-Allow-Credentials true
+#Header merge Vary "Origin"
+
+RewriteEngine on
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 403 /error.php?code=403
+
+#Hide internal files
+RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
+RewriteCond %{REQUEST_URI} !do_login\.php
+RewriteCond %{REQUEST_URI} !do_register\.php
+RewriteCond %{REQUEST_URI} !do_forgot_password\.php
+RewriteCond %{REQUEST_URI} !do_reset_password\.php
+RewriteCond %{REQUEST_URI} !error\.php
+RewriteRule \.php$ - [F]
+
+#Normal pages
+RewriteRule ^inicia-la-sessio/?$ login.php [L]
+RewriteRule ^tanca-la-sessio/?$ logout.php [L]
+RewriteRule ^restableix-la-contrasenya/?$ reset_password.php [L]
+
