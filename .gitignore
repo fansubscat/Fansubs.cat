@@ -4,6 +4,7 @@ websites/admin/config.inc.php
 websites/advent/config.inc.php
 websites/api/config.inc.php
 websites/catalogue/config.inc.php
+websites/common/config.inc.php
 websites/main/config.inc.php
 websites/news/config.inc.php
 websites/users/config.inc.php

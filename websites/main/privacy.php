@@ -1,12 +1,8 @@
 <?php
-require_once("config.inc.php");
-$page_title="Política de privadesa | Fansubs.cat";
-$social_title="Política de privadesa | Fansubs.cat";
-$social_url=$main_url.'/politica-de-privadesa/';
-$social_image_url=$static_url.'/common/images/social.jpg';
-$social_description='A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.';
-$obscure_background=TRUE;
-require_once("header.inc.php");
+$page_title="Política de privadesa";
+$social_url='/politica-de-privadesa/';
+$style_type='text';
+require_once("../common.fansubs.cat/header.inc.php");
 ?>
 				<div class="text-page">
 					<h2 class="section-title"><i class="fa fa-fw fa-user-lock"></i> Política de privadesa</h2>
@@ -28,5 +24,5 @@ require_once("header.inc.php");
 					<div class="section-content">Si residiu a l'Espai Econòmic Europeu, teniu certs drets que podeu exercir en qualsevol moment. Tant si voleu exercir els vostres drets com si teniu qüestions sobre aquesta política de privadesa, les nostres pràctiques o les interaccions amb el lloc web, podeu contactar amb el delegat de protecció de dades fent servir l'enllaç de contacte de la part inferior de la pàgina.</div>
 				</div>
 <?php
-require_once("footer.inc.php");
+require_once("../common.fansubs.cat/footer.inc.php");
 ?>

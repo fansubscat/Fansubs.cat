@@ -1,12 +1,6 @@
 <?php
-require_once("config.inc.php");
-$page_title="Fansubs.cat";
-$social_title="Fansubs.cat";
-$social_url=$main_url.'/';
-$social_image_url=$static_url.'/common/images/social.jpg';
-$social_description='A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.';
-$show_social=TRUE;
-require_once("header.inc.php");
+$style_type='main';
+require_once("../common.fansubs.cat/header.inc.php");
 ?>
 				<?php include($static_directory.'/common/images/logo.svg'); ?>
 				<div class="main-buttons">
@@ -19,5 +13,5 @@ require_once("header.inc.php");
 					<a class="secondary-button" href="/qui-som/">Qui som?</a>
 				</div>
 <?php
-require_once("footer.inc.php");
+require_once("../common.fansubs.cat/footer.inc.php");
 ?>

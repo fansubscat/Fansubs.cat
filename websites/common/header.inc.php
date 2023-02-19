@@ -9,22 +9,24 @@ require_once("user_init.inc.php");
 		<meta name="theme-color" content="#000000">
 		<meta name="referrer" content="origin">
 		<meta name="twitter:card" content="summary_large_image">
-		<meta property="og:title" content="<?php echo $social_title; ?>">
-		<meta property="og:url" content="<?php echo $social_url; ?>">
-		<meta property="og:description" content="<?php echo $social_description; ?>">
-		<meta property="og:image" content="<?php echo $social_image_url; ?>">
+		<meta property="og:title" content="<?php echo !empty($page_title) ? htmlentities($page_title).' | '.htmlentities($site_config['site_title']) : htmlentities($site_config['site_title']); ?>">
+		<meta property="og:url" content="<?php echo !empty($social_url) ? $site_config['base_url'].$social_url : $site_config['base_url']; ?>">
+		<meta property="og:description" content="<?php echo !empty($social_description) ? htmlentities($social_description) : htmlentities($site_config['site_description']); ?>">
+		<meta property="og:image" content="<?php echo !empty($social_image_url) ? $social_image_url : $site_config['preview_image']; ?>">
 		<meta property="og:image:type" content="image/jpeg">
-		<title><?php echo $page_title; ?></title>
+		<title><?php echo !empty($page_title) ? htmlentities($page_title).' | '.htmlentities($site_config['site_title']) : htmlentities($site_config['site_title']); ?></title>
 		<link rel="shortcut icon" href="/favicon.png">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css">
-		<link rel="stylesheet" href="/style/users.css">
+		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/common.css">
+		<link rel="stylesheet" href="/style/<?php echo $site_config['own_css']; ?>">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-		<script src="/js/users.js"></script>
+		<script src="<?php echo $static_url; ?>/common/js/common.js"></script>
+		<script src="/js/<?php echo $site_config['own_js']; ?>"></script>
 	</head>
 	<body>
-		<div class="main-container<?php echo !empty($obscure_background) ? ' obscured-background' : ''; ?>">
+		<div class="main-container<?php echo ($style_type=='login' || $style_type=='text' || $style_type=='contact') ? ' obscured-background' : ''; ?>">
 <?php
-if (!empty($show_login)) {
+if ($style_type=='login') {
 ?>
 			<div class="overlay-page">
 				<div class="login-page">
@@ -49,7 +51,7 @@ if (!empty($show_login)) {
 							</div>
 						</div>
 					</div>
-					<div class="login-form"<?php echo (!empty($show_login) && !empty($show_reset_password)) ? ' style="display: none;"' : ''?>>
+					<div class="login-form"<?php echo $style_type=='reset_password' ? ' style="display: none;"' : ''?>>
 						<div class="login-form-main">
 							<div class="login-close fa fa-xmark" onclick="history.back();"></div>
 							<div class="login-subheader">Inicia la sessió</div>
@@ -67,7 +69,7 @@ if (!empty($show_login)) {
 						</div>
 						<div class="login-footer">Encara no n’ets usuari? <a onclick="showRegister();">Registra-t’hi</a></div>
 					</div>
-					<div class="reset-password-form"<?php echo empty($show_reset_password) ? ' style="display: none;"' : ''?>>
+					<div class="reset-password-form"<?php echo $style_type!='reset_password' ? ' style="display: none;"' : ''?>>
 						<div class="login-form-main">
 							<div class="login-subheader">Restableix la contrasenya</div>
 							<form id="reset-password-form" onsubmit="return resetPassword();" autocomplete="off" novalidate>
@@ -163,7 +165,19 @@ if (!empty($show_login)) {
 ?>
 			<div class="main-body">
 				<div class="header">
-					<a class="logo-small" href="<?php echo $main_url; ?>/"><?php include($static_directory.'/common/images/logo.svg'); ?></a>
+<?php
+	if ($style_type=='main') {
+?>
+					<a class="social-link twitter-link fab fa-fw fa-twitter" href="https://twitter.com/fansubscat" target="_blank" title="Twitter de Fansubs.cat"></a>
+					<a class="social-link mastodon-link fab fa-fw fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" title="Mastodon de Fansubs.cat"></a>
+					<a class="social-link telegram-link fab fa-fw fa-telegram" href="https://t.me/fansubscat" target="_blank" title="Telegram de Fansubs.cat"></a>
+<?php
+	} else {
+?>
+					<a class="logo-small" href="/"><?php include($static_directory.'/common/images/logo.svg'); ?></a>
+<?php
+	}
+?>
 					<div class="user-options">
 <?php
 	if (!empty($user)) {

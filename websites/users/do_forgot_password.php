@@ -1,5 +1,5 @@
 <?php
-require_once("user_init.inc.php");
+require_once("../common.fansubs.cat/user_init.inc.php");
 
 function sendForgotPasswordEmail($email, $username, $code) {
 	global $users_url;

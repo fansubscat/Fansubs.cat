@@ -1,5 +1,5 @@
 <?php
-require_once("db.inc.php");
+require_once("../common.fansubs.cat/db.inc.php");
 
 function sendContactEmail($sender_email, $username, $message) {
 	$message = "$username ($sender_email) ha enviat el següent missatge mitjançant el formulari de contacte de Fansubs.cat:\n\n$message\n\nFansubs.cat.";

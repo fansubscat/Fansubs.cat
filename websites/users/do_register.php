@@ -1,5 +1,5 @@
 <?php
-require_once("user_init.inc.php");
+require_once("../common.fansubs.cat/user_init.inc.php");
 
 function register_user(){
 	//Check if we have all the data

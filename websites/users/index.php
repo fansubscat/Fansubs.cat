@@ -1,5 +1,6 @@
 <?php
-require_once('header.inc.php');
+$style_type='text';
+require_once("../common.fansubs.cat/header.inc.php");
 
 if (!empty($user)){
 ?>
@@ -10,5 +11,5 @@ Sessió iniciada com a <?php echo $user['username']; ?>.
 Sessió NO iniciada.
 <?php
 }
-require_once('footer.inc.php');
+require_once("../common.fansubs.cat/footer.inc.php");
 ?>

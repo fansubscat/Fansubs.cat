@@ -1,13 +1,8 @@
 <?php
-require_once("config.inc.php");
-$page_title="Formulari de contacte | Fansubs.cat";
-$social_title="Formulari de contacte | Fansubs.cat";
-$social_url=$main_url.'/contacta-amb-nosaltres/';
-$social_image_url=$static_url.'/common/images/social.jpg';
-$social_description='A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.';
-$hide_contact=TRUE;
-$obscure_background=TRUE;
-require_once("header.inc.php");
+$page_title="Contacta amb nosaltres";
+$social_url='/contacta-amb-nosaltres/';
+$style_type='contact';
+require_once("../common.fansubs.cat/header.inc.php");
 ?>
 				<div class="text-page" id="contact-form">
 					<h2 class="section-title"><i class="fa fa-fw fa-envelope-open-text"></i> Formulari de contacte</h2>
@@ -37,5 +32,5 @@ require_once("header.inc.php");
 					</form>
 				</div>
 <?php
-require_once("footer.inc.php");
+require_once("../common.fansubs.cat/footer.inc.php");
 ?>

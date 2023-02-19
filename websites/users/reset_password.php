@@ -1,13 +1,15 @@
 <?php
-require_once("config.inc.php");
-$page_title="Restableix la contrasenya | Fansubs.cat";
-$social_title="Restableix la contrasenya | Fansubs.cat";
-$social_url=$users_url.'/restableix-la-contrasenya/';
-$social_image_url=$static_url.'/common/images/social.jpg';
-$social_description='A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.';
-$show_login=TRUE;
-$show_reset_password=TRUE;
-$obscure_background=TRUE;
-require_once("header.inc.php");
-require_once("footer.inc.php");
+require_once("../common.fansubs.cat/user_init.inc.php");
+
+//Kick the user if already logged in
+if (!empty($user)) {
+	header('Location: '.$main_url);
+	die();
+}
+
+$page_title="Restableix la contrasenya";
+$social_url='/restableix-la-contrasenya/';
+$style_type='reset_password';
+require_once("../common.fansubs.cat/header.inc.php");
+require_once("../common.fansubs.cat/footer.inc.php");
 ?>

@@ -1,12 +1,8 @@
 <?php
-require_once("config.inc.php");
-$page_title="Qui som? | Fansubs.cat";
-$social_title="Qui som? | Fansubs.cat";
-$social_url=$main_url.'/qui-som/';
-$social_image_url=$static_url.'/common/images/social.jpg';
-$social_description='A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.';
-$obscure_background=TRUE;
-require_once("header.inc.php");
+$page_title="Qui som?";
+$social_url='/qui-som/';
+$style_type='text';
+require_once("../common.fansubs.cat/header.inc.php");
 ?>
 				<div class="text-page">
 					<h2 class="section-title"><i class="fa fa-fw fa-users"></i> Qui som?</h2>
@@ -22,5 +18,5 @@ require_once("header.inc.php");
 					<div class="section-content">Pots contactar amb nosaltres fent servir el botó de la part inferior de la pàgina. Si vols contactar amb un fansub en concret, pots fer-ho mitjançant el seu lloc web o el seu Twitter.</div>
 				</div>
 <?php
-require_once("footer.inc.php");
+require_once("../common.fansubs.cat/footer.inc.php");
 ?>
