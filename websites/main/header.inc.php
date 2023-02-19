@@ -4,21 +4,21 @@ require_once("user_init.inc.php");
 <!DOCTYPE html>
 <html lang="ca">
 	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="theme-color" content="#000000" />
-		<meta name="referrer" content="origin" />
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta property="og:title" content="<?php echo $social_title; ?>" />
-		<meta property="og:url" content="<?php echo $social_url; ?>" />
-		<meta property="og:description" content="<?php echo $social_description; ?>" />
-		<meta property="og:image" content="<?php echo $social_image_url; ?>" />
-		<meta property="og:image:type" content="image/jpeg" />
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="theme-color" content="#000000">
+		<meta name="referrer" content="origin">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta property="og:title" content="<?php echo $social_title; ?>">
+		<meta property="og:url" content="<?php echo $social_url; ?>">
+		<meta property="og:description" content="<?php echo $social_description; ?>">
+		<meta property="og:image" content="<?php echo $social_image_url; ?>">
+		<meta property="og:image:type" content="image/jpeg">
 		<title><?php echo $page_title; ?></title>
-		<link rel="shortcut icon" href="/favicon.png" />
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css" />
-		<link rel="stylesheet" href="/style/main.css" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<link rel="shortcut icon" href="/favicon.png">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css">
+		<link rel="stylesheet" href="/style/main.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		<script src="/js/main.js"></script>
 	</head>
 	<body>
@@ -34,7 +34,7 @@ if (!empty($show_social)) {
 <?php
 } else {
 ?>
-					<a class="logo-small" href="/"><?php include('images/logo.svg'); ?></a>
+					<a class="logo-small" href="/"><?php include($static_directory.'/common/images/logo.svg'); ?></a>
 <?php
 }
 ?>

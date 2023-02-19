@@ -10,6 +10,5 @@ Sessió iniciada com a <?php echo $user['username']; ?>.
 Sessió NO iniciada.
 <?php
 }
-
 require_once('footer.inc.php');
 ?>

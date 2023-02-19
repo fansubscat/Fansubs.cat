@@ -1,3 +1,5 @@
+const MAIN_URL = "https://wwwv2.fansubs.cat";
+
 function clearForms() {
 	$('.invalid').removeClass('invalid');
 	$('.validation-message').text('');
@@ -94,7 +96,7 @@ function login() {
 			withCredentials: true
 		},
 	}).done(function(data) {
-		window.location.href="https://wwwv2.fansubs.cat/";
+		window.location.href=MAIN_URL;
 	}).fail(function(data) {
 		try {
 			var response = JSON.parse(data.responseText);
@@ -186,7 +188,7 @@ function register() {
 			withCredentials: true
 		},
 	}).done(function(data) {
-		window.location.href="https://wwwv2.fansubs.cat/";
+		window.location.href=MAIN_URL;
 	}).fail(function(data) {
 		try {
 			var response = JSON.parse(data.responseText);
@@ -305,7 +307,7 @@ function resetPassword() {
 			withCredentials: true
 		},
 	}).done(function(data) {
-		window.location.href="https://wwwv2.fansubs.cat/";
+		window.location.href=MAIN_URL;
 	}).fail(function(data) {
 		try {
 			var response = JSON.parse(data.responseText);

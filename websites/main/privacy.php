@@ -3,13 +3,13 @@ require_once("config.inc.php");
 $page_title="Política de privadesa | Fansubs.cat";
 $social_title="Política de privadesa | Fansubs.cat";
 $social_url=$main_url.'/politica-de-privadesa/';
-$social_image_url=$main_url.'/images/social.jpg';
-$social_description='Fansubs.cat és el portal dels fansubs en català. Hi trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.';
+$social_image_url=$static_url.'/common/images/social.jpg';
+$social_description='A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.';
 $obscure_background=TRUE;
 require_once("header.inc.php");
 ?>
 				<div class="text-page">
-					<h2 class="section-title">Política de privadesa</h2>
+					<h2 class="section-title"><i class="fa fa-fw fa-user-lock"></i> Política de privadesa</h2>
 					<div class="section-content">Aquesta política de privadesa defineix la manera en què Fansubs.cat (“nosaltres”) recopila, emmagatzema, utilitza, manté i comparteix la informació (“informació” o “dades”) recopilada dels usuaris (cadascun, un “usuari”, o “vós”) del lloc web de Fansubs.cat (“lloc web”). Aquesta política de privadesa s'aplica a tots els productes i serveis oferts per Fansubs.cat en relació amb el lloc web (“serveis”). Si teniu qualsevol dubte relatiu a aquesta política de privadesa o a l'ús que fem de les vostres dades, us el podem resoldre si ens escriviu fent servir l'enllaç de contacte de la part inferior de la pàgina.</div>
 					<h3 class="section-title">Informació que recopilem</h3>
 					<h4 class="section-title">Informació personal que ens proporcioneu</h4>

@@ -15,4 +15,11 @@ $manga_url='https://manga.fansubs.cat';
 $liveaction_url='https://accioreal.fansubs.cat';
 $news_url='https://noticies.fansubs.cat';
 $users_url='https://usuaris.fansubs.cat';
+
+//Internal path (no final slash)
+$static_directory='/srv/websites/static.fansubs.cat';
+
+//Cookie params
+$cookie_duration = 60*60*24*365*10;
+$cookie_domain = ".fansubs.cat";
 ?>

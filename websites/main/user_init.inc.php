@@ -1,7 +1,7 @@
 <?php
 require_once("db.inc.php");
 ob_start();
-session_set_cookie_params(60*60*24*365*10, '/', '.fansubs.cat', TRUE, FALSE);
+session_set_cookie_params($cookie_duration, '/', $cookie_domain, TRUE, FALSE);
 session_start();
 
 if (!empty($_SESSION['username'])){

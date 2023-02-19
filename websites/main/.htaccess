@@ -11,5 +11,5 @@ RewriteRule \.php$ - [F]
 #Normal pages
 RewriteRule ^qui-som/?$ about.php [L]
 RewriteRule ^politica-de-privadesa/?$ privacy.php [L]
-RewriteRule ^contacte/?$ contact.php [L]
+RewriteRule ^contacta-amb-nosaltres/?$ contact.php [L]
 

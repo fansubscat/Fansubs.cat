@@ -1,8 +1,3 @@
-#SetEnvIf Origin ^(https://.+\.fansubs\.cat(?::\d{1,5})?)$ CORS_ALLOW_ORIGIN=$1
-#Header append Access-Control-Allow-Origin %{CORS_ALLOW_ORIGIN}e env=CORS_ALLOW_ORIGIN
-#Header append Access-Control-Allow-Credentials true
-#Header merge Vary "Origin"
-
 RewriteEngine on
 ErrorDocument 404 /error.php?code=404
 ErrorDocument 403 /error.php?code=403

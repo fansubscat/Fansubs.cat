@@ -2,8 +2,8 @@
 require_once("user_init.inc.php");
 
 function sendForgotPasswordEmail($email, $username, $code) {
-	global $main_url;
-	$message = "Bon dia, $username,\n\nReps aquest correu perquè has demanat restablir la contrasenya del teu usuari a Fansubs.cat.\n\nSi no has estat tu qui ho ha demanat, pots ignorar aquest correu.\n\nPer a restablir la contrasenya, visita el següent enllaç: $main_url/restableix-la-contrasenya?usuari=".urlencode($username)."&codi=$code\n\nFansubs.cat.";
+	global $users_url;
+	$message = "Bon dia, $username,\n\nReps aquest correu perquè has demanat restablir la contrasenya del teu usuari a Fansubs.cat.\n\nSi no has estat tu qui ho ha demanat, pots ignorar aquest correu.\n\nPer a restablir la contrasenya, visita el següent enllaç: $users_url/restableix-la-contrasenya?usuari=".urlencode($username)."&codi=$code\n\nFansubs.cat.";
 	mail($email,'Restabliment de la contrasenya de Fansubs.cat', $message,'From: Fansubs.cat <info@fansubs.cat>','-f info@fansubs.cat -F "Fansubs.cat"');
 }
 
