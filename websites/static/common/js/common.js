@@ -16,3 +16,13 @@ function removeValidationOnlyText(elementId){
 	$('#'+elementId+'_validation').text('');
 }
 
+function showUserDropdown(){
+	$('#user-dropdown').toggleClass('dropdown-show');
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+	if (!event.target.matches('.dropdown-button')) {
+		$('.dropdown-content').removeClass('dropdown-show');
+	}
+}

@@ -254,6 +254,7 @@ CREATE TABLE `user` (
   `email` varchar(200) NOT NULL,
   `birthdate` date NOT NULL,
   `reset_password_code` varchar(200) NULL,
+  `avatar_filename` varchar(200) NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),

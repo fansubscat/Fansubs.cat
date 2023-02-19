@@ -174,7 +174,7 @@ if ($style_type=='login') {
 <?php
 	} else {
 ?>
-					<a class="logo-small" href="/"><?php include($static_directory.'/common/images/logo.svg'); ?></a>
+					<a class="logo-small" href="<?php echo $main_url; ?>/"><?php include($static_directory.'/common/images/logo.svg'); ?></a>
 <?php
 	}
 ?>
@@ -182,8 +182,17 @@ if ($style_type=='login') {
 <?php
 	if (!empty($user)) {
 ?>
-						<div class="user-name"><strong><?php echo $user['username']; ?></strong></div>
-						<a class="user-logout" href="<?php echo $users_url.'/tanca-la-sessio/'; ?>"><span class="fa fa-fw fa-sign-out-alt"></span></a>
+						<div class="dropdown-menu">
+							<img onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? $static_url.'/images/avatars/'.$user['avatar_filename'] : $static_url.'/common/images/noavatar.jpg'; ?>">
+							<div id="user-dropdown" class="dropdown-content">
+								<div class="dropdown-title"><?php echo $user['username']; ?></div>
+								<hr class="dropdown-separator">
+								<a href="<?php echo $users_url; ?>/">El meu perfil</a>
+								<a href="<?php echo $users_url.'/la-meva-llista/'; ?>">La meva llista</a>
+								<hr class="dropdown-separator-secondary">
+								<a href="<?php echo $users_url.'/tanca-la-sessio/'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
+							</div>
+						</div>
 <?php
 	} else {
 ?>
