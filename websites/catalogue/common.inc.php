@@ -49,8 +49,24 @@ function get_status_description_short($id){
 	}
 }
 
+function get_status_icon($id){
+	switch ($id){
+		case 1:
+			return "far fa-circle-check";
+		case 2:
+			return "fa-circle-notch fa-rotate-90";
+		case 3:
+			return "far fa-circle";
+		case 4:
+			return "far fa-circle-xmark";
+		case 5:
+			return "far fa-circle-xmark";
+		default:
+			return "far fa-circle-question";
+	}
+}
+
 function get_status_description($id){
-	global $config;
 	switch ($id){
 		case 1:
 			return "Completat";
@@ -282,8 +298,8 @@ function get_display_method($links){
 }
 
 function get_episode_player_title($fansub_name, $series, $episode_title, $is_extra){
-	global $config;
-	if ($series['name']==$episode_title || ($series['subtype']==$config['filmsoneshots_db'] && !$is_extra)){
+	global $cat_config;
+	if ($series['name']==$episode_title || ($series['subtype']==$cat_config['filmsoneshots_db'] && !$is_extra)){
 		if (!empty($episode_title)) {
 			return $fansub_name . ' - ' . $episode_title;
 		} else {
@@ -295,7 +311,7 @@ function get_episode_player_title($fansub_name, $series, $episode_title, $is_ext
 }
 
 function get_video_sources($links){
-	global $config,$google_drive_api_key;
+	global $cat_config,$google_drive_api_key;
 	$elements = array();
 	foreach ($links as $link) {
 		$matches = array();
@@ -311,7 +327,7 @@ function get_video_sources($links){
 			);
 		} else if (preg_match(REGEXP_YOUTUBE,$link['url'],$matches)){
 			$elements[]=array(
-				'url' => "https://www.youtube.com/embed/".$matches[1]."?origin=${config['base_url']}&iv_load_policy=3&modestbranding=1&playsinline=1showinfo=0&rel=0&enablejsapi=1",
+				'url' => "https://www.youtube.com/embed/".$matches[1]."?origin=${cat_config['base_url']}&iv_load_policy=3&modestbranding=1&playsinline=1showinfo=0&rel=0&enablejsapi=1",
 				'resolution' => get_resolution_single($link['resolution'])
 			);
 		} else if (preg_match(REGEXP_STORAGE,$link['url'],$matches)){
@@ -340,7 +356,7 @@ function get_hours_or_minutes_formatted($time){
 }
 
 function print_episode($fansub_names, $row, $version_id, $series, $version, $position){
-	global $config, $default_fansub_id;
+	global $cat_config, $default_fansub_id;
 	if (!empty($row['linked_episode_id'])) {
 		log_action("SELECT f.* FROM file f WHERE f.episode_id=".$row['linked_episode_id']." AND f.version_id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']}) ORDER BY f.variant_name ASC, f.id ASC");
 		$result = query("SELECT f.* FROM file f WHERE f.episode_id=".$row['linked_episode_id']." AND f.version_id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']}) ORDER BY f.variant_name ASC, f.id ASC");
@@ -371,7 +387,7 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 	} else {
 		if (!empty($row['title'])){
 			$episode_title.=htmlspecialchars($row['title']);
-		} else if ($series['subtype']==$config['filmsoneshots_db']) {
+		} else if ($series['subtype']==$cat_config['filmsoneshots_db']) {
 			$episode_title.=$series['name'];
 		} else {
 			$episode_title.='Capítol sense nom';
@@ -392,7 +408,7 @@ function print_extra($fansub_names, $row, $version_id, $series, $position){
 }
 
 function internal_print_episode($fansub_names, $episode_title, $result, $series, $is_extra, $position) {
-	global $config, $static_url;
+	global $cat_config, $static_url;
 	if (mysqli_num_rows($result)==0){
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode episode-unavailable">'."\n";
 		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
@@ -539,24 +555,23 @@ function exists_more_than_one_version($series_id){
 	return ($row['cnt']>1);
 }
 
-function get_recommended_fansub_info($fansub_name, $fansub_type, $manga=FALSE) {
-	if (strpos($fansub_name,"|")!==FALSE){
-		if (strpos($fansub_type,"|")!==FALSE) {
-			return 'Versions de diversos fansubs';
-		} else if ($fansub_type=='fandub') {
-			return 'Doblatge de diversos fansubs';
-		} else if ($manga){
-			return 'Editat per diversos fansubs';
-		} else {
-			return 'Subtítols de diversos fansubs';
+function get_recommended_fansub_info($fansub_info, $version_id) {
+	global $static_url;
+	$fansubs = explode('|',$fansub_info);
+	$version_fansubs = array();
+
+	foreach ($fansubs as $fansub) {
+		$fields = explode('___',$fansub);
+		if ($fields[0]==$version_id) {
+			array_push($version_fansubs, array('name' => $fields[1], 'type' => $fields[2], 'icon' => $static_url.'/images/icons/'.$fields[3].'.png'));
 		}
-	} else if ($fansub_type=='fandub') {
-		return 'Doblatge '.get_fansub_preposition_name($fansub_name);
-	} else if ($manga){
-		return 'Editat per '.$fansub_name;
-	} else {
-		return 'Subtítols '.get_fansub_preposition_name($fansub_name);
 	}
+
+	foreach ($version_fansubs as $fansub) {
+		$result_code.='<div class="fansub">'.($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').htmlentities($fansub['name']).' <img src="'.$fansub['icon'].'" alt=""></div>'."\n";
+	}
+
+	return $result_code;
 }
 
 function print_carousel_item($series, $specific_version, $show_new=TRUE) {
@@ -568,8 +583,8 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 }
 
 function print_carousel_item_generic($series, $specific_version, $show_new=TRUE) {
-	global $config, $anime_url, $liveaction_url, $static_url;
-	echo "\t\t\t\t\t\t\t".'<a class="thumbnail" data-series-id="'.$series['slug'].'" href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['subtype']=='movie' ? "films" : "series").'/'.$series['slug'].(($specific_version && exists_more_than_one_version($series['id'])) ? "?v=".$series['version_id'] : "").'">'."\n";
+	global $cat_config, $anime_url, $liveaction_url, $static_url;
+	echo "\t\t\t\t\t\t\t".'<a class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['slug'].'" href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['subtype']=='movie' ? "films" : "series").'/'.$series['slug'].(($specific_version && exists_more_than_one_version($series['id'])) ? "?v=".$series['version_id'] : "").'" onmouseenter="hoverThumbnailElement(this);" onmouseleave="leaveThumbnailElement(this);">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($series['best_status']).'"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<img src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'" />'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="watchbutton">'."\n";
@@ -604,7 +619,7 @@ function print_carousel_item_generic($series, $specific_version, $show_new=TRUE)
 
 function print_carousel_item_manga($manga, $specific_version, $show_new=TRUE) {
 	global $manga_url, $static_url;
-	echo "\t\t\t\t\t\t\t".'<a class="thumbnail data-series-id="'.$manga['slug'].'" href="'.$manga_url.'/'.($manga['subtype']=='oneshot' ? "one-shots" : "serialitzats").'/'.$manga['slug'].(($specific_version && exists_more_than_one_version($manga['id'])) ? "?v=".$manga['version_id'] : "").'">'."\n";
+	echo "\t\t\t\t\t\t\t".'<a class="thumbnail" data-series-id="'.$manga['slug'].'" href="'.$manga_url.'/'.($manga['subtype']=='oneshot' ? "one-shots" : "serialitzats").'/'.$manga['slug'].(($specific_version && exists_more_than_one_version($manga['id'])) ? "?v=".$manga['version_id'] : "").'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($manga['best_status']).'"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<img src="'.$static_url.'/images/covers/'.$manga['id'].'.jpg" alt="'.$manga['name'].'" />'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="watchbutton">'."\n";
@@ -629,81 +644,41 @@ function print_carousel_item_manga($manga, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t".'</a>'."\n";
 }
 
-function print_featured_item($series, $specific_version=TRUE, $show_new=TRUE) {
-	if ($series['type']=='manga') {
-		print_featured_item_manga($series, $specific_version, $show_new);
-	} else {
-		print_featured_item_generic($series, $specific_version, $show_new);
-	}
-}
-
-function print_featured_item_generic($series, $specific_version=TRUE) {
-	global $anime_url, $liveaction_url, $static_url;
-	echo "\t\t\t\t\t\t\t".'<a class="recommendation data-series-id="'.$series['slug'].'" href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['subtype']=='movie' ? "films" : "series").'/'.$series['slug'].(($specific_version && exists_more_than_one_version($series['id'])) ? "?v=".$series['version_id'] : "").'">'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<img src="'.$static_url.'/images/featured/'.$series['id'].'.jpg" alt="'.$series['name'].'" />'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'">'.get_status_description_short($series['best_status']).'</div>'."\n";
-	
-	if (!empty($series['last_file_created']) && $series['last_file_created']>=date('Y-m-d', strtotime("-1 week"))) {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>'."\n";
-	}
-	if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.$series['number_of_episodes'].' films</div>'."\n";
-	} else if ($series['subtype']=='movie') {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="divisions">Film</div>'."\n";
-	} else if ($series['divisions']>1) {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie '.($series['divisions']==11 ? "d'11" : 'de '.$series['divisions']).' temporades, '.($series['number_of_episodes']==-1 ? 'en emissió' : $series['number_of_episodes'].' capítols').'</div>'."\n";
-	} else {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie '.($series['number_of_episodes']==-1 ? 'en emissió' : ($series['number_of_episodes']==1 ? "d'1 capítol" : ($series['number_of_episodes']==11 ? "d'11 capítols" : 'de '.$series['number_of_episodes'].' capítols'))).'</div>'."\n";
-	}
-	echo "\t\t\t\t\t\t\t\t".'<div class="watchbutton">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-play"></span> Mira\'l ara'."\n";
-	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
+function print_featured_item($series, $specific_version=TRUE) {
+	global $cat_config, $anime_url, $liveaction_url, $static_url;
+	echo "\t\t\t\t\t\t\t".'<a class="recommendation" data-series-id="'.$series['slug'].'" href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.$series['slug'].(($specific_version && exists_more_than_one_version($series['id'])) ? "?v=".$series['version_id'] : "").'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.$static_url.'/images/featured/'.$series['id'].'.jpg" alt="'.$series['name'].'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'"><i class="fa fa-fw '.get_status_icon($series['best_status']).'"></i>'.get_status_description_short($series['best_status']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="title">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".$series['name']."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="cover" src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.$series['name'].'</div>'."\n";
+	if ($series['subtype']=='oneshot') {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">One-shot</div>'."\n";
+	} else if ($series['subtype']=='serialized') {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Serialitzat • '.($series['divisions']==1 ? "1 volum" : $manga['divisions'].' volums').' • '.($series['number_of_episodes']==-1 ? 'En publicació' : ($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols')).'</div>'."\n";
+	} else if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Conjunt de '.$series['number_of_episodes'].' films</div>'."\n";
+	} else if ($series['subtype']=='movie') {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Film</div>'."\n";
+	} else if ($series['divisions']>1) {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.$series['divisions'].' temporades • '.($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols').'</div>'."\n";
+	} else {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.($series['number_of_episodes']==-1 ? 'En emissió' : ($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols')).'</div>'."\n";
+	}
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
 
 	$Parsedown = new Parsedown();
 	$synopsis = $Parsedown->setBreaksEnabled(false)->line($series['synopsis']);
 
-	echo "\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="watchbutton">'.$cat_config['view_now'].'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="fansub">'.get_recommended_fansub_info($series['fansub_name'], $series['fansub_type']).'</div>'."\n";
-	echo "\t\t\t\t\t\t\t".'</a>'."\n";
-}
-
-function print_featured_item_manga($manga, $specific_version=TRUE) {
-	global $manga_url, $static_url;
-	echo "\t\t\t\t\t\t\t".'<a class="recommendation data-series-id="'.$manga['slug'].'" href="'.$manga_url.'/'.($manga['subtype']=='oneshot' ? "one-shots" : "serialitzats").'/'.$manga['slug'].(($specific_version && exists_more_than_one_version($manga['id'])) ? "?v=".$manga['version_id'] : "").'">'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<img src="'.$static_url.'/images/featured/'.$manga['id'].'.jpg" alt="'.$manga['name'].'" />'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($manga['best_status']).'">'.get_status_description_short($manga['best_status']).'</div>'."\n";
-	
-	if (!empty($manga['last_file_created']) && $manga['last_file_created']>=date('Y-m-d', strtotime("-1 week"))) {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="new" title="Hi ha contingut publicat durant la darrera setmana">Novetat!</div>'."\n";
-	}
-	if ($manga['subtype']=='oneshot') {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="divisions">One-shot</div>'."\n";
-	} else {
-		echo "\t\t\t\t\t\t\t\t\t".'<div class="divisions">Manga '.($manga['divisions']==1 ? "d'1 volum" : ($manga['divisions']==11 ? "d'11 volums" : 'de '.$manga['divisions'].' volums')).', '.($manga['number_of_episodes']==-1 ? 'en edició' : $manga['number_of_episodes'].' capítols').'</div>'."\n";
-	}
-	echo "\t\t\t\t\t\t\t\t".'<div class="watchbutton">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-book-open"></span> Llegeix-lo ara'."\n";
-	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="title">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".$manga['name']."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
-
-	$Parsedown = new Parsedown();
-	$synopsis = $Parsedown->setBreaksEnabled(false)->line($manga['synopsis']);
-
-	echo "\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="fansub">'.get_recommended_fansub_info($manga['fansub_name'], $manga['fansub_type'], TRUE).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="fansubs">'.get_recommended_fansub_info($series['fansub_info'], $series['version_id']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</a>'."\n";
 }
 

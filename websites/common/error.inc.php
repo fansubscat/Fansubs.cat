@@ -1,10 +1,10 @@
 <?php
-require_once("config.inc.php");
+require_once(dirname(__FILE__)."/config.inc.php");
 $page_title="Error";
 $style_type='text';
 $code = !empty($_GET['code']) ? $_GET['code'] : 404;
 http_response_code($code);
-require_once("header.inc.php");
+require_once(dirname(__FILE__)."/header.inc.php");
 ?>
 				<div class="text-page centered error-page">
 					<h2 class="section-title"><?php echo $code==403 ? "Ostres! Sembla que no tens permís..." : "Ostres! Sembla que la pàgina no existeix..."; ?></h2>

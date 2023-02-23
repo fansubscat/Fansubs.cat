@@ -1,8 +1,10 @@
 <?php
-require_once("user_init.inc.php");
+require_once(dirname(__FILE__)."/user_init.inc.php");
+
+$is_fools_day = (date('d')==28 && date('m')==12);
 ?>
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="ca" class="theme-dark">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,15 +17,57 @@ require_once("user_init.inc.php");
 		<meta property="og:image" content="<?php echo !empty($social_image_url) ? $social_image_url : $site_config['preview_image']; ?>">
 		<meta property="og:image:type" content="image/jpeg">
 		<title><?php echo !empty($page_title) ? htmlentities($page_title).' | '.htmlentities($site_config['site_title']) : htmlentities($site_config['site_title']); ?></title>
-		<link rel="shortcut icon" href="/favicon.png">
+		<link rel="icon" href="/favicon.png">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css">
-		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/common.css">
-		<link rel="stylesheet" href="/style/<?php echo $site_config['own_css']; ?>">
+<?php
+if ($style_type=='catalogue') {
+?>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+		<link rel="stylesheet" href="/js/videojs/video-js.min.css?v=<?php echo $version; ?>" />
+		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo $version; ?>" />
+<?php
+}
+?>
+		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/common.css?v=<?php echo $version; ?>">
+		<link rel="stylesheet" href="/style/<?php echo $site_config['own_css']; ?>?v=<?php echo $version; ?>">
+<?php
+$is_fools_day = (date('d')==28 && date('m')==12);
+if ($is_fools_day){
+?>
+		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/28dec.css?v=<?php echo $version; ?>" />
+<?php
+}
+?>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		<script src="<?php echo $static_url; ?>/common/js/common.js"></script>
 		<script src="/js/<?php echo $site_config['own_js']; ?>"></script>
+<?php
+if ($style_type=='catalogue') {
+?>
+		<script>
+			window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = {
+				preloadWebComponents: true,
+			};
+		</script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/jquery-ui.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+		<script src="/js/megajs/main.browser-umd.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/videojs/video.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/videostream.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/videojs/lang_ca.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/videojs/videojs-youtube.min.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/videojs/videojs-hotkeys.min.js?v=<?php echo $version; ?>"></script>
+		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+<?php
+}
+?>
 	</head>
-	<body>
+	<body class="style-type-<?php echo $style_type; ?>">
 		<div class="main-container<?php echo ($style_type=='login' || $style_type=='text' || $style_type=='contact') ? ' obscured-background' : ''; ?>">
 <?php
 if ($style_type=='login') {
@@ -162,33 +206,143 @@ if ($style_type=='login') {
 			</div>
 <?php
 } else {
+	if ($style_type=='catalogue') {
+?>
+			<div data-nosnippet id="overlay" class="hidden">
+				<a id="overlay-close" style="display: none;"><span class="fa fa-times"></span></a>
+				<div id="overlay-content"></div>
+			</div>
+			<div data-nosnippet id="options-overlay" class="hidden flex">
+				<div id="options-overlay-content">
+					<form id="options-form">
+						<h2 class="section-title">Opcions de visualització</h2>
+						<div class="options-item">
+							<input id="show_cancelled" type="checkbox"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
+						  	<label for="show_cancelled"><?php echo $cat_config['option_show_cancelled']; ?></label>
+						</div>
+						<div class="options-item">
+							<input id="show_missing" type="checkbox"<?php echo !empty($_COOKIE['show_missing']) ? ' checked' : ''; ?>>
+						  	<label for="show_missing"><?php echo $cat_config['option_show_missing']; ?></label>
+						</div>
+						<div class="options-item">
+							<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
+						  	<label for="show_hentai">Mostra el contingut explícit (confirmes que ets major d'edat)</label>
+						</div>
+<?php
+		if ($cat_config['items_type']=='manga') {
+?>
+						<h2 class="section-title options-section-divider">Opcions de lectura</h2>
+						<div class="options-item">
+							<input id="force_long_strip" type="checkbox"<?php echo !empty($_COOKIE['force_long_strip']) ? ' checked' : ''; ?>>
+						  	<label for="force_long_strip">Utilitza sempre el lector de manga en mode tira vertical</label>
+						</div>
+						<div class="options-item">
+							<input id="force_reader_ltr" type="checkbox"<?php echo !empty($_COOKIE['force_reader_ltr']) ? ' checked' : ''; ?>>
+						  	<label for="force_reader_ltr">Força el sentit de lectura occidental en lloc de l'oriental</label>
+						</div>
+<?php
+		}
+?>
+						<h2 class="section-title options-section-divider">Fansubs que es mostren</h2>
+						<div id="options-fansubs">
+<?php
+		$cookie_fansub_ids = get_cookie_fansub_ids();
+		$resultf = query("SELECT f.id, IF(f.name='Fansub independent','Fansubs independents',f.name) name FROM fansub f WHERE EXISTS (SELECT vf.version_id FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='${cat_config['items_type']}' AND vf.fansub_id=f.id AND v.is_hidden=0) ORDER BY IF(f.name='Fansub independent','Fansubs independents',f.name)");
+		while ($row = mysqli_fetch_assoc($resultf)) {
+?>
+							<div class="options-item options-fansub">
+								<input id="show_fansub_<?php echo $row['id']; ?>" type="checkbox"<?php echo in_array($row['id'],$cookie_fansub_ids) ? '' : ' checked'; ?> value="<?php echo $row['id']; ?>">
+							  	<label for="show_fansub_<?php echo $row['id']; ?>"><?php echo $row['name']; ?></label>
+							</div>
+<?php
+		}
+		mysqli_free_result($resultf);
+?>
+						</div>
+						<div id="options-select-buttons">
+							<a id="options-select-all">Selecciona'ls tots</a> / <a id="options-unselect-all">Desselecciona'ls tots</a>
+						</div>
+					</form>
+					<div id="options-buttonbar">
+						<button id="options-save-button"><span class="fa fa-check icon"></span>Desa la configuració</button>
+						<button id="options-cancel-button"><span class="fa fa-times icon"></span>Cancel·la</button>
+					</div>
+				</div>
+			</div>
+			<div data-nosnippet id="alert-overlay" class="hidden flex">
+				<div id="alert-overlay-content">
+					<h2 class="section-title" id="alert-title">S'ha produït un error</h2>
+					<div id="alert-message">S'ha produït un error desconegut.</div>
+					<div id="alert-buttonbar">
+						<button id="alert-refresh-button" class="hidden">Actualitza</button>
+						<button id="alert-ok-button">D'acord</button>
+					</div>
+				</div>
+			</div>
+<?php
+	}
 ?>
 			<div class="main-body">
 				<div class="header">
 <?php
 	if ($style_type=='main') {
 ?>
-					<a class="social-link twitter-link fab fa-fw fa-twitter" href="https://twitter.com/fansubscat" target="_blank" title="Twitter de Fansubs.cat"></a>
-					<a class="social-link mastodon-link fab fa-fw fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" title="Mastodon de Fansubs.cat"></a>
-					<a class="social-link telegram-link fab fa-fw fa-telegram" href="https://t.me/fansubscat" target="_blank" title="Telegram de Fansubs.cat"></a>
+					<a class="social-link twitter-link fab fa-fw fa-twitter" href="https://twitter.com/fansubscat" target="_blank" alt="Twitter de Fansubs.cat"></a>
+					<a class="social-link mastodon-link fab fa-fw fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" alt="Mastodon de Fansubs.cat"></a>
+					<a class="social-link telegram-link fab fa-fw fa-telegram" href="https://t.me/fansubscat" target="_blank" alt="Telegram de Fansubs.cat"></a>
 <?php
 	} else {
 ?>
-					<a class="logo-small" href="<?php echo $main_url; ?>/"><?php include($static_directory.'/common/images/logo.svg'); ?></a>
+					<a class="logo-small" href="<?php echo $main_url; ?>/">
+						<?php include($static_directory.'/common/images/logo.svg'); ?>
+					</a>
+<?php
+		if ($style_type=='catalogue') {
+?>
+					<div class="catalogues-navigation">
+						<a href="<?php echo $anime_url; ?>/"<?php echo $cat_config['items_type']=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
+						<span class="catalogues-separator">|</span>
+						<a href="<?php echo $manga_url; ?>/"<?php echo $cat_config['items_type']=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
+						<span class="catalogues-separator">|</span>
+						<a href="<?php echo $liveaction_url; ?>/"<?php echo $cat_config['items_type']=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Acció real</a>
+						<span class="catalogues-underline"></span>
+					</div>
+<?php
+		}
+	}
+?>
+					<div class="separator">
+<?php
+	if ($style_type=='catalogue') {
+?>
+						<div class="filter-settings">
+							<a id="filter-button" title="Filtra per categories"><i class="fa fa-sliders"></i></a>
+						</div>
+						<div class="search-form">
+							<form id="search_form">
+								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo empty($header_series_page) ? ' autofocus' : ''; ?>>
+								<i id="search_button" class="fa fa-search" title="Cerca"></i>
+							</form>
+						</div>
+						<div class="user-settings">
+							<a id="options-button" title="Opcions de visualització"><i class="fa fa-gear"></i></a>
+							<a id="theme-button" title="Canvia entre el mode clar i mode fosc"><i class="fa fa-circle-half-stroke"></i></a>
+						</div>
 <?php
 	}
 ?>
+					</div>
 					<div class="user-options">
 <?php
 	if (!empty($user)) {
 ?>
 						<div class="dropdown-menu">
-							<img onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? $static_url.'/images/avatars/'.$user['avatar_filename'] : $static_url.'/common/images/noavatar.jpg'; ?>">
+							<img alt="Menú de l’usuari" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? $static_url.'/images/avatars/'.$user['avatar_filename'] : $static_url.'/common/images/noavatar.jpg'; ?>">
 							<div id="user-dropdown" class="dropdown-content">
 								<div class="dropdown-title"><?php echo $user['username']; ?></div>
 								<hr class="dropdown-separator">
-								<a href="<?php echo $users_url; ?>/">El meu perfil</a>
-								<a href="<?php echo $users_url.'/la-meva-llista/'; ?>">La meva llista</a>
+								<a href="<?php echo $users_url; ?>/"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
+								<a href="<?php echo $users_url.'/la-meva-llista/'; ?>"><i class="fa fa-fw fa-list-ul"></i> La meva llista</a>
 								<hr class="dropdown-separator-secondary">
 								<a href="<?php echo $users_url.'/tanca-la-sessio/'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
 							</div>

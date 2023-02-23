@@ -1,8 +1,0 @@
-@font-face {
-    font-family: comic_sans;
-    src: url(comic_sans.ttf);
-}
-
-:not(.fa):not(.fab):not([class^="vjs-"]) {
-	font-family: comic_sans !important;
-}

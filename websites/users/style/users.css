@@ -3,6 +3,7 @@
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	text-align: center;
 }
 
 .login-header {
@@ -10,6 +11,7 @@
 	text-align: left;
 	margin-bottom: 0.5em;
 	line-height: 1.2;
+	font-family: "lexend_deca_bold", sans-serif;
 }
 
 .login-explanation {
@@ -87,6 +89,7 @@
 	font-size: 2.25em;
 	margin-bottom: 0.5em;
 	margin-top: -0.25em;
+	font-family: "lexend_deca_bold", sans-serif;
 }
 
 .login-text {

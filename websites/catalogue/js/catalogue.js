@@ -19,6 +19,10 @@ var enableDebug = false;
 var loggedMessages = "";
 var pageLoadedDate = Date.now();
 var playerWasFullscreen = false;
+var hoveringThumbnailIds = Array();
+var hoveringFloatingInfoIds = Array();
+var hoveringThumbnailIdInc = 0;
+var hoveringFloatingInfoIdInc = 0;
 
 var cookieOptions = {
 	expires: 3650,
@@ -667,7 +671,314 @@ function closeOverlay() {
 	}
 }
 
+function menuOptionUnderlineSetup(element) {
+	var target = document.querySelector(".catalogues-underline");
+	var links = document.querySelectorAll(".catalogues-navigation a");
+	var originalLink = document.querySelector(".catalogue-selected");
+	if (!originalLink.classList.contains("catalogue-selected-processed")) {
+		originalLink.classList.add("catalogue-selected-processed");
+		target.classList.add('catalogues-underline-noanim');
+
+		const width = originalLink.getBoundingClientRect().width;
+		const height = originalLink.getBoundingClientRect().height;
+		const left = originalLink.getBoundingClientRect().left + window.pageXOffset;
+		const top = originalLink.getBoundingClientRect().top + window.pageYOffset;
+
+		target.style.width = `${width}px`;
+		target.style.height = `${height}px`;
+		target.style.left = `${left}px`;
+		target.style.top = `${top}px`;
+		target.classList.remove('catalogues-underline-noanim');
+	}
+	if (!element.classList.contains("catalogues-underline-active")) {
+		for (let i = 0; i < links.length; i++) {
+			if (links[i].classList.contains("catalogues-underline-active")) {
+				links[i].classList.remove("catalogues-underline-active");
+			}
+		}
+
+		element.classList.add("catalogues-underline-active");
+
+		const width = element.getBoundingClientRect().width;
+		const height = element.getBoundingClientRect().height;
+		const left = element.getBoundingClientRect().left + window.pageXOffset;
+		const top = element.getBoundingClientRect().top + window.pageYOffset;
+
+		target.style.width = `${width}px`;
+		target.style.height = `${height}px`;
+		target.style.left = `${left}px`;
+		target.style.top = `${top}px`;
+	}
+}
+
+function menuOptionMouseEnter(e) {
+	menuOptionUnderlineSetup(e.currentTarget);
+}
+
+function menuOptionMouseLeave() {
+	var target = document.querySelector(".catalogues-underline");
+	var links = document.querySelectorAll(".catalogues-navigation a");
+	for (let i = 0; i < links.length; i++) {
+		if (links[i].classList.contains("catalogues-underline-active")) {
+			links[i].classList.remove("catalogues-underline-active");
+		}
+	}
+
+	var originalLink = document.querySelector(".catalogue-selected");
+	originalLink.classList.add("catalogues-underline-active");
+
+	const width = originalLink.getBoundingClientRect().width;
+	const height = originalLink.getBoundingClientRect().height;
+	const left = originalLink.getBoundingClientRect().left + window.pageXOffset;
+	const top = originalLink.getBoundingClientRect().top + window.pageYOffset;
+
+	target.style.width = `${width}px`;
+	target.style.height = `${height}px`;
+	target.style.left = `${left}px`;
+	target.style.top = `${top}px`;
+	target.style.transform = "none";
+}
+
+function getOffset(element){
+	var offsetLeft = 0;
+	var offsetTop  = 0;
+
+	while (element) {
+		offsetLeft += element.offsetLeft;
+		offsetTop  += element.offsetTop;
+		element = element.offsetParent;
+	}
+
+	return [offsetLeft, offsetTop];
+}
+
+function hoverThumbnailElement(element){
+	var id = $(element).attr('hover-thumbnail-id');
+	if (id===undefined) {
+		id = hoveringThumbnailIdInc++;
+		$(element).attr('hover-thumbnail-id', id);
+	}
+	console.log("hoverThumbnailElement "+id+" / "+hoveringFloatingInfoIds.toString());
+	hoveringThumbnailIds.push(id);
+	if (!hoveringFloatingInfoIds.includes(id)) {
+//		console.log("client w/h: "+element.clientWidth+'/'+element.clientHeight+", x/y: "+element.getBoundingClientRect().x+"/"+element.getBoundingClientRect().y);
+		
+		var offset = getOffset(element);
+//		console.log("fixed client w/h: "+element.clientWidth+'/'+element.clientHeight+", x/y: "+valueX+"/"+valueY);
+		var regex = /translate3d\((.*)px, 0px, 0px\)/g;
+		var translation = parseInt(regex.exec(element.parentNode.parentNode.style.transform)[1]);
+//		console.log("translate is:"+translation);
+//		console.log("window width is "+$(window).width()+", rightmost side would be "+(offset[0]+translation+(element.clientWidth*1.2*2)));
+		if ((offset[0]+translation+element.clientWidth*1.2*2)<$(window).width()){
+			//We can fit it: right-side
+			$('.floating-info-pattern').clone().removeClass('floating-info-pattern').removeClass('hidden').addClass('floating-info-right').attr('floating-info-id', id).appendTo('.main-section');
+			$('.floating-info[floating-info-id='+id+']').css({'opacity': 1,'left': offset[0]+translation+element.clientWidth+"px", 'top': offset[1]+"px", 'height': element.clientHeight+"px", 'width': element.clientWidth+"px", 'transform': "scale(1.2)"});
+		} else {
+			//We can't: left-side
+			$('.floating-info-pattern').clone().removeClass('floating-info-pattern').removeClass('hidden').addClass('floating-info-left').attr('floating-info-id', id).appendTo('.main-section');
+			$('.floating-info[floating-info-id='+id+']').css({'opacity': 1,'left': offset[0]+translation-element.clientWidth+"px", 'top': offset[1]+"px", 'height': element.clientHeight+"px", 'width': element.clientWidth+"px", 'transform': "scale(1.2)"});
+		}
+	}
+}
+
+function leaveThumbnailElement(element){
+	var id = $(element).attr('hover-thumbnail-id');
+	console.log("leaveThumbnailElement "+id+" / "+hoveringFloatingInfoIds.toString());
+	$(element).addClass('fake-thumbnail-hover');
+	setTimeout(leaveThumbnailApply, 10, element);
+}
+
+function leaveThumbnailApply(element){
+	var id = $(element).attr('hover-thumbnail-id');
+	console.log("leaveThumbnailApply "+id+" / "+hoveringFloatingInfoIds.toString());
+	for( var i = 0; i < hoveringThumbnailIds.length; i++){
+		if ( hoveringThumbnailIds[i] === id) {
+			hoveringThumbnailIds.splice(i, 1);
+		}
+	}
+	setTimeout(checkFloatingInfoShouldBeClosed, 10, id);
+}
+
+function hoverFloatingInfo(element){
+	var id = $(element).attr('floating-info-id');
+	if (id===undefined) {
+		id = hoveringFloatingInfoIdInc++;
+		$(element).attr('floating-info-id', id);
+	}
+	console.log("hoverFloatingInfo "+id+" / "+hoveringFloatingInfoIds.toString());
+	hoveringFloatingInfoIds.push(id);
+}
+
+function leaveFloatingInfo(element){
+	var id = $(element).attr('floating-info-id');
+	console.log("leaveFloatingInfo "+id);
+	setTimeout(leaveFloatingInfoApply, 10, element);
+}
+
+function leaveFloatingInfoApply(element){
+	var id = $(element).attr('floating-info-id');
+	console.log("leaveFloatingInfoApply "+id+" / "+hoveringFloatingInfoIds.toString());
+	for( var i = 0; i < hoveringFloatingInfoIds.length; i++){
+		if ( hoveringFloatingInfoIds[i] === id) {
+			hoveringFloatingInfoIds.splice(i, 1);
+		}
+	}
+	setTimeout(checkFloatingInfoShouldBeClosed, 10, id);
+}
+
+function checkFloatingInfoShouldBeClosed(id){
+	console.log("checkFloatingInfoShouldBeClosed "+id+" / "+hoveringFloatingInfoIds.toString());
+	if (!hoveringFloatingInfoIds.includes(id) && !hoveringThumbnailIds.includes(id)) {
+		$('.floating-info[floating-info-id='+id+']').css({'opacity': 0, 'transform': "scale(1)"});
+		$('.thumbnail[hover-thumbnail-id='+id+']').removeClass('fake-thumbnail-hover');
+		setTimeout(removeFloatingInfoFromPage, 200, id);
+	} else {
+		setTimeout(checkFloatingInfoShouldBeClosed, 50, id);
+	}
+}
+
+function removeFloatingInfoFromPage(id){
+	console.log("removeFloatingInfoFromPage "+id+" / "+hoveringFloatingInfoIds.toString());
+	for( var i = 0; i < hoveringFloatingInfoIds.length; i++){
+		if ( hoveringFloatingInfoIds[i] === id) {
+			hoveringFloatingInfoIds.splice(i, 1);
+		}
+	}
+	console.log("leaveThumbnailApply "+id+" / "+hoveringFloatingInfoIds.toString());
+	for( var i = 0; i < hoveringThumbnailIds.length; i++){
+		if ( hoveringThumbnailIds[i] === id) {
+			hoveringThumbnailIds.splice(i, 1);
+		}
+	}
+	$('.floating-info[floating-info-id='+id+']').css({'opacity': 0, 'transform': "scale(1)"});
+	$('.thumbnail[hover-thumbnail-id='+id+']').removeClass('fake-thumbnail-hover');
+	$('.floating-info[floating-info-id='+id+']').remove();
+}
+
+function initializeCarousels() {
+	var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
+	var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
+	var swipeToSlideSetting = ($(window).width()>650 ? false : true);
+
+	$('.style-type-catalogue').addClass('has-carousel');
+
+	$('.carousel').slick({
+		speed: 300,
+		infinite: false,
+		slidesToShow: size,
+		slidesToScroll: size,
+		swipeToSlide: swipeToSlideSetting,
+		variableWidth: true,
+		prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+		nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
+	});
+
+	$('.recommendations').slick({
+		dots: true,
+		appendDots: '.recommendations',
+		speed: 500,
+		fade: true,
+		infinite: true,
+		autoplay: true,
+		autoplaySpeed: 10000,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+		prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+		nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
+	});
+
+	$('.recommendations').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+		if ((currentSlide==$('.recommendations .slick-dots li').length-1 && nextSlide==0) || nextSlide-currentSlide==1) {
+			//Advance
+			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .5s ease', 'translate': '-20em', 'opacity': '0'}).delay(500).queue(function() {
+				$(this).css({'transition': 'all 0s ease', 'translate': '0em', 'opacity': '1'});
+		 		$(this).dequeue();
+			});
+			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'all 0s ease', 'translate': '20em', 'opacity': '0'}).delay(1).queue(function() {
+				$(this).css({'transition': 'all .5s ease', 'translate': '0em', 'opacity': '1'});
+				$(this).dequeue();
+			});
+		} else if ((currentSlide==0 && nextSlide==$('.recommendations .slick-dots li').length-1) || nextSlide-currentSlide==-1) {
+			//Go back
+			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .5s ease', 'translate': '20em', 'opacity': '0'}).delay(500).queue(function() {
+				$(this).css({'transition': 'all 0s ease', 'translate': '0em', 'opacity': '1'});
+		 		$(this).dequeue();
+			});
+			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'all 0s ease', 'translate': '-20em', 'opacity': '0'}).delay(1).queue(function() {
+				$(this).css({'transition': 'all .5s ease', 'translate': '0em', 'opacity': '1'});
+				$(this).dequeue();
+			});
+		} else {
+			//Just fade
+		}
+	});
+
+	$('.genres-carousel').slick({
+		speed: 300,
+		infinite: false,
+		slidesToShow: genresSize,
+		slidesToScroll: genresSize,
+		swipeToSlide: swipeToSlideSetting,
+		variableWidth: true,
+		prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+		nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
+	});
+
+	if ($('.synopsis-content').height()>=154) {
+		$(".show-more").removeClass('hidden');
+		$('.synopsis-content').addClass('expandable-content-hidden');
+		$(".show-more a").on("click", function() {
+			var linkText = $(this).text();    
+
+			if(linkText === "Mostra'n més..."){
+				linkText = "Mostra'n menys";
+				$(".synopsis-content").switchClass("expandable-content-hidden", "expandable-content-shown", 400);
+			} else {
+				linkText = "Mostra'n més...";
+				$(".synopsis-content").switchClass("expandable-content-shown", "expandable-content-hidden", 400);
+			};
+
+			$(this).text(linkText);
+		});
+	}
+}
+
 $(document).ready(function() {
+	var links = document.querySelectorAll(".catalogues-navigation a");
+	var container = document.querySelector(".catalogues-navigation");
+
+	for (let i = 0; i < links.length; i++) {
+		links[i].addEventListener("mouseenter", menuOptionMouseEnter);
+	}
+	container.addEventListener("mouseleave", menuOptionMouseLeave);
+
+	if ($('.absolutely-real').length==0 && $('.catalogue-index').length==1) {
+		$.post({
+			url: "/results.php",
+			data: [],
+			xhrFields: {
+				withCredentials: true
+			},
+		}).done(function(data) {
+			$('.main-section').html(data);
+			initializeCarousels();
+		}).fail(function(data) {
+			alert('Error del servidor.');
+		});
+	} else {
+		initializeCarousels();
+	}
+
+	$('#theme-button').click(function(){
+		if ($('html').hasClass('theme-dark')) {
+			$('html').removeClass('theme-dark');
+			$('html').addClass('theme-light');
+		} else {
+			$('html').removeClass('theme-light');
+			$('html').addClass('theme-dark');
+		}
+	});
+
 	$('#overlay-close').click(function(){
 		sendReadEndAjax();
 		if (!isEmbedPage()) {
@@ -839,60 +1150,6 @@ $(document).ready(function() {
 			}
 		});
 
-		var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
-		var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
-
-		$('.carousel').slick({
-			speed: 300,
-			infinite: false,
-			slidesToShow: size,
-			slidesToScroll: size,
-			variableWidth: true,
-			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-		});
-
-		$('.recommendations').slick({
-			dots: true,
-			appendDots: '.recommendations',
-			speed: 600,
-			infinite: true,
-			autoplay: true,
-			autoplaySpeed: 10000,
-			slidesToShow: 1,
-			slidesToScroll: 1,
-			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-		});
-
-		$('.genres-carousel').slick({
-			speed: 300,
-			infinite: false,
-			slidesToShow: genresSize,
-			slidesToScroll: genresSize,
-			variableWidth: true,
-			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-		});
-
-		if ($('.synopsis-content').height()>=154) {
-			$(".show-more").removeClass('hidden');
-			$('.synopsis-content').addClass('expandable-content-hidden');
-			$(".show-more a").on("click", function() {
-				var linkText = $(this).text();    
-
-				if(linkText === "Mostra'n més..."){
-					linkText = "Mostra'n menys";
-					$(".synopsis-content").switchClass("expandable-content-hidden", "expandable-content-shown", 400);
-				} else {
-					linkText = "Mostra'n més...";
-					$(".synopsis-content").switchClass("expandable-content-shown", "expandable-content-hidden", 400);
-				};
-
-				$(this).text(linkText);
-			});
-		}
-
 		if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
 			$("#options-tooltip").removeClass('hidden');
 			$("#options-tooltip").fadeIn("slow");
@@ -904,8 +1161,19 @@ $(document).ready(function() {
 
 		$(window).resize(function() {
 			if ($(window).width()!=lastWindowWidth) {
+				//Reposition underline
+				var target = document.querySelector(".catalogues-underline");
+				var active = document.querySelector("a.catalogues-underline-active");
+				if (active) {
+					const left = active.getBoundingClientRect().left + window.pageXOffset;
+					const top = active.getBoundingClientRect().top + window.pageYOffset;
+					target.style.left = `${left}px`;
+					target.style.top = `${top}px`;
+				}
+
 				var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
 				var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
+				var swipeToSlideSetting = ($(window).width()>650 ? false : true);
 
 				$('.carousel').slick('unslick');
 				$('.carousel').slick({
@@ -913,6 +1181,7 @@ $(document).ready(function() {
 					infinite: false,
 					slidesToShow: size,
 					slidesToScroll: size,
+					swipeToSlide: swipeToSlideSetting,
 					variableWidth: true,
 					prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
 					nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
@@ -924,6 +1193,7 @@ $(document).ready(function() {
 					infinite: false,
 					slidesToShow: genresSize,
 					slidesToScroll: genresSize,
+					swipeToSlide: swipeToSlideSetting,
 					variableWidth: true,
 					prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
 					nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'

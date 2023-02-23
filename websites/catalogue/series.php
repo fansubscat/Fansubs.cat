@@ -1,6 +1,8 @@
 <?php
-require_once("db.inc.php");
-require_once("parsedown.inc.php");
+$style_type='catalogue';
+require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("libraries/parsedown.inc.php");
+require_once("common.inc.php");
 
 function apply_sort($order_type, $episodes) {
 	switch ($order_type){
@@ -42,7 +44,7 @@ function apply_sort($order_type, $episodes) {
 	}
 }
 
-$result = query("SELECT s.*, YEAR(s.publish_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='${config['items_type']}' AND slug='".escape(!empty($_GET['slug']) ? $_GET['slug'] : '')."' GROUP BY s.id");
+$result = query("SELECT s.*, YEAR(s.publish_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='${cat_config['items_type']}' AND slug='".escape(!empty($_GET['slug']) ? $_GET['slug'] : '')."' GROUP BY s.id");
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
@@ -51,23 +53,17 @@ if (isset($failed)) {
 	die();
 }
 
-$header_page_title=$series['name'];
-
-$header_tab=$_GET['page'];
-
 $Parsedown = new Parsedown();
 $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
-$header_social = array(
-	'title' => $series['name'].' | '.$config['site_title'],
-	'url' => $config['base_url'].'/'.($series['subtype']==$config['filmsoneshots_db'] ? $config['filmsoneshots_slug'].'/' : $config['serialized_slug'].'/').$series['slug'].(isset($_GET['v']) ? '?v='.(int)$_GET['v'] : ''),
-	'description' => strip_tags($synopsis),
-	'image' => $config['base_url'].'/preview/'.$series['slug'].'.jpg'
-);
+$page_title=$series['name'];
+$social_url=$site_config['base_url'].'/'.($series['subtype']==$cat_config['filmsoneshots_db'] ? $cat_config['filmsoneshots_slug'].'/' : $cat_config['serialized_slug'].'/').$series['slug'].(isset($_GET['v']) ? '?v='.(int)$_GET['v'] : '');
+$social_description=strip_tags($synopsis);
+$social_image_url=$site_config['base_url'].'/preview/'.$series['slug'].'.jpg';
 
 $header_series_page=TRUE;
 
-require_once('header.inc.php');
+require_once("../common.fansubs.cat/header.inc.php");
 ?>
 				<div class="series_header">
 					<div class="img" style="background: url('<?php echo $static_url; ?>/images/featured/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
@@ -120,7 +116,7 @@ if ($series['number_of_episodes']>1) {
 <?php
 }
 if ($series['divisions']>1) {
-	if ($config['items_type']=='manga') {
+	if ($cat_config['items_type']=='manga') {
 ?>
 								<div><span class="fa fa-fw fa-th-large dataicon"></span><strong>Volums:</strong> <?php echo $series['divisions'].' volums'; ?></div>
 <?php
@@ -149,13 +145,13 @@ if (!empty($series['genres'])) {
 							</div>
 <?php
 if (!empty($series['external_id'])) {
-	if ($config['items_type']=='liveaction') {
+	if ($cat_config['items_type']=='liveaction') {
 ?>
 							<a class="mal-button" href="https://mydramalist.com/<?php echo $series['external_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra'n la fitxa a MyDramaList</a>
 <?php
 	} else {
 ?>
-							<a class="mal-button" href="https://myanimelist.net/<?php echo $config['items_type']; ?>/<?php echo $series['external_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra'n la fitxa a MyAnimeList</a>
+							<a class="mal-button" href="https://myanimelist.net/<?php echo $cat_config['items_type']; ?>/<?php echo $series['external_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra'n la fitxa a MyAnimeList</a>
 <?php
 	}
 }
@@ -167,13 +163,13 @@ if (!empty($series['tadaima_id'])) {
 							<a class="tadaima-button" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><span class="fa fa-comments icon"></span><?php echo get_tadaima_info($series['tadaima_id']); ?></a>
 <?php
 } else {
-	if ($series['subtype']==$config['filmsoneshots_db']) {
+	if ($series['subtype']==$cat_config['filmsoneshots_db']) {
 ?>
-							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=<?php echo $config['filmsoneshots_tadaima_forum_id']; ?>" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
+							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=<?php echo $cat_config['filmsoneshots_tadaima_forum_id']; ?>" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
 <?php
 	} else {
 ?>
-							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=<?php echo $config['serialized_tadaima_forum_id']; ?>" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
+							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=<?php echo $cat_config['serialized_tadaima_forum_id']; ?>" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
 <?php
 	}
 }
@@ -196,7 +192,7 @@ if (!empty($series['tadaima_id'])) {
 if ($series['has_licensed_parts']==1) {
 ?>
 							<div class="section-content padding-top parts-licensed">
-								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d'aquest <?php echo $config['items_string_s']; ?> ha estat llicenciat o editat oficialment en català. Se'n mostren només les parts no llicenciades.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d'aquest <?php echo $cat_config['items_string_s']; ?> ha estat llicenciat o editat oficialment en català. Se'n mostren només les parts no llicenciades.
 							</div>
 <?php
 }
@@ -218,7 +214,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest <?php echo $config['items_string_s']; ?> encara no disposa de cap versió editada en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
+							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> encara no disposa de cap versió editada en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
 						</div>
 <?php
 } else if ($count==0) {
@@ -226,14 +222,14 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest <?php echo $config['items_string_s']; ?> conté contingut pornogràfic i és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
+							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> conté contingut pornogràfic i és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
 						</div>
 <?php
 	} else {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest <?php echo $config['items_string_s']; ?> disposa d'alguna versió editada en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> disposa d'alguna versió editada en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -243,7 +239,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning-small">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Hi ha alguna altra versió d'aquest <?php echo $config['items_string_s']; ?>. La pots veure canviant el teu filtre d'usuari a la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Hi ha alguna altra versió d'aquest <?php echo $cat_config['items_string_s']; ?>. La pots veure canviant el teu filtre d'usuari a la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -315,8 +311,8 @@ if ($count_unfiltered==0) {
 
 		$plurals = array(
 				"active" => array("Aquest web només recopila el material editat. L'autoria de la versió en català és del ".($is_fandub ? 'fandub' : 'fansub')." següent.".($has_web ? " Al seu web també trobaràs els fitxers originals amb màxima qualitat. Si t'agrada la seva feina, deixa-hi un comentari d'agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : "")), "Aquest web només recopila el material editat. L'autoria de la versió en català és dels ".($is_fandub ? 'fandub' : 'fansub')."s següents.".($has_web ? " Als seus webs també trobaràs els fitxers originals amb màxima qualitat. Si t'agrada la seva feina, deixa-hi un comentari d'agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : ""))),
-				"abandoned" => array("Aquest ".$config['items_string_s']." es considera abandonat pel ".($is_fandub ? 'fandub' : 'fansub').", segurament no se'n llançaran més capítols.","Aquest ".$config['items_string_s']." es considera abandonat pels ".($is_fandub ? 'fandub' : 'fansub')."s, segurament no se'n llançaran més capítols."),
-				"cancelled" => array("Aquest ".$config['items_string_s']." ha estat cancel·lat pel ".($is_fandub ? 'fandub' : 'fansub').", no se'n llançaran més capítols.","Aquest ".$config['items_string_s']." ha estat cancel·lat pels ".($is_fandub ? 'fandub' : 'fansub')."s, no se'n llançaran més capítols.")
+				"abandoned" => array("Aquest ".$cat_config['items_string_s']." es considera abandonat pel ".($is_fandub ? 'fandub' : 'fansub').", segurament no se'n llançaran més capítols.","Aquest ".$cat_config['items_string_s']." es considera abandonat pels ".($is_fandub ? 'fandub' : 'fansub')."s, segurament no se'n llançaran més capítols."),
+				"cancelled" => array("Aquest ".$cat_config['items_string_s']." ha estat cancel·lat pel ".($is_fandub ? 'fandub' : 'fansub').", no se'n llançaran més capítols.","Aquest ".$cat_config['items_string_s']." ha estat cancel·lat pels ".($is_fandub ? 'fandub' : 'fansub')."s, no se'n llançaran més capítols.")
 		);
 ?>
 							<div class="section">
@@ -405,14 +401,14 @@ if ($count_unfiltered==0) {
 			if ($fansub['type']=='fandub') {
 ?>
 								<div class="section-content padding-bottom fandub-warning">
-									<span class="fa fa-fw fa-microphone icon-pr"></span>Aquest <?php echo $config['items_string_s']; ?> ha estat doblat per fans. L'àudio és únicament en català i no disposa de subtítols.
+									<span class="fa fa-fw fa-microphone icon-pr"></span>Aquest <?php echo $cat_config['items_string_s']; ?> ha estat doblat per fans. L'àudio és únicament en català i no disposa de subtítols.
 								</div>
 <?php
 			}
 			if ($series['number_of_episodes']==-1) {
 ?>
 							<div class="section-content padding-bottom series-on-air">
-								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Aquest <?php echo $config['items_string_s']; ?> està <?php echo $config['being_published']; ?>. Hi ha la possibilitat que acabi tenint més capítols que els que hi ha a la llista.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Aquest <?php echo $cat_config['items_string_s']; ?> està <?php echo $cat_config['being_published']; ?>. Hi ha la possibilitat que acabi tenint més capítols que els que hi ha a la llista.
 							</div>
 <?php
 			}
@@ -466,7 +462,7 @@ if ($count_unfiltered==0) {
 				mysqli_free_result($result_episodes);
 			}
 
-			if ($config['items_type']!='manga' && count($divisions)<2) {
+			if ($cat_config['items_type']!='manga' && count($divisions)<2) {
 				foreach ($divisions as $division) {
 ?>
 									<table class="episode-table">
@@ -475,7 +471,7 @@ if ($count_unfiltered==0) {
 												<th class="episode-seen-head">Vist</th>
 												<th>Títol</th>
 <?php
-					if ($config['items_type']!='manga') {
+					if ($cat_config['items_type']!='manga') {
 ?>
 													<th class="episode-info-head right">Notes</th></tr>
 <?php
@@ -502,20 +498,20 @@ if ($count_unfiltered==0) {
 					if ($is_first_in_empty_batch && $version['show_unavailable_episodes']==1) {
 	?>
 										<div class="empty-divisions"<?php echo ($index==0 ? ' style="margin-top: 0;"' : '') ?>>
-											<a onclick="$(this.parentNode.parentNode).find('.division').removeClass('hidden');$(this.parentNode.parentNode).find('.empty-divisions').addClass('hidden');"><?php echo $config['more_divisions_available']; ?></a>
+											<a onclick="$(this.parentNode.parentNode).find('.division').removeClass('hidden');$(this.parentNode.parentNode).find('.empty-divisions').addClass('hidden');"><?php echo $cat_config['more_divisions_available']; ?></a>
 										</div>
 	<?php
 					}
 ?>
-									<details id="<?php echo $config['division_name_lc']; ?>-<?php echo !empty($division['division_number']) ? floatval($division['division_number']) : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
+									<details id="<?php echo $cat_config['division_name_lc']; ?>-<?php echo !empty($division['division_number']) ? floatval($division['division_number']) : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
 <?php
-					if ($config['items_type']=='manga') {
+					if ($cat_config['items_type']=='manga') {
 ?>
 										<summary class="division_name"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Volum únic' : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? 'Volum '.floatval($division['division_number']) : 'Volum únic'))) : 'Altres'; ?><?php echo $division_available_episodes[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
 <?php
 					} else {
 ?>
-										<summary class="division_name"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : (!empty($division['division_name']) ? $division['division_name'] : $config['division_name'].' '.floatval($division['division_number']))) : 'Altres'; ?><?php echo $division_available_episodes[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
+										<summary class="division_name"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : (!empty($division['division_name']) ? $division['division_name'] : $cat_config['division_name'].' '.floatval($division['division_number']))) : 'Altres'; ?><?php echo $division_available_episodes[$index]>0 ? '' : ' <small style="color: #888;">(no hi ha contingut disponible)</small>'; ?></summary>
 <?php
 					}
 ?>
@@ -537,7 +533,7 @@ if ($count_unfiltered==0) {
 														<th class="episode-seen-head">Vist</th>
 														<th>Títol</th>
 <?php
-						if ($config['items_type']!='manga') {
+						if ($cat_config['items_type']!='manga') {
 ?>
 														<th class="episode-info-head right">Notes</th></tr>
 <?php
@@ -581,7 +577,7 @@ if ($count_unfiltered==0) {
 														<th class="episode-seen-head">Vist</th>
 														<th>Nom</th>
 <?php
-			if ($config['items_type']!='manga') {
+			if ($cat_config['items_type']!='manga') {
 ?>
 														<th class="episode-info-head right">Notes</th></tr>
 <?php
@@ -620,7 +616,7 @@ $base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MA
 //End copy from index.php
 //1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $series['genres']));
-$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE s.type='${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE s.type='${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg LEFT JOIN series s ON sg.series_id=s.id WHERE s.type='${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND sg.series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
+$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE s.type='${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE s.type='${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg LEFT JOIN series s ON sg.series_id=s.id WHERE s.type='${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND sg.series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
 $resultin = query($related_query);
 $in = array(-1);
 while ($row = mysqli_fetch_assoc($resultin)) {
@@ -632,8 +628,8 @@ $resultra = query($base_query . " WHERE (SELECT COUNT(*) FROM version v WHERE v.
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo $config['section_related']; ?></h2>
-						<h3 class="section-subtitle"><?php echo $config['section_related_desc']; ?></h3>
+						<h2 class="section-title-main"><?php echo $cat_config['section_related']; ?></h2>
+						<h3 class="section-subtitle"><?php echo $cat_config['section_related_desc']; ?></h3>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultra)) {
@@ -660,7 +656,7 @@ $base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MA
 //End copy from index.php
 //1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $series['genres']));
-$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE s.type<>'${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE s.type<>'${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg LEFT JOIN series s ON sg.series_id=s.id WHERE s.type<>'${config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND sg.series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
+$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE s.type<>'${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE s.type<>'${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg LEFT JOIN series s ON sg.series_id=s.id WHERE s.type<>'${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND sg.series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
 $resultin = query($related_query);
 $in = array(-1);
 while ($row = mysqli_fetch_assoc($resultin)) {
@@ -672,8 +668,8 @@ $resultrm = query($base_query . " WHERE (SELECT COUNT(*) FROM version v WHERE v.
 if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo $config['section_related_other']; ?></h2>
-						<h3 class="section-subtitle"><?php echo $config['section_related_other_desc']; ?></h3>
+						<h2 class="section-title-main"><?php echo $cat_config['section_related_other']; ?></h2>
+						<h3 class="section-subtitle"><?php echo $cat_config['section_related_other_desc']; ?></h3>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultrm)) {
@@ -697,5 +693,5 @@ mysqli_free_result($resultrm);
 				</div>
 <?php
 mysqli_free_result($result);
-require_once('footer.inc.php');
+require_once("../common.fansubs.cat/footer.inc.php");
 ?>
