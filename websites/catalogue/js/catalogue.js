@@ -19,10 +19,6 @@ var enableDebug = false;
 var loggedMessages = "";
 var pageLoadedDate = Date.now();
 var playerWasFullscreen = false;
-var hoveringThumbnailIds = Array();
-var hoveringFloatingInfoIds = Array();
-var hoveringThumbnailIdInc = 0;
-var hoveringFloatingInfoIdInc = 0;
 
 var cookieOptions = {
 	expires: 3650,
@@ -764,6 +760,15 @@ function prepareFloatingInfo(element){
 		//We can't: left-side
 		$(element).addClass('floating-info-left');
 	}
+}
+
+function toggleBookmark(seriesSlug){
+	if ($('.floating-info-bookmark[data-series-id='+seriesSlug+']').hasClass('fas'))	{
+		$('.floating-info-bookmark[data-series-id='+seriesSlug+']').removeClass('fas').addClass('far');
+	} else {
+		$('.floating-info-bookmark[data-series-id='+seriesSlug+']').removeClass('far').addClass('fas');
+	}
+	//TODO call server to save
 }
 
 function initializeCarousels() {
