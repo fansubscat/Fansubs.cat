@@ -181,7 +181,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 		}
 ?>
-					<div class="section-content<?php echo $type[$i]=='carousel' ? ' carousel' : ($type[$i]=='recommendations' ? ' recommendations' : ' flex wrappable catalog'); ?>">
+					<div class="section-content<?php echo $type[$i]=='carousel' ? ' carousel' : ($type[$i]=='recommendations' ? ' recommendations theme-dark' : ' flex wrappable catalog'); ?>">
 <?php
 		while ($row = mysqli_fetch_assoc($result)){
 			if (!empty($row['genres']) && $type[$i]=='static') {

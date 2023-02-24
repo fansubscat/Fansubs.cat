@@ -1,7 +1,7 @@
 :root {
 	--carousel-element-width: 16em;
 	--carousel-element-height: 25.25em;
-	--carousel-scaling: 1.2;
+	--carousel-scaling: 1.25;
 	--carousel-animation-duration: .3s;
 }
 
@@ -610,16 +610,6 @@
 	overflow: hidden;
 }
 
-.main-section a,
-.main-section a:visited, 
-#tachiyomi-message a:hover {
-	text-decoration: none;
-}
-
-.main-section a:hover {
-	text-decoration: underline;
-}
-
 .page-title-block {
 	padding: 1em 1em 1em 0em;
 	text-align: center;
@@ -764,7 +754,7 @@
 }
 
 .section-title-main {
-	color: rgb(var(--text-color));
+	color: rgb(var(--positive-color));
 	width:100%;
 	text-align: left;
 	border-top: 0.3em solid rgb(var(--primary-color));
@@ -776,8 +766,8 @@
 .section-title-main .header-with-background {
 	font-family: "lexend_deca", sans-serif; /* revert to normal in this case */
 	font-weight: normal;
-	color: rgb(var(--text-color));
-	background-color: rgb(var(--background-color-catalogue));
+	color: rgb(var(--positive-color));
+	background-color: rgb(var(--background-color-image));
 	text-decoration: none;
 	font-size: 1.4em;
 	display: inline-flex;
@@ -835,7 +825,7 @@
 	position: relative;
 	transition: all .6s ease;
 	overflow: hidden;
-	background: rgb(var(--secondary-color-filter)) 0% 0% no-repeat padding-box;
+	background: rgb(var(--secondary-color)) 0% 0% no-repeat padding-box;
 	mix-blend-mode: screen;
 	justify-content: center;
 }
@@ -913,7 +903,7 @@
 	top: 0;
 	left: 0;
 	z-index: 1;
-	color: rgb(var(--text-color));
+	color: rgb(var(--positive-color));
 	font-size: 1.5em;
 	margin-left: 3em;
 	margin-top: 0.75em;
@@ -922,7 +912,7 @@
 	white-space: nowrap;
 	overflow: hidden;
 	max-width: 25%;
-	background-color: rgba(var(--background-color), 0.5);
+	background-color: rgba(var(--negative-color), 0.5);
 	border-radius: 0.75em;
 	line-height: 1.3em;
 }
@@ -951,7 +941,7 @@
 .recommendation .infoholder {
 	height: 100%;
 	position: absolute;
-	color: rgb(var(--text-color));
+	color: rgb(var(--positive-color));
 	padding: 2em;
 	max-width: 76em;
 	display: flex;
@@ -961,7 +951,7 @@
 .recommendation .dataholder {
 	height: 100%;
 	text-align: left;
-	color: rgb(var(--background-color));
+	color: rgb(var(--negative-color));
 }
 
 .recommendation .watchbutton {
@@ -969,11 +959,11 @@
 	border-radius: 8px;
 	padding: 0.5em 2em;
 	font-size: 1.25em;
-	background: rgba(var(--background-color), 0.8);
+	background: rgb(var(--negative-color));
 	white-space: nowrap;
 	text-transform: uppercase;
 	display: inline-block;
-	color: rgb(var(--text-color));
+	color: rgb(var(--positive-color));
 	margin-top: 1.2em;
 }
 
@@ -981,30 +971,10 @@
 	opacity: 0.8;
 }
 
-.thumbnail .watchbutton {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	opacity: 0;
-	transition: opacity .5s ease-in-out;
-	font-family: "lexend_deca_bold", sans-serif;
-	border-radius: 999px;
-	padding: 0.5em;
-	font-size: 1.25em;
-	width: 36px;
-	height: 36px;
-	background: rgba(30, 105, 30, 0.8);
-	white-space: nowrap;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 .recommendation .coverholder {
 	height: 100%;
 	aspect-ratio: 0.70754717;
-	box-shadow: 0em 0em 2em 2em rgba(var(--background-color),0.15);
+	box-shadow: 0em 0em 2em 2em rgba(var(--negative-color),0.15);
 	margin-right: 2em;
 }
 
@@ -1045,7 +1015,7 @@
 	top: 0;
 	right: 0;
 	z-index: 1;
-	color: rgb(var(--background-color));
+	color: rgb(var(--negative-color));
 	font-size: 1.3em;
 	margin-right: 3em;
 	margin-top: 0.75em;
@@ -1120,7 +1090,7 @@
 .recommendations .slick-list {
 	margin-left: -3em;
 	margin-right: -3em;
-	background-color: rgb(var(--secondary-color-filter));
+	background-color: rgb(var(--secondary-color));
 }
 
 .slick-prev, .slick-next {
@@ -1134,7 +1104,7 @@
 .slick-prev::before, .slick-next::before {
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
-	color: rgb(var(--background-color));
+	color: rgb(var(--negative-color));
 	font-size: 3rem;
 	padding: 1em;
 }
@@ -1156,7 +1126,6 @@
 
 .slick-dots {
 	bottom: 0.2em;
-	filter: invert(var(--dots-inverted))
 }
 
 .slick-dotted.slick-slider {
@@ -1251,7 +1220,13 @@
 	justify-content: center;
 	height: 2.25em;
 	clear: both;
-	background-color: rgb(var(--background-color));
+	background-color: rgb(var(--negative-color));
+	transition: all var(--carousel-animation-duration) ease;
+	opacity: 1;
+}
+
+.thumbnail:hover .title {
+	opacity: 0;
 }
 
 .thumbnail .title .ellipsized-title {
@@ -1261,12 +1236,6 @@
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
-	transition: all var(--carousel-animation-duration) ease;
-	opacity: 1;
-}
-
-.thumbnail:hover .title .ellipsized-title {
-	opacity: 0;
 }
 
 .thumbnail .fansub {
@@ -1311,11 +1280,11 @@
 }
 
 .thumbnail.floating-info-right:hover {
-	box-shadow: 6.75em 7em 1em 8em rgba(var(--background-color),0.3);
+	filter: drop-shadow(0em 0em 1em rgba(var(--always-negative-color),0.7));
 }
 
 .thumbnail.floating-info-left:hover {
-	box-shadow: -6.75em 7em 1em 8em rgba(var(--background-color),0.3);
+	filter: drop-shadow(0em 0em 1em rgba(var(--always-negative-color),0.7));
 }
 
 .thumbnail.floating-info-right:hover img {
@@ -1327,29 +1296,33 @@
 }
 
 .thumbnail.floating-info-right:hover .floating-info {
-	transform: translateX(100%);
+	transform: translateX(99%);
 	border-radius: 0 0.3em 0.3em 0;
 }
 
 .thumbnail.floating-info-left:hover .floating-info {
-	transform: translateX(-100%);
+	transform: translateX(-99%);
 	border-radius: 0.3em 0 0 0.3em;
 }
 
 .thumbnail .floating-info {
-	display: flex;
-	flex-direction: column;
 	height: var(--carousel-element-height);
 	max-height: var(--carousel-element-height);
 	min-height: var(--carousel-element-height);
 	width: var(--carousel-element-width); 
 	max-width: var(--carousel-element-width);
 	min-width: var(--carousel-element-width);
-	background-color: rgb(var(--background-color));
 	opacity: 0;
-	transition: all var(--carousel-animation-duration) ease;
+	transition: all var(--carousel-animation-duration) ease-out;
 	position: absolute;
 	z-index: -1; /* to hide behind the image (z-index unset) */
+}
+
+.thumbnail .floating-info-main {
+	display: flex;
+	flex-direction: column;
+	background-color: rgb(var(--negative-color));
+	height: calc(100% - 2.5em);
 }
 
 .thumbnail:hover .floating-info {
@@ -1361,26 +1334,36 @@
 	height: 2.5em;
 }
 
+.floating-info .status-indicator{
+	opacity: 1 !important;
+	left: 1rem !important;
+	top: 0.8rem !important;
+	transition: none !important;
+}
+
 .floating-info-bookmark.fas{
 	color: rgb(var(--secondary-color));
 	position: absolute;
 	font-size: 1.5em;
 	right: 0.2em;
-	top: 0;
+	top: 0.8rem;
 }
 
 .floating-info-bookmark.far{
-	color: rgb(var(--text-color));
+	color: rgb(var(--positive-color));
 	position: absolute;
 	font-size: 1.5em;
 	right: 0.2em;
-	top: 0;
+	top: 0.8rem;
 }
 
 .floating-info-title {
 	font-family: "lexend_deca_bold", sans-serif;
 	font-size: 1.1em;
-	padding: 0 3rem;
+	padding: 0 1rem;
+	line-height: 1.1em;
+	margin-top: 2em;
+	width: 100%;
 	/* For ellipsizing and max 2 lines */
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
@@ -1391,75 +1374,131 @@
 
 .floating-info-fansub {
 	font-family: "lexend_deca_light", sans-serif;
-	font-size: 0.8em;
-	padding: 0 0.5rem;
+	font-size: 0.9em;
+	padding: 0 1rem;
+	margin-top: 0.3em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.floating-info-synopsis-wrapper {
+	flex-grow: 1;
 }
 
 .floating-info-synopsis {
 	font-family: "lexend_deca_light", sans-serif;
-	font-size: 0.8em;
+	font-size: 0.9em;
 	opacity: 0.75;
-	padding: 0 0.5rem;
-	/* For ellipsizing and max 7 lines */
+	padding: 0 1rem;
+	margin-top: 1.2em;
+	line-height: 1.1em;
+	/* For ellipsizing and max 8 lines */
 	display: -webkit-box;
 	-webkit-line-clamp: 7;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	text-align: left;
 }
 
-.status-indicator-tab {
-	align-self: flex-start;
+.floating-info-watch-now {
+	font-family: "lexend_deca_bold", sans-serif;
+	border-radius: 0.5em;
+	padding: 0.2em 0.8em;
+	font-size: 0.9em;
+	background: rgb(var(--positive-color));
+	white-space: nowrap;
+	text-transform: uppercase;
+	display: inline-block;
+	color: rgb(var(--negative-color));
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.status-completed .status-indicator, .status-completed.status-indicator-tab {
+.floating-info-watch-now:hover {
+	opacity: 0.8;
+}
+
+.floating-info-divisions {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 0.9em;
+	padding: 0 1rem;
+	margin-top: 0.8em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.floating-info-genres-score-wrapper {
+	display: flex;
+	flex-direction: row;
+	margin-top: 0.8em;
+	margin-bottom: 0.5em;
+	align-items: end;
+}
+
+.floating-info-genres-wrapper {
+	flex-grow: 1;
+	font-family: "lexend_deca_light", sans-serif;
+	font-size: 0.8em;
+	padding: 0 1rem;
+	height: 3.3em;
+	line-height: 1.1em;
+	display: flex;
+	align-items: end;
+}
+
+.floating-info-genres {
+	/* For ellipsizing and max 3 lines */
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: left;
+}
+
+.floating-info-score {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 2em;
+	padding: 0 1rem 0 0;
+	line-height: 1em;
+}
+
+.thumbnail .status-indicator {
 	position: absolute;
 	width: 0;
 	height: 0;
 	top: 0.3em;
 	left: 0.4em;
+	transition: all var(--carousel-animation-duration) ease;
+	border-radius: 1em;
+	opacity: 1;
+}
+
+.thumbnail:hover .status-indicator {
+	opacity: 0;
+}
+
+.status-completed .status-indicator {
 	border: 0.5em solid green;
-	border-radius: 1em;
 }
 
-.status-in-progress .status-indicator, .status-in-progress.status-indicator-tab {
-	position: absolute;
-	width: 0;
-	height: 0;
-	top: 0.3em;
-	left: 0.4em;
+.status-in-progress .status-indicator {
 	border: 0.5em solid yellow;
-	border-radius: 1em;
 }
 
-.status-partially-completed .status-indicator, .status-partially-completed.status-indicator-tab {
-	position: absolute;
-	width: 0;
-	height: 0;
-	top: 0.3em;
-	left: 0.4em;
+.status-partially-completed .status-indicator {
 	border: 0.5em solid greenyellow;
-	border-radius: 1em;
 }
 
-.status-cancelled .status-indicator, .status-cancelled.status-indicator-tab {
-	position: absolute;
-	width: 0;
-	height: 0;
-	top: 0.3em;
-	left: 0.4em;
+.status-cancelled .status-indicator {
 	border: 0.5em solid red;
-	border-radius: 1em;
 }
 
-.status-abandoned .status-indicator, .status-abandoned.status-indicator-tab {
-	position: absolute;
-	width: 0;
-	height: 0;
-	top: 0.3em;
-	left: 0.4em;
+.status-abandoned .status-indicator {
 	border: 0.5em solid coral;
-	border-radius: 1em;
 }
 
 /* Series screen */

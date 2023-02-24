@@ -753,7 +753,7 @@ function prepareFloatingInfo(element){
 	var regex = /translate3d\((.*)px, 0px, 0px\)/g;
 	var translation = parseInt(regex.exec(element.parentNode.parentNode.style.transform)[1]);
 	$(element).removeClass('floating-info-right').removeClass('floating-info-left');
-	if ((offset[0]+translation+element.clientWidth*1.2*2)<$(window).width()){
+	if ((offset[0]+translation+element.clientWidth*1.25*2)<$(window).width()){
 		//We can fit it: right-side
 		$(element).addClass('floating-info-right');
 	} else {
@@ -1087,6 +1087,7 @@ $(document).ready(function() {
 					target.style.top = `${top}px`;
 				}
 
+				//Recalculate multi-carousels
 				var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
 				var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
 				var swipeToSlideSetting = ($(window).width()>650 ? false : true);
