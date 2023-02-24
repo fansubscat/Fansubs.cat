@@ -752,107 +752,18 @@ function getOffset(element){
 	return [offsetLeft, offsetTop];
 }
 
-function hoverThumbnailElement(element){
-	var id = $(element).attr('hover-thumbnail-id');
-	if (id===undefined) {
-		id = hoveringThumbnailIdInc++;
-		$(element).attr('hover-thumbnail-id', id);
-	}
-	console.log("hoverThumbnailElement "+id+" / "+hoveringFloatingInfoIds.toString());
-	hoveringThumbnailIds.push(id);
-	if (!hoveringFloatingInfoIds.includes(id)) {
-//		console.log("client w/h: "+element.clientWidth+'/'+element.clientHeight+", x/y: "+element.getBoundingClientRect().x+"/"+element.getBoundingClientRect().y);
-		
-		var offset = getOffset(element);
-//		console.log("fixed client w/h: "+element.clientWidth+'/'+element.clientHeight+", x/y: "+valueX+"/"+valueY);
-		var regex = /translate3d\((.*)px, 0px, 0px\)/g;
-		var translation = parseInt(regex.exec(element.parentNode.parentNode.style.transform)[1]);
-//		console.log("translate is:"+translation);
-//		console.log("window width is "+$(window).width()+", rightmost side would be "+(offset[0]+translation+(element.clientWidth*1.2*2)));
-		if ((offset[0]+translation+element.clientWidth*1.2*2)<$(window).width()){
-			//We can fit it: right-side
-			$('.floating-info-pattern').clone().removeClass('floating-info-pattern').removeClass('hidden').addClass('floating-info-right').attr('floating-info-id', id).appendTo('.main-section');
-			$('.floating-info[floating-info-id='+id+']').css({'opacity': 1,'left': offset[0]+translation+element.clientWidth+"px", 'top': offset[1]+"px", 'height': element.clientHeight+"px", 'width': element.clientWidth+"px", 'transform': "scale(1.2)"});
-		} else {
-			//We can't: left-side
-			$('.floating-info-pattern').clone().removeClass('floating-info-pattern').removeClass('hidden').addClass('floating-info-left').attr('floating-info-id', id).appendTo('.main-section');
-			$('.floating-info[floating-info-id='+id+']').css({'opacity': 1,'left': offset[0]+translation-element.clientWidth+"px", 'top': offset[1]+"px", 'height': element.clientHeight+"px", 'width': element.clientWidth+"px", 'transform': "scale(1.2)"});
-		}
-	}
-}
-
-function leaveThumbnailElement(element){
-	var id = $(element).attr('hover-thumbnail-id');
-	console.log("leaveThumbnailElement "+id+" / "+hoveringFloatingInfoIds.toString());
-	$(element).addClass('fake-thumbnail-hover');
-	setTimeout(leaveThumbnailApply, 10, element);
-}
-
-function leaveThumbnailApply(element){
-	var id = $(element).attr('hover-thumbnail-id');
-	console.log("leaveThumbnailApply "+id+" / "+hoveringFloatingInfoIds.toString());
-	for( var i = 0; i < hoveringThumbnailIds.length; i++){
-		if ( hoveringThumbnailIds[i] === id) {
-			hoveringThumbnailIds.splice(i, 1);
-		}
-	}
-	setTimeout(checkFloatingInfoShouldBeClosed, 10, id);
-}
-
-function hoverFloatingInfo(element){
-	var id = $(element).attr('floating-info-id');
-	if (id===undefined) {
-		id = hoveringFloatingInfoIdInc++;
-		$(element).attr('floating-info-id', id);
-	}
-	console.log("hoverFloatingInfo "+id+" / "+hoveringFloatingInfoIds.toString());
-	hoveringFloatingInfoIds.push(id);
-}
-
-function leaveFloatingInfo(element){
-	var id = $(element).attr('floating-info-id');
-	console.log("leaveFloatingInfo "+id);
-	setTimeout(leaveFloatingInfoApply, 10, element);
-}
-
-function leaveFloatingInfoApply(element){
-	var id = $(element).attr('floating-info-id');
-	console.log("leaveFloatingInfoApply "+id+" / "+hoveringFloatingInfoIds.toString());
-	for( var i = 0; i < hoveringFloatingInfoIds.length; i++){
-		if ( hoveringFloatingInfoIds[i] === id) {
-			hoveringFloatingInfoIds.splice(i, 1);
-		}
-	}
-	setTimeout(checkFloatingInfoShouldBeClosed, 10, id);
-}
-
-function checkFloatingInfoShouldBeClosed(id){
-	console.log("checkFloatingInfoShouldBeClosed "+id+" / "+hoveringFloatingInfoIds.toString());
-	if (!hoveringFloatingInfoIds.includes(id) && !hoveringThumbnailIds.includes(id)) {
-		$('.floating-info[floating-info-id='+id+']').css({'opacity': 0, 'transform': "scale(1)"});
-		$('.thumbnail[hover-thumbnail-id='+id+']').removeClass('fake-thumbnail-hover');
-		setTimeout(removeFloatingInfoFromPage, 200, id);
+function prepareFloatingInfo(element){
+	var offset = getOffset(element);
+	var regex = /translate3d\((.*)px, 0px, 0px\)/g;
+	var translation = parseInt(regex.exec(element.parentNode.parentNode.style.transform)[1]);
+	$(element).removeClass('floating-info-right').removeClass('floating-info-left');
+	if ((offset[0]+translation+element.clientWidth*1.2*2)<$(window).width()){
+		//We can fit it: right-side
+		$(element).addClass('floating-info-right');
 	} else {
-		setTimeout(checkFloatingInfoShouldBeClosed, 50, id);
+		//We can't: left-side
+		$(element).addClass('floating-info-left');
 	}
-}
-
-function removeFloatingInfoFromPage(id){
-	console.log("removeFloatingInfoFromPage "+id+" / "+hoveringFloatingInfoIds.toString());
-	for( var i = 0; i < hoveringFloatingInfoIds.length; i++){
-		if ( hoveringFloatingInfoIds[i] === id) {
-			hoveringFloatingInfoIds.splice(i, 1);
-		}
-	}
-	console.log("leaveThumbnailApply "+id+" / "+hoveringFloatingInfoIds.toString());
-	for( var i = 0; i < hoveringThumbnailIds.length; i++){
-		if ( hoveringThumbnailIds[i] === id) {
-			hoveringThumbnailIds.splice(i, 1);
-		}
-	}
-	$('.floating-info[floating-info-id='+id+']').css({'opacity': 0, 'transform': "scale(1)"});
-	$('.thumbnail[hover-thumbnail-id='+id+']').removeClass('fake-thumbnail-hover');
-	$('.floating-info[floating-info-id='+id+']').remove();
 }
 
 function initializeCarousels() {

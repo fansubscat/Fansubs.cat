@@ -753,7 +753,7 @@
 }
 
 .section:nth-of-type(1) {
-	padding-top: 1.5em;
+	padding-top: 2em;
 }
 
 .section-title-main {
@@ -1071,31 +1071,24 @@
 	position: absolute;
 	background: red;
 	z-index: 9999;
-	transition: all .2s ease;
+	transition: all .3s ease;
 	opacity: 0;
 }
 
-.floating-info-right {
-	transform-origin: -50% 50%;
-}
-
-.floating-info-left {
-	transform-origin: 150% 50%;
-}
-
 .thumbnail {
-	display: block;
+	display: flex;
 	width: 180px; 
 	height: 256px;
 	max-width: 180px;
 	max-height: 256px;
 	background-color: #888;
 	position: relative;
-	transition: all .2s ease;
+	transition: all .3s ease;
 	margin: 2px;
+	z-index: 1; /*remove this to have free hovering*/
 }
 
-.thumbnail:hover, .fake-thumbnail-hover {
+.thumbnail:hover {
 	transform: scale(1.2);
 	filter: grayscale(0%) brightness(100%);
 	z-index: 99;
@@ -1336,6 +1329,55 @@
 
 .thumbnail .fansub-type {
 	margin-right: -0.4em;
+}
+
+.thumbnail.floating-info-right {
+	flex-direction: row;
+}
+
+.thumbnail.floating-info-left {
+	flex-direction: row-reverse;
+}
+
+.thumbnail.floating-info-right:hover {
+	box-shadow: 6.75em 7em 1em 8em rgba(var(--background-color),0.3);
+}
+
+.thumbnail.floating-info-left:hover {
+	box-shadow: -6.75em 7em 1em 8em rgba(var(--background-color),0.3);
+}
+
+.thumbnail.floating-info-right:hover .floating-info {
+	transform: translateX(100%);
+}
+
+.thumbnail.floating-info-left:hover .floating-info {
+	transform: translateX(-100%);
+}
+
+.thumbnail.floating-info-left {
+	transform-origin: 50% 50%;
+}
+
+.thumbnail.floating-info-right {
+	transform-origin: 50% 50%;
+}
+
+.thumbnail .floating-info {
+	height: 256px;
+	max-height: 256px;
+	background-color: red;
+	opacity: 0;
+	transition: all .3s ease;
+}
+
+.thumbnail:hover .floating-info {
+	width: 180px; 
+	max-width: 180px;
+	min-width: 180px;
+	opacity: 1;
+	transform: translateX(0%);
+	z-index: -99999;
 }
 
 .status-indicator-tab {
@@ -2104,7 +2146,7 @@
 }
 
 /* Tooltips */
-@media (pointer: coarse), (hover: none) {
+/*@media (pointer: coarse), (hover: none) {
 	.tooltip {
 		position: relative;
 		display: inline-flex;
@@ -2294,8 +2336,8 @@
 	}
 
 	.carousel {
-		/*min-height: 170px;
-		min-height: 170px;*/
+		min-height: 170px;
+		min-height: 170px;
 	}
 
 	.fake-carousel {
@@ -2396,4 +2438,4 @@
 	.video-js .vjs-duration, .video-js .vjs-time-divider {
 		display: none !important;
 	}
-}
+}*/

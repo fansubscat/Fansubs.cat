@@ -584,7 +584,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 
 function print_carousel_item_generic($series, $specific_version, $show_new=TRUE) {
 	global $cat_config, $anime_url, $liveaction_url, $static_url;
-	echo "\t\t\t\t\t\t\t".'<a class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['slug'].'" href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['subtype']=='movie' ? "films" : "series").'/'.$series['slug'].(($specific_version && exists_more_than_one_version($series['id'])) ? "?v=".$series['version_id'] : "").'" onmouseenter="hoverThumbnailElement(this);" onmouseleave="leaveThumbnailElement(this);">'."\n";
+	echo "\t\t\t\t\t\t\t".'<a class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['slug'].'" href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['subtype']=='movie' ? "films" : "series").'/'.$series['slug'].(($specific_version && exists_more_than_one_version($series['id'])) ? "?v=".$series['version_id'] : "").'" onmouseenter="prepareFloatingInfo(this);">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($series['best_status']).'"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<img src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'" />'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="watchbutton">'."\n";
@@ -614,6 +614,7 @@ function print_carousel_item_generic($series, $specific_version, $show_new=TRUE)
 		//$fansub_type = '<span class="fansub-type" title="Versió subtitulada"><span class="fa-stack" style="font-size:0.63em;"><span class="far fa-fw fa-square fa-stack-2x"></span><span class="fa fa-fw fa-minus fa-stack-1x" style="margin-top: 0.2em;"></span></span></span>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t".'<div class="fansub"><span class="fansub-name-th">'.(strpos($series['fansub_name'],"|")!==FALSE ? 'Diversos fansubs' : $series['fansub_name']).'</span>'.(!empty($fansub_type) ? ' '.$fansub_type : '').'</div>'."\n";
+	echo "\t\t\t\t\t\t\t".'<div class="floating-info">Això és una prova de text lateral</div>';
 	echo "\t\t\t\t\t\t\t".'</a>';
 }
 
