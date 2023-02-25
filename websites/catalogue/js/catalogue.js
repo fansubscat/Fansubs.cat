@@ -678,7 +678,7 @@ function menuOptionUnderlineSetup(element) {
 		const width = originalLink.getBoundingClientRect().width;
 		const height = originalLink.getBoundingClientRect().height;
 		const left = originalLink.getBoundingClientRect().left + window.pageXOffset;
-		const top = originalLink.getBoundingClientRect().top + window.pageYOffset;
+		const top = originalLink.getBoundingClientRect().top + window.pageYOffset+2;
 
 		target.style.width = `${width}px`;
 		target.style.height = `${height}px`;
@@ -698,7 +698,7 @@ function menuOptionUnderlineSetup(element) {
 		const width = element.getBoundingClientRect().width;
 		const height = element.getBoundingClientRect().height;
 		const left = element.getBoundingClientRect().left + window.pageXOffset;
-		const top = element.getBoundingClientRect().top + window.pageYOffset;
+		const top = element.getBoundingClientRect().top + window.pageYOffset+2;
 
 		target.style.width = `${width}px`;
 		target.style.height = `${height}px`;
@@ -726,7 +726,7 @@ function menuOptionMouseLeave() {
 	const width = originalLink.getBoundingClientRect().width;
 	const height = originalLink.getBoundingClientRect().height;
 	const left = originalLink.getBoundingClientRect().left + window.pageXOffset;
-	const top = originalLink.getBoundingClientRect().top + window.pageYOffset;
+	const top = originalLink.getBoundingClientRect().top + window.pageYOffset+2;
 
 	target.style.width = `${width}px`;
 	target.style.height = `${height}px`;
@@ -810,22 +810,22 @@ function initializeCarousels() {
 	$('.recommendations').on('beforeChange', function(event, slick, currentSlide, nextSlide){
 		if ((currentSlide==$('.recommendations .slick-dots li').length-1 && nextSlide==0) || nextSlide-currentSlide==1) {
 			//Advance
-			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .5s ease', 'translate': '-20em', 'opacity': '0'}).delay(500).queue(function() {
-				$(this).css({'transition': 'all 0s ease', 'translate': '0em', 'opacity': '1'});
+			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .6s ease', 'translate': '-30rem', 'opacity': '0'}).delay(500).queue(function() {
+				$(this).css({'transition': 'all 0s ease', 'translate': '0rem', 'opacity': '1'});
 		 		$(this).dequeue();
 			});
-			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'all 0s ease', 'translate': '20em', 'opacity': '0'}).delay(1).queue(function() {
-				$(this).css({'transition': 'all .5s ease', 'translate': '0em', 'opacity': '1'});
+			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'all 0s ease', 'translate': '30rem', 'opacity': '0'}).delay(1).queue(function() {
+				$(this).css({'transition': 'all .6s ease', 'translate': '0rem', 'opacity': '1'});
 				$(this).dequeue();
 			});
 		} else if ((currentSlide==0 && nextSlide==$('.recommendations .slick-dots li').length-1) || nextSlide-currentSlide==-1) {
 			//Go back
-			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .5s ease', 'translate': '20em', 'opacity': '0'}).delay(500).queue(function() {
-				$(this).css({'transition': 'all 0s ease', 'translate': '0em', 'opacity': '1'});
+			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .6s ease', 'translate': '30rem', 'opacity': '0'}).delay(500).queue(function() {
+				$(this).css({'transition': 'all 0s ease', 'translate': '0rem', 'opacity': '1'});
 		 		$(this).dequeue();
 			});
-			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'all 0s ease', 'translate': '-20em', 'opacity': '0'}).delay(1).queue(function() {
-				$(this).css({'transition': 'all .5s ease', 'translate': '0em', 'opacity': '1'});
+			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'all 0s ease', 'translate': '-30rem', 'opacity': '0'}).delay(1).queue(function() {
+				$(this).css({'transition': 'all .6s ease', 'translate': '0rem', 'opacity': '1'});
 				$(this).dequeue();
 			});
 		} else {
@@ -878,7 +878,7 @@ $(document).ready(function() {
 		initializeCarousels();
 	}
 
-	$('#theme-button').click(function(){
+	$('.theme-button').click(function(){
 		if ($('html').hasClass('theme-dark')) {
 			$('html').removeClass('theme-dark');
 			$('html').addClass('theme-light');

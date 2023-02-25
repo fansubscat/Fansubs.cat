@@ -41,8 +41,8 @@ if ($is_fools_day){
 }
 ?>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-		<script src="<?php echo $static_url; ?>/common/js/common.js"></script>
-		<script src="/js/<?php echo $site_config['own_js']; ?>"></script>
+		<script src="<?php echo $static_url; ?>/common/js/common.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/<?php echo $site_config['own_js']; ?>?v=<?php echo $version; ?>"></script>
 <?php
 if ($style_type=='catalogue') {
 ?>
@@ -193,7 +193,7 @@ if ($style_type=='login') {
 								<div id="register_birthday_validation" class="validation-message"></div>
 								<div class="checkbox-layout">
 									<input id="register_privacy_policy_accept" type="checkbox" onchange="removeValidationOnlyText('register_privacy_policy_accept');">
-									<label for="register_privacy_policy_accept">Accepto la <a href="<?php echo $mail_url; ?>/politica-de-privadesa/" target="_blank">política de privadesa</a></label>
+									<label for="register_privacy_policy_accept">Accepto la <a href="<?php echo $main_url; ?>/politica-de-privadesa/" target="_blank">política de privadesa</a></label>
 								</div>
 								<div id="register_privacy_policy_accept_validation" class="validation-message"></div>
 								<div id="register_generic_validation" class="validation-message-generic"></div>
@@ -316,7 +316,7 @@ if ($style_type=='login') {
 	if ($style_type=='catalogue') {
 ?>
 						<div class="filter-settings">
-							<a id="filter-button" title="Filtra per categories"><i class="fa fa-sliders"></i></a>
+							<a class="filter-button" title="Filtra per categories"><i class="fa fa-sliders"></i></a>
 						</div>
 						<div class="search-form">
 							<form id="search_form">
@@ -325,8 +325,8 @@ if ($style_type=='login') {
 							</form>
 						</div>
 						<div class="user-settings">
-							<a id="options-button" title="Opcions de visualització"><i class="fa fa-gear"></i></a>
-							<a id="theme-button" title="Canvia entre el mode clar i mode fosc"><i class="fa fa-circle-half-stroke"></i></a>
+							<a class="options-button" title="Opcions de visualització"><i class="fa fa-gear"></i></a>
+							<a class="theme-button" title="Canvia entre el mode clar i mode fosc"><i class="fa fa-circle-half-stroke"></i></a>
 						</div>
 <?php
 	}

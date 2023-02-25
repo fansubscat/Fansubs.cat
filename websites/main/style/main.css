@@ -1,3 +1,44 @@
-.main-section .main-logo {
-	user-select: none;
+.main-button {
+	font-family: "lexend_deca_bold", sans-serif;
+	display: inline-block;
+	background-color: rgb(var(--positive-color));
+	color: rgb(var(--negative-color));
+	padding: 1.4rem 2.2rem;
+	margin: 1.5rem 0.75rem 0;
+	min-width: 22.5rem;
+	font-size: 3rem;
+	border-radius: 0.5rem;
+	border: 0.3rem solid rgb(var(--positive-color));
+	transition: border .3s, letter-spacing .3s;
+	text-align: center;
+}
+
+.main-button:hover {
+	border: 0.3rem solid rgb(var(--primary-color));
+	letter-spacing: 0.15rem;
+}
+
+.secondary-button {
+	display: inline-block;
+	background: rgba(var(--negative-color),0.5);
+	color: rgb(var(--positive-color));
+	padding: 1.1rem 2.2rem;
+	margin: 1.5rem 0.75rem 0;
+	min-width: 18rem;
+	font-size: 2.4rem;
+	border-radius: 0.5rem;
+	border: 0.2rem solid rgb(var(--positive-color));
+	transition: border .3s, letter-spacing .3s;
+	text-align: center;
+}
+
+.secondary-button:hover {
+	border: 0.2rem solid rgb(var(--primary-color));
+	letter-spacing: 0.15rem;
+}
+
+@media (max-width: 900px){
+	.main-button, .secondary-button {
+		padding: 1rem;
+	}
 }

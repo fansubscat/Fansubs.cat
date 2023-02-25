@@ -5,7 +5,7 @@ if ($style_type!='login') {
 <?php
 	if ($style_type!='contact') {
 ?>
-					<a class="tertiary-button" href="<?php echo $main_url; ?>/contacta-amb-nosaltres/">Contacta amb nosaltres</a>
+					<a class="contact-button" href="<?php echo $main_url; ?>/contacta-amb-nosaltres/">Contacta amb nosaltres</a>
 <?php
 	}
 ?>

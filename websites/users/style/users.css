@@ -1,4 +1,3 @@
-
 .login-page {
 	display: flex;
 	flex-direction: row;
@@ -7,9 +6,9 @@
 }
 
 .login-header {
-	font-size: 4em;
+	font-size: 4.8rem;
 	text-align: left;
-	margin-bottom: 0.5em;
+	margin-bottom: 2.4rem;
 	line-height: 1.2;
 	font-family: "lexend_deca_bold", sans-serif;
 }
@@ -20,7 +19,7 @@
 }
 
 .login-points {
-	font-size: 2em;
+	font-size: 2.4rem;
 	font-weight: normal;
 	line-height: 1;
 }
@@ -29,7 +28,7 @@
 	clear: both;
 	display: flex;
 	flex-direction: row;
-	margin: 1em 0;
+	margin: 2.4rem 0;
 }
 
 .login-point:nth-child(1), .login-point:nth-child(3) {
@@ -42,62 +41,58 @@
 
 .login-point:nth-child(1) .login-point-text, .login-point:nth-child(3) .login-point-text {
 	text-align: left;
-	margin-left: 0.25em;
+	margin-left: 0.6rem;
 }
 
 .login-point:nth-child(2) .login-point-text, .login-point:nth-child(4) .login-point-text {
 	text-align: right;
-	margin-right: 0.25em;
+	margin-right: 0.6rem;
 }
 
 .login-point-icon {
-	font-size: 2em;
+	font-size: 4.8rem;
 }
 
 .login-form, .forgot-password-form, .forgot-password-result-form, .register-form, .reset-password-form {
-	margin-left: 5em;
-	width: 35em;
+	margin-left: 6rem;
+	width: 42rem;
 	align-self: center;
 }
 
 .login-form-main {
 	background: rgba(0,0,0,0.7);
-	border-radius: 0.5em;
-	padding: 2.5em;
+	border-radius: 0.6rem;
+	padding: 3rem;
 }
 
 .login-footer {
 	background: rgba(0,0,0,0.7);
-	border-radius: 0.5em;
-	padding: 2em 2.5em;
-	margin-top: 2em;
-	font-size: 1.2em;
+	border-radius: 0.6rem;
+	padding: 2.8rem 3.6rem;
+	margin-top: 2.8rem;
+	font-size: 1.5rem;
 }
 
 .login-close {
-	font-size: 2em;
+	font-size: 2.4rem;
 	float: right;
 	cursor: pointer;
-	margin: -0.5em;
+	margin: -1.2rem;
 }
 
 .login-close:hover {
-	color: #d6b135;
+	color: rgb(var(--secondary-color));
 }
 
 .login-subheader {
-	font-size: 2.25em;
-	margin-bottom: 0.5em;
-	margin-top: -0.25em;
 	font-family: "lexend_deca_bold", sans-serif;
-}
-
-.login-text {
-	font-size: 1.2em;
+	font-size: 2.7rem;
+	margin-bottom: 1.4rem;
+	margin-top: -0.7rem;
 }
 
 .forgot-password-result-text {
-	font-size: 1.2em;
+	font-size: 1.5rem;
 	font-weight: normal;
 }
 
@@ -106,26 +101,26 @@
 	border: none;
 	cursor: pointer;
 	text-align: center;
-	margin-top: 1em;
+	margin-top: 1.5rem;
 	font-weight: normal;
 	display: block;
 	width: 100%;
-	background: #6aa0f8;
-	color: white;
-	padding: 0.5em 0em;
-	font-size: 1.25em;
-	border-radius: 0.5em;
-	transition: background 0.25s;
+	background: rgb(var(--primary-color));
+	color: rgb(var(--positive-color));
+	padding: 0.75rem 0;
+	font-size: 1.5rem;
+	border-radius: 0.75rem;
+	transition: background .3s;
 }
 
 .login-button:hover {
-	background: #8ac0ff;
+	background: rgb(var(--primary-color-hover));
 }
 
 a.forgot-password {
 	display: block;
-	margin-top: 1.5em;
-	font-size: 1.2em;
+	margin-top: 2.2rem;
+	font-size: 1.5rem;
 }
 
 a.forgot-password:hover {
@@ -133,7 +128,7 @@ a.forgot-password:hover {
 }
 
 .login-footer a, .checkbox-layout a {
-	color: #d6b135;
+	color: rgb(var(--secondary-color));
 }
 
 .login-footer a:hover, .checkbox-layout a:hover {
@@ -144,7 +139,7 @@ a.forgot-password:hover {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
-	margin-top: 1em;
+	margin-top: 1.2rem;
 	align-items: center;
 }
 
@@ -154,7 +149,7 @@ a.forgot-password:hover {
 }
 
 .checkbox-layout label {
-	padding-left: 0.25em;
+	padding-left: 0.4rem;
 }
 
 .date-chooser {
@@ -168,21 +163,21 @@ a.forgot-password:hover {
 }
 
 .date-month {
-	margin-left: 1em;
-	margin-right: 1em;
+	margin-left: 1.5rem;
+	margin-right: 1.5rem;
 }
 
 .date-year {
 	width: 30%;
 }
 
-@media screen and (max-width: 900px){
+@media (max-width: 900px){
 	.login-page {
 		flex-direction: column-reverse;
 	}
 
 	.login-explanation {
-		margin-top: 1em;
+		margin-top: 1.2rem;
 	}
 
 	.login-form, .forgot-password-form, .register-form {
@@ -191,24 +186,39 @@ a.forgot-password:hover {
 	}
 
 	.login-form-main {
-		padding: 1em;
+		padding: 1.2rem;
+		margin-top: 1.2rem;
+	}
+
+	a.forgot-password {
+		margin-top: 1.2rem;
 	}
 
 	.login-footer {
-		padding: 1em;
-		margin-top: 1.5em;
+		padding: 1.2rem;
+		margin-top: 2rem;
 	}
 
 	.login-close {
-		margin: 0;
+		margin-right: 0;
+		margin-top: -1.2rem;
 	}
 
 	.login-header {
-		font-size: 2.25em;
+		font-size: 2.7rem;
 		text-align: center;
+		margin-bottom: 0.6rem;
 	}
 
 	.login-points {
-		font-size: 1.2em;
+		font-size: 1.7rem;
+	}
+
+	.login-point {
+		margin: 1.2rem 0;
+	}
+
+	.login-point-icon {
+		font-size: 3rem;
 	}
 }

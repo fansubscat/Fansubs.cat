@@ -33,7 +33,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 			'preview_image' => "https://static.fansubs.cat/common/images/social.jpg",
 			'own_js' => "users.js",
 			'own_css' => "users.css",
-			'site_title' => "El meu perfil | Fansubs.cat",
+			'site_title' => "Fansubs.cat",
 			'site_description' => "A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.",
 			'is_catalogue' => FALSE,
 		);
