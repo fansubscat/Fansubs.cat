@@ -15,7 +15,7 @@ $max_items=24;
 
 $cookie_viewed_files = get_cookie_viewed_files_ids();
 
-$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT CONCAT(v.id,'___',f.name,'___',f.type,'___',f.id) ORDER BY v.id,f.name SEPARATOR '|') fansub_info, GROUP_CONCAT(DISTINCT sg.genre_id) genres, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ' • ') genre_names, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0 AND ls.id NOT IN (".(count($cookie_viewed_files)>0 ? implode(',',$cookie_viewed_files) : '0').")) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
+$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND nv.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT CONCAT(v.id,'___',f.name,'___',f.type,'___',f.id) ORDER BY v.id,f.name SEPARATOR '|') fansub_info, GROUP_CONCAT(DISTINCT sg.genre_id) genres, GROUP_CONCAT(DISTINCT REPLACE(REPLACE(g.name,' ',' '),'-','‑') ORDER BY g.name SEPARATOR ' • ') genre_names, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0 AND ls.id NOT IN (".(count($cookie_viewed_files)>0 ? implode(',',$cookie_viewed_files) : '0').")) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
 $query_portion_limit_to_non_hidden = "(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND v.is_hidden=0";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
@@ -111,7 +111,7 @@ for ($i=0;$i<count($sections);$i++){
 		if (strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0){
 ?>
 				<div class="section">
-					<h2 class="section-title-main"><span class="header-with-background"><?php echo $sections[$i]; ?></span></h2>
+					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
 					<div class="section-content fake-carousel">
 						<a class="advent" href="<?php echo $advent_url; ?>" target="_blank"><img src="<?php echo $static_url; ?>/images/advent/header_<?php echo date('Y'); ?>.jpg" alt="Calendari d'advent dels fansubs en català" /></a>
 					</div>
@@ -126,7 +126,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 	if ($type[$i]!='recommendations') {
 ?>
-					<h2 class="section-title-main"><span class="header-with-background"><?php echo $sections[$i]; ?></span></h2>
+					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
 <?php
 	}
 	if (mysqli_num_rows($result)==0){
@@ -211,7 +211,7 @@ for ($i=0;$i<count($sections);$i++){
 <?php
 	//Search case: add manga
 	if ($header_tab=='search') {
-		$result = query("SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT CONCAT(v.id,'___',f.name,'___',f.type,'___',f.id) ORDER BY v.id,f.name SEPARATOR '|') fansub_info, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type<>'${cat_config['items_type']}' AND s.type<>'liveaction' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%' OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$spaced_query'))$cookie_extra_conditions_search GROUP BY s.id ORDER BY s.name ASC");
+		$result = query("SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND nv.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT CONCAT(v.id,'___',f.name,'___',f.type,'___',f.id) ORDER BY v.id,f.name SEPARATOR '|') fansub_info, GROUP_CONCAT(DISTINCT sg.genre_id) genres, GROUP_CONCAT(DISTINCT REPLACE(REPLACE(g.name,' ',' '),'-','‑') ORDER BY g.name SEPARATOR ' • ') genre_names, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type<>'${cat_config['items_type']}' AND s.type<>'liveaction' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%' OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$spaced_query'))$cookie_extra_conditions_search GROUP BY s.id ORDER BY s.name ASC");
 		if (mysqli_num_rows($result)>0){
 ?>
 				<div class="section">

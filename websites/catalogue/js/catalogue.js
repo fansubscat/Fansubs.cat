@@ -751,7 +751,7 @@ function getOffset(element){
 function prepareFloatingInfo(element){
 	var offset = getOffset(element);
 	var regex = /translate3d\((.*)px, 0px, 0px\)/g;
-	var translation = parseInt(regex.exec(element.parentNode.parentNode.style.transform)[1]);
+	var translation = parseInt(regex.exec(element.parentNode.parentNode.parentNode.style.transform)[1]);
 	$(element).removeClass('floating-info-right').removeClass('floating-info-left');
 	if ((offset[0]+translation+element.clientWidth*1.25*2)<$(window).width()){
 		//We can fit it: right-side
@@ -772,8 +772,12 @@ function toggleBookmark(seriesSlug){
 }
 
 function initializeCarousels() {
-	var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
-	var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
+	//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
+	//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
+	var carouselWidth = $('.header').width();
+	var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
+		+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
+	var size = Math.max(parseInt(carouselWidth/elementWidth),1);
 	var swipeToSlideSetting = ($(window).width()>650 ? false : true);
 
 	$('.style-type-catalogue').addClass('has-carousel');
@@ -827,17 +831,6 @@ function initializeCarousels() {
 		} else {
 			//Just fade
 		}
-	});
-
-	$('.genres-carousel').slick({
-		speed: 300,
-		infinite: false,
-		slidesToShow: genresSize,
-		slidesToScroll: genresSize,
-		swipeToSlide: swipeToSlideSetting,
-		variableWidth: true,
-		prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-		nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
 	});
 
 	if ($('.synopsis-content').height()>=154) {
@@ -1088,8 +1081,12 @@ $(document).ready(function() {
 				}
 
 				//Recalculate multi-carousels
-				var size = Math.max(parseInt($('.carousel').width()/($(window).width()>650 ? 184 : 122)),1);
-				var genresSize = Math.max(parseInt($('.genres-carousel').width()/($(window).width()>650 ? 100 : 100)),1);
+				//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
+				//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
+				var carouselWidth = $('.header').width();
+				var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
+					+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
+				var size = Math.max(parseInt(carouselWidth/elementWidth),1);
 				var swipeToSlideSetting = ($(window).width()>650 ? false : true);
 
 				$('.carousel').slick('unslick');
@@ -1098,18 +1095,6 @@ $(document).ready(function() {
 					infinite: false,
 					slidesToShow: size,
 					slidesToScroll: size,
-					swipeToSlide: swipeToSlideSetting,
-					variableWidth: true,
-					prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-					nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-				});
-
-				$('.genres-carousel').slick('unslick');
-				$('.genres-carousel').slick({
-					speed: 300,
-					infinite: false,
-					slidesToShow: genresSize,
-					slidesToScroll: genresSize,
 					swipeToSlide: swipeToSlideSetting,
 					variableWidth: true,
 					prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
