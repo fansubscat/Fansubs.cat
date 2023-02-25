@@ -936,6 +936,12 @@ function checkNumberOfEpisodes() {
 		return false;
 	}
 
+	var japaneseRegex = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/g;
+	if ($('#form-name-with-autocomplete').val().match(japaneseRegex) || $('#form-alternate_names').val().match(japaneseRegex)) {
+		alert('El nom i el camp "altres noms" no poden contenir caràcters japonesos. Fes servir únicament caràcters occidentals.');
+		return false;
+	}
+
 	if (document.getElementById('form-image-preview').naturalWidth>450 || document.getElementById('form-image-preview').naturalHeight>600) {
 		alert('La imatge de portada té unes dimensions massa grosses. El màxim són 450x600 píxels.');
 		return false;
