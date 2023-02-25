@@ -13,11 +13,6 @@
 	src: url('https://static.fansubs.cat/common/fonts/lexend_deca_light.ttf');
 }
 
-@font-face {
-	font-family: "signika";
-	src: url('https://static.fansubs.cat/common/fonts/signika.ttf');
-}
-
 .theme-dark {
 	/* Generic white color */
 	--positive-color: 255, 255, 255;

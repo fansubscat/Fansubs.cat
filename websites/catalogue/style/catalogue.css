@@ -910,7 +910,6 @@
 	padding-left: 0;
 	padding-right: 0.75em;
 	white-space: nowrap;
-	overflow: hidden;
 	max-width: 25%;
 	background-color: rgba(var(--negative-color), 0.5);
 	border-radius: 0.75em;
@@ -1017,12 +1016,10 @@
 	z-index: 1;
 	color: rgb(var(--negative-color));
 	font-size: 1.3em;
-	margin-right: 3em;
-	margin-top: 0.75em;
+	padding-top: 0.75em;
 	padding-left: 0.75em;
-	padding-right: 0;
+	padding-right: 3em;
 	white-space: nowrap;
-	overflow: hidden;
 	max-width: 25%;
 }
 
@@ -1043,6 +1040,37 @@
 	border-radius: 0.5em;
 	width: 1.5em;
 	height: 1.5em;
+}
+
+.recommendation .genres {
+	font-family: "lexend_deca_light", sans-serif;
+	display: flex;
+	justify-content: right;
+	flex-direction: row;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	z-index: 1;
+	color: rgb(var(--positive-color));
+	font-size: 1em;
+	padding-right: 3.5em; /* 9em */
+	padding-bottom: 1em; /* 4em */
+	padding-left: 0.75em;
+	max-width: 25%;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.recommendation .genres i {
+	font-size: 1.6em;
+	-webkit-text-stroke: 0.1rem rgb(var(--always-negative-color));
+}
+
+.recommendation .genres .genre {
+	background-color: rgb(var(--negative-color));
+	border-radius: 2em;
+	padding: 0.1em 0.5em;
+	margin: 0.2em 0.2em;
 }
 
 .status-abandoned .thumbnail:hover img {

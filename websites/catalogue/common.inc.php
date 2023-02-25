@@ -592,6 +592,19 @@ function get_carousel_fansub_info($fansub_info, $version_id) {
 	return $result_code;
 }
 
+function get_genres_for_featured($genre_names) {
+	if (empty($genre_names)) {
+		return "";
+	}
+	$genres_array = explode(' • ',$genre_names);
+	$result_code = '';
+
+	foreach ($genres_array as $genre) {
+		$result_code.='<div class="genre">'.htmlentities($genre).'</div>';
+	}
+	return '<i class="fa fa-fw fa-tag fa-flip-horizontal"></i> '.$result_code;
+}
+
 function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	global $cat_config, $anime_url, $liveaction_url, $manga_url, $static_url, $user;
 	$more_than_one_version = exists_more_than_one_version($series['id']);
@@ -681,6 +694,7 @@ function print_featured_item($series, $specific_version=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="fansubs">'.get_recommended_fansub_info($series['fansub_info'], $series['version_id']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="genres">'.get_genres_for_featured($series['genre_names']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }
 

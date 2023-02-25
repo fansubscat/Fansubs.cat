@@ -1,6 +1,6 @@
 @font-face {
-    font-family: "comic_sans";
-    src: url('https://static.fansubs.cat/common/fonts/comic_sans.ttf');
+	font-family: "comic_sans";
+	src: url('https://static.fansubs.cat/common/fonts/comic_sans.ttf');
 }
 
 :not(.fa):not(.fab):not([class^="vjs-"]) {
