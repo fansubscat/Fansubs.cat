@@ -43,12 +43,12 @@ RewriteRule ^one-shots/?$ / [R=301,L]
 RewriteRule ^one-shots/([^/]+)/?$ /$1 [R=301,QSA,L]
 RewriteRule ^serialitzats/?$ / [R=301,L]
 RewriteRule ^serialitzats/([^/]+)/?$ /$1 [R=301,QSA,L]
-RewriteRule ^cerca/(.+)/?$ /cerca [R=301,QSA,L]
+RewriteRule ^cerca/?$ index.php?search=1&query= [L]
+RewriteRule ^cerca/([^/]+)/?$ index.php?search=1&query=$1 [L]
 
 #Generic pages
-RewriteRule ^cerca/?$ search.php [QSA,L]
 RewriteRule ^qui-som/?$ about.php [L]
-RewriteRule ^embed/([^/]*)/?$ embed.php?file_id=$1 [L]
+RewriteRule ^embed/([^/]+)/?$ embed.php?file_id=$1 [L]
 
 #Old (pre-v3) migration for manga (Piwigo -> Catalogue) - Used by links at Lluna Plena
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]

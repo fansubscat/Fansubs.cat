@@ -745,7 +745,7 @@ function getOffset(element){
 function prepareFloatingInfo(element){
 	var offset = getOffset(element);
 	var regex = /translate3d\((.*)px, 0px, 0px\)/g;
-	var translation = parseInt(regex.exec(element.parentNode.parentNode.parentNode.style.transform)[1]);
+	var translation = ($('.has-carousel').length>0 ? parseInt(regex.exec(element.parentNode.parentNode.parentNode.style.transform)[1]) : 0);
 	$(element).removeClass('floating-info-right').removeClass('floating-info-left');
 	if ((offset[0]+translation+element.clientWidth*1.25*2)<$(window).width()){
 		//We can fit it: right-side
@@ -766,6 +766,8 @@ function toggleBookmark(seriesSlug){
 }
 
 function initializeCarousels() {
+	$('.style-type-catalogue').addClass('has-carousel');
+
 	//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
 	//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
 	var carouselWidth = $('.header').width();
@@ -773,8 +775,6 @@ function initializeCarousels() {
 		+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
 	var size = Math.max(parseInt(carouselWidth/elementWidth),1);
 	var swipeToSlideSetting = ($(window).width()>650 ? false : true);
-
-	$('.style-type-catalogue').addClass('has-carousel');
 
 	$('.carousel').slick({
 		speed: 300,
@@ -804,7 +804,7 @@ function initializeCarousels() {
 	$('.recommendations').on('beforeChange', function(event, slick, currentSlide, nextSlide){
 		if ((currentSlide==$('.recommendations .slick-dots li').length-1 && nextSlide==0) || nextSlide-currentSlide==1) {
 			//Advance
-			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .6s ease', 'translate': '-30rem', 'opacity': '0'}).delay(500).queue(function() {
+			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .6s ease', 'translate': '-30rem', 'opacity': '0'}).delay(600).queue(function() {
 				$(this).css({'transition': 'all 0s ease', 'translate': '0rem', 'opacity': '1'});
 		 		$(this).dequeue();
 			});
@@ -814,7 +814,7 @@ function initializeCarousels() {
 			});
 		} else if ((currentSlide==0 && nextSlide==$('.recommendations .slick-dots li').length-1) || nextSlide-currentSlide==-1) {
 			//Go back
-			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .6s ease', 'translate': '30rem', 'opacity': '0'}).delay(500).queue(function() {
+			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .6s ease', 'translate': '30rem', 'opacity': '0'}).delay(600).queue(function() {
 				$(this).css({'transition': 'all 0s ease', 'translate': '0rem', 'opacity': '1'});
 		 		$(this).dequeue();
 			});
@@ -846,6 +846,78 @@ function initializeCarousels() {
 	}
 }
 
+function loadSearchResults(query, pushState) {
+	if ($('.catalogue-index').length==0 && $('.catalogue-search').length==0) {
+		window.location.href='/cerca/'+encodeURIComponent(query)+(query!='' ? '/' : '');
+		return;
+	}
+	if (pushState) {
+		history.pushState({'type': 'search', 'query': query}, '', '/cerca/'+encodeURIComponent(query)+(query!='' ? '/' : ''));
+	}
+	if (query!='') {
+		$('.loading-message').text('S’estan carregant els resultats de la cerca...');
+	} else {
+		$('.loading-message').text('S’està carregant el catàleg sencer...');
+	}
+
+	$('.style-type-catalogue').removeClass('has-search-results');
+	$('.style-type-catalogue').removeClass('has-carousel');
+	$('.loading-layout').removeClass('hidden');
+	$('.error-layout').addClass('hidden');
+	$('.results-layout').addClass('hidden');
+	if ($('.search-layout').hasClass('hidden')) {
+		$('.search-layout').removeClass('hidden').delay(1).queue(function() {
+			$(this).css({'opacity': '1'});
+			$(this).dequeue();
+		});
+	}
+	$.post({
+		url: "/results.php?search=1&query="+encodeURIComponent(query),
+		data: [],
+		xhrFields: {
+			withCredentials: true
+		},
+	}).done(function(data) {
+		$('.style-type-catalogue').addClass('has-search-results');
+		$('.results-layout').html(data);
+		$('.loading-layout').addClass('hidden');
+		$('.error-layout').addClass('hidden');
+		$('.results-layout').removeClass('hidden');
+	}).fail(function(data) {
+		$('.style-type-catalogue').removeClass('has-search-results');
+		$('.error-message').text('S’ha produït un error en contactar amb el servidor. Torna-ho a provar.');
+		$('.loading-layout').addClass('hidden');
+		$('.results-layout').addClass('hidden');
+		$('.error-layout').removeClass('hidden');
+	});
+}
+
+function loadCatalogueIndex() {
+	$('.style-type-catalogue').removeClass('has-search-results');
+	$('.style-type-catalogue').removeClass('has-carousel');
+	$('.loading-message').text('S’estan carregant les darreres novetats...');
+	$('.loading-layout').removeClass('hidden');
+	$('.error-layout').addClass('hidden');
+	$('.results-layout').addClass('hidden');
+	$.post({
+		url: "/results.php",
+		data: [],
+		xhrFields: {
+			withCredentials: true
+		},
+	}).done(function(data) {
+		$('.loading-layout').addClass('hidden');
+		$('.error-layout').addClass('hidden');
+		$('.results-layout').removeClass('hidden');
+		$('.results-layout').html(data);
+		initializeCarousels();
+	}).fail(function(data) {
+		$('.loading-layout').addClass('hidden');
+		$('.results-layout').addClass('hidden');
+		$('.error-layout').removeClass('hidden');
+	});
+}
+
 $(document).ready(function() {
 	var links = document.querySelectorAll(".catalogues-navigation a");
 	var container = document.querySelector(".catalogues-navigation");
@@ -856,18 +928,9 @@ $(document).ready(function() {
 	container.addEventListener("mouseleave", menuOptionMouseLeave);
 
 	if ($('.absolutely-real').length==0 && $('.catalogue-index').length==1) {
-		$.post({
-			url: "/results.php",
-			data: [],
-			xhrFields: {
-				withCredentials: true
-			},
-		}).done(function(data) {
-			$('.main-section').html(data);
-			initializeCarousels();
-		}).fail(function(data) {
-			alert('Error del servidor.');
-		});
+		loadCatalogueIndex();
+	} else if ($('.absolutely-real').length==0 && $('.catalogue-search').length==1) {
+		loadSearchResults($('.catalogue-search-query').val(), false);
 	} else {
 		initializeCarousels();
 	}
@@ -925,13 +988,11 @@ $(document).ready(function() {
 			$("#version_content_"+$(this).attr('data-version-id')).removeClass("hidden");
 		});
 		$('#search_form').submit(function(){
-			if ($('#search_query').val()!=''){
-				window.location.href='/cerca/' + encodeURIComponent(encodeURIComponent($('#search_query').val()));
-			}
-			else{
-				window.location.href='/';
-			}
+			loadSearchResults($('#search_query').val(), true);
 			return false;
+		});
+		$('.filter-button').click(function(){
+			loadSearchResults('', true);
 		});
 		$('#search_button').click(function(){
 			$('#search_form').submit();
@@ -1052,6 +1113,17 @@ $(document).ready(function() {
 			$("#tachiyomi-message").attr('style','display: none;');
 		}
 
+		window.addEventListener('popstate', function(e) {
+			if (e.state && e.state.type && e.state.type=='search') {
+				$('#search_query').val(e.state.query);
+				loadSearchResults(e.state.query, false);
+			} else {
+				$('#search_query').val('');
+				$('.search-layout').addClass('hidden');
+				loadCatalogueIndex();
+			}
+		});
+
 		$(window).resize(function() {
 			if ($(window).width()!=lastWindowWidth) {
 				//Reposition underline
@@ -1059,7 +1131,7 @@ $(document).ready(function() {
 				var active = document.querySelector("a.catalogues-underline-active");
 				if (active) {
 					const left = active.getBoundingClientRect().left + window.pageXOffset;
-					const top = active.getBoundingClientRect().top + window.pageYOffset;
+					const top = active.getBoundingClientRect().top + window.pageYOffset+2;
 					target.style.left = `${left}px`;
 					target.style.top = `${top}px`;
 				}

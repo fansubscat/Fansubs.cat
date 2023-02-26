@@ -100,6 +100,7 @@ html {
 	font-size: 62.5%;
 	color: rgb(var(--positive-color));
 	background-color: rgb(var(--negative-color));
+	scrollbar-gutter: stable;
 }
 
 body {
@@ -342,15 +343,6 @@ a img {
 	align-items: center;
 	text-align: center;
 	padding-top: 1.2rem;
-}
-
-.style-type-catalogue .main-section {
-	margin-left: -3.6rem;
-	margin-right: -3.6rem;
-}
-
-.style-type-catalogue.has-carousel .main-section {
-	display: block;
 }
 
 .contact-button {
