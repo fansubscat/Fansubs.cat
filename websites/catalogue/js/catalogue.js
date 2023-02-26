@@ -20,12 +20,6 @@ var loggedMessages = "";
 var pageLoadedDate = Date.now();
 var playerWasFullscreen = false;
 
-var cookieOptions = {
-	expires: 3650,
-	path: '/',
-	domain: window.location.hostname
-};
-
 nanoid=(t=21)=>{let e="",r=crypto.getRandomValues(new Uint8Array(t));for(;t--;){let n=63&r[t];e+=n<36?n.toString(36):n<62?(n-26).toString(36).toUpperCase():n<63?"_":"-"}return e};
 
 function getNewViewId(){
@@ -877,16 +871,6 @@ $(document).ready(function() {
 	} else {
 		initializeCarousels();
 	}
-
-	$('.theme-button').click(function(){
-		if ($('html').hasClass('theme-dark')) {
-			$('html').removeClass('theme-dark');
-			$('html').addClass('theme-light');
-		} else {
-			$('html').removeClass('theme-light');
-			$('html').addClass('theme-dark');
-		}
-	});
 
 	$('#overlay-close').click(function(){
 		sendReadEndAjax();

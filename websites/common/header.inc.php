@@ -4,7 +4,7 @@ require_once(dirname(__FILE__)."/user_init.inc.php");
 $is_fools_day = (date('d')==28 && date('m')==12);
 ?>
 <!DOCTYPE html>
-<html lang="ca" class="theme-dark">
+<html lang="ca" class="theme-<?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'light' : 'dark'; ?>">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,6 +41,7 @@ if ($is_fools_day){
 }
 ?>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script src="<?php echo $static_url; ?>/common/js/common.js?v=<?php echo $version; ?>"></script>
 		<script src="/js/<?php echo $site_config['own_js']; ?>?v=<?php echo $version; ?>"></script>
 <?php
@@ -52,7 +53,6 @@ if ($style_type=='catalogue') {
 			};
 		</script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/jquery-ui.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 		<script src="/js/megajs/main.browser-umd.js?v=<?php echo $version; ?>"></script>
 		<script src="/js/videojs/video.js?v=<?php echo $version; ?>"></script>
@@ -111,7 +111,7 @@ if ($style_type=='login') {
 								<a class="forgot-password" onclick="showForgotPassword();">He oblidat la contrasenya</a>
 							</form>
 						</div>
-						<div class="login-footer">Encara no n’ets usuari? <a onclick="showRegister();">Registra-t’hi</a></div>
+						<div class="login-footer">Encara no n’ets membre? <a onclick="showRegister();">Registra-t’hi</a></div>
 					</div>
 					<div class="reset-password-form"<?php echo $style_type!='reset_password' ? ' style="display: none;"' : ''?>>
 						<div class="login-form-main">
@@ -212,63 +212,6 @@ if ($style_type=='login') {
 				<a id="overlay-close" style="display: none;"><span class="fa fa-times"></span></a>
 				<div id="overlay-content"></div>
 			</div>
-			<div data-nosnippet id="options-overlay" class="hidden flex">
-				<div id="options-overlay-content">
-					<form id="options-form">
-						<h2 class="section-title">Opcions de visualització</h2>
-						<div class="options-item">
-							<input id="show_cancelled" type="checkbox"<?php echo !empty($_COOKIE['show_cancelled']) ? ' checked' : ''; ?>>
-						  	<label for="show_cancelled"><?php echo $cat_config['option_show_cancelled']; ?></label>
-						</div>
-						<div class="options-item">
-							<input id="show_missing" type="checkbox"<?php echo !empty($_COOKIE['show_missing']) ? ' checked' : ''; ?>>
-						  	<label for="show_missing"><?php echo $cat_config['option_show_missing']; ?></label>
-						</div>
-						<div class="options-item">
-							<input id="show_hentai" type="checkbox"<?php echo !empty($_COOKIE['show_hentai']) ? ' checked' : ''; ?>>
-						  	<label for="show_hentai">Mostra el contingut explícit (confirmes que ets major d'edat)</label>
-						</div>
-<?php
-		if ($cat_config['items_type']=='manga') {
-?>
-						<h2 class="section-title options-section-divider">Opcions de lectura</h2>
-						<div class="options-item">
-							<input id="force_long_strip" type="checkbox"<?php echo !empty($_COOKIE['force_long_strip']) ? ' checked' : ''; ?>>
-						  	<label for="force_long_strip">Utilitza sempre el lector de manga en mode tira vertical</label>
-						</div>
-						<div class="options-item">
-							<input id="force_reader_ltr" type="checkbox"<?php echo !empty($_COOKIE['force_reader_ltr']) ? ' checked' : ''; ?>>
-						  	<label for="force_reader_ltr">Força el sentit de lectura occidental en lloc de l'oriental</label>
-						</div>
-<?php
-		}
-?>
-						<h2 class="section-title options-section-divider">Fansubs que es mostren</h2>
-						<div id="options-fansubs">
-<?php
-		$cookie_fansub_ids = get_cookie_fansub_ids();
-		$resultf = query("SELECT f.id, IF(f.name='Fansub independent','Fansubs independents',f.name) name FROM fansub f WHERE EXISTS (SELECT vf.version_id FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='${cat_config['items_type']}' AND vf.fansub_id=f.id AND v.is_hidden=0) ORDER BY IF(f.name='Fansub independent','Fansubs independents',f.name)");
-		while ($row = mysqli_fetch_assoc($resultf)) {
-?>
-							<div class="options-item options-fansub">
-								<input id="show_fansub_<?php echo $row['id']; ?>" type="checkbox"<?php echo in_array($row['id'],$cookie_fansub_ids) ? '' : ' checked'; ?> value="<?php echo $row['id']; ?>">
-							  	<label for="show_fansub_<?php echo $row['id']; ?>"><?php echo $row['name']; ?></label>
-							</div>
-<?php
-		}
-		mysqli_free_result($resultf);
-?>
-						</div>
-						<div id="options-select-buttons">
-							<a id="options-select-all">Selecciona'ls tots</a> / <a id="options-unselect-all">Desselecciona'ls tots</a>
-						</div>
-					</form>
-					<div id="options-buttonbar">
-						<button id="options-save-button"><span class="fa fa-check icon"></span>Desa la configuració</button>
-						<button id="options-cancel-button"><span class="fa fa-times icon"></span>Cancel·la</button>
-					</div>
-				</div>
-			</div>
 			<div data-nosnippet id="alert-overlay" class="hidden flex">
 				<div id="alert-overlay-content">
 					<h2 class="section-title" id="alert-title">S'ha produït un error</h2>
@@ -316,7 +259,7 @@ if ($style_type=='login') {
 	if ($style_type=='catalogue') {
 ?>
 						<div class="filter-settings">
-							<a class="filter-button" title="Filtra per categories"><i class="fa fa-sliders"></i></a>
+							<a class="filter-button" title="Filtra per categories"><i class="fa fa-fw fa-sliders"></i></a>
 						</div>
 						<div class="search-form">
 							<form id="search_form">
@@ -324,36 +267,58 @@ if ($style_type=='login') {
 								<i id="search_button" class="fa fa-search" title="Cerca"></i>
 							</form>
 						</div>
-						<div class="user-settings">
-							<a class="options-button" title="Opcions de visualització"><i class="fa fa-gear"></i></a>
-							<a class="theme-button" title="Canvia entre el mode clar i mode fosc"><i class="fa fa-circle-half-stroke"></i></a>
-						</div>
 <?php
 	}
 ?>
 					</div>
-					<div class="user-options">
 <?php
-	if (!empty($user)) {
+	if (empty($user)) {
 ?>
-						<div class="dropdown-menu">
-							<img alt="Menú de l’usuari" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? $static_url.'/images/avatars/'.$user['avatar_filename'] : $static_url.'/common/images/noavatar.jpg'; ?>">
-							<div id="user-dropdown" class="dropdown-content">
-								<div class="dropdown-title"><?php echo $user['username']; ?></div>
-								<hr class="dropdown-separator">
-								<a href="<?php echo $users_url; ?>/"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
-								<a href="<?php echo $users_url.'/la-meva-llista/'; ?>"><i class="fa fa-fw fa-list-ul"></i> La meva llista</a>
-								<hr class="dropdown-separator-secondary">
-								<a href="<?php echo $users_url.'/tanca-la-sessio/'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
-							</div>
-						</div>
-<?php
-	} else {
-?>
-						<a class="user-login" href="<?php echo $users_url.'/inicia-la-sessio/'; ?>">Inicia la sessió</a>
+					<a class="user-login" href="<?php echo $users_url.'/inicia-la-sessio/'; ?>">Inicia la sessió</a>
 <?php
 	}
 ?>
+					<div class="user-options">
+						<div class="dropdown-menu">
+<?php
+	if (!empty($user)) {
+?>
+							<img alt="Menú de l’usuari" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? $static_url.'/images/avatars/'.$user['avatar_filename'] : $static_url.'/common/images/noavatar.jpg'; ?>">
+<?php
+	} else {
+?>
+							<div onclick="showUserDropdown();" class="anon-avatar dropdown-button"><i class="fa fa-gear"></i></div>
+<?php
+	}
+?>
+							<div id="user-dropdown" class="dropdown-content">
+								<div class="dropdown-title"><?php echo !empty($user) ? $user['username'] : 'Opcions'; ?></div>
+								<hr class="dropdown-separator">
+<?php
+	if (!empty($user)) {
+?>
+								<a href="<?php echo $users_url; ?>/"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
+								<a href="<?php echo $users_url.'/la-meva-llista/'; ?>"><i class="fa fa-fw fa-list-ul"></i> La meva llista</a>
+								<hr class="dropdown-separator-secondary">
+<?php
+	}
+?>
+								<a href="<?php echo $users_url.'/configuracio/'; ?>"><i class="fa fa-fw fa-gear"></i> Configuració</a>
+								<a class="theme-button" onclick="toggleSiteTheme();"><i class="fa fa-fw fa-circle-half-stroke"></i> <span class="theme-button-text"><?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'Canvia al tema fosc' : 'Canvia al tema clar'; ?></span></a>
+								<hr class="dropdown-separator-secondary">
+<?php
+	if (!empty($user)) {
+?>
+								<a href="<?php echo $users_url.'/tanca-la-sessio/'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
+<?php
+	} else {
+?>
+								<a href="<?php echo $users_url.'/inicia-la-sessio/'; ?>"><i class="fa fa-fw fa-sign-in"></i> Inicia la sessió</a>
+<?php
+	}
+?>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="main-section">

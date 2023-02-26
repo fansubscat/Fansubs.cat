@@ -60,13 +60,13 @@
 }
 
 .login-form-main {
-	background: rgba(0,0,0,0.7);
+	background: rgba(var(--negative-color),0.7);
 	border-radius: 0.6rem;
 	padding: 3rem;
 }
 
 .login-footer {
-	background: rgba(0,0,0,0.7);
+	background: rgba(var(--negative-color),0.7);
 	border-radius: 0.6rem;
 	padding: 2.8rem 3.6rem;
 	margin-top: 2.8rem;
@@ -81,7 +81,7 @@
 }
 
 .login-close:hover {
-	color: rgb(var(--secondary-color));
+	filter: drop-shadow(0 0 0.4rem rgba(var(--positive-color), 0.5));
 }
 
 .login-subheader {
@@ -106,7 +106,7 @@
 	display: block;
 	width: 100%;
 	background: rgb(var(--primary-color));
-	color: rgb(var(--positive-color));
+	color: rgb(var(--always-positive-color));
 	padding: 0.75rem 0;
 	font-size: 1.5rem;
 	border-radius: 0.75rem;
@@ -114,7 +114,7 @@
 }
 
 .login-button:hover {
-	background: rgb(var(--primary-color-hover));
+	background: rgb(var(--primary-color-lighter));
 }
 
 a.forgot-password {
@@ -128,10 +128,11 @@ a.forgot-password:hover {
 }
 
 .login-footer a, .checkbox-layout a {
-	color: rgb(var(--secondary-color));
+	color: rgb(var(--secondary-color-darker));
 }
 
 .login-footer a:hover, .checkbox-layout a:hover {
+	color: rgb(var(--secondary-color));
 	text-decoration: underline;
 }
 

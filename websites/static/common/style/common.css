@@ -34,10 +34,14 @@
 	--neutral-color-links: 102, 102, 102;
 	/* Primary accent color, blue */
 	--primary-color: 106, 160, 248;
-	/* Used in buttons on hover, a whiter version of blue */
-	--primary-color-hover: 138, 192, 255;
+	/* A darker version of blue, used as a background filter */
+	--primary-color-darker: 76, 130, 218;
+	/* A lighter version of blue, used as a hover color in buttons */
+	--primary-color-lighter: 136, 190, 255;
 	/* Secondary accent color, yellow */
 	--secondary-color: 249, 192, 43;
+	/* A darker version of yellow, used in links */
+	--secondary-color-darker: 219, 162, 13;
 	/* Generic error color (used in error fields), red */
 	--error-color: 255, 68, 68;
 	/* Generic background for all pages WITHOUT background images */
@@ -46,8 +50,12 @@
 	--background-color-image: 0, 0, 0;
 	/* Background color for dropdown menus (like the user menu) */
 	--background-color-dropdown: 32, 32, 32;
-	/* Used on hover */
+	/* Same but when hovering on them */
 	--background-color-dropdown-hover: 64, 64, 64;
+	/* Color for header icons or white buttons */
+	--icon-button-color: 237, 237, 237;
+	/* Same but when hovering on them */
+	--icon-button-color-hover: 255, 255, 255;
 }
 
 .theme-light {
@@ -58,14 +66,17 @@
 	--neutral-color: 136, 136, 136;
 	--neutral-color-links: 102, 102, 102;
 	--primary-color: 106, 160, 248;
-	--primary-color-hover: 138, 192, 255;
+	--primary-color-darker: 76, 130, 218;
+	--primary-color-lighter: 136, 190, 255;
 	--secondary-color: 214, 177, 53;
-	--secondary-color-filter: 249, 192, 43;
+	--secondary-color-darker: 219, 162, 13;
 	--error-color: 255, 68, 68;
 	--background-color-standard: 237, 237, 237;
 	--background-color-image: 255, 255, 255;
 	--background-color-dropdown: 223, 223, 223;
-	--background-color-dropdown-hover: 191, 191, 191;
+	--background-color-dropdown-hover: 255, 255, 255;
+	--icon-button-color: 0, 0, 0;
+	--icon-button-color-hover: 32, 32, 32;
 }
 
 *, *:before, *:after {
@@ -97,7 +108,7 @@ body {
 	font-size: 1.2rem;
 	line-height: 1.2;
 	text-align: left;
-	background: linear-gradient(to bottom, rgba(var(--background-color-image),1) 0%, rgba(var(--background-color-image),0.6) 25% 75%, rgba(var(--background-color-image),1) 100%), url('https://static.fansubs.cat/common/images/bg.jpg');
+	background: linear-gradient(to bottom, rgba(var(--background-color-image),1) 0%, rgba(var(--background-color-image),0.65) 25% 75%, rgba(var(--background-color-image),1) 100%), url('https://static.fansubs.cat/common/images/bg.jpg');
 	background-size: cover;
 	background-position: center;
 }
@@ -164,12 +175,13 @@ a img {
 	text-align: center;
 }
 
-.overlay-page {
-	justify-content: center;
+.obscured-background {
+	background: linear-gradient(to bottom, transparent 0%, rgba(var(--primary-color-darker),0.35) 25% 75%, transparent 100%);
+	backdrop-filter: grayscale(1);
 }
 
-.obscured-background {
-	backdrop-filter: sepia(1) hue-rotate(180deg) saturate(2.5) brightness(0.7);
+.overlay-page {
+	justify-content: center;
 }
 
 .social-link {
@@ -213,7 +225,7 @@ a img {
 	font-weight: normal;
 	display: inline-block;
 	background: rgb(var(--primary-color));
-	color: rgb(var(--positive-color));
+	color: rgb(var(--always-positive-color));
 	padding: 0.75rem 2.25rem;
 	margin: 0 0.4rem;
 	min-width: 6rem;
@@ -227,9 +239,23 @@ a img {
 	border-radius: 99rem;
 	width: 5rem;
 	height: 5rem;
-	margin: 0 0.3rem;
 	border: 0.2rem solid rgb(var(--primary-color));
 	cursor: pointer;
+}
+
+.anon-avatar {
+	display: flex;
+	width: 5rem;
+	height: 5rem;
+	font-size: 2.5rem;
+	cursor: pointer;
+	justify-content: center;
+	align-items: center;
+	color: rgb(var(--icon-button-color));
+}
+
+.anon-avatar:hover {
+	color: rgb(var(--icon-button-color-hover));
 }
 
 .dropdown-menu {
@@ -238,8 +264,22 @@ a img {
 	display: block;
 }
 
-.user-avatar:hover, .user-avatar:focus {
+.user-avatar:hover {
 	filter: brightness(1.2);
+}
+
+.anon-options {
+	margin-right: 1.5rem;
+	font-size: 2.4rem;
+	color: rgb(var(--positive-color));
+}
+
+.dropdown-button {
+	cursor: pointer;
+}
+
+.dropdown-button i {
+	pointer-events: none;
 }
 
 .dropdown-content {
@@ -248,9 +288,9 @@ a img {
 	background-color: rgb(var(--background-color-dropdown));
 	min-width: 18rem;
 	overflow: auto;
-	filter: drop-shadow(0em 0em 2rem rgba(var(--negative-color),0.5));
+	filter: drop-shadow(0em 0.5rem 0.65rem rgba(var(--always-negative-color),0.5));
 	right: 0;
-	z-index: 1;
+	z-index: 999;
 	border-radius: 0.6rem;
 	margin-top: 0.6rem;
 }
@@ -291,7 +331,7 @@ a img {
 }
 
 .user-login:hover, .user-logout:hover {
-	background-color: rgb(var(--primary-color-hover));
+	background-color: rgb(var(--primary-color-lighter));
 }
 
 .main-section {
@@ -408,7 +448,7 @@ input, select, textarea {
 	font-weight: normal;
 	display: inline-block;
 	background: rgb(var(--primary-color));
-	color: rgb(var(--positive-color));
+	color: rgb(var(--always-positive-color));
 	padding: 0.7rem 2.2rem;
 	font-size: 1.5rem;
 	border-radius: 0.7rem;
@@ -416,14 +456,15 @@ input, select, textarea {
 }
 
 .normal-button:hover {
-	background: rgb(var(--primary-color-hover));
+	background: rgb(var(--primary-color-lighter));
 }
 
 .error-page a {
-	color: rgb(var(--secondary-color));
+	color: rgb(var(--secondary-color-darker));
 }
 
 .error-page a:hover {
+	color: rgb(var(--secondary-color));
 	text-decoration: underline;
 }
 
@@ -511,7 +552,7 @@ h2.section-title:first-of-type {
 	}
 
 	.social-link {
-		font-size: 3rem;
+		font-size: 2.6rem;
 	}
 
 	.main-logo {
@@ -529,5 +570,20 @@ h2.section-title:first-of-type {
 
 	.text-page {
 		padding: 1rem;
+	}
+
+	.user-avatar {
+		width: 4rem;
+		height: 4rem;
+	}
+
+	.anon-avatar {
+		width: 4rem;
+		height: 4rem;
+		margin-right: -0.8rem;
+	}
+
+	.user-login {
+		margin-right: 0.5rem;
 	}
 }

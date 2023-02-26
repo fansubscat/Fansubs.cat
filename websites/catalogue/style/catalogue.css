@@ -68,10 +68,6 @@
 	transition: all 0s ease-in-out !important;
 }
 
-.theme-button {
-	margin-left: 0.25rem;
-}
-
 .loading {
 	font-size: 1.8rem;
 }
@@ -366,28 +362,49 @@
 	background: rgb(100, 100, 100);
 }
 
+.site-message {
+	padding: 1rem;
+	border-radius: 0.6rem;
+	background-color: rgb(var(--primary-color));
+	color: rgb(var(--always-positive-color));
+	text-align: center;
+	font-size: 1.6rem;
+}
+
+.site-message a:hover {
+	color: rgb(var(--secondary-color));
+	text-decoration: underline;
+}
+
 .user-settings {
 	margin-left: 1.8rem;
 	margin-right: 3.6rem;
 	font-size: 2.4rem;
-	color: rgb(var(--positive-color));
 }
 
 .filter-settings {
-	margin-right: 1.5rem;
+	margin-right: 0.9rem;
 	font-size: 2.4rem;
-	color: rgb(var(--positive-color));
+}
+
+.filter-button {
+	color: rgb(var(--icon-button-color));
+}
+
+.filter-button:hover {
+	color: rgb(var(--icon-button-color-hover));
 }
 
 .search-form {
 	margin: 0.6rem;
+	margin-right: 2.4rem;
 }
 
 #search_query {
 	width: 23rem;
 	margin-right: 0.7rem;
 	vertical-align: middle;
-	height: 3rem;
+	height: 3.4rem;
 	border-radius: 0.7rem;
 	padding: 0 3.2rem 0 1rem;
 	display: inline-block;
@@ -535,13 +552,13 @@
 }
 
 .recommendation .watchbutton:hover {
-	opacity: 0.8;
+	background: rgba(var(--negative-color), 0.7);
 }
 
 .recommendation .coverholder {
 	height: 100%;
 	aspect-ratio: 0.70710678118;
-	filter: drop-shadow(0 0 2.6rem rgba(var(--negative-color),0.5));
+	filter: drop-shadow(0 0 2.6rem rgba(var(--always-negative-color),0.5));
 	margin-right: 2.6rem;
 }
 
@@ -646,14 +663,6 @@
 	margin: 0.25rem 0.25rem;
 }
 
-.status-abandoned .thumbnail:hover img {
-	filter: grayscale(0%) brightness(100%);
-}
-
-.status-cancelled .thumbnail:hover img {
-	filter: grayscale(0%) brightness(100%);
-}
-
 .slick-list {
 	overflow: visible !important;
 }
@@ -668,8 +677,12 @@
 	z-index: 100;
 }
 
-.slick-prev:hover:before, .slick-next:hover:before {
-	opacity: 0.5;
+.slick-prev:hover, .slick-next:hover {
+	filter: brightness(1.5);
+}
+
+.recommendations .slick-prev:hover,.recommendations  .slick-next:hover {
+	filter: opacity(0.5);
 }
 
 .carousel .slick-prev {
@@ -692,7 +705,7 @@
 	color: rgb(var(--positive-color));
 	font-size: 3rem;
 	padding: 3.6rem;
-	-webkit-text-stroke: 0.1rem rgb(var(--negative-color));
+	-webkit-text-stroke: 0.15rem rgb(var(--negative-color));
 }
 
 .recommendations .slick-prev::before, .recommendations .slick-next::before {
@@ -704,12 +717,13 @@
 }
 
 .carousel .slick-prev::before {
-	padding-left: 0;
+	margin-left: -2rem;
+	padding-right: 1rem;
 	content: '\f053' !important;
 }
 
 .carousel .slick-next::before {
-	margin-left: -1.5rem;
+	padding-left: 1rem;
 	content: '\f054' !important;
 }
 
@@ -780,14 +794,12 @@
 
 .thumbnail:hover {
 	transform: scale(var(--carousel-scaling));
-	filter: grayscale(0%) brightness(100%);
 	z-index: 9999; /*to go above other carousel elements (z-index 1)*/
 }
 
 .thumbnail .image-link {
 	width: 100%; 
 	height: 100%;
-	z-index: 1; /*remove this to have free hovering*/
 }
 
 .thumbnail img {
@@ -959,7 +971,7 @@
 	border-radius: 0.6rem;
 	padding: 0.25rem 1rem;
 	font-size: 1.15rem;
-	background: rgb(var(--positive-color));
+	background: rgb(var(--icon-button-color));
 	white-space: nowrap;
 	text-transform: uppercase;
 	display: inline-block;
@@ -969,7 +981,7 @@
 }
 
 .floating-info-watch-now:hover {
-	opacity: 0.8;
+	background: rgb(var(--icon-button-color-hover));
 }
 
 .floating-info-divisions {
