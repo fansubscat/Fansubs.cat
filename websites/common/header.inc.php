@@ -236,7 +236,7 @@ if ($style_type=='login') {
 <?php
 	} else {
 ?>
-					<a class="logo-small" href="<?php echo $main_url; ?>/">
+					<a class="logo-small" href="<?php echo $main_url; ?>/" title="Torna a la pàgina d’inici de Fansubs.cat">
 						<?php include($static_directory.'/common/images/logo.svg'); ?>
 					</a>
 <?php
@@ -256,15 +256,20 @@ if ($style_type=='login') {
 ?>
 					<div class="separator">
 <?php
-	if ($style_type=='catalogue') {
+	if ($style_type=='catalogue' && empty($hide_search)) {
 ?>
 						<div class="filter-settings">
-							<a class="filter-button" title="Filtra per categories"><i class="fa fa-fw fa-sliders"></i></a>
+							<a class="filter-button" title="Filtra i mostra tot el catàleg">
+								<span class="fa-stack" style="vertical-align: top;">
+									<i class="fa-solid fa-fw fa-grip fa-stack-2x"></i>
+									<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>
+								</span>
+							</a>
 						</div>
 						<div class="search-form">
 							<form id="search_form">
 								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo empty($header_series_page) ? ' autofocus' : ''; ?>>
-								<i id="search_button" class="fa fa-search" title="Cerca"></i>
+								<i id="search_button" class="fa fa-search" title="Cerca en tot el catàleg"></i>
 							</form>
 						</div>
 <?php

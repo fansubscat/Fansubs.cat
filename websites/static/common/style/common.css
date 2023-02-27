@@ -407,7 +407,7 @@ svg.main-logo:hover path#line_2 {
 	d: path("M133 178.763v-1h348v1z");
 }
 
-label, input, select, textarea {
+label:not(.for-checkbox), input:not([type='checkbox']), select, textarea {
 	font-family: inherit;
 	display: block;
 	text-align: left;
@@ -418,6 +418,14 @@ label, input, select, textarea {
 
 label {
 	margin-top: 1.1rem;
+}
+
+label.for-checkbox {
+	font-family: inherit;
+	text-align: left;
+	width: 100%;
+	font-size: 1.5rem;
+	font-weight: normal;
 }
 
 textarea {

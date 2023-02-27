@@ -19,6 +19,7 @@ var enableDebug = false;
 var loggedMessages = "";
 var pageLoadedDate = Date.now();
 var playerWasFullscreen = false;
+var lastSearchRequest = null;
 
 nanoid=(t=21)=>{let e="",r=crypto.getRandomValues(new Uint8Array(t));for(;t--;){let n=63&r[t];e+=n<36?n.toString(36):n<62?(n-26).toString(36).toUpperCase():n<63?"_":"-"}return e};
 
@@ -745,9 +746,11 @@ function getOffset(element){
 function prepareFloatingInfo(element){
 	var offset = getOffset(element);
 	var regex = /translate3d\((.*)px, 0px, 0px\)/g;
-	var translation = ($('.has-carousel').length>0 ? parseInt(regex.exec(element.parentNode.parentNode.parentNode.style.transform)[1]) : 0);
+	var inCarouselPage = $('.has-carousel').length>0;
+	var translation = (inCarouselPage ? parseInt(regex.exec(element.parentNode.parentNode.parentNode.style.transform)[1]) : 0);
+	var maxWidth = $(window).width();
 	$(element).removeClass('floating-info-right').removeClass('floating-info-left');
-	if ((offset[0]+translation+element.clientWidth*1.25*2)<$(window).width()){
+	if ((offset[0]+translation+element.clientWidth*1.25*2)<maxWidth){
 		//We can fit it: right-side
 		$(element).addClass('floating-info-right');
 	} else {
@@ -804,22 +807,22 @@ function initializeCarousels() {
 	$('.recommendations').on('beforeChange', function(event, slick, currentSlide, nextSlide){
 		if ((currentSlide==$('.recommendations .slick-dots li').length-1 && nextSlide==0) || nextSlide-currentSlide==1) {
 			//Advance
-			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .6s ease', 'translate': '-30rem', 'opacity': '0'}).delay(600).queue(function() {
-				$(this).css({'transition': 'all 0s ease', 'translate': '0rem', 'opacity': '1'});
+			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '-30rem', 'opacity': '0'}).delay(600).queue(function() {
+				$(this).css({'transition': 'none', 'translate': '0', 'opacity': '1'});
 		 		$(this).dequeue();
 			});
-			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'all 0s ease', 'translate': '30rem', 'opacity': '0'}).delay(1).queue(function() {
-				$(this).css({'transition': 'all .6s ease', 'translate': '0rem', 'opacity': '1'});
+			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'none', 'translate': '30rem', 'opacity': '0'}).delay(1).queue(function() {
+				$(this).css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '0', 'opacity': '1'});
 				$(this).dequeue();
 			});
 		} else if ((currentSlide==0 && nextSlide==$('.recommendations .slick-dots li').length-1) || nextSlide-currentSlide==-1) {
 			//Go back
-			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'all .6s ease', 'translate': '30rem', 'opacity': '0'}).delay(600).queue(function() {
-				$(this).css({'transition': 'all 0s ease', 'translate': '0rem', 'opacity': '1'});
+			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '30rem', 'opacity': '0'}).delay(600).queue(function() {
+				$(this).css({'transition': 'none', 'translate': '0', 'opacity': '1'});
 		 		$(this).dequeue();
 			});
-			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'all 0s ease', 'translate': '-30rem', 'opacity': '0'}).delay(1).queue(function() {
-				$(this).css({'transition': 'all .6s ease', 'translate': '0rem', 'opacity': '1'});
+			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'none', 'translate': '-30rem', 'opacity': '0'}).delay(1).queue(function() {
+				$(this).css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '0rem', 'opacity': '1'});
 				$(this).dequeue();
 			});
 		} else {
@@ -846,33 +849,20 @@ function initializeCarousels() {
 	}
 }
 
-function loadSearchResults(query, pushState) {
-	if ($('.catalogue-index').length==0 && $('.catalogue-search').length==0) {
-		window.location.href='/cerca/'+encodeURIComponent(query)+(query!='' ? '/' : '');
-		return;
-	}
-	if (pushState) {
-		history.pushState({'type': 'search', 'query': query}, '', '/cerca/'+encodeURIComponent(query)+(query!='' ? '/' : ''));
-	}
-	if (query!='') {
-		$('.loading-message').text('S’estan carregant els resultats de la cerca...');
-	} else {
-		$('.loading-message').text('S’està carregant el catàleg sencer...');
-	}
+function launchSearch(query) {
+	window.location.href='/cerca/'+encodeURIComponent(query)+(query!='' ? '/' : '');
+}
 
+function loadSearchResults() {
 	$('.style-type-catalogue').removeClass('has-search-results');
-	$('.style-type-catalogue').removeClass('has-carousel');
-	$('.loading-layout').removeClass('hidden');
 	$('.error-layout').addClass('hidden');
 	$('.results-layout').addClass('hidden');
-	if ($('.search-layout').hasClass('hidden')) {
-		$('.search-layout').removeClass('hidden').delay(1).queue(function() {
-			$(this).css({'opacity': '1'});
-			$(this).dequeue();
-		});
+	$('.loading-layout').removeClass('hidden');
+	if (lastSearchRequest!=null) {
+		lastSearchRequest.abort();
 	}
-	$.post({
-		url: "/results.php?search=1&query="+encodeURIComponent(query),
+	lastSearchRequest = $.post({
+		url: "/results.php?search=1&query="+encodeURIComponent($('#catalogue-search-query').val()),
 		data: [],
 		xhrFields: {
 			withCredentials: true
@@ -883,19 +873,18 @@ function loadSearchResults(query, pushState) {
 		$('.loading-layout').addClass('hidden');
 		$('.error-layout').addClass('hidden');
 		$('.results-layout').removeClass('hidden');
-	}).fail(function(data) {
-		$('.style-type-catalogue').removeClass('has-search-results');
-		$('.error-message').text('S’ha produït un error en contactar amb el servidor. Torna-ho a provar.');
-		$('.loading-layout').addClass('hidden');
-		$('.results-layout').addClass('hidden');
-		$('.error-layout').removeClass('hidden');
+	}).fail(function(xhr, status, error) {
+		if (error!='abort') {
+			$('.style-type-catalogue').removeClass('has-search-results');
+			$('.loading-layout').addClass('hidden');
+			$('.results-layout').addClass('hidden');
+			$('.error-layout').removeClass('hidden');
+		}
 	});
 }
 
 function loadCatalogueIndex() {
-	$('.style-type-catalogue').removeClass('has-search-results');
 	$('.style-type-catalogue').removeClass('has-carousel');
-	$('.loading-message').text('S’estan carregant les darreres novetats...');
 	$('.loading-layout').removeClass('hidden');
 	$('.error-layout').addClass('hidden');
 	$('.results-layout').addClass('hidden');
@@ -912,6 +901,7 @@ function loadCatalogueIndex() {
 		$('.results-layout').html(data);
 		initializeCarousels();
 	}).fail(function(data) {
+		$('.style-type-catalogue').removeClass('has-carousel');
 		$('.loading-layout').addClass('hidden');
 		$('.results-layout').addClass('hidden');
 		$('.error-layout').removeClass('hidden');
@@ -927,12 +917,20 @@ $(document).ready(function() {
 	}
 	container.addEventListener("mouseleave", menuOptionMouseLeave);
 
-	if ($('.absolutely-real').length==0 && $('.catalogue-index').length==1) {
-		loadCatalogueIndex();
-	} else if ($('.absolutely-real').length==0 && $('.catalogue-search').length==1) {
-		loadSearchResults($('.catalogue-search-query').val(), false);
+	if ($('.absolutely-real').length==0) {
+		if ($('.catalogue-index').length==1) {
+			loadCatalogueIndex();
+		} else if ($('#catalogue-search-query').length==1) {
+			loadSearchResults();
+		} else {
+			initializeCarousels();
+		}
 	} else {
-		initializeCarousels();
+		if ($('#catalogue-search-query').length==1) {
+			$('.style-type-catalogue').addClass('has-search-results');
+		} else {			
+			initializeCarousels();
+		}
 	}
 
 	$('#overlay-close').click(function(){
@@ -988,11 +986,11 @@ $(document).ready(function() {
 			$("#version_content_"+$(this).attr('data-version-id')).removeClass("hidden");
 		});
 		$('#search_form').submit(function(){
-			loadSearchResults($('#search_query').val(), true);
+			launchSearch($('#search_query').val());
 			return false;
 		});
 		$('.filter-button').click(function(){
-			loadSearchResults('', true);
+			launchSearch('');
 		});
 		$('#search_button').click(function(){
 			$('#search_form').submit();
@@ -1112,17 +1110,6 @@ $(document).ready(function() {
 		if (Cookies.get('tachiyomi_message_closed', cookieOptions)=='1') {
 			$("#tachiyomi-message").attr('style','display: none;');
 		}
-
-		window.addEventListener('popstate', function(e) {
-			if (e.state && e.state.type && e.state.type=='search') {
-				$('#search_query').val(e.state.query);
-				loadSearchResults(e.state.query, false);
-			} else {
-				$('#search_query').val('');
-				$('.search-layout').addClass('hidden');
-				loadCatalogueIndex();
-			}
-		});
 
 		$(window).resize(function() {
 			if ($(window).width()!=lastWindowWidth) {

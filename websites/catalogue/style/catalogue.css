@@ -16,19 +16,16 @@
 /* Header */
 
 .style-type-catalogue .main-section {
+	justify-content: start;
+	width: 100%;
+	flex-direction: row;
 	margin-left: -3.6rem;
 	margin-right: -3.6rem;
-	flex-direction: row-reverse;
 }
 
 .style-type-catalogue.has-carousel .main-section {
 	display: block;
-}
-
-.style-type-catalogue.has-search-results .main-section {
-	justify-content: start;
-	width: 100%;
-	flex-direction: row-reverse;
+	width: unset;
 }
 
 .style-type-catalogue.has-search-results .section {
@@ -81,18 +78,17 @@
 	position: absolute;
 	border-bottom: 0.3rem solid rgb(var(--primary-color));
 	z-index: 1;
-	transition: all .3s ease-in-out;
+	transition: left .3s ease-in-out, top .3s ease-in-out, width .3s ease-in-out, height .3s ease-in-out;
 	pointer-events: none;
 }
 
 .catalogues-underline-noanim {
-	transition: all 0s ease-in-out !important;
+	transition: none !important; /* Disable all animations */
 }
 
 .loading-layout, .error-layout {
 	font-size: 1.8rem;
-	width: calc(100vw - 35.2rem); /* full width - search-layout (32rem) - padding (3.6rem*2) - scrollbar (0.7rem) (and a little more for extra) */
-	flex-grow: 1;
+	width: 100%;
 }
 
 .loading-spinner {
@@ -103,9 +99,10 @@
 	margin-top: 0.7rem;
 }
 
-.results-layout {
-	width: 100%;
+.catalogue-search {
+	width: calc(100% - 28rem);
 	align-self: start;
+	margin-left: 3.6rem;
 }
 
 .catalogue {
@@ -421,8 +418,8 @@
 }
 
 .filter-settings {
-	margin-right: 0.9rem;
-	font-size: 2.4rem;
+	margin-right: 1.2rem;
+	font-size: 1.4rem;
 }
 
 .filter-button {
@@ -431,6 +428,18 @@
 
 .filter-button:hover {
 	color: rgb(var(--icon-button-color-hover));
+}
+
+.filter-button .fa-stack-1x {
+	background: rgba(var(--background-color-standard),1);
+	height: 1.7em;
+	width: 1.7em;
+	border-radius: 999em;
+	left: 1em;
+	top: 0.5em;
+	margin-left: 0.6em;
+	margin-top: 0.6em;
+	line-height: 1.5
 }
 
 .search-form {
@@ -459,9 +468,15 @@
 
 .search-layout {
 	align-self: start;
-	transition: all .6s ease;
 	min-width: 28rem;
-	opacity: 0;
+	width: 28rem;
+	max-width: 28rem;
+	background: rgb(var(--background-color-dropdown));
+	font-size: 2rem;
+	filter: drop-shadow(0.4rem 0.4rem 0.2rem rgba(var(--always-negative-color),0.5));
+	margin-left: -3.6rem;
+	padding: 1.6rem;
+	margin-top: 2.4rem;
 }
 
 .section {
@@ -514,7 +529,6 @@
 	height: 40rem;
 	max-height: 40rem;
 	position: relative;
-	transition: all .6s ease;
 	overflow: hidden;
 	background: rgb(var(--secondary-color)) 0% 0% no-repeat padding-box;
 	mix-blend-mode: screen;
@@ -527,7 +541,6 @@
 	height: 40rem;
 	max-height: 40rem;
 	position: relative;
-	transition: all .6s ease;
 	overflow: hidden;
 	justify-content: center;
 }
@@ -824,14 +837,13 @@
 	max-width: var(--carousel-element-width);
 	max-height:  var(--carousel-element-height);
 	position: relative;
-	transition: all var(--carousel-animation-duration) ease;
 	margin: 0.5rem;
 }
 
 .thumbnail {
 	display: flex;
 	position: relative;
-	transition: all var(--carousel-animation-duration) ease;
+	transition: transform var(--carousel-animation-duration) ease, z-index var(--carousel-animation-duration) ease, filter var(--carousel-animation-duration) ease;
 	width: 100%; 
 	height: calc(100% - 3.2rem);
 	z-index: 1; /*remove this to have free hovering*/
@@ -853,7 +865,6 @@
 	height: 100%;
 	object-fit: cover;
 	border-radius: 0.4rem;
-	transition: all var(--carousel-animation-duration) ease;
 }
 
 .thumbnail-outer .title {
@@ -921,7 +932,7 @@
 	max-width: var(--carousel-element-width);
 	min-width: var(--carousel-element-width);
 	opacity: 0;
-	transition: all var(--carousel-animation-duration) ease-out;
+	transition: height var(--carousel-animation-duration) ease-out, max-height var(--carousel-animation-duration) ease-out, min-height var(--carousel-animation-duration) ease-out, width var(--carousel-animation-duration) ease-out, max-width var(--carousel-animation-duration) ease-out, min-width var(--carousel-animation-duration) ease-out, opacity var(--carousel-animation-duration) ease-out, z-index var(--carousel-animation-duration) ease-out, transform var(--carousel-animation-duration) ease-out;
 	position: absolute;
 	z-index: -1; /* to hide behind the image (z-index unset) */
 }
@@ -1081,7 +1092,7 @@
 	height: 0;
 	top: 0.4rem;
 	left: 0.5rem;
-	transition: all var(--carousel-animation-duration) ease;
+	transition: opacity var(--carousel-animation-duration) ease;
 	border-radius: 99rem;
 	opacity: 1;
 	z-index: 2;
