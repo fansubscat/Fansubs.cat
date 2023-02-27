@@ -8,11 +8,23 @@ if (!empty($_GET['search'])) {
 	$hide_search=TRUE;
 }
 
+if (!empty($_GET['hentai'])) {
+	$page_title='Hentai';
+	$hentai_subquery=" AND s.rating='XXX'";
+} else {
+	$hentai_subquery=" AND (s.rating IS NULL OR s.rating<>'XXX')";
+}
+
+if ($cat_config['items_type']=='liveaction') {
+	$hide_hentai=TRUE;
+}
+
 require_once("../common.fansubs.cat/header.inc.php");
 
 if (!empty($_GET['search'])) {
 ?>
 					<div class="search-layout<?php echo !empty($_GET['search']) ? '' : ' hidden'; ?>">
+						<input class="search-base-url" type="hidden" value="<?php echo !empty($_GET['hentai']) ? '/hentai/cerca' : '/cerca'; ?>">
 						<div class="search-filter-title">Filtres de cerca</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>
@@ -42,10 +54,6 @@ if (!empty($_GET['search'])) {
 								<input id="catalogue-search-include-lost" type="checkbox" oninput="loadSearchResults();">
 								<label for="catalogue-search-include-lost" class="for-checkbox">Projectes amb capítols perduts</label>
 							</div>
-							<div>
-								<input id="catalogue-search-include-explicit" type="checkbox" oninput="loadSearchResults();">
-								<label for="catalogue-search-include-explicit" class="for-checkbox">Contingut pornogràfic</label>
-							</div>
 						</form>
 					</div>
 <?php
@@ -54,17 +62,17 @@ if (!empty($_GET['search'])) {
 					<div class="results-layout catalogue-<?php echo !empty($_GET['search']) ? 'search' : 'index'; ?><?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){
-	if ($cat_config['items_type']=='liveaction') {
+	if ($cat_config['items_type']=='liveaction' || !empty($_GET['hentai'])) {
 		$number=25;
 	} else {
 		$number=50;
 	}
-	$restotalnumber = query("SELECT FLOOR((COUNT(*)-1)/$number)*$number cnt FROM series s WHERE s.type='${cat_config['items_type']}' AND EXISTS (SELECT id FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)");
+	$restotalnumber = query("SELECT FLOOR((COUNT(*)-1)/$number)*$number cnt FROM series s WHERE s.type='${cat_config['items_type']}'$hentai_subquery AND EXISTS (SELECT id FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)");
 	$totalnumber = mysqli_fetch_assoc($restotalnumber)['cnt'];
 	mysqli_free_result($restotalnumber);
 ?>
 						<div class="section">
-							<div class="site-message absolutely-real"><?php printf($cat_config['site_robot_message'], $totalnumber); ?></div>
+							<div class="site-message absolutely-real"><?php printf($cat_config['site_robot_message'.(!empty($_GET['hentai']) ? '_hentai' : '')], $totalnumber); ?></div>
 						</div>
 <?php
 	include("results.php");
@@ -72,7 +80,7 @@ if (is_robot()){
 ?>					</div>
 					<div class="loading-layout<?php echo !is_robot() ? '' : ' hidden'; ?>">
 						<div class="loading-spinner"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div>
-						<div class="loading-message"><?php echo !empty($_GET['search']) ? (empty($_GET['query']) ? 'S’està carregant el catàleg sencer...' : 'S’estan carregant els resultats de la cerca...') : 'S’estan carregant les darreres novetats...'; ?></div>
+						<div class="loading-message">S’estan carregant les darreres novetats...</div>
 					</div>
 					<div class="error-layout hidden">
 						<div class="error-icon"><i class="fa-3x fas fa-circle-exclamation"></i></div>

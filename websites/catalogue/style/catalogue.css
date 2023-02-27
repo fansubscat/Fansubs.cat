@@ -54,6 +54,10 @@
 	text-decoration: none;
 }
 
+.catalogues-explicit-category {
+	font-size: 4rem;
+}
+
 .catalogue-selected-processed {
 	font-family: "lexend_deca", sans-serif;
 	text-decoration: none !important;
@@ -417,12 +421,19 @@
 	font-size: 2.4rem;
 }
 
-.filter-settings {
+.hentai-button {
 	margin-right: 1.2rem;
-	font-size: 1.4rem;
+	font-size: 2.2rem;
+	color: rgb(var(--icon-button-color));
+}
+
+.hentai-button:hover {
+	color: rgb(var(--icon-button-color-hover));
 }
 
 .filter-button {
+	margin-right: 1.2rem;
+	font-size: 1.4rem;
 	color: rgb(var(--icon-button-color));
 }
 

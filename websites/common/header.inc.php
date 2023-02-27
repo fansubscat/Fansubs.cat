@@ -241,13 +241,24 @@ if ($style_type=='login') {
 					</a>
 <?php
 		if ($style_type=='catalogue') {
+			if (!empty($_GET['hentai'])) {
+?>
+						<div class="catalogues-explicit-category"><i class="fa fa-fw fa-pepper-hot"></i></div>
+<?php
+			}
 ?>
 					<div class="catalogues-navigation">
-						<a href="<?php echo $anime_url; ?>/"<?php echo $cat_config['items_type']=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
+						<a href="<?php echo $anime_url.(!empty($_GET['hentai']) ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
 						<span class="catalogues-separator">|</span>
-						<a href="<?php echo $manga_url; ?>/"<?php echo $cat_config['items_type']=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
+						<a href="<?php echo $manga_url.(!empty($_GET['hentai']) ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
+<?php
+			if (empty($_GET['hentai'])) {
+?>
 						<span class="catalogues-separator">|</span>
-						<a href="<?php echo $liveaction_url; ?>/"<?php echo $cat_config['items_type']=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Acció real</a>
+						<a href="<?php echo $liveaction_url; ?>"<?php echo $cat_config['items_type']=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Acció real</a>
+<?php
+			}
+?>
 						<span class="catalogues-underline"></span>
 					</div>
 <?php
@@ -256,16 +267,29 @@ if ($style_type=='login') {
 ?>
 					<div class="separator">
 <?php
+	if ($style_type=='catalogue' && empty($hide_hentai)) {
+		if (empty($_GET['hentai'])) {
+?>
+						<a class="hentai-button" href="/hentai" title="Vés a l'apartat de hentai">
+							<i class="fa-solid fa-fw fa-pepper-hot"></i>
+						</a>
+<?php
+		} else {
+?>
+						<a class="hentai-button" href="/" title="Vés a la portada general">
+							<i class="fa-solid fa-fw fa-house-chimney"></i>
+						</a>
+<?php
+		}
+	}
 	if ($style_type=='catalogue' && empty($hide_search)) {
 ?>
-						<div class="filter-settings">
-							<a class="filter-button" title="Filtra i mostra tot el catàleg">
-								<span class="fa-stack" style="vertical-align: top;">
-									<i class="fa-solid fa-fw fa-grip fa-stack-2x"></i>
-									<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>
-								</span>
-							</a>
-						</div>
+						<a class="filter-button" href="<?php echo !empty($_GET['hentai']) ? '/hentai' : ''; ?>/cerca" title="Filtra i mostra tot el catàleg">
+							<span class="fa-stack" style="vertical-align: top;">
+								<i class="fa-solid fa-fw fa-grip fa-stack-2x"></i>
+								<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>
+							</span>
+						</a>
 						<div class="search-form">
 							<form id="search_form">
 								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo empty($header_series_page) ? ' autofocus' : ''; ?>>

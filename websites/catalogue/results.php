@@ -2,6 +2,13 @@
 require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
+
+if (!empty($_GET['hentai'])) {
+	$hentai_subquery=" AND s.rating='XXX'";
+} else {
+	$hentai_subquery=" AND (s.rating IS NULL OR s.rating<>'XXX')";
+}
+
 if (!empty($site_message) || !empty($is_fools_day)){
 ?>
 				<div data-nosnippet class="section">
@@ -15,13 +22,11 @@ $max_items=24;
 $cookie_viewed_files = get_cookie_viewed_files_ids();
 
 $base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND nv.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT CONCAT(v.id,'___',f.name,'___',f.type,'___',f.id) ORDER BY v.id,f.name SEPARATOR '|') fansub_info, GROUP_CONCAT(DISTINCT sg.genre_id) genres, GROUP_CONCAT(DISTINCT REPLACE(REPLACE(g.name,' ',' '),'-','‑') ORDER BY g.name SEPARATOR ' • ') genre_names, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0 AND ls.id NOT IN (".(count($cookie_viewed_files)>0 ? implode(',',$cookie_viewed_files) : '0').")) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
-$query_portion_limit_to_non_hidden = "(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND v.is_hidden=0";
+$query_portion_limit_to_non_hidden = "(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND v.is_hidden=0$hentai_subquery";
 
 $cookie_fansub_ids = get_cookie_fansub_ids();
 
-$cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ? " AND v.status<>5 AND v.status<>4" : "").(!empty($_COOKIE['show_missing']) ? "" : " AND v.is_missing_episodes=0").((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND (s.rating<>'XXX' OR s.rating IS NULL)" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
-
-$cookie_extra_conditions_search = ((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND (s.rating<>'XXX' OR s.rating IS NULL)" : "");
+$cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot()) ? " AND v.status<>5 AND v.status<>4" : "").(!empty($_COOKIE['show_missing']) ? "" : " AND v.is_missing_episodes=0").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
 if (!empty($_GET['search'])) {
 	$query = (!empty($_GET['query']) ? escape($_GET['query']) : "");
@@ -29,7 +34,7 @@ if (!empty($_GET['search'])) {
 	$spaced_query=$query;
 	$query = str_replace(" ", "%", $query);
 	$queries=array(
-		$base_query . " WHERE s.type='${cat_config['items_type']}' AND $query_portion_limit_to_non_hidden AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%' OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$spaced_query'))$cookie_extra_conditions_search GROUP BY s.id ORDER BY s.name ASC");
+		$base_query . " WHERE s.type='${cat_config['items_type']}' AND $query_portion_limit_to_non_hidden AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%' OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$spaced_query')) GROUP BY s.id ORDER BY s.name ASC");
 	$specific_version=array(FALSE);
 	$type=array('static');
 } else {
@@ -97,65 +102,61 @@ for ($i=0;$i<count($sections);$i++){
 		continue;
 	}
 	$result = query($queries[$i]);
+	if (mysqli_num_rows($result)>0 || $type[$i]=='static'){
 ?>
 				<div class="section">
 <?php
-	if ($type[$i]!='recommendations') {
+		if ($type[$i]!='recommendations') {
 ?>
 					<h2 class="section-title-main"><?php echo $sections[$i]; ?></h2>
 <?php
-	}
-	if (mysqli_num_rows($result)==0){
-		if ($sections[$i]=='Resultats de la cerca'){
+		}
+		if (mysqli_num_rows($result)==0){
 ?>
 					<div class="section-content fake-carousel"><div><i class="fa fa-search empty-icon"></i><br><br>No s'ha trobat cap element. Prova una altra cerca o explora el catàleg a les pestanyes superiors.</div></div>
 <?php
 		} else {
-?>
-					<div class="section-content fake-carousel"><div><i class="fa fa-ban empty-icon"></i><br><br>No s'ha trobat cap element. Prova de reduir el filtre a les opcions de la part superior dreta.</div></div>
-<?php
-		}
-	} else {
-		if ($type[$i]=='static') {
-			$genres = array();
-			while ($row = mysqli_fetch_assoc($result)) {
-				if (!empty($row['genres'])) {
-					$dbgenres = explode(',',$row['genres']);
-					foreach ($dbgenres as $dbgenre) {
-						if (!empty($genres[$dbgenre])) {
-							$genres[$dbgenre]=$genres[$dbgenre]+1;
-						} else {
-							$genres[$dbgenre]=1;
+			if ($type[$i]=='static') {
+				$genres = array();
+				while ($row = mysqli_fetch_assoc($result)) {
+					if (!empty($row['genres'])) {
+						$dbgenres = explode(',',$row['genres']);
+						foreach ($dbgenres as $dbgenre) {
+							if (!empty($genres[$dbgenre])) {
+								$genres[$dbgenre]=$genres[$dbgenre]+1;
+							} else {
+								$genres[$dbgenre]=1;
+							}
 						}
 					}
 				}
+				mysqli_data_seek($result, 0);
 			}
-			mysqli_data_seek($result, 0);
-		}
 ?>
 					<div class="section-content<?php echo $type[$i]=='carousel' ? ' carousel' : ($type[$i]=='recommendations' ? ' recommendations theme-dark' : ' catalogue'); ?>">
 <?php
-		while ($row = mysqli_fetch_assoc($result)){
-			if (!empty($row['genres']) && $type[$i]=='static') {
-				$genres = ' genre-'.implode(' genre-', explode(',',$row['genres']));
-			} else {
-				$genres = "";
-			}
+			while ($row = mysqli_fetch_assoc($result)){
+				if (!empty($row['genres']) && $type[$i]=='static') {
+					$genres = ' genre-'.implode(' genre-', explode(',',$row['genres']));
+				} else {
+					$genres = "";
+				}
 ?>
 						<div class="status-<?php echo get_status($row['best_status']); ?><?php echo $genres; ?>">
 <?php
-			if ($type[$i]=='recommendations') {
-				print_featured_item($row, $specific_version[$i]);
-			} else {
-				print_carousel_item($row, $specific_version[$i]);
-			}
+				if ($type[$i]=='recommendations') {
+					print_featured_item($row, $specific_version[$i]);
+				} else {
+					print_carousel_item($row, $specific_version[$i]);
+				}
 ?>
 						</div>
 <?php
-		}
+			}
 ?>
 					</div>
 <?php
+		}
 	}
 	mysqli_free_result($result);
 ?>
@@ -178,7 +179,7 @@ for ($i=0;$i<count($sections);$i++){
 		}
 
 		foreach ($other_searches as $other_search_type) {
-			$result = query("SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND nv.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT CONCAT(v.id,'___',f.name,'___',f.type,'___',f.id) ORDER BY v.id,f.name SEPARATOR '|') fansub_info, GROUP_CONCAT(DISTINCT sg.genre_id) genres, GROUP_CONCAT(DISTINCT REPLACE(REPLACE(g.name,' ',' '),'-','‑') ORDER BY g.name SEPARATOR ' • ') genre_names, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='$other_search_type' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%' OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$spaced_query'))$cookie_extra_conditions_search GROUP BY s.id ORDER BY s.name ASC");
+			$result = query("SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND nv.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT CONCAT(v.id,'___',f.name,'___',f.type,'___',f.id) ORDER BY v.id,f.name SEPARATOR '|') fansub_info, GROUP_CONCAT(DISTINCT sg.genre_id) genres, GROUP_CONCAT(DISTINCT REPLACE(REPLACE(g.name,' ',' '),'-','‑') ORDER BY g.name SEPARATOR ' • ') genre_names, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='$other_search_type' AND $query_portion_limit_to_non_hidden AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.studio LIKE '%$query%' OR s.keywords OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%' OR s.id IN (SELECT sg.series_id FROM rel_series_genre sg LEFT JOIN genre g ON sg.genre_id=g.id WHERE g.name='$spaced_query'))$hentai_subquery GROUP BY s.id ORDER BY s.name ASC");
 			if (mysqli_num_rows($result)>0){
 ?>
 				<div class="section">

@@ -31,10 +31,7 @@ RewriteCond %{REQUEST_URI} !strip_reader\.php
 RewriteCond %{REQUEST_URI} !results\.php
 RewriteRule \.php$ - [F]
 
-#Preview images
-RewriteRule ^preview/([^/]*)\.jpg$ preview_image.php?slug=$1 [L]
-
-#Old (v4) pages
+#OLD REDIRECTS: v4 pages were divided by type, and about page was moved to a new domain
 RewriteRule ^films/?$ / [R=301,L]
 RewriteRule ^films/([^/]+)/?$ /$1 [R=301,QSA,L]
 RewriteRule ^series/?$ / [R=301,L]
@@ -43,14 +40,9 @@ RewriteRule ^one-shots/?$ / [R=301,L]
 RewriteRule ^one-shots/([^/]+)/?$ /$1 [R=301,QSA,L]
 RewriteRule ^serialitzats/?$ / [R=301,L]
 RewriteRule ^serialitzats/([^/]+)/?$ /$1 [R=301,QSA,L]
-RewriteRule ^cerca/?$ index.php?search=1&query= [L]
-RewriteRule ^cerca/([^/]+)/?$ index.php?search=1&query=$1 [L]
+RewriteRule ^qui-som/?$ https://wwwv2.fansubs.cat/qui-som/ [R=301,L]
 
-#Generic pages
-RewriteRule ^qui-som/?$ about.php [L]
-RewriteRule ^embed/([^/]+)/?$ embed.php?file_id=$1 [L]
-
-#Old (pre-v3) migration for manga (Piwigo -> Catalogue) - Used by links at Lluna Plena
+#OLD REDIRECTS: v3 migration for manga (Piwigo -> Catalogue) - Used by links at Lluna Plena
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
 RewriteRule ^index/category/(.*)-(.*)$ migration.php?migration_type=piwigo&id=$1 [L]
@@ -61,12 +53,55 @@ RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
 RewriteRule ^picture/(.*)/category/(.*)-(.*)$ migration.php?migration_type=piwigo&id=$2 [L]
 
-#Migration for(pre-v4) Tachiyomi image URLs: Tachiyomi keeps the cover URL in cache.
+#OLD REDIRECTS: v4 migration for old Tachiyomi image URLs: Tachiyomi keeps the cover URL in cache.
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
 RewriteRule ^images/manga/(.*)\.jpg$ migration.php?migration_type=tachiyomi_cache&id=$1 [L]
 
-#We have reached the end, so this must be a normal series pages
+#Normal v5 pages
+RewriteRule ^preview/([^/]*)\.jpg$ preview_image.php?slug=$1 [L]
+RewriteRule ^cerca/?$ index.php?search=1 [L]
+RewriteRule ^cerca/([^/]+)/?$ index.php?search=1&query=$1 [L]
+RewriteRule ^embed/([^/]+)/?$ embed.php?file_id=$1 [L]
 RewriteRule ^/?$ index.php [L]
+
+#Hentai (only anime and manga)
+RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^hentai/preview/([^/]*)\.jpg$ preview_image.php?hentai=1&slug=$1 [L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^hentai/cerca/?$ index.php?hentai=1&search=1 [L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^hentai/cerca/([^/]+)/?$ index.php?hentai=1&search=1&query=$1 [L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^hentai/embed/([^/]+)/?$ embed.php?hentai=1&file_id=$1 [L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^hentai/?$ index.php?hentai=1 [L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^hentai/results.php$ results.php?hentai=1 [QSA,L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^hentai/([^.]+)/?$ series.php?hentai=1&slug=$1 [QSA,L]
+
+#If it was anything else let's assume it was a series
 RewriteRule ^([^.]+)/?$ series.php?slug=$1 [QSA,L]
 

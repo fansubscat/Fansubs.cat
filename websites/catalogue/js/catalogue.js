@@ -850,10 +850,18 @@ function initializeCarousels() {
 }
 
 function launchSearch(query) {
-	window.location.href='/cerca/'+encodeURIComponent(query)+(query!='' ? '/' : '');
+	window.location.href=$('.filter-button').attr('href')+(query!='' ? '/'+encodeURIComponent(query) : '');
 }
 
 function loadSearchResults() {
+	var query = $('#catalogue-search-query').val();
+	if (lastSearchRequest==null && query=='') {
+		$('.loading-message').text('S’està carregant el catàleg sencer...');
+	} else {
+		history.replaceState(null, null, $('.search-base-url').val()+(query!='' ? '/'+encodeURIComponent(query) : ''));
+		$('.loading-message').text('S’estan carregant els resultats de la cerca...');
+	}
+
 	$('.style-type-catalogue').removeClass('has-search-results');
 	$('.error-layout').addClass('hidden');
 	$('.results-layout').addClass('hidden');
@@ -862,7 +870,7 @@ function loadSearchResults() {
 		lastSearchRequest.abort();
 	}
 	lastSearchRequest = $.post({
-		url: "/results.php?search=1&query="+encodeURIComponent($('#catalogue-search-query').val()),
+		url: ($('.fa-house-chimney').length>0 ? '/hentai' : '')+"/results.php?search=1&query="+encodeURIComponent($('#catalogue-search-query').val()),
 		data: [],
 		xhrFields: {
 			withCredentials: true
@@ -889,7 +897,7 @@ function loadCatalogueIndex() {
 	$('.error-layout').addClass('hidden');
 	$('.results-layout').addClass('hidden');
 	$.post({
-		url: "/results.php",
+		url: ($('.fa-house-chimney').length>0 ? '/hentai' : '')+"/results.php",
 		data: [],
 		xhrFields: {
 			withCredentials: true
@@ -988,9 +996,6 @@ $(document).ready(function() {
 		$('#search_form').submit(function(){
 			launchSearch($('#search_query').val());
 			return false;
-		});
-		$('.filter-button').click(function(){
-			launchSearch('');
 		});
 		$('#search_button').click(function(){
 			$('#search_form').submit();

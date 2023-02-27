@@ -63,6 +63,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 		);
 		$cat_config = array(
 			'site_robot_message' => "Fansubs.cat et permet llegir en línia més de %d mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.",
+			'site_robot_message_hentai' => "Fansubs.cat et permet llegir en línia mangues hentai editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.",
 			'items_type' => "manga",
 			'filmsoneshots' => "One-shots",
 			'filmsoneshots_icon' => "fa-book-open",
@@ -115,6 +116,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 		);
 		$cat_config = array(
 			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d continguts d'acció real subtitulats en català. Ara pots gaudir de tot el contingut d'acció real de tots els fansubs en català en un únic lloc.",
+			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming més de %d continguts d'acció real subtitulats en català. Ara pots gaudir de tot el contingut d'acció real de tots els fansubs en català en un únic lloc.",
 			'items_type' => "liveaction",
 			'filmsoneshots' => "Films",
 			'filmsoneshots_icon' => "fa-video",
@@ -169,6 +171,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 		);
 		$cat_config = array(
 			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d animes subtitulats en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.",
+			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming animes hentai subtitulats en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.",
 			'items_type' => "anime",
 			'filmsoneshots' => "Films",
 			'filmsoneshots_icon' => "fa-video",
