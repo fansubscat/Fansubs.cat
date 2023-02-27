@@ -1128,28 +1128,41 @@ $(document).ready(function() {
 					target.style.top = `${top}px`;
 				}
 
-				//Recalculate multi-carousels
-				//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
-				//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
-				var carouselWidth = $('.header').width();
-				var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
-					+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
-				var size = Math.max(parseInt(carouselWidth/elementWidth),1);
-				var swipeToSlideSetting = ($(window).width()>650 ? false : true);
+				if ($('.has-carousel').length>0) {
+					//Recalculate multi-carousels
+					//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
+					//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
+					var carouselWidth = $('.header').width();
+					var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
+						+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
+					var size = Math.max(parseInt(carouselWidth/elementWidth),1);
+					var swipeToSlideSetting = ($(window).width()>650 ? false : true);
 
-				$('.carousel').slick('unslick');
-				$('.carousel').slick({
-					speed: 300,
-					infinite: false,
-					slidesToShow: size,
-					slidesToScroll: size,
-					swipeToSlide: swipeToSlideSetting,
-					variableWidth: true,
-					prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-					nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-				});
+					$('.carousel').slick('unslick');
+					$('.carousel').slick({
+						speed: 300,
+						infinite: false,
+						slidesToShow: size,
+						slidesToScroll: size,
+						swipeToSlide: swipeToSlideSetting,
+						variableWidth: true,
+						prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+						nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
+					});
+				}
 
 				lastWindowWidth=$(window).width();
+			}
+		});
+		$(window).scroll(function () {
+			if ($('.search-layout').length>0) {
+				var scroll = $(window).scrollTop();
+				var top = $('.main-section')[0].offsetTop + (2.4 * parseFloat(getComputedStyle(document.documentElement).fontSize));
+				if (scroll>top) {
+					$('.search-layout').css({'top': '0', 'height': 'calc(100%)'});
+				} else {
+					$('.search-layout').css({'top': 'calc('+(top-scroll)+'px + '+(parseFloat((top-scroll))/top*2.4)+'px)', 'height': 'calc(100% - '+(top-scroll)+'px)'});
+				}
 			}
 		});
 
