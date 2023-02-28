@@ -1,3 +1,7 @@
+.main-site-logo {
+	margin-bottom: 4.2rem;
+}
+
 .main-button {
 	font-family: "lexend_deca_bold", sans-serif;
 	display: inline-block;
@@ -37,7 +41,13 @@
 	letter-spacing: 0.15rem;
 }
 
-@media (max-width: 900px){
+@media (max-width: 920px){
+	.main-site-logo {
+		width: 24rem;
+		height: 6.667rem;
+		margin-bottom: 3rem;
+		margin-top: 1rem;
+	}
 	.main-button, .secondary-button {
 		padding: 1rem;
 	}

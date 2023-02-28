@@ -759,6 +759,11 @@ function prepareFloatingInfo(element){
 	}
 }
 
+function prepareClickableFloatingInfo(element){
+	$('.thumbnail-clicked').removeClass('thumbnail-clicked');
+	$(element).parent().parent().addClass('thumbnail-clicked');
+}
+
 function toggleBookmark(seriesSlug){
 	if ($('.floating-info-bookmark[data-series-id='+seriesSlug+']').hasClass('fas'))	{
 		$('.floating-info-bookmark[data-series-id='+seriesSlug+']').removeClass('fas').addClass('far');

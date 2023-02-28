@@ -1,7 +1,7 @@
 /* POSSIBLE BREAKING POINTS:
 	L: 1200px;
 	M:  920px;
-	S:  650px;
+	S:  600px;
 	XS: 350px;
 */
 
@@ -162,7 +162,6 @@ a img {
 	flex-direction: row;
 	align-items: center;
 	width: 100%;
-	height: var(--header-height);
 	margin-bottom: var(--page-padding);
 }
 
@@ -225,6 +224,7 @@ a img {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	height: var(--header-height);
 	justify-content: end;
 	order: 30;
 }
@@ -234,7 +234,7 @@ a img {
 	display: flex;
 	align-items: flex-end;
 	flex-direction: column;
-	height: 4.2rem;
+	height: var(--header-height);
 	justify-content: center;
 	order: 50;
 }
@@ -398,7 +398,6 @@ a img {
 .main-logo {
 	width: 36rem;
 	height: 10rem;
-	margin-bottom: 4.2rem;
 	max-width: 100%;
 	object-fit: contain;
 	user-select: none;
@@ -487,11 +486,18 @@ input:not([type='range']), select, textarea {
 }
 
 .logo-small {
+	height: var(--header-height);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	order: 10;
+}
+
+.logo-small svg {
+	display: block;
 	width: 18rem;
 	height: 5rem;
-	margin-top: -5rem;
 	z-index: 0;
-	order: 10;
 }
 
 .text-page {
@@ -585,17 +591,9 @@ h2.section-title:first-of-type {
 		font-size: 2.6rem;
 	}
 
-	.main-logo {
-		width: 24rem;
-		height: 6.667rem;
-		margin-bottom: 2rem;
-		margin-top: 2rem;
-	}
-
-	.logo-small {
+	.logo-small svg {
 		width: 12rem;
 		height: 3.333rem;
-		margin-top: -7.5rem;
 	}
 
 	.text-page {
@@ -619,7 +617,7 @@ h2.section-title:first-of-type {
 	}
 }
 
-@media (max-width: 350px){
+@media (max-width: 600px){
 	.user-login-text {
 		display: none;
 	}

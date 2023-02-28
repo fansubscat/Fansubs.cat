@@ -2,7 +2,9 @@
 $style_type='main';
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
-				<?php include($static_directory.'/common/images/logo.svg'); ?>
+				<div class="main-site-logo">
+<?php include($static_directory.'/common/images/logo.svg'); ?>
+				</div>
 				<div class="main-buttons">
 					<a class="main-button" href="<?php echo $anime_url; ?>">Anime</a>
 					<a class="main-button" href="<?php echo $manga_url; ?>">Manga</a>

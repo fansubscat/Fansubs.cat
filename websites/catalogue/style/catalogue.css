@@ -40,13 +40,13 @@
 }
 
 .catalogues-navigation {
+	height: var(--header-height);
 	margin-left: 2.5rem;
 	font-size: 1.7rem;
 	text-transform: uppercase;
 	align-self: end;
-	margin-bottom: -0.2rem;
 	display: flex;
-	align-items: center;
+	align-items: end;
 	font-family: "lexend_deca_light", sans-serif;
 	letter-spacing: -0.1rem;
 	order: 20;
@@ -916,11 +916,6 @@
 	z-index: 1; /*remove this to have free hovering*/
 }
 
-.thumbnail:hover {
-	transform: scale(var(--carousel-scaling));
-	z-index: 9999; /*to go above other carousel elements (z-index 1)*/
-}
-
 .thumbnail .image-link {
 	width: 100%; 
 	height: 100%;
@@ -965,32 +960,6 @@
 	flex-direction: row-reverse;
 }
 
-.thumbnail.floating-info-right:hover {
-	filter: drop-shadow(0em 0em 0.65rem rgba(var(--always-negative-color),0.8));
-}
-
-.thumbnail.floating-info-left:hover {
-	filter: drop-shadow(0em 0em 0.65rem rgba(var(--always-negative-color),0.8));
-}
-
-.thumbnail.floating-info-right:hover img {
-	border-radius: 0.4rem 0 0 0.4rem;
-}
-
-.thumbnail.floating-info-left:hover img {
-	border-radius: 0 0.4rem 0.4rem 0;
-}
-
-.thumbnail.floating-info-right:hover .floating-info {
-	transform: translateX(99%);
-	border-radius: 0 0.4rem 0.4rem 0;
-}
-
-.thumbnail.floating-info-left:hover .floating-info {
-	transform: translateX(-99%);
-	border-radius: 0.4rem 0 0 0.4rem;
-}
-
 .thumbnail .floating-info {
 	height: var(--carousel-element-height);
 	max-height: var(--carousel-element-height);
@@ -1004,17 +973,28 @@
 	z-index: -1; /* to hide behind the image (z-index unset) */
 }
 
+.thumbnail .clickable-thumbnail {
+	height: var(--carousel-element-height);
+	max-height: var(--carousel-element-height);
+	min-height: var(--carousel-element-height);
+	width: var(--carousel-element-width); 
+	max-width: var(--carousel-element-width);
+	min-width: var(--carousel-element-width);
+	opacity: 0;
+	position: absolute;
+}
+
+.thumbnail-clicked .floating-info {
+	z-index: 1;
+	opacity: 1;
+}
+
 .thumbnail .floating-info-main {
 	display: flex;
 	flex-direction: column;
 	background-color: rgb(var(--negative-color));
 	height: calc(100% - var(--thumbnail-text-height));
 	overflow: hidden;
-}
-
-.thumbnail:hover .floating-info {
-	opacity: 1;
-	transform: translateX(0%);
 }
 
 .floating-info .status-indicator{
@@ -1166,10 +1146,6 @@
 	z-index: 2;
 }
 
-.thumbnail:hover .status-indicator {
-	opacity: 0;
-}
-
 .status-completed .status-indicator {
 	border: 0.6rem solid green;
 }
@@ -1267,6 +1243,54 @@ input[type='range']::-webkit-slider-thumb:active {
 /* Series screen */
 /* TODO */
 
+@media (hover: hover) {
+	/* Disable clicking the clickable section */
+	.thumbnail .clickable-thumbnail {
+		pointer-events: none;
+	}
+
+	/* These go here because if the primary pointing device can hover, we want to do this, but if it can't, we don't want to do this EVER */
+	.thumbnail:hover {
+		transform: scale(var(--carousel-scaling));
+		z-index: 9999; /*to go above other carousel elements (z-index 1)*/
+	}
+
+	.thumbnail.floating-info-right:hover {
+		filter: drop-shadow(0em 0em 0.65rem rgba(var(--always-negative-color),0.8));
+	}
+
+	.thumbnail.floating-info-left:hover {
+		filter: drop-shadow(0em 0em 0.65rem rgba(var(--always-negative-color),0.8));
+	}
+
+	.thumbnail.floating-info-right:hover img {
+		border-radius: 0.4rem 0 0 0.4rem;
+	}
+
+	.thumbnail.floating-info-left:hover img {
+		border-radius: 0 0.4rem 0.4rem 0;
+	}
+
+	.thumbnail.floating-info-right:hover .floating-info {
+		transform: translateX(99%);
+		border-radius: 0 0.4rem 0.4rem 0;
+	}
+
+	.thumbnail.floating-info-left:hover .floating-info {
+		transform: translateX(-99%);
+		border-radius: 0.4rem 0 0 0.4rem;
+	}
+
+	.thumbnail:hover .floating-info {
+		opacity: 1;
+		transform: translateX(0%);
+	}
+
+	.thumbnail:hover .status-indicator {
+		opacity: 0;
+	}
+}
+
 @media (max-width: 1200px){
 	.user-login {
 		min-width: 4rem;
@@ -1280,42 +1304,24 @@ input[type='range']::-webkit-slider-thumb:active {
 
 @media (max-width: 920px){
 	:root {
-		--header-height-catalogue: 12.6rem;
+		--header-height-catalogue: 8.4rem;
 		--carousel-element-width: 12.72rem;
 		--carousel-element-height: 19.92rem;
 		--thumbnail-margin: 0.3rem;
 		--thumbnail-text-height: 1.92rem;
 	}
 
-	.style-type-catalogue .user-login {
-		margin-left: 1rem;
-		margin-right: 0.5rem;
-		order: 18;
-	}
-
-	.style-type-catalogue .user-options {
-		margin-left: 1rem;
-		order: 19;
-	}
-
-	.style-type-catalogue .separator {
-		order: 99;
-		width: 100%;
-		justify-content: center;
-	}
-
 	.style-type-catalogue .header {
-		height: var(--header-height-catalogue);
-		justify-content: center;
+		justify-content: left;
 		flex-wrap: wrap;
 	}
 
 	.catalogues-navigation {
 		margin-left: 0;
-		margin-top: 0.5rem;
-		margin-bottom: 0.5rem;
 		width: 100%;
 		justify-content: center;
+		align-items: center;
+		order: 99;
 	}
 
 	.catalogues-explicit-category {
@@ -1324,12 +1330,26 @@ input[type='range']::-webkit-slider-thumb:active {
 	}
 
 	.search-form {
-		margin-right: 0;
+		display: none;
 	}
 
 	.thumbnail-outer .title {
-		padding-left: 0.45rem;
-		padding-right: 0.45rem;
-		font-size: 0.87rem;
+		padding-left: 0.25rem;
+		padding-right: 0.25rem;
+		font-size: 1.1rem;
+		line-height: 1.0;
+	}
+
+	.section {
+		padding: 0 var(--page-padding) 1.5rem var(--page-padding);
+	}
+
+	.section-title-main {
+		font-size: 1.7rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.section-title-main i {
+		font-size: 1.9rem;
 	}
 }

@@ -609,6 +609,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t".'<div class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['slug'].'" onmouseenter="prepareFloatingInfo(this);">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="status-indicator"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlentities($series['name']).'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="clickable-thumbnail" onclick="prepareClickableFloatingInfo(this);"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="floating-info">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-main">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($series['best_status']).'"></div>'."\n";
