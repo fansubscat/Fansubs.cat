@@ -916,6 +916,37 @@ function loadCatalogueIndex() {
 	});
 }
 
+function formatDoubleSliderInput(input, value) {
+	var format = $(input).attr('value-formatting');
+	if (format=='time' || format=='time-max') {
+		//Convert minutes to time
+		if (value==120 && format=='time-max') {
+			input.innerText='2:00:00+';
+		} else {
+			input.innerText=Math.floor(value/60)+':'+((value%60)>9 ? (value%60) : '0'+(value%60))+':00';
+		}
+	} else if (format=='score') {
+		//Divide by 10
+		input.innerText=Number(value/10).toFixed(1).replaceAll('.',',');
+	} else if (format=='rating') {
+		if (value==0) {
+			input.innerText='TP';
+		} else if (value==1) {
+			input.innerText='+7';
+		} else if (value==2) {
+			input.innerText='+13';
+		} else if (value==3) {
+			input.innerText='+16';
+		} else if (value==4) {
+			input.innerText='+18';
+		} else {
+			input.innerText='XXX';
+		}
+	} else {
+		input.innerText=value;
+	}
+}
+
 $(document).ready(function() {
 	var links = document.querySelectorAll(".catalogues-navigation a");
 	var container = document.querySelector(".catalogues-navigation");
@@ -1154,19 +1185,56 @@ $(document).ready(function() {
 				lastWindowWidth=$(window).width();
 			}
 		});
+
+		lastWindowWidth=$(window).width();
+
 		$(window).scroll(function () {
 			if ($('.search-layout').length>0) {
 				var scroll = $(window).scrollTop();
 				var top = $('.main-section')[0].offsetTop + (2.4 * parseFloat(getComputedStyle(document.documentElement).fontSize));
 				if (scroll>top) {
 					$('.search-layout').css({'top': '0', 'height': 'calc(100%)'});
+					$('.loading-layout').css({'top': '0', 'height': 'calc(100%)'});
+					$('.error-layout').css({'top': '0', 'height': 'calc(100%)'});
 				} else {
 					$('.search-layout').css({'top': 'calc('+(top-scroll)+'px + '+(parseFloat((top-scroll))/top*2.4)+'px)', 'height': 'calc(100% - '+(top-scroll)+'px)'});
+					$('.loading-layout').css({'top': 'calc('+(top-scroll)+'px + '+(parseFloat((top-scroll))/top*2.4)+'px)', 'height': 'calc(100% - '+(top-scroll)+'px)'});
+					$('.error-layout').css({'top': 'calc('+(top-scroll)+'px + '+(parseFloat((top-scroll))/top*2.4)+'px)', 'height': 'calc(100% - '+(top-scroll)+'px)'});
 				}
 			}
 		});
 
-		lastWindowWidth=$(window).width();
+		if ($('.search-layout').length>0) {
+			//Duration
+			const fromSliderDuration = $('#duration-from-slider')[0];
+			const toSliderDuration = $('#duration-to-slider')[0];
+			const fromInputDuration = $('#duration-from-input')[0];
+			const toInputDuration = $('#duration-to-input')[0];
+			fillDoubleSlider(fromSliderDuration, toSliderDuration, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSliderDuration);
+			setDoubleSliderToggleAccessible(toSliderDuration);
+			fromSliderDuration.oninput = () => applyDoubleSliderFrom(fromSliderDuration, toSliderDuration, fromInputDuration);
+			toSliderDuration.oninput = () => applyDoubleSliderTo(fromSliderDuration, toSliderDuration, toInputDuration);
+			
+			//Rating
+			const fromSliderRating = $('#rating-from-slider')[0];
+			const toSliderRating = $('#rating-to-slider')[0];
+			const fromInputRating = $('#rating-from-input')[0];
+			const toInputRating = $('#rating-to-input')[0];
+			fillDoubleSlider(fromSliderRating, toSliderRating, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSliderRating);
+			setDoubleSliderToggleAccessible(toSliderRating);
+			fromSliderRating.oninput = () => applyDoubleSliderFrom(fromSliderRating, toSliderRating, fromInputRating);
+			toSliderRating.oninput = () => applyDoubleSliderTo(fromSliderRating, toSliderRating, toInputRating);
+			
+			//Score
+			const fromSliderScore = $('#score-from-slider')[0];
+			const toSliderScore = $('#score-to-slider')[0];
+			const fromInputScore = $('#score-from-input')[0];
+			const toInputScore = $('#score-to-input')[0];
+			fillDoubleSlider(fromSliderScore, toSliderScore, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSliderScore);
+			setDoubleSliderToggleAccessible(toSliderScore);
+			fromSliderScore.oninput = () => applyDoubleSliderFrom(fromSliderScore, toSliderScore, fromInputScore);
+			toSliderScore.oninput = () => applyDoubleSliderTo(fromSliderScore, toSliderScore, toInputScore);
+		}
 	} else {
 		$('body').addClass('no-overflow');
 		if ($('#data-item-type').val()=='manga') {

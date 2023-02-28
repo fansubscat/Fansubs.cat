@@ -209,4 +209,7 @@ for ($i=0;$i<count($sections);$i++){
 		}
 	}
 }
+if (!empty($_GET['search'])) {
+	require_once("../common.fansubs.cat/footer_text.inc.php");
+}
 ?>

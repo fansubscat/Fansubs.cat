@@ -63,7 +63,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 		);
 		$cat_config = array(
 			'site_robot_message' => "Fansubs.cat et permet llegir en línia més de %d mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.",
-			'site_robot_message_hentai' => "Fansubs.cat et permet llegir en línia mangues hentai editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.",
+			'site_robot_message_hentai' => "Fansubs.cat et permet llegir en línia manga hentai en català. Ara pots gaudir de tot el manga hentai de tots els fansubs en català en un únic lloc.",
 			'items_type' => "manga",
 			'filmsoneshots' => "One-shots",
 			'filmsoneshots_icon' => "fa-book-open",
@@ -89,7 +89,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 			//Sections
 			'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
 			'section_last_completed' => "<i class=\"fa fa-fw fa-check\"></i> Finalitzats recentment",
-			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l'atzar",
+			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l’atzar",
 			'section_popular' => "<i class=\"fa fa-fw fa-fire\"></i> Més populars",
 			'section_more_recent' => "<i class=\"fa fa-fw fa-stopwatch\"></i> Més actuals",
 			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
@@ -111,12 +111,12 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 			'own_js' => "catalogue.js",
 			'own_css' => "catalogue.css",
 			'site_title' => "Fansubs.cat - Acció real en català",
-			'site_description' => "Aquí podràs veure en línia tot el contingut d'acció real subtitulat pels fansubs en català!",
+			'site_description' => "Aquí podràs veure en línia tot el contingut d’acció real subtitulat pels fansubs en català!",
 			'is_catalogue' => TRUE,
 		);
 		$cat_config = array(
-			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d continguts d'acció real subtitulats en català. Ara pots gaudir de tot el contingut d'acció real de tots els fansubs en català en un únic lloc.",
-			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming més de %d continguts d'acció real subtitulats en català. Ara pots gaudir de tot el contingut d'acció real de tots els fansubs en català en un únic lloc.",
+			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d continguts d’acció real subtitulats en català. Ara pots gaudir de tot el contingut d’acció real de tots els fansubs en català en un únic lloc.",
+			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming més de %d continguts d’acció real subtitulats en català. Ara pots gaudir de tot el contingut d’acció real de tots els fansubs en català en un únic lloc.",
 			'items_type' => "liveaction",
 			'filmsoneshots' => "Films",
 			'filmsoneshots_icon' => "fa-video",
@@ -142,7 +142,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 			//Sections
 			'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
 			'section_last_completed' => "<i class=\"fa fa-fw fa-check\"></i> Finalitzats recentment",
-			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l'atzar",
+			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l’atzar",
 			'section_popular' => "<i class=\"fa fa-fw fa-fire\"></i> Més populars",
 			'section_more_recent' => "<i class=\"fa fa-fw fa-stopwatch\"></i> Més actuals",
 			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
@@ -153,8 +153,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 			'section_related' => "<i class=\"fa fa-fw fa-tv\"></i> Continguts d’acció real recomanats",
 			'section_related_other' => "<i class=\"fa fa-fw fa-square-plus\"></i> Altres continguts recomanats",
 			'view_now' => "Mira'l ara",
-			'option_show_cancelled' => "Mostra els continguts d'acció real cancel·lats o abandonats pels fansubs",
-			'option_show_missing' => "Mostra els continguts d'acció real amb algun capítol sense enllaç vàlid",
+			'option_show_cancelled' => "Mostra els continguts d’acció real cancel·lats o abandonats pels fansubs",
+			'option_show_missing' => "Mostra els continguts d’acció real amb algun capítol sense enllaç vàlid",
 		);
 		break;
 	case 'anime.fansubs.cat':
@@ -166,12 +166,12 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 			'own_js' => "catalogue.js",
 			'own_css' => "catalogue.css",
 			'site_title' => "Fansubs.cat - Anime en català",
-			'site_description' => "Aquí podràs veure en línia tot l'anime subtitulat pels fansubs en català!",
+			'site_description' => "Aquí podràs veure en línia tot l’anime subtitulat pels fansubs en català!",
 			'is_catalogue' => TRUE,
 		);
 		$cat_config = array(
-			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d animes subtitulats en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.",
-			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming animes hentai subtitulats en català. Ara pots gaudir de tot l'anime de tots els fansubs en català en un únic lloc.",
+			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d animes subtitulats en català. Ara pots gaudir de tot l’anime de tots els fansubs en català en un únic lloc.",
+			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming anime hentai subtitulat en català. Ara pots gaudir de tot l’anime hentai de tots els fansubs en català en un únic lloc.",
 			'items_type' => "anime",
 			'filmsoneshots' => "Films",
 			'filmsoneshots_icon' => "fa-video",
@@ -197,7 +197,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.cat
 			//Sections
 			'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
 			'section_last_completed' => "<i class=\"fa fa-fw fa-check\"></i> Finalitzats recentment",
-			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l'atzar",
+			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l’atzar",
 			'section_popular' => "<i class=\"fa fa-fw fa-fire\"></i> Més populars",
 			'section_more_recent' => "<i class=\"fa fa-fw fa-stopwatch\"></i> Més actuals",
 			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",

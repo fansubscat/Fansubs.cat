@@ -79,6 +79,12 @@
 	--icon-button-color-hover: 32, 32, 32;
 }
 
+.subtheme-hentai {
+	--primary-color: 217, 24, 131;
+	--primary-color-darker: 187, 0, 101;
+	--primary-color-lighter: 247, 54, 255;
+}
+
 *, *:before, *:after {
 	box-sizing: inherit;
 }
@@ -407,7 +413,7 @@ svg.main-logo:hover path#line_2 {
 	d: path("M133 178.763v-1h348v1z");
 }
 
-label:not(.for-checkbox), input:not([type='checkbox']), select, textarea {
+label:not(.for-checkbox), input:not([type='checkbox']):not([type='range']), select, textarea {
 	font-family: inherit;
 	display: block;
 	text-align: left;
@@ -432,7 +438,7 @@ textarea {
 	height: 11rem;
 }
 
-input, select, textarea {
+input:not([type='range']), select, textarea {
 	margin-top: 0.2rem;
 	padding: 0.7rem;
 	border-radius: 0.6rem;

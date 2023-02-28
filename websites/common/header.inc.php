@@ -4,7 +4,7 @@ require_once(dirname(__FILE__)."/user_init.inc.php");
 $is_fools_day = (date('d')==28 && date('m')==12);
 ?>
 <!DOCTYPE html>
-<html lang="ca" class="theme-<?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'light' : 'dark'; ?>">
+<html lang="ca" class="theme-<?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'light' : 'dark'; ?><?php echo !empty($_GET['hentai']) ? ' subtheme-hentai' : ''; ?>">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,12 +62,13 @@ if ($style_type=='catalogue') {
 		<script src="/js/videojs/videojs-youtube.min.js?v=<?php echo $version; ?>"></script>
 		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo $version; ?>"></script>
 		<script src="/js/videojs/videojs-hotkeys.min.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/double-slider.js?v=<?php echo $version; ?>"></script>
 		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 <?php
 }
 ?>
 	</head>
-	<body class="style-type-<?php echo $style_type; ?>">
+	<body class="style-type-<?php echo $style_type; ?><?php echo !empty($extra_body_class) ? ' '.$extra_body_class : ''; ?>">
 		<div class="main-container<?php echo ($style_type=='login' || $style_type=='text' || $style_type=='contact') ? ' obscured-background' : ''; ?>">
 <?php
 if ($style_type=='login') {
@@ -243,7 +244,14 @@ if ($style_type=='login') {
 		if ($style_type=='catalogue') {
 			if (!empty($_GET['hentai'])) {
 ?>
-						<div class="catalogues-explicit-category"><i class="fa fa-fw fa-pepper-hot"></i></div>
+						<div class="catalogues-explicit-category">
+							<span class="fa-stack" style="vertical-align: top;">
+								<i class="fa-solid fa-fw fa-pepper-hot fa-stack-2x"></i>
+								<i class="fa-solid fa-fw fa-plus fa-stack-1x"></i>
+								<i class="fa-solid fa-fw fa-1 fa-stack-1x"></i>
+								<i class="fa-solid fa-fw fa-8 fa-stack-1x"></i>
+							</span>
+						</div>
 <?php
 			}
 ?>
@@ -267,17 +275,22 @@ if ($style_type=='login') {
 ?>
 					<div class="separator">
 <?php
-	if ($style_type=='catalogue' && empty($hide_hentai)) {
+	if ($style_type=='catalogue' && empty($hide_hentai) && (is_adult() || is_robot())) {
 		if (empty($_GET['hentai'])) {
 ?>
-						<a class="hentai-button" href="/hentai" title="Vés a l'apartat de hentai">
-							<i class="fa-solid fa-fw fa-pepper-hot"></i>
+						<a class="hentai-button" href="/hentai<?php echo !empty($_GET['search']) ? '/cerca' : ''; ?>" title="Vés a l'apartat de hentai">
+							<span class="fa-stack" style="vertical-align: top;">
+								<i class="fa-solid fa-fw fa-pepper-hot fa-stack-2x"></i>
+								<i class="fa-solid fa-fw fa-plus fa-stack-1x"></i>
+								<i class="fa-solid fa-fw fa-1 fa-stack-1x"></i>
+								<i class="fa-solid fa-fw fa-8 fa-stack-1x"></i>
+							</span>
 						</a>
 <?php
 		} else {
 ?>
-						<a class="hentai-button" href="/" title="Vés a la portada general">
-							<i class="fa-solid fa-fw fa-house-chimney"></i>
+						<a class="hentai-button" href="<?php echo !empty($_GET['search']) ? '/cerca' : '/'; ?>" title="Vés al contingut general">
+							<i class="fa-solid fa-fw fa-house-chimney fa-2x"></i>
 						</a>
 <?php
 		}

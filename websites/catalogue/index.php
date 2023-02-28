@@ -19,9 +19,27 @@ if ($cat_config['items_type']=='liveaction') {
 	$hide_hentai=TRUE;
 }
 
+if (!empty($_GET['hentai'])) {
+	if (empty($user) && !is_robot()) {
+		header("Location: $users_url/inicia-la-sessio");
+		die();
+	} else if (!is_robot() && !is_adult()) {
+		$_GET['hentai']=0;
+		$_GET['code']=403;
+		http_response_code(403);
+		include('error.php');
+		die();
+	}
+}
+
+if (is_robot() && empty($_GET['search'])) {
+	$extra_body_class='has-carousel';
+}
+
 require_once("../common.fansubs.cat/header.inc.php");
 
 if (!empty($_GET['search'])) {
+	$skip_footer=TRUE;
 ?>
 					<div class="search-layout<?php echo !empty($_GET['search']) ? '' : ' hidden'; ?>">
 						<input class="search-base-url" type="hidden" value="<?php echo !empty($_GET['hentai']) ? '/hentai/cerca' : '/cerca'; ?>">
@@ -34,26 +52,51 @@ if (!empty($_GET['search'])) {
 							<label for="catalogue-search-status">Estat</label>
 							<input id="catalogue-search-status" type="text" oninput="loadSearchResults();">
 							<label for="catalogue-search-duration">Durada</label>
-							<input id="catalogue-search-duration" type="text" oninput="loadSearchResults();">
+							<div id="catalogue-search-duration" class="double-slider-container">
+								<input id="duration-from-slider" class="double-slider-from" type="range" value="0" min="0" max="120" onchange="loadSearchResults();">
+								<input id="duration-to-slider" class="double-slider-to" type="range" value="120" min="0" max="120" onchange="loadSearchResults();">
+								<div id="duration-from-input" value-formatting="time" class="double-slider-input-from">0:00:00</div>
+								<div id="duration-to-input" value-formatting="time-max" class="double-slider-input-to">2:00:00+</div>
+							</div>
 							<label for="catalogue-search-rating">Valoració per edats</label>
-							<input id="catalogue-search-rating" type="text" oninput="loadSearchResults();">
+							<div id="catalogue-search-rating" class="double-slider-container">
+								<input id="rating-from-slider" class="double-slider-from" type="range" value="0" min="0" max="4" onchange="loadSearchResults();">
+								<input id="rating-to-slider" class="double-slider-to" type="range" value="4" min="0" max="4" onchange="loadSearchResults();">
+								<div id="rating-from-input" value-formatting="rating" class="double-slider-input-from">TP</div>
+								<div id="rating-to-input" value-formatting="rating" class="double-slider-input-to">+18</div>
+							</div>
 							<label for="catalogue-search-score">Puntuació a MyAnimeList</label>
-							<input id="catalogue-search-score" type="text" oninput="loadSearchResults();">
+							<div id="catalogue-search-score" class="double-slider-container">
+								<input id="score-from-slider" class="double-slider-from" type="range" value="0" min="0" max="100" onchange="loadSearchResults();">
+								<input id="score-to-slider" class="double-slider-to" type="range" value="100" min="0" max="100" onchange="loadSearchResults();">
+								<div id="score-from-input" value-formatting="score" class="double-slider-input-from">0,0</div>
+								<div id="score-to-input" value-formatting="score" class="double-slider-input-to">10,0</div>
+							</div>
+							<label>Inclou també...</label>
+							<div>
+								<input id="catalogue-search-include-blacklisted" type="checkbox" oninput="loadSearchResults();">
+								<label for="catalogue-search-include-blacklisted" class="for-checkbox">Fansubs ocultats</label>
+							</div>
+							<div>
+								<input id="catalogue-search-include-lost" type="checkbox" oninput="loadSearchResults();">
+								<label for="catalogue-search-include-lost" class="for-checkbox">Amb capítols perduts</label>
+							</div>
+<?php
+	if (is_adult() && empty($_GET['hentai'])) {
+?>
+							<div>
+								<input id="catalogue-search-include-hentai" type="checkbox" oninput="loadSearchResults();">
+								<label for="catalogue-search-include-hentai" class="for-checkbox">Hentai</label>
+							</div>
+<?php
+	}
+?>
 							<label for="catalogue-search-genre">Gèneres</label>
 							<input id="catalogue-search-genre" type="text" oninput="loadSearchResults();">
 							<label for="catalogue-search-demography">Demografies</label>
 							<input id="catalogue-search-demography" type="text" oninput="loadSearchResults();">
 							<label for="catalogue-search-theme">Temàtiques</label>
 							<input id="catalogue-search-theme" type="text" oninput="loadSearchResults();">
-							<label>Inclou també</label>
-							<div>
-								<input id="catalogue-search-include-blacklisted" type="checkbox" oninput="loadSearchResults();">
-								<label for="catalogue-search-include-blacklisted" class="for-checkbox">Fansubs de la llista negra</label>
-							</div>
-							<div>
-								<input id="catalogue-search-include-lost" type="checkbox" oninput="loadSearchResults();">
-								<label for="catalogue-search-include-lost" class="for-checkbox">Projectes amb capítols perduts</label>
-							</div>
 						</form>
 					</div>
 <?php
@@ -70,11 +113,13 @@ if (is_robot()){
 	$restotalnumber = query("SELECT FLOOR((COUNT(*)-1)/$number)*$number cnt FROM series s WHERE s.type='${cat_config['items_type']}'$hentai_subquery AND EXISTS (SELECT id FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)");
 	$totalnumber = mysqli_fetch_assoc($restotalnumber)['cnt'];
 	mysqli_free_result($restotalnumber);
+	if (empty($_GET['search'])) {
 ?>
 						<div class="section">
 							<div class="site-message absolutely-real"><?php printf($cat_config['site_robot_message'.(!empty($_GET['hentai']) ? '_hentai' : '')], $totalnumber); ?></div>
 						</div>
 <?php
+	}
 	include("results.php");
 } 
 ?>					</div>

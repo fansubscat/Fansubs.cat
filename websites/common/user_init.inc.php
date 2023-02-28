@@ -1,4 +1,13 @@
 <?php
+function is_adult(){
+	global $user;
+	return (!empty($user) && date_diff(date_create_from_format('Y-m-d', $user['birthdate']), date_create(date('Y-m-d')))->format('%Y')>=18);
+}
+
+function is_robot(){
+	return !empty($_SERVER['HTTP_USER_AGENT']) && preg_match('/bot|crawl|slurp|spider|mediapartners/i', $_SERVER['HTTP_USER_AGENT']);
+}
+
 require_once(dirname(__FILE__)."/db.inc.php");
 ob_start();
 session_set_cookie_params($cookie_duration, '/', $cookie_domain, TRUE, FALSE);
