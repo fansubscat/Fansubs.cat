@@ -1,3 +1,11 @@
+/* POSSIBLE BREAKING POINTS:
+	L: 1200px;
+	M:  920px;
+	S:  650px;
+	XS: 350px;
+*/
+
+
 @font-face {
 	font-family: "lexend_deca";
 	src: url('https://static.fansubs.cat/common/fonts/lexend_deca_regular.ttf');
@@ -14,9 +22,8 @@
 }
 
 :root {
-	--breaking-point-large: 1200px;
-	--breaking-point-medium: 900px;
-	--breaking-point-small: 650px;
+	--header-height: 4.2rem;
+	--page-padding: 3.6rem;
 }
 
 .theme-dark {
@@ -107,6 +114,8 @@ html {
 	color: rgb(var(--positive-color));
 	background-color: rgb(var(--negative-color));
 	scrollbar-gutter: stable;
+	min-width: 250px;
+	overflow-y: scroll;
 }
 
 body {
@@ -153,7 +162,8 @@ a img {
 	flex-direction: row;
 	align-items: center;
 	width: 100%;
-	height: 4.2rem;
+	height: var(--header-height);
+	margin-bottom: var(--page-padding);
 }
 
 .main-body, .overlay-page {
@@ -162,7 +172,7 @@ a img {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: 3.6rem;
+	padding: var(--page-padding);
 }
 
 .style-type-catalogue.has-carousel .main-body {
@@ -216,6 +226,7 @@ a img {
 	flex-direction: row;
 	align-items: center;
 	justify-content: end;
+	order: 30;
 }
 
 .user-options {
@@ -225,6 +236,7 @@ a img {
 	flex-direction: column;
 	height: 4.2rem;
 	justify-content: center;
+	order: 50;
 }
 
 .user-login {
@@ -239,6 +251,7 @@ a img {
 	font-size: 1.5rem;
 	border-radius: 0.4rem;
 	transition: background .3s;
+	order: 40;
 }
 
 .user-avatar {
@@ -348,7 +361,6 @@ a img {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	padding-top: 1.2rem;
 }
 
 .contact-button {
@@ -479,6 +491,7 @@ input:not([type='range']), select, textarea {
 	height: 5rem;
 	margin-top: -5rem;
 	z-index: 0;
+	order: 10;
 }
 
 .text-page {
@@ -552,9 +565,20 @@ h2.section-title:first-of-type {
 	border: 0.1rem solid rgb(var(--error-color));
 }
 
-@media (max-width: 900px){
-	.main-body, .overlay-page {
-		padding: 1rem;
+.user-login-icon {
+	display: none;
+}
+
+@media (max-width: 1200px){
+	.user-login {
+		min-width: 4rem;
+		padding: 0.75rem 0.75rem;
+	}
+}
+
+@media (max-width: 920px){
+	:root {
+		--page-padding: 1rem;
 	}
 
 	.social-link {
@@ -590,6 +614,16 @@ h2.section-title:first-of-type {
 	}
 
 	.user-login {
-		margin-right: 0.5rem;
+		min-width: 4rem;
+		padding: 0.75rem 0.75rem;
+	}
+}
+
+@media (max-width: 350px){
+	.user-login-text {
+		display: none;
+	}
+	.user-login-icon {
+		display: inline;
 	}
 }

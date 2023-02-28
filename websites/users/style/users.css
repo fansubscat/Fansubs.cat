@@ -172,7 +172,7 @@ a.forgot-password:hover {
 	width: 30%;
 }
 
-@media (max-width: 900px){
+@media (max-width: 920px){
 	.login-page {
 		flex-direction: column-reverse;
 	}

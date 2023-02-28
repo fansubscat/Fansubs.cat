@@ -316,7 +316,7 @@ if ($style_type=='login') {
 <?php
 	if (empty($user)) {
 ?>
-					<a class="user-login" href="<?php echo $users_url.'/inicia-la-sessio/'; ?>">Inicia la sessió</a>
+					<a class="user-login" href="<?php echo $users_url.'/inicia-la-sessio/'; ?>"><span class="user-login-text">Inicia la sessió</span><span class="user-login-icon"><i class="fa fa-fw fa-sign-in"></i></span></a>
 <?php
 	}
 ?>

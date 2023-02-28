@@ -1,6 +1,9 @@
 :root {
+	--header-height-catalogue: 4.2rem;
 	--carousel-element-width: 21.2rem;
 	--carousel-element-height: 33.2rem;
+	--thumbnail-margin: 0.5rem;
+	--thumbnail-text-height: 3.2rem;
 	--carousel-scaling: 1.25;
 	--carousel-animation-duration: .3s;
 }
@@ -17,15 +20,14 @@
 
 .style-type-catalogue .main-section {
 	justify-content: start;
-	width: 100%;
+	width: calc(100% + var(--page-padding) + var(--page-padding));
 	flex-direction: row;
-	margin-left: -3.6rem;
-	margin-right: -3.6rem;
+	margin-left: calc(0rem - var(--page-padding));
+	margin-right: calc(0rem - var(--page-padding));
 }
 
 .style-type-catalogue.has-carousel .main-section {
 	display: block;
-	width: unset;
 }
 
 .style-type-catalogue.has-search-results .main-section {
@@ -33,7 +35,7 @@
 }
 
 .style-type-catalogue.has-search-results .section {
-	padding: 0.6rem 0 2.4rem 0;
+	padding: 0 0 2.5rem 0;
 	overflow: visible;
 }
 
@@ -47,6 +49,7 @@
 	align-items: center;
 	font-family: "lexend_deca_light", sans-serif;
 	letter-spacing: -0.1rem;
+	order: 20;
 }
 
 .catalogues-navigation a {
@@ -61,6 +64,7 @@
 .catalogues-explicit-category {
 	font-size: 2rem;
 	margin-left: 1rem;
+	order: 15;
 }
 
 .catalogue-selected-processed {
@@ -102,7 +106,7 @@
 
 .search-layout ~ .loading-layout, .search-layout ~ .error-layout {
 	font-size: 1.8rem;
-	margin-left: 28rem;
+	margin-left: calc(28rem + var(--page-padding));
 	width: calc(100% - 28rem);
 	position: fixed;
 	display: flex;
@@ -110,8 +114,8 @@
 	align-items: center;
 	justify-content: center;
 	pointer-events: none;
-	height: calc(100% - 4.2rem - 3.6rem - 2.4rem);
-	top: calc(4.2rem + 3.6rem + 2.4rem); /* header (4.2rem) + body padding (3.6rem) + extra margin: 2.4rem; */
+	height: calc(100% - var(--header-height-catalogue) - var(--page-padding) - var(--page-padding) - 1.2rem);
+	top: calc(var(--header-height-catalogue) + var(--page-padding) + var(--page-padding) + 1.2rem); /* header + header margin + body padding + extra margin: 1.2rem; */
 }
 
 .search-layout ~ .results-layout.hidden {
@@ -137,7 +141,7 @@
 }
 
 .catalogue-search {
-	margin-left: 28rem;
+	margin-left: calc(28rem + var(--page-padding));
 	width: calc(100% - 28rem);
 }
 
@@ -447,12 +451,6 @@
 	text-decoration: underline;
 }
 
-.user-settings {
-	margin-left: 1.8rem;
-	margin-right: 3.6rem;
-	font-size: 2.4rem;
-}
-
 .hentai-button {
 	margin-right: 1rem;
 	font-size: 1.3rem;
@@ -541,21 +539,16 @@
 	background: rgb(var(--background-color-dropdown));
 	font-size: 2rem;
 	filter: drop-shadow(0.4rem 0.4rem 0.2rem rgba(var(--always-negative-color),0.5));
-	margin-left: -3.6rem;
 	padding: 1.6rem;
 	position: fixed;
 	overflow-y: scroll;
-	height: calc(100% - 4.2rem - 3.6rem - 2.4rem);
-	top: calc(4.2rem + 3.6rem + 2.4rem); /* header (4.2rem) + body padding (3.6rem) + extra margin: 2.4rem; */
+	height: calc(100% - var(--header-height-catalogue) - var(--page-padding) - var(--page-padding) - 1.2rem);
+	top: calc(var(--header-height-catalogue) + var(--page-padding) + var(--page-padding) + 1.2rem); /* header + header margin + body padding + extra margin: 1.2rem; */
 }
 
 .section {
-	padding: 0.6rem 3.6rem 2.4rem 3.6rem;
+	padding: 0 var(--page-padding) 2.5rem var(--page-padding);
 	overflow: hidden;
-}
-
-.section:nth-of-type(1) {
-	padding-top: 2.4rem !important;
 }
 
 .section-title-main {
@@ -566,8 +559,8 @@
 	font-size: 2.4rem;
 	width:100%;
 	text-align: left;
-	margin-top: 0.5rem;
-	margin-bottom: 3rem;
+	margin-top: 0;
+	margin-bottom: 2.5rem;
 	display: flex;
 	align-items: center;
 }
@@ -832,7 +825,7 @@
 	font-weight: 900;
 	color: rgb(var(--positive-color));
 	font-size: 3rem;
-	padding: 3.6rem;
+	padding: var(--page-padding);
 	-webkit-text-stroke: 0.15rem rgb(var(--negative-color));
 }
 
@@ -890,6 +883,10 @@
 	font-size: 1.2rem !important;
 }
 
+.recommendations {
+	margin-bottom: var(--thumbnail-margin);
+}
+
 .carousel, .recommendations {
 	opacity: 0;
 }
@@ -907,7 +904,7 @@
 	max-width: var(--carousel-element-width);
 	max-height:  var(--carousel-element-height);
 	position: relative;
-	margin: 0.5rem;
+	margin: var(--thumbnail-margin);
 }
 
 .thumbnail {
@@ -915,7 +912,7 @@
 	position: relative;
 	transition: transform var(--carousel-animation-duration) ease, z-index var(--carousel-animation-duration) ease, filter var(--carousel-animation-duration) ease;
 	width: 100%; 
-	height: calc(100% - 3.2rem);
+	height: calc(100% - var(--thumbnail-text-height));
 	z-index: 1; /*remove this to have free hovering*/
 }
 
@@ -944,7 +941,7 @@
 	font-size: 1.45rem;
 	text-align: center;
 	line-height: 1.1;
-	height: 3.2rem;
+	height: var(--thumbnail-text-height);
 	background-color: rgb(var(--negative-color));
 	display: flex;
 	align-items: center;
@@ -1011,7 +1008,8 @@
 	display: flex;
 	flex-direction: column;
 	background-color: rgb(var(--negative-color));
-	height: calc(100% - 3.2rem);
+	height: calc(100% - var(--thumbnail-text-height));
+	overflow: hidden;
 }
 
 .thumbnail:hover .floating-info {
@@ -1268,3 +1266,70 @@ input[type='range']::-webkit-slider-thumb:active {
 
 /* Series screen */
 /* TODO */
+
+@media (max-width: 1200px){
+	.user-login {
+		min-width: 4rem;
+		padding: 0.75rem 0.75rem;
+	}
+
+	#search_query {
+		width: 12rem;
+	}
+}
+
+@media (max-width: 920px){
+	:root {
+		--header-height-catalogue: 12.6rem;
+		--carousel-element-width: 12.72rem;
+		--carousel-element-height: 19.92rem;
+		--thumbnail-margin: 0.3rem;
+		--thumbnail-text-height: 1.92rem;
+	}
+
+	.style-type-catalogue .user-login {
+		margin-left: 1rem;
+		margin-right: 0.5rem;
+		order: 18;
+	}
+
+	.style-type-catalogue .user-options {
+		margin-left: 1rem;
+		order: 19;
+	}
+
+	.style-type-catalogue .separator {
+		order: 99;
+		width: 100%;
+		justify-content: center;
+	}
+
+	.style-type-catalogue .header {
+		height: var(--header-height-catalogue);
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.catalogues-navigation {
+		margin-left: 0;
+		margin-top: 0.5rem;
+		margin-bottom: 0.5rem;
+		width: 100%;
+		justify-content: center;
+	}
+
+	.catalogues-explicit-category {
+		font-size: 1.4rem;
+		margin-left: 0.8rem;
+	}
+
+	.search-form {
+		margin-right: 0;
+	}
+
+	.thumbnail-outer .title {
+		padding-left: 0.45rem;
+		padding-right: 0.45rem;
+		font-size: 0.87rem;
+	}
+}
