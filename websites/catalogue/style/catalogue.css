@@ -5,6 +5,7 @@
 	--thumbnail-margin: 0.5rem;
 	--thumbnail-text-height: 3.2rem;
 	--carousel-scaling: 1.25;
+	--carousel-scaling-mobile: 1.225;
 	--carousel-animation-duration: .3s;
 }
 
@@ -626,7 +627,7 @@
 	z-index: 1;
 	color: rgb(var(--positive-color));
 	font-size: 2rem;
-	margin-left: 6rem;
+	margin-left: 5rem;
 	margin-top: 1.5rem;
 	padding-left: 0;
 	padding-right: 1.5rem;
@@ -635,6 +636,7 @@
 	background-color: rgba(var(--negative-color), 0.5);
 	border-radius: 99rem;
 	line-height: 1.25;
+	max-width: 20vw
 }
 
 .recommendation .status i {
@@ -648,6 +650,7 @@
 	position: absolute;
 	color: rgb(var(--positive-color));
 	padding: 2.5rem;
+	width: 60vw;
 	max-width: 100rem;
 	display: flex;
 	flex-direction: row;
@@ -692,9 +695,11 @@
 
 .recommendation .title {
 	font-family: "lexend_deca_bold", sans-serif;
-	font-size: 4rem;
-	line-height: 1;
+	font-size: 3.5rem;
+	line-height: 1.15;
 	/* For ellipsizing and max 2 lines */
+	text-overflow: ellipsis;
+	overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
@@ -707,11 +712,11 @@
 
 .recommendation .synopsis {
 	font-size: 1.6rem;
-	text-overflow: ellipsis;
-	overflow: hidden;
 	margin-top: 2.2rem;
 	line-height: 1.3;
 	/* For ellipsizing and max 7 lines */
+	text-overflow: ellipsis;
+	overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 7;
 	-webkit-box-orient: vertical;
@@ -727,11 +732,12 @@
 	z-index: 1;
 	color: rgb(var(--negative-color));
 	font-size: 1.7rem;
-	padding-top: 1.2rem;
-	padding-left: 1.2rem;
-	padding-right: 5rem;
-	white-space: nowrap;
-	max-width: 25%;
+	margin-top: 1.5rem;
+	margin-right: 5rem;
+	max-width: 20vw;
+	overflow: hidden;
+	line-height: 1.15;
+	text-align: right;
 }
 
 .recommendation .fansub {
@@ -764,17 +770,19 @@
 	z-index: 1;
 	color: rgb(var(--positive-color));
 	font-size: 1.3rem;
-	padding-right: 4.6rem;
-	padding-bottom: 1.3rem;
-	padding-left: 1rem;
-	max-width: 25%;
+	margin-right: 5rem;
+	margin-bottom: 1.3rem;
+	max-width: calc(50vw - 20rem);
 	flex-wrap: wrap;
-	align-items: center;
+	align-content: end;
+	max-height: 5.5rem;
+	overflow: hidden;
 }
 
 .recommendation .genres i {
 	font-size: 2.1rem;
 	-webkit-text-stroke: 0.1rem rgb(var(--always-negative-color));
+	align-self: center;
 }
 
 .recommendation .genres .genre {
@@ -789,8 +797,8 @@
 }
 
 .recommendations .slick-list {
-	margin-left: -4rem;
-	margin-right: -4rem;
+	margin-left: calc(0rem - var(--page-padding));
+	margin-right: calc(0rem - var(--page-padding));
 	background-color: rgb(var(--secondary-color));
 }
 
@@ -877,6 +885,8 @@
 
 .slick-dots li button {
 	padding: 0 !important;
+	width: 2rem !important;
+	height: 2rem !important;
 }
 
 .slick-dots li button::before {
@@ -912,7 +922,7 @@
 .thumbnail {
 	display: flex;
 	position: relative;
-	transition: transform var(--carousel-animation-duration) ease;
+	transition: transform var(--carousel-animation-duration) ease, filter var(--carousel-animation-duration) ease;
 	width: 100%; 
 	height: calc(100% - var(--thumbnail-text-height));
 	z-index: 1; /*remove this to have free hovering*/
@@ -936,11 +946,11 @@
 
 .thumbnail-outer .title {
 	width: 100%;
-	padding-left: 0.75rem;
-	padding-right: 0.75rem;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
 	font-size: 1.45rem;
 	text-align: center;
-	line-height: 1.1;
+	line-height: 1.15;
 	height: var(--thumbnail-text-height);
 	background-color: rgb(var(--negative-color));
 	display: flex;
@@ -949,9 +959,9 @@
 }
 
 .thumbnail-outer .title .ellipsized-title {
+	/* For ellipsizing and max 2 lines */
 	text-overflow: ellipsis;
 	overflow: hidden;
-	/* For ellipsizing and max 2 lines */
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
@@ -990,8 +1000,13 @@
 	position: absolute;
 }
 
+.thumbnail-clicked {
+	z-index: 1;
+	filter: drop-shadow(0 0 0.8rem rgba(var(--always-negative-color),0.5));
+}
+
 .thumbnail-clicked .thumbnail {
-	transform: rotateY(180deg);
+	transform: scale(var(--carousel-scaling-mobile)) rotateY(180deg);
 }
 
 .thumbnail-clicked .clickable-thumbnail {
@@ -1037,13 +1052,13 @@
 	padding: 0 1rem;
 	margin-top: 2.8rem;
 	width: 100%;
-	line-height: 1.1;
+	line-height: 1.15;
 	/* For ellipsizing and max 2 lines */
+	text-overflow: ellipsis;
+	overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 .floating-info-fansub {
@@ -1054,7 +1069,7 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: 1.1;
+	line-height: 1.15;
 }
 
 .floating-info-synopsis-wrapper {
@@ -1069,14 +1084,14 @@
 	font-size: 1.15rem;
 	opacity: 0.75;
 	padding: 0 1rem;
-	line-height: 1.1;
+	line-height: 1.15;
+	text-align: left;
 	/* For ellipsizing and max 8 lines */
+	text-overflow: ellipsis;
+	overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 7;
 	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	text-align: left;
 }
 
 .floating-info-watch-now {
@@ -1119,7 +1134,7 @@
 	flex-grow: 1;
 	font-family: "lexend_deca_light", sans-serif;
 	font-size: 1rem;
-	line-height: 1.1;
+	line-height: 1.15;
 	padding: 0 1rem;
 	height: 3.5rem;
 	display: flex;
@@ -1127,13 +1142,13 @@
 }
 
 .floating-info-genres {
+	text-align: left;
 	/* For ellipsizing and max 3 lines */
+	text-overflow: ellipsis;
+	overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	text-align: left;
 }
 
 .floating-info-score {
@@ -1148,11 +1163,12 @@
 	width: 0;
 	height: 0;
 	top: 0.4rem;
-	left: 0.5rem;
+	left: 0.4rem;
 	transition: opacity var(--carousel-animation-duration) ease;
 	border-radius: 99rem;
 	opacity: 1;
 	z-index: 2;
+	backface-visibility: hidden;
 }
 
 .status-completed .status-indicator {
@@ -1266,6 +1282,10 @@ input[type='range']::-webkit-slider-thumb:active {
 		transition: transform var(--carousel-animation-duration) ease, z-index var(--carousel-animation-duration) ease, filter var(--carousel-animation-duration) ease;
 	}
 
+	.thumbnail .status-indicator {
+		backface-visibility: unset;
+	}
+
 	.thumbnail .image-link {
 		backface-visibility: unset;
 	}
@@ -1327,6 +1347,32 @@ input[type='range']::-webkit-slider-thumb:active {
 	#search_query {
 		width: 12rem;
 	}
+
+	.recommendation .infoholder {
+		width: 80vw;
+	}
+
+	.recommendation .status {
+		max-width: 10vw;
+		padding-right: 0;
+	}
+
+	.recommendation .status i {
+		margin-left: -0.25em;
+		margin-right: -0.25em;
+	}
+
+	.recommendation .status .text {
+		display: none;
+	}
+
+	.recommendation .fansubs {
+		max-width: 10vw;
+	}
+
+	.recommendation .fansubs .text {
+		display: none;
+	}
 }
 
 @media (max-width: 920px){
@@ -1364,7 +1410,7 @@ input[type='range']::-webkit-slider-thumb:active {
 		padding-left: 0.25rem;
 		padding-right: 0.25rem;
 		font-size: 1.1rem;
-		line-height: 1.0;
+		line-height: 1.15;
 	}
 
 	.section {
@@ -1378,5 +1424,246 @@ input[type='range']::-webkit-slider-thumb:active {
 
 	.section-title-main i {
 		font-size: 1.9rem;
+	}
+
+	.thumbnail .status-indicator {
+		top: 0.3rem;
+		left: 0.3rem;
+	}
+
+	.status-completed .status-indicator {
+		border: 0.4rem solid green;
+	}
+
+	.status-in-progress .status-indicator {
+		border: 0.4rem solid yellow;
+	}
+
+	.status-partially-completed .status-indicator {
+		border: 0.4rem solid greenyellow;
+	}
+
+	.status-cancelled .status-indicator {
+		border: 0.4rem solid red;
+	}
+
+	.status-abandoned .status-indicator {
+		border: 0.4rem solid coral;
+	}
+
+	.floating-info .status-indicator {
+		left: 0.6rem !important;
+		top: 0.6rem !important;
+	}
+
+	.floating-info .status-completed .status-indicator {
+		border: 0.6rem solid green;
+	}
+
+	.floating-info .status-in-progress .status-indicator {
+		border: 0.6rem solid yellow;
+	}
+
+	.floating-info .status-partially-completed .status-indicator {
+		border: 0.6rem solid greenyellow;
+	}
+
+	.floating-info .status-cancelled .status-indicator {
+		border: 0.6rem solid red;
+	}
+
+	.floating-info .status-abandoned .status-indicator {
+		border: 0.6rem solid coral;
+	}
+
+	.floating-info-bookmark.fas, .floating-info-bookmark.far {
+		font-size: 1.3rem;
+		right: 0;
+		top: 0.3rem;
+	}
+
+	.floating-info-title {
+		font-size: 1rem;
+		padding: 0 0.5rem;
+		margin-top: 1.4rem;
+	}
+
+	.floating-info-fansub {
+		font-size: 0.8rem;
+		padding: 0 0.5rem;
+		margin-top: 0.2rem;
+	}
+
+	.floating-info-synopsis {
+		font-size: 0.9rem;
+		padding: 0 0.5rem;
+		-webkit-line-clamp: 6;
+	}
+
+	.floating-info-watch-now {
+		border-radius: 0.3rem;
+		padding: 0.2rem 0.75rem;
+		font-size: 1rem;
+	}
+
+	.floating-info-divisions {
+		font-size: 0.9rem;
+		padding: 0 0.5rem;
+		margin-top: 0.4rem;
+	}
+
+	.floating-info-genres-score-wrapper {
+		margin-top: 0.5rem;
+		margin-bottom: 0.3rem;
+		align-items: end;
+	}
+
+	.floating-info-genres-wrapper {
+		font-size: 0.8rem;
+		padding: 0 0.5rem;
+		height: 2.5rem;
+	}
+
+	.floating-info-score {
+		font-size: 1.6rem;
+		padding: 0 0.5rem 0 0;
+	}
+
+	.recommendation {
+		height: 25rem;
+		max-height: 25rem;
+	}
+
+	.advent {
+		height: 25rem;
+		max-height: 25rem;
+	}
+
+	.recommendation .status {
+		font-size: 1.2rem;
+		margin-left: 1rem;
+		margin-top: 1rem;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.recommendation .status i {
+		font-size: 1.8rem;
+		margin-right: -0.25rem;
+		margin-left: -0.25rem;
+	}
+
+	.recommendation .infoholder {
+		padding: 1.5rem;
+	}
+
+	.recommendation .watchbutton {
+		border-radius: 0.4rem;
+		padding: 0.6rem 2rem;
+		font-size: 1.3rem;
+		margin-top: 1.2rem;
+	}
+
+	.recommendation .coverholder {
+		filter: drop-shadow(0 0 1.8rem rgba(var(--always-negative-color),0.5));
+		margin-right: 1rem;
+	}
+
+	.recommendation .cover {
+		border-radius: 0.2rem;
+	}
+
+	.recommendation .title {
+		font-size: 2.2rem;
+	}
+
+	.recommendation .divisions {
+		font-size: 1.2rem;
+	}
+
+	.recommendation .synopsis {
+		font-size: 1.2rem;
+		margin-top: 0.6rem;
+	}
+
+	.recommendation .fansubs {
+		font-size: 1.4rem;
+		margin-top: 1rem;
+		margin-right: 1rem;
+	}
+
+	.recommendation .fansub {
+		margin-bottom: 0.5rem;
+	}
+
+	.recommendation .fansub i {
+		margin-right: 0.2rem;
+	}
+
+	.recommendation .fansub img {
+		margin-left: 0.6rem;
+		border-radius: 0.6rem;
+		width: 1.6rem;
+		height: 1.6rem;
+	}
+
+	.recommendation .genres {
+		font-size: 1rem;
+		margin-right: 1rem;
+		margin-bottom: 1rem;
+		max-width: calc(50vw - 15rem);
+		max-height: 4.2rem;
+	}
+
+	.recommendation .genres i {
+		font-size: 1.6rem;
+	}
+
+	.recommendation .genres .genre {
+		padding: 0.1rem 0.4rem;
+		margin: 0.25rem 0.25rem;
+	}
+
+	.slick-dots li {
+		margin: 0 0 !important;
+	}
+
+	.slick-dots li button {
+		width: 1.2rem !important;
+		height: 1.2rem !important;
+	}
+
+	.slick-dots li button::before {
+		font-size: 0.8rem !important;
+	}
+
+	.recommendations .slick-prev::before {
+		padding-left: 2rem;
+		content: '\f053' !important;
+	}
+
+	.recommendations .slick-next::before {
+		padding-right: 2rem;
+		margin-left: -5rem;
+		content: '\f054' !important;
+	}
+}
+
+@media (max-width: 600px){
+	.recommendation .coverholder {
+		height: 70%;
+		align-self: center;
+	}
+
+	.recommendation .infoholder {
+		width: 90vw;
+	}
+
+	.recommendation .title {
+		font-size: 1.8rem;
+	}
+
+	.recommendation .genres {
+		display: none;
 	}
 }

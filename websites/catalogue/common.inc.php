@@ -569,7 +569,7 @@ function get_recommended_fansub_info($fansub_info, $version_id) {
 	$result_code='';
 
 	foreach ($version_fansubs as $fansub) {
-		$result_code.='<div class="fansub">'.($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').htmlentities($fansub['name']).' <img src="'.$fansub['icon'].'" alt=""></div>'."\n";
+		$result_code.='<div class="fansub">'.($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').'<span class="text">'.htmlentities($fansub['name']).'</span> <img src="'.$fansub['icon'].'" alt=""></div>'."\n";
 	}
 
 	return $result_code;
@@ -622,7 +622,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-synopsis">'."\n";
 
 	$Parsedown = new Parsedown();
-	$synopsis = $Parsedown->setBreaksEnabled(false)->line($series['synopsis']);
+	$synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
@@ -661,13 +661,13 @@ function print_featured_item($series, $specific_version=TRUE) {
 	$more_than_one_version = exists_more_than_one_version($series['id']);
 	echo "\t\t\t\t\t\t\t".'<div class="recommendation" data-series-id="'.$series['slug'].'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.$static_url.'/images/featured/'.$series['id'].'.jpg" alt="'.$series['name'].'">'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'"><i class="fa fa-fw '.get_status_icon($series['best_status']).'"></i>'.get_status_description_short($series['best_status']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'"><i class="fa fa-fw '.get_status_icon($series['best_status']).'"></i><span class="text">'.get_status_description_short($series['best_status']).'</span></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img class="cover" src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.$series['name'].'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlentities($series['name']).'</div>'."\n";
 	if ($series['subtype']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">One-shot</div>'."\n";
 	} else if ($series['subtype']=='serialized') {
@@ -684,7 +684,7 @@ function print_featured_item($series, $specific_version=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
 
 	$Parsedown = new Parsedown();
-	$synopsis = $Parsedown->setBreaksEnabled(false)->line($series['synopsis']);
+	$synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
 	echo "\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
