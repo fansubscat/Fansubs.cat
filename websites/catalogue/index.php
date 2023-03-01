@@ -99,6 +99,7 @@ if (!empty($_GET['search'])) {
 							<input id="catalogue-search-theme" type="text" oninput="loadSearchResults();">
 						</form>
 					</div>
+					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
 <?php
 }
 ?>

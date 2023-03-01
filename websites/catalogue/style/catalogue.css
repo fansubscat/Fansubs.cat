@@ -1,12 +1,14 @@
 :root {
 	--header-height-catalogue: 4.2rem;
 	--carousel-element-width: 21.2rem;
-	--carousel-element-height: 33.2rem;
+	--carousel-element-height: 33.5rem;
 	--thumbnail-margin: 0.5rem;
-	--thumbnail-text-height: 3.2rem;
+	--thumbnail-text-height: 3.5rem;
 	--carousel-scaling: 1.25;
-	--carousel-scaling-mobile: 1.225;
+	--carousel-scaling-mobile: 1.23;
 	--carousel-animation-duration: .3s;
+	--search-layout-width: 28rem;
+	--is-hovering-device: 0;
 }
 
 /* Hide dots in Firefox... screws accessibility though */
@@ -65,7 +67,6 @@
 .catalogues-explicit-category {
 	font-size: 2rem;
 	margin-left: 1rem;
-	order: 15;
 }
 
 .catalogue-selected-processed {
@@ -106,17 +107,16 @@
 }
 
 .search-layout ~ .loading-layout, .search-layout ~ .error-layout {
-	font-size: 1.8rem;
-	margin-left: calc(28rem + var(--page-padding));
-	width: calc(100% - 28rem);
+	margin-left: calc(var(--search-layout-width) + var(--page-padding));
+	width: calc(100% - var(--search-layout-width) - var(--page-padding) - var(--page-padding));
 	position: fixed;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	pointer-events: none;
-	height: calc(100% - var(--header-height-catalogue) - var(--page-padding) - var(--page-padding) - 1.2rem);
-	top: calc(var(--header-height-catalogue) + var(--page-padding) + var(--page-padding) + 1.2rem); /* header + header margin + body padding + extra margin: 1.2rem; */
+	height: calc(100% - var(--header-height-catalogue) - var(--page-padding) - var(--page-padding));
+	top: calc(var(--header-height-catalogue) + var(--page-padding) + var(--page-padding)); /* header + header margin + body padding */
 }
 
 .search-layout ~ .results-layout.hidden {
@@ -133,6 +133,26 @@
 	flex-grow: 1;
 }
 
+.search-layout-toggle-button {
+	display: none;
+	font-size: 1.8rem;
+	position: fixed;
+	transition: left var(--fast-animation-duration) ease-in-out;
+	left: 0;
+	cursor: pointer;
+	top: calc(var(--header-height-catalogue) + var(--page-padding) + var(--page-padding)); /* header + header margin + body padding */
+	z-index: 99;
+	width: 1.2rem;
+	height: calc(100% - var(--header-height-catalogue) - var(--page-padding) - var(--page-padding));
+	background-image: linear-gradient(0deg,transparent,rgb(var(--neutral-color)), transparent);
+	align-items: center;
+}
+
+.search-layout-toggle-button-visible {
+	left: var(--search-layout-width);
+	transform: rotateZ(180deg);
+}
+
 .loading-spinner {
 	color: rgb(var(--primary-color));
 }
@@ -142,8 +162,8 @@
 }
 
 .catalogue-search {
-	margin-left: calc(28rem + var(--page-padding));
-	width: calc(100% - 28rem);
+	margin-left: calc(var(--search-layout-width) + var(--page-padding));
+	width: calc(100vw - var(--search-layout-width) - var(--page-padding) - var(--page-padding));
 }
 
 .catalogue {
@@ -534,17 +554,17 @@
 
 .search-layout {
 	align-self: start;
-	min-width: 28rem;
-	width: 28rem;
-	max-width: 28rem;
+	min-width: var(--search-layout-width);
+	width: var(--search-layout-width);
+	max-width: var(--search-layout-width);
 	background: rgb(var(--background-color-dropdown));
 	font-size: 2rem;
 	filter: drop-shadow(0.4rem 0.4rem 0.2rem rgba(var(--always-negative-color),0.5));
 	padding: 1.6rem;
 	position: fixed;
 	overflow-y: scroll;
-	height: calc(100% - var(--header-height-catalogue) - var(--page-padding) - var(--page-padding) - 1.2rem);
-	top: calc(var(--header-height-catalogue) + var(--page-padding) + var(--page-padding) + 1.2rem); /* header + header margin + body padding + extra margin: 1.2rem; */
+	height: calc(100% - var(--header-height-catalogue) - var(--page-padding) - var(--page-padding));
+	top: calc(var(--header-height-catalogue) + var(--page-padding) + var(--page-padding)); /* header + header margin + body padding; */
 }
 
 .section {
@@ -632,17 +652,18 @@
 	padding-left: 0;
 	padding-right: 1.5rem;
 	white-space: nowrap;
-	max-width: 25%;
 	background-color: rgba(var(--negative-color), 0.5);
 	border-radius: 99rem;
-	line-height: 1.25;
-	max-width: 20vw
+	line-height: 1.2;
+	max-width: 20vw;
+	align-items: center;
 }
 
-.recommendation .status i {
-	font-size: 2.6rem;
+.recommendation .status-indicator {
+	margin-left: 0.2rem;
 	margin-right: 0.8rem;
-	margin-left: -0.25rem;
+	width: 2.1rem;
+	height: 2.1rem;
 }
 
 .recommendation .infoholder {
@@ -690,7 +711,7 @@
 	height: 100%;
 	width: 100%;
 	object-fit: cover;
-	border-radius: 0.4rem;
+	border-radius: 0.6rem;
 }
 
 .recommendation .title {
@@ -708,6 +729,12 @@
 .recommendation .divisions {
 	font-size: 1.85rem;
 	line-height: 1.3;
+	/* For ellipsizing and max 1 lines */
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
 }
 
 .recommendation .synopsis {
@@ -759,6 +786,32 @@
 	height: 2.6rem;
 }
 
+.recommendation .special-day {
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	bottom: 1.5rem;
+	left: 0;
+	z-index: 1;
+	color: rgb(var(--positive-color));
+	font-size: 1.8rem;
+	margin-left: 5rem;
+	margin-top: 1.5rem;
+	padding: 0.25rem 0.5rem;
+	white-space: nowrap;
+	border: 0.2rem solid rgba(var(--negative-color), 0.5);
+	border-radius: 0.5rem;
+	color: rgba(var(--negative-color), 0.5);
+	line-height: 1.2;
+	max-width: 20vw;
+}
+
+.recommendation .special-day i {
+	font-size: 2.2rem;
+	margin-right: 0.5rem;
+	margin-left: -0.25rem;
+}
+
 .recommendation .genres {
 	font-family: "lexend_deca_light", sans-serif;
 	display: flex;
@@ -774,7 +827,7 @@
 	margin-bottom: 1.3rem;
 	max-width: calc(50vw - 20rem);
 	flex-wrap: wrap;
-	align-content: end;
+	align-content: start;
 	max-height: 5.5rem;
 	overflow: hidden;
 }
@@ -891,6 +944,11 @@
 
 .slick-dots li button::before {
 	font-size: 1.2rem !important;
+	color: rgb(var(--positive-color));
+}
+
+.slick-dots li.slick-active button:before {
+	color: rgb(var(--positive-color));
 }
 
 .recommendations {
@@ -1001,7 +1059,7 @@
 }
 
 .thumbnail-clicked {
-	z-index: 1;
+	z-index: 99;
 	filter: drop-shadow(0 0 0.8rem rgba(var(--always-negative-color),0.5));
 }
 
@@ -1158,37 +1216,41 @@
 	line-height: 1;
 }
 
+.status-indicator {
+	border: 0.1rem solid rgb(var(--always-positive-color));
+	width: 1.2rem;
+	height: 1.2rem;
+	border-radius: 99rem;
+}
+
 .thumbnail .status-indicator {
 	position: absolute;
-	width: 0;
-	height: 0;
 	top: 0.4rem;
 	left: 0.4rem;
 	transition: opacity var(--carousel-animation-duration) ease;
-	border-radius: 99rem;
 	opacity: 1;
 	z-index: 2;
 	backface-visibility: hidden;
 }
 
 .status-completed .status-indicator {
-	border: 0.6rem solid green;
+	background: green;
 }
 
 .status-in-progress .status-indicator {
-	border: 0.6rem solid yellow;
+	background: yellow;
 }
 
 .status-partially-completed .status-indicator {
-	border: 0.6rem solid greenyellow;
+	background: greenyellow;
 }
 
 .status-cancelled .status-indicator {
-	border: 0.6rem solid red;
+	background: red;
 }
 
 .status-abandoned .status-indicator {
-	border: 0.6rem solid coral;
+	background: coral;
 }
 
 /* Begin double slider code from https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816 */
@@ -1269,6 +1331,11 @@ input[type='range']::-webkit-slider-thumb:active {
 /* TODO */
 
 @media (hover: hover) {
+
+	:root {
+		--is-hovering-device: 1;
+	}
+
 	/* Disable clicking the clickable section */
 	.thumbnail .clickable-thumbnail {
 		pointer-events: none;
@@ -1352,14 +1419,23 @@ input[type='range']::-webkit-slider-thumb:active {
 		width: 80vw;
 	}
 
+	.recommendation .special-day {
+		max-width: 10vw;
+	}
+
+	.recommendation .special-day i {
+		margin-left: -0.25em;
+		margin-right: -0.25em;
+	}
+
 	.recommendation .status {
 		max-width: 10vw;
 		padding-right: 0;
 	}
 
-	.recommendation .status i {
-		margin-left: -0.25em;
-		margin-right: -0.25em;
+	.recommendation .status-indicator {
+		margin-left: 0;
+		margin-right: 0;
 	}
 
 	.recommendation .status .text {
@@ -1373,15 +1449,24 @@ input[type='range']::-webkit-slider-thumb:active {
 	.recommendation .fansubs .text {
 		display: none;
 	}
+
+	.recommendation .special-day .text {
+		display: none;
+	}
 }
 
 @media (max-width: 920px){
 	:root {
 		--header-height-catalogue: 8.4rem;
 		--carousel-element-width: 12.72rem;
-		--carousel-element-height: 19.92rem;
+		--carousel-element-height: 20.1rem;
 		--thumbnail-margin: 0.3rem;
-		--thumbnail-text-height: 1.92rem;
+		--thumbnail-text-height: 2.1rem;
+	}
+
+	.loading-layout, .error-layout {
+		font-size: 1.5rem;
+		width: 100%;
 	}
 
 	.style-type-catalogue .header {
@@ -1406,10 +1491,35 @@ input[type='range']::-webkit-slider-thumb:active {
 		display: none;
 	}
 
+	.search-layout {
+		padding: 1rem;
+		z-index: 99;
+		transform: translateX(-100%);
+		transition: transform var(--fast-animation-duration) ease-in-out;
+	}
+
+	.search-layout-visible {
+		transform: translateX(0);
+	}
+
+	.search-layout-toggle-button {
+		display: flex;
+	}
+
+	.search-layout ~ .loading-layout, .search-layout ~ .error-layout {
+		margin-left: var(--page-padding);
+		width: 100%;
+	}
+
+	.catalogue-search {
+		margin-left: var(--page-padding);
+		width: calc(100vw - var(--page-padding) - var(--page-padding));
+	}
+
 	.thumbnail-outer .title {
 		padding-left: 0.25rem;
 		padding-right: 0.25rem;
-		font-size: 1.1rem;
+		font-size: 0.87rem;
 		line-height: 1.15;
 	}
 
@@ -1427,53 +1537,19 @@ input[type='range']::-webkit-slider-thumb:active {
 	}
 
 	.thumbnail .status-indicator {
-		top: 0.3rem;
-		left: 0.3rem;
+		top: 0.2rem;
+		left: 0.2rem;
 	}
 
-	.status-completed .status-indicator {
-		border: 0.4rem solid green;
-	}
-
-	.status-in-progress .status-indicator {
-		border: 0.4rem solid yellow;
-	}
-
-	.status-partially-completed .status-indicator {
-		border: 0.4rem solid greenyellow;
-	}
-
-	.status-cancelled .status-indicator {
-		border: 0.4rem solid red;
-	}
-
-	.status-abandoned .status-indicator {
-		border: 0.4rem solid coral;
+	.status-indicator {
+		width: 1rem;
+		height: 1rem;
+		border: 0.005rem solid rgb(var(--always-positive-color));
 	}
 
 	.floating-info .status-indicator {
-		left: 0.6rem !important;
-		top: 0.6rem !important;
-	}
-
-	.floating-info .status-completed .status-indicator {
-		border: 0.6rem solid green;
-	}
-
-	.floating-info .status-in-progress .status-indicator {
-		border: 0.6rem solid yellow;
-	}
-
-	.floating-info .status-partially-completed .status-indicator {
-		border: 0.6rem solid greenyellow;
-	}
-
-	.floating-info .status-cancelled .status-indicator {
-		border: 0.6rem solid red;
-	}
-
-	.floating-info .status-abandoned .status-indicator {
-		border: 0.6rem solid coral;
+		left: 0.4rem !important;
+		top: 0.4rem !important;
 	}
 
 	.floating-info-bookmark.fas, .floating-info-bookmark.far {
@@ -1497,7 +1573,7 @@ input[type='range']::-webkit-slider-thumb:active {
 	.floating-info-synopsis {
 		font-size: 0.9rem;
 		padding: 0 0.5rem;
-		-webkit-line-clamp: 6;
+		-webkit-line-clamp: 5;
 	}
 
 	.floating-info-watch-now {
@@ -1513,7 +1589,7 @@ input[type='range']::-webkit-slider-thumb:active {
 	}
 
 	.floating-info-genres-score-wrapper {
-		margin-top: 0.5rem;
+		margin-top: 0.6rem;
 		margin-bottom: 0.3rem;
 		align-items: end;
 	}
@@ -1547,10 +1623,9 @@ input[type='range']::-webkit-slider-thumb:active {
 		padding-right: 0;
 	}
 
-	.recommendation .status i {
-		font-size: 1.8rem;
-		margin-right: -0.25rem;
-		margin-left: -0.25rem;
+	.recommendation .status-indicator {
+		width: 1.6rem;
+		height: 1.6rem;
 	}
 
 	.recommendation .infoholder {
@@ -1570,7 +1645,7 @@ input[type='range']::-webkit-slider-thumb:active {
 	}
 
 	.recommendation .cover {
-		border-radius: 0.2rem;
+		border-radius: 0.4rem;
 	}
 
 	.recommendation .title {
@@ -1607,6 +1682,16 @@ input[type='range']::-webkit-slider-thumb:active {
 		height: 1.6rem;
 	}
 
+	.recommendation .special-day {
+		font-size: 1.2rem;
+		margin-left: 1rem;
+		margin-top: 1rem;
+	}
+
+	.recommendation .special-day i {
+		font-size: 1.4rem;
+	}
+
 	.recommendation .genres {
 		font-size: 1rem;
 		margin-right: 1rem;
@@ -1637,22 +1722,46 @@ input[type='range']::-webkit-slider-thumb:active {
 		font-size: 0.8rem !important;
 	}
 
+	.carousel .slick-prev {
+		transform: translateX(1.5rem) translateY(-50%);
+		width: 2rem;
+	}
+
+	.carousel .slick-next {
+		transform: translateX(-1.5rem) translateY(-50%);
+		width: 2rem;
+	}
+
+	.carousel .slick-prev::before {
+		margin-left: -1rem;
+	}
+
+	.carousel .slick-next::before {
+		margin-left: -1rem;
+	}
+
+	.carousel .slick-prev::before, .carousel .slick-next::before {
+		font-size: 3rem;
+	}
+
 	.recommendations .slick-prev::before {
 		padding-left: 2rem;
-		content: '\f053' !important;
 	}
 
 	.recommendations .slick-next::before {
 		padding-right: 2rem;
 		margin-left: -5rem;
-		content: '\f054' !important;
 	}
 }
 
 @media (max-width: 600px){
+	:root {
+		--search-layout-width: 90vw;
+	}
+
 	.recommendation .coverholder {
-		height: 70%;
-		align-self: center;
+		height: 85%;
+		align-self: start;
 	}
 
 	.recommendation .infoholder {
@@ -1663,7 +1772,30 @@ input[type='range']::-webkit-slider-thumb:active {
 		font-size: 1.8rem;
 	}
 
+	.recommendation .special-day {
+		max-width: 20vw;
+		bottom: 2rem;
+	}
+
 	.recommendation .genres {
-		display: none;
+		max-width: 70vw;
+		max-height: 2.2rem;
+		margin-bottom: 2rem;
+	}
+
+	.recommendation .synopsis {
+		-webkit-line-clamp: 5;
+	}
+
+	.results-layout {
+		margin-left: var(--page-padding);
+		width: calc(100vw - var(--page-padding) - var(--page-padding));
+	}
+}
+
+@media (max-width: 350px){
+	.recommendation .coverholder {
+		height: 70%;
+		margin-top: 1.5rem;
 	}
 }

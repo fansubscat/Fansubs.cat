@@ -96,9 +96,8 @@ if ($style_type=='login') {
 							</div>
 						</div>
 					</div>
-					<div class="login-form"<?php echo $style_type=='reset_password' ? ' style="display: none;"' : ''?>>
+					<div class="login-form<?php echo $style_type=='reset_password' ? ' hidden' : ''; ?>">
 						<div class="login-form-main">
-							<div class="login-close fa fa-xmark" onclick="history.back();"></div>
 							<div class="login-subheader">Inicia la sessió</div>
 							<form id="login-form" onsubmit="return login();" autocomplete="off" novalidate>
 								<label for="login_username">Nom d'usuari</label>
@@ -114,7 +113,7 @@ if ($style_type=='login') {
 						</div>
 						<div class="login-footer">Encara no n’ets membre? <a onclick="showRegister();">Registra-t’hi</a></div>
 					</div>
-					<div class="reset-password-form"<?php echo $style_type!='reset_password' ? ' style="display: none;"' : ''?>>
+					<div class="reset-password-form<?php echo $style_type!='reset_password' ? ' hidden' : ''?>">
 						<div class="login-form-main">
 							<div class="login-subheader">Restableix la contrasenya</div>
 							<form id="reset-password-form" onsubmit="return resetPassword();" autocomplete="off" novalidate>
@@ -132,7 +131,7 @@ if ($style_type=='login') {
 						</div>
 						<div class="login-footer">L’has recordada? <a onclick="showLogin();">Inicia la sessió</a></div>
 					</div>
-					<div class="forgot-password-form" style="display: none;">
+					<div class="forgot-password-form hidden">
 						<div class="login-form-main">
 							<div class="login-close fa fa-xmark" onclick="showLogin();"></div>
 							<div class="login-subheader">Contrasenya oblidada</div>
@@ -146,7 +145,7 @@ if ($style_type=='login') {
 						</div>
 						<div class="login-footer">T’has equivocat? <a onclick="showLogin();">Inicia la sessió</a></div>
 					</div>
-					<div class="forgot-password-result-form" style="display: none;">
+					<div class="forgot-password-result-form hidden">
 						<div class="login-form-main">
 							<div class="login-close fa fa-xmark" onclick="showLogin();"></div>
 							<div class="login-subheader">Comprova el correu</div>
@@ -154,7 +153,7 @@ if ($style_type=='login') {
 						</div>
 						<div class="login-footer">Ja has canviat la contrasenya? <a onclick="showLogin();">Inicia la sessió</a></div>
 					</div>
-					<div class="register-form" style="display: none;">
+					<div class="register-form hidden">
 						<div class="login-form-main">
 							<div class="login-close fa fa-xmark" onclick="showLogin();"></div>
 							<div class="login-subheader">Registre</div>
@@ -194,11 +193,11 @@ if ($style_type=='login') {
 								<div id="register_birthday_validation" class="validation-message"></div>
 								<div class="checkbox-layout">
 									<input id="register_privacy_policy_accept" type="checkbox" onchange="removeValidationOnlyText('register_privacy_policy_accept');">
-									<label for="register_privacy_policy_accept">Accepto la <a href="<?php echo $main_url; ?>/politica-de-privadesa/" target="_blank">política de privadesa</a></label>
+									<label for="register_privacy_policy_accept">Accepto la <a href="<?php echo $main_url; ?>/politica-de-privadesa" target="_blank">política de privadesa</a></label>
 								</div>
 								<div id="register_privacy_policy_accept_validation" class="validation-message"></div>
 								<div id="register_generic_validation" class="validation-message-generic"></div>
-								<button id="register_submit" type="submit" class="login-button">Registra-m’hi</button>
+								<button id="register_submit" type="submit" class="login-button">Registra-m’hi i inicia la sessió</button>
 							</form>
 						</div>
 						<div class="login-footer">Ja t’hi has registrat? <a onclick="showLogin();">Inicia la sessió</a></div>
@@ -237,12 +236,10 @@ if ($style_type=='login') {
 <?php
 	} else {
 ?>
-					<a class="logo-small" href="<?php echo $main_url; ?>/" title="Torna a la pàgina d’inici de Fansubs.cat">
+					<a class="logo-small" href="<?php echo $main_url; ?>" title="Torna a la pàgina d’inici de Fansubs.cat">
 						<?php include($static_directory.'/common/images/logo.svg'); ?>
-					</a>
 <?php
-		if ($style_type=='catalogue') {
-			if (!empty($_GET['hentai'])) {
+		if ($style_type=='catalogue' && !empty($_GET['hentai'])) {
 ?>
 						<div class="catalogues-explicit-category">
 							<span class="fa-stack" style="vertical-align: top;">
@@ -253,7 +250,11 @@ if ($style_type=='login') {
 							</span>
 						</div>
 <?php
-			}
+		}
+?>
+					</a>
+<?php
+		if ($style_type=='catalogue') {
 ?>
 					<div class="catalogues-navigation">
 						<a href="<?php echo $anime_url.(!empty($_GET['hentai']) ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
@@ -316,7 +317,7 @@ if ($style_type=='login') {
 <?php
 	if (empty($user)) {
 ?>
-					<a class="user-login" href="<?php echo $users_url.'/inicia-la-sessio/'; ?>"><span class="user-login-text">Inicia la sessió</span><span class="user-login-icon"><i class="fa fa-fw fa-sign-in"></i></span></a>
+					<a class="user-login" href="<?php echo $users_url.'/inicia-la-sessio'; ?>"><span class="user-login-text">Inicia la sessió</span><span class="user-login-icon"><i class="fa fa-fw fa-sign-in"></i></span></a>
 <?php
 	}
 ?>
@@ -339,23 +340,23 @@ if ($style_type=='login') {
 <?php
 	if (!empty($user)) {
 ?>
-								<a href="<?php echo $users_url; ?>/"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
-								<a href="<?php echo $users_url.'/la-meva-llista/'; ?>"><i class="fa fa-fw fa-list-ul"></i> La meva llista</a>
+								<a href="<?php echo $users_url; ?>"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
+								<a href="<?php echo $users_url.'/la-meva-llista'; ?>"><i class="fa fa-fw fa-list-ul"></i> La meva llista</a>
 								<hr class="dropdown-separator-secondary">
 <?php
 	}
 ?>
-								<a href="<?php echo $users_url.'/configuracio/'; ?>"><i class="fa fa-fw fa-gear"></i> Configuració</a>
+								<a href="<?php echo $users_url.'/configuracio'; ?>"><i class="fa fa-fw fa-gear"></i> Configuració</a>
 								<a class="theme-button" onclick="toggleSiteTheme();"><i class="fa fa-fw fa-circle-half-stroke"></i> <span class="theme-button-text"><?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'Canvia al tema fosc' : 'Canvia al tema clar'; ?></span></a>
 								<hr class="dropdown-separator-secondary">
 <?php
 	if (!empty($user)) {
 ?>
-								<a href="<?php echo $users_url.'/tanca-la-sessio/'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
+								<a href="<?php echo $users_url.'/tanca-la-sessio'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
 <?php
 	} else {
 ?>
-								<a href="<?php echo $users_url.'/inicia-la-sessio/'; ?>"><i class="fa fa-fw fa-sign-in"></i> Inicia la sessió</a>
+								<a href="<?php echo $users_url.'/inicia-la-sessio'; ?>"><i class="fa fa-fw fa-sign-in"></i> Inicia la sessió</a>
 <?php
 	}
 ?>

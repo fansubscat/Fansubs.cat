@@ -24,6 +24,7 @@ RewriteRule ^favicon\.png$ images/favicon_liveaction.png [L]
 
 #Hide internal files
 RewriteCond %{THE_REQUEST} ^(.+)\.php(\?\S*)?\ HTTP/ [NC]
+RewriteCond %{REQUEST_URI} !do_save_to_my_list\.php
 RewriteCond %{REQUEST_URI} !error\.php
 RewriteCond %{REQUEST_URI} !counter\.php
 RewriteCond %{REQUEST_URI} !reader\.php

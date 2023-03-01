@@ -765,12 +765,27 @@ function prepareClickableFloatingInfo(element){
 }
 
 function toggleBookmark(seriesSlug){
+	var action;
 	if ($('.floating-info-bookmark[data-series-id='+seriesSlug+']').hasClass('fas'))	{
 		$('.floating-info-bookmark[data-series-id='+seriesSlug+']').removeClass('fas').addClass('far');
+		action='remove';
 	} else {
 		$('.floating-info-bookmark[data-series-id='+seriesSlug+']').removeClass('far').addClass('fas');
+		action='add';
 	}
-	//TODO call server to save
+
+	var values = {
+		series_slug: seriesSlug,
+		action: action
+	};
+
+	$.post({
+		url: "/do_save_to_my_list.php",
+		data: values,
+		xhrFields: {
+			withCredentials: true
+		},
+	});
 }
 
 function initializeCarousels() {
@@ -782,14 +797,14 @@ function initializeCarousels() {
 	var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
 		+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
 	var size = Math.max(parseInt(carouselWidth/elementWidth),1);
-	var swipeToSlideSetting = ($(window).width()>650 ? false : true);
+	var swipeToSlideSetting = (getComputedStyle(document.documentElement).getPropertyValue('--is-hovering-device')==0);
 
 	$('.carousel').slick({
 		speed: 300,
 		infinite: false,
 		slidesToShow: size,
 		slidesToScroll: size,
-		swipeToSlide: swipeToSlideSetting,
+		swipeToSlide: false,
 		variableWidth: true,
 		prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
 		nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
@@ -801,7 +816,7 @@ function initializeCarousels() {
 		speed: 500,
 		fade: true,
 		infinite: true,
-		autoplay: false,
+		autoplay: true,
 		autoplaySpeed: 10000,
 		slidesToShow: 1,
 		slidesToScroll: 1,
@@ -949,6 +964,16 @@ function formatDoubleSliderInput(input, value) {
 		}
 	} else {
 		input.innerText=value;
+	}
+}
+
+function toggleSearchLayout() {
+	if ($('.search-layout-toggle-button-visible').length>0) {
+		$('.search-layout-toggle-button').removeClass('search-layout-toggle-button-visible');
+		$('.search-layout').removeClass('search-layout-visible');
+	} else {
+		$('.search-layout-toggle-button').addClass('search-layout-toggle-button-visible');
+		$('.search-layout').addClass('search-layout-visible');
 	}
 }
 
@@ -1172,7 +1197,7 @@ $(document).ready(function() {
 					var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
 						+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
 					var size = Math.max(parseInt(carouselWidth/elementWidth),1);
-					var swipeToSlideSetting = ($(window).width()>650 ? false : true);
+					var swipeToSlideSetting = (getComputedStyle(document.documentElement).getPropertyValue('--is-hovering-device')==0);
 
 					$('.carousel').slick('unslick');
 					$('.carousel').slick({
@@ -1180,7 +1205,7 @@ $(document).ready(function() {
 						infinite: false,
 						slidesToShow: size,
 						slidesToScroll: size,
-						swipeToSlide: swipeToSlideSetting,
+						swipeToSlide: false,
 						variableWidth: true,
 						prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
 						nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
@@ -1196,15 +1221,18 @@ $(document).ready(function() {
 		$(window).scroll(function () {
 			if ($('.search-layout').length>0) {
 				var scroll = $(window).scrollTop();
-				var top = $('.main-section')[0].offsetTop + (2.4 * parseFloat(getComputedStyle(document.documentElement).fontSize));
+				var top = $('.main-section')[0].offsetTop;// + (2.4 * parseFloat(getComputedStyle(document.documentElement).fontSize));
+				var headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height-catalogue').replace('rem',''))*parseFloat(getComputedStyle(document.documentElement).fontSize);
 				if (scroll>top) {
 					$('.search-layout').css({'top': '0', 'height': 'calc(100%)'});
 					$('.loading-layout').css({'top': '0', 'height': 'calc(100%)'});
 					$('.error-layout').css({'top': '0', 'height': 'calc(100%)'});
+					$('.search-layout-toggle-button').css({'top': '0', 'height': 'calc(100%)'});
 				} else {
-					$('.search-layout').css({'top': 'calc('+(top-scroll)+'px + '+(parseFloat((top-scroll))/top*2.4)+'px)', 'height': 'calc(100% - '+(top-scroll)+'px)'});
-					$('.loading-layout').css({'top': 'calc('+(top-scroll)+'px + '+(parseFloat((top-scroll))/top*2.4)+'px)', 'height': 'calc(100% - '+(top-scroll)+'px)'});
-					$('.error-layout').css({'top': 'calc('+(top-scroll)+'px + '+(parseFloat((top-scroll))/top*2.4)+'px)', 'height': 'calc(100% - '+(top-scroll)+'px)'});
+					$('.search-layout').css({'top': (top-scroll)+'px', 'height': 'calc(100% - '+(top-scroll)+'px)'});
+					$('.loading-layout').css({'top': (top-scroll)+'px', 'height': 'calc(100% - '+(top-scroll)+'px)'});
+					$('.error-layout').css({'top': (top-scroll)+'px', 'height': 'calc(100% - '+(top-scroll)+'px)'});
+					$('.search-layout-toggle-button').css({'top': (top-scroll)+'px', 'height': 'calc(100% - '+(top-scroll)+'px)'});
 				}
 			}
 		});

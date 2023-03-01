@@ -45,23 +45,6 @@ function get_status_description_short($id){
 	}
 }
 
-function get_status_icon($id){
-	switch ($id){
-		case 1:
-			return "far fa-circle-check";
-		case 2:
-			return "fa-circle-notch fa-rotate-90";
-		case 3:
-			return "far fa-circle";
-		case 4:
-			return "far fa-circle-xmark";
-		case 5:
-			return "far fa-circle-xmark";
-		default:
-			return "far fa-circle-question";
-	}
-}
-
 function get_status_description($id){
 	switch ($id){
 		case 1:
@@ -656,12 +639,12 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }
 
-function print_featured_item($series, $specific_version=TRUE) {
+function print_featured_item($series, $special_day=NULL, $specific_version=TRUE) {
 	global $cat_config, $anime_url, $liveaction_url, $static_url;
 	$more_than_one_version = exists_more_than_one_version($series['id']);
 	echo "\t\t\t\t\t\t\t".'<div class="recommendation" data-series-id="'.$series['slug'].'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.$static_url.'/images/featured/'.$series['id'].'.jpg" alt="'.$series['name'].'">'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'"><i class="fa fa-fw '.get_status_icon($series['best_status']).'"></i><span class="text">'.get_status_description_short($series['best_status']).'</span></div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'"><div class="status-indicator"></div><span class="text">'.get_status_description_short($series['best_status']).'</span></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img class="cover" src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'"></a>'."\n";
@@ -692,6 +675,15 @@ function print_featured_item($series, $specific_version=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="fansubs">'.get_recommended_fansub_info($series['fansub_info'], $series['version_id']).'</div>'."\n";
+	if (!empty($special_day)) {
+		if ($special_day=='fools') {
+			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-trophy"></i><span class="text">Els millors de l’any</span></div>'."\n";
+		} else if ($special_day=='sant_jordi') {
+			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-dragon"></i><span class="text">Especial Sant Jordi</span></div>'."\n";
+		} if ($special_day=='tots_sants') {
+			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-ghost"></i><span class="text">Especial Tots Sants</span></div>'."\n";
+		}
+	}
 	echo "\t\t\t\t\t\t\t\t".'<div class="genres">'.get_genres_for_featured($series['genre_names']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }

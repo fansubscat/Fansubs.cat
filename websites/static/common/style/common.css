@@ -24,6 +24,8 @@
 :root {
 	--header-height: 4.2rem;
 	--page-padding: 3.6rem;
+	--fast-animation-duration: .3s;
+	--slow-animation-duration: .6s;
 }
 
 .theme-dark {
@@ -114,7 +116,7 @@ html {
 	color: rgb(var(--positive-color));
 	background-color: rgb(var(--negative-color));
 	scrollbar-gutter: stable;
-	min-width: 250px;
+	min-width: 280px;
 	overflow-y: scroll;
 }
 

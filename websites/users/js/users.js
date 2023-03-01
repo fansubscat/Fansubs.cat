@@ -12,38 +12,38 @@ function clearForms() {
 
 function showLogin() {
 	clearForms();
-	$('.login-form').show();
-	$('.register-form').hide();
-	$('.forgot-password-form').hide();
-	$('.forgot-password-result-form').hide();
-	$('.reset-password-form').hide();
+	$('.login-form').removeClass('hidden');
+	$('.register-form').addClass('hidden');
+	$('.forgot-password-form').addClass('hidden');
+	$('.forgot-password-result-form').addClass('hidden');
+	$('.reset-password-form').addClass('hidden');
 }
 
 function showForgotPassword() {
 	clearForms();
-	$('.login-form').hide();
-	$('.register-form').hide();
-	$('.forgot-password-form').show();
-	$('.forgot-password-result-form').hide();
-	$('.reset-password-form').hide();
+	$('.login-form').addClass('hidden');
+	$('.register-form').addClass('hidden');
+	$('.forgot-password-form').removeClass('hidden');
+	$('.forgot-password-result-form').addClass('hidden');
+	$('.reset-password-form').addClass('hidden');
 }
 
 function showForgotPasswordResult() {
 	clearForms();
-	$('.login-form').hide();
-	$('.register-form').hide();
-	$('.forgot-password-form').hide();
-	$('.forgot-password-result-form').show();
-	$('.reset-password-form').hide();
+	$('.login-form').addClass('hidden');
+	$('.register-form').addClass('hidden');
+	$('.forgot-password-form').addClass('hidden');
+	$('.forgot-password-result-form').removeClass('hidden');
+	$('.reset-password-form').addClass('hidden');
 }
 
 function showRegister() {
 	clearForms();
-	$('.login-form').hide();
-	$('.register-form').show();
-	$('.forgot-password-form').hide();
-	$('.forgot-password-result-form').hide();
-	$('.reset-password-form').hide();
+	$('.login-form').addClass('hidden');
+	$('.register-form').removeClass('hidden');
+	$('.forgot-password-form').addClass('hidden');
+	$('.forgot-password-result-form').addClass('hidden');
+	$('.reset-password-form').addClass('hidden');
 }
 
 function login() {

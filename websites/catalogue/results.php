@@ -46,7 +46,9 @@ if (!empty($_GET['search'])) {
 	mysqli_free_result($result);
 	$sections=array($cat_config['section_advent'], $cat_config['section_featured'], $cat_config['section_last_updated'], $cat_config['section_last_completed'], $cat_config['section_random'], $cat_config['section_popular'], $cat_config['section_more_recent'], $cat_config['section_best_rated']);
 	$recommendations_subquery = "SELECT version_id FROM recommendation r LEFT JOIN version v ON r.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='${cat_config['items_type']}'";
+	$special_day=NULL;
 	if ($is_fools_day) {
+		$special_day='fools';
 		$sections[1]=$cat_config['section_fools'];
 		//Worst rated completed or semi completed animes
 		$fools_day_result = query("SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE sr.type='${cat_config['items_type']}' AND (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status IN (1,3) AND sr.score IS NOT NULL AND vr.is_missing_episodes=0 ORDER BY sr.score ASC LIMIT 10");
@@ -56,6 +58,7 @@ if (!empty($_GET['search'])) {
 		}
 		$recommendations_subquery = implode(',',$fools_day_items);
 	} else if (date('m-d')=='04-23') { // Sant Jordi
+		$special_day='sant_jordi';
 		$sections[1]=$cat_config['section_sant_jordi'];
 		//Best rated completed and featurable animes of genres Romance, Boys Love and Girls Love
 		$sant_jordi_result = query("SELECT DISTINCT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE sr.type='${cat_config['items_type']}' AND (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status=1 AND vr.is_featurable=1 AND sr.score IS NOT NULL AND vr.is_missing_episodes=0 AND sr.id IN (SELECT rsg.series_id FROM rel_series_genre rsg WHERE rsg.genre_id IN (7,23,38)) ORDER BY sr.score DESC LIMIT 10");
@@ -65,6 +68,7 @@ if (!empty($_GET['search'])) {
 		}
 		$recommendations_subquery = implode(',',$sant_jordi_items);
 	} else if (date('m-d')=='10-31' || date('m-d')=='11-01') { // Tots Sants
+		$special_day='tots_sants';
 		$sections[1]=$cat_config['section_tots_sants'];
 		//Best rated completed and featurable animes of genre Horror
 		$tots_sants_result = query("SELECT DISTINCT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE sr.type='${cat_config['items_type']}' AND (sr.rating<>'XXX' OR sr.rating IS NULL) AND vr.status=1 AND vr.is_featurable=1 AND sr.score IS NOT NULL AND vr.is_missing_episodes=0 AND sr.id IN (SELECT rsg.series_id FROM rel_series_genre rsg WHERE rsg.genre_id IN (21)) ORDER BY sr.score DESC LIMIT 10");
@@ -145,7 +149,7 @@ for ($i=0;$i<count($sections);$i++){
 						<div class="status-<?php echo get_status($row['best_status']); ?><?php echo $genres; ?>">
 <?php
 				if ($type[$i]=='recommendations') {
-					print_featured_item($row, $specific_version[$i]);
+					print_featured_item($row, $special_day, $specific_version[$i]);
 				} else {
 					print_carousel_item($row, $specific_version[$i]);
 				}

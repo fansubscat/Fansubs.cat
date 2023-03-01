@@ -255,10 +255,65 @@ CREATE TABLE `user` (
   `birthdate` date NOT NULL,
   `reset_password_code` varchar(200) NULL,
   `avatar_filename` varchar(200) NULL,
+  `hide_hentai_access` tinyint(1) NOT NULL DEFAULT 0,
+  `show_cancelled_projects` tinyint(1) NOT NULL DEFAULT 0,
+  `show_lost_projects` tinyint(1) NOT NULL DEFAULT 0,
+  `manga_reader_type` tinyint(1) NOT NULL DEFAULT 0,
+  `previous_chapters_read_behavior` int(11) NOT NULL DEFAULT 0,
+  `site_theme` tinyint(1) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `username` varchar(200) NOT NULL,
+  `password` varchar(200) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `birthdate` date NOT NULL,
+  `reset_password_code` varchar(200) NULL,
+  `avatar_filename` varchar(200) NULL,
+  `hide_hentai_access` tinyint(1) NOT NULL DEFAULT 0,
+  `show_cancelled_projects` tinyint(1) NOT NULL DEFAULT 0,
+  `show_lost_projects` tinyint(1) NOT NULL DEFAULT 0,
+  `manga_reader_type` tinyint(1) NOT NULL DEFAULT 0,
+  `previous_chapters_read_behavior` tinyint(1) NOT NULL DEFAULT 0,
+  `site_theme` tinyint(1) NOT NULL DEFAULT 0,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(200) NOT NULL,
+  `updated` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_by` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user_episode_progress` (
+  `user_id` int(11) NOT NULL,
+  `episode_id` int(11) NOT NULL,
+  `is_seen` tinyint(1) NOT NULL DEFAULT 0,
+  `progress` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user_fansub_blacklist` (
+  `user_id` int(11) NOT NULL,
+  `fansub_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user_series_list` (
+  `user_id` int(11) NOT NULL,
+  `series_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user_version_followed` (
+  `user_id` int(11) NOT NULL,
+  `version_id` int(11) NOT NULL,
+  `last_seen_episode_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `user_version_rating` (
+  `user_id` int(11) NOT NULL,
+  `version_id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `version` (
@@ -423,6 +478,26 @@ ALTER TABLE `series`
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `user_episode_progress`
+  ADD PRIMARY KEY (`user_id`,`episode_id`),
+  ADD KEY `user_episode_progress_ibfk_1` (`episode_id`);
+
+ALTER TABLE `user_fansub_blacklist`
+  ADD PRIMARY KEY (`user_id`,`fansub_id`),
+  ADD KEY `user_fansub_blacklist_ibfk_1` (`fansub_id`);
+
+ALTER TABLE `user_series_list`
+  ADD PRIMARY KEY (`user_id`,`series_id`),
+  ADD KEY `user_series_list_ibfk_1` (`series_id`);
+
+ALTER TABLE `user_version_followed`
+  ADD PRIMARY KEY (`user_id`,`version_id`),
+  ADD KEY `user_version_followed_ibfk_1` (`version_id`);
+
+ALTER TABLE `user_version_rating`
+  ADD PRIMARY KEY (`user_id`,`version_id`),
+  ADD KEY `user_version_rating_ibfk_1` (`version_id`);
+
 ALTER TABLE `version`
   ADD PRIMARY KEY (`id`),
   ADD KEY `version_ibfk_1` (`series_id`);
@@ -545,6 +620,22 @@ ALTER TABLE `remote_folder`
 
 ALTER TABLE `remote_folder_failed_files`
   ADD CONSTRAINT `remote_folder_failed_files_ibfk_1` FOREIGN KEY (`remote_folder_id`) REFERENCES `remote_folder` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `user_episode_progress`
+  ADD CONSTRAINT `user_episode_progress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_episode_progress_ibfk_2` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `user_series_list`
+  ADD CONSTRAINT `user_series_list_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_series_list_ibfk_2` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `user_version_followed`
+  ADD CONSTRAINT `user_version_followed_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_version_followed_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `user_fansub_blacklist`
+  ADD CONSTRAINT `user_fansub_blacklist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_fansub_blacklist_ibfk_2` FOREIGN KEY (`fansub_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `version`
   ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -12,6 +12,8 @@ RewriteCond %{REQUEST_URI} !error\.php
 RewriteRule \.php$ - [F]
 
 #Normal pages
+RewriteRule ^la-meva-llista/?$ list.php [L]
+RewriteRule ^configuracio/?$ settings.php [L]
 RewriteRule ^inicia-la-sessio/?$ login.php [L]
 RewriteRule ^tanca-la-sessio/?$ logout.php [L]
 RewriteRule ^restableix-la-contrasenya/?$ reset_password.php [L]
