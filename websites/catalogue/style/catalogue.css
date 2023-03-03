@@ -676,33 +676,6 @@
 	margin-left: 0.9em;
 }
 
-.search-form {
-	margin-right: 0.6rem;
-}
-
-#search_query {
-	width: 23rem;
-	margin-right: 0.7rem;
-	vertical-align: middle;
-	height: 3.4rem;
-	border-radius: 0.7rem;
-	padding: 0 3.2rem 0 1rem;
-	display: inline-block;
-	border: 0.1em solid rgb(var(--always-negative-color));
-}
-
-#search_button {
-	cursor: pointer;
-	font-size: 1.7rem;
-	margin-left: -3.4rem;
-	color: gray;
-	float: right;
-	margin-right: 1.5rem;
-	margin-top: 1rem;
-        position: relative;
-        z-index: 2;
-}
-
 .search-layout {
 	align-self: start;
 	min-width: var(--search-layout-width);
@@ -716,49 +689,6 @@
 	overflow-y: scroll;
 	height: calc(100% - var(--header-height-catalogue) - var(--page-padding) - var(--page-padding));
 	top: calc(var(--header-height-catalogue) + var(--page-padding) + var(--page-padding)); /* header + header margin + body padding; */
-}
-
-.section {
-	padding: 0 var(--page-padding) 2.5rem var(--page-padding);
-	overflow: hidden;
-}
-
-.section-title-main {
-	font-family: "lexend_deca", sans-serif; /* revert to normal in this case */
-	font-weight: normal;
-	color: rgb(var(--positive-color));
-	text-decoration: none;
-	font-size: 2.4rem;
-	width:100%;
-	text-align: left;
-	margin-top: 0;
-	margin-bottom: 2.5rem;
-	display: flex;
-	align-items: center;
-}
-
-.section-title-main::after {
-	content: '';
-	border: 0.3rem solid rgb(var(--primary-color));
-	border-radius: 99rem;
-	margin-left: 1.2rem;
-	margin-top: 0.2em;
-	flex-grow: 1;
-}
-
-.section-title-main i {
-	font-size: 2.6rem;
-	margin-right: 0.8rem;
-
-}
-
-.section-empty {
-	font-size: 1.7rem;
-}
-
-.section-empty i {
-	font-size: 4rem;
-	margin-bottom: 0.8rem;
 }
 
 /* Main screen */
@@ -1575,10 +1505,6 @@ input[type='range']::-webkit-slider-thumb:active {
 		padding: 0.75rem 0.75rem;
 	}
 
-	#search_query {
-		width: 12rem;
-	}
-
 	.recommendation .infoholder {
 		width: 80vw;
 	}
@@ -1685,28 +1611,6 @@ input[type='range']::-webkit-slider-thumb:active {
 		padding-right: 0.25rem;
 		font-size: 0.87rem;
 		line-height: 1.15;
-	}
-
-	.section {
-		padding: 0 var(--page-padding) 1.5rem var(--page-padding);
-	}
-
-	.section-title-main {
-		font-size: 1.7rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.section-title-main i {
-		font-size: 1.9rem;
-	}
-
-	.section-empty {
-		font-size: 1.5rem;
-	}
-
-	.section-empty i {
-		font-size: 3rem;
-		margin-bottom: 0.5rem;
 	}
 
 	.thumbnail .status-indicator {

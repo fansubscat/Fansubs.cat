@@ -35,7 +35,7 @@ if (!empty($user)) {
 }
 
 if (!empty($is_searching)) {
-	$query = (isset($_GET['query']) ? escape($_GET['query']) : "");
+	$query = (isset($_GET['query']) ? escape(urldecode($_GET['query'])) : "");
 	$query = str_replace(" ", "%", $query);
 	$is_full_catalogue=($query!='');
 	

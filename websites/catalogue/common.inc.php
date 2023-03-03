@@ -689,19 +689,6 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE)
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }
 
-function get_cookie_blacklisted_fansub_ids() {
-	$fansub_ids = array();
-	if (!empty($_COOKIE['blacklisted_fansub_ids'])) {
-		$exploded = explode(',',$_COOKIE['blacklisted_fansub_ids']);
-		foreach ($exploded as $id) {
-			if (intval($id)) {
-				array_push($fansub_ids, intval($id));
-			}
-		}
-	}
-	return $fansub_ids;
-}
-
 function get_cookie_viewed_files_ids() {
 	$file_ids = array();
 	if (!empty($_COOKIE['viewed_file_ids'])) {

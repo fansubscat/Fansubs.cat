@@ -1,0 +1,134 @@
+.style-type-news .main-section {
+	width: calc(100% + var(--page-padding) + var(--page-padding));
+	margin-left: calc(0rem - var(--page-padding));
+	margin-right: calc(0rem - var(--page-padding));
+	justify-content: flex-start;
+}
+
+.groups-button {
+	margin-right: 2rem;
+	font-size: 1.3rem;
+	color: rgb(var(--icon-button-color));
+}
+
+.groups-button:hover {
+	color: rgb(var(--icon-button-color-hover));
+}
+
+.groups-button .fa-stack-1x {
+	background: rgba(var(--background-color-standard),1);
+	height: 1.6em;
+	width: 1.6em;
+	border-radius: 999em;
+	left: 1em;
+	top: 0.5em;
+	margin-left: 0.6em;
+	margin-top: 0.6em;
+	line-height: 1.7;
+}
+
+.news-article {
+	background-color: rgb(var(--negative-color));
+	border-radius: 1.5rem;
+	padding: 2rem;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),0.2);
+	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+}
+
+.news-article + .news-article {
+	margin-top: 2rem;
+}
+
+.news-info {
+	text-align: left;
+	display: flex;
+	align-items: center;
+	white-space: pre;
+	margin-top: 0.2rem;
+	font-size: 1.6rem;
+}
+
+.news-text {
+	text-align: left;
+	flex-grow: 1;
+	font-size: 1.6rem;
+	margin-top: 2rem;
+}
+
+.news-image {
+	max-height: 30rem;
+	max-width: 60rem;
+	height: auto;
+	width: auto;	
+	cursor: zoom-in;
+	border-radius: 0.6rem;
+	margin-left: 2rem;
+	float: right;
+	max-width: 50vw;
+	object-fit: contain;
+}
+
+.news-image-mobile {
+	display: none;
+	max-height: 25rem;
+	max-width: 28rem;
+	height: auto;
+	width: auto;	
+	cursor: zoom-in;
+	border-radius: 0.6rem;
+	margin-top: 1rem;
+	align-self: center;
+}
+
+.news-title {
+	font-family: "lexend_deca_bold", sans-serif;
+	text-align: left;
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 2.2rem;
+}
+
+.news-content {
+	flex-grow: 1;
+}
+
+.news-text-wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.news-fansub {
+	display: flex;
+	align-items: center;
+}
+
+.news-fansub img {
+	width: 2rem;
+	height: 2rem;
+	border-radius: 0.4rem;
+}
+
+.news-readmore {
+	text-align: left;
+}
+
+img.mfp-img {
+	object-fit: contain;
+}
+
+@media (max-width: 920px){
+	.news-article {
+		flex-direction: column;
+	}
+
+	.news-image {
+		display: none;
+	}
+
+	.news-image-mobile {
+		display: block;
+	}
+}

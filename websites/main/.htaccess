@@ -8,6 +8,21 @@ RewriteCond %{REQUEST_URI} !error\.php
 RewriteCond %{REQUEST_URI} !do_send_contact_email\.php
 RewriteRule \.php$ - [F]
 
+#v5: These are old www.fansubs.cat pages, redirect where more appropriate
+# The following no longer exist:
+RewriteRule ^arxiu/?$ https://noticiesv2.fansubs.cat [R=301,L]
+RewriteRule ^envia-noticies-contacta/?$ contacta-amb-nosaltres [R=301,L]
+RewriteRule ^estadistiques/$ https://noticiesv2.fansubs.cat [R=301,L]
+RewriteRule ^fansub/(.+)/pagina/(.+)/?$ https://noticiesv2.fansubs.cat [R=301,L]
+RewriteRule ^fansub/(.+)/?$ https://noticiesv2.fansubs.cat [R=301,L]
+# Old advent calendar for 2020 (pre-v4):
+RewriteRule ^nadal/?$ https://advent.fansubs.cat/2020 [R=301,L]
+# These still exist, but on a different domain
+RewriteRule ^pagina/(.+)/?$ https://noticiesv2.fansubs.cat/pagina/$1 [R=301,L]
+RewriteRule ^rss/?$ https://noticiesv2.fansubs.cat/rss [R=301,L]
+RewriteRule ^cerca/(.+)/pagina/(.+)/?$ https://noticiesv2.fansubs.cat/cerca/$1/pagina/$2 [R=301,L]
+RewriteRule ^cerca/(.+)/?$ https://noticiesv2.fansubs.cat/cerca/$1 [R=301,L]
+
 #Normal pages
 RewriteRule ^qui-som/?$ about.php [L]
 RewriteRule ^politica-de-privadesa/?$ privacy.php [L]

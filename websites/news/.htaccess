@@ -1,24 +1,13 @@
 RewriteEngine on
 ErrorDocument 404 /error.php?code=404
 ErrorDocument 403 /error.php?code=403
-RewriteRule ^pagina/(.*)/$ index.php?page=$1
-RewriteRule ^pagina/(.*)$ index.php?page=$1
-RewriteRule ^fansub/(.*)/pagina/(.*)/$ index.php?fansub_id=$1&page=$2
-RewriteRule ^fansub/(.*)/pagina/(.*)$ index.php?fansub_id=$1&page=$2
-RewriteRule ^fansub/(.*)/$ index.php?fansub_id=$1
-RewriteRule ^fansub/(.*)$ index.php?fansub_id=$1
-RewriteRule ^estadistiques/$ stats.php
-RewriteRule ^estadistiques$ stats.php
-RewriteRule ^envia-noticies-contacta/$ contact.php
-RewriteRule ^envia-noticies-contacta$ contact.php
-RewriteRule ^arxiu/$ archive.php
-RewriteRule ^arxiu$ archive.php
-RewriteRule ^rss/$ rss.php
-RewriteRule ^rss$ rss.php
-RewriteRule ^cerca/(.*)/pagina/(.*)/$ search.php?query=$1&page=$2
-RewriteRule ^cerca/(.*)/pagina/(.*)$ search.php?query=$1&page=$2
-RewriteRule ^cerca/(.*)/$ search.php?query=$1
-RewriteRule ^cerca/(.*)$ search.php?query=$1
-RewriteRule ^.*\.inc\.php$ error.php?code=404
-RewriteRule ^nadal/$ https://advent.fansubs.cat/2020/
-RewriteRule ^nadal$ https://advent.fansubs.cat/2020/
+
+RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
+RewriteCond %{REQUEST_URI} !error\.php
+RewriteRule \.php$ - [F]
+
+RewriteRule ^pagina/(.+)/?$ index.php?page=$1
+RewriteRule ^rss/?$ rss.php
+RewriteRule ^cerca/(.+)/pagina/(.+)/?$ index.php?query=$1&page=$2
+RewriteRule ^cerca/(.+)/?$ index.php?query=$1
+

@@ -8,6 +8,19 @@ function is_robot(){
 	return !empty($_SERVER['HTTP_USER_AGENT']) && preg_match('/bot|crawl|slurp|spider|mediapartners/i', $_SERVER['HTTP_USER_AGENT']);
 }
 
+function get_cookie_blacklisted_fansub_ids() {
+	$fansub_ids = array();
+	if (!empty($_COOKIE['blacklisted_fansub_ids'])) {
+		$exploded = explode(',',$_COOKIE['blacklisted_fansub_ids']);
+		foreach ($exploded as $id) {
+			if (intval($id)) {
+				array_push($fansub_ids, intval($id));
+			}
+		}
+	}
+	return $fansub_ids;
+}
+
 require_once(dirname(__FILE__)."/db.inc.php");
 ob_start();
 session_set_cookie_params($cookie_duration, '/', $cookie_domain, TRUE, FALSE);

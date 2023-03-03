@@ -29,11 +29,16 @@ if (!empty($user)) {
 <?php
 if ($style_type=='catalogue') {
 ?>
-		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/smoothness/jquery-ui.css" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-		<link rel="stylesheet" href="/js/videojs/video-js.min.css?v=<?php echo $version; ?>" />
-		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo $version; ?>" />
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
+		<link rel="stylesheet" href="/js/videojs/video-js.min.css?v=<?php echo $version; ?>">
+		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo $version; ?>">
+<?php
+}
+if ($style_type=='news') {
+?>
+		<link rel="stylesheet" href="/style/magnific-popup-1.1.0.css">
 <?php
 }
 ?>
@@ -70,6 +75,11 @@ if ($style_type=='catalogue') {
 		<script src="/js/videojs/videojs-hotkeys.min.js?v=<?php echo $version; ?>"></script>
 		<script src="/js/double-slider.js?v=<?php echo $version; ?>"></script>
 		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+<?php
+}
+if ($style_type=='news') {
+?>
+		<script src="/js/jquery.magnific-popup-1.1.0.min.js"></script>
 <?php
 }
 ?>
@@ -314,6 +324,21 @@ if ($style_type=='login') {
 							<form id="search_form">
 								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo empty($header_series_page) ? ' autofocus' : ''; ?>>
 								<i id="search_button" class="fa fa-search" title="Cerca en tot el catàleg"></i>
+							</form>
+						</div>
+<?php
+	} else if ($style_type=='news') {
+?>
+						<a class="groups-button" href="<?php echo $groups_url; ?>" title="Coneix els grups que subtitulen i editen">
+							<span class="fa-stack" style="vertical-align: top;">
+								<i class="fa-solid fa-fw fa-users fa-stack-2x"></i>
+								<i class="fa-solid fa-fw fa-circle-info fa-stack-1x"></i>
+							</span>
+						</a>
+						<div class="search-form">
+							<form id="search_form">
+								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
+								<i id="search_button" class="fa fa-search" title="Cerca a totes les notícies"></i>
 							</form>
 						</div>
 <?php
