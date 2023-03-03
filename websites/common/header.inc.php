@@ -2,9 +2,16 @@
 require_once(dirname(__FILE__)."/user_init.inc.php");
 
 $is_fools_day = (date('d')==28 && date('m')==12);
+$site_theme='dark';
+$is_hentai_site=!empty($_GET['hentai']);
+if (!empty($user)) {
+	$site_theme=($user['site_theme']==1 ? 'light' : 'dark');
+} else if (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') {
+	$site_theme='light';
+}
 ?>
 <!DOCTYPE html>
-<html lang="ca" class="theme-<?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'light' : 'dark'; ?><?php echo !empty($_GET['hentai']) ? ' subtheme-hentai' : ''; ?>">
+<html lang="ca" class="theme-<?php echo ($site_theme=='light') ? 'light' : 'dark'; ?><?php echo $is_hentai_site ? ' subtheme-hentai' : ''; ?>">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +40,6 @@ if ($style_type=='catalogue') {
 		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/common.css?v=<?php echo $version; ?>">
 		<link rel="stylesheet" href="/style/<?php echo $site_config['own_css']; ?>?v=<?php echo $version; ?>">
 <?php
-$is_fools_day = (date('d')==28 && date('m')==12);
 if ($is_fools_day){
 ?>
 		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/28dec.css?v=<?php echo $version; ?>" />
@@ -239,7 +245,7 @@ if ($style_type=='login') {
 					<a class="logo-small" href="<?php echo $main_url; ?>" title="Torna a la pàgina d’inici de Fansubs.cat">
 						<?php include($static_directory.'/common/images/logo.svg'); ?>
 <?php
-		if ($style_type=='catalogue' && !empty($_GET['hentai'])) {
+		if ($style_type=='catalogue' && $is_hentai_site) {
 ?>
 						<div class="catalogues-explicit-category">
 							<span class="fa-stack" style="vertical-align: top;">
@@ -257,11 +263,11 @@ if ($style_type=='login') {
 		if ($style_type=='catalogue') {
 ?>
 					<div class="catalogues-navigation">
-						<a href="<?php echo $anime_url.(!empty($_GET['hentai']) ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
+						<a href="<?php echo $anime_url.($is_hentai_site ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
 						<span class="catalogues-separator">|</span>
-						<a href="<?php echo $manga_url.(!empty($_GET['hentai']) ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
+						<a href="<?php echo $manga_url.($is_hentai_site ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
 <?php
-			if (empty($_GET['hentai'])) {
+			if (!$is_hentai_site) {
 ?>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo $liveaction_url; ?>"<?php echo $cat_config['items_type']=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Acció real</a>
@@ -277,9 +283,9 @@ if ($style_type=='login') {
 					<div class="separator">
 <?php
 	if ($style_type=='catalogue' && empty($hide_hentai) && (is_adult() || is_robot())) {
-		if (empty($_GET['hentai'])) {
+		if (!$is_hentai_site) {
 ?>
-						<a class="hentai-button" href="/hentai<?php echo !empty($_GET['search']) ? '/cerca' : ''; ?>" title="Vés a l'apartat de hentai">
+						<a class="hentai-button" href="/hentai<?php echo !empty($is_searching) ? '/cerca' : ''; ?>" title="Vés a l'apartat de hentai">
 							<span class="fa-stack" style="vertical-align: top;">
 								<i class="fa-solid fa-fw fa-pepper-hot fa-stack-2x"></i>
 								<i class="fa-solid fa-fw fa-plus fa-stack-1x"></i>
@@ -290,15 +296,15 @@ if ($style_type=='login') {
 <?php
 		} else {
 ?>
-						<a class="hentai-button" href="<?php echo !empty($_GET['search']) ? '/cerca' : '/'; ?>" title="Vés al contingut general">
+						<a class="hentai-button" href="<?php echo !empty($is_searching) ? '/cerca' : '/'; ?>" title="Vés al contingut general">
 							<i class="fa-solid fa-fw fa-house-chimney fa-2x"></i>
 						</a>
 <?php
 		}
 	}
-	if ($style_type=='catalogue' && empty($hide_search)) {
+	if ($style_type=='catalogue' && empty($is_searching)) {
 ?>
-						<a class="filter-button" href="<?php echo !empty($_GET['hentai']) ? '/hentai' : ''; ?>/cerca" title="Filtra i mostra tot el catàleg">
+						<a class="filter-button" href="<?php echo $is_hentai_site ? '/hentai' : ''; ?>/cerca" title="Filtra i mostra tot el catàleg">
 							<span class="fa-stack" style="vertical-align: top;">
 								<i class="fa-solid fa-fw fa-grip fa-stack-2x"></i>
 								<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>

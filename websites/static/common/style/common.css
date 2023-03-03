@@ -24,6 +24,7 @@
 :root {
 	--header-height: 4.2rem;
 	--page-padding: 3.6rem;
+	--ultrafast-animation-duration: .2s;
 	--fast-animation-duration: .3s;
 	--slow-animation-duration: .6s;
 }
@@ -41,6 +42,8 @@
 	--neutral-color: 136, 136, 136;
 	/* Used in footer links, they are a bit darker */
 	--neutral-color-links: 102, 102, 102;
+	/* Used for neutral selection in tristate buttons */
+	--neutral-color-more-positive: 180, 180, 180;
 	/* Primary accent color, blue */
 	--primary-color: 106, 160, 248;
 	/* A darker version of blue, used as a background filter */
@@ -205,7 +208,7 @@ a img {
 .social-link {
 	font-size: 3.6rem;
 	text-align: left;
-	transition: color .3s;	
+	transition: color var(--fast-animation-duration);	
 	margin-right: 0.9rem;
 }
 
@@ -252,7 +255,7 @@ a img {
 	min-width: 6rem;
 	font-size: 1.5rem;
 	border-radius: 0.4rem;
-	transition: background .3s;
+	transition: background var(--fast-animation-duration);
 	order: 40;
 }
 
@@ -376,7 +379,7 @@ a img {
 	font-size: 1.3rem;
 	border-radius: 0.6rem;
 	border: 0.1rem solid rgb(var(--negative-color));
-	transition: border .3s;
+	transition: border var(--fast-animation-duration);
 	text-align: center;
 }
 
@@ -410,7 +413,7 @@ svg.main-logo g {
 }
 
 svg.main-logo path#line_1, svg.main-logo path#line_2 {
-	transition: d .3s;
+	transition: d var(--fast-animation-duration);
 }
 
 svg.main-logo path#line_1, svg.main-logo path#line_2, svg.main-logo path#line_3 {
@@ -471,7 +474,7 @@ input:not([type='range']), select, textarea {
 	padding: 0.7rem 2.2rem;
 	font-size: 1.5rem;
 	border-radius: 0.7rem;
-	transition: background .3s;
+	transition: background var(--fast-animation-duration);
 }
 
 .normal-button:hover {

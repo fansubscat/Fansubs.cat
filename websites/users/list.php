@@ -7,7 +7,7 @@ if (empty($user)) {
 	die();
 }
 ?>
-Aquí anirà el perfil de l’usuari.
+Aquí anirà la llista de l’usuari.
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");
 ?>

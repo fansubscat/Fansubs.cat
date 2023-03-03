@@ -1,3 +1,10 @@
+#Allow access from other domains
+SetEnvIf Origin "https://.*\.fansubs\.cat$" AccessControlAllowOrigin=$0
+Header add Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
+Header add Access-Control-Allow-Credentials true
+Header merge Vary Origin
+
+#Normal rules
 RewriteEngine on
 ErrorDocument 404 /error.php?code=404
 ErrorDocument 403 /error.php?code=403
@@ -8,6 +15,7 @@ RewriteCond %{REQUEST_URI} !do_login\.php
 RewriteCond %{REQUEST_URI} !do_register\.php
 RewriteCond %{REQUEST_URI} !do_forgot_password\.php
 RewriteCond %{REQUEST_URI} !do_reset_password\.php
+RewriteCond %{REQUEST_URI} !do_save_site_theme\.php
 RewriteCond %{REQUEST_URI} !error\.php
 RewriteRule \.php$ - [F]
 

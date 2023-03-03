@@ -26,6 +26,12 @@ if (!empty($_SESSION['username'])){
 		$user = mysqli_fetch_assoc($result);
 		$user['password']=NULL;
 		mysqli_free_result($result);
+		$user['series_list_ids']=array();
+		$result = query("SELECT series_id FROM user_series_list WHERE user_id='".$user['id']."'");
+		while ($row = mysqli_fetch_assoc($result)) {
+			array_push($user['series_list_ids'], $row['series_id']);
+		}
+		mysqli_free_result($result);
 	}
 }
 ?>

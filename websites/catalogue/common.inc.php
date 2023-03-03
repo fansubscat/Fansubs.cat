@@ -21,6 +21,7 @@ function get_status($id){
 		case 3:
 			return "partially-completed";
 		case 4:
+			return "abandoned";
 		case 5:
 			return "cancelled";
 		default:
@@ -589,7 +590,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	global $cat_config, $anime_url, $liveaction_url, $manga_url, $static_url, $user;
 	$more_than_one_version = exists_more_than_one_version($series['id']);
 	echo "\t\t\t\t\t\t\t".'<div class="thumbnail-outer">'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<div class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['slug'].'" onmouseenter="prepareFloatingInfo(this);">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['id'].'" onmouseenter="prepareFloatingInfo(this);">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="status-indicator"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlentities($series['name']).'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="clickable-thumbnail" onclick="prepareClickableFloatingInfo(this);"></div>'."\n";
@@ -597,7 +598,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-main">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($series['best_status']).'"></div>'."\n";
 	if (!empty($user)) {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark fas fa-fw fa-bookmark" data-series-id="'.$series['slug'].'" onclick="toggleBookmark(\''.$series['slug'].'\'); return false;"></div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark '.(in_array($series['id'], $user['series_list_ids']) ? 'fas' : 'far').' fa-fw fa-bookmark" data-series-id="'.$series['id'].'" onclick="toggleBookmark('.$series['id'].'); return false;"></div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-title">'.htmlentities($series['name']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-fansub">'.(($more_than_one_version && !$specific_version) ? "Diverses versions" : get_carousel_fansub_info($series['fansub_info'], $series['version_id'])).'</div>'."\n";
@@ -610,7 +611,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'">'.$cat_config['view_now'].'</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
 	if ($series['subtype']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">One-shot</div>'."\n";
 	} else if ($series['subtype']=='serialized') {
@@ -640,14 +641,14 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 }
 
 function print_featured_item($series, $special_day=NULL, $specific_version=TRUE) {
-	global $cat_config, $anime_url, $liveaction_url, $static_url;
+	global $cat_config, $anime_url, $manga_url, $liveaction_url, $static_url;
 	$more_than_one_version = exists_more_than_one_version($series['id']);
-	echo "\t\t\t\t\t\t\t".'<div class="recommendation" data-series-id="'.$series['slug'].'">'."\n";
+	echo "\t\t\t\t\t\t\t".'<div class="recommendation" data-series-id="'.$series['id'].'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.$static_url.'/images/featured/'.$series['id'].'.jpg" alt="'.$series['name'].'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'"><div class="status-indicator"></div><span class="text">'.get_status_description_short($series['best_status']).'</span></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img class="cover" src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img class="cover" src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlentities($series['name']).'</div>'."\n";
@@ -671,7 +672,7 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE)
 
 	echo "\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.($series['type']=='liveaction' ? $liveaction_url : $anime_url).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'">'.$cat_config['view_now'].'</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="fansubs">'.get_recommended_fansub_info($series['fansub_info'], $series['version_id']).'</div>'."\n";
@@ -688,10 +689,10 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE)
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }
 
-function get_cookie_fansub_ids() {
+function get_cookie_blacklisted_fansub_ids() {
 	$fansub_ids = array();
-	if (!empty($_COOKIE['hidden_fansubs'])) {
-		$exploded = explode(',',$_COOKIE['hidden_fansubs']);
+	if (!empty($_COOKIE['blacklisted_fansub_ids'])) {
+		$exploded = explode(',',$_COOKIE['blacklisted_fansub_ids']);
 		foreach ($exploded as $id) {
 			if (intval($id)) {
 				array_push($fansub_ids, intval($id));
@@ -703,8 +704,8 @@ function get_cookie_fansub_ids() {
 
 function get_cookie_viewed_files_ids() {
 	$file_ids = array();
-	if (!empty($_COOKIE['viewed_files'])) {
-		$exploded = explode(',',$_COOKIE['viewed_files']);
+	if (!empty($_COOKIE['viewed_file_ids'])) {
+		$exploded = explode(',',$_COOKIE['viewed_file_ids']);
 		foreach ($exploded as $id) {
 			if (intval($id)) {
 				array_push($file_ids, intval($id));

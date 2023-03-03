@@ -3,7 +3,7 @@
 ?>
 				<div class="footer">
 <?php
-		if ($style_type!='contact') {
+		if (empty($style_type) || $style_type!='contact') {
 ?>
 					<a class="contact-button" href="<?php echo $main_url; ?>/contacta-amb-nosaltres/">Contacta amb nosaltres</a>
 <?php

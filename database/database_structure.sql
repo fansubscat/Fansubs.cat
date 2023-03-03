@@ -287,9 +287,9 @@ CREATE TABLE `user` (
   `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `user_episode_progress` (
+CREATE TABLE `user_file_progress` (
   `user_id` int(11) NOT NULL,
-  `episode_id` int(11) NOT NULL,
+  `file_id` int(11) NOT NULL,
   `is_seen` tinyint(1) NOT NULL DEFAULT 0,
   `progress` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -478,9 +478,9 @@ ALTER TABLE `series`
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `user_episode_progress`
-  ADD PRIMARY KEY (`user_id`,`episode_id`),
-  ADD KEY `user_episode_progress_ibfk_1` (`episode_id`);
+ALTER TABLE `user_file_progress`
+  ADD PRIMARY KEY (`user_id`,`file_id`),
+  ADD KEY `user_file_progress_ibfk_1` (`file_id`);
 
 ALTER TABLE `user_fansub_blacklist`
   ADD PRIMARY KEY (`user_id`,`fansub_id`),
@@ -621,9 +621,13 @@ ALTER TABLE `remote_folder`
 ALTER TABLE `remote_folder_failed_files`
   ADD CONSTRAINT `remote_folder_failed_files_ibfk_1` FOREIGN KEY (`remote_folder_id`) REFERENCES `remote_folder` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `user_episode_progress`
-  ADD CONSTRAINT `user_episode_progress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_episode_progress_ibfk_2` FOREIGN KEY (`episode_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `user_fansub_blacklist`
+  ADD CONSTRAINT `user_fansub_blacklist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_fansub_blacklist_ibfk_2` FOREIGN KEY (`fansub_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `user_file_progress`
+  ADD CONSTRAINT `user_file_progress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_file_progress_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `file` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `user_series_list`
   ADD CONSTRAINT `user_series_list_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -632,10 +636,6 @@ ALTER TABLE `user_series_list`
 ALTER TABLE `user_version_followed`
   ADD CONSTRAINT `user_version_followed_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_version_followed_ibfk_2` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `user_fansub_blacklist`
-  ADD CONSTRAINT `user_fansub_blacklist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_fansub_blacklist_ibfk_2` FOREIGN KEY (`fansub_id`) REFERENCES `episode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `version`
   ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

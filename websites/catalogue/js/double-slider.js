@@ -12,7 +12,7 @@ function applyDoubleSliderFrom(fromSlider, toSlider, fromInput) {
 function applyDoubleSliderTo(fromSlider, toSlider, toInput) {
 	const [from, to] = getDoubleSliderParsedValue(fromSlider, toSlider);
 	fillDoubleSlider(fromSlider, toSlider, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSlider);
-	setDoubleSliderToggleAccessible(toSlider);
+	setDoubleSliderToggleAccessible(fromSlider, toSlider);
 	if (from <= to) {
 		toSlider.value = to;
 		formatDoubleSliderInput(toInput, to);
@@ -42,8 +42,8 @@ function fillDoubleSlider(fromSlider, toSlider, sliderColor, rangeColor, control
 	${sliderColor} 100%)`;
 }
 
-function setDoubleSliderToggleAccessible(toSlider) {
-	if (Number(toSlider.value) <= 0 ) {
+function setDoubleSliderToggleAccessible(fromSlider, toSlider) {
+	if (Number(toSlider.value) <= Number(fromSlider.min) ) {
 		toSlider.style.zIndex = 2;
 	} else {
 		toSlider.style.zIndex = 0;

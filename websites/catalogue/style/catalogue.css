@@ -6,7 +6,6 @@
 	--thumbnail-text-height: 3.5rem;
 	--carousel-scaling: 1.25;
 	--carousel-scaling-mobile: 1.23;
-	--carousel-animation-duration: .3s;
 	--search-layout-width: 28rem;
 	--is-hovering-device: 0;
 }
@@ -93,7 +92,7 @@
 	position: absolute;
 	border-bottom: 0.3rem solid rgb(var(--primary-color));
 	z-index: 1;
-	transition: left .3s ease-in-out, top .3s ease-in-out, width .3s ease-in-out, height .3s ease-in-out;
+	transition: left var(--fast-animation-duration) ease-in-out, top var(--fast-animation-duration) ease-in-out, width var(--fast-animation-duration) ease-in-out, height var(--fast-animation-duration) ease-in-out;
 	pointer-events: none;
 }
 
@@ -133,6 +132,18 @@
 	flex-grow: 1;
 }
 
+.search-layout label {
+	font-size: 1.6rem;
+	margin-bottom: 0.6rem;
+}
+
+.search-layout label.for-checkbox {
+	font-size: 1.5rem;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 0.5rem;
+}
+
 .search-layout-toggle-button {
 	display: none;
 	font-size: 1.8rem;
@@ -153,6 +164,145 @@
 	transform: rotateZ(180deg);
 }
 
+.search-filter-title {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 2.2rem;
+	text-align: left;
+}
+
+.search-checkboxes {
+	text-align: left;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	padding: 0.1rem 0;
+}
+
+.tristate-selector, .singlechoice-selector {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 0.1rem 0;
+}
+
+.singlechoice-selector div:first-child {
+	border-top-left-radius: 0.6rem;
+	border-bottom-left-radius: 0.6rem;
+}
+
+.singlechoice-selector div:last-child {
+	border-top-right-radius: 0.6rem;
+	border-bottom-right-radius: 0.6rem;
+}
+
+.tristate-selector .tristate-button {
+	background-color: rgb(var(--always-positive-color));
+	color: rgb(var(--always-negative-color));
+	font-size: 1.6rem;
+	cursor: pointer;
+	height: 2rem;
+	width: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.singlechoice-selector .singlechoice-button {
+	background-color: rgb(var(--always-positive-color));
+	color: rgb(var(--always-negative-color));
+	font-size: 1.4rem;
+	cursor: pointer;
+	height: 3.8rem;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+	flex-direction: column;
+	white-space: nowrap;
+}
+
+.singlechoice-selector .singlechoice-button i {
+	font-size: 1.6rem;
+	margin-bottom: 0.2rem;
+}
+
+.singlechoice-selector .singlechoice-selected {
+	background-color: rgb(var(--primary-color));
+}
+
+.tristate-selector .tristate-button:hover, .singlechoice-selector .singlechoice-button:hover {
+	filter: brightness(0.9);
+}
+
+.tristate-selector .tristate-include {
+	border-top-left-radius: 0.6rem;
+	border-bottom-left-radius: 0.6rem;
+}
+
+.tristate-selector .tristate-exclude {
+	border-top-right-radius: 0.6rem;
+	border-bottom-right-radius: 0.6rem;
+}
+
+.tristate-selector .tristate-include.tristate-selected {
+	background-color: rgb(var(--primary-color));
+}
+
+.tristate-selector .tristate-neutral.tristate-selected {
+	background-color: rgb(var(--neutral-color-more-positive));
+}
+
+.tristate-selector .tristate-exclude.tristate-selected {
+	background-color: rgb(var(--secondary-color));
+}
+
+.tristate-selector .tristate-description {
+	flex-grow: 1;
+	text-align: left;
+	margin-left: 0.6rem;
+	font-size: 1.5rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.search-checkboxes input[type="checkbox"] {
+	background-color: rgb(var(--always-positive-color));
+	appearance: none;
+	margin: 0;
+	font-size: 1.6rem;
+	cursor: pointer;
+	height: 2rem;
+	width: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: "Font Awesome 6 Free" !important;
+	font-weight: 900;
+	content: '\f00c' !important;
+	color: rgb(var(--always-positive-color));
+}
+
+.search-checkboxes input[type="checkbox"]:hover {
+	filter: brightness(0.9);
+}
+
+.search-checkboxes input[type="checkbox"]:before {
+	font-family: "Font Awesome 6 Free" !important;
+	font-weight: 900;
+	content: '\f00c' !important;
+}
+
+.search-checkboxes input[type="checkbox"]:checked {
+	background-color: rgb(var(--primary-color));
+}
+
+.search-checkboxes input[type="checkbox"]:checked:before {
+	color: rgb(var(--always-negative-color));
+}
+
 .loading-spinner {
 	color: rgb(var(--primary-color));
 }
@@ -163,7 +313,8 @@
 
 .catalogue-search {
 	margin-left: calc(var(--search-layout-width) + var(--page-padding));
-	width: calc(100vw - var(--search-layout-width) - var(--page-padding) - var(--page-padding));
+	margin-right: var(--page-padding);
+	width: calc(100% - var(--search-layout-width));
 }
 
 .catalogue {
@@ -601,8 +752,13 @@
 
 }
 
-.section-content {
-	font-size: 1.3rem;
+.section-empty {
+	font-size: 1.7rem;
+}
+
+.section-empty i {
+	font-size: 4rem;
+	margin-bottom: 0.8rem;
 }
 
 /* Main screen */
@@ -980,7 +1136,7 @@
 .thumbnail {
 	display: flex;
 	position: relative;
-	transition: transform var(--carousel-animation-duration) ease, filter var(--carousel-animation-duration) ease;
+	transition: transform var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
 	width: 100%; 
 	height: calc(100% - var(--thumbnail-text-height));
 	z-index: 1; /*remove this to have free hovering*/
@@ -1227,7 +1383,7 @@
 	position: absolute;
 	top: 0.4rem;
 	left: 0.4rem;
-	transition: opacity var(--carousel-animation-duration) ease;
+	transition: opacity var(--fast-animation-duration) ease;
 	opacity: 1;
 	z-index: 2;
 	backface-visibility: hidden;
@@ -1253,6 +1409,13 @@
 	background: coral;
 }
 
+.search-status .status-indicator {
+	display: inline-block;
+	width: 1.4rem;
+	height: 1.4rem;
+	margin-bottom: -0.2rem;
+}
+
 /* Begin double slider code from https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816 */
 .double-slider-container {
 	position: relative;
@@ -1270,10 +1433,11 @@
 }
 
 .double-slider-input-from, .double-slider-input-to {
+	font-family: "lexend_deca_light", sans-serif;
 	background: rgb(var(--always-positive-color));
 	border-radius: 0.7rem;
 	font-size: 1.5rem;
-	width: 7rem;
+	width: 7.5rem;
 	color: rgb(var(--always-negative-color));
 	margin-top: 1.2rem;
 }
@@ -1299,22 +1463,22 @@ input[type='range'] {
 input[type='range']::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	pointer-events: all;
-	width: 1.2rem;
-	height: 1.2rem;
+	width: 1rem;
+	height: 1rem;
 	background-color: rgb(var(--always-positive-color));
 	border-radius: 50%;
-	box-shadow: 0 0 0 0.1rem rgb(var(--always-negative-color));
+	box-shadow: 0 0 0 0.2rem rgb(var(--primary-color));
 	cursor: pointer;
 }
 
 input[type='range']::-moz-range-thumb {
 	-webkit-appearance: none;
 	pointer-events: all;
-	width: 1.2rem;
-	height: 1.2rem;
+	width: 1rem;
+	height: 1rem;
 	background-color: rgb(var(--always-positive-color));
 	border-radius: 50%;
-	box-shadow: 0 0 0 0.1rem rgb(var(--always-negative-color));
+	box-shadow: 0 0 0 0.2rem rgb(var(--primary-color));
 	cursor: pointer;
 }
 
@@ -1323,7 +1487,7 @@ input[type='range']::-webkit-slider-thumb:hover {
 }
 
 input[type='range']::-webkit-slider-thumb:active {
-	box-shadow: inset 0 0 0.1rem rgb(var(--primary-color)), 0 0 0.4rem rgb(var(--always-negative-color));
+	box-shadow: 0 0 0 0.3rem rgb(var(--primary-color));
 }
 /* End double slider code from https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816 */
 
@@ -1346,7 +1510,7 @@ input[type='range']::-webkit-slider-thumb:active {
 		perspective: unset;
 	}
 	.thumbnail {
-		transition: transform var(--carousel-animation-duration) ease, z-index var(--carousel-animation-duration) ease, filter var(--carousel-animation-duration) ease;
+		transition: transform var(--fast-animation-duration) ease, z-index var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
 	}
 
 	.thumbnail .status-indicator {
@@ -1361,7 +1525,7 @@ input[type='range']::-webkit-slider-thumb:active {
 		backface-visibility: unset;
 		transform: none;
 		opacity: 0;
-		transition: height var(--carousel-animation-duration) ease-out, max-height var(--carousel-animation-duration) ease-out, min-height var(--carousel-animation-duration) ease-out, width var(--carousel-animation-duration) ease-out, max-width var(--carousel-animation-duration) ease-out, min-width var(--carousel-animation-duration) ease-out, opacity var(--carousel-animation-duration) ease-out, z-index var(--carousel-animation-duration) ease-out, transform var(--carousel-animation-duration) ease-out;
+		transition: height var(--fast-animation-duration) ease-out, max-height var(--fast-animation-duration) ease-out, min-height var(--fast-animation-duration) ease-out, width var(--fast-animation-duration) ease-out, max-width var(--fast-animation-duration) ease-out, min-width var(--fast-animation-duration) ease-out, opacity var(--fast-animation-duration) ease-out, z-index var(--fast-animation-duration) ease-out, transform var(--fast-animation-duration) ease-out;
 	}
 
 	.thumbnail:hover {
@@ -1513,7 +1677,7 @@ input[type='range']::-webkit-slider-thumb:active {
 
 	.catalogue-search {
 		margin-left: var(--page-padding);
-		width: calc(100vw - var(--page-padding) - var(--page-padding));
+		width: 100%;
 	}
 
 	.thumbnail-outer .title {
@@ -1534,6 +1698,15 @@ input[type='range']::-webkit-slider-thumb:active {
 
 	.section-title-main i {
 		font-size: 1.9rem;
+	}
+
+	.section-empty {
+		font-size: 1.5rem;
+	}
+
+	.section-empty i {
+		font-size: 3rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.thumbnail .status-indicator {

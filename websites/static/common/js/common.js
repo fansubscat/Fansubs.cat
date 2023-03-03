@@ -1,3 +1,6 @@
+const MAIN_URL = "https://wwwv2.fansubs.cat";
+const USERS_URL='https://usuarisv2.fansubs.cat';
+
 var cookieOptions = {
 	expires: 3650,
 	path: '/',
@@ -27,17 +30,31 @@ function showUserDropdown(){
 }
 
 function toggleSiteTheme() {
+	var newTheme; 
 	if ($('html').hasClass('theme-dark')) {
 		$('html').removeClass('theme-dark');
 		$('html').addClass('theme-light');
-		Cookies.set('site_theme', 'light', cookieOptions);
 		$('.theme-button-text').text('Canvia al tema fosc');
+		newTheme='light';
 	} else {
 		$('html').removeClass('theme-light');
 		$('html').addClass('theme-dark');
-		Cookies.set('site_theme', 'dark', cookieOptions);
 		$('.theme-button-text').text('Canvia al tema clar');
+		newTheme='dark';
 	}
+
+	values = {
+		'site_theme': newTheme
+	};
+
+	Cookies.set('site_theme', newTheme, cookieOptions);
+	$.post({
+		url: USERS_URL+"/do_save_site_theme.php",
+		data: values,
+		xhrFields: {
+			withCredentials: true
+		},
+	});
 }
 
 // Close the dropdown if the user clicks outside of it

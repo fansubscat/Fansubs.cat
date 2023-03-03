@@ -764,18 +764,18 @@ function prepareClickableFloatingInfo(element){
 	$(element).parent().parent().addClass('thumbnail-clicked');
 }
 
-function toggleBookmark(seriesSlug){
+function toggleBookmark(seriesId){
 	var action;
-	if ($('.floating-info-bookmark[data-series-id='+seriesSlug+']').hasClass('fas'))	{
-		$('.floating-info-bookmark[data-series-id='+seriesSlug+']').removeClass('fas').addClass('far');
+	if ($('.floating-info-bookmark[data-series-id='+seriesId+']').hasClass('fas'))	{
+		$('.floating-info-bookmark[data-series-id='+seriesId+']').removeClass('fas').addClass('far');
 		action='remove';
 	} else {
-		$('.floating-info-bookmark[data-series-id='+seriesSlug+']').removeClass('far').addClass('fas');
+		$('.floating-info-bookmark[data-series-id='+seriesId+']').removeClass('far').addClass('fas');
 		action='add';
 	}
 
 	var values = {
-		series_slug: seriesSlug,
+		series_id: seriesId,
 		action: action
 	};
 
@@ -889,9 +889,48 @@ function loadSearchResults() {
 	if (lastSearchRequest!=null) {
 		lastSearchRequest.abort();
 	}
+
+	var statuses = Array();
+	for (element of $('.search-status input:checked')) {
+		statuses.push($(element).attr('data-id'));
+	}
+
+	var demographics = Array();
+	for (element of $('.search-demographics input:checked')) {
+		demographics.push($(element).attr('data-id'));
+	}
+
+	var includedGenres = Array();
+	for (element of $('.tristate-genres .tristate-include.tristate-selected')) {
+		includedGenres.push($(element).parent().attr('data-id'));
+	}
+
+	var excludedGenres = Array();
+	for (element of $('.tristate-genres .tristate-exclude.tristate-selected')) {
+		excludedGenres.push($(element).parent().attr('data-id'));
+	}
+
+	var values = {
+		'min_duration': $('#duration-from-slider').val(),
+		'max_duration': $('#duration-to-slider').val(),
+		'min_rating': $('#rating-from-slider').val(),
+		'max_rating': $('#rating-to-slider').val(),
+		'min_score': $('#score-from-slider').val(),
+		'max_score': $('#score-to-slider').val(),
+		'min_year': $('#year-from-slider').val(),
+		'max_year': $('#year-to-slider').val(),
+		'show_blacklisted_fansubs': $('#catalogue-search-include-blacklisted').is(':checked') ? 1 : 0,
+		'show_lost_content': $('#catalogue-search-include-lost').is(':checked') ? 1 : 0,
+		'type': $('#catalogue-search-type .singlechoice-selected').attr('data-value'),
+		'status[]': statuses,
+		'demographics[]': demographics,
+		'genres_include[]': includedGenres,
+		'genres_exclude[]': excludedGenres
+	};
+
 	lastSearchRequest = $.post({
 		url: ($('.fa-house-chimney').length>0 ? '/hentai' : '')+"/results.php?search=1&query="+encodeURIComponent($('#catalogue-search-query').val()),
-		data: [],
+		data: values,
 		xhrFields: {
 			withCredentials: true
 		},
@@ -945,9 +984,19 @@ function formatDoubleSliderInput(input, value) {
 		} else {
 			input.innerText=Math.floor(value/60)+':'+((value%60)>9 ? (value%60) : '0'+(value%60))+':00';
 		}
+	} else if (format=='pages' || format=='pages-max') {
+		if (value==100 && format=='pages-max') {
+			input.innerText='100+ pàg.';
+		} else {
+			input.innerText=value+' pàg.';
+		}
 	} else if (format=='score') {
 		//Divide by 10
-		input.innerText=Number(value/10).toFixed(1).replaceAll('.',',');
+		if (value==0) {
+			input.innerText="-";
+		} else {
+			input.innerText=Number(value/10).toFixed(1).replaceAll('.',',');
+		}
 	} else if (format=='rating') {
 		if (value==0) {
 			input.innerText='TP';
@@ -962,18 +1011,41 @@ function formatDoubleSliderInput(input, value) {
 		} else {
 			input.innerText='XXX';
 		}
+	} else if (format=='year') {
+		if (value==1950) {
+			input.innerText="-";
+		} else {
+			input.innerText=value;
+		}
 	} else {
 		input.innerText=value;
 	}
 }
 
 function toggleSearchLayout() {
+	$('.thumbnail-clicked').removeClass('thumbnail-clicked');
 	if ($('.search-layout-toggle-button-visible').length>0) {
 		$('.search-layout-toggle-button').removeClass('search-layout-toggle-button-visible');
 		$('.search-layout').removeClass('search-layout-visible');
 	} else {
 		$('.search-layout-toggle-button').addClass('search-layout-toggle-button-visible');
 		$('.search-layout').addClass('search-layout-visible');
+	}
+}
+
+function tristateChange(element) {
+	if (!$(element).hasClass('tristate-selected')) {
+		$(element).parent().find('.tristate-button').removeClass("tristate-selected");
+		$(element).addClass("tristate-selected");
+		loadSearchResults();
+	}
+}
+
+function singlechoiceChange(element) {
+	if (!$(element).hasClass('singlechoice-selected')) {
+		$(element).parent().find('.singlechoice-button').removeClass("singlechoice-selected");
+		$(element).addClass("singlechoice-selected");
+		loadSearchResults();
 	}
 }
 
@@ -1244,19 +1316,21 @@ $(document).ready(function() {
 			const fromInputDuration = $('#duration-from-input')[0];
 			const toInputDuration = $('#duration-to-input')[0];
 			fillDoubleSlider(fromSliderDuration, toSliderDuration, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSliderDuration);
-			setDoubleSliderToggleAccessible(toSliderDuration);
+			setDoubleSliderToggleAccessible(fromSliderDuration, toSliderDuration);
 			fromSliderDuration.oninput = () => applyDoubleSliderFrom(fromSliderDuration, toSliderDuration, fromInputDuration);
 			toSliderDuration.oninput = () => applyDoubleSliderTo(fromSliderDuration, toSliderDuration, toInputDuration);
 			
 			//Rating
-			const fromSliderRating = $('#rating-from-slider')[0];
-			const toSliderRating = $('#rating-to-slider')[0];
-			const fromInputRating = $('#rating-from-input')[0];
-			const toInputRating = $('#rating-to-input')[0];
-			fillDoubleSlider(fromSliderRating, toSliderRating, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSliderRating);
-			setDoubleSliderToggleAccessible(toSliderRating);
-			fromSliderRating.oninput = () => applyDoubleSliderFrom(fromSliderRating, toSliderRating, fromInputRating);
-			toSliderRating.oninput = () => applyDoubleSliderTo(fromSliderRating, toSliderRating, toInputRating);
+			if ($('#rating-from-slider').length>0) {
+				const fromSliderRating = $('#rating-from-slider')[0];
+				const toSliderRating = $('#rating-to-slider')[0];
+				const fromInputRating = $('#rating-from-input')[0];
+				const toInputRating = $('#rating-to-input')[0];
+				fillDoubleSlider(fromSliderRating, toSliderRating, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSliderRating);
+				setDoubleSliderToggleAccessible(fromSliderRating, toSliderRating);
+				fromSliderRating.oninput = () => applyDoubleSliderFrom(fromSliderRating, toSliderRating, fromInputRating);
+				toSliderRating.oninput = () => applyDoubleSliderTo(fromSliderRating, toSliderRating, toInputRating);
+			}
 			
 			//Score
 			const fromSliderScore = $('#score-from-slider')[0];
@@ -1264,9 +1338,19 @@ $(document).ready(function() {
 			const fromInputScore = $('#score-from-input')[0];
 			const toInputScore = $('#score-to-input')[0];
 			fillDoubleSlider(fromSliderScore, toSliderScore, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSliderScore);
-			setDoubleSliderToggleAccessible(toSliderScore);
+			setDoubleSliderToggleAccessible(fromSliderScore, toSliderScore);
 			fromSliderScore.oninput = () => applyDoubleSliderFrom(fromSliderScore, toSliderScore, fromInputScore);
 			toSliderScore.oninput = () => applyDoubleSliderTo(fromSliderScore, toSliderScore, toInputScore);
+			
+			//Year
+			const fromSliderYear = $('#year-from-slider')[0];
+			const toSliderYear = $('#year-to-slider')[0];
+			const fromInputYear = $('#year-from-input')[0];
+			const toInputYear = $('#year-to-input')[0];
+			fillDoubleSlider(fromSliderYear, toSliderYear, 'rgb(var(--neutral-color))', 'rgb(var(--primary-color))', toSliderYear);
+			setDoubleSliderToggleAccessible(fromSliderYear, toSliderYear);
+			fromSliderYear.oninput = () => applyDoubleSliderFrom(fromSliderYear, toSliderYear, fromInputYear);
+			toSliderYear.oninput = () => applyDoubleSliderTo(fromSliderYear, toSliderYear, toInputYear);
 		}
 	} else {
 		$('body').addClass('no-overflow');

@@ -1,5 +1,3 @@
-const MAIN_URL = "https://wwwv2.fansubs.cat";
-
 function clearForms() {
 	$('.invalid').removeClass('invalid');
 	$('.validation-message').text('');
