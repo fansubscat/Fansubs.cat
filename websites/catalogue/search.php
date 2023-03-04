@@ -95,7 +95,7 @@ if (!$is_hentai_site) {
 							<label>Inclou-hi també...</label>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-blacklisted" type="checkbox" oninput="loadSearchResults();" checked>
-								<label for="catalogue-search-include-blacklisted" class="for-checkbox">Fansubs de la llista negra</label>
+								<label for="catalogue-search-include-blacklisted" class="for-checkbox">Els meus fansubs exclosos</label>
 							</div>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-lost" type="checkbox" oninput="loadSearchResults();" checked>

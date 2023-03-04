@@ -77,7 +77,7 @@ else{
 <?php
 		if ($row['image']!=NULL){
 ?>
-							<img class="news-image-mobile" src="<?php echo $static_url.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt=""/>
+									<img class="news-image-mobile" src="<?php echo $static_url.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt=""/>
 <?php
 		}
 ?>
@@ -107,11 +107,11 @@ else{
 <?php
 }
 ?>
-<div id="bottom-navigation">
+					<div id="bottom-navigation">
 <?php
 if ($page>1 && mysqli_num_rows($result)>0){
 ?>
-<a id="nav-newer" href="<?php echo ((isset($_GET['query']) && $_GET['query']!='') ? '/cerca/'.urlencode(urlencode(urldecode($_GET['query']))) : '') . ($page==2 ? '' : '/pagina/'.($page-1)); ?>">← Notícies més noves</a>
+						<a id="nav-newer" class="normal-button" href="<?php echo ((isset($_GET['query']) && $_GET['query']!='') ? '/cerca/'.urlencode(urlencode(urldecode($_GET['query']))) : '') . ($page==2 ? '' : '/pagina/'.($page-1)); ?>">← Notícies més noves</a>
 <?php
 }
 mysqli_free_result($result);
@@ -121,11 +121,11 @@ $result = query("SELECT n.*, f.name fansub_name, IFNULL(f.slug,'fansubs-cat') fa
 
 if (mysqli_num_rows($result)>0){
 ?>
-<a id="nav-older" href="<?php echo ((isset($_GET['query']) && $_GET['query']!='') ? '/cerca/'.urlencode(urlencode(urldecode($_GET['query']))) : '') . '/pagina/'.($page+1); ?>">Notícies més antigues →</a>
+						<a id="nav-older" class="normal-button" href="<?php echo ((isset($_GET['query']) && $_GET['query']!='') ? '/cerca/'.urlencode(urlencode(urldecode($_GET['query']))) : '') . '/pagina/'.($page+1); ?>">Notícies més antigues →</a>
 <?php
 }
 ?>
-</div>
+					</div>
 <?php
 mysqli_free_result($result);
 require_once("../common.fansubs.cat/footer.inc.php");
