@@ -4,33 +4,18 @@ require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
 
+$page_title='Resultats de la cerca';
+
+validate_hentai();
+
+if ($is_hentai_site) {
+	$page_title.=' | Hentai';
+}
+
+$social_url=($is_hentai_site ? '/hentai' : '').'/cerca/'.(!empty($_GET['query']) ? urldecode($_GET['query']) : '');
+
 $is_searching=TRUE;
-$is_hentai_site=!empty($_GET['hentai']);
 $skip_footer=TRUE;
-
-if ($is_hentai_site) {
-	$page_title='Hentai';
-	$hentai_subquery=" AND s.rating='XXX'";
-} else {
-	$hentai_subquery=" AND (s.rating IS NULL OR s.rating<>'XXX')";
-}
-
-if ($cat_config['items_type']=='liveaction' || (!empty($user) && $user['hide_hentai_access']==1)) {
-	$hide_hentai=TRUE;
-}
-
-if ($is_hentai_site) {
-	if (empty($user) && !is_robot()) {
-		header("Location: $users_url/inicia-la-sessio");
-		die();
-	} else if (!is_robot() && !is_adult()) {
-		$_GET['hentai']=0;
-		$_GET['code']=403;
-		http_response_code(403);
-		include('error.php');
-		die();
-	}
-}
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
@@ -39,7 +24,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 						<div class="search-filter-title">Filtres de cerca</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>
-							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo !empty($_GET['query']) ? htmlentities(urldecode($_GET['query'])) : ''; ?>" placeholder="Cerca...">
+							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo !empty($_GET['query']) ? htmlspecialchars(urldecode($_GET['query'])) : ''; ?>" placeholder="Cerca...">
 							<label for="catalogue-search-type">Tipus</label>
 							<div id="catalogue-search-type" class="singlechoice-selector singlechoice-type">
 								<div class="singlechoice-button singlechoice-selected" onclick="singlechoiceChange(this);" data-value="all"><i class="fa fa-fw fa-grip"></i>Tots</div>
@@ -134,7 +119,7 @@ while ($row=mysqli_fetch_assoc($result)) {
 								<div class="tristate-button tristate-include" onclick="tristateChange(this);"><i class="fa fa-fw fa-check"></i></div>
 								<div class="tristate-button tristate-neutral tristate-selected" onclick="tristateChange(this);"><i class="fa fa-fw fa-minus"></i></div>
 								<div class="tristate-button tristate-exclude" onclick="tristateChange(this);"><i class="fa fa-fw fa-xmark"></i></div>
-								<div class="tristate-description"><?php echo htmlentities($row['name']); ?></div>
+								<div class="tristate-description"><?php echo htmlspecialchars($row['name']); ?></div>
 							</div>
 <?php
 }
@@ -150,7 +135,7 @@ while ($row=mysqli_fetch_assoc($result)) {
 								<div class="tristate-button tristate-include" onclick="tristateChange(this);"><i class="fa fa-fw fa-check"></i></div>
 								<div class="tristate-button tristate-neutral tristate-selected" onclick="tristateChange(this);"><i class="fa fa-fw fa-minus"></i></div>
 								<div class="tristate-button tristate-exclude" onclick="tristateChange(this);"><i class="fa fa-fw fa-xmark"></i></div>
-								<div class="tristate-description"><?php echo htmlentities($row['name']); ?></div>
+								<div class="tristate-description"><?php echo htmlspecialchars($row['name']); ?></div>
 							</div>
 <?php
 }

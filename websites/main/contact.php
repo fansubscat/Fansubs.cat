@@ -1,6 +1,6 @@
 <?php
 $page_title="Contacta amb nosaltres";
-$social_url='/contacta-amb-nosaltres/';
+$social_url='/contacta-amb-nosaltres';
 $style_type='contact';
 require_once("../common.fansubs.cat/header.inc.php");
 ?>

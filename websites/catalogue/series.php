@@ -4,45 +4,7 @@ require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
 
-function apply_sort($order_type, $episodes) {
-	switch ($order_type){
-		case 1: // Alphabetic strict sort
-			$titles = array_column($episodes, 'title');
-			$numbers = array_column($episodes, 'number');
-			array_multisort($titles, SORT_ASC, SORT_LOCALE_STRING|SORT_FLAG_CASE, $numbers, SORT_ASC, SORT_NUMERIC, $episodes);
-
-			// Move empty titles to last
-			while(reset($titles) == '') {
-				$k = key($titles);
-				unset($titles[$k]); // remove empty element from beginning of array
-				$titles[$k] = ''; // add it to end of array
-				$v = reset($episodes);
-				$k = key($episodes);
-				unset($episodes[$k]);
-				$episodes[$k] = $v;
-			}
-			return $episodes;
-		case 2: // Alphabetic natural sort
-			$titles = array_column($episodes, 'title');
-			$numbers = array_column($episodes, 'number');
-			array_multisort($titles, SORT_ASC, SORT_NATURAL|SORT_FLAG_CASE, $numbers, SORT_ASC, SORT_NUMERIC, $episodes);
-
-			// Move empty titles to last
-			while(reset($titles) == '') {
-				$k = key($titles);
-				unset($titles[$k]); // remove empty element from beginning of array
-				$titles[$k] = ''; // add it to end of array
-				$v = reset($episodes);
-				$k = key($episodes);
-				unset($episodes[$k]);
-				$episodes[$k] = $v;
-			}
-			return $episodes;
-		case 0: //Normal sort - already sorted from the database
-		default:
-			return $episodes;
-	}
-}
+validate_hentai();
 
 $result = query("SELECT s.*, YEAR(s.publish_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='${cat_config['items_type']}' AND slug='".escape(!empty($_GET['slug']) ? $_GET['slug'] : '')."' GROUP BY s.id");
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
@@ -56,10 +18,16 @@ if (isset($failed)) {
 $Parsedown = new Parsedown();
 $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
+
 $page_title=$series['name'];
-$social_url=$site_config['base_url'].'/'.($series['subtype']==$cat_config['filmsoneshots_db'] ? $cat_config['filmsoneshots_slug'].'/' : $cat_config['serialized_slug'].'/').$series['slug'].(isset($_GET['v']) ? '?v='.(int)$_GET['v'] : '');
+
+if ($is_hentai_site) {
+	$page_title.=' | Hentai';
+}
+
+$social_url='/'.$series['slug'].(isset($_GET['v']) ? '?v='.(int)$_GET['v'] : '');
 $social_description=strip_tags($synopsis);
-$social_image_url=$site_config['base_url'].'/preview/'.$series['slug'].'.jpg';
+$social_image_url=$site_config['base_url'].($is_hentai_site ? '/hentai' : '').'/preview/'.$series['slug'].'.jpg';
 
 $header_series_page=TRUE;
 
@@ -203,7 +171,7 @@ $result_unfiltered = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_autho
 $count_unfiltered = mysqli_num_rows($result_unfiltered);
 mysqli_free_result($result_unfiltered);
 
-$cookie_fansub_ids = (empty($_GET['f']) ? get_cookie_fansub_ids() : array());
+$cookie_fansub_ids = array(); //TODO RESTORE THIS FROM v4: (empty($_GET['f']) ? get_cookie_blacklisted_fansub_ids() : array());
 
 $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot() && empty($_GET['f'])) ? " AND v.status<>5 AND v.status<>4" : "").((!empty($_COOKIE['show_missing']) || !empty($_GET['f'])) ? "" : " AND v.is_missing_episodes=0").((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND (s.rating<>'XXX' OR s.rating IS NULL)" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
@@ -427,7 +395,7 @@ if ($count_unfiltered==0) {
 							'division_id' => $last_division_id,
 							'division_number' => $last_division_number,
 							'division_name' => $last_division_name,
-							'episodes' => apply_sort($version['order_type'],$current_division_episodes)
+							'episodes' => $current_division_episodes
 						));
 					}
 					$last_division_number=$row['division_number'];
@@ -442,7 +410,7 @@ if ($count_unfiltered==0) {
 				'division_id' => $last_division_id,
 				'division_number' => $last_division_number,
 				'division_name' => $last_division_name,
-				'episodes' => apply_sort($version['order_type'],$current_division_episodes)
+				'episodes' => $current_division_episodes
 			));
 
 			$division_available_episodes=array();
@@ -629,7 +597,6 @@ if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
 						<h2 class="section-title-main"><?php echo $cat_config['section_related']; ?></h2>
-						<h3 class="section-subtitle"><?php echo $cat_config['section_related_desc']; ?></h3>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultra)) {
@@ -669,7 +636,6 @@ if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
 						<h2 class="section-title-main"><?php echo $cat_config['section_related_other']; ?></h2>
-						<h3 class="section-subtitle"><?php echo $cat_config['section_related_other_desc']; ?></h3>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultrm)) {

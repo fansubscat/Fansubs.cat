@@ -12,7 +12,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 				</div>
 				<div class="secondary-buttons">
 					<a class="secondary-button" href="<?php echo $news_url; ?>">Notícies</a>
-					<a class="secondary-button" href="/qui-som/">Qui som?</a>
+					<a class="secondary-button" href="/qui-som">Qui som?</a>
 				</div>
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");

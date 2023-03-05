@@ -16,14 +16,21 @@ if (!empty($user)) {
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="theme-color" content="#000000">
+<?php
+if ($is_hentai_site) {
+?>
+		<meta name="rating" content="adult">
+<?php
+}
+?>
 		<meta name="referrer" content="origin">
 		<meta name="twitter:card" content="summary_large_image">
-		<meta property="og:title" content="<?php echo !empty($page_title) ? htmlentities($page_title).' | '.htmlentities($site_config['site_title']) : htmlentities($site_config['site_title']); ?>">
-		<meta property="og:url" content="<?php echo !empty($social_url) ? $site_config['base_url'].$social_url : $site_config['base_url']; ?>">
-		<meta property="og:description" content="<?php echo !empty($social_description) ? htmlentities($social_description) : htmlentities($site_config['site_description']); ?>">
+		<meta property="og:title" content="<?php echo !empty($page_title) ? htmlspecialchars($page_title).' | '.htmlspecialchars($site_config['site_title']) : htmlspecialchars($site_config['site_title']); ?>">
+		<meta property="og:url" content="<?php echo htmlspecialchars(!empty($social_url) ? $site_config['base_url'].$social_url : $site_config['base_url']); ?>">
+		<meta property="og:description" content="<?php echo !empty($social_description) ? htmlspecialchars($social_description) : htmlspecialchars($site_config['site_description']); ?>">
 		<meta property="og:image" content="<?php echo !empty($social_image_url) ? $social_image_url : $site_config['preview_image']; ?>">
 		<meta property="og:image:type" content="image/jpeg">
-		<title><?php echo !empty($page_title) ? htmlentities($page_title).' | '.htmlentities($site_config['site_title']) : htmlentities($site_config['site_title']); ?></title>
+		<title><?php echo !empty($page_title) ? htmlspecialchars($page_title).' | '.htmlspecialchars($site_config['site_title']) : htmlspecialchars($site_config['site_title']); ?></title>
 		<link rel="icon" href="/favicon.png">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css">
 <?php
@@ -47,7 +54,7 @@ if ($style_type=='news') {
 <?php
 if ($is_fools_day){
 ?>
-		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/28dec.css?v=<?php echo $version; ?>" />
+		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/28dec.css?v=<?php echo $version; ?>">
 <?php
 }
 ?>
@@ -79,7 +86,7 @@ if ($style_type=='catalogue') {
 }
 if ($style_type=='news') {
 ?>
-		<script src="/js/jquery.magnific-popup-1.1.0.min.js"></script>
+		<script src="/js/jquery.magnific-popup-1.1.0.min.js?v=<?php echo $version; ?>"></script>
 <?php
 }
 ?>
@@ -292,7 +299,7 @@ if ($style_type=='login') {
 ?>
 					<div class="separator">
 <?php
-	if ($style_type=='catalogue' && empty($hide_hentai) && (is_adult() || is_robot())) {
+	if ($style_type=='catalogue' && $cat_config['items_type']!='liveaction' && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
 		if (!$is_hentai_site) {
 ?>
 						<a class="hentai-button" href="/hentai<?php echo !empty($is_searching) ? '/cerca' : ''; ?>" title="Vés a l'apartat de hentai">

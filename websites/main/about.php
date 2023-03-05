@@ -1,6 +1,6 @@
 <?php
 $page_title="Qui som?";
-$social_url='/qui-som/';
+$social_url='/qui-som';
 $style_type='text';
 require_once("../common.fansubs.cat/header.inc.php");
 ?>

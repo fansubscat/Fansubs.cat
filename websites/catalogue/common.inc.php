@@ -12,6 +12,28 @@ const REGEXP_YOUTUBE='/(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?
 const REGEXP_DL_LINK='/^https:\/\/(?:drive\.google\.com|mega\.nz|mega\.co\.nz).*/';
 const REGEXP_STORAGE='/^storage:\/\/.*/';
 
+function validate_hentai() {
+	global $is_hentai_site, $hentai_subquery, $user, $users_url;
+
+	$is_hentai_site=!empty($_GET['hentai']);
+
+	if ($is_hentai_site) {
+		if (empty($user) && !is_robot()) {
+			header("Location: $users_url/inicia-la-sessio");
+			die();
+		} else if (!is_robot() && !is_adult()) {
+			$_GET['hentai']=0;
+			$_GET['code']=403;
+			http_response_code(403);
+			include('error.php');
+			die();
+		}
+		$hentai_subquery=" AND s.rating='XXX'";
+	} else {
+		$hentai_subquery=" AND (s.rating IS NULL OR s.rating<>'XXX')";
+	}
+}
+
 function get_status($id){
 	switch ($id){
 		case 1:
@@ -553,7 +575,7 @@ function get_recommended_fansub_info($fansub_info, $version_id) {
 	$result_code='';
 
 	foreach ($version_fansubs as $fansub) {
-		$result_code.='<div class="fansub">'.($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').'<span class="text">'.htmlentities($fansub['name']).'</span> <img src="'.$fansub['icon'].'" alt=""></div>'."\n";
+		$result_code.='<div class="fansub">'.($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').'<span class="text">'.htmlspecialchars($fansub['name']).'</span> <img src="'.$fansub['icon'].'" alt=""></div>'."\n";
 	}
 
 	return $result_code;
@@ -567,7 +589,7 @@ function get_carousel_fansub_info($fansub_info, $version_id) {
 		if ($result_code!='') {
 			$result_code.=' + ';
 		}
-		$result_code.=($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').htmlentities($fansub['name']);
+		$result_code.=($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').htmlspecialchars($fansub['name']);
 	}
 
 	return $result_code;
@@ -581,7 +603,7 @@ function get_genres_for_featured($genre_names) {
 	$result_code = '';
 
 	foreach ($genres_array as $genre) {
-		$result_code.='<div class="genre">'.htmlentities($genre).'</div>';
+		$result_code.='<div class="genre">'.htmlspecialchars($genre).'</div>';
 	}
 	return '<i class="fa fa-fw fa-tag fa-flip-horizontal"></i> '.$result_code;
 }
@@ -592,7 +614,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t".'<div class="thumbnail-outer">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['id'].'" onmouseenter="prepareFloatingInfo(this);">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="status-indicator"></div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlentities($series['name']).'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="clickable-thumbnail" onclick="prepareClickableFloatingInfo(this);"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="floating-info">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-main">'."\n";
@@ -600,7 +622,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	if (!empty($user)) {
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark '.(in_array($series['id'], $user['series_list_ids']) ? 'fas' : 'far').' fa-fw fa-bookmark" data-series-id="'.$series['id'].'" onclick="toggleBookmark('.$series['id'].'); return false;"></div>'."\n";
 	}
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-title">'.htmlentities($series['name']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-title">'.htmlspecialchars($series['name']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-fansub">'.(($more_than_one_version && !$specific_version) ? "Diverses versions" : get_carousel_fansub_info($series['fansub_info'], $series['version_id'])).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-synopsis-wrapper">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-synopsis">'."\n";
@@ -627,7 +649,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres-score-wrapper">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres-wrapper">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres">'.htmlentities($series['genre_names']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres">'.htmlspecialchars($series['genre_names']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-score">'.(!empty($series['score']) ? number_format($series['score'],2,","," ") : '-').'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
@@ -635,7 +657,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>';
 	echo "\t\t\t\t\t\t\t\t".'<div class="title">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="ellipsized-title">'.htmlentities($series['name']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="ellipsized-title">'.htmlspecialchars($series['name']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }
@@ -651,7 +673,7 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE)
 	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.($series['type']=='liveaction' ? $liveaction_url : ($series['type']=='anime' ? $anime_url : $manga_url)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img class="cover" src="'.$static_url.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlentities($series['name']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlspecialchars($series['name']).'</div>'."\n";
 	if ($series['subtype']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">One-shot</div>'."\n";
 	} else if ($series['subtype']=='serialized') {

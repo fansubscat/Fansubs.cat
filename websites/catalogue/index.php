@@ -4,30 +4,10 @@ require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
 
-$is_hentai_site=!empty($_GET['hentai']);
+validate_hentai();
 
 if ($is_hentai_site) {
 	$page_title='Hentai';
-	$hentai_subquery=" AND s.rating='XXX'";
-} else {
-	$hentai_subquery=" AND (s.rating IS NULL OR s.rating<>'XXX')";
-}
-
-if ($cat_config['items_type']=='liveaction' || (!empty($user) && $user['hide_hentai_access']==1)) {
-	$hide_hentai=TRUE;
-}
-
-if ($is_hentai_site) {
-	if (empty($user) && !is_robot()) {
-		header("Location: $users_url/inicia-la-sessio");
-		die();
-	} else if (!is_robot() && !is_adult()) {
-		$_GET['hentai']=0;
-		$_GET['code']=403;
-		http_response_code(403);
-		include('error.php');
-		die();
-	}
 }
 
 if (is_robot()) {

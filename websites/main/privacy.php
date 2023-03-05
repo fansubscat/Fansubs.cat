@@ -1,6 +1,6 @@
 <?php
 $page_title="Política de privadesa";
-$social_url='/politica-de-privadesa/';
+$social_url='/politica-de-privadesa';
 $style_type='text';
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
