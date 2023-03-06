@@ -1,5 +1,5 @@
 <?php
-if ($style_type!='login') {
+if (PAGE_STYLE_TYPE!='login') {
 ?>
 				</div>
 <?php

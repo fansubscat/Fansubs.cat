@@ -1,23 +1,27 @@
 <?php
 require_once(dirname(__FILE__)."/user_init.inc.php");
+require_once(dirname(__FILE__)."/common.inc.php");
 
-$is_fools_day = (date('d')==28 && date('m')==12);
-$site_theme='dark';
-$is_hentai_site=!empty($_GET['hentai']);
+define('IS_FOOLS_DAY', date('d')==28 && date('m')==12);
+if (!defined('SITE_IS_HENTAI')) {
+	define('SITE_IS_HENTAI', !empty($_GET['hentai']));
+}
 if (!empty($user)) {
-	$site_theme=($user['site_theme']==1 ? 'light' : 'dark');
+	define('SITE_THEME', $user['site_theme']==1 ? 'light' : 'dark');
 } else if (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') {
-	$site_theme='light';
+	define('SITE_THEME', 'light');
+} else {
+	define('SITE_THEME', 'dark');
 }
 ?>
 <!DOCTYPE html>
-<html lang="ca" class="theme-<?php echo ($site_theme=='light') ? 'light' : 'dark'; ?><?php echo $is_hentai_site ? ' subtheme-hentai' : ''; ?>">
+<html lang="ca" class="theme-<?php echo SITE_THEME; ?><?php echo SITE_IS_HENTAI ? ' subtheme-hentai' : ''; ?>">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="theme-color" content="#000000">
 <?php
-if ($is_hentai_site) {
+if (SITE_IS_HENTAI) {
 ?>
 		<meta name="rating" content="adult">
 <?php
@@ -25,45 +29,44 @@ if ($is_hentai_site) {
 ?>
 		<meta name="referrer" content="origin">
 		<meta name="twitter:card" content="summary_large_image">
-		<meta property="og:title" content="<?php echo !empty($page_title) ? htmlspecialchars($page_title).' | '.htmlspecialchars($site_config['site_title']) : htmlspecialchars($site_config['site_title']); ?>">
-		<meta property="og:url" content="<?php echo htmlspecialchars(!empty($social_url) ? $site_config['base_url'].$social_url : $site_config['base_url']); ?>">
-		<meta property="og:description" content="<?php echo !empty($social_description) ? htmlspecialchars($social_description) : htmlspecialchars($site_config['site_description']); ?>">
-		<meta property="og:image" content="<?php echo !empty($social_image_url) ? $social_image_url : $site_config['preview_image']; ?>">
+		<meta property="og:title" content="<?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?>">
+		<meta property="og:url" content="<?php echo htmlspecialchars(defined('PAGE_PATH') ? SITE_BASE_URL.PAGE_PATH : SITE_BASE_URL); ?>">
+		<meta property="og:description" content="<?php echo htmlspecialchars(defined('PAGE_DESCRIPTION') ? PAGE_DESCRIPTION : SITE_DESCRIPTION); ?>">
+		<meta property="og:image" content="<?php echo htmlspecialchars(defined('PAGE_PREVIEW_IMAGE') ? PAGE_PREVIEW_IMAGE : SITE_PREVIEW_IMAGE); ?>">
 		<meta property="og:image:type" content="image/jpeg">
-		<title><?php echo !empty($page_title) ? htmlspecialchars($page_title).' | '.htmlspecialchars($site_config['site_title']) : htmlspecialchars($site_config['site_title']); ?></title>
+		<title><?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?></title>
 		<link rel="icon" href="/favicon.png">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css">
 <?php
-if ($style_type=='catalogue') {
+if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
-		<link rel="stylesheet" href="/js/videojs/video-js.min.css?v=<?php echo $version; ?>">
-		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo $version; ?>">
+		<link rel="stylesheet" href="/js/videojs/video-js.min.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo VERSION; ?>">
 <?php
-}
-if ($style_type=='news') {
+} else if (PAGE_STYLE_TYPE=='news') {
 ?>
 		<link rel="stylesheet" href="/style/magnific-popup-1.1.0.css">
 <?php
 }
 ?>
-		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/common.css?v=<?php echo $version; ?>">
-		<link rel="stylesheet" href="/style/<?php echo $site_config['own_css']; ?>?v=<?php echo $version; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/common/style/common.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="/style/<?php echo SITE_OWN_CSS; ?>?v=<?php echo VERSION; ?>">
 <?php
-if ($is_fools_day){
+if (IS_FOOLS_DAY){
 ?>
-		<link rel="stylesheet" href="<?php echo $static_url; ?>/common/style/28dec.css?v=<?php echo $version; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/common/style/28dec.css?v=<?php echo VERSION; ?>">
 <?php
 }
 ?>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
-		<script src="<?php echo $static_url; ?>/common/js/common.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/<?php echo $site_config['own_js']; ?>?v=<?php echo $version; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/common/js/common.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/<?php echo SITE_OWN_JS; ?>?v=<?php echo VERSION; ?>"></script>
 <?php
-if ($style_type=='catalogue') {
+if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 		<script>
 			window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = {
@@ -72,29 +75,28 @@ if ($style_type=='catalogue') {
 		</script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="/js/megajs/main.browser-umd.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/videojs/video.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/videostream.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/videojs/lang_ca.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/videojs/videojs-youtube.min.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/videojs/videojs-hotkeys.min.js?v=<?php echo $version; ?>"></script>
-		<script src="/js/double-slider.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/megajs/main.browser-umd.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/videojs/video.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/videostream.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/videojs/lang_ca.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/videojs/videojs-youtube.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/videojs/videojs-hotkeys.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/double-slider.js?v=<?php echo VERSION; ?>"></script>
 		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 <?php
-}
-if ($style_type=='news') {
+} else if (PAGE_STYLE_TYPE=='news') {
 ?>
-		<script src="/js/jquery.magnific-popup-1.1.0.min.js?v=<?php echo $version; ?>"></script>
+		<script src="/js/jquery.magnific-popup-1.1.0.min.js?v=<?php echo VERSION; ?>"></script>
 <?php
 }
 ?>
 	</head>
-	<body class="style-type-<?php echo $style_type; ?><?php echo !empty($extra_body_class) ? ' '.$extra_body_class : ''; ?>">
-		<div class="main-container<?php echo ($style_type=='login' || $style_type=='text' || $style_type=='contact') ? ' obscured-background' : ''; ?>">
+	<body class="style-type-<?php echo PAGE_STYLE_TYPE; ?><?php echo defined('PAGE_EXTRA_BODY_CLASS') ? ' '.PAGE_EXTRA_BODY_CLASS : ''; ?>">
+		<div class="main-container<?php echo (PAGE_STYLE_TYPE=='login' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') ? ' obscured-background' : ''; ?>">
 <?php
-if ($style_type=='login') {
+if (PAGE_STYLE_TYPE=='login') {
 ?>
 			<div class="overlay-page">
 				<div class="login-page">
@@ -119,7 +121,7 @@ if ($style_type=='login') {
 							</div>
 						</div>
 					</div>
-					<div class="login-form<?php echo $style_type=='reset_password' ? ' hidden' : ''; ?>">
+					<div class="login-form<?php echo PAGE_STYLE_TYPE=='reset_password' ? ' hidden' : ''; ?>">
 						<div class="login-form-main">
 							<div class="login-subheader">Inicia la sessió</div>
 							<form id="login-form" onsubmit="return login();" autocomplete="off" novalidate>
@@ -136,7 +138,7 @@ if ($style_type=='login') {
 						</div>
 						<div class="login-footer">Encara no n’ets membre? <a onclick="showRegister();">Registra-t’hi</a></div>
 					</div>
-					<div class="reset-password-form<?php echo $style_type!='reset_password' ? ' hidden' : ''?>">
+					<div class="reset-password-form<?php echo PAGE_STYLE_TYPE!='reset_password' ? ' hidden' : ''?>">
 						<div class="login-form-main">
 							<div class="login-subheader">Restableix la contrasenya</div>
 							<form id="reset-password-form" onsubmit="return resetPassword();" autocomplete="off" novalidate>
@@ -216,7 +218,7 @@ if ($style_type=='login') {
 								<div id="register_birthday_validation" class="validation-message"></div>
 								<div class="checkbox-layout">
 									<input id="register_privacy_policy_accept" type="checkbox" onchange="removeValidationOnlyText('register_privacy_policy_accept');">
-									<label for="register_privacy_policy_accept">Accepto la <a href="<?php echo $main_url; ?>/politica-de-privadesa" target="_blank">política de privadesa</a></label>
+									<label for="register_privacy_policy_accept">Accepto la <a href="<?php echo MAIN_URL; ?>/politica-de-privadesa" target="_blank">política de privadesa</a></label>
 								</div>
 								<div id="register_privacy_policy_accept_validation" class="validation-message"></div>
 								<div id="register_generic_validation" class="validation-message-generic"></div>
@@ -229,7 +231,7 @@ if ($style_type=='login') {
 			</div>
 <?php
 } else {
-	if ($style_type=='catalogue') {
+	if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 			<div data-nosnippet id="overlay" class="hidden">
 				<a id="overlay-close" style="display: none;"><span class="fa fa-times"></span></a>
@@ -251,7 +253,7 @@ if ($style_type=='login') {
 			<div class="main-body">
 				<div class="header">
 <?php
-	if ($style_type=='main') {
+	if (PAGE_STYLE_TYPE=='main') {
 ?>
 					<a class="social-link twitter-link fab fa-fw fa-twitter" href="https://twitter.com/fansubscat" target="_blank" alt="Twitter de Fansubs.cat"></a>
 					<a class="social-link mastodon-link fab fa-fw fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" alt="Mastodon de Fansubs.cat"></a>
@@ -259,10 +261,10 @@ if ($style_type=='login') {
 <?php
 	} else {
 ?>
-					<a class="logo-small" href="<?php echo $main_url; ?>" title="Torna a la pàgina d’inici de Fansubs.cat">
-						<?php include($static_directory.'/common/images/logo.svg'); ?>
+					<a class="logo-small" href="<?php echo MAIN_URL; ?>" title="Torna a la pàgina d’inici de Fansubs.cat">
+						<?php include(STATIC_DIRECTORY.'/common/images/logo.svg'); ?>
 <?php
-		if ($style_type=='catalogue' && $is_hentai_site) {
+		if (PAGE_STYLE_TYPE=='catalogue' && SITE_IS_HENTAI) {
 ?>
 						<div class="catalogues-explicit-category">
 							<span class="fa-stack" style="vertical-align: top;">
@@ -277,17 +279,17 @@ if ($style_type=='login') {
 ?>
 					</a>
 <?php
-		if ($style_type=='catalogue') {
+		if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 					<div class="catalogues-navigation">
-						<a href="<?php echo $anime_url.($is_hentai_site ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
+						<a href="<?php echo ANIME_URL.(SITE_IS_HENTAI ? '/hentai' : ''); ?>"<?php echo CATALOGUE_ITEM_TYPE=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
 						<span class="catalogues-separator">|</span>
-						<a href="<?php echo $manga_url.($is_hentai_site ? '/hentai' : ''); ?>"<?php echo $cat_config['items_type']=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
+						<a href="<?php echo MANGA_URL.(SITE_IS_HENTAI ? '/hentai' : ''); ?>"<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
 <?php
-			if (!$is_hentai_site) {
+			if (!SITE_IS_HENTAI) {
 ?>
 						<span class="catalogues-separator">|</span>
-						<a href="<?php echo $liveaction_url; ?>"<?php echo $cat_config['items_type']=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Acció real</a>
+						<a href="<?php echo LIVEACTION_URL; ?>"<?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Acció real</a>
 <?php
 			}
 ?>
@@ -299,10 +301,10 @@ if ($style_type=='login') {
 ?>
 					<div class="separator">
 <?php
-	if ($style_type=='catalogue' && $cat_config['items_type']!='liveaction' && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
-		if (!$is_hentai_site) {
+	if (PAGE_STYLE_TYPE=='catalogue' && CATALOGUE_ITEM_TYPE!='liveaction' && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
+		if (!SITE_IS_HENTAI) {
 ?>
-						<a class="hentai-button" href="/hentai<?php echo !empty($is_searching) ? '/cerca' : ''; ?>" title="Vés a l'apartat de hentai">
+						<a class="hentai-button" href="/hentai<?php echo defined('PAGE_IS_SEARCH') ? '/cerca' : ''; ?>" title="Vés a l'apartat de hentai">
 							<span class="fa-stack" style="vertical-align: top;">
 								<i class="fa-solid fa-fw fa-pepper-hot fa-stack-2x"></i>
 								<i class="fa-solid fa-fw fa-plus fa-stack-1x"></i>
@@ -313,15 +315,15 @@ if ($style_type=='login') {
 <?php
 		} else {
 ?>
-						<a class="hentai-button" href="<?php echo !empty($is_searching) ? '/cerca' : '/'; ?>" title="Vés al contingut general">
+						<a class="hentai-button" href="<?php echo defined('PAGE_IS_SEARCH') ? '/cerca' : '/'; ?>" title="Vés al contingut general">
 							<i class="fa-solid fa-fw fa-house-chimney fa-2x"></i>
 						</a>
 <?php
 		}
 	}
-	if ($style_type=='catalogue' && empty($is_searching)) {
+	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH')) {
 ?>
-						<a class="filter-button" href="<?php echo $is_hentai_site ? '/hentai' : ''; ?>/cerca" title="Filtra i mostra tot el catàleg">
+						<a class="filter-button" href="<?php echo SITE_IS_HENTAI ? '/hentai' : ''; ?>/cerca" title="Filtra i mostra tot el catàleg">
 							<span class="fa-stack" style="vertical-align: top;">
 								<i class="fa-solid fa-fw fa-grip fa-stack-2x"></i>
 								<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>
@@ -329,14 +331,14 @@ if ($style_type=='login') {
 						</a>
 						<div class="search-form">
 							<form id="search_form">
-								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo empty($header_series_page) ? ' autofocus' : ''; ?>>
+								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo defined('PAGE_IS_SERIES')!='series' ? ' autofocus' : ''; ?>>
 								<i id="search_button" class="fa fa-search" title="Cerca en tot el catàleg"></i>
 							</form>
 						</div>
 <?php
-	} else if ($style_type=='news') {
+	} else if (PAGE_STYLE_TYPE=='news') {
 ?>
-						<a class="groups-button" href="<?php echo $groups_url; ?>" title="Coneix els grups que subtitulen i editen">
+						<a class="groups-button" href="<?php echo GROUPS_URL; ?>" title="Coneix els grups que subtitulen i editen">
 							<span class="fa-stack" style="vertical-align: top;">
 								<i class="fa-solid fa-fw fa-users fa-stack-2x"></i>
 								<i class="fa-solid fa-fw fa-circle-info fa-stack-1x"></i>
@@ -355,7 +357,7 @@ if ($style_type=='login') {
 <?php
 	if (empty($user)) {
 ?>
-					<a class="user-login" href="<?php echo $users_url.'/inicia-la-sessio'; ?>"><span class="user-login-text">Inicia la sessió</span><span class="user-login-icon"><i class="fa fa-fw fa-sign-in"></i></span></a>
+					<a class="user-login" href="<?php echo USERS_URL.'/inicia-la-sessio'; ?>"><span class="user-login-text">Inicia la sessió</span><span class="user-login-icon"><i class="fa fa-fw fa-sign-in"></i></span></a>
 <?php
 	}
 ?>
@@ -364,7 +366,7 @@ if ($style_type=='login') {
 <?php
 	if (!empty($user)) {
 ?>
-							<img alt="Menú de l’usuari" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? $static_url.'/images/avatars/'.$user['avatar_filename'] : $static_url.'/common/images/noavatar.jpg'; ?>">
+							<img alt="Menú de l’usuari" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/common/images/noavatar.jpg'; ?>">
 <?php
 	} else {
 ?>
@@ -378,23 +380,23 @@ if ($style_type=='login') {
 <?php
 	if (!empty($user)) {
 ?>
-								<a href="<?php echo $users_url; ?>"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
-								<a href="<?php echo $users_url.'/la-meva-llista'; ?>"><i class="fa fa-fw fa-list-ul"></i> La meva llista</a>
+								<a href="<?php echo USERS_URL; ?>"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
+								<a href="<?php echo USERS_URL.'/la-meva-llista'; ?>"><i class="fa fa-fw fa-list-ul"></i> La meva llista</a>
 								<hr class="dropdown-separator-secondary">
 <?php
 	}
 ?>
-								<a href="<?php echo $users_url.'/configuracio'; ?>"><i class="fa fa-fw fa-gear"></i> Configuració</a>
+								<a href="<?php echo USERS_URL.'/configuracio'; ?>"><i class="fa fa-fw fa-gear"></i> Configuració</a>
 								<a class="theme-button" onclick="toggleSiteTheme();"><i class="fa fa-fw fa-circle-half-stroke"></i> <span class="theme-button-text"><?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'Canvia al tema fosc' : 'Canvia al tema clar'; ?></span></a>
 								<hr class="dropdown-separator-secondary">
 <?php
 	if (!empty($user)) {
 ?>
-								<a href="<?php echo $users_url.'/tanca-la-sessio'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
+								<a href="<?php echo USERS_URL.'/tanca-la-sessio'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
 <?php
 	} else {
 ?>
-								<a href="<?php echo $users_url.'/inicia-la-sessio'; ?>"><i class="fa fa-fw fa-sign-in"></i> Inicia la sessió</a>
+								<a href="<?php echo USERS_URL.'/inicia-la-sessio'; ?>"><i class="fa fa-fw fa-sign-in"></i> Inicia la sessió</a>
 <?php
 	}
 ?>

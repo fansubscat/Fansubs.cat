@@ -1,5 +1,8 @@
 <?php
-$style_type='text';
+define('PAGE_TITLE', 'Configuració');
+define('PAGE_PATH', '/configuracio');
+define('PAGE_STYLE_TYPE', 'text');
+
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 Aquí anirà la configuració.

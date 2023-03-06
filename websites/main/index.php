@@ -1,19 +1,19 @@
 <?php
-$style_type='main';
+define('PAGE_STYLE_TYPE', 'main');
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
-				<div class="main-site-logo">
-<?php include($static_directory.'/common/images/logo.svg'); ?>
-				</div>
-				<div class="main-buttons">
-					<a class="main-button" href="<?php echo $anime_url; ?>">Anime</a>
-					<a class="main-button" href="<?php echo $manga_url; ?>">Manga</a>
-					<a class="main-button" href="<?php echo $liveaction_url; ?>">Acció real</a>
-				</div>
-				<div class="secondary-buttons">
-					<a class="secondary-button" href="<?php echo $news_url; ?>">Notícies</a>
-					<a class="secondary-button" href="/qui-som">Qui som?</a>
-				</div>
+					<div class="main-site-logo">
+						<?php include(STATIC_DIRECTORY.'/common/images/logo.svg'); ?>
+					</div>
+					<div class="main-buttons">
+						<a class="main-button" href="<?php echo ANIME_URL; ?>">Anime</a>
+						<a class="main-button" href="<?php echo MANGA_URL; ?>">Manga</a>
+						<a class="main-button" href="<?php echo LIVEACTION_URL; ?>">Acció real</a>
+					</div>
+					<div class="secondary-buttons">
+						<a class="secondary-button" href="<?php echo NEWS_URL; ?>">Notícies</a>
+						<a class="secondary-button" href="/qui-som">Qui som?</a>
+					</div>
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");
 ?>

@@ -2,49 +2,49 @@
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 require_once('config_per_site.inc.php');
 
-$version='5.0.0.wip';
+define('VERSION', '5.0.0-WIP');
 
 //Database access
-$db_host="YOUR_DB_HOST_HERE";
-$db_name="YOUR_DB_NAME_HERE";
-$db_user="YOUR_DB_USER_HERE";
-$db_passwd="YOUR_DB_PASS_HERE";
+define('DB_HOST', 'YOUR_DB_HOST_HERE');
+define('DB_NAME', 'YOUR_DB_NAME_HERE');
+define('DB_USER', 'YOUR_DB_USER_HERE');
+define('DB_PASSWORD', 'YOUR_DB_PASS_HERE');
+define('DB_CHARSET', 'utf8mb4');
 
 //Website URLs (no final slash)
-$main_url='https://www.fansubs.cat';
-$advent_url='https://advent.fansubs.cat';
-$anime_url='https://anime.fansubs.cat';
-$manga_url='https://manga.fansubs.cat';
-$liveaction_url='https://accioreal.fansubs.cat';
-$news_url='https://noticies.fansubs.cat';
-$static_url='https://static.fansubs.cat';
-$users_url='https://usuaris.fansubs.cat';
+define('MAIN_URL', 'https://www.fansubs.cat');
+define('ADVENT_URL', 'https://advent.fansubs.cat');
+define('ANIME_URL', 'https://anime.fansubs.cat');
+define('MANGA_URL', 'https://manga.fansubs.cat');
+define('LIVEACTION_URL', 'https://accioreal.fansubs.cat');
+define('NEWS_URL', 'https://noticies.fansubs.cat');
+define('STATIC_URL', 'https://static.fansubs.cat');
+define('USERS_URL', 'https://usuaris.fansubs.cat');
+define('GROUPS_URL', 'https://grups.fansubs.cat');
 
 //Internal path (no final slash)
-$static_directory='/srv/websites/static.fansubs.cat';
+define('STATIC_DIRECTORY', '/srv/websites/static.fansubs.cat');
 
 //Memcached access (for storing remote requests cache)
-$memcached_host='YOUR_MEMCACHED_HOST_HERE';
-$memcached_port=YOUR_MEMCACHED_PORT_HERE;
-$memcached_expiry_time=12*3600;
+define('MEMCACHED_HOST', 'YOUR_MEMCACHED_HOST_HERE');
+define('MEMCACHED_PORT', YOUR_MEMCACHED_PORT_HERE);
+define('MEMCACHED_EXPIRY_TIME', 12*3600);
 
 //Google Drive API key
-$google_drive_api_key='YOUR_GOOGLE_DRIVE_API_KEY_HERE';
+define('GOOGLE_DRIVE_API_KEY', 'YOUR_GOOGLE_DRIVE_API_KEY_HERE');
 
 //Cookie params
-$cookie_duration = 60*60*24*365*10;
-$cookie_domain = ".fansubs.cat";
-
-//Specific data
-$default_fansub_id=28; //"Fansub independent"
+define('COOKIE_DURATION', 60*60*24*365*10);
+define('COOKIE_DOMAIN', '.fansubs.cat');
 
 //Populate this variable if you want to display a message on all listing pages
-$site_message="";
+define('GLOBAL_MESSAGE', '');
+
+//What to use as sender when sending e-mails
+define('EMAIL_ACCOUNT', 'info@fansubs.cat');
 
 //Storages
-$storages = array(
-	'https://YOUR_STORAGE_SERVERS/'
-);
+define('STORAGES', array('https://YOUR_STORAGE_SERVERS/'));
 
 //Storage URL customization
 function generate_storage_url($url) {

@@ -1,5 +1,6 @@
 <?php
 require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("queries.inc.php");
 
 function register_user(){
 	//Check if we have all the data
@@ -45,21 +46,23 @@ function register_user(){
 	}
 
 	//Check if user exists
-	$result = query("SELECT * FROM user WHERE username='$username'");
+	$result = query_user_by_username($username);
 	if (mysqli_num_rows($result)>0){
 		http_response_code(400);
+		mysqli_free_result($result);
 		return array('result' => 'ko', 'code' => 2);
 	}
 
 	//Check if email exists
-	$result = query("SELECT * FROM user WHERE email='$email_address'");
+	$result = query_user_by_email($email_address);
 	if (mysqli_num_rows($result)>0){
 		http_response_code(400);
+		mysqli_free_result($result);
 		return array('result' => 'ko', 'code' => 3);
 	}
 
 	//Insert user
-	query("INSERT INTO user (username, password, email, birthdate, created, created_by, updated, updated_by) VALUES ('".escape($username)."', '".escape($password)."', '".escape($email_address)."', '".escape($birth_year)."-".escape($birth_month)."-".escape($birth_day)."', CURRENT_TIMESTAMP, 'Themself', CURRENT_TIMESTAMP, 'Themself')");
+	query_insert_registered_user($username, $password, $email_address, $birth_year."-".$birth_month."-".$birth_day);
 
 	//Set the session username, the next request will fill in the $user variable automatically
 	$_SESSION['username']=$_POST['username'];

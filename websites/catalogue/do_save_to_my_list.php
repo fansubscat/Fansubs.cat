@@ -1,5 +1,6 @@
 <?php
 require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("queries.inc.php");
 
 function save_to_my_list(){
 	global $user;
@@ -14,16 +15,16 @@ function save_to_my_list(){
 	$action = $_POST['action'];
 
 	//Check if series exists
-	$result = query("SELECT * FROM series WHERE id=$series_id");
+	$result = query_series_by_id($series_id);
 	if (mysqli_num_rows($result)==0){
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 2);
 	}
 	
 	if ($action=='add') {
-		query("REPLACE INTO user_series_list (user_id, series_id) VALUES (".$user['id'].", $series_id)");
+		query_insert_to_user_series_list($user['id'], $series_id);
 	} else {
-		query("DELETE FROM user_series_list WHERE user_id=".$user['id']." AND series_id=$series_id");
+		query_delete_from_user_series_list($user['id'], $series_id);
 	}
 
 	return array('result' => 'ok');

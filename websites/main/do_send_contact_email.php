@@ -3,7 +3,7 @@ require_once("../common.fansubs.cat/db.inc.php");
 
 function sendContactEmail($sender_email, $username, $message) {
 	$message = "$username ($sender_email) ha enviat el següent missatge mitjançant el formulari de contacte de Fansubs.cat:\n\n$message\n\nFansubs.cat.";
-	mail('info@fansubs.cat','Fansubs.cat - Nou missatge', $message,'From: Fansubs.cat <info@fansubs.cat>','-f info@fansubs.cat -F "Fansubs.cat"');
+	mail(EMAIL_ACCOUNT,'Fansubs.cat - Nou missatge', $message,'From: Fansubs.cat <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "Fansubs.cat"');
 }
 
 function contactEmail(){

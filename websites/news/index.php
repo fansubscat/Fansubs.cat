@@ -1,7 +1,8 @@
 <?php
-$style_type='news';
+define('PAGE_STYLE_TYPE', 'news');
 require_once("../common.fansubs.cat/header.inc.php");
 require_once("common.inc.php");
+require_once("queries.inc.php");
 
 //Are we processing a page?
 if (!empty($_GET['page'])) {
@@ -17,28 +18,17 @@ else{
 	$page = 1;
 }
 
-if (!empty($user)) {
-	$blacklist_condition="f.id NOT IN (SELECT ufbl.fansub_id FROM user_fansub_blacklist ufbl WHERE ufbl.user_id=".$user['id'].")";
-} else {
-	$cookie_blacklisted_fansub_ids = get_cookie_blacklisted_fansub_ids();
-	if (count($cookie_blacklisted_fansub_ids)>0) {
-		$blacklist_condition="f.id NOT IN (".implode(',',$cookie_blacklisted_fansub_ids).")";
-	} else {
-		$blacklist_condition="1";
-	}
-}
-
 if (isset($_GET['query']) && $_GET['query']!='') {
-	$search_condition = "(n.title LIKE '%".escape(urldecode($_GET['query']))."%' OR n.contents LIKE '%".escape(urldecode($_GET['query']))."%')";
+	$search_query = urldecode($_GET['query']);
 }
 else{
-	$search_condition = '1';
+	$search_query = NULL;
 }
 
-$result = query("SELECT n.*, f.name fansub_name, IFNULL(f.slug,'fansubs-cat') fansub_slug, f.url fansub_url, f.archive_url FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE $blacklist_condition AND $search_condition ORDER BY n.date DESC LIMIT 20 OFFSET ".(($page-1)*20));
+$result = query_latest_news($user, $search_query, $page, 20);
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> <?php echo (isset($_GET['query']) && $_GET['query']!='') ? 'Resultats de la cerca' : 'Darreres notícies'; ?></h2>
+						<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> <?php echo $search_query!==NULL ? 'Resultats de la cerca' : 'Darreres notícies'; ?></h2>
 <?php
 if (mysqli_num_rows($result)==0){
 ?>
@@ -56,7 +46,7 @@ else{
 <?php
 		if ($row['url']!=NULL){
 ?>
-										<a href="<?php echo $row['url']; ?>"><?php echo $row['title']; ?></a>
+										<a href="<?php echo $row['url']; ?>" target="_blank"><?php echo $row['title']; ?></a>
 <?php
 		}
 		else{
@@ -67,7 +57,7 @@ else{
 ?>
 									</h3>
 									<div class="news-info">
-										<a class="news-fansub" href="<?php echo (!empty($row['fansub_url']) && empty($row['archive_url']) ? $row['fansub_url'] : (!empty($row['archive_url']) ? $row['archive_url'] : '#')); ?>" title="<?php echo $row['fansub_name']; ?>"><img src="<?php echo $static_url.'/images/icons/'.$row['fansub_id'].'.png'; ?>" alt="<?php echo $row['fansub_name']; ?>"> <?php echo $row['fansub_name']; ?></a> • <span class="news-date" title="<?php echo date("d/m/Y \\a \\l\\e\\s H:i:s", strtotime($row['date'])); ?>"><?php echo relative_time(strtotime($row['date'])); ?></span>
+										<a class="news-fansub" href="<?php echo (!empty($row['fansub_url']) && empty($row['archive_url']) ? $row['fansub_url'] : (!empty($row['archive_url']) ? $row['archive_url'] : '#')); ?>" target="_blank"><img src="<?php echo STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png'; ?>" alt=""> <?php echo $row['fansub_name']; ?></a> • <span class="news-date" title="<?php echo date("d/m/Y \\a \\l\\e\\s H:i:s", strtotime($row['date'])); ?>"><?php echo relative_time(strtotime($row['date'])); ?></span>
 									</div>
 									<div class="news-text">
 										<!-- Begin article content -->
@@ -77,7 +67,7 @@ else{
 <?php
 		if ($row['image']!=NULL){
 ?>
-									<img class="news-image-mobile" src="<?php echo $static_url.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt=""/>
+									<img class="news-image-mobile" src="<?php echo STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt=""/>
 <?php
 		}
 ?>
@@ -85,7 +75,7 @@ else{
 		if ($row['url']!=NULL){
 ?>
 									<div class="news-readmore">
-										<a class="normal-button" href="<?php echo $row['url']; ?>"><?php echo "Vés a {$row['fansub_name']}"; ?> ➔</a>
+										<a class="normal-button" href="<?php echo $row['url']; ?>" target="_blank"><?php echo "Vés a {$row['fansub_name']}"; ?> ➔</a>
 									</div>
 <?php
 		}
@@ -95,7 +85,7 @@ else{
 <?php
 		if ($row['image']!=NULL){
 ?>
-							<img class="news-image" src="<?php echo $static_url.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt=""/>
+							<img class="news-image" src="<?php echo STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt=""/>
 <?php
 		}
 ?>
@@ -111,17 +101,17 @@ else{
 <?php
 if ($page>1 && mysqli_num_rows($result)>0){
 ?>
-						<a id="nav-newer" class="normal-button" href="<?php echo ((isset($_GET['query']) && $_GET['query']!='') ? '/cerca/'.urlencode(urlencode(urldecode($_GET['query']))) : '') . ($page==2 ? '' : '/pagina/'.($page-1)); ?>">← Notícies més noves</a>
+						<a id="nav-newer" class="normal-button" href="<?php echo ($search_query!==NULL ? '/cerca/'.urlencode(urlencode($search_query)) : '') . ($page==2 ? '' : '/pagina/'.($page-1)); ?>">← Notícies més noves</a>
 <?php
 }
 mysqli_free_result($result);
 
 //Do the same query but for the next page, to know if it exists
-$result = query("SELECT n.*, f.name fansub_name, IFNULL(f.slug,'fansubs-cat') fansub_slug, f.url fansub_url, f.archive_url FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE $blacklist_condition AND $search_condition ORDER BY n.date DESC LIMIT 20 OFFSET ".(($page)*20));
+$result = query_latest_news($user, $search_query, $page+1, 20);
 
 if (mysqli_num_rows($result)>0){
 ?>
-						<a id="nav-older" class="normal-button" href="<?php echo ((isset($_GET['query']) && $_GET['query']!='') ? '/cerca/'.urlencode(urlencode(urldecode($_GET['query']))) : '') . '/pagina/'.($page+1); ?>">Notícies més antigues →</a>
+						<a id="nav-older" class="normal-button" href="<?php echo ($search_query!==NULL ? '/cerca/'.urlencode(urlencode($search_query)) : '') . '/pagina/'.($page+1); ?>">Notícies més antigues →</a>
 <?php
 }
 ?>

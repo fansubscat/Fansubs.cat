@@ -13,7 +13,7 @@ function log_action($action, $text=NULL){
 	} else {
 		$username = "NULL";
 	}
-	query("INSERT INTO admin_log (action, text, author, date) VALUES ('".escape($action)."',$text,$username, CURRENT_TIMESTAMP)", TRUE);
+	mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('".escape($action)."', $text, $username, CURRENT_TIMESTAMP)");
 }
 
 function crash($string){
@@ -28,22 +28,17 @@ function escape($string){
 	return mysqli_real_escape_string($db_connection, $string);
 }
 
-function query($query, $ignore_crash=FALSE){
+function query($query){
 	global $db_connection;
-	if ($ignore_crash){
-		$result = mysqli_query($db_connection, $query);
-	} else {
-		$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");
-	}
+	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");
 	return $result;
 }
 
-$db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash("No s'ha pogut connectar a la base de dades.");
+//Connect to database and initialize it
+$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash("No s'ha pogut connectar a la base de dades.");
+mysqli_set_charset($db_connection, DB_CHARSET) or crash(mysqli_error($db_connection));
 
+//Connect to Memcached for key-value cache storage
 $memcached = new Memcached();
-$memcached->addServer($memcached_host, $memcached_port);
-
-unset($db_host, $db_name, $db_user, $db_passwd, $memcached_host, $memcached_port);
-
-mysqli_set_charset($db_connection, 'utf8mb4') or crash(mysqli_error($db_connection));
+$memcached->addServer(MEMCACHED_HOST, MEMCACHED_PORT);
 ?>

@@ -1,14 +1,18 @@
 <?php
 require_once('../common.fansubs.cat/db.inc.php');
+require_once('queries.inc.php');
 require_once('libraries/linebreaks4imagettftext.php');
-const IMAGE_WIDTH = 1200;
-const IMAGE_HEIGHT = 628;
-const COVER_WIDTH = 444;
-const COVER_HEIGHT = 628;
-const TEXT_MARGIN = 46;
-$font = $static_directory.'/common/fonts/lexend_deca_regular.ttf';
-$font_bold = $static_directory.'/common/fonts/lexend_deca_bold.ttf';
-$font_light = $static_directory.'/common/fonts/lexend_deca_light.ttf';
+define('IMAGE_WIDTH', 1200);
+define('IMAGE_HEIGHT', 628);
+define('COVER_WIDTH', 444);
+define('COVER_HEIGHT', 628);
+define('TEXT_MARGIN', 46);
+define('FONT_REGULAR', STATIC_DIRECTORY.'/common/fonts/lexend_deca_regular.ttf');
+define('FONT_BOLD', STATIC_DIRECTORY.'/common/fonts/lexend_deca_bold.ttf');
+define('FONT_LIGHT', STATIC_DIRECTORY.'/common/fonts/lexend_deca_light.ttf');
+
+//Obtained from running: `fc-query --format='%{charset}\n' font.ttf`
+define('SUPPORTED_CHARS_REGEX', '/[^\n\x{20}-\x{7e}\x{a0}-\x{17e}\x{18f}\x{192}\x{19d}\x{1a0}-\x{1a1}\x{1af}-\x{1b0}\x{1c4}-\x{1d4}\x{1e6}-\x{1e7}\x{1ea}-\x{1eb}\x{1f1}-\x{1f2}\x{1fa}-\x{21b}\x{22a}-\x{22d}\x{230}-\x{233}\x{237}\x{259}\x{272}\x{2bb}-\x{2bc}\x{2be}-\x{2bf}\x{2c6}-\x{2c8}\x{2cc}\x{2d8}-\x{2dd}\x{300}-\x{304}\x{306}-\x{30c}\x{30f}\x{311}-\x{312}\x{31b}\x{323}-\x{324}\x{326}-\x{328}\x{32e}\x{331}\x{335}\x{394}\x{3a9}\x{3bc}\x{3c0}\x{1e08}-\x{1e09}\x{1e0c}-\x{1e0f}\x{1e14}-\x{1e17}\x{1e1c}-\x{1e1d}\x{1e20}-\x{1e21}\x{1e24}-\x{1e25}\x{1e2a}-\x{1e2b}\x{1e2e}-\x{1e2f}\x{1e36}-\x{1e37}\x{1e3a}-\x{1e3b}\x{1e42}-\x{1e49}\x{1e4c}-\x{1e53}\x{1e5a}-\x{1e5b}\x{1e5e}-\x{1e69}\x{1e6c}-\x{1e6f}\x{1e78}-\x{1e7b}\x{1e80}-\x{1e85}\x{1e8e}-\x{1e8f}\x{1e92}-\x{1e93}\x{1e97}\x{1e9e}\x{1ea0}-\x{1ef9}\x{2007}-\x{200b}\x{2010}\x{2012}-\x{2015}\x{2018}-\x{201a}\x{201c}-\x{201e}\x{2020}-\x{2022}\x{2026}\x{2030}\x{2033}\x{2039}-\x{203a}\x{2044}\x{2070}\x{2074}-\x{2079}\x{2080}-\x{2089}\x{20a1}\x{20a3}-\x{20a4}\x{20a6}-\x{20a7}\x{20a9}\x{20ab}-\x{20ad}\x{20b1}-\x{20b2}\x{20b5}\x{20b9}-\x{20ba}\x{20bc}-\x{20bd}\x{2113}\x{2116}\x{2122}\x{2126}\x{212e}\x{215b}-\x{215e}\x{2202}\x{2205}-\x{2206}\x{220f}\x{2211}-\x{2212}\x{2215}\x{2219}-\x{221a}\x{221e}\x{222b}\x{2248}\x{2260}\x{2264}-\x{2265}\x{25ca}\x{fb01}-\x{fb02}]/u');
 
 ob_start();
 
@@ -96,14 +100,18 @@ function gradient_region(&$img, $x, $y, $width, $height,$src_color, $dest_color,
 	}
 }
 
-$result = query("SELECT s.*, YEAR(s.publish_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='${cat_config['items_type']}' AND slug='".escape(!empty($_GET['slug']) ? $_GET['slug'] : '')."' GROUP BY s.id");
+function get_text_without_missing_glyphs($text) {
+	return preg_replace(SUPPORTED_CHARS_REGEX, ' ', $text);
+}
+
+$result = query_series_data_for_preview_image_by_slug(!empty($_GET['slug']) ? $_GET['slug'] : '');
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 
 if (empty($failed)) {
 	$id = $series['id'];
-	if (TRUE) {//!file_exists($static_directory."/social/series_v5_".$id.".jpg") || filemtime($static_directory."/social/series_v5_".$id.".jpg")<(date('U')-3600*8)) {
-		$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE v.is_hidden=0 AND v.series_id=$id GROUP BY v.id ORDER BY v.status DESC, v.created DESC");
+	if (TRUE) {//!file_exists(STATIC_DIRECTORY."/social/series_v5_".$id.".jpg") || filemtime(STATIC_DIRECTORY."/social/series_v5_".$id.".jpg")<(date('U')-3600*8)) {
+		$result = query_version_data_for_preview_image_by_series_id($id);
 		$versions = array();
 		while ($version = mysqli_fetch_assoc($result)) {
 			$versions[] = $version;
@@ -114,11 +122,11 @@ if (empty($failed)) {
 		$image = imagecreatetruecolor(IMAGE_WIDTH, IMAGE_HEIGHT);
 
 		//Load cover and scale it as needed
-		$cover = imagecreatefromjpeg($static_directory."/images/covers/$id.jpg");
+		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/$id.jpg");
 		$cover = scale_smallest_side($cover, COVER_WIDTH, COVER_HEIGHT);
 
 		//Load bg and scale it as needed
-		$background = imagecreatefromjpeg($static_directory."/images/featured/$id.jpg");
+		$background = imagecreatefromjpeg(STATIC_DIRECTORY."/images/featured/$id.jpg");
 		$background = scale_smallest_side($background, IMAGE_WIDTH, IMAGE_HEIGHT);
 
 		//Darken and blur bg
@@ -141,49 +149,49 @@ if (empty($failed)) {
 		//Type
 		if ($series['type']=='manga') {
 			if ($series['subtype']=='oneshot') {
-				$text = get_comic_type($series['comic_type'])." · One-shot";
+				$text = get_comic_type($series['comic_type'])." • One-shot";
 			} else if ($series['divisions']>1) {
-				$text = get_comic_type($series['comic_type'])." · Serialitzat · ".$series['divisions']." volums · ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
+				$text = get_comic_type($series['comic_type'])." • Serialitzat • ".$series['divisions']." volums • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
 			} else {
-				$text = get_comic_type($series['comic_type'])." · Serialitzat · 1 volum · ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
+				$text = get_comic_type($series['comic_type'])." • Serialitzat • 1 volum • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
 			}
 		} else {
 			if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-				$text = $cat_config['preview_prefix']." · Conjunt de ".$series['number_of_episodes']." films";
+				$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Conjunt de ".$series['number_of_episodes']." films";
 			} else if ($series['subtype']=='movie') {
-				$text = $cat_config['preview_prefix']." · Film";
+				$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Film";
 			} else if ($series['divisions']>1) {
-				$text = $cat_config['preview_prefix']." · Sèrie · ".$series['divisions']." temporades · ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols');
+				$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Sèrie • ".$series['divisions']." temporades • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols');
 			} else {
-				$text = $cat_config['preview_prefix']." · Sèrie · ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols');
+				$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Sèrie • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols');
 			}
 		}
 
 		$gray = imagecolorallocate($image, 0xDC, 0xDC, 0xDC);
-		imagefttext($image, 23.5, 0, TEXT_MARGIN, $current_height, $gray, $font, $text);
+		imagefttext($image, 23.5, 0, TEXT_MARGIN, $current_height, $gray, FONT_REGULAR, get_text_without_missing_glyphs($text));
 		$current_height = $current_height+90;
 
 		//Name
-		$text = \andrewgjohnson\linebreaks4imagettftext(42, 0, $font_bold, $series['name'], IMAGE_WIDTH-COVER_WIDTH-(TEXT_MARGIN+4)*2);
+		$text = \andrewgjohnson\linebreaks4imagettftext(42, 0, FONT_BOLD, get_text_without_missing_glyphs($series['name']), IMAGE_WIDTH-COVER_WIDTH-(TEXT_MARGIN+4)*2);
 		if (substr_count($text, "\n")>2) {
 			$text = implode("\n",array_slice(explode("\n", $text), 0, 3)).'…';
 		}
 		$white = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
 		for ($i=0;$i<=substr_count($text, "\n");$i++) {
-			imagefttext($image, 42, 0, TEXT_MARGIN-4, $current_height, $white, $font_bold, explode("\n", $text)[$i]);
+			imagefttext($image, 42, 0, TEXT_MARGIN-4, $current_height, $white, FONT_BOLD, explode("\n", get_text_without_missing_glyphs($text))[$i]);
 			$current_height = $current_height+54;
 		}
 			$current_height = $current_height-2;
 
 		//Alternate names
 		if (!empty($series['alternate_names'])) {
-			$text = \andrewgjohnson\linebreaks4imagettftext(23.5, 0, $font_light, $series['alternate_names'], IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2);
+			$text = \andrewgjohnson\linebreaks4imagettftext(23.5, 0, FONT_LIGHT, get_text_without_missing_glyphs($series['alternate_names']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2);
 			if (substr_count($text, "\n")>1) {
 				$text = implode("\n",array_slice(explode("\n", $text), 0, 2)).'…';
 			}
 			$yellow = imagecolorallocate($image, 0xA3, 0xA3, 0xA3);
 			for ($i=0;$i<=substr_count($text, "\n");$i++) {
-				imagefttext($image, 23.5, 0, TEXT_MARGIN, $current_height, $yellow, $font_light, explode("\n", $text)[$i]);
+				imagefttext($image, 23.5, 0, TEXT_MARGIN, $current_height, $yellow, FONT_LIGHT, explode("\n", get_text_without_missing_glyphs($text))[$i]);
 				$current_height = $current_height+38;
 			}
 		} else {
@@ -195,8 +203,8 @@ if (empty($failed)) {
 
 		if (!empty($score)) {
 			$orange = imagecolorallocate($image, 0xFF, 0xC1, 0x00);
-			imagefttext($image, 48, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-150, IMAGE_HEIGHT-TEXT_MARGIN, $orange, $font_bold, number_format($score, 2, ',',' '));
-			imagefttext($image, 17, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-10, IMAGE_HEIGHT-TEXT_MARGIN-14, $white, $font, "/10");
+			imagefttext($image, 48, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-150, IMAGE_HEIGHT-TEXT_MARGIN, $orange, FONT_BOLD, number_format($score, 2, ',',' '));
+			imagefttext($image, 17, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-10, IMAGE_HEIGHT-TEXT_MARGIN-14, $white, FONT_REGULAR, "/10");
 		}
 
 		//Genres
@@ -207,7 +215,7 @@ if (empty($failed)) {
 		$lines = 1;
 		//First iteration to know the number of lines
 		foreach ($genres as $genre) {
-			$bbox = imagettfbbox(14, 0, $font_light, $genre);
+			$bbox = imagettfbbox(14, 0, FONT_LIGHT, $genre);
 			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2-8*2-10-140);
 			if (!$fits) {
 				$current_width = TEXT_MARGIN+10;
@@ -219,14 +227,14 @@ if (empty($failed)) {
 		$current_height = IMAGE_HEIGHT-TEXT_MARGIN-9-36*($lines-1);
 		$current_width = TEXT_MARGIN+10;
 		foreach ($genres as $genre) {
-			$bbox = imagettfbbox(14, 0, $font_light, $genre);
+			$bbox = imagettfbbox(14, 0, FONT_LIGHT, $genre);
 			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2-8*2-10-140);
 			if (!$fits) {
 				$current_width = TEXT_MARGIN+10;
 				$current_height = $current_height+36;
 			}
 			imageroundedrectangle($image, $current_width-8, $current_height-20, $current_width+$bbox[2]+8, $current_height+8, 14, $tag_bg_color);
-			imagefttext($image, 14, 0, $current_width+2, $current_height, $white, $font_light, $genre);
+			imagefttext($image, 14, 0, $current_width+2, $current_height, $white, FONT_LIGHT, get_text_without_missing_glyphs($genre));
 			$current_width+=$bbox[2]+6*2+12;
 		}
 
@@ -235,21 +243,21 @@ if (empty($failed)) {
 		$current_fansub_line = 0;
 
 		foreach ($versions as $version) {
-			$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, $font, $version['fansub_name'], IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN);
+			$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, FONT_REGULAR, get_text_without_missing_glyphs($version['fansub_name']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN);
 			$current_height = $current_height - 30;
-			imagefttext($image, 46, 0, TEXT_MARGIN, $current_height+13, get_status_color($image, $version['status']), $font, "•");
+			imagefttext($image, 46, 0, TEXT_MARGIN, $current_height+13, get_status_color($image, $version['status']), FONT_REGULAR, "•");
 			if (substr_count($text, "\n")>0) {
 				$text = implode("\n",array_slice(explode("\n", $text), 0, 1)).'…';
 			}
-			imagefttext($image, 17, 0, TEXT_MARGIN+24, $current_height, $white, $font, $text);
+			imagefttext($image, 17, 0, TEXT_MARGIN+24, $current_height, $white, FONT_REGULAR, get_text_without_missing_glyphs($text));
 			$current_fansub_line++;
 		}
-		imagejpeg($image, $static_directory."/social/series_v5_".$id.".jpg", 80);
+		imagejpeg($image, STATIC_DIRECTORY."/social/series_v5_".$id.".jpg", 80);
 		imagedestroy($image);
 	}
 
 	header('Content-Type: image/jpeg');
-	readfile($static_directory."/social/series_v5_".$id.".jpg");
+	readfile(STATIC_DIRECTORY."/social/series_v5_".$id.".jpg");
 } else {
 	echo "Aquest element no existeix.";
 }

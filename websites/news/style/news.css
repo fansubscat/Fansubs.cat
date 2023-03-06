@@ -72,6 +72,7 @@
 
 .news-image-mobile {
 	display: none;
+	margin-top: 1rem;
 	max-height: 25rem;
 	max-width: 28rem;
 	height: auto;

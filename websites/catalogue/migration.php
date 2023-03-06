@@ -35,15 +35,15 @@ if ($migration_type=='piwigo') {
 		}
 
 		$file_id_for_file=$file_id+10000;
-		$result = query("SELECT m.subtype,m.slug,IF(m.subtype='oneshot',NULL,vo.number) division_number FROM file f LEFT JOIN episode c ON f.episode_id=c.id LEFT JOIN division vo ON c.division_id=vo.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series m ON v.series_id=m.id WHERE m.type='manga' AND f.id=$file_id_for_file");
+		$result = query_manga_division_data_from_file_with_old_piwigo_id($file_id_for_file);
 		if ($row = mysqli_fetch_assoc($result)) {
 			header("HTTP/1.1 301 Moved Permanently");
 			header("Location: /".$row['slug'].(!empty($row['division_number']) ? '#volum-'.$row['division_number'] : ''));
 			mysqli_free_result($result);
 		} else {
 			mysqli_free_result($result);
-			$file_id_for_version=$file_id+1000;
-			$result = query("SELECT m.subtype,m.slug,IF(m.type='oneshot',NULL,v.number) division_number FROM division v LEFT JOIN series m ON v.series_id=m.id WHERE m.type='manga' AND v.id=$file_id_for_version");
+			$file_id_for_division=$file_id+1000;
+			$result = query_manga_division_data_from_division_with_old_piwigo_id($file_id_for_division);
 			if ($row = mysqli_fetch_assoc($result)) {
 				header("HTTP/1.1 301 Moved Permanently");
 				header("Location: /".$row['slug'].(!empty($row['division_number']) ? '#volum-'.$row['division_number'] : ''));
@@ -51,7 +51,7 @@ if ($migration_type=='piwigo') {
 			} else {
 				mysqli_free_result($result);
 				$file_id_for_series=$file_id+1000;
-				$result = query("SELECT m.subtype,m.slug FROM series m WHERE m.type='manga' AND m.id=$file_id_for_series");
+				$result = query_manga_series_data_from_series_with_old_piwigo_id($file_id_for_division);
 				if ($row = mysqli_fetch_assoc($result)) {
 					header("HTTP/1.1 301 Moved Permanently");
 					header("Location: /".$row['slug']);
@@ -69,7 +69,7 @@ if ($migration_type=='piwigo') {
 } else if ($migration_type=='tachiyomi_cache') {
 	$series_id = (!empty($_GET['id']) ? intval($_GET['id']) : 0)+1000;
 	header("HTTP/1.1 301 Moved Permanently");
-	header("Location: https://static.fansubs.cat/images/covers/".$series_id.".jpg");
+	header("Location: ".STATIC_URL."/images/covers/".$series_id.".jpg");
 }
 
 ob_flush();

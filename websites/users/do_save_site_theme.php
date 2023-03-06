@@ -1,5 +1,6 @@
 <?php
 require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("queries.inc.php");
 
 function save_site_theme(){
 	global $user;
@@ -13,7 +14,7 @@ function save_site_theme(){
 	$site_theme = ($_POST['site_theme']=='light' ? 1 : 0);
 
 	//Set attribute
-	query("UPDATE user SET site_theme=${site_theme} WHERE id=${user['id']}");
+	query_update_user_site_theme_by_user_id($site_theme, $user['id']);
 
 	return array('result' => 'ok');
 }

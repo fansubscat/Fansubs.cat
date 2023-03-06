@@ -1,12 +1,12 @@
 <?php
-$style_type='catalogue';
+define('PAGE_STYLE_TYPE', 'catalogue');
 require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
 
 validate_hentai();
 
-$result = query("SELECT s.*, YEAR(s.publish_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='${cat_config['items_type']}' AND slug='".escape(!empty($_GET['slug']) ? $_GET['slug'] : '')."' GROUP BY s.id");
+$result = query("SELECT s.*, YEAR(s.publish_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='".CATALOGUE_ITEM_TYPE."' AND slug='".escape(!empty($_GET['slug']) ? $_GET['slug'] : '')."' GROUP BY s.id");
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
@@ -18,23 +18,22 @@ if (isset($failed)) {
 $Parsedown = new Parsedown();
 $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
-
-$page_title=$series['name'];
-
-if ($is_hentai_site) {
-	$page_title.=' | Hentai';
+if (SITE_IS_HENTAI) {
+	define('PAGE_TITLE', $series['name'].' | Hentai');
+} else {
+	define('PAGE_TITLE', $series['name']);
 }
 
-$social_url='/'.$series['slug'].(isset($_GET['v']) ? '?v='.(int)$_GET['v'] : '');
-$social_description=strip_tags($synopsis);
-$social_image_url=$site_config['base_url'].($is_hentai_site ? '/hentai' : '').'/preview/'.$series['slug'].'.jpg';
+define('PAGE_PATH', '/'.$series['slug'].(isset($_GET['v']) ? '?v='.(int)$_GET['v'] : ''));
+define('PAGE_DESCRIPTION', strip_tags($synopsis));
+define('PAGE_IMAGE_PREVIEW', BASE_URL.(SITE_IS_HENTAI ? '/hentai' : '').'/preview/'.$series['slug'].'.jpg');
 
-$header_series_page=TRUE;
+define('PAGE_IS_SERIES', TRUE);
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 				<div class="series_header">
-					<div class="img" style="background: url('<?php echo $static_url; ?>/images/featured/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
+					<div class="img" style="background: url('<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
 					<div class="series_title_container">
 						<h2 class="series_title"><?php echo htmlspecialchars($series['name']); ?></h2>
 <?php
@@ -49,7 +48,7 @@ if (!empty($series['alternate_names'])) {
 				<div class="flex mobilewrappable">
 					<div class="series_sidebar">
 						<div class="series_sidebar_inner">
-							<div class="sidebar_thumbnail" style="background: url('<?php echo $static_url; ?>/images/covers/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
+							<div class="sidebar_thumbnail" style="background: url('<?php echo STATIC_URL; ?>/images/covers/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
 							<h2 class="section-title">Fitxa tècnica</h2>
 							<div class="sidebar_data">
 <?php
@@ -84,7 +83,7 @@ if ($series['number_of_episodes']>1) {
 <?php
 }
 if ($series['divisions']>1) {
-	if ($cat_config['items_type']=='manga') {
+	if (CATALOGUE_ITEM_TYPE=='manga') {
 ?>
 								<div><span class="fa fa-fw fa-th-large dataicon"></span><strong>Volums:</strong> <?php echo $series['divisions'].' volums'; ?></div>
 <?php
@@ -113,7 +112,7 @@ if (!empty($series['genres'])) {
 							</div>
 <?php
 if (!empty($series['external_id'])) {
-	if ($cat_config['items_type']=='liveaction') {
+	if (CATALOGUE_ITEM_TYPE=='liveaction') {
 ?>
 							<a class="mal-button" href="https://mydramalist.com/<?php echo $series['external_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra'n la fitxa a MyDramaList</a>
 <?php
@@ -131,15 +130,9 @@ if (!empty($series['tadaima_id'])) {
 							<a class="tadaima-button" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><span class="fa fa-comments icon"></span><?php echo get_tadaima_info($series['tadaima_id']); ?></a>
 <?php
 } else {
-	if ($series['subtype']==$cat_config['filmsoneshots_db']) {
 ?>
-							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=<?php echo $cat_config['filmsoneshots_tadaima_forum_id']; ?>" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
+							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 9 : ($series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? 1 : 2 /* TODO */); ?>" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
 <?php
-	} else {
-?>
-							<a class="tadaima-button" href="https://tadaima.cat/posting.php?mode=post&f=<?php echo $cat_config['serialized_tadaima_forum_id']; ?>" target="_blank"><span class="fa fa-comments icon"></span>Comenta-ho a Tadaima.cat</a>
-<?php
-	}
 }
 ?>
 						</div>
@@ -167,7 +160,7 @@ if ($series['has_licensed_parts']==1) {
 ?>
 						</div>
 <?php
-$result_unfiltered = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE ".(!empty($_GET['show_hidden']) ? '1' : 'v.is_hidden=0')." AND v.series_id=".$series['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
+$result_unfiltered = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE ".(!empty($_GET['show_hidden']) ? '1' : 'v.is_hidden=0')." AND v.series_id=".$series['id']." GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
 $count_unfiltered = mysqli_num_rows($result_unfiltered);
 mysqli_free_result($result_unfiltered);
 
@@ -175,7 +168,7 @@ $cookie_fansub_ids = array(); //TODO RESTORE THIS FROM v4: (empty($_GET['f']) ? 
 
 $cookie_extra_conditions = ((empty($_COOKIE['show_cancelled']) && !is_robot() && empty($_GET['f'])) ? " AND v.status<>5 AND v.status<>4" : "").((!empty($_COOKIE['show_missing']) || !empty($_GET['f'])) ? "" : " AND v.is_missing_episodes=0").((empty($_COOKIE['show_hentai']) && !is_robot()) ? " AND (s.rating<>'XXX' OR s.rating IS NULL)" : "").(count($cookie_fansub_ids)>0 ? " AND v.id NOT IN (SELECT v2.id FROM version v2 LEFT JOIN rel_version_fansub vf2 ON v2.id=vf2.version_id WHERE vf2.fansub_id IN (".implode(',',$cookie_fansub_ids).") AND NOT EXISTS (SELECT vf3.version_id FROM rel_version_fansub vf3 WHERE vf3.version_id=vf2.version_id AND vf3.fansub_id NOT IN (".implode(',',$cookie_fansub_ids).")))" : '');
 
-$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE ".(!empty($_GET['show_hidden']) ? '1' : 'v.is_hidden=0')." AND v.series_id=".$series['id']."$cookie_extra_conditions GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
+$result = query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE ".(!empty($_GET['show_hidden']) ? '1' : 'v.is_hidden=0')." AND v.series_id=".$series['id']."$cookie_extra_conditions GROUP BY v.id ORDER BY v.status ASC, v.created ASC");
 $count = mysqli_num_rows($result);
 
 if ($count_unfiltered==0) {
@@ -293,7 +286,7 @@ if ($count_unfiltered==0) {
 ?>
 											<tr>
 												<td class="fansub-icon"><img src="<?php echo $static_url; ?>/images/icons/<?php echo $fansub['id']; ?>.png" alt="" /></td>
-												<td class="fansub-name"><?php echo !empty($fansub['url'] && $fansub['is_historical']==0) ? ('<a href="'.$fansub['url'].'" target="_blank">'.$fansub['name'].(($fansub['id']==$default_fansub_id && !empty($fansub['version_author'])) ? ' ('.$fansub['version_author'].')' : '').'</a>') : $fansub['name'].(($fansub['id']==$default_fansub_id && !empty($fansub['version_author'])) ? ' ('.$fansub['version_author'].')' : ''); ?><?php if ($fansub['status']==0 && $fansub['id']!=$default_fansub_id) { echo '<span class="fansub-inactive"> (actualment inactiu)</span>'; } ?></td>
+												<td class="fansub-name"><?php echo !empty($fansub['url'] && $fansub['is_historical']==0) ? ('<a href="'.$fansub['url'].'" target="_blank">'.$fansub['name'].(($fansub['id']==28 && !empty($fansub['version_author'])) ? ' ('.$fansub['version_author'].')' : '').'</a>') : $fansub['name'].(($fansub['id']==28 && !empty($fansub['version_author'])) ? ' ('.$fansub['version_author'].')' : ''); ?><?php if ($fansub['status']==0 && $fansub['id']!=28) { echo '<span class="fansub-inactive"> (actualment inactiu)</span>'; } ?></td>
 												<td class="fansub-links">
 <?php
 			if (!empty($fansub['downloads_url'])) {

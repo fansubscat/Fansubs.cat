@@ -1,17 +1,18 @@
 <?php
-$style_type='catalogue';
+define('PAGE_STYLE_TYPE', 'catalogue');
 require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
+require_once("queries.inc.php");
 
 validate_hentai();
 
-if ($is_hentai_site) {
-	$page_title='Hentai';
+if (SITE_IS_HENTAI) {
+	define('PAGE_TITLE', 'Hentai');
 }
 
 if (is_robot()) {
-	$extra_body_class='has-carousel';
+	define('PAGE_EXTRA_BODY_CLASS', 'has-carousel');
 }
 
 require_once("../common.fansubs.cat/header.inc.php");
@@ -19,19 +20,20 @@ require_once("../common.fansubs.cat/header.inc.php");
 					<div class="results-layout catalogue-index<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){
-	if ($cat_config['items_type']=='liveaction' || $is_hentai_site) {
+	if (CATALOGUE_ITEM_TYPE=='liveaction' || SITE_IS_HENTAI) {
 		$number=25;
 	} else {
 		$number=50;
 	}
-	$restotalnumber = query("SELECT FLOOR((COUNT(*)-1)/$number)*$number cnt FROM series s WHERE s.type='${cat_config['items_type']}'$hentai_subquery AND EXISTS (SELECT id FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)");
-	$totalnumber = mysqli_fetch_assoc($restotalnumber)['cnt'];
-	mysqli_free_result($restotalnumber);
+
+	$result = query_total_number_of_series();
+	$row = mysqli_fetch_assoc($result);
 ?>
 						<div class="section">
-							<div class="site-message absolutely-real"><?php printf($cat_config['site_robot_message'.($is_hentai_site ? '_hentai' : '')], $totalnumber); ?></div>
+							<div class="site-message absolutely-real"><?php printf(SITE_IS_HENTAI ? CATALOGUE_ROBOT_MESSAGE_HENTAI : CATALOGUE_ROBOT_MESSAGE, $row['cnt']); ?></div>
 						</div>
 <?php
+	mysqli_free_result($result);
 	include("results.php");
 } 
 ?>					</div>

@@ -324,8 +324,8 @@ function initializePlayer(title, method, sourceData){
 	currentVideoTitle = title;
 	currentSourceData = sourceData;
 	var sources = JSON.parse(sourceData);
-	var start='<div class="white-popup"><div style="display: flex; height: 100%; width: 100%; justify-content: center; align-items: center;">';
-	var end='</div></div>';
+	var start='<div class="player-popup">';
+	var end='</div>';
 
 	if (method=='storage' && Date.now()-pageLoadedDate>=48*3600*1000) {
 		parsePlayerError('PAGE_TOO_OLD_ERROR');
@@ -345,9 +345,9 @@ function initializePlayer(title, method, sourceData){
 						sourcesCode+="\n";
 					}
 					if (!enableDebug) {
-						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+(sources[i].url.includes('?') ? '&amp;view_id=' : '?view_id=')+currentViewId+'&amp;file_id='+currentFileId+'" size="'+sources[i].resolution+'"/>';
+						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+(sources[i].url.includes('?') ? '&amp;view_id=' : '?view_id=')+currentViewId+'&amp;file_id='+currentFileId+'" size="'+sources[i].resolution+'">';
 					} else {
-						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+'"/>';
+						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+'">';
 					}
 				}
 				$('#overlay-content').html(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered">'+sourcesCode+'</video>'+end);
@@ -451,7 +451,7 @@ function initializePlayer(title, method, sourceData){
 	}, 0);
 	player.on('ready', function(){
 		if ($('.player_extra_upper').length==0) {
-			$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close vjs-button" title="Tanca" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>')+'</div><div class="player_extra_ended"><div id="player_extra_ended_buttons"><button id="player_extra_ended_replay" class="player_extra_ended_button" onclick="replayCurrentVideo();"><span class="fa fa-undo"></span></button>' + (hasNextVideo() ? '<button id="player_extra_ended_next" class="player_extra_ended_button" onclick="playNextVideo();"><span class="fa fa-step-forward"></span></button>' : '') + '</div></div>').appendTo(".video-js");
+			$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div><div class="player_extra_ended"><div id="player_extra_ended_buttons"><button id="player_extra_ended_replay" class="player_extra_ended_button" onclick="replayCurrentVideo();"><span class="fa fa-undo"></span></button>' + (hasNextVideo() ? '<button id="player_extra_ended_next" class="player_extra_ended_button" onclick="playNextVideo();"><span class="fa fa-step-forward"></span></button>' : '') + '</div></div>').appendTo(".video-js");
 			if (player.techName_=='Html5') {
 				setTimeout(function(){
 					if (player) {
@@ -623,17 +623,6 @@ function shutdownVideoPlayer() {
 	$('#overlay-content').html('');
 }
 
-function showContactScreen(reason) {
-	$('body').addClass('no-overflow');
-	$('#contact-overlay').removeClass('hidden');
-
-	if (reason=='version_lost') {
-		$('#contact-explanation').text("Hi ha capítols de fansubs antics que sabem que van ser publicats, però que actualment no estan disponibles. Si saps on els podem aconseguir, o si ens els pots fer arribar, si us plau, escriu-nos fent servir aquest formulari:");
-	} else {
-		$('#contact-explanation').text("Per a temes relacionats amb els fansubs, és recomanable que escriguis directament al fansub en qüestió fent servir el seu web o Twitter. En cas contrari, ens pots fer arribar comentaris, avisar-nos d'errors o de qualsevol problema o suggeriment per al web fent servir aquest formulari:");
-	}
-}
-
 function showAlert(title, message, showRefresh=false) {
 	if (document.fullscreenElement) {
 		document.exitFullscreen();
@@ -656,7 +645,7 @@ function closeOverlay() {
 	sendVideoTrackingEndAjax();
 	if (!isEmbedPage()) {
 		$('#overlay').addClass('hidden');
-		$('body').removeClass('no-overflow');
+		$('html').removeClass('page-no-overflow');
 	} else {
 		window.parent.postMessage('embedClosed', '*');
 	}
@@ -1079,20 +1068,20 @@ $(document).ready(function() {
 		if (!isEmbedPage()) {
 			$('#overlay-content').html('');
 			$('#overlay').addClass('hidden');
-			$('body').removeClass('no-overflow');
+			$('html').removeClass('page-no-overflow');
 		} else {
 			window.parent.postMessage('embedClosed', '*');
 		}
 	});
 	if (!isEmbedPage()) {
 		$(".manga-reader").click(function(){
-			$('body').addClass('no-overflow');
+			$('html').addClass('page-no-overflow');
 			$('#overlay').removeClass('hidden');
 			beginReaderTracking($(this).attr('data-file-id'));
 			initializeReader($(this).attr('data-file-id'));
 		});
 		$(".video-player").click(function(){
-			$('body').addClass('no-overflow');
+			$('html').addClass('page-no-overflow');
 			$('#overlay').removeClass('hidden');
 			beginVideoTracking($(this).attr('data-file-id'), $(this).attr('data-method'));
 			initializePlayer($(this).attr('data-title'), $(this).attr('data-method'), atob($(this).attr('data-sources')));
@@ -1134,7 +1123,7 @@ $(document).ready(function() {
 			$('#search_form').submit();
 		});
 		$('#options-button').click(function(){
-			$('body').addClass('no-overflow');
+			$('html').addClass('page-no-overflow');
 			$('#options-overlay').removeClass('hidden');
 			$('#options-tooltip').attr('style','');
 			$('#options-tooltip').addClass('hidden');
@@ -1152,7 +1141,7 @@ $(document).ready(function() {
 		$('#options-cancel-button').click(function(){
 			$('#options-form').trigger("reset");
 			$('#options-overlay').addClass('hidden');
-			$('body').removeClass('no-overflow');
+			$('html').removeClass('page-no-overflow');
 		});
 		$('#options-save-button').click(function(){
 			Cookies.set('show_missing', $('#show_missing').prop('checked') ? '1' : '0', cookieOptions);
@@ -1183,11 +1172,6 @@ $(document).ready(function() {
 			$('[id^=show_fansub_]').each(function(){
 				$(this).prop('checked',false);
 			});
-		});
-		$('#contact-cancel-button').click(function(){
-			$('#contact-form').trigger("reset");
-			$('#contact-overlay').addClass('hidden');
-			$('body').removeClass('no-overflow');
 		});
 		$('#alert-ok-button').click(function(){
 			$('#alert-overlay').addClass('hidden');
@@ -1320,7 +1304,7 @@ $(document).ready(function() {
 			toSliderYear.oninput = () => applyDoubleSliderTo(fromSliderYear, toSliderYear, toInputYear);
 		}
 	} else {
-		$('body').addClass('no-overflow');
+		$('html').addClass('page-no-overflow');
 		if ($('#data-item-type').val()=='manga') {
 			beginReaderTracking($('#data-file-id').val());
 			initializeReader($('#data-file-id').val());
