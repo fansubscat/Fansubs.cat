@@ -17,7 +17,7 @@ if (is_robot()) {
 	define('PAGE_EXTRA_BODY_CLASS', 'has-search-results');
 }
 
-define('PAGE_PATH', (SITE_IS_HENTAI ? '/hentai' : '').'/cerca/'.(!empty($_GET['query']) ? urldecode($_GET['query']) : ''));
+define('PAGE_PATH', (SITE_IS_HENTAI ? '/hentai' : '').'/cerca'.(!empty($_GET['query']) ? '/'.$_GET['query'] : ''));
 define('PAGE_IS_SEARCH', TRUE);
 define('SKIP_FOOTER', TRUE);
 
@@ -28,7 +28,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 						<div class="search-filter-title">Filtres de cerca</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>
-							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo !empty($_GET['query']) ? htmlspecialchars(urldecode($_GET['query'])) : ''; ?>" placeholder="Cerca...">
+							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
 							<label for="catalogue-search-type">Tipus</label>
 							<div id="catalogue-search-type" class="singlechoice-selector singlechoice-type">
 								<div class="singlechoice-button singlechoice-selected" onclick="singlechoiceChange(this);" data-value="all"><i class="fa fa-fw fa-grip"></i>Tots</div>
@@ -156,7 +156,7 @@ if (is_robot()){
 ?>					</div>
 					<div class="loading-layout<?php echo !is_robot() ? '' : ' hidden'; ?>">
 						<div class="loading-spinner"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div>
-						<div class="loading-message">S’estan carregant les darreres novetats...</div>
+						<div class="loading-message">S’està carregant el catàleg sencer...</div>
 					</div>
 					<div class="error-layout hidden">
 						<div class="error-icon"><i class="fa-3x fas fa-circle-exclamation"></i></div>

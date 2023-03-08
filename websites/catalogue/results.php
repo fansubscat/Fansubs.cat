@@ -1,5 +1,7 @@
 <?php
-define('PAGE_STYLE_TYPE', 'catalogue');
+if (!defined('PAGE_STYLE_TYPE')) {
+	define('PAGE_STYLE_TYPE', 'catalogue');
+}
 require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
@@ -7,21 +9,12 @@ require_once("queries.inc.php");
 
 validate_hentai_ajax();
 
-define('IS_FOOLS_DAY', date('d')==28 && date('m')==12);
 if (isset($_GET['search'])) {
 	define('PAGE_IS_SEARCH', TRUE);
 }
 
-if (GLOBAL_MESSAGE!='' || IS_FOOLS_DAY){
-?>
-				<div data-nosnippet class="section">
-					<div class="site-message"><?php echo IS_FOOLS_DAY ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.STATIC_URL.'/various/innocents.png" target="_blank" style="color: black;">Més informació</a>.' : GLOBAL_MESSAGE; ?></div>
-				</div>
-<?php
-}
-
 if (defined('PAGE_IS_SEARCH')) {
-	$text = (isset($_GET['query']) ? urldecode($_GET['query']) : "");
+	$text = (isset($_GET['query']) ? $_GET['query'] : "");
 	$is_full_catalogue=($text!='');
 	$subtype='all';
 	$min_score = 0;
@@ -193,7 +186,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	$special_day = NULL;
 	$force_recommended_ids_list = array();
-	if (IS_FOOLS_DAY) {
+	if (date('m-d')=='12-28') {
 		$special_day='fools';
 		$result = query_version_ids_for_fools_day(10);
 	} else if (date('m-d')=='04-23') { // Sant Jordi
@@ -333,6 +326,7 @@ foreach($sections as $section){
 	mysqli_free_result($result);
 	$i++;
 }
+
 if (defined('PAGE_IS_SEARCH')) {
 	require_once("../common.fansubs.cat/footer_text.inc.php");
 }

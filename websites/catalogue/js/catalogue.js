@@ -859,7 +859,7 @@ function initializeCarousels() {
 }
 
 function launchSearch(query) {
-	window.location.href=$('.filter-button').attr('href')+(query!='' ? '/'+encodeURIComponent(encodeURIComponent(query)) : '');
+	window.location.href=$('.filter-button').attr('href')+(query!='' ? '/'+encodeURIComponent(query) : '');
 }
 
 function loadSearchResults() {
@@ -867,7 +867,7 @@ function loadSearchResults() {
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
 		$('.loading-message').text('S’està carregant el catàleg sencer...');
 	} else {
-		history.replaceState(null, null, $('.search-base-url').val()+(query!='' ? '/'+encodeURIComponent(encodeURIComponent(query)) : ''));
+		history.replaceState(null, null, $('.search-base-url').val()+(query!='' ? '/'+encodeURIComponent(query) : ''));
 		$('.loading-message').text('S’estan carregant els resultats de la cerca...');
 	}
 
@@ -918,7 +918,7 @@ function loadSearchResults() {
 	};
 
 	lastSearchRequest = $.post({
-		url: ($('.catalogues-explicit-category').length>0 ? '/hentai' : '')+"/results.php?search=1&query="+encodeURIComponent(encodeURIComponent($('#catalogue-search-query').val())),
+		url: ($('.catalogues-explicit-category').length>0 ? '/hentai' : '')+"/results.php?search=1&query="+encodeURIComponent($('#catalogue-search-query').val()),
 		data: values,
 		xhrFields: {
 			withCredentials: true
@@ -1245,7 +1245,7 @@ $(document).ready(function() {
 			if ($('.search-layout').length>0) {
 				var scroll = $(window).scrollTop();
 				var top = $('.main-section')[0].offsetTop;// + (2.4 * parseFloat(getComputedStyle(document.documentElement).fontSize));
-				var headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height-catalogue').replace('rem',''))*parseFloat(getComputedStyle(document.documentElement).fontSize);
+				var headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height-local').replace('rem',''))*parseFloat(getComputedStyle(document.documentElement).fontSize);
 				if (scroll>top) {
 					$('.search-layout').css({'top': '0', 'height': 'calc(100%)'});
 					$('.loading-layout').css({'top': '0', 'height': 'calc(100%)'});

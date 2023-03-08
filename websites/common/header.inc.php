@@ -89,6 +89,7 @@ if (PAGE_STYLE_TYPE=='catalogue') {
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>
 		<script src="/js/jquery.magnific-popup-1.1.0.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="/js/double-slider.js?v=<?php echo VERSION; ?>"></script>
 <?php
 }
 ?>
@@ -331,22 +332,22 @@ if (PAGE_STYLE_TYPE=='login') {
 						</a>
 						<div class="search-form">
 							<form id="search_form">
-								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
+								<input id="search_query" type="text" value="" placeholder="Cerca..." autocomplete="off">
 								<i id="search_button" class="fa fa-search" title="Cerca en tot el catàleg"></i>
 							</form>
 						</div>
 <?php
 	} else if (PAGE_STYLE_TYPE=='news' && !defined('PAGE_IS_SEARCH')) {
 ?>
-						<a class="groups-button" href="<?php echo GROUPS_URL; ?>" title="Coneix els grups que subtitulen i editen">
+						<a class="filter-button" href="/cerca" title="Filtra i mostra totes les notícies">
 							<span class="fa-stack" style="vertical-align: top;">
-								<i class="fa-solid fa-fw fa-users fa-stack-2x"></i>
-								<i class="fa-solid fa-fw fa-circle-info fa-stack-1x"></i>
+								<i class="fa-solid fa-fw fa-grip-lines fa-stack-2x"></i>
+								<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>
 							</span>
 						</a>
 						<div class="search-form">
 							<form id="search_form">
-								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
+								<input id="search_query" type="text" value="" placeholder="Cerca..." autocomplete="off">
 								<i id="search_button" class="fa fa-search" title="Cerca a totes les notícies"></i>
 							</form>
 						</div>
@@ -404,6 +405,16 @@ if (PAGE_STYLE_TYPE=='login') {
 						</div>
 					</div>
 				</div>
+<?php
+
+if (GLOBAL_MESSAGE!='' || IS_FOOLS_DAY){
+?>
+				<div data-nosnippet class="section">
+					<div class="site-message"><?php echo IS_FOOLS_DAY ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.STATIC_URL.'/various/innocents.png" target="_blank" style="color: black;">Més informació</a>.' : GLOBAL_MESSAGE; ?></div>
+				</div>
+<?php
+}
+?>
 				<div class="main-section">
 <?php
 }
