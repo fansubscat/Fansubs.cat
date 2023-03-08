@@ -13,7 +13,7 @@
 	font-size: 3rem;
 	border-radius: 0.5rem;
 	border: 0.3rem solid rgb(var(--positive-color));
-	transition: border .3s, letter-spacing .3s;
+	transition: border var(--fast-animation-duration), letter-spacing var(--fast-animation-duration), background var(--fast-animation-duration);
 	text-align: center;
 }
 

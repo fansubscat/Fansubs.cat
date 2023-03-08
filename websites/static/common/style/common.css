@@ -379,7 +379,7 @@ a img {
 	font-size: 1.3rem;
 	border-radius: 0.6rem;
 	border: 0.1rem solid rgb(var(--negative-color));
-	transition: border var(--fast-animation-duration);
+	transition: border var(--fast-animation-duration), background var(--fast-animation-duration);
 	text-align: center;
 }
 

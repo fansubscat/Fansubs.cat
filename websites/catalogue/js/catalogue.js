@@ -918,7 +918,7 @@ function loadSearchResults() {
 	};
 
 	lastSearchRequest = $.post({
-		url: ($('.fa-house-chimney').length>0 ? '/hentai' : '')+"/results.php?search=1&query="+encodeURIComponent(encodeURIComponent($('#catalogue-search-query').val())),
+		url: ($('.catalogues-explicit-category').length>0 ? '/hentai' : '')+"/results.php?search=1&query="+encodeURIComponent(encodeURIComponent($('#catalogue-search-query').val())),
 		data: values,
 		xhrFields: {
 			withCredentials: true
@@ -945,7 +945,7 @@ function loadCatalogueIndex() {
 	$('.error-layout').addClass('hidden');
 	$('.results-layout').addClass('hidden');
 	$.post({
-		url: ($('.fa-house-chimney').length>0 ? '/hentai' : '')+"/results.php",
+		url: ($('.catalogues-explicit-category').length>0 ? '/hentai' : '')+"/results.php",
 		data: [],
 		xhrFields: {
 			withCredentials: true
@@ -1260,6 +1260,11 @@ $(document).ready(function() {
 			}
 		});
 
+		if ($('#search_query').length>0) {
+			var temp = $('#search_query').val();
+			$('#search_query').focus().val('').val(temp);
+		}
+
 		if ($('.search-layout').length>0) {
 			//Duration
 			const fromSliderDuration = $('#duration-from-slider')[0];
@@ -1302,6 +1307,9 @@ $(document).ready(function() {
 			setDoubleSliderToggleAccessible(fromSliderYear, toSliderYear);
 			fromSliderYear.oninput = () => applyDoubleSliderFrom(fromSliderYear, toSliderYear, fromInputYear);
 			toSliderYear.oninput = () => applyDoubleSliderTo(fromSliderYear, toSliderYear, toInputYear);
+
+			var temp = $('#catalogue-search-query').val();
+			$('#catalogue-search-query').focus().val('').val(temp);
 		}
 	} else {
 		$('html').addClass('page-no-overflow');

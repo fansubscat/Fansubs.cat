@@ -301,7 +301,7 @@ if (PAGE_STYLE_TYPE=='login') {
 ?>
 					<div class="separator">
 <?php
-	if (PAGE_STYLE_TYPE=='catalogue' && CATALOGUE_ITEM_TYPE!='liveaction' && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
+	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH') && !defined('PAGE_IS_SERIES') && CATALOGUE_ITEM_TYPE!='liveaction' && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
 		if (!SITE_IS_HENTAI) {
 ?>
 						<a class="hentai-button" href="/hentai<?php echo defined('PAGE_IS_SEARCH') ? '/cerca' : ''; ?>" title="Vés a l'apartat de hentai">
@@ -331,12 +331,12 @@ if (PAGE_STYLE_TYPE=='login') {
 						</a>
 						<div class="search-form">
 							<form id="search_form">
-								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo defined('PAGE_IS_SERIES')!='series' ? ' autofocus' : ''; ?>>
+								<input id="search_query" type="text" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
 								<i id="search_button" class="fa fa-search" title="Cerca en tot el catàleg"></i>
 							</form>
 						</div>
 <?php
-	} else if (PAGE_STYLE_TYPE=='news') {
+	} else if (PAGE_STYLE_TYPE=='news' && !defined('PAGE_IS_SEARCH')) {
 ?>
 						<a class="groups-button" href="<?php echo GROUPS_URL; ?>" title="Coneix els grups que subtitulen i editen">
 							<span class="fa-stack" style="vertical-align: top;">
