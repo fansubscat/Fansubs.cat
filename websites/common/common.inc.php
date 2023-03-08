@@ -20,4 +20,17 @@ function get_cookie_blacklisted_fansub_ids() {
 	}
 	return $fansub_ids;
 }
+
+function get_cookie_viewed_files_ids() {
+	$file_ids = array();
+	if (!empty($_COOKIE['viewed_file_ids'])) {
+		$exploded = explode(',',$_COOKIE['viewed_file_ids']);
+		foreach ($exploded as $id) {
+			if (intval($id)) {
+				array_push($file_ids, intval($id));
+			}
+		}
+	}
+	return $file_ids;
+}
 ?>

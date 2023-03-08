@@ -13,6 +13,10 @@ if (SITE_IS_HENTAI) {
 	define('PAGE_TITLE', 'Resultats de la cerca');
 }
 
+if (is_robot()) {
+	define('PAGE_EXTRA_BODY_CLASS', 'has-search-results');
+}
+
 define('PAGE_PATH', (SITE_IS_HENTAI ? '/hentai' : '').'/cerca/'.(!empty($_GET['query']) ? urldecode($_GET['query']) : ''));
 define('PAGE_IS_SEARCH', TRUE);
 define('SKIP_FOOTER', TRUE);
@@ -143,7 +147,7 @@ mysqli_free_result($result);
 ?>
 						</form>
 					</div>
-					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
+					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-left"></i></div>
 					<div class="results-layout catalogue-search<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){

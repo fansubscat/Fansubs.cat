@@ -8,6 +8,6 @@ RewriteRule \.php$ - [F]
 
 RewriteRule ^pagina/(.+)/?$ index.php?page=$1
 RewriteRule ^rss/?$ rss.php
+RewriteRule ^cerca/?$ index.php?query=
 RewriteRule ^cerca/(.+)/pagina/(.+)/?$ index.php?query=$1&page=$2
 RewriteRule ^cerca/(.+)/?$ index.php?query=$1
-

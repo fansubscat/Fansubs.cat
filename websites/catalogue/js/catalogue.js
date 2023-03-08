@@ -737,7 +737,7 @@ function prepareFloatingInfo(element){
 	var regex = /translate3d\((.*)px, 0px, 0px\)/g;
 	var inCarouselPage = $('.has-carousel').length>0;
 	var translation = (inCarouselPage ? parseInt(regex.exec(element.parentNode.parentNode.parentNode.style.transform)[1]) : 0);
-	var maxWidth = $(window).width();
+	var maxWidth = $('.search-layout').length>0 ? ($(window).width() - $('.search-layout').width()) : $(window).width();
 	$(element).removeClass('floating-info-right').removeClass('floating-info-left');
 	if ((offset[0]+translation+element.clientWidth*1.25*2)<maxWidth){
 		//We can fit it: right-side
@@ -864,7 +864,7 @@ function launchSearch(query) {
 
 function loadSearchResults() {
 	var query = $('#catalogue-search-query').val();
-	if (lastSearchRequest==null && query=='') {
+	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
 		$('.loading-message').text('S’està carregant el catàleg sencer...');
 	} else {
 		history.replaceState(null, null, $('.search-base-url').val()+(query!='' ? '/'+encodeURIComponent(encodeURIComponent(query)) : ''));
@@ -908,8 +908,8 @@ function loadSearchResults() {
 		'max_score': $('#score-to-slider').val(),
 		'min_year': $('#year-from-slider').val(),
 		'max_year': $('#year-to-slider').val(),
-		'show_blacklisted_fansubs': $('#catalogue-search-include-blacklisted').is(':checked') ? 1 : 0,
-		'show_lost_content': $('#catalogue-search-include-lost').is(':checked') ? 1 : 0,
+		'hide_blacklisted_fansubs': $('#catalogue-search-include-blacklisted').is(':checked') ? 0 : 1,
+		'hide_lost_content': $('#catalogue-search-include-lost').is(':checked') ? 0 : 1,
 		'type': $('#catalogue-search-type .singlechoice-selected').attr('data-value'),
 		'status[]': statuses,
 		'demographics[]': demographics,
@@ -1051,14 +1051,14 @@ $(document).ready(function() {
 		if ($('.catalogue-index').length==1) {
 			loadCatalogueIndex();
 		} else if ($('#catalogue-search-query').length==1) {
-			loadSearchResults();
+			if (!$('body').hasClass('has-search-results')) {
+				loadSearchResults();
+			}
 		} else {
 			initializeCarousels();
 		}
 	} else {
-		if ($('#catalogue-search-query').length==1) {
-			$('.style-type-catalogue').addClass('has-search-results');
-		} else {			
+		if ($('.catalogue-index').length==1) {			
 			initializeCarousels();
 		}
 	}

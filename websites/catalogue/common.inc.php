@@ -1,4 +1,6 @@
 <?php
+require_once("queries.inc.php");
+
 //Versions to avoid site caching
 const JS_VER=57;
 const CS_VER=24;
@@ -560,9 +562,9 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 }
 
 function exists_more_than_one_version($series_id){
-	$result = query("SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id AND is_hidden=0");
+	$result = query_number_of_versions_by_series_id($series_id);
 	$row = mysqli_fetch_assoc($result);
-	mysqli_free_result($result);	
+	mysqli_free_result($result);
 	return ($row['cnt']>1);
 }
 
@@ -721,19 +723,6 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE)
 	}
 	echo "\t\t\t\t\t\t\t\t".'<div class="genres">'.get_genres_for_featured($series['genre_names']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
-}
-
-function get_cookie_viewed_files_ids() {
-	$file_ids = array();
-	if (!empty($_COOKIE['viewed_file_ids'])) {
-		$exploded = explode(',',$_COOKIE['viewed_file_ids']);
-		foreach ($exploded as $id) {
-			if (intval($id)) {
-				array_push($file_ids, intval($id));
-			}
-		}
-	}
-	return $file_ids;
 }
 
 function get_tadaima_info($thread_id) {

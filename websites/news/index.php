@@ -18,7 +18,7 @@ else{
 	$page = 1;
 }
 
-if (isset($_GET['query']) && $_GET['query']!='') {
+if (isset($_GET['query'])) {
 	$search_query = urldecode($_GET['query']);
 }
 else{

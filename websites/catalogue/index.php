@@ -21,12 +21,12 @@ require_once("../common.fansubs.cat/header.inc.php");
 <?php
 if (is_robot()){
 	if (CATALOGUE_ITEM_TYPE=='liveaction' || SITE_IS_HENTAI) {
-		$number=25;
+		$round_interval=25;
 	} else {
-		$number=50;
+		$round_interval=50;
 	}
 
-	$result = query_total_number_of_series();
+	$result = query_total_number_of_series($round_interval);
 	$row = mysqli_fetch_assoc($result);
 ?>
 						<div class="section">
