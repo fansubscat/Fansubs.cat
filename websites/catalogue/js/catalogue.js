@@ -737,7 +737,7 @@ function prepareFloatingInfo(element){
 	var regex = /translate3d\((.*)px, 0px, 0px\)/g;
 	var inCarouselPage = $('.has-carousel').length>0;
 	var translation = (inCarouselPage ? parseInt(regex.exec(element.parentNode.parentNode.parentNode.style.transform)[1]) : 0);
-	var maxWidth = $('.search-layout').length>0 ? ($(window).width() - $('.search-layout').width()) : $(window).width();
+	var maxWidth = $(window).width(); //If search layout is on the right: $('.search-layout').length>0 ? ($(window).width() - $('.search-layout').width()) : $(window).width();
 	$(element).removeClass('floating-info-right').removeClass('floating-info-left');
 	if ((offset[0]+translation+element.clientWidth*1.25*2)<maxWidth){
 		//We can fit it: right-side

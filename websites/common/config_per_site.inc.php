@@ -54,6 +54,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'One-shots');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Serialitzats');
 		define('CATALOGUE_ITEM_STRING_SINGULAR', 'manga');
+		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet llegir en línia més de %d mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.');
+		define('CATALOGUE_ROBOT_MESSAGE_HENTAI', 'Fansubs.cat et permet llegir en línia manga hentai en català. Ara pots gaudir de tot el manga hentai de tots els fansubs en català en un únic lloc.');
 /*		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet llegir en línia més de %d mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.');
 		define('CATALOGUE_ROBOT_MESSAGE_HENTAI', 'Fansubs.cat et permet llegir en línia manga hentai en català. Ara pots gaudir de tot el manga hentai de tots els fansubs en català en un únic lloc.');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'One-shots');
@@ -103,6 +105,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'Films');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
 		define('CATALOGUE_ITEM_STRING_SINGULAR', 'contingut d’acció real');
+		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet veure en streaming més de %d continguts d’acció real subtitulats en català. Ara pots gaudir de tot el contingut d’acció real de tots els fansubs en català en un únic lloc.');
+		define('CATALOGUE_ROBOT_MESSAGE_HENTAI', ''); //N/A
 /*		$cat_config = array(
 			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d continguts d’acció real subtitulats en català. Ara pots gaudir de tot el contingut d’acció real de tots els fansubs en català en un únic lloc.",
 			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming més de %d continguts d’acció real subtitulats en català. Ara pots gaudir de tot el contingut d’acció real de tots els fansubs en català en un únic lloc.",

@@ -1247,6 +1247,10 @@
 }
 
 @media (max-width: 1200px){
+	.catalogue {
+		justify-content: center;
+	}
+
 	.user-login {
 		min-width: 4rem;
 		padding: 0.75rem 0.75rem;

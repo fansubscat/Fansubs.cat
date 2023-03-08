@@ -47,7 +47,7 @@ $max_date = (($today_year - $start_year) * 12) + ($today_month - $start_month);
 							</div>
 						</form>
 					</div>
-					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-left"></i></div>
+					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
 					<div class="results-layout news-search<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){

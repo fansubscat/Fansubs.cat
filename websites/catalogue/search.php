@@ -147,7 +147,7 @@ mysqli_free_result($result);
 ?>
 						</form>
 					</div>
-					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-left"></i></div>
+					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
 					<div class="results-layout catalogue-search<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){
