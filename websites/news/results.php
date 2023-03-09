@@ -25,6 +25,7 @@ else{
 }
 
 $show_blacklisted_fansubs = FALSE;
+$show_own_news = TRUE;
 $text = NULL;
 $min_month = '2003-05';
 $max_month = date('Y-m');
@@ -35,13 +36,16 @@ if (defined('PAGE_IS_SEARCH')) {
 	if (!empty($_POST['hide_blacklisted_fansubs'])) {
 		$show_blacklisted_fansubs = FALSE;
 	}
+	if (!empty($_POST['hide_own_news'])) {
+		$show_own_news = FALSE;
+	}
 	if (isset($_POST['min_month']) && isset($_POST['max_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_POST['min_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_POST['max_month'])) {
 		$min_month = $_POST['min_month'];
 		$max_month = $_POST['max_month'];
 	}
 }
 
-$result = query_latest_news($user, $text, $page, 20, $show_blacklisted_fansubs, $min_month, $max_month);
+$result = query_latest_news($user, $text, $page, 20, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
 
 ?>
 						<div class="section">
@@ -79,7 +83,16 @@ else{
 ?>
 										</h3>
 										<div class="news-info">
-											<a class="news-fansub" href="<?php echo (!empty($row['fansub_url']) && empty($row['archive_url']) ? $row['fansub_url'] : (!empty($row['archive_url']) ? $row['archive_url'] : '#')); ?>" target="_blank"><img src="<?php echo STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png'; ?>" alt=""> <?php echo $row['fansub_name']; ?></a> • <span class="news-date" title="<?php echo date("d/m/Y \\a \\l\\e\\s H:i:s", strtotime($row['date'])); ?>"><?php echo relative_time(strtotime($row['date'])); ?></span>
+<?php
+		if (!empty($row['fansub_url']) && empty($row['archive_url'])) {
+			$url = $row['fansub_url'];
+		} else if (!empty($row['archive_url'])) {
+			$url = $row['archive_url'];
+		} else {
+			$url = NULL;
+		}
+?>
+											<a class="news-fansub"<?php $url!==NULL ? ' href="'.$url.'" target="_blank"' : ''; ?>><img src="<?php echo $row['fansub_id']!==NULL ? STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png' : '/favicon.png'; ?>" alt=""> <?php echo $row['fansub_name']; ?></a> • <span class="news-date" title="<?php echo date("d/m/Y \\a \\l\\e\\s H:i:s", strtotime($row['date'])); ?>"><?php echo relative_time(strtotime($row['date'])); ?></span>
 										</div>
 										<div class="news-text">
 											<!-- Begin article content -->
@@ -114,29 +127,27 @@ else{
 							</div>
 <?php
 	}
-?>
-						</div>
-<?php
 }
 ?>
-						<div id="bottom-navigation">
+							<div id="bottom-navigation">
 <?php
 if ($page>1 && mysqli_num_rows($result)>0){
 ?>
-							<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : '/pagina/'.($page-1)).'"'); ?>"><i class="fa fa-fw fa-arrow-left"></i> Notícies més noves</a>
+								<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : '/pagina/'.($page-1)).'"'); ?>"><i class="fa fa-fw fa-arrow-left"></i> Notícies més noves</a>
 <?php
 }
 mysqli_free_result($result);
 
 //Do the same query but for the next page, to know if it exists
-$result = query_latest_news($user, $text, $page+1, 20, $show_blacklisted_fansubs, $min_month, $max_month);
+$result = query_latest_news($user, $text, $page+1, 20, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
 
 if (mysqli_num_rows($result)>0){
 ?>
-							<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="/pagina/'.($page+1).'"'); ?>">Notícies més antigues <i class="fa fa-fw fa-arrow-right"></i></a>
+								<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="/pagina/'.($page+1).'"'); ?>">Notícies més antigues <i class="fa fa-fw fa-arrow-right"></i></a>
 <?php
 }
 ?>
+							</div>
 						</div>
 <?php
 mysqli_free_result($result);

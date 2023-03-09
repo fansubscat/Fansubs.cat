@@ -2,6 +2,14 @@
 require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("queries.inc.php");
 
+function string_ends_with($haystack, $needle) {
+	$length = strlen($needle);
+	if(!$length) {
+		return TRUE;
+	}
+	return substr($haystack, -$length) === $needle;
+}
+
 function register_user(){
 	//Check if we have all the data
 	if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) && is_numeric($_POST['birthday_day']) && is_numeric($_POST['birthday_month']) && is_numeric($_POST['birthday_year'])) {
@@ -43,6 +51,14 @@ function register_user(){
 	if (!preg_match("/.*@.*\\..*/",$email_address)) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 8);
+	}
+
+	//Check not from a blocked domain
+	foreach (BLACKLISTED_EMAIL_DOMAINS as $domain) {
+		if (string_ends_with($email_address, $domain)) {
+			http_response_code(400);
+			return array('result' => 'ko', 'code' => 9);
+		}
 	}
 
 	//Check if user exists

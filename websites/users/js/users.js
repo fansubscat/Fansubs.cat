@@ -188,6 +188,8 @@ function register() {
 				addValidationOnlyText('register_birthday','No és permès el registre als menors de 13 anys.');
 			} else if (response.code==8) {
 				addValidation('register_email','L’adreça electrònica no té un format correcte.');
+			} else if (response.code==9) {
+				addValidation('register_email','No acceptem registres amb adreces electròniques d’aquest domini perquè no ens és possible enviar-hi correus de restabliment de la contrasenya.');
 			} else {
 				addValidationOnlyText('register_generic','S’ha produït un error. Torna-ho a provar.');
 			}

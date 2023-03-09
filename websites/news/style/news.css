@@ -147,6 +147,10 @@ img.mfp-img {
 	transform: scaleY(1.6) scaleX(1.1);
 }
 
+#bottom-navigation {
+	margin-top: 2.5rem;
+}
+
 @media (max-width: 920px){
 	.news-article {
 		flex-direction: column;
@@ -190,5 +194,9 @@ img.mfp-img {
 
 	.search-form {
 		display: none;
+	}
+
+	#bottom-navigation {
+		margin-top: 1.5rem;
 	}
 }

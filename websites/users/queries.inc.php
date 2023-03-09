@@ -1,15 +1,7 @@
 <?php
-require_once(dirname(__FILE__)."/db.inc.php");
+require_once("../common.fansubs.cat/db.inc.php");
 
 // SELECT
-
-function query_user_by_username($username) {
-	$username_escaped = escape($username);
-	$final_query = "SELECT *
-			FROM user
-			WHERE username='$username_escaped'";
-	return query($final_query);
-}
 
 function query_user_by_email($email) {
 	$email_escaped = escape($email);

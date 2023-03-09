@@ -45,6 +45,10 @@ $max_date = (($today_year - $start_year) * 12) + ($today_month - $start_month);
 								<input id="news-search-include-blacklisted" type="checkbox" oninput="loadSearchResults(1);" checked>
 								<label for="news-search-include-blacklisted" class="for-checkbox">Els meus fansubs exclosos</label>
 							</div>
+							<div class="search-checkboxes">
+								<input id="news-search-include-own" type="checkbox" oninput="loadSearchResults(1);" checked>
+								<label for="news-search-include-own" class="for-checkbox">Notícies de Fansubs.cat</label>
+							</div>
 						</form>
 					</div>
 					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>

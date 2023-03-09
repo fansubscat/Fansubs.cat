@@ -24,7 +24,7 @@ function get_internal_blacklisted_fansubs_condition($user) {
 
 // SELECT
 
-function query_latest_news($user, $text, $page, $page_size, $show_blacklisted_fansubs, $min_month, $max_month) {
+function query_latest_news($user, $text, $page, $page_size, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month) {
 	//We assume that everything except $text needs no escaping
 	//Page starts at 1, not 0
 	$text = escape($text);
@@ -36,6 +36,7 @@ function query_latest_news($user, $text, $page, $page_size, $show_blacklisted_fa
 				LEFT JOIN fansub f ON n.fansub_id=f.id
 			WHERE ".($text!==NULL ? "(n.title LIKE '%".escape($text)."%' OR n.contents LIKE '%".escape($text)."%')" : "1")."
 				AND ".($show_blacklisted_fansubs ? "1" : get_internal_blacklisted_fansubs_condition($user))."
+				AND ".($show_own_news ? "1" : "n.fansub_id IS NOT NULL")."
 				AND n.date>='$min_month-01 00:00:00' AND n.date<='$max_month-31 23:59:59'
 			ORDER BY n.date DESC
 			LIMIT $page_size

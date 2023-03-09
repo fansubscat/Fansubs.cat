@@ -18,7 +18,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
 		<description>Totes les notícies dels fansubs en català</description>
 		<atom:link href="<?php echo NEWS_URL; ?>/rss" rel="self" type="application/rss+xml" />
 <?php
-$result = query_latest_news(NULL, NULL, 1, 20);
+$result = query_latest_news(NULL, NULL, 1, 20, TRUE, TRUE, '2003-05', date('Y-m'));
 while ($row = mysqli_fetch_assoc($result)){
 ?>
 		<item>

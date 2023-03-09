@@ -10,7 +10,7 @@ function login(){
 	}
 
 	//Check if user exists
-	$result = query_user_by_username($username);
+	$result = query_user_by_username($_POST['username']);
 	if (mysqli_num_rows($result)==0){
 		http_response_code(400);
 		mysqli_free_result($result);

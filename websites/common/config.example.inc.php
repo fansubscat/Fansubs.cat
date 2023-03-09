@@ -43,6 +43,9 @@ define('GLOBAL_MESSAGE', '');
 //What to use as sender when sending e-mails
 define('EMAIL_ACCOUNT', 'info@fansubs.cat');
 
+//These domains do not allow our e-mails, just block registrations
+define('BLACKLISTED_EMAIL_DOMAINS', array('domain.com'));
+
 //Storages
 define('STORAGES', array('https://YOUR_STORAGE_SERVERS/'));
 
