@@ -25,6 +25,12 @@ if (!empty($_SESSION['username'])){
 			array_push($user['series_list_ids'], $row['series_id']);
 		}
 		mysqli_free_result($result);
+		$user['blacklisted_fansub_ids']=array();
+		$result = query_user_blacklisted_fansub_ids_by_user_id($user['id']);
+		while ($row = mysqli_fetch_assoc($result)) {
+			array_push($user['blacklisted_fansub_ids'], $row['fansub_id']);
+		}
+		mysqli_free_result($result);
 	}
 }
 ?>

@@ -41,10 +41,16 @@ $max_date = (($today_year - $start_year) * 12) + ($today_month - $start_month);
 								<div id="date-to-input" value-formatting="date" class="double-slider-input-to"><?php echo date('m/Y'); ?></div>
 							</div>
 							<label>Inclou-hi també...</label>
+<?php
+if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
+?>
 							<div class="search-checkboxes">
 								<input id="news-search-include-blacklisted" type="checkbox" oninput="loadSearchResults(1);" checked>
-								<label for="news-search-include-blacklisted" class="for-checkbox">Els meus fansubs exclosos</label>
+								<label for="news-search-include-blacklisted" class="for-checkbox">Fansubs a la llista negra</label>
 							</div>
+<?php
+}
+?>
 							<div class="search-checkboxes">
 								<input id="news-search-include-own" type="checkbox" oninput="loadSearchResults(1);" checked>
 								<label for="news-search-include-own" class="for-checkbox">Notícies de Fansubs.cat</label>

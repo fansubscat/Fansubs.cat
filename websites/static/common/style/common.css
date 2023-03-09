@@ -808,6 +808,14 @@ h2.section-title:first-of-type {
 	background-color: rgb(var(--primary-color));
 }
 
+.search-checkboxes input[type="checkbox"]:disabled {
+	background-color: rgb(var(--neutral-color));
+}
+
+.search-checkboxes input[type="checkbox"]:disabled:hover {
+	filter: none;
+}
+
 .search-checkboxes input[type="checkbox"]:checked:before {
 	color: rgb(var(--always-negative-color));
 }

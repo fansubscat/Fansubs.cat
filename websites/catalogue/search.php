@@ -82,10 +82,16 @@ if (!SITE_IS_HENTAI) {
 								<div id="year-to-input" value-formatting="year" class="double-slider-input-to"><?php echo date('Y'); ?></div>
 							</div>
 							<label>Inclou-hi també...</label>
+<?php
+if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
+?>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-blacklisted" type="checkbox" oninput="loadSearchResults();" checked>
-								<label for="catalogue-search-include-blacklisted" class="for-checkbox">Els meus fansubs exclosos</label>
+								<label for="catalogue-search-include-blacklisted" class="for-checkbox">Fansubs a la llista negra</label>
 							</div>
+<?php
+}
+?>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-lost" type="checkbox" oninput="loadSearchResults();" checked>
 								<label for="catalogue-search-include-lost" class="for-checkbox">Fitxes amb capítols perduts</label>

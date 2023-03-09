@@ -2296,7 +2296,7 @@ function fetch_via_wordpress_ys($fansub_slug, $url, $last_fetched_item_date){
 
 				$description = $html_article->find('div.entry-content', 0)->innertext;
 
-				$parts = explode('<div id="atatags', $description);
+				$parts = explode('<style', $description);
 				if (count($parts)>1) {
 					$description = $parts[0];
 				}
