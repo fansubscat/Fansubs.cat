@@ -291,7 +291,8 @@ CREATE TABLE `user_file_progress` (
   `user_id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL,
   `is_seen` tinyint(1) NOT NULL DEFAULT 0,
-  `progress` int(11) NOT NULL
+  `progress` int(11) NOT NULL,
+  `last_viewed` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `user_fansub_blacklist` (

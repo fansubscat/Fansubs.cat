@@ -210,12 +210,14 @@ if (defined('PAGE_IS_SEARCH')) {
 		'result' => query_home_recommended_items($user, $force_recommended_ids_list, 10),
 	));
 
-	array_push($sections, array(
-		'type' => 'chapters-carousel',
-		'title' => '<i class="fa fa-fw fa-eye"></i> Continua mirant',
-		'specific_version' => TRUE,
-		'result' => query_home_continue_watching_by_user_id($user['id']),
-	));
+	if (!empty($user)) {
+		array_push($sections, array(
+			'type' => 'chapters-carousel',
+			'title' => '<i class="fa fa-fw fa-eye"></i> Continua '.(CATALOGUE_ITEM_TYPE=='manga' ? 'llegint' : 'mirant'),
+			'specific_version' => TRUE,
+			'result' => query_home_continue_watching_by_user_id($user['id']),
+		));
+	}
 
 	array_push($sections, array(
 		'type' => 'carousel',

@@ -571,7 +571,6 @@ function exists_more_than_one_version($series_id){
 function get_version_fansubs($fansub_info, $version_id) {
 	$fansubs = explode('|',$fansub_info);
 	$version_fansubs = array();
-
 	foreach ($fansubs as $fansub) {
 		$fields = explode('___',$fansub);
 		if ($fields[0]==$version_id) {
@@ -587,6 +586,17 @@ function get_recommended_fansub_info($fansub_info, $version_id) {
 
 	foreach ($version_fansubs as $fansub) {
 		$result_code.='<div class="fansub">'.($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').'<span class="text">'.htmlspecialchars($fansub['name']).'</span> <img src="'.$fansub['icon'].'" alt=""></div>'."\n";
+	}
+
+	return $result_code;
+}
+
+function get_continue_watching_fansub_info($fansub_info, $version_id) {
+	$version_fansubs = get_version_fansubs($fansub_info, $version_id);
+	$result_code='';
+
+	foreach ($version_fansubs as $fansub) {
+		$result_code.='<div class="fansub"><img src="'.$fansub['icon'].'" alt=""></div>'."\n";
 	}
 
 	return $result_code;
@@ -620,7 +630,25 @@ function get_genres_for_featured($genre_names) {
 }
 
 function print_chapter_item($row) {
-	echo "TODO";
+?>
+	<div class="continue-watching-thumbnail-outer">
+		<div class="continue-watching-thumbnail">
+			<a class="image-link" href="/<?php echo (SITE_IS_HENTAI ? 'hentai/' : '').$row['series_slug']."?f=".$row['file_id']; ?>">
+				<div class="fansubs"><?php echo get_continue_watching_fansub_info($row['fansub_info'], $row['version_id']); ?></div>
+				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/various/innocents.png'; ?>" alt="">
+				<span class="progress" style="width: <?php echo $row['progress_percent']*100; ?>%;"></span>
+				<div class="play-button fa fa-fw fa-<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'book-open' : 'play'; ?>"></div>
+				<div class="close-button fa fa-fw fa-times" onclick="removeFromContinueWatching(this, <?php echo $row['file_id']; ?>); return false;"></div>
+			</a>
+		</div>
+		<div class="title">
+			<?php echo $row['series_name']; ?>
+		</div>
+		<div class="subtitle">
+			<?php echo $row['division_name'].(($row['division_name']!='' && $row['episode_number']!='') ? ' • ' : '').($row['episode_number']!='' ? 'Cap. '.$row['episode_number'] : '').((($row['division_name']!='' || $row['episode_number']!='') && $row['episode_title']!='') ? ': ' : '').$row['episode_title']; ?>
+		</div>
+	</div>
+<?php
 }
 
 function print_carousel_item($series, $specific_version, $show_new=TRUE) {

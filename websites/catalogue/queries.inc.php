@@ -501,27 +501,132 @@ function query_home_recommended_items($user, $force_recommended_ids_list, $max_i
 
 function query_home_continue_watching_by_user_id($user_id) {
 	$user_id = intval($user_id);
-	$final_query = "SELECT e.number episode_number,
-				et.title episode_title,
-				s.name series_name,
-				GROUP_CONCAT(DISTINCT CONCAT(fa.name, '___', fa.type, '___', fa.id)
-					ORDER BY fa.name
+	$final_query = "SELECT *,
+				GROUP_CONCAT(DISTINCT CONCAT(t.version_id, '___', t.fansub_name, '___', t.fansub_type, '___', t.fansub_id)
+					ORDER BY t.fansub_name
 					SEPARATOR '|'
-				) fansub_info,
-				ufp.progress/f.length progress_percent
-			FROM user_file_progress ufp
-				LEFT JOIN file f ON ufp.file_id=f.id
-				LEFT JOIN version v ON f.version_id=v.id
-				LEFT JOIN series s ON v.series_id=s.id
-				LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id
-				LEFT JOIN fansub fa ON vf.fansub_id=fa.id
-				LEFT JOIN episode e ON f.episode_id=e.id
-				LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
-			WHERE ufp.user_id=$user_id
-				AND s.type='".CATALOGUE_ITEM_TYPE."'
-				AND ufp.is_seen=0
-				AND ".get_internal_hentai_condition()."
-			GROUP BY f.id";
+				) fansub_info
+			FROM (SELECT f.id file_id,
+					f.version_id,
+					IF(s.type='manga' AND v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
+						IF(d.name IS NULL,
+							CONCAT('Vol. ', REPLACE(TRIM(d.number)+0,'.',',')),
+							d.name
+						),
+						NULL
+					) division_name,
+					IF(v.show_episode_numbers=1,
+						REPLACE(TRIM(e.number)+0, '.', ','),
+						NULL
+					) episode_number,
+					IF(s.subtype='oneshot',
+						'One-shot',
+						IF(s.subtype='movie' AND s.number_of_episodes=1,
+							'Film',
+							IF(et.title IS NOT NULL,
+								et.title,
+								IF(e.number IS NULL,
+									e.description,
+									et.title
+								)
+							)
+						)
+					) episode_title,
+					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
+						d.name,
+						s.name
+					) series_name,
+					s.slug series_slug,
+					fa.name fansub_name,
+					fa.type fansub_type,
+					fa.id fansub_id,
+					ufp.progress/f.length progress_percent,
+					ufp.last_viewed last_viewed,
+					1 origin
+				FROM user_file_progress ufp
+					LEFT JOIN file f ON ufp.file_id=f.id
+					LEFT JOIN version v ON f.version_id=v.id
+					LEFT JOIN series s ON v.series_id=s.id
+					LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id
+					LEFT JOIN fansub fa ON vf.fansub_id=fa.id
+					LEFT JOIN episode e ON f.episode_id=e.id
+					LEFT JOIN division d ON e.division_id=d.id
+					LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
+				WHERE ufp.user_id=$user_id
+					AND s.type='".CATALOGUE_ITEM_TYPE."'
+					AND f.is_lost=0
+					AND ufp.is_seen=0
+					AND ".get_internal_hentai_condition()."
+				UNION
+				SELECT f.id file_id,
+					f.version_id,
+					IF(s.type='manga' AND v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
+						IF(d.name IS NULL,
+							CONCAT('Vol. ', REPLACE(TRIM(d.number)+0,'.',',')),
+							d.name
+						),
+						NULL
+					) division_name,
+					IF(v.show_episode_numbers=1,
+						REPLACE(TRIM(e.number)+0, '.', ','),
+						NULL
+					) episode_number,
+					IF(s.subtype='oneshot',
+						'One-shot',
+						IF(s.subtype='movie' AND s.number_of_episodes=1,
+							'Film',
+							IF(et.title IS NOT NULL,
+								et.title,
+								IF(e.number IS NULL,
+									e.description,
+									et.title
+								)
+							)
+						)
+					) episode_title,
+					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
+						d.name,
+						s.name
+					) series_name,
+					s.slug series_slug,
+					fa.name fansub_name,
+					fa.type fansub_type,
+					fa.id fansub_id,
+					0 progress_percent,
+					CURRENT_TIMESTAMP last_viewed,
+					0 origin
+				FROM file f
+					LEFT JOIN version v ON f.version_id=v.id
+					LEFT JOIN series s ON v.series_id=s.id
+					LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id
+					LEFT JOIN fansub fa ON vf.fansub_id=fa.id
+					LEFT JOIN episode e ON f.episode_id=e.id
+					LEFT JOIN division d ON e.division_id=d.id
+					LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
+				WHERE f.id IN (
+					SELECT (SELECT f.id
+						FROM file f
+						LEFT JOIN episode e2 ON f.episode_id=e2.id
+						LEFT JOIN episode_title et2 ON et2.episode_id=e2.id AND et2.version_id=f.version_id
+						WHERE f.version_id=v.id
+							AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (e2.number>e1.number))
+						ORDER BY e2.number IS NULL ASC,
+							e2.number ASC,
+							IFNULL(et2.title, e2.description) ASC
+						LIMIT 1) newer_episode_file_id
+					FROM user_version_followed uvf
+					LEFT JOIN version v ON v.id=uvf.version_id
+					LEFT JOIN episode e1 ON e1.id=uvf.last_seen_episode_id
+					LEFT JOIN episode_title et1 ON et1.episode_id=uvf.last_seen_episode_id AND et1.version_id=uvf.version_id
+					WHERE uvf.user_id=$user_id
+				)
+					AND s.type='".CATALOGUE_ITEM_TYPE."'
+					AND f.is_lost=0
+					AND ".get_internal_hentai_condition()."
+			) t
+			GROUP BY t.version_id
+			ORDER BY t.origin ASC,
+				t.last_viewed DESC";
 	return query($final_query);
 }
 

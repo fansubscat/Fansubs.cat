@@ -777,6 +777,30 @@ function toggleBookmark(seriesId){
 	});
 }
 
+function removeFromContinueWatching(element, fileId){
+	var slide = $(element).parent().parent().parent().parent();
+	var carousel = slide.parent().parent().parent();
+	var index = carousel.find('.slick-slide').index(slide);
+	carousel.slick('slickRemove', index);
+	if (carousel.find('.slick-slide').length==0) {
+		//This was the last element: remove the carousel too
+		carousel.slick('unslick');
+		carousel.parent().remove();
+	}
+
+	var values = {
+		file_id: fileId
+	};
+
+	$.post({
+		url: "/do_remove_from_continue_watching.php",
+		data: values,
+		xhrFields: {
+			withCredentials: true
+		},
+	});
+}
+
 function initializeCarousels() {
 	$('.style-type-catalogue').addClass('has-carousel');
 
@@ -1198,6 +1222,12 @@ $(document).ready(function() {
 
 		if (Cookies.get('tachiyomi_message_closed', cookieOptions)=='1') {
 			$("#tachiyomi-message").attr('style','display: none;');
+		}
+
+		if ($('#autoopen_file_id').length>0 && $('#autoopen_file_id').val()!='') {
+			history.replaceState(null, null, window.location.pathname);
+			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
+			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}
 
 		$(window).resize(function() {
