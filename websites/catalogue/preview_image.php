@@ -44,6 +44,7 @@ function get_status_color($image, $id){
 		case 3:
 			return imagecolorallocate($image, 0xAD, 0xFF, 0x2F);
 		case 4:
+			return imagecolorallocate($image, 0xFF, 0x7F, 0x50);
 		case 5:
 			return imagecolorallocate($image, 0xFF, 0x00, 0x00);
 		default:
@@ -245,11 +246,12 @@ if (empty($failed)) {
 		foreach ($versions as $version) {
 			$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, FONT_REGULAR, get_text_without_missing_glyphs($version['fansub_name']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN);
 			$current_height = $current_height - 30;
-			imagefttext($image, 46, 0, TEXT_MARGIN, $current_height+13, get_status_color($image, $version['status']), FONT_REGULAR, "•");
+			imagefttext($image, 50.5, 0, TEXT_MARGIN, $current_height+16, imagecolorallocate($image, 0xFF, 0xFF, 0xFF), FONT_REGULAR, "•");
+			imagefttext($image, 42, 0, TEXT_MARGIN+2, $current_height+12, get_status_color($image, $version['status']), FONT_REGULAR, "•");
 			if (substr_count($text, "\n")>0) {
 				$text = implode("\n",array_slice(explode("\n", $text), 0, 1)).'…';
 			}
-			imagefttext($image, 17, 0, TEXT_MARGIN+24, $current_height, $white, FONT_REGULAR, get_text_without_missing_glyphs($text));
+			imagefttext($image, 17, 0, TEXT_MARGIN+28, $current_height, $white, FONT_REGULAR, get_text_without_missing_glyphs($text));
 			$current_fansub_line++;
 		}
 		imagejpeg($image, STATIC_DIRECTORY."/social/series_v5_".$id.".jpg", 80);

@@ -9,6 +9,7 @@
 	--chapter-carousel-element-height: 16.75rem;
 	--chapter-thumbnail-title-height: 1.6rem;
 	--chapter-thumbnail-subtitle-height: 1.6rem;
+	--thumbnail-transition-delay: 0.5s;
 }
 
 /* Header */
@@ -98,8 +99,8 @@
 }
 
 .tristate-selector .tristate-button {
-	background-color: rgb(var(--always-positive-color));
-	color: rgb(var(--always-negative-color));
+	background-color: rgb(var(--negative-color));
+	color: rgb(var(--neutral-color));
 	font-size: 1.6rem;
 	cursor: pointer;
 	height: 2rem;
@@ -145,14 +146,12 @@
 
 .tristate-selector .tristate-include.tristate-selected {
 	background-color: rgb(var(--primary-color));
-}
-
-.tristate-selector .tristate-neutral.tristate-selected {
-	background-color: rgb(var(--neutral-color-more-positive));
+	color: rgb(var(--always-negative-color));
 }
 
 .tristate-selector .tristate-exclude.tristate-selected {
 	background-color: rgb(var(--secondary-color));
+	color: rgb(var(--always-negative-color));
 }
 
 .tristate-selector .tristate-description {
@@ -1026,6 +1025,9 @@
 	height: 100%;
 	object-fit: cover;
 	border-radius: 0.4rem;
+	transform: scale(1.0000001); /* Avoids weird flicker on Chrome when using img with object-fit: cover and scaling */
+	transition: border-radius var(--fast-animation-duration) ease;
+	transition-delay: 0s;
 }
 
 .thumbnail-outer .title {
@@ -1250,6 +1252,7 @@
 	top: 0.4rem;
 	left: 0.4rem;
 	transition: opacity var(--fast-animation-duration) ease;
+	transition-delay: 0s;
 	opacity: 1;
 	z-index: 2;
 	backface-visibility: hidden;
@@ -1324,12 +1327,23 @@
 	.thumbnail-outer {
 		perspective: unset;
 	}
+
 	.thumbnail {
 		transition: transform var(--fast-animation-duration) ease, z-index var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
+		transition-delay: 0s;
+	}
+
+	.thumbnail:hover {
+		transition-delay: var(--thumbnail-transition-delay);
 	}
 
 	.thumbnail .status-indicator {
 		backface-visibility: unset;
+		transition-delay: 0s;
+	}
+
+	.thumbnail:hover .status-indicator {
+		transition-delay: var(--thumbnail-transition-delay);
 	}
 
 	.thumbnail .image-link {
@@ -1341,6 +1355,11 @@
 		transform: none;
 		opacity: 0;
 		transition: height var(--fast-animation-duration) ease-out, max-height var(--fast-animation-duration) ease-out, min-height var(--fast-animation-duration) ease-out, width var(--fast-animation-duration) ease-out, max-width var(--fast-animation-duration) ease-out, min-width var(--fast-animation-duration) ease-out, opacity var(--fast-animation-duration) ease-out, z-index var(--fast-animation-duration) ease-out, transform var(--fast-animation-duration) ease-out;
+		transition-delay: 0s;
+	}
+
+	.thumbnail:hover .floating-info {
+		transition-delay: var(--thumbnail-transition-delay);
 	}
 
 	.thumbnail:hover {
@@ -1358,10 +1377,12 @@
 
 	.thumbnail.floating-info-right:hover img {
 		border-radius: 0.4rem 0 0 0.4rem;
+		transition-delay: var(--thumbnail-transition-delay);
 	}
 
 	.thumbnail.floating-info-left:hover img {
 		border-radius: 0 0.4rem 0.4rem 0;
+		transition-delay: var(--thumbnail-transition-delay);
 	}
 
 	.thumbnail.floating-info-right:hover .floating-info {

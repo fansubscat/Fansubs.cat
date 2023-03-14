@@ -15,7 +15,7 @@ var lastErrorTimestamp = null;
 var lastErrorReported = null;
 var playedMediaTimer = null;
 var playedMediaSeconds = 0;
-var enableDebug = false;
+var enableDebug = true;
 var loggedMessages = "";
 var pageLoadedDate = Date.now();
 var playerWasFullscreen = false;
@@ -44,9 +44,13 @@ function getReaderSource(file_id){
 function sendReadEndAjax(){
 	if (currentFileId!=-1){
 		clearInterval(reportTimer);
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
-		xmlHttp.send(null);
+		if (!enableDebug) {
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
+			xmlHttp.send(null);
+		} else {
+			console.debug('Would have requested: /counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
+		}
 		currentFileId=-1;
 		currentMethod=null;
 		currentViewId="";
@@ -58,7 +62,11 @@ function sendReadEndAjax(){
 function sendReadEndBeacon(){
 	if (currentFileId!=-1){
 		clearInterval(reportTimer);
-		navigator.sendBeacon('/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
+		if (!enableDebug) {
+			navigator.sendBeacon('/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
+		} else {
+			console.debug('Would have requested: /counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
+		}
 		currentFileId=-1;
 		currentMethod=null;
 		currentViewId="";
@@ -104,7 +112,7 @@ function beginVideoTracking(fileId, method){
 			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			xhr.send("log="+encodeURIComponent(loggedMessages));
 		} else {
-			console.debug('Would have requested: /counter.php?view_id='+currentViewId+"&method="+currentMethod+'&file_id='+currentFileId+"&action=notify&time_spent="+Math.floor(playedMediaSeconds));
+			console.debug('Would have requested: /counter.php?view_id='+currentViewId+"&file_id="+currentFileId+"&method="+currentMethod+"&action=notify&time_spent="+Math.floor(playedMediaSeconds));
 		}
 	}, 60000);
 }
@@ -116,12 +124,21 @@ function beginReaderTracking(fileId){
 	//The chances of collision of this is so low that if we get a collision, it's no problem at all.
 	currentViewId=getNewViewId();
 	currentReadStartTime=Math.floor(new Date().getTime()/1000);
-	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+fileId+"&method=reader&action=open", true);
-	xmlHttp.send(null);
-	reportTimer = setInterval(function tick() {
-		xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method=reader&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
+	if (!enableDebug) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+fileId+"&method=reader&action=open", true);
 		xmlHttp.send(null);
+	} else {
+		console.debug('Would have requested: /counter.php?view_id='+currentViewId+"&file_id="+currentFileId+"&method=reader&action=open");
+	}
+	reportTimer = setInterval(function tick() {
+		if (!enableDebug) {
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method=reader&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
+			xmlHttp.send(null);
+		} else {
+			console.debug('Would have requested: /counter.php?view_id='+currentViewId+"&file_id="+currentFileId+"&method=reader&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
+		}
 	}, 60000);
 }
 
@@ -1050,6 +1067,9 @@ function tristateChange(element) {
 	if (!$(element).hasClass('tristate-selected')) {
 		$(element).parent().find('.tristate-button').removeClass("tristate-selected");
 		$(element).addClass("tristate-selected");
+		loadSearchResults();
+	} else {
+		$(element).parent().find('.tristate-button').removeClass("tristate-selected");
 		loadSearchResults();
 	}
 }

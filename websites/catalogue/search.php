@@ -127,7 +127,6 @@ while ($row=mysqli_fetch_assoc($result)) {
 							
 							<div class="tristate-selector tristate-genres" data-id="<?php echo $row['id']; ?>">
 								<div class="tristate-button tristate-include" onclick="tristateChange(this);"><i class="fa fa-fw fa-check"></i></div>
-								<div class="tristate-button tristate-neutral tristate-selected" onclick="tristateChange(this);"><i class="fa fa-fw fa-minus"></i></div>
 								<div class="tristate-button tristate-exclude" onclick="tristateChange(this);"><i class="fa fa-fw fa-xmark"></i></div>
 								<div class="tristate-description"><?php echo htmlspecialchars($row['name']); ?></div>
 							</div>
@@ -143,7 +142,6 @@ while ($row=mysqli_fetch_assoc($result)) {
 							
 							<div class="tristate-selector tristate-genres" data-id="<?php echo $row['id']; ?>">
 								<div class="tristate-button tristate-include" onclick="tristateChange(this);"><i class="fa fa-fw fa-check"></i></div>
-								<div class="tristate-button tristate-neutral tristate-selected" onclick="tristateChange(this);"><i class="fa fa-fw fa-minus"></i></div>
 								<div class="tristate-button tristate-exclude" onclick="tristateChange(this);"><i class="fa fa-fw fa-xmark"></i></div>
 								<div class="tristate-description"><?php echo htmlspecialchars($row['name']); ?></div>
 							</div>

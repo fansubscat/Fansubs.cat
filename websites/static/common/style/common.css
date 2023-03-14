@@ -44,8 +44,6 @@
 	--neutral-color: 136, 136, 136;
 	/* Used in footer links, they are a bit darker */
 	--neutral-color-links: 102, 102, 102;
-	/* Used for neutral selection in tristate buttons */
-	--neutral-color-more-positive: 180, 180, 180;
 	/* Primary accent color, blue */
 	--primary-color: 106, 160, 248;
 	/* A darker version of blue, used as a background filter */
@@ -778,7 +776,7 @@ h2.section-title:first-of-type {
 }
 
 .search-checkboxes input[type="checkbox"] {
-	background-color: rgb(var(--always-positive-color));
+	background-color: rgb(var(--negative-color));
 	appearance: none;
 	margin: 0;
 	font-size: 1.6rem;
@@ -802,6 +800,7 @@ h2.section-title:first-of-type {
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
 	content: '\f00c' !important;
+	color: rgb(var(--negative-color));
 }
 
 .search-checkboxes input[type="checkbox"]:checked {
