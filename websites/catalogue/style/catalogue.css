@@ -135,13 +135,12 @@
 }
 
 .tristate-selector .tristate-include {
-	border-top-left-radius: 0.6rem;
-	border-bottom-left-radius: 0.6rem;
+	border-radius: 0.6rem;
 }
 
 .tristate-selector .tristate-exclude {
-	border-top-right-radius: 0.6rem;
-	border-bottom-right-radius: 0.6rem;
+	margin-left: 0.2rem;
+	border-radius: 0.6rem;
 }
 
 .tristate-selector .tristate-include.tristate-selected {

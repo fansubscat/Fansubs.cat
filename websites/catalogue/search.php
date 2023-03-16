@@ -155,6 +155,7 @@ mysqli_free_result($result);
 					<div class="results-layout catalogue-search<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){
+	define('ROBOT_INCLUDED', TRUE);
 	include("results.php");
 }
 ?>					</div>

@@ -27,7 +27,7 @@ if (defined('PAGE_IS_SEARCH')) {
 	$length_type=(CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'minutes');
 	$show_blacklisted_fansubs = TRUE;
 	$show_lost_content = TRUE;
-	$show_no_demographics = TRUE;
+	$show_no_demographics = FALSE;
 	$demographics=array();
 	$genres_include=array();
 	$genres_exclude=array();

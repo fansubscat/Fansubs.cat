@@ -175,8 +175,8 @@ function get_internal_most_popular_series_from_date($since_date) {
 
 function get_internal_demographics_condition($demographic_ids, $show_no_demographics) {
 	//Input is already escaped
-	$demographics_condition = "1";
-	$no_demographics_condition = "0";
+	$demographics_condition = defined('ROBOT_INCLUDED') ? "1" : "0";
+	$no_demographics_condition = defined('ROBOT_INCLUDED') ? "1" : "0";
 	if (count($demographic_ids)>0) {
 		$demographics_condition = "s.id IN (SELECT sg.series_id
 						FROM rel_series_genre sg
@@ -230,7 +230,7 @@ function get_internal_statuses_condition($statuses) {
 	if (count($statuses)>0) {
 		return "v.status IN (".implode(',', $statuses).")";
 	}
-	return "1";
+	return defined('ROBOT_INCLUDED') ? "1" : "0";
 }
 
 function get_internal_length_condition($type, $length_type, $min_length, $max_length) {
@@ -713,7 +713,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 				AND (".($min_year==1950 ? "s.publish_date IS NULL OR " : '')."(YEAR(s.publish_date)>=$min_year AND YEAR(s.publish_date)<=$max_year))
 				AND ".($show_blacklisted_fansubs ? '1' : get_internal_blacklisted_fansubs_condition($user))."
 				AND ".($show_lost_content ? '1' : 'v.is_missing_episodes=0')."
-				AND ".get_internal_demographics_condition($demographic_ids, $show_no_demographics)."
+				AND ".(SITE_IS_HENTAI ? '1' : get_internal_demographics_condition($demographic_ids, $show_no_demographics))."
 				AND ".get_internal_included_genres_condition($genres_included_ids)."
 				AND ".get_internal_excluded_genres_condition($genres_excluded_ids)."
 				AND ".get_internal_statuses_condition($statuses)."
