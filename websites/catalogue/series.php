@@ -1,5 +1,4 @@
 <?php
-define('PAGE_STYLE_TYPE', 'catalogue');
 require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
@@ -14,6 +13,7 @@ if (isset($failed)) {
 	include('error.php');
 	die();
 }
+define('PAGE_STYLE_TYPE', 'catalogue');
 
 $Parsedown = new Parsedown();
 $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);

@@ -713,7 +713,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 				AND (".($min_year==1950 ? "s.publish_date IS NULL OR " : '')."(YEAR(s.publish_date)>=$min_year AND YEAR(s.publish_date)<=$max_year))
 				AND ".($show_blacklisted_fansubs ? '1' : get_internal_blacklisted_fansubs_condition($user))."
 				AND ".($show_lost_content ? '1' : 'v.is_missing_episodes=0')."
-				AND ".(SITE_IS_HENTAI ? '1' : get_internal_demographics_condition($demographic_ids, $show_no_demographics))."
+				AND ".((SITE_IS_HENTAI || CATALOGUE_ITEM_TYPE=='liveaction') ? '1' : get_internal_demographics_condition($demographic_ids, $show_no_demographics))."
 				AND ".get_internal_included_genres_condition($genres_included_ids)."
 				AND ".get_internal_excluded_genres_condition($genres_excluded_ids)."
 				AND ".get_internal_statuses_condition($statuses)."

@@ -1,7 +1,9 @@
 <?php
 require_once(dirname(__FILE__)."/config.inc.php");
-$page_title="Error";
-$style_type='text';
+if (!defined('PAGE_STYLE_TYPE')) {
+	define('PAGE_STYLE_TYPE', 'text');
+}
+define('PAGE_TITLE', 'Error');
 $code = !empty($_GET['code']) ? $_GET['code'] : 404;
 http_response_code($code);
 require_once(dirname(__FILE__)."/header.inc.php");
@@ -15,11 +17,11 @@ require_once(dirname(__FILE__)."/header.inc.php");
 <?php
 if ($code==403){
 ?>
-						<strong>No tens permís per a accedir a aquesta adreça.</strong><br>Fes bondat i fes servir només la part pública de la web ;)<br><br>Et recomanem que tornis a la <a href="<?php echo MAIN_URL; ?>">pàgina principal</a> i provis de trobar el que cerques allà!
+						<strong>No tens permís per a accedir a aquesta adreça.</strong><br>Fes bondat i fes servir només la part pública de la web ;)<br><br>Et recomanem que tornis a la <a href="<?php echo SITE_BASE_URL; ?>">pàgina principal</a> i provis de trobar el que cerques allà!
 <?php
 } else {
 ?>
-						<strong>És possible que hagis seguit un enllaç antic o que el contingut ja no estigui disponible.</strong><br>Qui sap, potser l'han llicenciat en català i tot! O potser no i només és un error...<br><br>Et recomanem que tornis a la <a href="<?php echo MAIN_URL; ?>">pàgina principal</a> i provis de trobar el que cerques allà!
+						<strong>És possible que hagis seguit un enllaç antic o que el contingut ja no estigui disponible.</strong><br>Qui sap, potser l'han llicenciat en català i tot! O potser no i només és un error...<br><br>Et recomanem que tornis a la <a href="<?php echo SITE_BASE_URL; ?>">pàgina principal</a> i provis de trobar el que cerques allà!
 <?php
 }
 ?>
