@@ -29,7 +29,7 @@ $max_date = (($today_year - $start_year) * 12) + ($today_month - $start_month);
 ?>
 					<div class="search-layout">
 						<input class="search-base-url" type="hidden" value="<?php echo SITE_IS_HENTAI ? '/hentai/cerca' : '/cerca'; ?>">
-						<div class="search-filter-title">Filtres de cerca</div>
+						<div class="search-filter-title">Filtres de les notícies</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="news-search-query">Text a cercar</label>
 							<input id="news-search-query" type="text" oninput="loadSearchResults(1);" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">

@@ -27,7 +27,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="search-layout">
 						<input class="search-base-url" type="hidden" value="<?php echo SITE_IS_HENTAI ? '/hentai/cerca' : '/cerca'; ?>">
-						<div class="search-filter-title">Filtres de cerca</div>
+						<div class="search-filter-title">Filtres del catàleg</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>
 							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
@@ -111,7 +111,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 							</div>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-full-catalogue" type="checkbox" oninput="loadSearchResults();" checked>
-								<label for="catalogue-search-include-full-catalogue" class="for-checkbox">Altres resultats de cerca</label>
+								<label for="catalogue-search-include-full-catalogue" class="for-checkbox">Altres resultats de la cerca</label>
 							</div>
 <?php
 if (CATALOGUE_ITEM_TYPE!='liveaction' && !SITE_IS_HENTAI) {

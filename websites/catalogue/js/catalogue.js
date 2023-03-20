@@ -281,13 +281,13 @@ function replayCurrentVideo() {
 	player.play();
 }
 
-function hasNextVideo() {
+function hasPrevVideo() {
 	if (isEmbedPage()) {
 		return false;
 	}
 	var position  = parseInt($('.video-player[data-file-id="'+currentFileId+'"]').first().attr('data-position'));
 	var results = $('.video-player').filter(function(){
-		return parseInt($(this).attr('data-position')) > position;
+		return parseInt($(this).attr('data-position')) == position-1;
 	});
 
 	if (results.length>0) {
@@ -296,11 +296,40 @@ function hasNextVideo() {
 	return false;
 }
 
+function hasNextVideo() {
+	if (isEmbedPage()) {
+		return false;
+	}
+	var position  = parseInt($('.video-player[data-file-id="'+currentFileId+'"]').first().attr('data-position'));
+	var results = $('.video-player').filter(function(){
+		return parseInt($(this).attr('data-position')) == position+1;
+	});
+
+	if (results.length>0) {
+		return true;
+	}
+	return false;
+}
+
+function playPrevVideo() {
+	playerWasFullscreen = player.isFullscreen();
+	var position  = parseInt($('.video-player[data-file-id="'+currentFileId+'"]').first().attr('data-position'));
+	var results = $('.video-player[data-file-id="'+currentFileId+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
+		return parseInt($(this).attr('data-position')) == position-1;
+	});
+
+	if (results.length>0) {
+		//In case of multiple files for one episode, only the first will be played
+		closeOverlay();
+		results.first().click();
+	}
+}
+
 function playNextVideo() {
 	playerWasFullscreen = player.isFullscreen();
 	var position  = parseInt($('.video-player[data-file-id="'+currentFileId+'"]').first().attr('data-position'));
 	var results = $('.video-player[data-file-id="'+currentFileId+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
-		return parseInt($(this).attr('data-position')) > position;
+		return parseInt($(this).attr('data-position')) == position+1;
 	});
 
 	if (results.length>0) {
@@ -411,6 +440,8 @@ function initializePlayer(title, method, sourceData){
 				"currentTimeDisplay",
 				"timeDivider",
 				"durationDisplay",
+				hasPrevVideo() ? "prevButton" : "prevButtonDisabled",
+				hasNextVideo() ? "nextButton" : "nextButtonDisabled",
 				"muteToggle",
 				"volumeControl",
 				"fullscreenToggle"
@@ -537,21 +568,21 @@ function parsePlayerError(error){
 		case /ESID \(\-15\)/.test(error):
 		case /EBLOCKED \(\-16\)/.test(error):
 		case /ETEMPUNAVAIL \(\-18\)/.test(error):
-			title = "S'ha produït un error";
-			message = "S'ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+			title = "S’ha produït un error";
+			message = "S’ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 			reportErrorToServer('mega-unknown', error);
 			break;
 		case /ENOENT \(\-9\)/.test(error):
 			critical = true;
 			title = "El fitxer no existeix";
-			message = "Sembla que el fitxer ja no existeix al proveïdor del vídeo en streaming.<br>Mirarem de corregir-ho ben aviat, disculpa les molèsties.";
+			message = "Sembla que el fitxer ja no existeix al proveïdor del vídeo en streaming.<br>Mirarem de corregir-ho ben aviat. Disculpa les molèsties.";
 			reportErrorToServer('mega-unavailable', error);
 			break;
 		case /EOVERQUOTA \(\-17\)/.test(error):
 		case /Bandwidth limit reached/.test(error):
 			forceRefresh = true;
 			title = "Límit de MEGA superat";
-			message = "Has superat el límit d'ample de banda del proveïdor del vídeo en streaming (MEGA).<br>Segurament estàs provant de mirar un vídeo que s'ha publicat fa molt poc.<br>L'estem copiant automàticament a un servidor alternatiu i d'aquí a poca estona estarà disponible i no veuràs aquest error.<br>Torna a carregar la pàgina d'aquí a una estona i torna-ho a provar.";
+			message = "Has superat el límit d'ample de banda del proveïdor del vídeo en streaming (MEGA).<br>Segurament estàs provant de mirar un vídeo que s'ha publicat fa molt poc.<br>L’estem copiant automàticament a un servidor alternatiu i d’aquí a poca estona estarà disponible i no veuràs aquest error.<br>Torna a carregar la pàgina d’aquí a una estona i torna-ho a provar.";
 			reportErrorToServer('mega-quota-exceeded', error);
 			break;
 		case /E_MEGA_LOAD_ERROR/.test(error):
@@ -562,11 +593,11 @@ function parsePlayerError(error){
 				reportErrorToServer('mega-incompatible-browser', error);
 			} else if (/NetworkError/.test(error)){
 				title = "No hi ha connexió";
-				message = "S'ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+				message = "S’ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura’t que tinguis una connexió estable a Internet i torna-ho a provar.";
 				reportErrorToServer('mega-connection-error', error);
 			} else {
 				title = "No s'ha pogut carregar";
-				message = "S'ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+				message = "S’ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 				reportErrorToServer('mega-load-failed', error);
 			}
 			break;
@@ -574,20 +605,20 @@ function parsePlayerError(error){
 			switch (true) {
 				case /NETWORK_ERROR/.test(error):
 					title = "No hi ha connexió";
-					message = "S'ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura't que tinguis una connexió estable a Internet i torna-ho a provar.";
+					message = "S’ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura’t que tinguis una connexió estable a Internet i torna-ho a provar.";
 					break;
 				case /DECODER_ERROR/.test(error):
-					title = "S'ha produït un error";
-					message = "S'ha produït un error durant la decodificació del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+					title = "S’ha produït un error";
+					message = "S’ha produït un error durant la decodificació del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 					break;
 				case /NOT_SUPPORTED/.test(error):
-					title = "No s'ha pogut carregar";
-					message = "S'ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+					title = "No s’ha pogut carregar";
+					message = "S’ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 					break;
 				case /ABORTED_BY_USER/.test(error):
 				default:
-					title = "S'ha produït un error";
-					message = "S'ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+					title = "S’ha produït un error";
+					message = "S’ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 			}
 			reportErrorToServer(/E_MEGA_PLAYER_ERROR/.test(error) ? 'mega-player-failed' : 'direct-player-failed', error);
 			break;
@@ -598,17 +629,17 @@ function parsePlayerError(error){
 			reportErrorToServer('page-too-old', error);
 			break;
 		default:
-			title = "S'ha produït un error";
-			message = "S'ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+			title = "S’ha produït un error";
+			message = "S’ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tornar a carregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 			reportErrorToServer('unknown', error);
 			break;
 	}
 	lastErrorTimestamp = player ? player.currentTime() : 0;
 	shutdownVideoPlayer();
-	var start = '<div class="white-popup"><div style="justify-content: center; align-items: center; width: 100%; height: 100%; display: flex; flex-direction: column;" class="video-js"><div class="player_extra_upper" style="box-sizing: border-box;"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="player_extra_close vjs-button" title="Tanca" type="button" onclick="closeOverlay();"><svg aria-hidden="true" focusable="false" height="24" viewBox="4 4 16 16" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button></div>';
+	var start = '<div class="video-js player-error"><div class="player_extra_upper" style="box-sizing: border-box;"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div><button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button></div>';
 	var buttons = forceRefresh ? '<div class="player_error_buttons"><button class="error-close-button" onclick="location.reload();">Torna a carregar la pàgina</button></div>' : (critical ? '<div class="player_error_buttons"><button class="error-close-button" onclick="closeOverlay();">Tanca</button></div>' : '<div class="player_error_buttons"><button class="error-close-button" onclick="initializePlayer(currentVideoTitle, currentMethod, currentSourceData);">Torna-ho a provar</button></div>');
-	var end='</div></div>';
-	$('#overlay-content').html(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details style="color: #888; font-size: 1.3em; line-height: normal;"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>Reproducció / Enllaç / Instant: ' + currentViewId + ' / ' + currentFileId + ' / ' + lastErrorTimestamp + '</details>' + end);
+	var end='</div>';
+	$('#overlay-content').html(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details class="player-error-technical-details"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>' + currentViewId + ' / ' + currentFileId + ' / ' + lastErrorTimestamp + '</details>' + end);
 }
 
 function loadMegaStream(url){
@@ -1133,6 +1164,51 @@ function initializeSearchAutocomplete() {
 }
 
 $(document).ready(function() {
+	var videoJsButton = videojs.getComponent('Button');
+
+	var nextButton = videojs.extend(videoJsButton, {
+		constructor: function () {
+			videoJsButton.apply(this, arguments);
+			this.addClass('vjs-next-button');
+			this.controlText('Capítol següent');
+		},
+		handleClick: function () {
+			playNextVideo();
+		}
+	});
+
+	var prevButton = videojs.extend(videoJsButton, {
+		constructor: function () {
+			videoJsButton.apply(this, arguments);
+			this.addClass('vjs-prev-button');
+			this.controlText('Capítol anterior');
+		},
+		handleClick: function () {
+			playPrevVideo();
+		}
+	});
+
+	var nextButtonDisabled = videojs.extend(videoJsButton, {
+		constructor: function () {
+			videoJsButton.apply(this, arguments);
+			this.addClass('vjs-next-button');
+			this.addClass('vjs-button-disabled');
+		}
+	});
+
+	var prevButtonDisabled = videojs.extend(videoJsButton, {
+		constructor: function () {
+			videoJsButton.apply(this, arguments);
+			this.addClass('vjs-prev-button');
+			this.addClass('vjs-button-disabled');
+		}
+	});
+
+	videojs.registerComponent('nextButton', nextButton);
+	videojs.registerComponent('nextButtonDisabled', nextButtonDisabled);
+	videojs.registerComponent('prevButton', prevButton);
+	videojs.registerComponent('prevButtonDisabled', prevButtonDisabled);
+
 	var links = document.querySelectorAll(".catalogues-navigation a");
 	var container = document.querySelector(".catalogues-navigation");
 
