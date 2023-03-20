@@ -256,7 +256,7 @@ function get_internal_length_condition($type, $length_type, $min_length, $max_le
 					WHERE s.type='$type'
 					GROUP BY s.id HAVING AVG(f.length)>=".(intval($min_length)*60)." AND AVG(f.length)<=".(intval($max_length==120 ? 1000000 : $max_length)*60)."
 				)";
-		} else if ($min_length!=0 || $max_length!=100) {
+		} else if ($min_length!=1 || $max_length!=100) {
 			return "0";
 		}
 	}
@@ -719,6 +719,18 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 				AND ".get_internal_statuses_condition($statuses)."
 				AND ".($subtype=='all' ? "1" : "subtype='$subtype'")."
 				AND ".get_internal_length_condition($type, $length_type, $min_length, $max_length)."
+			GROUP BY s.id
+			ORDER BY s.name ASC";
+	return query($final_query);
+}
+
+function query_autocomplete($user, $text, $type) {
+	$text = str_replace(" ", "%", $text);
+	$text = escape($text);
+	$type = escape($type);
+	$final_query = get_internal_catalogue_base_query_portion($user)."
+				AND s.type='$type'
+				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
 			GROUP BY s.id
 			ORDER BY s.name ASC";
 	return query($final_query);

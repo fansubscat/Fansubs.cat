@@ -17,7 +17,9 @@ if (is_robot()) {
 	define('PAGE_EXTRA_BODY_CLASS', 'has-search-results');
 }
 
-define('PAGE_PATH', (SITE_IS_HENTAI ? '/hentai' : '').'/cerca'.(!empty($_GET['query']) ? '/'.$_GET['query'] : ''));
+$_GET['query']=str_replace('%2F', '/', isset($_GET['query']) ? $_GET['query'] : '');
+
+define('PAGE_PATH', (SITE_IS_HENTAI ? '/hentai' : '').'/cerca'.(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
 define('PAGE_IS_SEARCH', TRUE);
 define('SKIP_FOOTER', TRUE);
 
@@ -28,7 +30,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 						<div class="search-filter-title">Filtres de cerca</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>
-							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
+							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
 							<label for="catalogue-search-type">Tipus</label>
 							<div id="catalogue-search-type" class="singlechoice-selector singlechoice-type">
 								<div class="singlechoice-button singlechoice-selected" onclick="singlechoiceChange(this);" data-value="all"><i class="fa fa-fw fa-grip"></i>Tots</div>

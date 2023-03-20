@@ -20,6 +20,7 @@ var loggedMessages = "";
 var pageLoadedDate = Date.now();
 var playerWasFullscreen = false;
 var lastSearchRequest = null;
+var lastAutocompleteRequest = null;
 
 nanoid=(t=21)=>{let e="",r=crypto.getRandomValues(new Uint8Array(t));for(;t--;){let n=63&r[t];e+=n<36?n.toString(36):n<62?(n-26).toString(36).toUpperCase():n<63?"_":"-"}return e};
 
@@ -904,7 +905,7 @@ function launchSearch(query) {
 }
 
 function loadSearchResults() {
-	var query = $('#catalogue-search-query').val();
+	var query = $('#catalogue-search-query').val().trim();
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
 		$('.loading-message').text('S’està carregant el catàleg sencer...');
 	} else {
@@ -976,6 +977,25 @@ function loadSearchResults() {
 			$('.loading-layout').addClass('hidden');
 			$('.results-layout').addClass('hidden');
 			$('.error-layout').removeClass('hidden');
+		}
+	});
+}
+
+function loadAutocompleteResults() {
+	if (lastAutocompleteRequest!=null) {
+		lastAutocompleteRequest.abort();
+	}
+
+	lastAutocompleteRequest = $.post({
+		url: ($('.catalogues-explicit-category').length>0 ? '/hentai' : '')+"/autocomplete.php?query="+encodeURIComponent($('#search_query').val().trim()),
+		xhrFields: {
+			withCredentials: true
+		},
+	}).done(function(data) {
+		$('#search_query_autocomplete').html(data);
+	}).fail(function(xhr, status, error) {
+		if (error!='abort') {
+			$('#search_query_autocomplete').html('<i class="fa-xl fas fa-circle-exclamation"></i>');
 		}
 	});
 }
@@ -1080,6 +1100,35 @@ function singlechoiceChange(element) {
 		$(element).addClass("singlechoice-selected");
 		loadSearchResults();
 	}
+}
+
+function initializeSearchAutocomplete() {
+	$('#search_query').on('click', function(e) {
+		if (this.value.trim()!='') {
+			if ($('#search_query_autocomplete').hasClass('hidden')) {
+				$('#search_query_autocomplete').removeClass('hidden');
+				$('#search_query_autocomplete').html('<i class="fa-xl fas fa-circle-notch fa-spin"></i>');
+				loadAutocompleteResults();
+			}
+		}
+	});
+	$('#search_query').on('input', function(e) {
+		if (this.value.trim()!='') {
+			if ($('#search_query_autocomplete').hasClass('hidden')) {
+				$('#search_query_autocomplete').removeClass('hidden');
+				$('#search_query_autocomplete').html('<i class="fa-xl fas fa-circle-notch fa-spin"></i>');
+			}
+			loadAutocompleteResults();
+		} else {
+			$('#search_query_autocomplete').addClass('hidden');
+		}
+	});
+	$(document).on('click', function (e) {
+		var autocomplete = $('#search_query_autocomplete');
+		if (!((e.target && e.target.id && e.target.id=='search_query') || (e.target.parentNode && e.target.parentNode.parentNode && e.target.parentNode.parentNode.parentNode && e.target.parentNode.parentNode.parentNode.id && e.target.parentNode.parentNode.parentNode.id=='search_query_autocomplete'))) {
+			autocomplete.addClass('hidden');
+		}
+	});
 }
 
 $(document).ready(function() {
@@ -1249,6 +1298,8 @@ $(document).ready(function() {
 			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
 			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}
+
+		initializeSearchAutocomplete();
 
 		$(window).resize(function() {
 			if ($(window).width()!=lastWindowWidth) {

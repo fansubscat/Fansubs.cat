@@ -1,5 +1,6 @@
 <?php
 require_once('../common.fansubs.cat/db.inc.php');
+require_once('common.inc.php');
 require_once('queries.inc.php');
 require_once('libraries/linebreaks4imagettftext.php');
 define('IMAGE_WIDTH', 1200);
@@ -52,19 +53,6 @@ function get_status_color($image, $id){
 	}
 }
 
-function get_comic_type($comic_type){
-	switch ($comic_type) {
-		case 'manga':
-			return 'Manga';
-		case 'manhwa':
-			return 'Manhwa';
-		case 'manhua':
-			return 'Manhua';
-		default:
-			return 'Còmic';
-	}
-}
-
 //Taken from (and modified): https://gist.github.com/mistic100/9301c0eebaef047bfdc8?permalink_comment_id=3043071#gistcomment-3043071
 function imageroundedrectangle(&$img, $x1, $y1, $x2, $y2, $r, $color) {
 	$r = min($r, floor(min(($x2 - $x1) / 2, ($y2 - $y1) / 2)));
@@ -103,6 +91,30 @@ function gradient_region(&$img, $x, $y, $width, $height,$src_color, $dest_color,
 
 function get_text_without_missing_glyphs($text) {
 	return preg_replace(SUPPORTED_CHARS_REGEX, ' ', $text);
+}
+
+function get_series_type_summary($series) {
+	$text='';
+	if ($series['type']=='manga') {
+		if ($series['subtype']=='oneshot') {
+			$text = get_comic_type($series['comic_type'])." • One-shot";
+		} else if ($series['divisions']>1) {
+			$text = get_comic_type($series['comic_type'])." • Serialitzat • ".$series['divisions']." volums • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes']." capítols");
+		} else {
+			$text = get_comic_type($series['comic_type'])." • Serialitzat • 1 volum • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes']." capítols");
+		}
+	} else {
+		if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
+			$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Conjunt de ".$series['number_of_episodes']." films";
+		} else if ($series['subtype']=='movie') {
+			$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Film";
+		} else if ($series['divisions']>1) {
+			$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Sèrie • ".$series['divisions']." temporades • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes']." capítols");
+		} else {
+			$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Sèrie • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes']." capítols");
+		}
+	}
+	return $text;
 }
 
 $result = query_series_data_for_preview_image_by_slug(!empty($_GET['slug']) ? $_GET['slug'] : '');
@@ -148,25 +160,7 @@ if (empty($failed)) {
 		$current_height = TEXT_MARGIN+34;
 
 		//Type
-		if ($series['type']=='manga') {
-			if ($series['subtype']=='oneshot') {
-				$text = get_comic_type($series['comic_type'])." • One-shot";
-			} else if ($series['divisions']>1) {
-				$text = get_comic_type($series['comic_type'])." • Serialitzat • ".$series['divisions']." volums • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
-			} else {
-				$text = get_comic_type($series['comic_type'])." • Serialitzat • 1 volum • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes'].' capítols');
-			}
-		} else {
-			if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-				$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Conjunt de ".$series['number_of_episodes']." films";
-			} else if ($series['subtype']=='movie') {
-				$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Film";
-			} else if ($series['divisions']>1) {
-				$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Sèrie • ".$series['divisions']." temporades • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols');
-			} else {
-				$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Sèrie • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols');
-			}
-		}
+		$text = get_series_type_summary($series);
 
 		$gray = imagecolorallocate($image, 0xDC, 0xDC, 0xDC);
 		imagefttext($image, 23.5, 0, TEXT_MARGIN, $current_height, $gray, FONT_REGULAR, get_text_without_missing_glyphs($text));

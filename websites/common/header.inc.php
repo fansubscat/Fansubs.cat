@@ -334,6 +334,7 @@ if (PAGE_STYLE_TYPE=='login') {
 							<form id="search_form">
 								<input id="search_query" type="text" value="" placeholder="Cerca..." autocomplete="off">
 								<i id="search_button" class="fa fa-search" title="Cerca en tot el catàleg"></i>
+								<div id="search_query_autocomplete" class="hidden"></div>
 							</form>
 						</div>
 <?php

@@ -371,6 +371,29 @@ function get_hours_or_minutes_formatted($time){
 	}
 }
 
+function get_comic_type($comic_type){
+	switch ($comic_type) {
+		case 'manga':
+			return 'Manga';
+		case 'manhwa':
+			return 'Manhwa';
+		case 'manhua':
+			return 'Manhua';
+		default:
+			return 'Còmic';
+	}
+}
+
+function get_type_depending_on_catalogue($series) {
+	if ($series['type']=='manga') {
+		return (CATALOGUE_ITEM_TYPE!='manga' ? get_comic_type($series['comic_type']).' • ' : '');
+	} else if ($series['type']=='anime') {
+		return (CATALOGUE_ITEM_TYPE!='anime' ? 'Anime • ' : '');
+	} else {
+		return (CATALOGUE_ITEM_TYPE!='liveaction' ? 'Acció real • ' : '');
+	}
+}
+
 function print_episode($fansub_names, $row, $version_id, $series, $version, $position){
 	if (!empty($row['linked_episode_id'])) {
 		$result = query("SELECT f.* FROM file f WHERE f.episode_id=".$row['linked_episode_id']." AND f.version_id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']}) ORDER BY f.variant_name ASC, f.id ASC");

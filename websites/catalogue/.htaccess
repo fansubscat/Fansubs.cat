@@ -24,6 +24,7 @@ RewriteRule ^favicon\.png$ images/favicon_liveaction.png [L]
 
 #Hide internal files
 RewriteCond %{THE_REQUEST} ^(.+)\.php(\?\S*)?\ HTTP/ [NC]
+RewriteCond %{REQUEST_URI} !autocomplete\.php
 RewriteCond %{REQUEST_URI} !do_save_to_my_list\.php
 RewriteCond %{REQUEST_URI} !error\.php
 RewriteCond %{REQUEST_URI} !counter\.php
@@ -62,7 +63,7 @@ RewriteRule ^images/manga/(.*)\.jpg$ migration.php?migration_type=tachiyomi_cach
 #Normal v5 pages
 RewriteRule ^preview/([^/]*)\.jpg$ preview_image.php?slug=$1 [L]
 RewriteRule ^cerca/?$ search.php [L]
-RewriteRule ^cerca/([^/]+)/?$ search.php?query=$1 [L]
+RewriteRule ^cerca/([^/]+)/?$ search.php?query=$1 [B,L]
 RewriteRule ^embed/([^/]+)/?$ embed.php?file_id=$1 [L]
 RewriteRule ^/?$ index.php [L]
 
@@ -81,7 +82,7 @@ RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
-RewriteRule ^hentai/cerca/([^/]+)/?$ search.php?hentai=1&query=$1 [L]
+RewriteRule ^hentai/cerca/([^/]+)/?$ search.php?hentai=1&query=$1 [B,L]
 RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
@@ -97,6 +98,11 @@ RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
 RewriteRule ^hentai/results.php$ results.php?hentai=1 [QSA,L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
+RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteRule ^hentai/autocomplete.php$ autocomplete.php?hentai=1 [QSA,L]
 RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
