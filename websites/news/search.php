@@ -40,17 +40,28 @@ $max_date = (($today_year - $start_year) * 12) + ($today_month - $start_month);
 								<div id="date-from-input" value-formatting="date" class="double-slider-input-from">05/2003</div>
 								<div id="date-to-input" value-formatting="date" class="double-slider-input-to"><?php echo date('m/Y'); ?></div>
 							</div>
-							<label>Inclou-hi també...</label>
+							<label for="news-search-fansub">Fansub</label>
+							<select id="news-search-fansub" onchange="loadSearchResults(1);">
 <?php
 if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
 ?>
-							<div class="search-checkboxes">
-								<input id="news-search-include-blacklisted" type="checkbox" oninput="loadSearchResults(1);" checked>
-								<label for="news-search-include-blacklisted" class="for-checkbox">Fansubs a la llista negra</label>
-							</div>
+								<option value="-1" selected>Tots (fins i tot llista negra)</option>
+								<option value="-2">Tots (excepte llista negra)</option>
+<?php
+} else {
+?>
+								<option value="-1" selected>Tots els fansubs</option>
+<?php
+}
+$result = query_all_fansubs_with_news();
+while ($row = mysqli_fetch_assoc($result)) {
+?>
+								<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
 <?php
 }
 ?>
+							</select>
+							<label>Inclou-hi també...</label>
 							<div class="search-checkboxes">
 								<input id="news-search-include-own" type="checkbox" oninput="loadSearchResults(1);" checked>
 								<label for="news-search-include-own" class="for-checkbox">Notícies de Fansubs.cat</label>

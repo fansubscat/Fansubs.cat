@@ -395,6 +395,7 @@ function query_filter_genders() {
 							AND v.is_hidden=0
 						)>0
 						AND sg.genre_id=g.id
+						AND s.type='".CATALOGUE_ITEM_TYPE."'
 						AND ".get_internal_hentai_condition()."
 				)
 			ORDER BY g.name ASC";
@@ -414,6 +415,7 @@ function query_filter_themes() {
 							AND v.is_hidden=0
 						)>0
 						AND sg.genre_id=g.id
+						AND s.type='".CATALOGUE_ITEM_TYPE."'
 						AND ".get_internal_hentai_condition()."
 				)
 			ORDER BY g.name ASC";
@@ -693,7 +695,7 @@ function query_home_best_rated($user, $max_items) {
 	return query($final_query);
 }
 
-function query_search_filter($user, $text, $type, $subtype, $min_score, $max_score, $min_year, $max_year, $min_length, $max_length, $length_type, $ratings, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $genres_included_ids, $genres_excluded_ids, $statuses) {
+function query_search_filter($user, $text, $type, $subtype, $min_score, $max_score, $min_year, $max_year, $min_length, $max_length, $length_type, $ratings, $fansub_id, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $genres_included_ids, $genres_excluded_ids, $statuses) {
 	$text = str_replace(" ", "%", $text);
 	$text = escape($text);
 	$type = escape($type);
@@ -704,6 +706,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 	$max_year = intval($max_year);
 	$min_length = intval($min_length);
 	$max_length = intval($max_length);
+	$fansub_id = intval($fansub_id);
 	//No need to escape $ratings, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $genres_included_ids, $genres_excluded_ids, $statuses: they come from code
 	$final_query = get_internal_catalogue_base_query_portion($user)."
 				AND s.type='$type'
@@ -719,6 +722,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 				AND ".get_internal_statuses_condition($statuses)."
 				AND ".($subtype=='all' ? "1" : "subtype='$subtype'")."
 				AND ".get_internal_length_condition($type, $length_type, $min_length, $max_length)."
+				AND ".($fansub_id>0 ? "v.id IN (SELECT DISTINCT sqvf.version_id FROM rel_version_fansub sqvf WHERE sqvf.fansub_id=$fansub_id)" : "1")."
 			GROUP BY s.id
 			ORDER BY s.name ASC";
 	return query($final_query);
@@ -733,6 +737,18 @@ function query_autocomplete($user, $text, $type) {
 				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
 			GROUP BY s.id
 			ORDER BY s.name ASC";
+	return query($final_query);
+}
+
+function query_all_fansubs_with_versions() {
+	$final_query = "SELECT DISTINCT f.*
+			FROM rel_version_fansub vf
+				LEFT JOIN fansub f ON vf.fansub_id=f.id
+				LEFT JOIN version v ON vf.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND ".get_internal_hentai_condition()."
+			ORDER BY f.name ASC";
 	return query($final_query);
 }
 

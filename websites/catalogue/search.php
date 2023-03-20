@@ -83,20 +83,35 @@ if (!SITE_IS_HENTAI) {
 								<div id="year-from-input" value-formatting="year" class="double-slider-input-from">-</div>
 								<div id="year-to-input" value-formatting="year" class="double-slider-input-to"><?php echo date('Y'); ?></div>
 							</div>
-							<label>Inclou-hi també...</label>
+							<label for="catalogue-search-fansub">Fansub</label>
+							<select id="catalogue-search-fansub" onchange="loadSearchResults();">
 <?php
 if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
 ?>
-							<div class="search-checkboxes">
-								<input id="catalogue-search-include-blacklisted" type="checkbox" oninput="loadSearchResults();" checked>
-								<label for="catalogue-search-include-blacklisted" class="for-checkbox">Fansubs a la llista negra</label>
-							</div>
+								<option value="-1" selected>Tots (fins i tot llista negra)</option>
+								<option value="-2">Tots (excepte llista negra)</option>
+<?php
+} else {
+?>
+								<option value="-1" selected>Tots els fansubs</option>
+<?php
+}
+$result = query_all_fansubs_with_versions();
+while ($row = mysqli_fetch_assoc($result)) {
+?>
+								<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
 <?php
 }
 ?>
+							</select>
+							<label>Inclou-hi també...</label>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-lost" type="checkbox" oninput="loadSearchResults();" checked>
 								<label for="catalogue-search-include-lost" class="for-checkbox">Fitxes amb capítols perduts</label>
+							</div>
+							<div class="search-checkboxes">
+								<input id="catalogue-search-include-full-catalogue" type="checkbox" oninput="loadSearchResults();" checked>
+								<label for="catalogue-search-include-full-catalogue" class="for-checkbox">Altres resultats de cerca</label>
 							</div>
 <?php
 if (CATALOGUE_ITEM_TYPE!='liveaction' && !SITE_IS_HENTAI) {

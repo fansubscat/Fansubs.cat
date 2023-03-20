@@ -33,7 +33,7 @@ function loadSearchResults(page) {
 	var values = {
 		'min_month': selectedStartDate,
 		'max_month': selectedEndDate,
-		'hide_blacklisted_fansubs': $('#news-search-include-blacklisted').is(':checked') ? 0 : 1,
+		'fansub_id': $('#news-search-fansub').val(),
 		'hide_own_news': $('#news-search-include-own').is(':checked') ? 0 : 1
 	};
 

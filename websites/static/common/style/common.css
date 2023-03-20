@@ -483,6 +483,10 @@ input:not([type='range']), select, textarea {
 	border: none;
 }
 
+select {
+	border-right: 0.6rem solid transparent;
+}
+
 .normal-button {
 	font-family: inherit;
 	border: none;
