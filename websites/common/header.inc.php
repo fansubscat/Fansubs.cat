@@ -73,9 +73,8 @@ if (PAGE_STYLE_TYPE=='catalogue') {
 				preloadWebComponents: true,
 			};
 		</script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/jquery-ui.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-		<script src="/js/megajs/main.browser-umd.js?v=<?php echo VERSION; ?>"></script>
+		<script src="https://unpkg.com/megajs@1.1.1/dist/main.browser-umd.js"></script>
 		<script src="/js/videojs/video.js?v=<?php echo VERSION; ?>"></script>
 		<script src="/js/videostream.js?v=<?php echo VERSION; ?>"></script>
 		<script src="/js/videojs/lang_ca.js?v=<?php echo VERSION; ?>"></script>

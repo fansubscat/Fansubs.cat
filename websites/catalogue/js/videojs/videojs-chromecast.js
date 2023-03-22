@@ -1,1764 +1,2417 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-(function(){
-  var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
- 
-  // The base Class implementation (does nothing)
-  this.Class = function(){};
- 
-  // Create a new Class that inherits from this class
-  Class.extend = function(prop) {
-    var _super = this.prototype;
-   
-    // Instantiate a base class (but only create the instance,
-    // don't run the init constructor)
-    initializing = true;
-    var prototype = new this();
-    initializing = false;
-   
-    // Copy the properties over onto the new prototype
-    for (var name in prop) {
-      // Check if we're overwriting an existing function
-      prototype[name] = typeof prop[name] == "function" &&
-        typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-        (function(name, fn){
-          return function() {
-            var tmp = this._super;
-           
-            // Add a new ._super() method that is the same method
-            // but on the super-class
-            this._super = _super[name];
-           
-            // The method only need to be bound temporarily, so we
-            // remove it when we're done executing
-            var ret = fn.apply(this, arguments);        
-            this._super = tmp;
-           
-            return ret;
-          };
-        })(name, prop[name]) :
-        prop[name];
-    }
-   
-    // The dummy class constructor
-    function Class() {
-      // All construction is actually done in the init method
-      if ( !initializing && this.init )
-        this.init.apply(this, arguments);
-    }
-   
-    // Populate our constructed prototype object
-    Class.prototype = prototype;
-   
-    // Enforce the constructor to be what we expect
-    Class.prototype.constructor = Class;
- 
-    // And make this class extendable
-    Class.extend = arguments.callee;
-   
-    return Class;
-  };
-
-  //I only added this line
-  module.exports = Class;
-})();
+module.exports = function (it) {
+  if (typeof it != 'function') {
+    throw TypeError(String(it) + ' is not a function');
+  } return it;
+};
 
 },{}],2:[function(require,module,exports){
-(function (global){
-//     Underscore.js 1.9.1
-//     http://underscorejs.org
-//     (c) 2009-2018 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-//     Underscore may be freely distributed under the MIT license.
+var isObject = require('../internals/is-object');
 
-(function() {
+module.exports = function (it) {
+  if (!isObject(it) && it !== null) {
+    throw TypeError("Can't set " + String(it) + ' as a prototype');
+  } return it;
+};
 
-  // Baseline setup
-  // --------------
+},{"../internals/is-object":44}],3:[function(require,module,exports){
+var wellKnownSymbol = require('../internals/well-known-symbol');
+var create = require('../internals/object-create');
+var definePropertyModule = require('../internals/object-define-property');
 
-  // Establish the root object, `window` (`self`) in the browser, `global`
-  // on the server, or `this` in some virtual machines. We use `self`
-  // instead of `window` for `WebWorker` support.
-  var root = typeof self == 'object' && self.self === self && self ||
-            typeof global == 'object' && global.global === global && global ||
-            this ||
-            {};
+var UNSCOPABLES = wellKnownSymbol('unscopables');
+var ArrayPrototype = Array.prototype;
 
-  // Save the previous value of the `_` variable.
-  var previousUnderscore = root._;
+// Array.prototype[@@unscopables]
+// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
+if (ArrayPrototype[UNSCOPABLES] == undefined) {
+  definePropertyModule.f(ArrayPrototype, UNSCOPABLES, {
+    configurable: true,
+    value: create(null)
+  });
+}
 
-  // Save bytes in the minified (but not gzipped) version:
-  var ArrayProto = Array.prototype, ObjProto = Object.prototype;
-  var SymbolProto = typeof Symbol !== 'undefined' ? Symbol.prototype : null;
+// add a key to Array.prototype[@@unscopables]
+module.exports = function (key) {
+  ArrayPrototype[UNSCOPABLES][key] = true;
+};
 
-  // Create quick reference variables for speed access to core prototypes.
-  var push = ArrayProto.push,
-      slice = ArrayProto.slice,
-      toString = ObjProto.toString,
-      hasOwnProperty = ObjProto.hasOwnProperty;
+},{"../internals/object-create":51,"../internals/object-define-property":53,"../internals/well-known-symbol":85}],4:[function(require,module,exports){
+var isObject = require('../internals/is-object');
 
-  // All **ECMAScript 5** native function implementations that we hope to use
-  // are declared here.
-  var nativeIsArray = Array.isArray,
-      nativeKeys = Object.keys,
-      nativeCreate = Object.create;
+module.exports = function (it) {
+  if (!isObject(it)) {
+    throw TypeError(String(it) + ' is not an object');
+  } return it;
+};
 
-  // Naked function reference for surrogate-prototype-swapping.
-  var Ctor = function(){};
+},{"../internals/is-object":44}],5:[function(require,module,exports){
+var toIndexedObject = require('../internals/to-indexed-object');
+var toLength = require('../internals/to-length');
+var toAbsoluteIndex = require('../internals/to-absolute-index');
 
-  // Create a safe reference to the Underscore object for use below.
-  var _ = function(obj) {
-    if (obj instanceof _) return obj;
-    if (!(this instanceof _)) return new _(obj);
-    this._wrapped = obj;
+// `Array.prototype.{ indexOf, includes }` methods implementation
+var createMethod = function (IS_INCLUDES) {
+  return function ($this, el, fromIndex) {
+    var O = toIndexedObject($this);
+    var length = toLength(O.length);
+    var index = toAbsoluteIndex(fromIndex, length);
+    var value;
+    // Array#includes uses SameValueZero equality algorithm
+    // eslint-disable-next-line no-self-compare -- NaN check
+    if (IS_INCLUDES && el != el) while (length > index) {
+      value = O[index++];
+      // eslint-disable-next-line no-self-compare -- NaN check
+      if (value != value) return true;
+    // Array#indexOf ignores holes, Array#includes - not
+    } else for (;length > index; index++) {
+      if ((IS_INCLUDES || index in O) && O[index] === el) return IS_INCLUDES || index || 0;
+    } return !IS_INCLUDES && -1;
+  };
+};
+
+module.exports = {
+  // `Array.prototype.includes` method
+  // https://tc39.es/ecma262/#sec-array.prototype.includes
+  includes: createMethod(true),
+  // `Array.prototype.indexOf` method
+  // https://tc39.es/ecma262/#sec-array.prototype.indexof
+  indexOf: createMethod(false)
+};
+
+},{"../internals/to-absolute-index":75,"../internals/to-indexed-object":76,"../internals/to-length":78}],6:[function(require,module,exports){
+var bind = require('../internals/function-bind-context');
+var IndexedObject = require('../internals/indexed-object');
+var toObject = require('../internals/to-object');
+var toLength = require('../internals/to-length');
+var arraySpeciesCreate = require('../internals/array-species-create');
+
+var push = [].push;
+
+// `Array.prototype.{ forEach, map, filter, some, every, find, findIndex, filterOut }` methods implementation
+var createMethod = function (TYPE) {
+  var IS_MAP = TYPE == 1;
+  var IS_FILTER = TYPE == 2;
+  var IS_SOME = TYPE == 3;
+  var IS_EVERY = TYPE == 4;
+  var IS_FIND_INDEX = TYPE == 6;
+  var IS_FILTER_OUT = TYPE == 7;
+  var NO_HOLES = TYPE == 5 || IS_FIND_INDEX;
+  return function ($this, callbackfn, that, specificCreate) {
+    var O = toObject($this);
+    var self = IndexedObject(O);
+    var boundFunction = bind(callbackfn, that, 3);
+    var length = toLength(self.length);
+    var index = 0;
+    var create = specificCreate || arraySpeciesCreate;
+    var target = IS_MAP ? create($this, length) : IS_FILTER || IS_FILTER_OUT ? create($this, 0) : undefined;
+    var value, result;
+    for (;length > index; index++) if (NO_HOLES || index in self) {
+      value = self[index];
+      result = boundFunction(value, index, O);
+      if (TYPE) {
+        if (IS_MAP) target[index] = result; // map
+        else if (result) switch (TYPE) {
+          case 3: return true;              // some
+          case 5: return value;             // find
+          case 6: return index;             // findIndex
+          case 2: push.call(target, value); // filter
+        } else switch (TYPE) {
+          case 4: return false;             // every
+          case 7: push.call(target, value); // filterOut
+        }
+      }
+    }
+    return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : target;
+  };
+};
+
+module.exports = {
+  // `Array.prototype.forEach` method
+  // https://tc39.es/ecma262/#sec-array.prototype.foreach
+  forEach: createMethod(0),
+  // `Array.prototype.map` method
+  // https://tc39.es/ecma262/#sec-array.prototype.map
+  map: createMethod(1),
+  // `Array.prototype.filter` method
+  // https://tc39.es/ecma262/#sec-array.prototype.filter
+  filter: createMethod(2),
+  // `Array.prototype.some` method
+  // https://tc39.es/ecma262/#sec-array.prototype.some
+  some: createMethod(3),
+  // `Array.prototype.every` method
+  // https://tc39.es/ecma262/#sec-array.prototype.every
+  every: createMethod(4),
+  // `Array.prototype.find` method
+  // https://tc39.es/ecma262/#sec-array.prototype.find
+  find: createMethod(5),
+  // `Array.prototype.findIndex` method
+  // https://tc39.es/ecma262/#sec-array.prototype.findIndex
+  findIndex: createMethod(6),
+  // `Array.prototype.filterOut` method
+  // https://github.com/tc39/proposal-array-filtering
+  filterOut: createMethod(7)
+};
+
+},{"../internals/array-species-create":9,"../internals/function-bind-context":30,"../internals/indexed-object":38,"../internals/to-length":78,"../internals/to-object":79}],7:[function(require,module,exports){
+var fails = require('../internals/fails');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+var V8_VERSION = require('../internals/engine-v8-version');
+
+var SPECIES = wellKnownSymbol('species');
+
+module.exports = function (METHOD_NAME) {
+  // We can't use this feature detection in V8 since it causes
+  // deoptimization and serious performance degradation
+  // https://github.com/zloirock/core-js/issues/677
+  return V8_VERSION >= 51 || !fails(function () {
+    var array = [];
+    var constructor = array.constructor = {};
+    constructor[SPECIES] = function () {
+      return { foo: 1 };
+    };
+    return array[METHOD_NAME](Boolean).foo !== 1;
+  });
+};
+
+},{"../internals/engine-v8-version":26,"../internals/fails":29,"../internals/well-known-symbol":85}],8:[function(require,module,exports){
+'use strict';
+var fails = require('../internals/fails');
+
+module.exports = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call,no-throw-literal -- required for testing
+    method.call(null, argument || function () { throw 1; }, 1);
+  });
+};
+
+},{"../internals/fails":29}],9:[function(require,module,exports){
+var isObject = require('../internals/is-object');
+var isArray = require('../internals/is-array');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+
+var SPECIES = wellKnownSymbol('species');
+
+// `ArraySpeciesCreate` abstract operation
+// https://tc39.es/ecma262/#sec-arrayspeciescreate
+module.exports = function (originalArray, length) {
+  var C;
+  if (isArray(originalArray)) {
+    C = originalArray.constructor;
+    // cross-realm fallback
+    if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
+    else if (isObject(C)) {
+      C = C[SPECIES];
+      if (C === null) C = undefined;
+    }
+  } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
+};
+
+},{"../internals/is-array":42,"../internals/is-object":44,"../internals/well-known-symbol":85}],10:[function(require,module,exports){
+var toString = {}.toString;
+
+module.exports = function (it) {
+  return toString.call(it).slice(8, -1);
+};
+
+},{}],11:[function(require,module,exports){
+var TO_STRING_TAG_SUPPORT = require('../internals/to-string-tag-support');
+var classofRaw = require('../internals/classof-raw');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+
+var TO_STRING_TAG = wellKnownSymbol('toStringTag');
+// ES3 wrong here
+var CORRECT_ARGUMENTS = classofRaw(function () { return arguments; }()) == 'Arguments';
+
+// fallback for IE11 Script Access Denied error
+var tryGet = function (it, key) {
+  try {
+    return it[key];
+  } catch (error) { /* empty */ }
+};
+
+// getting tag from ES6+ `Object.prototype.toString`
+module.exports = TO_STRING_TAG_SUPPORT ? classofRaw : function (it) {
+  var O, tag, result;
+  return it === undefined ? 'Undefined' : it === null ? 'Null'
+    // @@toStringTag case
+    : typeof (tag = tryGet(O = Object(it), TO_STRING_TAG)) == 'string' ? tag
+    // builtinTag case
+    : CORRECT_ARGUMENTS ? classofRaw(O)
+    // ES3 arguments fallback
+    : (result = classofRaw(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : result;
+};
+
+},{"../internals/classof-raw":10,"../internals/to-string-tag-support":81,"../internals/well-known-symbol":85}],12:[function(require,module,exports){
+var has = require('../internals/has');
+var ownKeys = require('../internals/own-keys');
+var getOwnPropertyDescriptorModule = require('../internals/object-get-own-property-descriptor');
+var definePropertyModule = require('../internals/object-define-property');
+
+module.exports = function (target, source) {
+  var keys = ownKeys(source);
+  var defineProperty = definePropertyModule.f;
+  var getOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    if (!has(target, key)) defineProperty(target, key, getOwnPropertyDescriptor(source, key));
+  }
+};
+
+},{"../internals/has":34,"../internals/object-define-property":53,"../internals/object-get-own-property-descriptor":54,"../internals/own-keys":64}],13:[function(require,module,exports){
+var fails = require('../internals/fails');
+
+module.exports = !fails(function () {
+  function F() { /* empty */ }
+  F.prototype.constructor = null;
+  // eslint-disable-next-line es/no-object-getprototypeof -- required for testing
+  return Object.getPrototypeOf(new F()) !== F.prototype;
+});
+
+},{"../internals/fails":29}],14:[function(require,module,exports){
+'use strict';
+var IteratorPrototype = require('../internals/iterators-core').IteratorPrototype;
+var create = require('../internals/object-create');
+var createPropertyDescriptor = require('../internals/create-property-descriptor');
+var setToStringTag = require('../internals/set-to-string-tag');
+var Iterators = require('../internals/iterators');
+
+var returnThis = function () { return this; };
+
+module.exports = function (IteratorConstructor, NAME, next) {
+  var TO_STRING_TAG = NAME + ' Iterator';
+  IteratorConstructor.prototype = create(IteratorPrototype, { next: createPropertyDescriptor(1, next) });
+  setToStringTag(IteratorConstructor, TO_STRING_TAG, false, true);
+  Iterators[TO_STRING_TAG] = returnThis;
+  return IteratorConstructor;
+};
+
+},{"../internals/create-property-descriptor":16,"../internals/iterators":47,"../internals/iterators-core":46,"../internals/object-create":51,"../internals/set-to-string-tag":69}],15:[function(require,module,exports){
+var DESCRIPTORS = require('../internals/descriptors');
+var definePropertyModule = require('../internals/object-define-property');
+var createPropertyDescriptor = require('../internals/create-property-descriptor');
+
+module.exports = DESCRIPTORS ? function (object, key, value) {
+  return definePropertyModule.f(object, key, createPropertyDescriptor(1, value));
+} : function (object, key, value) {
+  object[key] = value;
+  return object;
+};
+
+},{"../internals/create-property-descriptor":16,"../internals/descriptors":21,"../internals/object-define-property":53}],16:[function(require,module,exports){
+module.exports = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
+
+},{}],17:[function(require,module,exports){
+'use strict';
+var toPrimitive = require('../internals/to-primitive');
+var definePropertyModule = require('../internals/object-define-property');
+var createPropertyDescriptor = require('../internals/create-property-descriptor');
+
+module.exports = function (object, key, value) {
+  var propertyKey = toPrimitive(key);
+  if (propertyKey in object) definePropertyModule.f(object, propertyKey, createPropertyDescriptor(0, value));
+  else object[propertyKey] = value;
+};
+
+},{"../internals/create-property-descriptor":16,"../internals/object-define-property":53,"../internals/to-primitive":80}],18:[function(require,module,exports){
+'use strict';
+var anObject = require('../internals/an-object');
+var toPrimitive = require('../internals/to-primitive');
+
+module.exports = function (hint) {
+  if (hint !== 'string' && hint !== 'number' && hint !== 'default') {
+    throw TypeError('Incorrect hint');
+  } return toPrimitive(anObject(this), hint !== 'number');
+};
+
+},{"../internals/an-object":4,"../internals/to-primitive":80}],19:[function(require,module,exports){
+'use strict';
+var $ = require('../internals/export');
+var createIteratorConstructor = require('../internals/create-iterator-constructor');
+var getPrototypeOf = require('../internals/object-get-prototype-of');
+var setPrototypeOf = require('../internals/object-set-prototype-of');
+var setToStringTag = require('../internals/set-to-string-tag');
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+var redefine = require('../internals/redefine');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+var IS_PURE = require('../internals/is-pure');
+var Iterators = require('../internals/iterators');
+var IteratorsCore = require('../internals/iterators-core');
+
+var IteratorPrototype = IteratorsCore.IteratorPrototype;
+var BUGGY_SAFARI_ITERATORS = IteratorsCore.BUGGY_SAFARI_ITERATORS;
+var ITERATOR = wellKnownSymbol('iterator');
+var KEYS = 'keys';
+var VALUES = 'values';
+var ENTRIES = 'entries';
+
+var returnThis = function () { return this; };
+
+module.exports = function (Iterable, NAME, IteratorConstructor, next, DEFAULT, IS_SET, FORCED) {
+  createIteratorConstructor(IteratorConstructor, NAME, next);
+
+  var getIterationMethod = function (KIND) {
+    if (KIND === DEFAULT && defaultIterator) return defaultIterator;
+    if (!BUGGY_SAFARI_ITERATORS && KIND in IterablePrototype) return IterablePrototype[KIND];
+    switch (KIND) {
+      case KEYS: return function keys() { return new IteratorConstructor(this, KIND); };
+      case VALUES: return function values() { return new IteratorConstructor(this, KIND); };
+      case ENTRIES: return function entries() { return new IteratorConstructor(this, KIND); };
+    } return function () { return new IteratorConstructor(this); };
   };
 
-  // Export the Underscore object for **Node.js**, with
-  // backwards-compatibility for their old module API. If we're in
-  // the browser, add `_` as a global object.
-  // (`nodeType` is checked to ensure that `module`
-  // and `exports` are not HTML elements.)
-  if (typeof exports != 'undefined' && !exports.nodeType) {
-    if (typeof module != 'undefined' && !module.nodeType && module.exports) {
-      exports = module.exports = _;
+  var TO_STRING_TAG = NAME + ' Iterator';
+  var INCORRECT_VALUES_NAME = false;
+  var IterablePrototype = Iterable.prototype;
+  var nativeIterator = IterablePrototype[ITERATOR]
+    || IterablePrototype['@@iterator']
+    || DEFAULT && IterablePrototype[DEFAULT];
+  var defaultIterator = !BUGGY_SAFARI_ITERATORS && nativeIterator || getIterationMethod(DEFAULT);
+  var anyNativeIterator = NAME == 'Array' ? IterablePrototype.entries || nativeIterator : nativeIterator;
+  var CurrentIteratorPrototype, methods, KEY;
+
+  // fix native
+  if (anyNativeIterator) {
+    CurrentIteratorPrototype = getPrototypeOf(anyNativeIterator.call(new Iterable()));
+    if (IteratorPrototype !== Object.prototype && CurrentIteratorPrototype.next) {
+      if (!IS_PURE && getPrototypeOf(CurrentIteratorPrototype) !== IteratorPrototype) {
+        if (setPrototypeOf) {
+          setPrototypeOf(CurrentIteratorPrototype, IteratorPrototype);
+        } else if (typeof CurrentIteratorPrototype[ITERATOR] != 'function') {
+          createNonEnumerableProperty(CurrentIteratorPrototype, ITERATOR, returnThis);
+        }
+      }
+      // Set @@toStringTag to native iterators
+      setToStringTag(CurrentIteratorPrototype, TO_STRING_TAG, true, true);
+      if (IS_PURE) Iterators[TO_STRING_TAG] = returnThis;
     }
-    exports._ = _;
+  }
+
+  // fix Array#{values, @@iterator}.name in V8 / FF
+  if (DEFAULT == VALUES && nativeIterator && nativeIterator.name !== VALUES) {
+    INCORRECT_VALUES_NAME = true;
+    defaultIterator = function values() { return nativeIterator.call(this); };
+  }
+
+  // define iterator
+  if ((!IS_PURE || FORCED) && IterablePrototype[ITERATOR] !== defaultIterator) {
+    createNonEnumerableProperty(IterablePrototype, ITERATOR, defaultIterator);
+  }
+  Iterators[NAME] = defaultIterator;
+
+  // export additional methods
+  if (DEFAULT) {
+    methods = {
+      values: getIterationMethod(VALUES),
+      keys: IS_SET ? defaultIterator : getIterationMethod(KEYS),
+      entries: getIterationMethod(ENTRIES)
+    };
+    if (FORCED) for (KEY in methods) {
+      if (BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME || !(KEY in IterablePrototype)) {
+        redefine(IterablePrototype, KEY, methods[KEY]);
+      }
+    } else $({ target: NAME, proto: true, forced: BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME }, methods);
+  }
+
+  return methods;
+};
+
+},{"../internals/create-iterator-constructor":14,"../internals/create-non-enumerable-property":15,"../internals/export":28,"../internals/is-pure":45,"../internals/iterators":47,"../internals/iterators-core":46,"../internals/object-get-prototype-of":58,"../internals/object-set-prototype-of":62,"../internals/redefine":66,"../internals/set-to-string-tag":69,"../internals/well-known-symbol":85}],20:[function(require,module,exports){
+var path = require('../internals/path');
+var has = require('../internals/has');
+var wrappedWellKnownSymbolModule = require('../internals/well-known-symbol-wrapped');
+var defineProperty = require('../internals/object-define-property').f;
+
+module.exports = function (NAME) {
+  var Symbol = path.Symbol || (path.Symbol = {});
+  if (!has(Symbol, NAME)) defineProperty(Symbol, NAME, {
+    value: wrappedWellKnownSymbolModule.f(NAME)
+  });
+};
+
+},{"../internals/has":34,"../internals/object-define-property":53,"../internals/path":65,"../internals/well-known-symbol-wrapped":84}],21:[function(require,module,exports){
+var fails = require('../internals/fails');
+
+// Detect IE8's incomplete defineProperty implementation
+module.exports = !fails(function () {
+  // eslint-disable-next-line es/no-object-defineproperty -- required for testing
+  return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] != 7;
+});
+
+},{"../internals/fails":29}],22:[function(require,module,exports){
+var global = require('../internals/global');
+var isObject = require('../internals/is-object');
+
+var document = global.document;
+// typeof document.createElement is 'object' in old IE
+var EXISTS = isObject(document) && isObject(document.createElement);
+
+module.exports = function (it) {
+  return EXISTS ? document.createElement(it) : {};
+};
+
+},{"../internals/global":33,"../internals/is-object":44}],23:[function(require,module,exports){
+// iterable DOM collections
+// flag - `iterable` interface - 'entries', 'keys', 'values', 'forEach' methods
+module.exports = {
+  CSSRuleList: 0,
+  CSSStyleDeclaration: 0,
+  CSSValueList: 0,
+  ClientRectList: 0,
+  DOMRectList: 0,
+  DOMStringList: 0,
+  DOMTokenList: 1,
+  DataTransferItemList: 0,
+  FileList: 0,
+  HTMLAllCollection: 0,
+  HTMLCollection: 0,
+  HTMLFormElement: 0,
+  HTMLSelectElement: 0,
+  MediaList: 0,
+  MimeTypeArray: 0,
+  NamedNodeMap: 0,
+  NodeList: 1,
+  PaintRequestList: 0,
+  Plugin: 0,
+  PluginArray: 0,
+  SVGLengthList: 0,
+  SVGNumberList: 0,
+  SVGPathSegList: 0,
+  SVGPointList: 0,
+  SVGStringList: 0,
+  SVGTransformList: 0,
+  SourceBufferList: 0,
+  StyleSheetList: 0,
+  TextTrackCueList: 0,
+  TextTrackList: 0,
+  TouchList: 0
+};
+
+},{}],24:[function(require,module,exports){
+var classof = require('../internals/classof-raw');
+var global = require('../internals/global');
+
+module.exports = classof(global.process) == 'process';
+
+},{"../internals/classof-raw":10,"../internals/global":33}],25:[function(require,module,exports){
+var getBuiltIn = require('../internals/get-built-in');
+
+module.exports = getBuiltIn('navigator', 'userAgent') || '';
+
+},{"../internals/get-built-in":32}],26:[function(require,module,exports){
+var global = require('../internals/global');
+var userAgent = require('../internals/engine-user-agent');
+
+var process = global.process;
+var versions = process && process.versions;
+var v8 = versions && versions.v8;
+var match, version;
+
+if (v8) {
+  match = v8.split('.');
+  version = match[0] + match[1];
+} else if (userAgent) {
+  match = userAgent.match(/Edge\/(\d+)/);
+  if (!match || match[1] >= 74) {
+    match = userAgent.match(/Chrome\/(\d+)/);
+    if (match) version = match[1];
+  }
+}
+
+module.exports = version && +version;
+
+},{"../internals/engine-user-agent":25,"../internals/global":33}],27:[function(require,module,exports){
+// IE8- don't enum bug keys
+module.exports = [
+  'constructor',
+  'hasOwnProperty',
+  'isPrototypeOf',
+  'propertyIsEnumerable',
+  'toLocaleString',
+  'toString',
+  'valueOf'
+];
+
+},{}],28:[function(require,module,exports){
+var global = require('../internals/global');
+var getOwnPropertyDescriptor = require('../internals/object-get-own-property-descriptor').f;
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+var redefine = require('../internals/redefine');
+var setGlobal = require('../internals/set-global');
+var copyConstructorProperties = require('../internals/copy-constructor-properties');
+var isForced = require('../internals/is-forced');
+
+/*
+  options.target      - name of the target object
+  options.global      - target is the global object
+  options.stat        - export as static methods of target
+  options.proto       - export as prototype methods of target
+  options.real        - real prototype method for the `pure` version
+  options.forced      - export even if the native feature is available
+  options.bind        - bind methods to the target, required for the `pure` version
+  options.wrap        - wrap constructors to preventing global pollution, required for the `pure` version
+  options.unsafe      - use the simple assignment of property instead of delete + defineProperty
+  options.sham        - add a flag to not completely full polyfills
+  options.enumerable  - export as enumerable property
+  options.noTargetGet - prevent calling a getter on target
+*/
+module.exports = function (options, source) {
+  var TARGET = options.target;
+  var GLOBAL = options.global;
+  var STATIC = options.stat;
+  var FORCED, target, key, targetProperty, sourceProperty, descriptor;
+  if (GLOBAL) {
+    target = global;
+  } else if (STATIC) {
+    target = global[TARGET] || setGlobal(TARGET, {});
   } else {
-    root._ = _;
+    target = (global[TARGET] || {}).prototype;
   }
-
-  // Current version.
-  _.VERSION = '1.9.1';
-
-  // Internal function that returns an efficient (for current engines) version
-  // of the passed-in callback, to be repeatedly applied in other Underscore
-  // functions.
-  var optimizeCb = function(func, context, argCount) {
-    if (context === void 0) return func;
-    switch (argCount == null ? 3 : argCount) {
-      case 1: return function(value) {
-        return func.call(context, value);
-      };
-      // The 2-argument case is omitted because we’re not using it.
-      case 3: return function(value, index, collection) {
-        return func.call(context, value, index, collection);
-      };
-      case 4: return function(accumulator, value, index, collection) {
-        return func.call(context, accumulator, value, index, collection);
-      };
+  if (target) for (key in source) {
+    sourceProperty = source[key];
+    if (options.noTargetGet) {
+      descriptor = getOwnPropertyDescriptor(target, key);
+      targetProperty = descriptor && descriptor.value;
+    } else targetProperty = target[key];
+    FORCED = isForced(GLOBAL ? key : TARGET + (STATIC ? '.' : '#') + key, options.forced);
+    // contained in target
+    if (!FORCED && targetProperty !== undefined) {
+      if (typeof sourceProperty === typeof targetProperty) continue;
+      copyConstructorProperties(sourceProperty, targetProperty);
     }
-    return function() {
-      return func.apply(context, arguments);
-    };
-  };
-
-  var builtinIteratee;
-
-  // An internal function to generate callbacks that can be applied to each
-  // element in a collection, returning the desired result — either `identity`,
-  // an arbitrary callback, a property matcher, or a property accessor.
-  var cb = function(value, context, argCount) {
-    if (_.iteratee !== builtinIteratee) return _.iteratee(value, context);
-    if (value == null) return _.identity;
-    if (_.isFunction(value)) return optimizeCb(value, context, argCount);
-    if (_.isObject(value) && !_.isArray(value)) return _.matcher(value);
-    return _.property(value);
-  };
-
-  // External wrapper for our callback generator. Users may customize
-  // `_.iteratee` if they want additional predicate/iteratee shorthand styles.
-  // This abstraction hides the internal-only argCount argument.
-  _.iteratee = builtinIteratee = function(value, context) {
-    return cb(value, context, Infinity);
-  };
-
-  // Some functions take a variable number of arguments, or a few expected
-  // arguments at the beginning and then a variable number of values to operate
-  // on. This helper accumulates all remaining arguments past the function’s
-  // argument length (or an explicit `startIndex`), into an array that becomes
-  // the last argument. Similar to ES6’s "rest parameter".
-  var restArguments = function(func, startIndex) {
-    startIndex = startIndex == null ? func.length - 1 : +startIndex;
-    return function() {
-      var length = Math.max(arguments.length - startIndex, 0),
-          rest = Array(length),
-          index = 0;
-      for (; index < length; index++) {
-        rest[index] = arguments[index + startIndex];
-      }
-      switch (startIndex) {
-        case 0: return func.call(this, rest);
-        case 1: return func.call(this, arguments[0], rest);
-        case 2: return func.call(this, arguments[0], arguments[1], rest);
-      }
-      var args = Array(startIndex + 1);
-      for (index = 0; index < startIndex; index++) {
-        args[index] = arguments[index];
-      }
-      args[startIndex] = rest;
-      return func.apply(this, args);
-    };
-  };
-
-  // An internal function for creating a new object that inherits from another.
-  var baseCreate = function(prototype) {
-    if (!_.isObject(prototype)) return {};
-    if (nativeCreate) return nativeCreate(prototype);
-    Ctor.prototype = prototype;
-    var result = new Ctor;
-    Ctor.prototype = null;
-    return result;
-  };
-
-  var shallowProperty = function(key) {
-    return function(obj) {
-      return obj == null ? void 0 : obj[key];
-    };
-  };
-
-  var has = function(obj, path) {
-    return obj != null && hasOwnProperty.call(obj, path);
+    // add a flag to not completely full polyfills
+    if (options.sham || (targetProperty && targetProperty.sham)) {
+      createNonEnumerableProperty(sourceProperty, 'sham', true);
+    }
+    // extend global
+    redefine(target, key, sourceProperty, options);
   }
+};
 
-  var deepGet = function(obj, path) {
-    var length = path.length;
-    for (var i = 0; i < length; i++) {
-      if (obj == null) return void 0;
-      obj = obj[path[i]];
-    }
-    return length ? obj : void 0;
-  };
-
-  // Helper for collection methods to determine whether a collection
-  // should be iterated as an array or as an object.
-  // Related: http://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength
-  // Avoids a very nasty iOS 8 JIT bug on ARM-64. #2094
-  var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
-  var getLength = shallowProperty('length');
-  var isArrayLike = function(collection) {
-    var length = getLength(collection);
-    return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
-  };
-
-  // Collection Functions
-  // --------------------
-
-  // The cornerstone, an `each` implementation, aka `forEach`.
-  // Handles raw objects in addition to array-likes. Treats all
-  // sparse array-likes as if they were dense.
-  _.each = _.forEach = function(obj, iteratee, context) {
-    iteratee = optimizeCb(iteratee, context);
-    var i, length;
-    if (isArrayLike(obj)) {
-      for (i = 0, length = obj.length; i < length; i++) {
-        iteratee(obj[i], i, obj);
-      }
-    } else {
-      var keys = _.keys(obj);
-      for (i = 0, length = keys.length; i < length; i++) {
-        iteratee(obj[keys[i]], keys[i], obj);
-      }
-    }
-    return obj;
-  };
-
-  // Return the results of applying the iteratee to each element.
-  _.map = _.collect = function(obj, iteratee, context) {
-    iteratee = cb(iteratee, context);
-    var keys = !isArrayLike(obj) && _.keys(obj),
-        length = (keys || obj).length,
-        results = Array(length);
-    for (var index = 0; index < length; index++) {
-      var currentKey = keys ? keys[index] : index;
-      results[index] = iteratee(obj[currentKey], currentKey, obj);
-    }
-    return results;
-  };
-
-  // Create a reducing function iterating left or right.
-  var createReduce = function(dir) {
-    // Wrap code that reassigns argument variables in a separate function than
-    // the one that accesses `arguments.length` to avoid a perf hit. (#1991)
-    var reducer = function(obj, iteratee, memo, initial) {
-      var keys = !isArrayLike(obj) && _.keys(obj),
-          length = (keys || obj).length,
-          index = dir > 0 ? 0 : length - 1;
-      if (!initial) {
-        memo = obj[keys ? keys[index] : index];
-        index += dir;
-      }
-      for (; index >= 0 && index < length; index += dir) {
-        var currentKey = keys ? keys[index] : index;
-        memo = iteratee(memo, obj[currentKey], currentKey, obj);
-      }
-      return memo;
-    };
-
-    return function(obj, iteratee, memo, context) {
-      var initial = arguments.length >= 3;
-      return reducer(obj, optimizeCb(iteratee, context, 4), memo, initial);
-    };
-  };
-
-  // **Reduce** builds up a single result from a list of values, aka `inject`,
-  // or `foldl`.
-  _.reduce = _.foldl = _.inject = createReduce(1);
-
-  // The right-associative version of reduce, also known as `foldr`.
-  _.reduceRight = _.foldr = createReduce(-1);
-
-  // Return the first value which passes a truth test. Aliased as `detect`.
-  _.find = _.detect = function(obj, predicate, context) {
-    var keyFinder = isArrayLike(obj) ? _.findIndex : _.findKey;
-    var key = keyFinder(obj, predicate, context);
-    if (key !== void 0 && key !== -1) return obj[key];
-  };
-
-  // Return all the elements that pass a truth test.
-  // Aliased as `select`.
-  _.filter = _.select = function(obj, predicate, context) {
-    var results = [];
-    predicate = cb(predicate, context);
-    _.each(obj, function(value, index, list) {
-      if (predicate(value, index, list)) results.push(value);
-    });
-    return results;
-  };
-
-  // Return all the elements for which a truth test fails.
-  _.reject = function(obj, predicate, context) {
-    return _.filter(obj, _.negate(cb(predicate)), context);
-  };
-
-  // Determine whether all of the elements match a truth test.
-  // Aliased as `all`.
-  _.every = _.all = function(obj, predicate, context) {
-    predicate = cb(predicate, context);
-    var keys = !isArrayLike(obj) && _.keys(obj),
-        length = (keys || obj).length;
-    for (var index = 0; index < length; index++) {
-      var currentKey = keys ? keys[index] : index;
-      if (!predicate(obj[currentKey], currentKey, obj)) return false;
-    }
+},{"../internals/copy-constructor-properties":12,"../internals/create-non-enumerable-property":15,"../internals/global":33,"../internals/is-forced":43,"../internals/object-get-own-property-descriptor":54,"../internals/redefine":66,"../internals/set-global":68}],29:[function(require,module,exports){
+module.exports = function (exec) {
+  try {
+    return !!exec();
+  } catch (error) {
     return true;
+  }
+};
+
+},{}],30:[function(require,module,exports){
+var aFunction = require('../internals/a-function');
+
+// optional / simple context binding
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 0: return function () {
+      return fn.call(that);
+    };
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
   };
+};
 
-  // Determine if at least one element in the object matches a truth test.
-  // Aliased as `any`.
-  _.some = _.any = function(obj, predicate, context) {
-    predicate = cb(predicate, context);
-    var keys = !isArrayLike(obj) && _.keys(obj),
-        length = (keys || obj).length;
-    for (var index = 0; index < length; index++) {
-      var currentKey = keys ? keys[index] : index;
-      if (predicate(obj[currentKey], currentKey, obj)) return true;
-    }
-    return false;
+},{"../internals/a-function":1}],31:[function(require,module,exports){
+'use strict';
+var aFunction = require('../internals/a-function');
+var isObject = require('../internals/is-object');
+
+var slice = [].slice;
+var factories = {};
+
+var construct = function (C, argsLength, args) {
+  if (!(argsLength in factories)) {
+    for (var list = [], i = 0; i < argsLength; i++) list[i] = 'a[' + i + ']';
+    // eslint-disable-next-line no-new-func -- we have no proper alternatives, IE8- only
+    factories[argsLength] = Function('C,a', 'return new C(' + list.join(',') + ')');
+  } return factories[argsLength](C, args);
+};
+
+// `Function.prototype.bind` method implementation
+// https://tc39.es/ecma262/#sec-function.prototype.bind
+module.exports = Function.bind || function bind(that /* , ...args */) {
+  var fn = aFunction(this);
+  var partArgs = slice.call(arguments, 1);
+  var boundFunction = function bound(/* args... */) {
+    var args = partArgs.concat(slice.call(arguments));
+    return this instanceof boundFunction ? construct(fn, args.length, args) : fn.apply(that, args);
   };
+  if (isObject(fn.prototype)) boundFunction.prototype = fn.prototype;
+  return boundFunction;
+};
 
-  // Determine if the array or object contains a given item (using `===`).
-  // Aliased as `includes` and `include`.
-  _.contains = _.includes = _.include = function(obj, item, fromIndex, guard) {
-    if (!isArrayLike(obj)) obj = _.values(obj);
-    if (typeof fromIndex != 'number' || guard) fromIndex = 0;
-    return _.indexOf(obj, item, fromIndex) >= 0;
+},{"../internals/a-function":1,"../internals/is-object":44}],32:[function(require,module,exports){
+var path = require('../internals/path');
+var global = require('../internals/global');
+
+var aFunction = function (variable) {
+  return typeof variable == 'function' ? variable : undefined;
+};
+
+module.exports = function (namespace, method) {
+  return arguments.length < 2 ? aFunction(path[namespace]) || aFunction(global[namespace])
+    : path[namespace] && path[namespace][method] || global[namespace] && global[namespace][method];
+};
+
+},{"../internals/global":33,"../internals/path":65}],33:[function(require,module,exports){
+(function (global){(function (){
+var check = function (it) {
+  return it && it.Math == Math && it;
+};
+
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+module.exports =
+  // eslint-disable-next-line es/no-global-this -- safe
+  check(typeof globalThis == 'object' && globalThis) ||
+  check(typeof window == 'object' && window) ||
+  // eslint-disable-next-line no-restricted-globals -- safe
+  check(typeof self == 'object' && self) ||
+  check(typeof global == 'object' && global) ||
+  // eslint-disable-next-line no-new-func -- fallback
+  (function () { return this; })() || Function('return this')();
+
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],34:[function(require,module,exports){
+var toObject = require('../internals/to-object');
+
+var hasOwnProperty = {}.hasOwnProperty;
+
+module.exports = function hasOwn(it, key) {
+  return hasOwnProperty.call(toObject(it), key);
+};
+
+},{"../internals/to-object":79}],35:[function(require,module,exports){
+module.exports = {};
+
+},{}],36:[function(require,module,exports){
+var getBuiltIn = require('../internals/get-built-in');
+
+module.exports = getBuiltIn('document', 'documentElement');
+
+},{"../internals/get-built-in":32}],37:[function(require,module,exports){
+var DESCRIPTORS = require('../internals/descriptors');
+var fails = require('../internals/fails');
+var createElement = require('../internals/document-create-element');
+
+// Thank's IE8 for his funny defineProperty
+module.exports = !DESCRIPTORS && !fails(function () {
+  // eslint-disable-next-line es/no-object-defineproperty -- requied for testing
+  return Object.defineProperty(createElement('div'), 'a', {
+    get: function () { return 7; }
+  }).a != 7;
+});
+
+},{"../internals/descriptors":21,"../internals/document-create-element":22,"../internals/fails":29}],38:[function(require,module,exports){
+var fails = require('../internals/fails');
+var classof = require('../internals/classof-raw');
+
+var split = ''.split;
+
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
+module.exports = fails(function () {
+  // throws an error in rhino, see https://github.com/mozilla/rhino/issues/346
+  // eslint-disable-next-line no-prototype-builtins -- safe
+  return !Object('z').propertyIsEnumerable(0);
+}) ? function (it) {
+  return classof(it) == 'String' ? split.call(it, '') : Object(it);
+} : Object;
+
+},{"../internals/classof-raw":10,"../internals/fails":29}],39:[function(require,module,exports){
+var isObject = require('../internals/is-object');
+var setPrototypeOf = require('../internals/object-set-prototype-of');
+
+// makes subclassing work correct for wrapped built-ins
+module.exports = function ($this, dummy, Wrapper) {
+  var NewTarget, NewTargetPrototype;
+  if (
+    // it can work only with native `setPrototypeOf`
+    setPrototypeOf &&
+    // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
+    typeof (NewTarget = dummy.constructor) == 'function' &&
+    NewTarget !== Wrapper &&
+    isObject(NewTargetPrototype = NewTarget.prototype) &&
+    NewTargetPrototype !== Wrapper.prototype
+  ) setPrototypeOf($this, NewTargetPrototype);
+  return $this;
+};
+
+},{"../internals/is-object":44,"../internals/object-set-prototype-of":62}],40:[function(require,module,exports){
+var store = require('../internals/shared-store');
+
+var functionToString = Function.toString;
+
+// this helper broken in `3.4.1-3.4.4`, so we can't use `shared` helper
+if (typeof store.inspectSource != 'function') {
+  store.inspectSource = function (it) {
+    return functionToString.call(it);
   };
+}
 
-  // Invoke a method (with arguments) on every item in a collection.
-  _.invoke = restArguments(function(obj, path, args) {
-    var contextPath, func;
-    if (_.isFunction(path)) {
-      func = path;
-    } else if (_.isArray(path)) {
-      contextPath = path.slice(0, -1);
-      path = path[path.length - 1];
-    }
-    return _.map(obj, function(context) {
-      var method = func;
-      if (!method) {
-        if (contextPath && contextPath.length) {
-          context = deepGet(context, contextPath);
-        }
-        if (context == null) return void 0;
-        method = context[path];
-      }
-      return method == null ? method : method.apply(context, args);
-    });
-  });
+module.exports = store.inspectSource;
 
-  // Convenience version of a common use case of `map`: fetching a property.
-  _.pluck = function(obj, key) {
-    return _.map(obj, _.property(key));
+},{"../internals/shared-store":71}],41:[function(require,module,exports){
+var NATIVE_WEAK_MAP = require('../internals/native-weak-map');
+var global = require('../internals/global');
+var isObject = require('../internals/is-object');
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+var objectHas = require('../internals/has');
+var shared = require('../internals/shared-store');
+var sharedKey = require('../internals/shared-key');
+var hiddenKeys = require('../internals/hidden-keys');
+
+var OBJECT_ALREADY_INITIALIZED = 'Object already initialized';
+var WeakMap = global.WeakMap;
+var set, get, has;
+
+var enforce = function (it) {
+  return has(it) ? get(it) : set(it, {});
+};
+
+var getterFor = function (TYPE) {
+  return function (it) {
+    var state;
+    if (!isObject(it) || (state = get(it)).type !== TYPE) {
+      throw TypeError('Incompatible receiver, ' + TYPE + ' required');
+    } return state;
   };
+};
 
-  // Convenience version of a common use case of `filter`: selecting only objects
-  // containing specific `key:value` pairs.
-  _.where = function(obj, attrs) {
-    return _.filter(obj, _.matcher(attrs));
+if (NATIVE_WEAK_MAP) {
+  var store = shared.state || (shared.state = new WeakMap());
+  var wmget = store.get;
+  var wmhas = store.has;
+  var wmset = store.set;
+  set = function (it, metadata) {
+    if (wmhas.call(store, it)) throw new TypeError(OBJECT_ALREADY_INITIALIZED);
+    metadata.facade = it;
+    wmset.call(store, it, metadata);
+    return metadata;
   };
-
-  // Convenience version of a common use case of `find`: getting the first object
-  // containing specific `key:value` pairs.
-  _.findWhere = function(obj, attrs) {
-    return _.find(obj, _.matcher(attrs));
+  get = function (it) {
+    return wmget.call(store, it) || {};
   };
+  has = function (it) {
+    return wmhas.call(store, it);
+  };
+} else {
+  var STATE = sharedKey('state');
+  hiddenKeys[STATE] = true;
+  set = function (it, metadata) {
+    if (objectHas(it, STATE)) throw new TypeError(OBJECT_ALREADY_INITIALIZED);
+    metadata.facade = it;
+    createNonEnumerableProperty(it, STATE, metadata);
+    return metadata;
+  };
+  get = function (it) {
+    return objectHas(it, STATE) ? it[STATE] : {};
+  };
+  has = function (it) {
+    return objectHas(it, STATE);
+  };
+}
 
-  // Return the maximum element (or element-based computation).
-  _.max = function(obj, iteratee, context) {
-    var result = -Infinity, lastComputed = -Infinity,
-        value, computed;
-    if (iteratee == null || typeof iteratee == 'number' && typeof obj[0] != 'object' && obj != null) {
-      obj = isArrayLike(obj) ? obj : _.values(obj);
-      for (var i = 0, length = obj.length; i < length; i++) {
-        value = obj[i];
-        if (value != null && value > result) {
-          result = value;
-        }
-      }
-    } else {
-      iteratee = cb(iteratee, context);
-      _.each(obj, function(v, index, list) {
-        computed = iteratee(v, index, list);
-        if (computed > lastComputed || computed === -Infinity && result === -Infinity) {
-          result = v;
-          lastComputed = computed;
-        }
+module.exports = {
+  set: set,
+  get: get,
+  has: has,
+  enforce: enforce,
+  getterFor: getterFor
+};
+
+},{"../internals/create-non-enumerable-property":15,"../internals/global":33,"../internals/has":34,"../internals/hidden-keys":35,"../internals/is-object":44,"../internals/native-weak-map":49,"../internals/shared-key":70,"../internals/shared-store":71}],42:[function(require,module,exports){
+var classof = require('../internals/classof-raw');
+
+// `IsArray` abstract operation
+// https://tc39.es/ecma262/#sec-isarray
+// eslint-disable-next-line es/no-array-isarray -- safe
+module.exports = Array.isArray || function isArray(arg) {
+  return classof(arg) == 'Array';
+};
+
+},{"../internals/classof-raw":10}],43:[function(require,module,exports){
+var fails = require('../internals/fails');
+
+var replacement = /#|\.prototype\./;
+
+var isForced = function (feature, detection) {
+  var value = data[normalize(feature)];
+  return value == POLYFILL ? true
+    : value == NATIVE ? false
+    : typeof detection == 'function' ? fails(detection)
+    : !!detection;
+};
+
+var normalize = isForced.normalize = function (string) {
+  return String(string).replace(replacement, '.').toLowerCase();
+};
+
+var data = isForced.data = {};
+var NATIVE = isForced.NATIVE = 'N';
+var POLYFILL = isForced.POLYFILL = 'P';
+
+module.exports = isForced;
+
+},{"../internals/fails":29}],44:[function(require,module,exports){
+module.exports = function (it) {
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+
+},{}],45:[function(require,module,exports){
+module.exports = false;
+
+},{}],46:[function(require,module,exports){
+'use strict';
+var fails = require('../internals/fails');
+var getPrototypeOf = require('../internals/object-get-prototype-of');
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+var has = require('../internals/has');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+var IS_PURE = require('../internals/is-pure');
+
+var ITERATOR = wellKnownSymbol('iterator');
+var BUGGY_SAFARI_ITERATORS = false;
+
+var returnThis = function () { return this; };
+
+// `%IteratorPrototype%` object
+// https://tc39.es/ecma262/#sec-%iteratorprototype%-object
+var IteratorPrototype, PrototypeOfArrayIteratorPrototype, arrayIterator;
+
+/* eslint-disable es/no-array-prototype-keys -- safe */
+if ([].keys) {
+  arrayIterator = [].keys();
+  // Safari 8 has buggy iterators w/o `next`
+  if (!('next' in arrayIterator)) BUGGY_SAFARI_ITERATORS = true;
+  else {
+    PrototypeOfArrayIteratorPrototype = getPrototypeOf(getPrototypeOf(arrayIterator));
+    if (PrototypeOfArrayIteratorPrototype !== Object.prototype) IteratorPrototype = PrototypeOfArrayIteratorPrototype;
+  }
+}
+
+var NEW_ITERATOR_PROTOTYPE = IteratorPrototype == undefined || fails(function () {
+  var test = {};
+  // FF44- legacy iterators case
+  return IteratorPrototype[ITERATOR].call(test) !== test;
+});
+
+if (NEW_ITERATOR_PROTOTYPE) IteratorPrototype = {};
+
+// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
+if ((!IS_PURE || NEW_ITERATOR_PROTOTYPE) && !has(IteratorPrototype, ITERATOR)) {
+  createNonEnumerableProperty(IteratorPrototype, ITERATOR, returnThis);
+}
+
+module.exports = {
+  IteratorPrototype: IteratorPrototype,
+  BUGGY_SAFARI_ITERATORS: BUGGY_SAFARI_ITERATORS
+};
+
+},{"../internals/create-non-enumerable-property":15,"../internals/fails":29,"../internals/has":34,"../internals/is-pure":45,"../internals/object-get-prototype-of":58,"../internals/well-known-symbol":85}],47:[function(require,module,exports){
+arguments[4][35][0].apply(exports,arguments)
+},{"dup":35}],48:[function(require,module,exports){
+var IS_NODE = require('../internals/engine-is-node');
+var V8_VERSION = require('../internals/engine-v8-version');
+var fails = require('../internals/fails');
+
+// eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
+module.exports = !!Object.getOwnPropertySymbols && !fails(function () {
+  // eslint-disable-next-line es/no-symbol -- required for testing
+  return !Symbol.sham &&
+    // Chrome 38 Symbol has incorrect toString conversion
+    // Chrome 38-40 symbols are not inherited from DOM collections prototypes to instances
+    (IS_NODE ? V8_VERSION === 38 : V8_VERSION > 37 && V8_VERSION < 41);
+});
+
+},{"../internals/engine-is-node":24,"../internals/engine-v8-version":26,"../internals/fails":29}],49:[function(require,module,exports){
+var global = require('../internals/global');
+var inspectSource = require('../internals/inspect-source');
+
+var WeakMap = global.WeakMap;
+
+module.exports = typeof WeakMap === 'function' && /native code/.test(inspectSource(WeakMap));
+
+},{"../internals/global":33,"../internals/inspect-source":40}],50:[function(require,module,exports){
+'use strict';
+var DESCRIPTORS = require('../internals/descriptors');
+var fails = require('../internals/fails');
+var objectKeys = require('../internals/object-keys');
+var getOwnPropertySymbolsModule = require('../internals/object-get-own-property-symbols');
+var propertyIsEnumerableModule = require('../internals/object-property-is-enumerable');
+var toObject = require('../internals/to-object');
+var IndexedObject = require('../internals/indexed-object');
+
+// eslint-disable-next-line es/no-object-assign -- safe
+var $assign = Object.assign;
+// eslint-disable-next-line es/no-object-defineproperty -- required for testing
+var defineProperty = Object.defineProperty;
+
+// `Object.assign` method
+// https://tc39.es/ecma262/#sec-object.assign
+module.exports = !$assign || fails(function () {
+  // should have correct order of operations (Edge bug)
+  if (DESCRIPTORS && $assign({ b: 1 }, $assign(defineProperty({}, 'a', {
+    enumerable: true,
+    get: function () {
+      defineProperty(this, 'b', {
+        value: 3,
+        enumerable: false
       });
     }
-    return result;
-  };
-
-  // Return the minimum element (or element-based computation).
-  _.min = function(obj, iteratee, context) {
-    var result = Infinity, lastComputed = Infinity,
-        value, computed;
-    if (iteratee == null || typeof iteratee == 'number' && typeof obj[0] != 'object' && obj != null) {
-      obj = isArrayLike(obj) ? obj : _.values(obj);
-      for (var i = 0, length = obj.length; i < length; i++) {
-        value = obj[i];
-        if (value != null && value < result) {
-          result = value;
-        }
-      }
-    } else {
-      iteratee = cb(iteratee, context);
-      _.each(obj, function(v, index, list) {
-        computed = iteratee(v, index, list);
-        if (computed < lastComputed || computed === Infinity && result === Infinity) {
-          result = v;
-          lastComputed = computed;
-        }
-      });
-    }
-    return result;
-  };
-
-  // Shuffle a collection.
-  _.shuffle = function(obj) {
-    return _.sample(obj, Infinity);
-  };
-
-  // Sample **n** random values from a collection using the modern version of the
-  // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
-  // If **n** is not specified, returns a single random element.
-  // The internal `guard` argument allows it to work with `map`.
-  _.sample = function(obj, n, guard) {
-    if (n == null || guard) {
-      if (!isArrayLike(obj)) obj = _.values(obj);
-      return obj[_.random(obj.length - 1)];
-    }
-    var sample = isArrayLike(obj) ? _.clone(obj) : _.values(obj);
-    var length = getLength(sample);
-    n = Math.max(Math.min(n, length), 0);
-    var last = length - 1;
-    for (var index = 0; index < n; index++) {
-      var rand = _.random(index, last);
-      var temp = sample[index];
-      sample[index] = sample[rand];
-      sample[rand] = temp;
-    }
-    return sample.slice(0, n);
-  };
-
-  // Sort the object's values by a criterion produced by an iteratee.
-  _.sortBy = function(obj, iteratee, context) {
-    var index = 0;
-    iteratee = cb(iteratee, context);
-    return _.pluck(_.map(obj, function(value, key, list) {
-      return {
-        value: value,
-        index: index++,
-        criteria: iteratee(value, key, list)
-      };
-    }).sort(function(left, right) {
-      var a = left.criteria;
-      var b = right.criteria;
-      if (a !== b) {
-        if (a > b || a === void 0) return 1;
-        if (a < b || b === void 0) return -1;
-      }
-      return left.index - right.index;
-    }), 'value');
-  };
-
-  // An internal function used for aggregate "group by" operations.
-  var group = function(behavior, partition) {
-    return function(obj, iteratee, context) {
-      var result = partition ? [[], []] : {};
-      iteratee = cb(iteratee, context);
-      _.each(obj, function(value, index) {
-        var key = iteratee(value, index, obj);
-        behavior(result, value, key);
-      });
-      return result;
-    };
-  };
-
-  // Groups the object's values by a criterion. Pass either a string attribute
-  // to group by, or a function that returns the criterion.
-  _.groupBy = group(function(result, value, key) {
-    if (has(result, key)) result[key].push(value); else result[key] = [value];
-  });
-
-  // Indexes the object's values by a criterion, similar to `groupBy`, but for
-  // when you know that your index values will be unique.
-  _.indexBy = group(function(result, value, key) {
-    result[key] = value;
-  });
-
-  // Counts instances of an object that group by a certain criterion. Pass
-  // either a string attribute to count by, or a function that returns the
-  // criterion.
-  _.countBy = group(function(result, value, key) {
-    if (has(result, key)) result[key]++; else result[key] = 1;
-  });
-
-  var reStrSymbol = /[^\ud800-\udfff]|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff]/g;
-  // Safely create a real, live array from anything iterable.
-  _.toArray = function(obj) {
-    if (!obj) return [];
-    if (_.isArray(obj)) return slice.call(obj);
-    if (_.isString(obj)) {
-      // Keep surrogate pair characters together
-      return obj.match(reStrSymbol);
-    }
-    if (isArrayLike(obj)) return _.map(obj, _.identity);
-    return _.values(obj);
-  };
-
-  // Return the number of elements in an object.
-  _.size = function(obj) {
-    if (obj == null) return 0;
-    return isArrayLike(obj) ? obj.length : _.keys(obj).length;
-  };
-
-  // Split a collection into two arrays: one whose elements all satisfy the given
-  // predicate, and one whose elements all do not satisfy the predicate.
-  _.partition = group(function(result, value, pass) {
-    result[pass ? 0 : 1].push(value);
-  }, true);
-
-  // Array Functions
-  // ---------------
-
-  // Get the first element of an array. Passing **n** will return the first N
-  // values in the array. Aliased as `head` and `take`. The **guard** check
-  // allows it to work with `_.map`.
-  _.first = _.head = _.take = function(array, n, guard) {
-    if (array == null || array.length < 1) return n == null ? void 0 : [];
-    if (n == null || guard) return array[0];
-    return _.initial(array, array.length - n);
-  };
-
-  // Returns everything but the last entry of the array. Especially useful on
-  // the arguments object. Passing **n** will return all the values in
-  // the array, excluding the last N.
-  _.initial = function(array, n, guard) {
-    return slice.call(array, 0, Math.max(0, array.length - (n == null || guard ? 1 : n)));
-  };
-
-  // Get the last element of an array. Passing **n** will return the last N
-  // values in the array.
-  _.last = function(array, n, guard) {
-    if (array == null || array.length < 1) return n == null ? void 0 : [];
-    if (n == null || guard) return array[array.length - 1];
-    return _.rest(array, Math.max(0, array.length - n));
-  };
-
-  // Returns everything but the first entry of the array. Aliased as `tail` and `drop`.
-  // Especially useful on the arguments object. Passing an **n** will return
-  // the rest N values in the array.
-  _.rest = _.tail = _.drop = function(array, n, guard) {
-    return slice.call(array, n == null || guard ? 1 : n);
-  };
-
-  // Trim out all falsy values from an array.
-  _.compact = function(array) {
-    return _.filter(array, Boolean);
-  };
-
-  // Internal implementation of a recursive `flatten` function.
-  var flatten = function(input, shallow, strict, output) {
-    output = output || [];
-    var idx = output.length;
-    for (var i = 0, length = getLength(input); i < length; i++) {
-      var value = input[i];
-      if (isArrayLike(value) && (_.isArray(value) || _.isArguments(value))) {
-        // Flatten current level of array or arguments object.
-        if (shallow) {
-          var j = 0, len = value.length;
-          while (j < len) output[idx++] = value[j++];
-        } else {
-          flatten(value, shallow, strict, output);
-          idx = output.length;
-        }
-      } else if (!strict) {
-        output[idx++] = value;
-      }
-    }
-    return output;
-  };
-
-  // Flatten out an array, either recursively (by default), or just one level.
-  _.flatten = function(array, shallow) {
-    return flatten(array, shallow, false);
-  };
-
-  // Return a version of the array that does not contain the specified value(s).
-  _.without = restArguments(function(array, otherArrays) {
-    return _.difference(array, otherArrays);
-  });
-
-  // Produce a duplicate-free version of the array. If the array has already
-  // been sorted, you have the option of using a faster algorithm.
-  // The faster algorithm will not work with an iteratee if the iteratee
-  // is not a one-to-one function, so providing an iteratee will disable
-  // the faster algorithm.
-  // Aliased as `unique`.
-  _.uniq = _.unique = function(array, isSorted, iteratee, context) {
-    if (!_.isBoolean(isSorted)) {
-      context = iteratee;
-      iteratee = isSorted;
-      isSorted = false;
-    }
-    if (iteratee != null) iteratee = cb(iteratee, context);
-    var result = [];
-    var seen = [];
-    for (var i = 0, length = getLength(array); i < length; i++) {
-      var value = array[i],
-          computed = iteratee ? iteratee(value, i, array) : value;
-      if (isSorted && !iteratee) {
-        if (!i || seen !== computed) result.push(value);
-        seen = computed;
-      } else if (iteratee) {
-        if (!_.contains(seen, computed)) {
-          seen.push(computed);
-          result.push(value);
-        }
-      } else if (!_.contains(result, value)) {
-        result.push(value);
-      }
-    }
-    return result;
-  };
-
-  // Produce an array that contains the union: each distinct element from all of
-  // the passed-in arrays.
-  _.union = restArguments(function(arrays) {
-    return _.uniq(flatten(arrays, true, true));
-  });
-
-  // Produce an array that contains every item shared between all the
-  // passed-in arrays.
-  _.intersection = function(array) {
-    var result = [];
-    var argsLength = arguments.length;
-    for (var i = 0, length = getLength(array); i < length; i++) {
-      var item = array[i];
-      if (_.contains(result, item)) continue;
-      var j;
-      for (j = 1; j < argsLength; j++) {
-        if (!_.contains(arguments[j], item)) break;
-      }
-      if (j === argsLength) result.push(item);
-    }
-    return result;
-  };
-
-  // Take the difference between one array and a number of other arrays.
-  // Only the elements present in just the first array will remain.
-  _.difference = restArguments(function(array, rest) {
-    rest = flatten(rest, true, true);
-    return _.filter(array, function(value){
-      return !_.contains(rest, value);
-    });
-  });
-
-  // Complement of _.zip. Unzip accepts an array of arrays and groups
-  // each array's elements on shared indices.
-  _.unzip = function(array) {
-    var length = array && _.max(array, getLength).length || 0;
-    var result = Array(length);
-
-    for (var index = 0; index < length; index++) {
-      result[index] = _.pluck(array, index);
-    }
-    return result;
-  };
-
-  // Zip together multiple lists into a single array -- elements that share
-  // an index go together.
-  _.zip = restArguments(_.unzip);
-
-  // Converts lists into objects. Pass either a single array of `[key, value]`
-  // pairs, or two parallel arrays of the same length -- one of keys, and one of
-  // the corresponding values. Passing by pairs is the reverse of _.pairs.
-  _.object = function(list, values) {
-    var result = {};
-    for (var i = 0, length = getLength(list); i < length; i++) {
-      if (values) {
-        result[list[i]] = values[i];
-      } else {
-        result[list[i][0]] = list[i][1];
-      }
-    }
-    return result;
-  };
-
-  // Generator function to create the findIndex and findLastIndex functions.
-  var createPredicateIndexFinder = function(dir) {
-    return function(array, predicate, context) {
-      predicate = cb(predicate, context);
-      var length = getLength(array);
-      var index = dir > 0 ? 0 : length - 1;
-      for (; index >= 0 && index < length; index += dir) {
-        if (predicate(array[index], index, array)) return index;
-      }
-      return -1;
-    };
-  };
-
-  // Returns the first index on an array-like that passes a predicate test.
-  _.findIndex = createPredicateIndexFinder(1);
-  _.findLastIndex = createPredicateIndexFinder(-1);
-
-  // Use a comparator function to figure out the smallest index at which
-  // an object should be inserted so as to maintain order. Uses binary search.
-  _.sortedIndex = function(array, obj, iteratee, context) {
-    iteratee = cb(iteratee, context, 1);
-    var value = iteratee(obj);
-    var low = 0, high = getLength(array);
-    while (low < high) {
-      var mid = Math.floor((low + high) / 2);
-      if (iteratee(array[mid]) < value) low = mid + 1; else high = mid;
-    }
-    return low;
-  };
-
-  // Generator function to create the indexOf and lastIndexOf functions.
-  var createIndexFinder = function(dir, predicateFind, sortedIndex) {
-    return function(array, item, idx) {
-      var i = 0, length = getLength(array);
-      if (typeof idx == 'number') {
-        if (dir > 0) {
-          i = idx >= 0 ? idx : Math.max(idx + length, i);
-        } else {
-          length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
-        }
-      } else if (sortedIndex && idx && length) {
-        idx = sortedIndex(array, item);
-        return array[idx] === item ? idx : -1;
-      }
-      if (item !== item) {
-        idx = predicateFind(slice.call(array, i, length), _.isNaN);
-        return idx >= 0 ? idx + i : -1;
-      }
-      for (idx = dir > 0 ? i : length - 1; idx >= 0 && idx < length; idx += dir) {
-        if (array[idx] === item) return idx;
-      }
-      return -1;
-    };
-  };
-
-  // Return the position of the first occurrence of an item in an array,
-  // or -1 if the item is not included in the array.
-  // If the array is large and already in sort order, pass `true`
-  // for **isSorted** to use binary search.
-  _.indexOf = createIndexFinder(1, _.findIndex, _.sortedIndex);
-  _.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
-
-  // Generate an integer Array containing an arithmetic progression. A port of
-  // the native Python `range()` function. See
-  // [the Python documentation](http://docs.python.org/library/functions.html#range).
-  _.range = function(start, stop, step) {
-    if (stop == null) {
-      stop = start || 0;
-      start = 0;
-    }
-    if (!step) {
-      step = stop < start ? -1 : 1;
-    }
-
-    var length = Math.max(Math.ceil((stop - start) / step), 0);
-    var range = Array(length);
-
-    for (var idx = 0; idx < length; idx++, start += step) {
-      range[idx] = start;
-    }
-
-    return range;
-  };
-
-  // Chunk a single array into multiple arrays, each containing `count` or fewer
-  // items.
-  _.chunk = function(array, count) {
-    if (count == null || count < 1) return [];
-    var result = [];
-    var i = 0, length = array.length;
-    while (i < length) {
-      result.push(slice.call(array, i, i += count));
-    }
-    return result;
-  };
-
-  // Function (ahem) Functions
-  // ------------------
-
-  // Determines whether to execute a function as a constructor
-  // or a normal function with the provided arguments.
-  var executeBound = function(sourceFunc, boundFunc, context, callingContext, args) {
-    if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
-    var self = baseCreate(sourceFunc.prototype);
-    var result = sourceFunc.apply(self, args);
-    if (_.isObject(result)) return result;
-    return self;
-  };
-
-  // Create a function bound to a given object (assigning `this`, and arguments,
-  // optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
-  // available.
-  _.bind = restArguments(function(func, context, args) {
-    if (!_.isFunction(func)) throw new TypeError('Bind must be called on a function');
-    var bound = restArguments(function(callArgs) {
-      return executeBound(func, bound, context, this, args.concat(callArgs));
-    });
-    return bound;
-  });
-
-  // Partially apply a function by creating a version that has had some of its
-  // arguments pre-filled, without changing its dynamic `this` context. _ acts
-  // as a placeholder by default, allowing any combination of arguments to be
-  // pre-filled. Set `_.partial.placeholder` for a custom placeholder argument.
-  _.partial = restArguments(function(func, boundArgs) {
-    var placeholder = _.partial.placeholder;
-    var bound = function() {
-      var position = 0, length = boundArgs.length;
-      var args = Array(length);
-      for (var i = 0; i < length; i++) {
-        args[i] = boundArgs[i] === placeholder ? arguments[position++] : boundArgs[i];
-      }
-      while (position < arguments.length) args.push(arguments[position++]);
-      return executeBound(func, bound, this, this, args);
-    };
-    return bound;
-  });
-
-  _.partial.placeholder = _;
-
-  // Bind a number of an object's methods to that object. Remaining arguments
-  // are the method names to be bound. Useful for ensuring that all callbacks
-  // defined on an object belong to it.
-  _.bindAll = restArguments(function(obj, keys) {
-    keys = flatten(keys, false, false);
-    var index = keys.length;
-    if (index < 1) throw new Error('bindAll must be passed function names');
-    while (index--) {
-      var key = keys[index];
-      obj[key] = _.bind(obj[key], obj);
-    }
-  });
-
-  // Memoize an expensive function by storing its results.
-  _.memoize = function(func, hasher) {
-    var memoize = function(key) {
-      var cache = memoize.cache;
-      var address = '' + (hasher ? hasher.apply(this, arguments) : key);
-      if (!has(cache, address)) cache[address] = func.apply(this, arguments);
-      return cache[address];
-    };
-    memoize.cache = {};
-    return memoize;
-  };
-
-  // Delays a function for the given number of milliseconds, and then calls
-  // it with the arguments supplied.
-  _.delay = restArguments(function(func, wait, args) {
-    return setTimeout(function() {
-      return func.apply(null, args);
-    }, wait);
-  });
-
-  // Defers a function, scheduling it to run after the current call stack has
-  // cleared.
-  _.defer = _.partial(_.delay, _, 1);
-
-  // Returns a function, that, when invoked, will only be triggered at most once
-  // during a given window of time. Normally, the throttled function will run
-  // as much as it can, without ever going more than once per `wait` duration;
-  // but if you'd like to disable the execution on the leading edge, pass
-  // `{leading: false}`. To disable execution on the trailing edge, ditto.
-  _.throttle = function(func, wait, options) {
-    var timeout, context, args, result;
-    var previous = 0;
-    if (!options) options = {};
-
-    var later = function() {
-      previous = options.leading === false ? 0 : _.now();
-      timeout = null;
-      result = func.apply(context, args);
-      if (!timeout) context = args = null;
-    };
-
-    var throttled = function() {
-      var now = _.now();
-      if (!previous && options.leading === false) previous = now;
-      var remaining = wait - (now - previous);
-      context = this;
-      args = arguments;
-      if (remaining <= 0 || remaining > wait) {
-        if (timeout) {
-          clearTimeout(timeout);
-          timeout = null;
-        }
-        previous = now;
-        result = func.apply(context, args);
-        if (!timeout) context = args = null;
-      } else if (!timeout && options.trailing !== false) {
-        timeout = setTimeout(later, remaining);
-      }
-      return result;
-    };
-
-    throttled.cancel = function() {
-      clearTimeout(timeout);
-      previous = 0;
-      timeout = context = args = null;
-    };
-
-    return throttled;
-  };
-
-  // Returns a function, that, as long as it continues to be invoked, will not
-  // be triggered. The function will be called after it stops being called for
-  // N milliseconds. If `immediate` is passed, trigger the function on the
-  // leading edge, instead of the trailing.
-  _.debounce = function(func, wait, immediate) {
-    var timeout, result;
-
-    var later = function(context, args) {
-      timeout = null;
-      if (args) result = func.apply(context, args);
-    };
-
-    var debounced = restArguments(function(args) {
-      if (timeout) clearTimeout(timeout);
-      if (immediate) {
-        var callNow = !timeout;
-        timeout = setTimeout(later, wait);
-        if (callNow) result = func.apply(this, args);
-      } else {
-        timeout = _.delay(later, wait, this, args);
-      }
-
-      return result;
-    });
-
-    debounced.cancel = function() {
-      clearTimeout(timeout);
-      timeout = null;
-    };
-
-    return debounced;
-  };
-
-  // Returns the first function passed as an argument to the second,
-  // allowing you to adjust arguments, run code before and after, and
-  // conditionally execute the original function.
-  _.wrap = function(func, wrapper) {
-    return _.partial(wrapper, func);
-  };
-
-  // Returns a negated version of the passed-in predicate.
-  _.negate = function(predicate) {
-    return function() {
-      return !predicate.apply(this, arguments);
-    };
-  };
-
-  // Returns a function that is the composition of a list of functions, each
-  // consuming the return value of the function that follows.
-  _.compose = function() {
-    var args = arguments;
-    var start = args.length - 1;
-    return function() {
-      var i = start;
-      var result = args[start].apply(this, arguments);
-      while (i--) result = args[i].call(this, result);
-      return result;
-    };
-  };
-
-  // Returns a function that will only be executed on and after the Nth call.
-  _.after = function(times, func) {
-    return function() {
-      if (--times < 1) {
-        return func.apply(this, arguments);
-      }
-    };
-  };
-
-  // Returns a function that will only be executed up to (but not including) the Nth call.
-  _.before = function(times, func) {
-    var memo;
-    return function() {
-      if (--times > 0) {
-        memo = func.apply(this, arguments);
-      }
-      if (times <= 1) func = null;
-      return memo;
-    };
-  };
-
-  // Returns a function that will be executed at most one time, no matter how
-  // often you call it. Useful for lazy initialization.
-  _.once = _.partial(_.before, 2);
-
-  _.restArguments = restArguments;
-
-  // Object Functions
-  // ----------------
-
-  // Keys in IE < 9 that won't be iterated by `for key in ...` and thus missed.
-  var hasEnumBug = !{toString: null}.propertyIsEnumerable('toString');
-  var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString',
-    'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
-
-  var collectNonEnumProps = function(obj, keys) {
-    var nonEnumIdx = nonEnumerableProps.length;
-    var constructor = obj.constructor;
-    var proto = _.isFunction(constructor) && constructor.prototype || ObjProto;
-
-    // Constructor is a special case.
-    var prop = 'constructor';
-    if (has(obj, prop) && !_.contains(keys, prop)) keys.push(prop);
-
-    while (nonEnumIdx--) {
-      prop = nonEnumerableProps[nonEnumIdx];
-      if (prop in obj && obj[prop] !== proto[prop] && !_.contains(keys, prop)) {
-        keys.push(prop);
-      }
-    }
-  };
-
-  // Retrieve the names of an object's own properties.
-  // Delegates to **ECMAScript 5**'s native `Object.keys`.
-  _.keys = function(obj) {
-    if (!_.isObject(obj)) return [];
-    if (nativeKeys) return nativeKeys(obj);
-    var keys = [];
-    for (var key in obj) if (has(obj, key)) keys.push(key);
-    // Ahem, IE < 9.
-    if (hasEnumBug) collectNonEnumProps(obj, keys);
-    return keys;
-  };
-
-  // Retrieve all the property names of an object.
-  _.allKeys = function(obj) {
-    if (!_.isObject(obj)) return [];
-    var keys = [];
-    for (var key in obj) keys.push(key);
-    // Ahem, IE < 9.
-    if (hasEnumBug) collectNonEnumProps(obj, keys);
-    return keys;
-  };
-
-  // Retrieve the values of an object's properties.
-  _.values = function(obj) {
-    var keys = _.keys(obj);
+  }), { b: 2 })).b !== 1) return true;
+  // should work with symbols and should have deterministic property order (V8 bug)
+  var A = {};
+  var B = {};
+  // eslint-disable-next-line es/no-symbol -- safe
+  var symbol = Symbol();
+  var alphabet = 'abcdefghijklmnopqrst';
+  A[symbol] = 7;
+  alphabet.split('').forEach(function (chr) { B[chr] = chr; });
+  return $assign({}, A)[symbol] != 7 || objectKeys($assign({}, B)).join('') != alphabet;
+}) ? function assign(target, source) { // eslint-disable-line no-unused-vars -- required for `.length`
+  var T = toObject(target);
+  var argumentsLength = arguments.length;
+  var index = 1;
+  var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
+  var propertyIsEnumerable = propertyIsEnumerableModule.f;
+  while (argumentsLength > index) {
+    var S = IndexedObject(arguments[index++]);
+    var keys = getOwnPropertySymbols ? objectKeys(S).concat(getOwnPropertySymbols(S)) : objectKeys(S);
     var length = keys.length;
-    var values = Array(length);
-    for (var i = 0; i < length; i++) {
-      values[i] = obj[keys[i]];
+    var j = 0;
+    var key;
+    while (length > j) {
+      key = keys[j++];
+      if (!DESCRIPTORS || propertyIsEnumerable.call(S, key)) T[key] = S[key];
     }
-    return values;
-  };
+  } return T;
+} : $assign;
 
-  // Returns the results of applying the iteratee to each element of the object.
-  // In contrast to _.map it returns an object.
-  _.mapObject = function(obj, iteratee, context) {
-    iteratee = cb(iteratee, context);
-    var keys = _.keys(obj),
-        length = keys.length,
-        results = {};
-    for (var index = 0; index < length; index++) {
-      var currentKey = keys[index];
-      results[currentKey] = iteratee(obj[currentKey], currentKey, obj);
+},{"../internals/descriptors":21,"../internals/fails":29,"../internals/indexed-object":38,"../internals/object-get-own-property-symbols":57,"../internals/object-keys":60,"../internals/object-property-is-enumerable":61,"../internals/to-object":79}],51:[function(require,module,exports){
+var anObject = require('../internals/an-object');
+var defineProperties = require('../internals/object-define-properties');
+var enumBugKeys = require('../internals/enum-bug-keys');
+var hiddenKeys = require('../internals/hidden-keys');
+var html = require('../internals/html');
+var documentCreateElement = require('../internals/document-create-element');
+var sharedKey = require('../internals/shared-key');
+
+var GT = '>';
+var LT = '<';
+var PROTOTYPE = 'prototype';
+var SCRIPT = 'script';
+var IE_PROTO = sharedKey('IE_PROTO');
+
+var EmptyConstructor = function () { /* empty */ };
+
+var scriptTag = function (content) {
+  return LT + SCRIPT + GT + content + LT + '/' + SCRIPT + GT;
+};
+
+// Create object with fake `null` prototype: use ActiveX Object with cleared prototype
+var NullProtoObjectViaActiveX = function (activeXDocument) {
+  activeXDocument.write(scriptTag(''));
+  activeXDocument.close();
+  var temp = activeXDocument.parentWindow.Object;
+  activeXDocument = null; // avoid memory leak
+  return temp;
+};
+
+// Create object with fake `null` prototype: use iframe Object with cleared prototype
+var NullProtoObjectViaIFrame = function () {
+  // Thrash, waste and sodomy: IE GC bug
+  var iframe = documentCreateElement('iframe');
+  var JS = 'java' + SCRIPT + ':';
+  var iframeDocument;
+  iframe.style.display = 'none';
+  html.appendChild(iframe);
+  // https://github.com/zloirock/core-js/issues/475
+  iframe.src = String(JS);
+  iframeDocument = iframe.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(scriptTag('document.F=Object'));
+  iframeDocument.close();
+  return iframeDocument.F;
+};
+
+// Check for document.domain and active x support
+// No need to use active x approach when document.domain is not set
+// see https://github.com/es-shims/es5-shim/issues/150
+// variation of https://github.com/kitcambridge/es5-shim/commit/4f738ac066346
+// avoid IE GC bug
+var activeXDocument;
+var NullProtoObject = function () {
+  try {
+    /* global ActiveXObject -- old IE */
+    activeXDocument = document.domain && new ActiveXObject('htmlfile');
+  } catch (error) { /* ignore */ }
+  NullProtoObject = activeXDocument ? NullProtoObjectViaActiveX(activeXDocument) : NullProtoObjectViaIFrame();
+  var length = enumBugKeys.length;
+  while (length--) delete NullProtoObject[PROTOTYPE][enumBugKeys[length]];
+  return NullProtoObject();
+};
+
+hiddenKeys[IE_PROTO] = true;
+
+// `Object.create` method
+// https://tc39.es/ecma262/#sec-object.create
+module.exports = Object.create || function create(O, Properties) {
+  var result;
+  if (O !== null) {
+    EmptyConstructor[PROTOTYPE] = anObject(O);
+    result = new EmptyConstructor();
+    EmptyConstructor[PROTOTYPE] = null;
+    // add "__proto__" for Object.getPrototypeOf polyfill
+    result[IE_PROTO] = O;
+  } else result = NullProtoObject();
+  return Properties === undefined ? result : defineProperties(result, Properties);
+};
+
+},{"../internals/an-object":4,"../internals/document-create-element":22,"../internals/enum-bug-keys":27,"../internals/hidden-keys":35,"../internals/html":36,"../internals/object-define-properties":52,"../internals/shared-key":70}],52:[function(require,module,exports){
+var DESCRIPTORS = require('../internals/descriptors');
+var definePropertyModule = require('../internals/object-define-property');
+var anObject = require('../internals/an-object');
+var objectKeys = require('../internals/object-keys');
+
+// `Object.defineProperties` method
+// https://tc39.es/ecma262/#sec-object.defineproperties
+// eslint-disable-next-line es/no-object-defineproperties -- safe
+module.exports = DESCRIPTORS ? Object.defineProperties : function defineProperties(O, Properties) {
+  anObject(O);
+  var keys = objectKeys(Properties);
+  var length = keys.length;
+  var index = 0;
+  var key;
+  while (length > index) definePropertyModule.f(O, key = keys[index++], Properties[key]);
+  return O;
+};
+
+},{"../internals/an-object":4,"../internals/descriptors":21,"../internals/object-define-property":53,"../internals/object-keys":60}],53:[function(require,module,exports){
+var DESCRIPTORS = require('../internals/descriptors');
+var IE8_DOM_DEFINE = require('../internals/ie8-dom-define');
+var anObject = require('../internals/an-object');
+var toPrimitive = require('../internals/to-primitive');
+
+// eslint-disable-next-line es/no-object-defineproperty -- safe
+var $defineProperty = Object.defineProperty;
+
+// `Object.defineProperty` method
+// https://tc39.es/ecma262/#sec-object.defineproperty
+exports.f = DESCRIPTORS ? $defineProperty : function defineProperty(O, P, Attributes) {
+  anObject(O);
+  P = toPrimitive(P, true);
+  anObject(Attributes);
+  if (IE8_DOM_DEFINE) try {
+    return $defineProperty(O, P, Attributes);
+  } catch (error) { /* empty */ }
+  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported');
+  if ('value' in Attributes) O[P] = Attributes.value;
+  return O;
+};
+
+},{"../internals/an-object":4,"../internals/descriptors":21,"../internals/ie8-dom-define":37,"../internals/to-primitive":80}],54:[function(require,module,exports){
+var DESCRIPTORS = require('../internals/descriptors');
+var propertyIsEnumerableModule = require('../internals/object-property-is-enumerable');
+var createPropertyDescriptor = require('../internals/create-property-descriptor');
+var toIndexedObject = require('../internals/to-indexed-object');
+var toPrimitive = require('../internals/to-primitive');
+var has = require('../internals/has');
+var IE8_DOM_DEFINE = require('../internals/ie8-dom-define');
+
+// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+var $getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+// `Object.getOwnPropertyDescriptor` method
+// https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
+exports.f = DESCRIPTORS ? $getOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
+  O = toIndexedObject(O);
+  P = toPrimitive(P, true);
+  if (IE8_DOM_DEFINE) try {
+    return $getOwnPropertyDescriptor(O, P);
+  } catch (error) { /* empty */ }
+  if (has(O, P)) return createPropertyDescriptor(!propertyIsEnumerableModule.f.call(O, P), O[P]);
+};
+
+},{"../internals/create-property-descriptor":16,"../internals/descriptors":21,"../internals/has":34,"../internals/ie8-dom-define":37,"../internals/object-property-is-enumerable":61,"../internals/to-indexed-object":76,"../internals/to-primitive":80}],55:[function(require,module,exports){
+/* eslint-disable es/no-object-getownpropertynames -- safe */
+var toIndexedObject = require('../internals/to-indexed-object');
+var $getOwnPropertyNames = require('../internals/object-get-own-property-names').f;
+
+var toString = {}.toString;
+
+var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
+  ? Object.getOwnPropertyNames(window) : [];
+
+var getWindowNames = function (it) {
+  try {
+    return $getOwnPropertyNames(it);
+  } catch (error) {
+    return windowNames.slice();
+  }
+};
+
+// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+module.exports.f = function getOwnPropertyNames(it) {
+  return windowNames && toString.call(it) == '[object Window]'
+    ? getWindowNames(it)
+    : $getOwnPropertyNames(toIndexedObject(it));
+};
+
+},{"../internals/object-get-own-property-names":56,"../internals/to-indexed-object":76}],56:[function(require,module,exports){
+var internalObjectKeys = require('../internals/object-keys-internal');
+var enumBugKeys = require('../internals/enum-bug-keys');
+
+var hiddenKeys = enumBugKeys.concat('length', 'prototype');
+
+// `Object.getOwnPropertyNames` method
+// https://tc39.es/ecma262/#sec-object.getownpropertynames
+// eslint-disable-next-line es/no-object-getownpropertynames -- safe
+exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
+  return internalObjectKeys(O, hiddenKeys);
+};
+
+},{"../internals/enum-bug-keys":27,"../internals/object-keys-internal":59}],57:[function(require,module,exports){
+// eslint-disable-next-line es/no-object-getownpropertysymbols -- safe
+exports.f = Object.getOwnPropertySymbols;
+
+},{}],58:[function(require,module,exports){
+var has = require('../internals/has');
+var toObject = require('../internals/to-object');
+var sharedKey = require('../internals/shared-key');
+var CORRECT_PROTOTYPE_GETTER = require('../internals/correct-prototype-getter');
+
+var IE_PROTO = sharedKey('IE_PROTO');
+var ObjectPrototype = Object.prototype;
+
+// `Object.getPrototypeOf` method
+// https://tc39.es/ecma262/#sec-object.getprototypeof
+// eslint-disable-next-line es/no-object-getprototypeof -- safe
+module.exports = CORRECT_PROTOTYPE_GETTER ? Object.getPrototypeOf : function (O) {
+  O = toObject(O);
+  if (has(O, IE_PROTO)) return O[IE_PROTO];
+  if (typeof O.constructor == 'function' && O instanceof O.constructor) {
+    return O.constructor.prototype;
+  } return O instanceof Object ? ObjectPrototype : null;
+};
+
+},{"../internals/correct-prototype-getter":13,"../internals/has":34,"../internals/shared-key":70,"../internals/to-object":79}],59:[function(require,module,exports){
+var has = require('../internals/has');
+var toIndexedObject = require('../internals/to-indexed-object');
+var indexOf = require('../internals/array-includes').indexOf;
+var hiddenKeys = require('../internals/hidden-keys');
+
+module.exports = function (object, names) {
+  var O = toIndexedObject(object);
+  var i = 0;
+  var result = [];
+  var key;
+  for (key in O) !has(hiddenKeys, key) && has(O, key) && result.push(key);
+  // Don't enum bug & hidden keys
+  while (names.length > i) if (has(O, key = names[i++])) {
+    ~indexOf(result, key) || result.push(key);
+  }
+  return result;
+};
+
+},{"../internals/array-includes":5,"../internals/has":34,"../internals/hidden-keys":35,"../internals/to-indexed-object":76}],60:[function(require,module,exports){
+var internalObjectKeys = require('../internals/object-keys-internal');
+var enumBugKeys = require('../internals/enum-bug-keys');
+
+// `Object.keys` method
+// https://tc39.es/ecma262/#sec-object.keys
+// eslint-disable-next-line es/no-object-keys -- safe
+module.exports = Object.keys || function keys(O) {
+  return internalObjectKeys(O, enumBugKeys);
+};
+
+},{"../internals/enum-bug-keys":27,"../internals/object-keys-internal":59}],61:[function(require,module,exports){
+'use strict';
+var $propertyIsEnumerable = {}.propertyIsEnumerable;
+// eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+// Nashorn ~ JDK8 bug
+var NASHORN_BUG = getOwnPropertyDescriptor && !$propertyIsEnumerable.call({ 1: 2 }, 1);
+
+// `Object.prototype.propertyIsEnumerable` method implementation
+// https://tc39.es/ecma262/#sec-object.prototype.propertyisenumerable
+exports.f = NASHORN_BUG ? function propertyIsEnumerable(V) {
+  var descriptor = getOwnPropertyDescriptor(this, V);
+  return !!descriptor && descriptor.enumerable;
+} : $propertyIsEnumerable;
+
+},{}],62:[function(require,module,exports){
+/* eslint-disable no-proto -- safe */
+var anObject = require('../internals/an-object');
+var aPossiblePrototype = require('../internals/a-possible-prototype');
+
+// `Object.setPrototypeOf` method
+// https://tc39.es/ecma262/#sec-object.setprototypeof
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+// eslint-disable-next-line es/no-object-setprototypeof -- safe
+module.exports = Object.setPrototypeOf || ('__proto__' in {} ? function () {
+  var CORRECT_SETTER = false;
+  var test = {};
+  var setter;
+  try {
+    // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+    setter = Object.getOwnPropertyDescriptor(Object.prototype, '__proto__').set;
+    setter.call(test, []);
+    CORRECT_SETTER = test instanceof Array;
+  } catch (error) { /* empty */ }
+  return function setPrototypeOf(O, proto) {
+    anObject(O);
+    aPossiblePrototype(proto);
+    if (CORRECT_SETTER) setter.call(O, proto);
+    else O.__proto__ = proto;
+    return O;
+  };
+}() : undefined);
+
+},{"../internals/a-possible-prototype":2,"../internals/an-object":4}],63:[function(require,module,exports){
+'use strict';
+var TO_STRING_TAG_SUPPORT = require('../internals/to-string-tag-support');
+var classof = require('../internals/classof');
+
+// `Object.prototype.toString` method implementation
+// https://tc39.es/ecma262/#sec-object.prototype.tostring
+module.exports = TO_STRING_TAG_SUPPORT ? {}.toString : function toString() {
+  return '[object ' + classof(this) + ']';
+};
+
+},{"../internals/classof":11,"../internals/to-string-tag-support":81}],64:[function(require,module,exports){
+var getBuiltIn = require('../internals/get-built-in');
+var getOwnPropertyNamesModule = require('../internals/object-get-own-property-names');
+var getOwnPropertySymbolsModule = require('../internals/object-get-own-property-symbols');
+var anObject = require('../internals/an-object');
+
+// all object keys, includes non-enumerable and symbols
+module.exports = getBuiltIn('Reflect', 'ownKeys') || function ownKeys(it) {
+  var keys = getOwnPropertyNamesModule.f(anObject(it));
+  var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
+  return getOwnPropertySymbols ? keys.concat(getOwnPropertySymbols(it)) : keys;
+};
+
+},{"../internals/an-object":4,"../internals/get-built-in":32,"../internals/object-get-own-property-names":56,"../internals/object-get-own-property-symbols":57}],65:[function(require,module,exports){
+var global = require('../internals/global');
+
+module.exports = global;
+
+},{"../internals/global":33}],66:[function(require,module,exports){
+var global = require('../internals/global');
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+var has = require('../internals/has');
+var setGlobal = require('../internals/set-global');
+var inspectSource = require('../internals/inspect-source');
+var InternalStateModule = require('../internals/internal-state');
+
+var getInternalState = InternalStateModule.get;
+var enforceInternalState = InternalStateModule.enforce;
+var TEMPLATE = String(String).split('String');
+
+(module.exports = function (O, key, value, options) {
+  var unsafe = options ? !!options.unsafe : false;
+  var simple = options ? !!options.enumerable : false;
+  var noTargetGet = options ? !!options.noTargetGet : false;
+  var state;
+  if (typeof value == 'function') {
+    if (typeof key == 'string' && !has(value, 'name')) {
+      createNonEnumerableProperty(value, 'name', key);
     }
-    return results;
-  };
-
-  // Convert an object into a list of `[key, value]` pairs.
-  // The opposite of _.object.
-  _.pairs = function(obj) {
-    var keys = _.keys(obj);
-    var length = keys.length;
-    var pairs = Array(length);
-    for (var i = 0; i < length; i++) {
-      pairs[i] = [keys[i], obj[keys[i]]];
+    state = enforceInternalState(value);
+    if (!state.source) {
+      state.source = TEMPLATE.join(typeof key == 'string' ? key : '');
     }
-    return pairs;
+  }
+  if (O === global) {
+    if (simple) O[key] = value;
+    else setGlobal(key, value);
+    return;
+  } else if (!unsafe) {
+    delete O[key];
+  } else if (!noTargetGet && O[key]) {
+    simple = true;
+  }
+  if (simple) O[key] = value;
+  else createNonEnumerableProperty(O, key, value);
+// add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
+})(Function.prototype, 'toString', function toString() {
+  return typeof this == 'function' && getInternalState(this).source || inspectSource(this);
+});
+
+},{"../internals/create-non-enumerable-property":15,"../internals/global":33,"../internals/has":34,"../internals/inspect-source":40,"../internals/internal-state":41,"../internals/set-global":68}],67:[function(require,module,exports){
+// `RequireObjectCoercible` abstract operation
+// https://tc39.es/ecma262/#sec-requireobjectcoercible
+module.exports = function (it) {
+  if (it == undefined) throw TypeError("Can't call method on " + it);
+  return it;
+};
+
+},{}],68:[function(require,module,exports){
+var global = require('../internals/global');
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+
+module.exports = function (key, value) {
+  try {
+    createNonEnumerableProperty(global, key, value);
+  } catch (error) {
+    global[key] = value;
+  } return value;
+};
+
+},{"../internals/create-non-enumerable-property":15,"../internals/global":33}],69:[function(require,module,exports){
+var defineProperty = require('../internals/object-define-property').f;
+var has = require('../internals/has');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+
+var TO_STRING_TAG = wellKnownSymbol('toStringTag');
+
+module.exports = function (it, TAG, STATIC) {
+  if (it && !has(it = STATIC ? it : it.prototype, TO_STRING_TAG)) {
+    defineProperty(it, TO_STRING_TAG, { configurable: true, value: TAG });
+  }
+};
+
+},{"../internals/has":34,"../internals/object-define-property":53,"../internals/well-known-symbol":85}],70:[function(require,module,exports){
+var shared = require('../internals/shared');
+var uid = require('../internals/uid');
+
+var keys = shared('keys');
+
+module.exports = function (key) {
+  return keys[key] || (keys[key] = uid(key));
+};
+
+},{"../internals/shared":72,"../internals/uid":82}],71:[function(require,module,exports){
+var global = require('../internals/global');
+var setGlobal = require('../internals/set-global');
+
+var SHARED = '__core-js_shared__';
+var store = global[SHARED] || setGlobal(SHARED, {});
+
+module.exports = store;
+
+},{"../internals/global":33,"../internals/set-global":68}],72:[function(require,module,exports){
+var IS_PURE = require('../internals/is-pure');
+var store = require('../internals/shared-store');
+
+(module.exports = function (key, value) {
+  return store[key] || (store[key] = value !== undefined ? value : {});
+})('versions', []).push({
+  version: '3.11.0',
+  mode: IS_PURE ? 'pure' : 'global',
+  copyright: '© 2021 Denis Pushkarev (zloirock.ru)'
+});
+
+},{"../internals/is-pure":45,"../internals/shared-store":71}],73:[function(require,module,exports){
+var toInteger = require('../internals/to-integer');
+var requireObjectCoercible = require('../internals/require-object-coercible');
+
+// `String.prototype.{ codePointAt, at }` methods implementation
+var createMethod = function (CONVERT_TO_STRING) {
+  return function ($this, pos) {
+    var S = String(requireObjectCoercible($this));
+    var position = toInteger(pos);
+    var size = S.length;
+    var first, second;
+    if (position < 0 || position >= size) return CONVERT_TO_STRING ? '' : undefined;
+    first = S.charCodeAt(position);
+    return first < 0xD800 || first > 0xDBFF || position + 1 === size
+      || (second = S.charCodeAt(position + 1)) < 0xDC00 || second > 0xDFFF
+        ? CONVERT_TO_STRING ? S.charAt(position) : first
+        : CONVERT_TO_STRING ? S.slice(position, position + 2) : (first - 0xD800 << 10) + (second - 0xDC00) + 0x10000;
   };
+};
 
-  // Invert the keys and values of an object. The values must be serializable.
-  _.invert = function(obj) {
-    var result = {};
-    var keys = _.keys(obj);
-    for (var i = 0, length = keys.length; i < length; i++) {
-      result[obj[keys[i]]] = keys[i];
-    }
-    return result;
+module.exports = {
+  // `String.prototype.codePointAt` method
+  // https://tc39.es/ecma262/#sec-string.prototype.codepointat
+  codeAt: createMethod(false),
+  // `String.prototype.at` method
+  // https://github.com/mathiasbynens/String.prototype.at
+  charAt: createMethod(true)
+};
+
+},{"../internals/require-object-coercible":67,"../internals/to-integer":77}],74:[function(require,module,exports){
+var requireObjectCoercible = require('../internals/require-object-coercible');
+var whitespaces = require('../internals/whitespaces');
+
+var whitespace = '[' + whitespaces + ']';
+var ltrim = RegExp('^' + whitespace + whitespace + '*');
+var rtrim = RegExp(whitespace + whitespace + '*$');
+
+// `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
+var createMethod = function (TYPE) {
+  return function ($this) {
+    var string = String(requireObjectCoercible($this));
+    if (TYPE & 1) string = string.replace(ltrim, '');
+    if (TYPE & 2) string = string.replace(rtrim, '');
+    return string;
   };
+};
 
-  // Return a sorted list of the function names available on the object.
-  // Aliased as `methods`.
-  _.functions = _.methods = function(obj) {
-    var names = [];
-    for (var key in obj) {
-      if (_.isFunction(obj[key])) names.push(key);
-    }
-    return names.sort();
-  };
+module.exports = {
+  // `String.prototype.{ trimLeft, trimStart }` methods
+  // https://tc39.es/ecma262/#sec-string.prototype.trimstart
+  start: createMethod(1),
+  // `String.prototype.{ trimRight, trimEnd }` methods
+  // https://tc39.es/ecma262/#sec-string.prototype.trimend
+  end: createMethod(2),
+  // `String.prototype.trim` method
+  // https://tc39.es/ecma262/#sec-string.prototype.trim
+  trim: createMethod(3)
+};
 
-  // An internal function for creating assigner functions.
-  var createAssigner = function(keysFunc, defaults) {
-    return function(obj) {
-      var length = arguments.length;
-      if (defaults) obj = Object(obj);
-      if (length < 2 || obj == null) return obj;
-      for (var index = 1; index < length; index++) {
-        var source = arguments[index],
-            keys = keysFunc(source),
-            l = keys.length;
-        for (var i = 0; i < l; i++) {
-          var key = keys[i];
-          if (!defaults || obj[key] === void 0) obj[key] = source[key];
-        }
-      }
-      return obj;
-    };
-  };
+},{"../internals/require-object-coercible":67,"../internals/whitespaces":86}],75:[function(require,module,exports){
+var toInteger = require('../internals/to-integer');
 
-  // Extend a given object with all the properties in passed-in object(s).
-  _.extend = createAssigner(_.allKeys);
+var max = Math.max;
+var min = Math.min;
 
-  // Assigns a given object with all the own properties in the passed-in object(s).
-  // (https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
-  _.extendOwn = _.assign = createAssigner(_.keys);
+// Helper for a popular repeating case of the spec:
+// Let integer be ? ToInteger(index).
+// If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
+module.exports = function (index, length) {
+  var integer = toInteger(index);
+  return integer < 0 ? max(integer + length, 0) : min(integer, length);
+};
 
-  // Returns the first key on an object that passes a predicate test.
-  _.findKey = function(obj, predicate, context) {
-    predicate = cb(predicate, context);
-    var keys = _.keys(obj), key;
-    for (var i = 0, length = keys.length; i < length; i++) {
-      key = keys[i];
-      if (predicate(obj[key], key, obj)) return key;
-    }
-  };
+},{"../internals/to-integer":77}],76:[function(require,module,exports){
+// toObject with fallback for non-array-like ES3 strings
+var IndexedObject = require('../internals/indexed-object');
+var requireObjectCoercible = require('../internals/require-object-coercible');
 
-  // Internal pick helper function to determine if `obj` has key `key`.
-  var keyInObj = function(value, key, obj) {
-    return key in obj;
-  };
+module.exports = function (it) {
+  return IndexedObject(requireObjectCoercible(it));
+};
 
-  // Return a copy of the object only containing the whitelisted properties.
-  _.pick = restArguments(function(obj, keys) {
-    var result = {}, iteratee = keys[0];
-    if (obj == null) return result;
-    if (_.isFunction(iteratee)) {
-      if (keys.length > 1) iteratee = optimizeCb(iteratee, keys[1]);
-      keys = _.allKeys(obj);
+},{"../internals/indexed-object":38,"../internals/require-object-coercible":67}],77:[function(require,module,exports){
+var ceil = Math.ceil;
+var floor = Math.floor;
+
+// `ToInteger` abstract operation
+// https://tc39.es/ecma262/#sec-tointeger
+module.exports = function (argument) {
+  return isNaN(argument = +argument) ? 0 : (argument > 0 ? floor : ceil)(argument);
+};
+
+},{}],78:[function(require,module,exports){
+var toInteger = require('../internals/to-integer');
+
+var min = Math.min;
+
+// `ToLength` abstract operation
+// https://tc39.es/ecma262/#sec-tolength
+module.exports = function (argument) {
+  return argument > 0 ? min(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
+};
+
+},{"../internals/to-integer":77}],79:[function(require,module,exports){
+var requireObjectCoercible = require('../internals/require-object-coercible');
+
+// `ToObject` abstract operation
+// https://tc39.es/ecma262/#sec-toobject
+module.exports = function (argument) {
+  return Object(requireObjectCoercible(argument));
+};
+
+},{"../internals/require-object-coercible":67}],80:[function(require,module,exports){
+var isObject = require('../internals/is-object');
+
+// `ToPrimitive` abstract operation
+// https://tc39.es/ecma262/#sec-toprimitive
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+module.exports = function (input, PREFERRED_STRING) {
+  if (!isObject(input)) return input;
+  var fn, val;
+  if (PREFERRED_STRING && typeof (fn = input.toString) == 'function' && !isObject(val = fn.call(input))) return val;
+  if (typeof (fn = input.valueOf) == 'function' && !isObject(val = fn.call(input))) return val;
+  if (!PREFERRED_STRING && typeof (fn = input.toString) == 'function' && !isObject(val = fn.call(input))) return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+
+},{"../internals/is-object":44}],81:[function(require,module,exports){
+var wellKnownSymbol = require('../internals/well-known-symbol');
+
+var TO_STRING_TAG = wellKnownSymbol('toStringTag');
+var test = {};
+
+test[TO_STRING_TAG] = 'z';
+
+module.exports = String(test) === '[object z]';
+
+},{"../internals/well-known-symbol":85}],82:[function(require,module,exports){
+var id = 0;
+var postfix = Math.random();
+
+module.exports = function (key) {
+  return 'Symbol(' + String(key === undefined ? '' : key) + ')_' + (++id + postfix).toString(36);
+};
+
+},{}],83:[function(require,module,exports){
+/* eslint-disable es/no-symbol -- required for testing */
+var NATIVE_SYMBOL = require('../internals/native-symbol');
+
+module.exports = NATIVE_SYMBOL
+  && !Symbol.sham
+  && typeof Symbol.iterator == 'symbol';
+
+},{"../internals/native-symbol":48}],84:[function(require,module,exports){
+var wellKnownSymbol = require('../internals/well-known-symbol');
+
+exports.f = wellKnownSymbol;
+
+},{"../internals/well-known-symbol":85}],85:[function(require,module,exports){
+var global = require('../internals/global');
+var shared = require('../internals/shared');
+var has = require('../internals/has');
+var uid = require('../internals/uid');
+var NATIVE_SYMBOL = require('../internals/native-symbol');
+var USE_SYMBOL_AS_UID = require('../internals/use-symbol-as-uid');
+
+var WellKnownSymbolsStore = shared('wks');
+var Symbol = global.Symbol;
+var createWellKnownSymbol = USE_SYMBOL_AS_UID ? Symbol : Symbol && Symbol.withoutSetter || uid;
+
+module.exports = function (name) {
+  if (!has(WellKnownSymbolsStore, name) || !(NATIVE_SYMBOL || typeof WellKnownSymbolsStore[name] == 'string')) {
+    if (NATIVE_SYMBOL && has(Symbol, name)) {
+      WellKnownSymbolsStore[name] = Symbol[name];
     } else {
-      iteratee = keyInObj;
-      keys = flatten(keys, false, false);
-      obj = Object(obj);
+      WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
     }
-    for (var i = 0, length = keys.length; i < length; i++) {
-      var key = keys[i];
-      var value = obj[key];
-      if (iteratee(value, key, obj)) result[key] = value;
+  } return WellKnownSymbolsStore[name];
+};
+
+},{"../internals/global":33,"../internals/has":34,"../internals/native-symbol":48,"../internals/shared":72,"../internals/uid":82,"../internals/use-symbol-as-uid":83}],86:[function(require,module,exports){
+// a string of all valid unicode whitespaces
+module.exports = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' +
+  '\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
+
+},{}],87:[function(require,module,exports){
+'use strict';
+/* eslint-disable es/no-array-prototype-indexof -- required for testing */
+var $ = require('../internals/export');
+var $indexOf = require('../internals/array-includes').indexOf;
+var arrayMethodIsStrict = require('../internals/array-method-is-strict');
+
+var nativeIndexOf = [].indexOf;
+
+var NEGATIVE_ZERO = !!nativeIndexOf && 1 / [1].indexOf(1, -0) < 0;
+var STRICT_METHOD = arrayMethodIsStrict('indexOf');
+
+// `Array.prototype.indexOf` method
+// https://tc39.es/ecma262/#sec-array.prototype.indexof
+$({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD }, {
+  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
+    return NEGATIVE_ZERO
+      // convert -0 to +0
+      ? nativeIndexOf.apply(this, arguments) || 0
+      : $indexOf(this, searchElement, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
+
+},{"../internals/array-includes":5,"../internals/array-method-is-strict":8,"../internals/export":28}],88:[function(require,module,exports){
+'use strict';
+var toIndexedObject = require('../internals/to-indexed-object');
+var addToUnscopables = require('../internals/add-to-unscopables');
+var Iterators = require('../internals/iterators');
+var InternalStateModule = require('../internals/internal-state');
+var defineIterator = require('../internals/define-iterator');
+
+var ARRAY_ITERATOR = 'Array Iterator';
+var setInternalState = InternalStateModule.set;
+var getInternalState = InternalStateModule.getterFor(ARRAY_ITERATOR);
+
+// `Array.prototype.entries` method
+// https://tc39.es/ecma262/#sec-array.prototype.entries
+// `Array.prototype.keys` method
+// https://tc39.es/ecma262/#sec-array.prototype.keys
+// `Array.prototype.values` method
+// https://tc39.es/ecma262/#sec-array.prototype.values
+// `Array.prototype[@@iterator]` method
+// https://tc39.es/ecma262/#sec-array.prototype-@@iterator
+// `CreateArrayIterator` internal method
+// https://tc39.es/ecma262/#sec-createarrayiterator
+module.exports = defineIterator(Array, 'Array', function (iterated, kind) {
+  setInternalState(this, {
+    type: ARRAY_ITERATOR,
+    target: toIndexedObject(iterated), // target
+    index: 0,                          // next index
+    kind: kind                         // kind
+  });
+// `%ArrayIteratorPrototype%.next` method
+// https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
+}, function () {
+  var state = getInternalState(this);
+  var target = state.target;
+  var kind = state.kind;
+  var index = state.index++;
+  if (!target || index >= target.length) {
+    state.target = undefined;
+    return { value: undefined, done: true };
+  }
+  if (kind == 'keys') return { value: index, done: false };
+  if (kind == 'values') return { value: target[index], done: false };
+  return { value: [index, target[index]], done: false };
+}, 'values');
+
+// argumentsList[@@iterator] is %ArrayProto_values%
+// https://tc39.es/ecma262/#sec-createunmappedargumentsobject
+// https://tc39.es/ecma262/#sec-createmappedargumentsobject
+Iterators.Arguments = Iterators.Array;
+
+// https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
+addToUnscopables('keys');
+addToUnscopables('values');
+addToUnscopables('entries');
+
+},{"../internals/add-to-unscopables":3,"../internals/define-iterator":19,"../internals/internal-state":41,"../internals/iterators":47,"../internals/to-indexed-object":76}],89:[function(require,module,exports){
+'use strict';
+var $ = require('../internals/export');
+var toAbsoluteIndex = require('../internals/to-absolute-index');
+var toInteger = require('../internals/to-integer');
+var toLength = require('../internals/to-length');
+var toObject = require('../internals/to-object');
+var arraySpeciesCreate = require('../internals/array-species-create');
+var createProperty = require('../internals/create-property');
+var arrayMethodHasSpeciesSupport = require('../internals/array-method-has-species-support');
+
+var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
+
+var max = Math.max;
+var min = Math.min;
+var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
+var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
+
+// `Array.prototype.splice` method
+// https://tc39.es/ecma262/#sec-array.prototype.splice
+// with adding support of @@species
+$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT }, {
+  splice: function splice(start, deleteCount /* , ...items */) {
+    var O = toObject(this);
+    var len = toLength(O.length);
+    var actualStart = toAbsoluteIndex(start, len);
+    var argumentsLength = arguments.length;
+    var insertCount, actualDeleteCount, A, k, from, to;
+    if (argumentsLength === 0) {
+      insertCount = actualDeleteCount = 0;
+    } else if (argumentsLength === 1) {
+      insertCount = 0;
+      actualDeleteCount = len - actualStart;
+    } else {
+      insertCount = argumentsLength - 2;
+      actualDeleteCount = min(max(toInteger(deleteCount), 0), len - actualStart);
     }
+    if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER) {
+      throw TypeError(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
+    }
+    A = arraySpeciesCreate(O, actualDeleteCount);
+    for (k = 0; k < actualDeleteCount; k++) {
+      from = actualStart + k;
+      if (from in O) createProperty(A, k, O[from]);
+    }
+    A.length = actualDeleteCount;
+    if (insertCount < actualDeleteCount) {
+      for (k = actualStart; k < len - actualDeleteCount; k++) {
+        from = k + actualDeleteCount;
+        to = k + insertCount;
+        if (from in O) O[to] = O[from];
+        else delete O[to];
+      }
+      for (k = len; k > len - actualDeleteCount + insertCount; k--) delete O[k - 1];
+    } else if (insertCount > actualDeleteCount) {
+      for (k = len - actualDeleteCount; k > actualStart; k--) {
+        from = k + actualDeleteCount - 1;
+        to = k + insertCount - 1;
+        if (from in O) O[to] = O[from];
+        else delete O[to];
+      }
+    }
+    for (k = 0; k < insertCount; k++) {
+      O[k + actualStart] = arguments[k + 2];
+    }
+    O.length = len - actualDeleteCount + insertCount;
+    return A;
+  }
+});
+
+},{"../internals/array-method-has-species-support":7,"../internals/array-species-create":9,"../internals/create-property":17,"../internals/export":28,"../internals/to-absolute-index":75,"../internals/to-integer":77,"../internals/to-length":78,"../internals/to-object":79}],90:[function(require,module,exports){
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+var dateToPrimitive = require('../internals/date-to-primitive');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+
+var TO_PRIMITIVE = wellKnownSymbol('toPrimitive');
+var DatePrototype = Date.prototype;
+
+// `Date.prototype[@@toPrimitive]` method
+// https://tc39.es/ecma262/#sec-date.prototype-@@toprimitive
+if (!(TO_PRIMITIVE in DatePrototype)) {
+  createNonEnumerableProperty(DatePrototype, TO_PRIMITIVE, dateToPrimitive);
+}
+
+},{"../internals/create-non-enumerable-property":15,"../internals/date-to-primitive":18,"../internals/well-known-symbol":85}],91:[function(require,module,exports){
+'use strict';
+var DESCRIPTORS = require('../internals/descriptors');
+var global = require('../internals/global');
+var isForced = require('../internals/is-forced');
+var redefine = require('../internals/redefine');
+var has = require('../internals/has');
+var classof = require('../internals/classof-raw');
+var inheritIfRequired = require('../internals/inherit-if-required');
+var toPrimitive = require('../internals/to-primitive');
+var fails = require('../internals/fails');
+var create = require('../internals/object-create');
+var getOwnPropertyNames = require('../internals/object-get-own-property-names').f;
+var getOwnPropertyDescriptor = require('../internals/object-get-own-property-descriptor').f;
+var defineProperty = require('../internals/object-define-property').f;
+var trim = require('../internals/string-trim').trim;
+
+var NUMBER = 'Number';
+var NativeNumber = global[NUMBER];
+var NumberPrototype = NativeNumber.prototype;
+
+// Opera ~12 has broken Object#toString
+var BROKEN_CLASSOF = classof(create(NumberPrototype)) == NUMBER;
+
+// `ToNumber` abstract operation
+// https://tc39.es/ecma262/#sec-tonumber
+var toNumber = function (argument) {
+  var it = toPrimitive(argument, false);
+  var first, third, radix, maxCode, digits, length, index, code;
+  if (typeof it == 'string' && it.length > 2) {
+    it = trim(it);
+    first = it.charCodeAt(0);
+    if (first === 43 || first === 45) {
+      third = it.charCodeAt(2);
+      if (third === 88 || third === 120) return NaN; // Number('+0x1') should be NaN, old V8 fix
+    } else if (first === 48) {
+      switch (it.charCodeAt(1)) {
+        case 66: case 98: radix = 2; maxCode = 49; break; // fast equal of /^0b[01]+$/i
+        case 79: case 111: radix = 8; maxCode = 55; break; // fast equal of /^0o[0-7]+$/i
+        default: return +it;
+      }
+      digits = it.slice(2);
+      length = digits.length;
+      for (index = 0; index < length; index++) {
+        code = digits.charCodeAt(index);
+        // parseInt parses a string to a first unavailable symbol
+        // but ToNumber should return NaN if a string contains unavailable symbols
+        if (code < 48 || code > maxCode) return NaN;
+      } return parseInt(digits, radix);
+    }
+  } return +it;
+};
+
+// `Number` constructor
+// https://tc39.es/ecma262/#sec-number-constructor
+if (isForced(NUMBER, !NativeNumber(' 0o1') || !NativeNumber('0b1') || NativeNumber('+0x1'))) {
+  var NumberWrapper = function Number(value) {
+    var it = arguments.length < 1 ? 0 : value;
+    var dummy = this;
+    return dummy instanceof NumberWrapper
+      // check on 1..constructor(foo) case
+      && (BROKEN_CLASSOF ? fails(function () { NumberPrototype.valueOf.call(dummy); }) : classof(dummy) != NUMBER)
+        ? inheritIfRequired(new NativeNumber(toNumber(it)), dummy, NumberWrapper) : toNumber(it);
+  };
+  for (var keys = DESCRIPTORS ? getOwnPropertyNames(NativeNumber) : (
+    // ES3:
+    'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
+    // ES2015 (in case, if modules with ES2015 Number statics required before):
+    'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
+    'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger,' +
+    // ESNext
+    'fromString,range'
+  ).split(','), j = 0, key; keys.length > j; j++) {
+    if (has(NativeNumber, key = keys[j]) && !has(NumberWrapper, key)) {
+      defineProperty(NumberWrapper, key, getOwnPropertyDescriptor(NativeNumber, key));
+    }
+  }
+  NumberWrapper.prototype = NumberPrototype;
+  NumberPrototype.constructor = NumberWrapper;
+  redefine(global, NUMBER, NumberWrapper);
+}
+
+},{"../internals/classof-raw":10,"../internals/descriptors":21,"../internals/fails":29,"../internals/global":33,"../internals/has":34,"../internals/inherit-if-required":39,"../internals/is-forced":43,"../internals/object-create":51,"../internals/object-define-property":53,"../internals/object-get-own-property-descriptor":54,"../internals/object-get-own-property-names":56,"../internals/redefine":66,"../internals/string-trim":74,"../internals/to-primitive":80}],92:[function(require,module,exports){
+var $ = require('../internals/export');
+var assign = require('../internals/object-assign');
+
+// `Object.assign` method
+// https://tc39.es/ecma262/#sec-object.assign
+// eslint-disable-next-line es/no-object-assign -- required for testing
+$({ target: 'Object', stat: true, forced: Object.assign !== assign }, {
+  assign: assign
+});
+
+},{"../internals/export":28,"../internals/object-assign":50}],93:[function(require,module,exports){
+var $ = require('../internals/export');
+var DESCRIPTORS = require('../internals/descriptors');
+var objectDefinePropertyModile = require('../internals/object-define-property');
+
+// `Object.defineProperty` method
+// https://tc39.es/ecma262/#sec-object.defineproperty
+$({ target: 'Object', stat: true, forced: !DESCRIPTORS, sham: !DESCRIPTORS }, {
+  defineProperty: objectDefinePropertyModile.f
+});
+
+},{"../internals/descriptors":21,"../internals/export":28,"../internals/object-define-property":53}],94:[function(require,module,exports){
+var $ = require('../internals/export');
+var fails = require('../internals/fails');
+var toObject = require('../internals/to-object');
+var nativeGetPrototypeOf = require('../internals/object-get-prototype-of');
+var CORRECT_PROTOTYPE_GETTER = require('../internals/correct-prototype-getter');
+
+var FAILS_ON_PRIMITIVES = fails(function () { nativeGetPrototypeOf(1); });
+
+// `Object.getPrototypeOf` method
+// https://tc39.es/ecma262/#sec-object.getprototypeof
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES, sham: !CORRECT_PROTOTYPE_GETTER }, {
+  getPrototypeOf: function getPrototypeOf(it) {
+    return nativeGetPrototypeOf(toObject(it));
+  }
+});
+
+
+},{"../internals/correct-prototype-getter":13,"../internals/export":28,"../internals/fails":29,"../internals/object-get-prototype-of":58,"../internals/to-object":79}],95:[function(require,module,exports){
+var $ = require('../internals/export');
+var setPrototypeOf = require('../internals/object-set-prototype-of');
+
+// `Object.setPrototypeOf` method
+// https://tc39.es/ecma262/#sec-object.setprototypeof
+$({ target: 'Object', stat: true }, {
+  setPrototypeOf: setPrototypeOf
+});
+
+},{"../internals/export":28,"../internals/object-set-prototype-of":62}],96:[function(require,module,exports){
+var TO_STRING_TAG_SUPPORT = require('../internals/to-string-tag-support');
+var redefine = require('../internals/redefine');
+var toString = require('../internals/object-to-string');
+
+// `Object.prototype.toString` method
+// https://tc39.es/ecma262/#sec-object.prototype.tostring
+if (!TO_STRING_TAG_SUPPORT) {
+  redefine(Object.prototype, 'toString', toString, { unsafe: true });
+}
+
+},{"../internals/object-to-string":63,"../internals/redefine":66,"../internals/to-string-tag-support":81}],97:[function(require,module,exports){
+var $ = require('../internals/export');
+var getBuiltIn = require('../internals/get-built-in');
+var aFunction = require('../internals/a-function');
+var anObject = require('../internals/an-object');
+var isObject = require('../internals/is-object');
+var create = require('../internals/object-create');
+var bind = require('../internals/function-bind');
+var fails = require('../internals/fails');
+
+var nativeConstruct = getBuiltIn('Reflect', 'construct');
+
+// `Reflect.construct` method
+// https://tc39.es/ecma262/#sec-reflect.construct
+// MS Edge supports only 2 arguments and argumentsList argument is optional
+// FF Nightly sets third argument as `new.target`, but does not create `this` from it
+var NEW_TARGET_BUG = fails(function () {
+  function F() { /* empty */ }
+  return !(nativeConstruct(function () { /* empty */ }, [], F) instanceof F);
+});
+var ARGS_BUG = !fails(function () {
+  nativeConstruct(function () { /* empty */ });
+});
+var FORCED = NEW_TARGET_BUG || ARGS_BUG;
+
+$({ target: 'Reflect', stat: true, forced: FORCED, sham: FORCED }, {
+  construct: function construct(Target, args /* , newTarget */) {
+    aFunction(Target);
+    anObject(args);
+    var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
+    if (ARGS_BUG && !NEW_TARGET_BUG) return nativeConstruct(Target, args, newTarget);
+    if (Target == newTarget) {
+      // w/o altered newTarget, optimization for 0-4 arguments
+      switch (args.length) {
+        case 0: return new Target();
+        case 1: return new Target(args[0]);
+        case 2: return new Target(args[0], args[1]);
+        case 3: return new Target(args[0], args[1], args[2]);
+        case 4: return new Target(args[0], args[1], args[2], args[3]);
+      }
+      // w/o altered newTarget, lot of arguments case
+      var $args = [null];
+      $args.push.apply($args, args);
+      return new (bind.apply(Target, $args))();
+    }
+    // with altered newTarget, not support built-in constructors
+    var proto = newTarget.prototype;
+    var instance = create(isObject(proto) ? proto : Object.prototype);
+    var result = Function.apply.call(Target, instance, args);
+    return isObject(result) ? result : instance;
+  }
+});
+
+},{"../internals/a-function":1,"../internals/an-object":4,"../internals/export":28,"../internals/fails":29,"../internals/function-bind":31,"../internals/get-built-in":32,"../internals/is-object":44,"../internals/object-create":51}],98:[function(require,module,exports){
+'use strict';
+var charAt = require('../internals/string-multibyte').charAt;
+var InternalStateModule = require('../internals/internal-state');
+var defineIterator = require('../internals/define-iterator');
+
+var STRING_ITERATOR = 'String Iterator';
+var setInternalState = InternalStateModule.set;
+var getInternalState = InternalStateModule.getterFor(STRING_ITERATOR);
+
+// `String.prototype[@@iterator]` method
+// https://tc39.es/ecma262/#sec-string.prototype-@@iterator
+defineIterator(String, 'String', function (iterated) {
+  setInternalState(this, {
+    type: STRING_ITERATOR,
+    string: String(iterated),
+    index: 0
+  });
+// `%StringIteratorPrototype%.next` method
+// https://tc39.es/ecma262/#sec-%stringiteratorprototype%.next
+}, function next() {
+  var state = getInternalState(this);
+  var string = state.string;
+  var index = state.index;
+  var point;
+  if (index >= string.length) return { value: undefined, done: true };
+  point = charAt(string, index);
+  state.index += point.length;
+  return { value: point, done: false };
+});
+
+},{"../internals/define-iterator":19,"../internals/internal-state":41,"../internals/string-multibyte":73}],99:[function(require,module,exports){
+// `Symbol.prototype.description` getter
+// https://tc39.es/ecma262/#sec-symbol.prototype.description
+'use strict';
+var $ = require('../internals/export');
+var DESCRIPTORS = require('../internals/descriptors');
+var global = require('../internals/global');
+var has = require('../internals/has');
+var isObject = require('../internals/is-object');
+var defineProperty = require('../internals/object-define-property').f;
+var copyConstructorProperties = require('../internals/copy-constructor-properties');
+
+var NativeSymbol = global.Symbol;
+
+if (DESCRIPTORS && typeof NativeSymbol == 'function' && (!('description' in NativeSymbol.prototype) ||
+  // Safari 12 bug
+  NativeSymbol().description !== undefined
+)) {
+  var EmptyStringDescriptionStore = {};
+  // wrap Symbol constructor for correct work with undefined description
+  var SymbolWrapper = function Symbol() {
+    var description = arguments.length < 1 || arguments[0] === undefined ? undefined : String(arguments[0]);
+    var result = this instanceof SymbolWrapper
+      ? new NativeSymbol(description)
+      // in Edge 13, String(Symbol(undefined)) === 'Symbol(undefined)'
+      : description === undefined ? NativeSymbol() : NativeSymbol(description);
+    if (description === '') EmptyStringDescriptionStore[result] = true;
     return result;
+  };
+  copyConstructorProperties(SymbolWrapper, NativeSymbol);
+  var symbolPrototype = SymbolWrapper.prototype = NativeSymbol.prototype;
+  symbolPrototype.constructor = SymbolWrapper;
+
+  var symbolToString = symbolPrototype.toString;
+  var native = String(NativeSymbol('test')) == 'Symbol(test)';
+  var regexp = /^Symbol\((.*)\)[^)]+$/;
+  defineProperty(symbolPrototype, 'description', {
+    configurable: true,
+    get: function description() {
+      var symbol = isObject(this) ? this.valueOf() : this;
+      var string = symbolToString.call(symbol);
+      if (has(EmptyStringDescriptionStore, symbol)) return '';
+      var desc = native ? string.slice(7, -1) : string.replace(regexp, '$1');
+      return desc === '' ? undefined : desc;
+    }
   });
 
-  // Return a copy of the object without the blacklisted properties.
-  _.omit = restArguments(function(obj, keys) {
-    var iteratee = keys[0], context;
-    if (_.isFunction(iteratee)) {
-      iteratee = _.negate(iteratee);
-      if (keys.length > 1) context = keys[1];
+  $({ global: true, forced: true }, {
+    Symbol: SymbolWrapper
+  });
+}
+
+},{"../internals/copy-constructor-properties":12,"../internals/descriptors":21,"../internals/export":28,"../internals/global":33,"../internals/has":34,"../internals/is-object":44,"../internals/object-define-property":53}],100:[function(require,module,exports){
+var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
+
+// `Symbol.iterator` well-known symbol
+// https://tc39.es/ecma262/#sec-symbol.iterator
+defineWellKnownSymbol('iterator');
+
+},{"../internals/define-well-known-symbol":20}],101:[function(require,module,exports){
+'use strict';
+var $ = require('../internals/export');
+var global = require('../internals/global');
+var getBuiltIn = require('../internals/get-built-in');
+var IS_PURE = require('../internals/is-pure');
+var DESCRIPTORS = require('../internals/descriptors');
+var NATIVE_SYMBOL = require('../internals/native-symbol');
+var USE_SYMBOL_AS_UID = require('../internals/use-symbol-as-uid');
+var fails = require('../internals/fails');
+var has = require('../internals/has');
+var isArray = require('../internals/is-array');
+var isObject = require('../internals/is-object');
+var anObject = require('../internals/an-object');
+var toObject = require('../internals/to-object');
+var toIndexedObject = require('../internals/to-indexed-object');
+var toPrimitive = require('../internals/to-primitive');
+var createPropertyDescriptor = require('../internals/create-property-descriptor');
+var nativeObjectCreate = require('../internals/object-create');
+var objectKeys = require('../internals/object-keys');
+var getOwnPropertyNamesModule = require('../internals/object-get-own-property-names');
+var getOwnPropertyNamesExternal = require('../internals/object-get-own-property-names-external');
+var getOwnPropertySymbolsModule = require('../internals/object-get-own-property-symbols');
+var getOwnPropertyDescriptorModule = require('../internals/object-get-own-property-descriptor');
+var definePropertyModule = require('../internals/object-define-property');
+var propertyIsEnumerableModule = require('../internals/object-property-is-enumerable');
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+var redefine = require('../internals/redefine');
+var shared = require('../internals/shared');
+var sharedKey = require('../internals/shared-key');
+var hiddenKeys = require('../internals/hidden-keys');
+var uid = require('../internals/uid');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+var wrappedWellKnownSymbolModule = require('../internals/well-known-symbol-wrapped');
+var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
+var setToStringTag = require('../internals/set-to-string-tag');
+var InternalStateModule = require('../internals/internal-state');
+var $forEach = require('../internals/array-iteration').forEach;
+
+var HIDDEN = sharedKey('hidden');
+var SYMBOL = 'Symbol';
+var PROTOTYPE = 'prototype';
+var TO_PRIMITIVE = wellKnownSymbol('toPrimitive');
+var setInternalState = InternalStateModule.set;
+var getInternalState = InternalStateModule.getterFor(SYMBOL);
+var ObjectPrototype = Object[PROTOTYPE];
+var $Symbol = global.Symbol;
+var $stringify = getBuiltIn('JSON', 'stringify');
+var nativeGetOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;
+var nativeDefineProperty = definePropertyModule.f;
+var nativeGetOwnPropertyNames = getOwnPropertyNamesExternal.f;
+var nativePropertyIsEnumerable = propertyIsEnumerableModule.f;
+var AllSymbols = shared('symbols');
+var ObjectPrototypeSymbols = shared('op-symbols');
+var StringToSymbolRegistry = shared('string-to-symbol-registry');
+var SymbolToStringRegistry = shared('symbol-to-string-registry');
+var WellKnownSymbolsStore = shared('wks');
+var QObject = global.QObject;
+// Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
+var USE_SETTER = !QObject || !QObject[PROTOTYPE] || !QObject[PROTOTYPE].findChild;
+
+// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
+var setSymbolDescriptor = DESCRIPTORS && fails(function () {
+  return nativeObjectCreate(nativeDefineProperty({}, 'a', {
+    get: function () { return nativeDefineProperty(this, 'a', { value: 7 }).a; }
+  })).a != 7;
+}) ? function (O, P, Attributes) {
+  var ObjectPrototypeDescriptor = nativeGetOwnPropertyDescriptor(ObjectPrototype, P);
+  if (ObjectPrototypeDescriptor) delete ObjectPrototype[P];
+  nativeDefineProperty(O, P, Attributes);
+  if (ObjectPrototypeDescriptor && O !== ObjectPrototype) {
+    nativeDefineProperty(ObjectPrototype, P, ObjectPrototypeDescriptor);
+  }
+} : nativeDefineProperty;
+
+var wrap = function (tag, description) {
+  var symbol = AllSymbols[tag] = nativeObjectCreate($Symbol[PROTOTYPE]);
+  setInternalState(symbol, {
+    type: SYMBOL,
+    tag: tag,
+    description: description
+  });
+  if (!DESCRIPTORS) symbol.description = description;
+  return symbol;
+};
+
+var isSymbol = USE_SYMBOL_AS_UID ? function (it) {
+  return typeof it == 'symbol';
+} : function (it) {
+  return Object(it) instanceof $Symbol;
+};
+
+var $defineProperty = function defineProperty(O, P, Attributes) {
+  if (O === ObjectPrototype) $defineProperty(ObjectPrototypeSymbols, P, Attributes);
+  anObject(O);
+  var key = toPrimitive(P, true);
+  anObject(Attributes);
+  if (has(AllSymbols, key)) {
+    if (!Attributes.enumerable) {
+      if (!has(O, HIDDEN)) nativeDefineProperty(O, HIDDEN, createPropertyDescriptor(1, {}));
+      O[HIDDEN][key] = true;
     } else {
-      keys = _.map(flatten(keys, false, false), String);
-      iteratee = function(value, key) {
-        return !_.contains(keys, key);
+      if (has(O, HIDDEN) && O[HIDDEN][key]) O[HIDDEN][key] = false;
+      Attributes = nativeObjectCreate(Attributes, { enumerable: createPropertyDescriptor(0, false) });
+    } return setSymbolDescriptor(O, key, Attributes);
+  } return nativeDefineProperty(O, key, Attributes);
+};
+
+var $defineProperties = function defineProperties(O, Properties) {
+  anObject(O);
+  var properties = toIndexedObject(Properties);
+  var keys = objectKeys(properties).concat($getOwnPropertySymbols(properties));
+  $forEach(keys, function (key) {
+    if (!DESCRIPTORS || $propertyIsEnumerable.call(properties, key)) $defineProperty(O, key, properties[key]);
+  });
+  return O;
+};
+
+var $create = function create(O, Properties) {
+  return Properties === undefined ? nativeObjectCreate(O) : $defineProperties(nativeObjectCreate(O), Properties);
+};
+
+var $propertyIsEnumerable = function propertyIsEnumerable(V) {
+  var P = toPrimitive(V, true);
+  var enumerable = nativePropertyIsEnumerable.call(this, P);
+  if (this === ObjectPrototype && has(AllSymbols, P) && !has(ObjectPrototypeSymbols, P)) return false;
+  return enumerable || !has(this, P) || !has(AllSymbols, P) || has(this, HIDDEN) && this[HIDDEN][P] ? enumerable : true;
+};
+
+var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(O, P) {
+  var it = toIndexedObject(O);
+  var key = toPrimitive(P, true);
+  if (it === ObjectPrototype && has(AllSymbols, key) && !has(ObjectPrototypeSymbols, key)) return;
+  var descriptor = nativeGetOwnPropertyDescriptor(it, key);
+  if (descriptor && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key])) {
+    descriptor.enumerable = true;
+  }
+  return descriptor;
+};
+
+var $getOwnPropertyNames = function getOwnPropertyNames(O) {
+  var names = nativeGetOwnPropertyNames(toIndexedObject(O));
+  var result = [];
+  $forEach(names, function (key) {
+    if (!has(AllSymbols, key) && !has(hiddenKeys, key)) result.push(key);
+  });
+  return result;
+};
+
+var $getOwnPropertySymbols = function getOwnPropertySymbols(O) {
+  var IS_OBJECT_PROTOTYPE = O === ObjectPrototype;
+  var names = nativeGetOwnPropertyNames(IS_OBJECT_PROTOTYPE ? ObjectPrototypeSymbols : toIndexedObject(O));
+  var result = [];
+  $forEach(names, function (key) {
+    if (has(AllSymbols, key) && (!IS_OBJECT_PROTOTYPE || has(ObjectPrototype, key))) {
+      result.push(AllSymbols[key]);
+    }
+  });
+  return result;
+};
+
+// `Symbol` constructor
+// https://tc39.es/ecma262/#sec-symbol-constructor
+if (!NATIVE_SYMBOL) {
+  $Symbol = function Symbol() {
+    if (this instanceof $Symbol) throw TypeError('Symbol is not a constructor');
+    var description = !arguments.length || arguments[0] === undefined ? undefined : String(arguments[0]);
+    var tag = uid(description);
+    var setter = function (value) {
+      if (this === ObjectPrototype) setter.call(ObjectPrototypeSymbols, value);
+      if (has(this, HIDDEN) && has(this[HIDDEN], tag)) this[HIDDEN][tag] = false;
+      setSymbolDescriptor(this, tag, createPropertyDescriptor(1, value));
+    };
+    if (DESCRIPTORS && USE_SETTER) setSymbolDescriptor(ObjectPrototype, tag, { configurable: true, set: setter });
+    return wrap(tag, description);
+  };
+
+  redefine($Symbol[PROTOTYPE], 'toString', function toString() {
+    return getInternalState(this).tag;
+  });
+
+  redefine($Symbol, 'withoutSetter', function (description) {
+    return wrap(uid(description), description);
+  });
+
+  propertyIsEnumerableModule.f = $propertyIsEnumerable;
+  definePropertyModule.f = $defineProperty;
+  getOwnPropertyDescriptorModule.f = $getOwnPropertyDescriptor;
+  getOwnPropertyNamesModule.f = getOwnPropertyNamesExternal.f = $getOwnPropertyNames;
+  getOwnPropertySymbolsModule.f = $getOwnPropertySymbols;
+
+  wrappedWellKnownSymbolModule.f = function (name) {
+    return wrap(wellKnownSymbol(name), name);
+  };
+
+  if (DESCRIPTORS) {
+    // https://github.com/tc39/proposal-Symbol-description
+    nativeDefineProperty($Symbol[PROTOTYPE], 'description', {
+      configurable: true,
+      get: function description() {
+        return getInternalState(this).description;
+      }
+    });
+    if (!IS_PURE) {
+      redefine(ObjectPrototype, 'propertyIsEnumerable', $propertyIsEnumerable, { unsafe: true });
+    }
+  }
+}
+
+$({ global: true, wrap: true, forced: !NATIVE_SYMBOL, sham: !NATIVE_SYMBOL }, {
+  Symbol: $Symbol
+});
+
+$forEach(objectKeys(WellKnownSymbolsStore), function (name) {
+  defineWellKnownSymbol(name);
+});
+
+$({ target: SYMBOL, stat: true, forced: !NATIVE_SYMBOL }, {
+  // `Symbol.for` method
+  // https://tc39.es/ecma262/#sec-symbol.for
+  'for': function (key) {
+    var string = String(key);
+    if (has(StringToSymbolRegistry, string)) return StringToSymbolRegistry[string];
+    var symbol = $Symbol(string);
+    StringToSymbolRegistry[string] = symbol;
+    SymbolToStringRegistry[symbol] = string;
+    return symbol;
+  },
+  // `Symbol.keyFor` method
+  // https://tc39.es/ecma262/#sec-symbol.keyfor
+  keyFor: function keyFor(sym) {
+    if (!isSymbol(sym)) throw TypeError(sym + ' is not a symbol');
+    if (has(SymbolToStringRegistry, sym)) return SymbolToStringRegistry[sym];
+  },
+  useSetter: function () { USE_SETTER = true; },
+  useSimple: function () { USE_SETTER = false; }
+});
+
+$({ target: 'Object', stat: true, forced: !NATIVE_SYMBOL, sham: !DESCRIPTORS }, {
+  // `Object.create` method
+  // https://tc39.es/ecma262/#sec-object.create
+  create: $create,
+  // `Object.defineProperty` method
+  // https://tc39.es/ecma262/#sec-object.defineproperty
+  defineProperty: $defineProperty,
+  // `Object.defineProperties` method
+  // https://tc39.es/ecma262/#sec-object.defineproperties
+  defineProperties: $defineProperties,
+  // `Object.getOwnPropertyDescriptor` method
+  // https://tc39.es/ecma262/#sec-object.getownpropertydescriptors
+  getOwnPropertyDescriptor: $getOwnPropertyDescriptor
+});
+
+$({ target: 'Object', stat: true, forced: !NATIVE_SYMBOL }, {
+  // `Object.getOwnPropertyNames` method
+  // https://tc39.es/ecma262/#sec-object.getownpropertynames
+  getOwnPropertyNames: $getOwnPropertyNames,
+  // `Object.getOwnPropertySymbols` method
+  // https://tc39.es/ecma262/#sec-object.getownpropertysymbols
+  getOwnPropertySymbols: $getOwnPropertySymbols
+});
+
+// Chrome 38 and 39 `Object.getOwnPropertySymbols` fails on primitives
+// https://bugs.chromium.org/p/v8/issues/detail?id=3443
+$({ target: 'Object', stat: true, forced: fails(function () { getOwnPropertySymbolsModule.f(1); }) }, {
+  getOwnPropertySymbols: function getOwnPropertySymbols(it) {
+    return getOwnPropertySymbolsModule.f(toObject(it));
+  }
+});
+
+// `JSON.stringify` method behavior with symbols
+// https://tc39.es/ecma262/#sec-json.stringify
+if ($stringify) {
+  var FORCED_JSON_STRINGIFY = !NATIVE_SYMBOL || fails(function () {
+    var symbol = $Symbol();
+    // MS Edge converts symbol values to JSON as {}
+    return $stringify([symbol]) != '[null]'
+      // WebKit converts symbol values to JSON as null
+      || $stringify({ a: symbol }) != '{}'
+      // V8 throws on boxed symbols
+      || $stringify(Object(symbol)) != '{}';
+  });
+
+  $({ target: 'JSON', stat: true, forced: FORCED_JSON_STRINGIFY }, {
+    // eslint-disable-next-line no-unused-vars -- required for `.length`
+    stringify: function stringify(it, replacer, space) {
+      var args = [it];
+      var index = 1;
+      var $replacer;
+      while (arguments.length > index) args.push(arguments[index++]);
+      $replacer = replacer;
+      if (!isObject(replacer) && it === undefined || isSymbol(it)) return; // IE8 returns string on undefined
+      if (!isArray(replacer)) replacer = function (key, value) {
+        if (typeof $replacer == 'function') value = $replacer.call(this, key, value);
+        if (!isSymbol(value)) return value;
       };
+      args[1] = replacer;
+      return $stringify.apply(null, args);
     }
-    return _.pick(obj, iteratee, context);
   });
+}
 
-  // Fill in a given object with default properties.
-  _.defaults = createAssigner(_.allKeys, true);
+// `Symbol.prototype[@@toPrimitive]` method
+// https://tc39.es/ecma262/#sec-symbol.prototype-@@toprimitive
+if (!$Symbol[PROTOTYPE][TO_PRIMITIVE]) {
+  createNonEnumerableProperty($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+}
+// `Symbol.prototype[@@toStringTag]` property
+// https://tc39.es/ecma262/#sec-symbol.prototype-@@tostringtag
+setToStringTag($Symbol, SYMBOL);
 
-  // Creates an object that inherits from the given prototype object.
-  // If additional properties are provided then they will be added to the
-  // created object.
-  _.create = function(prototype, props) {
-    var result = baseCreate(prototype);
-    if (props) _.extendOwn(result, props);
-    return result;
-  };
+hiddenKeys[HIDDEN] = true;
 
-  // Create a (shallow-cloned) duplicate of an object.
-  _.clone = function(obj) {
-    if (!_.isObject(obj)) return obj;
-    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
-  };
+},{"../internals/an-object":4,"../internals/array-iteration":6,"../internals/create-non-enumerable-property":15,"../internals/create-property-descriptor":16,"../internals/define-well-known-symbol":20,"../internals/descriptors":21,"../internals/export":28,"../internals/fails":29,"../internals/get-built-in":32,"../internals/global":33,"../internals/has":34,"../internals/hidden-keys":35,"../internals/internal-state":41,"../internals/is-array":42,"../internals/is-object":44,"../internals/is-pure":45,"../internals/native-symbol":48,"../internals/object-create":51,"../internals/object-define-property":53,"../internals/object-get-own-property-descriptor":54,"../internals/object-get-own-property-names":56,"../internals/object-get-own-property-names-external":55,"../internals/object-get-own-property-symbols":57,"../internals/object-keys":60,"../internals/object-property-is-enumerable":61,"../internals/redefine":66,"../internals/set-to-string-tag":69,"../internals/shared":72,"../internals/shared-key":70,"../internals/to-indexed-object":76,"../internals/to-object":79,"../internals/to-primitive":80,"../internals/uid":82,"../internals/use-symbol-as-uid":83,"../internals/well-known-symbol":85,"../internals/well-known-symbol-wrapped":84}],102:[function(require,module,exports){
+var defineWellKnownSymbol = require('../internals/define-well-known-symbol');
 
-  // Invokes interceptor with the obj, and then returns obj.
-  // The primary purpose of this method is to "tap into" a method chain, in
-  // order to perform operations on intermediate results within the chain.
-  _.tap = function(obj, interceptor) {
-    interceptor(obj);
-    return obj;
-  };
+// `Symbol.toPrimitive` well-known symbol
+// https://tc39.es/ecma262/#sec-symbol.toprimitive
+defineWellKnownSymbol('toPrimitive');
 
-  // Returns whether an object has a given set of `key:value` pairs.
-  _.isMatch = function(object, attrs) {
-    var keys = _.keys(attrs), length = keys.length;
-    if (object == null) return !length;
-    var obj = Object(object);
-    for (var i = 0; i < length; i++) {
-      var key = keys[i];
-      if (attrs[key] !== obj[key] || !(key in obj)) return false;
+},{"../internals/define-well-known-symbol":20}],103:[function(require,module,exports){
+var global = require('../internals/global');
+var DOMIterables = require('../internals/dom-iterables');
+var ArrayIteratorMethods = require('../modules/es.array.iterator');
+var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
+var wellKnownSymbol = require('../internals/well-known-symbol');
+
+var ITERATOR = wellKnownSymbol('iterator');
+var TO_STRING_TAG = wellKnownSymbol('toStringTag');
+var ArrayValues = ArrayIteratorMethods.values;
+
+for (var COLLECTION_NAME in DOMIterables) {
+  var Collection = global[COLLECTION_NAME];
+  var CollectionPrototype = Collection && Collection.prototype;
+  if (CollectionPrototype) {
+    // some Chrome versions have non-configurable methods on DOMTokenList
+    if (CollectionPrototype[ITERATOR] !== ArrayValues) try {
+      createNonEnumerableProperty(CollectionPrototype, ITERATOR, ArrayValues);
+    } catch (error) {
+      CollectionPrototype[ITERATOR] = ArrayValues;
     }
-    return true;
-  };
-
-
-  // Internal recursive comparison function for `isEqual`.
-  var eq, deepEq;
-  eq = function(a, b, aStack, bStack) {
-    // Identical objects are equal. `0 === -0`, but they aren't identical.
-    // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
-    if (a === b) return a !== 0 || 1 / a === 1 / b;
-    // `null` or `undefined` only equal to itself (strict comparison).
-    if (a == null || b == null) return false;
-    // `NaN`s are equivalent, but non-reflexive.
-    if (a !== a) return b !== b;
-    // Exhaust primitive checks
-    var type = typeof a;
-    if (type !== 'function' && type !== 'object' && typeof b != 'object') return false;
-    return deepEq(a, b, aStack, bStack);
-  };
-
-  // Internal recursive comparison function for `isEqual`.
-  deepEq = function(a, b, aStack, bStack) {
-    // Unwrap any wrapped objects.
-    if (a instanceof _) a = a._wrapped;
-    if (b instanceof _) b = b._wrapped;
-    // Compare `[[Class]]` names.
-    var className = toString.call(a);
-    if (className !== toString.call(b)) return false;
-    switch (className) {
-      // Strings, numbers, regular expressions, dates, and booleans are compared by value.
-      case '[object RegExp]':
-      // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
-      case '[object String]':
-        // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
-        // equivalent to `new String("5")`.
-        return '' + a === '' + b;
-      case '[object Number]':
-        // `NaN`s are equivalent, but non-reflexive.
-        // Object(NaN) is equivalent to NaN.
-        if (+a !== +a) return +b !== +b;
-        // An `egal` comparison is performed for other numeric values.
-        return +a === 0 ? 1 / +a === 1 / b : +a === +b;
-      case '[object Date]':
-      case '[object Boolean]':
-        // Coerce dates and booleans to numeric primitive values. Dates are compared by their
-        // millisecond representations. Note that invalid dates with millisecond representations
-        // of `NaN` are not equivalent.
-        return +a === +b;
-      case '[object Symbol]':
-        return SymbolProto.valueOf.call(a) === SymbolProto.valueOf.call(b);
+    if (!CollectionPrototype[TO_STRING_TAG]) {
+      createNonEnumerableProperty(CollectionPrototype, TO_STRING_TAG, COLLECTION_NAME);
     }
-
-    var areArrays = className === '[object Array]';
-    if (!areArrays) {
-      if (typeof a != 'object' || typeof b != 'object') return false;
-
-      // Objects with different constructors are not equivalent, but `Object`s or `Array`s
-      // from different frames are.
-      var aCtor = a.constructor, bCtor = b.constructor;
-      if (aCtor !== bCtor && !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
-                               _.isFunction(bCtor) && bCtor instanceof bCtor)
-                          && ('constructor' in a && 'constructor' in b)) {
-        return false;
+    if (DOMIterables[COLLECTION_NAME]) for (var METHOD_NAME in ArrayIteratorMethods) {
+      // some Chrome versions have non-configurable methods on DOMTokenList
+      if (CollectionPrototype[METHOD_NAME] !== ArrayIteratorMethods[METHOD_NAME]) try {
+        createNonEnumerableProperty(CollectionPrototype, METHOD_NAME, ArrayIteratorMethods[METHOD_NAME]);
+      } catch (error) {
+        CollectionPrototype[METHOD_NAME] = ArrayIteratorMethods[METHOD_NAME];
       }
     }
-    // Assume equality for cyclic structures. The algorithm for detecting cyclic
-    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
-
-    // Initializing stack of traversed objects.
-    // It's done here since we only need them for objects and arrays comparison.
-    aStack = aStack || [];
-    bStack = bStack || [];
-    var length = aStack.length;
-    while (length--) {
-      // Linear search. Performance is inversely proportional to the number of
-      // unique nested structures.
-      if (aStack[length] === a) return bStack[length] === b;
-    }
-
-    // Add the first object to the stack of traversed objects.
-    aStack.push(a);
-    bStack.push(b);
-
-    // Recursively compare objects and arrays.
-    if (areArrays) {
-      // Compare array lengths to determine if a deep comparison is necessary.
-      length = a.length;
-      if (length !== b.length) return false;
-      // Deep compare the contents, ignoring non-numeric properties.
-      while (length--) {
-        if (!eq(a[length], b[length], aStack, bStack)) return false;
-      }
-    } else {
-      // Deep compare objects.
-      var keys = _.keys(a), key;
-      length = keys.length;
-      // Ensure that both objects contain the same number of properties before comparing deep equality.
-      if (_.keys(b).length !== length) return false;
-      while (length--) {
-        // Deep compare each member
-        key = keys[length];
-        if (!(has(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
-      }
-    }
-    // Remove the first object from the stack of traversed objects.
-    aStack.pop();
-    bStack.pop();
-    return true;
-  };
-
-  // Perform a deep comparison to check if two objects are equal.
-  _.isEqual = function(a, b) {
-    return eq(a, b);
-  };
-
-  // Is a given array, string, or object empty?
-  // An "empty" object has no enumerable own-properties.
-  _.isEmpty = function(obj) {
-    if (obj == null) return true;
-    if (isArrayLike(obj) && (_.isArray(obj) || _.isString(obj) || _.isArguments(obj))) return obj.length === 0;
-    return _.keys(obj).length === 0;
-  };
-
-  // Is a given value a DOM element?
-  _.isElement = function(obj) {
-    return !!(obj && obj.nodeType === 1);
-  };
-
-  // Is a given value an array?
-  // Delegates to ECMA5's native Array.isArray
-  _.isArray = nativeIsArray || function(obj) {
-    return toString.call(obj) === '[object Array]';
-  };
-
-  // Is a given variable an object?
-  _.isObject = function(obj) {
-    var type = typeof obj;
-    return type === 'function' || type === 'object' && !!obj;
-  };
-
-  // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp, isError, isMap, isWeakMap, isSet, isWeakSet.
-  _.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error', 'Symbol', 'Map', 'WeakMap', 'Set', 'WeakSet'], function(name) {
-    _['is' + name] = function(obj) {
-      return toString.call(obj) === '[object ' + name + ']';
-    };
-  });
-
-  // Define a fallback version of the method in browsers (ahem, IE < 9), where
-  // there isn't any inspectable "Arguments" type.
-  if (!_.isArguments(arguments)) {
-    _.isArguments = function(obj) {
-      return has(obj, 'callee');
-    };
   }
+}
 
-  // Optimize `isFunction` if appropriate. Work around some typeof bugs in old v8,
-  // IE 11 (#1621), Safari 8 (#1929), and PhantomJS (#2236).
-  var nodelist = root.document && root.document.childNodes;
-  if (typeof /./ != 'function' && typeof Int8Array != 'object' && typeof nodelist != 'function') {
-    _.isFunction = function(obj) {
-      return typeof obj == 'function' || false;
-    };
-  }
-
-  // Is a given object a finite number?
-  _.isFinite = function(obj) {
-    return !_.isSymbol(obj) && isFinite(obj) && !isNaN(parseFloat(obj));
-  };
-
-  // Is the given value `NaN`?
-  _.isNaN = function(obj) {
-    return _.isNumber(obj) && isNaN(obj);
-  };
-
-  // Is a given value a boolean?
-  _.isBoolean = function(obj) {
-    return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
-  };
-
-  // Is a given value equal to null?
-  _.isNull = function(obj) {
-    return obj === null;
-  };
-
-  // Is a given variable undefined?
-  _.isUndefined = function(obj) {
-    return obj === void 0;
-  };
-
-  // Shortcut function for checking if an object has a given property directly
-  // on itself (in other words, not on a prototype).
-  _.has = function(obj, path) {
-    if (!_.isArray(path)) {
-      return has(obj, path);
-    }
-    var length = path.length;
-    for (var i = 0; i < length; i++) {
-      var key = path[i];
-      if (obj == null || !hasOwnProperty.call(obj, key)) {
-        return false;
-      }
-      obj = obj[key];
-    }
-    return !!length;
-  };
-
-  // Utility Functions
-  // -----------------
-
-  // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
-  // previous owner. Returns a reference to the Underscore object.
-  _.noConflict = function() {
-    root._ = previousUnderscore;
-    return this;
-  };
-
-  // Keep the identity function around for default iteratees.
-  _.identity = function(value) {
-    return value;
-  };
-
-  // Predicate-generating functions. Often useful outside of Underscore.
-  _.constant = function(value) {
-    return function() {
-      return value;
-    };
-  };
-
-  _.noop = function(){};
-
-  // Creates a function that, when passed an object, will traverse that object’s
-  // properties down the given `path`, specified as an array of keys or indexes.
-  _.property = function(path) {
-    if (!_.isArray(path)) {
-      return shallowProperty(path);
-    }
-    return function(obj) {
-      return deepGet(obj, path);
-    };
-  };
-
-  // Generates a function for a given object that returns a given property.
-  _.propertyOf = function(obj) {
-    if (obj == null) {
-      return function(){};
-    }
-    return function(path) {
-      return !_.isArray(path) ? obj[path] : deepGet(obj, path);
-    };
-  };
-
-  // Returns a predicate for checking whether an object has a given set of
-  // `key:value` pairs.
-  _.matcher = _.matches = function(attrs) {
-    attrs = _.extendOwn({}, attrs);
-    return function(obj) {
-      return _.isMatch(obj, attrs);
-    };
-  };
-
-  // Run a function **n** times.
-  _.times = function(n, iteratee, context) {
-    var accum = Array(Math.max(0, n));
-    iteratee = optimizeCb(iteratee, context, 1);
-    for (var i = 0; i < n; i++) accum[i] = iteratee(i);
-    return accum;
-  };
-
-  // Return a random integer between min and max (inclusive).
-  _.random = function(min, max) {
-    if (max == null) {
-      max = min;
-      min = 0;
-    }
-    return min + Math.floor(Math.random() * (max - min + 1));
-  };
-
-  // A (possibly faster) way to get the current timestamp as an integer.
-  _.now = Date.now || function() {
-    return new Date().getTime();
-  };
-
-  // List of HTML entities for escaping.
-  var escapeMap = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#x27;',
-    '`': '&#x60;'
-  };
-  var unescapeMap = _.invert(escapeMap);
-
-  // Functions for escaping and unescaping strings to/from HTML interpolation.
-  var createEscaper = function(map) {
-    var escaper = function(match) {
-      return map[match];
-    };
-    // Regexes for identifying a key that needs to be escaped.
-    var source = '(?:' + _.keys(map).join('|') + ')';
-    var testRegexp = RegExp(source);
-    var replaceRegexp = RegExp(source, 'g');
-    return function(string) {
-      string = string == null ? '' : '' + string;
-      return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-    };
-  };
-  _.escape = createEscaper(escapeMap);
-  _.unescape = createEscaper(unescapeMap);
-
-  // Traverses the children of `obj` along `path`. If a child is a function, it
-  // is invoked with its parent as context. Returns the value of the final
-  // child, or `fallback` if any child is undefined.
-  _.result = function(obj, path, fallback) {
-    if (!_.isArray(path)) path = [path];
-    var length = path.length;
-    if (!length) {
-      return _.isFunction(fallback) ? fallback.call(obj) : fallback;
-    }
-    for (var i = 0; i < length; i++) {
-      var prop = obj == null ? void 0 : obj[path[i]];
-      if (prop === void 0) {
-        prop = fallback;
-        i = length; // Ensure we don't continue iterating.
-      }
-      obj = _.isFunction(prop) ? prop.call(obj) : prop;
-    }
-    return obj;
-  };
-
-  // Generate a unique integer id (unique within the entire client session).
-  // Useful for temporary DOM ids.
-  var idCounter = 0;
-  _.uniqueId = function(prefix) {
-    var id = ++idCounter + '';
-    return prefix ? prefix + id : id;
-  };
-
-  // By default, Underscore uses ERB-style template delimiters, change the
-  // following template settings to use alternative delimiters.
-  _.templateSettings = {
-    evaluate: /<%([\s\S]+?)%>/g,
-    interpolate: /<%=([\s\S]+?)%>/g,
-    escape: /<%-([\s\S]+?)%>/g
-  };
-
-  // When customizing `templateSettings`, if you don't want to define an
-  // interpolation, evaluation or escaping regex, we need one that is
-  // guaranteed not to match.
-  var noMatch = /(.)^/;
-
-  // Certain characters need to be escaped so that they can be put into a
-  // string literal.
-  var escapes = {
-    "'": "'",
-    '\\': '\\',
-    '\r': 'r',
-    '\n': 'n',
-    '\u2028': 'u2028',
-    '\u2029': 'u2029'
-  };
-
-  var escapeRegExp = /\\|'|\r|\n|\u2028|\u2029/g;
-
-  var escapeChar = function(match) {
-    return '\\' + escapes[match];
-  };
-
-  // JavaScript micro-templating, similar to John Resig's implementation.
-  // Underscore templating handles arbitrary delimiters, preserves whitespace,
-  // and correctly escapes quotes within interpolated code.
-  // NB: `oldSettings` only exists for backwards compatibility.
-  _.template = function(text, settings, oldSettings) {
-    if (!settings && oldSettings) settings = oldSettings;
-    settings = _.defaults({}, settings, _.templateSettings);
-
-    // Combine delimiters into one regular expression via alternation.
-    var matcher = RegExp([
-      (settings.escape || noMatch).source,
-      (settings.interpolate || noMatch).source,
-      (settings.evaluate || noMatch).source
-    ].join('|') + '|$', 'g');
-
-    // Compile the template source, escaping string literals appropriately.
-    var index = 0;
-    var source = "__p+='";
-    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
-      source += text.slice(index, offset).replace(escapeRegExp, escapeChar);
-      index = offset + match.length;
-
-      if (escape) {
-        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
-      } else if (interpolate) {
-        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
-      } else if (evaluate) {
-        source += "';\n" + evaluate + "\n__p+='";
-      }
-
-      // Adobe VMs need the match returned to produce the correct offset.
-      return match;
-    });
-    source += "';\n";
-
-    // If a variable is not specified, place data values in local scope.
-    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
-
-    source = "var __t,__p='',__j=Array.prototype.join," +
-      "print=function(){__p+=__j.call(arguments,'');};\n" +
-      source + 'return __p;\n';
-
-    var render;
-    try {
-      render = new Function(settings.variable || 'obj', '_', source);
-    } catch (e) {
-      e.source = source;
-      throw e;
-    }
-
-    var template = function(data) {
-      return render.call(this, data, _);
-    };
-
-    // Provide the compiled source as a convenience for precompilation.
-    var argument = settings.variable || 'obj';
-    template.source = 'function(' + argument + '){\n' + source + '}';
-
-    return template;
-  };
-
-  // Add a "chain" function. Start chaining a wrapped Underscore object.
-  _.chain = function(obj) {
-    var instance = _(obj);
-    instance._chain = true;
-    return instance;
-  };
-
-  // OOP
-  // ---------------
-  // If Underscore is called as a function, it returns a wrapped object that
-  // can be used OO-style. This wrapper holds altered versions of all the
-  // underscore functions. Wrapped objects may be chained.
-
-  // Helper function to continue chaining intermediate results.
-  var chainResult = function(instance, obj) {
-    return instance._chain ? _(obj).chain() : obj;
-  };
-
-  // Add your own custom functions to the Underscore object.
-  _.mixin = function(obj) {
-    _.each(_.functions(obj), function(name) {
-      var func = _[name] = obj[name];
-      _.prototype[name] = function() {
-        var args = [this._wrapped];
-        push.apply(args, arguments);
-        return chainResult(this, func.apply(_, args));
-      };
-    });
-    return _;
-  };
-
-  // Add all of the Underscore functions to the wrapper object.
-  _.mixin(_);
-
-  // Add all mutator Array functions to the wrapper.
-  _.each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
-    var method = ArrayProto[name];
-    _.prototype[name] = function() {
-      var obj = this._wrapped;
-      method.apply(obj, arguments);
-      if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
-      return chainResult(this, obj);
-    };
-  });
-
-  // Add all accessor Array functions to the wrapper.
-  _.each(['concat', 'join', 'slice'], function(name) {
-    var method = ArrayProto[name];
-    _.prototype[name] = function() {
-      return chainResult(this, method.apply(this._wrapped, arguments));
-    };
-  });
-
-  // Extracts the result from a wrapped and chained object.
-  _.prototype.value = function() {
-    return this._wrapped;
-  };
-
-  // Provide unwrapping proxy for some methods used in engine operations
-  // such as arithmetic and JSON stringification.
-  _.prototype.valueOf = _.prototype.toJSON = _.prototype.value;
-
-  _.prototype.toString = function() {
-    return String(this._wrapped);
-  };
-
-  // AMD registration happens at the end for compatibility with AMD loaders
-  // that may not enforce next-turn semantics on modules. Even though general
-  // practice for AMD registration is to be anonymous, underscore registers
-  // as a named module because, like jQuery, it is a base library that is
-  // popular enough to be bundled in a third party lib, but not be part of
-  // an AMD load request. Those cases could generate an error when an
-  // anonymous define() is called outside of a loader request.
-  if (typeof define == 'function' && define.amd) {
-    define('underscore', [], function() {
-      return _;
-    });
-  }
-}());
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
+},{"../internals/create-non-enumerable-property":15,"../internals/dom-iterables":23,"../internals/global":33,"../internals/well-known-symbol":85,"../modules/es.array.iterator":88}],104:[function(require,module,exports){
 /**
  * @license
  * Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
@@ -4264,190 +4917,206 @@ window.CustomElements.addModule(function(scope) {
   var head = document.querySelector("head");
   head.insertBefore(style, head.firstChild);
 })(window.WebComponents);
-},{}],4:[function(require,module,exports){
-'use strict';
+},{}],105:[function(require,module,exports){
+"use strict";
 
-var Class = require('class.extend'),
-    _ = require('underscore'),
-    hasConnected = false, // See the `isChromecastConnected` function.
-    ChromecastSessionManager;
-
-function getCastContext() {
-   return cast.framework.CastContext.getInstance();
-}
-
-ChromecastSessionManager = Class.extend(/** @lends ChromecastSessionManager.prototype **/ {
-
-   sessionStateChangeListener: null,
-   castStateChangeListener: null,
-
-   /**
-    * Stores the state of the current Chromecast session and its associated objects such
-    * as the
-    * [RemotePlayerController](https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayerController),
-    * and the
-    * [RemotePlayer](https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayer).
-    *
-    * WARNING: Do not instantiate this class until the
-    * [CastContext](https://developers.google.com/cast/docs/reference/chrome/cast.framework.CastContext)
-    * has been configured.
-    *
-    * For an undocumented (and thus unknown) reason, RemotePlayer and
-    * RemotePlayerController instances created before the cast context has been configured
-    * or after requesting a session or loading media will not stay in sync with media
-    * items that are loaded later.
-    *
-    * For example, the first item that you cast will work as expected: events on
-    * RemotePlayerController will fire and the state (currentTime, duration, etc) of the
-    * RemotePlayer instance will update as the media item plays. However, if a new media
-    * item is loaded via a `loadMedia` request, the media item will play, but the
-    * remotePlayer will be in a "media unloaded" state where the duration is 0, the
-    * currentTime does not update, and no change events are fired (except, strangely,
-    * displayStatus updates).
-    *
-    * @param player {object} Video.js Player
-    * @constructs ChromecastSessionManager
-    */
-   init: function(player) {
-      this._addCastContextEventListeners();
-
-      this._notifyPlayerOfDevicesAvailabilityChange(this.getCastContext().getCastState());
-
-      this.remotePlayer = new cast.framework.RemotePlayer();
-      this.remotePlayerController = new cast.framework.RemotePlayerController(this.remotePlayer);
-   },
-
-   /**
-    * Add event listeners for events triggered on the current CastContext.
-    *
-    * @private
-    */
-   _addCastContextEventListeners: function() {
+require("core-js/modules/es.object.define-property.js");
+require("core-js/modules/es.symbol.iterator.js");
+require("core-js/modules/es.array.iterator.js");
+require("core-js/modules/es.string.iterator.js");
+require("core-js/modules/web.dom-collections.iterator.js");
+require("core-js/modules/es.symbol.to-primitive.js");
+require("core-js/modules/es.date.to-primitive.js");
+require("core-js/modules/es.symbol.js");
+require("core-js/modules/es.symbol.description.js");
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.number.constructor.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+/** @lends ChromecastSessionManager.prototype **/
+var ChromecastSessionManager = /*#__PURE__*/function () {
+  /**
+   * Stores the state of the current Chromecast session and its associated objects such
+   * as the
+   * [RemotePlayerController](https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayerController),
+   * and the
+   * [RemotePlayer](https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayer).
+   *
+   * WARNING: Do not instantiate this class until the
+   * [CastContext](https://developers.google.com/cast/docs/reference/chrome/cast.framework.CastContext)
+   * has been configured.
+   *
+   * For an undocumented (and thus unknown) reason, RemotePlayer and
+   * RemotePlayerController instances created before the cast context has been configured
+   * or after requesting a session or loading media will not stay in sync with media
+   * items that are loaded later.
+   *
+   * For example, the first item that you cast will work as expected: events on
+   * RemotePlayerController will fire and the state (currentTime, duration, etc) of the
+   * RemotePlayer instance will update as the media item plays. However, if a new media
+   * item is loaded via a `loadMedia` request, the media item will play, but the
+   * remotePlayer will be in a "media unloaded" state where the duration is 0, the
+   * currentTime does not update, and no change events are fired (except, strangely,
+   * displayStatus updates).
+   *
+   * @param player {object} Video.js Player
+   * @constructs ChromecastSessionManager
+   */
+  function ChromecastSessionManager(player) {
+    _classCallCheck(this, ChromecastSessionManager);
+    this._sessionListener = this._onSessionStateChange.bind(this);
+    this._castListener = this._onCastStateChange.bind(this);
+    this._addCastContextEventListeners();
+    this._notifyPlayerOfDevicesAvailabilityChange(this.getCastContext().getCastState());
+    this.remotePlayer = new cast.framework.RemotePlayer();
+    this.remotePlayerController = new cast.framework.RemotePlayerController(this.remotePlayer);
+  }
+  _createClass(ChromecastSessionManager, [{
+    key: "_addCastContextEventListeners",
+    value:
+    /**
+     * Add event listeners for events triggered on the current CastContext.
+     *
+     * @private
+     */
+    function _addCastContextEventListeners() {
       var sessionStateChangedEvt = cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
-          castStateChangedEvt = cast.framework.CastContextEventType.CAST_STATE_CHANGED;
+        castStateChangedEvt = cast.framework.CastContextEventType.CAST_STATE_CHANGED;
+      this.getCastContext().addEventListener(sessionStateChangedEvt, this._sessionListener);
+      this.getCastContext().addEventListener(castStateChangedEvt, this._castListener);
+    }
 
-      this.sessionStateChangeListener = this._onSessionStateChange.bind(this);
-      this.castStateChangeListener = this._onCastStateChange.bind(this);
-      this.getCastContext().addEventListener(sessionStateChangedEvt, this.sessionStateChangeListener);
-      this.getCastContext().addEventListener(castStateChangedEvt, this.castStateChangeListener);
-   },
-
-   /**
-    * Remove event listeners that were added in {@link
-    * ChromecastSessionManager#_addCastContextEventListeners}.
-    *
-    * @private
-    */
-   _removeCastContextEventListeners: function() {
+    /**
+     * Remove event listeners that were added in {@link
+     * ChromecastSessionManager#_addCastContextEventListeners}.
+     *
+     * @private
+     */
+  }, {
+    key: "_removeCastContextEventListeners",
+    value: function _removeCastContextEventListeners() {
       var sessionStateChangedEvt = cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
-          castStateChangedEvt = cast.framework.CastContextEventType.CAST_STATE_CHANGED;
+        castStateChangedEvt = cast.framework.CastContextEventType.CAST_STATE_CHANGED;
+      this.getCastContext().removeEventListener(sessionStateChangedEvt, this._sessionListener);
+      this.getCastContext().removeEventListener(castStateChangedEvt, this._castListener);
+    }
 
-      this.getCastContext().removeEventListener(sessionStateChangedEvt, this.sessionStateChangeListener);
-      this.getCastContext().removeEventListener(castStateChangedEvt, this.castStateChangeListener);
-   },
-
-   /**
-    * Handle the CastContext's SessionState change event.
-    *
-    * @private
-    */
-   _onSessionStateChange: function(event) {
+    /**
+     * Handle the CastContext's SessionState change event.
+     *
+     * @private
+     */
+  }, {
+    key: "_onSessionStateChange",
+    value: function _onSessionStateChange(event) {
       if (event.sessionState === cast.framework.SessionState.SESSION_ENDED) {
-         if (window.player && window.currentMethod!='mega' && window.currentMethod!='youtube') {
-            window.player.trigger('chromecastDisconnected');
-            this._reloadTech();
-         }
+        if (window.player && window.currentMethod != 'mega' && window.currentMethod != 'youtube') {
+          window.player.trigger('chromecastDisconnected');
+          this._reloadTech();
+        }
       } else if (event.sessionState === cast.framework.SessionState.SESSION_STARTED || event.sessionState === cast.framework.SessionState.SESSION_RESUMED) {
-         if (window.player) {
-            if (!window.player.currentSource() || window.currentMethod=='mega' || window.currentMethod=='youtube') {
-               // Do not cast if there is no media item loaded in the player
-               if (window.currentMethod=='mega') {
-                  showAlert("No es pot emetre", "Els vídeos acabats de penjar estan allotjats a MEGA i no es poden emetre. Si vols emetre'l, caldrà que esperis un parell d'hores i refresquis la pàgina.");
-               } else {
-                  showAlert("No es pot emetre", "Aquest vídeo no es pot emetre.");
-               }
-               cast.framework.CastContext.getInstance().endCurrentSession(true);
-               return;
+        if (window.player) {
+          if (!window.player.currentSource() || window.currentMethod == 'mega' || window.currentMethod == 'youtube') {
+            // Do not cast if there is no media item loaded in the player
+            if (window.currentMethod == 'mega') {
+              showAlert("No es pot emetre", "Els vídeos acabats de penjar estan allotjats a MEGA i no es poden emetre. Si vols emetre'l, caldrà que esperis un parell d'hores i refresquis la pàgina.");
+            } else {
+              showAlert("No es pot emetre", "Aquest vídeo no es pot emetre.");
             }
-            window.player.trigger('chromecastConnected');
-            this._reloadTech();
-         }
-         hasConnected = true;
+            cast.framework.CastContext.getInstance().endCurrentSession(true);
+            window.player.pause();
+            return;
+          }
+          window.player.trigger('chromecastConnected');
+          this._reloadTech();
+        }
+        ChromecastSessionManager.hasConnected = true;
       }
-   },
+    }
 
-   /**
-    * Handle the CastContext's CastState change event.
-    *
-    * @private
-    */
-   _onCastStateChange: function(event) {
+    /**
+     * Handle the CastContext's CastState change event.
+     *
+     * @private
+     */
+  }, {
+    key: "_onCastStateChange",
+    value: function _onCastStateChange(event) {
       this._notifyPlayerOfDevicesAvailabilityChange(event.castState);
-   },
+    }
 
-   /**
-    * Triggers player events that notifies listeners that Chromecast devices are
-    * either available or unavailable.
-    *
-    * @private
-    */
-   _notifyPlayerOfDevicesAvailabilityChange: function(castState) {
+    /**
+     * Triggers player events that notifies listeners that Chromecast devices are
+     * either available or unavailable.
+     *
+     * @private
+     */
+  }, {
+    key: "_notifyPlayerOfDevicesAvailabilityChange",
+    value: function _notifyPlayerOfDevicesAvailabilityChange(castState) {
       if (window.player) {
-         if (this.hasAvailableDevices(castState)) {
-            window.player.trigger('chromecastDevicesAvailable');
-         } else {
-            window.player.trigger('chromecastDevicesUnavailable');
-         }
+        if (this.hasAvailableDevices(castState)) {
+          window.player.trigger('chromecastDevicesAvailable');
+        } else {
+          window.player.trigger('chromecastDevicesUnavailable');
+        }
       }
-   },
+    }
 
-   /**
-    * Returns whether or not there are Chromecast devices available to cast to.
-    *
-    * @see https://developers.google.com/cast/docs/reference/chrome/cast.framework#.CastState
-    * @param {String} castState
-    * @return {boolean} true if there are Chromecast devices available to cast to.
-    */
-   hasAvailableDevices: function(castState) {
+    /**
+     * Returns whether or not there are Chromecast devices available to cast to.
+     *
+     * @see https://developers.google.com/cast/docs/reference/chrome/cast.framework#.CastState
+     * @param {String} castState
+     * @return {boolean} true if there are Chromecast devices available to cast to.
+     */
+  }, {
+    key: "hasAvailableDevices",
+    value: function hasAvailableDevices(castState) {
       castState = castState || this.getCastContext().getCastState();
+      return castState === cast.framework.CastState.NOT_CONNECTED || castState === cast.framework.CastState.CONNECTING || castState === cast.framework.CastState.CONNECTED;
+    }
 
-      return castState === cast.framework.CastState.NOT_CONNECTED ||
-         castState === cast.framework.CastState.CONNECTING ||
-         castState === cast.framework.CastState.CONNECTED;
-   },
-
-   /**
-    * Opens the Chromecast casting menu by requesting a CastSession. Does nothing if the
-    * Video.js player does not have a source.
-    */
-   openCastMenu: function() {
+    /**
+     * Opens the Chromecast casting menu by requesting a CastSession. Does nothing if the
+     * Video.js player does not have a source.
+     */
+  }, {
+    key: "openCastMenu",
+    value: function openCastMenu() {
       // It is the `requestSession` function call that actually causes the cast menu to
       // open.
-      // The second parameter to `.then` is an error handler. We use _.noop here
+      // The second parameter to `.then` is an error handler. We use a noop function here
       // because we handle errors in the ChromecastTech class and we do not want an
       // error to bubble up to the console. This error handler is also triggered when
       // the user closes out of the chromecast selector pop-up without choosing a
       // casting destination.
-      this.getCastContext().requestSession()
-         .then(_.noop, _.noop);
-   },
+      this.getCastContext().requestSession().then(function () {/* noop */}, function () {/* noop */});
+    }
 
-   /**
-    * Reloads the Video.js player's Tech. This causes the player to re-evaluate which
-    * Tech should be used for the current source by iterating over available Tech and
-    * calling `Tech.isSupported` and `Tech.canPlaySource`. Video.js uses the first
-    * Tech that returns true from both of those functions. This is what allows us to
-    * switch back and forth between the Chromecast Tech and other available Tech when a
-    * CastSession is connected or disconnected.
-    *
-    * @private
-    */
-   _reloadTech: function() {
+    /**
+     * Reloads the Video.js player's Tech. This causes the player to re-evaluate which
+     * Tech should be used for the current source by iterating over available Tech and
+     * calling `Tech.isSupported` and `Tech.canPlaySource`. Video.js uses the first
+     * Tech that returns true from both of those functions. This is what allows us to
+     * switch back and forth between the Chromecast Tech and other available Tech when a
+     * CastSession is connected or disconnected.
+     *
+     * @private
+     */
+  }, {
+    key: "_reloadTech",
+    value: function _reloadTech() {
       var player = window.player,
-          currentTime = player.currentTime(),
-          wasPaused = player.paused(),
-          wasEnded = player.ended(),
-          sources = player.currentSources();
+        currentTime = player.currentTime(),
+        wasPaused = player.paused(),
+        wasEnded = player.ended(),
+        sources = player.currentSources();
 
       // Reload the current source(s) to re-lookup and use the currently available Tech.
       // The chromecast Tech gets used if `ChromecastSessionManager.isChromecastConnected`
@@ -4455,268 +5124,338 @@ ChromecastSessionManager = Class.extend(/** @lends ChromecastSessionManager.prot
       // otherwise Video.js continues to search through the Tech list for other eligible
       // Tech to use, such as the HTML5 player.
       player.src(sources);
-
-      player.ready(function() {
-         if (window.isChromecastDead) {
-            showAlert("Error en emetre", "S'ha perdut la connexió amb el dispositiu al qual s'emetia. Si vols continuar controlant el Chromecast des d'aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
+      player.ready(function () {
+        if (window.isChromecastDead) {
+          showAlert("Error en emetre", "S'ha perdut la connexió amb el dispositiu al qual s'emetia. Si vols continuar controlant el Chromecast des d'aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
+          player.pause();
+          //Purely a visual change:
+          setTimeout(function () {
+            player.addClass('vjs-has-started');
+          }, 100);
+        } else {
+          if (wasEnded) {
             player.pause();
-            //Purely a visual change:
-            setTimeout(function (){
-               player.addClass('vjs-has-started');
-            }, 100);
-         }
-         else {
-            if (wasEnded) {
-               player.pause();
-            } else {
-               setTimeout(function (){
-                  player.play();
-                  if (document.visibilityState && document.visibilityState!='visible') {
-                     player.one('play', function(){
-                        player.pause();
-                     });
-                  }
-               }, 0);
-            }
-            player.currentTime(currentTime || 0);
-         }
+          } else {
+            setTimeout(function () {
+              player.play();
+              if (document.visibilityState && document.visibilityState != 'visible') {
+                player.one('play', function () {
+                  player.pause();
+                });
+              }
+            }, 0);
+          }
+          player.currentTime(currentTime || 0);
+        }
       });
-   },
+    }
 
-   /**
-    * @see https://developers.google.com/cast/docs/reference/chrome/cast.framework.CastContext
-    * @returns {object} the current CastContext, if one exists
-    */
-   getCastContext: getCastContext,
+    /**
+     * @see https://developers.google.com/cast/docs/reference/chrome/cast.framework.CastContext
+     * @returns {object} the current CastContext, if one exists
+     */
+  }, {
+    key: "getCastContext",
+    value: function getCastContext() {
+      return cast.framework.CastContext.getInstance();
+    }
 
-   /**
-    * @see https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayer
-    * @returns {object} the current RemotePlayer, if one exists
-    */
-   getRemotePlayer: function() {
+    /**
+     * @see https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayer
+     * @returns {object} the current RemotePlayer, if one exists
+     */
+  }, {
+    key: "getRemotePlayer",
+    value: function getRemotePlayer() {
       return this.remotePlayer;
-   },
+    }
 
-   /**
-    * @see https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayerController
-    * @returns {object} the current RemotePlayerController, if one exists
-    */
-   getRemotePlayerController: function() {
+    /**
+     * @see https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayerController
+     * @returns {object} the current RemotePlayerController, if one exists
+     */
+  }, {
+    key: "getRemotePlayerController",
+    value: function getRemotePlayerController() {
       return this.remotePlayerController;
-   },
-});
+    }
 
+    /**
+     * Returns whether or not the current Chromecast API is available (that is,
+     * `window.chrome`, `window.chrome.cast`, and `window.cast` exist).
+     *
+     * @static
+     * @returns {boolean} true if the Chromecast API is available
+     */
+  }], [{
+    key: "isChromecastAPIAvailable",
+    value: function isChromecastAPIAvailable() {
+      return window.chrome && window.chrome.cast && window.cast;
+    }
 
-/**
- * Returns whether or not the current Chromecast API is available (that is,
- * `window.chrome`, `window.chrome.cast`, and `window.cast` exist).
- *
- * @static
- * @returns {boolean} true if the Chromecast API is available
- */
-ChromecastSessionManager.isChromecastAPIAvailable = function() {
-   return window.chrome && window.chrome.cast && window.cast;
-};
-
-/**
- * Returns whether or not there is a current CastSession and it is connected.
- *
- * @static
- * @returns {boolean} true if the current CastSession exists and is connected
- */
-ChromecastSessionManager.isChromecastConnected = function() {
-   // We must also check the `hasConnected` flag because
-   // `getCastContext().getCastState()` returns `CONNECTED` even when the current casting
-   // session was initiated by another tab in the browser or by another process.
-   return ChromecastSessionManager.isChromecastAPIAvailable() &&
-      (getCastContext().getCastState() === cast.framework.CastState.CONNECTED) &&
-      hasConnected && !window.isChromecastDead;
-};
-
+    /**
+     * Returns whether or not there is a current CastSession and it is connected.
+     *
+     * @static
+     * @returns {boolean} true if the current CastSession exists and is connected
+     */
+  }, {
+    key: "isChromecastConnected",
+    value: function isChromecastConnected() {
+      // We must also check the `hasConnected` flag because
+      // `getCastContext().getCastState()` returns `CONNECTED` even when the current
+      // casting session was initiated by another tab in the browser or by another process
+      return ChromecastSessionManager.isChromecastAPIAvailable() && cast.framework.CastContext.getInstance().getCastState() === cast.framework.CastState.CONNECTED && ChromecastSessionManager.hasConnected && !window.isChromecastDead;
+    }
+  }]);
+  return ChromecastSessionManager;
+}();
+_defineProperty(ChromecastSessionManager, "hasConnected", false);
 module.exports = ChromecastSessionManager;
 
-},{"class.extend":1,"underscore":2}],5:[function(require,module,exports){
-'use strict';
+},{"core-js/modules/es.array.iterator.js":88,"core-js/modules/es.date.to-primitive.js":90,"core-js/modules/es.number.constructor.js":91,"core-js/modules/es.object.define-property.js":93,"core-js/modules/es.object.to-string.js":96,"core-js/modules/es.string.iterator.js":98,"core-js/modules/es.symbol.description.js":99,"core-js/modules/es.symbol.iterator.js":100,"core-js/modules/es.symbol.js":101,"core-js/modules/es.symbol.to-primitive.js":102,"core-js/modules/web.dom-collections.iterator.js":103}],106:[function(require,module,exports){
+"use strict";
 
-/**
- * The ChromecastButton module contains both the ChromecastButton class definition and
- * the function used to register the button as a Video.js Component.
- *
- * @module ChromecastButton
- */
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.reflect.construct.js");
+require("core-js/modules/es.object.define-property.js");
+require("core-js/modules/es.symbol.to-primitive.js");
+require("core-js/modules/es.date.to-primitive.js");
+require("core-js/modules/es.symbol.js");
+require("core-js/modules/es.symbol.description.js");
+require("core-js/modules/es.number.constructor.js");
+require("core-js/modules/es.symbol.iterator.js");
+require("core-js/modules/es.array.iterator.js");
+require("core-js/modules/es.string.iterator.js");
+require("core-js/modules/web.dom-collections.iterator.js");
+require("core-js/modules/es.object.set-prototype-of.js");
+require("core-js/modules/es.object.get-prototype-of.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+module.exports = function (videojs) {
+  /**
+   * Registers the ChromecastButton Component with Video.js. Calls
+   * {@link http://docs.videojs.com/Component.html#.registerComponent}, which will add a
+   * component called `chromecastButton` to the list of globally registered Video.js
+   * components. The `chromecastButton` is added to the player's control bar UI
+   * automatically once {@link module:enableChromecast} has been called. If you would
+   * like to specify the order of the buttons that appear in the control bar, including
+   * this button, you can do so in the options that you pass to the `videojs` function
+   * when creating a player:
+   *
+   * ```
+   * videojs('playerID', {
+   *    controlBar: {
+   *       children: [
+   *          'playToggle',
+   *          'progressControl',
+   *          'volumePanel',
+   *          'fullscreenToggle',
+   *          'chromecastButton',
+   *       ],
+   *    }
+   * });
+   * ```
+   *
+   * @param videojs {object} A reference to {@link http://docs.videojs.com/module-videojs.html|Video.js}
+   * @see http://docs.videojs.com/module-videojs.html#~registerPlugin
+   */
 
-var ChromecastButton;
+  /**
+   * The Video.js Button class is the base class for UI button components.
+   *
+   * @external Button
+   * @see {@link http://docs.videojs.com/Button.html|Button}
+   */
+  var ButtonComponent = videojs.getComponent('Button');
 
-/**
-* The Video.js Button class is the base class for UI button components.
-*
-* @external Button
-* @see {@link http://docs.videojs.com/Button.html|Button}
-*/
+  /**
+   * The ChromecastButton module contains both the ChromecastButton class definition and
+   * the function used to register the button as a Video.js Component.
+   * @module ChromecastButton
+   */
 
-/** @lends ChromecastButton.prototype */
-ChromecastButton = {
-
-   /**
-    * This class is a button component designed to be displayed in the player UI's control
-    * bar. It opens the Chromecast menu when clicked.
-    *
-    * @constructs
-    * @extends external:Button
-    * @param player {Player} the video.js player instance
-    */
-   constructor: function(player) {
-      this.constructor.super_.apply(this, arguments);
-
-      player.on('chromecastConnected', this._onChromecastConnected.bind(this));
-      player.on('chromecastDisconnected', this._onChromecastDisconnected.bind(this));
-      player.on('chromecastDevicesAvailable', this._onChromecastDevicesAvailable.bind(this));
-      player.on('chromecastDevicesUnavailable', this._onChromecastDevicesUnavailable.bind(this));
-
-      this.controlText('Open Chromecast menu');
+  /** @lends ChromecastButton.prototype **/
+  var ChromecastButton = /*#__PURE__*/function (_ButtonComponent) {
+    _inherits(ChromecastButton, _ButtonComponent);
+    var _super = _createSuper(ChromecastButton);
+    /**
+     * This class is a button component designed to be displayed in the
+     * player UI's control bar. It opens the Chromecast menu when clicked.
+     *
+     * @constructs
+     * @extends external:Button
+     * @param player {Player} the video.js player instance
+     */
+    function ChromecastButton(player, options) {
+      var _this;
+      _classCallCheck(this, ChromecastButton);
+      _this = _super.call(this, player, options);
+      player.on('chromecastConnected', _this._onChromecastConnected.bind(_assertThisInitialized(_this)));
+      player.on('chromecastDisconnected', _this._onChromecastDisconnected.bind(_assertThisInitialized(_this)));
+      player.on('chromecastDevicesAvailable', _this._onChromecastDevicesAvailable.bind(_assertThisInitialized(_this)));
+      player.on('chromecastDevicesUnavailable', _this._onChromecastDevicesUnavailable.bind(_assertThisInitialized(_this)));
 
       // Use the initial state of `hasAvailableDevices` to call the corresponding event
       // handlers because the corresponding events may have already been emitted before
       // binding the listeners above.
       if (window.chromecastSessionManager && window.chromecastSessionManager.hasAvailableDevices()) {
-         this._onChromecastDevicesAvailable();
+        _this._onChromecastDevicesAvailable();
       } else {
-         this._onChromecastDevicesUnavailable();
+        _this._onChromecastDevicesUnavailable();
+      }
+      if (window.chrome && window.chrome.cast && window.cast && cast.framework.CastContext.getInstance().getCurrentSession() && (cast.framework.CastContext.getInstance().getCurrentSession().getSessionState() == 'SESSION_STARTED' || cast.framework.CastContext.getInstance().getCurrentSession().getSessionState() == 'SESSION_RESUMED') && !window.isChromecastDead) {
+        _this._isChromecastConnected = true;
+        _this._reloadCSSClasses();
+        player.addClass('vjs-casting');
+      }
+      if (options.addCastLabelToButton) {
+        _this.el().classList.add('vjs-chromecast-button-lg');
+        _this._labelEl = document.createElement('span');
+        _this._labelEl.classList.add('vjs-chromecast-button-label');
+        _this._updateCastLabelText();
+        _this.el().appendChild(_this._labelEl);
+      } else {
+        _this.controlText('Open Chromecast menu');
+      }
+      return _this;
+    }
+
+    /**
+     * Overrides Button#buildCSSClass to return the classes used on the button element.
+     *
+     * @param el {DOMElement}
+     * @see {@link http://docs.videojs.com/Button.html#buildCSSClass|Button#buildCSSClass}
+     */
+    _createClass(ChromecastButton, [{
+      key: "buildCSSClass",
+      value: function buildCSSClass() {
+        return 'vjs-chromecast-button ' + (this._isChromecastConnected ? 'vjs-chromecast-casting-state ' : '') + (this.options_.addCastLabelToButton ? 'vjs-chromecast-button-lg ' : '') + ButtonComponent.prototype.buildCSSClass();
       }
 
-      if (window.chrome && window.chrome.cast && window.cast && cast.framework.CastContext.getInstance().getCurrentSession() &&
-            (cast.framework.CastContext.getInstance().getCurrentSession().getSessionState()=='SESSION_STARTED' ||
-                  cast.framework.CastContext.getInstance().getCurrentSession().getSessionState()=='SESSION_RESUMED') && !window.isChromecastDead) {
-         this._isChromecastConnected = true;
-         this._reloadCSSClasses();
-         player.addClass('vjs-casting');
+      /**
+       * Overrides Button#handleClick to handle button click events. Chromecast
+       * functionality is handled outside of this class, which should be limited
+       * to UI related logic.  This function simply triggers an event on the player.
+       *
+       * @fires ChromecastButton#chromecastRequested
+       * @param el {DOMElement}
+       * @see {@link http://docs.videojs.com/Button.html#handleClick|Button#handleClick}
+       */
+    }, {
+      key: "handleClick",
+      value: function handleClick() {
+        this.player().trigger('chromecastRequested');
       }
-   },
 
-   /**
-    * Overrides Button#buildCSSClass to return the classes used on the button element.
-    *
-    * @param el {DOMElement}
-    * @see {@link http://docs.videojs.com/Button.html#buildCSSClass|Button#buildCSSClass}
-    */
-   buildCSSClass: function() {
-      return 'vjs-chromecast-button ' + (this._isChromecastConnected ? 'vjs-chromecast-casting-state ' : '') +
-         this.constructor.super_.prototype.buildCSSClass();
-   },
-
-   /**
-    * Overrides Button#handleClick to handle button click events. Chromecast functionality
-    * is handled outside of this class, which should be limited to UI related logic. This
-    * function simply triggers an event on the player.
-    *
-    * @fires ChromecastButton#chromecastRequested
-    * @param el {DOMElement}
-    * @see {@link http://docs.videojs.com/Button.html#handleClick|Button#handleClick}
-    */
-   handleClick: function() {
-      this.player().trigger('chromecastRequested');
-   },
-
-   /**
-    * Handles `chromecastConnected` player events.
-    *
-    * @private
-    */
-   _onChromecastConnected: function() {
-      this._isChromecastConnected = true;
-      this._reloadCSSClasses();
-      this.player().addClass('vjs-casting');
-   },
-
-   /**
-    * Handles `chromecastDisconnected` player events.
-    *
-    * @private
-    */
-   _onChromecastDisconnected: function() {
-      this._isChromecastConnected = false;
-      this._reloadCSSClasses();
-      this.player().removeClass('vjs-casting');
-   },
-
-   /**
-    * Handles `chromecastDevicesAvailable` player events.
-    *
-    * @private
-    */
-   _onChromecastDevicesAvailable: function() {
-      this.show();
-   },
-
-   /**
-    * Handles `chromecastDevicesUnavailable` player events.
-    *
-    * @private
-    */
-   _onChromecastDevicesUnavailable: function() {
-      this.hide();
-   },
-
-   /**
-    * Re-calculates which CSS classes the button needs and sets them on the buttons'
-    * DOMElement.
-    *
-    * @private
-    */
-   _reloadCSSClasses: function() {
-      if (!this.el_) {
-         return;
+      /**
+       * Handles `chromecastConnected` player events.
+       *
+       * @private
+       */
+    }, {
+      key: "_onChromecastConnected",
+      value: function _onChromecastConnected() {
+        this._isChromecastConnected = true;
+        this._reloadCSSClasses();
+        this.player().addClass('vjs-casting');
+        this._updateCastLabelText();
       }
-      this.el_.className = this.buildCSSClass();
-   },
+
+      /**
+       * Handles `chromecastDisconnected` player events.
+       *
+       * @private
+       */
+    }, {
+      key: "_onChromecastDisconnected",
+      value: function _onChromecastDisconnected() {
+        this._isChromecastConnected = false;
+        this._reloadCSSClasses();
+        this.player().removeClass('vjs-casting');
+        this._updateCastLabelText();
+      }
+
+      /**
+       * Handles `chromecastDevicesAvailable` player events.
+       *
+       * @private
+       */
+    }, {
+      key: "_onChromecastDevicesAvailable",
+      value: function _onChromecastDevicesAvailable() {
+        this.show();
+      }
+
+      /**
+       * Handles `chromecastDevicesUnavailable` player events.
+       *
+       * @private
+       */
+    }, {
+      key: "_onChromecastDevicesUnavailable",
+      value: function _onChromecastDevicesUnavailable() {
+        this.hide();
+      }
+
+      /**
+       * Re-calculates which CSS classes the button needs and sets them on the buttons'
+       * DOMElement.
+       *
+       * @private
+       */
+    }, {
+      key: "_reloadCSSClasses",
+      value: function _reloadCSSClasses() {
+        if (!this.el_) {
+          return;
+        }
+        this.el_.className = this.buildCSSClass();
+      }
+
+      /**
+       * Updates the optional cast label text based on whether the chromecast is connected
+       * or disconnected.
+       *
+       * @private
+       */
+    }, {
+      key: "_updateCastLabelText",
+      value: function _updateCastLabelText() {
+        if (!this._labelEl) {
+          return;
+        }
+        this._labelEl.textContent = this._isChromecastConnected ? this.localize('Disconnect Cast') : this.localize('Cast');
+      }
+    }]);
+    return ChromecastButton;
+  }(ButtonComponent);
+  videojs.registerComponent('chromecastButton', ChromecastButton);
 };
 
-/**
- * Registers the ChromecastButton Component with Video.js. Calls
- * {@link http://docs.videojs.com/Component.html#.registerComponent}, which will add a
- * component called `chromecastButton` to the list of globally registered Video.js
- * components. The `chromecastButton` is added to the player's control bar UI
- * automatically once {@link module:enableChromecast} has been called. If you would like
- * to specify the order of the buttons that appear in the control bar, including this
- * button, you can do so in the options that you pass to the `videojs` function when
- * creating a player:
- *
- * ```
- * videojs('playerID', {
- *    controlBar: {
- *       children: [
- *          'playToggle',
- *          'progressControl',
- *          'volumePanel',
- *          'fullscreenToggle',
- *          'chromecastButton',
- *       ],
- *    }
- * });
- * ```
- *
- * @param videojs {object} A reference to {@link http://docs.videojs.com/module-videojs.html|Video.js}
- * @see http://docs.videojs.com/module-videojs.html#~registerPlugin
- */
-module.exports = function(videojs) {
-   var ChromecastButtonImpl;
+},{"core-js/modules/es.array.iterator.js":88,"core-js/modules/es.date.to-primitive.js":90,"core-js/modules/es.number.constructor.js":91,"core-js/modules/es.object.define-property.js":93,"core-js/modules/es.object.get-prototype-of.js":94,"core-js/modules/es.object.set-prototype-of.js":95,"core-js/modules/es.object.to-string.js":96,"core-js/modules/es.reflect.construct.js":97,"core-js/modules/es.string.iterator.js":98,"core-js/modules/es.symbol.description.js":99,"core-js/modules/es.symbol.iterator.js":100,"core-js/modules/es.symbol.js":101,"core-js/modules/es.symbol.to-primitive.js":102,"core-js/modules/web.dom-collections.iterator.js":103}],107:[function(require,module,exports){
+"use strict";
 
-   ChromecastButtonImpl = videojs.extend(videojs.getComponent('Button'), ChromecastButton);
-   videojs.registerComponent('chromecastButton', ChromecastButtonImpl);
-};
-
-},{}],6:[function(require,module,exports){
-'use strict';
-
+require("core-js/modules/es.object.assign.js");
 /**
  * @module enableChromecast
  */
 
 var ChromecastSessionManager = require('./chromecast/ChromecastSessionManager'),
-    _ = require('underscore'),
-    CHECK_AVAILABILITY_INTERVAL = 1000, // milliseconds
-    CHECK_AVAILABILITY_TIMEOUT = 30 * 1000; // milliseconds
-
+  CHECK_AVAILABILITY_INTERVAL = 1000,
+  // milliseconds
+  CHECK_AVAILABILITY_TIMEOUT = 30 * 1000; // milliseconds
 
 /**
  * Configures the Chromecast
@@ -4727,15 +5466,14 @@ var ChromecastSessionManager = require('./chromecast/ChromecastSessionManager'),
  * @param options {object} the plugin options
  */
 function configureCastContext(options) {
-   var context = cast.framework.CastContext.getInstance();
-
-   context.setOptions({
-      receiverApplicationId: options.receiverAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-      // Setting autoJoinPolicy to ORIGIN_SCOPED prevents this plugin from automatically
-      // trying to connect to a preexisting Chromecast session, if one exists. The user
-      // must end any existing session before trying to cast from this player instance.
-      autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED,
-   });
+  var context = cast.framework.CastContext.getInstance();
+  context.setOptions({
+    receiverApplicationId: options.receiverAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+    // Setting autoJoinPolicy to ORIGIN_SCOPED prevents this plugin from automatically
+    // trying to connect to a preexisting Chromecast session, if one exists. The user
+    // must end any existing session before trying to cast from this player instance.
+    autoJoinPolicy: chrome.cast.AutoJoinPolicy.PAGE_SCOPED
+  });
 }
 
 /**
@@ -4746,11 +5484,11 @@ function configureCastContext(options) {
  * @param player {object} a Video.js player instance
  */
 function onChromecastRequested(player) {
-   if (!window.isChromecastDead) {
-      window.chromecastSessionManager.openCastMenu();
-   } else {
-      showAlert("Error en emetre", "S'ha perdut la connexió amb el dispositiu al qual s'emetia. Si vols continuar controlant el Chromecast des d'aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
-   }
+  if (!window.isChromecastDead) {
+    window.chromecastSessionManager.openCastMenu();
+  } else {
+    showAlert("Error en emetre", "S'ha perdut la connexió amb el dispositiu al qual s'emetia. Si vols continuar controlant el Chromecast des d'aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
+  }
 }
 
 /**
@@ -4762,22 +5500,20 @@ function onChromecastRequested(player) {
  * @param options {object} the plugin options
  */
 function setUpChromecastButton(player, options) {
-   var indexOpt;
+  var indexOpt;
 
-   // Ensure Chromecast button exists
-   if (options.addButtonToControlBar && !player.controlBar.getChild('chromecastButton')) {
-      // Figure out Chromecast button's index
-      indexOpt = player.controlBar.children().length;
-      if (typeof options.buttonPositionIndex !== 'undefined') {
-         indexOpt = options.buttonPositionIndex >= 0
-            ? options.buttonPositionIndex
-            : player.controlBar.children().length + options.buttonPositionIndex;
-      }
-      player.controlBar.addChild('chromecastButton', options, indexOpt);
-   }
-   // Respond to requests for casting. The ChromecastButton component triggers this event
-   // when the user clicks the Chromecast button.
-   player.on('chromecastRequested', onChromecastRequested.bind(null, player));
+  // Ensure Chromecast button exists
+  if (options.addButtonToControlBar && !player.controlBar.getChild('chromecastButton')) {
+    // Figure out Chromecast button's index
+    indexOpt = player.controlBar.children().length;
+    if (typeof options.buttonPositionIndex !== 'undefined') {
+      indexOpt = options.buttonPositionIndex >= 0 ? options.buttonPositionIndex : player.controlBar.children().length + options.buttonPositionIndex;
+    }
+    player.controlBar.addChild('chromecastButton', options, indexOpt);
+  }
+  // Respond to requests for casting. The ChromecastButton component triggers this event
+  // when the user clicks the Chromecast button.
+  player.on('chromecastRequested', onChromecastRequested.bind(null, player));
 }
 
 /**
@@ -4787,9 +5523,9 @@ function setUpChromecastButton(player, options) {
  * @param player {object} a Video.js player instance
  */
 function createSessionManager(player) {
-   if (!window.chromecastSessionManager) {
-      window.chromecastSessionManager = new ChromecastSessionManager(player);
-   }
+  if (!window.chromecastSessionManager) {
+    window.chromecastSessionManager = new ChromecastSessionManager(player);
+  }
 }
 
 /**
@@ -4799,9 +5535,9 @@ function createSessionManager(player) {
  * @param options {object} the plugin options
  */
 function enableChromecast(player, options) {
-   configureCastContext(options);
-   createSessionManager(player);
-   setUpChromecastButton(player, options);
+  configureCastContext(options);
+  createSessionManager(player);
+  setUpChromecastButton(player, options);
 }
 
 /**
@@ -4815,32 +5551,31 @@ function enableChromecast(player, options) {
  * @param options {object} the plugin options
  */
 function waitUntilChromecastAPIsAreAvailable(player, options) {
-   var maxTries = CHECK_AVAILABILITY_TIMEOUT / CHECK_AVAILABILITY_INTERVAL,
-       tries = 1,
-       intervalID;
+  var maxTries = CHECK_AVAILABILITY_TIMEOUT / CHECK_AVAILABILITY_INTERVAL,
+    tries = 1,
+    intervalID;
 
-   // The Chromecast APIs are loaded asynchronously, so they may not be loaded and
-   // initialized at this point. The Chromecast APIs do provide a callback function that
-   // is called after the framework has loaded, but it requires you to define the callback
-   // function **before** loading the APIs. That would require us to expose some callback
-   // function to `window` here, and would require users of this plugin to define a
-   // Chromecast API callback on `window` that calls our callback function in their HTML
-   // file. To avoid all of this, we simply check to see if the Chromecast API is
-   // available periodically, and stop after a timeout threshold has passed.
-   //
-   // See https://developers.google.com/cast/docs/chrome_sender_integrate#initialization
-   intervalID = setInterval(function() {
-      if (tries > maxTries) {
-         clearInterval(intervalID);
-         return;
-      }
-      if (ChromecastSessionManager.isChromecastAPIAvailable()) {
-         clearInterval(intervalID);
-         enableChromecast(player, options);
-      }
-      tries = tries + 1;
-   }, CHECK_AVAILABILITY_INTERVAL);
-
+  // The Chromecast APIs are loaded asynchronously, so they may not be loaded and
+  // initialized at this point. The Chromecast APIs do provide a callback function that
+  // is called after the framework has loaded, but it requires you to define the callback
+  // function **before** loading the APIs. That would require us to expose some callback
+  // function to `window` here, and would require users of this plugin to define a
+  // Chromecast API callback on `window` that calls our callback function in their HTML
+  // file. To avoid all of this, we simply check to see if the Chromecast API is
+  // available periodically, and stop after a timeout threshold has passed.
+  //
+  // See https://developers.google.com/cast/docs/chrome_sender_integrate#initialization
+  intervalID = setInterval(function () {
+    if (tries > maxTries) {
+      clearInterval(intervalID);
+      return;
+    }
+    if (ChromecastSessionManager.isChromecastAPIAvailable()) {
+      clearInterval(intervalID);
+      enableChromecast(player, options);
+    }
+    tries = tries + 1;
+  }, CHECK_AVAILABILITY_INTERVAL);
 }
 
 /**
@@ -4892,35 +5627,37 @@ function waitUntilChromecastAPIsAreAvailable(player, options) {
  * @param {object} videojs
  * @see http://docs.videojs.com/module-videojs.html#~registerPlugin
  */
-module.exports = function(videojs) {
-   videojs.registerPlugin('chromecast', function(options) {
-      var pluginOptions = _.extend({ addButtonToControlBar: true }, options || {});
+module.exports = function (videojs) {
+  videojs.registerPlugin('chromecast', function (options) {
+    var pluginOptions = Object.assign({
+      addButtonToControlBar: true
+    }, options || {});
 
-      // `this` is an instance of a Video.js Player.
-      // Wait until the player is "ready" so that the player's control bar component has
-      // been created.
-      this.ready(function() {
-         if (!this.controlBar) {
-            return;
-         }
-         if (ChromecastSessionManager.isChromecastAPIAvailable()) {
-            enableChromecast(this, pluginOptions);
-         } else {
-            waitUntilChromecastAPIsAreAvailable(this, pluginOptions);
-         }
-      }.bind(this));
-   });
+    // `this` is an instance of a Video.js Player.
+    // Wait until the player is "ready" so that the player's control bar component has
+    // been created.
+    this.ready(function () {
+      if (!this.controlBar) {
+        return;
+      }
+      if (ChromecastSessionManager.isChromecastAPIAvailable()) {
+        enableChromecast(this, pluginOptions);
+      } else {
+        waitUntilChromecastAPIsAreAvailable(this, pluginOptions);
+      }
+    }.bind(this));
+  });
 };
 
-},{"./chromecast/ChromecastSessionManager":4,"underscore":2}],7:[function(require,module,exports){
-/* eslint-disable global-require */
-'use strict';
+},{"./chromecast/ChromecastSessionManager":105,"core-js/modules/es.object.assign.js":92}],108:[function(require,module,exports){
+"use strict";
 
-var _ = require('underscore'),
-    preloadWebComponents = require('./preloadWebComponents'),
-    createChromecastButton = require('./components/ChromecastButton'),
-    createChromecastTech = require('./tech/ChromecastTech'),
-    enableChromecast = require('./enableChromecast');
+require("core-js/modules/es.object.assign.js");
+/* eslint-disable global-require */
+var preloadWebComponents = require('./preloadWebComponents'),
+  createChromecastButton = require('./components/ChromecastButton'),
+  createChromecastTech = require('./tech/ChromecastTech'),
+  enableChromecast = require('./enableChromecast');
 
 /**
  * @module index
@@ -4937,887 +5674,93 @@ var _ = require('underscore'),
  * @see module:enableChromecast
  * @see module:ChromecastButton
  */
-module.exports = function(videojs, userOpts) {
-   var options = _.defaults(_.extend({}, userOpts), { preloadWebComponents: false });
-
-   if (options.preloadWebComponents) {
-      preloadWebComponents();
-   }
-
-   videojs = videojs || window.videojs;
-   createChromecastButton(videojs);
-   createChromecastTech(videojs);
-   enableChromecast(videojs);
+module.exports = function (videojs, userOpts) {
+  var options = Object.assign({
+    preloadWebComponents: false
+  }, userOpts);
+  if (options.preloadWebComponents) {
+    preloadWebComponents();
+  }
+  videojs = videojs || window.videojs;
+  createChromecastButton(videojs);
+  createChromecastTech(videojs);
+  enableChromecast(videojs);
 };
 
-},{"./components/ChromecastButton":5,"./enableChromecast":6,"./preloadWebComponents":8,"./tech/ChromecastTech":10,"underscore":2}],8:[function(require,module,exports){
-'use strict';
+},{"./components/ChromecastButton":106,"./enableChromecast":107,"./preloadWebComponents":109,"./tech/ChromecastTech":111,"core-js/modules/es.object.assign.js":92}],109:[function(require,module,exports){
+"use strict";
 
-var _ = require('underscore');
-
+require("core-js/modules/es.array.index-of.js");
 function doesUserAgentContainString(str) {
-   return _.isString(window.navigator.userAgent) && window.navigator.userAgent.indexOf(str) >= 0;
+  return typeof window.navigator.userAgent === 'string' && window.navigator.userAgent.indexOf(str) >= 0;
 }
 
 // For information as to why this is needed, please see:
 // https://github.com/silvermine/videojs-chromecast/issues/17
 // https://github.com/silvermine/videojs-chromecast/issues/22
 
-module.exports = function() {
-   var needsWebComponents = !document.registerElement,
-       iosChrome = doesUserAgentContainString('CriOS'),
-       androidChrome;
+module.exports = function () {
+  var needsWebComponents = !document.registerElement,
+    iosChrome = doesUserAgentContainString('CriOS'),
+    androidChrome;
+  androidChrome = doesUserAgentContainString('Android') && doesUserAgentContainString('Chrome/') && window.navigator.presentation;
 
-   androidChrome = doesUserAgentContainString('Android')
-      && doesUserAgentContainString('Chrome/')
-      && window.navigator.presentation;
-
-   // These checks are based on the checks found in `cast_sender.js` which
-   // determine if `cast_framework.js` needs to be loaded
-   if ((androidChrome || iosChrome) && needsWebComponents) {
-      // This is requiring webcomponents.js@0.7.24 because that's what was used
-      // by the Chromecast framework at the time this was added.
-      // We are using webcomponents-lite.js because it doesn't interfere with jQuery as
-      // badly (e.g. it doesn't interfere with jQuery's fix for consistently bubbling
-      // events, see #21). While the "lite" version does not include the shadow DOM
-      // polyfills that the Chromecast framework may need for the <google-cast-button>
-      // component to work properly, this plugin does not use the <google-cast-button>
-      // component.
-      require('webcomponents.js/webcomponents-lite.js'); // eslint-disable-line global-require
-   }
+  // These checks are based on the checks found in `cast_sender.js` which
+  // determine if `cast_framework.js` needs to be loaded
+  if ((androidChrome || iosChrome) && needsWebComponents) {
+    // This is requiring webcomponents.js@0.7.24 because that's what was used
+    // by the Chromecast framework at the time this was added.
+    // We are using webcomponents-lite.js because it doesn't interfere with jQuery as
+    // badly (e.g. it doesn't interfere with jQuery's fix for consistently bubbling
+    // events, see #21). While the "lite" version does not include the shadow DOM
+    // polyfills that the Chromecast framework may need for the <google-cast-button>
+    // component to work properly, this plugin does not use the <google-cast-button>
+    // component.
+    require('webcomponents.js/webcomponents-lite.js'); // eslint-disable-line global-require
+  }
 };
 
-},{"underscore":2,"webcomponents.js/webcomponents-lite.js":3}],9:[function(require,module,exports){
-'use strict';
+},{"core-js/modules/es.array.index-of.js":87,"webcomponents.js/webcomponents-lite.js":104}],110:[function(require,module,exports){
+"use strict";
 
 // This file is used to create a standalone javascript file for use in a script tag. The
 // file that is output assumes that Video.js is available at `window.videojs`.
 
 require('./index')(undefined, window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG);
 
-},{"./index":7}],10:[function(require,module,exports){
-'use strict';
+},{"./index":108}],111:[function(require,module,exports){
+"use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.reflect.construct.js");
+require("core-js/modules/es.object.define-property.js");
+require("core-js/modules/es.symbol.to-primitive.js");
+require("core-js/modules/es.date.to-primitive.js");
+require("core-js/modules/es.symbol.js");
+require("core-js/modules/es.symbol.description.js");
+require("core-js/modules/es.number.constructor.js");
+require("core-js/modules/es.symbol.iterator.js");
+require("core-js/modules/es.array.iterator.js");
+require("core-js/modules/es.string.iterator.js");
+require("core-js/modules/web.dom-collections.iterator.js");
+require("core-js/modules/es.array.splice.js");
+require("core-js/modules/es.object.set-prototype-of.js");
+require("core-js/modules/es.object.get-prototype-of.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 var ChromecastSessionManager = require('../chromecast/ChromecastSessionManager'),
-    ChromecastTechUI = require('./ChromecastTechUI'),
-    _ = require('underscore'),
-    SESSION_TIMEOUT = 10 * 1000, // milliseconds
-    ChromecastTech;
-
-/**
- * @module ChomecastTech
- */
-
-/**
- * The Video.js Tech class is the base class for classes that provide media playback
- * technology implementations to Video.js such as HTML5, Flash and HLS.
- *
- * @external Tech
- * @see {@link http://docs.videojs.com/Tech.html|Tech}
- */
-
-/** @lends ChromecastTech.prototype */
-ChromecastTech = {
-
-   /**
-    * Implements Video.js playback {@link http://docs.videojs.com/tutorial-tech_.html|Tech}
-    * for {@link https://developers.google.com/cast/|Google's Chromecast}.
-    *
-    * @constructs ChromecastTech
-    * @extends external:Tech
-    * @param options {object} The options to use for configuration
-    * @see {@link https://developers.google.com/cast/|Google Cast}
-    */
-   constructor: function(options) {
-      var subclass;
-
-      this._eventListeners = [];
-
-      this.videojsPlayer = this.videojs(options.playerId);
-      this._chromecastSessionManager = window.chromecastSessionManager;
-
-      // We have to initialize the UI here, before calling super.constructor
-      // because the constructor calls `createEl`, which references `this._ui`.
-      this._ui = new ChromecastTechUI();
-
-      // Call the super class' constructor function
-      subclass = this.constructor.super_.apply(this, arguments);
-
-      this._remotePlayer = this._chromecastSessionManager.getRemotePlayer();
-      this._remotePlayerController = this._chromecastSessionManager.getRemotePlayerController();
-      this._listenToPlayerControllerEvents();
-      this.on('dispose', this._removeAllEventListeners.bind(this));
-
-      this._hasPlayedAnyItem = false;
-      this._requestTitle = options.requestTitleFn || _.noop;
-      this._requestSubtitle = options.requestSubtitleFn || _.noop;
-      this._requestCoverImageUrl = options.requestCoverImageUrlFn || _.noop;
-      this._requestCustomData = options.requestCustomDataFn || _.noop;
-      // See `currentTime` function
-      this._initialStartTime = options.startTime || 0;
-
-      this._playSource(options.source, this._initialStartTime);
-      this.ready(function() {
-         this.setMuted(options.muted);
-      }.bind(this));
-
-      this.reconnectRetryCount = 0;
-
-      return subclass;
-   },
-
-   /**
-    * Creates a DOMElement that Video.js displays in its player UI while this Tech is
-    * active.
-    *
-    * @returns {DOMElement}
-    * @see {@link http://docs.videojs.com/Tech.html#createEl}
-    */
-   createEl: function() {
-      return this._ui.getDOMElement();
-   },
-
-   /**
-    * Resumes playback if a media item is paused or restarts an item from its beginning if
-    * the item has played and ended.
-    *
-    * @see {@link http://docs.videojs.com/Player.html#play}
-    */
-   play: function() {
-      if ($('.vjs-ended').length>0) { //UGLY HACK
-         this._playSource({ src: this.videojsPlayer.src() }, 0);
-         return;
-      }
-      if (!this.paused()) {
-         return;
-      }
-      if (this.ended() && !this._isMediaLoading) {
-         // Restart the current item from the beginning
-         this._playSource({ src: this.videojsPlayer.src() }, 0);
-      } else {
-         try {
-            this._remotePlayerController.playOrPause();
-            this.reconnectRetryCount = 0;
-         } catch (error) {
-            //Retry
-            this.reconnectRetryCount++;
-            if (this.reconnectRetryCount>5) {
-              this._killChromecastSessionDueToError("playOrPause failed due to cast session error, reverting to normal player");
-            }
-            else {
-              this._reconnectChromecastSessionDueToError("playOrPause failed due to cast session error, reconnecting");
-               var that = this;
-               setTimeout(function(){
-                  that.play();
-                 }, 2000);
-            }
-         }
-      }
-   },
-
-   /**
-    * Pauses playback if the player is not already paused and if the current media item
-    * has not ended yet.
-    *
-    * @see {@link http://docs.videojs.com/Player.html#pause}
-    */
-   pause: function() {
-      if (!this.paused() && this._remotePlayer.canPause) {
-         try {
-            this._remotePlayerController.playOrPause();
-            this.reconnectRetryCount = 0;
-         } catch (error) {
-            //Retry
-            this.reconnectRetryCount++;
-            if (this.reconnectRetryCount>5) {
-              this._killChromecastSessionDueToError("playOrPause failed due to cast session error, reverting to normal player");
-            }
-            else {
-              this._reconnectChromecastSessionDueToError("playOrPause failed due to cast session error, reconnecting");
-               var that = this;
-               setTimeout(function(){
-                  that.pause();
-                 }, 2000);
-            }
-         }
-      }
-   },
-
-   /**
-    * Returns whether or not the player is "paused". Video.js' definition of "paused" is
-    * "playback paused" OR "not playing".
-    *
-    * @returns {boolean} true if playback is paused
-    * @see {@link http://docs.videojs.com/Player.html#paused}
-    */
-   paused: function() {
-      return this._remotePlayer.isPaused || this.ended() || this._remotePlayer.playerState === null;
-   },
-
-   /**
-    * Stores the given source and begins playback, starting at the beginning
-    * of the media item.
-    *
-    * @param source {object} the source to store and play
-    * @see {@link http://docs.videojs.com/Player.html#src}
-    */
-   setSource: function(source) {
-      if (this._currentSource && this._currentSource.src === source.src && this._currentSource.type === source.type) {
-         // Skip setting the source if the `source` argument is the same as what's already
-         // been set. This `setSource` function calls `this._playSource` which sends a
-         // "load media" request to the Chromecast PlayerController. Because this function
-         // may be called multiple times in rapid succession with the same `source`
-         // argument, we need to de-duplicate calls with the same `source` argument to
-         // prevent overwhelming the Chromecast PlayerController with expensive "load
-         // media" requests, which it itself does not de-duplicate.
-         return;
-      }
-      // We cannot use `this.videojsPlayer.currentSource()` because the value returned by
-      // that function is not the same as what's returned by the Video.js Player's
-      // middleware after they are run. Also, simply using `this.videojsPlayer.src()`
-      // does not include mimetype information which we pass to the Chromecast player.
-      this._currentSource = source;
-      this._playSource(source, 0);
-   },
-
-   /**
-    * Plays the given source, beginning at an optional starting time.
-    *
-    * @private
-    * @param source {object} the source to play
-    * @param [startTime] The time to start playback at, in seconds
-    * @see {@link http://docs.videojs.com/Player.html#src}
-    */
-   _playSource: function(source, startTime) {
-      var castSession = this._getCastSession(),
-          mediaInfo = new chrome.cast.media.MediaInfo(source.src, source.type),
-          title = this._requestTitle(source),
-          subtitle = this._requestSubtitle(source),
-          imageUrl = this._requestCoverImageUrl(source),
-          customData = this._requestCustomData(source),
-          request;
-
-      this.trigger('waiting');
-      //this._clearSessionTimeout(); //Disabled for now
-
-      mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-      mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
-      mediaInfo.metadata.title = title;
-      mediaInfo.metadata.subtitle = subtitle;
-      mediaInfo.metadata.images = [{
-         url: imageUrl
-      }];
-      mediaInfo.streamType = this.videojsPlayer.liveTracker && this.videojsPlayer.liveTracker.isLive()
-         ? chrome.cast.media.StreamType.LIVE
-         : chrome.cast.media.StreamType.BUFFERED;
-
-      if (customData) {
-         mediaInfo.customData = customData;
-      }
-
-      this._ui.updateTitle((castSession && castSession.getCastDevice() && castSession.getCastDevice().friendlyName) ? "S'està emetent a "+castSession.getCastDevice().friendlyName : "S'està emetent");
-      //this._ui.updateSubtitle(subtitle);
-      this._ui.updateCoverImage(imageUrl);
-
-      request = new chrome.cast.media.LoadRequest(mediaInfo);
-      request.autoplay = true;
-      request.currentTime = startTime;
-
-      this._isMediaLoading = true;
-      this._hasPlayedCurrentItem = false;
-      try {
-         castSession.loadMedia(request)
-            .then(function() {
-               if (!this._hasPlayedAnyItem) {
-                  // `triggerReady` is required here to notify the Video.js player that the
-                  // Tech has been initialized and is ready.
-                  this.triggerReady();
-               }
-               this.trigger('loadstart');
-               this.trigger('loadeddata');
-               this.trigger('play');
-               this.trigger('playing');
-               this._hasPlayedAnyItem = true;
-               this._isMediaLoading = false;
-               this._getMediaSession().addUpdateListener(this._onMediaSessionStatusChanged.bind(this));
-            }.bind(this), this._triggerErrorEvent.bind(this));
-        window.currentChromecastSessionId = castSession.getSessionId();
-        this.reconnectRetryCount = 0;
-      } catch (error) {
-         //Retry
-         this.reconnectRetryCount++;
-         if (this.reconnectRetryCount>5) {
-           this._killChromecastSessionDueToError("loadMedia failed due to cast session error, reverting to normal player");
-         }
-         else {
-           this._reconnectChromecastSessionDueToError("loadMedia failed due to cast session error, reconnecting");
-            var that = this;
-            setTimeout(function(){
-               that._playSource(source, startTime);
-              }, 2000);
-         }
-      }
-   },
-
-   _reconnectChromecastSessionDueToError: function(message) {
-     console.log("Reconnecting to Cast: "+message);
-     chrome.cast.requestSessionById(window.currentChromecastSessionId);
-   },
-
-   _killChromecastSessionDueToError: function(message) {
-      console.log(message);
-      window.isChromecastDead=true;
-      window.player.trigger('chromecastDisconnected');
-      this._chromecastSessionManager._reloadTech();
-   },
-
-   /**
-    * Manually updates the current time. The playback position will jump to the given time
-    * and continue playing if the item was playing when `setCurrentTime` was called, or
-    * remain paused if the item was paused.
-    *
-    * @param time {number} the playback time position to jump to
-    * @see {@link http://docs.videojs.com/Tech.html#setCurrentTime}
-    */
-   setCurrentTime: function(time) {
-      var duration = this.duration();
-
-      if (time > duration || !this._remotePlayer.canSeek) {
-         return;
-      }
-      // Seeking to any place within (approximately) 1 second of the end of the item
-      // causes the Video.js player to get stuck in a BUFFERING state. To work around
-      // this, we only allow seeking to within 1 second of the end of an item.
-      this._remotePlayer.currentTime = Math.min(duration - 1, time);
-
-      try {
-         this._remotePlayerController.seek();
-         this._triggerTimeUpdateEvent();
-         this.reconnectRetryCount = 0;
-      } catch (error) {
-         //Retry
-         this.reconnectRetryCount++;
-         if (this.reconnectRetryCount>5) {
-           this._killChromecastSessionDueToError("seek failed due to cast session error, reverting to normal player");
-         }
-         else {
-           this._reconnectChromecastSessionDueToError("seek failed due to cast session error, reconnecting");
-            var that = this;
-            setTimeout(function(){
-               that.setCurrentTime(time);
-              }, 2000);
-         }
-      }
-   },
-
-   /**
-    * Returns the current playback time position.
-    *
-    * @returns {number} the current playback time position
-    * @see {@link http://docs.videojs.com/Player.html#currentTime}
-    */
-   currentTime: function() {
-      // There is a brief period of time when Video.js has switched to the chromecast
-      // Tech, but chromecast has not yet loaded its first media item. During that time,
-      // Video.js calls this `currentTime` function to update its player UI. In that
-      // period, `this._remotePlayer.currentTime` will be 0 because the media has not
-      // loaded yet. To prevent the UI from using a 0 second currentTime, we use the
-      // currentTime passed in to the first media item that was provided to the Tech until
-      // chromecast plays its first item.
-      if (!this._hasPlayedAnyItem) {
-         return this._initialStartTime;
-      }
-      return this._remotePlayer.currentTime;
-   },
-
-   /**
-    * Returns the duration of the current media item, or `0` if the source is not set or
-    * if the duration of the item is not available from the Chromecast API yet.
-    *
-    * @returns {number} the duration of the current media item
-    * @see {@link http://docs.videojs.com/Player.html#duration}
-    */
-   duration: function() {
-      // There is a brief period of time when Video.js has switched to the chromecast
-      // Tech, but chromecast has not yet loaded its first media item. During that time,
-      // Video.js calls this `duration` function to update its player UI. In that period,
-      // `this._remotePlayer.duration` will be 0 because the media has not loaded yet. To
-      // prevent the UI from using a 0 second duration, we use the duration passed in to
-      // the first media item that was provided to the Tech until chromecast plays its
-      // first item.
-      if (!this._hasPlayedAnyItem) {
-         return this.videojsPlayer.duration();
-      }
-      return this._remotePlayer.duration;
-   },
-
-   /**
-    * Returns whether or not the current media item has finished playing. Returns `false`
-    * if a media item has not been loaded, has not been played, or has not yet finished
-    * playing.
-    *
-    * @returns {boolean} true if the current media item has finished playing
-    * @see {@link http://docs.videojs.com/Player.html#ended}
-    */
-   ended: function() {
-      var mediaSession = this._getMediaSession();
-
-      if (!mediaSession && this._hasMediaSessionEnded) {
-         return true;
-      }
-
-      return mediaSession ? (mediaSession.idleReason === chrome.cast.media.IdleReason.FINISHED) : false;
-   },
-
-   /**
-    * Returns the current volume level setting as a decimal number between `0` and `1`.
-    *
-    * @returns {number} the current volume level
-    * @see {@link http://docs.videojs.com/Player.html#volume}
-    */
-   volume: function() {
-      //return this._remotePlayer.volumeLevel;
-      return 1; //Disable for now
-   },
-
-   /**
-    * Sets the current volume level. Volume level is a decimal number between `0` and `1`,
-    * where `0` is muted and `1` is the loudest volume level.
-    *
-    * @param volumeLevel {number}
-    * @returns {number} the current volume level
-    * @see {@link http://docs.videojs.com/Player.html#volume}
-    */
-   setVolume: function(volumeLevel) {
-      //this._remotePlayer.volumeLevel = volumeLevel;
-      //this._remotePlayerController.setVolumeLevel();
-      // This event is triggered by the listener on
-      // `RemotePlayerEventType.VOLUME_LEVEL_CHANGED`, but waiting for that event to fire
-      // in response to calls to `setVolume` introduces noticeable lag in the updating of
-      // the player UI's volume slider bar, which makes user interaction with the volume
-      // slider choppy.
-      this._triggerVolumeChangeEvent();
-   },
-
-   /**
-    * Returns whether or not the player is currently muted.
-    *
-    * @returns {boolean} true if the player is currently muted
-    * @see {@link http://docs.videojs.com/Player.html#muted}
-    */
-   muted: function() {
-      return this._remotePlayer.isMuted;
-   },
-
-   /**
-    * Mutes or un-mutes the player. Does nothing if the player is currently muted and the
-    * `isMuted` parameter is true or if the player is not muted and `isMuted` is false.
-    *
-    * @param isMuted {boolean} whether or not the player should be muted
-    * @see {@link http://docs.videojs.com/Html5.html#setMuted} for an example
-    */
-   setMuted: function(isMuted) {
-      if ((this._remotePlayer.isMuted && !isMuted) || (!this._remotePlayer.isMuted && isMuted)) {
-         try {
-            this._remotePlayerController.muteOrUnmute();
-            this.reconnectRetryCount = 0;
-         } catch (error) {
-            //Retry
-            this.reconnectRetryCount++;
-            if (this.reconnectRetryCount>5) {
-              this._killChromecastSessionDueToError("muteOrUnmute failed due to cast session error, reverting to normal player");
-            }
-            else {
-              this._reconnectChromecastSessionDueToError("muteOrUnmute failed due to cast session error, reconnecting");
-               var that = this;
-               setTimeout(function(){
-                  that.setMuted(isMuted);
-                 }, 2000);
-            }
-         }
-      }
-   },
-
-   /**
-    * Gets the URL to the current poster image.
-    *
-    * @returns {string} URL to the current poster image or `undefined` if none exists
-    * @see {@link http://docs.videojs.com/Player.html#poster}
-    */
-   poster: function() {
-      return this._ui.getPoster();
-   },
-
-   /**
-    * Sets the URL to the current poster image. The poster image shown in the Chromecast
-    * Tech UI view is updated with this new URL.
-    *
-    * @param poster {string} the URL to the new poster image
-    * @see {@link http://docs.videojs.com/Tech.html#setPoster}
-    */
-   setPoster: function(poster) {
-      //this._ui.updatePoster(poster);
-   },
-
-   /**
-    * This function is "required" when implementing {@link external:Tech} and is supposed
-    * to return a mock
-    * {@link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges|TimeRanges}
-    * object that represents the portions of the current media item that have been
-    * buffered. However, the Chromecast API does not currently provide a way to determine
-    * how much the media item has buffered, so we always return `undefined`.
-    *
-    * Returning `undefined` is safe: the player will simply not display the buffer amount
-    * indicator in the scrubber UI.
-    *
-    * @returns {undefined} always returns `undefined`
-    * @see {@link http://docs.videojs.com/Player.html#buffered}
-    */
-   buffered: function() {
-      return undefined;
-   },
-
-   /**
-    * This function is "required" when implementing {@link external:Tech} and is supposed
-    * to return a mock
-    * {@link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges|TimeRanges}
-    * object that represents the portions of the current media item that has playable
-    * content. However, the Chromecast API does not currently provide a way to determine
-    * how much the media item has playable content, so we'll just assume the entire video
-    * is an available seek target.
-    *
-    * The risk here lies with live streaming, where there may exist a sliding window of
-    * playable content and seeking is only possible within the last X number of minutes,
-    * rather than for the entire video.
-    *
-    * Unfortunately we have no way of detecting when this is the case. Returning anything
-    * other than the full range of the video means that we lose the ability to seek during
-    * VOD.
-    *
-    * @returns {TimeRanges} always returns a `TimeRanges` object with one `TimeRange` that
-    * starts at `0` and ends at the `duration` of the current media item
-    * @see {@link http://docs.videojs.com/Player.html#seekable}
-    */
-   seekable: function() {
-      // TODO Investigate if there's a way to detect if the source is live, so that we can
-      // possibly adjust the seekable `TimeRanges` accordingly.
-      return this.videojs.createTimeRange(0, this.duration());
-   },
-
-   /**
-    * Returns whether the native media controls should be shown (`true`) or hidden
-    * (`false`). Not applicable to this Tech.
-    *
-    * @returns {boolean} always returns `false`
-    * @see {@link http://docs.videojs.com/Html5.html#controls} for an example
-    */
-   controls: function() {
-      return false;
-   },
-
-   /**
-    * Returns whether or not the browser should show the player "inline" (non-fullscreen)
-    * by default. This function always returns true to tell the browser that non-
-    * fullscreen playback is preferred.
-    *
-    * @returns {boolean} always returns `true`
-    * @see {@link http://docs.videojs.com/Html5.html#playsinline} for an example
-    */
-   playsinline: function() {
-      return true;
-   },
-
-   /**
-    * Returns whether or not fullscreen is supported by this Tech. Always returns `true`
-    * because fullscreen is always supported.
-    *
-    * @returns {boolean} always returns `true`
-    * @see {@link http://docs.videojs.com/Html5.html#supportsFullScreen} for an example
-    */
-   supportsFullScreen: function() {
-      return true;
-   },
-
-   /**
-    * Sets a flag that determines whether or not the media should automatically begin
-    * playing on page load. This is not supported because a Chromecast session must be
-    * initiated by casting via the casting menu and cannot autoplay.
-    *
-    * @see {@link http://docs.videojs.com/Html5.html#setAutoplay} for an example
-    */
-   setAutoplay: function() {
-      // Not supported
-   },
-
-   /**
-    * @returns {number} the chromecast player's playback rate, if available. Otherwise,
-    * the return value defaults to `1`.
-    */
-   playbackRate: function() {
-      var mediaSession = this._getMediaSession();
-
-      return mediaSession ? mediaSession.playbackRate : 1;
-   },
-
-   /**
-    * Does nothing. Changing the playback rate is not supported.
-    */
-   setPlaybackRate: function() {
-      // Not supported
-   },
-
-   /**
-    * Does nothing. Satisfies calls to the missing preload method.
-    */
-   preload: function() {
-      // Not supported
-   },
-
-   /**
-    * Causes the Tech to begin loading the current source. `load` is not supported in this
-    * ChromecastTech because setting the source on the `Chromecast` automatically causes
-    * it to begin loading.
-    */
-   load: function() {
-      // Not supported
-   },
-
-   /**
-    * Gets the Chromecast equivalent of HTML5 Media Element's `readyState`.
-    *
-    * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState
-    */
-   readyState: function() {
-      if (this._remotePlayer.playerState === 'IDLE' || this._remotePlayer.playerState === 'BUFFERING') {
-         return 0; // HAVE_NOTHING
-      }
-      return 4;
-   },
-
-   /**
-    * Wires up event listeners for
-    * [RemotePlayerController](https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayerController)
-    * events.
-    *
-    * @private
-    */
-   _listenToPlayerControllerEvents: function() {
-      var eventTypes = cast.framework.RemotePlayerEventType;
-
-      this._addEventListener(this._remotePlayerController, eventTypes.PLAYER_STATE_CHANGED, this._onPlayerStateChanged, this);
-      this._addEventListener(this._remotePlayerController, eventTypes.VOLUME_LEVEL_CHANGED, this._triggerVolumeChangeEvent, this);
-      this._addEventListener(this._remotePlayerController, eventTypes.IS_MUTED_CHANGED, this._triggerVolumeChangeEvent, this);
-      this._addEventListener(this._remotePlayerController, eventTypes.CURRENT_TIME_CHANGED, this._triggerTimeUpdateEvent, this);
-      this._addEventListener(this._remotePlayerController, eventTypes.DURATION_CHANGED, this._triggerDurationChangeEvent, this);
-   },
-
-   /**
-    * Registers an event listener on the given target object. Because many objects in the
-    * Chromecast API are either singletons or must be shared between instances of
-    * `ChromecastTech` for the lifetime of the player, we must unbind the listeners when
-    * this Tech instance is destroyed to prevent memory leaks. To do that, we need to keep
-    * a reference to listeners that are added to global objects so that we can use those
-    * references to remove the listener when this Tech is destroyed.
-    *
-    * @param target {object} the object to register the event listener on
-    * @param type {string} the name of the event
-    * @param callback {Function} the listener's callback function that executes when the
-    * event is emitted
-    * @param context {object} the `this` context to use when executing the `callback`
-    * @private
-    */
-   _addEventListener: function(target, type, callback, context) {
-      var listener;
-
-      listener = {
-         target: target,
-         type: type,
-         callback: callback,
-         context: context,
-         listener: callback.bind(context),
-      };
-      target.addEventListener(type, listener.listener);
-      this._eventListeners.push(listener);
-   },
-
-   /**
-    * Removes all event listeners that were registered with global objects during the
-    * lifetime of this Tech. See {@link _addEventListener} for more information about why
-    * this is necessary.
-    *
-    * @private
-    */
-   _removeAllEventListeners: function() {
-      while (this._eventListeners.length > 0) {
-         this._removeEventListener(this._eventListeners[0]);
-      }
-      this._eventListeners = [];
-   },
-
-   /**
-    * Removes a single event listener that was registered with global objects during the
-    * lifetime of this Tech. See {@link _addEventListener} for more information about why
-    * this is necessary.
-    *
-    * @private
-    */
-   _removeEventListener: function(listener) {
-      var index;
-
-      listener.target.removeEventListener(listener.type, listener.listener);
-
-      index = _.findIndex(this._eventListeners, function(registeredListener) {
-         return registeredListener.target === listener.target &&
-            registeredListener.type === listener.type &&
-            registeredListener.callback === listener.callback &&
-            registeredListener.context === listener.context;
-      });
-
-      if (index !== -1) {
-         this._eventListeners.splice(index, 1);
-      }
-   },
-
-   /**
-    * Handles Chromecast player state change events. The player may "change state" when
-    * paused, played, buffering, etc.
-    *
-    * @private
-    */
-   _onPlayerStateChanged: function() {
-      var states = chrome.cast.media.PlayerState,
-          playerState = this._remotePlayer.playerState;
-
-      if (playerState === states.PLAYING) {
-         this._hasPlayedCurrentItem = true;
-         this.trigger('play');
-         this.trigger('playing');
-      } else if (playerState === states.PAUSED) {
-         this.trigger('pause');
-      } else if ((playerState === states.IDLE && this.ended()) || (playerState === null && this._hasPlayedCurrentItem)) {
-         this._hasPlayedCurrentItem = false;
-         //this._closeSessionOnTimeout();
-         this.trigger('ended');
-         this._triggerTimeUpdateEvent();
-      } else if (playerState === states.BUFFERING) {
-         this.trigger('waiting');
-      }
-   },
-
-   /**
-    * Handles Chromecast MediaSession state change events. The only property sent to this
-    * event is whether the session is alive. This is useful for determining if an item has
-    * ended as the MediaSession will fire this event with `false` then be immediately
-    * destroyed. This means that we cannot trust `idleReason` to show whether an item has
-    * ended since we may no longer have access to the MediaSession.
-    *
-    * @private
-    */
-   _onMediaSessionStatusChanged: function(isAlive) {
-      this._hasMediaSessionEnded = !!isAlive;
-   },
-
-   /**
-    * Ends the session after a certain number of seconds of inactivity.
-    *
-    * If the Chromecast player is in the "IDLE" state after an item has ended, and no
-    * further items are queued up to play, the session is considered inactive. Once a
-    * period of time (currently 10 seconds) has elapsed with no activity, we manually end
-    * the session to prevent long periods of a blank Chromecast screen that is shown at
-    * the end of item playback.
-    *
-    * @private
-    */
-   _closeSessionOnTimeout: function() {
-      // Ensure that there's never more than one session timeout active
-      this._clearSessionTimeout();
-      window._chromecastSessionTimeoutID = setTimeout(function() {
-         var castSession = this._getCastSession();
-
-         if (castSession) {
-            castSession.endSession(true);
-         }
-         this._clearSessionTimeout();
-      }.bind(this), SESSION_TIMEOUT);
-   },
-
-   /**
-    * Stops the timeout that is waiting during a period of inactivity in order to close
-    * the session.
-    *
-    * @private
-    * @see _closeSessionOnTimeout
-    */
-   _clearSessionTimeout: function() {
-      if (window._chromecastSessionTimeoutID) {
-         clearTimeout(window._chromecastSessionTimeoutID);
-         window._chromecastSessionTimeoutID = false;
-      }
-   },
-
-   /**
-    * @private
-    * @return {object} the current CastContext, if one exists
-    */
-   _getCastContext: function() {
-      return this._chromecastSessionManager.getCastContext();
-   },
-
-   /**
-    * @private
-    * @return {object} the current CastSession, if one exists
-    */
-   _getCastSession: function() {
-      return this._getCastContext().getCurrentSession();
-   },
-
-   /**
-    * @private
-    * @return {object} the current MediaSession, if one exists
-    * @see https://developers.google.com/cast/docs/reference/chrome/chrome.cast.media.Media
-    */
-   _getMediaSession: function() {
-      var castSession = this._getCastSession();
-
-      return castSession ? castSession.getMediaSession() : null;
-   },
-
-   /**
-    * Triggers a 'volumechange' event
-    * @private
-    * @see http://docs.videojs.com/Player.html#event:volumechange
-    */
-   _triggerVolumeChangeEvent: function() {
-      this.trigger('volumechange');
-   },
-
-   /**
-    * Triggers a 'timeupdate' event
-    * @private
-    * @see http://docs.videojs.com/Player.html#event:timeupdate
-    */
-   _triggerTimeUpdateEvent: function() {
-      this.trigger('timeupdate');
-   },
-
-   /**
-    * Triggers a 'durationchange' event
-    * @private
-    * @see http://docs.videojs.com/Player.html#event:durationchange
-    */
-   _triggerDurationChangeEvent: function() {
-      this.trigger('durationchange');
-   },
-
-   /**
-    * Triggers an 'error' event
-    * @private
-    * @see http://docs.videojs.com/Player.html#event:error
-    */
-   _triggerErrorEvent: function() {
-      this.trigger('error');
-   },
-};
+  ChromecastTechUI = require('./ChromecastTechUI');
 
 /**
  * Registers the ChromecastTech Tech with Video.js. Calls {@link
@@ -5833,40 +5776,945 @@ ChromecastTech = {
  * {@link http://docs.videojs.com/module-videojs.html|Video.js}
  * @see http://docs.videojs.com/Tech.html#.registerTech
  */
-module.exports = function(videojs) {
-   var Tech = videojs.getComponent('Tech'),
-       ChromecastTechImpl;
+module.exports = function (videojs) {
+  var Tech = videojs.getComponent('Tech'),
+    SESSION_TIMEOUT = 10 * 1000; // milliseconds
 
-   ChromecastTechImpl = videojs.extend(Tech, ChromecastTech);
+  /**
+   * @module ChomecastTech
+   */
 
-   // Required for Video.js Tech implementations.
-   // TODO Consider a more comprehensive check based on mimetype.
-   ChromecastTechImpl.canPlaySource = ChromecastSessionManager.isChromecastConnected.bind(ChromecastSessionManager);
-   ChromecastTechImpl.isSupported = ChromecastSessionManager.isChromecastConnected.bind(ChromecastSessionManager);
+  /**
+   * The Video.js Tech class is the base class for classes that provide media playback
+   * technology implementations to Video.js such as HTML5, Flash and HLS.
+   *
+   * @external Tech
+   * @see {@link http://docs.videojs.com/Tech.html|Tech}
+   */
 
-   ChromecastTechImpl.prototype.featuresVolumeControl = false; //Changed
-   ChromecastTechImpl.prototype.featuresPlaybackRate = false;
-   ChromecastTechImpl.prototype.movingMediaElementInDOM = false;
-   ChromecastTechImpl.prototype.featuresFullscreenResize = true;
-   ChromecastTechImpl.prototype.featuresTimeupdateEvents = true;
-   ChromecastTechImpl.prototype.featuresProgressEvents = false;
-   // Text tracks are not supported in this version
-   ChromecastTechImpl.prototype.featuresNativeTextTracks = false;
-   ChromecastTechImpl.prototype.featuresNativeAudioTracks = false;
-   ChromecastTechImpl.prototype.featuresNativeVideoTracks = false;
+  /** @lends ChromecastTech.prototype */
+  var ChromecastTech = /*#__PURE__*/function (_Tech) {
+    _inherits(ChromecastTech, _Tech);
+    var _super = _createSuper(ChromecastTech);
+    /**
+     * Implements Video.js playback {@link http://docs.videojs.com/tutorial-tech_.html|Tech}
+     * for {@link https://developers.google.com/cast/|Google's Chromecast}.
+     *
+     * @constructs ChromecastTech
+     * @extends external:Tech
+     * @param options {object} The options to use for configuration
+     * @see {@link https://developers.google.com/cast/|Google Cast}
+     */
+    function ChromecastTech(options) {
+      var _this;
+      _classCallCheck(this, ChromecastTech);
+      _this = _super.call(this, options);
+      _this.featuresVolumeControl = false; //Changed
+      _this.featuresPlaybackRate = false;
+      _this.movingMediaElementInDOM = false;
+      _this.featuresFullscreenResize = true;
+      _this.featuresTimeupdateEvents = true;
+      _this.featuresProgressEvents = false;
+      // Text tracks are not supported in this version
+      _this.featuresNativeTextTracks = false;
+      _this.featuresNativeAudioTracks = false;
+      _this.featuresNativeVideoTracks = false;
 
-   // Give ChromecastTech class instances a reference to videojs
-   ChromecastTechImpl.prototype.videojs = videojs;
+      // Give ChromecastTech class instances a reference to videojs
+      _this.videojs = videojs;
+      _this._eventListeners = [];
+      _this.videojsPlayer = _this.videojs(options.playerId);
+      _this._chromecastSessionManager = window.chromecastSessionManager;
+      _this._remotePlayer = _this._chromecastSessionManager.getRemotePlayer();
+      _this._remotePlayerController = _this._chromecastSessionManager.getRemotePlayerController();
+      _this._listenToPlayerControllerEvents();
+      _this.on('dispose', _this._removeAllEventListeners.bind(_assertThisInitialized(_this)));
+      _this._hasPlayedAnyItem = false;
+      _this._requestTitle = options.requestTitleFn || function () {/* noop */};
+      _this._requestSubtitle = options.requestSubtitleFn || function () {/* noop */};
+      _this._requestCoverImageUrl = options.requestCoverImageUrlFn || function () {/* noop */};
+      _this._requestCustomData = options.requestCustomDataFn || function () {/* noop */};
+      // See `currentTime` function
+      _this._initialStartTime = options.startTime || 0;
+      _this._playSource(options.source, _this._initialStartTime);
+      _this.ready(function () {
+        this.setMuted(options.muted);
+      }.bind(_assertThisInitialized(_this)));
+      _this.reconnectRetryCount = 0;
+      return _this;
+    }
 
-   videojs.registerTech('chromecast', ChromecastTechImpl);
+    /**
+     * Creates a DOMElement that Video.js displays in its player UI while this Tech is
+     * active.
+     *
+     * @returns {DOMElement}
+     * @see {@link http://docs.videojs.com/Tech.html#createEl}
+     */
+    _createClass(ChromecastTech, [{
+      key: "createEl",
+      value: function createEl() {
+        // We have to initialize the UI here, because the super.constructor
+        // calls `createEl`, which references `this._ui`.
+        this._ui = this._ui || new ChromecastTechUI();
+        return this._ui.getDOMElement();
+      }
+
+      /**
+       * Resumes playback if a media item is paused or restarts an item from
+       * its beginning if the item has played and ended.
+       *
+       * @see {@link http://docs.videojs.com/Player.html#play}
+       */
+    }, {
+      key: "play",
+      value: function play() {
+        if ($('.vjs-ended').length > 0) {
+          //UGLY HACK
+          this._playSource({
+            src: this.videojsPlayer.src()
+          }, 0);
+          return;
+        }
+        if (!this.paused()) {
+          return;
+        }
+        if (this.ended() && !this._isMediaLoading) {
+          // Restart the current item from the beginning
+          this._playSource({
+            src: this.videojsPlayer.src()
+          }, 0);
+        } else {
+          try {
+            this._remotePlayerController.playOrPause();
+            this.reconnectRetryCount = 0;
+          } catch (error) {
+            //Retry
+            this.reconnectRetryCount++;
+            if (this.reconnectRetryCount > 5) {
+              this._killChromecastSessionDueToError("playOrPause failed due to cast session error, reverting to normal player");
+            } else {
+              this._reconnectChromecastSessionDueToError("playOrPause failed due to cast session error, reconnecting");
+              var that = this;
+              setTimeout(function () {
+                that.play();
+              }, 2000);
+            }
+          }
+        }
+      }
+
+      /**
+       * Pauses playback if the player is not already paused and if the current media item
+       * has not ended yet.
+       *
+       * @see {@link http://docs.videojs.com/Player.html#pause}
+       */
+    }, {
+      key: "pause",
+      value: function pause() {
+        if (!this.paused() && this._remotePlayer.canPause) {
+          try {
+            this._remotePlayerController.playOrPause();
+            this.reconnectRetryCount = 0;
+          } catch (error) {
+            //Retry
+            this.reconnectRetryCount++;
+            if (this.reconnectRetryCount > 5) {
+              this._killChromecastSessionDueToError("playOrPause failed due to cast session error, reverting to normal player");
+            } else {
+              this._reconnectChromecastSessionDueToError("playOrPause failed due to cast session error, reconnecting");
+              var that = this;
+              setTimeout(function () {
+                that.pause();
+              }, 2000);
+            }
+          }
+        }
+      }
+
+      /**
+       * Returns whether or not the player is "paused". Video.js'
+       * definition of "paused" is "playback paused" OR "not playing".
+       *
+       * @returns {boolean} true if playback is paused
+       * @see {@link http://docs.videojs.com/Player.html#paused}
+       */
+    }, {
+      key: "paused",
+      value: function paused() {
+        return this._remotePlayer.isPaused || this.ended() || this._remotePlayer.playerState === null;
+      }
+
+      /**
+       * Stores the given source and begins playback, starting at the beginning
+       * of the media item.
+       *
+       * @param source {object} the source to store and play
+       * @see {@link http://docs.videojs.com/Player.html#src}
+       */
+    }, {
+      key: "setSource",
+      value: function setSource(source) {
+        if (this._currentSource && this._currentSource.src === source.src && this._currentSource.type === source.type) {
+          // Skip setting the source if the `source` argument is the
+          // same as what's already been set. This `setSource` function
+          // calls `this._playSource` which sends a "load media" request
+          // to the Chromecast PlayerController. Because this function
+          // may be called multiple times in rapid succession with the same `source`
+          // argument, we need to de-duplicate calls with the same `source` argument to
+          // prevent overwhelming the Chromecast PlayerController with expensive "load
+          // media" requests, which it itself does not de-duplicate.
+          return;
+        }
+        // We cannot use `this.videojsPlayer.currentSource()` because the
+        // value returned by that function is not the same as what's returned
+        // by the Video.js Player's middleware after they are run. Also, simply
+        // using `this.videojsPlayer.src()` does not include mimetype information
+        // which we pass to the Chromecast player.
+        this._currentSource = source;
+        this._playSource(source, 0);
+      }
+
+      /**
+       * Plays the given source, beginning at an optional starting time.
+       *
+       * @private
+       * @param source {object} the source to play
+       * @param [startTime] The time to start playback at, in seconds
+       * @see {@link http://docs.videojs.com/Player.html#src}
+       */
+    }, {
+      key: "_playSource",
+      value: function _playSource(source, startTime) {
+        var castSession = this._getCastSession(),
+          mediaInfo = new chrome.cast.media.MediaInfo(source.src, source.type),
+          title = this._requestTitle(source),
+          subtitle = this._requestSubtitle(source),
+          imageUrl = this._requestCoverImageUrl(source),
+          poster = this.poster(),
+          customData = this._requestCustomData(source),
+          request;
+        this.trigger('waiting');
+        //this._clearSessionTimeout(); //Disabled for now
+
+        mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+        mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+        mediaInfo.metadata.title = title;
+        mediaInfo.metadata.subtitle = subtitle;
+        mediaInfo.metadata.images = [{
+          url: imageUrl
+        }];
+        mediaInfo.streamType = this.videojsPlayer.liveTracker && this.videojsPlayer.liveTracker.isLive() ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED;
+        if (poster) {
+          mediaInfo.metadata.images = [{
+            url: poster
+          }];
+        }
+        if (customData) {
+          mediaInfo.customData = customData;
+        }
+        this._ui.updateTitle(castSession && castSession.getCastDevice() && castSession.getCastDevice().friendlyName ? "S'està emetent a " + castSession.getCastDevice().friendlyName : "S'està emetent");
+        //this._ui.updateSubtitle(subtitle);
+        this._ui.updateCoverImage(imageUrl);
+        request = new chrome.cast.media.LoadRequest(mediaInfo);
+        request.autoplay = true;
+        request.currentTime = startTime;
+        this._isMediaLoading = true;
+        this._hasPlayedCurrentItem = false;
+        try {
+          castSession.loadMedia(request).then(function () {
+            if (!this._hasPlayedAnyItem) {
+              // `triggerReady` is required here to notify the Video.js
+              // player that the Tech has been initialized and is ready.
+              this.triggerReady();
+            }
+            this.trigger('loadstart');
+            this.trigger('loadeddata');
+            this.trigger('play');
+            this.trigger('playing');
+            this._hasPlayedAnyItem = true;
+            this._isMediaLoading = false;
+            this._getMediaSession().addUpdateListener(this._onMediaSessionStatusChanged.bind(this));
+          }.bind(this), this._triggerErrorEvent.bind(this));
+          window.currentChromecastSessionId = castSession.getSessionId();
+          this.reconnectRetryCount = 0;
+        } catch (error) {
+          //Retry
+          this.reconnectRetryCount++;
+          if (this.reconnectRetryCount > 5) {
+            this._killChromecastSessionDueToError("loadMedia failed due to cast session error, reverting to normal player");
+          } else {
+            this._reconnectChromecastSessionDueToError("loadMedia failed due to cast session error, reconnecting");
+            var that = this;
+            setTimeout(function () {
+              that._playSource(source, startTime);
+            }, 2000);
+          }
+        }
+      }
+    }, {
+      key: "_reconnectChromecastSessionDueToError",
+      value: function _reconnectChromecastSessionDueToError(message) {
+        console.log("Reconnecting to Cast: " + message);
+        chrome.cast.requestSessionById(window.currentChromecastSessionId);
+      }
+    }, {
+      key: "_killChromecastSessionDueToError",
+      value: function _killChromecastSessionDueToError(message) {
+        console.log(message);
+        window.isChromecastDead = true;
+        window.player.trigger('chromecastDisconnected');
+        this._chromecastSessionManager._reloadTech();
+      }
+
+      /**
+       * Manually updates the current time. The playback position will jump to
+       * the given time and continue playing if the item was playing when `setCurrentTime`
+       * was called, or remain paused if the item was paused.
+       *
+       * @param time {number} the playback time position to jump to
+       * @see {@link http://docs.videojs.com/Tech.html#setCurrentTime}
+       */
+    }, {
+      key: "setCurrentTime",
+      value: function setCurrentTime(time) {
+        var duration = this.duration();
+        if (time > duration || !this._remotePlayer.canSeek) {
+          return;
+        }
+        // Seeking to any place within (approximately) 1 second of the end of the item
+        // causes the Video.js player to get stuck in a BUFFERING state. To work around
+        // this, we only allow seeking to within 1 second of the end of an item.
+        this._remotePlayer.currentTime = Math.min(duration - 1, time);
+        try {
+          this._remotePlayerController.seek();
+          this._triggerTimeUpdateEvent();
+          this.reconnectRetryCount = 0;
+        } catch (error) {
+          //Retry
+          this.reconnectRetryCount++;
+          if (this.reconnectRetryCount > 5) {
+            this._killChromecastSessionDueToError("seek failed due to cast session error, reverting to normal player");
+          } else {
+            this._reconnectChromecastSessionDueToError("seek failed due to cast session error, reconnecting");
+            var that = this;
+            setTimeout(function () {
+              that.setCurrentTime(time);
+            }, 2000);
+          }
+        }
+      }
+
+      /**
+       * Returns the current playback time position.
+       *
+       * @returns {number} the current playback time position
+       * @see {@link http://docs.videojs.com/Player.html#currentTime}
+       */
+    }, {
+      key: "currentTime",
+      value: function currentTime() {
+        // There is a brief period of time when Video.js has switched to the chromecast
+        // Tech, but chromecast has not yet loaded its first media item. During
+        // that time, Video.js calls this `currentTime` function to update
+        // its player UI. In that period, `this._remotePlayer.currentTime`
+        // will be 0 because the media has not loaded yet. To prevent the
+        // UI from using a 0 second currentTime, we use the currentTime passed
+        // in to the first media item that was provided to the Tech until
+        // chromecast plays its first item.
+        if (!this._hasPlayedAnyItem) {
+          return this._initialStartTime;
+        }
+        return this._remotePlayer.currentTime;
+      }
+
+      /**
+       * Returns the duration of the current media item, or `0` if the source
+       * is not set or if the duration of the item is not available from the
+       * Chromecast API yet.
+       *
+       * @returns {number} the duration of the current media item
+       * @see {@link http://docs.videojs.com/Player.html#duration}
+       */
+    }, {
+      key: "duration",
+      value: function duration() {
+        // There is a brief period of time when Video.js has switched to the chromecast
+        // Tech, but chromecast has not yet loaded its first media item.
+        // During that time, Video.js calls this `duration` function to update its player
+        // UI. In that period, `this._remotePlayer.duration` will be 0 because the media
+        // has not loaded yet. To prevent the UI from using a 0 second duration, we
+        // use the duration passed in to the first media item that was provided to
+        // the Tech until chromecast plays its first item.
+        if (!this._hasPlayedAnyItem) {
+          return this.videojsPlayer.duration();
+        }
+        return this._remotePlayer.duration;
+      }
+
+      /**
+       * Returns whether or not the current media item has finished playing.
+       * Returns `false` if a media item has not been loaded, has not been played,
+       * or has not yet finished playing.
+       *
+       * @returns {boolean} true if the current media item has finished playing
+       * @see {@link http://docs.videojs.com/Player.html#ended}
+       */
+    }, {
+      key: "ended",
+      value: function ended() {
+        var mediaSession = this._getMediaSession();
+        if (!mediaSession && this._hasMediaSessionEnded) {
+          return true;
+        }
+        return mediaSession ? mediaSession.idleReason === chrome.cast.media.IdleReason.FINISHED : false;
+      }
+
+      /**
+       * Returns the current volume level setting as a decimal number between `0` and `1`.
+       *
+       * @returns {number} the current volume level
+       * @see {@link http://docs.videojs.com/Player.html#volume}
+       */
+    }, {
+      key: "volume",
+      value: function volume() {
+        //return this._remotePlayer.volumeLevel;
+        return 1; //Disable for now
+      }
+
+      /**
+       * Sets the current volume level. Volume level is a decimal number
+       * between `0` and `1`, where `0` is muted and `1` is the loudest volume level.
+       *
+       * @param volumeLevel {number}
+       * @returns {number} the current volume level
+       * @see {@link http://docs.videojs.com/Player.html#volume}
+       */
+    }, {
+      key: "setVolume",
+      value: function setVolume(volumeLevel) {
+        //this._remotePlayer.volumeLevel = volumeLevel;
+        //this._remotePlayerController.setVolumeLevel();
+        // This event is triggered by the listener on
+        // `RemotePlayerEventType.VOLUME_LEVEL_CHANGED`, but waiting for
+        // that event to fire in response to calls to `setVolume` introduces
+        // noticeable lag in the updating of the player UI's volume slider bar,
+        // which makes user interaction with the volume slider choppy.
+        this._triggerVolumeChangeEvent();
+      }
+
+      /**
+       * Returns whether or not the player is currently muted.
+       *
+       * @returns {boolean} true if the player is currently muted
+       * @see {@link http://docs.videojs.com/Player.html#muted}
+       */
+    }, {
+      key: "muted",
+      value: function muted() {
+        return this._remotePlayer.isMuted;
+      }
+
+      /**
+       * Mutes or un-mutes the player. Does nothing if the player is currently
+       * muted and the `isMuted` parameter is true or if the player is not muted and
+       * `isMuted` is false.
+       *
+       * @param isMuted {boolean} whether or not the player should be muted
+       * @see {@link http://docs.videojs.com/Html5.html#setMuted} for an example
+       */
+    }, {
+      key: "setMuted",
+      value: function setMuted(isMuted) {
+        if (this._remotePlayer.isMuted && !isMuted || !this._remotePlayer.isMuted && isMuted) {
+          try {
+            this._remotePlayerController.muteOrUnmute();
+            this.reconnectRetryCount = 0;
+          } catch (error) {
+            //Retry
+            this.reconnectRetryCount++;
+            if (this.reconnectRetryCount > 5) {
+              this._killChromecastSessionDueToError("muteOrUnmute failed due to cast session error, reverting to normal player");
+            } else {
+              this._reconnectChromecastSessionDueToError("muteOrUnmute failed due to cast session error, reconnecting");
+              var that = this;
+              setTimeout(function () {
+                that.setMuted(isMuted);
+              }, 2000);
+            }
+          }
+        }
+      }
+
+      /**
+       * Gets the URL to the current poster image.
+       *
+       * @returns {string} URL to the current poster image or `undefined` if none exists
+       * @see {@link http://docs.videojs.com/Player.html#poster}
+       */
+    }, {
+      key: "poster",
+      value: function poster() {
+        return this._ui.getPoster();
+      }
+
+      /**
+       * Sets the URL to the current poster image. The poster image shown
+       * in the Chromecast Tech UI view is updated with this new URL.
+       *
+       * @param poster {string} the URL to the new poster image
+       * @see {@link http://docs.videojs.com/Tech.html#setPoster}
+       */
+    }, {
+      key: "setPoster",
+      value: function setPoster(poster) {
+        //this._ui.updatePoster(poster);
+      }
+
+      /**
+       * This function is "required" when implementing {@link external:Tech}
+       * and is supposed to return a mock
+       * {@link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges|TimeRanges}
+       * object that represents the portions of the current media item that have been
+       * buffered. However, the Chromecast API does not currently provide a way
+       * to determine how much the media item has buffered, so we always
+       * return `undefined`.
+       *
+       * Returning `undefined` is safe: the player will simply not display
+       * the buffer amount indicator in the scrubber UI.
+       *
+       * @returns {undefined} always returns `undefined`
+       * @see {@link http://docs.videojs.com/Player.html#buffered}
+       */
+    }, {
+      key: "buffered",
+      value: function buffered() {
+        return undefined;
+      }
+
+      /**
+       * This function is "required" when implementing {@link external:Tech}
+       * and is supposed to return a mock
+       * {@link https://developer.mozilla.org/en-US/docs/Web/API/TimeRanges|TimeRanges}
+       * object that represents the portions of the current media item that has playable
+       * content. However, the Chromecast API does not currently provide a
+       * way to determine how much the media item has playable content, so
+       * we'll just assume the entire video is an available seek target.
+       *
+       * The risk here lies with live streaming, where there may exist a sliding window of
+       * playable content and seeking is only possible within the last X number of
+       * minutes, rather than for the entire video.
+       *
+       * Unfortunately we have no way of detecting when this is the case. Returning
+       * anything other than the full range of the video means that we lose the ability
+       * to seek during VOD.
+       *
+       * @returns {TimeRanges} always returns a `TimeRanges` object with one
+       * `TimeRange` that starts at `0` and ends at the `duration` of the
+       * current media item
+       * @see {@link http://docs.videojs.com/Player.html#seekable}
+       */
+    }, {
+      key: "seekable",
+      value: function seekable() {
+        // TODO Investigate if there's a way to detect
+        // if the source is live, so that we can
+        // possibly adjust the seekable `TimeRanges` accordingly.
+        return this.videojs.createTimeRange(0, this.duration());
+      }
+
+      /**
+       * Returns whether the native media controls should be shown (`true`) or hidden
+       * (`false`). Not applicable to this Tech.
+       *
+       * @returns {boolean} always returns `false`
+       * @see {@link http://docs.videojs.com/Html5.html#controls} for an example
+       */
+    }, {
+      key: "controls",
+      value: function controls() {
+        return false;
+      }
+
+      /**
+       * Returns whether or not the browser should show the player
+       * "inline" (non-fullscreen) by default. This function always
+       * returns true to tell the browser that non-fullscreen playback is preferred.
+       *
+       * @returns {boolean} always returns `true`
+       * @see {@link http://docs.videojs.com/Html5.html#playsinline} for an example
+       */
+    }, {
+      key: "playsinline",
+      value: function playsinline() {
+        return true;
+      }
+
+      /**
+       * Returns whether or not fullscreen is supported by this Tech.
+       * Always returns `true` because fullscreen is always supported.
+       *
+       * @returns {boolean} always returns `true`
+       * @see {@link http://docs.videojs.com/Html5.html#supportsFullScreen} for an example
+       */
+    }, {
+      key: "supportsFullScreen",
+      value: function supportsFullScreen() {
+        return true;
+      }
+
+      /**
+       * Sets a flag that determines whether or not the media should automatically begin
+       * playing on page load. This is not supported because a Chromecast session must be
+       * initiated by casting via the casting menu and cannot autoplay.
+       *
+       * @see {@link http://docs.videojs.com/Html5.html#setAutoplay} for an example
+       */
+    }, {
+      key: "setAutoplay",
+      value: function setAutoplay() {
+        // Not supported
+      }
+
+      /**
+       * @returns {number} the chromecast player's playback rate, if available. Otherwise,
+       * the return value defaults to `1`.
+       */
+    }, {
+      key: "playbackRate",
+      value: function playbackRate() {
+        var mediaSession = this._getMediaSession();
+        return mediaSession ? mediaSession.playbackRate : 1;
+      }
+
+      /**
+       * Does nothing. Changing the playback rate is not supported.
+       */
+    }, {
+      key: "setPlaybackRate",
+      value: function setPlaybackRate() {
+        // Not supported
+      }
+
+      /**
+       * Does nothing. Satisfies calls to the missing preload method.
+       */
+    }, {
+      key: "preload",
+      value: function preload() {
+        // Not supported
+      }
+
+      /**
+       * Causes the Tech to begin loading the current source. `load`
+       * is not supported in this ChromecastTech because setting the
+       * source on the `Chromecast` automatically causes it to begin loading.
+       */
+    }, {
+      key: "load",
+      value: function load() {
+        // Not supported
+      }
+
+      /**
+       * Gets the Chromecast equivalent of HTML5 Media Element's `readyState`.
+       *
+       * @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState
+       */
+    }, {
+      key: "readyState",
+      value: function readyState() {
+        if (this._remotePlayer.playerState === 'IDLE' || this._remotePlayer.playerState === 'BUFFERING') {
+          return 0; // HAVE_NOTHING
+        }
+
+        return 4;
+      }
+
+      /**
+       * Wires up event listeners for
+       * [RemotePlayerController](https://developers.google.com/cast/docs/reference/chrome/cast.framework.RemotePlayerController)
+       * events.
+       *
+       * @private
+       */
+    }, {
+      key: "_listenToPlayerControllerEvents",
+      value: function _listenToPlayerControllerEvents() {
+        var eventTypes = cast.framework.RemotePlayerEventType;
+        this._addEventListener(this._remotePlayerController, eventTypes.PLAYER_STATE_CHANGED, this._onPlayerStateChanged, this);
+        this._addEventListener(this._remotePlayerController, eventTypes.VOLUME_LEVEL_CHANGED, this._triggerVolumeChangeEvent, this);
+        this._addEventListener(this._remotePlayerController, eventTypes.IS_MUTED_CHANGED, this._triggerVolumeChangeEvent, this);
+        this._addEventListener(this._remotePlayerController, eventTypes.CURRENT_TIME_CHANGED, this._triggerTimeUpdateEvent, this);
+        this._addEventListener(this._remotePlayerController, eventTypes.DURATION_CHANGED, this._triggerDurationChangeEvent, this);
+      }
+
+      /**
+       * Registers an event listener on the given target object.
+       * Because many objects in the Chromecast API are either singletons
+       * or must be shared between instances of `ChromecastTech` for the
+       * lifetime of the player, we must unbind the listeners when this Tech
+       * instance is destroyed to prevent memory leaks. To do that, we need to keep
+       * a reference to listeners that are added to global objects so that we can
+       * use those references to remove the listener when this Tech is destroyed.
+       *
+       * @param target {object} the object to register the event listener on
+       * @param type {string} the name of the event
+       * @param callback {Function} the listener's callback function that
+       * executes when the event is emitted
+       * @param context {object} the `this` context to use when executing the `callback`
+       * @private
+       */
+    }, {
+      key: "_addEventListener",
+      value: function _addEventListener(target, type, callback, context) {
+        var listener;
+        listener = {
+          target: target,
+          type: type,
+          callback: callback,
+          context: context,
+          listener: callback.bind(context)
+        };
+        target.addEventListener(type, listener.listener);
+        this._eventListeners.push(listener);
+      }
+
+      /**
+       * Removes all event listeners that were registered with global objects during the
+       * lifetime of this Tech. See {@link _addEventListener} for more information
+       * about why this is necessary.
+       *
+       * @private
+       */
+    }, {
+      key: "_removeAllEventListeners",
+      value: function _removeAllEventListeners() {
+        while (this._eventListeners.length > 0) {
+          this._removeEventListener(this._eventListeners[0]);
+        }
+        this._eventListeners = [];
+      }
+
+      /**
+       * Removes a single event listener that was registered with global objects
+       * during the lifetime of this Tech. See {@link _addEventListener} for
+       * more information about why this is necessary.
+       *
+       * @private
+       */
+    }, {
+      key: "_removeEventListener",
+      value: function _removeEventListener(listener) {
+        var index = -1,
+          pass = false,
+          i;
+        listener.target.removeEventListener(listener.type, listener.listener);
+        for (i = 0; i < this._eventListeners.length; i++) {
+          pass = this._eventListeners[i].target === listener.target && this._eventListeners[i].type === listener.type && this._eventListeners[i].callback === listener.callback && this._eventListeners[i].context === listener.context;
+          if (pass) {
+            index = i;
+            break;
+          }
+        }
+        if (index !== -1) {
+          this._eventListeners.splice(index, 1);
+        }
+      }
+
+      /**
+       * Handles Chromecast player state change events. The player may "change state" when
+       * paused, played, buffering, etc.
+       *
+       * @private
+       */
+    }, {
+      key: "_onPlayerStateChanged",
+      value: function _onPlayerStateChanged() {
+        var states = chrome.cast.media.PlayerState,
+          playerState = this._remotePlayer.playerState;
+        if (playerState === states.PLAYING) {
+          this._hasPlayedCurrentItem = true;
+          this.trigger('play');
+          this.trigger('playing');
+        } else if (playerState === states.PAUSED) {
+          this.trigger('pause');
+        } else if (playerState === states.IDLE && this.ended() || playerState === null && this._hasPlayedCurrentItem) {
+          this._hasPlayedCurrentItem = false;
+          //this._closeSessionOnTimeout();
+          this.trigger('ended');
+          this._triggerTimeUpdateEvent();
+        } else if (playerState === states.BUFFERING) {
+          this.trigger('waiting');
+        }
+      }
+
+      /**
+       * Handles Chromecast MediaSession state change events. The only property sent
+       * to this event is whether the session is alive. This is useful for determining
+       * if an item has ended as the MediaSession will fire this event with `false` then
+       * be immediately destroyed. This means that we cannot trust `idleReason` to show
+       * whether an item has ended since we may no longer have access to the MediaSession.
+       *
+       * @private
+       */
+    }, {
+      key: "_onMediaSessionStatusChanged",
+      value: function _onMediaSessionStatusChanged(isAlive) {
+        this._hasMediaSessionEnded = !!isAlive;
+      }
+
+      /**
+       * Ends the session after a certain number of seconds of inactivity.
+       *
+       * If the Chromecast player is in the "IDLE" state after an item has ended, and no
+       * further items are queued up to play, the session is considered inactive. Once a
+       * period of time (currently 10 seconds) has elapsed with no activity, we manually
+       * end the session to prevent long periods of a blank Chromecast screen that is
+       * shown at the end of item playback.
+       *
+       * @private
+       */
+    }, {
+      key: "_closeSessionOnTimeout",
+      value: function _closeSessionOnTimeout() {
+        // Ensure that there's never more than one session timeout active
+        this._clearSessionTimeout();
+        window._chromecastSessionTimeoutID = setTimeout(function () {
+          var castSession = this._getCastSession();
+          if (castSession) {
+            castSession.endSession(true);
+          }
+          this._clearSessionTimeout();
+        }.bind(this), SESSION_TIMEOUT);
+      }
+
+      /**
+       * Stops the timeout that is waiting during a period of inactivity in order to close
+       * the session.
+       *
+       * @private
+       * @see _closeSessionOnTimeout
+       */
+    }, {
+      key: "_clearSessionTimeout",
+      value: function _clearSessionTimeout() {
+        if (window._chromecastSessionTimeoutID) {
+          clearTimeout(window._chromecastSessionTimeoutID);
+          window._chromecastSessionTimeoutID = false;
+        }
+      }
+
+      /**
+       * @private
+       * @return {object} the current CastContext, if one exists
+       */
+    }, {
+      key: "_getCastContext",
+      value: function _getCastContext() {
+        return this._chromecastSessionManager.getCastContext();
+      }
+
+      /**
+       * @private
+       * @return {object} the current CastSession, if one exists
+       */
+    }, {
+      key: "_getCastSession",
+      value: function _getCastSession() {
+        return this._getCastContext().getCurrentSession();
+      }
+
+      /**
+       * @private
+       * @return {object} the current MediaSession, if one exists
+       * @see https://developers.google.com/cast/docs/reference/chrome/chrome.cast.media.Media
+       */
+    }, {
+      key: "_getMediaSession",
+      value: function _getMediaSession() {
+        var castSession = this._getCastSession();
+        return castSession ? castSession.getMediaSession() : null;
+      }
+
+      /**
+       * Triggers a 'volumechange' event
+       * @private
+       * @see http://docs.videojs.com/Player.html#event:volumechange
+       */
+    }, {
+      key: "_triggerVolumeChangeEvent",
+      value: function _triggerVolumeChangeEvent() {
+        this.trigger('volumechange');
+      }
+
+      /**
+       * Triggers a 'timeupdate' event
+       * @private
+       * @see http://docs.videojs.com/Player.html#event:timeupdate
+       */
+    }, {
+      key: "_triggerTimeUpdateEvent",
+      value: function _triggerTimeUpdateEvent() {
+        this.trigger('timeupdate');
+      }
+
+      /**
+       * Triggers a 'durationchange' event
+       * @private
+       * @see http://docs.videojs.com/Player.html#event:durationchange
+       */
+    }, {
+      key: "_triggerDurationChangeEvent",
+      value: function _triggerDurationChangeEvent() {
+        this.trigger('durationchange');
+      }
+
+      /**
+       * Triggers an 'error' event
+       * @private
+       * @see http://docs.videojs.com/Player.html#event:error
+       */
+    }, {
+      key: "_triggerErrorEvent",
+      value: function _triggerErrorEvent() {
+        this.trigger('error');
+      }
+    }]);
+    return ChromecastTech;
+  }(Tech); // Required for Video.js Tech implementations.
+  // TODO Consider a more comprehensive check based on mimetype.
+  ChromecastTech.canPlaySource = function () {
+    return ChromecastSessionManager.isChromecastConnected();
+  };
+  ChromecastTech.isSupported = function () {
+    return ChromecastSessionManager.isChromecastConnected();
+  };
+  videojs.registerTech('chromecast', ChromecastTech);
 };
 
-},{"../chromecast/ChromecastSessionManager":4,"./ChromecastTechUI":11,"underscore":2}],11:[function(require,module,exports){
-'use strict';
+},{"../chromecast/ChromecastSessionManager":105,"./ChromecastTechUI":112,"core-js/modules/es.array.iterator.js":88,"core-js/modules/es.array.splice.js":89,"core-js/modules/es.date.to-primitive.js":90,"core-js/modules/es.number.constructor.js":91,"core-js/modules/es.object.define-property.js":93,"core-js/modules/es.object.get-prototype-of.js":94,"core-js/modules/es.object.set-prototype-of.js":95,"core-js/modules/es.object.to-string.js":96,"core-js/modules/es.reflect.construct.js":97,"core-js/modules/es.string.iterator.js":98,"core-js/modules/es.symbol.description.js":99,"core-js/modules/es.symbol.iterator.js":100,"core-js/modules/es.symbol.js":101,"core-js/modules/es.symbol.to-primitive.js":102,"core-js/modules/web.dom-collections.iterator.js":103}],112:[function(require,module,exports){
+"use strict";
 
-var Class = require('class.extend'),
-    ChromecastTechUI;
-
+require("core-js/modules/es.object.define-property.js");
+require("core-js/modules/es.symbol.iterator.js");
+require("core-js/modules/es.array.iterator.js");
+require("core-js/modules/es.string.iterator.js");
+require("core-js/modules/web.dom-collections.iterator.js");
+require("core-js/modules/es.symbol.to-primitive.js");
+require("core-js/modules/es.date.to-primitive.js");
+require("core-js/modules/es.symbol.js");
+require("core-js/modules/es.symbol.description.js");
+require("core-js/modules/es.object.to-string.js");
+require("core-js/modules/es.number.constructor.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 /**
  * This class represents the UI that is shown in the player while the Chromecast Tech is
  * active. The UI has a single root DOM element that displays the poster image of the
@@ -5875,187 +6723,208 @@ var Class = require('class.extend'),
  *
  * @class ChromecastTechUI
  */
-ChromecastTechUI = Class.extend(/** @lends ChromecastTechUI.prototype */ {
-   init: function() {
-      this._el = this._createDOMElement();
-   },
+var ChromecastTechUI = /*#__PURE__*/function () {
+  function ChromecastTechUI() {
+    _classCallCheck(this, ChromecastTechUI);
+    this._el = this._createDOMElement();
+  }
 
-   /**
-    * Creates and returns a single DOMElement that contains the UI. This implementation
-    * of the Chromecast Tech's UI displays a poster image, a title and a subtitle.
-    *
-    * @private
-    * @returns {DOMElement}
-    */
-   _createDOMElement: function() {
+  /**
+   * Creates and returns a single DOMElement that contains the UI. This implementation
+   * of the Chromecast Tech's UI displays a poster image, a title and a subtitle.
+   *
+   * @private
+   * @returns {DOMElement}
+   */
+  _createClass(ChromecastTechUI, [{
+    key: "_createDOMElement",
+    value: function _createDOMElement() {
       var el = this._createElement('div', 'vjs-tech vjs-tech-chromecast'),
-          coverEl = this._createElement('div', 'vjs-tech-chromecast-cover'),
-          iconEl = this._createElement('div', 'vjs-tech-chromecast-icon fab fa-chromecast'),
-          titleEl = this._createElement('div', 'vjs-tech-chromecast-title');
-
-      iconEl.style="font-size: 8em; margin-top: 0.1em; z-index: 1;";
-      titleEl.style="font-size: 1.6em; z-index: 1;";
-      titleEl.innerHTML="S'està emetent";
+        coverEl = this._createElement('div', 'vjs-tech-chromecast-cover'),
+        iconEl = this._createElement('div', 'vjs-tech-chromecast-icon fab fa-chromecast'),
+        titleEl = this._createElement('div', 'vjs-tech-chromecast-title');
+      iconEl.style = "font-size: 8em; margin-top: 0.1em; z-index: 1;";
+      titleEl.style = "font-size: 1.6em; z-index: 1;";
+      titleEl.innerHTML = "S'està emetent";
       el.appendChild(coverEl);
       el.appendChild(iconEl);
       el.appendChild(titleEl);
-
       return el;
-   },
+    }
 
-   /**
-    * A helper method for creating DOMElements of the given type and with the given class
-    * name(s).
-    *
-    * @param type {string} the kind of DOMElement to create (ex: 'div')
-    * @param className {string} the class name(s) to give to the DOMElement. May also be
-    * a space-delimited list of class names.
-    * @returns {DOMElement}
-    */
-   _createElement: function(type, className) {
+    /**
+     * A helper method for creating DOMElements of the given type and with the given class
+     * name(s).
+     *
+     * @param type {string} the kind of DOMElement to create (ex: 'div')
+     * @param className {string} the class name(s) to give to the DOMElement. May also be
+     * a space-delimited list of class names.
+     * @returns {DOMElement}
+     */
+  }, {
+    key: "_createElement",
+    value: function _createElement(type, className) {
       var el = document.createElement(type);
-
       el.className = className;
       return el;
-   },
+    }
 
-   /**
-    * Gets the root DOMElement to be shown in the player's UI.
-    *
-    * @returns {DOMElement}
-    */
-   getDOMElement: function() {
+    /**
+     * Gets the root DOMElement to be shown in the player's UI.
+     *
+     * @returns {DOMElement}
+     */
+  }, {
+    key: "getDOMElement",
+    value: function getDOMElement() {
       return this._el;
-   },
+    }
 
-   /**
-    * Finds the poster's DOMElement in the root UI element.
-    *
-    * @private
-    * @returns {DOMElement}
-    */
-   _findPosterEl: function() {
+    /**
+     * Finds the poster's DOMElement in the root UI element.
+     *
+     * @private
+     * @returns {DOMElement}
+     */
+  }, {
+    key: "_findPosterEl",
+    value: function _findPosterEl() {
       return this._el.querySelector('.vjs-tech-chromecast-poster');
-   },
+    }
 
-   /**
-    * Finds the poster's <img> DOMElement in the root UI element.
-    *
-    * @private
-    * @returns {DOMElement}
-    */
-   _findPosterImageEl: function() {
+    /**
+     * Finds the poster's <img> DOMElement in the root UI element.
+     *
+     * @private
+     * @returns {DOMElement}
+     */
+  }, {
+    key: "_findPosterImageEl",
+    value: function _findPosterImageEl() {
       return this._el.querySelector('.vjs-tech-chromecast-poster-img');
-   },
+    }
 
-   /**
-    * Finds the title's DOMElement in the root UI element.
-    *
-    * @private
-    * @returns {DOMElement}
-    */
-   _findTitleEl: function() {
+    /**
+     * Finds the title's DOMElement in the root UI element.
+     *
+     * @private
+     * @returns {DOMElement}
+     */
+  }, {
+    key: "_findTitleEl",
+    value: function _findTitleEl() {
       return this._el.querySelector('.vjs-tech-chromecast-title');
-   },
+    }
 
-   /**
-    * Finds the image's DOMElement in the root UI element.
-    *
-    * @private
-    * @returns {DOMElement}
-    */
-   _findImageEl: function() {
+    /**
+     * Finds the image's DOMElement in the root UI element.
+     *
+     * @private
+     * @returns {DOMElement}
+     */
+  }, {
+    key: "_findImageEl",
+    value: function _findImageEl() {
       return this._el.querySelector('.vjs-tech-chromecast-cover');
-   },
+    }
 
-   /**
-    * Finds the subtitle's DOMElement in the root UI element.
-    *
-    * @private
-    * @returns {DOMElement}
-    */
-   _findSubtitleEl: function() {
+    /**
+     * Finds the subtitle's DOMElement in the root UI element.
+     *
+     * @private
+     * @returns {DOMElement}
+     */
+  }, {
+    key: "_findSubtitleEl",
+    value: function _findSubtitleEl() {
       return this._el.querySelector('.vjs-tech-chromecast-subtitle');
-   },
+    }
 
-   /**
-    * Sets the current poster image URL and updates the poster image DOMElement with the
-    * new poster image URL.
-    *
-    * @param poster {string} a URL for a poster image
-    */
-   updatePoster: function(poster) {
+    /**
+     * Sets the current poster image URL and updates the poster image DOMElement with the
+     * new poster image URL.
+     *
+     * @param poster {string} a URL for a poster image
+     */
+  }, {
+    key: "updatePoster",
+    value: function updatePoster(poster) {
       var posterImageEl = this._findPosterImageEl();
-
       this._poster = poster ? poster : null;
       if (poster) {
-         posterImageEl.setAttribute('src', poster);
-         posterImageEl.classList.remove('vjs-tech-chromecast-poster-img-empty');
+        posterImageEl.setAttribute('src', poster);
+        posterImageEl.classList.remove('vjs-tech-chromecast-poster-img-empty');
       } else {
-         posterImageEl.removeAttribute('src');
-         posterImageEl.classList.add('vjs-tech-chromecast-poster-img-empty');
+        posterImageEl.removeAttribute('src');
+        posterImageEl.classList.add('vjs-tech-chromecast-poster-img-empty');
       }
-   },
+    }
 
-   /**
-    * Gets the current poster image URL.
-    *
-    * @returns {string} the URL for th current poster image
-    */
-   getPoster: function() {
+    /**
+     * Gets the current poster image URL.
+     *
+     * @returns {string} the URL for th current poster image
+     */
+  }, {
+    key: "getPoster",
+    value: function getPoster() {
       return this._poster;
-   },
+    }
 
-   /**
-    * Sets the current title and updates the title's DOMElement with the new text.
-    *
-    * @param title {string} a title to show
-    */
-   updateTitle: function(title) {
+    /**
+     * Sets the current title and updates the title's DOMElement with the new text.
+     *
+     * @param title {string} a title to show
+     */
+  }, {
+    key: "updateTitle",
+    value: function updateTitle(title) {
       var titleEl = this._findTitleEl();
-
       this._title = title;
       if (title) {
-         titleEl.innerHTML = title;
-         titleEl.classList.remove('vjs-tech-chromecast-title-empty');
+        titleEl.innerHTML = title;
+        titleEl.classList.remove('vjs-tech-chromecast-title-empty');
       } else {
-         titleEl.classList.add('vjs-tech-chromecast-title-empty');
+        titleEl.classList.add('vjs-tech-chromecast-title-empty');
       }
-   },
+    }
 
-   /**
-    * Sets the current image and updates the image's DOMElement with the new image.
-    *
-    * @param imageUrl {string} a imageUrl to show
-    */
-   updateCoverImage: function(imageUrl) {
+    /**
+     * Sets the current image and updates the image's DOMElement with the new image.
+     *
+     * @param imageUrl {string} a imageUrl to show
+     */
+  }, {
+    key: "updateCoverImage",
+    value: function updateCoverImage(imageUrl) {
       var imageEl = this._findImageEl();
-
       if (imageUrl) {
-         imageEl.style="width: 100%; height: 100%; position: absolute; background: url('"+imageUrl+"'); background-position: center; background-size: cover; filter: blur(5px) brightness(50%);";
+        imageEl.style = "width: 100%; height: 100%; position: absolute; background: url('" + imageUrl + "'); background-position: center; background-size: cover; filter: blur(5px) brightness(50%);";
       } else {
-         imageEl.style="width: 100%; height: 100%; position: absolute; background: black;";
+        imageEl.style = "width: 100%; height: 100%; position: absolute; background: black;";
       }
-   },
+    }
 
-   /**
-    * Sets the current subtitle and updates the subtitle's DOMElement with the new text.
-    *
-    * @param subtitle {string} a subtitle to show
-    */
-   updateSubtitle: function(subtitle) {
+    /**
+     * Sets the current subtitle and updates the subtitle's DOMElement with the new text.
+     *
+     * @param subtitle {string} a subtitle to show
+     */
+  }, {
+    key: "updateSubtitle",
+    value: function updateSubtitle(subtitle) {
       var subtitleEl = this._findSubtitleEl();
-
       this._subtitle = subtitle;
       if (subtitle) {
-         subtitleEl.innerHTML = subtitle;
-         subtitleEl.classList.remove('vjs-tech-chromecast-subtitle-empty');
+        subtitleEl.innerHTML = subtitle;
+        subtitleEl.classList.remove('vjs-tech-chromecast-subtitle-empty');
       } else {
-         subtitleEl.classList.add('vjs-tech-chromecast-subtitle-empty');
+        subtitleEl.classList.add('vjs-tech-chromecast-subtitle-empty');
       }
-   },
-});
-
+    }
+  }]);
+  return ChromecastTechUI;
+}();
 module.exports = ChromecastTechUI;
 
-},{"class.extend":1}]},{},[9]);
+},{"core-js/modules/es.array.iterator.js":88,"core-js/modules/es.date.to-primitive.js":90,"core-js/modules/es.number.constructor.js":91,"core-js/modules/es.object.define-property.js":93,"core-js/modules/es.object.to-string.js":96,"core-js/modules/es.string.iterator.js":98,"core-js/modules/es.symbol.description.js":99,"core-js/modules/es.symbol.iterator.js":100,"core-js/modules/es.symbol.js":101,"core-js/modules/es.symbol.to-primitive.js":102,"core-js/modules/web.dom-collections.iterator.js":103}]},{},[110]);

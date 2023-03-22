@@ -1164,50 +1164,53 @@ function initializeSearchAutocomplete() {
 }
 
 $(document).ready(function() {
-	var videoJsButton = videojs.getComponent('Button');
+	const Button = videojs.getComponent('Button');
 
-	var nextButton = videojs.extend(videoJsButton, {
-		constructor: function () {
-			videoJsButton.apply(this, arguments);
-			this.addClass('vjs-next-button');
+	class NextButton extends Button {
+		constructor(player, options) {
+			super(player, options);
 			this.controlText('Capítol següent');
-		},
-		handleClick: function () {
+		}
+		handleClick() {
 			playNextVideo();
 		}
-	});
-
-	var prevButton = videojs.extend(videoJsButton, {
-		constructor: function () {
-			videoJsButton.apply(this, arguments);
-			this.addClass('vjs-prev-button');
+		buildCSSClass() {
+			return `${super.buildCSSClass()} vjs-next-button`;
+		}
+	}
+	class PrevButton extends Button {
+		constructor(player, options) {
+			super(player, options);
 			this.controlText('Capítol anterior');
-		},
-		handleClick: function () {
+		}
+		handleClick() {
 			playPrevVideo();
 		}
-	});
-
-	var nextButtonDisabled = videojs.extend(videoJsButton, {
-		constructor: function () {
-			videoJsButton.apply(this, arguments);
-			this.addClass('vjs-next-button');
-			this.addClass('vjs-button-disabled');
+		buildCSSClass() {
+			return `${super.buildCSSClass()} vjs-prev-button`;
 		}
-	});
-
-	var prevButtonDisabled = videojs.extend(videoJsButton, {
-		constructor: function () {
-			videoJsButton.apply(this, arguments);
-			this.addClass('vjs-prev-button');
-			this.addClass('vjs-button-disabled');
+	}
+	class NextButtonDisabled extends Button {
+		constructor(player, options) {
+			super(player, options);
 		}
-	});
+		buildCSSClass() {
+			return `${super.buildCSSClass()} vjs-next-button vjs-button-disabled`;
+		}
+	}
+	class PrevButtonDisabled extends Button {
+		constructor(player, options) {
+			super(player, options);
+		}
+		buildCSSClass() {
+			return `${super.buildCSSClass()} vjs-prev-button vjs-button-disabled`;
+		}
+	}
 
-	videojs.registerComponent('nextButton', nextButton);
-	videojs.registerComponent('nextButtonDisabled', nextButtonDisabled);
-	videojs.registerComponent('prevButton', prevButton);
-	videojs.registerComponent('prevButtonDisabled', prevButtonDisabled);
+	videojs.registerComponent('NextButton', NextButton);
+	videojs.registerComponent('NextButtonDisabled', NextButtonDisabled);
+	videojs.registerComponent('PrevButton', PrevButton);
+	videojs.registerComponent('PrevButtonDisabled', PrevButtonDisabled);
 
 	var links = document.querySelectorAll(".catalogues-navigation a");
 	var container = document.querySelector(".catalogues-navigation");
