@@ -106,7 +106,7 @@ foreach($sections as $section){
 }
 if ($max_elements<$total_elements) {
 ?>
-						<a class="autocomplete-item autocomplete-more" href="<?php echo SITE_BASE_URL.'/'.(SITE_IS_HENTAI ? 'hentai/' : '').'cerca/'.urlencode($_GET['query']); ?>">Mostra tots els <?php echo $total_elements; ?> resultats <i class="fa fa-fw fa-arrow-right"></i></a>
+						<a class="autocomplete-item autocomplete-more" href="<?php echo SITE_BASE_URL.'/'.(SITE_IS_HENTAI ? 'hentai/' : '').'cerca/'.urlencode($_GET['query']); ?>">Mostra tots els resultats (<?php echo $total_elements; ?>) <i class="fa fa-fw fa-arrow-right"></i></a>
 <?php
 } else if ($total_elements==0) {
 ?>

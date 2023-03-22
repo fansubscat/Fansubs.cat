@@ -573,32 +573,22 @@ if ($count_unfiltered==0) {
 				</div>
 				<div class="bottom-recommendations">
 <?php
-//Begin copy from index.php
-$max_items=24;
-$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
-//End copy from index.php
-//1. Related, 2. Same author, 3. Half of genres or more in common
 $num_of_genres = count(explode(', ', $series['genres']));
-$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE s.type='${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE s.type='${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg LEFT JOIN series s ON sg.series_id=s.id WHERE s.type='${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND sg.series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
-$resultin = query($related_query);
-$in = array(-1);
-while ($row = mysqli_fetch_assoc($resultin)) {
-	$in[]=$row['id'];
-}
-mysqli_free_result($resultin);
-$resultra = query($base_query . " WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
+$num_of_genres_in_common = max(intval(round($num_of_genres/2)),1);
+
+$resultra = query_related_series($user, $series['id'], $series['author'], $num_of_genres_in_common, 24, TRUE);
 
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo $cat_config['section_related']; ?></h2>
+						<h2 class="section-title-main"><?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'Continguts d’acció real amb temàtiques en comú' : (CATALOGUE_ITEM_TYPE=='anime' ? 'Animes amb temàtiques en comú' : 'Mangues amb temàtiques en comú'); ?></h2>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultra)) {
 ?>
-							<div class="status-<?php echo get_status($row['best_status']); ?>">
+							<div<?php echo isset($row['best_status']) ? ' class="status-'.get_status($row['best_status']).'"' : ''; ?>>
 <?php
-		print_carousel_item($row, FALSE, FALSE);
+		print_carousel_item($row, FALSE);
 ?>
 							</div>
 <?php
@@ -612,32 +602,19 @@ if (mysqli_num_rows($resultra)>0) {
 
 mysqli_free_result($resultra);
 
-//Begin copy from index.php
-$max_items=24;
-$base_query="SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT f.type ORDER BY f.type SEPARATOR '|') fansub_type, GROUP_CONCAT(DISTINCT sg.genre_id) genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id";
-//End copy from index.php
-//1. Related, 2. Same author, 3. Half of genres or more in common
-$num_of_genres = count(explode(', ', $series['genres']));
-$related_query="SELECT rs.related_series_id id, s.name FROM related_series rs LEFT JOIN series s ON rs.related_series_id=s.id WHERE s.type<>'${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND rs.series_id=".$series['id']." UNION SELECT id, NULL FROM series s WHERE s.type<>'${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND id<>".$series['id']." AND author='".escape($series['author'])."' UNION (SELECT series_id id, NULL FROM rel_series_genre sg LEFT JOIN series s ON sg.series_id=s.id WHERE s.type<>'${cat_config['items_type']}' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=sg.series_id AND v.is_hidden=0)>0 AND sg.series_id<>".$series['id']." GROUP BY series_id HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=".$series['id'].") THEN 1 END)>=".max($num_of_genres>=2 ? 2 : 1,intval(round($num_of_genres/2))).") ORDER BY name IS NULL ASC, name ASC, RAND() LIMIT $max_items";
-$resultin = query($related_query);
-$in = array(-1);
-while ($row = mysqli_fetch_assoc($resultin)) {
-	$in[]=$row['id'];
-}
-mysqli_free_result($resultin);
-$resultrm = query($base_query . " WHERE (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND s.id IN (".implode(',',$in).") GROUP BY s.id ORDER BY FIELD(s.id,".implode(',',$in).") ASC");
+$resultrm = query_related_series($user, $series['id'], $series['author'], $num_of_genres_in_common, 24, FALSE);
 
 if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo $cat_config['section_related_other']; ?></h2>
+						<h2 class="section-title-main"><?php echo "Altres continguts amb temàtiques en comú"; ?></h2>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultrm)) {
 ?>
-							<div class="status-<?php echo get_status($row['best_status']); ?>">
+							<div<?php echo isset($row['best_status']) ? ' class="status-'.get_status($row['best_status']).'"' : ''; ?>>
 <?php
-		print_carousel_item($row, FALSE, FALSE);
+		print_carousel_item($row, FALSE);
 ?>
 							</div>
 <?php

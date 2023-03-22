@@ -316,10 +316,6 @@
 	cursor: pointer;
 }
 
-.player_extra_ended_button:hover {
-	opacity: 1;
-}
-
 .video-js.vjs-has-started.vjs-user-inactive.vjs-playing {
 	cursor: none;
 }
@@ -396,10 +392,6 @@
 .video-js .vjs-big-play-button:before {
 	content: "\f04b";
 	font-size: 1.3em;
-}
-
-.video-js .vjs-big-play-button:hover {
-	background-color: rgb(var(--primary-color-lighter)) !important;
 }
 
 .video-js.vjs-casting .vjs-big-play-button {
@@ -578,10 +570,6 @@
 	transition: background var(--fast-animation-duration);
 	cursor: pointer;
 	line-height: normal;
-}
-
-.video-js .error-close-button:hover {
-	background: rgb(var(--primary-color-lighter));
 }
 
 .hentai-button {
@@ -1397,10 +1385,6 @@
 	color: rgb(var(--always-negative-color));
 }
 
-.autocomplete-item:hover {
-	background: rgb(var(--always-negative-color),0.15);
-}
-
 .autocomplete-image {
 	width: 3.54rem;
 	min-width: 3.54rem;
@@ -1438,11 +1422,7 @@
 	padding: 1rem;
 }
 
-.autocomplete-more:hover {
-	background: rgb(var(--primary-color-lighter));
-}
-
-.autocomplete-more fa {
+.autocomplete-more .fa {
 	margin-left: 0.2rem;
 }
 
@@ -1596,6 +1576,26 @@
 
 	.continue-watching-thumbnail:hover .close-button {
 		opacity: 1;
+	}
+
+	.player_extra_ended_button:hover {
+		opacity: 1;
+	}
+
+	.video-js .vjs-big-play-button:hover {
+		background-color: rgb(var(--primary-color-lighter)) !important;
+	}
+
+	.video-js .error-close-button:hover {
+		background: rgb(var(--primary-color-lighter));
+	}
+
+	.autocomplete-item:hover {
+		background: rgb(var(--always-negative-color),0.15);
+	}
+
+	.autocomplete-more:hover {
+		background: rgb(var(--primary-color-lighter));
 	}
 }
 

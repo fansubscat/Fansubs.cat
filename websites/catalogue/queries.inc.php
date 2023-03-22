@@ -534,6 +534,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 							)
 						)
 					) episode_title,
+					v.series_id,
 					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
 						d.name,
 						s.name
@@ -586,6 +587,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 							)
 						)
 					) episode_title,
+					v.series_id,
 					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
 						d.name,
 						s.name
@@ -627,10 +629,8 @@ function query_home_continue_watching_by_user_id($user_id) {
 						FROM user_file_progress ufp
 						LEFT JOIN file f ON ufp.file_id=f.id
 						WHERE ufp.user_id=$user_id
-						AND s.type='".CATALOGUE_ITEM_TYPE."'
 						AND f.is_lost=0
 						AND ufp.is_seen=0
-						AND ".get_internal_hentai_condition()."
 					)
 					AND s.type='".CATALOGUE_ITEM_TYPE."'
 					AND f.is_lost=0
@@ -702,6 +702,55 @@ function query_home_best_rated($user, $max_items) {
 			GROUP BY s.id
 			ORDER BY s.score DESC
 			LIMIT $max_items";
+	return query($final_query);
+}
+
+function query_related_series($user, $series_id, $series_author, $num_of_genres_in_common, $max_items, $own_type) {
+	$series_id=intval($series_id);
+	$series_author=escape($series_author);
+	$num_of_genres_in_common=intval($num_of_genres_in_common);
+	$max_items = intval($max_items);
+
+	$related_query="SELECT rs.related_series_id id,
+				s.name
+			FROM related_series rs
+				LEFT JOIN series s ON rs.related_series_id=s.id
+			WHERE s.type".($own_type==TRUE ? "=" : "<>")."'".CATALOGUE_ITEM_TYPE."'
+				AND rs.series_id=$series_id
+			UNION
+			SELECT id,
+				NULL
+			FROM series s
+			WHERE s.type".($own_type==TRUE ? "=" : "<>")."'".CATALOGUE_ITEM_TYPE."'
+				AND id<>$series_id
+				AND author='$series_author'
+			UNION
+			SELECT series_id id,
+				NULL
+			FROM rel_series_genre sg
+				LEFT JOIN series s ON sg.series_id=s.id
+			WHERE s.type".($own_type==TRUE ? "=" : "<>")."'".CATALOGUE_ITEM_TYPE."'
+				AND sg.series_id<>$series_id
+			GROUP BY series_id
+			HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=$series_id) THEN 1 END)>=$num_of_genres_in_common
+			ORDER BY name IS NULL ASC,
+				name ASC,
+				RAND() LIMIT $max_items";
+	$resultin = query($related_query);
+	$in = array(-1);
+	while ($row = mysqli_fetch_assoc($resultin)) {
+		$in[]=$row['id'];
+	}
+	mysqli_free_result($resultin);
+
+	$final_query = get_internal_catalogue_base_query_portion($user)."
+				AND s.type".($own_type==TRUE ? "=" : "<>")."'".CATALOGUE_ITEM_TYPE."'
+				AND ".get_internal_blacklisted_fansubs_condition($user)."
+				AND ".get_internal_cancelled_projects_condition($user)."
+				AND ".get_internal_lost_projects_condition($user)."
+				AND s.id IN (".implode(',',$in).")
+			GROUP BY s.id
+			ORDER BY FIELD(s.id, ".implode(',',$in).") ASC";
 	return query($final_query);
 }
 

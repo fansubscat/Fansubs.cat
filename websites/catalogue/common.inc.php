@@ -658,7 +658,7 @@ function print_chapter_item($row) {
 		<div class="continue-watching-thumbnail">
 			<a class="image-link" href="/<?php echo (SITE_IS_HENTAI ? 'hentai/' : '').$row['series_slug']."?f=".$row['file_id']; ?>">
 				<div class="fansubs"><?php echo get_continue_watching_fansub_info($row['fansub_info'], $row['version_id']); ?></div>
-				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/various/innocents.png'; ?>" alt="">
+				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'; ?>" alt="">
 				<span class="progress" style="width: <?php echo $row['progress_percent']*100; ?>%;"></span>
 				<div class="play-button fa fa-fw fa-<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'book-open' : 'play'; ?>"></div>
 				<div class="close-button fa fa-fw fa-times" onclick="removeFromContinueWatching(this, <?php echo $row['file_id']; ?>); return false;"></div>
