@@ -10,7 +10,9 @@ if (is_robot()) {
 	define('PAGE_EXTRA_BODY_CLASS', 'has-search-results');
 }
 
-define('PAGE_PATH', '/cerca'.(!empty($_GET['query']) ? '/'.$_GET['query'] : ''));
+$_GET['query']=str_replace('%2F', '/', isset($_GET['query']) ? $_GET['query'] : '');
+
+define('PAGE_PATH', '/cerca'.(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
 define('PAGE_IS_SEARCH', TRUE);
 define('SKIP_FOOTER', TRUE);
 

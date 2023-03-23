@@ -19,11 +19,15 @@ if (!empty($user)) {
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="theme-color" content="#000000">
 <?php
 if (SITE_IS_HENTAI) {
 ?>
+		<meta name="theme-color" content="#D91883">
 		<meta name="rating" content="adult">
+<?php
+} else {
+?>
+		<meta name="theme-color" content="#6AA0F8">
 <?php
 }
 ?>
@@ -37,34 +41,32 @@ if (SITE_IS_HENTAI) {
 		<title><?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?></title>
 		<link rel="icon" href="/favicon.png">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
 <?php
 if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
-		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/themes/smoothness/jquery-ui.css">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
-		<link rel="stylesheet" href="/js/videojs/video-js.min.css?v=<?php echo VERSION; ?>">
-		<link rel="stylesheet" href="/js/videojs/videojs-chromecast.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/js/videojs/video-js.min.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/js/videojs/videojs-chromecast.css?v=<?php echo VERSION; ?>">
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>
-		<link rel="stylesheet" href="/style/magnific-popup-1.1.0.css">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/magnific-popup-1.1.0.css">
 <?php
 }
 ?>
-		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/common/style/common.css?v=<?php echo VERSION; ?>">
-		<link rel="stylesheet" href="/style/<?php echo SITE_OWN_CSS; ?>?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/common.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/<?php echo SITE_INTERNAL_NAME; ?>.css?v=<?php echo VERSION; ?>">
 <?php
 if (IS_FOOLS_DAY){
 ?>
-		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/common/style/28dec.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/28dec.css?v=<?php echo VERSION; ?>">
 <?php
 }
 ?>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
-		<script src="<?php echo STATIC_URL; ?>/common/js/common.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/<?php echo SITE_OWN_JS; ?>?v=<?php echo VERSION; ?>"></script>
+		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <?php
 if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
@@ -73,25 +75,25 @@ if (PAGE_STYLE_TYPE=='catalogue') {
 				preloadWebComponents: true,
 			};
 		</script>
-		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 		<script src="https://unpkg.com/megajs@1.1.1/dist/main.browser-umd.js"></script>
-		<script src="/js/videojs/video.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/videostream.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/videojs/lang_ca.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/videojs/videojs-chromecast.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/videojs/videojs-youtube.min.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/videojs/videojs-hotkeys.min.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/double-slider.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs/video.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videostream.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs/lang_ca.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs/videojs-chromecast.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs/videojs-youtube.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs/videojs-hotkeys.min.js?v=<?php echo VERSION; ?>"></script>
 		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>
-		<script src="/js/jquery.magnific-popup-1.1.0.min.js?v=<?php echo VERSION; ?>"></script>
-		<script src="/js/double-slider.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/jquery.magnific-popup-1.1.0.min.js?v=<?php echo VERSION; ?>"></script>
 <?php
 }
 ?>
+		<script src="<?php echo STATIC_URL; ?>/js/double-slider.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/common.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/<?php echo SITE_INTERNAL_NAME; ?>.js?v=<?php echo VERSION; ?>"></script>
 	</head>
 	<body class="style-type-<?php echo PAGE_STYLE_TYPE; ?><?php echo defined('PAGE_EXTRA_BODY_CLASS') ? ' '.PAGE_EXTRA_BODY_CLASS : ''; ?>">
 		<div class="main-container<?php echo (PAGE_STYLE_TYPE=='login' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') ? ' obscured-background' : ''; ?>">
@@ -262,7 +264,7 @@ if (PAGE_STYLE_TYPE=='login') {
 	} else {
 ?>
 					<a class="logo-small" href="<?php echo MAIN_URL; ?>" title="Torna a la pàgina d’inici de Fansubs.cat">
-						<?php include(STATIC_DIRECTORY.'/common/images/logo.svg'); ?>
+						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
 <?php
 		if (PAGE_STYLE_TYPE=='catalogue' && SITE_IS_HENTAI) {
 ?>
@@ -367,7 +369,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 	if (!empty($user)) {
 ?>
-							<img alt="Menú de l’usuari" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/common/images/noavatar.jpg'; ?>">
+							<img alt="Menú de l’usuari" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
 <?php
 	} else {
 ?>

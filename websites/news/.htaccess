@@ -9,5 +9,5 @@ RewriteRule \.php$ - [F]
 
 RewriteRule ^pagina/(.+)/?$ index.php?page=$1
 RewriteRule ^rss/?$ rss.php
-RewriteRule ^cerca/?$ search.php?query=
-RewriteRule ^cerca/(.+)/?$ search.php?query=$1
+RewriteRule ^cerca/?$ search.php
+RewriteRule ^cerca/([^/]+)/?$ search.php?query=$1 [B,L]

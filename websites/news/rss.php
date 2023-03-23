@@ -18,11 +18,11 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
 		<description>Totes les notícies dels fansubs en català</description>
 		<atom:link href="<?php echo NEWS_URL; ?>/rss" rel="self" type="application/rss+xml" />
 <?php
-$result = query_latest_news(NULL, NULL, 1, 20, TRUE, TRUE, '2003-05', date('Y-m'));
+$result = query_latest_news(NULL, NULL, 1, 20, NULL, TRUE, TRUE, '2003-05', date('Y-m'));
 while ($row = mysqli_fetch_assoc($result)){
 ?>
 		<item>
-			<title><?php echo $row['fansub_name']; ?>: <?php echo $row['title']; ?></title>
+			<title><?php echo $row['fansub_name']; ?>: <?php echo htmlspecialchars($row['title']); ?></title>
 			<link><?php echo $row['url']!=NULL ? $row['url'] : NEWS_URL; ?></link>
 			<description><![CDATA[<?php
 	if ($row['image']!=NULL){

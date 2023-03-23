@@ -3,7 +3,7 @@ define('PAGE_STYLE_TYPE', 'main');
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="main-site-logo">
-						<?php include(STATIC_DIRECTORY.'/common/images/logo.svg'); ?>
+						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
 					</div>
 					<div class="main-buttons">
 						<a class="main-button" href="<?php echo ANIME_URL; ?>">Anime</a>
