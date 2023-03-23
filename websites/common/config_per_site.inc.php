@@ -6,40 +6,40 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('SITE_BASE_URL', 'https://wwwv2.fansubs.cat');
 		define('SITE_TITLE', 'Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
-		define('SITE_PREVIEW_IMAGE', 'main.jpg');
 		define('SITE_INTERNAL_NAME', 'main');
+		define('SITE_INTERNAL_TYPE', 'main');
 		define('SITE_IS_CATALOGUE', FALSE);
 		break;
 	case 'noticiesv2.fansubs.cat':
 		define('SITE_BASE_URL', 'https://noticiesv2.fansubs.cat');
 		define('SITE_TITLE', 'Notícies dels fansubs en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
-		define('SITE_PREVIEW_IMAGE', 'news.jpg');
 		define('SITE_INTERNAL_NAME', 'news');
+		define('SITE_INTERNAL_TYPE', 'news');
 		define('SITE_IS_CATALOGUE', FALSE);
 		break;
 	case 'usuarisv2.fansubs.cat':
 		define('SITE_BASE_URL', 'https://usuarisv2.fansubs.cat');
 		define('SITE_TITLE', 'Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
-		define('SITE_PREVIEW_IMAGE', 'users.jpg');
 		define('SITE_INTERNAL_NAME', 'users');
+		define('SITE_INTERNAL_TYPE', 'users');
 		define('SITE_IS_CATALOGUE', FALSE);
 		break;
 	case 'equipsv2.fansubs.cat':
 		define('SITE_BASE_URL', 'https://equipsv2.fansubs.cat');
 		define('SITE_TITLE', 'Equips | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
-		define('SITE_PREVIEW_IMAGE', 'teams.jpg');
-		define('SITE_INTERNAL_NAME', 'teams');
+		define('SITE_INTERNAL_NAME', 'groups');
+		define('SITE_INTERNAL_TYPE', 'groups');
 		define('SITE_IS_CATALOGUE', FALSE);
 		break;
 	case 'mangav2.fansubs.cat':
 		define('SITE_BASE_URL', 'https://mangav2.fansubs.cat');
 		define('SITE_TITLE', 'Manga en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga editat pels fansubs en català!');
-		define('SITE_PREVIEW_IMAGE', 'manga.jpg');
-		define('SITE_INTERNAL_NAME', 'catalogue');
+		define('SITE_INTERNAL_NAME', 'manga');
+		define('SITE_INTERNAL_TYPE', 'catalogue');
 		define('SITE_IS_CATALOGUE', TRUE);
 		define('CATALOGUE_ITEM_TYPE', 'manga');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'oneshot');
@@ -88,8 +88,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('SITE_BASE_URL', 'https://acciorealv2.fansubs.cat');
 		define('SITE_TITLE', 'Acció real en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’acció real subtitulat pels fansubs en català!');
-		define('SITE_PREVIEW_IMAGE', 'liveaction.jpg');
-		define('SITE_INTERNAL_NAME', 'catalogue');
+		define('SITE_INTERNAL_NAME', 'liveaction');
+		define('SITE_INTERNAL_TYPE', 'catalogue');
 		define('SITE_IS_CATALOGUE', TRUE);
 		define('CATALOGUE_ITEM_TYPE', 'liveaction');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'movie');
@@ -144,8 +144,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('SITE_BASE_URL', 'https://animev2.fansubs.cat');
 		define('SITE_TITLE', 'Anime en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot l’anime subtitulat pels fansubs en català!');
-		define('SITE_PREVIEW_IMAGE', 'anime.jpg');
-		define('SITE_INTERNAL_NAME', 'catalogue');
+		define('SITE_INTERNAL_NAME', 'anime');
+		define('SITE_INTERNAL_TYPE', 'catalogue');
 		define('SITE_IS_CATALOGUE', TRUE);
 		define('CATALOGUE_ITEM_TYPE', 'anime');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'movie');

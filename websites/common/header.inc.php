@@ -33,13 +33,20 @@ if (SITE_IS_HENTAI) {
 ?>
 		<meta name="referrer" content="origin">
 		<meta name="twitter:card" content="summary_large_image">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="msapplication-config" content="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/browserconfig.xml">
 		<meta property="og:title" content="<?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?>">
 		<meta property="og:url" content="<?php echo htmlspecialchars(defined('PAGE_PATH') ? SITE_BASE_URL.PAGE_PATH : SITE_BASE_URL); ?>">
 		<meta property="og:description" content="<?php echo htmlspecialchars(defined('PAGE_DESCRIPTION') ? PAGE_DESCRIPTION : SITE_DESCRIPTION); ?>">
-		<meta property="og:image" content="<?php echo htmlspecialchars(defined('PAGE_PREVIEW_IMAGE') ? PAGE_PREVIEW_IMAGE : SITE_PREVIEW_IMAGE); ?>">
+		<meta property="og:image" content="<?php echo htmlspecialchars(defined('PAGE_PREVIEW_IMAGE') ? PAGE_PREVIEW_IMAGE : STATIC_URL.'/social/'.SITE_INTERNAL_NAME.'.jpg'); ?>">
 		<meta property="og:image:type" content="image/jpeg">
 		<title><?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?></title>
-		<link rel="icon" href="/favicon.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon-16x16.png">
+		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/site.webmanifest">
+		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/safari-pinned-tab.svg" color="#6aa0f8">
+		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon.ico">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
@@ -56,7 +63,7 @@ if (PAGE_STYLE_TYPE=='catalogue') {
 }
 ?>
 		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/common.css?v=<?php echo VERSION; ?>">
-		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/<?php echo SITE_INTERNAL_NAME; ?>.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/<?php echo SITE_INTERNAL_TYPE; ?>.css?v=<?php echo VERSION; ?>">
 <?php
 if (IS_FOOLS_DAY){
 ?>
@@ -93,7 +100,7 @@ if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 		<script src="<?php echo STATIC_URL; ?>/js/double-slider.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/common.js?v=<?php echo VERSION; ?>"></script>
-		<script src="<?php echo STATIC_URL; ?>/js/<?php echo SITE_INTERNAL_NAME; ?>.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/<?php echo SITE_INTERNAL_TYPE; ?>.js?v=<?php echo VERSION; ?>"></script>
 	</head>
 	<body class="style-type-<?php echo PAGE_STYLE_TYPE; ?><?php echo defined('PAGE_EXTRA_BODY_CLASS') ? ' '.PAGE_EXTRA_BODY_CLASS : ''; ?>">
 		<div class="main-container<?php echo (PAGE_STYLE_TYPE=='login' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') ? ' obscured-background' : ''; ?>">

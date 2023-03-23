@@ -2,26 +2,6 @@ RewriteEngine on
 ErrorDocument 404 /error.php?code=404
 ErrorDocument 403 /error.php?code=403
 
-#Favicon depending on host
-RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$
-RewriteRule ^favicon\.ico$ images/favicon_anime.ico [L]
-RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$
-RewriteRule ^favicon\.png$ images/favicon_anime.png [L]
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
-RewriteRule ^favicon\.ico$ images/favicon_manga.ico [L]
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
-RewriteRule ^favicon\.png$ images/favicon_manga.png [L]
-RewriteCond %{HTTP_HOST} ^accioreal.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^acciorealv2.fansubs.cat$
-RewriteRule ^favicon\.ico$ images/favicon_liveaction.ico [L]
-RewriteCond %{HTTP_HOST} ^accioreal.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^acciorealv2.fansubs.cat$
-RewriteRule ^favicon\.png$ images/favicon_liveaction.png [L]
-
 #Hide internal files
 RewriteCond %{THE_REQUEST} ^(.+)\.php(\?\S*)?\ HTTP/ [NC]
 RewriteCond %{REQUEST_URI} !autocomplete\.php
