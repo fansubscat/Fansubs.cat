@@ -596,7 +596,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 			foreach ($divisions as $division) {
 				if (is_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'])) {
-					move_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'], $static_directory."/images/divisions/".$data['id']."_".$division['id'].".jpg");
+					move_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'], STATIC_DIRECTORY."/images/divisions/".$data['id']."_".$division['id'].".jpg");
 				}
 			}
 
@@ -650,7 +650,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 			foreach ($divisions as $division) {
 				if (is_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'])) {
-					move_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'], $static_directory."/images/divisions/".$inserted_id."_".$volume['id'].".jpg");
+					move_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'], STATIC_DIRECTORY."/images/divisions/".$inserted_id."_".$volume['id'].".jpg");
 				}
 			}
 
@@ -677,16 +677,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultd);
 
-		$has_independent_fansub = FALSE;
 		$fansubs = array();
 
 		$resultf = query("SELECT fansub_id, downloads_url FROM rel_version_fansub vf WHERE vf.version_id=".$row['id']);
 
 		while ($rowf = mysqli_fetch_assoc($resultf)) {
 			array_push($fansubs, array($rowf['fansub_id'], $rowf['downloads_url']));
-			if ($rowf['fansub_id']==$default_fansub_id) {
-				$has_independent_fansub = TRUE;
-			}
 		}
 		mysqli_free_result($resultf);
 
@@ -721,7 +717,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$row['storage_processing']=1;
 		}
 
-		$has_independent_fansub = FALSE;
 		$fansubs = array();
 
 		$resultd = query("SELECT d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d WHERE d.series_id=".escape($_GET['series_id'])." ORDER BY d.number ASC");
@@ -843,7 +838,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm-4">
 								<div class="form-group">
 									<label for="form-version_author">Autor de la versió <small class="text-muted">(per a fansubs independents)</small></label>
-									<input id="form-version_author" name="version_author" type="text" class="form-control" value="<?php echo htmlspecialchars($row['version_author']); ?>" maxlength="200"<?php echo $has_independent_fansub ? '' : ' disabled'; ?>/>
+									<input id="form-version_author" name="version_author" type="text" class="form-control" value="<?php echo htmlspecialchars($row['version_author']); ?>" maxlength="200" disabled/>
 								</div>
 							</div>
 							<div class="col-sm">
@@ -1054,9 +1049,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="col-sm-2 text-center pr-1 pl-1">
 										<label><?php echo $division_name." ".$division['number'].(!empty($division['name']) ? " (".$division['name'].")" : ""); ?>:</label>
 <?php
-		$file_exists = !empty($row['id']) && file_exists($static_directory.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg');
+		$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg');
 ?>
-										<img id="form-division_cover_<?php echo $division['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="'.$static_url.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg" data-original="'.$static_url.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg"' : ''; ?> alt=""><br />
+										<img id="form-division_cover_<?php echo $division['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg" data-original="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg"' : ''; ?> alt=""><br />
 										<label for="form-division_cover_<?php echo $division['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 										<input id="form-division_cover_<?php echo $division['id']; ?>" name="division_cover_<?php echo $division['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 102400, 'form-division_cover_<?php echo $division['id']; ?>_preview');"/>
 								</div>

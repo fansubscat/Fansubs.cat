@@ -7,8 +7,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id']) && $_SESSION['admin_level']>=3) {
 		log_action("delete-fansub", "S'ha suprimit el fansub '".query_single("SELECT name FROM fansub WHERE id=".escape($_GET['delete_id']))."' (id. de fansub: ".$_GET['delete_id'].")");
 		query("DELETE FROM fansub WHERE id=".escape($_GET['delete_id']));
-		@unlink($static_directory.'/images/icons/'.$_GET['delete_id'].'.jpg');
-		@unlink($static_directory.'/images/logos/'.$_GET['delete_id'].'.jpg');
+		@unlink(STATIC_DIRECTORY.'/images/icons/'.$_GET['delete_id'].'.jpg');
+		@unlink(STATIC_DIRECTORY.'/images/logos/'.$_GET['delete_id'].'.jpg');
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}
 ?>

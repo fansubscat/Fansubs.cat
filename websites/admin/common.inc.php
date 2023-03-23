@@ -31,19 +31,11 @@ function get_subtype_name($subtype){
 	}
 }
 
-function get_subtype_slug($subtype){
-	switch ($subtype){
-		case 'movie':
-			return "films";
-		case 'series':
-			return "series";
-		case 'oneshot':
-			return "oneshots";
-		case 'serialized':
-			return "serialitzats";
-		default:
-			return "desconegut";
+function get_hentai_slug($series){
+	if ($series['rating']=='XXX') {
+		return "hentai/";
 	}
+	return "";
 }
 
 function get_fansub_preposition_name($text){
@@ -143,7 +135,6 @@ function rrmdir($dir) {
 }
 
 function flatten_directories_and_move_to_storage($file_id, $temp_path){
-	global $storages;
 	$cleaned_path = "/tmp/cleaned_$file_id/";
 	log_action("debug-log", "Creating cleaned directory $cleaned_path for file $file_id");
 	mkdir($cleaned_path);
@@ -161,13 +152,13 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 	rrmdir($temp_path);
 	//Create remote directory
 	//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
-	log_action("debug-log", "Running: ssh root@".$storages[0]['hostname']." mkdir -p /home/storage/Manga/$file_id/");
-	exec("ssh root@".$storages[0]['hostname']." mkdir -p /home/storage/Manga/$file_id/", $output, $result_code);
+	log_action("debug-log", "Running: ssh root@".ADMIN_STORAGES[0]['hostname']." mkdir -p /home/storage/Manga/$file_id/");
+	exec("ssh root@".ADMIN_STORAGES[0]['hostname']." mkdir -p /home/storage/Manga/$file_id/", $output, $result_code);
 	log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
 	//Copy to remote directory
 	//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
-	log_action("debug-log", "Running: rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".$storages[0]['hostname'].":/home/storage/Manga/$file_id/ --delete");
-	exec("rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".$storages[0]['hostname'].":/home/storage/Manga/$file_id/ --delete", $output, $result_code);
+	log_action("debug-log", "Running: rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".ADMIN_STORAGES[0]['hostname'].":/home/storage/Manga/$file_id/ --delete");
+	exec("rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".ADMIN_STORAGES[0]['hostname'].":/home/storage/Manga/$file_id/ --delete", $output, $result_code);
 	log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
 	//Clean cleaned directory
 	log_action("debug-log", "Removing cleaned directory $cleaned_path for file $file_id");

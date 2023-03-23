@@ -67,7 +67,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if ($remote_account_folder['type']=='mega') {
 			//Awfully ugly logic, will probably break, but for now it works.
 			//Had to do this crap with a helper script because Mega-CMD cannot be run inside the Apache process.
-			$lock_pointer = fopen($mega_lock_file, "w+");
+			$lock_pointer = fopen(MEGA_LOCK_FILE, "w+");
 
 			//We acquire a file lock to prevent two invocations at the same time.
 			//This could happen if a cron or another request is running while this one is done.

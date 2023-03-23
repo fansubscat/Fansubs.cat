@@ -7,10 +7,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($_GET['delete_year'])) {
 		log_action("delete-advent-calendar", "S'ha suprimit el calendari d'advent del ".$_GET['delete_year']);
 		query("DELETE FROM advent_calendar WHERE year=".escape($_GET['delete_year']));
-		@unlink($static_directory.'/images/advent/background_'.$_GET['delete_year'].'.jpg');
-		@unlink($static_directory.'/images/advent/preview_'.$_GET['delete_year'].'.jpg');
+		@unlink(STATIC_DIRECTORY.'/images/advent/background_'.$_GET['delete_year'].'.jpg');
+		@unlink(STATIC_DIRECTORY.'/images/advent/preview_'.$_GET['delete_year'].'.jpg');
 		for ($i=1;$i<25;$i++) {
-			@unlink($static_directory.'/images/advent/image_'.$_GET['delete_year'].'_'.$i.'.jpg');
+			@unlink(STATIC_DIRECTORY.'/images/advent/image_'.$_GET['delete_year'].'_'.$i.'.jpg');
 		}
 		$_SESSION['message']="S'ha suprimit correctament.";
 	}

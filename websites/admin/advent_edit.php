@@ -35,22 +35,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		query("REPLACE INTO advent_calendar (year, position) VALUES (".$data['year'].",'".$data['position']."')");
 		if (!empty($_FILES['background'])) {
-			move_uploaded_file($_FILES['background']["tmp_name"], $static_directory.'/images/advent/background_'.$data['year'].'.jpg');
+			move_uploaded_file($_FILES['background']["tmp_name"], STATIC_DIRECTORY.'/images/advent/background_'.$data['year'].'.jpg');
 		}
 		if (!empty($_FILES['preview'])) {
-			move_uploaded_file($_FILES['preview']["tmp_name"], $static_directory.'/images/advent/preview_'.$data['year'].'.jpg');
+			move_uploaded_file($_FILES['preview']["tmp_name"], STATIC_DIRECTORY.'/images/advent/preview_'.$data['year'].'.jpg');
 		}
 		if (!empty($_FILES['header'])) {
-			move_uploaded_file($_FILES['header']["tmp_name"], $static_directory.'/images/advent/header_'.$data['year'].'.jpg');
+			move_uploaded_file($_FILES['header']["tmp_name"], STATIC_DIRECTORY.'/images/advent/header_'.$data['year'].'.jpg');
 		}
 		if (!empty($_FILES['menu'])) {
-			move_uploaded_file($_FILES['menu']["tmp_name"], $static_directory.'/images/advent/menu_'.$data['year'].'.png');
+			move_uploaded_file($_FILES['menu']["tmp_name"], STATIC_DIRECTORY.'/images/advent/menu_'.$data['year'].'.png');
 		}
 
 		for ($i=1; $i<25; $i++) {
 			query("REPLACE INTO advent_day (year, day, description, link_url) VALUES (".$data['year'].",".$i.",".$data['description_'.$i].",".$data['link_url_'.$i].")");
 			if (!empty($_FILES['image_'.$i])) {
-				move_uploaded_file($_FILES['image_'.$i]["tmp_name"], $static_directory.'/images/advent/image_'.$data['year'].'_'.$i.'.jpg');
+				move_uploaded_file($_FILES['image_'.$i]["tmp_name"], STATIC_DIRECTORY.'/images/advent/image_'.$data['year'].'_'.$i.'.jpg');
 			}
 		}
 
@@ -93,7 +93,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="form-group">
 								<label>Imatge de fons<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1024x768px, però millor si és superior)</small></label><br>
 <?php
-	$file_exists = file_exists($static_directory.'/images/advent/background_'.$row['year'].'.jpg');
+	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/background_'.$row['year'].'.jpg');
 ?>
 								<label for="form-background" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="background" type="file" accept="image/jpeg" id="form-background" onchange="checkImageUpload(this, -1, 'form-background-preview', 'form-background-preview-link');">
@@ -102,8 +102,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-3" style="align-self: center;">
 							<div class="form-group">
-								<a id="form-background-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/images/advent/background_'.$row['year'].'.jpg" data-original="'.$static_url.'/images/advent/background_'.$row['year'].'.jpg"' : ''; ?> target="_blank">
-									<img id="form-background-preview" style="width: 192px; height: 108px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/images/advent/background_'.$row['year'].'.jpg" data-original="'.$static_url.'/images/advent/background_'.$row['year'].'.jpg"' : ''; ?> alt="">
+								<a id="form-background-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/advent/background_'.$row['year'].'.jpg" data-original="'.STATIC_URL.'/images/advent/background_'.$row['year'].'.jpg"' : ''; ?> target="_blank">
+									<img id="form-background-preview" style="width: 192px; height: 108px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/advent/background_'.$row['year'].'.jpg" data-original="'.STATIC_URL.'/images/advent/background_'.$row['year'].'.jpg"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
@@ -111,7 +111,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="form-group">
 								<label>Imatge de previsualització<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1024x768px, però millor si és superior)</small></label><br>
 <?php
-	$file_exists = file_exists($static_directory.'/images/advent/preview_'.$row['year'].'.jpg');
+	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/preview_'.$row['year'].'.jpg');
 ?>
 								<label for="form-preview" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="preview" type="file" accept="image/jpeg" id="form-preview" onchange="checkImageUpload(this, -1, 'form-preview-preview', 'form-preview-preview-link');">
@@ -119,8 +119,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-3" style="align-self: center;">
 							<div class="form-group">
-								<a id="form-preview-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/images/advent/preview_'.$row['year'].'.jpg" data-original="'.$static_url.'/images/advent/preview_'.$row['year'].'.jpg"' : ''; ?> target="_blank">
-									<img id="form-preview-preview" style="width: 192px; height: 108px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/images/advent/preview_'.$row['year'].'.jpg" data-original="'.$static_url.'/images/advent/preview_'.$row['year'].'.jpg"' : ''; ?> alt="">
+								<a id="form-preview-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/advent/preview_'.$row['year'].'.jpg" data-original="'.STATIC_URL.'/images/advent/preview_'.$row['year'].'.jpg"' : ''; ?> target="_blank">
+									<img id="form-preview-preview" style="width: 192px; height: 108px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/advent/preview_'.$row['year'].'.jpg" data-original="'.STATIC_URL.'/images/advent/preview_'.$row['year'].'.jpg"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
@@ -130,7 +130,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="form-group">
 								<label>Imatge de capçalera<span class="mandatory"></span> <small class="text-muted">(JPEG, mida exacta 1200x256px)</small></label><br>
 <?php
-	$file_exists = file_exists($static_directory.'/images/advent/header_'.$row['year'].'.jpg');
+	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/header_'.$row['year'].'.jpg');
 ?>
 								<label for="form-header" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="header" type="file" accept="image/jpeg" id="form-header" onchange="checkImageUpload(this, -1, 'form-header-preview', 'form-header-preview-link');">
@@ -138,8 +138,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-3" style="align-self: center;">
 							<div class="form-group">
-								<a id="form-header-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/images/advent/header_'.$row['year'].'.jpg" data-original="'.$static_url.'/images/advent/header_'.$row['year'].'.jpg"' : ''; ?> target="_blank">
-									<img id="form-header-preview" style="width: 240px; height: 51px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/images/advent/header_'.$row['year'].'.jpg" data-original="'.$static_url.'/images/advent/header_'.$row['year'].'.jpg"' : ''; ?> alt="">
+								<a id="form-header-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/advent/header_'.$row['year'].'.jpg" data-original="'.STATIC_URL.'/images/advent/header_'.$row['year'].'.jpg"' : ''; ?> target="_blank">
+									<img id="form-header-preview" style="width: 240px; height: 51px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/advent/header_'.$row['year'].'.jpg" data-original="'.STATIC_URL.'/images/advent/header_'.$row['year'].'.jpg"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
@@ -147,7 +147,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="form-group">
 								<label>Imatge del menú lateral<span class="mandatory"></span> <small class="text-muted">(PNG, mida exacta 205x128px)</small></label><br>
 <?php
-	$file_exists = file_exists($static_directory.'/images/advent/menu_'.$row['year'].'.png');
+	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/menu_'.$row['year'].'.png');
 ?>
 								<label for="form-menu" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="menu" type="file" accept="image/png" id="form-menu" onchange="checkImageUpload(this, -1, 'form-menu-preview', 'form-menu-preview-link');">
@@ -155,8 +155,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-3" style="align-self: center;">
 							<div class="form-group">
-								<a id="form-menu-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/images/advent/menu_'.$row['year'].'.png" data-original="'.$static_url.'/images/advent/menu_'.$row['year'].'.png"' : ''; ?> target="_blank">
-									<img id="form-menu-preview" style="width: 205px; height: 128px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/images/advent/menu_'.$row['year'].'.png" data-original="'.$static_url.'/images/advent/menu_'.$row['year'].'.png"' : ''; ?> alt="">
+								<a id="form-menu-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/advent/menu_'.$row['year'].'.png" data-original="'.STATIC_URL.'/images/advent/menu_'.$row['year'].'.png"' : ''; ?> target="_blank">
+									<img id="form-menu-preview" style="width: 205px; height: 128px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/advent/menu_'.$row['year'].'.png" data-original="'.STATIC_URL.'/images/advent/menu_'.$row['year'].'.png"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
@@ -193,10 +193,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												</td>
 												<td class="text-center align-middle">
 <?php
-			$file_exists = file_exists($static_directory.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg');
+			$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg');
 ?>
-													<a id="form-image_<?php echo $i; ?>-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg" data-original="'.$static_url.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg"' : ''; ?> target="_blank">
-														<img id="form-image_<?php echo $i; ?>-preview" style="width: 64px; height: 64px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg" data-original="'.$static_url.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg"' : ''; ?> alt="">
+													<a id="form-image_<?php echo $i; ?>-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg" data-original="'.STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg"' : ''; ?> target="_blank">
+														<img id="form-image_<?php echo $i; ?>-preview" style="width: 64px; height: 64px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg" data-original="'.STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg"' : ''; ?> alt="">
 													</a>
 													<br>
 													<label for="form-image_<?php echo $i; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>

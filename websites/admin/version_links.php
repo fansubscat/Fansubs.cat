@@ -30,21 +30,21 @@ switch ($type) {
 		$divisions_short = "Temp.";
 		$divisions_plural = "temporades";
 		$divisions_anchor = "temporada";
-		$link_url=$anime_url;
+		$link_url=ANIME_URL;
 		break;
 	case 'liveaction':
 		$divisions_name = "Temporada";
 		$divisions_short = "Temp.";
 		$divisions_plural = "temporades";
 		$divisions_anchor = "temporada";
-		$link_url=$liveaction_url;
+		$link_url=LIVEACTION_URL;
 		break;
 	case 'manga':
 		$divisions_name = "Volum";
 		$divisions_short = "Vol.";
 		$divisions_plural = "volums";
 		$divisions_anchor = "volum";
-		$link_url=$manga_url;
+		$link_url=MANGA_URL;
 		break;
 }
 
@@ -79,8 +79,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<p class="text-center">Aquests són els enllaços de la versió de "<b><?php echo htmlspecialchars($row['series_name']); ?></b>" feta per <?php echo htmlspecialchars($row['fansub_name']); ?>.</p>
 					<hr>
 					<div class="text-center">
-						<button onclick="copyToClipboard('<?php echo $link_url.'/'.get_subtype_slug($series['subtype']).'/'.$series['slug']; ?>', $(this));" class="btn btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç a la fitxa en general</button>
-						<button onclick="copyToClipboard('<?php echo $link_url.'/'.get_subtype_slug($series['subtype']).'/'.$series['slug']; ?>?v=<?php echo $_GET['id']; ?>', $(this));" class="btn btn-info"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç a la versió específica</button>
+						<button onclick="copyToClipboard('<?php echo $link_url.'/'.get_hentai_slug($series).$series['slug']; ?>', $(this));" class="btn btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç a la fitxa en general</button>
+						<button onclick="copyToClipboard('<?php echo $link_url.'/'.get_hentai_slug($series).$series['slug']; ?>?v=<?php echo $_GET['id']; ?>', $(this));" class="btn btn-info"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç a la versió específica</button>
 					</div>
 				</article>
 			</div>
@@ -107,7 +107,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						<tr>
 							<td style="width: 70%;"><strong><?php echo !empty($division['name']) ? $division['name'] : $divisions_name." ".$division['number']; ?></strong></td>
-							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.get_subtype_slug($series['subtype']).'/'.$series['slug'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button> <button onclick="copyToClipboard('<?php echo $link_url.'/'.get_subtype_slug($series['subtype']).'/'.$series['slug'].'?v='.$_GET['id'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-info"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
+							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.get_hentai_slug($series).$series['slug'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button> <button onclick="copyToClipboard('<?php echo $link_url.'/'.get_hentai_slug($series).$series['slug'].'?v='.$_GET['id'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-info"><span class="fa fa-clipboard pr-2"></span>Copia l'enllaç</button></td>
 						</tr>
 <?php
 		}

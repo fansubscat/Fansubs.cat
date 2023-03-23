@@ -45,7 +45,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$toupdate_row = mysqli_fetch_assoc($toupdate_result);
 				log_action("update-news", "S'ha actualitzat la notícia '".escape($toupdate_row['title'])."' del fansub '".escape($toupdate_row['fansub_name'])."'");
 				if (!empty($_FILES['image'])) {
-					move_uploaded_file($_FILES['image']["tmp_name"], $static_directory.'/images/news/'.$toupdate_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
+					move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/news/'.$toupdate_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
 					$data['image'] = "'".md5($data['title'].$data['date'])."'";
 				} else if (!empty($toupdate_row['image'])) {
 					$data['image'] = "'".$toupdate_row['image']."'";
@@ -59,7 +59,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$fansub_result = query("SELECT f.name fansub_name, f.slug fansub_slug FROM fansub f WHERE f.id=".$data['fansub_id']);
 			$fansub_row = mysqli_fetch_assoc($fansub_result);
 			if (!empty($_FILES['image'])) {
-				move_uploaded_file($_FILES['image']["tmp_name"], $static_directory.'/images/news/'.$fansub_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
+				move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/news/'.$fansub_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
 				$data['image'] = "'".md5($data['title'].$data['date'])."'";
 			} else {
 				$data['image'] = 'NULL';
@@ -87,7 +87,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_GET['import_pending_id'])) {
 			$pending_result = query("SELECT pn.* FROM pending_news pn WHERE pn.id=".escape($_GET['import_pending_id']));
 			$prow = mysqli_fetch_assoc($pending_result) or crash('Pending news not found');
-			$row['fansub_id']=$default_fansub_id;
+			$row['fansub_id']="";
 			$row['title']=$prow['title'];
 			$row['contents']=$prow['contents'];
 			$row['url']=$prow['url'];
@@ -170,7 +170,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="form-group">
 								<label>Imatge<br><small class="text-muted">(format JPEG o PNG)</small></label><br>
 <?php
-	$file_exists = !empty($row['id']) && file_exists($static_directory.'/images/news/'.$row['fansub_slug'].'/'.$row['image']);
+	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/news/'.$row['fansub_slug'].'/'.$row['image']);
 ?>
 								<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="image" type="file" accept="image/jpeg,image/png" id="form-image" onchange="checkImageUpload(this, -1, 'form-image-preview', 'form-image-preview-link');">
@@ -178,8 +178,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group">
-								<a id="form-image-preview-link"<?php echo $file_exists ? ' href="'.$static_url.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'" data-original="'.$static_url.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'"' : ''; ?> target="_blank">
-									<img id="form-image-preview" style="width: 140px; height: 90px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.$static_url.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'" data-original="'.$static_url.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'"' : ''; ?> alt="">
+								<a id="form-image-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'" data-original="'.STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'"' : ''; ?> target="_blank">
+									<img id="form-image-preview" style="width: 140px; height: 90px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'" data-original="'.STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>

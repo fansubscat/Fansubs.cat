@@ -10,7 +10,7 @@ if (!empty($_SESSION['username'])) {
 else if (isset($_POST['username']) && isset($_POST['password'])) {
 	//No need to escape the password string since it will be hashed anyway, and the hash does not cause SQL injections
 	$username=escape($_POST['username']);
-	$password=hash('sha256', $password_salt . $_POST['password']);
+	$password=hash('sha256', PASSWORD_SALT . $_POST['password']);
 
 	$result=query("SELECT * FROM admin_user u WHERE username='".$username."' AND password='".$password."'");
 

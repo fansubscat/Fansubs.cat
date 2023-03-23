@@ -24,7 +24,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			</div>
 		</div>
 <?php
-	foreach ($storages as $storage) {
+	foreach (ADMIN_STORAGES as $storage) {
 		//Get images from server
 		$auth = base64_encode($storage['api_username'].':'.$storage['api_password']);
 		$context = stream_context_create([

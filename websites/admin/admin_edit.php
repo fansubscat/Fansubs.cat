@@ -19,7 +19,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$data['username_old']=NULL;
 		}
 		if (!empty($_POST['password'])) {
-			$data['password']=$password=hash('sha256', $password_salt . $_POST['password']);
+			$data['password']=$password=hash('sha256', PASSWORD_SALT . $_POST['password']);
 		} else if ($_POST['action']=='edit') {
 			$data['password']=NULL;
 		} else {

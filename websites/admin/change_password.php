@@ -8,7 +8,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$data=array();
 		$data['username']=escape($_SESSION['username']);
 		if (!empty($_POST['password']) && !empty($_POST['password_confirm']) && $_POST['password']===$_POST['password_confirm'] && strlen($_POST['password'])>=7) {
-			$data['password']=$password=hash('sha256', $password_salt . $_POST['password']);
+			$data['password']=$password=hash('sha256', PASSWORD_SALT . $_POST['password']);
 		} else {
 			crash("Dades invàlides");
 		}

@@ -2,10 +2,9 @@
 require_once("config.inc.php");
 
 function get_storage_url($url) {
-	global $storages;
-	if (count($storages)>0 && strpos($url, "storage://")===0) {
+	if (count(ADMIN_STORAGES)>0 && strpos($url, "storage://")===0) {
 		//Always the first storage
-		return generate_storage_url(str_replace("storage://", $storages[0]['base_url'], $url));
+		return generate_storage_url(str_replace("storage://", ADMIN_STORAGES[0]['base_url'], $url));
 	} else {
 		return $url;
 	}
@@ -16,13 +15,12 @@ session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE,
 session_start();
 
 function retrieve_remote_file_size($url){
-	global $storages;
 	$ch = curl_init(str_replace("&", "%26", str_replace(" ", "%20", get_storage_url($url))));
 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, TRUE);
 	curl_setopt($ch, CURLOPT_NOBODY, TRUE);
-	curl_setopt($ch, CURLOPT_REFERER, $storages[0]['base_url'].'/');
+	curl_setopt($ch, CURLOPT_REFERER, ADMIN_STORAGES[0]['base_url'].'/');
 
 	$data = curl_exec($ch);
 	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);

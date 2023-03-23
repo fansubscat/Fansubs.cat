@@ -47,7 +47,7 @@ function toggleSiteTheme() {
 		'site_theme': newTheme
 	};
 
-	Cookies.set('site_theme', newTheme, cookieOptions);
+	Cookies.set('site_theme', newTheme, cookieOptions, {secure: true});
 	$.post({
 		url: USERS_URL+"/do_save_site_theme.php",
 		data: values,
