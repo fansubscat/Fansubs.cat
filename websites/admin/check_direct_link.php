@@ -11,6 +11,8 @@ function get_storage_url($url) {
 	}
 }
 
+session_name(ADMIN_COOKIE_NAME);
+session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 
 function retrieve_remote_file_size($url){

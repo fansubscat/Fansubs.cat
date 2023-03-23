@@ -36,7 +36,7 @@ a {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'P';
-	background-color: #007bff !important;
+	background-color: #dc3545 !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -45,7 +45,7 @@ a {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'A';
-	background-color: #007bff !important;
+	background-color: #dc3545 !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -54,7 +54,7 @@ a {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'M';
-	background-color: #007bff !important;
+	background-color: #dc3545 !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -63,7 +63,7 @@ a {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'AR';
-	background-color: #007bff !important;
+	background-color: #dc3545 !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -72,7 +72,16 @@ a {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'N';
-	background-color: #007bff !important;
+	background-color: #dc3545 !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
+.fa-custom-groups:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'G';
+	background-color: #dc3545 !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -81,7 +90,7 @@ a {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'R';
-	background-color: #007bff !important;
+	background-color: #dc3545 !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -90,9 +99,13 @@ a {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'CA';
-	background-color: #007bff !important;
+	background-color:#dc3545 !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
+}
+
+.navbar {
+	background-color: #dc3545 !important;
 }
 
 tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {

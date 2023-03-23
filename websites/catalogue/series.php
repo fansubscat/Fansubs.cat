@@ -581,7 +581,7 @@ $resultra = query_related_series($user, $series['id'], $series['author'], $num_o
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'Continguts d’acció real amb temàtiques en comú' : (CATALOGUE_ITEM_TYPE=='anime' ? 'Animes amb temàtiques en comú' : 'Mangues amb temàtiques en comú'); ?></h2>
+						<h2 class="section-title-main"><?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'Contingut d’acció real amb temàtiques en comú' : (CATALOGUE_ITEM_TYPE=='anime' ? 'Anime amb temàtiques en comú' : 'Manga amb temàtiques en comú'); ?></h2>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultra)) {

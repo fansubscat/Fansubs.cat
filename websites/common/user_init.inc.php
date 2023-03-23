@@ -3,6 +3,7 @@ require_once(dirname(__FILE__)."/db.inc.php");
 require_once(dirname(__FILE__)."/queries.inc.php");
 
 ob_start();
+session_name(COOKIE_NAME);
 session_set_cookie_params(COOKIE_DURATION, '/', COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 

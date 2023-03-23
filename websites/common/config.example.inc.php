@@ -34,6 +34,7 @@ define('MEMCACHED_EXPIRY_TIME', 12*3600);
 define('GOOGLE_DRIVE_API_KEY', 'YOUR_GOOGLE_DRIVE_API_KEY_HERE');
 
 //Cookie params
+define('COOKIE_NAME', 'session_id');
 define('COOKIE_DURATION', 60*60*24*365*10);
 define('COOKIE_DOMAIN', '.fansubs.cat');
 

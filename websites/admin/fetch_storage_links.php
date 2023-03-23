@@ -30,7 +30,8 @@ function get_custom_server_files($server_base_url, $remote_folder) {
 	return array('status' => 'ok', 'files' => $files);
 }
 
-session_set_cookie_params(3600 * 24 * 30); // 30 days
+session_name(ADMIN_COOKIE_NAME);
+session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {

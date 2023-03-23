@@ -65,6 +65,8 @@ function get_change_in_views_for_series($current_month, $id, $new_views, $series
 	}
 }
 
+session_name(ADMIN_COOKIE_NAME);
+session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 
 if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) || $_GET['token']==$internal_token) {
