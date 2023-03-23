@@ -8,4 +8,23 @@ websites/common/config.inc.php
 websites/main/config.inc.php
 websites/news/config.inc.php
 websites/users/config.inc.php
+websites/static/images/advent/*
+!websites/static/images/advent/.gitkeep
+websites/static/images/avatars/*
+!websites/static/images/avatars/.gitkeep
+websites/static/images/covers/*
+!websites/static/images/covers/.gitkeep
+websites/static/images/divisions/*
+!websites/static/images/divisions/.gitkeep
+websites/static/images/featured/*
+!websites/static/images/featured/.gitkeep
+websites/static/images/files/*
+!websites/static/images/files/.gitkeep
+websites/static/images/icons/*
+!websites/static/images/icons/.gitkeep
+websites/static/images/logos/*
+!websites/static/images/logos/.gitkeep
+websites/static/images/news/*
+!websites/static/images/news/.gitkeep
+websites/static/social/series_*
 
