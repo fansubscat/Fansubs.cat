@@ -53,8 +53,8 @@ if (SITE_IS_HENTAI) {
 <?php
 if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
-		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/js/videojs/video-js.min.css?v=<?php echo VERSION; ?>">
-		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/js/videojs/videojs-chromecast.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs.min.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs-chromecast.css?v=<?php echo VERSION; ?>">
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>
@@ -83,13 +83,13 @@ if (PAGE_STYLE_TYPE=='catalogue') {
 			};
 		</script>
 		<script src="https://unpkg.com/megajs@1.1.1/dist/main.browser-umd.js"></script>
-		<script src="<?php echo STATIC_URL; ?>/js/videojs/video.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/video.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videostream.js?v=<?php echo VERSION; ?>"></script>
-		<script src="<?php echo STATIC_URL; ?>/js/videojs/lang_ca.js?v=<?php echo VERSION; ?>"></script>
-		<script src="<?php echo STATIC_URL; ?>/js/videojs/videojs-chromecast.js?v=<?php echo VERSION; ?>"></script>
-		<script src="<?php echo STATIC_URL; ?>/js/videojs/videojs-youtube.min.js?v=<?php echo VERSION; ?>"></script>
-		<script src="<?php echo STATIC_URL; ?>/js/videojs/videojs-landscape-fullscreen.min.js?v=<?php echo VERSION; ?>"></script>
-		<script src="<?php echo STATIC_URL; ?>/js/videojs/videojs-hotkeys.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs-lang_ca.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs-chromecast.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs-youtube.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs-landscape-fullscreen.min.js?v=<?php echo VERSION; ?>"></script>
+		<script src="<?php echo STATIC_URL; ?>/js/videojs-hotkeys.min.js?v=<?php echo VERSION; ?>"></script>
 		<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
