@@ -8,9 +8,9 @@ define('IMAGE_HEIGHT', 628);
 define('COVER_WIDTH', 444);
 define('COVER_HEIGHT', 628);
 define('TEXT_MARGIN', 46);
-define('FONT_REGULAR', STATIC_DIRECTORY.'/common/fonts/lexend_deca_regular.ttf');
-define('FONT_BOLD', STATIC_DIRECTORY.'/common/fonts/lexend_deca_bold.ttf');
-define('FONT_LIGHT', STATIC_DIRECTORY.'/common/fonts/lexend_deca_light.ttf');
+define('FONT_REGULAR', STATIC_DIRECTORY.'/fonts/lexend_deca_regular.ttf');
+define('FONT_BOLD', STATIC_DIRECTORY.'/fonts/lexend_deca_bold.ttf');
+define('FONT_LIGHT', STATIC_DIRECTORY.'/fonts/lexend_deca_light.ttf');
 
 //Obtained from running: `fc-query --format='%{charset}\n' font.ttf`
 define('SUPPORTED_CHARS_REGEX', '/[^\n\x{20}-\x{7e}\x{a0}-\x{17e}\x{18f}\x{192}\x{19d}\x{1a0}-\x{1a1}\x{1af}-\x{1b0}\x{1c4}-\x{1d4}\x{1e6}-\x{1e7}\x{1ea}-\x{1eb}\x{1f1}-\x{1f2}\x{1fa}-\x{21b}\x{22a}-\x{22d}\x{230}-\x{233}\x{237}\x{259}\x{272}\x{2bb}-\x{2bc}\x{2be}-\x{2bf}\x{2c6}-\x{2c8}\x{2cc}\x{2d8}-\x{2dd}\x{300}-\x{304}\x{306}-\x{30c}\x{30f}\x{311}-\x{312}\x{31b}\x{323}-\x{324}\x{326}-\x{328}\x{32e}\x{331}\x{335}\x{394}\x{3a9}\x{3bc}\x{3c0}\x{1e08}-\x{1e09}\x{1e0c}-\x{1e0f}\x{1e14}-\x{1e17}\x{1e1c}-\x{1e1d}\x{1e20}-\x{1e21}\x{1e24}-\x{1e25}\x{1e2a}-\x{1e2b}\x{1e2e}-\x{1e2f}\x{1e36}-\x{1e37}\x{1e3a}-\x{1e3b}\x{1e42}-\x{1e49}\x{1e4c}-\x{1e53}\x{1e5a}-\x{1e5b}\x{1e5e}-\x{1e69}\x{1e6c}-\x{1e6f}\x{1e78}-\x{1e7b}\x{1e80}-\x{1e85}\x{1e8e}-\x{1e8f}\x{1e92}-\x{1e93}\x{1e97}\x{1e9e}\x{1ea0}-\x{1ef9}\x{2007}-\x{200b}\x{2010}\x{2012}-\x{2015}\x{2018}-\x{201a}\x{201c}-\x{201e}\x{2020}-\x{2022}\x{2026}\x{2030}\x{2033}\x{2039}-\x{203a}\x{2044}\x{2070}\x{2074}-\x{2079}\x{2080}-\x{2089}\x{20a1}\x{20a3}-\x{20a4}\x{20a6}-\x{20a7}\x{20a9}\x{20ab}-\x{20ad}\x{20b1}-\x{20b2}\x{20b5}\x{20b9}-\x{20ba}\x{20bc}-\x{20bd}\x{2113}\x{2116}\x{2122}\x{2126}\x{212e}\x{215b}-\x{215e}\x{2202}\x{2205}-\x{2206}\x{220f}\x{2211}-\x{2212}\x{2215}\x{2219}-\x{221a}\x{221e}\x{222b}\x{2248}\x{2260}\x{2264}-\x{2265}\x{25ca}\x{fb01}-\x{fb02}]/u');

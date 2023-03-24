@@ -1,14 +1,17 @@
 <?php
-const IMAGE_WIDTH = 1200;
-const IMAGE_HEIGHT = 675;
-const COVER_WIDTH = 85;
-const COVER_HEIGHT = 120;
-const TEXT_MARGIN = 48;
-const FONT = 'style/patinio_neue.ttf';
-
-ob_start();
 require_once("db.inc.php");
 require_once('libraries/linebreaks4imagettftext.php');
+
+ob_start();
+
+define('IMAGE_WIDTH', 1200);
+define('IMAGE_HEIGHT', 675);
+define('COVER_WIDTH', 85);
+define('COVER_HEIGHT', 120);
+define('TEXT_MARGIN', 30);
+define('FONT_REGULAR', STATIC_DIRECTORY.'/fonts/lexend_deca_regular.ttf');
+define('FONT_BOLD', STATIC_DIRECTORY.'/fonts/lexend_deca_bold.ttf');
+define('FONT_LIGHT', STATIC_DIRECTORY.'/fonts/lexend_deca_light.ttf');
 
 function scale_smallest_side($image, $desired_width, $desired_height) {
 	$width = imagesx($image);
@@ -168,33 +171,33 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		//Paste into canvas
 		imagecopy($image, $background, 0, 0, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 	} else {
-		imagefttext($image, 30, 0, 333, 350, imagecolorallocate($image, 0xCC, 0xCC, 0xCC), FONT, "No hi ha res vist en aquest període.");
+		imagefttext($image, 30, 0, 333, 350, imagecolorallocate($image, 0xCC, 0xCC, 0xCC), FONT_REGULAR, "No hi ha res vist en aquest període.");
 	}
 
 	switch ($type){
 		case 'manga':
-			$title="Els mangues més populars a Fansubs.cat - ";
+			$title="Mangues més populars a Fansubs.cat";
 			break;
 		case 'liveaction':
-			$title="Els continguts d'acció real més populars a Fansubs.cat - ";
+			$title="Continguts d'acció real més populars a Fansubs.cat";
 			break;
 		case 'anime':
 		default:
-			$title="Els animes més populars a Fansubs.cat - ";
+			$title="Animes més populars a Fansubs.cat";
 			break;
 	}
 	setlocale(LC_ALL, 'ca_ES.utf8');
 
 	switch($mode) {
 		case 'all':
-			$title.='Total 2020-'.date('Y');
+			$subtitle.='Total 2020-'.date('Y');
 			break;
 		case 'year':
-			$title.='Any '.strftime("%Y", strtotime(date($last_month.'-01')));
+			$subtitle.='Any '.strftime("%Y", strtotime(date($last_month.'-01')));
 			break;
 		case 'month':
 		default:
-			$title.=ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($last_month.'-01'))))));
+			$subtitle.=ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($last_month.'-01'))))));
 			break;
 	}
 
@@ -210,9 +213,13 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 	$red = imagecolorallocate($image, 0xBB, 0x44, 0x44);
 	$yellow = imagecolorallocate($image, 0xBB, 0xBB, 0x44);
 	$reddish = imagecolorallocate($image, 0xFF, 0xAA, 0xAA);
-	$bbox = imageftbbox(32, 0, FONT, $title);
+	$bbox = imageftbbox(26, 0, FONT_BOLD, $title);
 	$center = (imagesx($image) / 2) - (($bbox[2] - $bbox[0]) / 2);
-	imagefttext($image, 32, 0, $center, $current_height, $gray, FONT, $title);
+	imagefttext($image, 26, 0, $center, $current_height, $gray, FONT_BOLD, $title);
+	$current_height+=26+6;
+	$bbox = imageftbbox(22, 0, FONT_BOLD, $subtitle);
+	$center = (imagesx($image) / 2) - (($bbox[2] - $bbox[0]) / 2);
+	imagefttext($image, 22, 0, $center, $current_height, $gray, FONT_BOLD, $subtitle);
 	$current_height = 71;
 
 	for ($i=0;$i<count($series);$i++) {
@@ -264,30 +271,30 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 			$change_in_views_color=$gray;
 			$change_in_views_text="=";
 		}
-		imagefttext($image, 60, 0, ($i>4 ? 624 : 24)+$extra_left, $current_height+88, $color, FONT, $series[$i]['position']);
-		$bbox = imageftbbox(16, 0, FONT, $change_in_position_text);
+		imagefttext($image, 60, 0, ($i>4 ? 624 : 24)+$extra_left, $current_height+88, $color, FONT_REGULAR, $series[$i]['position']);
+		$bbox = imageftbbox(16, 0, FONT_REGULAR, $change_in_position_text);
 		$center = ($i>4 ? 624 : 24) + 72/2 - (($bbox[2]-$bbox[0])/2);
 		if ($mode!='all') {
-			imagefttext($image, 16, 0, $center-2, $current_height+112, $change_in_position_color, FONT, $change_in_position_text);
+			imagefttext($image, 16, 0, $center-2, $current_height+112, $change_in_position_color, FONT_REGULAR, $change_in_position_text);
 		}
-		$text = \andrewgjohnson\linebreaks4imagettftext(28, 0, FONT, $series[$i]['name'], 380);
+		$text = \andrewgjohnson\linebreaks4imagettftext(24, 0, FONT_REGULAR, $series[$i]['name'], 380);
 		if (substr_count($text, "\n")>0) {
 			$text = explode("\n", $text)[0].'...';
 		}
-		imagefttext($image, 28, 0, $i>4 ? 624+172 : 24+172, $current_height+40, ($series[$i]['rating']=='XXX' ? $reddish : $gray), FONT, $text);
-		$text = \andrewgjohnson\linebreaks4imagettftext(22, 0, FONT, $series[$i]['fansubs'], 380);
+		imagefttext($image, 24, 0, $i>4 ? 624+172 : 24+172, $current_height+40, ($series[$i]['rating']=='XXX' ? $reddish : $gray), FONT_REGULAR, $text);
+		$text = \andrewgjohnson\linebreaks4imagettftext(22, 0, FONT_REGULAR, $series[$i]['fansubs'], 380);
 		if (substr_count($text, "\n")>0) {
 			$text = explode("\n", $text)[0].'...';
 		}
-		imagefttext($image, 22, 0, $i>4 ? 624+172 : 24+172, $current_height+74, $not_so_darker_gray, FONT, $text);
-		imagefttext($image, 22, 0, $i>4 ? 624+172 : 24+172, $current_height+108, $gray, FONT, $series[$i]['views'].($mode!='all' ? ' (' : ''));
+		imagefttext($image, 22, 0, $i>4 ? 624+172 : 24+172, $current_height+74, $not_so_darker_gray, FONT_REGULAR, $text);
+		imagefttext($image, 22, 0, $i>4 ? 624+172 : 24+172, $current_height+108, $gray, FONT_REGULAR, $series[$i]['views'].($mode!='all' ? ' (' : ''));
 		if ($mode!='all') {
-			$bbox = imageftbbox(22, 0, FONT, $series[$i]['views'].' (');
+			$bbox = imageftbbox(22, 0, FONT_REGULAR, $series[$i]['views'].' (');
 			$views_change_position = ($i>4 ? 624+172 : 24+172) + ($bbox[2]-$bbox[0]);
-			imagefttext($image, 22, 0, $views_change_position, $current_height+108, $change_in_views_color, FONT, $change_in_views_text);
-			$bbox = imageftbbox(22, 0, FONT, $change_in_views_text);
+			imagefttext($image, 22, 0, $views_change_position, $current_height+108, $change_in_views_color, FONT_REGULAR, $change_in_views_text);
+			$bbox = imageftbbox(22, 0, FONT_REGULAR, $change_in_views_text);
 			$views_change_position = $views_change_position + ($bbox[2]-$bbox[0]);
-			imagefttext($image, 22, 0, $views_change_position, $current_height+108, $gray, FONT, ')');
+			imagefttext($image, 22, 0, $views_change_position, $current_height+108, $gray, FONT_REGULAR, ')');
 		}
 
 		//Load cover and scale it as needed
