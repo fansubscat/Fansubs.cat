@@ -32,16 +32,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($_SESSION['admin_level']>=2) {
 ?>
 						<div class="text-center p-2">
-							<a href="series_edit.php?type=anime" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix un anime nou</a> 
+							<a href="series_edit.php?type=anime" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un anime nou</a> 
 						</div>
 <?php
 	}
 ?>
 						<div class="text-center p-2">
-							<a href="series_choose.php?type=anime" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix una versió nova</a>
+							<a href="series_choose.php?type=anime" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una versió nova</a>
 						</div>
 						<div class="text-center p-2">
-							<a href="version_list.php?type=anime" class="btn btn-primary"><span class="fa fa-edit pr-2"></span>Edita una versió existent</a>
+							<a href="version_list.php?type=anime" class="btn btn-primary"><span class="fa fa-edit pe-2"></span>Edita una versió existent</a>
 						</div>
 					</div>
 					<div class="col-sm">
@@ -50,16 +50,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($_SESSION['admin_level']>=2) {
 ?>
 						<div class="text-center p-2">
-							<a href="series_edit.php?type=manga" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix un manga nou</a> 
+							<a href="series_edit.php?type=manga" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un manga nou</a> 
 						</div>
 <?php
 	}
 ?>
 						<div class="text-center p-2">
-							<a href="series_choose.php?type=manga" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix una versió nova</a>
+							<a href="series_choose.php?type=manga" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una versió nova</a>
 						</div>
 						<div class="text-center p-2">
-							<a href="version_list.php?type=manga" class="btn btn-primary"><span class="fa fa-edit pr-2"></span>Edita una versió existent</a>
+							<a href="version_list.php?type=manga" class="btn btn-primary"><span class="fa fa-edit pe-2"></span>Edita una versió existent</a>
 						</div>
 					</div>
 					<div class="col-sm">
@@ -68,16 +68,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($_SESSION['admin_level']>=2) {
 ?>
 						<div class="text-center p-2">
-							<a href="series_edit.php?type=liveaction" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix un contingut nou</a> 
+							<a href="series_edit.php?type=liveaction" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un contingut nou</a> 
 						</div>
 <?php
 	}
 ?>
 						<div class="text-center p-2">
-							<a href="series_choose.php?type=liveaction" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix una versió nova</a>
+							<a href="series_choose.php?type=liveaction" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una versió nova</a>
 						</div>
 						<div class="text-center p-2">
-							<a href="version_list.php?type=liveaction" class="btn btn-primary"><span class="fa fa-edit pr-2"></span>Edita una versió existent</a>
+							<a href="version_list.php?type=liveaction" class="btn btn-primary"><span class="fa fa-edit pe-2"></span>Edita una versió existent</a>
 						</div>
 					</div>
 				</div>
