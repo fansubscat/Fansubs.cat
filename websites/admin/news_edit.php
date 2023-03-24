@@ -40,10 +40,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if ($_POST['action']=='edit') {
 			$toupdate_result = query("SELECT n.*, f.name fansub_name, f.slug fansub_slug FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE MD5(CONCAT(n.title, n.date))='".$data['id']."'");
 			if (mysqli_num_rows($toupdate_result)>1) {
-				crash("No es pot editar la notícia: més d'una notícia amb el mateix MD5!");
+				crash("No es pot editar la notícia: més d’una notícia amb el mateix MD5!");
 			} else if (mysqli_num_rows($toupdate_result)==1) {
 				$toupdate_row = mysqli_fetch_assoc($toupdate_result);
-				log_action("update-news", "S'ha actualitzat la notícia '".escape($toupdate_row['title'])."' del fansub '".escape($toupdate_row['fansub_name'])."'");
+				log_action("update-news", "S’ha actualitzat la notícia «".escape($toupdate_row['title'])."» del fansub '".escape($toupdate_row['fansub_name'])."'");
 				if (!empty($_FILES['image'])) {
 					move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/news/'.$toupdate_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
 					$data['image'] = "'".md5($data['title'].$data['date'])."'";
@@ -65,14 +65,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$data['image'] = 'NULL';
 			}
 			if (isset($_POST['import_pending_id'])) {
-				log_action("import-pending-news", "S'ha importat la notícia proposada amb id. ".escape($_POST['import_pending_id']));
+				log_action("import-pending-news", "S’ha importat la notícia proposada amb id. ".escape($_POST['import_pending_id']));
 				query("DELETE FROM pending_news WHERE id=".escape($_POST['import_pending_id']));
 			}
-			log_action("create-news", "S'ha creat la notícia '".$data['title']."' de '".escape($fansub_row['fansub_name'])."'");
+			log_action("create-news", "S’ha creat la notícia «".$data['title']."» de «".escape($fansub_row['fansub_name'])."»");
 			query("INSERT INTO news (fansub_id,news_fetcher_id,title,contents,original_contents,date,url,image) VALUES (".$data['fansub_id'].",NULL,'".$data['title']."','".$data['contents']."','".$data['contents']."','".$data['date']."',".$data['url'].",".$data['image'].")");
 		}
 
-		$_SESSION['message']="S'han desat les dades correctament.";
+		$_SESSION['message']="S’han desat les dades correctament.";
 
 		header("Location: news_list.php");
 		die();
@@ -113,11 +113,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input class="form-control" id="form-pending_author" disabled value="<?php echo htmlspecialchars($row['pending_author']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-pending_email">Correu de l'autor que ha proposat la notícia</label>
+						<label for="form-pending_email">Correu de l’autor que ha proposat la notícia</label>
 						<input class="form-control" id="form-pending_email" disabled value="<?php echo htmlspecialchars($row['pending_email']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-pending_comments">Comentaris de l'autor que ha proposat la notícia</label>
+						<label for="form-pending_comments">Comentaris de l’autor que ha proposat la notícia</label>
 						<input class="form-control" id="form-pending_comments" disabled value="<?php echo htmlspecialchars($row['pending_comments']); ?>">
 					</div>
 					<div class="mb-3">
@@ -127,7 +127,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	} else if (empty($row['id'])) {
 ?>
-					<p class="alert alert-warning"><span class="fa fa-exclamation-triangle me-2"></span>Normalment, no és necessari afegir manualment notícies de fansubs, ja que s'obtenen automàticament mitjançant els recollidors. Assegura't que realment és això el que vols fer, i en cas de dubte, contacta amb un administrador.</p>
+					<p class="alert alert-warning"><span class="fa fa-exclamation-triangle me-2"></span>Normalment, no és necessari afegir manualment notícies de fansubs, ja que s’obtenen automàticament mitjançant els recollidors. Assegura’t que realment és això el que vols fer, i en cas de dubte, contacta amb un administrador.</p>
 <?php
 	}
 ?>

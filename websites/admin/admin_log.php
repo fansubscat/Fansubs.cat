@@ -1,5 +1,5 @@
 <?php
-$header_title="Registre d'accions - Eines";
+$header_title="Registre d’accions - Eines";
 $page="tools";
 include("header.inc.php");
 
@@ -13,7 +13,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Registre d'accions</h4>
+					<h4 class="card-title text-center mb-4 mt-1">Registre d’accions</h4>
 					<hr>
 					<p class="text-center">Es mostren les darreres 200 accions (les més noves primer).</p>
 					<div class="d-flex justify-content-center pb-3">

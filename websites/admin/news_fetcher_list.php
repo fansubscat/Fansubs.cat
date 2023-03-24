@@ -28,7 +28,7 @@ function get_method($method){
 		case 'blogspot_shinsengumi':
 			return "Blogspot (Shinsengumi no Fansub)";
 		case 'blogspot_teqma':
-			return "Blogspot (Tot el que m'agrada)";
+			return "Blogspot (Tot el que m’agrada)";
 		case 'blogspot_tnf':
 			return "Blogspot (Tohoshinki no Fansub)";
 		case 'blogspot_uto':
@@ -81,10 +81,10 @@ function get_fetch_type($fetch_type){
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-news-fetcher", "S'ha suprimit el recollidor de notícies amb URL '".query_single("SELECT url FROM news_fetcher WHERE id=".escape($_GET['delete_id']))."' (id. de recollidor de notícies: ".$_GET['delete_id'].")");
+		log_action("delete-news-fetcher", "S’ha suprimit el recollidor de notícies amb URL «".query_single("SELECT url FROM news_fetcher WHERE id=".escape($_GET['delete_id']))."» (id. de recollidor de notícies: ".$_GET['delete_id'].")");
 		query("UPDATE news SET news_fetcher_id=NULL WHERE news_fetcher_id=".escape($_GET['delete_id']));
 		query("DELETE FROM news_fetcher WHERE id=".escape($_GET['delete_id']));
-		$_SESSION['message']="S'ha suprimit correctament.";
+		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -133,7 +133,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle small"><?php echo htmlspecialchars($row['url']); ?></td>
 								<td class="align-middle"><?php echo htmlspecialchars(get_method($row['method'])); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(get_fetch_type($row['fetch_type'])); ?></th>
-								<td class="align-middle text-center text-nowrap"><a href="news_fetcher_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="news_fetcher_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el recollidor de notícies de '".$row['url']."'? L'acció no es podrà desfer. No se'n suprimiran les notícies.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="news_fetcher_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="news_fetcher_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el recollidor de notícies de «".$row['url']."»? L’acció no es podrà desfer. No se’n suprimiran les notícies.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}

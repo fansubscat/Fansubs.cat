@@ -116,11 +116,11 @@ if (!empty($series['genres'])) {
 if (!empty($series['external_id'])) {
 	if (CATALOGUE_ITEM_TYPE=='liveaction') {
 ?>
-							<a class="mal-button" href="https://mydramalist.com/<?php echo $series['external_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra'n la fitxa a MyDramaList</a>
+							<a class="mal-button" href="https://mydramalist.com/<?php echo $series['external_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra’n la fitxa a MyDramaList</a>
 <?php
 	} else {
 ?>
-							<a class="mal-button" href="https://myanimelist.net/<?php echo $cat_config['items_type']; ?>/<?php echo $series['external_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra'n la fitxa a MyAnimeList</a>
+							<a class="mal-button" href="https://myanimelist.net/<?php echo $cat_config['items_type']; ?>/<?php echo $series['external_id']; ?>/" target="_blank"><span class="fa fa-th-list icon"></span>Mostra’n la fitxa a MyAnimeList</a>
 <?php
 	}
 }
@@ -148,14 +148,14 @@ if (!empty($series['tadaima_id'])) {
 
 								</div>
 								<div class="show-more hidden">
-									<a>Mostra'n més...</a>
+									<a>Mostra’n més...</a>
 								</div>
 							</div>
 <?php
 if ($series['has_licensed_parts']==1) {
 ?>
 							<div class="section-content padding-top parts-licensed">
-								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d'aquest <?php echo $cat_config['items_string_s']; ?> ha estat llicenciat o editat oficialment en català. Se'n mostren només les parts no llicenciades.
+								<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Part d’aquest <?php echo $cat_config['items_string_s']; ?> ha estat llicenciat o editat oficialment en català. Se’n mostren només les parts no llicenciades.
 							</div>
 <?php
 }
@@ -177,7 +177,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> encara no disposa de cap versió editada en català. És probable que l'estiguem afegint ara mateix. Torna d'aquí a una estona!</div>
+							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> encara no disposa de cap versió editada en català. És probable que l’estiguem afegint ara mateix. Torna d’aquí a una estona!</div>
 						</div>
 <?php
 } else if ($count==0) {
@@ -185,14 +185,14 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> conté contingut pornogràfic i és només per a majors d'edat. Si ets major d'edat i vols veure'l, activa l'opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
+							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> conté contingut pornogràfic i és només per a majors d’edat. Si ets major d’edat i vols veure’l, activa l’opció de mostrar hentai a la icona de configuració de la part superior de la pàgina.</div>
 						</div>
 <?php
 	} else {
 ?>
 						<div class="section warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> disposa d'alguna versió editada en català, però el teu filtre d'usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> disposa d’alguna versió editada en català, però el teu filtre d’usuari impedeix mostrar-la. Pots canviar el filtre a la icona de configuració de la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -202,7 +202,7 @@ if ($count_unfiltered==0) {
 ?>
 						<div class="section warning-small">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Hi ha alguna altra versió d'aquest <?php echo $cat_config['items_string_s']; ?>. La pots veure canviant el teu filtre d'usuari a la part superior de la pàgina, o mostrar-la temporalment.</div>
+							<div class="section-content">Hi ha alguna altra versió d’aquest <?php echo $cat_config['items_string_s']; ?>. La pots veure canviant el teu filtre d’usuari a la part superior de la pàgina, o mostrar-la temporalment.</div>
 							<a class="force-display" href="?f=1">Mostra-la</a>
 						</div>
 <?php
@@ -273,9 +273,9 @@ if ($count_unfiltered==0) {
 		
 
 		$plurals = array(
-				"active" => array("Aquest web només recopila el material editat. L'autoria de la versió en català és del ".($is_fandub ? 'fandub' : 'fansub')." següent.".($has_web ? " Al seu web també trobaràs els fitxers originals amb màxima qualitat. Si t'agrada la seva feina, deixa-hi un comentari d'agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : "")), "Aquest web només recopila el material editat. L'autoria de la versió en català és dels ".($is_fandub ? 'fandub' : 'fansub')."s següents.".($has_web ? " Als seus webs també trobaràs els fitxers originals amb màxima qualitat. Si t'agrada la seva feina, deixa-hi un comentari d'agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : ""))),
-				"abandoned" => array("Aquest ".$cat_config['items_string_s']." es considera abandonat pel ".($is_fandub ? 'fandub' : 'fansub').", segurament no se'n llançaran més capítols.","Aquest ".$cat_config['items_string_s']." es considera abandonat pels ".($is_fandub ? 'fandub' : 'fansub')."s, segurament no se'n llançaran més capítols."),
-				"cancelled" => array("Aquest ".$cat_config['items_string_s']." ha estat cancel·lat pel ".($is_fandub ? 'fandub' : 'fansub').", no se'n llançaran més capítols.","Aquest ".$cat_config['items_string_s']." ha estat cancel·lat pels ".($is_fandub ? 'fandub' : 'fansub')."s, no se'n llançaran més capítols.")
+				"active" => array("Aquest web només recopila el material editat. L’autoria de la versió en català és del ".($is_fandub ? 'fandub' : 'fansub')." següent.".($has_web ? " Al seu web també trobaràs els fitxers originals amb màxima qualitat. Si t’agrada la seva feina, deixa-hi un comentari d’agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : "")), "Aquest web només recopila el material editat. L’autoria de la versió en català és dels ".($is_fandub ? 'fandub' : 'fansub')."s següents.".($has_web ? " Als seus webs també trobaràs els fitxers originals amb màxima qualitat. Si t’agrada la seva feina, deixa-hi un comentari d’agraïment!" : ($has_download ? " Si vols, també pots baixar-ne els fitxers originals amb màxima qualitat." : ""))),
+				"abandoned" => array("Aquest ".$cat_config['items_string_s']." es considera abandonat pel ".($is_fandub ? 'fandub' : 'fansub').", segurament no se’n llançaran més capítols.","Aquest ".$cat_config['items_string_s']." es considera abandonat pels ".($is_fandub ? 'fandub' : 'fansub')."s, segurament no se’n llançaran més capítols."),
+				"cancelled" => array("Aquest ".$cat_config['items_string_s']." ha estat cancel·lat pel ".($is_fandub ? 'fandub' : 'fansub').", no se’n llançaran més capítols.","Aquest ".$cat_config['items_string_s']." ha estat cancel·lat pels ".($is_fandub ? 'fandub' : 'fansub')."s, no se’n llançaran més capítols.")
 		);
 ?>
 							<div class="section">
@@ -357,14 +357,14 @@ if ($count_unfiltered==0) {
 			if ($version['is_missing_episodes']==1) {
 ?>
 								<div class="section-content padding-bottom episodes-missing">
-									<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Hi ha capítols editats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta'ns</a>.
+									<span class="fa fa-fw fa-exclamation-triangle icon-pr"></span>Hi ha capítols editats que no tenen cap enllaç vàlid. Si els tens o saps on trobar-los, <a class="version-missing-links-link">contacta amb nosaltres</a>.
 								</div>
 <?php
 			}
 			if ($fansub['type']=='fandub') {
 ?>
 								<div class="section-content padding-bottom fandub-warning">
-									<span class="fa fa-fw fa-microphone icon-pr"></span>Aquest <?php echo $cat_config['items_string_s']; ?> ha estat doblat per fans. L'àudio és únicament en català i no disposa de subtítols.
+									<span class="fa fa-fw fa-microphone icon-pr"></span>Aquest <?php echo $cat_config['items_string_s']; ?> ha estat doblat per fans. L’àudio és únicament en català i no disposa de subtítols.
 								</div>
 <?php
 			}

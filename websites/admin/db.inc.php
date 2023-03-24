@@ -45,7 +45,7 @@ function query_single($query){
 }
 
 //Connect to database and initialize it
-$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash("No s'ha pogut connectar a la base de dades.");
+$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash("No s’ha pogut connectar a la base de dades.");
 mysqli_set_charset($db_connection, DB_CHARSET) or crash(mysqli_error($db_connection));
 
 //Connect to Memcached for key-value cache storage

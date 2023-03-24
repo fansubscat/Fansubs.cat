@@ -154,7 +154,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 								<a class="dropdown-item" href="stats.php">Estadístiques</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="error_list.php">Errors de reproducció</a>
-								<a class="dropdown-item" href="storage_status.php">Servidors d'emmagatzematge</a>
+								<a class="dropdown-item" href="storage_status.php">Servidors d’emmagatzematge</a>
 							</div>
 						</li>
 						<li class="nav-item dropdown">

@@ -9,7 +9,7 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Edició d'anime - Anime";
+		$header_title="Edició d’anime - Anime";
 		$page="anime";
 	break;
 	case 'manga':
@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Edició de contingut d'acció real - Acció real";
+		$header_title="Edició de contingut d’acció real - Acció real";
 		$page="liveaction";
 	break;
 }
@@ -30,9 +30,9 @@ switch ($type) {
 		$division_name_singular='Temporada';
 		$division_name_short='Temp.';
 		$division_one="una temporada";
-		$more_than_one="més d'una";
+		$more_than_one="més d’una";
 		$open_series="Encara en emissió";
-		$content_apos="l'anime";
+		$content_apos="l’anime";
 		$content_one="un anime";
 		$external_provider='MyAnimeList';
 		break;
@@ -41,7 +41,7 @@ switch ($type) {
 		$division_name_singular='Volum';
 		$division_name_short='Vol.';
 		$division_one="un volum";
-		$more_than_one="més d'un";
+		$more_than_one="més d’un";
 		$open_series="Encara en publicació";
 		$content_apos="el manga";
 		$content_one="un manga";
@@ -52,10 +52,10 @@ switch ($type) {
 		$division_name_singular='Temporada';
 		$division_name_short='Temp.';
 		$division_one="una temporada";
-		$more_than_one="més d'una";
+		$more_than_one="més d’una";
 		$open_series="Encara en emissió";
-		$content_apos="el contingut d'acció real";
-		$content_one="un contingut d'acció real";
+		$content_apos="el contingut d’acció real";
+		$content_one="un contingut d’acció real";
 		$external_provider='MyDramaList';
 		break;
 }
@@ -252,13 +252,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (is_numeric($_POST['form-related-list-related_series_id-'.$i])) {
 				array_push($related_series,escape($_POST['form-related-list-related_series_id-'.$i]));
 			} else {
-				crash("Dades invàlides: id d'element relacionat no numèric");
+				crash("Dades invàlides: id d’element relacionat no numèric");
 			}
 			$i++;
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-series", "S'ha actualitzat la sèrie '".$data['name']."' (id. de sèrie: ".$data['id'].")");
+			log_action("update-series", "S’ha actualitzat la sèrie «".$data['name']."» (id. de sèrie: ".$data['id'].")");
 			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",subtype='".$data['subtype']."',publish_date=".$data['publish_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",number_of_episodes=".$data['number_of_episodes'].",synopsis='".$data['synopsis']."',external_id=".$data['external_id'].",tadaima_id=".$data['tadaima_id'].",score=".$data['score'].",has_licensed_parts=".$data['has_licensed_parts'].",duration=".$data['duration'].",comic_type=".$data['comic_type'].",reader_type=".$data['reader_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
@@ -310,10 +310,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/'.$data['id'].'.jpg');
 			}
 
-			$_SESSION['message']="S'han desat les dades correctament.";
+			$_SESSION['message']="S’han desat les dades correctament.";
 		}
 		else {
-			log_action("create-series", "S'ha creat la sèrie '".$data['name']."'");
+			log_action("create-series", "S’ha creat la sèrie «".$data['name']."»");
 			query("INSERT INTO series (slug,name,alternate_names,keywords,type,subtype,publish_date,author,director,studio,rating,number_of_episodes,synopsis,external_id,tadaima_id,score,has_licensed_parts,duration,comic_type,reader_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."','".$data['subtype']."',".$data['publish_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['number_of_episodes'].",'".$data['synopsis']."',".$data['external_id'].",".$data['tadaima_id'].",".$data['score'].",".$data['has_licensed_parts'].",".$data['duration'].",".$data['comic_type'].",".$data['reader_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
@@ -340,7 +340,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/'.$inserted_id.'.jpg');
 			}
 
-			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?type=$type&series_id=$inserted_id\"><span class=\"fa fa-plus pe-2\"></span>Crea'n una versió</a>";
+			$_SESSION['message']="S’han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?type=$type&series_id=$inserted_id\"><span class=\"fa fa-plus pe-2\"></span>Crea’n una versió</a>";
 		}
 
 		header("Location: series_list.php?type=$type");
@@ -416,7 +416,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div id="import-from-mal-done" class="col-sm mb-3 alert alert-warning d-none">
-							<span class="fa fa-exclamation-triangle pe-2"></span>S'ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el nom, si s'escau.
+							<span class="fa fa-exclamation-triangle pe-2"></span>S’ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el nom, si s’escau.
 						</div>
 						<hr />
 						<div class="row">
@@ -468,7 +468,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="mb-3">
-									<label for="form-keywords">Paraules clau <small class="text-muted">(separades per espais; que no siguin ja al nom o noms alternatius, s'utilitza per a la cerca)</small></label>
+									<label for="form-keywords">Paraules clau <small class="text-muted">(separades per espais; que no siguin ja al nom o noms alternatius, s’utilitza per a la cerca)</small></label>
 									<input class="form-control" name="keywords" id="form-keywords" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['keywords'])); ?>">
 								</div>
 							</div>
@@ -497,7 +497,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-publish_date">Data d'estrena</label>
+									<label for="form-publish_date">Data d’estrena</label>
 									<input class="form-control" name="publish_date" type="date" id="form-publish_date" maxlength="200" value="<?php echo !empty($row['publish_date']) ? date('Y-m-d', strtotime($row['publish_date'])) : ""; ?>">
 								</div>
 							</div>
@@ -649,7 +649,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="mb-3">
-							<label for="form-explicit">Nivell d'erotisme <small>(si n'hi ha; marca només el més alt; ecchi &lt; erotisme &lt; hentai)</small></label>
+							<label for="form-explicit">Nivell d’erotisme <small>(si n’hi ha; marca només el més alt; ecchi &lt; erotisme &lt; hentai)</small></label>
 							<div id="form-explicit" class="row ps-3 pe-3">
 <?php
 	$resultg = query("SELECT g.* FROM genre g WHERE type='explicit' ORDER BY g.name");
@@ -691,7 +691,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 10%;" class="mandatory">Núm.</th>
-													<th>Nom <small class="text-muted">(es mostra si n'hi ha més <?php echo $more_than_one; ?>; si està informat, no s'hi afegeix «<?php echo $division_name_singular; ?> X»)</small></th>
+													<th>Nom <small class="text-muted">(es mostra si n’hi ha més <?php echo $more_than_one; ?>; si està informat, no s’hi afegeix «<?php echo $division_name_singular; ?> X»)</small></th>
 													<th class="mandatory" style="width: 15%;">Capítols</th>
 													<th style="width: 15%;">Id. <?php echo $external_provider; ?></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -754,7 +754,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="mb-3">
 							<label for="form-episode-list">Capítols</label>
 							<div id="import-from-mal-episodes-done" class="col-sm mb-3 alert alert-warning d-none">
-								<span class="fa fa-exclamation-triangle pe-2"></span>S'han importat els capítols de MyAnimeList. Revisa'n tots els camps.
+								<span class="fa fa-exclamation-triangle pe-2"></span>S’han importat els capítols de MyAnimeList. Revisa’n tots els camps.
 							</div>
 							<div class="container" id="form-episode-list">
 								<div class="row">

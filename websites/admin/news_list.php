@@ -7,19 +7,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($_GET['delete_id'])) {
 		$todelete_result = query("SELECT n.*, f.name fansub_name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE MD5(CONCAT(n.title, n.date))='".escape($_GET['delete_id'])."'");
 		if (mysqli_num_rows($todelete_result)>1) {
-			crash("No es pot esborrar la notícia: més d'una notícia amb el mateix MD5!");
+			crash("No es pot esborrar la notícia: més d’una notícia amb el mateix MD5!");
 		} else if (mysqli_num_rows($todelete_result)==1) {
 			$todelete_row = mysqli_fetch_assoc($todelete_result);
-			log_action("delete-news", "S'ha suprimit la notícia '".escape($todelete_row['title'])."' del fansub '".escape($todelete_row['fansub_name'])."'");
+			log_action("delete-news", "S’ha suprimit la notícia «".escape($todelete_row['title'])."» del fansub «".escape($todelete_row['fansub_name'])."»");
 			query("DELETE FROM news WHERE MD5(CONCAT(title, date))='".escape($_GET['delete_id'])."'");
 		}
-		$_SESSION['message']="S'ha suprimit correctament.";
+		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 
 	if (!empty($_GET['delete_pending_id'])) {
-		log_action("delete-pending-news", "S'ha suprimit la notícia proposada amb id. ".escape($_GET['delete_pending_id']));
+		log_action("delete-pending-news", "S’ha suprimit la notícia proposada amb id. ".escape($_GET['delete_pending_id']));
 		query("DELETE FROM pending_news WHERE id=".escape($_GET['delete_pending_id']));
-		$_SESSION['message']="S'ha suprimit correctament.";
+		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -39,7 +39,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$result = query("SELECT pn.* FROM pending_news pn ORDER BY pn.title ASC");
 	if (mysqli_num_rows($result)>0) {
 ?>
-					<h5 class="card-title text-center mb-4 mt-1">Hi ha notícies proposades pendents d'aprovar:</h5>
+					<h5 class="card-title text-center mb-4 mt-1">Hi ha notícies proposades pendents d’aprovar:</h5>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
@@ -57,7 +57,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row"><?php echo htmlspecialchars($row['title']); ?></th>
 								<td class="small"><?php echo htmlspecialchars($row['sender_name']); ?></td>
 								<td class="small"><?php echo htmlspecialchars(substr($row['contents'], 0, 255).'...'); ?></td>
-								<td class="align-middle text-center"><a href="news_edit.php?import_pending_id=<?php echo $row['id']; ?>" title="Notícia bona, importa-la" class="fa fa-thumbs-up p-1 text-success"></a> <a href="news_list.php?delete_pending_id=<?php echo $row['id']; ?>" title="Notícia dolenta, suprimeix-la" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la notícia proposada '".$row['title']."'? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-thumbs-down p-1 text-danger"></a></td>
+								<td class="align-middle text-center"><a href="news_edit.php?import_pending_id=<?php echo $row['id']; ?>" title="Notícia bona, importa-la" class="fa fa-thumbs-up p-1 text-success"></a> <a href="news_list.php?delete_pending_id=<?php echo $row['id']; ?>" title="Notícia dolenta, suprimeix-la" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la notícia proposada «".$row['title']."»? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-thumbs-down p-1 text-danger"></a></td>
 							</tr>
 <?php
 		}
@@ -100,7 +100,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : '(Notícia interna de Fansubs.cat)'; ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars($row['title']); ?></td>
 								<td class="align-middle text-center"><?php echo date('Y-m-d H:i:s', strtotime($row['date'])); ?></th>
-								<td class="align-middle text-center text-nowrap"><a href="news_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="news_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la notícia '".$row['title']."'? Només s'hauria de fer en casos molt especials. L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="news_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="news_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la notícia «".$row['title']."»? Només s’hauria de fer en casos molt especials. L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}

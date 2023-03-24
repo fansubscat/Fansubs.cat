@@ -170,7 +170,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'serialized_tadaima_forum_id' => "10",
 			'items_string_s' => "anime",
 			'items_string_p' => "animes",
-			'items_string_del' => "de l'anime",
+			'items_string_del' => "de l’anime",
 			'being_published' => "en emissió",
 			'more_divisions_available' => "Hi ha més temporades sense contingut disponible. Prem per a mostrar-les totes.",
 			'division_name' => "Temporada",

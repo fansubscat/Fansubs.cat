@@ -93,13 +93,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						$results = "Error de sessió ja iniciada. Torna-ho a provar. (codi: 1)";
 						break;
 					case 'ERROR 2':
-						$results = "Error d'inici de sessió. El compte encara està actiu? (codi: 2)";
+						$results = "Error d’inici de sessió. El compte encara està actiu? (codi: 2)";
 						break;
 					case 'ERROR 3':
-						$results = "Error d'accés a la carpeta. El nom de la carpeta és correcte? (codi: 3)";
+						$results = "Error d’accés a la carpeta. El nom de la carpeta és correcte? (codi: 3)";
 						break;
 					case 'ERROR 4':
-						$results = "Error d'exportació d'enllaços. (codi: 4)";
+						$results = "Error d’exportació d’enllaços. (codi: 4)";
 						break;
 					case 'ERROR 5':
 						$results = "Error en tancar la sessió. (codi: 5)";
@@ -123,7 +123,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if ($res['status']=='ko') {
 				echo json_encode(array(
 					"status" => 'ko',
-					"error" => "Error en accedir a l'emmagatzematge. (codi: ".$res['code'].")"
+					"error" => "Error en accedir a l’emmagatzematge. (codi: ".$res['code'].")"
 				));
 				die();
 			} else {
@@ -163,7 +163,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						$element['file'] = $filename;
 						$element['link'] = $real_link;
 						$element['reason'] = "Múltiples enllaços";
-						$element['reason_description'] = "Hi ha més d'un enllaç del mateix tipus per a aquest capítol, s'ha importat només el primer.";
+						$element['reason_description'] = "Hi ha més d’un enllaç del mateix tipus per a aquest capítol, s’ha importat només el primer.";
 						array_push($unmatched_results, $element);
 					}
 				} else {
@@ -172,7 +172,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$element['file'] = $filename;
 					$element['link'] = $real_link;
 					$element['reason'] = "Capítol inexistent";
-					$element['reason_description'] = "No s'ha trobat cap capítol amb aquest número.";
+					$element['reason_description'] = "No s’ha trobat cap capítol amb aquest número.";
 					array_push($unmatched_results, $element);
 				}
 			}
@@ -186,7 +186,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				array_push($unmatched_results, $element);
 			}
 		} else {
-			log_action('get-link-failed', "No s'ha pogut obtenir l'enllaç, text de sortida sense el format correcte: '".$link."'");
+			log_action('get-link-failed', "No s’ha pogut obtenir l’enllaç, text de sortida sense el format correcte: «".$link."»");
 		}
 	}
 

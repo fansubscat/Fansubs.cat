@@ -10,13 +10,13 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Darreres visualitzacions d'anime - Anàlisi";
+		$header_title="Darreres visualitzacions d’anime - Anàlisi";
 	break;
 	case 'manga':
 		$header_title="Darreres visualitzacions de manga - Anàlisi";
 	break;
 	case 'liveaction':
-		$header_title="Darreres visualitzacions d'acció real - Anàlisi";
+		$header_title="Darreres visualitzacions d’acció real - Anàlisi";
 	break;
 }
 
@@ -25,7 +25,7 @@ include("header.inc.php");
 switch ($type) {
 	case 'anime':
 		$content_uc="Anime";
-		$content_prep="d'anime";
+		$content_prep="d’anime";
 		$view_name="Visualitzacions";
 		$view_name_lc="visualitzacions";
 		$division_name="Temporada";
@@ -38,8 +38,8 @@ switch ($type) {
 		$division_name="Volum";
 	break;
 	case 'liveaction':
-		$content_uc="Contingut d'acció real";
-		$content_prep="de contingut d'acció real";
+		$content_uc="Contingut d’acció real";
+		$content_prep="de contingut d’acció real";
 		$view_name="Visualitzacions";
 		$view_name_lc="visualitzacions";
 		$division_name="Temporada";
@@ -119,7 +119,7 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les <?php echo $view_name_lc; ?> de navegadors, la resta poden fluctuar i s'incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
+								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les <?php echo $view_name_lc; ?> de navegadors, la resta poden fluctuar i s’incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
 							</article>
 						</div>
 					</div>
@@ -206,7 +206,7 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les <?php echo $view_name_lc; ?> de navegadors, la resta poden fluctuar i s'incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
+								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les <?php echo $view_name_lc; ?> de navegadors, la resta poden fluctuar i s’incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
 							</article>
 						</div>
 					</div>

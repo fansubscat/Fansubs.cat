@@ -9,7 +9,7 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Llista d'anime - Anime";
+		$header_title="Llista d’anime - Anime";
 		$page="anime";
 	break;
 	case 'manga':
@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Llista de contingut d'acció real - Acció real";
+		$header_title="Llista de contingut d’acció real - Acció real";
 		$page="liveaction";
 	break;
 }
@@ -27,7 +27,7 @@ include("header.inc.php");
 switch ($type) {
 	case 'anime':
 		$content="anime";
-		$content_prep="d'anime";
+		$content_prep="d’anime";
 		$divisions = "Temporades";
 	break;
 	case 'manga':
@@ -36,15 +36,15 @@ switch ($type) {
 		$divisions = "Volums";
 	break;
 	case 'liveaction':
-		$content="contingut d'acció real";
-		$content_prep="de contingut d'acció real";
+		$content="contingut d’acció real";
+		$content_prep="de contingut d’acció real";
 		$divisions = "Temporades";
 	break;
 }
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-series", "S'ha suprimit la sèrie '".query_single("SELECT name FROM series WHERE id=".escape($_GET['delete_id']))."' (id. de sèrie: ".$_GET['delete_id'].")");
+		log_action("delete-series", "S’ha suprimit la sèrie «".query_single("SELECT name FROM series WHERE id=".escape($_GET['delete_id']))."» (id. de sèrie: ".$_GET['delete_id'].")");
 		query("DELETE FROM rel_series_genre WHERE series_id=".escape($_GET['delete_id']));
 		query("DELETE FROM episode WHERE series_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE series_id=".escape($_GET['delete_id']));
@@ -53,7 +53,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		@unlink(STATIC_DIRECTORY.'/images/featured/'.$_GET['delete_id'].'.jpg');
 		//Cascaded deletions: file, link, rel_version_fansub
 		//Views will NOT be removed in order to keep consistent stats history
-		$_SESSION['message']="S'ha suprimit correctament.";
+		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -100,7 +100,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center"><?php echo $row['divisions']; ?></td>
 								<td class="align-middle text-center"><?php echo ($row['number_of_episodes']!=-1 ? $row['number_of_episodes'] : 'Oberta').($row['specials']>0 ? '<small>+'.$row['specials'].'</small>' : ''); ?></td>
 								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea'n una versió" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="series_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir ".$content_prep." '".$row['name']."' i tot el seu material? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea’n una versió" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="series_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir ".$content_prep." «".$row['name']."» i tot el seu material? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}

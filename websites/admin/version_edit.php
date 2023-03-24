@@ -9,7 +9,7 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Edició de versions d'anime - Anime";
+		$header_title="Edició de versions d’anime - Anime";
 		$page="anime";
 	break;
 	case 'manga':
@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Edició de versions d'acció real - Acció real";
+		$header_title="Edició de versions d’acció real - Acció real";
 		$page="liveaction";
 	break;
 }
@@ -28,7 +28,7 @@ switch ($type) {
 	case 'anime':
 		$content="anime";
 		$content_uc="Anime";
-		$content_prep="de l'anime";
+		$content_prep="de l’anime";
 		$division_name="Temporada";
 		$division_prep="de les temporades";
 		$division_some_completed="alguna temporada completada";
@@ -52,9 +52,9 @@ switch ($type) {
 		$series_name="serialitzats";
 		break;
 	case 'liveaction':
-		$content="contingut d'acció real";
-		$content_uc="Contingut d'acció real";
-		$content_prep="del contingut d'acció real";
+		$content="contingut d’acció real";
+		$content_uc="Contingut d’acció real";
+		$content_prep="del contingut d’acció real";
 		$division_name="Temporada";
 		$division_prep="de les temporades";
 		$division_some_completed="alguna temporada completada";
@@ -294,25 +294,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (is_numeric($_POST['form-extras-list-id-'.$i])) {
 				$extra['id']=escape($_POST['form-extras-list-id-'.$i]);
 			} else {
-				crash("Dades invàlides: manca id de l'extra");
+				crash("Dades invàlides: manca id de l’extra");
 			}
 			if (!empty($_POST['form-extras-list-name-'.$i])) {
 				$extra['name']=escape($_POST['form-extras-list-name-'.$i]);
 			} else {
-				crash("Dades invàlides: manca name de l'extra");
+				crash("Dades invàlides: manca name de l’extra");
 			}
 			if (is_uploaded_file($_FILES['form-extras-list-file-'.$i]['tmp_name'])) {
 				$extra['original_filename']=escape($_FILES['form-extras-list-file-'.$i]["name"]);
 				$extra['original_filename_unescaped']=$_FILES['form-extras-list-file-'.$i]['name'];
 				$extra['temporary_filename']=$_FILES['form-extras-list-file-'.$i]['tmp_name'];
 			} else if ($type=='manga' && $extra['id']==-1) {
-				crash("Dades invàlides: manca fitxer de l'extra");
+				crash("Dades invàlides: manca fitxer de l’extra");
 			}
 			if (!empty($_POST['form-extras-list-length-'.$i])) {
 				//This works for manga too because if the format is not in HH:MM:SS, the value is returned directly
 				$extra['length']=escape(convert_from_hh_mm_ss($_POST['form-extras-list-length-'.$i]));
 			} else {
-				crash("Dades invàlides: manca length de l'extra");
+				crash("Dades invàlides: manca length de l’extra");
 			}
 			if (!empty($_POST['form-extras-list-comments-'.$i])) {
 				$extra['comments']="'".escape($_POST['form-extras-list-comments-'.$i])."'";
@@ -396,7 +396,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				mysqli_free_result($result_old);
 			}
 
-			log_action("update-version", "S'ha actualitzat una versió de '".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."' (id. de versió: ".$data['id'].")");
+			log_action("update-version", "S’ha actualitzat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (id. de versió: ".$data['id'].")");
 			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_divisions=".$data['show_divisions'].",show_expanded_divisions=".$data['show_expanded_divisions'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",show_expanded_extras=".$data['show_expanded_extras'].",order_type=".$data['order_type'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder='".$data['storage_folder']."',storage_processing=".$data['storage_processing'].",default_resolution=".$data['default_resolution'].",version_author=".$data['version_author'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
@@ -600,10 +600,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 
-			$_SESSION['message']="S'han desat les dades correctament.";
+			$_SESSION['message']="S’han desat les dades correctament.";
 		}
 		else {
-			log_action("create-version", "S'ha creat una versió de '".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."'");
+			log_action("create-version", "S’ha creat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."»");
 			query("INSERT INTO version (series_id,status,is_missing_episodes,is_featurable,is_always_featured,show_divisions,show_expanded_divisions,show_episode_numbers,show_unavailable_episodes,show_expanded_extras,order_type,is_hidden,completed_date,storage_folder,storage_processing,default_resolution,version_author,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_divisions'].",".$data['show_expanded_divisions'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['show_expanded_extras'].",".$data['order_type'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",'".$data['storage_folder']."',".$data['storage_processing'].",".$data['default_resolution'].",".$data['version_author'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
@@ -654,7 +654,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 
-			$_SESSION['message']="S'han desat les dades correctament.";
+			$_SESSION['message']="S’han desat les dades correctament.";
 		}
 
 		header("Location: version_list.php?type=$type");
@@ -804,19 +804,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-downloads_url_1">Enllaç de baixada dels fitxers originals 1<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
+									<label for="form-downloads_url_1">Enllaç de baixada dels fitxers originals 1<br /><small class="text-muted">(o fitxa del fansub; separa’ls amb un punt i coma, si cal)</small></label>
 									<input id="form-downloads_url_1" name="downloads_url_1" type="url" class="form-control" value="<?php echo (count($fansubs)>0 ? htmlspecialchars($fansubs[0][1]) : ''); ?>" maxlength="200"/>
 								</div>
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-downloads_url_2">Enllaç de baixada dels fitxers originals 2<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
+									<label for="form-downloads_url_2">Enllaç de baixada dels fitxers originals 2<br /><small class="text-muted">(o fitxa del fansub; separa’ls amb un punt i coma, si cal)</small></label>
 									<input id="form-downloads_url_2" name="downloads_url_2" type="url" class="form-control" value="<?php echo (count($fansubs)>1 ? htmlspecialchars($fansubs[1][1]) : ''); ?>" maxlength="200" <?php echo (count($fansubs)>1 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-downloads_url_3">Enllaç de baixada dels fitxers originals 3<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
+									<label for="form-downloads_url_3">Enllaç de baixada dels fitxers originals 3<br /><small class="text-muted">(o fitxa del fansub; separa’ls amb un punt i coma, si cal)</small></label>
 									<input id="form-downloads_url_3" name="downloads_url_3" type="url" class="form-control" value="<?php echo (count($fansubs)>2 ? htmlspecialchars($fansubs[2][1]) : ''); ?>" maxlength="200" <?php echo (count($fansubs)>2 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
@@ -863,32 +863,32 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-storage_folder"><span class="mandatory">Carpeta d'emmagatzematge</span><br /><small class="text-muted">(modifica-la només si saps què fas; s'hi copiaran els fitxers)</small></label>
+									<label for="form-storage_folder"><span class="mandatory">Carpeta d’emmagatzematge</span><br /><small class="text-muted">(modifica-la només si saps què fas; s’hi copiaran els fitxers)</small></label>
 									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo $row['storage_folder']; ?>" maxlength="200" required<?php echo (!empty($row['id']) && empty($row['is_hidden'])) ? ' readonly' : '' ; ?>/>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-default_resolution">Resolució per defecte<br /><small class="text-muted">(per a la importació automàtica d'enllaços)</small></label>
+									<label for="form-default_resolution">Resolució per defecte<br /><small class="text-muted">(per a la importació automàtica d’enllaços)</small></label>
 									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-storage_processing"><span class="mandatory">Processament previ</span><br /><small class="text-muted">(com s'importen els fitxers a l'emmagatzematge)</small></label>
+									<label for="form-storage_processing"><span class="mandatory">Processament previ</span><br /><small class="text-muted">(com s’importen els fitxers a l’emmagatzematge)</small></label>
 									<select name="storage_processing" class="form-select" onchange="if(!confirm('Modificar aquesta opció pot provocar que els vídeos no es puguin reproduir correctament. Canvia-la només si tens el permís d‘un administrador. En cas contrari, deixa-la a “Recomprimeix el vídeo i l’àudio”. Vols mantenir el canvi?')) this.selectedIndex=0;">
-										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Recomprimeix el vídeo i l'àudio</option>
-										<option value="0"<?php echo $row['storage_processing']==0 ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l'àudio</option>
-										<option value="2"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>Recomprimeix l'àudio, copia el vídeo</option>
-										<option value="3"<?php echo $row['storage_processing']==3 ? " selected" : ""; ?>>No recomprimeixis res (regenera l'MP4)</option>
+										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Recomprimeix el vídeo i l’àudio</option>
+										<option value="0"<?php echo $row['storage_processing']==0 ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l’àudio</option>
+										<option value="2"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>Recomprimeix l’àudio, copia el vídeo</option>
+										<option value="3"<?php echo $row['storage_processing']==3 ? " selected" : ""; ?>>No recomprimeixis res (regenera l’MP4)</option>
 										<option value="4"<?php echo $row['storage_processing']==4 ? " selected" : ""; ?>>Copia sense cap canvi (còpia 1:1)</option>
-										<option value="5"<?php echo $row['storage_processing']==5 ? " selected" : ""; ?>>Omet l'emmagatzematge local (còpia 1:1)</option>
+										<option value="5"<?php echo $row['storage_processing']==5 ? " selected" : ""; ?>>Omet l’emmagatzematge local (còpia 1:1)</option>
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="mb-3">
-							<label for="form-remote_folders-list">Carpetes remotes <small class="text-muted">(per a l'obtenció automàtica d'enllaços)</small></label>
+							<label for="form-remote_folders-list">Carpetes remotes <small class="text-muted">(per a l’obtenció automàtica d’enllaços)</small></label>
 							<div class="container" id="form-remote_folders-list">
 <?php
 
@@ -1009,7 +1009,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<button onclick="addVersionRemoteFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix una carpeta</button>
 										</div>
 										<div class="col-sm text-end" style="padding-left: 0; padding-right: 0">
-											<select id="import-type" class="form-select form-control-sm form-inline" title="Indica el tipus de sinronització desitjada en aquesta actualització d'enllaços: tots els comptes o només els marcats." style="width: auto; display: inline; font-size: 78%;">
+											<select id="import-type" class="form-select form-control-sm form-inline" title="Indica el tipus de sincronització desitjada en aquesta actualització d’enllaços: tots els comptes o només els marcats." style="width: auto; display: inline; font-size: 78%;">
 												<option value="all" selected>Utilitza tots els comptes</option>
 												<option value="sync">Només els sincronitzats</option>
 											</select> →
@@ -1023,7 +1023,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="d-none alert alert-warning" id="import-failed-results">
-							<div><span class="fa fa-exclamation-triangle me-2"></span> Els següents elements no s'han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa <?php echo $content_prep; ?>. Afegeix-los a mà on correspongui. Recorda que els fitxers només s'importen automàticament si tenen el format "<i>text</i><u><b> - 123</b></u><i>text</i>.mp4".</div>
+							<div><span class="fa fa-exclamation-triangle me-2"></span> Els següents elements no s’han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa <?php echo $content_prep; ?>. Afegeix-los a mà on correspongui. Recorda que els fitxers només s’importen automàticament si tenen el format «<i>text</i><u><b> - 123</b></u><i>text</i>.mp4».</div>
 							<table class="table-hover table-sm mt-2 small w-100" id="import-failed-results-table">
 								<thead>
 									<tr>
@@ -1073,13 +1073,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<option value="360p">
 								</datalist>
 								<div id="warning-no-numbers-and-sort" class="alert alert-warning<?php echo $row['show_episode_numbers']==0 && $row['order_type']!=0 ? '' : ' d-none'; ?>">
-									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle me-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura’t d’afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle me-2"></span>L’ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura’t que n’introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
 								<div id="warning-no-numbers" class="alert alert-warning<?php echo $row['show_episode_numbers']==0 && $row['order_type']==0 ? '' : ' d-none'; ?>">
-									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.</div>
+									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura’t d’afegir-los allà on sigui necessari.</div>
 								</div>
 								<div id="warning-sort" class="alert alert-warning<?php echo $row['order_type']!=0 && $row['show_episode_numbers']!=0 ? '' : ' d-none'; ?>">
-									<div><span class="fa fa-exclamation-triangle me-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+									<div><span class="fa fa-exclamation-triangle me-2"></span>L’ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura’t que n’introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
 <?php
 	for ($i=0;$i<count($episodes);$i++) {
@@ -1136,7 +1136,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="files-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($files),1); ?>">
 													<thead>
 														<tr>
-															<th style="width: 12%;"><span class="mandatory">Variant</span> <span class="fa fa-question-circle small text-secondary" style="cursor: help;" title="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.), però normalment només n'hi ha una ('Única')"></span></th>
+															<th style="width: 12%;"><span class="mandatory">Variant</span> <span class="fa fa-question-circle small text-secondary" style="cursor: help;" title="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.), però normalment només n’hi ha una («Única»)"></span></th>
 <?php
 			if ($type=='manga') {
 ?>
@@ -1318,7 +1318,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 ?>
 									<div class="alert alert-warning">
-										<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest capítol és un film enllaçat. No se'n mostrarà el número de capítol, i el títol que es mostrarà serà el que introdueixis aquí.</div>
+										<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest capítol és un film enllaçat. No se’n mostrarà el número de capítol, i el títol que es mostrarà serà el que introdueixis aquí.</div>
 									</div>
 <?php
 		}
@@ -1468,15 +1468,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_divisions" id="form-show_divisions" value="1"<?php echo $row['show_divisions']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_divisions">Separa per <?php echo $division_pl; ?> i mostra'n els noms <small class="text-muted">(normalment activat; si només n'hi ha <?php echo $division_one; ?>, no es mostrarà)</small></label>
+									<label class="form-check-label" for="form-show_divisions">Separa per <?php echo $division_pl; ?> i mostra’n els noms <small class="text-muted">(normalment activat; si només n’hi ha <?php echo $division_one; ?>, no es mostrarà)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_expanded_divisions" id="form-show_expanded_divisions" value="1"<?php echo $row['show_expanded_divisions']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_expanded_divisions">Mostra <?php echo $division_pl_expanded; ?> per defecte <small class="text-muted">(normalment activat; si n'hi ha <?php echo $division_many; ?>, es pot desmarcar)</small></label>
+									<label class="form-check-label" for="form-show_expanded_divisions">Mostra <?php echo $division_pl_expanded; ?> per defecte <small class="text-muted">(normalment activat; si n’hi ha <?php echo $division_many; ?>, es pot desmarcar)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_expanded_extras" id="form-show_expanded_extras" value="1"<?php echo $row['show_expanded_extras']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_expanded_extras">Mostra els extres desplegats per defecte <small class="text-muted">(normalment activat; si n'hi ha molts o poc rellevants, es pot desmarcar)</small></label>
+									<label class="form-check-label" for="form-show_expanded_extras">Mostra els extres desplegats per defecte <small class="text-muted">(normalment activat; si n’hi ha molts o poc rellevants, es pot desmarcar)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_unavailable_episodes" id="form-show_unavailable_episodes" value="1"<?php echo $row['show_unavailable_episodes']==1 ? " checked" : ""; ?>>
@@ -1484,15 +1484,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_standard" value="0"<?php echo $row['order_type']==0 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-order_type_standard">Aplica l'ordenació estàndard <small class="text-muted">(primer capítols normals per ordre numèric, després especials per ordre alfabètic estricte)</small></label>
+									<label class="form-check-label" for="form-order_type_standard">Aplica l’ordenació estàndard <small class="text-muted">(primer capítols normals per ordre numèric, després especials per ordre alfabètic estricte)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_alphabetic" value="1"<?php echo $row['order_type']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-order_type_alphabetic">Aplica l'ordenació alfabètica estricta <small class="text-muted">(capítols i especials barrejats, ordre: 1, 10, 11, 12..., 2, 3...)</small></label>
+									<label class="form-check-label" for="form-order_type_alphabetic">Aplica l’ordenació alfabètica estricta <small class="text-muted">(capítols i especials barrejats, ordre: 1, 10, 11, 12..., 2, 3...)</small></label>
 								</div>
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="radio" name="order_type" id="form-order_type_natural" value="2"<?php echo $row['order_type']==2 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-order_type_natural">Aplica l'ordenació alfabètica natural <small class="text-muted">(capítols i especials barrejats, ordre: 1, 2, 3... 10, 11, 12...)</small></label>
+									<label class="form-check-label" for="form-order_type_natural">Aplica l’ordenació alfabètica natural <small class="text-muted">(capítols i especials barrejats, ordre: 1, 2, 3... 10, 11, 12...)</small></label>
 								</div>
 							</div>
 						</div>
@@ -1510,7 +1510,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<div class="form-check form-check-inline mb-2">
 								<input class="form-check-input" type="checkbox" name="do_not_recreate_storage_links" id="form-do_not_recreate_storage_links" value="1" onchange="if($(this).prop('checked')){$('#form-do_not_count_as_update').prop('checked',true);}">
-								<label class="form-check-label" for="form-do_not_recreate_storage_links">No recreïs els enllaços d'emmagatzematge</label>
+								<label class="form-check-label" for="form-do_not_recreate_storage_links">No recreïs els enllaços d’emmagatzematge</label>
 							</div>
 							<br />
 <?php

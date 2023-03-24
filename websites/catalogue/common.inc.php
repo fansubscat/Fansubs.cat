@@ -93,7 +93,7 @@ function get_status_description($id){
 		case 2:
 			return "En procés: No hi ha tots els capítols disponibles";
 		case 3:
-			return "Parcialment completat: Almenys una part de l'obra està completada";
+			return "Parcialment completat: Almenys una part de l’obra està completada";
 		case 4:
 			return "Abandonat: No hi ha tots els capítols disponibles";
 		case 5:

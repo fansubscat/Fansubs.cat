@@ -283,7 +283,7 @@ function populateMalDataManga(response) {
 			}
 		}
 		if (response.data.chapters) {
-			var howMany = prompt("S'importaran els volums, però no sabem quants capítols té cadascun. Segons MyAnimeList, en total n'hi ha "+response.data.chapters+" repartits en "+response.data.volumes+" volums (aprox. uns "+Math.floor(response.data.chapters/response.data.volumes)+" capítols per volum). Amb l'objectiu de facilitar introduir les dades, podem assignar-ne una quantitat fixa a cada volum: introdueix-la. Si ho cancel·les o no introdueixes res, s'assignaran tots al primer volum. En qualsevol cas, assegura't de revisar que tot sigui correcte abans d'afegir el manga.");
+			var howMany = prompt("S’importaran els volums, però no sabem quants capítols té cadascun. Segons MyAnimeList, en total n’hi ha "+response.data.chapters+" repartits en "+response.data.volumes+" volums (aprox. uns "+Math.floor(response.data.chapters/response.data.volumes)+" capítols per volum). Amb l’objectiu de facilitar introduir les dades, podem assignar-ne una quantitat fixa a cada volum: introdueix-la. Si ho cancel·les o no introdueixes res, s’assignaran tots al primer volum. En qualsevol cas, assegura’t de revisar que tot sigui correcte abans d’afegir el manga.");
 			if (!howMany || !howMany.match(/^-?[0-9]+$/)) {
 				$("#form-division-list-number_of_episodes-1").val(response.data.chapters);
 			} else {
@@ -439,7 +439,7 @@ function addExtraLinkRow(extra_number) {
 
 function addVersionRow(episode_id) {
 	if (isAutoFetchActive()){
-		alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d'una variant per capítol. Abans has de desactivar-la.");
+		alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d’una variant per capítol. Abans has de desactivar-la.");
 		return;
 	}
 
@@ -481,7 +481,7 @@ function uncompressFile(fileInput) {
 	var numberOfPagesElement=$(document.getElementById(fileInput.id.replace("file-", "length-")));
 	// Just return if there is no file selected
 	if (fileInput.files.length === 0) {
-		detailsElement.html("<span style=\"color: gray;\"><span class=\"fa fa-times fa-fw\"></span> No s'ha seleccionat cap fitxer, no es faran canvis.</span>");
+		detailsElement.html("<span style=\"color: gray;\"><span class=\"fa fa-times fa-fw\"></span> No s’ha seleccionat cap fitxer, no es faran canvis.</span>");
 		numberOfPagesElement.val(0);
 		$('label[for="'+fileInput.id+'"]').removeClass("btn-danger");
 		$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
@@ -520,7 +520,7 @@ function uncompressFile(fileInput) {
 			});
 
 			if (countImages==count && countRepeated==0) {
-				detailsElement.html("<span style=\"color: #1e7e34;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L'arxiu consta de <strong>"+countImages+" imatges</strong> en total.</span>");
+				detailsElement.html("<span style=\"color: #1e7e34;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L’arxiu consta de <strong>"+countImages+" imatges</strong> en total.</span>");
 				numberOfPagesElement.val(countImages);
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-danger");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
@@ -529,7 +529,7 @@ function uncompressFile(fileInput) {
 				$('label[for="'+fileInput.id+'"]').addClass("btn-success");
 				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pe-2"></span>Es pujarà');
 			} else if (countRepeated>0) {
-				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L'arxiu conté "+countRepeated+" fitxers amb noms repetits. Recorda que no hi poden haver subcarpetes.</span>");
+				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L’arxiu conté "+countRepeated+" fitxers amb noms repetits. Recorda que no hi poden haver subcarpetes.</span>");
 				fileInput.value="";
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
@@ -539,7 +539,7 @@ function uncompressFile(fileInput) {
 				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pe-2"></span>Puja un fitxer...');
 				numberOfPagesElement.val(0);
 			} else if (countImages==0) {
-				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L'arxiu no conté cap fitxer d'imatge JPEG ni PNG.</span>");
+				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L’arxiu no conté cap fitxer d’imatge JPEG ni PNG.</span>");
 				fileInput.value="";
 				numberOfPagesElement.val(0);
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
@@ -549,7 +549,7 @@ function uncompressFile(fileInput) {
 				$('label[for="'+fileInput.id+'"]').addClass("btn-danger");
 				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pe-2"></span>Puja un fitxer...');
 			} else {
-				detailsElement.html("<span style=\"color: #d39e00;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L'arxiu consta de <strong>"+countImages+" imatges</strong> en total.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>Compte: L'arxiu conté "+(count-countImages)+" fitxers que no són imatges i es descartaran.</span>");
+				detailsElement.html("<span style=\"color: #d39e00;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L’arxiu consta de <strong>"+countImages+" imatges</strong> en total.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>Compte: L’arxiu conté "+(count-countImages)+" fitxers que no són imatges i es descartaran.</span>");
 				numberOfPagesElement.val(countImages);
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-danger");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
@@ -612,7 +612,7 @@ function addVersionRemoteFolderRow() {
 }
 
 function deleteVersionRow(episode_id, id) {
-	if ($("#form-files-list-"+episode_id+"-id-"+id).val()=='-1' || ($("#form-files-list-"+episode_id+"-id-"+id).val()!='-1' && confirm($('#type').val()=='manga' ? "Segur que vols esborrar aquest fitxer? Se'n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, fes servir el botó 'Canvia el fitxer'." : "Segur que vols esborrar aquest fitxer? Se'n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, simplement canvia'n els enllaços."))) {
+	if ($("#form-files-list-"+episode_id+"-id-"+id).val()=='-1' || ($("#form-files-list-"+episode_id+"-id-"+id).val()!='-1' && confirm($('#type').val()=='manga' ? "Segur que vols esborrar aquest fitxer? Se’n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, fes servir el botó 'Canvia el fitxer'." : "Segur que vols esborrar aquest fitxer? Se’n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, simplement canvia’n els enllaços."))) {
 		var i = parseInt($('#files-list-table-'+episode_id).attr('data-count'));
 		if(i==1) {
 			$("#form-files-list-"+episode_id+"-id-1").val("-1");
@@ -727,7 +727,7 @@ function deleteExtraLinkRow(extra_number, id) {
 }
 
 function deleteVersionExtraRow(id) {
-	if ($("#form-extras-list-id-"+id).val()=='-1' || ($("#form-extras-list-id-"+id).val()!='-1' && confirm("Segur que vols esborrar aquest extra? Se'n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, simplement canvia'n l'enllaç."))) {
+	if ($("#form-extras-list-id-"+id).val()=='-1' || ($("#form-extras-list-id-"+id).val()!='-1' && confirm("Segur que vols esborrar aquest extra? Se’n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, simplement canvia’n l’enllaç."))) {
 		var i = parseInt($('#extras-list-table').attr('data-count'));
 		$("#form-extras-list-row-"+id).remove();
 		for (var j=id+1;j<i+1;j++) {
@@ -826,7 +826,7 @@ function fetchMalEpisodes(current_division, total_divisions, page) {
 					malDataDivisionsEpisodesCount+=malDataEpisodes.length;
 				}
 				else{
-					malDataMessages+="\nLa temporada "+$("#form-division-list-number-"+current_division).val()+" no té capítols donats d'alta a MyAnimeList. Caldrà que els introdueixis a mà.";
+					malDataMessages+="\nLa temporada "+$("#form-division-list-number-"+current_division).val()+" no té capítols donats d’alta a MyAnimeList. Caldrà que els introdueixis a mà.";
 					malDataDivisionsEpisodes.push({'episodes': []});
 				}
 				if (current_division<total_divisions) {
@@ -839,11 +839,11 @@ function fetchMalEpisodes(current_division, total_divisions, page) {
 							populateMalEpisodes(i+1,malDataDivisionsEpisodes[i]);
 						}
 						if (malDataMessages!='') {
-							alert("S'han produït els següents errors:\n"+malDataMessages);
+							alert("S’han produït els següents errors:\n"+malDataMessages);
 						}
 						$("#import-from-mal-episodes-done").removeClass("d-none");
 					} else {
-						alert("No hi ha capítols donats d'alta a MyAnimeList. Caldrà que els introdueixis a mà.");
+						alert("No hi ha capítols donats d’alta a MyAnimeList. Caldrà que els introdueixis a mà.");
 					}
 					$("#import-from-mal-episodes-loading").addClass("d-none");
 					$("#import-from-mal-episodes-not-loading").removeClass("d-none");
@@ -854,7 +854,7 @@ function fetchMalEpisodes(current_division, total_divisions, page) {
 				}
 			}
 		} else if (this.readyState == 4) {
-			alert("S'ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
+			alert("S’ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
 			$("#import-from-mal-episodes-loading").addClass("d-none");
 			$("#import-from-mal-episodes-not-loading").removeClass("d-none");
 			setTimeout(function() {
@@ -980,7 +980,7 @@ function checkNumberOfLinks() {
 		}
 
 		if (multipleLinks) {
-			alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d'una variant per capítol. Has de desactivar-la o bé eliminar els enllaços addicionals dels capítols.");
+			alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d’una variant per capítol. Has de desactivar-la o bé eliminar els enllaços addicionals dels capítols.");
 			return false;
 		}
 	}
@@ -990,11 +990,11 @@ function checkNumberOfLinks() {
 		if (urls[i].value!='') {
 			var resolution = $('#'+urls[i].id.replace('-url','-resolution'));
 			if (resolution.val()=='' || resolution.val()=='null' || (!resolution.val().includes('p') && !resolution.val().includes('x'))) {
-				alert("Si introdueixes una URL per a un capítol, cal que també n'especifiquis la resolució.\nLa resolució ha de tenir format '1234p' o '1234x1234'.");
+				alert("Si introdueixes una URL per a un capítol, cal que també n’especifiquis la resolució.\nLa resolució ha de tenir format '1234p' o '1234x1234'.");
 				return false;
 			}
 			if (urls[i].value.startsWith("https://mega.nz/") && !urls[i].value.match(/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/)) {
-				alert("La URL de MEGA següent és invàlida:\n"+urls[i].value+"\nAssegura't que l'has exportada correctament fent botó dret -> Copy link havent iniciat la sessió al compte.");
+				alert("La URL de MEGA següent és invàlida:\n"+urls[i].value+"\nAssegura’t que l’has exportada correctament fent botó dret -> Copy link havent iniciat la sessió al compte.");
 				return false;
 			}
 		}
@@ -1007,7 +1007,7 @@ function checkNumberOfLinks() {
 				var urls = $(lengths[i]).parent().parent().find('[id$=-url]');
 				for (var j=0;j<urls.length;j++) {
 					if (urls[j].value!='') {
-						alert("Si introdueixes una URL per a un capítol, cal que també n'especifiquis la durada. Hi ha algun capítol en què no ho has fet.");
+						alert("Si introdueixes una URL per a un capítol, cal que també n’especifiquis la durada. Hi ha algun capítol en què no ho has fet.");
 						return false;
 					}
 				}
@@ -1340,7 +1340,7 @@ function generateStorageFolder() {
 
 function checkAnimeGenres(currentElement, currentMalIdElement, currentGenres) {
 	if (currentElement==0 && currentMalIdElement==0) {
-		$('#output').text("S'ha iniciat la comprovació de gèneres dels animes. Tingues paciència...");
+		$('#output').text("S’ha iniciat la comprovació de gèneres dels animes. Tingues paciència...");
 	}
 
 	var xmlhttp = new XMLHttpRequest();
@@ -1371,12 +1371,12 @@ function checkAnimeGenres(currentElement, currentMalIdElement, currentGenres) {
 					//Finished elements, check genres and go to next
 					var difference = $($.unique(currentGenres)).not(animes[currentElement].genres).get();
 					for (var i = 0; i < difference.length; i++) {
-						$('#output').append("<br />A l'anime «"+animes[currentElement].name+"» li manca el gènere "+getAnimeGenreName(difference[i]));
+						$('#output').append("<br />A l’anime «"+animes[currentElement].name+"» li manca el gènere "+getAnimeGenreName(difference[i]));
 					}
 
 					difference = $(animes[currentElement].genres).not(currentGenres).get();
 					for (var i = 0; i < difference.length; i++) {
-						$('#output').append("<br />A l'anime «"+animes[currentElement].name+"» li sobra el gènere "+getAnimeGenreName(difference[i]));
+						$('#output').append("<br />A l’anime «"+animes[currentElement].name+"» li sobra el gènere "+getAnimeGenreName(difference[i]));
 					}
 		
 					if (currentElement<animes.length-1) {
@@ -1388,7 +1388,7 @@ function checkAnimeGenres(currentElement, currentMalIdElement, currentGenres) {
 					}
 				}
 			} else {
-				$('#output').append("<br />No s'han pogut obtenir les dades de l'anime «"+animes[currentElement].name+"»");
+				$('#output').append("<br />No s’han pogut obtenir les dades de l’anime «"+animes[currentElement].name+"»");
 		
 				if (currentElement<animes.length-1) {
 					setTimeout(function() {
@@ -1406,7 +1406,7 @@ function checkAnimeGenres(currentElement, currentMalIdElement, currentGenres) {
 
 function checkMangaGenres(currentElement, currentMalIdElement, currentGenres) {
 	if (currentElement==0 && currentMalIdElement==0) {
-		$('#output').text("S'ha iniciat la comprovació de gèneres dels mangues. Tingues paciència...");
+		$('#output').text("S’ha iniciat la comprovació de gèneres dels mangues. Tingues paciència...");
 	}
 
 	var xmlhttp = new XMLHttpRequest();
@@ -1454,7 +1454,7 @@ function checkMangaGenres(currentElement, currentMalIdElement, currentGenres) {
 					}
 				}
 			} else {
-				$('#output').append("<br />No s'han pogut obtenir les dades del manga «"+mangas[currentElement].name+"»");
+				$('#output').append("<br />No s’han pogut obtenir les dades del manga «"+mangas[currentElement].name+"»");
 		
 				if (currentElement<mangas.length-1) {
 					setTimeout(function() {
@@ -1503,7 +1503,7 @@ function showMangaWithNoMal() {
 }
 
 function showLiveActionWithNoMdl() {
-	$('#output').text("Continguts d'acció real sense enllaç a MDL:");
+	$('#output').text("Continguts d’acció real sense enllaç a MDL:");
 	for (var i = 0; i < noMdlLiveAction.length; i++) {
 		$('#output').append("<br />«"+noMdlLiveAction[i]+"»");
 	}
@@ -1550,28 +1550,28 @@ $(document).ready(function() {
 	$("#import-from-mal").click(function() {
 		if ($("#form-external_id").val()=='') {
 			if ($('#type').val()=='manga') {
-				var result = prompt("Introdueix l'URL del manga a MyAnimeList per a importar-ne la fitxa.");
+				var result = prompt("Introdueix l’URL del manga a MyAnimeList per a importar-ne la fitxa.");
 				if (!result) {
 					return;
 				} else if (result.match(/https?:\/\/.*myanimelist.net\/manga\/(\d+)\//i)) {
 					$("#form-external_id").val(result.match(/https?:\/\/.*myanimelist.net\/manga\/(\d*)\//i)[1]);
 				} else {
-					alert("L'URL no és vàlida.");
+					alert("L’URL no és vàlida.");
 					return;
 				}
 			} else {
-				var result = prompt("Introdueix l'URL de l'anime a MyAnimeList per a importar-ne la fitxa.");
+				var result = prompt("Introdueix l’URL de l’anime a MyAnimeList per a importar-ne la fitxa.");
 				if (!result) {
 					return;
 				} else if (result.match(/https?:\/\/.*myanimelist.net\/anime\/(\d+)\//i)) {
 					$("#form-external_id").val(result.match(/https?:\/\/.*myanimelist.net\/anime\/(\d*)\//i)[1]);
 				} else {
-					alert("L'URL no és vàlida.");
+					alert("L’URL no és vàlida.");
 					return;
 				}
 			}
 		}
-		if (($("#form-name-with-autocomplete").val()!='' || $("#form-synopsis").val()!='') && !confirm("ATENCIÓ! La fitxa ja conté dades. Si continues, se sobreescriuran les dades d'autor, director, estudi, valoració per edats, gèneres i imatge de portada, i també s'ompliran els camps que siguin buits.\nL'acció no es podrà desfer un cop hagis desat els canvis. Vols continuar?")) {
+		if (($("#form-name-with-autocomplete").val()!='' || $("#form-synopsis").val()!='') && !confirm("ATENCIÓ! La fitxa ja conté dades. Si continues, se sobreescriuran les dades d’autor, director, estudi, valoració per edats, gèneres i imatge de portada, i també s’ompliran els camps que siguin buits.\nL’acció no es podrà desfer un cop hagis desat els canvis. Vols continuar?")) {
 			return;
 		}
 		$("#import-from-mal").prop('disabled', true);
@@ -1614,7 +1614,7 @@ $(document).ready(function() {
 							} else if (this.readyState == 4) {
 								$("#import-from-mal-loading").addClass("d-none");
 								$("#import-from-mal-not-loading").removeClass("d-none");
-								alert("S'ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
+								alert("S’ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
 								setTimeout(function() {
 									$("#import-from-mal").prop('disabled', false);
 									$("#import-from-mal-episodes").prop('disabled', false);
@@ -1626,7 +1626,7 @@ $(document).ready(function() {
 					}, 4000);
 				}
 			} else if (this.readyState == 4) {
-				alert("S'ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
+				alert("S’ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
 				$("#import-from-mal-loading").addClass("d-none");
 				$("#import-from-mal-not-loading").removeClass("d-none");
 				setTimeout(function() {
@@ -1659,16 +1659,16 @@ $(document).ready(function() {
 		}
 		if (with_id==0) {
 			if ($('#type').val()=='manga') {
-				alert("Cal que introdueixis l'identificador de MyAnimeList d'almenys un dels volums.");
+				alert("Cal que introdueixis l’identificador de MyAnimeList d’almenys un dels volums.");
 			} else {
-				alert("Cal que introdueixis l'identificador de MyAnimeList d'almenys una de les temporades.");
+				alert("Cal que introdueixis l’identificador de MyAnimeList d’almenys una de les temporades.");
 			}
 			return;
 		} else if (with_id<divisions.length) {
 			if ($('#type').val()=='manga') {
-				alert("Hi ha volums sense identificador de MyAnimeList. Cal que especifiquis l'identificador de tots.");
+				alert("Hi ha volums sense identificador de MyAnimeList. Cal que especifiquis l’identificador de tots.");
 			} else {
-				alert("Hi ha temporades sense identificador de MyAnimeList. Cal que especifiquis l'identificador de totes.");
+				alert("Hi ha temporades sense identificador de MyAnimeList. Cal que especifiquis l’identificador de totes.");
 			}
 			return;
 		}
@@ -1717,7 +1717,7 @@ $(document).ready(function() {
 
 		var divisionName = ($('#type').val()=='manga' ? 'volum' : 'temporada');
 
-		var restart = (divisions.length==1 || confirm("Vols reiniciar la numeració de capítols a cada "+divisionName+"? Si és així, prem 'D'acord', en cas contrari, prem 'Cancel·la'."));
+		var restart = (divisions.length==1 || confirm("Vols reiniciar la numeració de capítols a cada "+divisionName+"? Si és així, prem «D’acord», en cas contrari, prem «Cancel·la»."));
 
 		var i = parseInt($('#episode-list-table').attr('data-count'));
 		for (var id=1;id<i+1;id++) {
@@ -1769,7 +1769,7 @@ $(document).ready(function() {
 			if (this.readyState == 4 && this.status == 200) {
 				var data = JSON.parse(this.responseText);
 				if (data.status=='ko') {
-					alert("S'ha produït un error:\n"+data.error);
+					alert("S’ha produït un error:\n"+data.error);
 				} else {
 					var moreThanOne = false;
 					for (var i = 0; i < data.results.length; i++) {
@@ -1825,14 +1825,14 @@ $(document).ready(function() {
 					}
 
 					if (moreThanOne) {
-						alert("ALERTA! Hi havia més d'un enllaç del tipus importat en algun capítol. La importació només ha subtituït el primer de cada capítol.");
+						alert("ALERTA! Hi havia més d’un enllaç del tipus importat en algun capítol. La importació només ha subtituït el primer de cada capítol.");
 					}
 				}
 				$("#import-from-mega-loading").addClass("d-none");
 				$("#import-from-mega-not-loading").removeClass("d-none");
 				$("#import-from-mega").prop('disabled', false);
 			} else if (this.readyState == 4) {
-				alert("S'ha produït un error. Torna-ho a provar.");
+				alert("S’ha produït un error. Torna-ho a provar.");
 				$("#import-from-mega-loading").addClass("d-none");
 				$("#import-from-mega-not-loading").removeClass("d-none");
 				$("#import-from-mega").prop('disabled', false);

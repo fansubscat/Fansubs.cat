@@ -78,7 +78,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-fansub", "S'ha actualitzat el fansub '".$data['name']."' (id. de fansub: ".$data['id'].")");
+			log_action("update-fansub", "S’ha actualitzat el fansub «".$data['name']."» (id. de fansub: ".$data['id'].")");
 			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',discord_url=".$data['discord_url'].",status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
@@ -89,7 +89,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			}
 		}
 		else {
-			log_action("create-fansub", "S'ha creat el fansub '".$data['name']."'");
+			log_action("create-fansub", "S’ha creat el fansub «".$data['name']."»");
 			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,mastodon_url,mastodon_handle,discord_url,status,ping_token,is_historical,archive_url,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."',".$data['discord_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['icon'])) {
@@ -100,7 +100,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			}
 		}
 
-		$_SESSION['message']="S'han desat les dades correctament.";
+		$_SESSION['message']="S’han desat les dades correctament.";
 
 		header("Location: fansub_list.php");
 		die();
@@ -213,11 +213,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 						</div>
 					</div>
 					<div class="mb-3">
-						<label for="form-archive_url">URL d'Archive.org <small class="text-muted">(obligatori si és històric)</small></label>
+						<label for="form-archive_url">URL d’Archive.org <small class="text-muted">(obligatori si és històric)</small></label>
 						<input class="form-control" type="url" name="archive_url" id="form-archive_url" maxlength="200"<?php echo $row['is_historical']==0? " disabled" : ""; ?> value="<?php echo htmlspecialchars($row['archive_url']); ?>" required>
 					</div>
 					<div class="mb-3">
-						<label for="form-ping_token">Testimoni per a fer ping <small class="text-muted">(si es fa una petició a https://api.fansubs.cat/refresh/&lt;testimoni&gt;, s'actualitzaran les notícies al moment)</small></label>
+						<label for="form-ping_token">Testimoni per a fer ping <small class="text-muted">(si es fa una petició a <?php echo API_URL; ?>/refresh/{testimoni}, s’actualitzaran les notícies al moment)</small></label>
 						<input class="form-control" name="ping_token" id="form-ping_token" maxlength="200" value="<?php echo htmlspecialchars($row['ping_token']); ?>">
 					</div>
 					<div class="mb-3 text-center pt-2">

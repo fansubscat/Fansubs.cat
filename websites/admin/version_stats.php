@@ -9,7 +9,7 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Estadístiques de la versió d'anime - Anime";
+		$header_title="Estadístiques de la versió d’anime - Anime";
 		$page="anime";
 	break;
 	case 'manga':
@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Estadístiques de la versió d'acció real - Acció real";
+		$header_title="Estadístiques de la versió d’acció real - Acció real";
 		$page="liveaction";
 	break;
 }

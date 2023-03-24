@@ -13,7 +13,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			crash("Dades invàlides");
 		}
 		
-		log_action("change-admin-password", "S'ha canviat la contrasenya de l'administrador '".$data['username']."'");
+		log_action("change-admin-password", "S’ha canviat la contrasenya de l’administrador «".$data['username']."»");
 		query("UPDATE admin_user SET password='".$data['password']."' WHERE username='".$data['username']."'");
 
 		$changed=TRUE;
@@ -28,7 +28,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	if (!empty($changed)) {
 ?>
-					<p class="alert alert-success text-center">S'ha canviat la contrasenya.</p>
+					<p class="alert alert-success text-center">S’ha canviat la contrasenya.</p>
 <?php
 	} else {
 ?>

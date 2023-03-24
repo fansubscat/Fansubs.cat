@@ -1,5 +1,5 @@
 <?php
-$header_title="Edició de calendaris d'advent - Altres";
+$header_title="Edició de calendaris d’advent - Altres";
 $page="other";
 include("header.inc.php");
 
@@ -31,7 +31,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 
-		log_action("update-advent-calendar", "S'ha actualitzat el calendari d'advent del ".$data['year']);
+		log_action("update-advent-calendar", "S’ha actualitzat el calendari d’advent del ".$data['year']);
 		
 		query("REPLACE INTO advent_calendar (year, position) VALUES (".$data['year'].",'".$data['position']."')");
 		if (!empty($_FILES['background'])) {
@@ -54,7 +54,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 
-		$_SESSION['message']="S'han desat les dades correctament.";
+		$_SESSION['message']="S’han desat les dades correctament.";
 
 		header("Location: advent_list.php");
 		die();
@@ -85,7 +85,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 			<article class="card-body">
-				<h4 class="card-title text-center mb-4 mt-1">Edita el calendari d'advent del <?php echo $row['year']; ?></h4>
+				<h4 class="card-title text-center mb-4 mt-1">Edita el calendari d’advent del <?php echo $row['year']; ?></h4>
 				<hr>
 				<form method="post" action="advent_edit.php" enctype="multipart/form-data">
 					<div class="row">
@@ -166,7 +166,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<label for="form-position" class="mandatory">Posició del logo</label>
 						<select class="form-control" name="position" id="form-position" required>
 							<option value="">- Selecciona una posició -</option>
-							<option value="left"<?php echo $row['position']=='left' ? " selected" : ""; ?>>A l'esquerra</option>
+							<option value="left"<?php echo $row['position']=='left' ? " selected" : ""; ?>>A l’esquerra</option>
 							<option value="right"<?php echo $row['position']=='right' ? " selected" : ""; ?>>A la dreta</option>
 						</select>
 					</div>
@@ -178,8 +178,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<thead>
 											<tr>
 												<th class="text-center" style="width: 5%;">Dia</th>
-												<th class="text-center mandatory" style="width: 20%;">Imatge <small class="text-muted">(512px d'alçada)</small></th>
-												<th class="mandatory">URL de l'enllaç i descripció <small class="text-muted">(la descripció no es mostra públicament)</small></th>
+												<th class="text-center mandatory" style="width: 20%;">Imatge <small class="text-muted">(512px d’alçada)</small></th>
+												<th class="mandatory">URL de l’enllaç i descripció <small class="text-muted">(la descripció no es mostra públicament)</small></th>
 											</tr>
 										</thead>
 										<tbody>

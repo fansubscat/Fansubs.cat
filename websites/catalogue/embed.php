@@ -104,11 +104,11 @@ $links = filter_links($links);
 		</div>
 		<div data-nosnippet id="alert-overlay" class="hidden flex">
 			<div id="alert-overlay-content">
-				<h2 class="section-title" id="alert-title">S'ha produït un error</h2>
-				<div id="alert-message">S'ha produït un error desconegut.</div>
+				<h2 class="section-title" id="alert-title">S’ha produït un error</h2>
+				<div id="alert-message">S’ha produït un error desconegut.</div>
 				<div id="alert-buttonbar">
 					<button id="alert-refresh-button" class="hidden">Actualitza</button>
-					<button id="alert-ok-button">D'acord</button>
+					<button id="alert-ok-button">D’acord</button>
 				</div>
 			</div>
 		</div>

@@ -18,9 +18,12 @@ define('ANIME_URL', 'https://anime.fansubs.cat');
 define('MANGA_URL', 'https://manga.fansubs.cat');
 define('LIVEACTION_URL', 'https://accioreal.fansubs.cat');
 define('NEWS_URL', 'https://noticies.fansubs.cat');
-define('STATIC_URL', 'https://static.fansubs.cat');
-define('USERS_URL', 'https://usuaris.fansubs.cat');
+define('RESOURCES_URL', 'https://recursos.fansubs.cat');
 define('GROUPS_URL', 'https://grups.fansubs.cat');
+define('USERS_URL', 'https://usuaris.fansubs.cat');
+define('STATIC_URL', 'https://static.fansubs.cat');
+define('ADMIN_URL', 'https://admin.fansubs.cat');
+define('API_URL', 'https://api.fansubs.cat');
 
 //Internal path (no final slash)
 define('STATIC_DIRECTORY', '/srv/websites/static.fansubs.cat');

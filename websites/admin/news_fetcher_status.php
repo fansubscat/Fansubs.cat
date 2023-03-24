@@ -76,7 +76,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Estat dels recollidors de notícies</h4>
 					<hr>
-					<p class="text-center">Aquí es mostra l'estat dels recollidors de notícies i quan se n'han obtingut dades per darrer cop.<br />Les notícies s'obtenen automàticament dels diferents recollidors cada 15 minuts.</p>
+					<p class="text-center">Aquí es mostra l’estat dels recollidors de notícies i quan se n’han obtingut dades per darrer cop.<br />Les notícies s’obtenen automàticament dels diferents recollidors cada 15 minuts.</p>
 					<div class="text-center pb-3">
 						<a href="news_fetcher_status.php" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
 					</div>

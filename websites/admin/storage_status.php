@@ -1,5 +1,5 @@
 <?php
-$header_title="Estadístiques - Servidors d'emmagatzematge";
+$header_title="Estadístiques - Servidors d’emmagatzematge";
 $page="analytics";
 include("header.inc.php");
 
@@ -17,9 +17,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Servidors d'emmagatzematge</h4>
+					<h4 class="card-title text-center mb-4 mt-1">Servidors d’emmagatzematge</h4>
 					<hr>
-					<p class="text-center">Aquest és l'estat actual dels servidors d'emmagatzematge. Els diagrames només mostren el darrer dia.</p>
+					<p class="text-center">Aquest és l’estat actual dels servidors d’emmagatzematge. Els diagrames només mostren el darrer dia.</p>
 				</article>
 			</div>
 		</div>
@@ -40,7 +40,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body text-center">
 					<h4 class="card-title mb-4 mt-1">Servidor "<?php echo $storage['hostname']; ?>"</h4>
 					<hr>
-					<h5 class="mb-3">Operacions d'entrada/sortida per segon (màx. 150)</h5>
+					<h5 class="mb-3">Operacions d’entrada/sortida per segon (màx. 150)</h5>
 					<img src="<?php echo get_image_type_url($response, 'iops_daily'); ?>" alt="" />
 					<h5 class="mb-3 mt-3">Ús de la xarxa</h5>
 					<img src="<?php echo get_image_type_url($response, 'traffic_daily'); ?>" alt="" />
@@ -48,7 +48,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<img src="<?php echo get_image_type_url($response, 'cpu_daily'); ?>" alt="" />
 					<h5 class="mb-3 mt-3">Ús de la memòria</h5>
 					<img src="<?php echo get_image_type_url($response, 'memory_daily'); ?>" alt="" />
-					<h5 class="mb-3 mt-3">Ús de l'emmagatzematge</h5>
+					<h5 class="mb-3 mt-3">Ús de l’emmagatzematge</h5>
 					<img src="<?php echo get_image_type_url($response, 'storage_daily'); ?>" alt="" />
 				</article>
 			</div>

@@ -582,7 +582,7 @@ function parsePlayerError(error){
 		case /Bandwidth limit reached/.test(error):
 			forceRefresh = true;
 			title = "Límit de MEGA superat";
-			message = "Has superat el límit d'ample de banda del proveïdor del vídeo en streaming (MEGA).<br>Segurament estàs provant de mirar un vídeo que s'ha publicat fa molt poc.<br>L’estem copiant automàticament a un servidor alternatiu i d’aquí a poca estona estarà disponible i no veuràs aquest error.<br>Torna a carregar la pàgina d’aquí a una estona i torna-ho a provar.";
+			message = "Has superat el límit d’ample de banda del proveïdor del vídeo en streaming (MEGA).<br>Segurament estàs provant de mirar un vídeo que s’ha publicat fa molt poc.<br>L’estem copiant automàticament a un servidor alternatiu i d’aquí a poca estona estarà disponible i no veuràs aquest error.<br>Torna a carregar la pàgina d’aquí a una estona i torna-ho a provar.";
 			reportErrorToServer('mega-quota-exceeded', error);
 			break;
 		case /E_MEGA_LOAD_ERROR/.test(error):
@@ -596,7 +596,7 @@ function parsePlayerError(error){
 				message = "S’ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura’t que tinguis una connexió estable a Internet i torna-ho a provar.";
 				reportErrorToServer('mega-connection-error', error);
 			} else {
-				title = "No s'ha pogut carregar";
+				title = "No s’ha pogut carregar";
 				message = "S’ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de recarregar la pàgina.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
 				reportErrorToServer('mega-load-failed', error);
 			}
@@ -918,11 +918,11 @@ function initializeCarousels() {
 		$(".show-more a").on("click", function() {
 			var linkText = $(this).text();    
 
-			if(linkText === "Mostra'n més..."){
-				linkText = "Mostra'n menys";
+			if(linkText === "Mostra’n més..."){
+				linkText = "Mostra’n menys";
 				$(".synopsis-content").switchClass("expandable-content-hidden", "expandable-content-shown", 400);
 			} else {
-				linkText = "Mostra'n més...";
+				linkText = "Mostra’n més...";
 				$(".synopsis-content").switchClass("expandable-content-shown", "expandable-content-hidden", 400);
 			};
 

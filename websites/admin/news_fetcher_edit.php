@@ -33,15 +33,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-news-fetcher", "S'ha actualitzat el recollidor de notícies amb URL '".$data['url']."' (id. de recollidor de notícies: ".$data['id'].")");
+			log_action("update-news-fetcher", "S’ha actualitzat el recollidor de notícies amb URL «".$data['url']."» (id. de recollidor de notícies: ".$data['id'].")");
 			query("UPDATE news_fetcher SET fansub_id=".$data['fansub_id'].",url='".$data['url']."',method='".$data['method']."',fetch_type='".$data['fetch_type']."',updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
 		else {
-			log_action("create-news-fetcher", "S'ha creat un recollidor de notícies amb URL '".$data['url']."'");
+			log_action("create-news-fetcher", "S’ha creat un recollidor de notícies amb URL «".$data['url']."»");
 			query("INSERT INTO news_fetcher (fansub_id,url,method,fetch_type,status,last_fetch_result,last_fetch_date,last_fetch_increment,created,created_by,updated,updated_by) VALUES (".$data['fansub_id'].",'".$data['url']."','".$data['method']."','".$data['fetch_type']."','idle',NULL,NULL,NULL,CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 
-		$_SESSION['message']="S'han desat les dades correctament.";
+		$_SESSION['message']="S’han desat les dades correctament.";
 
 		header("Location: news_fetcher_list.php");
 		die();
@@ -96,7 +96,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="blogspot_pnm"<?php echo $row['method']=='blogspot_pnm' ? " selected" : ""; ?>>Blogspot (Projecte Nou Món)</option>
 							<option value="blogspot_snf"<?php echo $row['method']=='blogspot_snf' ? " selected" : ""; ?>>Blogspot (Seireitei no Fansub)</option>
 							<option value="blogspot_shinsengumi"<?php echo $row['method']=='blogspot_shinsengumi' ? " selected" : ""; ?>>Blogspot (Shinsengumi no Fansub)</option>
-							<option value="blogspot_teqma"<?php echo $row['method']=='blogspot_teqma' ? " selected" : ""; ?>>Blogspot (Tot el que m'agrada)</option>
+							<option value="blogspot_teqma"<?php echo $row['method']=='blogspot_teqma' ? " selected" : ""; ?>>Blogspot (Tot el que m’agrada)</option>
 							<option value="blogspot_tnf"<?php echo $row['method']=='blogspot_tnf' ? " selected" : ""; ?>>Blogspot (Tohoshinki no Fansub)</option>
 							<option value="blogspot_uto"<?php echo $row['method']=='blogspot_uto' ? " selected" : ""; ?>>Blogspot (Un Tortosí Otaku)</option>
 							<option value="catsub"<?php echo $row['method']=='catsub' ? " selected" : ""; ?>>CatSub</option>

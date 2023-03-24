@@ -1,5 +1,5 @@
 <?php
-$header_title="Edició d'administradors - Altres";
+$header_title="Edició d’administradors - Altres";
 $page="other";
 include("header.inc.php");
 
@@ -37,7 +37,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-admin-user", "S'ha actualitzat l'administrador '".$data['username']."'");
+			log_action("update-admin-user", "S’ha actualitzat l’administrador «".$data['username']."»");
 			if ($data['password']!=NULL) {
 				query("UPDATE admin_user SET username='".$data['username']."',password='".$data['password']."',admin_level=".$data['admin_level'].",fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE username='".$data['username_old']."'");
 			} else {
@@ -45,11 +45,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 		else {
-			log_action("create-admin-user", "S'ha creat l'administrador '".$data['username']."'");
+			log_action("create-admin-user", "S’ha creat l’administrador «".$data['username']."»");
 			query("INSERT INTO admin_user (username,password,admin_level,fansub_id,created,created_by,updated,updated_by) VALUES ('".$data['username']."','".$data['password']."',".$data['admin_level'].",".$data['fansub_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 
-		$_SESSION['message']="S'han desat les dades correctament.";
+		$_SESSION['message']="S’han desat les dades correctament.";
 
 		header("Location: admin_list.php");
 		die();
@@ -66,7 +66,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['username']) ? "Edita l'administrador" : "Afegeix un administrador"; ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['username']) ? "Edita l’administrador" : "Afegeix un administrador"; ?></h4>
 					<hr>
 					<form method="post" action="admin_edit.php">
 						<div class="mb-3">
@@ -90,7 +90,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						</div>
 						<div class="mb-3">
-							<label for="form-admin-level" class="mandatory">Nivell d'administrador</label>
+							<label for="form-admin-level" class="mandatory">Nivell d’administrador</label>
 							<select class="form-select" name="admin_level" id="form-admin-level" required>
 								<option value="">- Selecciona un nivell -</option>
 								<option value="1"<?php echo $row['admin_level']==1 ? " selected" : ""; ?>>1: Gestor de versions</option>
@@ -114,7 +114,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</select>
 						</div>
 						<div class="mb-3 text-center pt-2">
-							<button type="submit" name="action" value="<?php echo !empty($row['username']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['username']) ? "Desa els canvis" : "Afegeix l'administrador"; ?></button>
+							<button type="submit" name="action" value="<?php echo !empty($row['username']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['username']) ? "Desa els canvis" : "Afegeix l’administrador"; ?></button>
 						</div>
 					</form>
 					

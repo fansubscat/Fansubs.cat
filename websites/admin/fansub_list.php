@@ -5,11 +5,11 @@ include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id']) && $_SESSION['admin_level']>=3) {
-		log_action("delete-fansub", "S'ha suprimit el fansub '".query_single("SELECT name FROM fansub WHERE id=".escape($_GET['delete_id']))."' (id. de fansub: ".$_GET['delete_id'].")");
+		log_action("delete-fansub", "S’ha suprimit el fansub «".query_single("SELECT name FROM fansub WHERE id=".escape($_GET['delete_id']))."» (id. de fansub: ".$_GET['delete_id'].")");
 		query("DELETE FROM fansub WHERE id=".escape($_GET['delete_id']));
 		@unlink(STATIC_DIRECTORY.'/images/icons/'.$_GET['delete_id'].'.jpg');
 		@unlink(STATIC_DIRECTORY.'/images/logos/'.$_GET['delete_id'].'.jpg');
-		$_SESSION['message']="S'ha suprimit correctament.";
+		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -33,9 +33,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="col">Enllaços</th>
 								<th class="text-center" scope="col">Estat</th>
 								<th class="text-center" scope="col">Notícies</th>
-								<th class="text-center" scope="col">Versions<br />d'anime</th>
+								<th class="text-center" scope="col">Versions<br />d’anime</th>
 								<th class="text-center" scope="col">Versions<br />de&nbsp;manga</th>
-								<th class="text-center" scope="col">Versions<br />d'acció real</th>
+								<th class="text-center" scope="col">Versions<br />d’acció real</th>
 								<th class="text-center" scope="col">Accions</th>
 							</tr>
 						</thead>
@@ -84,7 +84,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 		if (empty($_SESSION['fansub_id']) || (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id']) && $_SESSION['fansub_id']!=$row['id']))  {
 ?>
-<a href="fansub_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el fansub '".$row['name']."' i tot el seu material? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
+<a href="fansub_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el fansub «".$row['name']."» i tot el seu material? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
 <?php
 		}
 ?>

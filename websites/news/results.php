@@ -62,7 +62,7 @@ $result = query_latest_news($user, $text, $page, 20, $fansub_id, $show_blacklist
 if (mysqli_num_rows($result)==0){
 	if (defined('PAGE_IS_SEARCH')) {
 ?>
-							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s'ha trobat cap contingut per a aquesta cerca. Prova de reduir la cerca o fes-ne una altra.</div></div>
+							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap contingut per a aquesta cerca. Prova de reduir la cerca o fes-ne una altra.</div></div>
 <?php
 	} else {
 ?>

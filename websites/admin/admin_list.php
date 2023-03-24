@@ -1,19 +1,19 @@
 <?php
-$header_title="Llista d'administradors - Altres";
+$header_title="Llista d’administradors - Altres";
 $page="other";
 include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id'])) {
-		log_action("delete-admin-user", "S'ha suprimit l'administrador '".$_GET['delete_id']."'");
+		log_action("delete-admin-user", "S’ha suprimit l’administrador «".$_GET['delete_id']."»");
 		query("DELETE FROM admin_user WHERE username='".escape($_GET['delete_id'])."'");
-		$_SESSION['message']="S'ha suprimit correctament.";
+		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Llista d'administradors</h4>
+					<h4 class="card-title text-center mb-4 mt-1">Llista d’administradors</h4>
 					<hr>
 
 <?php
@@ -29,7 +29,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<thead class="table-dark">
 							<tr>
 								<th scope="col">Usuari</th>
-								<th class="text-center" scope="col">Nivell d'administrador</th>
+								<th class="text-center" scope="col">Nivell d’administrador</th>
 								<th class="text-center" scope="col">Fansub associat</th>
 								<th class="text-center" scope="col">Accions</th>
 							</tr>
@@ -50,7 +50,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo $row['username']; ?></th>
 								<td class="align-middle text-center"><?php echo $row['admin_level']; ?></td>
 								<td class="align-middle text-center"><?php echo $row['fansub_name']!=NULL ? $row['fansub_name'] : '-'; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="admin_edit.php?id=<?php echo $row['username']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="admin_list.php?delete_id=<?php echo $row['username']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir l'administrador '".$row['username']."'? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="admin_edit.php?id=<?php echo $row['username']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="admin_list.php?delete_id=<?php echo $row['username']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir l’administrador «".$row['username']."»? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}

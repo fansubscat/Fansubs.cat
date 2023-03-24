@@ -279,7 +279,7 @@ foreach($sections as $section){
 				<div class="section">
 					<h2 class="section-title-main"><?php echo $section['title']; ?></h2>
 					<div class="section-content">
-						<a class="advent" href="<?php echo ADVENT_URL; ?>" target="_blank"><img src="<?php echo STATIC_URL; ?>/images/advent/header_<?php echo date('Y'); ?>.jpg" alt="Calendari d'advent dels fansubs en català" /></a>
+						<a class="advent" href="<?php echo ADVENT_URL; ?>" target="_blank"><img src="<?php echo STATIC_URL; ?>/images/advent/header_<?php echo date('Y'); ?>.jpg" alt="Calendari d’advent dels fansubs en català" /></a>
 					</div>
 				</div>
 <?php
@@ -303,7 +303,7 @@ foreach($sections as $section){
 <?php
 			} else {
 ?>
-					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s'ha trobat cap contingut per a aquesta cerca. Prova de reduir la cerca o fes-ne una altra.</div></div>
+					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap contingut per a aquesta cerca. Prova de reduir la cerca o fes-ne una altra.</div></div>
 <?php
 			}
 		} else {

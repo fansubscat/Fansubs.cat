@@ -49,7 +49,7 @@ else if (isset($_POST['username']) && isset($_POST['password'])) {
 						<div class="mb-3">
 							<div class="input-group">
 								<div class="input-group-text"><i class="fa fa-user"></i></div>
-								<input name="username" class="form-control" placeholder="Nom d'usuari" required autofocus>
+								<input name="username" class="form-control" placeholder="Nom d’usuari" required autofocus>
 							</div>
 						</div>
 						<div class="mb-3">

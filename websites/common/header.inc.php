@@ -134,7 +134,7 @@ if (PAGE_STYLE_TYPE=='login') {
 						<div class="login-form-main">
 							<div class="login-subheader">Inicia la sessió</div>
 							<form id="login-form" onsubmit="return login();" autocomplete="off" novalidate>
-								<label for="login_username">Nom d'usuari</label>
+								<label for="login_username">Nom d’usuari</label>
 								<input id="login_username" type="text" oninput="removeValidation(this.id);">
 								<div id="login_username_validation" class="validation-message"></div>
 								<label for="login_password">Contrasenya</label>
@@ -192,7 +192,7 @@ if (PAGE_STYLE_TYPE=='login') {
 							<div class="login-close fa fa-xmark" onclick="showLogin();"></div>
 							<div class="login-subheader">Registre</div>
 							<form id="register-form" onsubmit="return register();" autocomplete="off" novalidate>
-								<label for="register_username">Nom d'usuari</label>
+								<label for="register_username">Nom d’usuari</label>
 								<input id="register_username" type="text" oninput="removeValidation(this.id);">
 								<div id="register_username_validation" class="validation-message"></div>
 								<label for="register_password">Contrasenya</label>
@@ -248,11 +248,11 @@ if (PAGE_STYLE_TYPE=='login') {
 			</div>
 			<div data-nosnippet id="alert-overlay" class="hidden flex">
 				<div id="alert-overlay-content">
-					<h2 class="section-title" id="alert-title">S'ha produït un error</h2>
-					<div id="alert-message">S'ha produït un error desconegut.</div>
+					<h2 class="section-title" id="alert-title">S’ha produït un error</h2>
+					<div id="alert-message">S’ha produït un error desconegut.</div>
 					<div id="alert-buttonbar">
 						<button id="alert-refresh-button" class="hidden">Actualitza</button>
-						<button id="alert-ok-button">D'acord</button>
+						<button id="alert-ok-button">D’acord</button>
 					</div>
 				</div>
 			</div>
@@ -313,7 +313,7 @@ if (PAGE_STYLE_TYPE=='login') {
 	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH') && !defined('PAGE_IS_SERIES') && CATALOGUE_ITEM_TYPE!='liveaction' && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
 		if (!SITE_IS_HENTAI) {
 ?>
-						<a class="hentai-button" href="/hentai<?php echo defined('PAGE_IS_SEARCH') ? '/cerca' : ''; ?>" title="Vés a l'apartat de hentai">
+						<a class="hentai-button" href="/hentai<?php echo defined('PAGE_IS_SEARCH') ? '/cerca' : ''; ?>" title="Vés a l’apartat de hentai">
 							<span class="fa-stack" style="vertical-align: top;">
 								<i class="fa-solid fa-fw fa-pepper-hot fa-stack-2x"></i>
 								<i class="fa-solid fa-fw fa-plus fa-stack-1x"></i>

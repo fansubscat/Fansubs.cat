@@ -9,7 +9,7 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Llista de versions d'anime - Anime";
+		$header_title="Llista de versions d’anime - Anime";
 		$page="anime";
 	break;
 	case 'manga':
@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Llista de versions d'acció real - Acció real";
+		$header_title="Llista de versions d’acció real - Acció real";
 		$page="liveaction";
 	break;
 }
@@ -27,28 +27,28 @@ include("header.inc.php");
 switch ($type) {
 	case 'anime':
 		$content_uc="Anime";
-		$content_prep="d'anime";
+		$content_prep="d’anime";
 	break;
 	case 'manga':
 		$content_uc="Manga";
 		$content_prep="de manga";
 	break;
 	case 'liveaction':
-		$content_uc="Contingut d'acció real";
-		$content_prep="de contingut d'acció real";
+		$content_uc="Contingut d’acció real";
+		$content_prep="de contingut d’acció real";
 	break;
 }
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-version", "S'ha suprimit una versió de '".query_single("SELECT s.name FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".escape($_GET['delete_id']))."' (id. de versió: ".$_GET['delete_id'].")");
+		log_action("delete-version", "S’ha suprimit una versió de «".query_single("SELECT s.name FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".escape($_GET['delete_id']))."» (id. de versió: ".$_GET['delete_id'].")");
 		query("DELETE FROM file WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM remote_folder WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM rel_version_fansub WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE id=".escape($_GET['delete_id']));
 		//Views will NOT be removed in order to keep consistent stats history
-		$_SESSION['message']="S'ha suprimit correctament.";
+		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -101,7 +101,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center"><?php echo get_status_description_short($row['status']); ?></td>
 								<td class="align-middle text-center"><?php echo $row['is_featurable']==1 ? 'R'.($row['is_always_featured']==1 ? 'S' : '') : '-'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['files']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Enllaços" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de '".$row['series_name']."' de ".$row['fansub_name']." i tots els seus fitxers? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Enllaços" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de «".$row['series_name']."» de ".$row['fansub_name']." i tots els seus fitxers? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}

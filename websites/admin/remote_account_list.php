@@ -5,10 +5,10 @@ include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-remote-account", "S'ha suprimit el compte remot '".query_single("SELECT name FROM remote_account WHERE id=".escape($_GET['delete_id']))."' (id. de compte remot: ".$_GET['delete_id'].")");
+		log_action("delete-remote-account", "S’ha suprimit el compte remot «".query_single("SELECT name FROM remote_account WHERE id=".escape($_GET['delete_id']))."» (id. de compte remot: ".$_GET['delete_id'].")");
 		query("DELETE FROM remote_folder WHERE remote_account_id=".escape($_GET['delete_id']));
 		query("DELETE FROM remote_account WHERE id=".escape($_GET['delete_id']));
-		$_SESSION['message']="S'ha suprimit correctament.";
+		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -55,7 +55,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle"><?php echo $row['type']=='mega' ? 'MEGA' : 'Desconegut'; ?></th>
 								<td class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : '(Tots)'; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="remote_account_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="remote_account_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el compte remot '".$row['name']."'? L'acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="remote_account_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="remote_account_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el compte remot «".$row['name']."»? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}

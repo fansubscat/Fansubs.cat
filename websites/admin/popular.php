@@ -80,7 +80,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</select>
 						</div>
 						<div class="mb-3 p-3 mb-0">
-							<label for="amount">Nombre d'elements:</label>
+							<label for="amount">Nombre d’elements:</label>
 							<select id="amount" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;hide_hentai='+($('#hide_hentai').prop('checked') ? 1 : 0)+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val();">
 								<option value="10"<?php echo ($amount==10) ? ' selected' : ''; ?>>10</option>
 								<option value="25"<?php echo ($amount==25) ? ' selected' : ''; ?>>25</option>
@@ -207,7 +207,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d'acció real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d’acció real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
 					<hr>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
@@ -225,7 +225,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="4" class="text-center">- No hi ha cap contingut d'acció real vist -</td>
+								<td colspan="4" class="text-center">- No hi ha cap contingut d’acció real vist -</td>
 							</tr>
 <?php
 	}
