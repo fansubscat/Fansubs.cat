@@ -105,7 +105,7 @@ a {
 }
 
 .navbar {
-	background-color: #dc3545 !important;
+	background-color: #dc3545 !important; /* Remove in production */
 }
 
 tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {
@@ -113,21 +113,21 @@ tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] in
 }
 
 tr[id^="form-links-list-"] input[type="url"][value^="http://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="http://"], tr[id^="form-links-list-"] input[type="url"][value^="https://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://"] {
-	background: url("images/unknown.png") no-repeat scroll 4px center;
+	background: url("../images/site/link_unknown.png") no-repeat scroll 4px center;
 }
 
 tr[id^="form-links-list-"] input[type="url"][value^="https://mega.nz/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://mega.nz/"] {
-	background: url("images/mega.png") no-repeat scroll 4px center !important;
+	background: url("../images/site/link_mega.png") no-repeat scroll 4px center !important;
 }
 
 tr[id^="form-links-list-"] input[type="url"][value^="storage://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="storage://"] {
-	background: url("images/storage.png") no-repeat scroll 4px center !important;
+	background: url("../images/site/link_storage.png") no-repeat scroll 4px center !important;
 }
 
 tr[id^="form-links-list-"] input[type="url"][value^="https://drive.google.com/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://drive.google.com/"] {
-	background: url("images/drive.png") no-repeat scroll 4px center !important;
+	background: url("../images/site/link_drive.png") no-repeat scroll 4px center !important;
 }
 
 tr[id^="form-links-list-"] input[type="url"][value^="https://www.youtube.com/"], tr[id^="form-extras-list-row-"] input[type="url"][value^="https://www.youtube.com/"] {
-	background: url("images/youtube.png") no-repeat scroll 4px center !important;
+	background: url("../images/site/link_youtube.png") no-repeat scroll 4px center !important;
 }
