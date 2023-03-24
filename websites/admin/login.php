@@ -31,7 +31,7 @@ else if (isset($_POST['username']) && isset($_POST['password'])) {
 ?>
 		<div class="container d-flex h-100 justify-content-center align-items-center">
 			<div class="card">
-				<article class="card-body">
+				<article class="card-body text-center">
 					<h4 class="card-title text-center mb-4 mt-1">Inicia la sessió</h4>
 					<hr>
 <?php
@@ -46,23 +46,19 @@ else if (isset($_POST['username']) && isset($_POST['password'])) {
 	}
 ?>
 					<form method="post" action="login.php">
-						<div class="form-group">
+						<div class="mb-3">
 							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fa fa-user"></i></span>
-								 </div>
+								<div class="input-group-text"><i class="fa fa-user"></i></div>
 								<input name="username" class="form-control" placeholder="Nom d'usuari" required autofocus>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fa fa-lock"></i></span>
-								 </div>
+								<div class="input-group-text"><i class="fa fa-lock"></i></div>
 								<input name="password" class="form-control" placeholder="Contrasenya" type="password" required>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<button type="submit" class="btn btn-primary btn-block">Inicia la sessió</button>
 						</div>
 					</form>

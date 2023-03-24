@@ -340,7 +340,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/'.$inserted_id.'.jpg');
 			}
 
-			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?type=$type&series_id=$inserted_id\"><span class=\"fa fa-plus pr-2\"></span>Crea'n una versió</a>";
+			$_SESSION['message']="S'han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?type=$type&series_id=$inserted_id\"><span class=\"fa fa-plus pe-2\"></span>Crea'n una versió</a>";
 		}
 
 		header("Location: series_list.php?type=$type");
@@ -391,37 +391,37 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<form method="post" action="series_edit.php?type=<?php echo $type; ?>" enctype="multipart/form-data" onsubmit="return checkNumberOfEpisodes()">
 						<div class="row align-items-end">
 							<div class="col-sm-3">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-external_id">Identificador de <?php echo $external_provider; ?></label>
 									<input class="form-control" name="external_id" id="form-external_id"<?php echo ($type!='liveaction' ? ' type="number"' : ''); ?> value="<?php echo $row['external_id']; ?>">
 								</div>
 							</div>
-							<div class="col-sm form-group">
+							<div class="col-sm mb-3">
 <?php
 	if ($type!='liveaction') {
 ?>
 								<button type="button" id="import-from-mal" class="btn btn-primary">
-									<span id="import-from-mal-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
-									<span id="import-from-mal-not-loading" class="fa fa-th-list pr-2"></span>Importa la fitxa de MyAnimeList
+									<span id="import-from-mal-loading" class="d-none spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+									<span id="import-from-mal-not-loading" class="fa fa-list pe-2"></span>Importa la fitxa de MyAnimeList
 								</button>
 <?php
 	}
 ?>
 							</div>
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-tadaima_id">Identificador de fil a Tadaima.cat</label>
 									<input class="form-control" name="tadaima_id" id="form-tadaima_id" type="number" value="<?php echo $row['tadaima_id']; ?>">
 								</div>
 							</div>
 						</div>
-						<div id="import-from-mal-done" class="col-sm form-group alert alert-warning d-none">
-							<span class="fa fa-exclamation-triangle pr-2"></span>S'ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el nom, si s'escau.
+						<div id="import-from-mal-done" class="col-sm mb-3 alert alert-warning d-none">
+							<span class="fa fa-exclamation-triangle pe-2"></span>S'ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el nom, si s'escau.
 						</div>
 						<hr />
 						<div class="row">
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-name-with-autocomplete" class="mandatory">Nom</label>
 									<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['name'])); ?>">
 									<input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>">
@@ -429,16 +429,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-slug">Identificador<span class="mandatory"></span> <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>
 									<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
 									<input type="hidden" id="form-old_slug" value="<?php echo htmlspecialchars($row['slug']); ?>">
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-air_status">Estat</label>
-									<div id="form-air_status" class="row pl-3 pr-3">
+									<div id="form-air_status">
 										<div class="form-check form-check-inline">
 											<input class="form-check-input" type="checkbox" name="is_open" id="form-is_open" value="1"<?php echo $row['number_of_episodes']==-1? " checked" : ""; ?>>
 											<label class="form-check-label" for="form-is_open"><?php echo $open_series; ?></label>
@@ -453,13 +453,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="row">
 							<div class="col-sm-8">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-alternate_names">Altres noms</label>
 									<input class="form-control" name="alternate_names" id="form-alternate_names" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_names'])); ?>">
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-score">Puntuació a <?php echo $external_provider; ?></label>
 									<input class="form-control" name="score" id="form-score" type="number" value="<?php echo $row['score']; ?>" step=".01">
 								</div>
@@ -467,7 +467,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="row">
 							<div class="col-sm-12">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-keywords">Paraules clau <small class="text-muted">(separades per espais; que no siguin ja al nom o noms alternatius, s'utilitza per a la cerca)</small></label>
 									<input class="form-control" name="keywords" id="form-keywords" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['keywords'])); ?>">
 								</div>
@@ -475,9 +475,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="row">
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-type" class="mandatory">Tipus</label>
-									<select class="form-control" name="subtype" id="form-subtype" required>
+									<select class="form-select" name="subtype" id="form-subtype" required>
 										<option value="">- Selecciona un tipus -</option>
 <?php
 	if ($type=='manga') {
@@ -496,21 +496,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-publish_date">Data d'estrena</label>
 									<input class="form-control" name="publish_date" type="date" id="form-publish_date" maxlength="200" value="<?php echo !empty($row['publish_date']) ? date('Y-m-d', strtotime($row['publish_date'])) : ""; ?>">
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-author">Autor</label>
 									<input class="form-control" name="author" id="form-author" maxlength="200" value="<?php echo htmlspecialchars($row['author']); ?>">
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-rating" class="mandatory">Valoració per edats</label>
-									<select class="form-control" name="rating" id="form-rating" required>
+									<select class="form-select" name="rating" id="form-rating" required>
 										<option value="">- Selecciona una valoració -</option>
 										<option value="TP"<?php echo $row['rating']=='TP' ? " selected" : ""; ?>>Tots els públics</option>
 										<option value="+7"<?php echo $row['rating']=='+7' ? " selected" : ""; ?>>Majors de 7 anys</option>
@@ -527,9 +527,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						<div class="row">
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-comic_type" class="mandatory">Tipus de còmic</label>
-									<select class="form-control" name="comic_type" id="form-comic_type" required>
+									<select class="form-select" name="comic_type" id="form-comic_type" required>
 										<option value="manga"<?php echo $row['comic_type']=='manga' ? " selected" : ""; ?>>Manga (còmic japonès)</option>
 										<option value="manhwa"<?php echo $row['comic_type']=='manhwa' ? " selected" : ""; ?>>Manhwa (còmic coreà)</option>
 										<option value="manhua"<?php echo $row['comic_type']=='manhua' ? " selected" : ""; ?>>Manhua (còmic xinès)</option>
@@ -538,9 +538,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-reader_type" class="mandatory">Tipus de lector</label>
-									<select class="form-control" name="reader_type" id="form-reader_type" required>
+									<select class="form-select" name="reader_type" id="form-reader_type" required>
 										<option value="paged"<?php echo $row['reader_type']!='strip' ? " selected" : ""; ?>>Paginat (lectura normal pàgina a pàgina)</option>
 										<option value="strip"<?php echo $row['reader_type']=='strip' ? " selected" : ""; ?>>Webtoon (lectura per desplaçament, tira llarga)</option>
 									</select>
@@ -552,19 +552,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						<div class="row">
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-director">Director</label>
 									<input class="form-control" name="director" id="form-director" maxlength="200" value="<?php echo htmlspecialchars($row['director']); ?>">
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-studio">Estudi</label>
 									<input class="form-control" name="studio" id="form-studio" maxlength="200" value="<?php echo htmlspecialchars($row['studio']); ?>">
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-duration">Durada</label>
 									<input class="form-control" name="duration" id="form-duration" maxlength="200" value="<?php echo htmlspecialchars($row['duration']); ?>">
 								</div>
@@ -573,50 +573,50 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	}
 ?>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-synopsis">Sinopsi<span class="mandatory"></span> <small class="text-muted">(admet <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">Markdown</a>)</small></label>
 							<textarea class="form-control" name="synopsis" id="form-synopsis" required style="height: 150px;"><?php echo htmlspecialchars(str_replace('&#039;',"'",html_entity_decode($row['synopsis']))); ?></textarea>
 						</div>
 						<div class="row">
 							<div class="col-sm-3">
-								<div class="form-group">
+								<div class="mb-3">
 									<label>Imatge de portada<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ~300x424, ≤450x600, ≤150 KiB)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/covers/'.$row['id'].'.jpg');
 ?>
-									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 153600, 'form-image-preview', 'form-image-preview-link','form-image_url');">
 									<input class="form-control" name="image_url" type="hidden" id="form-image_url" value="">
 								</div>
 							</div>
 							<div class="col-sm-1">
-								<div class="form-group">
+								<div class="mb-3">
 									<a id="form-image-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
 										<img id="form-image-preview" style="width: 64px; height: 90px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>
 							<div class="col-sm-3">
-								<div class="form-group">
+								<div class="mb-3">
 									<label>Imatge de capçalera<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ~1104x256, ≤1200x400, ≤300 KiB)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/featured/'.$row['id'].'.jpg');
 ?>
-									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 307200, 'form-featured-image-preview', 'form-featured-image-preview-link');">
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<a id="form-featured-image-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/featured/'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/featured/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
 										<img id="form-featured-image-preview" style="width: 400px; height: 85px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/featured/'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/featured/'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-demographics">Demografia</label>
-							<div id="form-demographics" class="row pl-3 pr-3">
+							<div id="form-demographics" class="row ps-3 pe-3">
 <?php
 	$resultg = query("SELECT g.* FROM genre g WHERE type='demographics' ORDER BY g.name");
 	while ($rowg = mysqli_fetch_assoc($resultg)) {
@@ -631,9 +631,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-genres">Gèneres</label>
-							<div id="form-genres" class="row pl-3 pr-3">
+							<div id="form-genres" class="row ps-3 pe-3">
 <?php
 	$resultg = query("SELECT g.* FROM genre g WHERE type='genre' ORDER BY g.name");
 	while ($rowg = mysqli_fetch_assoc($resultg)) {
@@ -648,9 +648,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-explicit">Nivell d'erotisme <small>(si n'hi ha; marca només el més alt; ecchi &lt; erotisme &lt; hentai)</small></label>
-							<div id="form-explicit" class="row pl-3 pr-3">
+							<div id="form-explicit" class="row ps-3 pe-3">
 <?php
 	$resultg = query("SELECT g.* FROM genre g WHERE type='explicit' ORDER BY g.name");
 	while ($rowg = mysqli_fetch_assoc($resultg)) {
@@ -665,9 +665,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-themes">Temàtiques</label>
-							<div id="form-themes" class="row pl-3 pr-3">
+							<div id="form-themes" class="row ps-3 pe-3">
 <?php
 	$resultg = query("SELECT g.* FROM genre g WHERE type='theme' ORDER BY g.name");
 	while ($rowg = mysqli_fetch_assoc($resultg)) {
@@ -682,7 +682,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-division-list"><?php echo $division_name; ?></label>
 							<div class="container" id="form-division-list">
 								<div class="row">
@@ -747,14 +747,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="w-100 text-center"><button onclick="addDivisionRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix <?php echo $division_one; ?></button></div>
+									<div class="w-100 text-center"><button onclick="addDivisionRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix <?php echo $division_one; ?></button></div>
 								</div>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-episode-list">Capítols</label>
-							<div id="import-from-mal-episodes-done" class="col-sm form-group alert alert-warning d-none">
-								<span class="fa fa-exclamation-triangle pr-2"></span>S'han importat els capítols de MyAnimeList. Revisa'n tots els camps.
+							<div id="import-from-mal-episodes-done" class="col-sm mb-3 alert alert-warning d-none">
+								<span class="fa fa-exclamation-triangle pe-2"></span>S'han importat els capítols de MyAnimeList. Revisa'n tots els camps.
 							</div>
 							<div class="container" id="form-episode-list">
 								<div class="row">
@@ -762,7 +762,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 		if ($type!='manga') {
 ?>
-										<select id="form-episode-list-linked_episode_id-XXX" name="form-episode-list-linked_episode_id-XXX" class="form-control d-none">
+										<select id="form-episode-list-linked_episode_id-XXX" name="form-episode-list-linked_episode_id-XXX" class="form-select d-none">
 											<option value="">- Selecciona un film extern -</option>
 <?php
 			$resultle = query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',TRIM(d.number)+0))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' ORDER BY s.name, d.number, e.number IS NULL ASC, e.number ASC, e.description");
@@ -807,7 +807,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 		if (!empty($episodes[$i]['linked_episode_id'])) {
 ?>
-														<select id="form-episode-list-linked_episode_id-<?php echo $i+1; ?>" name="form-episode-list-linked_episode_id-<?php echo $i+1; ?>" class="form-control" required>
+														<select id="form-episode-list-linked_episode_id-<?php echo $i+1; ?>" name="form-episode-list-linked_episode_id-<?php echo $i+1; ?>" class="form-select" required>
 															<option value="">- Selecciona un film extern -</option>
 <?php
 			$resultle = query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',TRIM(d.number)+0))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' ORDER BY s.name, d.number, e.number IS NULL ASC, e.number ASC, e.description");
@@ -857,35 +857,37 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<button onclick="addEpisodeRow(false, false);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix capítol</button>
-									<button onclick="addEpisodeRow(true, false);" type="button" class="btn btn-success btn-sm ml-2"><span class="fa fa-plus pr-2"></span>Afegeix especial</button>
+									<div class="d-flex">
+										<button onclick="addEpisodeRow(false, false);" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix capítol</button>
+										<button onclick="addEpisodeRow(true, false);" type="button" class="btn btn-success btn-sm ms-2"><span class="fa fa-plus pe-2"></span>Afegeix especial</button>
 <?php
 	if ($type!='manga') {
 ?>
-									<button onclick="addEpisodeRow(true, true);" type="button" class="btn btn-success btn-sm ml-2"><span class="fa fa-plus pr-2"></span>Afegeix film enllaçat</button>
+										<button onclick="addEpisodeRow(true, true);" type="button" class="btn btn-success btn-sm ms-2"><span class="fa fa-plus pe-2"></span>Afegeix film enllaçat</button>
 <?php
 	}
 ?>
-									<span style="flex-grow: 1;"></span>
+										<span style="flex-grow: 1;"></span>
 <?php
 	if ($type=='anime') {
 ?>
-									<button type="button" id="import-from-mal-episodes" class="btn btn-primary btn-sm<?php echo $some_has_version ? ' disabled' : ''; ?>">
-										<span id="import-from-mal-episodes-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
-										<span id="import-from-mal-episodes-not-loading" class="fa fa-th-list pr-2"></span>
-										Importa els capítols de MyAnimeList
-									</button>
+										<button type="button" id="import-from-mal-episodes" class="btn btn-primary btn-sm<?php echo $some_has_version ? ' disabled' : ''; ?>">
+											<span id="import-from-mal-episodes-loading" class="d-none spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+											<span id="import-from-mal-episodes-not-loading" class="fa fa-list pe-2"></span>
+											Importa els capítols de MyAnimeList
+										</button>
 <?php
 	}
 ?>
-									<button type="button" id="generate-episodes" class="btn btn-primary btn-sm ml-2<?php echo $some_has_version ? ' disabled' : ''; ?>">
-										<span class="fa fa-sort-numeric-down pr-2"></span>
-										Genera els capítols automàticament
-									</button>
+										<button type="button" id="generate-episodes" class="btn btn-primary btn-sm ms-2<?php echo $some_has_version ? ' disabled' : ''; ?>">
+											<span class="fa fa-sort-numeric-down pe-2"></span>
+											Genera els capítols automàticament
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-related-list">Contingut relacionat <small class="text-muted">(es mostrarà a la fitxa pública)</small></label>
 							<div class="container" id="form-related-list">
 <?php
@@ -903,7 +905,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 								<div class="row mb-3">
 									<div class="w-100 column">
-										<select id="form-related-list-related_series_id-XXX" name="form-related-list-related_series_id-XXX" class="form-control d-none">
+										<select id="form-related-list-related_series_id-XXX" name="form-related-list-related_series_id-XXX" class="form-select d-none">
 											<option value="">- Selecciona un element -</option>
 <?php
 		$results = query("SELECT s.id, CONCAT(IF(s.type='anime','Anime',IF(s.type='manga','Manga','Acció real')),' - ',s.name) name FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.type ASC, s.name ASC");
@@ -931,7 +933,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-related-list-row-<?php echo $j+1; ?>">
 													<td>
-														<select id="form-related-list-related_series_id-<?php echo $j+1; ?>" name="form-related-list-related_series_id-<?php echo $j+1; ?>" class="form-control" required>
+														<select id="form-related-list-related_series_id-<?php echo $j+1; ?>" name="form-related-list-related_series_id-<?php echo $j+1; ?>" class="form-select" required>
 															<option value="">- Selecciona un element -</option>
 <?php
 		$results = query("SELECT s.id, CONCAT(IF(s.type='anime','Anime',IF(s.type='manga','Manga','Acció real')),' - ',s.name) name FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.type ASC, s.name ASC");
@@ -954,16 +956,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="form-group row w-100 ml-0">
+									<div class="mb-3 row w-100 ms-0">
 										<div class="col-sm text-center" style="padding-left: 0; padding-right: 0">
-											<button onclick="addRelatedSeriesRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un element relacionat</button>
+											<button onclick="addRelatedSeriesRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix un element relacionat</button>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="form-group text-center pt-2">
-							<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix ".$content_apos; ?></button>
+						<div class="mb-3 text-center pt-2">
+							<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix ".$content_apos; ?></button>
 						</div>
 					</form>
 				</article>

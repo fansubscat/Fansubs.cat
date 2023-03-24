@@ -31,7 +31,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col">Calendari d'advent</th>
 								<th class="text-center" scope="col">Creat i publicat</th>

@@ -27,7 +27,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col">Nom</th>
 								<th scope="col">Enllaços</th>
@@ -100,7 +100,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($_SESSION['admin_level']>=3) {
 ?>
 					<div class="text-center">
-						<a href="fansub_edit.php" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix un fansub</a>
+						<a href="fansub_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un fansub</a>
 					</div>
 <?php
 	}

@@ -69,38 +69,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['username']) ? "Edita l'administrador" : "Afegeix un administrador"; ?></h4>
 					<hr>
 					<form method="post" action="admin_edit.php">
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-user" class="mandatory">Usuari</label>
-							<input class="form-control" name="username" id="form-user" required maxlength="200" value="<?php echo $row['username']; ?>">
+							<input class="form-control" name="username" id="form-user" required maxlength="200" value="<?php echo $row['username']; ?>" autocomplete="new-password">
 							<input type="hidden" name="username_old" value="<?php echo htmlspecialchars($row['username']); ?>">
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 <?php
 	if ($row['username']==NULL) {
 ?>
 							<label for="form-password" class="mandatory">Contrasenya</label>
-							<input class="form-control" type="password" name="password" required id="form-password">
+							<input class="form-control" type="password" name="password" required id="form-password" autocomplete="new-password">
 <?php
 	} else {
 ?>
 							<label for="form-password">Contrasenya (introdueix-la només si la vols canviar)</label>
-							<input class="form-control" type="password" name="password" id="form-password">
+							<input class="form-control" type="password" name="password" id="form-password" autocomplete="new-password">
 <?php
 	}
 ?>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-admin-level" class="mandatory">Nivell d'administrador</label>
-							<select class="form-control" name="admin_level" id="form-admin-level" required>
+							<select class="form-select" name="admin_level" id="form-admin-level" required>
 								<option value="">- Selecciona un nivell -</option>
 								<option value="1"<?php echo $row['admin_level']==1 ? " selected" : ""; ?>>1: Gestor de versions</option>
 								<option value="2"<?php echo $row['admin_level']==2 ? " selected" : ""; ?>>2: Gestor de fitxes i versions</option>
 								<option value="3"<?php echo $row['admin_level']==3 ? " selected" : ""; ?>>3: Control total</option>
 							</select>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-fansub">Fansub associat</label>
-							<select name="fansub_id" class="form-control" id="form-fansub">
+							<select name="fansub_id" class="form-select" id="form-fansub">
 								<option value="">- No associat a cap fansub -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
@@ -113,8 +113,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							</select>
 						</div>
-						<div class="form-group text-center pt-2">
-							<button type="submit" name="action" value="<?php echo !empty($row['username']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['username']) ? "Desa els canvis" : "Afegeix l'administrador"; ?></button>
+						<div class="mb-3 text-center pt-2">
+							<button type="submit" name="action" value="<?php echo !empty($row['username']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['username']) ? "Desa els canvis" : "Afegeix l'administrador"; ?></button>
 						</div>
 					</form>
 					

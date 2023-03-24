@@ -72,7 +72,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col">Nom</th>
 								<th class="text-center" scope="col">Tipus</th>
@@ -109,7 +109,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</tbody>
 					</table>
 					<div class="text-center">
-						<a href="series_edit.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix un <?php echo $content; ?></a>
+						<a href="series_edit.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un <?php echo $content; ?></a>
 					</div>
 				</article>
 			</div>

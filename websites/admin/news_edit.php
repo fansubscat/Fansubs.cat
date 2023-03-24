@@ -108,32 +108,32 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	if(isset($_GET['import_pending_id'])) {
 ?>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-pending_author">Autor que ha proposat la notícia</label>
 						<input class="form-control" id="form-pending_author" disabled value="<?php echo htmlspecialchars($row['pending_author']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-pending_email">Correu de l'autor que ha proposat la notícia</label>
 						<input class="form-control" id="form-pending_email" disabled value="<?php echo htmlspecialchars($row['pending_email']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-pending_comments">Comentaris de l'autor que ha proposat la notícia</label>
 						<input class="form-control" id="form-pending_comments" disabled value="<?php echo htmlspecialchars($row['pending_comments']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-pending_image">Imatge proposada per a la notícia</label>
 						<input class="form-control" id="form-pending_image" disabled value="<?php echo htmlspecialchars($row['pending_image']); ?>">
 					</div>
 <?php
 	} else if (empty($row['id'])) {
 ?>
-					<p class="alert alert-warning"><span class="fa fa-exclamation-triangle mr-2"></span>Normalment, no és necessari afegir manualment notícies de fansubs, ja que s'obtenen automàticament mitjançant els recollidors. Assegura't que realment és això el que vols fer, i en cas de dubte, contacta amb un administrador.</p>
+					<p class="alert alert-warning"><span class="fa fa-exclamation-triangle me-2"></span>Normalment, no és necessari afegir manualment notícies de fansubs, ja que s'obtenen automàticament mitjançant els recollidors. Assegura't que realment és això el que vols fer, i en cas de dubte, contacta amb un administrador.</p>
 <?php
 	}
 ?>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-fansub_id">Fansub</label>
-						<select name="fansub_id" class="form-control" id="form-fansub_id"<?php echo isset($_GET['id']) ? ' disabled' : ''; ?>>
+						<select name="fansub_id" class="form-select" id="form-fansub_id"<?php echo isset($_GET['id']) ? ' disabled' : ''; ?>>
 							<option value="">- Notícia en nom de Fansubs.cat (tria un altre fansub, si no és així) -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
@@ -149,43 +149,43 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<?php echo isset($_GET['import_pending_id']) ? '<input type="hidden" name="import_pending_id" value="'.$row['pending_id'].'">' : ''; ?>
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-title" class="mandatory">Títol</label>
 						<input class="form-control" name="title" id="form-title" required value="<?php echo htmlspecialchars($row['title']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-contents">Contingut<span class="mandatory"></span> <small class="text-muted">(compte, en format HTML!)</small></label>
 						<textarea class="form-control" name="contents" id="form-contents" required style="height: 150px;"><?php echo htmlspecialchars($row['contents']); ?></textarea>
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-url">URL</label>
 						<input class="form-control" name="url" id="form-url" value="<?php echo htmlspecialchars($row['url']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-date" class="mandatory">Data</label>
 						<input class="form-control" name="date" type="datetime-local" id="form-date" required step="1" value="<?php echo !empty($row['date']) ? date('Y-m-d\TH:i:s', strtotime($row['date'])) : date('Y-m-d\TH:i:s'); ?>">
 					</div>
 					<div class="row">
 						<div class="col-sm-3">
-							<div class="form-group">
+							<div class="mb-3">
 								<label>Imatge<br><small class="text-muted">(format JPEG o PNG)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/news/'.$row['fansub_slug'].'/'.$row['image']);
 ?>
-								<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="image" type="file" accept="image/jpeg,image/png" id="form-image" onchange="checkImageUpload(this, -1, 'form-image-preview', 'form-image-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-4">
-							<div class="form-group">
+							<div class="mb-3">
 								<a id="form-image-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'" data-original="'.STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'"' : ''; ?> target="_blank">
 									<img id="form-image-preview" style="width: 140px; height: 90px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'" data-original="'.STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image'].'"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
 					</div>
-					<div class="form-group text-center pt-2">
-						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la notícia"; ?></button>
+					<div class="mb-3 text-center pt-2">
+						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la notícia"; ?></button>
 					</div>
 				</form>
 			</article>

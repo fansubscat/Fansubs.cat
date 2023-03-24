@@ -16,8 +16,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1">Registre d'accions</h4>
 					<hr>
 					<p class="text-center">Es mostren les darreres 200 accions (les més noves primer).</p>
-					<div class="text-center pb-3">
-						<select onchange="location.href='admin_log.php?filter='+this.value;">
+					<div class="d-flex justify-content-center pb-3">
+						<select class="form-select" style="width: unset;" onchange="location.href='admin_log.php?filter='+this.value;">
 							<option value="">Mostra els esdeveniments més rellevants</option>
 							<option value="ALL"<?php echo $_GET['filter']=='ALL' ? ' selected' : ''; ?>>Mostra tots els esdeveniments</option>
 <?php
@@ -32,10 +32,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</select>
 					</div>
 					<div class="text-center pb-3">
-						<a href="admin_log.php<?php echo (!empty($filter) ? "?filter=$filter" : '') ?>" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
+						<a href="admin_log.php<?php echo (!empty($filter) ? "?filter=$filter" : '') ?>" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
 					</div>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col" style="width: 18%;">Data i hora</th>
 								<th scope="col" style="width: 12%;">Usuari</th>

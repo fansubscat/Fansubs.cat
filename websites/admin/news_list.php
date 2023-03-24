@@ -41,7 +41,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 					<h5 class="card-title text-center mb-4 mt-1">Hi ha notícies proposades pendents d'aprovar:</h5>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col">Títol</th>
 								<th scope="col">Autor</th>
@@ -71,7 +71,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col">Fansub</th>
 								<th scope="col">Títol</th>
@@ -109,7 +109,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</tbody>
 					</table>
 					<div class="text-center">
-						<a href="news_edit.php" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix una notícia a mà</a>
+						<a href="news_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una notícia a mà</a>
 					</div>
 				</article>
 			</div>

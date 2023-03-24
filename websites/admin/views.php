@@ -68,13 +68,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($fansub)) {
 ?>
 				<li class="nav-item">
-					<a class="nav-link active" id="fansub-tab" data-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Visualitzacions <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
+					<a class="nav-link active" id="fansub-tab" data-bs-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Visualitzacions <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
 				</li>
 <?php
 	}
 ?>
 				<li class="nav-item">
-					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Visualitzacions globals</a>
+					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-bs-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Visualitzacions globals</a>
 				</li>
 			</ul>
 			<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
@@ -85,11 +85,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1"><?php echo $view_name; ?> <?php echo $content_prep; ?> en curs</h4>
 								<hr>
 								<div class="text-center pb-3">
-									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
+									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
 								</div>
 								<div class="row">
 									<table class="table table-hover table-striped">
-										<thead class="thead-dark">
+										<thead class="table-dark">
 											<tr>
 												<th scope="col" style="width: 20%;"><?php echo $content_uc; ?></th>
 												<th scope="col" style="width: 45%;">Capítol</th>
@@ -108,7 +108,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td scope="col"><?php echo $row['series_name']; ?></td>
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
-												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
+												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
 												<td class="text-center"><div<?php echo $row['is_view_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
 											</tr>
@@ -130,7 +130,7 @@ mysqli_free_result($result);
 								<hr>
 								<div class="row">
 									<table class="table table-hover table-striped">
-										<thead class="thead-dark">
+										<thead class="table-dark">
 											<tr>
 												<th scope="col"><?php echo $content_uc; ?></th>
 												<th scope="col">Capítol</th>
@@ -172,11 +172,11 @@ mysqli_free_result($result);
 								<h4 class="card-title text-center mb-4 mt-1"><?php echo $view_name; ?> <?php echo $content_prep; ?> en curs</h4>
 								<hr>
 								<div class="text-center pb-3">
-									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
+									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
 								</div>
 								<div class="row">
 									<table class="table table-hover table-striped">
-										<thead class="thead-dark">
+										<thead class="table-dark">
 											<tr>
 												<th scope="col" style="width: 20%;"><?php echo $content_uc; ?></th>
 												<th scope="col" style="width: 45%;">Capítol</th>
@@ -195,7 +195,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td scope="col"><?php echo $row['series_name']; ?></td>
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
-												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-info" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
+												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
 												<td class="text-center"><div<?php echo $row['is_view_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
 											</tr>
@@ -217,7 +217,7 @@ mysqli_free_result($result);
 								<hr>
 								<div class="row">
 									<table class="table table-hover table-striped">
-										<thead class="thead-dark">
+										<thead class="table-dark">
 											<tr>
 												<th scope="col"><?php echo $content_uc; ?></th>
 												<th scope="col">Capítol</th>

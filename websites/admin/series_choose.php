@@ -44,7 +44,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1">De quin <?php echo $content; ?> vols crear una versió?</h4>
 					<hr>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col">Nom</th>
 								<th class="text-center" scope="col">Tipus</th>

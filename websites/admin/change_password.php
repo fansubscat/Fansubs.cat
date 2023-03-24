@@ -33,16 +33,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	} else {
 ?>
 					<form method="post" action="change_password.php" onsubmit="if ($('#form-password').val()!=$('#form-password_confirm').val()) { alert('Les contrasenyes no coincideixen.'); return false; } else { return true; }">
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-password" class="mandatory">Contrasenya</label>
-							<input class="form-control" type="password" minlength="7" name="password" required id="form-password">
+							<input class="form-control" type="password" minlength="7" name="password" required id="form-password" autocomplete="new-password">
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-password_confirm" class="mandatory">Repeteix la contrasenya</label>
-							<input class="form-control" type="password" minlength="7" name="password_confirm" required id="form-password_confirm">
+							<input class="form-control" type="password" minlength="7" name="password_confirm" required id="form-password_confirm" autocomplete="new-password">
 						</div>
-						<div class="form-group text-center pt-2">
-							<button type="submit" name="action" value="change_password" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span>Canvia la contrasenya</button>
+						<div class="mb-3 text-center pt-2">
+							<button type="submit" name="action" value="change_password" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span>Canvia la contrasenya</button>
 						</div>
 					</form>
 <?php

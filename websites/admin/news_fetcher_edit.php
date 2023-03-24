@@ -61,9 +61,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita el recollidor de notícies" : "Afegeix un recollidor de notícies"; ?></h4>
 				<hr>
 				<form method="post" action="news_fetcher_edit.php">
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-fansub_id" class="mandatory">Fansub</label>
-						<select name="fansub_id" class="form-control" id="form-fansub_id" required>
+						<select name="fansub_id" class="form-select" id="form-fansub_id" required>
 							<option value="">- Selecciona un fansub -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
@@ -76,14 +76,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						</select>
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-url" class="mandatory">URL</label>
 						<input class="form-control" name="url" id="form-url" required value="<?php echo htmlspecialchars($row['url']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-method" class="mandatory">Mètode de recollida</label>
-						<select name="method" class="form-control" id="form-method" required>
+						<select name="method" class="form-select" id="form-method" required>
 							<option value="">- Selecciona un mètode -</option>
 							<option value="animugen"<?php echo $row['method']=='animugen' ? " selected" : ""; ?>>AniMugen</option>
 							<option value="blogspot"<?php echo $row['method']=='blogspot' ? " selected" : ""; ?>>Blogspot (genèric)</option>
@@ -114,9 +114,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="wordpress_ynf"<?php echo $row['method']=='wordpress_ynf' ? " selected" : ""; ?>>Wordpress (Yoshiwara no Fansub)</option>
 						</select>
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-fetch_type" class="mandatory">Freqüència de recollida</label>
-						<select name="fetch_type" class="form-control" id="form-fetch_type" required>
+						<select name="fetch_type" class="form-select" id="form-fetch_type" required>
 							<option value="">- Selecciona una freqüència -</option>
 							<option value="periodic"<?php echo $row['fetch_type']=='periodic' ? " selected" : ""; ?>>Periòdica (cada 15 minuts)</option>
 							<option value="onrequest"<?php echo $row['fetch_type']=='onrequest' ? " selected" : ""; ?>>Només a petició (amb testimoni de ping)</option>
@@ -124,8 +124,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="onetime_inactive"<?php echo $row['fetch_type']=='onetime_inactive' ? " selected" : ""; ?>>Només obtenció inicial (URL inactiva)</option>
 						</select>
 					</div>
-					<div class="form-group text-center pt-2">
-						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el recollidor de notícies"; ?></button>
+					<div class="mb-3 text-center pt-2">
+						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el recollidor de notícies"; ?></button>
 					</div>
 				</form>
 			</article>

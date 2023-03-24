@@ -26,7 +26,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col">Nom</th>
 								<th scope="col">Tipus</th>
@@ -64,7 +64,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</tbody>
 					</table>
 					<div class="text-center">
-						<a href="remote_account_edit.php" class="btn btn-primary"><span class="fa fa-plus pr-2"></span>Afegeix un compte remot</a>
+						<a href="remote_account_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un compte remot</a>
 					</div>
 				</article>
 			</div>

@@ -427,13 +427,13 @@ function deleteDivisionRow(id) {
 
 function addLinkRow(episode_id, variant_number) {
 	var i = parseInt($('#links-list-table-'+episode_id+'-'+variant_number).attr('data-count'))+1;
-	$('#links-list-table-'+episode_id+'-'+variant_number+' tbody').append('<tr id="form-links-list-'+episode_id+'-row-'+variant_number+'-'+i+'" style="background: none;"><td class="pl-0 pt-0 pb-0 border-0"><input id="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-url" name="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr(\'value\',$(this).val());"/><input id="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-id" name="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-resolution" name="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-delete" onclick="deleteLinkRow('+episode_id+','+variant_number+','+i+');" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr>');
+	$('#links-list-table-'+episode_id+'-'+variant_number+' tbody').append('<tr id="form-links-list-'+episode_id+'-row-'+variant_number+'-'+i+'" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-url" name="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr(\'value\',$(this).val());"/><input id="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-id" name="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-resolution" name="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-files-list-'+episode_id+'-file-'+variant_number+'-link-'+i+'-delete" onclick="deleteLinkRow('+episode_id+','+variant_number+','+i+');" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr>');
 	$('#links-list-table-'+episode_id+'-'+variant_number).attr('data-count', i);
 }
 
 function addExtraLinkRow(extra_number) {
 	var i = parseInt($('#extras-links-list-table-'+extra_number).attr('data-count'))+1;
-	$('#extras-links-list-table-'+extra_number+' tbody').append('<tr id="form-links-extras-list-row-'+extra_number+'-'+i+'" style="background: none;"><td class="pl-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+extra_number+'-link-'+i+'-url" name="form-extras-list-'+extra_number+'-link-'+i+'-url" type="url" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr(\'value\',$(this).val());" required/><input id="form-extras-list-'+extra_number+'-link-'+i+'-id" name="form-extras-list-'+extra_number+'-link-'+i+'-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+extra_number+'-link-'+i+'-resolution" name="form-extras-list-'+extra_number+'-link-'+i+'-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+extra_number+'-link-'+i+'-delete" onclick="deleteExtraLinkRow('+extra_number+','+i+');" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr>');
+	$('#extras-links-list-table-'+extra_number+' tbody').append('<tr id="form-links-extras-list-row-'+extra_number+'-'+i+'" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+extra_number+'-link-'+i+'-url" name="form-extras-list-'+extra_number+'-link-'+i+'-url" type="url" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr(\'value\',$(this).val());" required/><input id="form-extras-list-'+extra_number+'-link-'+i+'-id" name="form-extras-list-'+extra_number+'-link-'+i+'-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+extra_number+'-link-'+i+'-resolution" name="form-extras-list-'+extra_number+'-link-'+i+'-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+extra_number+'-link-'+i+'-delete" onclick="deleteExtraLinkRow('+extra_number+','+i+');" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr>');
 	$('#extras-links-list-table-'+extra_number).attr('data-count', i);
 }
 
@@ -447,9 +447,9 @@ function addVersionRow(episode_id) {
 
 	var contents = '<tr id="form-files-list-'+episode_id+'-row-'+i+'"><td><input id="form-files-list-'+episode_id+'-variant_name-'+i+'" name="form-files-list-'+episode_id+'-variant_name-'+i+'" type="text" class="form-control" value="" maxlength="200" placeholder="- Variant -" required/><input id="form-files-list-'+episode_id+'-id-'+i+'" name="form-files-list-'+episode_id+'-id-'+i+'" type="hidden" value="-1"/></td>';
 	if ($('#type').val()=='manga') {
-		contents += '<td class="align-middle"><div id="form-files-list-'+episode_id+'-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-files-list-'+episode_id+'-file-'+i+'" class="btn btn-sm btn-info w-100"><span class="fa fa-upload pr-2"></span>Puja un fitxer...</label><input id="form-files-list-'+episode_id+'-file-'+i+'" name="form-files-list-'+episode_id+'-file-'+i+'" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/><input id="form-files-list-'+episode_id+'-length-'+i+'" name="form-files-list-'+episode_id+'-length-'+i+'" type="hidden" value="0"/></td>';
+		contents += '<td class="align-middle"><div id="form-files-list-'+episode_id+'-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-files-list-'+episode_id+'-file-'+i+'" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un fitxer...</label><input id="form-files-list-'+episode_id+'-file-'+i+'" name="form-files-list-'+episode_id+'-file-'+i+'" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/><input id="form-files-list-'+episode_id+'-length-'+i+'" name="form-files-list-'+episode_id+'-length-'+i+'" type="hidden" value="0"/></td>';
 	} else {
-		contents += '<td><table class="w-100" id="links-list-table-'+episode_id+'-'+i+'" data-count="1"><tbody><tr id="form-links-list-'+episode_id+'-row-'+i+'-1" style="background: none;"><td class="pl-0 pt-0 pb-0 border-0"><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-url" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr(\'value\',$(this).val());"/><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-id" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-resolution" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-files-list-'+episode_id+'-file-'+i+'-link-1-delete" onclick="deleteLinkRow('+episode_id+','+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody><tfoot><tr style="background: none;"><td colspan="3" class="text-center p-0 border-0"><button id="form-files-list-'+episode_id+'-add_link-'+i+'" onclick="addLinkRow('+episode_id+','+i+');" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button></td></tr></tfoot></table></td><td><input id="form-files-list-'+episode_id+'-length-'+i+'" name="form-files-list-'+episode_id+'-length-'+i+'" type="time" step="1" class="form-control"/>';
+		contents += '<td><table class="w-100" id="links-list-table-'+episode_id+'-'+i+'" data-count="1"><tbody><tr id="form-links-list-'+episode_id+'-row-'+i+'-1" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-url" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr(\'value\',$(this).val());"/><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-id" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-resolution" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-files-list-'+episode_id+'-file-'+i+'-link-1-delete" onclick="deleteLinkRow('+episode_id+','+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody><tfoot><tr style="background: none;"><td colspan="3" class="text-center p-0 border-0"><button id="form-files-list-'+episode_id+'-add_link-'+i+'" onclick="addLinkRow('+episode_id+','+i+');" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pe-2"></span>Afegeix un altre enllaç</button></td></tr></tfoot></table></td><td><input id="form-files-list-'+episode_id+'-length-'+i+'" name="form-files-list-'+episode_id+'-length-'+i+'" type="time" step="1" class="form-control"/>';
 	}
 
 	contents += '<td><input id="form-files-list-'+episode_id+'-comments-'+i+'" name="form-files-list-'+episode_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center" style="padding-top: .75rem;"><input id="form-files-list-'+episode_id+'-is_lost-'+i+'" name="form-files-list-'+episode_id+'-is_lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center pt-2"><button id="form-files-list-'+episode_id+'-delete-'+i+'" onclick="deleteVersionRow('+episode_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>';
@@ -464,9 +464,9 @@ function addVersionExtraRow() {
 	var contents = '<tr id="form-extras-list-row-'+i+'"><td><input id="form-extras-list-name-'+i+'" name="form-extras-list-name-'+i+'" type="text" class="form-control" value="" maxlength="200" required placeholder="- Introdueix un nom -"/><input id="form-extras-list-id-'+i+'" name="form-extras-list-id-'+i+'" type="hidden" value="-1"/></td>';
 	
 	if ($('#type').val()=='manga') {
-		contents += '<td class="align-middle"><div id="form-extras-list-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-extras-list-file-'+i+'" class="btn btn-sm btn-info w-100"><span class="fa fa-upload pr-2"></span>Puja un fitxer...</label><input id="form-extras-list-file-'+i+'" name="form-extras-list-file-'+i+'" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);" required/><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="hidden" value="-1"/></td>';
+		contents += '<td class="align-middle"><div id="form-extras-list-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-extras-list-file-'+i+'" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un fitxer...</label><input id="form-extras-list-file-'+i+'" name="form-extras-list-file-'+i+'" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);" required/><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="hidden" value="-1"/></td>';
 	} else {
-		contents += '<td><table class="w-100" id="extras-links-list-table-'+i+'" data-count="1"><tbody><tr id="form-links-extras-list-row-'+i+'-1" style="background: none;"><td class="pl-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+i+'-link-1-url" name="form-extras-list-'+i+'-link-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr(\'value\',$(this).val());" required/><input id="form-extras-list-'+i+'-link-1-id" name="form-extras-list-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+i+'-link-1-resolution" name="form-extras-list-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+i+'-link-1-delete" onclick="deleteExtraLinkRow('+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody><tfoot><tr style="background: none;"><td colspan="3" class="text-center p-0 border-0"><button id="form-extras-list-add_link-'+i+'" onclick="addExtraLinkRow('+i+');" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button></td></tr></tfoot></table></td><td><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="time" step="1" class="form-control" required/></td>';
+		contents += '<td><table class="w-100" id="extras-links-list-table-'+i+'" data-count="1"><tbody><tr id="form-links-extras-list-row-'+i+'-1" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+i+'-link-1-url" name="form-extras-list-'+i+'-link-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr(\'value\',$(this).val());" required/><input id="form-extras-list-'+i+'-link-1-id" name="form-extras-list-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+i+'-link-1-resolution" name="form-extras-list-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+i+'-link-1-delete" onclick="deleteExtraLinkRow('+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody><tfoot><tr style="background: none;"><td colspan="3" class="text-center p-0 border-0"><button id="form-extras-list-add_link-'+i+'" onclick="addExtraLinkRow('+i+');" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pe-2"></span>Afegeix un altre enllaç</button></td></tr></tfoot></table></td><td><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="time" step="1" class="form-control" required/></td>';
 	}
 
 	contents += '<td><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center pt-2"><button id="form-extras-list-delete-'+i+'" onclick="deleteVersionExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>';
@@ -484,11 +484,11 @@ function uncompressFile(fileInput) {
 		detailsElement.html("<span style=\"color: gray;\"><span class=\"fa fa-times fa-fw\"></span> No s'ha seleccionat cap fitxer, no es faran canvis.</span>");
 		numberOfPagesElement.val(0);
 		$('label[for="'+fileInput.id+'"]').removeClass("btn-danger");
-		$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+		$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
 		$('label[for="'+fileInput.id+'"]').removeClass("btn-success");
 		$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
 		$('label[for="'+fileInput.id+'"]').addClass("btn-secondary");
-		$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-times pr-2"></span>Sense canvis');
+		$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-times pe-2"></span>Sense canvis');
 		return;
 	}
 
@@ -524,50 +524,50 @@ function uncompressFile(fileInput) {
 				numberOfPagesElement.val(countImages);
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-danger");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
-				$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
 				$('label[for="'+fileInput.id+'"]').addClass("btn-success");
-				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pr-2"></span>Es pujarà');
+				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pe-2"></span>Es pujarà');
 			} else if (countRepeated>0) {
 				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L'arxiu conté "+countRepeated+" fitxers amb noms repetits. Recorda que no hi poden haver subcarpetes.</span>");
 				fileInput.value="";
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
-				$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-success");
 				$('label[for="'+fileInput.id+'"]').addClass("btn-danger");
-				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pr-2"></span>Puja un fitxer...');
+				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pe-2"></span>Puja un fitxer...');
 				numberOfPagesElement.val(0);
 			} else if (countImages==0) {
 				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L'arxiu no conté cap fitxer d'imatge JPEG ni PNG.</span>");
 				fileInput.value="";
 				numberOfPagesElement.val(0);
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
-				$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-success");
 				$('label[for="'+fileInput.id+'"]').addClass("btn-danger");
-				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pr-2"></span>Puja un fitxer...');
+				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pe-2"></span>Puja un fitxer...');
 			} else {
 				detailsElement.html("<span style=\"color: #d39e00;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L'arxiu consta de <strong>"+countImages+" imatges</strong> en total.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>Compte: L'arxiu conté "+(count-countImages)+" fitxers que no són imatges i es descartaran.</span>");
 				numberOfPagesElement.val(countImages);
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-danger");
-				$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-success");
 				$('label[for="'+fileInput.id+'"]').addClass("btn-warning");
-				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-exclamation-triangle pr-2"></span>Es pujarà');
+				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-exclamation-triangle pe-2"></span>Es pujarà');
 			}
 		} else {
 			detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>El fitxer no és vàlid</strong> (ha de ser un arxiu ZIP o RAR).</span>");
 			fileInput.value="";
 			numberOfPagesElement.val(0);
 			$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
-			$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+			$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
 			$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
 			$('label[for="'+fileInput.id+'"]').removeClass("btn-success");
 			$('label[for="'+fileInput.id+'"]').addClass("btn-danger");
-			$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pr-2"></span>Puja un fitxer...');
+			$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pe-2"></span>Puja un fitxer...');
 		}
 	});
 }
@@ -621,8 +621,8 @@ function deleteVersionRow(episode_id, id) {
 			if ($('#type').val()=='manga') {
 				$("#form-files-list-"+episode_id+"-file-1").val("");
 				$('label[for="form-files-list-'+episode_id+'-file-1"]').removeClass("btn-warning");
-				$('label[for="form-files-list-'+episode_id+'-file-1"]').addClass("btn-info");
-				$('label[for="form-files-list-'+episode_id+'-file-1"]').html('<span class="fa fa-upload pr-2"></span> Puja un fitxer...');
+				$('label[for="form-files-list-'+episode_id+'-file-1"]').addClass("btn-primary");
+				$('label[for="form-files-list-'+episode_id+'-file-1"]').html('<span class="fa fa-upload pe-2"></span> Puja un fitxer...');
 				$("#form-files-list-"+episode_id+"-file_details-1").html('<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>');
 			} else {
 				$("#form-files-list-"+episode_id+"-length-1").val("");
@@ -1241,9 +1241,9 @@ function checkImageUpload(fileInput, maxBytes, previewImageId, previewLinkId, op
 				}
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
-				$('label[for="'+fileInput.id+'"]').removeClass("btn-info");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
 				$('label[for="'+fileInput.id+'"]').addClass("btn-success");
-				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pr-2"></span>Es pujarà');
+				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pe-2"></span>Es pujarà');
 			};
 			reader.readAsDataURL(fileInput.files[0]);
 			return;
@@ -1271,10 +1271,10 @@ function checkImageUpload(fileInput, maxBytes, previewImageId, previewLinkId, op
 
 function resetFileInput(fileInput) {
 	$('label[for="'+fileInput.attr('id')+'"]').removeClass("btn-warning");
-	$('label[for="'+fileInput.attr('id')+'"]').removeClass("btn-info");
+	$('label[for="'+fileInput.attr('id')+'"]').removeClass("btn-primary");
 	$('label[for="'+fileInput.attr('id')+'"]').removeClass("btn-success");
 	$('label[for="'+fileInput.attr('id')+'"]').addClass("btn-secondary");
-	$('label[for="'+fileInput.attr('id')+'"]').html('<span class="fa fa-times pr-2"></span>Sense canvis');
+	$('label[for="'+fileInput.attr('id')+'"]').html('<span class="fa fa-times pe-2"></span>Sense canvis');
 }
 
 function generateStorageFolder() {
@@ -1820,7 +1820,7 @@ $(document).ready(function() {
 					if (data.unmatched_results.length>0) {
 						$('#import-failed-results').removeClass('d-none');
 						for (var i = 0; i < data.unmatched_results.length; i++) {
-							$('#import-failed-results-table').append('<tr><td>'+data.unmatched_results[i].file+'</td><td>'+data.unmatched_results[i].link+'</td><td title="'+data.unmatched_results[i].reason_description+'" style="white-space: nowrap;">'+data.unmatched_results[i].reason+'<span class="fa fa-question-circle ml-1"></span></td></tr>');
+							$('#import-failed-results-table').append('<tr><td>'+data.unmatched_results[i].file+'</td><td>'+data.unmatched_results[i].link+'</td><td title="'+data.unmatched_results[i].reason_description+'" style="white-space: nowrap;">'+data.unmatched_results[i].reason+'<span class="fa fa-question-circle ms-1"></span></td></tr>');
 						}
 					}
 

@@ -740,9 +740,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la versió" : "Afegeix una versió"; ?></h4>
 					<hr>
 					<form method="post" action="version_edit.php?type=<?php echo $type; ?>" enctype="multipart/form-data" onsubmit="return checkNumberOfLinks()">
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-series" class="mandatory"><?php echo $content_uc; ?></label>
-							<div id="form-series" class="font-weight-bold form-control"><?php echo htmlspecialchars($series['name']); ?></div>
+							<div id="form-series" class="fw-bold form-control"><?php echo htmlspecialchars($series['name']); ?></div>
 							<input name="series_id" type="hidden" value="<?php echo $series['id']; ?>"/>
 							<input id="series_subtype" type="hidden" value="<?php echo $series['subtype']; ?>"/>
 							<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
@@ -750,9 +750,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="row align-items-end">
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-fansub-1" class="mandatory">Fansub</label>
-									<select name="fansub_1" class="form-control" id="form-fansub-1" required>
+									<select name="fansub_1" class="form-select" id="form-fansub-1" required>
 										<option value="">- Selecciona un fansub -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
@@ -767,9 +767,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-fansub-2">Fansub 2 <small class="text-muted">(en cas que sigui una col·laboració)</small></label>
-									<select name="fansub_2" class="form-control" id="form-fansub-2">
+									<select name="fansub_2" class="form-select" id="form-fansub-2">
 										<option value="">- Cap més fansub -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
@@ -784,9 +784,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-fansub-3">Fansub 3 <small class="text-muted">(en cas que sigui una col·laboració)</small></label>
-									<select name="fansub_3" class="form-control" id="form-fansub-3">
+									<select name="fansub_3" class="form-select" id="form-fansub-3">
 										<option value="">- Cap més fansub -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
@@ -803,19 +803,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="row">
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-downloads_url_1">Enllaç de baixada dels fitxers originals 1<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
 									<input id="form-downloads_url_1" name="downloads_url_1" type="url" class="form-control" value="<?php echo (count($fansubs)>0 ? htmlspecialchars($fansubs[0][1]) : ''); ?>" maxlength="200"/>
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-downloads_url_2">Enllaç de baixada dels fitxers originals 2<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
 									<input id="form-downloads_url_2" name="downloads_url_2" type="url" class="form-control" value="<?php echo (count($fansubs)>1 ? htmlspecialchars($fansubs[1][1]) : ''); ?>" maxlength="200" <?php echo (count($fansubs)>1 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-downloads_url_3">Enllaç de baixada dels fitxers originals 3<br /><small class="text-muted">(o fitxa del fansub; separa'ls amb un punt i coma, si cal)</small></label>
 									<input id="form-downloads_url_3" name="downloads_url_3" type="url" class="form-control" value="<?php echo (count($fansubs)>2 ? htmlspecialchars($fansubs[2][1]) : ''); ?>" maxlength="200" <?php echo (count($fansubs)>2 ? '' : ' disabled'); ?>/>
 								</div>
@@ -823,9 +823,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="row">
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-status" class="mandatory">Estat</label>
-									<select class="form-control" name="status" id="form-status" required>
+									<select class="form-select" name="status" id="form-status" required>
 										<option value="">- Selecciona un estat -</option>
 										<option value="1"<?php echo $row['status']==1 ? " selected" : ""; ?>>Completada</option>
 										<option value="2"<?php echo $row['status']==2 ? " selected" : ""; ?>>En procés</option>
@@ -836,15 +836,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-version_author">Autor de la versió <small class="text-muted">(per a fansubs independents)</small></label>
 									<input id="form-version_author" name="version_author" type="text" class="form-control" value="<?php echo htmlspecialchars($row['version_author']); ?>" maxlength="200" disabled/>
 								</div>
 							</div>
 							<div class="col-sm">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-featurable_check">Recomanacions</label>
-									<div id="form-featurable_check" class="row pl-3 pr-3">
+									<div id="form-featurable_check">
 										<div class="form-check form-check-inline">
 											<input class="form-check-input" type="checkbox" name="is_featurable" id="form-is_featurable" value="1"<?php echo $row['is_featurable']==1? " checked" : ""; ?>>
 											<label class="form-check-label" for="form-is_featurable">Té qualitat per a ser recomanada</label>
@@ -862,21 +862,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						<div class="row">
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-storage_folder"><span class="mandatory">Carpeta d'emmagatzematge</span><br /><small class="text-muted">(modifica-la només si saps què fas; s'hi copiaran els fitxers)</small></label>
 									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo $row['storage_folder']; ?>" maxlength="200" required<?php echo (!empty($row['id']) && empty($row['is_hidden'])) ? ' readonly' : '' ; ?>/>
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-default_resolution">Resolució per defecte<br /><small class="text-muted">(per a la importació automàtica d'enllaços)</small></label>
 									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div class="form-group">
+								<div class="mb-3">
 									<label for="form-storage_processing"><span class="mandatory">Processament previ</span><br /><small class="text-muted">(com s'importen els fitxers a l'emmagatzematge)</small></label>
-									<select name="storage_processing" class="form-control" onchange="if(!confirm('Modificar aquesta opció pot provocar que els vídeos no es puguin reproduir correctament. Canvia-la només si tens el permís d‘un administrador. En cas contrari, deixa-la a “Recomprimeix el vídeo i l’àudio”. Vols mantenir el canvi?')) this.selectedIndex=0;">
+									<select name="storage_processing" class="form-select" onchange="if(!confirm('Modificar aquesta opció pot provocar que els vídeos no es puguin reproduir correctament. Canvia-la només si tens el permís d‘un administrador. En cas contrari, deixa-la a “Recomprimeix el vídeo i l’àudio”. Vols mantenir el canvi?')) this.selectedIndex=0;">
 										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Recomprimeix el vídeo i l'àudio</option>
 										<option value="0"<?php echo $row['storage_processing']==0 ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l'àudio</option>
 										<option value="2"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>Recomprimeix l'àudio, copia el vídeo</option>
@@ -887,7 +887,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-remote_folders-list">Carpetes remotes <small class="text-muted">(per a l'obtenció automàtica d'enllaços)</small></label>
 							<div class="container" id="form-remote_folders-list">
 <?php
@@ -904,8 +904,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 ?>
 								<div class="row mb-3">
-									<div class="w-100 column">
-										<select id="form-remote_folders-list-remote_account_id-XXX" name="form-remote_folders-list-remote_account_id-XXX" onchange="if ($(this).find('option:selected').eq(0).hasClass('not-syncable')){$('#form-remote_folders-list-is_active-XXX').prop('disabled',true);} else { $('#form-remote_folders-list-is_active-XXX').prop('disabled',false); }" class="form-control d-none">
+									<div class="w-100 column ps-0 pe-0">
+										<select id="form-remote_folders-list-remote_account_id-XXX" name="form-remote_folders-list-remote_account_id-XXX" onchange="if ($(this).find('option:selected').eq(0).hasClass('not-syncable')){$('#form-remote_folders-list-is_active-XXX').prop('disabled',true);} else { $('#form-remote_folders-list-is_active-XXX').prop('disabled',false); }" class="form-select d-none">
 											<option value="">- Selecciona un compte remot -</option>
 <?php
 		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
@@ -923,7 +923,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resulta);
 ?>
 										</select>
-										<select id="form-remote_folders-list-division_id-XXX" name="form-remote_folders-list-division_id-XXX" class="form-control d-none">
+										<select id="form-remote_folders-list-division_id-XXX" name="form-remote_folders-list-division_id-XXX" class="form-select d-none">
 											<option value="">- Qualsevol -</option>
 <?php
 		$resultss = query("SELECT d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
@@ -954,7 +954,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-remote_folders-list-row-<?php echo $j+1; ?>">
 													<td>
-														<select id="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" name="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" onchange="if ($(this).find('option:selected').eq(0).hasClass('not-syncable')){$('#form-remote_folders-list-is_active-<?php echo $j+1; ?>').prop('disabled',true);} else { $('#form-remote_folders-list-is_active-<?php echo $j+1; ?>').prop('disabled',false); }" class="form-control" required>
+														<select id="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" name="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" onchange="if ($(this).find('option:selected').eq(0).hasClass('not-syncable')){$('#form-remote_folders-list-is_active-<?php echo $j+1; ?>').prop('disabled',true);} else { $('#form-remote_folders-list-is_active-<?php echo $j+1; ?>').prop('disabled',false); }" class="form-select" required>
 															<option value="">- Selecciona un compte remot -</option>
 <?php
 			if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
@@ -978,7 +978,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-remote_folders-list-folder-<?php echo $j+1; ?>" name="form-remote_folders-list-folder-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($remote_folders[$j]['folder']); ?>" maxlength="200" required/>
 													</td>
 													<td>
-														<select id="form-remote_folders-list-division_id-<?php echo $j+1; ?>" name="form-remote_folders-list-division_id-<?php echo $j+1; ?>" class="form-control">
+														<select id="form-remote_folders-list-division_id-<?php echo $j+1; ?>" name="form-remote_folders-list-division_id-<?php echo $j+1; ?>" class="form-select">
 															<option value="">- Qualsevol -</option>
 <?php
 			$resultss = query("SELECT d.*, TRIM(d.number)+0 number_formatted FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
@@ -1004,18 +1004,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="form-group row w-100 ml-0">
-										<div class="col-sm text-left" style="padding-left: 0; padding-right: 0">
-											<button onclick="addVersionRemoteFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una carpeta</button>
+									<div class="mb-3 row w-100 ms-0">
+										<div class="col-sm text-start" style="padding-left: 0; padding-right: 0">
+											<button onclick="addVersionRemoteFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix una carpeta</button>
 										</div>
-										<div class="col-sm text-right" style="padding-left: 0; padding-right: 0">
-											<select id="import-type" class="form-control form-control-sm form-inline" title="Indica el tipus de sinronització desitjada en aquesta actualització d'enllaços: tots els comptes o només els marcats." style="width: auto; display: inline; font-size: 78%;">
+										<div class="col-sm text-end" style="padding-left: 0; padding-right: 0">
+											<select id="import-type" class="form-select form-control-sm form-inline" title="Indica el tipus de sinronització desitjada en aquesta actualització d'enllaços: tots els comptes o només els marcats." style="width: auto; display: inline; font-size: 78%;">
 												<option value="all" selected>Utilitza tots els comptes</option>
 												<option value="sync">Només els sincronitzats</option>
 											</select> →
 											<button type="button" id="import-from-mega" class="btn btn-primary btn-sm">
-												<span id="import-from-mega-loading" class="d-none spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span>
-												<span id="import-from-mega-not-loading" class="fa fa-redo pr-2"></span>Actualitza els enllaços ara
+												<span id="import-from-mega-loading" class="d-none spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+												<span id="import-from-mega-not-loading" class="fa fa-redo pe-2"></span>Actualitza els enllaços ara
 											</button>
 										</div>
 									</div>
@@ -1023,7 +1023,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="d-none alert alert-warning" id="import-failed-results">
-							<div><span class="fa fa-exclamation-triangle mr-2"></span> Els següents elements no s'han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa <?php echo $content_prep; ?>. Afegeix-los a mà on correspongui. Recorda que els fitxers només s'importen automàticament si tenen el format "<i>text</i><u><b> - 123</b></u><i>text</i>.mp4".</div>
+							<div><span class="fa fa-exclamation-triangle me-2"></span> Els següents elements no s'han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa <?php echo $content_prep; ?>. Afegeix-los a mà on correspongui. Recorda que els fitxers només s'importen automàticament si tenen el format "<i>text</i><u><b> - 123</b></u><i>text</i>.mp4".</div>
 							<table class="table-hover table-sm mt-2 small w-100" id="import-failed-results-table">
 								<thead>
 									<tr>
@@ -1040,19 +1040,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	if ($type=='manga') {
 ?>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-division-list">Portades <?php echo $division_prep; ?> <small class="text-muted">(JPEG, ~156x220, ≤300x400, ≤100 KiB)</small></label>
 							<div class="row flex" id="form-division-list">
 <?php
 		foreach ($divisions as $division) {
 ?>
-								<div class="col-sm-2 text-center pr-1 pl-1">
+								<div class="col-sm-2 text-center pe-1 ps-1">
 										<label><?php echo $division_name." ".$division['number'].(!empty($division['name']) ? " (".$division['name'].")" : ""); ?>:</label>
 <?php
 		$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg');
 ?>
 										<img id="form-division_cover_<?php echo $division['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg" data-original="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg"' : ''; ?> alt=""><br />
-										<label for="form-division_cover_<?php echo $division['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+										<label for="form-division_cover_<?php echo $division['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 										<input id="form-division_cover_<?php echo $division['id']; ?>" name="division_cover_<?php echo $division['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 102400, 'form-division_cover_<?php echo $division['id']; ?>_preview');"/>
 								</div>
 <?php
@@ -1063,7 +1063,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	}
 ?>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-episode-list">Capítols, variants i <?php echo $type=='manga' ? 'fitxers' : 'enllaços'; ?></label>
 							<div class="container" id="form-episode-list">
 								<datalist id="resolution-options">
@@ -1073,13 +1073,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<option value="360p">
 								</datalist>
 								<div id="warning-no-numbers-and-sort" class="alert alert-warning<?php echo $row['show_episode_numbers']==0 && $row['order_type']!=0 ? '' : ' d-none'; ?>">
-									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.<br /><span class="fa fa-exclamation-triangle me-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
 								<div id="warning-no-numbers" class="alert alert-warning<?php echo $row['show_episode_numbers']==0 && $row['order_type']==0 ? '' : ' d-none'; ?>">
-									<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.</div>
+									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura't d'afegir-los allà on sigui necessari.</div>
 								</div>
 								<div id="warning-sort" class="alert alert-warning<?php echo $row['order_type']!=0 && $row['show_episode_numbers']!=0 ? '' : ' d-none'; ?>">
-									<div><span class="fa fa-exclamation-triangle mr-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
+									<div><span class="fa fa-exclamation-triangle me-2"></span>L'ordenació dels capítols a la fitxa pública mostra els capítols normals i els especials junts, per ordre alfabètic <?php echo $row['order_type']==1 ? 'estricte' : 'natural'; ?>, assegura't que n'introdueixes bé els títols (revisa-ho a la fitxa pública en acabar).</div>
 								</div>
 <?php
 	for ($i=0;$i<count($episodes);$i++) {
@@ -1124,15 +1124,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$files=array();
 		}
 ?>
-								<div class="form-group">
-									<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title"><span class="fa fa-caret-square-right pr-2 text-primary"></span><?php echo $episode_name; ?></label>
+								<div class="mb-3">
+									<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title"><span class="fa fa-caret-square-right pe-2 text-primary"></span><?php echo $episode_name; ?></label>
 									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="200" placeholder="(Sense títol)"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
 <?php
 		if (empty($episodes[$i]['linked_episode_id'])) {
 ?>
 									<div class="container" id="form-files-list-<?php echo $episodes[$i]['id']; ?>">
 										<div class="row mb-3">
-											<div class="w-100 column">
+											<div class="w-100 column ps-0 pe-0">
 												<table class="table table-bordered table-hover table-sm" id="files-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($files),1); ?>">
 													<thead>
 														<tr>
@@ -1171,7 +1171,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat el fitxer <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>'; ?></div>
 															</td>
 															<td class="align-middle">
-																<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'info' ; ?> w-100"><span class="fa fa-upload pr-2"></span><?php echo !empty($files[$j]['original_filename']) ? 'Canvia el fitxer...' : 'Puja un fitxer...' ; ?></label>
+																<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($files[$j]['original_filename']) ? 'Canvia el fitxer...' : 'Puja un fitxer...' ; ?></label>
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/>
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['length']; ?>"/>
 															</td>
@@ -1185,7 +1185,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					for ($k=0;$k<count($files[$j]['links']);$k++) {
 ?>
 																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
-																			<td class="pl-0 pt-0 pb-0 border-0">
+																			<td class="ps-0 pt-0 pb-0 border-0">
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['id']); ?>"/>
 																			</td>
@@ -1201,7 +1201,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					if (count($files[$j]['links'])==0) {
 ?>
 																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
-																			<td class="pl-0 pt-0 pb-0 border-0">
+																			<td class="ps-0 pt-0 pb-0 border-0">
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value=""/>
 																			</td>
@@ -1219,7 +1219,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																	<tfoot>
 																		<tr style="background: none;">
 																			<td colspan="3" class="text-center p-0 border-0">
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-<?php echo $j+1; ?>" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-<?php echo $j+1; ?>" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pe-2"></span>Afegeix un altre enllaç</button>
 																			</td>
 																		</tr>
 																	</tfoot>
@@ -1257,7 +1257,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div>
 															</td>
 															<td class="align-middle">
-																<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" class="btn btn-sm btn-info w-100"><span class="fa fa-upload pr-2"></span>Puja un fitxer...</label>
+																<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un fitxer...</label>
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/>
 																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="hidden" value="0"/>
 															</td>
@@ -1268,7 +1268,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<table class="w-100" id="links-list-table-<?php echo $episodes[$i]['id']; ?>-1" data-count="1">
 																	<tbody>
 																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
-																			<td class="pl-0 pt-0 pb-0 border-0">
+																			<td class="ps-0 pt-0 pb-0 border-0">
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value="-1"/>
 																			</td>
@@ -1283,7 +1283,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																	<tfoot>
 																		<tr style="background: none;">
 																			<td colspan="3" class="text-center p-0 border-0">
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-1" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-1" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pe-2"></span>Afegeix un altre enllaç</button>
 																			</td>
 																		</tr>
 																	</tfoot>
@@ -1311,14 +1311,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<div class="w-100 text-center"><button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix una altra variant per a aquest capítol</button></div>
+											<div class="w-100 text-center"><button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn btn-primary btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix una altra variant per a aquest capítol</button></div>
 										</div>
 									</div>
 <?php
 		} else {
 ?>
 									<div class="alert alert-warning">
-										<div><span class="fa fa-exclamation-triangle mr-2"></span>Aquest capítol és un film enllaçat. No se'n mostrarà el número de capítol, i el títol que es mostrarà serà el que introdueixis aquí.</div>
+										<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest capítol és un film enllaçat. No se'n mostrarà el número de capítol, i el títol que es mostrarà serà el que introdueixis aquí.</div>
 									</div>
 <?php
 		}
@@ -1329,7 +1329,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-extras-list">Material extra</label>
 							<div class="container" id="form-extras-list">
 <?php
@@ -1352,10 +1352,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$extras=array();
 	}
 ?>
-								<div class="form-group">
+								<div class="mb-3">
 									<div class="container" id="form-extras-list">
 										<div class="row mb-3">
-											<div class="w-100 column">
+											<div class="w-100 column ps-0 pe-0">
 												<table class="table table-bordered table-hover table-sm" id="extras-list-table" data-count="<?php echo count($extras); ?>">
 													<thead>
 														<tr>
@@ -1396,7 +1396,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<div id="form-extras-list-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($extras[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat el fitxer <strong>'.htmlspecialchars($extras[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span>'; ?></div>
 															</td>
 															<td class="align-middle">
-																<label style="margin-bottom: 0;" for="form-extras-list-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($extras[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pr-2"></span><?php echo !empty($extras[$j]['original_filename']) ? 'Canvia el fitxer...' : 'Puja un fitxer...' ; ?></label>
+																<label style="margin-bottom: 0;" for="form-extras-list-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($extras[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($extras[$j]['original_filename']) ? 'Canvia el fitxer...' : 'Puja un fitxer...' ; ?></label>
 																<input id="form-extras-list-file-<?php echo $j+1; ?>" name="form-extras-list-file-<?php echo $j+1; ?>" type="file" accept=".zip,.rar,.cbz" class="form-control d-none" onchange="uncompressFile(this);"/>
 																<input id="form-extras-list-length-<?php echo $j+1; ?>" name="form-extras-list-length-<?php echo $j+1; ?>" type="hidden" value="<?php echo $extras[$j]['length']; ?>"/>
 															</td>
@@ -1410,7 +1410,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			for ($k=0;$k<count($extras[$j]['links']);$k++) {
 ?>
 																		<tr id="form-links-extras-list-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
-																			<td class="pl-0 pt-0 pb-0 border-0">
+																			<td class="ps-0 pt-0 pb-0 border-0">
 																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr('value',$(this).val());" required/>
 																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['id']); ?>"/>
 																			</td>
@@ -1428,7 +1428,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																	<tfoot>
 																		<tr style="background: none;">
 																			<td colspan="3" class="text-center p-0 border-0">
-																				<button id="form-extras-list-add_link-<?php echo $j+1; ?>" onclick="addExtraLinkRow(<?php echo $j+1; ?>);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pr-2"></span>Afegeix un altre enllaç</button>
+																				<button id="form-extras-list-add_link-<?php echo $j+1; ?>" onclick="addExtraLinkRow(<?php echo $j+1; ?>);" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pe-2"></span>Afegeix un altre enllaç</button>
 																			</td>
 																		</tr>
 																	</tfoot>
@@ -1453,15 +1453,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<div class="w-100 text-center"><button onclick="addVersionExtraRow();" type="button" class="btn btn-info btn-sm"><span class="fa fa-plus pr-2"></span>Afegeix un altre material extra</button></div>
+											<div class="w-100 text-center"><button onclick="addVersionExtraRow();" type="button" class="btn btn-primary btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix un altre material extra</button></div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="mb-3">
 							<label for="form-view-options">Opcions de visualització de la fitxa pública</label>
-							<div id="form-view-options" class="row pl-3 pr-3">
+							<div id="form-view-options" class="row ps-3 pe-3">
 								<div class="form-check form-check-inline">
 									<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
 									<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols <small class="text-muted">(normalment activat només en <?php echo $series_name; ?>; afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>
@@ -1496,7 +1496,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 							</div>
 						</div>
-						<div class="form-group text-center pt-2">
+						<div class="mb-3 text-center pt-2">
 <?php
 	if (!empty($row['id'])) {
 ?>
@@ -1517,7 +1517,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 	}
 ?>
-							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
+							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
 						</div>
 					</form>
 				</article>

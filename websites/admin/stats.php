@@ -25,13 +25,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($fansub)) {
 ?>
 				<li class="nav-item">
-					<a class="nav-link active" id="fansub-tab" data-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
+					<a class="nav-link active" id="fansub-tab" data-bs-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
 				</li>
 <?php
 	}
 ?>
 				<li class="nav-item">
-					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Estadístiques totals</a>
+					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-bs-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Estadístiques totals</a>
 				</li>
 			</ul>
 			<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
@@ -114,10 +114,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="chart_tabs_anime" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="anime-daily-tab" data-toggle="tab" href="#anime-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="anime-daily-tab" data-bs-toggle="tab" href="#anime-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="anime-monthly-tab" data-toggle="tab" href="#anime-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
+										<a class="nav-link" id="anime-monthly-tab" data-bs-toggle="tab" href="#anime-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -150,7 +150,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-										<canvas id="anime_daily_chart"></canvas>
+										<div class="graph-container"><canvas id="anime_daily_chart"></canvas></div>
 										<script>
 											var ctx = document.getElementById('anime_daily_chart').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -162,36 +162,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Visualitzacions reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense visualitzar',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -226,7 +228,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-										<canvas id="anime_monthly_chart"></canvas>
+										<div class="graph-container"><canvas id="anime_monthly_chart"></canvas></div>
 										<script>
 											var ctx = document.getElementById('anime_monthly_chart').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -238,36 +240,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Visualitzacions reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense visualitzar',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -285,10 +289,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="chart_tabs_manga" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="manga-daily-tab" data-toggle="tab" href="#manga-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="manga-daily-tab" data-bs-toggle="tab" href="#manga-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="manga-monthly-tab" data-toggle="tab" href="#manga-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
+										<a class="nav-link" id="manga-monthly-tab" data-bs-toggle="tab" href="#manga-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -321,7 +325,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($page_values, $values[2]);
 	}
 ?>
-										<canvas id="manga_daily_chart"></canvas>
+										<div class="graph-container"><canvas id="manga_daily_chart"></canvas></div>
 										<script>
 											var ctx = document.getElementById('manga_daily_chart').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -333,36 +337,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Lectures reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense llegir',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Pàgines llegides',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$page_values); ?>]
+														data: [<?php echo implode(',',$page_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -397,7 +403,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($page_values, $values[2]);
 	}
 ?>
-										<canvas id="manga_monthly_chart"></canvas>
+										<div class="graph-container"><canvas id="manga_monthly_chart"></canvas></div>
 										<script>
 											var ctx = document.getElementById('manga_monthly_chart').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -409,36 +415,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Lectures reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense llegir',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Pàgines llegides',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$page_values); ?>]
+														data: [<?php echo implode(',',$page_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -456,10 +464,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="chart_tabs_liveaction" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="liveaction-daily-tab" data-toggle="tab" href="#liveaction-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="liveaction-daily-tab" data-bs-toggle="tab" href="#liveaction-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="liveaction-monthly-tab" data-toggle="tab" href="#liveaction-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
+										<a class="nav-link" id="liveaction-monthly-tab" data-bs-toggle="tab" href="#liveaction-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -492,7 +500,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-										<canvas id="liveaction_daily_chart"></canvas>
+										<div class="graph-container"><canvas id="liveaction_daily_chart"></canvas></div>
 										<script>
 											var ctx = document.getElementById('liveaction_daily_chart').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -504,36 +512,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Visualitzacions reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense visualitzar',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -568,7 +578,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-										<canvas id="liveaction_monthly_chart"></canvas>
+										<div class="graph-container"><canvas id="liveaction_monthly_chart"></canvas></div>
 										<script>
 											var ctx = document.getElementById('liveaction_monthly_chart').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -580,36 +590,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Visualitzacions reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense visualitzar',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -625,9 +637,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Els 10 animes més vistos (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
-									<div class="w-50 pr-1">
+									<div class="w-50 pe-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
@@ -649,9 +661,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="w-50 pl-1">
+									<div class="w-50 ps-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
@@ -683,9 +695,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Els 10 mangues més llegits (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
-									<div class="w-50 pr-1">
+									<div class="w-50 pe-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Manga</th>
 													<th class="text-center" scope="col" style="width: 28%;">Lectures<br /><small>(capítol més llegit)</small></th>
@@ -707,9 +719,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="w-50 pl-1">
+									<div class="w-50 ps-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Manga</th>
 													<th class="text-center" scope="col" style="width: 28%;">Lectures<br /><small>(capítol més llegit)</small></th>
@@ -741,9 +753,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Els 10 continguts d'acció real més vistos (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
-									<div class="w-50 pr-1">
+									<div class="w-50 pe-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
@@ -765,9 +777,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="w-50 pl-1">
+									<div class="w-50 ps-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
@@ -830,7 +842,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="version_status_chart"></canvas>
+								<div class="graph-container"><canvas id="version_status_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('version_status_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -844,8 +856,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -890,7 +906,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="manga_version_status_chart"></canvas>
+								<div class="graph-container"><canvas id="manga_version_status_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('manga_version_status_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -904,8 +920,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -950,7 +970,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="liveaction_version_status_chart"></canvas>
+								<div class="graph-container"><canvas id="liveaction_version_status_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('liveaction_version_status_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -964,8 +984,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -991,7 +1015,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_links_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_links_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_links_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -1005,8 +1029,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -1032,7 +1060,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_files_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_files_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_files_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -1046,8 +1074,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -1073,7 +1105,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="liveaction_fansub_links_chart"></canvas>
+								<div class="graph-container"><canvas id="liveaction_fansub_links_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('liveaction_fansub_links_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -1087,8 +1119,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -1109,7 +1145,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
 	mysqli_free_result($result);
 ?>
-								<canvas id="anime_origin_chart"></canvas>
+								<div class="graph-container"><canvas id="anime_origin_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('anime_origin_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -1123,8 +1159,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -1145,7 +1185,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$origin_values=array($row['desktop'], $row['mobile'], $row['api']);
 	mysqli_free_result($result);
 ?>
-								<canvas id="manga_origin_chart"></canvas>
+								<div class="graph-container"><canvas id="manga_origin_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('manga_origin_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -1159,8 +1199,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -1181,7 +1225,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
 	mysqli_free_result($result);
 ?>
-								<canvas id="liveaction_origin_chart"></canvas>
+								<div class="graph-container"><canvas id="liveaction_origin_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('liveaction_origin_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -1195,8 +1239,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -1287,10 +1335,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="anime_chart_tabs_fansub" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="anime-daily_fansub-tab" data-toggle="tab" href="#anime-daily_fansub" role="tab" aria-controls="anime-daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="anime-daily_fansub-tab" data-bs-toggle="tab" href="#anime-daily_fansub" role="tab" aria-controls="anime-daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="anime-monthly_fansub-tab" data-toggle="tab" href="#anime-monthly_fansub" role="tab" aria-controls="anime-monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
+										<a class="nav-link" id="anime-monthly_fansub-tab" data-bs-toggle="tab" href="#anime-monthly_fansub" role="tab" aria-controls="anime-monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -1323,7 +1371,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-										<canvas id="anime_daily_chart_fansub"></canvas>
+										<div class="graph-container"><canvas id="anime_daily_chart_fansub"></canvas></div>
 										<script>
 											var ctx = document.getElementById('anime_daily_chart_fansub').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -1335,36 +1383,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Visualitzacions reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense visualitzar',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -1399,7 +1449,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($time_values, $values[2]);
 		}
 ?>
-										<canvas id="anime_monthly_chart_fansub"></canvas>
+										<div class="graph-container"><canvas id="anime_monthly_chart_fansub"></canvas></div>
 										<script>
 											var ctx = document.getElementById('anime_monthly_chart_fansub').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -1411,36 +1461,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Visualitzacions reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense visualitzar',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -1458,10 +1510,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="chart_tabs_fansub_manga" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="manga_daily_fansub-tab" data-toggle="tab" href="#manga_daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="manga_daily_fansub-tab" data-bs-toggle="tab" href="#manga_daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="manga_monthly_fansub-tab" data-toggle="tab" href="#manga_monthly_fansub" role="tab" aria-controls="manga_monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
+										<a class="nav-link" id="manga_monthly_fansub-tab" data-bs-toggle="tab" href="#manga_monthly_fansub" role="tab" aria-controls="manga_monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -1494,7 +1546,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($page_values, $values[2]);
 	}
 ?>
-										<canvas id="manga_daily_chart_fansub"></canvas>
+										<div class="graph-container"><canvas id="manga_daily_chart_fansub"></canvas></div>
 										<script>
 											var ctx = document.getElementById('manga_daily_chart_fansub').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -1506,36 +1558,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Lectures reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense llegir',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Pàgines llegides',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$page_values); ?>]
+														data: [<?php echo implode(',',$page_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -1570,7 +1624,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($page_values, $values[2]);
 		}
 ?>
-										<canvas id="manga_monthly_chart_fansub"></canvas>
+										<div class="graph-container"><canvas id="manga_monthly_chart_fansub"></canvas></div>
 										<script>
 											var ctx = document.getElementById('manga_monthly_chart_fansub').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -1582,36 +1636,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Lectures reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense llegir',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Pàgines llegides',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$page_values); ?>]
+														data: [<?php echo implode(',',$page_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -1629,10 +1685,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 								<ul class="nav nav-tabs" id="liveaction_chart_tabs_fansub" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="liveaction-daily_fansub-tab" data-toggle="tab" href="#liveaction-daily_fansub" role="tab" aria-controls="liveaction-daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="liveaction-daily_fansub-tab" data-bs-toggle="tab" href="#liveaction-daily_fansub" role="tab" aria-controls="liveaction-daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="liveaction-monthly_fansub-tab" data-toggle="tab" href="#liveaction-monthly_fansub" role="tab" aria-controls="liveaction-monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
+										<a class="nav-link" id="liveaction-monthly_fansub-tab" data-bs-toggle="tab" href="#liveaction-monthly_fansub" role="tab" aria-controls="liveaction-monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -1665,7 +1721,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-										<canvas id="liveaction_daily_chart_fansub"></canvas>
+										<div class="graph-container"><canvas id="liveaction_daily_chart_fansub"></canvas></div>
 										<script>
 											var ctx = document.getElementById('liveaction_daily_chart_fansub').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -1677,36 +1733,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Visualitzacions reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense visualitzar',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -1741,7 +1799,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($time_values, $values[2]);
 		}
 ?>
-										<canvas id="liveaction_monthly_chart_fansub"></canvas>
+										<div class="graph-container"><canvas id="liveaction_monthly_chart_fansub"></canvas></div>
 										<script>
 											var ctx = document.getElementById('liveaction_monthly_chart_fansub').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -1753,36 +1811,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: 'Visualitzacions reals',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Clics sense visualitzar',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -1798,9 +1858,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Els 10 animes més vistos <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
-									<div class="w-50 pr-1">
+									<div class="w-50 pe-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
@@ -1822,9 +1882,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="w-50 pl-1">
+									<div class="w-50 ps-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
@@ -1856,9 +1916,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Els 10 mangues més llegits <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
-									<div class="w-50 pr-1">
+									<div class="w-50 pe-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Manga</th>
 													<th class="text-center" scope="col" style="width: 28%;">Lectures<br /><small>(capítol més llegit)</small></th>
@@ -1880,9 +1940,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="w-50 pl-1">
+									<div class="w-50 ps-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Manga</th>
 													<th class="text-center" scope="col" style="width: 28%;">Lectures<br /><small>(capítol més llegit)</small></th>
@@ -1914,9 +1974,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Els 10 continguts d'acció real més vistos <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
-									<div class="w-50 pr-1">
+									<div class="w-50 pe-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
@@ -1938,9 +1998,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</tbody>
 										</table>
 									</div>
-									<div class="w-50 pl-1">
+									<div class="w-50 ps-1">
 										<table class="table table-hover table-striped">
-											<thead class="thead-dark">
+											<thead class="table-dark">
 												<tr>
 													<th scope="col">Anime</th>
 													<th class="text-center" scope="col" style="width: 20%;">Visualitzacions<br /><small>(capítol més vist)</small></th>
@@ -2003,7 +2063,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_version_status_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_version_status_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_version_status_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2017,8 +2077,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -2063,7 +2127,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_manga_version_status_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_manga_version_status_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_manga_version_status_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2077,8 +2141,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -2123,7 +2191,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_liveaction_version_status_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_liveaction_version_status_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_liveaction_version_status_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2137,8 +2205,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -2164,7 +2236,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_fansub_links_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_fansub_links_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_fansub_links_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2178,8 +2250,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -2205,7 +2281,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_fansub_files_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_fansub_files_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_fansub_files_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2219,8 +2295,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -2246,7 +2326,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_liveactiobn_fansub_links_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_liveactiobn_fansub_links_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_liveactiobn_fansub_links_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2260,8 +2340,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -2282,7 +2366,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_anime_origin_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_anime_origin_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_anime_origin_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2296,8 +2380,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -2318,7 +2406,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$origin_values=array($row['desktop'], $row['mobile'], $row['api']);
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_manga_origin_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_manga_origin_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_manga_origin_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2332,8 +2420,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});
@@ -2354,7 +2446,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
 	mysqli_free_result($result);
 ?>
-								<canvas id="fansub_liveaction_origin_chart"></canvas>
+								<div class="graph-container"><canvas id="fansub_liveaction_origin_chart"></canvas></div>
 								<script>
 									var ctx = document.getElementById('fansub_liveaction_origin_chart').getContext('2d');
 									var chart = new Chart(ctx, {
@@ -2368,8 +2460,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											}]
 										},
 										options: {
-											legend: {
-												position: 'right'
+											responsive: true,
+											maintainAspectRatio: false,
+											plugins: {
+												legend: {
+													position: 'right'
+												}
 											}
 										}
 									});

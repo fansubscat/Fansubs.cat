@@ -107,10 +107,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<ul class="nav nav-tabs" id="stats_tabs" role="tablist">
 						<li class="nav-item">
-							<a class="nav-link active" id="monthly-tab" data-toggle="tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="true">Mensualment (total)</a>
+							<a class="nav-link active" id="monthly-tab" data-bs-toggle="tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="true">Mensualment (total)</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" id="daily-tab" data-toggle="tab" href="#daily" role="tab" aria-controls="daily" aria-selected="false">Diàriament (darrers <?php echo $max_days; ?> dies)</a>
+							<a class="nav-link" id="daily-tab" data-bs-toggle="tab" href="#daily" role="tab" aria-controls="daily" aria-selected="false">Diàriament (darrers <?php echo $max_days; ?> dies)</a>
 						</li>
 					</ul>
 					<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
@@ -146,7 +146,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-										<canvas id="monthly_chart"></canvas>
+										<div class="graph-container"><canvas id="monthly_chart"></canvas></div>
 										<script>
 											var ctx = document.getElementById('monthly_chart').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -158,36 +158,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: '<?php echo $series_a_graph; ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: '<?php echo $series_b_graph; ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: '<?php echo $series_c_graph; ?>',
 														backgroundColor: '<?php echo $series_c_color; ?>',
 														borderColor: '<?php echo $series_c_color; ?>',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -230,7 +232,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		array_push($time_values, $values[2]);
 	}
 ?>
-										<canvas id="daily_chart"></canvas>
+										<div class="graph-container"><canvas id="daily_chart"></canvas></div>
 										<script>
 											var ctx = document.getElementById('daily_chart').getContext('2d');
 											var chart = new Chart(ctx, {
@@ -242,36 +244,38 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														label: '<?php echo $series_a_graph; ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>]
+														data: [<?php echo implode(',',$view_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: '<?php echo $series_b_graph; ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
-														fill: false,
 														hidden: true,
-														data: [<?php echo implode(',',$click_values); ?>]
+														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
 													},
 													{
 														label: '<?php echo $series_c_graph; ?>',
 														backgroundColor: '<?php echo $series_c_color; ?>',
 														borderColor: '<?php echo $series_c_color; ?>',
-														fill: false,
-														data: [<?php echo implode(',',$time_values); ?>]
+														data: [<?php echo implode(',',$time_values); ?>],
+														tension: 0.2
 													}]
 												},
 												options: {
-													legend: {
-														position: 'bottom'
+													responsive: true,
+													maintainAspectRatio: false,
+													plugins: {
+														legend: {
+															position: 'bottom'
+														}
 													},
 													scales: {
-														yAxes: [{
-															ticks: {
-																beginAtZero: true
-															}
-														}]
+														y: {
+															beginAtZero: true
+														}
 													}
 												}
 											});
@@ -290,7 +294,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1">Dades totals per capítol</h4>
 					<hr>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col">Capítol</th>
 								<th class="text-center" scope="col" style="width: 12%;"><?php echo $series_a_short; ?></th>

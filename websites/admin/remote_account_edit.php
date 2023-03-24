@@ -61,24 +61,24 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita el compte remot" : "Afegeix un compte remot"; ?></h4>
 				<hr>
 				<form method="post" action="remote_account_edit.php">
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-name" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-type" class="mandatory">Tipus</label>
-						<select name="type" class="form-control" id="form-type" required>
+						<select name="type" class="form-select" id="form-type" required>
 							<option value="mega"<?php echo $row['type']=='mega' ? " selected" : ""; ?>>MEGA</option>
 						</select>
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-token" class="mandatory">Id. de sessió (MEGA)</label>
 						<input class="form-control" name="token" id="form-token" required maxlength="200" value="<?php echo htmlspecialchars($row['token']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-fansub_id">Fansub</label>
-						<select name="fansub_id" class="form-control" id="form-fansub_id">
+						<select name="fansub_id" class="form-select" id="form-fansub_id">
 							<option value="">- Qualsevol fansub hi té accés -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
@@ -91,8 +91,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						</select>
 					</div>
-					<div class="form-group text-center pt-2">
-						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el compte remot"; ?></button>
+					<div class="mb-3 text-center pt-2">
+						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el compte remot"; ?></button>
 					</div>
 				</form>
 			</article>

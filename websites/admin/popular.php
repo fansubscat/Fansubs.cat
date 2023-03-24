@@ -58,8 +58,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<p class="text-center">Aquests són els continguts més populars als diferents portals de Fansubs.cat.</p>
 
-					<div class="row justify-content-center">
-						<div class="form-group p-3 mb-0">
+					<div class="d-flex justify-content-center">
+						<div class="mb-3 p-3 mb-0">
 							<label for="month">Període:</label>
 							<select id="month" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;hide_hentai='+($('#hide_hentai').prop('checked') ? 1 : 0)+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val();">
 								<option value="ALL"<?php echo ($selected_all) ? ' selected' : ''; ?> style="font-weight: bold;">TOTAL 2020-<?php echo date('Y'); ?></option>
@@ -79,7 +79,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							</select>
 						</div>
-						<div class="form-group p-3 mb-0">
+						<div class="mb-3 p-3 mb-0">
 							<label for="amount">Nombre d'elements:</label>
 							<select id="amount" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;hide_hentai='+($('#hide_hentai').prop('checked') ? 1 : 0)+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val();">
 								<option value="10"<?php echo ($amount==10) ? ' selected' : ''; ?>>10</option>
@@ -87,14 +87,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<option value="50"<?php echo ($amount==50) ? ' selected' : ''; ?>>50</option>
 							</select>
 						</div>
-						<div class="form-group p-3 mb-0">
+						<div class="mb-3 p-3 mb-0">
 							<label for="type">Ordena per:</label>
 							<select id="type" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;hide_hentai='+($('#hide_hentai').prop('checked') ? 1 : 0)+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val();">
 								<option value="max_views"<?php echo ($type=='max_views') ? ' selected' : ''; ?>>Visualitzacions o lectures</option>
 								<option value="time_spent"<?php echo ($type=='time_spent') ? ' selected' : ''; ?>>Temps o pàgines totals</option>
 							</select>
 						</div>
-						<div class="form-group p-3 mb-0">
+						<div class="mb-3 p-3 mb-0">
 							<input type="checkbox" id="hide_hentai" value="1" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;hide_hentai='+($('#hide_hentai').prop('checked') ? 1 : 0)+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val();"<?php echo $hide_hentai ? ' checked' : ''; ?>>
 							<label for="hide_hentai">Amaga el hentai</label>
 						</div>
@@ -108,7 +108,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
 					<hr>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col" style="width: 6%;">Posició</th>
 								<th scope="col" style="width: 40%;">Anime</th>
@@ -139,7 +139,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$current_positions++;
 		}
 ?>
-							<tr<?php echo $row['rating']=='XXX' ? ' class="text-danger"' : ''; ?>>
+							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>
@@ -159,7 +159,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col" style="width: 6%;">Posició</th>
 								<th scope="col" style="width: 40%;">Manga</th>
@@ -189,7 +189,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$current_positions++;
 		}
 ?>
-							<tr<?php echo $row['rating']=='XXX' ? ' class="text-danger"' : ''; ?>>
+							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>
@@ -210,7 +210,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d'acció real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
 					<hr>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col" style="width: 6%;">Posició</th>
 								<th scope="col" style="width: 40%;">Contingut</th>
@@ -241,7 +241,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$current_positions++;
 		}
 ?>
-							<tr<?php echo $row['rating']=='XXX' ? ' class="text-danger"' : ''; ?>>
+							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>

@@ -10,7 +10,7 @@ function get_error_type($type) {
 		case 'mega-unavailable':
 			return '<span class="text-danger">MEGA: Contingut eliminat</span>';
 		case 'mega-quota-exceeded':
-			return '<span class="text-info">MEGA: Límit superat</span>';
+			return '<span class="text-primary">MEGA: Límit superat</span>';
 		case 'mega-player-failed':
 			return 'MEGA: Error de reproducció';
 		case 'mega-incompatible-browser':
@@ -45,10 +45,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<p class="text-center">Aquests són els darrers 100 errors de reproducció que han tingut els usuaris.</p>
 					<div class="text-center pb-3">
-						<a href="error_list.php" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
+						<a href="error_list.php" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
 					</div>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col" style="width: 35%;">Contingut i capítol</th>
 								<th scope="col" style="width: 25%;" class="text-center">Error</th>
@@ -76,7 +76,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>
-								<th scope="row" class="align-middle"><strong><?php echo $row['series']; ?></strong><br /><small><?php echo $row['episode_name']; ?></small></th>
+								<th scope="row" class="align-middle"><?php echo $row['series']; ?><br /><small class="fw-normal"><?php echo $row['episode_name']; ?></small></th>
 								<td class="align-middle text-center"><span style="cursor: help;" title="<?php echo htmlentities($row['text']); ?>"><?php echo get_error_type($row['type']); ?></span></td>
 								<td class="align-middle text-center"><?php echo get_time($row['location']); ?></td>
 								<td class="align-middle text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>

@@ -78,10 +78,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<p class="text-center">Aquí es mostra l'estat dels recollidors de notícies i quan se n'han obtingut dades per darrer cop.<br />Les notícies s'obtenen automàticament dels diferents recollidors cada 15 minuts.</p>
 					<div class="text-center pb-3">
-						<a href="news_fetcher_status.php" class="btn btn-primary"><span class="fa fa-redo pr-2"></span>Refresca</a>
+						<a href="news_fetcher_status.php" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
 					</div>
 					<table class="table table-hover table-striped">
-						<thead class="thead-dark">
+						<thead class="table-dark">
 							<tr>
 								<th scope="col" style="width: 18%;">Fansub / URL</th>
 								<th scope="col" style="width: 12%;" class="text-center">Freqüència</th>
@@ -107,12 +107,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<tr<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' class="text-muted"'; ?>>
-								<th scope="row" class="align-middle"><strong><?php echo $row['name']; ?></strong><br />&nbsp;&nbsp;&nbsp;<small><?php echo $row['url']; ?></small></th>
-								<td class="align-middle text-center"><?php echo show_fetch_type($row['fetch_type']); ?></td>
-								<td class="align-middle text-center"><?php echo show_status($row['status']); ?></td>
-								<td class="align-middle text-center"><?php echo ($row['last_fetch_date']!=NULL ? relative_time(strtotime($row['last_fetch_date'])) : 'Mai'); ?></td>
-								<td class="align-middle text-center"><strong><?php echo show_last_result($row['last_fetch_result'], $row['last_fetch_increment'], $row['fetch_type']); ?></strong></td>
+							<tr>
+								<th scope="row" class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><strong><?php echo $row['name']; ?></strong><br />&nbsp;&nbsp;&nbsp;<small><?php echo $row['url']; ?></small></th>
+								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo show_fetch_type($row['fetch_type']); ?></td>
+								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo show_status($row['status']); ?></td>
+								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo ($row['last_fetch_date']!=NULL ? relative_time(strtotime($row['last_fetch_date'])) : 'Mai'); ?></td>
+								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><strong><?php echo show_last_result($row['last_fetch_result'], $row['last_fetch_increment'], $row['fetch_type']); ?></strong></td>
 							</tr>
 <?php
 	}

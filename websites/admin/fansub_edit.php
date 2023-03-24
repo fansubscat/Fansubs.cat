@@ -120,18 +120,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita el fansub" : "Afegeix un fansub"; ?></h4>
 				<hr>
 				<form method="post" action="fansub_edit.php" enctype="multipart/form-data" onsubmit="return checkFansub()">
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-name-with-autocomplete" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" id="form-id" name="id" value="<?php echo $row['id']; ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-slug">Identificador<span class="mandatory"></span> <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>
 						<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-type">Tipus</label>
-						<select class="form-control" name="type" id="form-type" required>
+						<select class="form-select" name="type" id="form-type" required>
 							<option value="">- Selecciona un tipus -</option>
 							<option value="fansub"<?php echo $row['type']=='fansub' ? " selected" : ""; ?>>Fansub</option>
 							<option value="fandub"<?php echo $row['type']=='fandub' ? " selected" : ""; ?>>Fandub</option>
@@ -139,17 +139,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 					</div>
 					<div class="row">
 						<div class="col-sm-3">
-							<div class="form-group">
+							<div class="mb-3">
 								<label>Icona<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted">(PNG, mida 24x24px)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/icons/'.$row['id'].'.png');
 ?>
-								<label for="form-icon" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<label for="form-icon" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="icon" type="file" accept="image/png" id="form-icon" onchange="checkImageUpload(this, -1, 'form-icon-preview', 'form-icon-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
-							<div class="form-group">
+							<div class="mb-3">
 								<a id="form-icon-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/icons/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/icons/'.$row['id'].'.png"' : ''; ?> target="_blank">
 									<img id="form-icon-preview" style="width: 24px; height: 24px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/icons/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/icons/'.$row['id'].'.png"' : ''; ?> alt="">
 								</a>
@@ -158,50 +158,50 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 					</div>
 					<div class="row">
 						<div class="col-sm-3">
-							<div class="form-group">
+							<div class="mb-3">
 								<label>Logo <small class="text-muted">(PNG, aprox. 140x40px)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/logos/'.$row['id'].'.png');
 ?>
-								<label for="form-logo" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'info' ; ?>"><span class="fa fa-upload pr-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<label for="form-logo" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, -1, 'form-logo-preview', 'form-logo-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
-							<div class="form-group">
+							<div class="mb-3">
 								<a id="form-logo-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/logos/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/logos/'.$row['id'].'.png"' : ''; ?> target="_blank">
 									<img id="form-logo-preview" style="width: 140px; height: 60px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/logos/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/logos/'.$row['id'].'.png"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-url">URL</label>
 						<input class="form-control" type="url" name="url" id="form-url" maxlength="200" value="<?php echo htmlspecialchars($row['url']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-discord_url">URL del servidor de Discord públic del fansub</label>
 						<input class="form-control" type="url" name="discord_url" id="form-discord_url" maxlength="200" value="<?php echo htmlspecialchars($row['discord_url']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-mastodon_url">URL del perfil de Mastodon</label>
 						<input class="form-control" type="url" name="mastodon_url" id="form-mastodon_url" maxlength="200" value="<?php echo htmlspecialchars($row['mastodon_url']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-mastodon_handle">Nom a Mastodon<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
 						<input class="form-control" name="mastodon_handle" id="form-mastodon_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['mastodon_handle']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-twitter_url">URL del perfil de Twitter</label>
 						<input class="form-control" type="url" name="twitter_url" id="form-twitter_url" maxlength="200" value="<?php echo htmlspecialchars($row['twitter_url']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-twitter_handle">Nom a Twitter<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
 						<input class="form-control" name="twitter_handle" id="form-twitter_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['twitter_handle']); ?>">
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-status">Estat</label>
-						<div id="form-status" class="row pl-3 pr-3">
+						<div id="form-status">
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="checkbox" name="status" id="form-active" value="1"<?php echo $row['status']==1? " checked" : ""; ?>>
 								<label class="form-check-label" for="form-active">Actiu</label>
@@ -212,16 +212,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 							</div>
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-archive_url">URL d'Archive.org <small class="text-muted">(obligatori si és històric)</small></label>
 						<input class="form-control" type="url" name="archive_url" id="form-archive_url" maxlength="200"<?php echo $row['is_historical']==0? " disabled" : ""; ?> value="<?php echo htmlspecialchars($row['archive_url']); ?>" required>
 					</div>
-					<div class="form-group">
+					<div class="mb-3">
 						<label for="form-ping_token">Testimoni per a fer ping <small class="text-muted">(si es fa una petició a https://api.fansubs.cat/refresh/&lt;testimoni&gt;, s'actualitzaran les notícies al moment)</small></label>
 						<input class="form-control" name="ping_token" id="form-ping_token" maxlength="200" value="<?php echo htmlspecialchars($row['ping_token']); ?>">
 					</div>
-					<div class="form-group text-center pt-2">
-						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary font-weight-bold"><span class="fa fa-check pr-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el fansub"; ?></button>
+					<div class="mb-3 text-center pt-2">
+						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el fansub"; ?></button>
 					</div>
 				</form>
 			</article>
