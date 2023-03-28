@@ -80,10 +80,6 @@
 	margin: -1.2rem;
 }
 
-.login-close:hover {
-	filter: drop-shadow(0 0 0.4rem rgba(var(--positive-color), 0.5));
-}
-
 .login-subheader {
 	font-family: "lexend_deca_bold", sans-serif;
 	font-size: 2.7rem;
@@ -113,27 +109,14 @@
 	transition: background .3s;
 }
 
-.login-button:hover {
-	background: rgb(var(--primary-color-lighter));
-}
-
 a.forgot-password {
 	display: block;
 	margin-top: 2.2rem;
 	font-size: 1.5rem;
 }
 
-a.forgot-password:hover {
-	text-decoration: underline;
-}
-
 .login-footer a, .checkbox-layout a {
 	color: rgb(var(--secondary-color-darker));
-}
-
-.login-footer a:hover, .checkbox-layout a:hover {
-	color: rgb(var(--secondary-color));
-	text-decoration: underline;
 }
 
 .checkbox-layout {
@@ -170,6 +153,25 @@ a.forgot-password:hover {
 
 .date-year {
 	width: 30%;
+}
+
+@media (hover: hover) {
+	.login-close:hover {
+		filter: drop-shadow(0 0 0.4rem rgba(var(--positive-color), 0.5));
+	}
+
+	.login-button:hover {
+		background: rgb(var(--primary-color-lighter));
+	}
+
+	a.forgot-password:hover {
+		text-decoration: underline;
+	}
+
+	.login-footer a:hover, .checkbox-layout a:hover {
+		color: rgb(var(--secondary-color));
+		text-decoration: underline;
+	}
 }
 
 @media (max-width: 920px){

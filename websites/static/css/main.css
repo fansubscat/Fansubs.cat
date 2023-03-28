@@ -17,11 +17,6 @@
 	text-align: center;
 }
 
-.main-button:hover {
-	border: 0.3rem solid rgb(var(--primary-color));
-	letter-spacing: 0.15rem;
-}
-
 .secondary-button {
 	display: inline-block;
 	background: rgba(var(--negative-color),0.5);
@@ -36,13 +31,20 @@
 	text-align: center;
 }
 
-.secondary-button:hover {
-	border: 0.2rem solid rgb(var(--primary-color));
-	letter-spacing: 0.15rem;
-}
-
 .principle {
 	margin-left: 1rem;
+}
+
+@media (hover: hover) {
+	.main-button:hover {
+		border: 0.3rem solid rgb(var(--primary-color));
+		letter-spacing: 0.15rem;
+	}
+
+	.secondary-button:hover {
+		border: 0.2rem solid rgb(var(--primary-color));
+		letter-spacing: 0.15rem;
+	}
 }
 
 @media (max-width: 920px){
