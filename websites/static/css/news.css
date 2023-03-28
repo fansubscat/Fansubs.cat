@@ -10,26 +10,8 @@
 	flex-direction: row;
 }
 
-.groups-button {
-	margin-right: 2rem;
-	font-size: 1.2rem;
-	color: rgb(var(--icon-button-color));
-}
-
-.groups-button:hover {
-	color: rgb(var(--icon-button-color-hover));
-}
-
-.groups-button .fa-stack-1x {
-	background: rgba(var(--background-color-standard),1);
-	height: 1.6em;
-	width: 1.6em;
-	border-radius: 999em;
-	left: 1em;
-	top: 0.5em;
-	margin-left: 0.6em;
-	margin-top: 0.6em;
-	line-height: 1.7;
+.news-index {
+	width: 100%;
 }
 
 .news-article {

@@ -1,5 +1,29 @@
 # Registre de canvis
 
+## 2023-XX-XX - Versió 5.0.0
+- **General:**
+	- Nou disseny.
+	- Unificació i reorganització del codi.
+	- Tema fosc i tema clar.
+	- S’han actualitzat les biblioteques a les darreres versions disponibles.
+- **Principal:**
+	- Versió inicial. Nova pàgina amb enllaços als diferents portals.
+	- S’ha canviat el formulari de contacte.
+	- S’ha afegit la política de privacitat.
+	- S’ha modificat l’apartat «Qui som?».
+- **Usuaris:**
+	- Versió inicial. S’ha implementat el registre i l’inici de sessió.
+- **Catàleg:**
+	- S’han canviat les URLs de les sèries: ja no tenen el tipus.
+	- S’ha reimplementat la cerca i el filtrat de sèries.
+	- S’ha implementat l’autocompleció en cercar.
+	- S’ha mogut tot el contingut explícit a subportals nous.
+- **Notícies:**
+	- S’ha reimplementat la cerca i el filtrat de notícies.
+	- S’ha eliminat l’apartat d’estadístiques, l’arxiu i la llista de fansubs.
+- **Administració:**
+	- Es valida que el camp «Altres noms» no tingui caràcters en japonès.
+
 ## 2023-02-13 - Versió 4.2.11
 - **API:**
 	- S'amaguen els decimals (quan són zero) als números de volums.
