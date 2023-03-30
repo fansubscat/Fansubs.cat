@@ -29,72 +29,65 @@
 	--fast-animation-duration: .3s;
 	--slow-animation-duration: .6s;
 	--is-hovering-device: 0;
+	--always-positive-color: 255, 255, 255;
+	--always-negative-color: 0, 0, 0;
+	--primary-color: 106, 160, 248;
+	--primary-color-hover: 76, 130, 218;
+	--secondary-color: 249, 192, 43;
+	--secondary-color-hover: 219, 162, 13;
+	--neutral-color: 136, 136, 136;
+	--error-color: 255, 68, 68;
+	--brightness-hover: 1.1;
 }
 
 .theme-dark {
 	/* Generic white color */
 	--positive-color: 255, 255, 255;
-	/* Generic white color, will always be the same between themes */
-	--always-positive-color: 255, 255, 255;
+	/* Same but on hover: a little less bright, -40/+60 */
+	--positive-color-button-hover: 215, 215, 215;
 	/* Generic black color */
 	--negative-color: 0, 0, 0;
-	/* Generic black color, will always be the same between themes */
-	--always-negative-color: 0, 0, 0;
-	/* Generic neutral color (used only in footer for now) */
-	--neutral-color: 136, 136, 136;
-	/* Used in footer links, they are a bit darker */
-	--neutral-color-links: 102, 102, 102;
-	/* Primary accent color, blue */
-	--primary-color: 106, 160, 248;
-	/* A darker version of blue, used as a background filter */
-	--primary-color-darker: 76, 130, 218;
-	/* A lighter version of blue, used as a hover color in buttons */
-	--primary-color-lighter: 136, 190, 255;
-	/* Secondary accent color, yellow */
-	--secondary-color: 249, 192, 43;
-	/* A darker version of yellow, used in links */
-	--secondary-color-darker: 219, 162, 13;
-	/* Generic error color (used in error fields), red */
-	--error-color: 255, 68, 68;
-	/* Generic background for all pages WITHOUT background images */
-	--background-color-standard: 18, 18, 18;
-	/* Generic background for all pages with background images */
-	--background-color-image: 0, 0, 0;
-	/* Background color for dropdown menus (like the user menu) */
-	--background-color-dropdown: 32, 32, 32;
-	/* Same but when hovering on them */
-	--background-color-dropdown-hover: 64, 64, 64;
-	/* Color for header icons or white buttons */
-	--icon-button-color: 237, 237, 237;
-	/* Same but when hovering on them */
-	--icon-button-color-hover: 255, 255, 255;
+	/* Same but on hover: a little more bright, +60/-40 */
+	--negative-color-button-hover: 60, 60, 60;
+	/* Used in footer links, a bit darker so when hovered they can change to neutral, -30/+30 */
+	--neutral-color-links: 106, 106, 106;
+	/* Generic background for all pages WITHOUT background images, +40,-20 */
+	--background-color-standard: 40, 40, 40;
+	/* Background color for side filter panel, +50/-40 */
+	--background-color-side-panel: 50, 50, 50;
+	/* Background color for checkboxes, +40/-20 */
+	--background-color-checkbox: 40, 40, 40;
+	/* User dropdown menu background color when hovering, +40/-20 */
+	--menu-background-color-hover: 40, 40, 40;
+	/* Color for header icons */
+	--icon-button-color: 255, 255, 255;
+	/* Same but on hover: a little less bright, -40/+80 */
+	--icon-button-color-hover: 215, 215, 215;
+	/* Drop shadow transparency for cards/thumbnails */
+	--drop-shadow-transparency-card: 0.4;
+	/* Drop shadow transparency for menus or popups that appear above the content */
+	--drop-shadow-transparency-menu: 0.5;
 }
 
 .theme-light {
 	--positive-color: 0, 0, 0;
-	--always-positive-color: 255, 255, 255;
+	--positive-color-button-hover: 60, 60, 60;
 	--negative-color: 255, 255, 255;
-	--always-negative-color: 0, 0, 0;
-	--neutral-color: 136, 136, 136;
-	--neutral-color-links: 102, 102, 102;
-	--primary-color: 106, 160, 248;
-	--primary-color-darker: 76, 130, 218;
-	--primary-color-lighter: 136, 190, 255;
-	--secondary-color: 214, 177, 53;
-	--secondary-color-darker: 219, 162, 13;
-	--error-color: 255, 68, 68;
-	--background-color-standard: 237, 237, 237;
-	--background-color-image: 255, 255, 255;
-	--background-color-dropdown: 223, 223, 223;
-	--background-color-dropdown-hover: 255, 255, 255;
+	--negative-color-button-hover: 215, 215, 215;
+	--neutral-color-links: 166, 166, 166;
+	--background-color-standard: 235, 235, 235;
+	--background-color-side-panel: 215, 215, 215;
+	--background-color-checkbox: 235, 235, 235;
+	--menu-background-color-hover: 235, 235, 235;
 	--icon-button-color: 0, 0, 0;
-	--icon-button-color-hover: 32, 32, 32;
+	--icon-button-color-hover: 80, 80, 80;
+	--drop-shadow-transparency-card: 0.2;
+	--drop-shadow-transparency-menu: 0.5;
 }
 
 .subtheme-hentai {
 	--primary-color: 217, 24, 131;
-	--primary-color-darker: 187, 0, 101;
-	--primary-color-lighter: 247, 54, 255;
+	--primary-color-hover: 187, 0, 101;
 }
 
 *, *:before, *:after {
@@ -137,7 +130,7 @@ body {
 	font-size: 1.2rem;
 	line-height: 1.2;
 	text-align: left;
-	background: linear-gradient(to bottom, rgba(var(--background-color-image),1) 0%, rgba(var(--background-color-image),0.65) 25% 75%, rgba(var(--background-color-image),1) 100%), url('../images/site/background.jpg');
+	background: linear-gradient(to bottom, rgba(var(--negative-color),1) 0%, rgba(var(--negative-color),0.65) 25% 75%, rgba(var(--negative-color),1) 100%), url('../images/site/background.jpg');
 	background-size: cover;
 	background-position: center;
 }
@@ -214,7 +207,7 @@ a img {
 }
 
 .obscured-background {
-	background: linear-gradient(to bottom, transparent 0%, rgba(var(--primary-color-darker),0.35) 25% 75%, transparent 100%);
+	background: linear-gradient(to bottom, transparent 0%, rgba(var(--primary-color),0.35) 25% 75%, transparent 100%);
 	backdrop-filter: grayscale(1);
 }
 
@@ -282,6 +275,7 @@ a img {
 	justify-content: center;
 	align-items: center;
 	color: rgb(var(--icon-button-color));
+	border-radius: 99rem;
 }
 
 .dropdown-menu {
@@ -307,10 +301,10 @@ a img {
 .dropdown-content {
 	display: none;
 	position: absolute;
-	background-color: rgb(var(--background-color-dropdown));
+	background-color: rgb(var(--negative-color));
 	min-width: 18rem;
 	overflow: auto;
-	filter: drop-shadow(0em 0.5rem 0.65rem rgba(var(--always-negative-color),0.5));
+	filter: drop-shadow(0em 0.5rem 0.65rem rgba(var(--always-negative-color),var(--drop-shadow-transparency-menu)));
 	right: 0;
 	z-index: 999;
 	border-radius: 0.6rem;
@@ -454,7 +448,7 @@ select {
 }
 
 .error-page a {
-	color: rgb(var(--secondary-color-darker));
+	color: rgb(var(--secondary-color));
 }
 
 .logo-small {
@@ -797,9 +791,9 @@ h2.section-title:first-of-type {
 	min-width: var(--search-layout-width);
 	width: var(--search-layout-width);
 	max-width: var(--search-layout-width);
-	background: rgb(var(--background-color-dropdown));
+	background: rgb(var(--background-color-side-panel));
 	font-size: 2rem;
-	filter: drop-shadow(0.4rem 0.4rem 0.2rem rgba(var(--always-negative-color),0.5));
+	filter: drop-shadow(0.4rem 0.4rem 0.2rem rgba(var(--always-negative-color),var(--drop-shadow-transparency-menu)));
 	padding: 1.6rem;
 	position: fixed;
 	overflow-y: scroll;
@@ -915,15 +909,15 @@ input[type='range']::-webkit-slider-thumb:active {
 	}
 
 	.user-avatar:hover {
-		filter: brightness(1.2);
+		filter: brightness(var(--brightness-hover));
 	}
 
 	.dropdown-menu a:hover {
-		background-color: rgb(var(--background-color-dropdown-hover));
+		background-color: rgb(var(--menu-background-color-hover));
 	}
 
 	.user-login:hover, .user-logout:hover {
-		background-color: rgb(var(--primary-color-lighter));
+		background-color: rgb(var(--primary-color-hover));
 	}
 
 	.contact-button:hover {
@@ -944,11 +938,11 @@ input[type='range']::-webkit-slider-thumb:active {
 	}
 
 	.normal-button:hover {
-		background: rgb(var(--primary-color-lighter));
+		background-color: rgb(var(--primary-color-hover));
 	}
 
 	.error-page a:hover {
-		color: rgb(var(--secondary-color));
+		background-color: rgb(var(--secondary-color-hover));
 		text-decoration: underline;
 	}
 

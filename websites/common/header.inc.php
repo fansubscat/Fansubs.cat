@@ -6,7 +6,11 @@ define('IS_FOOLS_DAY', date('d')==28 && date('m')==12);
 if (!defined('SITE_IS_HENTAI')) {
 	define('SITE_IS_HENTAI', !empty($_GET['hentai']));
 }
-if (!empty($user)) {
+if (PAGE_STYLE_TYPE=='main' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') {
+	define('SITE_THEME', 'dark');
+	define('SITE_THEME_FORCED', TRUE);
+}
+else if (!empty($user)) {
 	define('SITE_THEME', $user['site_theme']==1 ? 'light' : 'dark');
 } else if (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') {
 	define('SITE_THEME', 'light');
@@ -397,7 +401,13 @@ if (PAGE_STYLE_TYPE=='login') {
 	}
 ?>
 								<a href="<?php echo USERS_URL.'/configuracio'; ?>"><i class="fa fa-fw fa-gear"></i> Configuració</a>
+<?php
+	if (!defined('SITE_THEME_FORCED')) {
+?>
 								<a class="theme-button" onclick="toggleSiteTheme();"><i class="fa fa-fw fa-circle-half-stroke"></i> <span class="theme-button-text"><?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'Canvia al tema fosc' : 'Canvia al tema clar'; ?></span></a>
+<?php
+	}
+?>
 								<hr class="dropdown-separator-secondary">
 <?php
 	if (!empty($user)) {

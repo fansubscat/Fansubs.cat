@@ -18,7 +18,7 @@
 	background-color: rgb(var(--negative-color));
 	border-radius: 1.5rem;
 	padding: 2rem;
-	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),0.2);
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
 	overflow: hidden;
 	display: flex;
 	flex-direction: row;
