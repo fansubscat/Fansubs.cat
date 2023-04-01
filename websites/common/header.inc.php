@@ -58,7 +58,7 @@ if (SITE_IS_HENTAI) {
 if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs.min.css?v=<?php echo VERSION; ?>">
-		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs-chromecast.css?v=<?php echo VERSION; ?>">
+<!--		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs-chromecast.css?v=<?php echo VERSION; ?>">-->
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>

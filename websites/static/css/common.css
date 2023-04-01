@@ -21,6 +21,11 @@
 	src: url('../fonts/lexend_deca_light.ttf');
 }
 
+@font-face {
+	font-family: "lexend_deca_numbers";
+	src: url('../fonts/lexend_deca_numbers.ttf');
+}
+
 :root {
 	--header-height: 4.2rem;
 	--page-padding: 3.6rem;
@@ -52,11 +57,9 @@
 	/* Used in footer links, a bit darker so when hovered they can change to neutral, -30/+30 */
 	--neutral-color-links: 106, 106, 106;
 	/* Generic background for all pages WITHOUT background images, +40,-20 */
-	--background-color-standard: 40, 40, 40;
+	--background-color-standard: 30, 30, 30;
 	/* Background color for side filter panel, +50/-40 */
 	--background-color-side-panel: 50, 50, 50;
-	/* Background color for checkboxes, +40/-20 */
-	--background-color-checkbox: 40, 40, 40;
 	/* User dropdown menu background color when hovering, +40/-20 */
 	--menu-background-color-hover: 40, 40, 40;
 	/* Color for header icons */
@@ -77,7 +80,6 @@
 	--neutral-color-links: 166, 166, 166;
 	--background-color-standard: 235, 235, 235;
 	--background-color-side-panel: 215, 215, 215;
-	--background-color-checkbox: 235, 235, 235;
 	--menu-background-color-hover: 235, 235, 235;
 	--icon-button-color: 0, 0, 0;
 	--icon-button-color-hover: 80, 80, 80;
@@ -253,7 +255,6 @@ a img {
 	min-width: 6rem;
 	font-size: 1.5rem;
 	border-radius: 0.4rem;
-	transition: background var(--fast-animation-duration);
 	order: 40;
 }
 
@@ -444,7 +445,6 @@ select {
 	padding: 0.7rem 2.2rem;
 	font-size: 1.5rem;
 	border-radius: 0.7rem;
-	transition: background var(--fast-animation-duration);
 }
 
 .error-page a {

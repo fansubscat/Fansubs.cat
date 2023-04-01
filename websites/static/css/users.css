@@ -106,7 +106,6 @@
 	padding: 0.75rem 0;
 	font-size: 1.5rem;
 	border-radius: 0.75rem;
-	transition: background var(--fast-animation-duration);
 }
 
 a.forgot-password {
@@ -169,7 +168,7 @@ a.forgot-password {
 	}
 
 	.login-footer a:hover, .checkbox-layout a:hover {
-		background-color: rgb(var(--secondary-color-hover));
+		color: rgb(var(--secondary-color-hover));
 		text-decoration: underline;
 	}
 }

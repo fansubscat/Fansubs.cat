@@ -327,6 +327,18 @@ function get_episode_player_title($fansub_name, $series, $episode_title, $is_ext
 	}
 }
 
+function get_episode_player_title_short($fansub_name, $series, $episode_title, $is_extra){
+	if ($series['name']==$episode_title || ($series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID && !$is_extra)){
+		if (!empty($episode_title)) {
+			return $episode_title;
+		} else {
+			return $series['name'];
+		}
+	} else {
+		return $episode_title;
+	}
+}
+
 function get_video_sources($links){
 	$elements = array();
 	foreach ($links as $link) {
@@ -493,7 +505,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 				if ($series['type']=='manga') {
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-book-open icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Llegeix-lo').'</a> '."\n";
 				} else {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-fansub="'.htmlspecialchars($fansub_names).'" data-cover="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" data-title="'.get_episode_player_title(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-file-id="'.$vrow['id'].'" data-position="'.$position.'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($links))).'" data-method="'.htmlspecialchars(get_display_method($links)).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-fansub="'.htmlspecialchars($fansub_names).'" data-cover="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" data-title="'.get_episode_player_title(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-title-short="'.get_episode_player_title_short(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-file-id="'.$vrow['id'].'" data-position="'.$position.'" data-duration="'.$vrow['length'].'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($links))).'" data-method="'.htmlspecialchars(get_display_method($links)).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
 				}
 				if (!empty($vrow['comments'])){
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
@@ -551,7 +563,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 			if ($series['type']=='manga') {
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-book-open icon-play"></span>'.$episode_title.'</a> '."\n";
 			} else {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-fansub="'.htmlspecialchars($fansub_names).'" data-cover="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" data-title="'.get_episode_player_title(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-file-id="'.$vrow['id'].'" data-position="'.$position.'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($links))).'" data-method="'.htmlspecialchars(get_display_method($links)).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-fansub="'.htmlspecialchars($fansub_names).'" data-cover="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-title="'.get_episode_player_title(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-title-short="'.get_episode_player_title_short(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-file-id="'.$vrow['id'].'" data-position="'.$position.'" data-duration="'.$vrow['length'].'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($links))).'" data-method="'.htmlspecialchars(get_display_method($links)).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 			}
 			if (!empty($vrow['comments'])){
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";

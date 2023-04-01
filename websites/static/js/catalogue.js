@@ -9,16 +9,18 @@ var player = null;
 var streamer = null;
 var currentMegaFile = null;
 var currentVideoTitle = null;
+var currentVideoDuration = null;
 var currentMethod = null;
 var currentSourceData = null;
 var lastErrorTimestamp = null;
 var lastErrorReported = null;
 var playedMediaTimer = null;
+var playerEndedTimer = null;
 var playedMediaSeconds = 0;
+var playerEndedMilliseconds = 0;
 var enableDebug = true;
 var loggedMessages = "";
 var pageLoadedDate = Date.now();
-var playerWasFullscreen = false;
 var lastSearchRequest = null;
 var lastAutocompleteRequest = null;
 
@@ -99,6 +101,9 @@ function beginVideoTracking(fileId, method){
 	currentMethod=method;
 	//The chances of collision of this is so low that if we get a collision, it's no problem at all.
 	currentViewId=getNewViewId();
+	lastErrorReported=null;
+	loggedMessages="";
+	playedMediaSeconds=0;
 	if (!enableDebug) {
 		var xhr = new XMLHttpRequest();
 		xhr.open("GET", "/counter.php?view_id="+currentViewId+"&file_id="+currentFileId+"&method="+currentMethod+"&action=open", true);
@@ -181,12 +186,6 @@ function sendVideoTrackingEndAjax(){
 		} else {
 			console.debug('Would have requested: /counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
 		}
-		currentFileId=-1;
-		currentMethod=null;
-		currentViewId="";
-		lastErrorReported=null;
-		loggedMessages="";
-		playedMediaSeconds=0;
 	}
 }
 
@@ -200,11 +199,6 @@ function sendVideoTrackingEndBeacon(){
 		} else {
 			console.debug('Would have requested: /counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
 		}
-		currentFileId=-1;
-		currentMethod=null;
-		currentViewId="";
-		lastErrorReported=null;
-		playedMediaSeconds=0;
 	}
 }
 
@@ -312,7 +306,6 @@ function hasNextVideo() {
 }
 
 function playPrevVideo() {
-	playerWasFullscreen = player.isFullscreen();
 	var position  = parseInt($('.video-player[data-file-id="'+currentFileId+'"]').first().attr('data-position'));
 	var results = $('.video-player[data-file-id="'+currentFileId+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
 		return parseInt($(this).attr('data-position')) == position-1;
@@ -320,13 +313,13 @@ function playPrevVideo() {
 
 	if (results.length>0) {
 		//In case of multiple files for one episode, only the first will be played
-		closeOverlay();
+		//closeOverlay();
+		shutdownVideoStreaming();
 		results.first().click();
 	}
 }
 
-function playNextVideo() {
-	playerWasFullscreen = player.isFullscreen();
+function getNextVideoElement() {
 	var position  = parseInt($('.video-player[data-file-id="'+currentFileId+'"]').first().attr('data-position'));
 	var results = $('.video-player[data-file-id="'+currentFileId+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
 		return parseInt($(this).attr('data-position')) == position+1;
@@ -334,7 +327,21 @@ function playNextVideo() {
 
 	if (results.length>0) {
 		//In case of multiple files for one episode, only the first will be played
-		closeOverlay();
+		return results.first();
+	}
+	return null;
+}
+
+function playNextVideo() {
+	var position  = parseInt($('.video-player[data-file-id="'+currentFileId+'"]').first().attr('data-position'));
+	var results = $('.video-player[data-file-id="'+currentFileId+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
+		return parseInt($(this).attr('data-position')) == position+1;
+	});
+
+	if (results.length>0) {
+		//In case of multiple files for one episode, only the first will be played
+		//closeOverlay();
+		shutdownVideoStreaming();
 		results.first().click();
 	}
 }
@@ -367,182 +374,170 @@ function initializeReader(fileId) {
 	$('#overlay-content').html(getReaderSource(fileId));
 }
 
-function initializePlayer(title, method, sourceData){
+function initializePlayer(title, method, duration, sourceData){
 	currentVideoTitle = title;
 	currentSourceData = sourceData;
+	currentVideoDuration = duration
 	var sources = JSON.parse(sourceData);
 	var start='<div class="player-popup">';
 	var end='</div>';
 
 	if (method=='storage' && Date.now()-pageLoadedDate>=48*3600*1000) {
 		parsePlayerError('PAGE_TOO_OLD_ERROR');
-	} else {
-		switch (method) {
-			case 'mega':
-				$('#overlay-content').html(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered"></video>'+end);
-				break;
-			case 'youtube':
-			case 'google-drive':
-			case 'direct-video':
-			case 'storage':
-			default:
-				var sourcesCode = "";
-				for(var i=0;i<sources.length;i++) {
-					if (sourcesCode!='') {
-						sourcesCode+="\n";
-					}
-					if (!enableDebug) {
-						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+(sources[i].url.includes('?') ? '&amp;view_id=' : '?view_id=')+currentViewId+'&amp;file_id='+currentFileId+'" size="'+sources[i].resolution+'">';
-					} else {
-						sourcesCode+='<source type="'+(method=='youtube' ? 'video/youtube' : 'video/mp4')+'" src="'+sources[i].url+'">';
-					}
-				}
-				$('#overlay-content').html(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered">'+sourcesCode+'</video>'+end);
-				break;
-		}
+	} else if (player==null) {
+		$('#overlay-content').html(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered"></video>'+end);
 	}
 
-	var highestQuality = 0;
-	var allQualities = [];
-	for(var i=0;i<sources.length;i++) {
-		if (!allQualities.includes(sources[i].resolution)) {
-			allQualities.push(parseInt(sources[i].resolution));
-		}
-		if (sources[i].resolution>highestQuality){
-			highestQuality=sources[i].resolution;
-		}
+	if (method=='mega' && window.chrome && window.chrome.cast && window.cast) {
+		cast.framework.CastContext.getInstance().endCurrentSession(true);
 	}
-
-	allQualities = allQualities.sort(function(a, b){return b-a});
-
-	var techOrders = ['chromecast', 'html5'];
-
-	if (method=='mega') {
-		if (window.chrome && window.chrome.cast && window.cast) {
-			cast.framework.CastContext.getInstance().endCurrentSession(true);
-		}
-		techOrders = ['html5'];
-	} else if (method=='youtube') {
-		if (window.chrome && window.chrome.cast && window.cast) {
-			cast.framework.CastContext.getInstance().endCurrentSession(true);
-		}
-		techOrders = ['youtube'];
-	}
-
-	var options = {
-		controls: true,
-		language: 'ca',
-		errorDisplay: false,
-		controlBar: {
-			children: [
-				"playToggle",
-				"progressControl",
-				"currentTimeDisplay",
-				"timeDivider",
-				"durationDisplay",
-				hasPrevVideo() ? "prevButton" : "prevButtonDisabled",
-				hasNextVideo() ? "nextButton" : "nextButtonDisabled",
-				"muteToggle",
-				"volumeControl",
-				"fullscreenToggle"
-			]
-		},
-		techOrder: techOrders,
-		chromecast: {
-			requestTitleFn: getTitleForChromecast,
-			requestSubtitleFn: getSubtitleForChromecast,
-			requestCoverImageUrlFn: getCoverImageUrlForChromecast
-		},
-		youtube: {
-			modestbranding: 1,
-			iv_load_policy: 3
-		},
-		plugins: {
+	if (player==null) {
+		var options = {
+			controls: true,
+			language: 'ca',
+			errorDisplay: false,
+			controlBar: {
+				children: [
+					"playToggle",
+					"progressControl",
+					"currentTimeDisplay",
+					"timeDivider",
+					"durationDisplay",
+					"muteToggle",
+					"volumeControl",
+					"fullscreenToggle"
+				]
+			},
+			techOrder: ['chromecast', 'html5', 'youtube'],
 			chromecast: {
-				buttonPositionIndex: -1
+				requestTitleFn: getTitleForChromecast,
+				requestSubtitleFn: getSubtitleForChromecast,
+				requestCoverImageUrlFn: getCoverImageUrlForChromecast
 			},
-			landscapeFullscreen: {
-				fullscreen: {
-					enterOnRotate: true,
-					alwaysInLandscapeMode: true,
-					iOS: false
-				}
+			youtube: {
+				modestbranding: 1,
+				iv_load_policy: 3
 			},
-			hotkeys: {
-				enableModifiersForNumbers: false
-			}
-		}
-	};
-	$('video').on('contextmenu', function(e) {
-		e.preventDefault();
-	});
-	player = videojs("player", options, function(){
-		// Player (this) is initialized and ready.
-		if (method=='mega') {
-			this.currentSrc = function() {
-				return 'mega';
-			};
-		}
-	});
-
-	//Recover from errors if needed
-	player.one('canplay', event => {
-		if (lastErrorTimestamp) {
-			player.currentTime(lastErrorTimestamp);
-			lastErrorTimestamp = null;
-		}
-	});
-	setTimeout(function(){
-		if (playerWasFullscreen) {
-			playerWasFullscreen = false;
-			player.requestFullscreen();
-		}
-	}, 0);
-	player.on('ready', function(){
-		if ($('.player_extra_upper').length==0) {
-			$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div><div class="player_extra_ended"><div id="player_extra_ended_buttons"><button id="player_extra_ended_replay" class="player_extra_ended_button" onclick="replayCurrentVideo();"><span class="fa fa-undo"></span></button>' + (hasNextVideo() ? '<button id="player_extra_ended_next" class="player_extra_ended_button" onclick="playNextVideo();"><span class="fa fa-step-forward"></span></button>' : '') + '</div></div>').appendTo(".video-js");
-			if (player.techName_=='Html5') {
-				setTimeout(function(){
-					if (player) {
-						player.play();
+			plugins: {
+				chromecast: {
+					buttonPositionIndex: -1
+				},
+				landscapeFullscreen: {
+					fullscreen: {
+						enterOnRotate: true,
+						alwaysInLandscapeMode: true,
+						iOS: false
 					}
-				}, 0);
+				},
+				hotkeys: {
+					enableModifiersForNumbers: false
+				}
 			}
-		}
-	});
-	
-	player.on('playing', function(){
-		addLog('Playing');
-		playedMediaTimer = setInterval(function tick() {
-			if (player) {
-				playedMediaSeconds+=player.playbackRate();
-				//addLog('playedMediaSeconds: '+playedMediaSeconds);
-			}
-		}, 1000);
-	});
-	player.on('pause', function(){
-		addLog('Paused');
-		clearInterval(playedMediaTimer);
-	});
-	player.on('ended', function(){
-		addLog('Ended');
-		clearInterval(playedMediaTimer);
-	});
-	player.on('stalled', function(){
-		addLog('Stalled (informative)');
-		//Do not clear: on iOS, this is triggered while the video keeps playing...
-	});
-	player.on('waiting', function(){
-		addLog('Waiting');
-		clearInterval(playedMediaTimer);
-	});
-	player.on('error', function(){
-		parsePlayerError((currentMethod=='mega' ? 'E_MEGA_PLAYER_ERROR' : 'E_DIRECT_PLAYER_ERROR')+': '+getPlayerErrorEvent());
-	});
+		};
+		$('video').on('contextmenu', function(e) {
+			e.preventDefault();
+		});
 
+		player = videojs("player", options, function(){
+			// Player (this) is initialized and ready.
+			if (method=='mega') {
+				this.currentSrc = function() {
+					return 'mega';
+				};
+			}
+		});
+
+		//Recover from errors if needed
+		player.one('canplay', event => {
+			if (lastErrorTimestamp) {
+				player.currentTime(lastErrorTimestamp);
+				lastErrorTimestamp = null;
+			}
+		});
+		player.on('ready', function(){
+			if ($('.player_extra_upper').length==0) {
+				$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
+				$('<div class="player_extra_ended"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">Següent capítol:</div><div class="player_extra_ended_title">'+new Option(getNextVideoElement().attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><img src="'+getNextVideoElement().attr('data-thumbnail')+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
+				if (player.techName_=='Html5') {
+					setTimeout(function(){
+						if (player) {
+							player.play();
+						}
+					}, 0);
+				}
+			}
+		});
+		
+		player.on('playing', function(){
+			addLog('Playing');
+			clearInterval(playerEndedTimer);
+			playedMediaTimer = setInterval(function tick() {
+				if (player) {
+					playedMediaSeconds+=player.playbackRate();
+					//addLog('playedMediaSeconds: '+playedMediaSeconds);
+				}
+			}, 1000);
+		});
+		player.on('pause', function(){
+			addLog('Paused');
+			clearInterval(playedMediaTimer);
+		});
+		player.on('seeking', function(){
+			clearInterval(playerEndedTimer);
+		});
+		player.on('ended', function(){
+			addLog('Ended');
+			clearInterval(playedMediaTimer);
+			playerEndedMilliseconds = 0;
+			if (hasNextVideo()) {
+				playerEndedTimer = setInterval(function tick() {
+					if (player) {
+						playerEndedMilliseconds+=33;
+						$('.player_extra_ended_thumbnail div')[0].style.width=parseFloat(playerEndedMilliseconds/100000)*100+'%';
+						if (playerEndedMilliseconds>=100000) {
+							clearInterval(playerEndedTimer);
+							playNextVideo();
+						}
+					} else {
+						clearInterval(playerEndedTimer);
+					}
+				}, 33);
+			}
+		});
+		player.on('stalled', function(){
+			addLog('Stalled (informative)');
+			//Do not clear: on iOS, this is triggered while the video keeps playing...
+		});
+		player.on('waiting', function(){
+			addLog('Waiting');
+			clearInterval(playedMediaTimer);
+		});
+		player.on('error', function(){
+			parsePlayerError((currentMethod=='mega' ? 'E_MEGA_PLAYER_ERROR' : 'E_DIRECT_PLAYER_ERROR')+': '+getPlayerErrorEvent());
+		});
+	} else {
+		//Player already active: finish last video and setup new video
+		$('.player_extra_title')[0].innerHTML=new Option(currentVideoTitle).innerHTML;
+		$('.player_extra_ended_title')[0].innerHTML=new Option(getNextVideoElement().attr('data-title-short')).innerHTML;
+		$('.player_extra_ended_thumbnail img')[0].src=getNextVideoElement().attr('data-thumbnail');
+	}
+	player.controlBar.removeChild('PrevButton');
+	player.controlBar.removeChild('NextButton');
+	player.controlBar.removeChild('PrevButtonDisabled');
+	player.controlBar.removeChild('NextButtonDisabled');
+	player.controlBar.addChild(hasPrevVideo() ? "PrevButton" : "PrevButtonDisabled", {}, 5);
+	player.controlBar.addChild(hasNextVideo() ? "NextButton" : "NextButtonDisabled", {}, 6);
+
+	//We only support one source for now
 	if (method=='mega') {
-		//No multi-source support: show the first one
 		loadMegaStream(sources[0].url);
+	} else {
+		if (enableDebug) {
+			player.src(sources[0].url);
+		} else {
+			player.src(sources[0].url+(sources[0].url.includes('?') ? '&view_id=' : '?view_id=')+currentViewId+'&file_id='+currentFileId);
+		}
+		player.play();
 	}
 }
 
@@ -655,8 +650,18 @@ function loadMegaStream(url){
 	});
 }
 
-function shutdownVideoPlayer() {
+function shutdownVideoStreaming() {
+	sendVideoTrackingEndAjax();
+	clearInterval(playerEndedTimer);
 	clearInterval(playedMediaTimer);
+	if (streamer!=null){
+		streamer.destroy();
+		streamer = null;
+	}
+}
+
+function shutdownVideoPlayer() {
+	shutdownVideoStreaming();
 	if (player!=null){
 		try {
 			player.dispose();
@@ -664,10 +669,6 @@ function shutdownVideoPlayer() {
 			console.log("Error while stopping player: "+error);
 		}
 		player = null;
-	}
-	if (streamer!=null){
-		streamer.destroy();
-		streamer = null;
 	}
 	$('#overlay-content').html('');
 }
@@ -691,7 +692,6 @@ function showAlert(title, message, showRefresh=false) {
 function closeOverlay() {
 	addLog('Closed');
 	shutdownVideoPlayer();
-	sendVideoTrackingEndAjax();
 	if (!isEmbedPage()) {
 		$('#overlay').addClass('hidden');
 		$('html').removeClass('page-no-overflow');
@@ -1212,6 +1212,35 @@ $(document).ready(function() {
 	videojs.registerComponent('PrevButton', PrevButton);
 	videojs.registerComponent('PrevButtonDisabled', PrevButtonDisabled);
 
+	videojs.time.setFormatTime( (seconds, guide) => {
+		guide = currentVideoDuration;
+		seconds = seconds < 0 ? 0 : seconds;
+		let s = Math.floor(seconds % 60);
+		let m = Math.floor(seconds / 60 % 60);
+		let h = Math.floor(seconds / 3600);
+		const gs = Math.floor(guide % 60);
+		const gm = Math.floor(guide / 60 % 60);
+		const gh = Math.floor(guide / 3600);
+
+		// handle invalid times
+		if (isNaN(seconds) || seconds === Infinity) {
+			h = gh;
+			m = gm;
+			s = gs;
+		}
+
+		// Check if we need to show hours
+		h = h > 0 || gh > 0 ? h + ':' : '';
+
+		// If hours are showing, we may need to add a leading zero.
+		// Always show at least one digit of minutes.
+		m = ((h || gm >= 10) && m < 10 ? '0' + m : m) + ':';
+
+		// Check if leading zero is need for seconds
+		s = s < 10 ? '0' + s : s;
+		return h + m + s;
+	});
+
 	var links = document.querySelectorAll(".catalogues-navigation a");
 	var container = document.querySelector(".catalogues-navigation");
 
@@ -1257,7 +1286,7 @@ $(document).ready(function() {
 			$('html').addClass('page-no-overflow');
 			$('#overlay').removeClass('hidden');
 			beginVideoTracking($(this).attr('data-file-id'), $(this).attr('data-method'));
-			initializePlayer($(this).attr('data-title'), $(this).attr('data-method'), atob($(this).attr('data-sources')));
+			initializePlayer($(this).attr('data-title'), $(this).attr('data-method'), $(this).attr('data-duration'), atob($(this).attr('data-sources')));
 		});
 		$(".viewed-indicator").click(function(){
 			if ($(this).hasClass('not-viewed')){
@@ -1499,7 +1528,7 @@ $(document).ready(function() {
 			initializeReader($('#data-file-id').val());
 		} else {
 			beginVideoTracking($('#data-file-id').val(), $('#data-method').val());
-			initializePlayer($('#data-title').val(), $('#data-method').val(), atob($('#data-sources').val()));
+			initializePlayer($('#data-title').val(), $('#data-method').val(), $('#data-duration').val(), atob($('#data-sources').val()));
 		}
 		window.parent.postMessage('embedInitialized', '*');
 	}

@@ -876,6 +876,7 @@ Streamer.prototype.destroy = function() {
   this.file && this.file.destroy();
   if (this.video) {
     for (i = this._events.length; i--; ) this.video.removeEventListener(this._events[i], this, !1);
+/* Commented Fansubs.cat
     if (this.video.parentNode) {
       var video = this.video, clone = video.cloneNode(), parent = video.parentNode;
       try {
@@ -886,6 +887,7 @@ Streamer.prototype.destroy = function() {
       parent.removeChild(video);
       parent.appendChild(clone);
     }
+*/
   }
   delete this.evs;
   delete this.file;

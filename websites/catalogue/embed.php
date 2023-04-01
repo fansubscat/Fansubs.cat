@@ -91,6 +91,7 @@ $links = filter_links($links);
 		<input type="hidden" id="embed-page" value="1" />
 		<input type="hidden" id="data-title" value="<?php echo $page_title; ?>" />
 		<input type="hidden" id="data-file-id" value="<?php echo $file['id']; ?>" />
+		<input type="hidden" id="data-duration" value="<?php echo $file['length']; ?>" />
 		<input type="hidden" id="data-method" value="<?php echo htmlspecialchars(get_display_method($links)); ?>" />
 		<input type="hidden" id="data-sources" value="<?php echo htmlspecialchars(base64_encode(get_video_sources($links))); ?>" />
 		<input type="hidden" id="data-series" value="<?php echo $file['series_name']; ?>" />
