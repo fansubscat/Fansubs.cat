@@ -1,6 +1,6 @@
 {
-    "name": "Acci\u00f3 real - Fansubs.cat",
-    "short_name": "Acci\u00f3 real - Fansubs.cat",
+    "name": "Imatge real - Fansubs.cat",
+    "short_name": "Imatge real - Fansubs.cat",
     "icons": [
         {
             "src": "https://static.fansubs.cat/favicons/liveaction/android-chrome-192x192.png",
@@ -15,6 +15,6 @@
     ],
     "theme_color": "#6aa0f8",
     "background_color": "#6aa0f8",
-    "start_url": "https://accioreal.fansubs.cat",
+    "start_url": "https://imatgereal.fansubs.cat",
     "display": "standalone"
 }

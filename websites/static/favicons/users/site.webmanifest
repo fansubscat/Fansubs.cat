@@ -1,6 +1,6 @@
 {
-    "name": "Fansubs.cat",
-    "short_name": "Fansubs.cat",
+    "name": "Perfil d\u2019usuari - Fansubs.cat",
+    "short_name": "Perfil d\u2019usuari - Fansubs.cat",
     "icons": [
         {
             "src": "https://static.fansubs.cat/favicons/users/android-chrome-192x192.png",
@@ -15,6 +15,6 @@
     ],
     "theme_color": "#6aa0f8",
     "background_color": "#6aa0f8",
-    "start_url": "https://www.fansubs.cat",
+    "start_url": "https://usuaris.fansubs.cat",
     "display": "standalone"
 }
