@@ -10,10 +10,13 @@
    viewBox="0 0 108.00001 108"
    version="1.1"
    id="svg54"
-   sodipodi:docname="F (2).svg"
+   sodipodi:docname="favicon_main.svg"
    width="108"
    height="108"
-   inkscape:version="1.0.2 (e86c870879, 2021-01-15)">
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   inkscape:export-filename="/home/ereza/Projectes/Fansubs.cat/assets/favicon_main.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600">
   <metadata
      id="metadata58">
     <rdf:RDF>
@@ -36,60 +39,31 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1043"
+     inkscape:window-height="1016"
      id="namedview56"
      showgrid="false"
-     inkscape:zoom="10.001516"
-     inkscape:cx="32.009998"
-     inkscape:cy="42.305"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="3.5142572"
+     inkscape:cx="49.758184"
+     inkscape:cy="58.577583"
+     inkscape:window-x="1920"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg54" />
+     inkscape:current-layer="svg54"
+     inkscape:document-rotation="0" />
   <defs
      id="defs35">
     <style
        id="style33">.cls-1{fill:#6aa0f8;}.cls-2{isolation:isolate;}.cls-3{fill:#f5f5f5;}.cls-4{fill:#fff;}</style>
   </defs>
-  <g
-     id="Capa_2"
-     data-name="Capa 2"
-     transform="translate(22.000033,11.695008)">
-    <g
-       id="Capa_1-2"
-       data-name="Capa 1">
-      <g
-         id="Layer_1-2"
-         data-name="Layer 1-2">
-        <path
-           class="cls-1"
-           d="M 25.64,84.61 H 12.31 A 12.37,12.37 0 0 1 0,72.2 V 12.31 A 12.32,12.32 0 0 1 12.31,0 h 39.3 A 12.37,12.37 0 0 1 64,12.31 V 23 a 12.25,12.25 0 0 1 -5.66,10.32 12.22,12.22 0 0 1 2.82,7.81 v 9 A 12.42,12.42 0 0 1 48.77,62.55 H 38.05 V 72.2 A 12.43,12.43 0 0 1 25.64,84.61 Z M 16,68.61 h 6.05 V 46.55 H 45.18 V 44.81 H 22.05 V 19.31 H 48 V 16 H 16 Z"
-           id="path37" />
-        <g
-           class="cls-2"
-           id="g43">
-          <g
-             class="cls-2"
-             id="g41">
-            <path
-               class="cls-3"
-               d="M 51.61,27.31 H 30.05 v 9.5 h 18.72 a 4.37,4.37 0 0 1 4.41,4.32 v 9 a 4.39,4.39 0 0 1 -4.41,4.41 H 30.05 V 72.2 a 4.39,4.39 0 0 1 -4.41,4.41 H 12.31 A 4.37,4.37 0 0 1 8,72.2 V 12.31 A 4.35,4.35 0 0 1 12.31,8 h 39.3 A 4.37,4.37 0 0 1 56,12.31 V 23 a 4.37,4.37 0 0 1 -4.39,4.31 z"
-               id="path39" />
-          </g>
-        </g>
-        <g
-           class="cls-2"
-           id="g49">
-          <g
-             class="cls-2"
-             id="g47">
-            <path
-               class="cls-4"
-               d="M 51.61,27.31 H 30.05 v 9.5 h 18.72 a 4.37,4.37 0 0 1 4.41,4.32 v 9 a 4.39,4.39 0 0 1 -4.41,4.41 H 30.05 V 72.2 a 4.39,4.39 0 0 1 -4.41,4.41 H 12.31 A 4.37,4.37 0 0 1 8,72.2 V 12.31 A 4.35,4.35 0 0 1 12.31,8 h 39.3 A 4.37,4.37 0 0 1 56,12.31 V 23 a 4.37,4.37 0 0 1 -4.39,4.31 z"
-               id="path45" />
-          </g>
-        </g>
-      </g>
-    </g>
-  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:125.714px;line-height:1.25;font-family:iMPACT;-inkscape-font-specification:iMPACT;letter-spacing:-24.3833px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+     x="16.914371"
+     y="97.999901"
+     id="text872"><tspan
+       sodipodi:role="line"
+       id="tspan870"
+       x="16.914371"
+       y="97.999901"
+       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-family:'MADE Tommy Soft';-inkscape-font-specification:'MADE Tommy Soft Heavy';fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill">F</tspan></text>
 </svg>

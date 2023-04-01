@@ -26,12 +26,12 @@ else if (!empty($user)) {
 <?php
 if (SITE_IS_HENTAI) {
 ?>
-		<meta name="theme-color" content="#D91883">
+		<meta name="theme-color" content="#d91883">
 		<meta name="rating" content="adult">
 <?php
 } else {
 ?>
-		<meta name="theme-color" content="#6AA0F8">
+		<meta name="theme-color" content="#6aa0f8">
 <?php
 }
 ?>
@@ -58,7 +58,6 @@ if (SITE_IS_HENTAI) {
 if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs.min.css?v=<?php echo VERSION; ?>">
-<!--		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs-chromecast.css?v=<?php echo VERSION; ?>">-->
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>

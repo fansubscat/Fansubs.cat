@@ -7,15 +7,18 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 108 108"
+   viewBox="0 0 108.00001 108"
    version="1.1"
-   id="svg116"
-   sodipodi:docname="M (2).svg"
+   id="svg54"
+   sodipodi:docname="favicon_manga.svg"
    width="108"
    height="108"
-   inkscape:version="1.0.2 (e86c870879, 2021-01-15)">
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   inkscape:export-filename="/home/ereza/Projectes/Fansubs.cat/assets/favicon_manga.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600">
   <metadata
-     id="metadata120">
+     id="metadata58">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -36,68 +39,30 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1043"
-     id="namedview118"
+     inkscape:window-height="1016"
+     id="namedview56"
      showgrid="false"
-     inkscape:zoom="10.001516"
-     inkscape:cx="48.380001"
-     inkscape:cy="42.305"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="1.682912"
+     inkscape:cx="12.141125"
+     inkscape:cy="54.833705"
+     inkscape:window-x="1920"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg116" />
+     inkscape:current-layer="svg54"
+     inkscape:document-rotation="0" />
   <defs
-     id="defs93">
+     id="defs35">
     <style
-       id="style91">.cls-1{isolation:isolate;}.cls-2{fill:#6aa0f8;}.cls-3{fill:#f5f5f5;}.cls-4{fill:#fff;}</style>
+       id="style33">.cls-1{fill:#6aa0f8;}.cls-2{isolation:isolate;}.cls-3{fill:#f5f5f5;}.cls-4{fill:#fff;}</style>
   </defs>
   <g
-     id="Capa_2"
-     data-name="Capa 2"
-     transform="translate(5.6199674,11.695192)">
-    <g
-       id="Capa_1-2"
-       data-name="Capa 1">
-      <g
-         id="Layer_1-2"
-         data-name="Layer 1-2">
-        <g
-           class="cls-1"
-           id="g99">
-          <g
-             class="cls-1"
-             id="g97">
-            <path
-               class="cls-2"
-               d="M 84.45,84.61 H 71.12 A 12.38,12.38 0 0 1 58.8,72.2 v -2 A 11.45,11.45 0 0 1 49.46,75 H 47.3 a 11.36,11.36 0 0 1 -9.25,-4.79 v 2 A 12.43,12.43 0 0 1 25.64,84.61 H 12.41 A 12.43,12.43 0 0 1 0,72.2 V 12.31 A 12.37,12.37 0 0 1 12.41,0 H 28.78 A 13,13 0 0 1 40.29,6.77 L 48.4,21.05 56.58,6.76 A 13,13 0 0 1 68.08,0 H 84.45 A 12.32,12.32 0 0 1 96.76,12.31 V 72.2 A 12.37,12.37 0 0 1 84.45,84.61 Z m -9.65,-16 h 6 V 16 h -6 z m -58.8,0 h 6.05 V 16 H 16 Z M 25.08,16 48.43,56.3 71.78,16 H 69.72 L 48.36,53.36 27.13,16 Z"
-               id="path95" />
-          </g>
-        </g>
-        <g
-           class="cls-1"
-           id="g105">
-          <g
-             class="cls-1"
-             id="g103">
-            <path
-               class="cls-3"
-               d="m 68.08,8 h 16.37 a 4.28,4.28 0 0 1 4.31,4.31 V 72.2 a 4.31,4.31 0 0 1 -4.31,4.41 H 71.12 A 4.37,4.37 0 0 1 66.8,72.2 V 40.54 L 52.5,65.24 A 3.48,3.48 0 0 1 49.5,67 H 47.3 A 3.43,3.43 0 0 1 44.36,65.24 L 30.05,40.54 V 72.2 a 4.39,4.39 0 0 1 -4.41,4.41 H 12.41 A 4.39,4.39 0 0 1 8,72.2 V 12.31 A 4.37,4.37 0 0 1 12.41,8 h 16.37 a 5.08,5.08 0 0 1 4.51,2.65 L 48.38,37.21 63.57,10.65 A 5.07,5.07 0 0 1 68.08,8 Z"
-               id="path101" />
-          </g>
-        </g>
-        <g
-           class="cls-1"
-           id="g111">
-          <g
-             class="cls-1"
-             id="g109">
-            <path
-               class="cls-4"
-               d="m 68.08,8 h 16.37 a 4.28,4.28 0 0 1 4.31,4.31 V 72.2 a 4.31,4.31 0 0 1 -4.31,4.41 H 71.12 A 4.37,4.37 0 0 1 66.8,72.2 V 40.54 L 52.5,65.24 A 3.48,3.48 0 0 1 49.5,67 H 47.3 A 3.43,3.43 0 0 1 44.36,65.24 L 30.05,40.54 V 72.2 a 4.39,4.39 0 0 1 -4.41,4.41 H 12.41 A 4.39,4.39 0 0 1 8,72.2 V 12.31 A 4.37,4.37 0 0 1 12.41,8 h 16.37 a 5.08,5.08 0 0 1 4.51,2.65 L 48.38,37.21 63.57,10.65 A 5.07,5.07 0 0 1 68.08,8 Z"
-               id="path107" />
-          </g>
-        </g>
-      </g>
-    </g>
+     aria-label="M"
+     id="text872"
+     style="font-size:125.714px;line-height:1.25;font-family:iMPACT;-inkscape-font-specification:iMPACT;letter-spacing:-24.3833px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill">
+    <path
+       d="M 67.485676,13.394379 54.000006,47.462872 40.640051,13.394379 c -1.131426,-2.137138 -3.394278,-3.394278 -5.782844,-3.394278 h -18.91451 c -3.142851,0 -5.657131,2.51428 -5.657131,5.531416 v 76.811252 c 0,3.14285 2.51428,5.65713 5.657131,5.65713 h 14.891662 c 3.14285,0 5.65713,-2.51428 5.65713,-5.65713 V 51.737148 l 12.354243,31.679927 c 0.754284,1.382854 2.262852,2.262852 3.77142,2.262852 h 2.765708 c 1.634282,0 3.14285,-0.879998 3.897134,-2.262852 L 71.634237,51.737148 v 40.605621 c 0,3.14285 2.514281,5.65713 5.531421,5.65713 h 15.01737 c 3.14285,0 5.531406,-2.51428 5.531406,-5.65713 V 15.531517 c 0,-3.017136 -2.388556,-5.531416 -5.531406,-5.531416 h -18.91451 c -2.388565,0 -4.651416,1.25714 -5.782842,3.394278 z"
+       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-family:'MADE Tommy Soft';-inkscape-font-specification:'MADE Tommy Soft Heavy';fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="path832"
+       sodipodi:nodetypes="cccsssssssccssccsssssssc" />
   </g>
 </svg>

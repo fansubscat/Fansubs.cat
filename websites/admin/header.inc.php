@@ -15,6 +15,7 @@ session_start();
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="msapplication-TileColor" content="#ffc40d">
 		<meta name="msapplication-config" content="<?php echo STATIC_URL; ?>/favicons/admin/browserconfig.xml">
+		<meta name="theme-color" content="#800000">
 		<title><?php echo $header_title; ?> - Tauler d’administració de Fansubs.cat</title>
 		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo STATIC_URL; ?>/favicons/admin/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="<?php echo STATIC_URL; ?>/favicons/admin/favicon-32x32.png">

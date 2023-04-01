@@ -7,15 +7,18 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 108 108"
+   viewBox="0 0 108.00001 108"
    version="1.1"
-   id="svg21"
-   sodipodi:docname="A (2).svg"
+   id="svg54"
+   sodipodi:docname="favicon_anime.svg"
    width="108"
    height="108"
-   inkscape:version="1.0.2 (e86c870879, 2021-01-15)">
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   inkscape:export-filename="/home/ereza/Projectes/Fansubs.cat/assets/favicon_anime.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600">
   <metadata
-     id="metadata25">
+     id="metadata58">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -37,55 +40,29 @@
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
-     id="namedview23"
+     id="namedview56"
      showgrid="false"
-     inkscape:zoom="4.8448454"
-     inkscape:cx="45.878596"
-     inkscape:cy="55.047699"
+     inkscape:zoom="4.9699102"
+     inkscape:cx="49.686253"
+     inkscape:cy="62.006642"
      inkscape:window-x="1920"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg21" />
+     inkscape:current-layer="svg54"
+     inkscape:document-rotation="0" />
   <defs
-     id="defs4">
+     id="defs35">
     <style
-       id="style2">.cls-1{isolation:isolate;}.cls-2{fill:#6aa0f8;}.cls-3{fill:#fff;}</style>
+       id="style33">.cls-1{fill:#6aa0f8;}.cls-2{isolation:isolate;}.cls-3{fill:#f5f5f5;}.cls-4{fill:#fff;}</style>
   </defs>
   <g
-     id="Capa_2"
-     data-name="Capa 2"
-     transform="translate(11.019134,11.694949)">
-    <g
-       id="Capa_1-2"
-       data-name="Capa 1">
-      <g
-         id="Layer_1-2"
-         data-name="Layer 1-2">
-        <g
-           class="cls-1"
-           id="g10">
-          <g
-             class="cls-1"
-             id="g8">
-            <path
-               class="cls-2"
-               d="M 74.53,84.61 H 59 A 12.38,12.38 0 0 1 47.12,75.67 L 46.61,74 h -7.27 l -0.4,1.43 A 12.29,12.29 0 0 1 27,84.61 H 11.52 A 11.56,11.56 0 0 1 2.12,79.74 11.43,11.43 0 0 1 0.61,69.43 L 20.9,8.68 A 13.46,13.46 0 0 1 33.37,0 H 52.58 A 13.39,13.39 0 0 1 65.17,9 L 85.34,69.43 A 11.46,11.46 0 0 1 74.53,84.61 Z m -12.82,-16 H 68.2 L 50.64,16 H 47.18 L 59,58.73 v 0 z m -44,0 H 24.2 L 27,58.73 v 0 L 38.77,16 h -3.46 z"
-               id="path6" />
-          </g>
-        </g>
-        <g
-           class="cls-1"
-           id="g16">
-          <g
-             class="cls-1"
-             id="g14">
-            <path
-               class="cls-3"
-               d="M 54.74,73.37 52.68,66 H 33.27 l -2.06,7.35 A 4.3,4.3 0 0 1 27,76.61 H 11.52 A 3.52,3.52 0 0 1 8.18,72 L 28.37,11.53 a 5.42,5.42 0 0 1 5,-3.53 h 19.21 a 5.32,5.32 0 0 1 5,3.53 L 77.77,72 a 3.46,3.46 0 0 1 -3.24,4.61 H 59 A 4.38,4.38 0 0 1 54.74,73.37 Z M 48.46,50.73 43,30.84 37.49,50.73 Z"
-               id="path12" />
-          </g>
-        </g>
-      </g>
-    </g>
+     aria-label="A"
+     id="text872"
+     style="font-size:125.714px;line-height:1.25;font-family:iMPACT;-inkscape-font-specification:iMPACT;letter-spacing:-24.3833px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill">
+    <path
+       d="m 73.495416,97.999901 h 19.988525 c 3.017136,0 5.154274,-3.017136 4.148562,-5.908558 L 71.73542,14.525807 C 70.855422,11.885813 68.215428,10.000103 65.324006,10.000103 H 42.696171 c -2.891422,0 -5.405701,1.88571 -6.411413,4.525704 L 10.387674,92.091343 c -1.0057118,2.891422 1.25714,5.908558 4.274276,5.908558 h 19.862812 c 2.51428,0 4.777131,-1.634282 5.405701,-4.148562 l 2.639994,-9.42855 H 65.44972 l 2.639994,9.42855 c 0.754284,2.51428 2.891422,4.148562 5.405702,4.148562 z m -25.519257,-33.188495 6.033929,-25.519942 6.03393,25.519942 z"
+       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-family:'MADE Tommy Soft';-inkscape-font-specification:'MADE Tommy Soft Heavy';fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="path923"
+       sodipodi:nodetypes="ssccssccssccccscccc" />
   </g>
 </svg>

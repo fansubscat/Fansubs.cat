@@ -10,11 +10,11 @@
    viewBox="0 0 108.00001 108"
    version="1.1"
    id="svg54"
-   sodipodi:docname="favicon_news.svg"
+   sodipodi:docname="favicon_resources.svg"
    width="108"
    height="108"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   inkscape:export-filename="/home/ereza/Projectes/Fansubs.cat/assets/favicon_news.png"
+   inkscape:export-filename="/home/ereza/Projectes/Fansubs.cat/assets/favicon_main.png"
    inkscape:export-xdpi="600"
    inkscape:export-ydpi="600">
   <metadata
@@ -43,8 +43,8 @@
      id="namedview56"
      showgrid="false"
      inkscape:zoom="3.365824"
-     inkscape:cx="30.589903"
-     inkscape:cy="39.766097"
+     inkscape:cx="49.758184"
+     inkscape:cy="58.577583"
      inkscape:window-x="1920"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -57,13 +57,13 @@
   </defs>
   <text
      xml:space="preserve"
-     style="font-size:125.714px;line-height:1.25;font-family:iMPACT;-inkscape-font-specification:iMPACT;letter-spacing:-24.3836px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20.0002;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-     x="6.982965"
+     style="font-size:125.714px;line-height:1.25;font-family:iMPACT;-inkscape-font-specification:iMPACT;letter-spacing:-24.3833px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+     x="8.5891294"
      y="97.999901"
      id="text872"><tspan
        sodipodi:role="line"
        id="tspan870"
-       x="6.982965"
+       x="8.5891294"
        y="97.999901"
-       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-family:'MADE Tommy Soft';-inkscape-font-specification:'MADE Tommy Soft Heavy';fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20.0002;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill">N</tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;font-family:'MADE Tommy Soft';-inkscape-font-specification:'MADE Tommy Soft Heavy';fill:#ffffff;fill-opacity:1;stroke:#6aa0f8;stroke-width:20;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill">R</tspan></text>
 </svg>
