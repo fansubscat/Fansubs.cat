@@ -1503,7 +1503,7 @@ function showMangaWithNoMal() {
 }
 
 function showLiveActionWithNoMdl() {
-	$('#output').text("Continguts d’acció real sense enllaç a MDL:");
+	$('#output').text("Continguts d’imatge real sense enllaç a MDL:");
 	for (var i = 0; i < noMdlLiveAction.length; i++) {
 		$('#output').append("<br />«"+noMdlLiveAction[i]+"»");
 	}
@@ -1644,7 +1644,7 @@ $(document).ready(function() {
 			if ($('#type').val()=='manga') {
 				alert('Aquest manga ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			} else if ($('#type').val()=='liveaction') {
-				alert('Aquest contingut d\'acció real ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+				alert('Aquest contingut d\'imatge real ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			} else {
 				alert('Aquest anime ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			}
@@ -1689,7 +1689,7 @@ $(document).ready(function() {
 			if ($('#type').val()=='manga') {
 				alert('Aquest manga ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			} else if ($('#type').val()=='liveaction') {
-				alert('Aquest contingut d\'acció real ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+				alert('Aquest contingut d\'imatge real ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			} else {
 				alert('Aquest anime ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			}

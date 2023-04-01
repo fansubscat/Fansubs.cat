@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Llista de contingut d’acció real - Acció real";
+		$header_title="Llista de contingut d’imatge real - Imatge real";
 		$page="liveaction";
 	break;
 }
@@ -36,8 +36,8 @@ switch ($type) {
 		$divisions = "Volums";
 	break;
 	case 'liveaction':
-		$content="contingut d’acció real";
-		$content_prep="de contingut d’acció real";
+		$content="contingut d’imatge real";
+		$content_prep="de contingut d’imatge real";
 		$divisions = "Temporades";
 	break;
 }

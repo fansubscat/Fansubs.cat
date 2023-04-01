@@ -179,7 +179,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 			$title="Mangues més populars a Fansubs.cat";
 			break;
 		case 'liveaction':
-			$title="Continguts d’acció real més populars a Fansubs.cat";
+			$title="Continguts d’imatge real més populars a Fansubs.cat";
 			break;
 		case 'anime':
 		default:

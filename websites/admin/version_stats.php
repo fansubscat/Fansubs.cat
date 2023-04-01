@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Estadístiques de la versió d’acció real - Acció real";
+		$header_title="Estadístiques de la versió d’imatge real - Imatge real";
 		$page="liveaction";
 	break;
 }

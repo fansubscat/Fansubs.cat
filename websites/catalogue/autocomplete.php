@@ -37,7 +37,7 @@ $sections=array();
 switch(CATALOGUE_ITEM_TYPE) {
 	case 'liveaction':
 		array_push($sections, array(
-			'name' => 'Acció real',
+			'name' => 'Imatge real',
 			'result' => query_autocomplete($user, $text, 'liveaction')
 		));
 		array_push($sections, array(
@@ -59,7 +59,7 @@ switch(CATALOGUE_ITEM_TYPE) {
 			'result' => query_autocomplete($user, $text, 'anime')
 		));
 		array_push($sections, array(
-			'name' => 'Acció real',
+			'name' => 'Imatge real',
 			'result' => query_autocomplete($user, $text, 'liveaction')
 		));
 		break;
@@ -74,7 +74,7 @@ switch(CATALOGUE_ITEM_TYPE) {
 			'result' => query_autocomplete($user, $text, 'manga')
 		));
 		array_push($sections, array(
-			'name' => 'Acció real',
+			'name' => 'Imatge real',
 			'result' => query_autocomplete($user, $text, 'liveaction')
 		));
 		break;

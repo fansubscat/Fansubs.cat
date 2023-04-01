@@ -35,7 +35,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th class="text-center" scope="col">Notícies</th>
 								<th class="text-center" scope="col">Versions<br />d’anime</th>
 								<th class="text-center" scope="col">Versions<br />de&nbsp;manga</th>
-								<th class="text-center" scope="col">Versions<br />d’acció real</th>
+								<th class="text-center" scope="col">Versions<br />d’imatge&nbsp;real</th>
 								<th class="text-center" scope="col">Accions</th>
 							</tr>
 						</thead>

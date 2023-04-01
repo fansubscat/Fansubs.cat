@@ -16,7 +16,7 @@ switch ($type) {
 		$header_title="Darreres visualitzacions de manga - Anàlisi";
 	break;
 	case 'liveaction':
-		$header_title="Darreres visualitzacions d’acció real - Anàlisi";
+		$header_title="Darreres visualitzacions d’imatge real - Anàlisi";
 	break;
 }
 
@@ -38,8 +38,8 @@ switch ($type) {
 		$division_name="Volum";
 	break;
 	case 'liveaction':
-		$content_uc="Contingut d’acció real";
-		$content_prep="de contingut d’acció real";
+		$content_uc="Contingut d’imatge real";
+		$content_prep="de contingut d’imatge real";
 		$view_name="Visualitzacions";
 		$view_name_lc="visualitzacions";
 		$division_name="Temporada";

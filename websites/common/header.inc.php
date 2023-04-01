@@ -301,7 +301,7 @@ if (PAGE_STYLE_TYPE=='login') {
 			if (!SITE_IS_HENTAI) {
 ?>
 						<span class="catalogues-separator">|</span>
-						<a href="<?php echo LIVEACTION_URL; ?>"<?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Acció real</a>
+						<a href="<?php echo LIVEACTION_URL; ?>"<?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Imatge real</a>
 <?php
 			}
 ?>

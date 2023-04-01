@@ -23,7 +23,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<button type="button" class="btn btn-primary" onclick="return showMangaWithNoMal();" onauxclick="return false;">Mostra els mangues no enllaçats a MAL</a>
 					</div>
 					<div class="text-center p-2">
-						<button type="button" class="btn btn-primary" onclick="return showLiveActionWithNoMdl();" onauxclick="return false;">Mostra els continguts d’acció real no enllaçats a MDL</a>
+						<button type="button" class="btn btn-primary" onclick="return showLiveActionWithNoMdl();" onauxclick="return false;">Mostra els continguts d’imatge real no enllaçats a MDL</a>
 					</div>
 				</article>
 			</div>

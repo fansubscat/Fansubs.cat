@@ -8,7 +8,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 					<div class="main-buttons">
 						<a class="main-button" href="<?php echo ANIME_URL; ?>">Anime</a>
 						<a class="main-button" href="<?php echo MANGA_URL; ?>">Manga</a>
-						<a class="main-button" href="<?php echo LIVEACTION_URL; ?>">Acció real</a>
+						<a class="main-button" href="<?php echo LIVEACTION_URL; ?>">Imatge real</a>
 					</div>
 					<div class="secondary-buttons">
 						<a class="secondary-button" href="<?php echo NEWS_URL; ?>">Notícies</a>

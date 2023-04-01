@@ -402,7 +402,7 @@ function get_type_depending_on_catalogue($series) {
 	} else if ($series['type']=='anime') {
 		return (CATALOGUE_ITEM_TYPE!='anime' ? 'Anime • ' : '');
 	} else {
-		return (CATALOGUE_ITEM_TYPE!='liveaction' ? 'Acció real • ' : '');
+		return (CATALOGUE_ITEM_TYPE!='liveaction' ? 'Imatge real • ' : '');
 	}
 }
 

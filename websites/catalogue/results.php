@@ -115,7 +115,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		case 'liveaction':
 			array_push($sections, array(
 				'type' => 'static',
-				'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’acció real',
+				'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 				'specific_version' => FALSE,
 				'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_id, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 			));
@@ -150,7 +150,7 @@ if (defined('PAGE_IS_SEARCH')) {
 				));
 				array_push($sections, array(
 					'type' => 'search',
-					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’acció real',
+					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 					'specific_version' => FALSE,
 					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_id, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 				));
@@ -173,7 +173,7 @@ if (defined('PAGE_IS_SEARCH')) {
 				));
 				array_push($sections, array(
 					'type' => 'search',
-					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’acció real',
+					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 					'specific_version' => FALSE,
 					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_id, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 				));

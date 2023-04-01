@@ -9,7 +9,7 @@
 	color: rgb(var(--negative-color));
 	padding: 1.4rem 2.2rem;
 	margin: 1.5rem 0.75rem 0;
-	min-width: 22.5rem;
+	min-width: 26rem;
 	font-size: 3rem;
 	border-radius: 0.5rem;
 	border: 0.3rem solid rgb(var(--positive-color));

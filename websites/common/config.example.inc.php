@@ -16,7 +16,7 @@ define('MAIN_URL', 'https://www.fansubs.cat');
 define('ADVENT_URL', 'https://advent.fansubs.cat');
 define('ANIME_URL', 'https://anime.fansubs.cat');
 define('MANGA_URL', 'https://manga.fansubs.cat');
-define('LIVEACTION_URL', 'https://accioreal.fansubs.cat');
+define('LIVEACTION_URL', 'https://imatgereal.fansubs.cat');
 define('NEWS_URL', 'https://noticies.fansubs.cat');
 define('RESOURCES_URL', 'https://recursos.fansubs.cat');
 define('GROUPS_URL', 'https://grups.fansubs.cat');

@@ -77,18 +77,18 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 							</div>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle<?php echo $page=='liveaction' ? ' active' : ''; ?>" href="#" id="navbarDropdownSeries" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Acció real</a>
+							<a class="nav-link dropdown-toggle<?php echo $page=='liveaction' ? ' active' : ''; ?>" href="#" id="navbarDropdownSeries" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Imatge real</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
-								<a class="dropdown-item" href="series_list.php?type=liveaction">Llista de contingut d’acció real</a>
-								<a class="dropdown-item" href="series_edit.php?type=liveaction">Afegeix un contingut d’acció real nou</a>
+								<a class="dropdown-item" href="series_list.php?type=liveaction">Llista de contingut d’imatge real</a>
+								<a class="dropdown-item" href="series_edit.php?type=liveaction">Afegeix un contingut d’imatge real nou</a>
 								<div class="dropdown-divider"></div>
 <?php
 	}
 ?>
-								<a class="dropdown-item" href="version_list.php?type=liveaction">Llista de versions d’acció real</a>
+								<a class="dropdown-item" href="version_list.php?type=liveaction">Llista de versions d’imatge real</a>
 								<a class="dropdown-item" href="series_choose.php?type=liveaction">Afegeix una versió nova</a>
 							</div>
 						</li>
@@ -149,7 +149,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownAnalytics">
 								<a class="dropdown-item" href="views.php?type=anime">Darreres visualitzacions - Anime</a>
 								<a class="dropdown-item" href="views.php?type=manga">Darreres visualitzacions - Manga</a>
-								<a class="dropdown-item" href="views.php?type=liveaction">Darreres visualitzacions - Acció real</a>
+								<a class="dropdown-item" href="views.php?type=liveaction">Darreres visualitzacions - Imatge real</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="popular.php">Continguts més populars</a>
 								<a class="dropdown-item" href="stats.php">Estadístiques</a>
@@ -181,7 +181,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					<a class="navbar-extra-link pe-3" href="<?php echo MAIN_URL; ?>/" target="_blank" title="Portada - Web públic (www.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-main fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
 					<a class="navbar-extra-link pe-3" href="<?php echo ANIME_URL; ?>/" target="_blank" title="Anime - Web públic (anime.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-anime fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
 					<a class="navbar-extra-link pe-3" href="<?php echo MANGA_URL; ?>/" target="_blank" title="Manga - Web públic (manga.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
-					<a class="navbar-extra-link pe-3" href="<?php echo LIVEACTION_URL; ?>/" target="_blank" title="Acció real - Web públic (accioreal.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-liveaction fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
+					<a class="navbar-extra-link pe-3" href="<?php echo LIVEACTION_URL; ?>/" target="_blank" title="Imatge real - Web públic (imatgereal.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-liveaction fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
 					<a class="navbar-extra-link pe-3" href="<?php echo NEWS_URL; ?>/" target="_blank" title="Notícies - Web públic (www.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-news fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
 					<a class="navbar-extra-link pe-3" href="<?php echo GROUPS_URL; ?>/" target="_blank" title="Grups - Web públic (recursos.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-groups fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
 					<a class="navbar-extra-link pe-3" href="<?php echo RESOURCES_URL; ?>/" target="_blank" title="Recursos - Web públic (recursos.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-resources fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>

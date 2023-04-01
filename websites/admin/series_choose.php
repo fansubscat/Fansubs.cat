@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Edició de versions - Acció real";
+		$header_title="Edició de versions - Imatge real";
 		$page="liveaction";
 	break;
 }
@@ -32,7 +32,7 @@ switch ($type) {
 		$content="manga";
 	break;
 	case 'liveaction':
-		$content="contingut d’acció real";
+		$content="contingut d’imatge real";
 	break;
 }
 

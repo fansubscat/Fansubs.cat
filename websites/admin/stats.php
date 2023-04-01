@@ -55,8 +55,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-3 text-center"><b>Versions de manga:</b><br><?php echo $totals['total_manga_versions']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-3 text-center"><b>Contingut d’acció real:</b><br><?php echo $totals['total_liveaction']; ?> <small>(duplicats: <?php echo $totals['total_liveaction_duplicity']; ?>)</small></div>
-										<div class="col-sm-3 text-center"><b>Versions d’acció real:</b><br><?php echo $totals['total_liveaction_versions']; ?></div>
+										<div class="col-sm-3 text-center"><b>Contingut d’imatge real:</b><br><?php echo $totals['total_liveaction']; ?> <small>(duplicats: <?php echo $totals['total_liveaction_duplicity']; ?>)</small></div>
+										<div class="col-sm-3 text-center"><b>Versions d’imatge real:</b><br><?php echo $totals['total_liveaction_versions']; ?></div>
 										<div class="col-sm-3 text-center"><b>Fansubs:</b><br><?php echo $totals['total_fansubs']; ?></div>
 										<div class="col-sm-3 text-center"><b>Notícies:</b><br><?php echo $totals['total_news']; ?></div>
 									</div>
@@ -91,7 +91,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 								<hr>
 								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Acció real:</h5></div>
+									<div class="col-sm text-center pb-1"><h5>Imatge real:</h5></div>
 									<div class="w-100 d-flex">
 										<div class="col-sm-4 text-center"><b>Capítols editats:</b><br><?php echo $totals['total_linked_liveaction_episodes']; ?></div>
 										<div class="col-sm-4 text-center"><b>Fitxers totals:</b><br><?php echo $totals['total_liveaction_files']; ?></div>
@@ -459,7 +459,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució del contingut d’acció real</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Evolució del contingut d’imatge real</h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs_liveaction" role="tablist">
@@ -750,7 +750,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els 10 continguts d’acció real més vistos (darrers 14 dies / sempre)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els 10 continguts d’imatge real més vistos (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
 									<div class="w-50 pe-1">
@@ -936,7 +936,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d’acció real</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d’imatge real</h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -1090,7 +1090,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers d’acció real per fansub</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers d’imatge real per fansub</h4>
 								<hr>
 <?php
 	$fansub_values=array();
@@ -1215,7 +1215,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d’acció real (darrers <?php echo $max_days; ?> dies)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d’imatge real (darrers <?php echo $max_days; ?> dies)</h4>
 								<hr>
 <?php
 	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
@@ -1276,8 +1276,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-3 text-center"><b>Versions de manga:</b><br><?php echo $totals['total_manga_versions']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-3 text-center"><b>Contingut d’acció real:</b><br><?php echo $totals['total_liveaction']; ?> <small>(duplicats: <?php echo $totals['total_liveaction_duplicity']; ?>)</small></div>
-										<div class="col-sm-3 text-center"><b>Versions d’acció real:</b><br><?php echo $totals['total_liveaction_versions']; ?></div>
+										<div class="col-sm-3 text-center"><b>Contingut d’imatge real:</b><br><?php echo $totals['total_liveaction']; ?> <small>(duplicats: <?php echo $totals['total_liveaction_duplicity']; ?>)</small></div>
+										<div class="col-sm-3 text-center"><b>Versions d’imatge real:</b><br><?php echo $totals['total_liveaction_versions']; ?></div>
 										<div class="col-sm-3 text-center"><b>Col·laboracions:</b><br><?php echo $totals['total_collabs']; ?></div>
 										<div class="col-sm-3 text-center"><b>Notícies:</b><br><?php echo $totals['total_news']; ?></div>
 									</div>
@@ -1312,7 +1312,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</div>
 								<hr>
 								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Acció real:</h5></div>
+									<div class="col-sm text-center pb-1"><h5>Imatge real:</h5></div>
 									<div class="w-100 d-flex">
 										<div class="col-sm-4 text-center"><b>Capítols editats:</b><br><?php echo $totals['total_linked_liveaction_episodes']; ?></div>
 										<div class="col-sm-4 text-center"><b>Fitxers totals:</b><br><?php echo $totals['total_liveaction_files']; ?></div>
@@ -1680,7 +1680,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució del contingut d’acció real <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Evolució del contingut d’imatge real <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="liveaction_chart_tabs_fansub" role="tablist">
@@ -1971,7 +1971,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els 10 continguts d’acció real més vistos <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers 14 dies / sempre)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els 10 continguts d’imatge real més vistos <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers 14 dies / sempre)</h4>
 								<hr>
 								<div class="row">
 									<div class="w-50 pe-1">
@@ -2157,7 +2157,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d’acció real <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d’imatge real <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -2311,7 +2311,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers d’acció real amb participació <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers d’imatge real amb participació <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 <?php
 	$fansub_values=array();
@@ -2436,7 +2436,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d’acció real <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers <?php echo $max_days; ?> dies)</h4>
+								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d’imatge real <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers <?php echo $max_days; ?> dies)</h4>
 								<hr>
 <?php
 	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");

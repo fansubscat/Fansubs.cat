@@ -207,7 +207,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d’acció real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d’imatge real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
 					<hr>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
@@ -225,7 +225,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="4" class="text-center">- No hi ha cap contingut d’acció real vist -</td>
+								<td colspan="4" class="text-center">- No hi ha cap contingut d’imatge real vist -</td>
 							</tr>
 <?php
 	}
@@ -263,7 +263,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="text-center">
 						<a href="twitter_image.php?type=anime&amp;mode=<?php echo $selected_all ? "all" : (!empty($selected_year) ? 'year' : 'month'); ?>&amp;first_month=<?php echo $first_month; ?>&amp;last_month=<?php echo $last_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Anime</a>
 						<a href="twitter_image.php?type=manga&amp;mode=<?php echo $selected_all ? "all" : (!empty($selected_year) ? 'year' : 'month'); ?>&amp;first_month=<?php echo $first_month; ?>&amp;last_month=<?php echo $last_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Manga</a>
-						<a href="twitter_image.php?type=liveaction&amp;mode=<?php echo $selected_all ? "all" : (!empty($selected_year) ? 'year' : 'month'); ?>&amp;first_month=<?php echo $first_month; ?>&amp;last_month=<?php echo $last_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Acció real</a>
+						<a href="twitter_image.php?type=liveaction&amp;mode=<?php echo $selected_all ? "all" : (!empty($selected_year) ? 'year' : 'month'); ?>&amp;first_month=<?php echo $first_month; ?>&amp;last_month=<?php echo $last_month; ?>&amp;hide_hentai=<?php echo $hide_hentai ? '1' : '0'; ?>" target="_blank" class="btn btn-primary">Imatge real</a>
 					</div>
 				</article>
 			</div>

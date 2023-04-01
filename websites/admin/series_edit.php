@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Edició de contingut d’acció real - Acció real";
+		$header_title="Edició de contingut d’imatge real - Imatge real";
 		$page="liveaction";
 	break;
 }
@@ -54,8 +54,8 @@ switch ($type) {
 		$division_one="una temporada";
 		$more_than_one="més d’una";
 		$open_series="Encara en emissió";
-		$content_apos="el contingut d’acció real";
-		$content_one="un contingut d’acció real";
+		$content_apos="el contingut d’imatge real";
+		$content_one="un contingut d’imatge real";
 		$external_provider='MyDramaList';
 		break;
 }
@@ -908,7 +908,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<select id="form-related-list-related_series_id-XXX" name="form-related-list-related_series_id-XXX" class="form-select d-none">
 											<option value="">- Selecciona un element -</option>
 <?php
-		$results = query("SELECT s.id, CONCAT(IF(s.type='anime','Anime',IF(s.type='manga','Manga','Acció real')),' - ',s.name) name FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.type ASC, s.name ASC");
+		$results = query("SELECT s.id, CONCAT(IF(s.type='anime','Anime',IF(s.type='manga','Manga','Imatge real')),' - ',s.name) name FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.type ASC, s.name ASC");
 		while ($srow = mysqli_fetch_assoc($results)) {
 ?>
 											<option value="<?php echo $srow['id']; ?>"><?php echo htmlspecialchars($srow['name']); ?></option>
@@ -936,7 +936,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<select id="form-related-list-related_series_id-<?php echo $j+1; ?>" name="form-related-list-related_series_id-<?php echo $j+1; ?>" class="form-select" required>
 															<option value="">- Selecciona un element -</option>
 <?php
-		$results = query("SELECT s.id, CONCAT(IF(s.type='anime','Anime',IF(s.type='manga','Manga','Acció real')),' - ',s.name) name FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.type ASC, s.name ASC");
+		$results = query("SELECT s.id, CONCAT(IF(s.type='anime','Anime',IF(s.type='manga','Manga','Imatge real')),' - ',s.name) name FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.type ASC, s.name ASC");
 		while ($srow = mysqli_fetch_assoc($results)) {
 ?>
 															<option value="<?php echo $srow['id']; ?>"<?php echo $related_series[$j]['series_id']==$srow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($srow['name']); ?></option>

@@ -105,13 +105,13 @@ function get_series_type_summary($series) {
 		}
 	} else {
 		if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Conjunt de ".$series['number_of_episodes']." films";
+			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Conjunt de ".$series['number_of_episodes']." films";
 		} else if ($series['subtype']=='movie') {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Film";
+			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Film";
 		} else if ($series['divisions']>1) {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Sèrie • ".$series['divisions']." temporades • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes']." capítols");
+			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Sèrie • ".$series['divisions']." temporades • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes']." capítols");
 		} else {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Acció real')." • Sèrie • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes']." capítols");
+			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Sèrie • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes']." capítols");
 		}
 	}
 	return $text;

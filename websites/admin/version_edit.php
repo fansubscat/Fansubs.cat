@@ -17,7 +17,7 @@ switch ($type) {
 		$page="manga";
 	break;
 	case 'liveaction':
-		$header_title="Edició de versions d’acció real - Acció real";
+		$header_title="Edició de versions d’imatge real - Imatge real";
 		$page="liveaction";
 	break;
 }
@@ -52,9 +52,9 @@ switch ($type) {
 		$series_name="serialitzats";
 		break;
 	case 'liveaction':
-		$content="contingut d’acció real";
-		$content_uc="Contingut d’acció real";
-		$content_prep="del contingut d’acció real";
+		$content="contingut d’imatge real";
+		$content_uc="Contingut d’imatge real";
+		$content_prep="del contingut d’imatge real";
 		$division_name="Temporada";
 		$division_prep="de les temporades";
 		$division_some_completed="alguna temporada completada";

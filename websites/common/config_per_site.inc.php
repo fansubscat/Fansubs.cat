@@ -78,7 +78,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
 			'section_search_anime' => "<i class=\"fa fa-fw fa-display\"></i> Resultats d’anime",
 			'section_search_manga' => "<i class=\"fa fa-fw fa-book-open\"></i> Resultats de manga",
-			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’acció real",
+			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’imatge real",
 			'section_related' => "<i class=\"fa fa-fw fa-book-open\"></i> Mangues recomanats",
 			'option_show_cancelled' => "Mostra els mangues cancel·lats o abandonats pels fansubs",
 			'option_show_missing' => "Mostra els mangues amb algun capítol sense enllaç vàlid",
@@ -86,8 +86,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		break;
 	case 'acciorealv2.fansubs.cat':
 		define('SITE_BASE_URL', 'https://acciorealv2.fansubs.cat');
-		define('SITE_TITLE', 'Acció real en català | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’acció real subtitulat pels fansubs en català!');
+		define('SITE_TITLE', 'Imatge real en català | Fansubs.cat');
+		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’imatge real subtitulat pels fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'liveaction');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
 		define('SITE_IS_CATALOGUE', TRUE);
@@ -98,12 +98,12 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-display');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'Films');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
-		define('CATALOGUE_ITEM_STRING_SINGULAR', 'contingut d’acció real');
-		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet veure en streaming més de %d continguts d’acció real subtitulats en català. Ara pots gaudir de tot el contingut d’acció real de tots els fansubs en català en un únic lloc.');
+		define('CATALOGUE_ITEM_STRING_SINGULAR', 'contingut d’imatge real');
+		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet veure en streaming més de %d continguts d’imatge real subtitulats en català. Ara pots gaudir de tot el contingut d’imatge real de tots els fansubs en català en un únic lloc.');
 		define('CATALOGUE_ROBOT_MESSAGE_HENTAI', ''); //N/A
 /*		$cat_config = array(
-			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d continguts d’acció real subtitulats en català. Ara pots gaudir de tot el contingut d’acció real de tots els fansubs en català en un únic lloc.",
-			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming més de %d continguts d’acció real subtitulats en català. Ara pots gaudir de tot el contingut d’acció real de tots els fansubs en català en un únic lloc.",
+			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d continguts d’imatge real subtitulats en català. Ara pots gaudir de tot el contingut d’imatge real de tots els fansubs en català en un únic lloc.",
+			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming més de %d continguts d’imatge real subtitulats en català. Ara pots gaudir de tot el contingut d’imatge real de tots els fansubs en català en un únic lloc.",
 			'items_type' => "liveaction",
 			'filmsoneshots' => "Films",
 			'filmsoneshots_icon' => "fa-video",
@@ -114,14 +114,14 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'serialized_db' => "series",
 			'filmsoneshots_tadaima_forum_id' => "14",
 			'serialized_tadaima_forum_id' => "16",
-			'items_string_s' => "contingut d’acció real",
-			'items_string_p' => "continguts d’acció real",
-			'items_string_del' => "del contingut d’acció real",
+			'items_string_s' => "contingut d’imatge real",
+			'items_string_p' => "continguts d’imatge real",
+			'items_string_del' => "del contingut d’imatge real",
 			'being_published' => "en emissió",
 			'more_divisions_available' => "Hi ha més temporades sense contingut disponible. Prem per a mostrar-les totes.",
 			'division_name' => "Temporada",
 			'division_name_lc' => "temporada",
-			'preview_prefix' => "Acció real",
+			'preview_prefix' => "Imatge real",
 			//Sections
 			'section_continue_watching' => "<i class=\"fa fa-fw fa-eye\"></i> Continua mirant",
 			'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
@@ -132,11 +132,11 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
 			'section_search_anime' => "<i class=\"fa fa-fw fa-display\"></i> Resultats d’anime",
 			'section_search_manga' => "<i class=\"fa fa-fw fa-book-open\"></i> Resultats de manga",
-			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’acció real",
-			'section_related' => "<i class=\"fa fa-fw fa-tv\"></i> Continguts d’acció real recomanats",
+			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’imatge real",
+			'section_related' => "<i class=\"fa fa-fw fa-tv\"></i> Continguts d’imatge real recomanats",
 			'section_related_other' => "<i class=\"fa fa-fw fa-square-plus\"></i> Altres continguts recomanats",
-			'option_show_cancelled' => "Mostra els continguts d’acció real cancel·lats o abandonats pels fansubs",
-			'option_show_missing' => "Mostra els continguts d’acció real amb algun capítol sense enllaç vàlid",
+			'option_show_cancelled' => "Mostra els continguts d’imatge real cancel·lats o abandonats pels fansubs",
+			'option_show_missing' => "Mostra els continguts d’imatge real amb algun capítol sense enllaç vàlid",
 		);*/
 		break;
 	case 'animev2.fansubs.cat':
@@ -186,7 +186,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
 			'section_search_anime' => "<i class=\"fa fa-fw fa-display\"></i> Resultats d’anime",
 			'section_search_manga' => "<i class=\"fa fa-fw fa-book-open\"></i> Resultats de manga",
-			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’acció real",
+			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’imatge real",
 			'section_related' => "<i class=\"fa fa-fw fa-tv\"></i> Animes recomanats",
 			'section_related_other' => "<i class=\"fa fa-fw fa-square-plus\"></i> Altres continguts recomanats",
 			'option_show_cancelled' => "Mostra els animes cancel·lats o abandonats pels fansubs",
