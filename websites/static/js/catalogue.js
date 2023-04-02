@@ -937,10 +937,10 @@ function launchSearch(query) {
 
 function loadSearchResults() {
 	var query = $('#catalogue-search-query').val().trim();
+	history.replaceState(null, null, $('.search-base-url').val()+(query!='' ? '/'+encodeURIComponent(query) : ''));
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
-		$('.loading-message').text('S’està carregant el catàleg sencer...');
+		$('.loading-message').text('S’està carregant el catàleg...');
 	} else {
-		history.replaceState(null, null, $('.search-base-url').val()+(query!='' ? '/'+encodeURIComponent(query) : ''));
 		$('.loading-message').text('S’estan carregant els resultats de la cerca...');
 	}
 
@@ -981,7 +981,7 @@ function loadSearchResults() {
 		'max_score': $('#score-to-slider').val(),
 		'min_year': $('#year-from-slider').val(),
 		'max_year': $('#year-to-slider').val(),
-		'fansub_id': $('#catalogue-search-fansub').val(),
+		'fansub': $('#catalogue-search-fansub').val(),
 		'full_catalogue': $('#catalogue-search-include-full-catalogue').is(':checked') ? 1 : 0,
 		'hide_lost_content': $('#catalogue-search-include-lost').is(':checked') ? 0 : 1,
 		'type': $('#catalogue-search-type .singlechoice-selected').attr('data-value'),

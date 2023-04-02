@@ -88,18 +88,18 @@ if (!SITE_IS_HENTAI) {
 <?php
 if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
 ?>
-								<option value="-1" selected>Tots (fins i tot llista negra)</option>
+								<option value="-1">Tots (fins i tot llista negra)</option>
 								<option value="-2">Tots (excepte llista negra)</option>
 <?php
 } else {
 ?>
-								<option value="-1" selected>Tots els fansubs</option>
+								<option value="-1">Tots els fansubs</option>
 <?php
 }
-$result = query_all_fansubs_with_versions();
+$result = query_all_fansubs_with_versions($user);
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-								<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+								<option value="<?php echo $row['slug']; ?>"<?php echo (!empty($_GET['fansub']) && $_GET['fansub']==$row['slug']) ? ' selected' : ''; ?>><?php echo $row['name']; ?></option>
 <?php
 }
 ?>
@@ -173,12 +173,15 @@ mysqli_free_result($result);
 <?php
 if (is_robot()){
 	define('ROBOT_INCLUDED', TRUE);
+	if (!empty($_GET['fansub'])) {
+		$_POST['fansub']=$_GET['fansub'];
+	}
 	include("results.php");
 }
 ?>					</div>
 					<div class="loading-layout<?php echo !is_robot() ? '' : ' hidden'; ?>">
 						<div class="loading-spinner"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div>
-						<div class="loading-message">S’està carregant el catàleg sencer...</div>
+						<div class="loading-message">S’està carregant el catàleg...</div>
 					</div>
 					<div class="error-layout hidden">
 						<div class="error-icon"><i class="fa-3x fas fa-circle-exclamation"></i></div>

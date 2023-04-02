@@ -137,11 +137,11 @@ body {
 	background-position: center;
 }
 
-body.style-type-catalogue, body.style-type-news, body.style-type-teams {
+body.style-type-catalogue, body.style-type-news, body.style-type-groups {
 	background: rgb(var(--background-color-standard));
 }
 
-body.style-type-catalogue .section-title-main .header-with-background, body.style-type-news .section-title-main .header-with-background, body.style-type-teams .section-title-main .header-with-background {
+body.style-type-catalogue .section-title-main .header-with-background, body.style-type-news .section-title-main .header-with-background, body.style-type-groups .section-title-main .header-with-background {
 	background-color: rgb(var(--background-color-standard));
 }
 
@@ -220,7 +220,7 @@ a img {
 .social-link {
 	font-size: 3.6rem;
 	text-align: left;
-	transition: color var(--fast-animation-duration);	
+	transition: color var(--fast-animation-duration);
 	margin-right: 0.9rem;
 }
 
@@ -902,6 +902,14 @@ input[type='range']::-webkit-slider-thumb:active {
 
 	.telegram-link:hover {
 		color: #229ED9;
+	}
+
+	.discord-link:hover {
+		color: #7289da;
+	}
+
+	.web-link:hover {
+		color: rgb(var(--primary-color-hover));
 	}
 
 	.anon-avatar:hover {

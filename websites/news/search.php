@@ -47,33 +47,33 @@ $max_date = (($today_year - $start_year) * 12) + ($today_month - $start_month);
 <?php
 if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
 ?>
-								<option value="-1" selected>Tots (fins i tot llista negra)</option>
+								<option value="-1">Tots (fins i tot llista negra)</option>
 								<option value="-2">Tots (excepte llista negra)</option>
+								<option value="-3">Només notícies de Fansubs.cat</option>
 <?php
 } else {
 ?>
-								<option value="-1" selected>Tots els fansubs</option>
+								<option value="-1">Tots els fansubs</option>
+								<option value="-3">Notícies pròpies de Fansubs.cat</option>
 <?php
 }
-$result = query_all_fansubs_with_news();
+$result = query_all_fansubs_with_news($user);
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-								<option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+								<option value="<?php echo $row['slug']; ?>"<?php echo (!empty($_GET['fansub']) && $_GET['fansub']==$row['slug']) ? ' selected' : ''; ?>><?php echo $row['name']; ?></option>
 <?php
 }
 ?>
 							</select>
-							<label>Inclou-hi també...</label>
-							<div class="search-checkboxes">
-								<input id="news-search-include-own" type="checkbox" oninput="loadSearchResults(1);" checked>
-								<label for="news-search-include-own" class="for-checkbox">Notícies de Fansubs.cat</label>
-							</div>
 						</form>
 					</div>
 					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
 					<div class="results-layout news-search<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){
+	if (!empty($_GET['fansub'])) {
+		$_POST['fansub']=$_GET['fansub'];
+	}
 	include("results.php");
 }
 ?>					</div>

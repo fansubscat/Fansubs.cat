@@ -754,7 +754,7 @@ function query_related_series($user, $series_id, $series_author, $num_of_genres_
 	return query($final_query);
 }
 
-function query_search_filter($user, $text, $type, $subtype, $min_score, $max_score, $min_year, $max_year, $min_length, $max_length, $length_type, $ratings, $fansub_id, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $genres_included_ids, $genres_excluded_ids, $statuses) {
+function query_search_filter($user, $text, $type, $subtype, $min_score, $max_score, $min_year, $max_year, $min_length, $max_length, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $genres_included_ids, $genres_excluded_ids, $statuses) {
 	$text = str_replace(" ", "%", $text);
 	$text = escape($text);
 	$type = escape($type);
@@ -765,7 +765,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 	$max_year = intval($max_year);
 	$min_length = intval($min_length);
 	$max_length = intval($max_length);
-	$fansub_id = intval($fansub_id);
+	$fansub_slug = escape($fansub_slug);
 	//No need to escape $ratings, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $genres_included_ids, $genres_excluded_ids, $statuses: they come from code
 	$final_query = get_internal_catalogue_base_query_portion($user)."
 				AND s.type='$type'
@@ -781,7 +781,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 				AND ".get_internal_statuses_condition($statuses)."
 				AND ".($subtype=='all' ? "1" : "subtype='$subtype'")."
 				AND ".get_internal_length_condition($type, $length_type, $min_length, $max_length)."
-				AND ".($fansub_id>0 ? "v.id IN (SELECT DISTINCT sqvf.version_id FROM rel_version_fansub sqvf WHERE sqvf.fansub_id=$fansub_id)" : "1")."
+				AND ".(!empty($fansub_slug) ? "v.id IN (SELECT DISTINCT sqvf.version_id FROM rel_version_fansub sqvf LEFT JOIN fansub sqf ON sqvf.fansub_id=sqf.id WHERE sqf.slug='$fansub_slug')" : "1")."
 			GROUP BY s.id
 			ORDER BY s.name ASC";
 	return query($final_query);
@@ -799,7 +799,7 @@ function query_autocomplete($user, $text, $type) {
 	return query($final_query);
 }
 
-function query_all_fansubs_with_versions() {
+function query_all_fansubs_with_versions($user) {
 	$final_query = "SELECT DISTINCT f.*
 			FROM rel_version_fansub vf
 				LEFT JOIN fansub f ON vf.fansub_id=f.id
@@ -807,6 +807,7 @@ function query_all_fansubs_with_versions() {
 				LEFT JOIN series s ON v.series_id=s.id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
 				AND ".get_internal_hentai_condition()."
+				AND ".get_internal_blacklisted_fansubs_condition($user)."
 			ORDER BY f.name ASC";
 	return query($final_query);
 }

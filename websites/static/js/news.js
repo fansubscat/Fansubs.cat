@@ -11,10 +11,10 @@ function loadSearchResults(page) {
 		window.scrollTo(0, 0);
 	}
 	var query = $('#news-search-query').val();
+	history.replaceState(null, null, '/cerca'+(query!='' ? '/'+encodeURIComponent(query) : ''));
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
 		$('.loading-message').text('S’estan carregant les notícies...');
 	} else {
-		history.replaceState(null, null, '/cerca'+(query!='' ? '/'+encodeURIComponent(query) : ''));
 		$('.loading-message').text('S’estan carregant els resultats de la cerca...');
 	}
 
@@ -33,8 +33,7 @@ function loadSearchResults(page) {
 	var values = {
 		'min_month': selectedStartDate,
 		'max_month': selectedEndDate,
-		'fansub_id': $('#news-search-fansub').val(),
-		'hide_own_news': $('#news-search-include-own').is(':checked') ? 0 : 1
+		'fansub': $('#news-search-fansub').val()
 	};
 
 	lastSearchRequest = $.post({

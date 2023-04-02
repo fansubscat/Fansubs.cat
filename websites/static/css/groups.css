@@ -1,0 +1,203 @@
+:root {
+	--header-height-local: 4.2rem;
+}
+
+.style-type-groups .main-section {
+	width: calc(100% + var(--page-padding) + var(--page-padding));
+	margin-left: calc(0rem - var(--page-padding));
+	margin-right: calc(0rem - var(--page-padding));
+	justify-content: start;
+	flex-direction: row;
+}
+
+.groups-index {
+	width: 100%;
+}
+
+.fansubs-grouping {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 1.5rem;
+}
+
+.group {
+	background-color: rgb(var(--negative-color));
+	border-radius: 1.5rem;
+	padding: 2rem;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),0.2);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	width: calc((100% / 3) - (((3 - 1) / 3) * 1.5em));
+}
+
+.group-icon {
+	width: 10rem;
+	height: 10rem;
+	object-fit: cover;
+	border-radius: 1rem;
+}
+
+.group-info {
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	margin-left: 2rem;
+	font-size: 1.6rem;
+}
+
+.group-text {
+	text-align: left;
+	flex-grow: 1;
+	font-size: 1.6rem;
+	margin-top: 2rem;
+}
+
+.group-name {
+	font-family: "lexend_deca_bold", sans-serif;
+	text-align: left;
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 2.2rem;
+	/* For ellipsizing and max 2 lines */
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.group-content {
+	display: flex;
+	flex-direction: row;
+	margin: 0 -2rem -2rem -2rem;
+}
+
+.group-links {
+	margin-top: 0.5rem;
+	font-size: 2.5rem;
+}
+
+.content-button {
+	width: 25%;
+	padding: 1.5rem 0.2rem;
+	border-radius: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-top: 1.5rem;
+}
+
+.content-button + .content-button {
+	border-left: 1px solid rgb(var(--negative-color));
+}
+
+.disabled-content-button {
+	text-align: center;
+	font-weight: normal;
+	background: rgb(var(--neutral-color));
+	color: rgb(var(--always-positive-color));
+	font-size: 1.5rem;
+}
+
+.content-type {
+	text-transform: uppercase;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	width: 100%;
+}
+
+.content-quantity {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 2.2rem;
+}
+
+.group-text-wrapper {
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+
+.group-fansub {
+	display: flex;
+	align-items: center;
+}
+
+.group-fansub img {
+	width: 2rem;
+	height: 2rem;
+	border-radius: 0.4rem;
+}
+
+.group-readmore {
+	text-align: left;
+	margin-top: 1.5rem;
+}
+
+.group-blacklisted {
+	opacity: 0.4;
+}
+
+.group-blacklisted .group-icon {
+	filter: grayscale(1);
+}
+
+@media (max-width: 1200px){
+	.group {
+		flex-direction: column;
+		border-radius: 1rem;
+		padding: 1rem;
+		width: calc((100% / 2) - (((2 - 1) / 2) * 1.5em));
+	}
+
+	.group-content {
+		margin: 0 -1rem -1rem -1rem;
+	}
+
+	.group-info {
+		font-size: 1.4rem;
+	}
+
+	.group-text {
+		font-size: 1.4rem;
+		margin-top: 1rem;
+	}
+
+	.group-name {
+		font-size: 1.7rem;
+	}
+
+	.group-readmore {
+		text-align: center;
+		margin-top: 1rem;
+	}
+
+	.content-button {
+		margin-top: 1rem;
+		padding: 0.5rem 0.2rem;
+	}
+}
+
+@media (max-width: 920px){
+	.group {
+		width: 100%;
+	}
+
+	.fansubs-grouping {
+		gap: 1rem;
+	}
+}
+
+@media (max-width: 350px){
+	.content-button {
+		font-size: 1.2rem;
+	}
+
+	.content-quantity {
+		font-size: 1.6rem;
+	}
+}

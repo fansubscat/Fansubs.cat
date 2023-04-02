@@ -25,35 +25,35 @@ else{
 }
 
 $show_blacklisted_fansubs = FALSE;
-$show_own_news = TRUE;
+$show_own_news = FALSE;
 $text = NULL;
-$fansub_id = NULL;
+$fansub_slug = NULL;
 $min_month = '2003-05';
 $max_month = date('Y-m');
 
 if (defined('PAGE_IS_SEARCH')) {
 	$text = (isset($_GET['query']) ? $_GET['query'] : "");
 	$show_blacklisted_fansubs = TRUE;
-	if (!empty($_POST['fansub_id'])) {
-		if ($_POST['fansub_id']==-1) {
+	if (!empty($_POST['fansub'])) {
+		if ($_POST['fansub']=='-1') {
 			$show_blacklisted_fansubs = TRUE;
 		} else {
 			$show_blacklisted_fansubs = FALSE;
 		}
 	}
-	if (!empty($_POST['hide_own_news'])) {
-		$show_own_news = FALSE;
+	if (!empty($_POST['fansub']) && $_POST['fansub']=='-3') {
+		$show_own_news = TRUE;
 	}
 	if (isset($_POST['min_month']) && isset($_POST['max_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_POST['min_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_POST['max_month'])) {
 		$min_month = $_POST['min_month'];
 		$max_month = $_POST['max_month'];
 	}
-	if (isset($_POST['fansub_id']) && $_POST['fansub_id']>0) {
-		$fansub_id = intval($_POST['fansub_id']);
+	if (!empty($_POST['fansub']) && $_POST['fansub']!='-1' && $_POST['fansub']!='-2' && $_POST['fansub']!='-3') {
+		$fansub_slug = $_POST['fansub'];
 	}
 }
 
-$result = query_latest_news($user, $text, $page, 20, $fansub_id, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
+$result = query_latest_news($user, $text, $page, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
 
 ?>
 						<div class="section">
@@ -100,7 +100,7 @@ else{
 			$url = NULL;
 		}
 ?>
-											<a class="news-fansub"<?php $url!==NULL ? ' href="'.$url.'" target="_blank"' : ''; ?>><img src="<?php echo $row['fansub_id']!==NULL ? STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png' : '/favicon.png'; ?>" alt=""> <?php echo $row['fansub_name']; ?></a> • <span class="news-date" title="<?php echo date("d/m/Y \\a \\l\\e\\s H:i:s", strtotime($row['date'])); ?>"><?php echo relative_time(strtotime($row['date'])); ?></span>
+											<a class="news-fansub"<?php $url!==NULL ? ' href="'.$url.'" target="_blank"' : ''; ?>><img src="<?php echo $row['fansub_id']!==NULL ? STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png' : STATIC_URL.'/images/site/default_fansub.png'; ?>" alt=""> <?php echo $row['fansub_id']!==NULL ? $row['fansub_name'] : 'Fansubs.cat'; ?></a> • <span class="news-date" title="<?php echo date("d/m/Y \\a \\l\\e\\s H:i:s", strtotime($row['date'])); ?>"><?php echo relative_time(strtotime($row['date'])); ?></span>
 										</div>
 										<div class="news-text">
 											<!-- Begin article content -->
@@ -147,7 +147,7 @@ if ($page>1 && mysqli_num_rows($result)>0){
 mysqli_free_result($result);
 
 //Do the same query but for the next page, to know if it exists
-$result = query_latest_news($user, $text, $page+1, 20, $fansub_id, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
+$result = query_latest_news($user, $text, $page+1, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
 
 if (mysqli_num_rows($result)>0){
 ?>
