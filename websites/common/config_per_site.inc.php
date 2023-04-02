@@ -30,8 +30,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('SITE_BASE_URL', 'https://grupsv2.fansubs.cat');
 		define('SITE_TITLE', 'Grups | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
-		define('SITE_INTERNAL_NAME', 'teams');
-		define('SITE_INTERNAL_TYPE', 'teams');
+		define('SITE_INTERNAL_NAME', 'groups');
+		define('SITE_INTERNAL_TYPE', 'groups');
 		define('SITE_IS_CATALOGUE', FALSE);
 		break;
 	case 'mangav2.fansubs.cat':
@@ -84,8 +84,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'option_show_missing' => "Mostra els mangues amb algun capítol sense enllaç vàlid",
 		);*/
 		break;
-	case 'acciorealv2.fansubs.cat':
-		define('SITE_BASE_URL', 'https://acciorealv2.fansubs.cat');
+	case 'imatgerealv2.fansubs.cat':
+		define('SITE_BASE_URL', 'https://imatgerealv2.fansubs.cat');
 		define('SITE_TITLE', 'Imatge real en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’imatge real subtitulat pels fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'liveaction');

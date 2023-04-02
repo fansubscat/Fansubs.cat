@@ -3,12 +3,12 @@
     "short_name": "Manga - Fansubs.cat",
     "icons": [
         {
-            "src": "https://static.fansubs.cat/favicons/manga/android-chrome-192x192.png",
+            "src": "https://staticv2.fansubs.cat/favicons/manga/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "https://static.fansubs.cat/favicons/manga/android-chrome-512x512.png",
+            "src": "https://staticv2.fansubs.cat/favicons/manga/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
         }

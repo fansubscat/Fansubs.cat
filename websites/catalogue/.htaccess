@@ -43,10 +43,10 @@ RewriteRule ^images/manga/(.*)\.jpg$ migration.php?migration_type=tachiyomi_cach
 #OLD REDIRECTS: v2 preview images
 RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$
-RewriteRule ^images/portada.png$ https://static.fansubs.cat/various/portada_nota_premsa.png [R=301,L]
+RewriteRule ^images/portada.png$ https://staticv2.fansubs.cat/various/portada_nota_premsa.png [R=301,L]
 RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
 RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$
-RewriteRule ^images/serie.png$ https://static.fansubs.cat/various/serie_nota_premsa.png [R=301,L]
+RewriteRule ^images/serie.png$ https://staticv2.fansubs.cat/various/serie_nota_premsa.png [R=301,L]
 
 #Normal v5 pages
 RewriteRule ^preview/([^/]*)\.jpg$ preview_image.php?slug=$1 [L]
