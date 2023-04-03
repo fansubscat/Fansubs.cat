@@ -377,21 +377,29 @@ function initializeReader(fileId) {
 function initializePlayer(title, method, duration, sourceData){
 	currentVideoTitle = title;
 	currentSourceData = sourceData;
-	currentVideoDuration = duration
+	currentVideoDuration = duration;
 	var sources = JSON.parse(sourceData);
 	var start='<div class="player-popup">';
 	var end='</div>';
+	var sourceUrl;
 
-	if (method=='storage' && Date.now()-pageLoadedDate>=48*3600*1000) {
-		parsePlayerError('PAGE_TOO_OLD_ERROR');
-	} else if (player==null) {
-		$('#overlay-content').html(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered"></video>'+end);
+	if (enableDebug) {
+		sourceUrl = sources[0].url;
+	} else {
+		sourceUrl = sources[0].url+'?view_id='+currentViewId+'&file_id='+currentFileId;
 	}
 
+	//Kill Chromecast session if this can not be casted
 	if (method=='mega' && window.chrome && window.chrome.cast && window.cast) {
 		cast.framework.CastContext.getInstance().endCurrentSession(true);
 	}
-	if (player==null) {
+
+	//Check for link expiration
+	if (method=='storage' && Date.now()-pageLoadedDate>=48*3600*1000) {
+		parsePlayerError('PAGE_TOO_OLD_ERROR');
+	} else if (player==null) {
+		//First play: initialize player
+		$('#overlay-content').html(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered">'+(method=='mega' ? '' : ('<source type="video/mp4" src="'+new Option(sourceUrl).innerHTML+'"/>'))+'</video>'+end);
 		var options = {
 			controls: true,
 			language: 'ca',
@@ -434,7 +442,7 @@ function initializePlayer(title, method, duration, sourceData){
 				}
 			}
 		};
-		$('video').on('contextmenu', function(e) {
+		$('#player').on('contextmenu', function(e) {
 			e.preventDefault();
 		});
 
@@ -444,6 +452,12 @@ function initializePlayer(title, method, duration, sourceData){
 				this.currentSrc = function() {
 					return 'mega';
 				};
+			}
+		});
+
+		player.bigPlayButton.on('click', function(){
+			if (player.hasClass('vjs-casting') && player.hasClass('vjs-playing')) {
+				player.pause();
 			}
 		});
 
@@ -457,7 +471,8 @@ function initializePlayer(title, method, duration, sourceData){
 		player.on('ready', function(){
 			if ($('.player_extra_upper').length==0) {
 				$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentVideoTitle).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
-				$('<div class="player_extra_ended"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">Següent capítol:</div><div class="player_extra_ended_title">'+new Option(getNextVideoElement().attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><img src="'+getNextVideoElement().attr('data-thumbnail')+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
+				var nextVideo = getNextVideoElement();
+				$('<div class="player_extra_ended'+(nextVideo==null ? ' hidden' : '')+'"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">Següent capítol:</div><div class="player_extra_ended_title">'+new Option(nextVideo==null ? '' : nextVideo.attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><a onclick="playNextVideo();">Reprodueix-lo ara</a><img src="'+(nextVideo==null ? '' : nextVideo.attr('data-thumbnail'))+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
 				if (player.techName_=='Html5') {
 					setTimeout(function(){
 						if (player) {
@@ -470,7 +485,7 @@ function initializePlayer(title, method, duration, sourceData){
 		
 		player.on('playing', function(){
 			addLog('Playing');
-			clearInterval(playerEndedTimer);
+			hideEndCard();
 			playedMediaTimer = setInterval(function tick() {
 				if (player) {
 					playedMediaSeconds+=player.playbackRate();
@@ -483,23 +498,23 @@ function initializePlayer(title, method, duration, sourceData){
 			clearInterval(playedMediaTimer);
 		});
 		player.on('seeking', function(){
-			clearInterval(playerEndedTimer);
+			hideEndCard();
 		});
 		player.on('ended', function(){
 			addLog('Ended');
 			clearInterval(playedMediaTimer);
 			playerEndedMilliseconds = 0;
 			if (hasNextVideo()) {
+				$('.player_extra_ended')[0].style.display='flex';
 				playerEndedTimer = setInterval(function tick() {
 					if (player) {
 						playerEndedMilliseconds+=33;
-						$('.player_extra_ended_thumbnail div')[0].style.width=parseFloat(playerEndedMilliseconds/100000)*100+'%';
-						if (playerEndedMilliseconds>=100000) {
-							clearInterval(playerEndedTimer);
+						$('.player_extra_ended_thumbnail div')[0].style.width=parseFloat(playerEndedMilliseconds/15000)*100+'%';
+						if (playerEndedMilliseconds>=15100) {
 							playNextVideo();
 						}
 					} else {
-						clearInterval(playerEndedTimer);
+						hideEndCard();
 					}
 				}, 33);
 			}
@@ -516,11 +531,22 @@ function initializePlayer(title, method, duration, sourceData){
 			parsePlayerError((currentMethod=='mega' ? 'E_MEGA_PLAYER_ERROR' : 'E_DIRECT_PLAYER_ERROR')+': '+getPlayerErrorEvent());
 		});
 	} else {
-		//Player already active: finish last video and setup new video
+		//Player already initialized: reuse it and setup new video
+		player.src(sourceUrl);
 		$('.player_extra_title')[0].innerHTML=new Option(currentVideoTitle).innerHTML;
-		$('.player_extra_ended_title')[0].innerHTML=new Option(getNextVideoElement().attr('data-title-short')).innerHTML;
-		$('.player_extra_ended_thumbnail img')[0].src=getNextVideoElement().attr('data-thumbnail');
+		var nextVideo = getNextVideoElement();
+		if (nextVideo!=null) {
+			$('.player_extra_ended').removeClass('hidden');
+			$('.player_extra_ended_title')[0].innerHTML=new Option(getNextVideoElement().attr('data-title-short')).innerHTML;
+			$('.player_extra_ended_thumbnail img')[0].src=getNextVideoElement().attr('data-thumbnail');
+		} else {
+			$('.player_extra_ended').addClass('hidden');
+			$('.player_extra_ended_title')[0].innerHTML=new Option('').innerHTML;
+			$('.player_extra_ended_thumbnail img')[0].src='';
+		}
 	}
+
+	//Sync prev/next buttons
 	player.controlBar.removeChild('PrevButton');
 	player.controlBar.removeChild('NextButton');
 	player.controlBar.removeChild('PrevButtonDisabled');
@@ -532,11 +558,6 @@ function initializePlayer(title, method, duration, sourceData){
 	if (method=='mega') {
 		loadMegaStream(sources[0].url);
 	} else {
-		if (enableDebug) {
-			player.src(sources[0].url);
-		} else {
-			player.src(sources[0].url+(sources[0].url.includes('?') ? '&view_id=' : '?view_id=')+currentViewId+'&file_id='+currentFileId);
-		}
 		player.play();
 	}
 }
@@ -658,6 +679,7 @@ function shutdownVideoStreaming() {
 		streamer.destroy();
 		streamer = null;
 	}
+	hideEndCard();
 }
 
 function shutdownVideoPlayer() {
@@ -671,6 +693,14 @@ function shutdownVideoPlayer() {
 		player = null;
 	}
 	$('#overlay-content').html('');
+}
+
+function hideEndCard() {
+	clearInterval(playerEndedTimer);
+	if ($('.player_extra_ended').length>0) {
+		$('.player_extra_ended')[0].style.display='';
+		$('.player_extra_ended_thumbnail div')[0].style.width='0%';
+	}
 }
 
 function showAlert(title, message, showRefresh=false) {
@@ -1402,8 +1432,8 @@ $(document).ready(function() {
 			$("#tachiyomi-message").attr('style','display: none;');
 		}
 
+		history.replaceState(null, null, window.location.pathname);
 		if ($('#autoopen_file_id').length>0 && $('#autoopen_file_id').val()!='') {
-			history.replaceState(null, null, window.location.pathname);
 			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
 			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}

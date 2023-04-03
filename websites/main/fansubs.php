@@ -1,12 +1,14 @@
 <?php
-define('PAGE_STYLE_TYPE', 'groups');
+define('PAGE_TITLE', 'Llista de fansubs en català');
+define('PAGE_PATH', '/llista-de-fansubs');
+define('PAGE_STYLE_TYPE', 'fansubs');
 require_once("../common.fansubs.cat/header.inc.php");
 require_once("common.inc.php");
 require_once("queries.inc.php");
 ?>
-					<div class="groups-index">
+					<div class="fansubs-index">
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Grups actius</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Fansubs actius</h2>
 <?php
 $result = query_fansubs($user, 1);
 
@@ -27,7 +29,7 @@ else{
 							</div>
 						</div>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Grups històrics</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Fansubs històrics</h2>
 <?php
 $result = query_fansubs($user, 0);
 

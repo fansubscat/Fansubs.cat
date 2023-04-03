@@ -26,14 +26,6 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('SITE_INTERNAL_TYPE', 'users');
 		define('SITE_IS_CATALOGUE', FALSE);
 		break;
-	case 'grupsv2.fansubs.cat':
-		define('SITE_BASE_URL', 'https://grupsv2.fansubs.cat');
-		define('SITE_TITLE', 'Grups | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
-		define('SITE_INTERNAL_NAME', 'groups');
-		define('SITE_INTERNAL_TYPE', 'groups');
-		define('SITE_IS_CATALOGUE', FALSE);
-		break;
 	case 'mangav2.fansubs.cat':
 		define('SITE_BASE_URL', 'https://mangav2.fansubs.cat');
 		define('SITE_TITLE', 'Manga en català | Fansubs.cat');

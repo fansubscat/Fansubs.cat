@@ -137,7 +137,7 @@ body {
 	background-position: center;
 }
 
-body.style-type-catalogue, body.style-type-news, body.style-type-groups {
+body.style-type-catalogue, body.style-type-news, body.style-type-fansubs {
 	background: rgb(var(--background-color-standard));
 }
 

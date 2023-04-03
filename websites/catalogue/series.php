@@ -24,7 +24,7 @@ if (SITE_IS_HENTAI) {
 	define('PAGE_TITLE', $series['name']);
 }
 
-define('PAGE_PATH', '/'.$series['slug'].(isset($_GET['v']) ? '?v='.(int)$_GET['v'] : ''));
+define('PAGE_PATH', '/'.$series['slug']);
 define('PAGE_DESCRIPTION', strip_tags($synopsis));
 define('PAGE_IMAGE_PREVIEW', BASE_URL.(SITE_IS_HENTAI ? '/hentai' : '').'/preview/'.$series['slug'].'.jpg');
 

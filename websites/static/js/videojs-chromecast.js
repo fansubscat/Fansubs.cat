@@ -6150,7 +6150,7 @@ module.exports = function (videojs) {
         if (!this._hasPlayedAnyItem) {
           return this.videojsPlayer.duration();
         }
-        return this._remotePlayer.duration;
+        return window.currentVideoDuration ? window.currentVideoDuration : this._remotePlayer.duration;
       }
 
       /**
@@ -6743,9 +6743,9 @@ var ChromecastTechUI = /*#__PURE__*/function () {
         coverEl = this._createElement('div', 'vjs-tech-chromecast-cover'),
         iconEl = this._createElement('div', 'vjs-tech-chromecast-icon fab fa-chromecast'),
         titleEl = this._createElement('div', 'vjs-tech-chromecast-title');
-      iconEl.style = "font-size: 8em; margin-top: 0.1em; z-index: 1;";
+      iconEl.style = "font-size: 4em; margin-top: 4em; z-index: 1;";
       titleEl.style = "font-size: 1.6em; z-index: 1;";
-      titleEl.innerHTML = "S'està emetent";
+      titleEl.innerHTML = "S’està emetent";
       el.appendChild(coverEl);
       el.appendChild(iconEl);
       el.appendChild(titleEl);
@@ -6899,7 +6899,7 @@ var ChromecastTechUI = /*#__PURE__*/function () {
     value: function updateCoverImage(imageUrl) {
       var imageEl = this._findImageEl();
       if (imageUrl) {
-        imageEl.style = "width: 100%; height: 100%; position: absolute; background: url('" + imageUrl + "'); background-position: center; background-size: cover; filter: blur(5px) brightness(50%);";
+        imageEl.style = "width: 100%; height: 100%; position: absolute; background: url('" + imageUrl + "'); background-position: center; background-size: cover; filter: blur(10px) brightness(50%);";
       } else {
         imageEl.style = "width: 100%; height: 100%; position: absolute; background: black;";
       }

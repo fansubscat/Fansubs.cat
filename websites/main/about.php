@@ -6,7 +6,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="text-page">
 						<h2 class="section-title"><i class="fa fa-fw fa-users"></i> Qui som?</h2>
-						<div class="section-content">Un «fansub» és un grup de persones que té l’afició de subtitular productes audiovisuals o traduir i editar còmics en la seva llengua de manera altruista.</div>
+						<div class="section-content">Un «fansub» és un grup d’una o més persones amb l’afició de subtitular productes audiovisuals o traduir i editar còmics en la seva llengua de manera altruista.</div>
 						<div class="section-content new-paragraph">Fansubs.cat és un projecte sorgit dels esforços conjunts dels principals fansubs en català. El nostre únic objectiu és potenciar el consum de contingut de l’Àsia Oriental en català, tot permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.</div>
 						<div class="section-content new-paragraph">El web és un recull de tot el contingut publicat pels diferents fansubs en català. No en valorem la qualitat ni hi fem cap correcció, per tant, sigues conscient que algunes obres poden tenir una qualitat inferior a l’esperada. Si no et satisfà algun fansub en concret, el pots afegir a la teva llista negra personal per a amagar-ne el contingut.</div>
 						<h2 class="section-title"><i class="fa fa-fw fa-comment-dots"></i> Declaració de principis</h2>
@@ -18,7 +18,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 						<div class="section-content new-paragraph">Alguns fansubs hem explorat vies per a aconseguir editar el material de manera oficial, però no és viable sense una forta inversió en el sector per part dels ens públics. Per aquest motiu, hem decidit fer aquesta feina com bonament podem: durant el nostre temps lliure i de manera completament altruista. El material que trobaràs recollit en aquest portal n’és el resultat.</div>
 						<div class="section-content new-paragraph">Desitgem de tot cor que gaudeixis del nostre contingut, i ens alegrarà molt que ens en facis arribar comentaris.</div>
 						<h2 class="section-title"><i class="fa fa-fw fa-envelope-open-text"></i> Contacte</h2>
-						<div class="section-content">Pots contactar amb nosaltres fent servir el botó de la part inferior de la pàgina. Si vols contactar amb un fansub en concret, pots fer-ho mitjançant el seu lloc web o les seves xarxes socials.</div>
+						<div class="section-content">Pots contactar amb nosaltres fent servir el botó de la part inferior de la pàgina. Si vols contactar amb un fansub en concret, pots fer-ho mitjançant el seu lloc web o les seves xarxes socials, que trobaràs a la fitxa de cada contingut o a l’apartat de fansubs.</div>
 					</div>
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");

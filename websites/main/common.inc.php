@@ -1,11 +1,11 @@
 <?php
 function print_fansub($row) {
 ?>
-								<div class="group<?php echo !empty($row['is_blacklisted']) ? ' group-blacklisted' : ''; ?>">
-									<div class="group-text-wrapper">
-										<img class="group-icon" src="<?php echo STATIC_URL.'/images/icons/'.$row['id'].'.png'; ?>" alt=""> <?php echo $row['fansub_name']; ?></a>
-										<div class="group-info">
-											<h3 class="group-name"><?php echo $row['name']; ?><?php echo !empty($row['is_blacklisted']) ? ' <span class="fa fa-fw fa-ban" title="Aquest grup és a la teva llista negra. Pots eliminar-l’en a la configuració d’usuari."></span>' : ''; ?></h3>
+								<div class="fansub<?php echo !empty($row['is_blacklisted']) ? ' fansub-blacklisted' : ''; ?>">
+									<div class="fansub-text-wrapper">
+										<img class="fansub-icon" src="<?php echo STATIC_URL.'/images/icons/'.$row['id'].'.png'; ?>" alt=""> <?php echo $row['fansub_name']; ?></a>
+										<div class="fansub-info">
+											<h3 class="fansub-name"><?php echo $row['name']; ?><?php echo !empty($row['is_blacklisted']) ? ' <span class="fa fa-fw fa-ban" title="Aquest grup és a la teva llista negra. Pots eliminar-l’en a la configuració d’usuari."></span>' : ''; ?></h3>
 <?php
 	if (!empty($row['url']) && empty($row['archive_url'])) {
 		$url = $row['url'];
@@ -15,11 +15,11 @@ function print_fansub($row) {
 		$url = NULL;
 	}
 ?>
-											<div class="group-links">
+											<div class="fansub-links">
 <?php
 	if ($url!=NULL){
 ?>
-												<a class="fa fa-fw fa-earth-europe web-link" href="<?php echo $row['url']; ?>" target="_blank"></a>
+												<a class="fa fa-fw fa-earth-europe web-link" href="<?php echo $url; ?>" target="_blank"></a>
 <?php
 	}
 ?>
@@ -47,7 +47,7 @@ function print_fansub($row) {
 											</div>
 										</div>
 									</div>
-									<div class="group-content">
+									<div class="fansub-content">
 <?php
 	if ($row['total_anime']>0 && empty($row['is_blacklisted'])) {
 ?>

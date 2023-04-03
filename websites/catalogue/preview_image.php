@@ -123,7 +123,7 @@ mysqli_free_result($result);
 
 if (empty($failed)) {
 	$id = $series['id'];
-	if (TRUE) {//!file_exists(STATIC_DIRECTORY."/social/series_v5_".$id.".jpg") || filemtime(STATIC_DIRECTORY."/social/series_v5_".$id.".jpg")<(date('U')-3600*8)) {
+	if (TRUE) { //!file_exists(STATIC_DIRECTORY."/social/series_".$id.".jpg") || filemtime(STATIC_DIRECTORY."/social/series_".$id.".jpg")<(date('U')-3600*8)) {
 		$result = query_version_data_for_preview_image_by_series_id($id);
 		$versions = array();
 		while ($version = mysqli_fetch_assoc($result)) {
@@ -248,12 +248,12 @@ if (empty($failed)) {
 			imagefttext($image, 17, 0, TEXT_MARGIN+28, $current_height, $white, FONT_REGULAR, get_text_without_missing_glyphs($text));
 			$current_fansub_line++;
 		}
-		imagejpeg($image, STATIC_DIRECTORY."/social/series_v5_".$id.".jpg", 80);
+		imagejpeg($image, STATIC_DIRECTORY."/social/series_".$id.".jpg", 80);
 		imagedestroy($image);
 	}
 
 	header('Content-Type: image/jpeg');
-	readfile(STATIC_DIRECTORY."/social/series_v5_".$id.".jpg");
+	readfile(STATIC_DIRECTORY."/social/series_".$id.".jpg");
 } else {
 	echo "Aquest element no existeix.";
 }
