@@ -3,7 +3,7 @@ function print_fansub($row) {
 ?>
 								<div class="fansub<?php echo !empty($row['is_blacklisted']) ? ' fansub-blacklisted' : ''; ?>">
 									<div class="fansub-text-wrapper">
-										<img class="fansub-icon" src="<?php echo STATIC_URL.'/images/icons/'.$row['id'].'.png'; ?>" alt=""> <?php echo $row['fansub_name']; ?></a>
+										<img class="fansub-icon" src="<?php echo STATIC_URL.'/images/icons/'.$row['id'].'.png'; ?>" alt="">
 										<div class="fansub-info">
 											<h3 class="fansub-name"><?php echo $row['name']; ?><?php echo !empty($row['is_blacklisted']) ? ' <span class="fa fa-fw fa-ban" title="Aquest grup és a la teva llista negra. Pots eliminar-l’en a la configuració d’usuari."></span>' : ''; ?></h3>
 <?php

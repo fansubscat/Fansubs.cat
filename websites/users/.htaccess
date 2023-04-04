@@ -16,6 +16,7 @@ RewriteCond %{REQUEST_URI} !do_register\.php
 RewriteCond %{REQUEST_URI} !do_forgot_password\.php
 RewriteCond %{REQUEST_URI} !do_reset_password\.php
 RewriteCond %{REQUEST_URI} !do_save_site_theme\.php
+RewriteCond %{REQUEST_URI} !do_save_to_my_list\.php
 RewriteCond %{REQUEST_URI} !error\.php
 RewriteRule \.php$ - [F]
 

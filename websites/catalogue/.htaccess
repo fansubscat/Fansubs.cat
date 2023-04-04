@@ -5,7 +5,6 @@ ErrorDocument 403 /error.php?code=403
 #Hide internal files
 RewriteCond %{THE_REQUEST} ^(.+)\.php(\?\S*)?\ HTTP/ [NC]
 RewriteCond %{REQUEST_URI} !autocomplete\.php
-RewriteCond %{REQUEST_URI} !do_save_to_my_list\.php
 RewriteCond %{REQUEST_URI} !error\.php
 RewriteCond %{REQUEST_URI} !counter\.php
 RewriteCond %{REQUEST_URI} !reader\.php

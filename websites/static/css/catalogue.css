@@ -1,15 +1,9 @@
 :root {
 	--header-height-local: 4.2rem;
-	--carousel-element-width: 21.2rem;
-	--carousel-element-height: 33.5rem;
-	--thumbnail-margin: 0.5rem;
-	--thumbnail-text-height: 3.5rem;
-	--carousel-scaling: 1.25;
 	--chapter-carousel-element-width: 21.2rem;
 	--chapter-carousel-element-height: 16.75rem;
 	--chapter-thumbnail-title-height: 1.6rem;
 	--chapter-thumbnail-subtitle-height: 1.6rem;
-	--thumbnail-transition-delay: 0.5s;
 }
 
 /* Header */
@@ -163,12 +157,6 @@
 	text-overflow: ellipsis;
 }
 
-.catalogue {
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-}
-
 .error-icon {
 	color: rgb(var(--error-color));
 }
@@ -256,7 +244,7 @@
 	display: none;
 	position: absolute;
 	height: 100%;
-	width: 24rem;
+	width: 32rem;
 	z-index: 1;
 	right: 4rem;
 	bottom: 8rem;
@@ -267,13 +255,14 @@
 .player_extra_ended_header {
 	font-family: "lexend_deca_bold", sans-serif;
 	text-align: left;
-	font-size: 1.6em;
+	font-size: 1.8em;
 	line-height: 1.2;
+	margin-bottom: 0.2em;
 }
 
 .player_extra_ended_title {
 	text-align: left;
-	font-size: 1.5em;
+	font-size: 1.6em;
 	margin-bottom: 0.4em;
 	line-height: 1.2;
 	text-overflow: ellipsis;
@@ -1203,296 +1192,6 @@
 	white-space: nowrap;
 }
 
-.thumbnail-outer {
-	display: flex;
-	flex-direction: column;
-	width: var(--carousel-element-width);
-	height: var(--carousel-element-height);
-	max-width: var(--carousel-element-width);
-	max-height:  var(--carousel-element-height);
-	position: relative;
-	margin: var(--thumbnail-margin);
-	perspective: 100rem;
-	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
-	background-color: rgb(var(--negative-color));
-	border-radius: 0.4rem;
-}
-
-.thumbnail {
-	display: flex;
-	position: relative;
-	transition: transform var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
-	width: 100%; 
-	height: calc(100% - var(--thumbnail-text-height));
-	z-index: 1; /*remove this to have free hovering*/
-	transform-style: preserve-3d;
-}
-
-.thumbnail .image-link {
-	width: 100%; 
-	height: 100%;
-	position: absolute;
-	backface-visibility: hidden;
-}
-
-.thumbnail img {
-	display: block;
-	width: 100%; 
-	height: 100%;
-	object-fit: cover;
-	border-radius: 0.4rem;
-	transform: scale(1.0000001); /* Avoids weird flicker on Chrome when using img with object-fit: cover and scaling */
-	transition: border-radius var(--fast-animation-duration) ease;
-	transition-delay: 0s;
-}
-
-.thumbnail-outer .title {
-	width: 100%;
-	padding-left: 0.5rem;
-	padding-right: 0.5rem;
-	font-size: 1.45rem;
-	text-align: center;
-	line-height: 1.15;
-	height: var(--thumbnail-text-height);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.thumbnail-outer .title .ellipsized-title {
-	/* For ellipsizing and max 2 lines */
-	text-overflow: ellipsis;
-	overflow: hidden;
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-}
-
-.thumbnail.floating-info-right {
-	flex-direction: row;
-}
-
-.thumbnail.floating-info-left {
-	flex-direction: row-reverse;
-}
-
-.thumbnail .floating-info {
-	height: var(--carousel-element-height);
-	max-height: var(--carousel-element-height);
-	min-height: var(--carousel-element-height);
-	width: var(--carousel-element-width); 
-	max-width: var(--carousel-element-width);
-	min-width: var(--carousel-element-width);
-	opacity: 1;
-	transform: rotateY(-180deg);
-	position: absolute;
-	z-index: -1; /* to hide behind the image (z-index unset) */
-	backface-visibility: hidden;
-}
-
-.thumbnail .clickable-thumbnail {
-	height: var(--carousel-element-height);
-	max-height: var(--carousel-element-height);
-	min-height: var(--carousel-element-height);
-	width: var(--carousel-element-width); 
-	max-width: var(--carousel-element-width);
-	min-width: var(--carousel-element-width);
-	opacity: 0;
-	position: absolute;
-}
-
-.thumbnail-clicked {
-	z-index: 99;
-	filter: drop-shadow(0 0 0.8rem rgba(var(--always-negative-color),var(--drop-shadow-transparency-menu)));
-}
-
-.thumbnail-clicked .thumbnail {
-	transform: scale(var(--carousel-scaling)) rotateY(180deg);
-}
-
-.thumbnail-clicked .clickable-thumbnail, .thumbnail-clicked .image-link {
-	pointer-events: none;
-}
-
-.thumbnail .floating-info-main {
-	display: flex;
-	flex-direction: column;
-	background-color: rgb(var(--negative-color));
-	height: calc(100% - var(--thumbnail-text-height));
-	overflow: hidden;
-}
-
-.floating-info .status-indicator{
-	opacity: 1 !important;
-	left: 1rem !important;
-	top: 0.8rem !important;
-	transition: none !important;
-}
-
-.floating-info-bookmark.fas{
-	color: rgb(var(--secondary-color));
-	position: absolute;
-	font-size: 2rem;
-	right: 0.4rem;
-	top: 0.8rem;
-	cursor: pointer;
-}
-
-.floating-info-bookmark.far{
-	color: rgb(var(--positive-color));
-	position: absolute;
-	font-size: 2rem;
-	right: 0.4rem;
-	top: 0.8rem;
-	cursor: pointer;
-}
-
-.floating-info-title {
-	font-family: "lexend_deca_bold", sans-serif;
-	font-size: 1.45rem;
-	padding: 0 1rem;
-	margin-top: 2.8rem;
-	width: 100%;
-	line-height: 1.15;
-	/* For ellipsizing and max 2 lines */
-	text-overflow: ellipsis;
-	overflow: hidden;
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-}
-
-.floating-info-fansub {
-	font-family: "lexend_deca_light", sans-serif;
-	font-size: 1.2rem;
-	padding: 0 1rem;
-	margin-top: 0.4rem;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	line-height: 1.15;
-}
-
-.floating-info-synopsis-wrapper {
-	flex-grow: 1;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.floating-info-synopsis {
-	font-family: "lexend_deca_light", sans-serif;
-	font-size: 1.15rem;
-	opacity: 0.75;
-	padding: 0 1rem;
-	line-height: 1.15;
-	text-align: left;
-	/* For ellipsizing and max 8 lines */
-	text-overflow: ellipsis;
-	overflow: hidden;
-	display: -webkit-box;
-	-webkit-line-clamp: 7;
-	-webkit-box-orient: vertical;
-}
-
-.floating-info-watch-now {
-	font-family: "lexend_deca_bold", sans-serif;
-	border-radius: 0.6rem;
-	padding: 0.25rem 1rem;
-	font-size: 1.15rem;
-	background: rgb(var(--positive-color));
-	white-space: nowrap;
-	text-transform: uppercase;
-	display: inline-block;
-	color: rgb(var(--negative-color));
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.floating-info-divisions {
-	font-family: "lexend_deca_bold", sans-serif;
-	font-size: 1.2rem;
-	padding: 0 1rem;
-	margin-top: 0.9rem;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.floating-info-genres-score-wrapper {
-	display: flex;
-	flex-direction: row;
-	margin-top: 1rem;
-	margin-bottom: 0.7rem;
-	align-items: end;
-}
-
-.floating-info-genres-wrapper {
-	flex-grow: 1;
-	font-family: "lexend_deca_light", sans-serif;
-	font-size: 1rem;
-	line-height: 1.15;
-	padding: 0 1rem;
-	height: 3.5rem;
-	display: flex;
-	align-items: end;
-}
-
-.floating-info-genres {
-	text-align: left;
-	/* For ellipsizing and max 3 lines */
-	text-overflow: ellipsis;
-	overflow: hidden;
-	display: -webkit-box;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-}
-
-.floating-info-score {
-	font-family: "lexend_deca_bold", sans-serif;
-	font-size: 2.7rem;
-	padding: 0 1rem 0 0;
-	line-height: 1;
-}
-
-.status-indicator {
-	border: 0.1rem solid rgb(var(--always-positive-color));
-	width: 1.2rem;
-	height: 1.2rem;
-	border-radius: 99rem;
-}
-
-.thumbnail .status-indicator {
-	position: absolute;
-	top: 0.4rem;
-	left: 0.4rem;
-	transition: opacity var(--fast-animation-duration) ease;
-	transition-delay: 0s;
-	opacity: 1;
-	z-index: 2;
-	backface-visibility: hidden;
-}
-
-.status-completed .status-indicator {
-	background: green;
-}
-
-.status-in-progress .status-indicator {
-	background: yellow;
-}
-
-.status-partially-completed .status-indicator {
-	background: greenyellow;
-}
-
-.status-cancelled .status-indicator {
-	background: red;
-}
-
-.status-abandoned .status-indicator {
-	background: coral;
-}
-
 .search-status .status-indicator {
 	display: inline-block;
 	width: 1.4rem;
@@ -1584,96 +1283,6 @@
 		filter: opacity(0.5);
 	}
 
-	.floating-info-watch-now:hover {
-		background: rgb(var(--positive-color-button-hover));
-	}
-
-	/* Disable clicking the clickable section */
-	.thumbnail .clickable-thumbnail {
-		pointer-events: none;
-	}
-
-	/* These go here because if the primary pointing device can hover, we want to do this, but if it can't, we don't want to do this EVER */
-	.thumbnail-outer {
-		perspective: unset;
-	}
-
-	.thumbnail {
-		transition: transform var(--fast-animation-duration) ease, z-index var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
-		transition-delay: 0s;
-	}
-
-	.thumbnail:hover {
-		transition-delay: var(--thumbnail-transition-delay);
-	}
-
-	.thumbnail .status-indicator {
-		backface-visibility: unset;
-		transition-delay: 0s;
-	}
-
-	.thumbnail:hover .status-indicator {
-		transition-delay: var(--thumbnail-transition-delay);
-	}
-
-	.thumbnail .image-link {
-		backface-visibility: unset;
-	}
-
-	.thumbnail .floating-info {
-		backface-visibility: unset;
-		transform: none;
-		opacity: 0;
-		transition: height var(--fast-animation-duration) ease-out, max-height var(--fast-animation-duration) ease-out, min-height var(--fast-animation-duration) ease-out, width var(--fast-animation-duration) ease-out, max-width var(--fast-animation-duration) ease-out, min-width var(--fast-animation-duration) ease-out, opacity var(--fast-animation-duration) ease-out, z-index var(--fast-animation-duration) ease-out, transform var(--fast-animation-duration) ease-out;
-		transition-delay: 0s;
-	}
-
-	.thumbnail:hover .floating-info {
-		transition-delay: var(--thumbnail-transition-delay);
-	}
-
-	.thumbnail:hover {
-		transform: scale(var(--carousel-scaling));
-		z-index: 9999; /*to go above other carousel elements (z-index 1)*/
-	}
-
-	.thumbnail.floating-info-right:hover {
-		filter: drop-shadow(0em 0em 0.65rem rgba(var(--always-negative-color),0.8));
-	}
-
-	.thumbnail.floating-info-left:hover {
-		filter: drop-shadow(0em 0em 0.65rem rgba(var(--always-negative-color),0.8));
-	}
-
-	.thumbnail.floating-info-right:hover img {
-		border-radius: 0.4rem 0 0 0.4rem;
-		transition-delay: var(--thumbnail-transition-delay);
-	}
-
-	.thumbnail.floating-info-left:hover img {
-		border-radius: 0 0.4rem 0.4rem 0;
-		transition-delay: var(--thumbnail-transition-delay);
-	}
-
-	.thumbnail.floating-info-right:hover .floating-info {
-		transform: translateX(99%);
-		border-radius: 0 0.4rem 0.4rem 0;
-	}
-
-	.thumbnail.floating-info-left:hover .floating-info {
-		transform: translateX(-99%);
-		border-radius: 0.4rem 0 0 0.4rem;
-	}
-
-	.thumbnail:hover .floating-info {
-		opacity: 1;
-		transform: translateX(0%);
-	}
-
-	.thumbnail:hover .status-indicator {
-		opacity: 0;
-	}
-
 	.continue-watching-thumbnail .image-link .fansubs {
 		opacity: 0;
 	}
@@ -1737,10 +1346,6 @@
 }
 
 @media (max-width: 1200px){
-	.catalogue {
-		justify-content: center;
-	}
-
 	.user-login {
 		min-width: 4rem;
 		padding: 0.75rem 0.75rem;
@@ -1879,82 +1484,6 @@
 		padding-left: 0.3rem;
 		padding-right: 0.3rem;
 		font-size: 0.87rem;
-	}
-
-	.thumbnail-outer .title {
-		padding-left: 0.25rem;
-		padding-right: 0.25rem;
-		font-size: 0.87rem;
-		line-height: 1.15;
-	}
-
-	.thumbnail .status-indicator {
-		top: 0.2rem;
-		left: 0.2rem;
-	}
-
-	.status-indicator {
-		width: 1rem;
-		height: 1rem;
-		border: 0.005rem solid rgb(var(--always-positive-color));
-	}
-
-	.floating-info .status-indicator {
-		left: 0.4rem !important;
-		top: 0.4rem !important;
-	}
-
-	.floating-info-bookmark.fas, .floating-info-bookmark.far {
-		font-size: 1.3rem;
-		right: 0;
-		top: 0.3rem;
-	}
-
-	.floating-info-title {
-		font-size: 1rem;
-		padding: 0 0.5rem;
-		margin-top: 1.4rem;
-	}
-
-	.floating-info-fansub {
-		font-size: 0.8rem;
-		padding: 0 0.5rem;
-		margin-top: 0.2rem;
-	}
-
-	.floating-info-synopsis {
-		font-size: 0.9rem;
-		padding: 0 0.5rem;
-		-webkit-line-clamp: 5;
-	}
-
-	.floating-info-watch-now {
-		border-radius: 0.3rem;
-		padding: 0.2rem 0.75rem;
-		font-size: 1rem;
-	}
-
-	.floating-info-divisions {
-		font-size: 0.9rem;
-		padding: 0 0.5rem;
-		margin-top: 0.4rem;
-	}
-
-	.floating-info-genres-score-wrapper {
-		margin-top: 0.6rem;
-		margin-bottom: 0.3rem;
-		align-items: end;
-	}
-
-	.floating-info-genres-wrapper {
-		font-size: 0.8rem;
-		padding: 0 0.5rem;
-		height: 2.5rem;
-	}
-
-	.floating-info-score {
-		font-size: 1.6rem;
-		padding: 0 0.5rem 0 0;
 	}
 
 	.recommendation {

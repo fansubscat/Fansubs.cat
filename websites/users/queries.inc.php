@@ -1,5 +1,7 @@
 <?php
 require_once("../common.fansubs.cat/db.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
+require_once("../common.fansubs.cat/queries.inc.php");
 
 // SELECT
 
@@ -8,6 +10,17 @@ function query_user_by_email($email) {
 	$final_query = "SELECT *
 			FROM user
 			WHERE email='$email_escaped'";
+	return query($final_query);
+}
+
+function query_my_list_by_type($user, $type, $hentai) {
+	$type = escape($type);
+	$final_query = get_internal_catalogue_base_query_portion($user, FALSE)."
+				AND s.type='$type'
+				AND ".($hentai ? "s.rating='XXX'" : "s.rating<>'XXX'")."
+				AND s.id IN (SELECT usl.series_id FROM user_series_list usl WHERE usl.user_id=${user['id']})
+			GROUP BY s.id
+			ORDER BY s.name ASC";
 	return query($final_query);
 }
 

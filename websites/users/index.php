@@ -6,8 +6,8 @@ if (empty($user)) {
 	die();
 }
 
-define('PAGE_TITLE', 'Perfil d’usuari: '.$user['username']);
-define('PAGE_STYLE_TYPE', 'text');
+define('PAGE_TITLE', 'El meu perfil');
+define('PAGE_STYLE_TYPE', 'users');
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>

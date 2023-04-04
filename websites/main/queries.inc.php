@@ -4,7 +4,7 @@ require_once("../common.fansubs.cat/common.inc.php");
 
 // INTERNAL
 
-function get_internal_blacklisted_fansubs_condition($user) {
+function get_internal_blacklisted_fansubs_condition_main($user) {
 	if (!empty($user)) {
 		$blacklisted_fansubs_condition = "f.id IN (
 							SELECT ufbl.fansub_id
@@ -28,7 +28,7 @@ function query_fansubs($user, $status) {
 	$status = intval($status);
 	$final_query = "SELECT *
 			FROM (SELECT f.*,
-					IF(".get_internal_blacklisted_fansubs_condition($user).", 1, 0) is_blacklisted,
+					IF(".get_internal_blacklisted_fansubs_condition_main($user).", 1, 0) is_blacklisted,
 					(SELECT COUNT(DISTINCT v.series_id)
 						FROM rel_version_fansub vf
 						LEFT JOIN version v ON vf.version_id=v.id

@@ -154,6 +154,13 @@ a.forgot-password {
 	width: 30%;
 }
 
+.style-type-users .main-section {
+	width: calc(100% + var(--page-padding) + var(--page-padding));
+	margin-left: calc(0rem - var(--page-padding));
+	margin-right: calc(0rem - var(--page-padding));
+	justify-content: start;
+}
+
 @media (hover: hover) {
 	.login-close:hover {
 		filter: drop-shadow(0 0 0.4rem rgba(var(--positive-color), 0.5));

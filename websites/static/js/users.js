@@ -311,3 +311,17 @@ function resetPassword() {
 	return false;
 }
 
+function bookmarkRemoved(seriesId) {
+	var elements = $('.thumbnail[data-series-id='+seriesId+']');
+	for (element of elements) {
+		$(element.parentNode).addClass('thumbnail-removed');
+		$(element.parentNode).on('transitionend', function(e){
+			var listParent = $(this.parentNode.parentNode.parentNode);
+			if (listParent.find('.thumbnail-outer:not(.thumbnail-removed)').length==0) {
+				listParent.find('.section-empty').removeClass('hidden');
+				listParent.find('.catalogue').addClass('hidden');
+			}
+		});
+	}
+}
+

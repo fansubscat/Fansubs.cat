@@ -1,6 +1,5 @@
 <?php
 require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("libraries/parsedown.inc.php");
 require_once("common.inc.php");
 
 validate_hentai();
@@ -26,7 +25,7 @@ if (SITE_IS_HENTAI) {
 
 define('PAGE_PATH', '/'.$series['slug']);
 define('PAGE_DESCRIPTION', strip_tags($synopsis));
-define('PAGE_IMAGE_PREVIEW', BASE_URL.(SITE_IS_HENTAI ? '/hentai' : '').'/preview/'.$series['slug'].'.jpg');
+define('PAGE_IMAGE_PREVIEW', SITE_BASE_URL.(SITE_IS_HENTAI ? '/hentai' : '').'/preview/'.$series['slug'].'.jpg');
 
 define('PAGE_IS_SERIES', TRUE);
 
