@@ -3,9 +3,6 @@ require_once(dirname(__FILE__)."/user_init.inc.php");
 require_once(dirname(__FILE__)."/common.inc.php");
 
 define('IS_FOOLS_DAY', date('d')==28 && date('m')==12);
-if (!defined('SITE_IS_HENTAI')) {
-	define('SITE_IS_HENTAI', !empty($_GET['hentai']));
-}
 /*if (PAGE_STYLE_TYPE=='main' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') {
 	define('SITE_THEME', 'dark');
 	define('SITE_THEME_FORCED', TRUE);
@@ -19,7 +16,7 @@ else */if (!empty($user)) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="ca" class="theme-<?php echo SITE_THEME; ?><?php echo SITE_IS_HENTAI ? ' subtheme-hentai' : ''; ?>">
+<html lang="ca" class="theme-<?php echo SITE_THEME; ?><?php echo SITE_IS_HENTAI ? ' subtheme-hentai' : ''; ?><?php echo SITE_IS_HENTAI && empty($_COOKIE['hentai_warning_accepted']) ? ' page-no-overflow' : ''; ?>">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +24,7 @@ else */if (!empty($user)) {
 if (SITE_IS_HENTAI) {
 ?>
 		<meta name="theme-color" content="#d91883">
-		<meta name="rating" content="adult">
+		<meta name="rating" content="RTA-5042-1996-1400-1577-RTA">
 <?php
 } else {
 ?>
@@ -36,6 +33,7 @@ if (SITE_IS_HENTAI) {
 }
 ?>
 		<meta name="referrer" content="origin">
+		<meta name="base_url" content="<?php echo SITE_BASE_URL; ?>">
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="msapplication-TileColor" content="#da532c">
 		<meta name="msapplication-config" content="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/browserconfig.xml">
@@ -246,20 +244,24 @@ if (PAGE_STYLE_TYPE=='login') {
 	if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 			<div data-nosnippet id="overlay" class="hidden">
-				<a id="overlay-close" style="display: none;"><span class="fa fa-times"></span></a>
 				<div id="overlay-content"></div>
 			</div>
-			<div data-nosnippet id="alert-overlay" class="hidden flex">
-				<div id="alert-overlay-content">
-					<h2 class="section-title" id="alert-title">S’ha produït un error</h2>
-					<div id="alert-message">S’ha produït un error desconegut.</div>
-					<div id="alert-buttonbar">
-						<button id="alert-refresh-button" class="hidden">Actualitza</button>
-						<button id="alert-ok-button">D’acord</button>
+<?php
+		if (SITE_IS_HENTAI && empty($_COOKIE['hentai_warning_accepted'])) {
+?>
+			<div data-nosnippet id="warning-overlay" class="flex">
+				<div id="warning-overlay-content">
+					<h2 id="warning-title">Avís important: contingut per a adults</h2>
+					<div id="warning-message">Aquest web permet veure contingut que sols és apte per a majors de 18 anys i que pot incloure representacions de comportaments o d’actituds intolerables a la vida real. Només hi pots accedir si ets major de 18 anys.</div>
+					<div id="warning-buttonbar">
+						<button id="warning-ok-button" class="normal-button" onclick="acceptHentaiWarning();">Sóc major d’edat i hi vull entrar</button>
+						<button id="warning-close-button" class="normal-button" onclick="window.location.href='<?php echo MAIN_URL; ?>';">No hi entris, torna a Fansubs.cat</button>
 					</div>
+					<div id="warning-post-explanation">Per a evitar que hi hagi menors que puguin accedir a aquest web amb el teu dispositiu, pots instal·lar-hi un programa de control parental que filtri els webs etiquetats per a adults. Tots els apartats per a adults del nostre web estan etiquetats adequadament i aquests filtres hi impediran l’accés.</div>
 				</div>
 			</div>
 <?php
+		}
 	}
 ?>
 			<div class="main-body">
@@ -273,7 +275,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 	} else {
 ?>
-					<a class="logo-small" href="<?php echo MAIN_URL; ?>" title="Torna a la pàgina d’inici de Fansubs.cat">
+					<a class="logo-small" href="<?php echo SITE_IS_HENTAI ? SITE_BASE_URL : MAIN_URL; ?>" title="Torna a la pàgina d’inici<?php echo !SITE_IS_HENTAI ? " de Fansubs.cat" : ""; ?>">
 						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
 <?php
 		if (PAGE_STYLE_TYPE=='catalogue' && SITE_IS_HENTAI) {
@@ -294,9 +296,9 @@ if (PAGE_STYLE_TYPE=='login') {
 		if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 					<div class="catalogues-navigation">
-						<a href="<?php echo ANIME_URL.(SITE_IS_HENTAI ? '/hentai' : ''); ?>"<?php echo CATALOGUE_ITEM_TYPE=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
+						<a href="<?php echo (SITE_IS_HENTAI ? HENTAI_ANIME_URL : ANIME_URL); ?>"<?php echo CATALOGUE_ITEM_TYPE=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
 						<span class="catalogues-separator">|</span>
-						<a href="<?php echo MANGA_URL.(SITE_IS_HENTAI ? '/hentai' : ''); ?>"<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
+						<a href="<?php echo (SITE_IS_HENTAI ? HENTAI_MANGA_URL : MANGA_URL); ?>"<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
 <?php
 			if (!SITE_IS_HENTAI) {
 ?>
@@ -313,10 +315,9 @@ if (PAGE_STYLE_TYPE=='login') {
 ?>
 					<div class="separator">
 <?php
-	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH') && !defined('PAGE_IS_SERIES') && CATALOGUE_ITEM_TYPE!='liveaction' && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
-		if (!SITE_IS_HENTAI) {
+	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH') && !defined('PAGE_IS_SERIES') && CATALOGUE_ITEM_TYPE!='liveaction' && !SITE_IS_HENTAI && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
 ?>
-						<a class="hentai-button" href="/hentai<?php echo defined('PAGE_IS_SEARCH') ? '/cerca' : ''; ?>" title="Vés a l’apartat de hentai">
+						<a class="hentai-button" href="<?php echo CATALOGUE_ITEM_TYPE=='anime' ? HENTAI_ANIME_URL : HENTAI_MANGA_URL; ?>" title="Vés a l’apartat de hentai">
 							<span class="fa-stack" style="vertical-align: top;">
 								<i class="fa-solid fa-fw fa-pepper-hot fa-stack-2x"></i>
 								<i class="fa-solid fa-fw fa-plus fa-stack-1x"></i>
@@ -325,17 +326,16 @@ if (PAGE_STYLE_TYPE=='login') {
 							</span>
 						</a>
 <?php
-		} else {
+	} else if (SITE_IS_HENTAI) {
 ?>
-						<a class="hentai-button" href="<?php echo defined('PAGE_IS_SEARCH') ? '/cerca' : '/'; ?>" title="Vés al contingut general">
+						<a class="hentai-button" href="<?php echo CATALOGUE_ITEM_TYPE=='anime' ? ANIME_URL : MANGA_URL; ?>" title="Vés al contingut general">
 							<i class="fa-solid fa-fw fa-house-chimney fa-2x"></i>
 						</a>
 <?php
-		}
 	}
 	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH')) {
 ?>
-						<a class="filter-button" href="<?php echo SITE_IS_HENTAI ? '/hentai' : ''; ?>/cerca" title="Filtra i mostra tot el catàleg">
+						<a class="filter-button" href="<?php echo SITE_BASE_URL; ?>/cerca" title="Filtra i mostra tot el catàleg">
 							<span class="fa-stack" style="vertical-align: top;">
 								<i class="fa-solid fa-fw fa-grip fa-stack-2x"></i>
 								<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>
@@ -403,7 +403,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 	if (!defined('SITE_THEME_FORCED')) {
 ?>
-								<a class="theme-button" onclick="toggleSiteTheme();"><i class="fa fa-fw fa-circle-half-stroke"></i> <span class="theme-button-text"><?php echo (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') ? 'Canvia al tema fosc' : 'Canvia al tema clar'; ?></span></a>
+								<a class="theme-button" onclick="toggleSiteTheme();"><i class="fa fa-fw fa-circle-half-stroke"></i> <span class="theme-button-text"><?php echo SITE_THEME=='light' ? 'Canvia al tema fosc' : 'Canvia al tema clar'; ?></span></a>
 <?php
 	}
 ?>

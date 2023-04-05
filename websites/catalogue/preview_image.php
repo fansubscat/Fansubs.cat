@@ -2,7 +2,7 @@
 require_once('../common.fansubs.cat/db.inc.php');
 require_once('common.inc.php');
 require_once('queries.inc.php');
-require_once('libraries/linebreaks4imagettftext.php');
+require_once('../common.fansubs.cat/libraries/linebreaks4imagettftext.php');
 define('IMAGE_WIDTH', 1200);
 define('IMAGE_HEIGHT', 628);
 define('COVER_WIDTH', 444);

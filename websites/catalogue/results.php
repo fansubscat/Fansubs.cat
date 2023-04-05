@@ -298,11 +298,11 @@ foreach($sections as $section){
 		if (mysqli_num_rows($result)==0){ //Default search case ('static'), because other types are filtered out
 			if ($is_full_catalogue && (mysqli_num_rows($sections[$i+1]['result'])>0 || mysqli_num_rows($sections[$i+2]['result'])>0)) {
 ?>
-					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap <?php echo CATALOGUE_ITEM_STRING_SINGULAR; ?> per a aquesta cerca, però hi ha altres continguts que hi coincideixen. Els tens a continuació.</div></div>
+					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap <?php echo CATALOGUE_ITEM_STRING_SINGULAR; ?> per a aquesta cerca.<br>A continuació hi ha altres continguts que hi coincideixen.</div></div>
 <?php
 			} else {
 ?>
-					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap contingut per a aquesta cerca. Prova de reduir la cerca o fes-ne una altra.</div></div>
+					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap contingut per a aquesta cerca.<br>Prova de reduir la cerca o fes-ne una altra.</div></div>
 <?php
 			}
 		} else {

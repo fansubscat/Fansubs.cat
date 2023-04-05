@@ -92,7 +92,7 @@ foreach($sections as $section){
 	$result = $section['result'];
 	while ($i<$max_elements && $row = mysqli_fetch_assoc($result)){
 ?>
-						<a class="autocomplete-item" href="<?php echo ($row['type']=='liveaction' ? LIVEACTION_URL : ($row['type']=='anime' ? ANIME_URL : MANGA_URL)).'/'.($row['rating']=='XXX' ? 'hentai/' : '').$row['slug']; ?>">
+						<a class="autocomplete-item" href="<?php echo get_base_url_from_type_and_rating($row['type'],$row['rating']).'/'.$row['slug']; ?>">
 							<?php echo '<img class="autocomplete-image" src="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'">'; ?>
 							<div class="autocomplete-data">
 								<div class="autocomplete-name"><?php echo htmlspecialchars($row['name']); ?></div>
@@ -106,7 +106,7 @@ foreach($sections as $section){
 }
 if ($max_elements<$total_elements) {
 ?>
-						<a class="autocomplete-item autocomplete-more" href="<?php echo SITE_BASE_URL.'/'.(SITE_IS_HENTAI ? 'hentai/' : '').'cerca/'.urlencode($_GET['query']); ?>">Mostra tots els resultats (<?php echo $total_elements; ?>) <i class="fa fa-fw fa-arrow-right"></i></a>
+						<a class="autocomplete-item autocomplete-more" href="<?php echo SITE_BASE_URL.'/'.'cerca/'.urlencode($_GET['query']); ?>">Mostra tots els resultats (<?php echo $total_elements; ?>) <i class="fa fa-fw fa-arrow-right"></i></a>
 <?php
 } else if ($total_elements==0) {
 ?>

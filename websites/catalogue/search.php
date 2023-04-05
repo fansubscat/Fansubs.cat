@@ -6,11 +6,7 @@ require_once("queries.inc.php");
 
 validate_hentai();
 
-if (SITE_IS_HENTAI) {
-	define('PAGE_TITLE', 'Resultats de la cerca | Hentai');
-} else {
-	define('PAGE_TITLE', 'Resultats de la cerca');
-}
+define('PAGE_TITLE', 'Resultats de la cerca');
 
 if (is_robot()) {
 	define('PAGE_EXTRA_BODY_CLASS', 'has-search-results');
@@ -18,14 +14,14 @@ if (is_robot()) {
 
 $_GET['query']=str_replace('%2F', '/', isset($_GET['query']) ? $_GET['query'] : '');
 
-define('PAGE_PATH', (SITE_IS_HENTAI ? '/hentai' : '').'/cerca'.(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
+define('PAGE_PATH', SITE_PATH.'/cerca'.(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
 define('PAGE_IS_SEARCH', TRUE);
 define('SKIP_FOOTER', TRUE);
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="search-layout">
-						<input class="search-base-url" type="hidden" value="<?php echo SITE_IS_HENTAI ? '/hentai/cerca' : '/cerca'; ?>">
+						<input class="search-base-url" type="hidden" value="<?php echo SITE_PATH.'/cerca'; ?>">
 						<div class="search-filter-title">Filtres del catàleg</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>

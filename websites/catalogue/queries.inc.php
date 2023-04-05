@@ -192,6 +192,17 @@ function query_manga_series_data_from_series_with_old_piwigo_id($old_piwigo_id) 
 	return query($final_query);
 }
 
+function query_series_data_from_slug_and_type($slug, $type) {
+	$slug = escape($slug);
+	$type = escape($type);
+	$final_query = "SELECT s.slug,
+				s.rating
+			FROM series s
+			WHERE s.type='$type'
+				AND s.slug='$slug'";
+	return query($final_query);
+}
+
 function query_series_data_for_preview_image_by_slug($slug) {
 	$slug = escape($slug);
 	$final_query = "SELECT s.*,

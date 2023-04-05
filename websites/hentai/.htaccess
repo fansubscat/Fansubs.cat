@@ -1,0 +1,11 @@
+RewriteEngine on
+ErrorDocument 404 /error.php?code=404
+ErrorDocument 403 /error.php?code=403
+
+#Hide internal files
+RewriteCond %{THE_REQUEST} ^(.+)\.php(\?\S*)?\ HTTP/ [NC]
+RewriteCond %{REQUEST_URI} !error\.php
+RewriteRule \.php$ - [F]
+
+#By default, redirect to the anime subdomain
+RewriteRule ^$ /anime [L]

@@ -41,7 +41,7 @@ function isEmbedPage(){
 function getReaderSource(file_id){
 	var start='<div class="white-popup"><div style="display: flex; height: 100%;">';
 	var end='</div></div>';
-	return start+'<iframe style="flex-grow: 1;" frameborder="0" src="/reader.php?file_id='+file_id+(isEmbedPage() && (window.self==window.top) ? '&hide_close=1' : '')+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>'+end;
+	return start+'<iframe style="flex-grow: 1;" frameborder="0" src="'+getBaseUrl()+'/reader.php?file_id='+file_id+(isEmbedPage() && (window.self==window.top) ? '&hide_close=1' : '')+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>'+end;
 }
 
 function sendReadEndAjax(){
@@ -49,7 +49,7 @@ function sendReadEndAjax(){
 		clearInterval(reportTimer);
 		if (!enableDebug) {
 			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
+			xmlHttp.open("GET", getBaseUrl()+'/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
 			xmlHttp.send(null);
 		} else {
 			console.debug('Would have requested: /counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
@@ -66,7 +66,7 @@ function sendReadEndBeacon(){
 	if (currentFileId!=-1){
 		clearInterval(reportTimer);
 		if (!enableDebug) {
-			navigator.sendBeacon('/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
+			navigator.sendBeacon(getBaseUrl()+'/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
 		} else {
 			console.debug('Would have requested: /counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
 		}
@@ -106,7 +106,7 @@ function beginVideoTracking(fileId, method){
 	playedMediaSeconds=0;
 	if (!enableDebug) {
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "/counter.php?view_id="+currentViewId+"&file_id="+currentFileId+"&method="+currentMethod+"&action=open", true);
+		xhr.open("GET", getBaseUrl()+"/counter.php?view_id="+currentViewId+"&file_id="+currentFileId+"&method="+currentMethod+"&action=open", true);
 		xhr.send(null);
 	} else {
 		console.debug('Would have requested: /counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method="+currentMethod+"&action=open");
@@ -114,7 +114,7 @@ function beginVideoTracking(fileId, method){
 	reportTimer = setInterval(function tick() {
 		if (!enableDebug) {
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", "/counter.php?view_id="+currentViewId+"&file_id="+currentFileId+"&method="+currentMethod+"&action=notify&time_spent="+Math.floor(playedMediaSeconds), true);
+			xhr.open("POST", getBaseUrl()+"/counter.php?view_id="+currentViewId+"&file_id="+currentFileId+"&method="+currentMethod+"&action=notify&time_spent="+Math.floor(playedMediaSeconds), true);
 			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			xhr.send("log="+encodeURIComponent(loggedMessages));
 		} else {
@@ -132,7 +132,7 @@ function beginReaderTracking(fileId){
 	currentReadStartTime=Math.floor(new Date().getTime()/1000);
 	if (!enableDebug) {
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", '/counter.php?view_id='+currentViewId+'&file_id='+fileId+"&method=reader&action=open", true);
+		xmlHttp.open("GET", getBaseUrl()+'/counter.php?view_id='+currentViewId+'&file_id='+fileId+"&method=reader&action=open", true);
 		xmlHttp.send(null);
 	} else {
 		console.debug('Would have requested: /counter.php?view_id='+currentViewId+"&file_id="+currentFileId+"&method=reader&action=open");
@@ -163,7 +163,7 @@ function reportErrorToServer(error_type, error_text){
 			}
 			if (!enableDebug) {
 				var xhr = new XMLHttpRequest();
-				xhr.open("POST", '/report_error.php', true);
+				xhr.open("POST", getBaseUrl()+'/report_error.php', true);
 				xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 				xhr.send("file_id="+currentFileId+"&location="+playerTime+"&type="+encodeURIComponent(error_type)+"&text="+encodeURIComponent(error_text));
 			} else {
@@ -180,7 +180,7 @@ function sendVideoTrackingEndAjax(){
 		clearInterval(reportTimer);
 		if (!enableDebug) {
 			var xhr = new XMLHttpRequest();
-			xhr.open("POST", "/counter.php?view_id="+currentViewId+"&file_id="+currentFileId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds), true);
+			xhr.open("POST", getBaseUrl()+"/counter.php?view_id="+currentViewId+"&file_id="+currentFileId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds), true);
 			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			xhr.send("log="+encodeURIComponent(loggedMessages));
 		} else {
@@ -195,7 +195,7 @@ function sendVideoTrackingEndBeacon(){
 		if (!enableDebug) {
 			var formData = new FormData();
 			formData.append("log", loggedMessages);
-			navigator.sendBeacon('/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds), formData);
+			navigator.sendBeacon(getBaseUrl()+'/counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds), formData);
 		} else {
 			console.debug('Would have requested: /counter.php?view_id='+currentViewId+'&file_id='+currentFileId+"&method="+currentMethod+"&action=close&time_spent="+Math.floor(playedMediaSeconds));
 		}
@@ -703,22 +703,6 @@ function hideEndCard() {
 	}
 }
 
-function showAlert(title, message, showRefresh=false) {
-	if (document.fullscreenElement) {
-		document.exitFullscreen();
-	}
-	$('#alert-overlay').removeClass('hidden');
-	$('#alert-title').text(title);
-	$('#alert-message').text(message);
-	if (showRefresh) {
-		$('#alert-refresh-button').removeClass('hidden');
-		$('#alert-ok-button').text('Ignora');
-	} else {
-		$('#alert-refresh-button').addClass('hidden');
-		$('#alert-ok-button').text('D\'acord');
-	}
-}
-
 function closeOverlay() {
 	addLog('Closed');
 	shutdownVideoPlayer();
@@ -818,7 +802,7 @@ function removeFromContinueWatching(element, fileId){
 	};
 
 	$.post({
-		url: "/do_remove_from_continue_watching.php",
+		url: getBaseUrl()+"/do_remove_from_continue_watching.php",
 		data: values,
 		xhrFields: {
 			withCredentials: true
@@ -968,7 +952,7 @@ function loadSearchResults() {
 	};
 
 	lastSearchRequest = $.post({
-		url: ($('.catalogues-explicit-category').length>0 ? '/hentai' : '')+"/results.php?search=1&query="+encodeURIComponent($('#catalogue-search-query').val()),
+		url: getBaseUrl()+"/results.php?search=1&query="+encodeURIComponent($('#catalogue-search-query').val()),
 		data: values,
 		xhrFields: {
 			withCredentials: true
@@ -995,7 +979,7 @@ function loadAutocompleteResults() {
 	}
 
 	lastAutocompleteRequest = $.post({
-		url: ($('.catalogues-explicit-category').length>0 ? '/hentai' : '')+"/autocomplete.php?query="+encodeURIComponent($('#search_query').val().trim()),
+		url: getBaseUrl()+"/autocomplete.php?query="+encodeURIComponent($('#search_query').val().trim()),
 		xhrFields: {
 			withCredentials: true
 		},
@@ -1014,7 +998,7 @@ function loadCatalogueIndex() {
 	$('.error-layout').addClass('hidden');
 	$('.results-layout').addClass('hidden');
 	$.post({
-		url: ($('.catalogues-explicit-category').length>0 ? '/hentai' : '')+"/results.php",
+		url: getBaseUrl()+"/results.php",
 		data: [],
 		xhrFields: {
 			withCredentials: true
@@ -1139,6 +1123,12 @@ function initializeSearchAutocomplete() {
 	});
 }
 
+function acceptHentaiWarning() {
+	Cookies.set('hentai_warning_accepted', '1', cookieOptions);
+	$('#warning-overlay').remove();
+	$('html').removeClass('page-no-overflow');
+}
+
 $(document).ready(function() {
 	const Button = videojs.getComponent('Button');
 
@@ -1240,17 +1230,6 @@ $(document).ready(function() {
 			initializeCarousels();
 		}
 	}
-
-	$('#overlay-close').click(function(){
-		sendReadEndAjax();
-		if (!isEmbedPage()) {
-			$('#overlay-content').html('');
-			$('#overlay').addClass('hidden');
-			$('html').removeClass('page-no-overflow');
-		} else {
-			window.parent.postMessage('embedClosed', '*');
-		}
-	});
 	if (!isEmbedPage()) {
 		$(".manga-reader").click(function(){
 			$('html').addClass('page-no-overflow');
@@ -1350,12 +1329,6 @@ $(document).ready(function() {
 			$('[id^=show_fansub_]').each(function(){
 				$(this).prop('checked',false);
 			});
-		});
-		$('#alert-ok-button').click(function(){
-			$('#alert-overlay').addClass('hidden');
-		});
-		$('#alert-refresh-button').click(function(){
-			window.location.reload();
 		});
 		$('.select-genre').click(function(){
 			$('.select-genre').removeClass('select-genre-selected');
@@ -1507,6 +1480,11 @@ $(document).ready(function() {
 			initializePlayer($('#data-title').val(), $('#data-method').val(), $('#data-duration').val(), atob($('#data-sources').val()));
 		}
 		window.parent.postMessage('embedInitialized', '*');
+
+		$('#overlay-close').click(function(){
+			sendReadEndAjax();
+			window.parent.postMessage('embedClosed', '*');
+		});
 	}
 
 	$(window).on('unload', function() {

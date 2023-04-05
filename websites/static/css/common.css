@@ -36,6 +36,8 @@
 	--is-hovering-device: 0;
 	--always-positive-color: 255, 255, 255;
 	--always-negative-color: 0, 0, 0;
+	--always-primary-color: 106, 160, 248;
+	--always-primary-color-hover: 76, 130, 218;
 	--primary-color: 106, 160, 248;
 	--primary-color-hover: 76, 130, 218;
 	--secondary-color: 249, 192, 43;
@@ -689,8 +691,12 @@ h2.section-title:first-of-type {
 	flex-direction: column;
 }
 
-.search-layout ~ .results-layout .section:nth-of-type(1) {
+.search-layout ~ .results-layout .footer {
 	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: end;
+	align-items: center;
 }
 
 .search-layout label {
@@ -741,7 +747,7 @@ h2.section-title:first-of-type {
 }
 
 .search-checkboxes input[type="checkbox"] {
-	background-color: rgb(var(--negative-color));
+	background-color: rgb(var(--always-positive-color));
 	appearance: none;
 	margin: 0;
 	font-size: 1.6rem;
@@ -761,7 +767,7 @@ h2.section-title:first-of-type {
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
 	content: '\f00c' !important;
-	color: rgb(var(--negative-color));
+	color: rgb(var(--always-positive-color));
 }
 
 .search-checkboxes input[type="checkbox"]:checked {
@@ -1261,7 +1267,7 @@ input[type='range']::-webkit-slider-thumb:active {
 	}
 
 	.error-page a:hover {
-		background-color: rgb(var(--secondary-color-hover));
+		color: rgb(var(--secondary-color-hover));
 		text-decoration: underline;
 	}
 

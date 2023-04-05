@@ -7,6 +7,10 @@ var cookieOptions = {
 	domain: ".fansubs.cat"
 };
 
+function getBaseUrl() {
+	return $('meta[name="base_url"]').attr('content');
+}
+
 function addValidation(elementId, text){
 	$('#'+elementId).addClass('invalid');
 	$('#'+elementId+'_validation').text(text);

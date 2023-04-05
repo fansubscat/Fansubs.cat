@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require_once("db.inc.php");
+require_once("queries.inc.php");
 
 $migration_type = (!empty($_GET['migration_type']) ? $_GET['migration_type'] : 'piwigo');
 
@@ -70,6 +70,29 @@ if ($migration_type=='piwigo') {
 	$series_id = (!empty($_GET['id']) ? intval($_GET['id']) : 0)+1000;
 	header("HTTP/1.1 301 Moved Permanently");
 	header("Location: ".STATIC_URL."/images/covers/".$series_id.".jpg");
+} else if ($migration_type=='v4_slug') {
+	$series_slug = (!empty($_GET['id']) ? $_GET['id'] : '');
+	$type = (!empty($_GET['type']) ? $_GET['type'] : '');
+	$result = query_series_data_from_slug_and_type($series_slug, $type);
+	if ($row = mysqli_fetch_assoc($result)) {
+		if ($row['rating']!='XXX') {
+			header("HTTP/1.1 301 Moved Permanently");
+			header("Location: /".$row['slug']);
+			mysqli_free_result($result);
+		} else if ($type=='manga') {
+			header("HTTP/1.1 301 Moved Permanently");
+			header("Location: ".HENTAI_MANGA_URL."/".$row['slug']);
+			mysqli_free_result($result);
+		} else {
+			header("HTTP/1.1 301 Moved Permanently");
+			header("Location: ".HENTAI_ANIME_URL."/".$row['slug']);
+			mysqli_free_result($result);
+		}
+	} else {
+		http_response_code(404);
+		include('error.php');
+		die(); //Avoids error because mysqli is already closed
+	}
 }
 
 ob_flush();

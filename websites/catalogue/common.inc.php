@@ -16,39 +16,20 @@ const REGEXP_STORAGE='/^storage:\/\/.*/';
 
 function validate_hentai() {
 	global $user;
-
-	if (!defined('SITE_IS_HENTAI')) {
-		define('SITE_IS_HENTAI', !empty($_GET['hentai']));
-	}
-
-	if (SITE_IS_HENTAI) {
-		if (empty($user) && !is_robot()) {
-			header("Location: ".USERS_URL."/inicia-la-sessio");
-			die();
-		} else if (!is_robot() && !is_adult()) {
-			$_GET['hentai']=0;
-			$_GET['code']=403;
-			http_response_code(403);
-			include('error.php');
-			die();
-		}
+	if (SITE_IS_HENTAI && !empty($user) && !is_adult()) {
+		$_GET['code']=403;
+		http_response_code(403);
+		include('error.php');
+		die();
 	}
 }
 
 function validate_hentai_ajax() {
 	global $user;
-
-	if (!defined('SITE_IS_HENTAI')) {
-		define('SITE_IS_HENTAI', !empty($_GET['hentai']));
-	}
-
-	if (SITE_IS_HENTAI) {
-		if ((empty($user) && !is_robot()) || (!is_robot() && !is_adult())) {
-			$_GET['hentai']=0;
-			$_GET['code']=403;
-			http_response_code(403);
-			die();
-		}
+	if (SITE_IS_HENTAI && !empty($user) && !is_adult()) {
+		$_GET['code']=403;
+		http_response_code(403);
+		die();
 	}
 }
 
@@ -361,7 +342,7 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 		$results = query("SELECT s.* FROM episode e LEFT JOIN series s ON e.series_id=s.id WHERE e.id=${row['linked_episode_id']}");
 		$series = mysqli_fetch_assoc($results);
 		mysqli_free_result($results);
-		$resultv=query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>$default_fansub_id, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']})");
+		$resultv=query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']})");
 		$version = mysqli_fetch_assoc($resultv);
 		$fansub_names = $version['fansub_name'];
 		mysqli_free_result($resultv);
@@ -571,7 +552,7 @@ function print_chapter_item($row) {
 ?>
 	<div class="continue-watching-thumbnail-outer">
 		<div class="continue-watching-thumbnail">
-			<a class="image-link" href="/<?php echo (SITE_IS_HENTAI ? 'hentai/' : '').$row['series_slug']."?f=".$row['file_id']; ?>">
+			<a class="image-link" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug']."?f=".$row['file_id']; ?>">
 				<div class="fansubs"><?php echo get_continue_watching_fansub_info($row['fansub_info'], $row['version_id']); ?></div>
 				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'; ?>" alt="">
 				<span class="progress" style="width: <?php echo $row['progress_percent']*100; ?>%;"></span>

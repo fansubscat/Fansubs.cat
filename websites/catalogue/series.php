@@ -17,15 +17,10 @@ define('PAGE_STYLE_TYPE', 'catalogue');
 $Parsedown = new Parsedown();
 $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
-if (SITE_IS_HENTAI) {
-	define('PAGE_TITLE', $series['name'].' | Hentai');
-} else {
-	define('PAGE_TITLE', $series['name']);
-}
-
+define('PAGE_TITLE', $series['name']);
 define('PAGE_PATH', '/'.$series['slug']);
 define('PAGE_DESCRIPTION', strip_tags($synopsis));
-define('PAGE_IMAGE_PREVIEW', SITE_BASE_URL.(SITE_IS_HENTAI ? '/hentai' : '').'/preview/'.$series['slug'].'.jpg');
+define('PAGE_PREVIEW_IMAGE', SITE_BASE_URL.'/preview/'.$series['slug'].'.jpg');
 
 define('PAGE_IS_SERIES', TRUE);
 
