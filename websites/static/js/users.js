@@ -314,12 +314,15 @@ function resetPassword() {
 function bookmarkRemoved(seriesId) {
 	var elements = $('.thumbnail[data-series-id='+seriesId+']');
 	for (element of elements) {
-		$(element.parentNode).addClass('thumbnail-removed');
-		$(element.parentNode).on('transitionend', function(e){
-			var listParent = $(this.parentNode.parentNode.parentNode);
+		$(element).parent().addClass('thumbnail-removed');
+		$(element).parent().on('transitionend', function(e){
+			var listParent = $(this).parent().parent().parent();
+			var sectionParent = listParent.parent();
 			if (listParent.find('.thumbnail-outer:not(.thumbnail-removed)').length==0) {
-				listParent.find('.section-empty').removeClass('hidden');
-				listParent.find('.catalogue').addClass('hidden');
+				listParent.remove();
+			}
+			if (sectionParent.find('.section:not(.empty-list)').length==0) {
+				$('.section.empty-list').removeClass('hidden');
 			}
 		});
 	}

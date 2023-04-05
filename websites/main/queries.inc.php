@@ -16,7 +16,7 @@ function get_internal_blacklisted_fansubs_condition_main($user) {
 		if (count($cookie_blacklisted_fansub_ids)>0) {
 			$blacklisted_fansubs_condition = "f.id IN (".implode(',',$cookie_blacklisted_fansub_ids).")";
 		} else {
-			$blacklisted_fansubs_condition = "1";
+			$blacklisted_fansubs_condition = "0";
 		}
 	}
 	return $blacklisted_fansubs_condition;

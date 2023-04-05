@@ -6,11 +6,11 @@ define('IS_FOOLS_DAY', date('d')==28 && date('m')==12);
 if (!defined('SITE_IS_HENTAI')) {
 	define('SITE_IS_HENTAI', !empty($_GET['hentai']));
 }
-if (PAGE_STYLE_TYPE=='main' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') {
+/*if (PAGE_STYLE_TYPE=='main' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') {
 	define('SITE_THEME', 'dark');
 	define('SITE_THEME_FORCED', TRUE);
 }
-else if (!empty($user)) {
+else */if (!empty($user)) {
 	define('SITE_THEME', $user['site_theme']==1 ? 'light' : 'dark');
 } else if (!empty($_COOKIE['site_theme']) && $_COOKIE['site_theme']=='light') {
 	define('SITE_THEME', 'light');
@@ -394,7 +394,7 @@ if (PAGE_STYLE_TYPE=='login') {
 	if (!empty($user)) {
 ?>
 								<a href="<?php echo USERS_URL; ?>"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
-								<a href="<?php echo USERS_URL.'/la-meva-llista'; ?>"><i class="fa fa-fw fa-list-ul"></i> La meva llista</a>
+								<a href="<?php echo USERS_URL.'/la-meva-llista'; ?>"><i class="fa fa-fw fa-bookmark"></i> La meva llista</a>
 								<hr class="dropdown-separator-secondary">
 <?php
 	}

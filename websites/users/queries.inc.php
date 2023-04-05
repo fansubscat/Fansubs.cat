@@ -24,6 +24,11 @@ function query_my_list_by_type($user, $type, $hentai) {
 	return query($final_query);
 }
 
+function query_my_list_total_items($user) {
+	$final_query = "SELECT COUNT(*) cnt FROM user_series_list usl WHERE usl.user_id=${user['id']}";
+	return query($final_query);
+}
+
 // INSERT
 
 function query_insert_registered_user($username, $password_hash, $email, $birthdate) {

@@ -753,24 +753,26 @@
 	left: 0;
 	z-index: 1;
 	color: rgb(var(--positive-color));
-	font-size: 2rem;
+	font-size: 1.6rem;
 	margin-left: 5rem;
 	margin-top: 1.5rem;
 	padding-left: 0;
 	padding-right: 1.5rem;
+	padding-top: 0.2rem;
+	padding-bottom: 0.2rem;
 	white-space: nowrap;
 	background-color: rgba(var(--negative-color), 0.5);
 	border-radius: 99rem;
-	line-height: 1.2;
+	line-height: 1.5;
 	max-width: 20vw;
 	align-items: center;
 }
 
 .recommendation .status-indicator {
-	margin-left: 0.2rem;
-	margin-right: 0.8rem;
-	width: 2.1rem;
-	height: 2.1rem;
+	margin-left: 1rem;
+	margin-right: 0.7rem;
+	width: 1.2rem;
+	height: 1.2rem;
 }
 
 .recommendation .infoholder {
@@ -1366,7 +1368,7 @@
 
 	.recommendation .status {
 		max-width: 10vw;
-		padding-right: 0;
+		padding: 0;
 	}
 
 	.recommendation .status-indicator {
@@ -1394,10 +1396,6 @@
 @media (max-width: 920px){
 	:root {
 		--header-height-local: 8.4rem;
-		--carousel-element-width: 12.72rem;
-		--carousel-element-height: 20.1rem;
-		--thumbnail-margin: 0.3rem;
-		--thumbnail-text-height: 2.1rem;
 		--chapter-carousel-element-width: 12.72rem;
 		--chapter-carousel-element-height: 10.05rem;
 		--chapter-thumbnail-title-height: 0.96rem;
@@ -1500,13 +1498,6 @@
 		font-size: 1.2rem;
 		margin-left: 1rem;
 		margin-top: 1rem;
-		padding-left: 0;
-		padding-right: 0;
-	}
-
-	.recommendation .status-indicator {
-		width: 1.6rem;
-		height: 1.6rem;
 	}
 
 	.recommendation .infoholder {
