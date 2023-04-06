@@ -14,7 +14,9 @@ $_GET['query']=str_replace('%2F', '/', isset($_GET['query']) ? $_GET['query'] : 
 
 define('PAGE_PATH', '/cerca'.(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
 define('PAGE_IS_SEARCH', TRUE);
-define('SKIP_FOOTER', TRUE);
+if (!is_robot()) {
+	define('SKIP_FOOTER', TRUE);
+}
 
 require_once("../common.fansubs.cat/header.inc.php");
 
@@ -75,6 +77,7 @@ if (is_robot()){
 		$_POST['fansub']=$_GET['fansub'];
 	}
 	include("results.php");
+	define('SKIP_FOOTER', TRUE);
 }
 ?>					</div>
 					<div class="loading-layout<?php echo !is_robot() ? '' : ' hidden'; ?>">

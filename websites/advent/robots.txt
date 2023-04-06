@@ -3,6 +3,4 @@ Disallow: /
 # Real robots.txt here:
 # User-agent: *
 # Disallow: /*.php
-# Disallow: /anime/embed
-# Disallow: /manga/embed
 

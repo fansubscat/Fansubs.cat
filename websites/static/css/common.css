@@ -813,6 +813,7 @@ h2.section-title:first-of-type {
 }
 
 .style-type-catalogue.has-search-results .main-section, .style-type-news.has-search-results .main-section {
+	display: flex;
 	align-items: stretch;
 }
 

@@ -32,6 +32,7 @@ if (SITE_IS_HENTAI) {
 <?php
 }
 ?>
+		<meta name="robots" content="noindex"> <!-- TODO REMOVE THIS BEFORE ENTERING PRODUCTION AND REVIEW ALL robots.txt wwwv2.fansubs -->
 		<meta name="referrer" content="origin">
 		<meta name="base_url" content="<?php echo SITE_BASE_URL; ?>">
 		<meta name="twitter:card" content="summary_large_image">
@@ -247,17 +248,17 @@ if (PAGE_STYLE_TYPE=='login') {
 				<div id="overlay-content"></div>
 			</div>
 <?php
-		if (SITE_IS_HENTAI && empty($_COOKIE['hentai_warning_accepted'])) {
+		if (SITE_IS_HENTAI && !is_robot() && empty($_COOKIE['hentai_warning_accepted'])) {
 ?>
 			<div data-nosnippet id="warning-overlay" class="flex">
 				<div id="warning-overlay-content">
 					<h2 id="warning-title">Avís important: contingut per a adults</h2>
-					<div id="warning-message">Aquest web permet veure contingut que sols és apte per a majors de 18 anys i que pot incloure representacions de comportaments o d’actituds intolerables a la vida real. Només hi pots accedir si ets major de 18 anys.</div>
+					<div id="warning-message">Aquest web permet accedir a contingut que sols és apte per a majors de 18 anys i que pot incloure representacions de comportaments o d’actituds intolerables a la vida real. Confirma que compleixes els requisits per a accedir-hi.</div>
+					<div id="warning-post-explanation">Per a evitar que hi hagi menors que puguin accedir a aquest web amb el teu dispositiu, pots instal·lar-hi un programa de control parental que filtri els webs etiquetats per a adults. Tot aquest apartat del web està etiquetat adequadament i un filtre correctament configurat hi ha d’impedir l’accés.</div>
 					<div id="warning-buttonbar">
 						<button id="warning-ok-button" class="normal-button" onclick="acceptHentaiWarning();">Sóc major d’edat i hi vull entrar</button>
-						<button id="warning-close-button" class="normal-button" onclick="window.location.href='<?php echo MAIN_URL; ?>';">No hi entris, torna a Fansubs.cat</button>
+						<button id="warning-close-button" class="normal-button" onclick="window.location.href='<?php echo MAIN_URL; ?>';">No hi vull entrar, torna a Fansubs.cat</button>
 					</div>
-					<div id="warning-post-explanation">Per a evitar que hi hagi menors que puguin accedir a aquest web amb el teu dispositiu, pots instal·lar-hi un programa de control parental que filtri els webs etiquetats per a adults. Tots els apartats per a adults del nostre web estan etiquetats adequadament i aquests filtres hi impediran l’accés.</div>
 				</div>
 			</div>
 <?php

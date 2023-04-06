@@ -6,8 +6,8 @@
 	width: calc(100% + var(--page-padding) + var(--page-padding));
 	margin-left: calc(0rem - var(--page-padding));
 	margin-right: calc(0rem - var(--page-padding));
-	justify-content: start;
 	flex-direction: row;
+	display: block;
 }
 
 .news-index {

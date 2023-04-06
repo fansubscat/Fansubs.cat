@@ -4,7 +4,7 @@ require_once("../common.fansubs.cat/common.inc.php");
 
 // INTERNAL
 
-function get_internal_blacklisted_fansubs_condition($user) {
+function get_internal_blacklisted_fansubs_condition_news($user) {
 	if (!empty($user)) {
 		$blacklisted_fansubs_condition = "n.fansub_id NOT IN (
 							SELECT ufbl.fansub_id
@@ -36,7 +36,7 @@ function query_latest_news($user, $text, $page, $page_size, $fansub_slug, $show_
 			FROM news n
 				LEFT JOIN fansub f ON n.fansub_id=f.id
 			WHERE ".($text!==NULL ? "(n.title LIKE '%".escape($text)."%' OR n.contents LIKE '%".escape($text)."%')" : "1")."
-				AND ".($show_blacklisted_fansubs ? "1" : get_internal_blacklisted_fansubs_condition($user))."
+				AND ".($show_blacklisted_fansubs ? "1" : get_internal_blacklisted_fansubs_condition_news($user))."
 				AND ".($show_own_news ? "n.fansub_id IS NULL" : "1")."
 				AND ".(!empty($fansub_slug) ? "f.slug='$fansub_slug'" : "1")."
 				AND n.date>='$min_month-01 00:00:00' AND n.date<='$max_month-31 23:59:59'
@@ -51,7 +51,7 @@ function query_all_fansubs_with_news($user) {
 			FROM news n
 				LEFT JOIN fansub f ON n.fansub_id=f.id
 			WHERE n.fansub_id IS NOT NULL
-			AND ".get_internal_blacklisted_fansubs_condition($user)."
+			AND ".get_internal_blacklisted_fansubs_condition_news($user)."
 			ORDER BY f.name ASC";
 	return query($final_query);
 }
