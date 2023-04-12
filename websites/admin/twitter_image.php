@@ -78,10 +78,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 	$first_month = escape($_GET['first_month']);
 	$last_month = escape($_GET['last_month']);
 	$mode = escape($_GET['mode']);
-	$hide_hentai = FALSE;
-	if (isset($_GET['hide_hentai']) && $_GET['hide_hentai']==1) {
-		$hide_hentai = TRUE;
-	}
+	$is_hentai = !empty($_GET['is_hentai']);
 
 	switch($mode) {
 		case 'all':
@@ -99,9 +96,9 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 			break;
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($hide_hentai ? " AND (s.rating IS NULL OR s.rating<>'XXX')" : '')." AND f.episode_id IS NOT NULL AND s.type='$type' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_name ASC LIMIT 10");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($is_hentai ? " AND s.rating='XXX'" : " AND s.rating<>'XXX'")." AND f.episode_id IS NOT NULL AND s.type='$type' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_name ASC LIMIT 10");
 
-	$result_previous_month = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_previous_month-01' AND vi.day<='$last_previous_month-31' AND vi.views>0".($hide_hentai ? " AND (s.rating IS NULL OR s.rating<>'XXX')" : '')." AND f.episode_id IS NOT NULL AND s.type='$type' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_name ASC");
+	$result_previous_month = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_previous_month-01' AND vi.day<='$last_previous_month-31' AND vi.views>0".($is_hentai ? " AND s.rating='XXX'" : " AND s.rating<>'XXX'")." AND f.episode_id IS NOT NULL AND s.type='$type' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, b.series_name ASC");
 	$prev_views = 0;
 	$position = 0;
 	$current_positions = 0;
@@ -176,14 +173,14 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 
 	switch ($type){
 		case 'manga':
-			$title="Mangues més populars a Fansubs.cat";
+			$title="Mangues".($is_hentai ? ' hentai' : '')." més populars a Fansubs.cat";
 			break;
 		case 'liveaction':
 			$title="Continguts d’imatge real més populars a Fansubs.cat";
 			break;
 		case 'anime':
 		default:
-			$title="Animes més populars a Fansubs.cat";
+			$title="Animes".($is_hentai ? ' hentai' : '')." més populars a Fansubs.cat";
 			break;
 	}
 	setlocale(LC_ALL, 'ca_ES.utf8');
@@ -212,7 +209,6 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 	$green = imagecolorallocate($image, 0x22, 0x99, 0x22);
 	$red = imagecolorallocate($image, 0xBB, 0x44, 0x44);
 	$yellow = imagecolorallocate($image, 0xBB, 0xBB, 0x44);
-	$reddish = imagecolorallocate($image, 0xFF, 0xAA, 0xAA);
 	$bbox = imageftbbox(26, 0, FONT_BOLD, $title);
 	$center = (imagesx($image) / 2) - (($bbox[2] - $bbox[0]) / 2);
 	imagefttext($image, 26, 0, $center, $current_height, $gray, FONT_BOLD, $title);
@@ -281,7 +277,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		if (substr_count($text, "\n")>0) {
 			$text = explode("\n", $text)[0].'...';
 		}
-		imagefttext($image, 24, 0, $i>4 ? 624+172 : 24+172, $current_height+40, ($series[$i]['rating']=='XXX' ? $reddish : $gray), FONT_REGULAR, $text);
+		imagefttext($image, 24, 0, $i>4 ? 624+172 : 24+172, $current_height+40, $gray, FONT_REGULAR, $text);
 		$text = \andrewgjohnson\linebreaks4imagettftext(22, 0, FONT_REGULAR, $series[$i]['fansubs'], 380);
 		if (substr_count($text, "\n")>0) {
 			$text = explode("\n", $text)[0].'...';
