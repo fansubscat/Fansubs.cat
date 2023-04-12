@@ -161,6 +161,202 @@ a.forgot-password {
 	justify-content: start;
 }
 
+.style-type-settings .main-section {
+	width: calc(100% + var(--page-padding) + var(--page-padding));
+	justify-content: start;
+	border-top: 0.6rem solid rgb(var(--primary-color));
+	padding-top: 3rem;
+}
+
+.profile-layout {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	padding: 0 var(--page-padding);
+}
+
+.profile-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: rgb(var(--negative-color));
+	padding: 2rem 4rem 1.5rem;
+	border-radius: 1rem;
+	font-size: 1.4rem;
+	max-width: 30rem;
+	align-self: start;
+}
+
+.profile-avatar {
+	position: relative;
+	width: 14rem;
+	height: 14rem;
+	overflow: hidden;
+	border-radius: 99rem;
+	border: 0.3rem solid rgb(var(--primary-color));
+	cursor: pointer;
+}
+
+.profile-avatar-image {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.profile-avatar-change {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: rgba(var(--negative-color), 0.5);
+	opacity: 1;
+	transition: opacity var(--fast-animation-duration) ease-in-out;
+	color: rgb(var(--always-positive-color));
+}
+
+.profile-name {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 2rem;
+	margin-top: 1rem;
+}
+
+.profile-my-list-button {
+	color: rgb(var(--negative-color));
+	font-size: 1.4rem;
+	padding: 0.5rem 1rem;
+	margin-top: 0.8rem;
+	margin-bottom: 2.4rem;
+}
+
+.profile-button {
+	padding: 0.5rem 0;
+}
+
+.profile-h-divider {
+	border-top: 0.1rem solid rgb(var(--primary-color));
+	margin: 1.5rem -4rem;
+	width: calc(100% + 8rem);
+}
+
+.profile-section + .content-section {
+	margin-left: 1.5rem;
+}
+
+.content-section {
+	flex-grow: 1;
+	background: rgb(var(--negative-color));
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: column;
+}
+
+.content-tabs {
+	text-align: left;
+	border-bottom: 0.1rem solid rgb(var(--primary-color));
+	padding-bottom: 0.5rem;
+	padding: 1rem 2rem;
+}
+
+.content-tab {
+	font-size: 1.8rem;
+	color: rgb(var(--neutral-color));
+}
+
+.content-tab-active {
+	font-size: 1.8rem;
+	color: rgb(var(--positive-color));
+}
+
+.content-tab + .content-tab {
+	margin-left: 1.5rem;
+}
+
+.content-layout {
+	padding: 2rem;
+	flex-grow: 1;
+}
+
+.profile-page {
+	display: flex;
+	flex-direction: row;
+	position: relative;
+}
+
+.remove-profile {
+	position: absolute;
+	right: 2rem;
+	bottom: 1rem;
+}
+
+.profile-basic-info, .profile-statistics {
+	flex-grow: 1;
+	text-align: left;
+}
+
+.profile-section-header, .settings-section-header {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 2rem;
+	margin-bottom: 2rem;
+}
+
+.profile-section-data-header {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 1.6rem;
+	margin-top: 2rem;
+}
+
+.profile-section-data-info {
+	font-size: 1.6rem;
+	margin-top: 0.5rem;
+	color: rgba(var(--positive-color), 0.7);
+}
+
+.settings-section-data {
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.settings-section-data-header {
+	font-size: 1.6rem;
+	flex-grow: 1;
+}
+
+.settings-section-data-switch .switch {
+	display: flex;
+	font-size: 0.65rem;
+	margin-right: 1.5rem;
+	width: 100% !important;
+}
+
+.settings-section-data-switch .switch .slider {
+	width: 6em;
+}
+
+
+
+.settings-section-data-switch .switch .settings-section-data-header {
+	margin-left: 4rem;
+}
+
+.settings-display, .settings-seen-settings, .settings-reader {
+	text-align: left;
+}
+
+.settings-seen-settings, .settings-reader {
+	margin-top: 3rem;
+}
+
 @media (hover: hover) {
 	.login-close:hover {
 		filter: drop-shadow(0 0 0.4rem rgba(var(--positive-color), 0.5));
@@ -177,6 +373,22 @@ a.forgot-password {
 	.login-footer a:hover, .checkbox-layout a:hover {
 		color: rgb(var(--secondary-color-hover));
 		text-decoration: underline;
+	}
+
+	.profile-avatar-change {
+		opacity: 0;
+	}
+
+	.profile-avatar-change:hover {
+		opacity: 1;
+	}
+
+	.profile-button:hover {
+		color: rgb(var(--positive-color-button-hover));
+	}
+
+	.content-tab:not(.content-tab-active):hover {
+		color: rgb(var(--positive-color-button-hover));
 	}
 }
 

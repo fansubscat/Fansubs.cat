@@ -10,6 +10,27 @@ function is_robot(){
 	return !empty($_SERVER['HTTP_USER_AGENT']) && preg_match('/bot|crawl|slurp|spider|mediapartners/i', $_SERVER['HTTP_USER_AGENT']);
 }
 
+function get_nanoid($size=24) {
+	//Adapted from: https://github.com/hidehalo/nanoid-php/blob/master/src/Core.php
+	$alphabet = '_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$len = strlen($alphabet);
+	$mask = (2 << (int) (log($len - 1) / M_LN2)) - 1;
+	$step = (int) ceil(1.6 * $mask * $size / $len);
+	$id = '';
+	while (true) {
+		$bytes = unpack('C*', random_bytes($step));
+		foreach ($bytes as $byte) {
+			$byte &= $mask;
+			if (isset($alphabet[$byte])) {
+				$id .= $alphabet[$byte];
+				if (strlen($id) === $size) {
+					return $id;
+				}
+			}
+		}
+	}
+}
+
 function get_cookie_blacklisted_fansub_ids() {
 	$fansub_ids = array();
 	if (!empty($_COOKIE['blacklisted_fansub_ids'])) {
@@ -118,19 +139,6 @@ function get_carousel_fansub_info($fansub_info, $version_id) {
 	}
 
 	return $result_code;
-}
-
-function get_genres_for_featured($genre_names) {
-	if (empty($genre_names)) {
-		return "";
-	}
-	$genres_array = explode(' • ',$genre_names);
-	$result_code = '';
-
-	foreach ($genres_array as $genre) {
-		$result_code.='<div class="genre">'.htmlspecialchars($genre).'</div>';
-	}
-	return '<i class="fa fa-fw fa-tag fa-flip-horizontal"></i> '.$result_code;
 }
 
 function print_carousel_item($series, $specific_version, $show_new=TRUE) {

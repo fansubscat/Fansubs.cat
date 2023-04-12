@@ -5015,15 +5015,17 @@ var ChromecastSessionManager = /*#__PURE__*/function () {
     key: "_onSessionStateChange",
     value: function _onSessionStateChange(event) {
       if (event.sessionState === cast.framework.SessionState.SESSION_ENDED) {
-        if (window.player && window.currentMethod != 'mega' && window.currentMethod != 'youtube') {
+        if (window.player) {
           window.player.trigger('chromecastDisconnected');
-          this._reloadTech();
+          if (window.currentSourceData.method != 'mega') {
+            this._reloadTech();
+          }
         }
       } else if (event.sessionState === cast.framework.SessionState.SESSION_STARTED || event.sessionState === cast.framework.SessionState.SESSION_RESUMED) {
         if (window.player) {
-          if (!window.player.currentSource() || window.currentMethod == 'mega' || window.currentMethod == 'youtube') {
+          if (!window.player.currentSource() || window.currentSourceData.method == 'mega') {
             // Do not cast if there is no media item loaded in the player
-            if (window.currentMethod == 'mega') {
+            if (window.currentSourceData.method == 'mega') {
               showAlert("No es pot emetre", "Els vídeos acabats de penjar estan allotjats a MEGA i no es poden emetre. Si vols emetre'l, caldrà que esperis un parell d'hores i refresquis la pàgina.");
             } else {
               showAlert("No es pot emetre", "Aquest vídeo no es pot emetre.");
@@ -5869,13 +5871,6 @@ module.exports = function (videojs) {
     }, {
       key: "play",
       value: function play() {
-        if ($('.vjs-ended').length > 0) {
-          //UGLY HACK
-          this._playSource({
-            src: this.videojsPlayer.src()
-          }, 0);
-          return;
-        }
         if (!this.paused()) {
           return;
         }
@@ -6079,6 +6074,12 @@ module.exports = function (videojs) {
     }, {
       key: "setCurrentTime",
       value: function setCurrentTime(time) {
+        if (this.ended()) {
+          this._playSource({
+            src: this.videojsPlayer.src()
+          }, time);
+          return;
+        }
         var duration = this.duration();
         if (time > duration || !this._remotePlayer.canSeek) {
           return;
@@ -6126,7 +6127,7 @@ module.exports = function (videojs) {
         if (!this._hasPlayedAnyItem) {
           return this._initialStartTime;
         }
-        return this._remotePlayer.currentTime;
+        return this.ended() ? this.duration() : this._remotePlayer.currentTime;
       }
 
       /**
@@ -6150,7 +6151,7 @@ module.exports = function (videojs) {
         if (!this._hasPlayedAnyItem) {
           return this.videojsPlayer.duration();
         }
-        return window.currentVideoDuration ? window.currentVideoDuration : this._remotePlayer.duration;
+        return window.currentSourceData.length ? window.currentSourceData.length : this._remotePlayer.duration;
       }
 
       /**
@@ -6165,7 +6166,7 @@ module.exports = function (videojs) {
       key: "ended",
       value: function ended() {
         var mediaSession = this._getMediaSession();
-        if (!mediaSession && this._hasMediaSessionEnded) {
+        if ($('.vjs-ended').length > 0 || !mediaSession && this._hasMediaSessionEnded) {
           return true;
         }
         return mediaSession ? mediaSession.idleReason === chrome.cast.media.IdleReason.FINISHED : false;
@@ -6544,6 +6545,7 @@ module.exports = function (videojs) {
         } else if (playerState === states.IDLE && this.ended() || playerState === null && this._hasPlayedCurrentItem) {
           this._hasPlayedCurrentItem = false;
           //this._closeSessionOnTimeout();
+          this.trigger('paused');
           this.trigger('ended');
           this._triggerTimeUpdateEvent();
         } else if (playerState === states.BUFFERING) {

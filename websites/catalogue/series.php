@@ -575,7 +575,7 @@ $resultra = query_related_series($user, $series['id'], $series['author'], $num_o
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'Contingut d’imatge real amb temàtiques en comú' : (CATALOGUE_ITEM_TYPE=='anime' ? 'Anime amb temàtiques en comú' : 'Manga amb temàtiques en comú'); ?></h2>
+						<h2 class="section-title-main"><?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'Continguts d’imatge real amb temàtiques en comú' : (CATALOGUE_ITEM_TYPE=='anime' ? 'Animes'.(SITE_IS_HENTAI ? ' hentai' : '').' amb temàtiques en comú' : 'Mangues'.(SITE_IS_HENTAI ? ' hentai' : '').' amb temàtiques en comú'); ?></h2>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultra)) {
@@ -601,7 +601,7 @@ $resultrm = query_related_series($user, $series['id'], $series['author'], $num_o
 if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo "Altres continguts amb temàtiques en comú"; ?></h2>
+						<h2 class="section-title-main"><?php echo SITE_IS_HENTAI ? (CATALOGUE_ITEM_TYPE=='anime' ? 'Mangues hentai amb temàtiques en comú' : 'Animes hentai amb temàtiques en comú') : "Altres continguts amb temàtiques en comú"; ?></h2>
 						<div class="section-content carousel">
 <?php
 	while ($row = mysqli_fetch_assoc($resultrm)) {

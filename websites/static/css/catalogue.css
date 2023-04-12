@@ -258,19 +258,23 @@
 	padding: 1em;
 	font-size: 1.5em;
 	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
+	background: linear-gradient(to bottom, rgba(var(--always-negative-color),0) 0%, rgba(var(--always-negative-color),1) 100%);
 }
 
 .player_extra_upper {
+	font-size: 1rem;
+	line-height: 1.1;
 	position: absolute;
 	top: 0;
 	left: 0;
 	display: flex;
 	width: 100%;
-	padding: 1.6em;
+	padding: 1.6rem;
 	z-index: 2000;
 	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
 	pointer-events: none;
 	align-items: center;
+	background: linear-gradient(to bottom, rgba(var(--always-negative-color),1) 0%, rgba(var(--always-negative-color),0) 100%);
 }
 
 .player_extra_upper .player_extra_title {
@@ -289,6 +293,18 @@
 	pointer-events: auto;
 	cursor: pointer;
 	padding: 0;
+	/* From .video-js button */
+	background: 0 0;
+	border: none;
+	color: inherit;
+	display: inline-block;
+	line-height: inherit;
+	text-transform: none;
+	text-decoration: none;
+	transition: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
 }
 
 .player_extra_ended {
@@ -380,6 +396,7 @@
 	display: flex;
 	flex-direction: column;
 	text-align: center;
+	font-size: 1rem;
 }
 
 .video-js video {
@@ -425,7 +442,7 @@
 	font-size: .6em;
 }
 
-.video-js.vjs-has-started.vjs-user-inactive.vjs-playing {
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing, .video-js.vjs-has-started.vjs-user-inactive.vjs-playing video {
 	cursor: none;
 }
 
@@ -435,26 +452,16 @@
 	transform: translateY(-100%);
 }
 
-.video-js.vjs-has-started.vjs-user-inactive.vjs-playing.vjs-casting .player_extra_upper {
-	visibility: visible;
-	opacity: 1;
-	transform: none;
-}
-
 .video-js.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {
 	transform: translateY(100%);
 	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
 }
 
-.video-js.vjs-has-started.vjs-user-inactive.vjs-playing.vjs-casting .vjs-control-bar {
-	opacity: 1;
-	transform: none;
-}
-
-.video-js.vjs-has-started.vjs-user-inactive.vjs-playing.vjs-casting .vjs-control-bar{
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing.vjs-casting .player_extra_upper, .video-js.vjs-has-started.vjs-user-inactive.vjs-playing.vjs-casting .vjs-control-bar{
 	visibility: visible;
 	opacity: 1;
 	transform: none;
+	pointer-events: all;
 }
 
 .video-js .vjs-current-time, .video-js .vjs-time-divider, .video-js .vjs-duration {
@@ -557,7 +564,7 @@
 	display: none;
 }
 
-.video-js .vjs-button{
+.vjs-button{
 	transition: .3s;
 }
 
@@ -577,14 +584,14 @@
 	margin-right: 0.1em;
 }
 
-.video-js .vjs-button .vjs-icon-placeholder:before{
+.vjs-button .vjs-icon-placeholder:before{
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
 	font-size: 1.8em;
 	line-height: 1.6em;
 }
 
-.video-js .vjs-button-disabled {
+.vjs-button-disabled {
 	filter: brightness(0.5);
 }
 
@@ -688,52 +695,36 @@
 	margin-left: 0;
 }
 
-.video-js .player_error_icon {
+.player_error_icon {
 	font-size: 2em;
 	color: rgb(var(--secondary-color));
 }
 
-.video-js .player_error_title {
+.player_error_title {
 	font-size: 2.5em;
 	line-height: normal;
 	font-family: "lexend_deca_bold", sans-serif;
 }
 
-.video-js .player_error_icon {
+.player_error_icon {
 	margin-bottom: 0.2em;
 	line-height: normal;
 }
 
-.video-js .player_error_details {
+.player_error_details {
 	margin-top: 0.75em;
 	line-height: normal;
 	font-size: 1.5em;
 }
 
-.video-js .player-error-technical-details {
+.player-error-technical-details {
 	color: rgb(var(--neutral-color));
 	font-size: 1.3em;
 	line-height: normal;
 }
 
-.video-js .player_error_buttons {
+.player_error_buttons {
 	margin-top: 1.25em;
-}
-
-.video-js .error-close-button {
-	font-family: "lexend_deca" !important;
-	text-align: center;
-	font-weight: normal;
-	display: inline-block;
-	background: rgb(var(--primary-color));
-	color: rgb(var(--always-positive-color));
-	padding: 0.75rem 2.25rem;
-	margin: 0 0.4rem;
-	min-width: 6rem;
-	font-size: 1.5rem;
-	border-radius: 0.4rem;
-	cursor: pointer;
-	line-height: normal;
 }
 
 .hentai-button {
@@ -1074,6 +1065,7 @@
 
 .slick-dots {
 	bottom: 0.25rem;
+	pointer-events: none;
 }
 
 .slick-dotted.slick-slider {
@@ -1082,6 +1074,7 @@
 
 .slick-dots li {
 	margin: 0 0.1rem !important;
+	pointer-events: all;
 }
 
 .slick-dots li button {
@@ -1311,7 +1304,6 @@
 /* TODO */
 
 @media (hover: hover) {
-
 	.catalogues-navigation a:hover {
 		text-decoration: none;
 	}
@@ -1334,6 +1326,10 @@
 
 	.recommendations .slick-prev:hover, .recommendations .slick-next:hover {
 		filter: opacity(0.5);
+	}
+
+	.recommendation .genres .genre:hover {
+		background-color: rgb(var(--negative-color-button-hover));
 	}
 
 	.continue-watching-thumbnail .image-link .fansubs {
@@ -1385,7 +1381,7 @@
 		background-color: rgb(var(--primary-color-hover));
 	}
 
-	.video-js .vjs-button:hover, .video-js .vjs-chromecast-button:hover {
+	.vjs-button:hover, .video-js .vjs-chromecast-button:hover {
 		color: rgba(var(--always-positive-color), 0.8);
 	}
 
@@ -1680,7 +1676,7 @@
 		margin-left: -5rem;
 	}
 
-	.video-js {
+	.video-js, .player_extra_upper {
 		font-size: 0.7rem;
 	}
 }

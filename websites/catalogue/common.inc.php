@@ -207,14 +207,6 @@ function get_resolution_short($links){
 	return $max_res.'p';
 }
 
-function get_resolution_single($resolution){
-	if (count(explode('x',$resolution))>1) {
-		return explode('x',$resolution)[1];
-	} else {
-		return preg_replace("/[^0-9]/", '', $resolution);
-	}
-}
-
 function get_resolution_css($links){
 	$resolution = str_replace('p', '', get_resolution_short($links));
 	if ($resolution>=1800) {
@@ -228,79 +220,28 @@ function get_resolution_css($links){
 	}
 }
 
-function get_display_method($links){
-	//Since we will not have mixed methods, we can just check the first one
-	if (preg_match(REGEXP_MEGA,$links[0]['url'])){
-		return "mega";
-	}
-	if (preg_match(REGEXP_GOOGLE_DRIVE,$links[0]['url'])){
-		return "google-drive";
-	}
-	if (preg_match(REGEXP_YOUTUBE,$links[0]['url'])){
-		return "youtube";
-	}
-	if (preg_match(REGEXP_STORAGE,$links[0]['url'])){
-		return "storage";
-	}
-	return "direct-video";
-}
-
-function get_episode_player_title($fansub_name, $series, $episode_title, $is_extra){
-	if ($series['name']==$episode_title || ($series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID && !$is_extra)){
+function get_episode_player_title($fansub_name, $series_name, $series_subtype, $episode_title, $is_extra){
+	if ($series_name==$episode_title || ($series_subtype==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID && !$is_extra)){
 		if (!empty($episode_title)) {
 			return $fansub_name . ' - ' . $episode_title;
 		} else {
-			return $fansub_name . ' - ' . $series['name'];
+			return $fansub_name . ' - ' . $series_name;
 		}
 	} else {
-		return $fansub_name . ' - ' . $series['name'] . ' - '. $episode_title;
+		return $fansub_name . ' - ' . $series_name . ' - '. $episode_title;
 	}
 }
 
-function get_episode_player_title_short($fansub_name, $series, $episode_title, $is_extra){
-	if ($series['name']==$episode_title || ($series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID && !$is_extra)){
+function get_episode_player_title_short($fansub_name, $series_name, $series_subtype, $episode_title, $is_extra){
+	if ($series_name==$episode_title || ($series_subtype==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID && !$is_extra)){
 		if (!empty($episode_title)) {
 			return $episode_title;
 		} else {
-			return $series['name'];
+			return $series_name;
 		}
 	} else {
 		return $episode_title;
 	}
-}
-
-function get_video_sources($links){
-	$elements = array();
-	foreach ($links as $link) {
-		$matches = array();
-		if (preg_match(REGEXP_MEGA,$link['url'],$matches)){
-			$elements[]=array(
-				'url' => $link['url'],
-				'resolution' => get_resolution_single($link['resolution'])
-			);
-		} else if (preg_match(REGEXP_GOOGLE_DRIVE,$link['url'],$matches)){
-			$elements[]=array(
-				'url' => "https://www.googleapis.com/drive/v3/files/".$matches[1]."?key=".GOOGLE_DRIVE_API_KEY."&alt=media",
-				'resolution' => get_resolution_single($link['resolution'])
-			);
-		} else if (preg_match(REGEXP_YOUTUBE,$link['url'],$matches)){
-			$elements[]=array(
-				'url' => "https://www.youtube.com/embed/".$matches[1]."?origin=".BASE_URL."&iv_load_policy=3&modestbranding=1&playsinline=1showinfo=0&rel=0&enablejsapi=1",
-				'resolution' => get_resolution_single($link['resolution'])
-			);
-		} else if (preg_match(REGEXP_STORAGE,$link['url'],$matches)){
-			$elements[]=array(
-				'url' => get_storage_url($link['url']),
-				'resolution' => get_resolution_single($link['resolution'])
-			);
-		} else {
-			$elements[]=array(
-				'url' => $link['url'],
-				'resolution' => get_resolution_single($link['resolution'])
-			);
-		}
-	}
-	return json_encode($elements);
 }
 
 function get_hours_or_minutes_formatted($time){
@@ -336,13 +277,36 @@ function get_type_depending_on_catalogue($series) {
 	}
 }
 
+function get_episode_title($series_subtype, $show_episode_numbers, $episode_number, $linked_episode_id, $title, $series_name, $extra_name, $is_extra) {
+	if ($is_extra) {
+		return $extra_name;
+	}
+
+	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
+		if (!empty($title)){
+			return 'Capítol '.str_replace('.',',',floatval($episode_number).': '.$title);
+		}
+		else {
+			return 'Capítol '.str_replace('.',',',floatval($episode_number));
+		}
+	} else {
+		if (!empty($title)){
+			return $title;
+		} else if ($series_subtype==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID) {
+			return $series_name;
+		} else {
+			return 'Capítol sense nom';
+		}
+	}
+}
+
 function print_episode($fansub_names, $row, $version_id, $series, $version, $position){
 	if (!empty($row['linked_episode_id'])) {
 		$result = query("SELECT f.* FROM file f WHERE f.episode_id=".$row['linked_episode_id']." AND f.version_id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']}) ORDER BY f.variant_name ASC, f.id ASC");
 		$results = query("SELECT s.* FROM episode e LEFT JOIN series s ON e.series_id=s.id WHERE e.id=${row['linked_episode_id']}");
 		$series = mysqli_fetch_assoc($results);
 		mysqli_free_result($results);
-		$resultv=query("SELECT v.*, GROUP_CONCAT(DISTINCT IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) ORDER BY IF(v.version_author IS NULL OR f.id<>28, f.name, CONCAT(f.name, ' (', v.version_author, ')')) SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']})");
+		$resultv=query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']})");
 		$version = mysqli_fetch_assoc($resultv);
 		$fansub_names = $version['fansub_name'];
 		mysqli_free_result($resultv);
@@ -354,24 +318,7 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 		return;
 	}
 
-	$episode_title='';
-	
-	if ($version['show_episode_numbers']==1 && !empty($row['number']) && empty($row['linked_episode_id'])) {
-		if (!empty($row['title'])){
-			$episode_title.='Capítol '.str_replace('.',',',floatval($row['number'])).': '.htmlspecialchars($row['title']);
-		}
-		else {
-			$episode_title.='Capítol '.str_replace('.',',',floatval($row['number']));
-		}
-	} else {
-		if (!empty($row['title'])){
-			$episode_title.=htmlspecialchars($row['title']);
-		} else if ($series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID) {
-			$episode_title.=$series['name'];
-		} else {
-			$episode_title.='Capítol sense nom';
-		}
-	}
+	$episode_title=htmlspecialchars(get_episode_title($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE));
 
 	internal_print_episode($fansub_names, $episode_title, $result, $series, FALSE, $position);
 	mysqli_free_result($result);
@@ -380,7 +327,7 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 function print_extra($fansub_names, $row, $version_id, $series, $position){
 	$result = query("SELECT f.* FROM file f WHERE f.episode_id IS NULL AND f.extra_name='".escape($row['extra_name'])."' AND f.version_id=$version_id ORDER BY f.id ASC");
 
-	$episode_title=htmlspecialchars($row['extra_name']);
+	$episode_title=htmlspecialchars(get_episode_title($series['subtype'], NULL,NULL,NULL,NULL,NULL,$row['extra_name'], TRUE));
 	
 	internal_print_episode($fansub_names, $episode_title, $result, $series, TRUE, $position);
 	mysqli_free_result($result);
@@ -414,7 +361,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 			if ($vrow['is_lost']==0) {
 				if ($series['type']!='manga') {
 					$links = array();
-					$resulti = query("SELECT l.* FROM link l WHERE l.file_id=${vrow['id']} ORDER BY l.url ASC");
+					$resulti = query_links_by_file_id($vrow['id']);
 					while ($lirow = mysqli_fetch_assoc($resulti)){
 						array_push($links, $lirow);
 					}
@@ -433,9 +380,9 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
 				if ($series['type']=='manga') {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-book-open icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Llegeix-lo').'</a> '."\n";
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-title-short="'.htmlspecialchars(get_episode_player_title_short($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-position="'.$position.'"><span class="fa fa-fw fa-book-open icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Llegeix-lo').'</a> '."\n";
 				} else {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-fansub="'.htmlspecialchars($fansub_names).'" data-cover="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" data-title="'.get_episode_player_title(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-title-short="'.get_episode_player_title_short(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-file-id="'.$vrow['id'].'" data-position="'.$position.'" data-duration="'.$vrow['length'].'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($links))).'" data-method="'.htmlspecialchars(get_display_method($links)).'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
+					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-file-id="'.$vrow['id'].'" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-title-short="'.htmlspecialchars(get_episode_player_title_short($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-position="'.$position.'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
 				}
 				if (!empty($vrow['comments'])){
 					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
@@ -491,9 +438,9 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
 			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
 			if ($series['type']=='manga') {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'"><span class="fa fa-fw fa-book-open icon-play"></span>'.$episode_title.'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="manga-reader" data-file-id="'.$vrow['id'].'" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-title-short="'.htmlspecialchars(get_episode_player_title_short($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-position="'.$position.'"><span class="fa fa-fw fa-book-open icon-play"></span>'.$episode_title.'</a> '."\n";
 			} else {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-fansub="'.htmlspecialchars($fansub_names).'" data-cover="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-title="'.get_episode_player_title(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-title-short="'.get_episode_player_title_short(htmlspecialchars($fansub_names), $series, $episode_title, $is_extra).'" data-file-id="'.$vrow['id'].'" data-position="'.$position.'" data-duration="'.$vrow['length'].'" data-sources="'.htmlspecialchars(base64_encode(get_video_sources($links))).'" data-method="'.htmlspecialchars(get_display_method($links)).'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
+				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="video-player" data-file-id="'.$vrow['id'].'" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-title-short="'.htmlspecialchars(get_episode_player_title_short($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-position="'.$position.'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
 			}
 			if (!empty($vrow['comments'])){
 				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
@@ -570,6 +517,21 @@ function print_chapter_item($row) {
 <?php
 }
 
+function get_genres_for_featured($genre_names, $type, $rating) {
+	if (empty($genre_names)) {
+		return "";
+	}
+	$genres_array = explode(' • ',$genre_names);
+	$result_code = '';
+
+	foreach ($genres_array as $genre) {
+		$genre_for_url = preg_replace('/\xC2\xA0/', ' ', $genre);
+		$genre_for_url = preg_replace('/‑/', '-', $genre_for_url);
+		$result_code.='<a class="genre" href="'.get_base_url_from_type_and_rating($type,$rating).'/cerca?categoria='.$genre_for_url.'">'.htmlspecialchars($genre).'</a>';
+	}
+	return '<i class="fa fa-fw fa-tag fa-flip-horizontal"></i> '.$result_code;
+}
+
 function print_featured_item($series, $special_day=NULL, $specific_version=TRUE) {
 	$more_than_one_version = exists_more_than_one_version($series['id']);
 	echo "\t\t\t\t\t\t\t".'<div class="recommendation" data-series-id="'.$series['id'].'">'."\n";
@@ -577,7 +539,7 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE)
 	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'"><div class="status-indicator"></div><span class="text">'.get_status_description_short($series['best_status']).'</span></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.($series['type']=='liveaction' ? LIVEACTION_URL : ($series['type']=='anime' ? ANIME_URL : MANGA_URL)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img class="cover" src="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img class="cover" src="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" alt="'.$series['name'].'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlspecialchars($series['name']).'</div>'."\n";
@@ -601,7 +563,7 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE)
 
 	echo "\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.($series['type']=='liveaction' ? LIVEACTION_URL : ($series['type']=='anime' ? ANIME_URL : MANGA_URL)).'/'.($series['rating']=='XXX' ? 'hentai/' : '').$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="fansubs">'.get_recommended_fansub_info($series['fansub_info'], $series['version_id']).'</div>'."\n";
@@ -614,7 +576,7 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE)
 			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-ghost"></i><span class="text">Especial Tots Sants</span></div>'."\n";
 		}
 	}
-	echo "\t\t\t\t\t\t\t\t".'<div class="genres">'.get_genres_for_featured($series['genre_names']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="genres">'.get_genres_for_featured($series['genre_names'], $series['type'], $series['rating']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }
 

@@ -681,4 +681,38 @@ function query_all_fansubs_with_versions($user) {
 			ORDER BY f.name ASC";
 	return query($final_query);
 }
+
+function query_player_details_by_file_id($file_id) {
+	$file_id = intval($file_id);
+	$final_query = "SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') fansub_name,
+				v.series_id series_id,
+				f.version_id version_id,
+				v.show_episode_numbers,
+				s.name series_name,
+				s.subtype series_subtype,
+				IF(f.episode_id IS NULL,TRUE,FALSE) is_extra,
+				f.length,
+				e.number episode_number,
+				e.linked_episode_id,
+				IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title,
+				f.extra_name
+			FROM file f
+				LEFT JOIN version v ON f.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
+				LEFT JOIN rel_version_fansub vf ON vf.version_id=v.id
+				LEFT JOIN fansub fa ON vf.fansub_id=fa.id
+				LEFT JOIN episode e ON f.episode_id=e.id
+				LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
+			WHERE f.id=$file_id";
+	return query($final_query);
+}
+
+function query_links_by_file_id($file_id) {
+	$file_id = intval($file_id);
+	$final_query = "SELECT l.*
+			FROM link l
+			WHERE l.file_id=$file_id
+			ORDER BY l.url ASC";
+	return query($final_query);
+}
 ?>

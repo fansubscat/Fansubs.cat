@@ -34,7 +34,8 @@ function showUserDropdown(){
 }
 
 function toggleSiteTheme() {
-	var newTheme; 
+	var newTheme;
+	$('html').addClass('notransition');
 	if ($('html').hasClass('theme-dark')) {
 		$('html').removeClass('theme-dark');
 		$('html').addClass('theme-light');
@@ -46,6 +47,8 @@ function toggleSiteTheme() {
 		$('.theme-button-text').text('Canvia al tema clar');
 		newTheme='dark';
 	}
+	$('html')[0].offsetHeight; //Triggers reflow
+	$('html').removeClass('notransition');
 
 	values = {
 		'site_theme': newTheme
