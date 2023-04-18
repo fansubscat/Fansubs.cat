@@ -7,6 +7,32 @@ var cookieOptions = {
 	domain: ".fansubs.cat"
 };
 
+function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray) {
+	$('#dialog-overlay').remove();
+	var code = '<div data-nosnippet id="dialog-overlay" class="flex'+(blurred ? ' dialog-overlay-blurred' : '')+'"><div id="dialog-overlay-content">';
+	if (closeable) {
+		code += '<a class="dialog-close-button fa fa-fw fa-times" title="Tanca" onclick="closeCustomDialog();"></a>'
+	}
+	code += '<h2 id="dialog-title">'+title+'</h2><div id="dialog-message">'+text+'</div>';
+	if (subtext!=null) {
+		code += '<div id="dialog-post-explanation">'+subtext+'</div>';
+	}
+	code += '<div id="dialog-buttonbar"></div></div></div>';
+
+	$(code).appendTo('.main-container');
+		
+	for (var i=0; i<buttonsArray.length;i++) {
+		var button = $('<button class="dialog-button '+buttonsArray[i].class+'">'+buttonsArray[i].text+'</button>');
+		button.click(buttonsArray[i].onclick);
+		button.appendTo('#dialog-buttonbar');
+	}
+}
+
+function closeCustomDialog() {
+	$('#dialog-overlay').remove();
+	$('html').removeClass('page-no-overflow');
+}
+
 function getBaseUrl() {
 	return $('meta[name="base_url"]').attr('content');
 }

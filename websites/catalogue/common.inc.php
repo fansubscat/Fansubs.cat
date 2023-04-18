@@ -9,8 +9,6 @@ const PL_VER=6;
 
 //Regexp used for determining types of links
 const REGEXP_MEGA='/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/';
-const REGEXP_GOOGLE_DRIVE='/https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=)?([^\/]*)(?:preview|view)?/';
-const REGEXP_YOUTUBE='/(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})?/';
 const REGEXP_DL_LINK='/^https:\/\/(?:drive\.google\.com|mega\.nz|mega\.co\.nz).*/';
 const REGEXP_STORAGE='/^storage:\/\/.*/';
 
@@ -65,10 +63,6 @@ function get_provider($links){
 	foreach ($links as $link) {
 		if (preg_match(REGEXP_MEGA,$link['url'])){
 			array_push($methods, 'mega');
-		} else if (preg_match(REGEXP_GOOGLE_DRIVE,$link['url'])){
-			array_push($methods, 'google-drive');
-		} else if (preg_match(REGEXP_YOUTUBE,$link['url'])){
-			array_push($methods, 'youtube');
 		} else if (preg_match(REGEXP_STORAGE,$link['url'])) {
 			array_push($methods, 'storage');
 		} else {
@@ -76,23 +70,11 @@ function get_provider($links){
 		}
 	}
 	$output = '';
-	if (in_array('google-drive', $methods)){
-		if ($output!='') {
-			$output.=", ";
-		}
-		$output.="Google Drive";
-	}
 	if (in_array('mega', $methods)){
 		if ($output!='') {
 			$output.=", ";
 		}
 		$output.="MEGA";
-	}
-	if (in_array('youtube', $methods)){
-		if ($output!='') {
-			$output.=", ";
-		}
-		$output.="YouTube";
 	}
 	if (in_array('direct-video', $methods) || in_array('storage', $methods)){
 		if ($output!='') {
@@ -131,17 +113,11 @@ function list_remote_files($url) {
 function filter_links($links){
 	$methods = array();
 	$links_mega = array();
-	$links_googledrive = array();
-	$links_youtube = array();
 	$links_storage = array();
 	$links_direct = array();
 	foreach ($links as $link) {
 		if (preg_match(REGEXP_MEGA,$link['url'])){
 			array_push($links_mega, $link);
-		} else if (preg_match(REGEXP_GOOGLE_DRIVE,$link['url'])){
-			array_push($links_googledrive, $link);
-		} else if (preg_match(REGEXP_YOUTUBE,$link['url'])){
-			array_push($links_youtube, $link);
 		} else if (preg_match(REGEXP_STORAGE,$link['url'])){
 			array_push($links_storage, $link);
 		} else {
@@ -150,7 +126,7 @@ function filter_links($links){
 	}
 
 	//This establishes the preferences order:
-	//Storage > Direct video > Google Drive > YouTube > MEGA
+	//Storage > Direct video > MEGA
 
 	if (count($links_storage)>0 && count(STORAGES)>0) {
 		return $links_storage;
@@ -158,14 +134,6 @@ function filter_links($links){
 
 	if (count($links_direct)>0) {
 		return $links_direct;
-	}
-
-	if (count($links_googledrive)>0) {
-		return $links_googledrive;
-	}
-
-	if (count($links_youtube)>0) {
-		return $links_youtube;
 	}
 
 	if (count($links_mega)>0) {
@@ -232,7 +200,7 @@ function get_episode_player_title($fansub_name, $series_name, $series_subtype, $
 	}
 }
 
-function get_episode_player_title_short($fansub_name, $series_name, $series_subtype, $episode_title, $is_extra){
+function get_episode_player_title_short($series_name, $series_subtype, $episode_title, $is_extra){
 	if ($series_name==$episode_title || ($series_subtype==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID && !$is_extra)){
 		if (!empty($episode_title)) {
 			return $episode_title;

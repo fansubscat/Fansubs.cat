@@ -65,7 +65,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	} else {
 		$where = '';
 	}
-	$result = query("SELECT s.name series, s.type series_type, IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(di.name IS NULL,NULL,CONCAT(di.name,' - ')),IF(ve.show_divisions=1 AND (SELECT COUNT(*) FROM division di2 WHERE di2.series_id=s.id)>1,CONCAT(IF(s.type='manga','Volum ','Temporada '), TRIM(di.number)+0, ' - '),'')),IF(ve.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(di.name IS NULL,NULL,CONCAT(di.name,' - ')),IF(ve.show_divisions=1 AND (SELECT COUNT(*) FROM division di2 WHERE di2.series_id=s.id)>1,CONCAT('Temporada ', TRIM(di.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, re.date, re.ip, re.user_agent, re.type, re.text, f.id file_id, re.location, ve.id version_id FROM reported_error re LEFT JOIN file f ON re.file_id=f.id LEFT JOIN version ve ON f.version_id=ve.id LEFT JOIN rel_version_fansub vf ON vf.version_id=ve.id LEFT JOIN series s ON ve.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division di ON e.division_id=di.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id$where GROUP BY re.id ORDER BY date DESC LIMIT 100");
+	$result = query("SELECT s.name series, s.type series_type, IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(di.name IS NULL,NULL,CONCAT(di.name,' - ')),IF(ve.show_divisions=1 AND (SELECT COUNT(*) FROM division di2 WHERE di2.series_id=s.id)>1,CONCAT(IF(s.type='manga','Volum ','Temporada '), TRIM(di.number)+0, ' - '),'')),IF(ve.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(di.name IS NULL,NULL,CONCAT(di.name,' - ')),IF(ve.show_divisions=1 AND (SELECT COUNT(*) FROM division di2 WHERE di2.series_id=s.id)>1,CONCAT('Temporada ', TRIM(di.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, re.date, re.ip, re.user_agent, re.type, re.text, f.id file_id, re.position, ve.id version_id FROM reported_error re LEFT JOIN file f ON re.file_id=f.id LEFT JOIN version ve ON f.version_id=ve.id LEFT JOIN rel_version_fansub vf ON vf.version_id=ve.id LEFT JOIN series s ON ve.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division di ON e.division_id=di.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id$where GROUP BY re.id ORDER BY date DESC LIMIT 100");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -78,8 +78,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="row" class="align-middle"><?php echo $row['series']; ?><br /><small class="fw-normal"><?php echo $row['episode_name']; ?></small></th>
 								<td class="align-middle text-center"><span style="cursor: help;" title="<?php echo htmlentities($row['text']); ?>"><?php echo get_error_type($row['type']); ?></span></td>
-								<td class="align-middle text-center"><?php echo get_time($row['location']); ?></td>
-								<td class="align-middle text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
+								<td class="align-middle text-center"><?php echo get_time($row['position']); ?></td>
+								<td class="align-middle text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 								<td class="align-middle text-center"><strong><?php echo $row['date']; ?></strong></td>
 								<td class="align-middle text-center text-nowrap">
 <?php

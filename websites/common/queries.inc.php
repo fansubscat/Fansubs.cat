@@ -35,9 +35,9 @@ function get_internal_hentai_condition() {
 
 function get_internal_viewed_files_condition($user) {
 	if (!empty($user)) {
-		$viewed_files_condition = "ls.id NOT IN (SELECT ufp.file_id
-								FROM user_file_progress ufp
-								WHERE ufp.user_id=".intval($user['id']).")";
+		$viewed_files_condition = "ls.id NOT IN (SELECT ufss.file_id
+								FROM user_file_seen_status ufss
+								WHERE ufss.user_id=".intval($user['id']).")";
 	} else {
 		$cookie_viewed_files_ids = get_cookie_viewed_files_ids(); //Already escaped
 		if (count($cookie_viewed_files_ids)>0) {

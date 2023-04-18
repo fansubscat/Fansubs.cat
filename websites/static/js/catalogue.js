@@ -1,12 +1,13 @@
-var currentReadStartTime=-1;
-var currentPagesRead=1;
-var lastRequestedFileId=null;
+//General variables
 var lastWindowWidth=0;
+var lastSearchRequest = null;
+var lastAutocompleteRequest = null;
+//Player/Reader variables
 var player = null;
 var streamer = null;
 var currentTechOrders = [];
 var currentSourceData = null;
-var currentMegaFile = null;
+var lastRequestedFileId=null;
 var lastErrorTimestamp = null;
 var lastErrorReported = null;
 var playerEndedTimer = null;
@@ -14,20 +15,27 @@ var playerEndedMilliseconds = 0;
 var enableDebug = false;
 var enableDebugUrl = true;
 var loggedMessages = "";
-var lastSearchRequest = null;
-var lastAutocompleteRequest = null;
 var lastTimeUpdate = 0;
+var hasBeenCasted = false;
+var hasJumpedToInitialPosition = false;
 
 function showAlert(title, desc) {
-	//TODO FIX THIS
-	alert(title+"\n\n"+desc);
+	showCustomDialog(title, desc, null, true, true, [
+		{
+			text: 'D’acord',
+			class: 'normal-button',
+			onclick: function(){
+				closeCustomDialog();
+			}
+		}
+	]);
 }
 
 function isEmbedPage(){
 	return $('#embed-page').length!=0;
 }
 
-function getReaderSource(file_id){
+/*function getReaderSource(file_id){
 	var start='<div class="white-popup"><div style="display: flex; height: 100%;">';
 	var end='</div></div>';
 	return start+'<iframe style="flex-grow: 1;" frameborder="0" src="'+getBaseUrl()+'/reader.php?file_id='+file_id+(isEmbedPage() && (window.self==window.top) ? '&hide_close=1' : '')+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>'+end;
@@ -65,7 +73,7 @@ function sendReadEndBeacon(){
 		currentReadStartTime=-1;
 		currentPagesRead=1;
 	}
-}
+}*/
 
 function addLog(message){
 	console.debug(message);
@@ -84,7 +92,7 @@ function addLog(message){
 	loggedMessages+=new Date().toLocaleTimeString()+": ["+playerTime+"] "+message+"\n";
 }
 
-function beginReaderTracking(fileId){
+/*function beginReaderTracking(fileId){
 	markFileAsViewed(fileId);
 	currentFileId=fileId;
 	currentMethod='pages';
@@ -107,80 +115,92 @@ function beginReaderTracking(fileId){
 			console.debug('Would have requested: /counter.php?type=read&view_id='+currentViewId+"&file_id="+currentFileId+"&method=reader&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
 		}
 	}, 60000);
-}
+}*/
 
 function reportErrorToServer(error_type, error_text){
 	if (!lastErrorReported || lastErrorReported<=Date.now()-2000) {
 		addLog("Error reported");
 		lastErrorReported = Date.now();
-		var playerTime = 0;
-		try {
-			if (player && (player.currentTime() || player.currentTime()===0)) {
-				playerTime = player.currentTime();
-			}
-		} catch (error) {
-			playerTime = 0;
-		}
+		var playerTime = getPlayerCurrentTime();
+		var formData = new FormData();
+		formData.append("view_id", currentSourceData.view_id);
+		formData.append("file_id", currentSourceData.file_id);
+		formData.append("position", playerTime);
+		formData.append("type", error_type);
+		formData.append("text", error_text);
+		var url = getBaseUrl()+'/report_error.php';
 		if (!enableDebug) {
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", getBaseUrl()+'/report_error.php', true);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.send("view_id="+currentSourceData.view_id+"&location="+playerTime+"&type="+encodeURIComponent(error_type)+"&text="+encodeURIComponent(error_text));
+			navigator.sendBeacon(url, formData);
 		} else {
-			console.debug('Would have sent error via POST: '+"view_id="+currentSourceData.view_id+"&location="+playerTime+"&type="+encodeURIComponent(error_type)+"&text="+encodeURIComponent(error_text));
+			console.debug('Would have requested: '+url);
 		}
 	} else {
 		addLog("Error repeated (not reported).");
 	}
 }
 
-function getPlayedSeconds() {
+function getPlayerCurrentTime() {
+	if (player!=null) {
+		return Math.floor(player.currentTime());
+	} else {
+		return 0;
+	}
+}
+
+function getPlayerPlayedSeconds() {
 	var total = 0;
 	if (player!=null) {
 		for (var i=0; i<player.played().length;i++) {
 			total+=(player.played().end(i)-player.played().start(i));
 		}
 	}
-	return total;
+	return Math.floor(total);
 }
 
-function sendVideoTracking(){
-	if (!enableDebug) {
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", getBaseUrl()+"/counter.php?type=watch&view_id="+currentSourceData.view_id+"&method="+currentSourceData.method+"&action=notify&current_time="+Math.floor(player!=null ? player.currentTime() : -1)+"&time_spent="+Math.floor(getPlayedSeconds()), true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send("log="+encodeURIComponent(loggedMessages));
-	} else {
-		console.debug('Would have requested: /counter.php?type=watch&view_id='+currentSourceData.view_id+"&method="+currentSourceData.method+"&action=notify&current_time="+Math.floor(player!=null ? player.currentTime() : -1)+"&time_spent="+Math.floor(getPlayedSeconds()));
-	}
+function getReaderCurrentPage() {
+	//TODO IMPLEMENT READER
+	return 0;
 }
 
-function sendVideoTrackingEndAjax(){
+function getReaderReadPages() {
+	//TODO IMPLEMENT READER
+	return 0;
+}
+
+function sendCurrentFileTracking(){
 	if (currentSourceData!=null) {
-		if (!enableDebug) {
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST", getBaseUrl()+"/counter.php?type=watch&view_id="+currentSourceData.view_id+"&method="+currentSourceData.method+"&action=close&current_time="+Math.floor(player!=null ? player.currentTime() : -1)+"&time_spent="+Math.floor(getPlayedSeconds()), true);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.send("log="+encodeURIComponent(loggedMessages));
+		var position;
+		var progress;
+		var markAsSeenProgress;
+		if (currentSourceData.method=='pages') {
+			position = getReaderCurrentPage();
+			progress = currentSourceData.initial_progress+getReaderReadPages();
+			markAsSeenProgress = Math.max(1, Math.floor(currentSourceData.length*0.8), currentSourceData.length-5);
 		} else {
-			console.debug('Would have requested: /counter.php?type=watch&view_id='+currentSourceData.view_id+"&method="+currentSourceData.method+"&action=close&current_time="+Math.floor(player!=null ? player.currentTime() : -1)+"&time_spent="+Math.floor(getPlayedSeconds()));
+			position = getPlayerCurrentTime();
+			progress = currentSourceData.initial_progress+getPlayerPlayedSeconds();
+			markAsSeenProgress = Math.max(1, Math.floor(currentSourceData.length*0.85), currentSourceData.length-600);
+		}
+		if (progress>=markAsSeenProgress && !currentSourceData.is_seen) {
+			markAsSeen(currentSourceData.file_id, true);
+			currentSourceData.is_seen=true;
+		}
+		var formData = new FormData();
+		//formData.append("log", loggedMessages);
+		formData.append("view_id", currentSourceData.view_id);
+		formData.append("is_casted", hasBeenCasted ? 1 : 0);
+		formData.append("position", position);
+		formData.append("progress", progress);
+		var url = getBaseUrl()+'/report_file_status.php';
+		if (!enableDebug) {
+			navigator.sendBeacon(url, formData);
+		} else {
+			console.debug('Would have requested: '+url);
 		}
 	}
 }
 
-function sendVideoTrackingEndBeacon(){
-	if (currentSourceData!=null) {
-		if (!enableDebug) {
-			var formData = new FormData();
-			formData.append("log", loggedMessages);
-			navigator.sendBeacon(getBaseUrl()+'/counter.php?type=watch&view_id='+currentSourceData.view_id+"&method="+currentSourceData.method+"&action=close&current_time="+Math.floor(player!=null ? player.currentTime() : -1)+"&time_spent="+Math.floor(getPlayedSeconds()), formData);
-		} else {
-			console.debug('Would have requested: /counter.php?type=watch&view_id='+currentSourceData.view_id+"&method="+currentSourceData.method+"&action=close&current_time="+Math.floor(player!=null ? player.currentTime() : -1)+"&time_spent="+Math.floor(getPlayedSeconds()));
-		}
-	}
-}
-
-function markFileAsViewed(file_id){
+/*function markFileAsViewed(file_id){
 	var current = Cookies.get('viewed_files', cookieOptions);
 	if (current){
 		var files = current.split(',');
@@ -218,7 +238,7 @@ function markFileAsNotViewed(file_id){
 	$('.viewed-indicator[data-file-id='+file_id+'] span').removeClass('fa-eye');
 	$('.viewed-indicator[data-file-id='+file_id+'] span').addClass('fa-eye-slash');
 	$('.new-episode[data-file-id='+file_id+']').removeClass('hidden');
-}
+}*/
 
 function getPlayerErrorEvent() {
 	var error = "";
@@ -287,7 +307,7 @@ function playPrevVideo() {
 
 	if (results.length>0) {
 		//In case of multiple files for one episode, only the first will be played
-		//closeOverlay();
+		sendCurrentFileTracking();
 		shutdownVideoStreaming();
 		results.first().click();
 	}
@@ -314,13 +334,14 @@ function playNextVideo() {
 
 	if (results.length>0) {
 		//In case of multiple files for one episode, only the first will be played
-		//closeOverlay();
+		sendCurrentFileTracking();
 		shutdownVideoStreaming();
 		results.first().click();
 	}
 }
 
 function getTitleForChromecast() {
+	hasBeenCasted=true;
 	return currentSourceData.series;
 }
 
@@ -429,11 +450,14 @@ function initializePlayer(){
 			}
 		});
 
-		//Recover from errors if needed
 		player.on('canplay', event => {
+			//Recover from errors if needed
 			if (lastErrorTimestamp) {
 				player.currentTime(lastErrorTimestamp);
 				lastErrorTimestamp = null;
+			} else if (!hasBeenCasted && !hasJumpedToInitialPosition) {
+				hasJumpedToInitialPosition = true;
+				player.currentTime(currentSourceData.initial_position);
 			}
 		});
 		player.on('ready', function(){
@@ -525,7 +549,7 @@ function initializePlayer(){
 		player.on('timeupdate', function(){
 			if (Math.abs(player.currentTime()-lastTimeUpdate) >= 30) {
 				lastTimeUpdate=player.currentTime();
-				sendVideoTracking();
+				sendCurrentFileTracking();
 			}
 		});
 	} else {
@@ -663,8 +687,7 @@ function parsePlayerError(error){
 }
 
 function loadMegaStream(url){
-	currentMegaFile = window.mega.file(url);
-	currentMegaFile.loadAttributes((error, file) => {
+	window.mega.file(url).loadAttributes((error, file) => {
 		if (error){
 			parsePlayerError('E_MEGA_LOAD_ERROR: '+error);
 		} else {
@@ -679,7 +702,6 @@ function shutdownVideoStreaming() {
 	if (player!=null && player.techName_=='Html5') {
 		player.pause();
 	}
-	sendVideoTrackingEndAjax();
 	clearInterval(playerEndedTimer);
 	if (streamer!=null){
 		streamer.destroy();
@@ -715,12 +737,72 @@ function hideEndCard() {
 
 function closeOverlay() {
 	addLog('Closed');
+	sendCurrentFileTracking();
 	shutdownVideoPlayer(true);
 	if (!isEmbedPage()) {
 		$('#overlay').addClass('hidden');
 		$('html').removeClass('page-no-overflow');
 	} else {
 		window.parent.postMessage('embedClosed', '*');
+	}
+}
+
+function getPreviousUnreadEpisodes(fileId) {
+	var position  = parseInt($('.video-player[data-file-id="'+fileId+'"]').first().attr('data-position'));
+	return $('.video-player').filter(function(){
+		return parseInt($(this).attr('data-position')) < position;
+	});
+}
+
+function setSeenBehavior(value) {
+	//TODO Call server to save it
+	$('#seen_behavior').val(value);
+}
+
+function markAsSeen(fileId, dontAsk) {
+	var previouslyUnreadEpisodes = getPreviousUnreadEpisodes(fileId);
+	if (!dontAsk && $('#seen_behavior').val()==0 && previouslyUnreadEpisodes.length>0) {
+		showCustomDialog('Vols marcar també els capítols anteriors com a vistos?', 'La decisió que prenguis s’aplicarà automàticament a partir d’ara.', 'Podràs canviar-la a la configuració d’usuari.', true, true, [
+			{
+				text: 'Sí',
+				class: 'normal-button',
+				onclick: function(){
+					setSeenBehavior(1);
+					markAsSeen(fileId, true);
+					closeCustomDialog();
+				}
+			},
+			{
+				text: 'No',
+				class: 'normal-button',
+				onclick: function(){
+					setSeenBehavior(2);
+					markAsSeen(fileId, true);
+					closeCustomDialog();
+				}
+			}
+		]);
+	} else if ($('#seen_behavior').val()==1) {
+		//Mark as seen INCLUDING all unread episodes previous to the current one
+		var previouslyUnreadEpisodeIds = previouslyUnreadEpisodes.get().map(a => $(a).attr('data-file-id'));
+		executeMarkAsSeen(previouslyUnreadEpisodeIds.concat([fileId]), true);
+	} else {
+		//Mark only the current file
+		executeMarkAsSeen([fileId], true);
+	}
+}
+
+function executeMarkAsSeen(fileIds, isSeen) {
+	var formData = new FormData();
+	formData.append("action", isSeen ? 'add' : 'remove');
+	for (var i=0;i<fileIds.length;i++) {
+		formData.append("file_id[]", fileIds[i]);
+	}
+	var url = getBaseUrl()+'/mark_as_seen.php';
+	if (!enableDebug) {
+		navigator.sendBeacon(url, formData);
+	} else {
+		console.debug('Would have requested: '+url);
 	}
 }
 
@@ -1141,12 +1223,15 @@ function acceptHentaiWarning() {
 
 function requestPlayerData(fileId) {
 	lastRequestedFileId = fileId;
+	hasBeenCasted = false;
+	hasJumpedToInitialPosition = false
+	lastTimeUpdate = 0;
 	var values = {
 		file_id: fileId
 	};
 
 	$.post({
-		url: getBaseUrl()+"/do_get_player_data.php",
+		url: getBaseUrl()+"/get_file_data.php",
 		data: values,
 		xhrFields: {
 			withCredentials: true
@@ -1530,15 +1615,10 @@ $(document).ready(function() {
 		});
 	}
 
-	$(window).on('unload', function() {
-		addLog('Navigated away');
-		if (currentSourceData!=null) {
-			if (currentSourceData.method=='pages') {
-				sendReadEndBeacon();
-			} else {
-				sendVideoTrackingEndBeacon();
-				shutdownVideoPlayer();
-			}
+	$(window).on('visibilitychange', function() {
+		if (document.visibilityState!="visible") {
+			addLog('Page is now hidden from user sight');
+			sendCurrentFileTracking();
 		}
 	});
 });

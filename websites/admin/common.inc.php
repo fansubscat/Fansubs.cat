@@ -218,16 +218,9 @@ function get_browser_icon_by_type($user_agent, $user_agent_read) {
 	return 'class="fa fa-laptop" style="color: #28a745;" title="Ordinador"';
 }
 
-function get_anonymized_username($ip, $ua) {
-	if (empty($ua)) {
-		$ua = ""; //Fix nulls
-	}
-	if (empty($ip)) {
-		return '<span style="color: #000000;" title="' . $ua . '">N/A</span>';
-	} else if ($ip=='(recovered view)') {
-		return '<span style="color: #333333;" title="' . $ua . '">N/D</span>';
-	}
-	srand(crc32($ip));
+function get_anonymized_username($user_id, $anon_id) {
+	$value = (!empty($user_id) ? $user_id : $anon_id);
+	srand(crc32($value));
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$charactersLength = strlen($characters);
 	$randomString = '';
@@ -240,6 +233,6 @@ function get_anonymized_username($ip, $ua) {
 	for ($i = 0; $i < 6; $i++) {
 		$randomColor .= $colors[rand(0, $colorsLength - 1)];
 	}
-	return '<span style="color: #' . $randomColor . ';" title="' . $ua . '">' . $randomString . '</span>';
+	return '<span style="color: #' . $randomColor . ';">' . $randomString . '</span>';
 }
 ?>

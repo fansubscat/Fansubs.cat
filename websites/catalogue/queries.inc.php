@@ -139,6 +139,124 @@ function get_internal_length_condition($type, $length_type, $min_length, $max_le
 	return "1";
 }
 
+// INSERT
+
+function query_insert_or_update_user_position_for_file_id($user_id, $file_id, $position) {
+	$file_id = intval($file_id);
+	$user_id = intval($user_id);
+	$position = intval($position);
+	$final_query = "INSERT INTO user_file_seen_status
+				(user_id, file_id, is_seen, position, last_viewed)
+			VALUES ($user_id, $file_id, FALSE, $position, CURRENT_TIMESTAMP)
+			ON DUPLICATE KEY UPDATE position=IF(is_seen=1,0,$position),last_viewed=CURRENT_TIMESTAMP";
+	return query($final_query);
+}
+
+function query_insert_or_update_user_seen_for_file_id($user_id, $file_id, $is_seen) {
+	$user_id = intval($user_id);
+	$file_id = intval($file_id);
+	$is_seen = ($is_seen===TRUE ? 1 : 0);
+	$final_query = "INSERT INTO user_file_seen_status
+				(user_id, file_id, is_seen, position, last_viewed)
+			VALUES ($user_id, $file_id, $is_seen, 0, NULL)
+			ON DUPLICATE KEY UPDATE is_seen=$is_seen";
+	return query($final_query);
+}
+
+function query_insert_view_session($view_id, $file_id, $user_id, $anon_id, $length, $ip, $user_agent) {
+	$view_id = escape($view_id);
+	$file_id = intval($file_id);
+	$user_id = $user_id!==NULL ? intval($user_id) : 'NULL';
+	$anon_id = $anon_id!==NULL ? "'".escape($anon_id)."'" : 'NULL';
+	$length = intval($length);
+	$ip = escape($ip);
+	$user_agent = escape($user_agent);
+	$final_query = "INSERT INTO view_session
+				(id, file_id, user_id, anon_id, progress, length, created, updated, is_casted, is_view_counted, ip, user_agent)
+			VALUES ('$view_id', $file_id, $user_id, $anon_id, 0, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '$ip', '$user_agent')";
+	return query($final_query);
+}
+
+function query_insert_reported_error($view_id, $file_id, $user_id, $anon_id, $position, $type, $text, $ip, $user_agent) {
+	$view_id = escape($view_id);
+	$file_id = intval($file_id);
+	$user_id = $user_id!==NULL ? intval($user_id) : 'NULL';
+	$anon_id = $anon_id!==NULL ? "'".escape($anon_id)."'" : 'NULL';
+	$position = intval($position);
+	$type = escape($type);
+	$text = escape($text);
+	$ip = escape($ip);
+	$user_agent = escape($user_agent);
+	$final_query = "INSERT INTO reported_error
+				(view_id, file_id, user_id, anon_id, position, type, text, date, ip, user_agent)
+			VALUES ('$view_id', $file_id, $user_id, $anon_id, $position, '$type', '$text', CURRENT_TIMESTAMP, '$ip', '$user_agent')";
+	return query($final_query);
+}
+
+function query_update_view_session_basic_attrs($view_id, $length, $ip, $user_agent) {
+	$view_id = escape($view_id);
+	$length = intval($length);
+	$ip = escape($ip);
+	$user_agent = escape($user_agent);
+	$final_query = "UPDATE view_session
+			SET length=$length,
+				ip='$ip',
+				user_agent='$user_agent',
+				updated=CURRENT_TIMESTAMP
+			WHERE id='$view_id'";
+	return query($final_query);
+}
+
+function query_update_view_session_progress($view_id, $progress, $is_casted, $ip, $user_agent) {
+	$view_id = escape($view_id);
+	$progress = intval($progress);
+	$is_casted = intval($is_casted);
+	$ip = escape($ip);
+	$user_agent = escape($user_agent);
+	$final_query = "UPDATE view_session
+			SET progress=IF($is_casted=1,length,GREATEST(progress,$progress)),
+				updated=CURRENT_TIMESTAMP,
+				is_casted=$is_casted,
+				ip='$ip',
+				user_agent='$user_agent'
+			WHERE id='$view_id'";
+	return query($final_query);
+}
+
+function query_insert_or_update_user_version_followed_by_file_id($user_id, $file_id) {
+	$user_id = intval($user_id);
+	$file_id = intval($file_id);
+	$final_query = "INSERT INTO user_version_followed (user_id, version_id, last_seen_episode_id)
+			VALUES ($user_id, (SELECT f2.version_id
+						FROM file f2
+						WHERE f2.id=$file_id), IFNULL((SELECT e.id last_episode_seen_id
+									FROM user_file_seen_status ufss
+ 									LEFT JOIN file f ON ufss.file_id=f.id
+									LEFT JOIN episode e ON f.episode_id=e.id
+									LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=f.version_id
+									WHERE f.version_id IN (SELECT f2.version_id
+												FROM file f2
+												WHERE f2.id=$file_id)
+									ORDER BY e.number IS NULL DESC,
+										e.number DESC,
+										IFNULL(et.title, e.description) DESC
+									LIMIT 1),-1)
+			)
+			ON DUPLICATE KEY UPDATE last_seen_episode_id=IFNULL((SELECT e.id last_episode_seen_id
+									FROM user_file_seen_status ufss
+ 									LEFT JOIN file f ON ufss.file_id=f.id
+									LEFT JOIN episode e ON f.episode_id=e.id
+									LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=f.version_id
+									WHERE f.version_id IN (SELECT f2.version_id
+												FROM file f2
+												WHERE f2.id=$file_id)
+									ORDER BY e.number IS NULL DESC,
+										e.number DESC,
+										IFNULL(et.title, e.description) DESC
+									LIMIT 1),-1)";
+	return query($final_query);
+}
+
 // SELECT
 
 function query_total_number_of_series($round_interval) {
@@ -413,11 +531,11 @@ function query_home_continue_watching_by_user_id($user_id) {
 					fa.name fansub_name,
 					fa.type fansub_type,
 					fa.id fansub_id,
-					ufp.progress/f.length progress_percent,
-					ufp.last_viewed last_viewed,
+					ufss.position/f.length progress_percent,
+					ufss.last_viewed last_viewed,
 					1 origin
-				FROM user_file_progress ufp
-					LEFT JOIN file f ON ufp.file_id=f.id
+				FROM user_file_seen_status ufss
+					LEFT JOIN file f ON ufss.file_id=f.id
 					LEFT JOIN version v ON f.version_id=v.id
 					LEFT JOIN series s ON v.series_id=s.id
 					LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id
@@ -425,10 +543,10 @@ function query_home_continue_watching_by_user_id($user_id) {
 					LEFT JOIN episode e ON f.episode_id=e.id
 					LEFT JOIN division d ON e.division_id=d.id
 					LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
-				WHERE ufp.user_id=$user_id
+				WHERE ufss.user_id=$user_id
 					AND s.type='".CATALOGUE_ITEM_TYPE."'
 					AND f.is_lost=0
-					AND ufp.is_seen=0
+					AND ufss.is_seen=0
 					AND ".get_internal_hentai_condition()."
 				UNION
 				SELECT f.id file_id,
@@ -496,11 +614,11 @@ function query_home_continue_watching_by_user_id($user_id) {
 					)
 					AND f.version_id NOT IN (
 						SELECT f.version_id
-						FROM user_file_progress ufp
-						LEFT JOIN file f ON ufp.file_id=f.id
-						WHERE ufp.user_id=$user_id
+						FROM user_file_seen_status ufss
+						LEFT JOIN file f ON ufss.file_id=f.id
+						WHERE ufss.user_id=$user_id
 						AND f.is_lost=0
-						AND ufp.is_seen=0
+						AND ufss.is_seen=0
 					)
 					AND s.type='".CATALOGUE_ITEM_TYPE."'
 					AND f.is_lost=0
@@ -713,6 +831,52 @@ function query_links_by_file_id($file_id) {
 			FROM link l
 			WHERE l.file_id=$file_id
 			ORDER BY l.url ASC";
+	return query($final_query);
+}
+
+function query_user_file_seen_status_by_file_id($user_id, $file_id) {
+	$user_id = intval($user_id);
+	$file_id = intval($file_id);
+	$final_query = "SELECT *
+			FROM user_file_seen_status
+			WHERE user_id=$user_id
+				AND file_id=$file_id";
+	return query($final_query);
+}
+
+function query_view_session_by_id($id) {
+	$id = escape($id);
+	$final_query = "SELECT *
+			FROM view_session
+			WHERE id='$id'";
+	return query($final_query);
+}
+
+function query_view_session_for_user_and_file_id($user_id, $file_id) {
+	$user_id = intval($user_id);
+	$file_id = intval($file_id);
+	$final_query = "SELECT *
+			FROM view_session
+			WHERE user_id=$user_id
+				AND file_id=$file_id";
+	return query($final_query);
+}
+
+function query_view_session_for_anon_id_and_file_id($anon_id, $file_id) {
+	$anon_id = intval($anon_id);
+	$file_id = intval($file_id);
+	$final_query = "SELECT *
+			FROM view_session
+			WHERE anon_id=$anon_id
+				AND file_id=$file_id";
+	return query($final_query);
+}
+
+function query_version_by_file_id($file_id) {
+	$file_id = intval($file_id);
+	$final_query = "SELECT version_id
+			FROM file f
+			WHERE f.id=$file_id";
 	return query($final_query);
 }
 ?>

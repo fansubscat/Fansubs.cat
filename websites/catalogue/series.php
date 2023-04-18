@@ -28,6 +28,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 ?>
 				<input id="autoopen_version_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['v']) ? (int)$_GET['v'] : ''); ?>"></input>
 				<input id="autoopen_file_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['f']) ? (int)$_GET['f'] : ''); ?>"></input>
+				<input id="seen_behavior" type="hidden" value="<?php echo 0; ?>"></input>
 				<div class="series_header">
 					<div class="img" style="background: url('<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
 					<div class="series_title_container">

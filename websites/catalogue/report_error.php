@@ -1,12 +1,21 @@
 <?php
-require_once("db.inc.php");
-if (!empty($_POST['type']) && !empty($_POST['text']) && !empty($_POST['file_id'])) {
-	$file_id = escape((int)$_POST['file_id']);
-	$location = escape((int)$_POST['location']);
-	$type = escape($_POST['type']);
-	$text = escape($_POST['text']);
-	$ip = escape($_SERVER['REMOTE_ADDR']);
-	$ua = escape($_SERVER['HTTP_USER_AGENT']);
-	query("INSERT INTO reported_error (file_id, location, type, text, ip, date, user_agent) VALUES ($file_id, $location, '$type', '$text', '$ip', CURRENT_TIMESTAMP, '$ua')");
+require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("common.inc.php");
+require_once("queries.inc.php");
+
+function report_error(){
+	global $user;
+	if (!empty($_POST['type']) && !empty($_POST['text']) && !empty($_POST['file_id']) && !empty($_POST['view_id'])) {
+		if (!empty($user)) {
+			query_insert_reported_error($_POST['view_id'], $_POST['file_id'], $user['id'], NULL, $_POST['position'], $_POST['type'], $_POST['text'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+		} else {
+			//Anon
+			query_insert_reported_error($_POST['view_id'], $_POST['file_id'], NULL, session_id(), $_POST['position'], $_POST['type'], $_POST['text'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+		}
+	}
+
+	return array('result' => 'ok');
 }
+
+echo json_encode(report_error());
 ?>

@@ -9,8 +9,8 @@
 .main-button {
 	font-family: "lexend_deca_bold", sans-serif;
 	display: inline-block;
-	background-color: rgb(var(--positive-color));
-	color: rgb(var(--negative-color));
+	background-color: rgb(var(--always-positive-color));
+	color: rgb(var(--always-negative-color));
 	padding: 1.4rem 2.2rem;
 	margin: 1.5rem 0.75rem 0;
 	min-width: 26rem;
@@ -167,7 +167,7 @@
 	filter: grayscale(1);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
 	.main-button:hover {
 		border: 0.3rem solid rgb(var(--primary-color));
 		letter-spacing: 0.15rem;
