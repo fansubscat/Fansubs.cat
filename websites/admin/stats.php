@@ -42,7 +42,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques totals</h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM news) total_news, (SELECT COUNT(*) FROM series WHERE type='anime') total_anime, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime') total_anime_versions, (SELECT COUNT(*) FROM series WHERE type='manga') total_manga, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga') total_manga_versions, (SELECT COUNT(*) FROM series WHERE type='liveaction') total_liveaction, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction') total_liveaction_versions, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='anime') total_anime_files, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='manga') total_manga_files, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='liveaction') total_liveaction_files, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_anime_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_manga_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_liveaction_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='anime') total_anime_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='anime') total_anime_views, (SELECT IFNULL(SUM(time_spent),0) FROM views WHERE type='anime') total_anime_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='manga') total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='manga') total_manga_views, (SELECT IFNULL(SUM(pages_read),0) FROM views WHERE type='manga') total_manga_pages_read, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='liveaction') total_liveaction_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='liveaction') total_liveaction_views, (SELECT IFNULL(SUM(time_spent),0) FROM views WHERE type='liveaction') total_liveaction_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_anime_episodes, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_manga_chapters, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_liveaction_episodes, (SELECT SUM(f.length) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0) total_anime_duration, (SELECT SUM(f.length) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0) total_manga_pages, (SELECT SUM(f.length) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0) total_liveaction_duration");
+			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM news) total_news, (SELECT COUNT(*) FROM series WHERE type='anime') total_anime, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime') total_anime_versions, (SELECT COUNT(*) FROM series WHERE type='manga') total_manga, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga') total_manga_versions, (SELECT COUNT(*) FROM series WHERE type='liveaction') total_liveaction, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction') total_liveaction_versions, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='anime') total_anime_files, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='manga') total_manga_files, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='liveaction') total_liveaction_files, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_anime_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_manga_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_liveaction_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='anime') total_anime_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='anime') total_anime_views, (SELECT IFNULL(SUM(total_length),0) FROM views WHERE type='anime') total_anime_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='manga') total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='manga') total_manga_views, (SELECT IFNULL(SUM(total_length),0) FROM views WHERE type='manga') total_manga_pages_read, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='liveaction') total_liveaction_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='liveaction') total_liveaction_views, (SELECT IFNULL(SUM(total_length),0) FROM views WHERE type='liveaction') total_liveaction_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_anime_episodes, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_manga_chapters, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_liveaction_episodes, (SELECT SUM(f.length) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0) total_anime_duration, (SELECT SUM(f.length) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0) total_manga_pages, (SELECT SUM(f.length) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0) total_liveaction_duration");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
@@ -70,8 +70,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-4 text-center"><b>Durada total:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_duration']); ?></div>
 									</div>
 									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo max(0, $totals['total_anime_clicks']); ?></div>
 										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_anime_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b><br><?php echo max(0, $totals['total_anime_clicks']-$totals['total_anime_views']); ?></div>
 										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_time_spent']); ?></div>
 									</div>
 								</div>
@@ -84,8 +84,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-4 text-center"><b>Pàgines totals:</b><br><?php echo $totals['total_manga_pages']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo max(0, $totals['total_manga_clicks']); ?></div>
 										<div class="col-sm-4 text-center"><b>Lectures:</b><br><?php echo $totals['total_manga_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Clics sense llegir:</b><br><?php echo max(0, $totals['total_manga_clicks']-$totals['total_manga_views']); ?></div>
 										<div class="col-sm-4 text-center"><b>Pàgines totals llegides:</b><br><?php echo $totals['total_manga_pages_read']; ?></div>
 									</div>
 								</div>
@@ -98,8 +98,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-4 text-center"><b>Durada total:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_duration']); ?></div>
 									</div>
 									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo max(0, $totals['total_liveaction_clicks']); ?></div>
 										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_liveaction_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b><br><?php echo max(0, $totals['total_liveaction_clicks']-$totals['total_liveaction_views']); ?></div>
 										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_time_spent']); ?></div>
 									</div>
 								</div>
@@ -132,7 +132,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v WHERE v.type='anime' AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/3600 total_time_spent FROM views v WHERE v.type='anime' AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
@@ -159,19 +159,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Visualitzacions reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense visualitzar',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Visualitzacions',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -210,7 +210,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i++;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v WHERE v.type='anime' GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/3600 total_time_spent FROM views v WHERE v.type='anime' GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
@@ -237,19 +237,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Visualitzacions reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense visualitzar',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Visualitzacions',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -307,7 +307,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(pages_read),0) total_pages_read FROM views v WHERE v.type='manga' AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0) total_pages_read FROM views v WHERE v.type='manga' AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read']);
 	}
@@ -334,19 +334,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Lectures reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense llegir',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Lectures',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -385,7 +385,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i++;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(pages_read),0) total_pages_read FROM views v WHERE v.type='manga' GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0) total_pages_read FROM views v WHERE v.type='manga' GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read']);
 	}
@@ -412,19 +412,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Lectures reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense llegir',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Lectures',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -482,7 +482,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v WHERE v.type='liveaction' AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/3600 total_time_spent FROM views v WHERE v.type='liveaction' AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
@@ -509,19 +509,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Visualitzacions reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense visualitzar',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Visualitzacions',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -560,7 +560,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i++;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v WHERE v.type='liveaction' GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/3600 total_time_spent FROM views v WHERE v.type='liveaction' GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
@@ -587,19 +587,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Visualitzacions reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense visualitzar',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Visualitzacions',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -966,7 +966,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
-	$result = query("SELECT (SELECT COUNT(*) FROM view_log WHERE type='anime' AND view_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_log WHERE type='anime' AND view_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_log WHERE type='anime' AND view_type='cast' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
+	$result = query("SELECT (SELECT COUNT(*) FROM view_session WHERE type='anime' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session WHERE type='anime' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session WHERE type='anime' AND source='cast' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
 	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
 	mysqli_free_result($result);
@@ -1006,7 +1006,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Tachiyomi'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
-	$result = query("SELECT (SELECT COUNT(*) FROM view_log WHERE type='manga' AND view_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_log WHERE type='manga' AND view_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_log WHERE type='manga' AND view_type='api' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') api");
+	$result = query("SELECT (SELECT COUNT(*) FROM view_session WHERE type='manga' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session WHERE type='manga' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session WHERE type='manga' AND source='api' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') api");
 	$row = mysqli_fetch_assoc($result);
 	$origin_values=array($row['desktop'], $row['mobile'], $row['api']);
 	mysqli_free_result($result);
@@ -1046,7 +1046,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
-	$result = query("SELECT (SELECT COUNT(*) FROM view_log WHERE type='liveaction' AND view_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_log WHERE type='liveaction' AND view_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_log WHERE type='liveaction' AND view_type='cast' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
+	$result = query("SELECT (SELECT COUNT(*) FROM view_session WHERE type='liveaction' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session WHERE type='liveaction' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session WHERE type='liveaction' AND source='cast' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
 	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
 	mysqli_free_result($result);
@@ -1089,7 +1089,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<h4 class="card-title text-center mb-4 mt-1">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
 								<hr>
 		<?php
-			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(*) FROM news WHERE fansub_id=".$fansub['id'].") total_news, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND vf.fansub_id=".$fansub['id'].") total_anime, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND fansub_id=".$fansub['id'].") total_anime_versions, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND vf.fansub_id=".$fansub['id'].") total_manga, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND fansub_id=".$fansub['id'].") total_manga_versions, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND vf.fansub_id=".$fansub['id'].") total_liveaction, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fansub_id=".$fansub['id'].") total_liveaction_versions, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_anime_files, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_manga_files, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_liveaction_files, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_anime_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_manga_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_liveaction_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_views, (SELECT IFNULL(SUM(time_spent),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_views, (SELECT IFNULL(SUM(pages_read),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_pages_read, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_views, (SELECT IFNULL(SUM(time_spent),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_anime_episodes, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_manga_chapters, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_liveaction_episodes, (SELECT SUM(f.length) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_anime_duration, (SELECT SUM(f.length) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_manga_pages, (SELECT SUM(f.length) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_liveaction_duration");
+			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(*) FROM news WHERE fansub_id=".$fansub['id'].") total_news, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND vf.fansub_id=".$fansub['id'].") total_anime, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND fansub_id=".$fansub['id'].") total_anime_versions, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND vf.fansub_id=".$fansub['id'].") total_manga, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND fansub_id=".$fansub['id'].") total_manga_versions, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND vf.fansub_id=".$fansub['id'].") total_liveaction, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fansub_id=".$fansub['id'].") total_liveaction_versions, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_anime_files, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_manga_files, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_liveaction_files, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_anime_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_manga_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_liveaction_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_views, (SELECT IFNULL(SUM(total_length),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_views, (SELECT IFNULL(SUM(total_length),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_pages_read, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_views, (SELECT IFNULL(SUM(total_length),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_anime_episodes, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_manga_chapters, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_liveaction_episodes, (SELECT SUM(f.length) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_anime_duration, (SELECT SUM(f.length) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_manga_pages, (SELECT SUM(f.length) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_liveaction_duration");
 			$totals = mysqli_fetch_assoc($result);
 			mysqli_free_result($result);
 		?>
@@ -1117,8 +1117,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-4 text-center"><b>Durada total:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_duration']); ?></div>
 									</div>
 									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo $totals['total_anime_clicks']; ?></div>
 										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_anime_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b><br><?php echo max(0, $totals['total_anime_clicks']-$totals['total_anime_views']); ?></div>
 										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_time_spent']); ?></div>
 									</div>
 								</div>
@@ -1131,8 +1131,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-4 text-center"><b>Pàgines totals:</b><br><?php echo $totals['total_manga_pages']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo $totals['total_manga_clicks']; ?></div>
 										<div class="col-sm-4 text-center"><b>Lectures:</b><br><?php echo $totals['total_manga_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Clics sense llegir:</b><br><?php echo max(0, $totals['total_manga_clicks']-$totals['total_manga_views']); ?></div>
 										<div class="col-sm-4 text-center"><b>Pàgines totals llegides:</b><br><?php echo $totals['total_manga_pages_read']; ?></div>
 									</div>
 								</div>
@@ -1145,8 +1145,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<div class="col-sm-4 text-center"><b>Durada total:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_duration']); ?></div>
 									</div>
 									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo $totals['total_liveaction_clicks']; ?></div>
 										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_liveaction_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Clics sense visualitzar:</b><br><?php echo max(0, $totals['total_liveaction_clicks']-$totals['total_liveaction_views']); ?></div>
 										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_time_spent']); ?></div>
 									</div>
 								</div>
@@ -1179,7 +1179,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/3600 total_time_spent FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
@@ -1206,19 +1206,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Visualitzacions reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense visualitzar',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Visualitzacions',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -1257,7 +1257,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$i++;
 		}
 
-		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/3600 total_time_spent FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 		while ($row = mysqli_fetch_assoc($result)) {
 			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 		}
@@ -1284,19 +1284,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Visualitzacions reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense visualitzar',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Visualitzacions',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -1354,7 +1354,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(pages_read),0) total_pages_read FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0) total_pages_read FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read']);
 	}
@@ -1381,19 +1381,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Lectures reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense llegir',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Lectures',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -1432,7 +1432,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$i++;
 		}
 
-		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(pages_read),0) total_pages_read FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0) total_pages_read FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 		while ($row = mysqli_fetch_assoc($result)) {
 			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_pages_read']);
 		}
@@ -1459,19 +1459,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Lectures reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense llegir',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Lectures',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -1529,7 +1529,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i--;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/3600 total_time_spent FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND DATE_FORMAT(v.day,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."' GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 	}
@@ -1556,19 +1556,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Visualitzacions reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense visualitzar',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Visualitzacions',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -1607,7 +1607,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$i++;
 		}
 
-		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(time_spent),0)/3600 total_time_spent FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+		$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/3600 total_time_spent FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 		while ($row = mysqli_fetch_assoc($result)) {
 			$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_time_spent']);
 		}
@@ -1634,19 +1634,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Visualitzacions reals',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
-														label: 'Clics sense visualitzar',
+														label: 'Clics',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: 'Visualitzacions',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -2013,7 +2013,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
-	$result = query("SELECT (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND view_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND view_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND view_type='cast' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
+	$result = query("SELECT (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND source='cast' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
 	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
 	mysqli_free_result($result);
@@ -2053,7 +2053,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Tachiyomi'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
-	$result = query("SELECT (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND view_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND view_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND view_type='api' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') api");
+	$result = query("SELECT (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND source='api' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') api");
 	$row = mysqli_fetch_assoc($result);
 	$origin_values=array($row['desktop'], $row['mobile'], $row['api']);
 	mysqli_free_result($result);
@@ -2093,7 +2093,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
-	$result = query("SELECT (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND view_type='desktop' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND view_type='mobile' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND view_type='cast' AND DATE_FORMAT(date,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
+	$result = query("SELECT (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND source='cast' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
 	$origin_values=array($row['desktop'], $row['mobile'], $row['cast']);
 	mysqli_free_result($result);

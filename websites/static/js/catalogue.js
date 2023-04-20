@@ -171,17 +171,17 @@ function sendCurrentFileTracking(){
 	if (currentSourceData!=null) {
 		var position;
 		var progress;
-		var markAsSeenProgress;
+		var markAsSeenPosition;
 		if (currentSourceData.method=='pages') {
 			position = getReaderCurrentPage();
 			progress = currentSourceData.initial_progress+getReaderReadPages();
-			markAsSeenProgress = Math.max(1, Math.floor(currentSourceData.length*0.8), currentSourceData.length-5);
+			markAsSeenPosition = Math.max(1, Math.floor(currentSourceData.length*0.85), currentSourceData.length-5);
 		} else {
 			position = getPlayerCurrentTime();
 			progress = currentSourceData.initial_progress+getPlayerPlayedSeconds();
-			markAsSeenProgress = Math.max(1, Math.floor(currentSourceData.length*0.85), currentSourceData.length-600);
+			markAsSeenPosition = Math.max(1, Math.floor(currentSourceData.length*0.85), currentSourceData.length-600);
 		}
-		if (progress>=markAsSeenProgress && !currentSourceData.is_seen) {
+		if (position>=markAsSeenPosition && !currentSourceData.is_seen) {
 			markAsSeen(currentSourceData.file_id, true);
 			currentSourceData.is_seen=true;
 		}

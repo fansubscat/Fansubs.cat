@@ -334,32 +334,22 @@ CREATE TABLE `views` (
   `type` varchar(200) NOT NULL,
   `clicks` int(11) NOT NULL DEFAULT 0,
   `views` int(11) NOT NULL DEFAULT 0,
-  `time_spent` int(11) DEFAULT NULL,
-  `pages_read` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE `view_log` (
-  `id` int(11) NOT NULL,
-  `type` varchar(200) NOT NULL,
-  `file_id` int(11) NOT NULL,
-  `ip` varchar(200) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `user_agent` text DEFAULT NULL,
-  `user_agent_read` text DEFAULT NULL,
-  `view_type` varchar(200) DEFAULT NULL
+  `total_length` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `view_session` (
   `id` varchar(24) NOT NULL,
   `file_id` int(11) NOT NULL,
+  `type` varchar(200) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `anon_id` varchar(48) DEFAULT NULL,
   `progress` int(11) NOT NULL DEFAULT 0,
   `length` int(11) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
+  `view_counted` timestamp NULL DEFAULT NULL,
   `is_casted` tinyint(1) NOT NULL DEFAULT 0,
-  `is_view_counted` tinyint(1) NOT NULL DEFAULT 0,
+  `source` varchar(200) NOT NULL,
   `ip` varchar(200) NOT NULL,
   `user_agent` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -484,16 +474,13 @@ ALTER TABLE `views`
   ADD PRIMARY KEY (`file_id`,`day`),
   ADD KEY `type` (`type`);
 
-ALTER TABLE `view_log`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `type` (`type`);
-
 ALTER TABLE `view_session`
   ADD PRIMARY KEY (`id`),
   ADD KEY `created` (`created`),
   ADD KEY `file_id` (`file_id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `anon_id` (`anon_id`);
+  ADD KEY `anon_id` (`anon_id`),
+  ADD KEY `source` (`source`);
 
 ALTER TABLE `admin_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -541,9 +528,6 @@ ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `version`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `view_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `admin_user`

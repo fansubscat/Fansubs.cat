@@ -101,16 +101,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.method, (IF(ps.method='size', IF(ps.total_bytes>0, ps.bytes_read/ps.total_bytes, 0), IF(ps.method='pages', ps.pages_read/ps.total_pages, ps.time_spent/ps.total_time)))*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent, ps.user_agent_read, ps.is_view_counted FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND ps.is_archived=0 AND ps.is_viewer_closed=0 AND UNIX_TIMESTAMP(ps.last_update)>=".(date('U')-120)." ORDER BY ps.created DESC");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.user_id, ps.anon_id, (ps.progress/ps.length)*100 progress, UNIX_TIMESTAMP(ps.updated) updated, ps.ip, ps.user_agent, ps.is_casted, ps.view_counted FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)." ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col"><?php echo $row['series_name']; ?></td>
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
-												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
-												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
-												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
-												<td class="text-center"><div<?php echo $row['is_view_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
+												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
+												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['updated']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['user_agent'], $row['is_casted']); ?>></div></td>
+												<td class="text-center"><div<?php echo !empty($row['view_counted']) ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -119,7 +119,7 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les <?php echo $view_name_lc; ?> de navegadors, la resta poden fluctuar i s’incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
+								<p class="text-center text-muted small">Depenent de la tecnologia utilitzada, algunes <?php echo $view_name_lc; ?> no mostren el progrés i apareixen immediatament com a completades.</p>
 							</article>
 						</div>
 					</div>
@@ -141,15 +141,15 @@ mysqli_free_result($result);
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, vl.date, vl.ip, vl.user_agent, vl.user_agent_read FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' ORDER BY vl.date DESC LIMIT $limit");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.user_id, ps.anon_id, (ps.progress/ps.length)*100 progress, UNIX_TIMESTAMP(ps.updated) updated, ps.ip, ps.user_agent, ps.is_casted, ps.view_counted FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND ps.view_counted IS NOT NULL ORDER BY ps.updated DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col"><?php echo $row['series_name']; ?></td>
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
-												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
-												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
-												<td class="text-center" class="text-center"><?php echo $row['date']; ?></td>
+												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['user_agent'], $row['is_casted']); ?>></div></td>
+												<td class="text-center" class="text-center"><?php echo date('Y-m-d H:i:s', $row['updated']); ?></td>
 											</tr>
 <?php
 }
@@ -188,16 +188,17 @@ mysqli_free_result($result);
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.method, (IF(ps.method='size', IF(ps.total_bytes>0, ps.bytes_read/ps.total_bytes, 0), IF(ps.method='reader', ps.pages_read/ps.total_pages, ps.time_spent/ps.total_time)))*100 progress, UNIX_TIMESTAMP(ps.last_update) last_update, ps.ip, ps.user_agent, ps.user_agent_read, ps.is_view_counted FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND ps.is_archived=0 AND ps.is_viewer_closed=0 AND UNIX_TIMESTAMP(ps.last_update)>=".(date('U')-120)." ORDER BY ps.created DESC");
+
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.user_id, ps.anon_id, (ps.progress/ps.length)*100 progress, UNIX_TIMESTAMP(ps.updated) updated, ps.ip, ps.user_agent, ps.is_casted, ps.view_counted FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)." ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col"><?php echo $row['series_name']; ?></td>
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
-												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
-												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['last_update']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
-												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
-												<td class="text-center"><div<?php echo $row['is_view_counted']==1 ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
+												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
+												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['updated']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['user_agent'], $row['is_casted']); ?>></div></td>
+												<td class="text-center"><div<?php echo !empty($row['view_counted']) ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" style="color: red;" title="De moment no compta com a visualització"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -206,7 +207,7 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Aquesta llista només inclou de manera fiable les <?php echo $view_name_lc; ?> de navegadors, la resta poden fluctuar i s’incorporaran més tard a les estadístiques. El progrés és sols orientatiu.</p>
+								<p class="text-center text-muted small">Depenent de la tecnologia utilitzada, algunes <?php echo $view_name_lc; ?> no mostren el progrés i apareixen immediatament com a completades.</p>
 							</article>
 						</div>
 					</div>
@@ -228,15 +229,15 @@ mysqli_free_result($result);
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, vl.date, vl.ip, vl.user_agent, vl.user_agent_read FROM view_log vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") ORDER BY vl.date DESC LIMIT $limit");
+$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.user_id, ps.anon_id, (ps.progress/ps.length)*100 progress, UNIX_TIMESTAMP(ps.updated) updated, ps.ip, ps.user_agent, ps.is_casted, ps.view_counted FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND ps.view_counted IS NOT NULL ORDER BY ps.updated DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr>
 												<td scope="col"><?php echo $row['series_name']; ?></td>
 												<td scope="col"><?php echo $row['episode_name']; ?></td>
-												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['ip'], $row['user_agent']); ?></td>
-												<td class="text-center"><div <?php echo get_browser_icon_by_type($row['user_agent'], $row['user_agent_read']); ?>></div></td>
-												<td class="text-center"><?php echo $row['date']; ?></td>
+												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
+												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['user_agent'], $row['is_casted']); ?>></div></td>
+												<td class="text-center" class="text-center"><?php echo date('Y-m-d H:i:s', $row['updated']); ?></td>
 											</tr>
 <?php
 }

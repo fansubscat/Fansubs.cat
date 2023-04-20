@@ -8,7 +8,7 @@ function log_action($action, $text=NULL){
 	} else {
 		$text = "NULL";
 	}
-	query("INSERT INTO admin_log (action, text, author, date) VALUES ('".escape($action)."',$text,'(Servei intern)', CURRENT_TIMESTAMP)", TRUE);
+	query("INSERT INTO admin_log (action, text, author, date) VALUES ('".escape($action)."',$text,'Intern [S]', CURRENT_TIMESTAMP)", TRUE);
 }
 
 function crash($string){

@@ -18,6 +18,7 @@
 	- S’ha reimplementat la cerca i el filtrat de sèries.
 	- S’ha implementat l’autocompleció en cercar.
 	- S’ha mogut tot el contingut explícit a subportals nous.
+	- S’ha reimplementat el seguiment de visualitzacions.
 - **Notícies:**
 	- S’ha reimplementat la cerca i el filtrat de notícies.
 	- S’ha eliminat l’apartat d’estadístiques, l’arxiu i la llista de fansubs.

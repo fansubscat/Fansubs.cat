@@ -34,6 +34,11 @@ function query($query){
 	return $result;
 }
 
+function get_previous_query_num_affected_rows(){
+	global $db_connection;
+	return mysqli_affected_rows($db_connection);
+}
+
 //Connect to database and initialize it
 $db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash("No s’ha pogut connectar a la base de dades.");
 mysqli_set_charset($db_connection, DB_CHARSET) or crash(mysqli_error($db_connection));

@@ -41,8 +41,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	} else {
 		$amount = 10;
 	}
-	if (isset($_GET['type']) && $_GET['type']=='time_spent') {
-		$type = 'time_spent';
+	if (isset($_GET['type']) && $_GET['type']=='total_length') {
+		$type = 'total_length';
 	} else {
 		$type = 'max_views';
 	}
@@ -91,7 +91,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<label for="type">Ordena per:</label>
 							<select id="type" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val();">
 								<option value="max_views"<?php echo ($type=='max_views') ? ' selected' : ''; ?>>Visualitzacions o lectures</option>
-								<option value="time_spent"<?php echo ($type=='time_spent') ? ' selected' : ''; ?>>Temps o pàgines totals</option>
+								<option value="total_length"<?php echo ($type=='total_length') ? ' selected' : ''; ?>>Temps o pàgines totals</option>
 							</select>
 						</div>
 					</div>
@@ -114,7 +114,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating<>'XXX' AND f.episode_id IS NOT NULL AND s.type='anime' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating<>'XXX' AND f.episode_id IS NOT NULL AND s.type='anime' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
 
 	if (mysqli_num_rows($result)==0) {
 ?>
@@ -139,7 +139,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>
-								<td class="align-middle text-center"><?php echo htmlspecialchars($type=='time_spent' ? get_hours_or_minutes_formatted($row[$type]) : $row[$type]); ?></td>
+								<td class="align-middle text-center"><?php echo htmlspecialchars($type=='total_length' ? get_hours_or_minutes_formatted($row[$type]) : $row[$type]); ?></td>
 							</tr>
 <?php
 	}
@@ -165,7 +165,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.pages_read) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.pages_read) pages_read, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating<>'XXX' AND f.episode_id IS NOT NULL AND s.type='manga' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating<>'XXX' AND f.episode_id IS NOT NULL AND s.type='manga' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -216,7 +216,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating<>'XXX' AND f.episode_id IS NOT NULL AND s.type='liveaction' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating<>'XXX' AND f.episode_id IS NOT NULL AND s.type='liveaction' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
 
 	if (mysqli_num_rows($result)==0) {
 ?>
@@ -241,7 +241,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>
-								<td class="align-middle text-center"><?php echo htmlspecialchars($type=='time_spent' ? get_hours_or_minutes_formatted($row[$type]) : $row[$type]); ?></td>
+								<td class="align-middle text-center"><?php echo htmlspecialchars($type=='total_length' ? get_hours_or_minutes_formatted($row[$type]) : $row[$type]); ?></td>
 							</tr>
 <?php
 	}
@@ -268,7 +268,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.time_spent) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.time_spent) time_spent, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating='XXX' AND f.episode_id IS NOT NULL AND s.type='anime' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating='XXX' AND f.episode_id IS NOT NULL AND s.type='anime' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
 
 	if (mysqli_num_rows($result)==0) {
 ?>
@@ -293,7 +293,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>
-								<td class="align-middle text-center"><?php echo htmlspecialchars($type=='time_spent' ? get_hours_or_minutes_formatted($row[$type]) : $row[$type]); ?></td>
+								<td class="align-middle text-center"><?php echo htmlspecialchars($type=='total_length' ? get_hours_or_minutes_formatted($row[$type]) : $row[$type]); ?></td>
 							</tr>
 <?php
 	}
@@ -319,7 +319,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.time_spent) time_spent, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.pages_read) time_spent, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.pages_read) pages_read, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating='XXX' AND f.episode_id IS NOT NULL AND s.type='manga' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0 AND s.rating='XXX' AND f.episode_id IS NOT NULL AND s.type='manga' GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY $type DESC, b.series_name ASC LIMIT $amount");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>

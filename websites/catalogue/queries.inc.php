@@ -159,21 +159,23 @@ function query_insert_or_update_user_seen_for_file_id($user_id, $file_id, $is_se
 	$final_query = "INSERT INTO user_file_seen_status
 				(user_id, file_id, is_seen, position, last_viewed)
 			VALUES ($user_id, $file_id, $is_seen, 0, NULL)
-			ON DUPLICATE KEY UPDATE is_seen=$is_seen";
+			ON DUPLICATE KEY UPDATE is_seen=$is_seen,position=IF($is_seen=1,0,position)";
 	return query($final_query);
 }
 
-function query_insert_view_session($view_id, $file_id, $user_id, $anon_id, $length, $ip, $user_agent) {
+function query_insert_view_session($view_id, $file_id, $type, $user_id, $anon_id, $length, $source, $ip, $user_agent) {
 	$view_id = escape($view_id);
 	$file_id = intval($file_id);
+	$type = escape($type);
 	$user_id = $user_id!==NULL ? intval($user_id) : 'NULL';
 	$anon_id = $anon_id!==NULL ? "'".escape($anon_id)."'" : 'NULL';
 	$length = intval($length);
+	$source = escape($source);
 	$ip = escape($ip);
 	$user_agent = escape($user_agent);
 	$final_query = "INSERT INTO view_session
-				(id, file_id, user_id, anon_id, progress, length, created, updated, is_casted, is_view_counted, ip, user_agent)
-			VALUES ('$view_id', $file_id, $user_id, $anon_id, 0, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 0, '$ip', '$user_agent')";
+				(id, file_id, type, user_id, anon_id, progress, length, created, updated, view_counted, is_casted, source, ip, user_agent)
+			VALUES ('$view_id', $file_id, '$type', $user_id, $anon_id, 0, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 0, '$source', '$ip', '$user_agent')";
 	return query($final_query);
 }
 
@@ -193,13 +195,15 @@ function query_insert_reported_error($view_id, $file_id, $user_id, $anon_id, $po
 	return query($final_query);
 }
 
-function query_update_view_session_basic_attrs($view_id, $length, $ip, $user_agent) {
+function query_update_view_session_basic_attrs($view_id, $length, $source, $ip, $user_agent) {
 	$view_id = escape($view_id);
 	$length = intval($length);
+	$source = escape($source);
 	$ip = escape($ip);
 	$user_agent = escape($user_agent);
 	$final_query = "UPDATE view_session
 			SET length=$length,
+				source=IF(is_casted=1,source,'$source'),
 				ip='$ip',
 				user_agent='$user_agent',
 				updated=CURRENT_TIMESTAMP
@@ -207,19 +211,30 @@ function query_update_view_session_basic_attrs($view_id, $length, $ip, $user_age
 	return query($final_query);
 }
 
-function query_update_view_session_progress($view_id, $progress, $is_casted, $ip, $user_agent) {
+function query_update_view_session_progress($view_id, $progress, $is_casted, $source, $ip, $user_agent) {
 	$view_id = escape($view_id);
 	$progress = intval($progress);
 	$is_casted = intval($is_casted);
+	$source = escape($source);
 	$ip = escape($ip);
 	$user_agent = escape($user_agent);
 	$final_query = "UPDATE view_session
 			SET progress=IF($is_casted=1,length,GREATEST(progress,$progress)),
 				updated=CURRENT_TIMESTAMP,
 				is_casted=$is_casted,
+				source='$source',
 				ip='$ip',
 				user_agent='$user_agent'
 			WHERE id='$view_id'";
+	return query($final_query);
+}
+
+function query_update_view_session_view_counted($view_id) {
+	$view_id = escape($view_id);
+	$final_query = "UPDATE view_session
+			SET view_counted=CURRENT_TIMESTAMP
+			WHERE id='$view_id'
+				AND view_counted IS NULL";
 	return query($final_query);
 }
 
@@ -254,6 +269,35 @@ function query_insert_or_update_user_version_followed_by_file_id($user_id, $file
 										e.number DESC,
 										IFNULL(et.title, e.description) DESC
 									LIMIT 1),-1)";
+	return query($final_query);
+}
+
+function query_save_click($file_id, $type, $date) {
+	$file_id = intval($file_id);
+	$type = escape($type);
+	$date = escape($date);
+	$final_query = "REPLACE INTO views
+			SELECT $file_id,
+				'$date',
+				'$type',
+				IFNULL((SELECT clicks+1 FROM views WHERE file_id=$file_id AND day='$date'),1),
+				IFNULL((SELECT views FROM views WHERE file_id=$file_id AND day='$date'),0),
+				IFNULL((SELECT total_length FROM views WHERE file_id=$file_id AND day='$date'),0)";
+	return query($final_query);
+}
+
+function query_save_view($file_id, $type, $date, $length) {
+	$file_id = intval($file_id);
+	$type = escape($type);
+	$date = escape($date);
+	$length = intval($length);
+	$final_query = "REPLACE INTO views
+			SELECT $file_id,
+				'$date',
+				'$type',
+				IFNULL((SELECT clicks FROM views WHERE file_id=$file_id AND day='$date'),0),
+				IFNULL((SELECT views+1 FROM views WHERE file_id=$file_id AND day='$date'),1),
+				IFNULL((SELECT total_length+$length FROM views WHERE file_id=$file_id AND day='$date'),$length)";
 	return query($final_query);
 }
 
@@ -807,6 +851,7 @@ function query_player_details_by_file_id($file_id) {
 				f.version_id version_id,
 				v.show_episode_numbers,
 				s.name series_name,
+				s.type series_type,
 				s.subtype series_subtype,
 				IF(f.episode_id IS NULL,TRUE,FALSE) is_extra,
 				f.length,
