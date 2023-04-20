@@ -11,12 +11,28 @@ class ComposerStaticInit7c88a727af669828ab1fa157863a74bc
         array (
             'LanguageDetection\\' => 18,
         ),
+        'C' => 
+        array (
+            'Composer\\CaBundle\\' => 18,
+        ),
+        'A' => 
+        array (
+            'Abraham\\TwitterOAuth\\' => 21,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'LanguageDetection\\' => 
         array (
             0 => __DIR__ . '/..' . '/patrickschur/language-detection/src/LanguageDetection',
+        ),
+        'Composer\\CaBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
+        ),
+        'Abraham\\TwitterOAuth\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/abraham/twitteroauth/src',
         ),
     );
 
