@@ -5,8 +5,7 @@ require_once("vendor/autoload.php");
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 function publish_tweet($tweet){
-	global $twitter_consumer_key, $twitter_consumer_secret, $twitter_access_token, $twitter_access_token_secret;
-	$connection = new TwitterOAuth($twitter_consumer_key, $twitter_consumer_secret, $twitter_access_token, $twitter_access_token_secret);
+	$connection = new TwitterOAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET);
 	$connection->setApiVersion('2');
 	$content = $connection->post("tweets", ["text" => $tweet], TRUE);
 }
