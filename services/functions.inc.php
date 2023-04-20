@@ -1,5 +1,6 @@
 <?php
 require_once("libs/simple_html_dom.php");
+require_once('db.inc.php');
 require_once('common.inc.php');
 require_once('config.inc.php');
 require_once("vendor/autoload.php");
@@ -46,7 +47,6 @@ function get_prepositioned_text($text, $twitter=FALSE){
 //Gets the first image in the news content that is not a SVG, if available.
 //Then copies it to our website directory
 function fetch_and_parse_image($fansub_slug, $url, $description){
-	global $static_directory;
 	preg_match_all('/<img [^>]*src=["|\']([^"|\']+)/i', $description, $matches);
 
 	$first_image_url=NULL;
@@ -66,13 +66,13 @@ function fetch_and_parse_image($fansub_slug, $url, $description){
 		if (strpos($first_image_url,"://")===FALSE){
 			$first_image_url=$url.$first_image_url;
 		}
-		if (!is_dir("$static_directory/images/news/$fansub_slug/")){
-			mkdir("$static_directory/images/news/$fansub_slug/");
+		if (!is_dir(STATIC_DIRECTORY."/images/news/$fansub_slug/")){
+			mkdir(STATIC_DIRECTORY."/images/news/$fansub_slug/");
 		}
-		if (@copy($first_image_url, "$static_directory/images/news/$fansub_slug/".slugify_short($first_image_url))){
+		if (@copy($first_image_url, STATIC_DIRECTORY."/images/news/$fansub_slug/".slugify_short($first_image_url))){
 			return slugify_short($first_image_url);
 		}
-		else if (file_exists("$static_directory/images/news/$fansub_slug/".slugify_short($first_image_url))){
+		else if (file_exists(STATIC_DIRECTORY."/images/news/$fansub_slug/".slugify_short($first_image_url))){
 			//This means that the file is no longer accessible, but we already have it locally!
 			return slugify_short($first_image_url);
 		}
@@ -89,9 +89,10 @@ function fetch_and_parse_image($fansub_slug, $url, $description){
 //  3 - date (formatted as Y-m-d H:i:s)
 //  4 - url
 //  5 - image URL
-function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher_id, $method, $url, $last_fetched_item_date){
-	mysqli_query($db_connection, "UPDATE news_fetcher SET status='fetching' WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
-	$old_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE news_fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
+function fetch_fansub_fetcher($fansub_id, $fansub_slug, $fetcher_id, $method, $url, $last_fetched_item_date){
+	global $db_connection;
+	query("UPDATE news_fetcher SET status='fetching' WHERE id=$fetcher_id");
+	$old_count_result = query("SELECT COUNT(*) count FROM news WHERE news_fetcher_id=$fetcher_id");
 	$old_count = mysqli_fetch_assoc($old_count_result)['count'];
 	switch($method){
 		case 'animugen':
@@ -204,6 +205,7 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 			}
 
 			//We delete the old ones (higher than the last one date)
+			//We use the native functions because we need to be able to rollback
 			mysqli_autocommit($db_connection, FALSE);
 			mysqli_query($db_connection, "DELETE FROM news WHERE news_fetcher_id=$fetcher_id AND date>'$last_fetched_item_date'") or (mysqli_rollback($db_connection) && $result[0]='error_mysql');
 
@@ -224,14 +226,14 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 	
 	$increment=NULL;
 
-	if ($result[0]=='ok'){		
-		$new_count_result = mysqli_query($db_connection, "SELECT COUNT(*) count FROM news WHERE news_fetcher_id=$fetcher_id") or die(mysqli_error($db_connection));
+	if ($result[0]=='ok'){
+		$new_count_result = query("SELECT COUNT(*) count FROM news WHERE news_fetcher_id=$fetcher_id");
 		$new_count = mysqli_fetch_assoc($new_count_result)['count'];
 		$increment = $new_count-$old_count;
 	}
 	
 	//Update fetch status
-	mysqli_query($db_connection, "UPDATE news_fetcher SET status='idle',last_fetch_result='".$result[0]."',last_fetch_date='".date('Y-m-d H:i:s')."',last_fetch_increment=".($increment!==NULL ? $increment : 'NULL')." WHERE id=$fetcher_id") or die(mysqli_error($db_connection));
+	query("UPDATE news_fetcher SET status='idle',last_fetch_result='".$result[0]."',last_fetch_date='".date('Y-m-d H:i:s')."',last_fetch_increment=".($increment!==NULL ? $increment : 'NULL')." WHERE id=$fetcher_id");
 
 	if ($increment>0){
 		//TODO: In the future, do things here, i.e, post to Twitter/Facebook accounts indicating that we have news from a certain fansub
@@ -242,12 +244,11 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 		//Hello 2018, we are now in the future 2020. We will send some tweets too... ;)
 		//Hello 2020, 2020 still. Maybe we will disable the news tweets, they are a bit annoying... And replace them with a cron job that tweets new manga/anime added to the DB.
 		//Hello 2020, we are now in the future 2021. We will report the increments to the action log
-		global $firebase_api_key;
-
+		//Hello 2021, we are now in the future 2023. Just doing some refactors in preparation for v5...
 		
-		mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('fetch-news-changes','Detectades $increment noves notícies del fansub $fansub_slug', '(Servei intern)', CURRENT_TIMESTAMP)") or die(mysqli_error($db_connection));
+		log_action('fetch-news-changes', "Detectades $increment noves notícies del fansub $fansub_slug");
 
-		$push_result = mysqli_query($db_connection, "SELECT n.title, f.slug fansub_slug, n.url, f.name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.news_fetcher_id=$fetcher_id ORDER BY n.date DESC LIMIT $increment") or die(mysqli_error($db_connection));
+		$push_result = query("SELECT n.title, f.slug fansub_slug, n.url, f.name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.news_fetcher_id=$fetcher_id ORDER BY n.date DESC LIMIT $increment");
 		while ($push_row = mysqli_fetch_assoc($push_result)){
 			$notification = array(
 				'to' => '/topics/all',
@@ -257,7 +258,7 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 					'fansub_id' => $push_row['fansub_slug']
 				)
 			);
-			$headers = array('Content-Type: application/json', 'Authorization: key=' . $firebase_api_key);
+			$headers = array('Content-Type: application/json', 'Authorization: key=' . FIREBASE_API_KEY);
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
 			curl_setopt($curl, CURLOPT_CUSTOMREQUEST,"POST");
@@ -269,8 +270,6 @@ function fetch_fansub_fetcher($db_connection, $fansub_id, $fansub_slug, $fetcher
 			//Close request
 			curl_close($curl);
 		}
-
-		mysqli_free_result($push_result);
 	}
 }
 

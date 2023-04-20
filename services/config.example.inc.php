@@ -2,47 +2,49 @@
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 
 //Database access
-$db_host="YOUR_DB_HOST_HERE";
-$db_name="YOUR_DB_NAME_HERE";
-$db_user="YOUR_DB_USER_HERE";
-$db_passwd="YOUR_DB_PASS_HERE";
+define('DB_HOST', 'YOUR_DB_HOST_HERE');
+define('DB_NAME', 'YOUR_DB_NAME_HERE');
+define('DB_USER', 'YOUR_DB_USER_HERE');
+define('DB_PASSWORD', 'YOUR_DB_PASS_HERE');
+define('DB_CHARSET', 'utf8mb4');
 
-//Social network tokens
-$facebook_api_token='YOUR_APP_TOKEN_HERE';
+//Website URLs (no final slash)
+define('STATIC_URL', 'https://staticv2.fansubs.cat');
+define('ADMIN_URL', 'https://adminv2.fansubs.cat');
+
+//Internal path (no final slash)
+define('STATIC_DIRECTORY', '/srv/websites/static.fansubs.cat');
 
 //Firebase Cloud Messaging key
-$firebase_api_key='YOUR_FIREBASE_TOKEN_HERE';
+define('FIREBASE_API_KEY', 'YOUR_FIREBASE_TOKEN_HERE');
 
 //Twitter keys
-$twitter_consumer_key='YOUR_TWITTER_KEY_HERE';
-$twitter_consumer_secret='YOUR_TWITTER_SECRET_HERE';
-$twitter_access_token='YOUR_TWITTER_ACCESS_TOKEN_HERE';
-$twitter_access_token_secret='YOUR_TWITTER_ACCESS_SECRET_HERE';
+define('TWITTER_CONSUMER_KEY', 'YOUR_TWITTER_KEY_HERE');
+define('TWITTER_CONSUMER_SECRET', 'YOUR_TWITTER_SECRET_HERE');
+define('TWITTER_ACCESS_TOKEN', 'YOUR_TWITTER_ACCESS_TOKEN_HERE');
+define('TWITTER_ACCESS_TOKEN_SECRET', 'YOUR_TWITTER_ACCESS_SECRET_HERE');
 
 //Mastodon keys
-$mastodon_host='YOUR_MASTODON_HOST_URL';
-$mastodon_access_token='YOUR_MASTODON_ACCESS_TOKEN';
+define('MASTODON_HOST', 'YOUR_MASTODON_HOST_URL');
+define('MASTODON_ACCESS_TOKEN', 'YOUR_MASTODON_ACCESS_TOKEN');
 
 //Multiple Discord webhooks are possible
-$discord_webhooks = array(
-	'YOUR_DISCORD_WEBHOOK_1_HERE',
-	'YOUR_DISCORD_WEBHOOK_2_HERE'
-);
+define('DISCORD_WEBHOOKS', array('YOUR_DISCORD_WEBHOOK_1_HERE', 'YOUR_DISCORD_WEBHOOK_2_HERE'));
 
 //Telegram bot API key and chat id
-$telegram_bot_api_key='YOUR_API_KEY_HERE';
-$telegram_bot_chat_id='YOUR_CHAT_ID_HERE';
-$telegram_bot_channel_chat_id='YOUR_CHANNEL_CHAT_ID_HERE';
+define('TELEGRAM_BOT_API_KEY', 'YOUR_API_KEY_HERE');
+define('TELEGRAM_BOT_CHAT_ID', 'YOUR_CHAT_ID_HERE');
+define('TELEGRAM_BOT_CHANNEL_CHAT_ID', 'YOUR_CHANNEL_CHAT_ID_HERE');
 
 //Token to bypass admin authentication in twitter_image.php
-$internal_token='YOUR_TOKEN';
+define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN');
 
 //Files
-$lock_file='/tmp/fansubscat_fetch_lock';
+define('LOCK_FILE', '/tmp/fansubscat_fetch_lock');
 
 //Lock file for MEGA sync processes
-$mega_lock_file='/tmp/mega_fetch.lock';
+define('MEGA_LOCK_FILE', '/tmp/mega_fetch.lock');
 
-//Paths (no end slash)
-$static_directory='/srv/websites/static.fansubs.cat';
+//What to use as sender when sending e-mails
+define('EMAIL_ACCOUNT', 'info@fansubs.cat');
 ?>

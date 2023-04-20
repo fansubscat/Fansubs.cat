@@ -8,7 +8,7 @@ function log_action($action, $text=NULL){
 	} else {
 		$text = "NULL";
 	}
-	query("INSERT INTO admin_log (action, text, author, date) VALUES ('".escape($action)."',$text,'Intern [S]', CURRENT_TIMESTAMP)", TRUE);
+	mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('".escape($action)."', $text, 'Intern [S]', CURRENT_TIMESTAMP)");
 }
 
 function crash($string){
@@ -21,19 +21,13 @@ function escape($string){
 	return mysqli_real_escape_string($db_connection, $string);
 }
 
-function query($query, $ignore_crash=FALSE){
+function query($query){
 	global $db_connection;
-	if ($ignore_crash){
-		$result = mysqli_query($db_connection, $query);
-	} else {
-		$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Original query: $query");
-	}
+	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");
 	return $result;
 }
 
-$db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash('Unable to connect to database');
+$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash("No s’ha pogut connectar a la base de dades.");
 
-unset($db_host, $db_name, $db_user, $db_passwd);
-
-mysqli_set_charset($db_connection, 'utf8mb4') or crash(mysqli_error($db_connection));
+mysqli_set_charset($db_connection, DB_CHARSET) or crash(mysqli_error($db_connection));
 ?>

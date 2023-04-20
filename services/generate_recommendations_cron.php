@@ -1,7 +1,7 @@
 <?php
 require_once('db.inc.php');
 
-log_action('cron-recommendations-started', "S'ha iniciat l'actualització periòdica de recomanacions");
+log_action('cron-recommendations-started', "S’ha iniciat l’actualització periòdica de recomanacions");
 
 $previous_ids=array(-1);
 $result = query("SELECT version_id FROM recommendation");
@@ -27,7 +27,7 @@ query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series 
 query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series sr ON vr.series_id=sr.id WHERE sr.type='anime' AND vr.is_hidden=0 AND (sr.subtype<>'movie' OR (sr.subtype='movie' AND sr.number_of_episodes=1) OR (sr.subtype='movie' AND (SELECT COUNT(vr2.id) FROM version vr2 WHERE vr2.series_id=vr.series_id)<=1)) AND sr.rating='XXX' AND (sr.score>=6 OR sr.score IS NULL OR vr.is_always_featured=1) AND vr.is_featurable=1 AND ((vr.status IN (1,3) AND vr.id NOT IN (".implode(',', $previous_ids).")) OR vr.is_always_featured=1) AND vr.is_missing_episodes=0 ORDER BY vr.is_always_featured DESC, RAND() LIMIT 10");
 query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series mr ON vr.series_id=mr.id WHERE mr.type='manga' AND vr.is_hidden=0 AND mr.rating='XXX' AND (mr.score>=6 OR mr.score IS NULL OR vr.is_always_featured=1) AND vr.is_featurable=1 AND ((vr.status IN (1,3) AND vr.id NOT IN (".implode(',', $previous_ids).")) OR vr.is_always_featured=1) AND vr.is_missing_episodes=0 ORDER BY vr.is_always_featured DESC, RAND() LIMIT 10");
 
-log_action('cron-recommendations-finished', "S'ha completat l'actualització periòdica de recomanacions");
+log_action('cron-recommendations-finished', "S’ha completat l’actualització periòdica de recomanacions");
 
 echo "All done!\n";
 ?>

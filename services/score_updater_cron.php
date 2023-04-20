@@ -1,12 +1,12 @@
 <?php
 require_once('db.inc.php');
 
-log_action('cron-scores-started', "S'ha iniciat l'actualització de la puntuació de les sèries");
+log_action('cron-scores-started', "S’ha iniciat l’actualització de la puntuació de les sèries");
 
 $result = query("SELECT * FROM series ORDER BY name ASC");
 
 while ($series = mysqli_fetch_assoc($result)) {
-	echo "Updating score for series ".$series['name']."\n";
+	echo "Updating score for series «".$series['name']."»\n";
 
 	$resultss = query("SELECT DISTINCT sq.external_id FROM (SELECT external_id FROM division WHERE series_id=".$series['id']." AND external_id IS NOT NULL UNION SELECT a.external_id FROM series a WHERE a.id=".$series['id']." AND a.external_id IS NOT NULL) sq");
 
@@ -27,7 +27,7 @@ while ($series = mysqli_fetch_assoc($result)) {
 				if ($score && is_numeric($score)) {
 					$divisionscoresum+=$score;
 				} else { //Skip this division: no score
-					echo "Series ".$series['name']." has division ".$division['external_id']." with no score.\n";
+					echo "Series «".$series['name']."» has division ".$division['external_id']." with no score.\n";
 					continue;
 				}
 			} else {
@@ -46,7 +46,7 @@ while ($series = mysqli_fetch_assoc($result)) {
 				if ($score && is_numeric($score)) {
 					$divisionscoresum+=$score;
 				} else { //Skip this division: no score
-					echo "Series ".$series['name']." has division ".$division['external_id']." with no score.\n";
+					echo "Series «".$series['name']."» has division ".$division['external_id']." with no score.\n";
 					continue;
 				}
 			}
@@ -55,21 +55,20 @@ while ($series = mysqli_fetch_assoc($result)) {
 	}
 
 	if ($error) {
-		echo "Update failed for series ".$series['name']."\n";
-		log_action('cron-score-failed', "No s'ha pogut actualitzar la puntuació de la sèrie '".$series['name']."'");
+		echo "Update failed for series «".$series['name']."»\n";
+		log_action('cron-score-failed', "No s’ha pogut actualitzar la puntuació de la sèrie «".$series['name']."»");
 	} else {
 		if ($divisioncount>0) { //if it's zero, we ignore it... no myanimelist, probably
 			$new_score=round($divisionscoresum/$divisioncount, 2);
 			if ($series['score']!=$new_score) {
 				echo "Previous score: ".$series['score']." / New score: $new_score\n";
-				log_action('cron-score-updated', "La puntuació de la sèrie '".$series['name']."' ha canviat de ".$series['score'].' a '.$new_score);
+				log_action('cron-score-updated', "La puntuació de la sèrie «".$series['name']."» ha canviat de ".$series['score'].' a '.$new_score);
 				query("UPDATE series SET score=".escape($new_score)." WHERE id=".$series['id']);
 			}
 		}
 	}
 }
-mysqli_free_result($result);
 
-log_action('cron-scores-finished', "S'ha completat l'actualització de la puntuació de les sèries");
+log_action('cron-scores-finished', "S’ha completat l’actualització de la puntuació de les sèries");
 echo "All done!\n";
 ?>

@@ -22,13 +22,11 @@ if (!file_exists($file)){
 
 $csv = new parseCSV($file);
 
-mysqli_query($db_connection, "DELETE FROM news WHERE fansub_id=$fansub_id") or (mysqli_rollback($db_connection) && die('SQL error'.mysqli_error($db_connection)));
+query("DELETE FROM news WHERE fansub_id=$fansub_id");
 
 foreach ($csv->data as $element){
-	mysqli_query($db_connection, "INSERT INTO news (fansub_id, news_fetcher_id, title, contents, original_contents, date, url, image) VALUES ($fansub_id, NULL, '".mysqli_real_escape_string($db_connection, $element['title'])."','".mysqli_real_escape_string($db_connection, str_replace("\n","<br />",$element['contents']))."','".mysqli_real_escape_string($db_connection, $element['contents'])."','".$element['date']."','".mysqli_real_escape_string($db_connection, $element['url'])."',".($element['image']!=NULL ? "'".mysqli_real_escape_string($db_connection, $element['image'])."'" : 'NULL').")") or (mysqli_rollback($db_connection) && die('SQL error'.mysqli_error($db_connection)));
+	query("INSERT INTO news (fansub_id, news_fetcher_id, title, contents, original_contents, date, url, image) VALUES ($fansub_id, NULL, '".escape($element['title'])."','".escape(str_replace("\n","<br />",$element['contents']))."','".escape($element['contents'])."','".$element['date']."','".escape($element['url'])."',".($element['image']!=NULL ? "'".escape($element['image'])."'" : 'NULL').")");
 }
 
-mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('load-static-data','S\'han carregat notícies via CSV', '(Servei intern)', CURRENT_TIMESTAMP)") or (mysqli_rollback($db_connection) && die('SQL error'.mysqli_error($db_connection)));
-
-mysqli_close($db_connection);
+log_action('load-static-data', 'S’han carregat notícies via CSV');
 ?>
