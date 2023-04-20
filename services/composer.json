@@ -1,0 +1,6 @@
+{
+    "require": {
+        "patrickschur/language-detection": "^5.1",
+        "abraham/twitteroauth": "3.1.0"
+    }
+}

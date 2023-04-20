@@ -7,7 +7,7 @@ namespace LanguageDetection;
 /**
  * Class Trainer
  *
- * @copyright 2016-2018 Patrick Schur
+ * @copyright Patrick Schur
  * @license https://opensource.org/licenses/mit-license.html MIT
  * @author Patrick Schur <patrick_schur@outlook.de>
  * @package LanguageDetection
@@ -26,29 +26,24 @@ class Trainer extends NgramParser
         {
             $dirname = __DIR__ . '/../../resources/*/*.txt';
         }
-        else if (!is_dir($dirname) || !is_readable($dirname))
+        else if (!\is_dir($dirname) || !\is_readable($dirname))
         {
             throw new \InvalidArgumentException('Provided directory could not be found or is not readable');
         }
         else
         {
-            $dirname = rtrim($dirname, '/');
+            $dirname = \rtrim($dirname, '/');
             $dirname .= '/*/*.txt';
         }
 
         /** @var \GlobIterator $txt */
         foreach (new \GlobIterator($dirname) as $txt)
         {
-            $content = mb_strtolower(file_get_contents($txt->getPathname()));
+            $content = \mb_strtolower(\file_get_contents($txt->getPathname()));
 
-            echo $txt->getBasename('.txt'), PHP_EOL;
-
-            file_put_contents(
-                substr_replace($txt->getPathname(), 'json', -3),
-                json_encode(
-                    [ $txt->getBasename('.txt') => $this->getNgrams($content) ],
-                    JSON_UNESCAPED_UNICODE
-                )
+            \file_put_contents(
+                \substr_replace($txt->getPathname(), 'php', -3),
+                \sprintf("<?php\n\nreturn %s;\n", var_export([ $txt->getBasename('.txt') => $this->getNgrams($content) ], true))
             );
         }
     }

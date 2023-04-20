@@ -7,7 +7,7 @@ namespace LanguageDetection;
 /**
  * Class Language
  *
- * @copyright 2016-2018 Patrick Schur
+ * @copyright Patrick Schur
  * @license https://opensource.org/licenses/mit-license.html MIT
  * @author Patrick Schur <patrick_schur@outlook.de>
  * @package LanguageDetection
@@ -29,25 +29,25 @@ class Language extends NgramParser
     {
         if (empty($dirname))
         {
-            $dirname = __DIR__ . '/../../resources/*/*.json';
+            $dirname = __DIR__ . '/../../resources/*/*.php';
         }
-        else if (!is_dir($dirname) || !is_readable($dirname))
+        else if (!\is_dir($dirname) || !\is_readable($dirname))
         {
             throw new \InvalidArgumentException('Provided directory could not be found or is not readable');
         }
         else
         {
-            $dirname = rtrim($dirname, '/');
-            $dirname .= '/*/*.json';
+            $dirname = \rtrim($dirname, '/');
+            $dirname .= '/*/*.php';
         }
 
         $isEmpty = empty($lang);
 
-        foreach (glob($dirname) as $json)
+        foreach (\glob($dirname) as $file)
         {
-            if ($isEmpty || in_array(basename($json, '.json'), $lang))
+            if ($isEmpty || \in_array(\basename($file, '.php'), $lang))
             {
-                $this->tokens += json_decode(file_get_contents($json), true);
+                $this->tokens += require $file;
             }
         }
     }
@@ -60,18 +60,18 @@ class Language extends NgramParser
      */
     public function detect(string $str): LanguageResult
     {
-        $str = mb_strtolower($str);
+        $str = \mb_strtolower($str);
 
         $samples = $this->getNgrams($str);
 
         $result = [];
 
-        if (count($samples) > 0)
+        if (\count($samples) > 0)
         {
             foreach ($this->tokens as $lang => $value)
             {
                 $index = $sum = 0;
-                $value = array_flip($value);
+                $value = \array_flip($value);
 
                 foreach ($samples as $v)
                 {
@@ -90,7 +90,7 @@ class Language extends NgramParser
                 $result[$lang] = 1 - ($sum / ($this->maxNgrams * $index));
             }
 
-            arsort($result, SORT_NUMERIC);
+            \arsort($result, SORT_NUMERIC);
         }
 
         return new LanguageResult($result);

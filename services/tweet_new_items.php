@@ -1,19 +1,14 @@
 <?php
 require_once('db.inc.php');
-require_once('common.inc.php');
-require_once("libs/codebird.php");
+require_once("vendor/autoload.php");
+
+use Abraham\TwitterOAuth\TwitterOAuth;
 
 function publish_tweet($tweet){
 	global $twitter_consumer_key, $twitter_consumer_secret, $twitter_access_token, $twitter_access_token_secret;
-
-	\Codebird\Codebird::setConsumerKey($twitter_consumer_key, $twitter_consumer_secret);
-	$cb = \Codebird\Codebird::getInstance();
-	$cb->setToken($twitter_access_token, $twitter_access_token_secret);
-
-	$params = array(
-		'status' => $tweet
-	);
-	$cb->statuses_update($params);
+	$connection = new TwitterOAuth($twitter_consumer_key, $twitter_consumer_secret, $twitter_access_token, $twitter_access_token_secret);
+	$connection->setApiVersion('2');
+	$content = $connection->post("tweets", ["text" => $tweet], TRUE);
 }
 
 function publish_toot($toot){
