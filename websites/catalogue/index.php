@@ -25,7 +25,7 @@ if (is_robot()){
 	$row = mysqli_fetch_assoc($result);
 ?>
 						<div class="section">
-							<div class="site-message absolutely-real"><?php printf(CATALOGUE_ROBOT_MESSAGE, $row['cnt']); ?></div>
+							<div class="site-message robo-message"><?php printf(CATALOGUE_ROBOT_MESSAGE, $row['cnt']); ?></div>
 						</div>
 <?php
 	mysqli_free_result($result);

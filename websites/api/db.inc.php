@@ -4,16 +4,17 @@ require_once('config.inc.php');
 function log_action($action, $text=NULL){
 	global $db_connection;
 	if (!empty($text)){
-		$text = "'".mysqli_real_escape_string($db_connection, $text)."'";
+		$text = "'".escape($text)."'";
 	} else {
 		$text = "NULL";
 	}
-	mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('".mysqli_real_escape_string($db_connection, $action)."',$text,'API', CURRENT_TIMESTAMP)");
+	mysqli_query($db_connection, "INSERT INTO admin_log (action, text, author, date) VALUES ('".escape($action)."',$text,'[API]', CURRENT_TIMESTAMP)");
 }
 
 function crash($string){
-	ob_end_clean();
 	http_response_code(500);
+	ob_end_clean();
+	log_action('crash', $string);
 	$response = array(
 		'status' => 'ko',
 		'error' => array(
@@ -24,9 +25,22 @@ function crash($string){
 	die(json_encode($response));
 }
 
-$db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash('Internal error: Could not connect to database.');
+function escape($string){
+	global $db_connection;
+	return mysqli_real_escape_string($db_connection, $string);
+}
 
-unset($db_host, $db_name, $db_user, $db_passwd);
+function query($query){
+	global $db_connection;
+	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");
+	return $result;
+}
 
-mysqli_set_charset($db_connection, 'utf8') or crash(mysqli_error($db_connection));
+function get_previous_query_num_affected_rows(){
+	global $db_connection;
+	return mysqli_affected_rows($db_connection);
+}
+
+$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash('Could not connect to database.');
+mysqli_set_charset($db_connection, DB_CHARSET) or crash(mysqli_error($db_connection));
 ?>

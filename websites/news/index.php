@@ -7,7 +7,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 if (is_robot()){
 ?>
 						<div class="section">
-							<div class="site-message absolutely-real">Et donem la benvinguda a Fansubs.cat! Aquí trobaràs les darreres notícies de tots els fansubs en català! Les notícies s’obtenen automàticament dels diferents webs dels fansubs. Per a accedir a cada notícia, només cal que hi facis clic!</div>
+							<div class="site-message robo-message">Et donem la benvinguda a Fansubs.cat! Aquí trobaràs les darreres notícies de tots els fansubs en català! Les notícies s’obtenen automàticament dels diferents webs dels fansubs. Per a accedir a cada notícia, només cal que hi facis clic!</div>
 						</div>
 <?php
 }

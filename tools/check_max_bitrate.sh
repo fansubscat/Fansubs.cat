@@ -40,7 +40,7 @@ then
 		then
 			conv_expected_bitrate=$((expected_bitrate/1024/segment_seconds))
 			conv_max_bitrate=$((max_bitrate/1024/segment_seconds))
-			echo "WARNING: File has a bitrate greater than the max allowed bitrate for at least ${segment_seconds}s ($conv_max_bitrate>$conv_expected_bitrate): '$url'"
+			echo "WARNING: File has a bitrate greater than the max allowed bitrate for at least ${segment_seconds}s ($conv_max_bitrate>$conv_expected_bitrate): «$url»"
 			exceed_normal=$((exceed_normal+1))
 		fi
 		rm -rf tmpbitrateanalysis

@@ -99,10 +99,8 @@ function get_shortened_toot($toot){
 }
 
 function exists_more_than_one_version($series_id){
-	global $db_connection;
-	$result = mysqli_query($db_connection, "SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id AND is_hidden=0") or die(mysqli_error($db_connection));
+	$result = query("SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id AND is_hidden=0");
 	$row = mysqli_fetch_assoc($result);
-	mysqli_free_result($result);	
 	return ($row['cnt']>1);
 }
 
@@ -147,9 +145,9 @@ $new_chapter_number_tweets = array(
 		'📙 Ja hi ha disponible el *capítol %4$d* del %COMIC_TYPE% *%1$s* (editat per %3$s), «%2$s»!'
 	),
 	array(
-		'S\'ha afegit el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
-		':orange_book: S\'ha afegit el **capítol %4$d** del %COMIC_TYPE% **%1$s** (editat per %3$s), «%2$s»!',
-		'📙 S\'ha afegit el *capítol %4$d* del %COMIC_TYPE% *%1$s* (editat per %3$s), «%2$s»!'
+		'S’ha afegit el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
+		':orange_book: S’ha afegit el **capítol %4$d** del %COMIC_TYPE% **%1$s** (editat per %3$s), «%2$s»!',
+		'📙 S’ha afegit el *capítol %4$d* del %COMIC_TYPE% *%1$s* (editat per %3$s), «%2$s»!'
 	),
 	array(
 		'Ja podeu llegir el capítol %4$d del %COMIC_TYPE% «%1$s» (editat per %3$s), «%2$s», al web de manga.fansubs.cat!',
@@ -224,9 +222,9 @@ $new_anime_tweets = array(
 		'🎞🆕 Hi ha disponible un *nou anime* %TYPE% per %2$s: *%1$s*!'
 	),
 	array(
-		'Ja podeu mirar l\'anime «%1$s» %TYPE% per %2$s a anime.fansubs.cat!',
-		':new: Ja podeu mirar **l\'anime** **%1$s** %TYPE% per %2$s!',
-		'🎞🆕 Ja podeu mirar *l\'anime* *%1$s* %TYPE% per %2$s!'
+		'Ja podeu mirar l’anime «%1$s» %TYPE% per %2$s a anime.fansubs.cat!',
+		':new: Ja podeu mirar **l’anime** **%1$s** %TYPE% per %2$s!',
+		'🎞🆕 Ja podeu mirar *l’anime* *%1$s* %TYPE% per %2$s!'
 	),
 	array(
 		'Hem afegit un nou anime %TYPE% per %2$s a anime.fansubs.cat: «%1$s»!',
@@ -242,177 +240,177 @@ $new_anime_tweets = array(
 
 $new_episode_number_tweets = array(
 	array(
-		'Ja hi ha disponible el capítol %4$d de l\'anime «%1$s» (%TYPE% per %3$s), «%2$s». El trobareu a anime.fansubs.cat!',
-		':arrow_forward: Ja hi ha disponible el **capítol %4$d** de l\'anime **%1$s** (%TYPE% per %3$s), «%2$s».',
-		'🎞 Ja hi ha disponible el *capítol %4$d* de l\'anime *%1$s* (%TYPE% per %3$s), «%2$s».'
+		'Ja hi ha disponible el capítol %4$d de l’anime «%1$s» (%TYPE% per %3$s), «%2$s». El trobareu a anime.fansubs.cat!',
+		':arrow_forward: Ja hi ha disponible el **capítol %4$d** de l’anime **%1$s** (%TYPE% per %3$s), «%2$s».',
+		'🎞 Ja hi ha disponible el *capítol %4$d* de l’anime *%1$s* (%TYPE% per %3$s), «%2$s».'
 	),
 	array(
-		'Hem afegit el capítol %4$d de l\'anime «%1$s» (%TYPE% per %3$s), «%2$s». Mireu-lo al web d\'anime.fansubs.cat!',
-		':arrow_forward: Hem afegit el **capítol %4$d** de l\'anime **%1$s** (%TYPE% per %3$s), «%2$s».',
-		'🎞 Hem afegit el *capítol %4$d* de l\'anime *%1$s* (%TYPE% per %3$s), «%2$s».'
+		'Hem afegit el capítol %4$d de l’anime «%1$s» (%TYPE% per %3$s), «%2$s». Mireu-lo al web d’anime.fansubs.cat!',
+		':arrow_forward: Hem afegit el **capítol %4$d** de l’anime **%1$s** (%TYPE% per %3$s), «%2$s».',
+		'🎞 Hem afegit el *capítol %4$d* de l’anime *%1$s* (%TYPE% per %3$s), «%2$s».'
 	),
 	array(
-		'Ja podeu mirar el capítol %4$d de l\'anime «%1$s» (%TYPE% per %3$s), «%2$s». El teniu al web d\'anime.fansubs.cat!',
-		':arrow_forward: Ja podeu mirar el **capítol %4$d** de l\'anime **%1$s** (%TYPE% per %3$s), «%2$s».',
-		'🎞 Ja podeu mirar el *capítol %4$d* de l\'anime *%1$s* (%TYPE% per %3$s), «%2$s».'
+		'Ja podeu mirar el capítol %4$d de l’anime «%1$s» (%TYPE% per %3$s), «%2$s». El teniu al web d’anime.fansubs.cat!',
+		':arrow_forward: Ja podeu mirar el **capítol %4$d** de l’anime **%1$s** (%TYPE% per %3$s), «%2$s».',
+		'🎞 Ja podeu mirar el *capítol %4$d* de l’anime *%1$s* (%TYPE% per %3$s), «%2$s».'
 	)
 );
 
 $new_episode_number_no_name_tweets = array(
 	array(
-		'Ja hi ha disponible el capítol %4$d de l\'anime «%1$s» (%TYPE% per %3$s). El trobareu a anime.fansubs.cat!',
-		':arrow_forward: Ja hi ha disponible el **capítol %4$d** de l\'anime **%1$s** (%TYPE% per %3$s).',
-		'🎞 Ja hi ha disponible el *capítol %4$d* de l\'anime *%1$s* (%TYPE% per %3$s).'
+		'Ja hi ha disponible el capítol %4$d de l’anime «%1$s» (%TYPE% per %3$s). El trobareu a anime.fansubs.cat!',
+		':arrow_forward: Ja hi ha disponible el **capítol %4$d** de l’anime **%1$s** (%TYPE% per %3$s).',
+		'🎞 Ja hi ha disponible el *capítol %4$d* de l’anime *%1$s* (%TYPE% per %3$s).'
 	),
 	array(
-		'Hem afegit el capítol %4$d de l\'anime «%1$s» (%TYPE% per %3$s). Mireu-lo al web d\'anime.fansubs.cat!',
-		':arrow_forward: Hem afegit el **capítol %4$d** de l\'anime **%1$s** (%TYPE% per %3$s).',
-		'🎞 Hem afegit el *capítol %4$d* de l\'anime *%1$s* (%TYPE% per %3$s).'
+		'Hem afegit el capítol %4$d de l’anime «%1$s» (%TYPE% per %3$s). Mireu-lo al web d’anime.fansubs.cat!',
+		':arrow_forward: Hem afegit el **capítol %4$d** de l’anime **%1$s** (%TYPE% per %3$s).',
+		'🎞 Hem afegit el *capítol %4$d* de l’anime *%1$s* (%TYPE% per %3$s).'
 	),
 	array(
-		'Ja podeu mirar el capítol %4$d de l\'anime «%1$s» (%TYPE% per %3$s). El teniu al web d\'anime.fansubs.cat!',
-		':arrow_forward: Ja podeu mirar el **capítol %4$d** de l\'anime **%1$s** (%TYPE% per %3$s).',
-		'🎞 Ja podeu mirar el *capítol %4$d* de l\'anime *%1$s* (%TYPE% per %3$s).'
+		'Ja podeu mirar el capítol %4$d de l’anime «%1$s» (%TYPE% per %3$s). El teniu al web d’anime.fansubs.cat!',
+		':arrow_forward: Ja podeu mirar el **capítol %4$d** de l’anime **%1$s** (%TYPE% per %3$s).',
+		'🎞 Ja podeu mirar el *capítol %4$d* de l’anime *%1$s* (%TYPE% per %3$s).'
 	)
 );
 
 $new_episode_no_number_tweets = array(
 	array(
-		'Ja hi ha disponible un nou capítol de l\'anime «%1$s» (%TYPE% per %3$s) a anime.fansubs.cat: «%2$s».',
-		':arrow_forward: Ja hi ha disponible un **nou capítol** de l\'anime **%1$s** (%TYPE% per %3$s): «%2$s».',
-		'🎞 Ja hi ha disponible un *nou capítol* de l\'anime *%1$s* (%TYPE% per %3$s): «%2$s».'
+		'Ja hi ha disponible un nou capítol de l’anime «%1$s» (%TYPE% per %3$s) a anime.fansubs.cat: «%2$s».',
+		':arrow_forward: Ja hi ha disponible un **nou capítol** de l’anime **%1$s** (%TYPE% per %3$s): «%2$s».',
+		'🎞 Ja hi ha disponible un *nou capítol* de l’anime *%1$s* (%TYPE% per %3$s): «%2$s».'
 	),
 	array(
-		'Hem afegit un nou capítol de l\'anime «%1$s» (%TYPE% per %3$s) al web d\'anime.fansubs.cat: «%2$s».',
-		':arrow_forward: Hem afegit un **nou capítol** de l\'anime **%1$s** (%TYPE% per %3$s): «%2$s».',
-		'🎞 Hem afegit un *nou capítol* de l\'anime *%1$s* (%TYPE% per %3$s): «%2$s».'
+		'Hem afegit un nou capítol de l’anime «%1$s» (%TYPE% per %3$s) al web d’anime.fansubs.cat: «%2$s».',
+		':arrow_forward: Hem afegit un **nou capítol** de l’anime **%1$s** (%TYPE% per %3$s): «%2$s».',
+		'🎞 Hem afegit un *nou capítol* de l’anime *%1$s* (%TYPE% per %3$s): «%2$s».'
 	),
 	array(
-		'Ja podeu mirar un nou capítol de l\'anime «%1$s» (%TYPE% per %3$s) a anime.fansubs.cat: «%2$s».',
-		':arrow_forward: Ja podeu mirar un **nou capítol** de l\'anime **%1$s** (%TYPE% per %3$s): «%2$s».',
-		'🎞 Ja podeu mirar un *nou capítol* de l\'anime *%1$s* (%TYPE% per %3$s): «%2$s».'
+		'Ja podeu mirar un nou capítol de l’anime «%1$s» (%TYPE% per %3$s) a anime.fansubs.cat: «%2$s».',
+		':arrow_forward: Ja podeu mirar un **nou capítol** de l’anime **%1$s** (%TYPE% per %3$s): «%2$s».',
+		'🎞 Ja podeu mirar un *nou capítol* de l’anime *%1$s* (%TYPE% per %3$s): «%2$s».'
 	)
 );
 
 $new_episodes_tweets = array(
 	array(
-		'Ja hi ha disponibles %2$d capítols nous de l\'anime «%1$s» (%TYPE% per %3$s) al web d\'anime.fansubs.cat!',
-		':arrow_forward: Ja hi ha disponibles **%2$d capítols nous** de l\'anime **%1$s** (%TYPE% per %3$s)!',
-		'🎞 Ja hi ha disponibles *%2$d capítols nous* de l\'anime *%1$s* (%TYPE% per %3$s)!'
+		'Ja hi ha disponibles %2$d capítols nous de l’anime «%1$s» (%TYPE% per %3$s) al web d’anime.fansubs.cat!',
+		':arrow_forward: Ja hi ha disponibles **%2$d capítols nous** de l’anime **%1$s** (%TYPE% per %3$s)!',
+		'🎞 Ja hi ha disponibles *%2$d capítols nous* de l’anime *%1$s* (%TYPE% per %3$s)!'
 	),
 	array(
-		'Hem afegit %2$d capítols nous de l\'anime «%1$s» (%TYPE% per %3$s) al web d\'anime.fansubs.cat!',
-		':arrow_forward: Hem afegit **%2$d capítols nous** de l\'anime **%1$s** (%TYPE% per %3$s)!',
-		'🎞 Hem afegit *%2$d capítols nous* de l\'anime *%1$s* (%TYPE% per %3$s)!'
+		'Hem afegit %2$d capítols nous de l’anime «%1$s» (%TYPE% per %3$s) al web d’anime.fansubs.cat!',
+		':arrow_forward: Hem afegit **%2$d capítols nous** de l’anime **%1$s** (%TYPE% per %3$s)!',
+		'🎞 Hem afegit *%2$d capítols nous* de l’anime *%1$s* (%TYPE% per %3$s)!'
 	),
 	array(
-		'Ja podeu mirar %2$d capítols nous de l\'anime «%1$s» (%TYPE% per %3$s) al web d\'anime.fansubs.cat!',
-		':arrow_forward: Ja podeu mirar **%2$d capítols nous** de l\'anime **%1$s** (%TYPE% per %3$s)!',
-		'🎞 Ja podeu mirar *%2$d capítols nous* de l\'anime *%1$s* (%TYPE% per %3$s)!'
+		'Ja podeu mirar %2$d capítols nous de l’anime «%1$s» (%TYPE% per %3$s) al web d’anime.fansubs.cat!',
+		':arrow_forward: Ja podeu mirar **%2$d capítols nous** de l’anime **%1$s** (%TYPE% per %3$s)!',
+		'🎞 Ja podeu mirar *%2$d capítols nous* de l’anime *%1$s* (%TYPE% per %3$s)!'
 	)
 );
 
 $new_liveaction_tweets = array(
 	array(
-		'Tenim un nou contingut d\'acció real %TYPE% per %2$s a accioreal.fansubs.cat: «%1$s»!',
-		':new: Tenim un **nou contingut d\'acció real** %TYPE% per %2$s a accioreal.fansubs.cat: **%1$s**!',
-		'🎥🆕 Tenim un *nou contingut d\'acció real* %TYPE% per %2$s a accioreal.fansubs.cat: *%1$s*!'
+		'Tenim un nou contingut d’imatge real %TYPE% per %2$s a accioreal.fansubs.cat: «%1$s»!',
+		':new: Tenim un **nou contingut d’imatge real** %TYPE% per %2$s a accioreal.fansubs.cat: **%1$s**!',
+		'🎥🆕 Tenim un *nou contingut d’imatge real* %TYPE% per %2$s a accioreal.fansubs.cat: *%1$s*!'
 	),
 	array(
-		'Hi ha disponible un nou contingut d\'acció real %TYPE% per %2$s a accioreal.fansubs.cat: «%1$s»!',
-		':new: Hi ha disponible un **nou contingut d\'acció real** %TYPE% per %2$s: **%1$s**!',
-		'🎥🆕 Hi ha disponible un *nou contingut d\'acció real* %TYPE% per %2$s: *%1$s*!'
+		'Hi ha disponible un nou contingut d’imatge real %TYPE% per %2$s a accioreal.fansubs.cat: «%1$s»!',
+		':new: Hi ha disponible un **nou contingut d’imatge real** %TYPE% per %2$s: **%1$s**!',
+		'🎥🆕 Hi ha disponible un *nou contingut d’imatge real* %TYPE% per %2$s: *%1$s*!'
 	),
 	array(
-		'Ja podeu mirar el contingut d\'acció real «%1$s» %TYPE% per %2$s a accioreal.fansubs.cat!',
-		':new: Ja podeu mirar **el contingut d\'acció real** **%1$s** %TYPE% per %2$s!',
-		'🎥🆕 Ja podeu mirar *el contingut d\'acció real* *%1$s* %TYPE% per %2$s!'
+		'Ja podeu mirar el contingut d’imatge real «%1$s» %TYPE% per %2$s a accioreal.fansubs.cat!',
+		':new: Ja podeu mirar **el contingut d’imatge real** **%1$s** %TYPE% per %2$s!',
+		'🎥🆕 Ja podeu mirar *el contingut d’imatge real* *%1$s* %TYPE% per %2$s!'
 	),
 	array(
-		'Hem afegit un nou contingut d\'acció real %TYPE% per %2$s a accioreal.fansubs.cat: «%1$s»!',
-		':new: Hem afegit un **nou contingut d\'acció real** %TYPE% per %2$s: **%1$s**!',
-		'🎥🆕 Hem afegit un *nou contingut d\'acció real* %TYPE% per %2$s: *%1$s*!'
+		'Hem afegit un nou contingut d’imatge real %TYPE% per %2$s a accioreal.fansubs.cat: «%1$s»!',
+		':new: Hem afegit un **nou contingut d’imatge real** %TYPE% per %2$s: **%1$s**!',
+		'🎥🆕 Hem afegit un *nou contingut d’imatge real* %TYPE% per %2$s: *%1$s*!'
 	),
 	array(
-		'Nou contingut d\'acció real: «%1$s», %TYPE% per %2$s! Seguiu-lo a accioreal.fansubs.cat!',
-		':new: **Nou contingut d\'acció real:** **%1$s**, %TYPE% per %2$s! Seguiu-lo a Fansubs.cat!',
-		'🎥🆕 *Nou contingut d\'acció real:* *%1$s*, %TYPE% per %2$s! Seguiu-lo a Fansubs.cat!'
+		'Nou contingut d’imatge real: «%1$s», %TYPE% per %2$s! Seguiu-lo a accioreal.fansubs.cat!',
+		':new: **Nou contingut d’imatge real:** **%1$s**, %TYPE% per %2$s! Seguiu-lo a Fansubs.cat!',
+		'🎥🆕 *Nou contingut d’imatge real:* *%1$s*, %TYPE% per %2$s! Seguiu-lo a Fansubs.cat!'
 	)
 );
 
 $new_liveaction_episode_number_tweets = array(
 	array(
-		'Ja hi ha disponible el capítol %4$d del contingut d\'acció real «%1$s» (%TYPE% per %3$s), «%2$s». El trobareu a accioreal.fansubs.cat!',
-		':arrow_forward: Ja hi ha disponible el **capítol %4$d** del contingut d\'acció real **%1$s** (%TYPE% per %3$s), «%2$s».',
-		'🎥 Ja hi ha disponible el *capítol %4$d* del contingut d\'acció real *%1$s* (%TYPE% per %3$s), «%2$s».'
+		'Ja hi ha disponible el capítol %4$d del contingut d’imatge real «%1$s» (%TYPE% per %3$s), «%2$s». El trobareu a accioreal.fansubs.cat!',
+		':arrow_forward: Ja hi ha disponible el **capítol %4$d** del contingut d’imatge real **%1$s** (%TYPE% per %3$s), «%2$s».',
+		'🎥 Ja hi ha disponible el *capítol %4$d* del contingut d’imatge real *%1$s* (%TYPE% per %3$s), «%2$s».'
 	),
 	array(
-		'Hem afegit el capítol %4$d del contingut d\'acció real «%1$s» (%TYPE% per %3$s), «%2$s». Mireu-lo al web d\'accioreal.fansubs.cat!',
-		':arrow_forward: Hem afegit el **capítol %4$d** del contingut d\'acció real **%1$s** (%TYPE% per %3$s), «%2$s».',
-		'🎥 Hem afegit el *capítol %4$d* del contingut d\'acció real *%1$s* (%TYPE% per %3$s), «%2$s».'
+		'Hem afegit el capítol %4$d del contingut d’imatge real «%1$s» (%TYPE% per %3$s), «%2$s». Mireu-lo al web d’accióreal.fansubs.cat!',
+		':arrow_forward: Hem afegit el **capítol %4$d** del contingut d’imatge real **%1$s** (%TYPE% per %3$s), «%2$s».',
+		'🎥 Hem afegit el *capítol %4$d* del contingut d’imatge real *%1$s* (%TYPE% per %3$s), «%2$s».'
 	),
 	array(
-		'Ja podeu mirar el capítol %4$d del contingut d\'acció real «%1$s» (%TYPE% per %3$s), «%2$s». El teniu al web d\'accioreal.fansubs.cat!',
-		':arrow_forward: Ja podeu mirar el **capítol %4$d** del contingut d\'acció real **%1$s** (%TYPE% per %3$s), «%2$s».',
-		'🎥 Ja podeu mirar el *capítol %4$d* del contingut d\'acció real *%1$s* (%TYPE% per %3$s), «%2$s».'
+		'Ja podeu mirar el capítol %4$d del contingut d’imatge real «%1$s» (%TYPE% per %3$s), «%2$s». El teniu al web d’accióreal.fansubs.cat!',
+		':arrow_forward: Ja podeu mirar el **capítol %4$d** del contingut d’imatge real **%1$s** (%TYPE% per %3$s), «%2$s».',
+		'🎥 Ja podeu mirar el *capítol %4$d* del contingut d’imatge real *%1$s* (%TYPE% per %3$s), «%2$s».'
 	)
 );
 
 $new_liveaction_episode_number_no_name_tweets = array(
 	array(
-		'Ja hi ha disponible el capítol %4$d del contingut d\'acció real «%1$s» (%TYPE% per %3$s). El trobareu a accioreal.fansubs.cat!',
-		':arrow_forward: Ja hi ha disponible el **capítol %4$d** del contingut d\'acció real **%1$s** (%TYPE% per %3$s).',
-		'🎥 Ja hi ha disponible el *capítol %4$d* del contingut d\'acció real *%1$s* (%TYPE% per %3$s).'
+		'Ja hi ha disponible el capítol %4$d del contingut d’imatge real «%1$s» (%TYPE% per %3$s). El trobareu a accioreal.fansubs.cat!',
+		':arrow_forward: Ja hi ha disponible el **capítol %4$d** del contingut d’imatge real **%1$s** (%TYPE% per %3$s).',
+		'🎥 Ja hi ha disponible el *capítol %4$d* del contingut d’imatge real *%1$s* (%TYPE% per %3$s).'
 	),
 	array(
-		'Hem afegit el capítol %4$d del contingut d\'acció real «%1$s» (%TYPE% per %3$s). Mireu-lo al web d\'accioreal.fansubs.cat!',
-		':arrow_forward: Hem afegit el **capítol %4$d** del contingut d\'acció real **%1$s** (%TYPE% per %3$s).',
-		'🎥 Hem afegit el *capítol %4$d* del contingut d\'acció real *%1$s* (%TYPE% per %3$s).'
+		'Hem afegit el capítol %4$d del contingut d’imatge real «%1$s» (%TYPE% per %3$s). Mireu-lo al web d’accióreal.fansubs.cat!',
+		':arrow_forward: Hem afegit el **capítol %4$d** del contingut d’imatge real **%1$s** (%TYPE% per %3$s).',
+		'🎥 Hem afegit el *capítol %4$d* del contingut d’imatge real *%1$s* (%TYPE% per %3$s).'
 	),
 	array(
-		'Ja podeu mirar el capítol %4$d del contingut d\'acció real «%1$s» (%TYPE% per %3$s). El teniu al web d\'accioreal.fansubs.cat!',
-		':arrow_forward: Ja podeu mirar el **capítol %4$d** del contingut d\'acció real **%1$s** (%TYPE% per %3$s).',
-		'🎥 Ja podeu mirar el *capítol %4$d* del contingut d\'acció real *%1$s* (%TYPE% per %3$s).'
+		'Ja podeu mirar el capítol %4$d del contingut d’imatge real «%1$s» (%TYPE% per %3$s). El teniu al web d’accióreal.fansubs.cat!',
+		':arrow_forward: Ja podeu mirar el **capítol %4$d** del contingut d’imatge real **%1$s** (%TYPE% per %3$s).',
+		'🎥 Ja podeu mirar el *capítol %4$d* del contingut d’imatge real *%1$s* (%TYPE% per %3$s).'
 	)
 );
 
 $new_liveaction_episode_no_number_tweets = array(
 	array(
-		'Ja hi ha disponible un nou capítol del contingut d\'acció real «%1$s» (%TYPE% per %3$s) a accioreal.fansubs.cat: «%2$s».',
-		':arrow_forward: Ja hi ha disponible un **nou capítol** del contingut d\'acció real **%1$s** (%TYPE% per %3$s): «%2$s».',
-		'🎥 Ja hi ha disponible un *nou capítol* del contingut d\'acció real *%1$s* (%TYPE% per %3$s): «%2$s».'
+		'Ja hi ha disponible un nou capítol del contingut d’imatge real «%1$s» (%TYPE% per %3$s) a accioreal.fansubs.cat: «%2$s».',
+		':arrow_forward: Ja hi ha disponible un **nou capítol** del contingut d’imatge real **%1$s** (%TYPE% per %3$s): «%2$s».',
+		'🎥 Ja hi ha disponible un *nou capítol* del contingut d’imatge real *%1$s* (%TYPE% per %3$s): «%2$s».'
 	),
 	array(
-		'Hem afegit un nou capítol del contingut d\'acció real «%1$s» (%TYPE% per %3$s) al web d\'accioreal.fansubs.cat: «%2$s».',
-		':arrow_forward: Hem afegit un **nou capítol** del contingut d\'acció real **%1$s** (%TYPE% per %3$s): «%2$s».',
-		'🎥 Hem afegit un *nou capítol* del contingut d\'acció real *%1$s* (%TYPE% per %3$s): «%2$s».'
+		'Hem afegit un nou capítol del contingut d’imatge real «%1$s» (%TYPE% per %3$s) al web d’accióreal.fansubs.cat: «%2$s».',
+		':arrow_forward: Hem afegit un **nou capítol** del contingut d’imatge real **%1$s** (%TYPE% per %3$s): «%2$s».',
+		'🎥 Hem afegit un *nou capítol* del contingut d’imatge real *%1$s* (%TYPE% per %3$s): «%2$s».'
 	),
 	array(
-		'Ja podeu mirar un nou capítol del contingut d\'acció real «%1$s» (%TYPE% per %3$s) a accioreal.fansubs.cat: «%2$s».',
-		':arrow_forward: Ja podeu mirar un **nou capítol** del contingut d\'acció real **%1$s** (%TYPE% per %3$s): «%2$s».',
-		'🎥 Ja podeu mirar un *nou capítol* del contingut d\'acció real *%1$s* (%TYPE% per %3$s): «%2$s».'
+		'Ja podeu mirar un nou capítol del contingut d’imatge real «%1$s» (%TYPE% per %3$s) a accioreal.fansubs.cat: «%2$s».',
+		':arrow_forward: Ja podeu mirar un **nou capítol** del contingut d’imatge real **%1$s** (%TYPE% per %3$s): «%2$s».',
+		'🎥 Ja podeu mirar un *nou capítol* del contingut d’imatge real *%1$s* (%TYPE% per %3$s): «%2$s».'
 	)
 );
 
 $new_liveaction_episodes_tweets = array(
 	array(
-		'Ja hi ha disponibles %2$d capítols nous del contingut d\'acció real «%1$s» (%TYPE% per %3$s) al web d\'accioreal.fansubs.cat!',
-		':arrow_forward: Ja hi ha disponibles **%2$d capítols nous** del contingut d\'acció real **%1$s** (%TYPE% per %3$s)!',
-		'🎥 Ja hi ha disponibles *%2$d capítols nous* del contingut d\'acció real *%1$s* (%TYPE% per %3$s)!'
+		'Ja hi ha disponibles %2$d capítols nous del contingut d’imatge real «%1$s» (%TYPE% per %3$s) al web d’accióreal.fansubs.cat!',
+		':arrow_forward: Ja hi ha disponibles **%2$d capítols nous** del contingut d’imatge real **%1$s** (%TYPE% per %3$s)!',
+		'🎥 Ja hi ha disponibles *%2$d capítols nous* del contingut d’imatge real *%1$s* (%TYPE% per %3$s)!'
 	),
 	array(
-		'Hem afegit %2$d capítols nous del contingut d\'acció real «%1$s» (%TYPE% per %3$s) al web d\'accioreal.fansubs.cat!',
-		':arrow_forward: Hem afegit **%2$d capítols nous** del contingut d\'acció real **%1$s** (%TYPE% per %3$s)!',
-		'🎥 Hem afegit *%2$d capítols nous* del contingut d\'acció real *%1$s* (%TYPE% per %3$s)!'
+		'Hem afegit %2$d capítols nous del contingut d’imatge real «%1$s» (%TYPE% per %3$s) al web d’accióreal.fansubs.cat!',
+		':arrow_forward: Hem afegit **%2$d capítols nous** del contingut d’imatge real **%1$s** (%TYPE% per %3$s)!',
+		'🎥 Hem afegit *%2$d capítols nous* del contingut d’imatge real *%1$s* (%TYPE% per %3$s)!'
 	),
 	array(
-		'Ja podeu mirar %2$d capítols nous del contingut d\'acció real «%1$s» (%TYPE% per %3$s) al web d\'accioreal.fansubs.cat!',
-		':arrow_forward: Ja podeu mirar **%2$d capítols nous** del contingut d\'acció real **%1$s** (%TYPE% per %3$s)!',
-		'🎥 Ja podeu mirar *%2$d capítols nous* del contingut d\'acció real *%1$s* (%TYPE% per %3$s)!'
+		'Ja podeu mirar %2$d capítols nous del contingut d’imatge real «%1$s» (%TYPE% per %3$s) al web d’accióreal.fansubs.cat!',
+		':arrow_forward: Ja podeu mirar **%2$d capítols nous** del contingut d’imatge real **%1$s** (%TYPE% per %3$s)!',
+		'🎥 Ja podeu mirar *%2$d capítols nous* del contingut d’imatge real *%1$s* (%TYPE% per %3$s)!'
 	)
 );
 
-$result = mysqli_query($db_connection, "SELECT IF(v.show_divisions=1,vo.name,NULL), m.name, m.synopsis, m.rating, v.series_id, m.subtype, m.comic_type, m.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, c.number, IF(ct.title IS NOT NULL, ct.title, IF(c.number IS NULL,c.description,ct.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_manga_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_manga
+$result = query("SELECT IF(v.show_divisions=1,vo.name,NULL), m.name, m.synopsis, m.rating, v.series_id, m.subtype, m.comic_type, m.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, c.number, IF(ct.title IS NOT NULL, ct.title, IF(c.number IS NULL,c.description,ct.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_manga_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_manga
 FROM file fi
 LEFT JOIN version v ON fi.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -421,8 +419,9 @@ LEFT JOIN series m ON v.series_id=m.id
 LEFT JOIN episode_title ct ON fi.episode_id=ct.episode_id AND ct.version_id=fi.version_id
 LEFT JOIN episode c ON fi.episode_id=c.id
 LEFT JOIN division vo ON vo.id=c.division_id
-WHERE m.type='manga' AND fi.id>$last_tweeted_manga_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC") or die(mysqli_error($db_connection));
-while ($row = mysqli_fetch_assoc($result)){
+WHERE m.type='manga' AND fi.id>$last_tweeted_manga_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC");
+//This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
+if ($row = mysqli_fetch_assoc($result)){
 	$comic_type = get_comic_type($row['comic_type']);
 	if ($row['new_manga']==1) {
 		$random = array_rand($new_manga_tweets, 1);
@@ -509,9 +508,7 @@ while ($row = mysqli_fetch_assoc($result)){
 	}
 }
 
-mysqli_free_result($result);
-
-$result = mysqli_query($db_connection, "SELECT IF(v.show_divisions=1, IFNULL(se.name,s.name), s.name) name, s.synopsis, s.rating, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_anime_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
+$result = query("SELECT IF(v.show_divisions=1, IFNULL(se.name,s.name), s.name) name, s.synopsis, s.rating, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_anime_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
 FROM file fi
 LEFT JOIN version v ON fi.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -520,7 +517,7 @@ LEFT JOIN series s ON v.series_id=s.id
 LEFT JOIN episode_title et ON fi.episode_id=et.episode_id AND et.version_id=fi.version_id
 LEFT JOIN episode e ON fi.episode_id=e.id
 LEFT JOIN division se ON se.id=e.division_id
-WHERE s.type='anime' AND fi.id>$last_tweeted_anime_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC") or die(mysqli_error($db_connection));
+WHERE s.type='anime' AND fi.id>$last_tweeted_anime_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC");
 while ($row = mysqli_fetch_assoc($result)){
 	$type = 'subtitulat';
 	if ($row['fansub_type']=='fandub') {
@@ -611,9 +608,7 @@ while ($row = mysqli_fetch_assoc($result)){
 	}
 }
 
-mysqli_free_result($result);
-
-$result = mysqli_query($db_connection, "SELECT IF(v.show_divisions=1, IFNULL(se.name,s.name), s.name) name, s.synopsis, s.rating, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_liveaction_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
+$result = query("SELECT IF(v.show_divisions=1, IFNULL(se.name,s.name), s.name) name, s.synopsis, s.rating, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_tweeted_liveaction_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
 FROM file fi
 LEFT JOIN version v ON fi.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -622,7 +617,7 @@ LEFT JOIN series s ON v.series_id=s.id
 LEFT JOIN episode_title et ON fi.episode_id=et.episode_id AND et.version_id=fi.version_id
 LEFT JOIN episode e ON fi.episode_id=e.id
 LEFT JOIN division se ON se.id=e.division_id
-WHERE s.type='liveaction' AND fi.id>$last_tweeted_liveaction_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC") or die(mysqli_error($db_connection));
+WHERE s.type='liveaction' AND fi.id>$last_tweeted_liveaction_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC");
 while ($row = mysqli_fetch_assoc($result)){
 	$type = 'subtitulat';
 	if ($row['fansub_type']=='fandub') {
@@ -634,8 +629,8 @@ while ($row = mysqli_fetch_assoc($result)){
 			if ($row['rating']<>'XXX') {
 				publish_tweet(get_shortened_tweet(sprintf(str_replace('%TYPE%', $type, $new_liveaction_tweets[$random][0]), $row['name'], $row['fansub_handles']))."\nhttps://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
 				publish_toot(get_shortened_toot(sprintf(str_replace('%TYPE%', $type, $new_liveaction_tweets[$random][0]), $row['name'], $row['fansub_mastodon_handles']))."\n➡️ https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-				publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_tweets[$random][1]), $row['name'], $row['fansub_names']), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
-				publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_tweets[$random][2]), $row['name'], $row['fansub_names']), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+				publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_tweets[$random][1]), $row['name'], $row['fansub_names']), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+				publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_tweets[$random][2]), $row['name'], $row['fansub_names']), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 			}
 			file_put_contents('last_tweeted_liveaction_id.txt', $row['id']);
 		} catch(Exception $e) {
@@ -647,8 +642,8 @@ while ($row = mysqli_fetch_assoc($result)){
 			if ($row['rating']<>'XXX') {
 				publish_tweet(get_shortened_tweet(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episodes_tweets[$random][0]), $row['name'], $row['cnt'], $row['fansub_handles']))."\nhttps://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
 				publish_toot(get_shortened_toot(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episodes_tweets[$random][0]), $row['name'], $row['cnt'], $row['fansub_mastodon_handles']))."\n➡️ https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-				publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episodes_tweets[$random][1]), $row['name'], $row['cnt'], $row['fansub_names']), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
-				publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episodes_tweets[$random][2]), $row['name'], $row['cnt'], $row['fansub_names']), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+				publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episodes_tweets[$random][1]), $row['name'], $row['cnt'], $row['fansub_names']), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+				publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episodes_tweets[$random][2]), $row['name'], $row['cnt'], $row['fansub_names']), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 			}
 			file_put_contents('last_tweeted_liveaction_id.txt', $row['id']);
 		} catch(Exception $e) {
@@ -662,8 +657,8 @@ while ($row = mysqli_fetch_assoc($result)){
 					if ($row['rating']<>'XXX') {
 						publish_tweet(get_shortened_tweet(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_handles']))."\nhttps://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
 						publish_toot(get_shortened_toot(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_mastodon_handles']))."\n➡️ https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-						publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][1]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
-						publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][2]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+						publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][1]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+						publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][2]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 					}
 					file_put_contents('last_tweeted_liveaction_id.txt', $row['id']);
 				} catch(Exception $e) {
@@ -675,8 +670,8 @@ while ($row = mysqli_fetch_assoc($result)){
 					if ($row['rating']<>'XXX') {
 						publish_tweet(get_shortened_tweet(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_handles'], str_replace('.',',',floatval($row['number']))))."\nhttps://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
 						publish_toot(get_shortened_toot(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_mastodon_handles'], str_replace('.',',',floatval($row['number']))))."\n➡️ https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-						publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_tweets[$random][1]), $row['name'], $row['title'], $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
-						publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_tweets[$random][2]), $row['name'], $row['title'], $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+						publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_tweets[$random][1]), $row['name'], $row['title'], $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+						publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_tweets[$random][2]), $row['name'], $row['title'], $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 					}
 					file_put_contents('last_tweeted_liveaction_id.txt', $row['id']);
 				} catch(Exception $e) {
@@ -688,8 +683,8 @@ while ($row = mysqli_fetch_assoc($result)){
 					if ($row['rating']<>'XXX') {
 						publish_tweet(get_shortened_tweet(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_no_name_tweets[$random][0]), $row['name'], '', $row['fansub_handles'], str_replace('.',',',floatval($row['number']))))."\nhttps://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
 						publish_toot(get_shortened_toot(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_no_name_tweets[$random][0]), $row['name'], '', $row['fansub_mastodon_handles'], str_replace('.',',',floatval($row['number']))))."\n➡️ https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-						publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_no_name_tweets[$random][1]), $row['name'], '', $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
-						publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_no_name_tweets[$random][2]), $row['name'], '', $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+						publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_no_name_tweets[$random][1]), $row['name'], '', $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+						publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_number_no_name_tweets[$random][2]), $row['name'], '', $row['fansub_names'], str_replace('.',',',floatval($row['number']))), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 					}
 					file_put_contents('last_tweeted_liveaction_id.txt', $row['id']);
 				} catch(Exception $e) {
@@ -702,8 +697,8 @@ while ($row = mysqli_fetch_assoc($result)){
 				if ($row['rating']<>'XXX') {
 					publish_tweet(get_shortened_tweet(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_handles']))."\nhttps://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
 					publish_toot(get_shortened_toot(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][0]), $row['name'], $row['title'], $row['fansub_mastodon_handles']))."\n➡️ https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""));
-					publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][1]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
-					publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][2]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Acció real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+					publish_to_discord(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][1]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
+					publish_to_telegram(sprintf(str_replace('%TYPE%', $type, $new_liveaction_episode_no_number_tweets[$random][2]), $row['name'], $row['title'], $row['fansub_names']), $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], "https://accioreal.fansubs.cat/".($row['subtype']=='series' ? 'series' : 'films')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : ""), "https://accioreal.fansubs.cat/preview/".$row['slug'].'.jpg', $row['rating']);
 				}
 				file_put_contents('last_tweeted_liveaction_id.txt', $row['id']);
 			} catch(Exception $e) {
@@ -712,8 +707,4 @@ while ($row = mysqli_fetch_assoc($result)){
 		}
 	}
 }
-
-mysqli_free_result($result);
-
-mysqli_close($db_connection);
 ?>

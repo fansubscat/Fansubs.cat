@@ -2,28 +2,26 @@
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 
 //Database access
-$db_host="YOUR_DB_HOST_HERE";
-$db_name="YOUR_DB_NAME_HERE";
-$db_user="YOUR_DB_USER_HERE";
-$db_passwd="YOUR_DB_PASS_HERE";
+define('DB_HOST', 'YOUR_DB_HOST_HERE');
+define('DB_NAME', 'YOUR_DB_NAME_HERE');
+define('DB_USER', 'YOUR_DB_USER_HERE');
+define('DB_PASSWORD', 'YOUR_DB_PASS_HERE');
+define('DB_CHARSET', 'utf8mb4');
 
 //Website URLs (no final slash)
-$static_url="https://static.fansubs.cat";
+define('STATIC_URL', 'https://static.fansubs.cat');
 
-//Paths (no final slash)
-$services_directory='/srv/services/fansubs.cat';
-$static_directory='/srv/websites/static.fansubs.cat';
-
-//Specific data
-$default_fansub_id=28; //"Fansub independent"
+//Internal paths (no final slash)
+define('SERVICES_DIRECTORY', '/srv/services/fansubs.cat');
+define('STATIC_DIRECTORY', '/srv/websites/static.fansubs.cat');
 
 //Used to check internal calls only
-$internal_token='YOUR_INTERNAL_TOKEN_HERE';
+define('INTERNAL_SERVICES_TOKEN', 'YOUR_INTERNAL_TOKEN_HERE');
 
 //Storages
-$storages = array(
+define('STORAGES', array(
 	'https://YOUR_STORAGE_SERVERS/'
-);
+));
 
 //Storage URL customization
 function generate_storage_url($url) {

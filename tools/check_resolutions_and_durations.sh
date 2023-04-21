@@ -23,25 +23,25 @@ then
 
 		if [ ! "$vcodec" == "h264" ]
 		then
-			echo "Video format is not H264 for file '$url': WEB:h264!=HDD:$vcodec";
+			echo "Video format is not H264 for file «$url»: WEB:h264!=HDD:$vcodec";
 		fi
 
 		if [ ! "$acodec" == "aac" ]
 		then
-			echo "Audio format is not AAC for file '$url': WEB:aac!=HDD:$acodec";
+			echo "Audio format is not AAC for file «$url»: WEB:aac!=HDD:$acodec";
 		fi
 
 		if [ ! "$artist" == "Recompressió per a anime.fansubs.cat" ]
 		then
 			if [ ! "$artist" == "Recompressió per a Fansubs.cat" ]
 			then
-				echo "Metadata is not correct for file '$url': WEB:Recompressió per a Fansubs.cat!=HDD:$artist";
+				echo "Metadata is not correct for file «$url»: WEB:Recompressió per a Fansubs.cat!=HDD:$artist";
 			fi
 		fi
 
 		if [ ! "$resolutionp" == "$resolutionr" ]
 		then
-			echo "Resolution DOES NOT MATCH for file '$url': WEB:$resolutionp!=HDD:$resolutionr";
+			echo "Resolution DOES NOT MATCH for file «$url»: WEB:$resolutionp!=HDD:$resolutionr";
 		fi
 
 		durationr=`./ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$dest_dir/$url" | awk -F'.' '{print $1}'`
@@ -51,13 +51,13 @@ then
 		then
 			if [ $durationr -ge 600 ]
 			then
-				echo "WARNING! Extra '$url' is more than 10 minutes long: are you sure this is an extra?"
+				echo "WARNING! Extra «$url» is more than 10 minutes long: are you sure this is an extra?"
 			fi
 		fi
 
 		if [ $durationd -ne 0 ]
 		then
-			echo "Duration DOES NOT MATCH for file '$url': WEB:$durationp!=HDD:$durationr";
+			echo "Duration DOES NOT MATCH for file «$url»: WEB:$durationp!=HDD:$durationr";
 			curl --data-urlencode "duration=$durationr" --data-urlencode "file_id=$file_id" https://api.fansubs.cat/internal/change_file_duration/?token=$token 2> /dev/null
 			echo "Setting duration to $durationr for file id $file_id"
 		fi

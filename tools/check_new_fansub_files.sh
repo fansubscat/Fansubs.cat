@@ -111,9 +111,9 @@ do
 
 			if [ $type = "liveaction" ]
 			then
-				folder_type="Acció real"
-				orig_dir="/volume1/Fansubs - Acció real"
-				dest_dir="$base_dest_dir/Acció real"
+				folder_type="Imatge real"
+				orig_dir="/volume1/Fansubs - Imatge real"
+				dest_dir="$base_dest_dir/Imatge real"
 			fi
 
 			if [ $is_extra = "true" ]

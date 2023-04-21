@@ -18,7 +18,7 @@ then
 
 		if [ ! "$expected_length" == "$real_length" ]
 		then
-			echo "Length DOES NOT MATCH for file '$original_filename' (id $file_id, $series): WEB:$expected_length!=HDD:$real_length";
+			echo "Length DOES NOT MATCH for file «$original_filename» (id $file_id, $series): WEB:$expected_length!=HDD:$real_length";
 		fi
 		
 		IFS=$'\n'

@@ -2,7 +2,6 @@ RewriteEngine on
 
 #Hide internal files
 RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
-RewriteCond %{REQUEST_URI} !error\.php
 RewriteRule \.php$ - [F]
 
 RewriteRule ^(.*)$ api.php

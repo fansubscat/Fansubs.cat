@@ -60,7 +60,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 						<div class="profile-section-data-info"><?php echo "123 pàgines"; ?></div>
 					</div>
 					<div class="profile-section-data">
-						<div class="profile-section-data-header">Total d’acció real vist</div>
+						<div class="profile-section-data-header">Total d’imatge real vist</div>
 						<div class="profile-section-data-info"><?php echo "123 hores"; ?></div>
 					</div>
 				</div>

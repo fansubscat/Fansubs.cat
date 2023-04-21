@@ -31,7 +31,7 @@ $types = array(
 			'manga', 'Manga', 'Mangues amb més visualitzacions', FALSE
 		),
 		array(
-			'liveaction', 'Acció real', 'Contingut d\'acció real amb més visualitzacions', FALSE
+			'liveaction', 'Imatge real', 'Contingut d’imatge real amb més visualitzacions', FALSE
 		),
 		array(
 			'anime', 'Anime hentai', 'Animes hentai amb més visualitzacions', TRUE
@@ -41,7 +41,7 @@ $types = array(
 		)
 );
 
-$message="*Totals del mes passat:*\n\n__Anime:__\n  • Visualitzacions: $views_anime\n  • Temps total: ".get_hours_or_minutes_formatted($time_anime)."\n  • Versions noves: ${totals['total_anime']}\n  • Fitxers nous: ${totals['total_files_anime']}\n\n__Manga:__\n  • Lectures: $views_manga\n  • Pàgines totals: $pages_manga\n  • Versions noves: ${totals['total_manga']}\n  • Fitxers nous: ${totals['total_files_manga']}\n\n__Acció real:__\n  • Visualitzacions: $views_liveaction\n  • Temps total: ".get_hours_or_minutes_formatted($time_liveaction)."\n  • Versions noves: ${totals['total_liveaction']}\n  • Fitxers nous: ${totals['total_files_liveaction']}\n\n__Altres:__\n  • Notícies noves: ${totals['total_news']}\n  • Fansubs nous: ${totals['total_fansubs']}\n  • Usuaris únics: ${totals['total_users']}\n  • Usuaris anònims: ${totals['total_anons']}";
+$message="*Totals del mes passat:*\n\n__Anime:__\n  • Visualitzacions: $views_anime\n  • Temps total: ".get_hours_or_minutes_formatted($time_anime)."\n  • Versions noves: ${totals['total_anime']}\n  • Fitxers nous: ${totals['total_files_anime']}\n\n__Manga:__\n  • Lectures: $views_manga\n  • Pàgines totals: $pages_manga\n  • Versions noves: ${totals['total_manga']}\n  • Fitxers nous: ${totals['total_files_manga']}\n\n__Imatge real:__\n  • Visualitzacions: $views_liveaction\n  • Temps total: ".get_hours_or_minutes_formatted($time_liveaction)."\n  • Versions noves: ${totals['total_liveaction']}\n  • Fitxers nous: ${totals['total_files_liveaction']}\n\n__Altres:__\n  • Notícies noves: ${totals['total_news']}\n  • Fansubs nous: ${totals['total_fansubs']}\n  • Usuaris únics: ${totals['total_users']}\n  • Usuaris anònims: ${totals['total_anons']}";
 
 file_get_contents("https://api.telegram.org/bot".TELEGRAM_BOT_API_KEY."/sendMessage?chat_id=".TELEGRAM_BOT_CHAT_ID."&parse_mode=markdownv2&text=".urlencode($message));
 

@@ -35,46 +35,6 @@ function isEmbedPage(){
 	return $('#embed-page').length!=0;
 }
 
-/*function getReaderSource(file_id){
-	var start='<div class="white-popup"><div style="display: flex; height: 100%;">';
-	var end='</div></div>';
-	return start+'<iframe style="flex-grow: 1;" frameborder="0" src="'+getBaseUrl()+'/reader.php?file_id='+file_id+(isEmbedPage() && (window.self==window.top) ? '&hide_close=1' : '')+'" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>'+end;
-}
-
-function sendReadEndAjax(){
-	if (currentFileId!=-1){
-		clearInterval(reportTimer);
-		if (!enableDebug) {
-			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("GET", getBaseUrl()+'/counter.php?type=read&view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
-			xmlHttp.send(null);
-		} else {
-			console.debug('Would have requested: /counter.php?type=read&view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
-		}
-		currentFileId=-1;
-		currentMethod=null;
-		currentViewId="";
-		currentReadStartTime=-1;
-		currentPagesRead=1;
-	}
-}
-
-function sendReadEndBeacon(){
-	if (currentFileId!=-1){
-		clearInterval(reportTimer);
-		if (!enableDebug) {
-			navigator.sendBeacon(getBaseUrl()+'/counter.php?type=read&view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
-		} else {
-			console.debug('Would have requested: /counter.php?type=read&view_id='+currentViewId+'&file_id='+currentFileId+"&action=close&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
-		}
-		currentFileId=-1;
-		currentMethod=null;
-		currentViewId="";
-		currentReadStartTime=-1;
-		currentPagesRead=1;
-	}
-}*/
-
 function addLog(message){
 	console.debug(message);
 	var playerTime = '--:--:--';
@@ -92,40 +52,14 @@ function addLog(message){
 	loggedMessages+=new Date().toLocaleTimeString()+": ["+playerTime+"] "+message+"\n";
 }
 
-/*function beginReaderTracking(fileId){
-	markFileAsViewed(fileId);
-	currentFileId=fileId;
-	currentMethod='pages';
-	//The chances of collision of this is so low that if we get a collision, it's no problem at all.
-	currentViewId=getNewViewId();
-	currentReadStartTime=Math.floor(new Date().getTime()/1000);
-	if (!enableDebug) {
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", getBaseUrl()+'/counter.php?type=read&view_id='+currentViewId+'&file_id='+fileId+"&method=reader&action=open", true);
-		xmlHttp.send(null);
-	} else {
-		console.debug('Would have requested: /counter.php?type=read&view_id='+currentViewId+"&file_id="+currentFileId+"&method=reader&action=open");
-	}
-	reportTimer = setInterval(function tick() {
-		if (!enableDebug) {
-			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("GET", '/counter.php?type=read&view_id='+currentViewId+'&file_id='+currentFileId+"&method=reader&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead, true);
-			xmlHttp.send(null);
-		} else {
-			console.debug('Would have requested: /counter.php?type=read&view_id='+currentViewId+"&file_id="+currentFileId+"&method=reader&action=notify&time_spent="+(Math.floor(new Date().getTime()/1000)-currentReadStartTime)+"&pages_read="+currentPagesRead);
-		}
-	}, 60000);
-}*/
-
 function reportErrorToServer(error_type, error_text){
 	if (!lastErrorReported || lastErrorReported<=Date.now()-2000) {
 		addLog("Error reported");
 		lastErrorReported = Date.now();
-		var playerTime = getPlayerCurrentTime();
 		var formData = new FormData();
 		formData.append("view_id", currentSourceData.view_id);
 		formData.append("file_id", currentSourceData.file_id);
-		formData.append("position", playerTime);
+		formData.append("position", getDisplayerCurrentPosition());
 		formData.append("type", error_type);
 		formData.append("text", error_text);
 		var url = getBaseUrl()+'/report_error.php';
@@ -136,6 +70,30 @@ function reportErrorToServer(error_type, error_text){
 		}
 	} else {
 		addLog("Error repeated (not reported).");
+	}
+}
+
+function getDisplayerCurrentPosition() {
+	if (currentSourceData.method=='pages') {
+		return getReaderCurrentPage();
+	} else {
+		return getPlayerCurrentTime();
+	}
+}
+
+function getDisplayerCurrentProgress() {
+	if (currentSourceData.method=='pages') {
+		return getReaderReadPages();
+	} else {
+		return getPlayerPlayedSeconds();
+	}
+}
+
+function getDisplayerMarkAsSeenPosition() {
+	if (currentSourceData.method=='pages') {
+		return Math.max(1, Math.floor(currentSourceData.length*0.85), currentSourceData.length-5);
+	} else {
+		return Math.max(1, Math.floor(currentSourceData.length*0.85), currentSourceData.length-600);
 	}
 }
 
@@ -169,18 +127,9 @@ function getReaderReadPages() {
 
 function sendCurrentFileTracking(){
 	if (currentSourceData!=null) {
-		var position;
-		var progress;
-		var markAsSeenPosition;
-		if (currentSourceData.method=='pages') {
-			position = getReaderCurrentPage();
-			progress = currentSourceData.initial_progress+getReaderReadPages();
-			markAsSeenPosition = Math.max(1, Math.floor(currentSourceData.length*0.85), currentSourceData.length-5);
-		} else {
-			position = getPlayerCurrentTime();
-			progress = currentSourceData.initial_progress+getPlayerPlayedSeconds();
-			markAsSeenPosition = Math.max(1, Math.floor(currentSourceData.length*0.85), currentSourceData.length-600);
-		}
+		var position = getDisplayerCurrentPosition();
+		var progress = currentSourceData.initial_progress+getDisplayerCurrentProgress();
+		var markAsSeenPosition = getDisplayerMarkAsSeenPosition();
 		if (position>=markAsSeenPosition && !currentSourceData.is_seen) {
 			markAsSeen(currentSourceData.file_id, true);
 			currentSourceData.is_seen=true;
@@ -199,46 +148,6 @@ function sendCurrentFileTracking(){
 		}
 	}
 }
-
-/*function markFileAsViewed(file_id){
-	var current = Cookies.get('viewed_files', cookieOptions);
-	if (current){
-		var files = current.split(',');
-		if (!files.includes(file_id)){
-			files.push(file_id);
-			Cookies.set('viewed_files', files.join(','), cookieOptions);
-		}
-	} else {
-		var files = [];
-		files.push(file_id);
-		Cookies.set('viewed_files', files.join(','), cookieOptions);
-	}
-	$('.viewed-indicator[data-file-id='+file_id+']').attr('title','Ja l\'has vist: prem per a marcar-lo com a no vist');
-	$('.viewed-indicator[data-file-id='+file_id+']').removeClass('not-viewed');
-	$('.viewed-indicator[data-file-id='+file_id+']').addClass('viewed');
-	$('.viewed-indicator[data-file-id='+file_id+'] span').removeClass('fa-eye-slash');
-	$('.viewed-indicator[data-file-id='+file_id+'] span').addClass('fa-eye');
-	$('.new-episode[data-file-id='+file_id+']').addClass('hidden');
-}
-
-function markFileAsNotViewed(file_id){
-	var current = Cookies.get('viewed_files', cookieOptions);
-	if (current){
-		var files = current.split(',');
-		if (files.includes(file_id)){
-			var result = files.filter(function(elem){
-				return elem != file_id; 
-			});
-			Cookies.set('viewed_files', result.join(','), cookieOptions);
-		}
-	}
-	$('.viewed-indicator[data-file-id='+file_id+']').attr('title','Encara no l\'has vist: prem per a marcar-lo com a vist');
-	$('.viewed-indicator[data-file-id='+file_id+']').removeClass('viewed');
-	$('.viewed-indicator[data-file-id='+file_id+']').addClass('not-viewed');
-	$('.viewed-indicator[data-file-id='+file_id+'] span').removeClass('fa-eye');
-	$('.viewed-indicator[data-file-id='+file_id+'] span').addClass('fa-eye-slash');
-	$('.new-episode[data-file-id='+file_id+']').removeClass('hidden');
-}*/
 
 function getPlayerErrorEvent() {
 	var error = "";
@@ -269,12 +178,12 @@ function getPlayerErrorEvent() {
 	return error;
 }
 
-function hasPrevVideo() {
+function hasPrevFile() {
 	if (isEmbedPage()) {
 		return false;
 	}
-	var position  = parseInt($('.video-player[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.video-player').filter(function(){
+	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
+	var results = $('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position-1;
 	});
 
@@ -284,12 +193,12 @@ function hasPrevVideo() {
 	return false;
 }
 
-function hasNextVideo() {
+function hasNextFile() {
 	if (isEmbedPage()) {
 		return false;
 	}
-	var position  = parseInt($('.video-player[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.video-player').filter(function(){
+	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
+	var results = $('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position+1;
 	});
 
@@ -299,23 +208,23 @@ function hasNextVideo() {
 	return false;
 }
 
-function playPrevVideo() {
-	var position  = parseInt($('.video-player[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.video-player[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
+function playPrevFile() {
+	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
+	var results = $('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position-1;
 	});
 
 	if (results.length>0) {
 		//In case of multiple files for one episode, only the first will be played
 		sendCurrentFileTracking();
-		shutdownVideoStreaming();
+		shutdownFileStreaming();
 		results.first().click();
 	}
 }
 
-function getNextVideoElement() {
-	var position  = parseInt($('.video-player[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.video-player[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
+function getNextFileElement() {
+	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
+	var results = $('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position+1;
 	});
 
@@ -326,16 +235,16 @@ function getNextVideoElement() {
 	return null;
 }
 
-function playNextVideo() {
-	var position  = parseInt($('.video-player[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.video-player[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.video-player').filter(function(){
+function playNextFile() {
+	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
+	var results = $('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position+1;
 	});
 
 	if (results.length>0) {
 		//In case of multiple files for one episode, only the first will be played
 		sendCurrentFileTracking();
-		shutdownVideoStreaming();
+		shutdownFileStreaming();
 		results.first().click();
 	}
 }
@@ -353,8 +262,16 @@ function getCoverImageUrlForChromecast() {
 	return currentSourceData.cover;
 }
 
-function initializeReader(fileId) {
-	$('#overlay-content').html(getReaderSource(fileId));
+function initializeReader() {
+	$('<div class="player-popup">Aquí va el manga de '+currentSourceData.title+'</div>').appendTo('#overlay-content');
+}
+
+function initializeFileDisplayer(){
+	if (currentSourceData.method=='pages') {
+		initializeReader();
+	} else {
+		initializePlayer();
+	}
 }
 
 function initializePlayer(){
@@ -381,7 +298,7 @@ function initializePlayer(){
 		if (window.chrome && window.chrome.cast && window.cast) {
 			cast.framework.CastContext.getInstance().endCurrentSession(true);
 		}
-		shutdownVideoPlayer(false);
+		shutdownFileDisplayer(false);
 		currentTechOrders=techOrders;
 	}
 
@@ -494,13 +411,13 @@ function initializePlayer(){
 			} else {
 				$('.player_extra_title').html(currentSourceData.title);
 			}
-			var nextVideo = getNextVideoElement();
+			var nextFile = getNextFileElement();
 			if ($('.video-js .player_extra_ended').length==0) {
-				$('<div class="player_extra_ended'+(nextVideo==null ? ' hidden' : '')+'"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">Següent capítol:</div><div class="player_extra_ended_title">'+new Option(nextVideo==null ? '' : nextVideo.attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><a onclick="playNextVideo();">Reprodueix-lo ara</a><img src="'+(nextVideo==null ? '' : nextVideo.attr('data-thumbnail'))+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
-			} else  if (nextVideo!=null) {
+				$('<div class="player_extra_ended'+(nextFile==null ? ' hidden' : '')+'"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">Següent capítol:</div><div class="player_extra_ended_title">'+new Option(nextFile==null ? '' : nextFile.attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><a onclick="playNextFile();">Reprodueix-lo ara</a><img src="'+(nextFile==null ? '' : nextFile.attr('data-thumbnail'))+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
+			} else  if (nextFile!=null) {
 				$('.player_extra_ended').removeClass('hidden');
-				$('.player_extra_ended_title')[0].innerHTML=new Option(getNextVideoElement().attr('data-title-short')).innerHTML;
-				$('.player_extra_ended_thumbnail img')[0].src=getNextVideoElement().attr('data-thumbnail');
+				$('.player_extra_ended_title')[0].innerHTML=new Option(getNextFileElement().attr('data-title-short')).innerHTML;
+				$('.player_extra_ended_thumbnail img')[0].src=getNextFileElement().attr('data-thumbnail');
 			} else {
 				$('.player_extra_ended').addClass('hidden');
 				$('.player_extra_ended_title')[0].innerHTML=new Option('').innerHTML;
@@ -520,7 +437,7 @@ function initializePlayer(){
 		});
 		player.on('ended', function(){
 			addLog('Ended');
-			if (hasNextVideo()) {
+			if (hasNextFile()) {
 				$('.player_extra_ended')[0].style.display='flex';
 				playerEndedTimer = setInterval(function tick() {
 					if (player) {
@@ -528,7 +445,7 @@ function initializePlayer(){
 						$('.player_extra_ended_thumbnail div')[0].style.width=parseFloat(playerEndedMilliseconds/15000)*100+'%';
 						if (playerEndedMilliseconds>=15100) {
 							playerEndedMilliseconds=0;
-							playNextVideo();
+							playNextFile();
 						}
 					} else {
 						hideEndCard();
@@ -564,8 +481,8 @@ function initializePlayer(){
 	player.controlBar.removeChild('NextButton');
 	player.controlBar.removeChild('PrevButtonDisabled');
 	player.controlBar.removeChild('NextButtonDisabled');
-	player.controlBar.addChild(hasPrevVideo() ? "PrevButton" : "PrevButtonDisabled", {}, 5);
-	player.controlBar.addChild(hasNextVideo() ? "NextButton" : "NextButtonDisabled", {}, 6);
+	player.controlBar.addChild(hasPrevFile() ? "PrevButton" : "PrevButtonDisabled", {}, 5);
+	player.controlBar.addChild(hasNextFile() ? "NextButton" : "NextButtonDisabled", {}, 6);
 
 	//We only support one source for now
 	if (currentSourceData.method=='mega') {
@@ -575,12 +492,12 @@ function initializePlayer(){
 	}
 }
 
-function reinitializePlayer(retryFullProcess){
+function reinitializeFile(retryFullProcess){
 	if (currentSourceData!=null && !retryFullProcess) {
-		initializePlayer();
+		initializeFileDisplayer();
 	} else {
 		$('.player-error').remove();
-		requestPlayerData(lastRequestedFileId);
+		requestFileData(lastRequestedFileId);
 	}
 }
 
@@ -677,11 +594,11 @@ function parsePlayerError(error){
 	}
 	lastErrorTimestamp = player ? player.currentTime() : 0;
 	var start = '<div class="player-error">';
-	var buttons = (critical ? '<div class="player_error_buttons"><button class="normal-button" onclick="closeOverlay();">Tanca</button></div>' : '<div class="player_error_buttons"><button class="normal-button" onclick="reinitializePlayer('+retryFullProcess+');">Torna-ho a provar</button></div>');
+	var buttons = (critical ? '<div class="player_error_buttons"><button class="normal-button" onclick="closeOverlay();">Tanca</button></div>' : '<div class="player_error_buttons"><button class="normal-button" onclick="reinitializeFile('+retryFullProcess+');">Torna-ho a provar</button></div>');
 	var end='</div>';
 	//Remove previous errors
 	$('.player-error').remove();
-	shutdownVideoPlayer(false);
+	shutdownFileDisplayer(false);
 	$('#overlay-content > .player_extra_upper').removeClass('hidden');
 	$(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details class="player-error-technical-details"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>VID: ' + (currentSourceData!=null ? currentSourceData.view_id : '(null)') + ' / FID: ' + (currentSourceData!=null ? currentSourceData.file_id : '(null)') + ' / TSP: ' + lastErrorTimestamp + '</details>' + end).appendTo('#overlay-content');
 }
@@ -698,7 +615,7 @@ function loadMegaStream(url){
 	});
 }
 
-function shutdownVideoStreaming() {
+function shutdownFileStreaming() {
 	if (player!=null && player.techName_=='Html5') {
 		player.pause();
 	}
@@ -710,8 +627,8 @@ function shutdownVideoStreaming() {
 	hideEndCard();
 }
 
-function shutdownVideoPlayer(clearSourceData) {
-	shutdownVideoStreaming();
+function shutdownFileDisplayer(clearSourceData) {
+	shutdownFileStreaming();
 	if (player!=null){
 		try {
 			player.dispose();
@@ -738,7 +655,7 @@ function hideEndCard() {
 function closeOverlay() {
 	addLog('Closed');
 	sendCurrentFileTracking();
-	shutdownVideoPlayer(true);
+	shutdownFileDisplayer(true);
 	if (!isEmbedPage()) {
 		$('#overlay').addClass('hidden');
 		$('html').removeClass('page-no-overflow');
@@ -748,8 +665,8 @@ function closeOverlay() {
 }
 
 function getPreviousUnreadEpisodes(fileId) {
-	var position  = parseInt($('.video-player[data-file-id="'+fileId+'"]').first().attr('data-position'));
-	return $('.video-player').filter(function(){
+	var position  = parseInt($('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-position'));
+	return $('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) < position;
 	});
 }
@@ -1221,7 +1138,7 @@ function acceptHentaiWarning() {
 	$('html').removeClass('page-no-overflow');
 }
 
-function requestPlayerData(fileId) {
+function requestFileData(fileId) {
 	lastRequestedFileId = fileId;
 	hasBeenCasted = false;
 	hasJumpedToInitialPosition = false
@@ -1240,7 +1157,7 @@ function requestPlayerData(fileId) {
 		var response = JSON.parse(data);
 		if (response.result=='ok') {
 			currentSourceData = response.data;
-			initializePlayer();
+			initializeFileDisplayer();
 		} else {
 			parsePlayerError('FAILED_TO_LOAD_ERROR');
 		}
@@ -1258,7 +1175,7 @@ $(document).ready(function() {
 			this.controlText('Capítol següent');
 		}
 		handleClick() {
-			playNextVideo();
+			playNextFile();
 		}
 		buildCSSClass() {
 			return `${super.buildCSSClass()} vjs-next-button`;
@@ -1270,7 +1187,7 @@ $(document).ready(function() {
 			this.controlText('Capítol anterior');
 		}
 		handleClick() {
-			playPrevVideo();
+			playPrevFile();
 		}
 		buildCSSClass() {
 			return `${super.buildCSSClass()} vjs-prev-button`;
@@ -1335,7 +1252,7 @@ $(document).ready(function() {
 	}
 	container.addEventListener("mouseleave", menuOptionMouseLeave);
 
-	if ($('.absolutely-real').length==0) {
+	if ($('.robo-message').length==0) {
 		if ($('.catalogue-index').length==1) {
 			loadCatalogueIndex();
 		} else if ($('#catalogue-search-query').length==1) {
@@ -1351,13 +1268,7 @@ $(document).ready(function() {
 		}
 	}
 	if (!isEmbedPage()) {
-		$(".manga-reader").click(function(){
-			$('html').addClass('page-no-overflow');
-			$('#overlay').removeClass('hidden');
-			beginReaderTracking($(this).attr('data-file-id'));
-			initializeReader($(this).attr('data-file-id'));
-		});
-		$(".video-player").click(function(){
+		$(".file-launcher").click(function(){
 			$('html').addClass('page-no-overflow');
 			$('#overlay').removeClass('hidden');
 			
@@ -1369,8 +1280,10 @@ $(document).ready(function() {
 			}
 			//Remove previous errors
 			$('.player-error').remove();
-			requestPlayerData($(this).attr('data-file-id'));
+			requestFileData($(this).attr('data-file-id'));
 		});
+
+		//TODO PENDING
 		$(".viewed-indicator").click(function(){
 			if ($(this).hasClass('not-viewed')){
 				markFileAsViewed($(this).attr('data-file-id'));
@@ -1400,6 +1313,8 @@ $(document).ready(function() {
 			$(this).addClass("version_tab_selected");
 			$("#version_content_"+$(this).attr('data-version-id')).removeClass("hidden");
 		});
+
+		//Search form
 		$('#search_form').submit(function(){
 			launchSearch($('#search_query').val());
 			return false;
@@ -1407,85 +1322,16 @@ $(document).ready(function() {
 		$('#search_button').click(function(){
 			$('#search_form').submit();
 		});
-		$('#options-button').click(function(){
-			$('html').addClass('page-no-overflow');
-			$('#options-overlay').removeClass('hidden');
-			$('#options-tooltip').attr('style','');
-			$('#options-tooltip').addClass('hidden');
-			Cookies.set('tooltip_closed', '1', cookieOptions);
-		});
-		$('#options-tooltip-close').click(function(){
-			$('#options-tooltip').attr('style','');
-			$('#options-tooltip').addClass('hidden');
-			Cookies.set('tooltip_closed', '1', cookieOptions);
-		});
-		$('#tachiyomi-message-close').click(function(){
-			$('#tachiyomi-message').attr('style','display: none;');
-			Cookies.set('tachiyomi_message_closed', '1', cookieOptions);
-		});
-		$('#options-cancel-button').click(function(){
-			$('#options-form').trigger("reset");
-			$('#options-overlay').addClass('hidden');
-			$('html').removeClass('page-no-overflow');
-		});
-		$('#options-save-button').click(function(){
-			Cookies.set('show_missing', $('#show_missing').prop('checked') ? '1' : '0', cookieOptions);
-			Cookies.set('show_cancelled', $('#show_cancelled').prop('checked') ? '1' : '0', cookieOptions);
-			Cookies.set('show_hentai', $('#show_hentai').prop('checked') ? '1' : '0', cookieOptions);
-			if ($('#force_long_strip').length>0) {
-				Cookies.set('force_long_strip', $('#force_long_strip').prop('checked') ? '1' : '0', cookieOptions);
-			}
-			if ($('#force_reader_ltr').length>0) {
-				Cookies.set('force_reader_ltr', $('#force_reader_ltr').prop('checked') ? '1' : '0', cookieOptions);
-			}
-			var hiddenFansubs = $('#options-fansubs input:not(:checked)');
-			var values = [];
-			
-			for (var i=0;i<hiddenFansubs.length;i++){
-				values.push(hiddenFansubs[i].value);
-			}
-			Cookies.set('hidden_fansubs', values.join(','), cookieOptions);
+		initializeSearchAutocomplete();
 
-			location.reload();
-		});
-		$('#options-select-all').click(function(){
-			$('[id^=show_fansub_]').each(function(){
-				$(this).prop('checked',true);
-			});
-		});
-		$('#options-unselect-all').click(function(){
-			$('[id^=show_fansub_]').each(function(){
-				$(this).prop('checked',false);
-			});
-		});
-		$('.select-genre').click(function(){
-			$('.select-genre').removeClass('select-genre-selected');
-			$(this).addClass('select-genre-selected');
-			var genreId = $(this).attr("data-genre-id");
-			if (genreId==-1) {
-				$('.catalog > div').removeClass('hidden');
-			} else {
-				$('.catalog > div').addClass('hidden');
-				$('.catalog > div.genre-'+genreId).removeClass('hidden');
-			}
-		});
-
-		if (Cookies.get('tooltip_closed', cookieOptions)!='1') {
-			$("#options-tooltip").removeClass('hidden');
-			$("#options-tooltip").fadeIn("slow");
-		}
-
-		if (Cookies.get('tachiyomi_message_closed', cookieOptions)=='1') {
-			$("#tachiyomi-message").attr('style','display: none;');
-		}
-
+		//Remove parameters from URL
 		history.replaceState(null, null, window.location.pathname);
+
+		//Autoopen according to parameters
 		if ($('#autoopen_file_id').length>0 && $('#autoopen_file_id').val()!='') {
 			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
 			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}
-
-		initializeSearchAutocomplete();
 
 		$(window).resize(function() {
 			if ($(window).width()!=lastWindowWidth) {
@@ -1547,6 +1393,7 @@ $(document).ready(function() {
 			}
 		});
 
+		//Search page logic
 		if ($('#search_query').length>0) {
 			var temp = $('#search_query').val();
 			$('#search_query').focus().val('').val(temp);
@@ -1599,13 +1446,14 @@ $(document).ready(function() {
 			$('#catalogue-search-query').focus().val('').val(temp);
 		}
 	} else {
+		//This is an embed
 		$('html').addClass('page-no-overflow');
 		if ($('#data-item-type').val()=='manga') {
 			beginReaderTracking($('#data-file-id').val());
 			initializeReader($('#data-file-id').val());
 		} else {
-			beginVideoTracking($('#data-file-id').val(), $('#data-method').val());
-			initializePlayer($('#data-title').val(), $('#data-method').val(), $('#data-duration').val(), atob($('#data-sources').val()));
+			beginFileTracking($('#data-file-id').val(), $('#data-method').val());
+			initializeFileDisplayer($('#data-title').val(), $('#data-method').val(), $('#data-duration').val(), atob($('#data-sources').val()));
 		}
 		window.parent.postMessage('embedInitialized', '*');
 
