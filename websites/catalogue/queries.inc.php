@@ -517,7 +517,7 @@ function query_version_ids_for_tots_sants($max_items) {
 function query_home_recommended_items($user, $force_recommended_ids_list, $max_items) {
 	$max_items = intval($max_items);
 	if (count($force_recommended_ids_list)>0) {
-		$recommendations_subquery = implode(',', $force_recommended_list); //No need to escape, comes from DB
+		$recommendations_subquery = implode(',', $force_recommended_ids_list); //No need to escape, comes from DB
 	} else {
 		$recommendations_subquery = "SELECT version_id
 						FROM recommendation r

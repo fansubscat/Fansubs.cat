@@ -252,7 +252,7 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 
 	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
 		if (!empty($title)){
-			return 'Capítol '.str_replace('.',',',floatval($episode_number).': '.$title);
+			return 'Capítol '.str_replace('.',',',floatval($episode_number)).': '.$title;
 		}
 		else {
 			return 'Capítol '.str_replace('.',',',floatval($episode_number));

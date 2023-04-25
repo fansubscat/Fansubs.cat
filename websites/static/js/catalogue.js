@@ -18,6 +18,7 @@ var loggedMessages = "";
 var lastTimeUpdate = 0;
 var hasBeenCasted = false;
 var hasJumpedToInitialPosition = false;
+var lastDoubleClickStart = 0;
 
 function showAlert(title, desc) {
 	showCustomDialog(title, desc, null, true, true, [
@@ -33,6 +34,35 @@ function showAlert(title, desc) {
 
 function isEmbedPage(){
 	return $('#embed-page').length!=0;
+}
+
+function formatTime(seconds, guide) {
+	guide = currentSourceData.length;
+	seconds = seconds < 0 ? 0 : seconds;
+	let s = Math.floor(seconds % 60);
+	let m = Math.floor(seconds / 60 % 60);
+	let h = Math.floor(seconds / 3600);
+	const gs = Math.floor(guide % 60);
+	const gm = Math.floor(guide / 60 % 60);
+	const gh = Math.floor(guide / 3600);
+
+	// handle invalid times
+	if (isNaN(seconds) || seconds === Infinity) {
+		h = gh;
+		m = gm;
+		s = gs;
+	}
+
+	// Check if we need to show hours
+	h = h > 0 || gh > 0 ? h + ':' : '';
+
+	// If hours are showing, we may need to add a leading zero.
+	// Always show at least one digit of minutes.
+	m = ((h || gm >= 10) && m < 10 ? '0' + m : m) + ':';
+
+	// Check if leading zero is need for seconds
+	s = s < 10 ? '0' + s : s;
+	return h + m + s;
 }
 
 function addLog(message){
@@ -361,6 +391,25 @@ function initializePlayer(){
 			}
 		});
 
+		//Allow dragging the seek bar and display its time
+		//Let's thank this person for providing this answer: https://stackoverflow.com/a/60748866/1254846
+		const SeekBar = videojs.getComponent('SeekBar');
+		SeekBar.prototype.getPercent = function getPercent() {
+			const time = this.player_.currentTime()
+			const percent = time / this.player_.duration()
+			return percent >= 1 ? 1 : percent
+		}
+		SeekBar.prototype.handleMouseMove = function handleMouseMove(event) {
+			let newTime = this.calculateDistance(event) * this.player_.duration()
+			if (newTime === this.player_.duration()) {
+				newTime = newTime - 0.1
+			}
+			this.player_.currentTime(newTime);
+			this.update();
+			//Changed the following line to use the proper function
+			player.controlBar.currentTimeDisplay.updateTextNode_(player.currentTime());
+		}
+
 		player.bigPlayButton.on('click', function(){
 			if (player.hasClass('vjs-casting') && player.hasClass('vjs-playing')) {
 				player.pause();
@@ -386,30 +435,66 @@ function initializePlayer(){
 				}, 1);
 			}
 
-			//Install click on sides to FF/RW on touch devices
+			//Install double click on sides to FF/RW on touch devices
 			if (player.el_.classList.contains("vjs-touch-enabled")) {
 				document.querySelector(".vjs-text-track-display").style.pointerEvents = "auto";
-				document.querySelector(".vjs-text-track-display").addEventListener("dblclick", function (e) {
-					const playerWidth = document.querySelector("#player").getBoundingClientRect().width;
-					if (0.66 * playerWidth < e.offsetX) {
-						player.currentTime(player.currentTime() + 10);
-					} else if (e.offsetX < 0.33 * playerWidth) {
-						player.currentTime((player.currentTime() - 10) < 0 ? 0 : (player.currentTime() - 10));
-					} else if (player.paused()) {
-						player.play();
+				document.querySelector(".vjs-text-track-display").addEventListener("click", function (e) {
+					if (lastDoubleClickStart == 0) {
+						lastDoubleClickStart = new Date().getTime();
 					} else {
-						player.pause();
+						if (((new Date().getTime()) - lastDoubleClickStart) < 500) {
+							lastDoubleClickStart = 0;
+							const playerWidth = document.querySelector("#player").getBoundingClientRect().width;
+							if (0.66 * playerWidth < e.offsetX) {
+								if ((player.currentTime()+10)<player.duration()) {
+									player.currentTime(player.currentTime() + 10);
+									clearTimeout($('.player_extra_backward').stop().data('timer'));
+									$('.player_extra_backward').css({'transition': 'none', 'opacity': '0'});
+									$('.player_extra_backward_time').html('0');
+									clearTimeout($('.player_extra_forward').stop().data('timer'));
+									$('.player_extra_forward_time').html(parseInt($('.player_extra_forward_time').text())+10);
+									$('.player_extra_forward').css({'transition': 'opacity .6s ease', 'opacity': '1'});
+									$('.player_extra_forward').data('timer', setTimeout(function() {
+										$('.player_extra_forward').css({'transition': 'none', 'opacity': '0'});
+										$('.player_extra_forward_time').html('0');
+									}, 1000));
+								}
+							} else if (e.offsetX < 0.33 * playerWidth) {
+								if ((player.currentTime()-10)>=0) {
+									player.currentTime(player.currentTime() - 10);
+									clearTimeout($('.player_extra_forward').stop().data('timer'));
+									$('.player_extra_forward').css({'transition': 'none', 'opacity': '0'});
+									$('.player_extra_forward_time').html('0');
+									clearTimeout($('.player_extra_backward').stop().data('timer'));
+									$('.player_extra_backward_time').html(parseInt($('.player_extra_backward_time').text())+10);
+									$('.player_extra_backward').css({'transition': 'opacity .6s ease', 'opacity': '1'});
+									$('.player_extra_backward').data('timer', setTimeout(function() {
+										$('.player_extra_backward').css({'transition': 'none', 'opacity': '0'});
+										$('.player_extra_backward_time').html('0');
+									}, 1000));
+								}
+							} else if (player.paused()) {
+								player.play();
+							} else {
+								player.pause();
+							}
+						} else {
+							lastDoubleClickStart = new Date().getTime();
+						}
 					}
 				});
 			}
 		});
 		player.on('loadstart', function(){
 			$('#overlay-content > .player_extra_upper').addClass('hidden');
-			//Install the top and ended bar
+			//Install the top, movement and ended bar
 			if ($('.video-js .player_extra_upper').length==0) {
 				$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentSourceData.title).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
+				$('<div class="player_extra_movement"><div class="player_extra_backward"><i class="fas fa-backward"></i><span><span class="player_extra_backward_time">0</span> s</span></div><div class="player_extra_forward"><i class="fas fa-forward"></i><span><span class="player_extra_forward_time">0</span> s</span></div></div>').appendTo(".video-js");
 			} else {
 				$('.player_extra_title').html(currentSourceData.title);
+				$('.player_extra_backward_time').html('0');
+				$('.player_extra_forward_time').html('0');
 			}
 			var nextFile = getNextFileElement();
 			if ($('.video-js .player_extra_ended').length==0) {
@@ -822,64 +907,66 @@ function removeFromContinueWatching(element, fileId){
 function initializeCarousels() {
 	$('.style-type-catalogue').addClass('has-carousel');
 
-	//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
-	//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
-	var carouselWidth = $('.header').width();
-	var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
-		+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
-	var size = Math.max(parseInt(carouselWidth/elementWidth),1);
-	var swipeToSlideSetting = (getComputedStyle(document.documentElement).getPropertyValue('--is-hovering-device')==0);
+	if ($('.carousel').length>0) {
+		//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
+		//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
+		var carouselWidth = $('.header').width();
+		var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
+			+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
+		var size = Math.max(parseInt(carouselWidth/elementWidth),1);
+		var swipeToSlideSetting = (getComputedStyle(document.documentElement).getPropertyValue('--is-hovering-device')==0);
 
-	$('.carousel').slick({
-		speed: 300,
-		infinite: false,
-		slidesToShow: size,
-		slidesToScroll: size,
-		swipeToSlide: false,
-		variableWidth: true,
-		prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-		nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-	});
+		$('.carousel').slick({
+			speed: 300,
+			infinite: false,
+			slidesToShow: size,
+			slidesToScroll: size,
+			swipeToSlide: false,
+			variableWidth: true,
+			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
+		});
 
-	$('.recommendations').slick({
-		dots: true,
-		appendDots: '.recommendations',
-		speed: 500,
-		fade: true,
-		infinite: true,
-		autoplay: true,
-		autoplaySpeed: 10000,
-		slidesToShow: 1,
-		slidesToScroll: 1,
-		prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-		nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-	});
+		$('.recommendations').slick({
+			dots: true,
+			appendDots: '.recommendations',
+			speed: 500,
+			fade: true,
+			infinite: true,
+			autoplay: true,
+			autoplaySpeed: 10000,
+			slidesToShow: 1,
+			slidesToScroll: 1,
+			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
+			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
+		});
 
-	$('.recommendations').on('beforeChange', function(event, slick, currentSlide, nextSlide){
-		if ((currentSlide==$('.recommendations .slick-dots li').length-1 && nextSlide==0) || nextSlide-currentSlide==1) {
-			//Advance
-			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '-30rem', 'opacity': '0'}).delay(600).queue(function() {
-				$(this).css({'transition': 'none', 'translate': '0', 'opacity': '1'});
-		 		$(this).dequeue();
-			});
-			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'none', 'translate': '30rem', 'opacity': '0'}).delay(1).queue(function() {
-				$(this).css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '0', 'opacity': '1'});
-				$(this).dequeue();
-			});
-		} else if ((currentSlide==0 && nextSlide==$('.recommendations .slick-dots li').length-1) || nextSlide-currentSlide==-1) {
-			//Go back
-			$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '30rem', 'opacity': '0'}).delay(600).queue(function() {
-				$(this).css({'transition': 'none', 'translate': '0', 'opacity': '1'});
-		 		$(this).dequeue();
-			});
-			$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'none', 'translate': '-30rem', 'opacity': '0'}).delay(1).queue(function() {
-				$(this).css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '0rem', 'opacity': '1'});
-				$(this).dequeue();
-			});
-		} else {
-			//Just fade
-		}
-	});
+		$('.recommendations').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+			if ((currentSlide==$('.recommendations .slick-dots li').length-1 && nextSlide==0) || nextSlide-currentSlide==1) {
+				//Advance
+				$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '-30rem', 'opacity': '0'}).delay(600).queue(function() {
+					$(this).css({'transition': 'none', 'translate': '0', 'opacity': '1'});
+			 		$(this).dequeue();
+				});
+				$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'none', 'translate': '30rem', 'opacity': '0'}).delay(1).queue(function() {
+					$(this).css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '0', 'opacity': '1'});
+					$(this).dequeue();
+				});
+			} else if ((currentSlide==0 && nextSlide==$('.recommendations .slick-dots li').length-1) || nextSlide-currentSlide==-1) {
+				//Go back
+				$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '30rem', 'opacity': '0'}).delay(600).queue(function() {
+					$(this).css({'transition': 'none', 'translate': '0', 'opacity': '1'});
+			 		$(this).dequeue();
+				});
+				$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'none', 'translate': '-30rem', 'opacity': '0'}).delay(1).queue(function() {
+					$(this).css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '0rem', 'opacity': '1'});
+					$(this).dequeue();
+				});
+			} else {
+				//Just fade
+			}
+		});
+	}
 
 	if ($('.synopsis-content').height()>=154) {
 		$(".show-more").removeClass('hidden');
@@ -1215,34 +1302,7 @@ $(document).ready(function() {
 	videojs.registerComponent('PrevButton', PrevButton);
 	videojs.registerComponent('PrevButtonDisabled', PrevButtonDisabled);
 
-	videojs.time.setFormatTime( (seconds, guide) => {
-		guide = currentSourceData.length;
-		seconds = seconds < 0 ? 0 : seconds;
-		let s = Math.floor(seconds % 60);
-		let m = Math.floor(seconds / 60 % 60);
-		let h = Math.floor(seconds / 3600);
-		const gs = Math.floor(guide % 60);
-		const gm = Math.floor(guide / 60 % 60);
-		const gh = Math.floor(guide / 3600);
-
-		// handle invalid times
-		if (isNaN(seconds) || seconds === Infinity) {
-			h = gh;
-			m = gm;
-			s = gs;
-		}
-
-		// Check if we need to show hours
-		h = h > 0 || gh > 0 ? h + ':' : '';
-
-		// If hours are showing, we may need to add a leading zero.
-		// Always show at least one digit of minutes.
-		m = ((h || gm >= 10) && m < 10 ? '0' + m : m) + ':';
-
-		// Check if leading zero is need for seconds
-		s = s < 10 ? '0' + s : s;
-		return h + m + s;
-	});
+	videojs.time.setFormatTime(formatTime);
 
 	var links = document.querySelectorAll(".catalogues-navigation a");
 	var container = document.querySelector(".catalogues-navigation");

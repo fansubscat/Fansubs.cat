@@ -20,7 +20,7 @@ RewriteRule ^nadal/?$ https://advent.fansubs.cat/2020 [R=301,L]
 # These still exist, but on a different domain
 RewriteRule ^pagina/(.+)/?$ https://noticiesv2.fansubs.cat/pagina/$1 [R=301,L]
 RewriteRule ^rss/?$ https://noticiesv2.fansubs.cat/rss [R=301,L]
-RewriteRule ^cerca/(.+)/pagina/(.+)/?$ https://noticiesv2.fansubs.cat/cerca/$1/pagina/$2 [R=301,L]
+RewriteRule ^cerca/(.+)/pagina/(.+)/?$ https://noticiesv2.fansubs.cat/cerca/$1 [R=301,L]
 RewriteRule ^cerca/(.+)/?$ https://noticiesv2.fansubs.cat/cerca/$1 [R=301,L]
 
 #Normal pages
