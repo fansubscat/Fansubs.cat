@@ -1136,6 +1136,7 @@
 	max-height:  var(--chapter-carousel-element-height);
 	position: relative;
 	margin: var(--thumbnail-margin);
+	transition: width var(--fast-animation-duration) ease, transform var(--fast-animation-duration) ease, margin var(--fast-animation-duration) ease;
 }
 
 .continue-watching-thumbnail {
@@ -1187,8 +1188,8 @@
 	display: inline;
 	margin-left: 0.4rem;
 	border-radius: 0.4rem;
-	width: 1.5rem;
-	height: 1.5rem;
+	width: 2rem;
+	height: 2rem;
 }
 
 .continue-watching-thumbnail .play-button {
@@ -1214,12 +1215,13 @@
 
 .continue-watching-thumbnail .close-button {
 	color: rgb(var(--always-positive-color));
-	font-size: 1.75rem;
+	font-size: 2.1rem;
 	position: absolute;
 	top: 0.2rem;
 	right: 0.1rem;
 	opacity: 1;
 	transition: opacity var(--fast-animation-duration) ease;
+	filter: drop-shadow(0 0 1px rgb(var(--always-negative-color)));
 }
 
 .continue-watching-thumbnail .progress {
@@ -1529,8 +1531,8 @@
 	.continue-watching-thumbnail .image-link .fansub img {
 		margin-left: 0.2rem;
 		border-radius: 0.2rem;
-		width: 1.2rem;
-		height: 1.2rem;
+		width: 1.5rem;
+		height: 1.5rem;
 	}
 
 	.continue-watching-thumbnail .play-button {
@@ -1542,7 +1544,7 @@
 	}
 
 	.continue-watching-thumbnail .close-button {
-		font-size: 1.3rem;
+		font-size: 1.7rem;
 	}
 
 	.continue-watching-thumbnail .progress {

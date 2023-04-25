@@ -403,9 +403,21 @@ svg.main-logo path#line_1, svg.main-logo path#line_2 {
 	transition: d var(--fast-animation-duration);
 }
 
-svg.main-logo path#line_1, svg.main-logo path#line_2, svg.main-logo path#line_3 {
+svg.main-logo path#line_1, svg.main-logo path#line_2, svg.main-logo path#line_3, svg.main-logo path#line_4 {
 	fill: rgb(var(--primary-color));
 	stroke: rgb(var(--primary-color));
+}
+
+svg.main-logo.keep-hover path#line_3 {
+	visibility: visible;
+}
+
+svg.main-logo.keep-hover path#line_1 {
+	d: path("M26 145.763v-1h477v1z");
+}
+
+svg.main-logo.keep-hover path#line_2 {
+	d: path("M133 178.763v-1h348v1z");
 }
 
 label:not(.for-checkbox), input:not([type='checkbox']):not([type='range']), select, textarea {
@@ -875,6 +887,11 @@ h2.section-title:first-of-type {
 	height: 100%;
 	position: absolute;
 	backface-visibility: hidden;
+}
+
+.status-abandoned .thumbnail .image-link, .status-cancelled .thumbnail .image-link {
+	filter: grayscale(70%) brightness(60%);
+	transition: filter var(--fast-animation-duration) ease;
 }
 
 .thumbnail img {
@@ -1432,6 +1449,10 @@ input:checked + .slider:before {
 
 	.thumbnail:hover {
 		transition-delay: var(--thumbnail-transition-delay);
+	}
+
+	.status-abandoned .thumbnail:hover .image-link, .status-cancelled .thumbnail:hover .image-link {
+		filter: grayscale(0%) brightness(100%);
 	}
 
 	.thumbnail .status-indicator {

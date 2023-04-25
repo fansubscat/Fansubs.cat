@@ -147,6 +147,7 @@ function prepareFloatingInfo(element){
 function prepareClickableFloatingInfo(element){
 	$('.thumbnail-clicked').removeClass('thumbnail-clicked');
 	$(element).parent().parent().addClass('thumbnail-clicked');
+	$('.thumbnail-clicked .floating-info-main').click(function(e) { $('.thumbnail-clicked').removeClass('thumbnail-clicked'); });
 }
 
 // Close the dropdown if the user clicks outside of it

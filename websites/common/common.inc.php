@@ -153,7 +153,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-main">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($series['best_status']).'"></div>'."\n";
 	if (!empty($user)) {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark '.(in_array($series['id'], $user['series_list_ids']) ? 'fas' : 'far').' fa-fw fa-bookmark" data-series-id="'.$series['id'].'" onclick="toggleBookmark('.$series['id'].'); return false;"></div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark '.(in_array($series['id'], $user['series_list_ids']) ? 'fas' : 'far').' fa-fw fa-bookmark" data-series-id="'.$series['id'].'" onclick="toggleBookmark('.$series['id'].'); event.stopPropagation(); return false;"></div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-title">'.htmlspecialchars($series['name']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-fansub">'.(($more_than_one_version && !$specific_version) ? "Diverses versions" : get_carousel_fansub_info($series['fansub_info'], $series['version_id'])).'</div>'."\n";
@@ -166,7 +166,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'" onclick="event.stopPropagation();">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
 	if ($series['subtype']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">One-shot</div>'."\n";
 	} else if ($series['subtype']=='serialized') {
