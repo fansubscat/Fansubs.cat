@@ -452,7 +452,7 @@ input:not([type='range']), select, textarea {
 	border: none;
 }
 
-select {
+select:not(.date-month) {
 	border-right: 0.6rem solid transparent;
 }
 
@@ -840,6 +840,10 @@ h2.section-title:first-of-type {
 	overflow: visible;
 }
 
+.style-type-login input:not([type='range']), .style-type-login select, .style-type-login textarea, .style-type-contact input:not([type='range']), .style-type-contact select, .style-type-contact textarea {
+	border: 0.1rem solid rgb(var(--positive-color));
+}
+
 /* Thumbnail for carousel series elements and so on: shared between catalogue and users */
 
 .catalogue {
@@ -894,7 +898,7 @@ h2.section-title:first-of-type {
 	transition: filter var(--fast-animation-duration) ease;
 }
 
-.thumbnail img {
+.thumbnail .image-link img {
 	display: block;
 	width: 100%; 
 	height: 100%;
@@ -911,7 +915,7 @@ h2.section-title:first-of-type {
 	padding-right: 0.5rem;
 	font-size: 1.45rem;
 	text-align: center;
-	line-height: 1.15;
+	line-height: 1.2;
 	height: var(--thumbnail-text-height);
 	display: flex;
 	align-items: center;
@@ -985,38 +989,31 @@ h2.section-title:first-of-type {
 	transition: filter var(--fast-animation-duration) ease;
 }
 
-.floating-info .status-indicator{
-	opacity: 1 !important;
-	left: 1rem !important;
-	top: 0.8rem !important;
-	transition: none !important;
-}
-
 .floating-info-bookmark.fas{
 	color: rgb(var(--secondary-color));
 	position: absolute;
-	font-size: 2rem;
+	font-size: 2.2rem;
 	right: 0.4rem;
-	top: 0.8rem;
+	top: 0.1rem;
 	cursor: pointer;
 }
 
 .floating-info-bookmark.far{
 	color: rgb(var(--positive-color));
 	position: absolute;
-	font-size: 2rem;
+	font-size: 2.2rem;
 	right: 0.4rem;
-	top: 0.8rem;
+	top: 0.1rem;
 	cursor: pointer;
 }
 
 .floating-info-title {
 	font-family: "lexend_deca_bold", sans-serif;
 	font-size: 1.45rem;
-	padding: 0 1rem;
-	margin-top: 2.8rem;
+	padding: 0 3rem;
+	margin-top: 0.6rem;
 	width: 100%;
-	line-height: 1.15;
+	line-height: 1.2;
 	/* For ellipsizing and max 2 lines */
 	text-overflow: ellipsis;
 	overflow: hidden;
@@ -1025,15 +1022,23 @@ h2.section-title:first-of-type {
 	-webkit-box-orient: vertical;
 }
 
-.floating-info-fansub {
+.floating-info-versions {
+	display: inline-flex;
 	font-family: "lexend_deca_light", sans-serif;
 	font-size: 1.2rem;
 	padding: 0 1rem;
-	margin-top: 0.4rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: 1.15;
+	line-height: 1.2;
+	justify-content: center;
+	align-items: center;
+}
+
+.floating-info-versions .fansub-name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .floating-info-synopsis-wrapper {
@@ -1048,20 +1053,20 @@ h2.section-title:first-of-type {
 	font-size: 1.15rem;
 	opacity: 0.75;
 	padding: 0 1rem;
-	line-height: 1.15;
+	line-height: 1.2;
 	text-align: left;
-	/* For ellipsizing and max 8 lines */
+	/* For ellipsizing and max 10 lines */
 	text-overflow: ellipsis;
 	overflow: hidden;
 	display: -webkit-box;
-	-webkit-line-clamp: 7;
+	-webkit-line-clamp: 9;
 	-webkit-box-orient: vertical;
 }
 
 .floating-info-watch-now {
 	font-family: "lexend_deca_bold", sans-serif;
 	border-radius: 0.6rem;
-	padding: 0.25rem 1rem;
+	padding: 0.35rem 1rem;
 	font-size: 1.15rem;
 	background: rgb(var(--positive-color));
 	white-space: nowrap;
@@ -1076,7 +1081,7 @@ h2.section-title:first-of-type {
 	font-family: "lexend_deca_bold", sans-serif;
 	font-size: 1.2rem;
 	padding: 0 1rem;
-	margin-top: 0.9rem;
+	margin-top: 0.8rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -1085,7 +1090,7 @@ h2.section-title:first-of-type {
 .floating-info-genres-score-wrapper {
 	display: flex;
 	flex-direction: row;
-	margin-top: 1rem;
+	margin-top: 0.3rem;
 	margin-bottom: 0.7rem;
 	align-items: end;
 }
@@ -1096,7 +1101,7 @@ h2.section-title:first-of-type {
 	font-size: 1rem;
 	line-height: 1.15;
 	padding: 0 1rem;
-	height: 3.5rem;
+	height: 2.7rem;
 	display: flex;
 	align-items: end;
 }
@@ -1107,7 +1112,7 @@ h2.section-title:first-of-type {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	display: -webkit-box;
-	-webkit-line-clamp: 3;
+	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 }
 
@@ -1125,34 +1130,103 @@ h2.section-title:first-of-type {
 	border-radius: 99rem;
 }
 
-.thumbnail .status-indicator {
+.thumbnail .versions {
+	display: flex;
+	justify-content: left;
+	flex-direction: row;
 	position: absolute;
-	top: 0.4rem;
-	left: 0.4rem;
+	top: 0;
+	right: 0;
 	transition: opacity var(--fast-animation-duration) ease;
 	transition-delay: 0s;
 	opacity: 1;
 	z-index: 2;
 	backface-visibility: hidden;
+	filter: drop-shadow(0 0 0.2rem rgb(var(--always-negative-color)));
+	padding: 0.2rem;
+	pointer-events: none;
 }
 
-.status-completed .status-indicator {
+.thumbnail .floating-info-versions-icons {
+	display: flex;
+	justify-content: left;
+	flex-direction: row;
+	padding: 0.2rem;
+	margin-right: 0.2rem;
+}
+
+.thumbnail .versions .fansubs {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	margin-left: 0.4rem;
+}
+
+.floating-info-versions-icons .fansubs {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	margin-left: 0.2rem;
+}
+
+.thumbnail .versions .fansubs:first-child, .floating-info-versions-icons .fansubs:first-child {
+	margin-left: 0;
+}
+
+.thumbnail .versions .fansubs .fansub, .floating-info-versions-icons .fansubs .fansub {
+	display: flex;
+	justify-content: left;
+	align-items: center;
+	margin-left: -0.4rem;
+}
+
+.thumbnail .versions .fansubs .fansub:first-child, .floating-info-versions-icons .fansubs .fansub:first-child {
+	margin-left: 0;
+}
+
+.thumbnail .versions .fansubs .fansub img {
+	display: inline;
+	border-radius: 100%;
+	width: 2rem;
+	height: 2rem;
+}
+
+.floating-info-versions-icons .fansubs .fansub img {
+	display: inline;
+	border-radius: 100%;
+	width: 1.8rem;
+	height: 1.8rem;
+}
+
+.thumbnail .versions .version-status, .floating-info-versions-icons .version-status {
+	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 100%;
+	position: absolute;
+	bottom: 0;
+	right: -0.1rem;
+}
+
+.status-completed .status-indicator, .version-status.status-completed  {
 	background: green;
 }
 
-.status-in-progress .status-indicator {
+.status-in-progress .status-indicator, .version-status.status-in-progress  {
 	background: yellow;
 }
 
-.status-partially-completed .status-indicator {
+.status-partially-completed .status-indicator, .version-status.status-partially-completed  {
 	background: greenyellow;
 }
 
-.status-cancelled .status-indicator {
+.status-cancelled .status-indicator, .version-status.status-cancelled  {
 	background: red;
 }
 
-.status-abandoned .status-indicator {
+.status-abandoned .status-indicator, .version-status.status-abandoned  {
 	background: coral;
 }
 
@@ -1455,12 +1529,12 @@ input:checked + .slider:before {
 		filter: grayscale(0%) brightness(100%);
 	}
 
-	.thumbnail .status-indicator {
+	.thumbnail .versions {
 		backface-visibility: unset;
 		transition-delay: 0s;
 	}
 
-	.thumbnail:hover .status-indicator {
+	.thumbnail:hover .versions {
 		transition-delay: var(--thumbnail-transition-delay);
 	}
 
@@ -1493,12 +1567,12 @@ input:checked + .slider:before {
 		filter: drop-shadow(0em 0em 0.65rem rgba(var(--always-negative-color),0.8));
 	}
 
-	.thumbnail.floating-info-right:hover img {
+	.thumbnail.floating-info-right:hover .image-link img {
 		border-radius: 0.4rem 0 0 0.4rem;
 		transition-delay: var(--thumbnail-transition-delay);
 	}
 
-	.thumbnail.floating-info-left:hover img {
+	.thumbnail.floating-info-left:hover .image-link img {
 		border-radius: 0 0.4rem 0.4rem 0;
 		transition-delay: var(--thumbnail-transition-delay);
 	}
@@ -1518,7 +1592,7 @@ input:checked + .slider:before {
 		transform: translateX(0%);
 	}
 
-	.thumbnail:hover .status-indicator {
+	.thumbnail:hover .versions {
 		opacity: 0;
 	}
 
@@ -1648,63 +1722,64 @@ input:checked + .slider:before {
 		padding-left: 0.25rem;
 		padding-right: 0.25rem;
 		font-size: 0.87rem;
-		line-height: 1.15;
+		line-height: 1.2;
 	}
 
-	.thumbnail .status-indicator {
-		top: 0.2rem;
-		left: 0.2rem;
+	.thumbnail .versions .fansubs .fansub img {
+		width: 1.6rem;
+		height: 1.6rem;
 	}
 
-	.status-indicator {
-		width: 1rem;
-		height: 1rem;
-		border: 0.005rem solid rgb(var(--always-positive-color));
+	.floating-info-versions-icons .fansubs .fansub img {
+		width: 1.6rem;
+		height: 1.6rem;
 	}
 
-	.floating-info .status-indicator {
-		left: 0.4rem !important;
-		top: 0.4rem !important;
+	.thumbnail .versions .version-status, .floating-info-versions-icons .version-status {
+		filter: drop-shadow(0 0 0.05rem rgb(var(--always-negative-color)));
+		width: 0.4rem;
+		height: 0.4rem;
+		right: -0.1rem;
 	}
 
 	.floating-info-bookmark.fas, .floating-info-bookmark.far {
-		font-size: 1.3rem;
+		font-size: 1.4rem;
 		right: 0;
-		top: 0.3rem;
+		top: 0.1rem;
 	}
 
 	.floating-info-title {
 		font-size: 1rem;
-		padding: 0 0.5rem;
-		margin-top: 1.4rem;
+		padding: 0 1.75rem;
+		margin-top: 0.3rem;
 	}
 
-	.floating-info-fansub {
-		font-size: 0.8rem;
+	.floating-info-versions {
+		font-size: 0.9rem;
 		padding: 0 0.5rem;
-		margin-top: 0.2rem;
+		margin-top: 0;
 	}
 
 	.floating-info-synopsis {
-		font-size: 0.9rem;
+		font-size: 0.85rem;
 		padding: 0 0.5rem;
-		-webkit-line-clamp: 5;
+		-webkit-line-clamp: 6;
 	}
 
 	.floating-info-watch-now {
 		border-radius: 0.3rem;
-		padding: 0.2rem 0.75rem;
+		padding: 0.3rem 0.75rem;
 		font-size: 1rem;
 	}
 
 	.floating-info-divisions {
-		font-size: 0.9rem;
+		font-size: 0.85rem;
 		padding: 0 0.5rem;
 		margin-top: 0.4rem;
 	}
 
 	.floating-info-genres-score-wrapper {
-		margin-top: 0.6rem;
+		margin-top: 0.3rem;
 		margin-bottom: 0.3rem;
 		align-items: end;
 	}
@@ -1712,7 +1787,7 @@ input:checked + .slider:before {
 	.floating-info-genres-wrapper {
 		font-size: 0.8rem;
 		padding: 0 0.5rem;
-		height: 2.5rem;
+		height: 1.7rem;
 	}
 
 	.floating-info-score {

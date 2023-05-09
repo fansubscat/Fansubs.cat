@@ -950,7 +950,7 @@
 .recommendation .fansub img {
 	display: inline;
 	margin-left: 0.8rem;
-	border-radius: 0.8rem;
+	border-radius: 100%;
 	width: 2.6rem;
 	height: 2.6rem;
 }
@@ -1166,30 +1166,60 @@
 	transition: transform var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
 }
 
-.continue-watching-thumbnail .image-link .fansubs {
+.continue-watching-thumbnail .image-link .versions {
 	display: flex;
 	justify-content: left;
 	flex-direction: row;
 	position: absolute;
 	top: 0;
 	left: 0;
-	margin-top: 0.4rem;
 	transition: opacity var(--fast-animation-duration) ease;
+	transition-delay: 0s;
+	opacity: 1;
 	z-index: 1;
+	backface-visibility: hidden;
+	filter: drop-shadow(0 0 0.2rem rgb(var(--always-negative-color)));
+	padding: 0.2rem;
 }
 
-.continue-watching-thumbnail .image-link .fansub {
+.continue-watching-thumbnail .image-link .versions .fansubs {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	margin-left: 0.4rem;
+}
+
+.continue-watching-thumbnail .image-link .versions .fansubs:first-child {
+	margin-left: 0;
+}
+
+.continue-watching-thumbnail .image-link .versions .fansubs .fansub {
 	display: flex;
 	justify-content: left;
 	align-items: center;
+	margin-left: -0.4rem;
 }
 
-.continue-watching-thumbnail .image-link .fansub img {
+.continue-watching-thumbnail .image-link .versions .fansubs .fansub:first-child {
+	margin-left: 0;
+}
+
+.continue-watching-thumbnail .image-link .versions .fansubs .fansub img {
 	display: inline;
-	margin-left: 0.4rem;
-	border-radius: 0.4rem;
+	border-radius: 100%;
 	width: 2rem;
 	height: 2rem;
+}
+
+.continue-watching-thumbnail .image-link .versions .version-status {
+	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 100%;
+	position: absolute;
+	bottom: 0;
+	right: -0.1rem;
 }
 
 .continue-watching-thumbnail .play-button {
@@ -1215,10 +1245,10 @@
 
 .continue-watching-thumbnail .close-button {
 	color: rgb(var(--always-positive-color));
-	font-size: 2.1rem;
+	font-size: 2rem;
 	position: absolute;
-	top: 0.2rem;
-	right: 0.1rem;
+	top: 0.3rem;
+	right: 0;
 	opacity: 1;
 	transition: opacity var(--fast-animation-duration) ease;
 	filter: drop-shadow(0 0 1px rgb(var(--always-negative-color)));
@@ -1356,7 +1386,7 @@
 		background-color: rgb(var(--negative-color-button-hover));
 	}
 
-	.continue-watching-thumbnail .image-link .fansubs {
+	.continue-watching-thumbnail .image-link .versions {
 		opacity: 0;
 	}
 
@@ -1365,7 +1395,7 @@
 		transform: scale(1.1);
 	}
 
-	.continue-watching-thumbnail:hover .image-link .fansubs {
+	.continue-watching-thumbnail:hover .image-link .versions {
 		opacity: 1;
 	}
 
@@ -1524,15 +1554,16 @@
 		border-radius: 0.8rem;
 	}
 
-	.continue-watching-thumbnail .image-link .fansubs {
-		margin-top: 0.2rem;
+	.continue-watching-thumbnail .image-link .versions .fansubs .fansub img {
+		width: 1.6rem;
+		height: 1.6rem;
 	}
 
-	.continue-watching-thumbnail .image-link .fansub img {
-		margin-left: 0.2rem;
-		border-radius: 0.2rem;
-		width: 1.5rem;
-		height: 1.5rem;
+	.continue-watching-thumbnail .image-link .versions .version-status {
+		filter: drop-shadow(0 0 0.05rem rgb(var(--always-negative-color)));
+		width: 0.4rem;
+		height: 0.4rem;
+		right: -0.1rem;
 	}
 
 	.continue-watching-thumbnail .play-button {
@@ -1544,7 +1575,7 @@
 	}
 
 	.continue-watching-thumbnail .close-button {
-		font-size: 1.7rem;
+		font-size: 1.8rem;
 	}
 
 	.continue-watching-thumbnail .progress {
@@ -1636,7 +1667,6 @@
 
 	.recommendation .fansub img {
 		margin-left: 0.6rem;
-		border-radius: 0.6rem;
 		width: 1.6rem;
 		height: 1.6rem;
 	}

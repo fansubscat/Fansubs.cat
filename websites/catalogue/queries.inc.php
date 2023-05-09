@@ -536,7 +536,7 @@ function query_home_recommended_items($user, $force_recommended_ids_list, $max_i
 function query_home_continue_watching_by_user_id($user_id) {
 	$user_id = intval($user_id);
 	$final_query = "SELECT *,
-				GROUP_CONCAT(DISTINCT CONCAT(t.version_id, '___', t.fansub_name, '___', t.fansub_type, '___', t.fansub_id)
+				GROUP_CONCAT(DISTINCT CONCAT(t.version_id, '___', t.status, '___', t.fansub_name, '___', t.fansub_type, '___', t.fansub_id)
 					ORDER BY t.fansub_name
 					SEPARATOR '|'
 				) fansub_info
@@ -567,6 +567,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 						)
 					) episode_title,
 					v.series_id,
+					v.status,
 					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
 						d.name,
 						s.name
@@ -620,6 +621,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 						)
 					) episode_title,
 					v.series_id,
+					v.status,
 					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
 						d.name,
 						s.name

@@ -108,55 +108,92 @@ function get_status_description($id){
 	}
 }
 
-function exists_more_than_one_version($series_id){
-	$result = query_number_of_versions_by_series_id($series_id);
-	$row = mysqli_fetch_assoc($result);
-	mysqli_free_result($result);
-	return ($row['cnt']>1);
-}
-
-function get_version_fansubs($fansub_info, $version_id) {
+function get_prepared_versions($fansub_info) {
 	$fansubs = explode('|',$fansub_info);
-	$version_fansubs = array();
+	$versions = array();
+	$current_version_id=-1;
+	$current_version_status = -1;
+	$current_version_fansubs = array();
 	foreach ($fansubs as $fansub) {
 		$fields = explode('___',$fansub);
-		if ($fields[0]==$version_id) {
-			array_push($version_fansubs, array('name' => $fields[1], 'type' => $fields[2], 'icon' => STATIC_URL.'/images/icons/'.$fields[3].'.png'));
+		if ($fields[0]!=$current_version_id) {
+			if ($current_version_id!=-1) {
+				array_push($versions, array('id' => $current_version_id, 'status' => $current_version_status, 'fansubs' => $current_version_fansubs));
+			}
+			$current_version_id = $fields[0];
+			$current_version_status = $fields[1];
+			$current_version_fansubs = array();
 		}
+		array_push($current_version_fansubs, array('name' => $fields[2], 'type' => $fields[3], 'icon' => STATIC_URL.'/images/icons/'.$fields[4].'.png'));
 	}
-	return $version_fansubs;
+	array_push($versions, array('id' => $current_version_id, 'status' => $current_version_status, 'fansubs' => $current_version_fansubs));
+	return $versions;
 }
 
-function get_carousel_fansub_info($fansub_info, $version_id) {
-	$version_fansubs = get_version_fansubs($fansub_info, $version_id);
-	$result_code='';
-
-	foreach ($version_fansubs as $fansub) {
-		if ($result_code!='') {
-			$result_code.=' + ';
+function get_carousel_fansub_info($fansub_info, $versions, $specific_version_id) {
+	if (!empty($specific_version_id)) {
+		//We recreate the array with only one version (if not found, it stays the same)
+		foreach ($versions as $version) {
+			if ($version['id']==$specific_version_id) {
+				$versions = array($version);
+				break;
+			}
 		}
-		$result_code.=($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').htmlspecialchars($fansub['name']);
 	}
 
+	if (count($versions)!=1) {
+		$fansub_name = count($versions).' versions';
+	} else {
+		$fansub_name = '';
+		foreach ($versions[0]['fansubs'] as $fansub) {
+			if ($fansub_name!='') {
+				$fansub_name.=' + ';
+			}
+			$fansub_name.=($fansub['type']=='fandub' ? '<i class="fa fa-fw fa-microphone"></i>' : '').htmlspecialchars($fansub['name']);
+		}
+	}
+
+	return '<div class="floating-info-versions-icons">'.get_fansub_icons($fansub_info, $versions, $specific_version_id).'</div><div class="fansub-name">'.$fansub_name."</div>";
+}
+
+function get_fansub_icons($fansub_info, $versions, $specific_version_id) {
+	if (!empty($specific_version_id)) {
+		//We recreate the array with only one version (if not found, it stays the same)
+		foreach ($versions as $version) {
+			if ($version['id']==$specific_version_id) {
+				$versions = array($version);
+				break;
+			}
+		}
+	}
+	$result_code='';
+	foreach ($versions as $version) {
+		$result_code.='<div class="fansubs">';
+		foreach ($version['fansubs'] as $fansub) {
+			$result_code.='<div class="fansub"><img src="'.$fansub['icon'].'" title="'.htmlspecialchars($fansub['name']).'"></div>'."\n";
+		}
+		$result_code.='<div class="version-status status-'.get_status($version['status']).'" title="'.htmlspecialchars(get_status_description($version['status'])).'"></div>';
+		$result_code.='</div>';
+	}
 	return $result_code;
 }
 
 function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	global $user;
-	$more_than_one_version = exists_more_than_one_version($series['id']);
+	$versions = get_prepared_versions($series['fansub_info']);
+	$number_of_versions = count($versions);
 	echo "\t\t\t\t\t\t\t".'<div class="thumbnail-outer">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['id'].'" onmouseenter="prepareFloatingInfo(this);">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="status-indicator"></div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'"><img src="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="versions">'.get_fansub_icons($series['fansub_info'], $versions, $specific_version ? $series['version_id'] : NULL).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $number_of_versions>1) ? "?v=".$series['version_id'] : "").'"><img src="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="clickable-thumbnail" onclick="prepareClickableFloatingInfo(this);"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="floating-info">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-main">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="status-indicator" title="'.get_status_description($series['best_status']).'"></div>'."\n";
 	if (!empty($user)) {
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark '.(in_array($series['id'], $user['series_list_ids']) ? 'fas' : 'far').' fa-fw fa-bookmark" data-series-id="'.$series['id'].'" onclick="toggleBookmark('.$series['id'].'); event.stopPropagation(); return false;"></div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-title">'.htmlspecialchars($series['name']).'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-fansub">'.(($more_than_one_version && !$specific_version) ? "Diverses versions" : get_carousel_fansub_info($series['fansub_info'], $series['version_id'])).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-versions">'.get_carousel_fansub_info($series['fansub_info'], $versions, $specific_version ? $series['version_id'] : NULL).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-synopsis-wrapper">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-synopsis">'."\n";
 
@@ -166,7 +203,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $more_than_one_version) ? "?v=".$series['version_id'] : "").'" onclick="event.stopPropagation();">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $number_of_versions>1) ? "?v=".$series['version_id'] : "").'" onclick="event.stopPropagation();">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
 	if ($series['subtype']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">One-shot</div>'."\n";
 	} else if ($series['subtype']=='serialized') {

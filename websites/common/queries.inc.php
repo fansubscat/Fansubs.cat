@@ -110,8 +110,10 @@ function get_internal_catalogue_base_query_portion($user, $apply_hentai_rule=TRU
 					AND nv.is_hidden=0
 				LIMIT 1
 			) version_id,
-			GROUP_CONCAT(DISTINCT CONCAT(v.id, '___', f.name, '___', f.type, '___', f.id)
-				ORDER BY v.id,
+			GROUP_CONCAT(DISTINCT CONCAT(v.id, '___', v.status, '___', f.name, '___', f.type, '___', f.id)
+				ORDER BY v.status,
+					v.files_updated,
+					v.id,
 					f.name
 				SEPARATOR '|'
 			) fansub_info,
