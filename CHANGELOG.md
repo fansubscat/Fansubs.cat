@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2023-07-12 - Versió 4.3.0
+- **General:**
+	- Adaptació del codi a PHP 8.2.
+- **Catàleg:**
+	- Possibilitat de mostrar una pàgina d’error per copyright.
+- **Administració:**
+	- S’impedeix introduir caràcters japonesos als «altres noms» de les fitxes.
+	- No es permeten cometes dobles a la carpeta d’emmagatzematge.
+
 ## 2023-02-13 - Versió 4.2.11
 - **API:**
 	- S'amaguen els decimals (quan són zero) als números de volums.

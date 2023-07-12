@@ -51,6 +51,8 @@ function query_single($query, $ignore_crash=FALSE){
 	return NULL;
 }
 
+mysqli_report(MYSQLI_REPORT_OFF);
+
 $db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash("No s'ha pogut connectar a la base de dades.");
 
 $memcached = new Memcached();

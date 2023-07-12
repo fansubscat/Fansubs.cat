@@ -51,6 +51,15 @@ if (isset($failed)) {
 	die();
 }
 
+//Blocked series - currently disabled
+$blocked_series = array();
+if (in_array($_GET['slug'], $blocked_series)) {
+	http_response_code(451);
+	define('COPYRIGHT_ISSUE', TRUE);
+	include('error.php');
+	die();
+}
+
 $header_page_title=$series['name'];
 
 $header_tab=$_GET['page'];

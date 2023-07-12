@@ -24,6 +24,8 @@ function crash($string){
 	die(json_encode($response));
 }
 
+mysqli_report(MYSQLI_REPORT_OFF);
+
 $db_connection = mysqli_connect($db_host,$db_user,$db_passwd, $db_name) or crash('Internal error: Could not connect to database.');
 
 unset($db_host, $db_name, $db_user, $db_passwd);

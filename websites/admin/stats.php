@@ -125,9 +125,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$days = array();
 
-	$current_day = strtotime(date('Y-m-d'));
 	$i=$max_days;
-	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
+	while ($i>=0) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
@@ -296,9 +295,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$days = array();
 
-	$current_day = strtotime(date('Y-m-d'));
 	$i=$max_days;
-	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
+	while ($i>=0) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
@@ -467,9 +465,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$days = array();
 
-	$current_day = strtotime(date('Y-m-d'));
 	$i=$max_days;
-	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
+	while ($i>=0) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
@@ -1298,9 +1295,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$days = array();
 
-	$current_day = strtotime(date('Y-m-d'));
 	$i=$max_days;
-	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
+	while ($i>=0) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
@@ -1469,9 +1465,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$days = array();
 
-	$current_day = strtotime(date('Y-m-d'));
 	$i=$max_days;
-	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
+	while ($i>=0) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
@@ -1640,9 +1635,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	$days = array();
 
-	$current_day = strtotime(date('Y-m-d'));
 	$i=$max_days;
-	while (strtotime(date('Y-m-d')."-$i days")<=$current_day) {
+	while ($i>=0) {
 		$days[date("Y-m-d", strtotime(date('Y-m-d')."-$i days"))]=array(0, 0, 0);
 		$i--;
 	}
