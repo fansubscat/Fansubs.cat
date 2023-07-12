@@ -17,9 +17,9 @@ function forgotPassword(){
 	//Check if mail exists
 	$result = query_user_by_email($_POST['email_address']);
 	if (mysqli_num_rows($result)>0){
-		$row = mysqli_fetch_assoc($result)
+		$row = mysqli_fetch_assoc($result);
 		$code = substr(md5(uniqid(mt_rand(), true)) , 0, 16);
-		query_update_user_reset_password_code_by_id($code, $row['id']);
+		query_update_user_reset_password_code_by_user_id($code, $row['id']);
 		sendForgotPasswordEmail($row['email'], $row['username'], $code);
 	}
 	mysqli_free_result($result);

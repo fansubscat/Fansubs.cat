@@ -1,10 +1,10 @@
-const MAIN_URL = "https://wwwv2.fansubs.cat";
-const USERS_URL='https://usuarisv2.fansubs.cat';
+const MAIN_URL = "https://www.fansubs.online";
+const USERS_URL='https://usuaris.fansubs.online';
 
 var cookieOptions = {
 	expires: 3650,
 	path: '/',
-	domain: ".fansubs.cat"
+	domain: ".fansubs.online"
 };
 
 function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray) {

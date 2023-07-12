@@ -11,6 +11,6 @@ $db_passwd="YOUR_DB_PASS_HERE";
 $static_directory='/srv/websites/static.fansubs.cat';
 
 //Site URLs (no final slash)
-$base_url='https://nadal.fansubs.cat';
+$base_url='https://advent.fansubs.cat';
 $static_url='https://static.fansubs.cat';
 ?>

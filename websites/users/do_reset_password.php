@@ -26,7 +26,7 @@ function resetPassword(){
 		return array('result' => 'ko', 'code' => 3);
 	}
 
-	query_update_user_password_hash_and_disable_reset_password_by_username($password, $username)
+	query_update_user_password_hash_and_disable_reset_password_by_username($password, $username);
 
 	//Set the session username, the next request will fill in the $user variable automatically
 	$_SESSION['username']=$_POST['username'];

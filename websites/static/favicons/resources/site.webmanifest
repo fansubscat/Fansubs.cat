@@ -3,12 +3,12 @@
     "short_name": "Recursos - Fansubs.cat",
     "icons": [
         {
-            "src": "https://staticv2.fansubs.cat/favicons/resources/android-chrome-192x192.png",
+            "src": "https://static.fansubs.online/favicons/resources/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "https://staticv2.fansubs.cat/favicons/resources/android-chrome-512x512.png",
+            "src": "https://static.fansubs.online/favicons/resources/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
         }

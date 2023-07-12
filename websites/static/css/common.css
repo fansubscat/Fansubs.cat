@@ -1046,6 +1046,7 @@ h2.section-title:first-of-type {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin-top: -0.3rem;
 }
 
 .floating-info-synopsis {
@@ -1059,7 +1060,7 @@ h2.section-title:first-of-type {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	display: -webkit-box;
-	-webkit-line-clamp: 9;
+	-webkit-line-clamp: 10;
 	-webkit-box-orient: vertical;
 }
 

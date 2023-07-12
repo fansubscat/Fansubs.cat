@@ -1,9 +1,10 @@
 <?php
 //This file sets config depending on the hostname used to display the site
 //This allows customization but keeping the same codebase
-switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.cat') {
-	case 'wwwv2.fansubs.cat':
-		define('SITE_BASE_URL', 'https://wwwv2.fansubs.cat');
+switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.online') {
+	case 'www.fansubs.online':
+	case 'fansubs.online':
+		define('SITE_BASE_URL', 'https://www.fansubs.online');
 		define('SITE_PATH', '');
 		define('SITE_TITLE', 'Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
@@ -12,8 +13,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
 		break;
-	case 'noticiesv2.fansubs.cat':
-		define('SITE_BASE_URL', 'https://noticiesv2.fansubs.cat');
+	case 'noticies.fansubs.online':
+		define('SITE_BASE_URL', 'https://noticies.fansubs.online');
 		define('SITE_PATH', '');
 		define('SITE_TITLE', 'Notícies dels fansubs en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
@@ -22,8 +23,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
 		break;
-	case 'usuarisv2.fansubs.cat':
-		define('SITE_BASE_URL', 'https://usuarisv2.fansubs.cat');
+	case 'usuaris.fansubs.online':
+		define('SITE_BASE_URL', 'https://usuaris.fansubs.online');
 		define('SITE_PATH', '');
 		define('SITE_TITLE', 'Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
@@ -32,8 +33,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
 		break;
-	case 'mangav2.fansubs.cat':
-		define('SITE_BASE_URL', 'https://mangav2.fansubs.cat');
+	case 'manga.fansubs.online':
+		define('SITE_BASE_URL', 'https://manga.fansubs.online');
 		define('SITE_PATH', '');
 		define('SITE_TITLE', 'Manga en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga editat pels fansubs en català!');
@@ -81,8 +82,8 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'option_show_missing' => "Mostra els mangues amb algun capítol sense enllaç vàlid",
 		);*/
 		break;
-	case 'imatgerealv2.fansubs.cat':
-		define('SITE_BASE_URL', 'https://imatgerealv2.fansubs.cat');
+	case 'imatgereal.fansubs.online':
+		define('SITE_BASE_URL', 'https://imatgereal.fansubs.online');
 		define('SITE_PATH', '');
 		define('SITE_TITLE', 'Imatge real en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’imatge real subtitulat pels fansubs en català!');
@@ -137,9 +138,9 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'option_show_missing' => "Mostra els continguts d’imatge real amb algun capítol sense enllaç vàlid",
 		);*/
 		break;
-	case 'animev2.fansubs.cat':
+	case 'anime.fansubs.online':
 	default:
-		define('SITE_BASE_URL', 'https://animev2.fansubs.cat');
+		define('SITE_BASE_URL', 'https://anime.fansubs.online');
 		define('SITE_PATH', '');
 		define('SITE_TITLE', 'Anime en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot l’anime subtitulat pels fansubs en català!');
@@ -192,11 +193,11 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 			'option_show_missing' => "Mostra els animes amb algun capítol sense enllaç vàlid",
 		);*/
 		break;
-	case 'hentaiv2.fansubs.cat':
+	case 'hentai.fansubs.online':
 		$path = explode('/', $_SERVER['REQUEST_URI']);
 		$path = count($path)>1 ? $path[1] : '';
 		if ($path=='anime') {
-			define('SITE_BASE_URL', 'https://hentaiv2.fansubs.cat/anime');
+			define('SITE_BASE_URL', 'https://hentai.fansubs.online/anime');
 			define('SITE_PATH', '/anime');
 			define('SITE_TITLE', 'Anime hentai en català | Fansubs.cat');
 			define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot l’anime hentai subtitulat pels fansubs en català!');
@@ -249,7 +250,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 				'option_show_missing' => "Mostra els animes amb algun capítol sense enllaç vàlid",
 			);*/
 		} else if ($path=='manga') {
-			define('SITE_BASE_URL', 'https://hentaiv2.fansubs.cat/manga');
+			define('SITE_BASE_URL', 'https://hentai.fansubs.online/manga');
 			define('SITE_PATH', '/manga');
 			define('SITE_TITLE', 'Manga hentai en català | Fansubs.cat');
 			define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga hentai editat pels fansubs en català!');
@@ -297,7 +298,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'wwwv2.fansubs.c
 				'option_show_missing' => "Mostra els mangues amb algun capítol sense enllaç vàlid",
 			);*/
 		} else { //Used for the error page when not using a path
-			define('SITE_BASE_URL', 'https://wwwv2.fansubs.cat');
+			define('SITE_BASE_URL', 'https://www.fansubs.online');
 			define('SITE_PATH', '');
 			define('SITE_TITLE', 'Fansubs.cat');
 			define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');

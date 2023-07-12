@@ -3,18 +3,18 @@
     "short_name": "Hentai - Fansubs.cat",
     "icons": [
         {
-            "src": "https://staticv2.fansubs.cat/favicons/hentai/android-chrome-192x192.png",
+            "src": "https://static.fansubs.online/favicons/hentai/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "https://staticv2.fansubs.cat/favicons/hentai/android-chrome-512x512.png",
+            "src": "https://static.fansubs.online/favicons/hentai/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
     ],
     "theme_color": "#d91883",
     "background_color": "#d91883",
-    "start_url": "https://hentai.fansubs.cat",
+    "start_url": "https://hentai.fansubs.online",
     "display": "standalone"
 }

@@ -16,64 +16,46 @@ RewriteCond %{REQUEST_URI} !results\.php
 RewriteRule \.php$ - [F]
 
 #OLD REDIRECTS: v2->v5 migration for old 2020 press release images
-RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$
-RewriteRule ^images/portada.png$ https://staticv2.fansubs.cat/various/portada_nota_premsa.png [R=301,L]
-RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$
-RewriteRule ^images/serie.png$ https://staticv2.fansubs.cat/various/serie_nota_premsa.png [R=301,L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.online$
+RewriteRule ^images/portada.png$ https://static.fansubs.online/various/portada_nota_premsa.png [R=301,L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.online$
+RewriteRule ^images/serie.png$ https://static.fansubs.online/various/serie_nota_premsa.png [R=301,L]
 
 #OLD REDIRECTS: v3->v5 migration for manga (Piwigo -> Catalogue) - Used by links at Lluna Plena
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^index/category/(.*)-(.*)$ migration.php?migration_type=piwigo&id=$1 [L]
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^index/category/(.*)$ migration.php?migration_type=piwigo&id=$1 [L]
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^picture/(.*)/category/(.*)-(.*)$ migration.php?migration_type=piwigo&id=$2 [L]
 
 #OLD REDIRECTS: v4->v4 migration for old Tachiyomi image URLs: Tachiyomi keeps the cover URL in cache.
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^images/manga/(.*)\.jpg$ migration.php?migration_type=tachiyomi_cache&id=$1 [L]
 
 #OLD REDIRECTS: v4->v5 pages were previously divided by type, and about page was moved to a new domain
-RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^imatgereal.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^imatgerealv2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^anime.fansubs.online$ [OR]
+RewriteCond %{HTTP_HOST} ^imatgereal.fansubs.online$
 RewriteRule ^films/?$ / [R=301,L]
-RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^imatgereal.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^imatgerealv2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^anime.fansubs.online$ [OR]
+RewriteCond %{HTTP_HOST} ^imatgereal.fansubs.online$
 RewriteRule ^series/?$ / [R=301,L]
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^one-shots/?$ / [R=301,L]
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^serialitzats/?$ / [R=301,L]
-RewriteRule ^qui-som/?$ https://wwwv2.fansubs.cat/qui-som/ [R=301,L]
-RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$
+RewriteRule ^qui-som/?$ https://www.fansubs.online/qui-som/ [R=301,L]
+RewriteCond %{HTTP_HOST} ^anime.fansubs.online$
 RewriteRule ^films/([^/]+)/?$ migration.php?migration_type=v4_slug&id=$1&type=anime [QSA,L]
-RewriteCond %{HTTP_HOST} ^anime.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^animev2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^anime.fansubs.online$
 RewriteRule ^series/([^/]+)/?$ migration.php?migration_type=v4_slug&id=$1&type=anime [QSA,L]
-RewriteCond %{HTTP_HOST} ^imatgereal.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^imatgerealv2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^imatgereal.fansubs.online$
 RewriteRule ^films/([^/]+)/?$ migration.php?migration_type=v4_slug&id=$1&type=liveaction [QSA,L]
-RewriteCond %{HTTP_HOST} ^imatgereal.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^imatgerealv2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^imatgereal.fansubs.online$
 RewriteRule ^series/([^/]+)/?$ migration.php?migration_type=v4_slug&id=$1&type=liveaction [QSA,L]
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^one-shots/([^/]+)/?$ migration.php?migration_type=v4_slug&id=$1&type=manga [QSA,L]
-RewriteCond %{HTTP_HOST} ^manga.fansubs.cat$ [OR]
-RewriteCond %{HTTP_HOST} ^mangav2.fansubs.cat$
+RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^serialitzats/([^/]+)/?$ migration.php?migration_type=v4_slug&id=$1&type=manga [QSA,L]
 
 #Normal v5 pages

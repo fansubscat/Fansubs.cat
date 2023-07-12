@@ -9,7 +9,8 @@ if (!empty($user)) {
 
 define('PAGE_TITLE', 'Restableix la contrasenya');
 define('PAGE_PATH', '/restableix-la-contrasenya');
-define('PAGE_STYLE_TYPE', 'reset_password');
+define('PAGE_STYLE_TYPE', 'login');
+define('PAGE_IS_RESET_PASSWORD', TRUE);
 
 require_once("../common.fansubs.cat/header.inc.php");
 require_once("../common.fansubs.cat/footer.inc.php");

@@ -32,7 +32,7 @@ if (SITE_IS_HENTAI) {
 <?php
 }
 ?>
-		<meta name="robots" content="noindex"> <!-- TODO REMOVE THIS BEFORE ENTERING PRODUCTION AND REVIEW ALL robots.txt wwwv2.fansubs -->
+		<meta name="robots" content="noindex"> <!-- TODO REMOVE THIS BEFORE ENTERING PRODUCTION AND REVIEW ALL robots.txt fansubs.online!!! -->
 		<meta name="referrer" content="origin">
 		<meta name="base_url" content="<?php echo SITE_BASE_URL; ?>">
 		<meta name="twitter:card" content="summary_large_image">
@@ -131,7 +131,7 @@ if (PAGE_STYLE_TYPE=='login') {
 							</div>
 						</div>
 					</div>
-					<div class="login-form<?php echo PAGE_STYLE_TYPE=='reset_password' ? ' hidden' : ''; ?>">
+					<div class="login-form<?php echo defined('PAGE_IS_RESET_PASSWORD') ? ' hidden' : ''; ?>">
 						<div class="login-form-main">
 							<div class="login-subheader">Inicia la sessió</div>
 							<form id="login-form" onsubmit="return login();" autocomplete="off" novalidate>
@@ -148,7 +148,7 @@ if (PAGE_STYLE_TYPE=='login') {
 						</div>
 						<div class="login-footer">Encara no n’ets membre? <a onclick="showRegister();">Registra-t’hi</a></div>
 					</div>
-					<div class="reset-password-form<?php echo PAGE_STYLE_TYPE!='reset_password' ? ' hidden' : ''?>">
+					<div class="reset-password-form<?php echo !defined('PAGE_IS_RESET_PASSWORD') ? ' hidden' : ''?>">
 						<div class="login-form-main">
 							<div class="login-subheader">Restableix la contrasenya</div>
 							<form id="reset-password-form" onsubmit="return resetPassword();" autocomplete="off" novalidate>

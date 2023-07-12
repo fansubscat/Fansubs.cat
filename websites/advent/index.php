@@ -75,7 +75,7 @@ if (!empty($_COOKIE['advent_'.$row['year']])) {
 					var openedDays = $.map($('.checkavailable:checked'), function(n, i){
 						return n.value;
 					}).join(',');
-					Cookies.set('advent_<?php echo $row['year']; ?>', openedDays, { expires: 3650, path: '/', domain: 'fansubs.cat' });
+					Cookies.set('advent_<?php echo $row['year']; ?>', openedDays, { expires: 3650, path: '/', domain: 'fansubs.online' });
 <?php
 if (!empty($_GET['twitter'])) {
 ?>
