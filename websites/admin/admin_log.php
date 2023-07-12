@@ -19,12 +19,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="d-flex justify-content-center pb-3">
 						<select class="form-select" style="width: unset;" onchange="location.href='admin_log.php?filter='+this.value;">
 							<option value="">Mostra els esdeveniments més rellevants</option>
-							<option value="ALL"<?php echo $_GET['filter']=='ALL' ? ' selected' : ''; ?>>Mostra tots els esdeveniments</option>
+							<option value="ALL"<?php echo (!empty($_GET['filter']) && $_GET['filter']=='ALL') ? ' selected' : ''; ?>>Mostra tots els esdeveniments</option>
 <?php
 	$result = query("SELECT action, COUNT(*) count FROM admin_log GROUP BY action ORDER BY action ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<option value="<?php echo $row['action']; ?>"<?php echo $_GET['filter']==$row['action'] ? ' selected' : ''; ?>>Mostra només: <?php echo $row['action'].' ('.$row['count'].')'; ?></option>
+							<option value="<?php echo $row['action']; ?>"<?php echo (!empty($_GET['filter']) && $_GET['filter']==$row['action']) ? ' selected' : ''; ?>>Mostra només: <?php echo $row['action'].' ('.$row['count'].')'; ?></option>
 <?php
 	}
 	mysqli_free_result($result);

@@ -26,7 +26,7 @@ Anywhere on the site, attribution is provided and links are shown in order to no
 
 ## How does it work?
 
-The site is run on a simple machine with Debian 10 (Buster), with an Apache 2.4 + PHP 7.3 + MariaDB 10.3 server.
+The site is run on a simple machine with Debian 12 (Bookworm), with an Apache 2.4 + PHP 8.2 + MariaDB 10.11 server.
 
 There are many services and sites included, as stated above. Describing all of them in detail would take some time, so please take a look at the code if you want to know more, or create an issue if in doubt! :)
 

@@ -12,6 +12,16 @@ if (isset($failed)) {
 	include('error.php');
 	die();
 }
+
+//Blocked series - currently disabled
+$blocked_series = array();
+if (in_array($_GET['slug'], $blocked_series)) {
+	http_response_code(451);
+	define('COPYRIGHT_ISSUE', TRUE);
+	include('error.php');
+	die();
+}
+
 define('PAGE_STYLE_TYPE', 'catalogue');
 
 $Parsedown = new Parsedown();
