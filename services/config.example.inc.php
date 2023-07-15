@@ -29,10 +29,15 @@ $discord_webhooks = array(
 	'YOUR_DISCORD_WEBHOOK_2_HERE'
 );
 
-//Telegram bot API key and chat id
-$telegram_bot_api_key='YOUR_API_KEY_HERE';
-$telegram_bot_chat_id='YOUR_CHAT_ID_HERE';
-$telegram_bot_channel_chat_id='YOUR_CHANNEL_CHAT_ID_HERE';
+//Multiple Telegram channels are posible
+//The first one (index 0) MUST be the one where monthly reports get sent
+$telegram_config = array(
+	array(
+		'TELEGRAM_BOT_API_KEY' => 'YOUR_API_KEY_HERE',
+		'TELEGRAM_BOT_CHAT_ID' => 'YOUR_CHAT_ID_HERE'
+		'TELEGRAM_BOT_CHANNEL_CHAT_ID', 'YOUR_CHANNEL_CHAT_ID_HERE'
+	)
+);
 
 //Token to bypass admin authentication in twitter_image.php
 $internal_token='YOUR_TOKEN';

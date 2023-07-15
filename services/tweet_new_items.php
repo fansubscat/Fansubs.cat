@@ -58,8 +58,11 @@ function publish_to_discord($text, $title, $description, $url, $image, $rating){
 }
 
 function publish_to_telegram($text, $title, $description, $url, $image, $rating){
-	global $telegram_bot_api_key, $telegram_bot_channel_chat_id;
-	@file_get_contents("https://api.telegram.org/bot$telegram_bot_api_key/sendMessage?chat_id=$telegram_bot_channel_chat_id&text=".urlencode($text."\n\n$url")."&parse_mode=Markdown", FALSE, $context);
+	global $telegram_config;
+
+	foreach ($telegram_config as $config) {
+		@file_get_contents("https://api.telegram.org/bot".$config['TELEGRAM_BOT_API_KEY']."/sendMessage?chat_id=".$config['TELEGRAM_BOT_CHANNEL_CHAT_ID']."&text=".urlencode($text."\n\n$url")."&parse_mode=Markdown", FALSE, $context);
+	}
 }
 
 function get_comic_type($comic_type){

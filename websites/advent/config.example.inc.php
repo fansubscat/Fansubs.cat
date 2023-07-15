@@ -7,6 +7,9 @@ $db_name="YOUR_DB_NAME_HERE";
 $db_user="YOUR_DB_USER_HERE";
 $db_passwd="YOUR_DB_PASS_HERE";
 
+//Timezone
+$default_timezone='Europe/Andorra';
+
 //Internal path (no final slash)
 $static_directory='/srv/websites/static.fansubs.cat';
 

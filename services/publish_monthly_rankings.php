@@ -44,7 +44,7 @@ foreach ($types as $type) {
 	file_put_contents("/tmp/fansubscat_monthly_rankings_2.png", file_get_contents("https://admin.fansubs.cat/twitter_image.php?type=${type[0]}&month=$last_month&hide_hentai=1&token=$internal_token"));
 
 	$post_content = [
-		'chat_id' => $telegram_bot_chat_id,
+		'chat_id' => $telegram_config[0]['TELEGRAM_BOT_CHAT_ID'],
 		'media' => json_encode([
 			['type' => 'photo', 'media' => 'attach://file_1', 'caption' => "*${type[2]} durant el mes passat*\n\\(incloent contingut explícit / sense incloure'l\\)", 'parse_mode' => 'MarkdownV2' ],
 			['type' => 'photo', 'media' => 'attach://file_2' ],
@@ -54,7 +54,7 @@ foreach ($types as $type) {
 	];
 
 	$curl = curl_init();
-	curl_setopt($curl, CURLOPT_URL, "https://api.telegram.org/bot$telegram_bot_api_key/sendMediaGroup");
+	curl_setopt($curl, CURLOPT_URL, "https://api.telegram.org/bot".$telegram_config[0]['TELEGRAM_BOT_API_KEY']."/sendMediaGroup");
 	curl_setopt($curl, CURLOPT_POSTFIELDS, $post_content);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
@@ -67,7 +67,7 @@ foreach ($types as $type) {
 
 $message="*Totals del mes passat:*\n\n__Anime:__\n  • Visualitzacions: $views_anime\n  • Temps total: ".get_hours_or_minutes_formatted($time_anime)."\n  • Versions noves: ${totals['total_anime']}\n  • Fitxers nous: ${totals['total_files_anime']}\n\n__Manga:__\n  • Visualitzacions: $views_manga\n  • Pàgines totals: $pages_manga\n  • Versions noves: ${totals['total_manga']}\n  • Fitxers nous: ${totals['total_files_manga']}\n\n__Acció real:__\n  • Visualitzacions: $views_liveaction\n  • Temps total: ".get_hours_or_minutes_formatted($time_liveaction)."\n  • Versions noves: ${totals['total_liveaction']}\n  • Fitxers nous: ${totals['total_files_liveaction']}\n\n__Altres:__\n  • Notícies noves: ${totals['total_news']}\n  • Fansubs nous: ${totals['total_fansubs']}\n  • Usuaris únics: ${totals['total_users']}\n\n_\\(Als missatges anteriors hi ha els continguts més populars\\)_";
 
-file_get_contents("https://api.telegram.org/bot$telegram_bot_api_key/sendMessage?chat_id=$telegram_bot_chat_id&parse_mode=markdownv2&text=".urlencode($message));
+file_get_contents("https://api.telegram.org/bot".$telegram_config[0]['TELEGRAM_BOT_API_KEY']."/sendMessage?chat_id=".$telegram_config[0]['TELEGRAM_BOT_CHAT_ID']."&parse_mode=markdownv2&text=".urlencode($message));
 
 mysqli_close($db_connection);
 ?>

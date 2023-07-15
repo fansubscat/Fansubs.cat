@@ -5,7 +5,7 @@ include("header.inc.php");
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	//Prepare list of months
-	setlocale(LC_ALL, 'ca_ES.utf8');
+	setlocale(LC_ALL, 'ca_AD.utf8');
 	$months = array();
 
 	$current_month = strtotime(date('Y-m-01'));

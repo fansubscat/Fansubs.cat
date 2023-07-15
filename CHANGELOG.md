@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2023-07-15 - Versió 4.3.1
+- **Serveis:**
+	- Es permet publicar en més d’un canal de Telegram.
+- **Catàleg:**
+	- Es canvia l’enllaç de Hitotsume de Discord a Telegram.
+
 ## 2023-07-12 - Versió 4.3.0
 - **General:**
 	- Adaptació del codi a PHP 8.2.
