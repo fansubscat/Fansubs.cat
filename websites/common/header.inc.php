@@ -50,7 +50,7 @@ if (SITE_IS_HENTAI) {
 		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/site.webmanifest">
 		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/safari-pinned-tab.svg" color="#6aa0f8">
 		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon.ico">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.3.0/css/all.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css">
 <?php
@@ -73,7 +73,7 @@ if (IS_FOOLS_DAY){
 <?php
 }
 ?>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <?php

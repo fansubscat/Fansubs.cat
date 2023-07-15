@@ -67,7 +67,7 @@ if (!empty($_COOKIE['advent_'.$row['year']])) {
 		<meta property="og:description" content="Segueix el calendari d'advent dels fansubs en català! Cada dia hi trobaràs un petit regalet en forma d'anime o manga editat en català!" />
 		<meta property="og:image" content="<?php echo $static_url; ?>/images/advent/preview_<?php echo $row['year']; ?>.jpg" />
 		<meta name="twitter:card" content="summary_large_image" />
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script>
 			$(document).ready(function() {
