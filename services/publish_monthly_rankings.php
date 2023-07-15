@@ -49,7 +49,7 @@ foreach ($types as $type) {
 	file_put_contents("/tmp/fansubscat_monthly_rankings.png", file_get_contents(ADMIN_URL."/twitter_image.php?type=${type[0]}&mode=month&first_month=$last_month&last_month=$last_month&is_hentai=".($type[3] ? '1' : '0')."&token=".INTERNAL_SERVICES_TOKEN));
 
 	$post_content = [
-		'chat_id' => TELEGRAM_BOT_CHAT_ID,
+		'chat_id' => TELEGRAM_CONFIG[0]['TELEGRAM_BOT_CHAT_ID'],
 		'media' => json_encode([
 			['type' => 'photo', 'media' => 'attach://file_1', 'caption' => "*${type[2]}*", 'parse_mode' => 'MarkdownV2' ],
 		]),
@@ -57,7 +57,7 @@ foreach ($types as $type) {
 	];
 
 	$curl = curl_init();
-	curl_setopt($curl, CURLOPT_URL, "https://api.telegram.org/bot".TELEGRAM_BOT_API_KEY."/sendMediaGroup");
+	curl_setopt($curl, CURLOPT_URL, "https://api.telegram.org/bot".TELEGRAM_CONFIG[0]['TELEGRAM_BOT_API_KEY']."/sendMediaGroup");
 	curl_setopt($curl, CURLOPT_POSTFIELDS, $post_content);
 	curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);

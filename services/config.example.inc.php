@@ -34,10 +34,15 @@ define('DISCORD_WEBHOOKS', array(
 	'YOUR_DISCORD_WEBHOOK_2_HERE'
 ));
 
-//Telegram bot API key and chat id
-define('TELEGRAM_BOT_API_KEY', 'YOUR_API_KEY_HERE');
-define('TELEGRAM_BOT_CHAT_ID', 'YOUR_CHAT_ID_HERE');
-define('TELEGRAM_BOT_CHANNEL_CHAT_ID', 'YOUR_CHANNEL_CHAT_ID_HERE');
+//Multiple Telegram channels are possible
+//The first one (index 0) MUST be the one where monthly reports get sent
+define('TELEGRAM_CONFIG', array(
+	array(
+		'TELEGRAM_BOT_API_KEY' => 'YOUR_API_KEY_HERE',
+		'TELEGRAM_BOT_CHAT_ID' => 'YOUR_CHAT_ID_HERE'
+		'TELEGRAM_BOT_CHANNEL_CHAT_ID', 'YOUR_CHANNEL_CHAT_ID_HERE'
+	)
+));
 
 //Token to bypass admin authentication in twitter_image.php
 define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN');

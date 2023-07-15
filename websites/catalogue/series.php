@@ -130,7 +130,7 @@ if (!empty($series['external_id'])) {
 	}
 }
 ?>
-							<a class="hitotsume-button" href="https://discord.com/invite/2Ksxb3wr3t" target="_blank"><span class="fab fa-discord icon"></span>Comenta-ho a HitotsumeCAT</a>
+							<a class="hitotsume-button" href="https://t.me/+azhIbKFImYI0MmE0" target="_blank"><span class="fab fa-telegram icon"></span>Comenta-ho a HitotsumeCAT</a>
 <?php
 if (!empty($series['tadaima_id'])) {
 ?>
