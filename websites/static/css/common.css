@@ -907,6 +907,7 @@ h2.section-title:first-of-type {
 	transform: scale(1.0000001); /* Avoids weird flicker on Chrome when using img with object-fit: cover and scaling */
 	transition: border-radius var(--fast-animation-duration) ease;
 	transition-delay: 0s;
+	background-color: rgba(var(--negative-color), 1);
 }
 
 .thumbnail-outer .title {
