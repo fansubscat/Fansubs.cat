@@ -41,7 +41,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$chapter_name = 'Extra - '.$row['extra_name'];
 		}
 ?>
-				{link: <?php echo json_encode(htmlspecialchars($row['url'])); ?>, text: <?php echo json_encode(htmlspecialchars($chapter_name)); ?>},
+				{link: <?php echo json_encode(htmlspecialchars($row['url'], ENT_COMPAT)); ?>, text: <?php echo json_encode(htmlspecialchars($chapter_name, ENT_COMPAT)); ?>},
 <?php
 	}
 	mysqli_free_result($resultl);
