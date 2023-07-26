@@ -80,6 +80,17 @@ function get_player_data(){
 			$links = filter_links($links);
 		}
 
+		$pages = array();
+		if (CATALOGUE_ITEM_TYPE=='manga') {
+			$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
+			$pages = list_remote_files($base_path);
+			natsort($pages);
+
+			if (count($pages)<1) {
+				return array('result' => 'ko', 'code' => 3);
+			}
+		}
+
 		//Use session:
 		//	id:		nanoid
 		//	file_id:	file_id
@@ -148,6 +159,7 @@ function get_player_data(){
 			'thumbnail' => (file_exists(STATIC_DIRECTORY.'/images/files/'.$file_id.'.jpg') ? STATIC_URL.'/images/files/'.$file_id.'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'),
 			'length' => intval($row['length']),
 			'data_sources' => get_data_sources($links),
+			'pages' => $pages,
 			'method' => get_display_method($links),
 			'initial_position' => intval($current_position),
 			'initial_progress' => intval($initial_progress),
