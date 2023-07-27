@@ -272,6 +272,11 @@ if (defined('PAGE_IS_SEARCH')) {
 $i=0;
 foreach($sections as $section){
 	$result = $section['result'];
+	$uses_swiper = FALSE;
+	if ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='recommendations') {
+		$uses_swiper = TRUE;
+	}
+
 	if ($section['type']=='advent') {
 		if (strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0){
 ?>
@@ -307,11 +312,16 @@ foreach($sections as $section){
 			}
 		} else {
 ?>
-					<div class="section-content<?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel') ? ' carousel' : ($section['type']=='recommendations' ? ' recommendations theme-dark' : ' catalogue'); ?>">
+					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel') ? ' carousel' : ($section['type']=='recommendations' ? ' recommendations theme-dark' : ' catalogue'); ?>">
 <?php
+			if ($uses_swiper) {
+?>
+						<div class="<?php echo $uses_swiper ? 'swiper-wrapper' : 'static-wrapper'; ?>">
+<?php
+			}
 			while ($row = mysqli_fetch_assoc($result)){
 ?>
-						<div<?php echo isset($row['best_status']) ? ' class="status-'.get_status($row['best_status']).'"' : ''; ?>>
+							<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> <?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 <?php
 				if ($section['type']=='recommendations') {
 					print_featured_item($row, $section['title'], $section['specific_version']);
@@ -321,12 +331,24 @@ foreach($sections as $section){
 					print_carousel_item($row, $section['specific_version']);
 				}
 ?>
-						</div>
+							</div>
 <?php
 			}
 ?>
+						</div>
+<?php
+			if ($uses_swiper) {
+				if ($section['type']=='recommendations') {
+?>
+						<div class="swiper-pagination"></div>
+<?php
+				}
+?>
+						<div class="swiper-button-prev"></div>
+						<div class="swiper-button-next"></div>
 					</div>
 <?php
+			}
 		}
 ?>
 				</div>

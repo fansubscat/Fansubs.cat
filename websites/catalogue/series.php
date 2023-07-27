@@ -587,19 +587,22 @@ if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
 						<h2 class="section-title-main"><?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'Continguts d’imatge real amb temàtiques en comú' : (CATALOGUE_ITEM_TYPE=='anime' ? 'Animes'.(SITE_IS_HENTAI ? ' hentai' : '').' amb temàtiques en comú' : 'Mangues'.(SITE_IS_HENTAI ? ' hentai' : '').' amb temàtiques en comú'); ?></h2>
-						<div class="section-content carousel">
+						<div class="section-content carousel swiper">
+							<div class="swiper-wrapper">
 <?php
 	while ($row = mysqli_fetch_assoc($resultra)) {
 ?>
-							<div<?php echo isset($row['best_status']) ? ' class="status-'.get_status($row['best_status']).'"' : ''; ?>>
+								<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> swiper-slide">
 <?php
 		print_carousel_item($row, FALSE);
 ?>
-							</div>
+								</div>
 <?php
 	}
 ?>
-
+							</div>
+							<div class="swiper-button-prev"></div>
+							<div class="swiper-button-next"></div>
 						</div>
 					</div>
 <?php
@@ -613,19 +616,22 @@ if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
 						<h2 class="section-title-main"><?php echo SITE_IS_HENTAI ? (CATALOGUE_ITEM_TYPE=='anime' ? 'Mangues hentai amb temàtiques en comú' : 'Animes hentai amb temàtiques en comú') : "Altres continguts amb temàtiques en comú"; ?></h2>
-						<div class="section-content carousel">
+						<div class="section-content carousel swiper">
+							<div class="swiper-wrapper">
 <?php
 	while ($row = mysqli_fetch_assoc($resultrm)) {
 ?>
-							<div<?php echo isset($row['best_status']) ? ' class="status-'.get_status($row['best_status']).'"' : ''; ?>>
+								<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> swiper-slide">
 <?php
 		print_carousel_item($row, FALSE);
 ?>
-							</div>
+								</div>
 <?php
 	}
 ?>
-
+							</div>
+							<div class="swiper-button-prev"></div>
+							<div class="swiper-button-next"></div>
 						</div>
 					</div>
 <?php

@@ -871,7 +871,7 @@
 }
 
 .recommendation .coverholder {
-	height: 100%;
+	height: 87.5%;
 	aspect-ratio: 0.70710678118;
 	filter: drop-shadow(0 0 2.6rem rgba(var(--negative-color),0.5));
 	margin-right: 2.6rem;
@@ -1015,35 +1015,25 @@
 	margin: 0.25rem 0.25rem;
 }
 
-.slick-list {
-	overflow: visible !important;
-}
-
-.recommendations .slick-list {
-	margin-left: calc(0rem - var(--page-padding));
-	margin-right: calc(0rem - var(--page-padding));
-	background-color: rgb(var(--secondary-color));
-}
-
-.slick-prev, .slick-next {
-	z-index: 100;
-}
-
-.carousel .slick-prev {
-	background-image: linear-gradient(90deg,rgb(var(--background-color-standard)), transparent, transparent, transparent);
-	transform: translateX(-1.1rem) translateY(-50%);
+.carousel .swiper-button-prev {
+	background-image: linear-gradient(90deg,rgb(var(--background-color-standard)), transparent);
+	transform: translateX(-1.1rem) translateY(-10%);
 	width: 4rem;
-	height: 100%;
+	height: 110%;
+	top: 0;
+	margin-top: 0;
 }
 
-.carousel .slick-next {
-	background-image: linear-gradient(-90deg,rgb(var(--background-color-standard)), transparent, transparent, transparent);
-	transform: translateX(1.1rem) translateY(-50%);
+.carousel .swiper-button-next {
+	background-image: linear-gradient(-90deg,rgb(var(--background-color-standard)), transparent);
+	transform: translateX(1.1rem) translateY(-10%);
 	width: 4rem;
-	height: 100%;
+	height: 110%;
+	top: 0;
+	margin-top: 0;
 }
 
-.carousel .slick-prev::before, .carousel .slick-next::before {
+.carousel .swiper-button-prev::after, .carousel .swiper-button-next::after {
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
 	color: rgb(var(--positive-color));
@@ -1052,7 +1042,7 @@
 	-webkit-text-stroke: 0.15rem rgb(var(--negative-color));
 }
 
-.recommendations .slick-prev::before, .recommendations .slick-next::before {
+.recommendations .swiper-button-prev::after, .recommendations .swiper-button-next::after {
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
 	color: rgb(var(--negative-color));
@@ -1060,72 +1050,65 @@
 	padding: 3rem;
 }
 
-.carousel .slick-prev::before {
-	margin-left: -2rem;
+.carousel .swiper-button-prev::after {
 	padding-right: 1rem;
 	content: '\f053' !important;
 }
 
-.carousel .slick-next::before {
+.carousel .swiper-button-next::after {
 	padding-left: 1rem;
 	content: '\f054' !important;
 }
 
-.recommendations .slick-prev::before {
-	padding-left: 6rem;
+.recommendations .swiper-button-prev::after {
+	padding-left: 12rem;
 	content: '\f053' !important;
 }
 
-.recommendations .slick-next::before {
-	padding-right: 6rem;
-	margin-left: -9rem;
+.recommendations .swiper-button-next::after {
+	padding-right: 12rem;
 	content: '\f054' !important;
-}
-
-.slick-disabled {
-	visibility: hidden;
-}
-
-.slick-dots {
-	bottom: 0.25rem;
-	pointer-events: none;
-}
-
-.slick-dotted.slick-slider {
-	margin-bottom: unset;
-}
-
-.slick-dots li {
-	margin: 0 0.1rem !important;
-	pointer-events: all;
-}
-
-.slick-dots li button {
-	padding: 0 !important;
-	width: 2rem !important;
-	height: 2rem !important;
-}
-
-.slick-dots li button::before {
-	font-size: 1.2rem !important;
-	color: rgb(var(--positive-color));
-}
-
-.slick-dots li.slick-active button:before {
-	color: rgb(var(--positive-color));
 }
 
 .recommendations {
 	margin-bottom: var(--thumbnail-margin);
+	margin-left: calc(0rem - var(--page-padding));
+	margin-right: calc(0rem - var(--page-padding));
+	background-color: rgb(var(--secondary-color));
+	--swiper-pagination-bottom: 0;
+	--swiper-pagination-bullet-size: 1rem;
+	--swiper-pagination-bullet-inactive-color: rgb(var(--positive-color));
+	--swiper-pagination-color: rgb(var(--positive-color));
 }
 
-.carousel, .recommendations {
-	opacity: 0;
+.swiper-slide {
+	width: unset;
 }
 
-.carousel.slick-initialized, .genres-carousel.slick-initialized, .recommendations.slick-initialized {
-	opacity: 1;
-	position: relative;
+.swiper {
+	overflow: visible;
+}
+
+.carousel .swiper-button-prev {
+	margin-left: calc(0rem - var(--page-padding));
+}
+
+.carousel .swiper-button-next {
+	margin-right: calc(0rem - var(--page-padding));
+}
+
+.swiper-button-disabled {
+	opacity: 0 !important;
+}
+
+.carousel.swiper-android .swiper-slide, .carousel.swiper-ios .swiper-slide {
+	transform: unset !important;
+}
+
+.swiper-horizontal>.swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction {
+	width: unset !important;
+	left: 50%;
+	transform: translateX(-50%);
 }
 
 .continue-watching-thumbnail-outer {
@@ -1240,7 +1223,7 @@
 	transition: opacity var(--fast-animation-duration) ease;
 }
 
-.continue-watching-thumbnail .play-button.fa-play {
+.continue-watching-thumbnail .play-button.fa-play::before {
 	padding-left: 0.3rem;
 }
 
@@ -1375,11 +1358,11 @@
 		background: rgb(var(--negative-color-button-hover));
 	}
 
-	.slick-prev:hover, .slick-next:hover {
+	.swiper-button-prev:hover::after, .swiper-button-next:hover::after {
 		filter: brightness(1.5);
 	}
 
-	.recommendations .slick-prev:hover, .recommendations .slick-next:hover {
+	.recommendations .swiper-button-prev:hover, .recommendations .swiper-button-next:hover {
 		filter: opacity(0.5);
 	}
 
@@ -1699,48 +1682,28 @@
 		margin: 0.25rem 0.25rem;
 	}
 
-	.slick-dots li {
-		margin: 0 0 !important;
-	}
-
-	.slick-dots li button {
-		width: 1.2rem !important;
-		height: 1.2rem !important;
-	}
-
-	.slick-dots li button::before {
-		font-size: 0.8rem !important;
-	}
-
-	.carousel .slick-prev {
-		transform: translateX(1.5rem) translateY(-50%);
+	.carousel .swiper-button-prev {
 		width: 2rem;
 	}
 
-	.carousel .slick-next {
-		transform: translateX(-1.5rem) translateY(-50%);
+	.carousel .swiper-button-next {
 		width: 2rem;
 	}
 
-	.carousel .slick-prev::before {
-		margin-left: -1rem;
+	.recommendations .swiper-button-prev::after, .recommendations .swiper-button-next::after {
+		font-size: 2rem;
 	}
 
-	.carousel .slick-next::before {
-		margin-left: -1rem;
+	.recommendations .swiper-button-prev::after {
+		padding-left: 0;
 	}
 
-	.carousel .slick-prev::before, .carousel .slick-next::before {
-		font-size: 3rem;
+	.recommendations .swiper-button-next::after {
+		padding-right: 0;
 	}
 
-	.recommendations .slick-prev::before {
-		padding-left: 2rem;
-	}
-
-	.recommendations .slick-next::before {
-		padding-right: 2rem;
-		margin-left: -5rem;
+	.carousel .swiper-button-prev::after, .carousel .swiper-button-next::after {
+		font-size: 2.5rem;
 	}
 
 	.video-js, .player_extra_upper {
@@ -1750,7 +1713,7 @@
 
 @media (max-width: 600px){
 	.recommendation .coverholder {
-		height: 85%;
+		height: 75%;
 		align-self: start;
 	}
 
@@ -1783,11 +1746,6 @@
 }
 
 @media (max-width: 350px){
-	.recommendation .coverholder {
-		height: 70%;
-		margin-top: 1.5rem;
-	}
-
 	.video-js .vjs-next-button, .video-js .vjs-prev-button {
 		display: none;
 	}

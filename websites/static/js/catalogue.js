@@ -882,13 +882,11 @@ function bookmarkRemoved(seriesId) {
 
 function removeFromContinueWatching(element, fileId){
 	var slide = $(element).parent().parent().parent().parent();
-	var carousel = slide.parent().parent().parent();
-	var index = carousel.find('.slick-slide').index(slide);
-	carousel.slick('slickRemove', index);
-	if (carousel.find('.slick-slide').length==0) {
-		//This was the last element: remove the carousel too
-		carousel.slick('unslick');
-		carousel.parent().remove();
+	var wrapper = slide.parent();
+	var index = wrapper.children().index(slide);
+	wrapper.parent().get(0).swiper.removeSlide(index);
+	if (wrapper.children().length==0) {
+		wrapper.parent().parent().remove();
 	}
 
 	var values = {
@@ -906,66 +904,49 @@ function removeFromContinueWatching(element, fileId){
 
 function initializeCarousels() {
 	$('.style-type-catalogue').addClass('has-carousel');
+	new Swiper('.recommendations', {
+		slidesPerView: 1,
+		direction: 'horizontal',
+		effect: 'fade',
+		speed: 1000,
+		loop: true,
+		parallax: true,
+		pagination: {
+			el: '.swiper-pagination',
+			clickable: true,
+		},
+		navigation: {
+			nextEl: '.swiper-button-next',
+			prevEl: '.swiper-button-prev',
+		},
+		autoplay: {
+			delay: 10000,
+			disableOnInteraction: true,
+		},
+		fadeEffect: {
+			crossFade: true,
+		},
+	});
 
-	if ($('.carousel').length>0) {
-		//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
-		//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
-		var carouselWidth = $('.header').width();
-		var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
-			+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
-		var size = Math.max(parseInt(carouselWidth/elementWidth),1);
-		var swipeToSlideSetting = (getComputedStyle(document.documentElement).getPropertyValue('--is-hovering-device')==0);
+	new Swiper('.carousel', {
+		slidesPerView: "auto",
+		slidesPerGroupAuto: true,
+		maxBackfaceHiddenSlides: 0,
+		direction: 'horizontal',
+		navigation: {
+			nextEl: '.swiper-button-next',
+			prevEl: '.swiper-button-prev',
+		},
+	});
 
-		$('.carousel').slick({
-			speed: 300,
-			infinite: false,
-			slidesToShow: size,
-			slidesToScroll: size,
-			swipeToSlide: false,
-			variableWidth: true,
-			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-		});
-
-		$('.recommendations').slick({
-			dots: true,
-			appendDots: '.recommendations',
-			speed: 500,
-			fade: true,
-			infinite: true,
-			autoplay: true,
-			autoplaySpeed: 10000,
-			slidesToShow: 1,
-			slidesToScroll: 1,
-			prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-			nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-		});
-
-		$('.recommendations').on('beforeChange', function(event, slick, currentSlide, nextSlide){
-			if ((currentSlide==$('.recommendations .slick-dots li').length-1 && nextSlide==0) || nextSlide-currentSlide==1) {
-				//Advance
-				$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '-30rem', 'opacity': '0'}).delay(600).queue(function() {
-					$(this).css({'transition': 'none', 'translate': '0', 'opacity': '1'});
-			 		$(this).dequeue();
-				});
-				$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'none', 'translate': '30rem', 'opacity': '0'}).delay(1).queue(function() {
-					$(this).css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '0', 'opacity': '1'});
-					$(this).dequeue();
-				});
-			} else if ((currentSlide==0 && nextSlide==$('.recommendations .slick-dots li').length-1) || nextSlide-currentSlide==-1) {
-				//Go back
-				$('.recommendations .slick-slide[data-slick-index='+currentSlide+'] .infoholder').css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '30rem', 'opacity': '0'}).delay(600).queue(function() {
-					$(this).css({'transition': 'none', 'translate': '0', 'opacity': '1'});
-			 		$(this).dequeue();
-				});
-				$('.recommendations .slick-slide[data-slick-index='+nextSlide+'] .infoholder').css({'transition': 'none', 'translate': '-30rem', 'opacity': '0'}).delay(1).queue(function() {
-					$(this).css({'transition': 'translate .6s ease, opacity .6s ease', 'translate': '0rem', 'opacity': '1'});
-					$(this).dequeue();
-				});
-			} else {
-				//Just fade
-			}
-		});
+	//UGLY HACK! slidesPerViewDynamic are wrongly computed, which results in this issue: https://github.com/nolimits4web/swiper/issues/4964
+	//We override the function in order to use our logic. It works, but this assumes that all elements are the same width and WILL BREAK otherwise.
+	for (element of $('.carousel')) {
+		element.swiper.slidesPerViewDynamic = function(){
+			var totalWidth = $(this.wrapperEl).width();
+			var elementWidth = $($(this.wrapperEl).find('.swiper-slide')[0]).width();
+			return Math.floor(totalWidth / elementWidth);
+		};
 	}
 
 	if ($('.synopsis-content').height()>=154) {
@@ -1403,29 +1384,6 @@ $(document).ready(function() {
 					const top = active.getBoundingClientRect().top + window.pageYOffset+2;
 					target.style.left = `${left}px`;
 					target.style.top = `${top}px`;
-				}
-
-				if ($('.has-carousel').length>0) {
-					//Recalculate multi-carousels
-					//Carousel width is equal to the page header in the current design (we use that instead because carousel has not been laid out yet)
-					//Element width is the width of .thumbnail-outer plus its margins (1/2 from each side), so we only get one full margin instead
-					var carouselWidth = $('.header').width();
-					var elementWidth = Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('width').replace('px',''))
-						+ Math.ceil(window.getComputedStyle(document.querySelector('.thumbnail-outer')).getPropertyValue('margin-left').replace('px',''));
-					var size = Math.max(parseInt(carouselWidth/elementWidth),1);
-					var swipeToSlideSetting = (getComputedStyle(document.documentElement).getPropertyValue('--is-hovering-device')==0);
-
-					$('.carousel').slick('unslick');
-					$('.carousel').slick({
-						speed: 300,
-						infinite: false,
-						slidesToShow: size,
-						slidesToScroll: size,
-						swipeToSlide: false,
-						variableWidth: true,
-						prevArrow: '<button data-nosnippet class="slick-prev" aria-label="Anterior" type="button">Anterior</button>',
-						nextArrow: '<button data-nosnippet class="slick-next" aria-label="Següent" type="button">Següent</button>'
-					});
 				}
 
 				lastWindowWidth=$(window).width();

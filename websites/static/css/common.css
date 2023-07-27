@@ -911,7 +911,6 @@ h2.section-title:first-of-type {
 }
 
 .thumbnail-outer .title {
-	width: 100%;
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
 	font-size: 1.45rem;
@@ -1013,7 +1012,6 @@ h2.section-title:first-of-type {
 	font-size: 1.45rem;
 	padding: 0 3rem;
 	margin-top: 0.6rem;
-	width: 100%;
 	line-height: 1.2;
 	/* For ellipsizing and max 2 lines */
 	text-overflow: ellipsis;
