@@ -293,7 +293,42 @@ function getCoverImageUrlForChromecast() {
 }
 
 function initializeReader() {
-	$('<div class="player-popup">Aquí va el manga de '+currentSourceData.title+'</div>').appendTo('#overlay-content');
+	var type = 'rtl'; //'webtoon', 'rtl' or 'ltr'
+	var pagesCode = '';
+	for (var i=0; i<currentSourceData.pages.length;i++) {
+		pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" loading="lazy"></div>';
+	}
+	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'"><div class="swiper-wrapper">'+pagesCode+'</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
+	new Swiper('.player-popup', {
+		slidesPerView: type=='webtoon' ? 'auto' : 1,
+		direction: type=='webtoon' ? 'vertical' : 'horizontal',
+		freeMode: type=='webtoon' ? true : false,
+		effect: 'slide',
+		mousewheel: {
+			enabled: true,
+			forceToAxis: true,
+		},
+		keyboard: {
+			enabled: true,
+			onlyInViewport: false,
+		},
+		speed: 300,
+		pagination: {
+			el: '.swiper-pagination',
+			clickable: true,
+			type: "progressbar",
+			renderCustom: function (swiper, current, total) {
+				return '<div class="manga-bar"><div>AAA</div>'+current + ' of ' + total+'<div>BBBBB</div></div>';
+			},
+			renderProgressbar: function (progressbarFillClass) {
+				return '<span class="' + progressbarFillClass + '"></span>';
+			},
+		},
+		navigation: {
+			nextEl: '.swiper-button-next',
+			prevEl: '.swiper-button-prev',
+		},
+	});
 }
 
 function initializeFileDisplayer(){
@@ -354,7 +389,11 @@ function initializePlayer(){
 					"muteToggle",
 					"volumeControl",
 					"fullscreenToggle"
-				]
+				],
+				/*volumePanel: {
+					vertical: true,
+					inline: false
+				}*/
 			},
 			techOrder: techOrders,
 			chromecast: {
@@ -721,8 +760,8 @@ function shutdownFileDisplayer(clearSourceData) {
 			console.log("Error while stopping player: "+error);
 		}
 		player = null;
-		$('.player-popup').remove();
 	}
+	$('.player-popup').remove();
 	if (clearSourceData) {
 		currentSourceData = null;
 	}
