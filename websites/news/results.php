@@ -24,6 +24,55 @@ else{
 	$page = 1;
 }
 
+function get_catalan_formatted_date($date) {
+	$day = date('j', $date);
+	if ($day=='1') {
+		$day.='r';
+	}
+	$month = date('m', $date);
+	switch ($month) {
+		case '01':
+			$month = 'de gener';
+			break;
+		case '02':
+			$month = 'de febrer';
+			break;
+		case '03':
+			$month = 'de març';
+			break;
+		case '04':
+			$month = 'd’abril';
+			break;
+		case '05':
+			$month = 'de maig';
+			break;
+		case '06':
+			$month = 'de juny';
+			break;
+		case '07':
+			$month = 'de juliol';
+			break;
+		case '08':
+			$month = 'd’agost';
+			break;
+		case '09':
+			$month = 'de setembre';
+			break;
+		case '10':
+			$month = 'd’octubre';
+			break;
+		case '11':
+			$month = 'de novembre';
+			break;
+		case '12':
+		default:
+			$month = 'de desembre';
+			break;
+	}
+	$year = date('Y', $date);
+	return "$day $month del $year";
+}
+
 $show_blacklisted_fansubs = FALSE;
 $show_own_news = FALSE;
 $text = NULL;
@@ -56,22 +105,49 @@ if (defined('PAGE_IS_SEARCH')) {
 $result = query_latest_news($user, $text, $page, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
 
 ?>
-						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> <?php echo defined('PAGE_IS_SEARCH') ? 'Resultats de la cerca' : 'Darreres notícies'; ?></h2>
 <?php
 if (mysqli_num_rows($result)==0){
 	if (defined('PAGE_IS_SEARCH')) {
 ?>
+						<div class="section">
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Resultats de la cerca</h2>
 							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap contingut per a aquesta cerca. Prova de reduir la cerca o fes-ne una altra.</div></div>
+						</div>
 <?php
 	} else {
 ?>
+						<div class="section">
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Darreres notícies</h2>
 							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No hem trobat cap notícia! I que no hi hagi cap notícia és una mala notícia...</div></div>
+						</div>
 <?php
 	}
 }
 else{
+	if (defined('PAGE_IS_SEARCH')) {
+?>
+						<div class="section">
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Resultats de la cerca</h2>
+<?php
+	}
+	$first = TRUE;
+	$last_date = NULL;
 	while ($row = mysqli_fetch_assoc($result)){
+		if (!defined('PAGE_IS_SEARCH')) {
+			if ($last_date!=date("Y-m-d", strtotime($row['date']))) {
+				$last_date = date("Y-m-d", strtotime($row['date']));
+				if (!$first) {
+?>
+						</div>
+<?php
+				}
+				$first = FALSE;
+?>
+						<div class="section">
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> <?php echo get_catalan_formatted_date(strtotime($row['date'])); ?></h2>
+<?php
+			}
+		}
 ?>
 							<div class="news-article">
 								<div class="news-content">
@@ -100,7 +176,7 @@ else{
 			$url = NULL;
 		}
 ?>
-											<a class="news-fansub"<?php $url!==NULL ? ' href="'.$url.'" target="_blank"' : ''; ?>><img src="<?php echo $row['fansub_id']!==NULL ? STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png' : STATIC_URL.'/images/site/default_fansub.png'; ?>" alt=""> <?php echo $row['fansub_id']!==NULL ? $row['fansub_name'] : 'Fansubs.cat'; ?></a> • <span class="news-date" title="<?php echo date("d/m/Y \\a \\l\\e\\s H:i:s", strtotime($row['date'])); ?>"><?php echo relative_time(strtotime($row['date'])); ?></span>
+											<a class="news-fansub"<?php $url!==NULL ? ' href="'.$url.'" target="_blank"' : ''; ?>><img src="<?php echo $row['fansub_id']!==NULL ? STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png' : STATIC_URL.'/images/site/default_fansub.png'; ?>" alt=""> <?php echo $row['fansub_id']!==NULL ? $row['fansub_name'] : 'Fansubs.cat'; ?></a> • <span class="news-date"><?php echo date("d/m/Y \\a \\l\\e\\s H:i", strtotime($row['date'])); ?></span>
 										</div>
 										<div class="news-text">
 											<!-- Begin article content -->
@@ -135,13 +211,16 @@ else{
 							</div>
 <?php
 	}
+?>
+						</div>
+<?php
 }
 ?>
-							<div id="bottom-navigation">
+						<div id="bottom-navigation">
 <?php
 if ($page>1 && mysqli_num_rows($result)>0){
 ?>
-								<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : '/pagina/'.($page-1)).'"'); ?>"><i class="fa fa-fw fa-arrow-left"></i> Notícies més noves</a>
+							<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : '/pagina/'.($page-1)).'"'); ?>"><i class="fa fa-fw fa-arrow-left"></i> Notícies més noves</a>
 <?php
 }
 mysqli_free_result($result);
@@ -151,11 +230,10 @@ $result = query_latest_news($user, $text, $page+1, 20, $fansub_slug, $show_black
 
 if (mysqli_num_rows($result)>0){
 ?>
-								<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="/pagina/'.($page+1).'"'); ?>">Notícies més antigues <i class="fa fa-fw fa-arrow-right"></i></a>
+							<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="/pagina/'.($page+1).'"'); ?>">Notícies més antigues <i class="fa fa-fw fa-arrow-right"></i></a>
 <?php
 }
 ?>
-							</div>
 						</div>
 <?php
 mysqli_free_result($result);

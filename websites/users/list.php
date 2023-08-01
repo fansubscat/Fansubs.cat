@@ -21,23 +21,23 @@ if ($cnt>0) {
 	$sections = array();
 
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> Els meus animes',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> Animes desats',
 		'result' => query_my_list_by_type($user, 'anime', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> Els meus mangues',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> Mangues desats',
 		'result' => query_my_list_by_type($user, 'manga', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i>Els meus continguts d’imatge real',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i>Continguts d’imatge real desats',
 		'result' => query_my_list_by_type($user, 'liveaction', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> Els meus animes hentai',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> Animes hentai desats',
 		'result' => query_my_list_by_type($user, 'anime', TRUE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> Els meus mangues hentai',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> Mangues hentai desats',
 		'result' => query_my_list_by_type($user, 'manga', TRUE)
 	));
 

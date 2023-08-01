@@ -151,6 +151,7 @@ body {
 	background: linear-gradient(to bottom, rgba(var(--negative-color),1) 0%, rgba(var(--negative-color),var(--background-image-opacity)) 25% 75%, rgba(var(--negative-color),1) 100%), var(--background-image);
 	background-size: cover;
 	background-position: center;
+	overflow: hidden;
 }
 
 body.style-type-catalogue, body.style-type-news, body.style-type-fansubs, body.style-type-users, body.style-type-settings {
@@ -575,7 +576,6 @@ select:not(.date-month) {
 
 .section {
 	padding: 2.5rem var(--page-padding) 0 var(--page-padding);
-	overflow: hidden;
 	width: 100%;
 }
 
@@ -770,11 +770,6 @@ h2.section-title:first-of-type {
 	height: calc(100% - var(--header-height-local) - var(--page-padding) - var(--page-padding));
 	top: calc(var(--header-height-local) + var(--page-padding) + var(--page-padding)); /* header + header margin + body padding */
 	left: 0;
-}
-
-.search-layout ~ .results-layout.hidden {
-	display: flex !important;
-	visibility: hidden;
 }
 
 .search-layout ~ .results-layout {
@@ -1485,6 +1480,10 @@ input:checked + .slider:before {
 	right: 0.75rem;
 	top: 1rem;
 	font-size: 3rem;
+}
+
+.error-icon {
+	color: rgb(var(--error-color));
 }
 
 @media (hover: hover) and (pointer: fine) {

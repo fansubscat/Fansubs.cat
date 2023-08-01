@@ -417,7 +417,6 @@ function query_filter_genders() {
 	$final_query = "SELECT g.*
 			FROM genre g
 			WHERE (g.type='genre' OR g.type='explicit')
-				AND g.name<>'Hentai'
 				AND EXISTS(SELECT s.id
 					FROM rel_series_genre sg
 						LEFT JOIN series s ON sg.series_id=s.id
