@@ -156,3 +156,83 @@ window.onclick = function(event) {
 		$('.dropdown-content').removeClass('dropdown-show');
 	}
 }
+
+function menuOptionUnderlineSetup(element) {
+	var target = document.querySelector(".catalogues-underline");
+	var links = document.querySelectorAll(".catalogues-navigation a");
+	var originalLink = document.querySelector(".catalogue-selected");
+	if (!originalLink.classList.contains("catalogue-selected-processed")) {
+		originalLink.classList.add("catalogue-selected-processed");
+		target.classList.add('catalogues-underline-noanim');
+
+		const width = originalLink.getBoundingClientRect().width;
+		const height = originalLink.getBoundingClientRect().height;
+		const left = originalLink.getBoundingClientRect().left + window.pageXOffset;
+		const top = originalLink.getBoundingClientRect().top + window.pageYOffset+2;
+
+		target.style.width = `${width}px`;
+		target.style.height = `${height}px`;
+		target.style.left = `${left}px`;
+		target.style.top = `${top}px`;
+		target.classList.remove('catalogues-underline-noanim');
+	}
+	if (!element.classList.contains("catalogues-underline-active")) {
+		for (let i = 0; i < links.length; i++) {
+			if (links[i].classList.contains("catalogues-underline-active")) {
+				links[i].classList.remove("catalogues-underline-active");
+			}
+		}
+
+		element.classList.add("catalogues-underline-active");
+
+		const width = element.getBoundingClientRect().width;
+		const height = element.getBoundingClientRect().height;
+		const left = element.getBoundingClientRect().left + window.pageXOffset;
+		const top = element.getBoundingClientRect().top + window.pageYOffset+2;
+
+		target.style.width = `${width}px`;
+		target.style.height = `${height}px`;
+		target.style.left = `${left}px`;
+		target.style.top = `${top}px`;
+	}
+}
+
+function menuOptionMouseEnter(e) {
+	menuOptionUnderlineSetup(e.currentTarget);
+}
+
+function menuOptionMouseLeave() {
+	var target = document.querySelector(".catalogues-underline");
+	var links = document.querySelectorAll(".catalogues-navigation a");
+	for (let i = 0; i < links.length; i++) {
+		if (links[i].classList.contains("catalogues-underline-active")) {
+			links[i].classList.remove("catalogues-underline-active");
+		}
+	}
+
+	var originalLink = document.querySelector(".catalogue-selected");
+	originalLink.classList.add("catalogues-underline-active");
+
+	const width = originalLink.getBoundingClientRect().width;
+	const height = originalLink.getBoundingClientRect().height;
+	const left = originalLink.getBoundingClientRect().left + window.pageXOffset;
+	const top = originalLink.getBoundingClientRect().top + window.pageYOffset+2;
+
+	target.style.width = `${width}px`;
+	target.style.height = `${height}px`;
+	target.style.left = `${left}px`;
+	target.style.top = `${top}px`;
+	target.style.transform = "none";
+}
+
+$(document).ready(function() {
+	var links = document.querySelectorAll(".catalogues-navigation a");
+	var container = document.querySelector(".catalogues-navigation");
+
+	if (container) {
+		for (let i = 0; i < links.length; i++) {
+			links[i].addEventListener("mouseenter", menuOptionMouseEnter);
+		}
+		container.addEventListener("mouseleave", menuOptionMouseLeave);
+	}
+});

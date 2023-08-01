@@ -1,7 +1,3 @@
-:root {
-	--header-height-local: 4.2rem;
-}
-
 .style-type-news .main-section {
 	width: calc(100% + var(--page-padding) + var(--page-padding));
 	margin-left: calc(0rem - var(--page-padding));
@@ -15,7 +11,7 @@
 }
 
 .news-article {
-	background-color: rgb(var(--negative-color));
+	background-color: rgb(var(--card-background-color));
 	border-radius: 1.5rem;
 	padding: 2rem;
 	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
@@ -133,7 +129,7 @@ img.mfp-img {
 	margin-top: 2.5rem;
 }
 
-@media (max-width: 920px){
+@media (max-width: 960px){
 	.news-article {
 		flex-direction: column;
 		border-radius: 1rem;

@@ -164,8 +164,6 @@ a.forgot-password {
 .style-type-settings .main-section {
 	width: calc(100% + var(--page-padding) + var(--page-padding));
 	justify-content: start;
-	border-top: 0.6rem solid rgb(var(--primary-color));
-	padding-top: 3rem;
 }
 
 .profile-layout {
@@ -392,7 +390,7 @@ a.forgot-password {
 	}
 }
 
-@media (max-width: 920px){
+@media (max-width: 960px){
 	.login-page {
 		flex-direction: column-reverse;
 	}

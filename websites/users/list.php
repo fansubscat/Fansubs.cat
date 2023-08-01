@@ -9,7 +9,8 @@ if (empty($user)) {
 
 define('PAGE_TITLE', 'La meva llista');
 define('PAGE_PATH', '/la-meva-llista');
-define('PAGE_STYLE_TYPE', 'users');
+define('PAGE_STYLE_TYPE', 'settings');
+define('SETTINGS_ITEM_TYPE', 'list');
 
 require_once("../common.fansubs.cat/header.inc.php");
 
@@ -20,23 +21,23 @@ if ($cnt>0) {
 	$sections = array();
 
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista d’anime',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> Els meus animes',
 		'result' => query_my_list_by_type($user, 'anime', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista de manga',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> Els meus mangues',
 		'result' => query_my_list_by_type($user, 'manga', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista d’imatge real',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i>Els meus continguts d’imatge real',
 		'result' => query_my_list_by_type($user, 'liveaction', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista d’anime hentai',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> Els meus animes hentai',
 		'result' => query_my_list_by_type($user, 'anime', TRUE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista de manga hentai',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> Els meus mangues hentai',
 		'result' => query_my_list_by_type($user, 'manga', TRUE)
 	));
 

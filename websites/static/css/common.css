@@ -1,6 +1,6 @@
 /* POSSIBLE BREAKING POINTS:
 	L: 1200px;
-	M:  920px;
+	M:  960px;
 	S:  600px;
 	XS: 350px;
 */
@@ -28,6 +28,7 @@
 
 :root {
 	--header-height: 4.2rem;
+	--header-height-local: 4.2rem;
 	--page-padding: 3.6rem;
 	--search-layout-width: 28rem;
 	--ultrafast-animation-duration: .2s;
@@ -72,6 +73,8 @@
 	--background-color-side-panel: 50, 50, 50;
 	/* User dropdown menu background color when hovering, +40/-20 */
 	--menu-background-color-hover: 40, 40, 40;
+	/* Card background color */
+	--card-background-color: 50, 50, 50;
 	/* Color for header icons */
 	--icon-button-color: 255, 255, 255;
 	/* Same but on hover: a little less bright, -40/+80 */
@@ -91,6 +94,7 @@
 	--background-color-standard: 235, 235, 235;
 	--background-color-side-panel: 215, 215, 215;
 	--menu-background-color-hover: 235, 235, 235;
+	--card-background-color: 255, 255, 255;
 	--icon-button-color: 0, 0, 0;
 	--icon-button-color-hover: 80, 80, 80;
 	--drop-shadow-transparency-card: 0.2;
@@ -190,8 +194,16 @@ a img {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	width: 100%;
-	margin-bottom: var(--page-padding);
+	width: calc(100% + var(--page-padding) + var(--page-padding));
+	padding-bottom: var(--page-padding);
+	margin-left: calc(-1 * var(--page-padding));
+	margin-right: calc(-1 * var(--page-padding));
+	padding-left: var(--page-padding);
+	padding-right: var(--page-padding);
+}
+
+.style-type-catalogue .header, .style-type-news .header, .style-type-fansubs .header, .style-type-settings .header {
+	border-bottom: 0.4rem solid rgb(var(--primary-color));
 }
 
 .main-body, .overlay-page {
@@ -207,6 +219,62 @@ a img {
 	display: block;
 }
 
+.catalogues-navigation {
+	height: var(--header-height);
+	margin-left: 2.5rem;
+	font-size: 2rem;
+	text-transform: uppercase;
+	align-self: end;
+	display: flex;
+	align-items: center;
+	font-family: "lexend_deca_light", sans-serif;
+	letter-spacing: -0.1rem;
+	order: 20;
+}
+
+.catalogues-navigation a {
+	display: block;
+	white-space: nowrap;
+}
+
+.catalogues-explicit-category {
+	font-size: 2rem;
+	margin-left: 1rem;
+}
+
+.catalogue-selected-processed {
+	/* -webkit-text-stroke: 0.03rem rgb(var(--positive-color)); */
+	font-family: "lexend_deca", sans-serif;
+	text-decoration: none !important;
+}
+
+.catalogue-selected {
+	/* -webkit-text-stroke: 0.03rem rgb(var(--positive-color)); */
+	font-family: "lexend_deca", sans-serif;
+	text-decoration: underline rgb(var(--primary-color)) 0.3rem;
+	text-underline-offset: 0.4rem;
+}
+
+.catalogues-separator {
+	margin-left: 1.2rem;
+	margin-right: 1.2rem;
+	display: inline-block;
+	margin-top: -0.2rem;
+	pointer-events: none;
+}
+
+.catalogues-underline {
+	position: absolute;
+	border-bottom: 0.3rem solid rgb(var(--primary-color));
+	z-index: 1;
+	transition: left var(--fast-animation-duration) ease-in-out, top var(--fast-animation-duration) ease-in-out, width var(--fast-animation-duration) ease-in-out, height var(--fast-animation-duration) ease-in-out;
+	pointer-events: none;
+}
+
+.catalogues-underline-noanim {
+	transition: none !important; /* Disable all animations */
+}
+
 .main-container {
 	width: 100%;
 	display: flex;
@@ -216,7 +284,7 @@ a img {
 
 .footer {
 	flex-grow: 0;
-	margin-top: 1.8rem;
+	margin-top: 2.5rem;
 	text-align: center;
 }
 
@@ -506,9 +574,13 @@ select:not(.date-month) {
 }
 
 .section {
-	padding: 0 var(--page-padding) 2.5rem var(--page-padding);
+	padding: 2.5rem var(--page-padding) 0 var(--page-padding);
 	overflow: hidden;
 	width: 100%;
+}
+
+.featured-section {
+	padding-top: 0 !important;
 }
 
 .section-title-main {
@@ -527,11 +599,12 @@ select:not(.date-month) {
 
 .section-title-main::after {
 	content: '';
-	border: 0.3rem solid rgb(var(--primary-color));
+	height: 0.2rem;
 	border-radius: 99rem;
 	margin-left: 1.2rem;
-	margin-top: 0.2em;
+	margin-top: 0.1em;
 	flex-grow: 1;
+	background: rgb(var(--primary-color));
 }
 
 .section-title-main i {
@@ -826,7 +899,7 @@ h2.section-title:first-of-type {
 	position: fixed;
 	overflow-y: scroll;
 	height: calc(100% - var(--header-height-local) - var(--page-padding) - var(--page-padding));
-	top: calc(var(--header-height-local) + var(--page-padding) + var(--page-padding)); /* header + header margin + body padding; */
+	top: calc(var(--header-height-local) + var(--page-padding) + var(--page-padding) + 0.5rem); /* header + header margin + body padding + header border-bottom; */
 	left: 0;
 }
 
@@ -836,7 +909,7 @@ h2.section-title:first-of-type {
 }
 
 .style-type-catalogue.has-search-results .section, .style-type-news.has-search-results .section {
-	padding: 0 0 2.5rem 0;
+	padding: 2.5rem 0 0 0;
 	overflow: visible;
 }
 
@@ -1419,6 +1492,10 @@ input:checked + .slider:before {
 		--is-hovering-device: 1;
 	}
 
+	.catalogues-navigation a:not(.no-underline-animation):hover {
+		text-decoration: none;
+	}
+
 	.site-message a:hover {
 		color: rgb(var(--secondary-color));
 		text-decoration: underline;
@@ -1630,13 +1707,33 @@ input:checked + .slider:before {
 	}
 }
 
-@media (max-width: 920px){
+@media (max-width: 960px){
 	:root {
+		--header-height-local: 8.4rem;
 		--page-padding: 1rem;
 		--carousel-element-width: 12.72rem;
 		--carousel-element-height: 20.1rem;
 		--thumbnail-margin: 0.3rem;
 		--thumbnail-text-height: 2.1rem;
+	}
+
+	.style-type-catalogue .header, .style-type-news .header, .style-type-fansubs .header, .style-type-settings .header {
+		justify-content: left;
+		flex-wrap: wrap;
+	}
+
+	.catalogues-navigation {
+		margin-left: 0;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		order: 99;
+		font-size: 1.8rem;
+	}
+
+	.catalogues-explicit-category {
+		font-size: 1.4rem;
+		margin-left: 0.8rem;
 	}
 
 	.social-link {
@@ -1672,7 +1769,7 @@ input:checked + .slider:before {
 	}
 
 	.section {
-		padding: 0 var(--page-padding) 1.5rem var(--page-padding);
+		padding: 1.5rem var(--page-padding) 0 var(--page-padding);
 	}
 
 	.section-title-main {
@@ -1807,5 +1904,15 @@ input:checked + .slider:before {
 
 	.user-login-icon {
 		display: inline;
+	}
+
+	.style-type-settings .catalogues-navigation {
+		font-size: 1.4rem;
+	}
+}
+
+@media (max-width: 350px){
+	.catalogues-navigation {
+		font-size: 1.6rem;
 	}
 }

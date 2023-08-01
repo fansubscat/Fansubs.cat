@@ -280,7 +280,7 @@ foreach($sections as $section){
 	if ($section['type']=='advent') {
 		if (strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0){
 ?>
-				<div class="section">
+				<div class="section featured-section">
 					<h2 class="section-title-main"><?php echo $section['title']; ?></h2>
 					<div class="section-content">
 						<a class="advent" href="<?php echo ADVENT_URL; ?>" target="_blank"><img src="<?php echo STATIC_URL; ?>/images/advent/header_<?php echo date('Y'); ?>.jpg" alt="Calendari d’advent dels fansubs en català" /></a>
@@ -293,7 +293,7 @@ foreach($sections as $section){
 		continue;
 	} else if (mysqli_num_rows($result)>0 || ($section['type']=='static')){
 ?>
-				<div class="section">
+				<div class="section<?php echo $section['type']=='recommendations' ? ' featured-section' : ''; ?>">
 <?php
 		if ($section['type']!='recommendations') {
 ?>

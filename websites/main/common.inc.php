@@ -1,7 +1,7 @@
 <?php
-function print_fansub($row) {
+function print_fansub($row, $is_hentai) {
 ?>
-								<div class="fansub<?php echo !empty($row['is_blacklisted']) ? ' fansub-blacklisted' : ''; ?>">
+								<div class="fansub<?php echo !empty($row['is_blacklisted']) ? ' fansub-blacklisted' : ''; ?><?php echo $is_hentai ? ' subtheme-hentai' : ''; ?>">
 									<div class="fansub-text-wrapper">
 										<img class="fansub-icon" src="<?php echo STATIC_URL.'/images/icons/'.$row['id'].'.png'; ?>" alt="">
 										<div class="fansub-info">
@@ -51,7 +51,7 @@ function print_fansub($row) {
 <?php
 	if ($row['total_anime']>0 && empty($row['is_blacklisted'])) {
 ?>
-												<a class="normal-button content-button" href="<?php echo ANIME_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Animes</span><span class="content-quantity"><?php echo $row['total_anime']; ?></span></a>
+												<a class="normal-button content-button" href="<?php echo ($is_hentai ? HENTAI_ANIME_URL : ANIME_URL).'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Animes</span><span class="content-quantity"><?php echo $row['total_anime']; ?></span></a>
 <?php
 	} else {
 ?>
@@ -60,7 +60,7 @@ function print_fansub($row) {
 	}
 	if ($row['total_manga']>0 && empty($row['is_blacklisted'])) {
 ?>
-												<a class="normal-button content-button" href="<?php echo MANGA_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Mangues</span><span class="content-quantity"><?php echo $row['total_manga']; ?></span></a>
+												<a class="normal-button content-button" href="<?php echo ($is_hentai ? HENTAI_MANGA_URL : MANGA_URL).'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Mangues</span><span class="content-quantity"><?php echo $row['total_manga']; ?></span></a>
 <?php
 	} else {
 ?>
@@ -69,9 +69,9 @@ function print_fansub($row) {
 	}
 	if ($row['total_liveaction']>0 && empty($row['is_blacklisted'])) {
 ?>
-												<a class="normal-button content-button" href="<?php echo LIVEACTION_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Imatge real</span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></a>
+												<a class="normal-button content-button" href="<?php echo ($is_hentai ? LIVEACTION_URL : LIVEACTION_URL).'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Imatge real</span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></a>
 <?php
-	} else {
+	} else if (!$is_hentai) {
 ?>
 												<span class="content-button disabled-content-button"><span class="content-type">Imatge real</span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></span>
 <?php

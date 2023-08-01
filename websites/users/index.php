@@ -8,6 +8,7 @@ if (empty($user)) {
 
 define('PAGE_TITLE', 'El meu perfil');
 define('PAGE_STYLE_TYPE', 'settings');
+define('SETTINGS_ITEM_TYPE', 'profile');
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>

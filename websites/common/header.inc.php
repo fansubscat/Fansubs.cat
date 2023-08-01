@@ -292,17 +292,43 @@ if (PAGE_STYLE_TYPE=='login') {
 ?>
 					</a>
 <?php
-		if (PAGE_STYLE_TYPE=='catalogue') {
+		if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='news' || PAGE_STYLE_TYPE=='fansubs' || PAGE_STYLE_TYPE=='settings') {
 ?>
 					<div class="catalogues-navigation">
+<?php
+			if (PAGE_STYLE_TYPE=='catalogue') {
+?>
 						<a href="<?php echo (SITE_IS_HENTAI ? HENTAI_ANIME_URL : ANIME_URL); ?>"<?php echo CATALOGUE_ITEM_TYPE=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo (SITE_IS_HENTAI ? HENTAI_MANGA_URL : MANGA_URL); ?>"<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
 <?php
-			if (!SITE_IS_HENTAI) {
+				if (!SITE_IS_HENTAI) {
 ?>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo LIVEACTION_URL; ?>"<?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Imatge real</a>
+<?php
+				}
+?>
+<?php
+			} else if (PAGE_STYLE_TYPE=='news') {
+?>
+						<a href="<?php echo NEWS_URL; ?>" class="catalogue-selected">Notícies</a>
+						<span class="catalogues-separator">|</span>
+						<a href="<?php echo MAIN_URL; ?>/llista-de-fansubs">Fansubs</a>
+<?php
+			} else if (PAGE_STYLE_TYPE=='fansubs') {
+?>
+						<a href="<?php echo NEWS_URL; ?>">Notícies</a>
+						<span class="catalogues-separator">|</span>
+						<a href="<?php echo MAIN_URL; ?>/llista-de-fansubs" class="catalogue-selected">Fansubs</a>
+<?php
+			} else if (PAGE_STYLE_TYPE=='settings') {
+?>
+						<a href="<?php echo USERS_URL; ?>"<?php echo SETTINGS_ITEM_TYPE=='profile' ? ' class="catalogue-selected"' : ''; ?>>El meu perfil</a>
+						<span class="catalogues-separator">|</span>
+						<a href="<?php echo USERS_URL; ?>/la-meva-llista"<?php echo SETTINGS_ITEM_TYPE=='list' ? ' class="catalogue-selected"' : ''; ?>>La meva llista</a>
+						<span class="catalogues-separator">|</span>
+						<a href="<?php echo USERS_URL; ?>/configuracio"<?php echo SETTINGS_ITEM_TYPE=='settings' ? ' class="catalogue-selected"' : ''; ?>>Configuració</a>
 <?php
 			}
 ?>

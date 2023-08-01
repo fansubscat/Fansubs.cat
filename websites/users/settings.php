@@ -2,6 +2,7 @@
 define('PAGE_TITLE', 'Configuració');
 define('PAGE_PATH', '/configuracio');
 define('PAGE_STYLE_TYPE', 'settings');
+define('SETTINGS_ITEM_TYPE', 'settings');
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
