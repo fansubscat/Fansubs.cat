@@ -50,7 +50,7 @@ if (SITE_IS_HENTAI) {
 		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/site.webmanifest">
 		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/safari-pinned-tab.svg" color="#6aa0f8">
 		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon.ico">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
 <?php
 if (PAGE_STYLE_TYPE=='catalogue') {
@@ -268,7 +268,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 	if (PAGE_STYLE_TYPE=='main') {
 ?>
-					<a class="social-link twitter-link fab fa-fw fa-twitter" href="https://twitter.com/fansubscat" target="_blank" alt="Twitter de Fansubs.cat"></a>
+					<a class="social-link twitter-link fab fa-fw fa-x-twitter" href="https://x.com/fansubscat" target="_blank" alt="X de Fansubs.cat"></a>
 					<a class="social-link mastodon-link fab fa-fw fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" alt="Mastodon de Fansubs.cat"></a>
 					<a class="social-link telegram-link fab fa-fw fa-telegram" href="https://t.me/fansubscat" target="_blank" alt="Telegram de Fansubs.cat"></a>
 <?php
