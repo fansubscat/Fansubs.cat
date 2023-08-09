@@ -183,11 +183,12 @@ a img {
 
 .site-message {
 	padding: 1rem;
-	border-radius: 0.6rem;
+	padding-bottom: 1.4rem;
 	background-color: rgb(var(--primary-color));
 	color: rgb(var(--always-positive-color));
 	text-align: center;
 	font-size: 1.6rem;
+	margin: 0 calc(-1 * var(--page-padding));
 }
 
 .header {

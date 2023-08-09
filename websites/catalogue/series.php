@@ -33,6 +33,7 @@ define('PAGE_DESCRIPTION', strip_tags($synopsis));
 define('PAGE_PREVIEW_IMAGE', SITE_BASE_URL.'/preview/'.$series['slug'].'.jpg');
 
 define('PAGE_IS_SERIES', TRUE);
+define('PAGE_EXTRA_BODY_CLASS', 'has-carousel');
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>

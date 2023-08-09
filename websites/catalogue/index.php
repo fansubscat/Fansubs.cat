@@ -24,7 +24,7 @@ if (is_robot()){
 	$result = query_total_number_of_series($round_interval);
 	$row = mysqli_fetch_assoc($result);
 ?>
-						<div class="section">
+						<div class="section featured-section">
 							<div class="site-message robo-message"><?php printf(CATALOGUE_ROBOT_MESSAGE, $row['cnt']); ?></div>
 						</div>
 <?php

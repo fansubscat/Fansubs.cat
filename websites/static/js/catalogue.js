@@ -1267,7 +1267,7 @@ $(document).ready(function() {
 			initializeCarousels();
 		}
 	} else {
-		if ($('.catalogue-index').length==1) {			
+		if ($('.catalogue-index').length==1) {
 			initializeCarousels();
 		}
 	}
