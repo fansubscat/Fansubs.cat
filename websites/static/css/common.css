@@ -26,6 +26,45 @@
 	src: url('../fonts/lexend_deca_numbers.ttf');
 }
 
+@font-face {
+	font-family: 'fansubscat_icons';
+	src: url('../fonts/fansubscat_icons.ttf');
+}
+
+/* Custom icons */
+[class^="fsc-"]:before, [class*=" fsc-"]:before {
+	font-family: "fansubscat_icons";
+	font-style: normal;
+	font-weight: normal;
+	speak: never;
+
+	display: inline-block;
+	text-decoration: inherit;
+	width: 1.25em;
+	text-align: center;
+
+	/* For safety - reset parent styles, that can break glyph codes*/
+	font-variant: normal;
+	text-transform: none;
+
+	/* fix buttons height, for twitter bootstrap */
+	line-height: 1em;
+
+	/* Font smoothing. That was taken from TWBS */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.fsc-catalogue:before {
+	content: '\e800';
+}
+.fsc-news:before {
+	content: '\e801';
+}
+.fsc-hentai:before {
+	content: '\e802';
+}
+
 :root {
 	--header-height: 4.2rem;
 	--header-height-local: 4.2rem;
@@ -240,7 +279,7 @@ a img {
 }
 
 .catalogues-explicit-category {
-	font-size: 2rem;
+	font-size: 2.2rem;
 	margin-left: 1rem;
 }
 
@@ -728,18 +767,6 @@ h2.section-title:first-of-type {
 	margin-right: 2rem;
 	font-size: 1.4rem;
 	color: rgb(var(--icon-button-color));
-}
-
-.filter-button .fa-stack-1x {
-	background: rgba(var(--background-color-standard),1);
-	height: 1.7em;
-	width: 1.7em;
-	border-radius: 999em;
-	left: 1em;
-	top: 0.5em;
-	margin-left: 0.6em;
-	margin-top: 0.6em;
-	line-height: 1.5
 }
 
 #search_button {

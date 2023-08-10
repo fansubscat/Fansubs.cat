@@ -2,7 +2,6 @@
 define('PAGE_STYLE_TYPE', 'catalogue');
 require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("common.inc.php");
-require_once("queries.inc.php");
 
 validate_hentai();
 

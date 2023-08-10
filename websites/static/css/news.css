@@ -121,10 +121,6 @@ img.mfp-img {
 	margin-top: 0;
 }
 
-.filter-button .fa-grip-lines {
-	transform: scaleY(1.6) scaleX(1.1);
-}
-
 #bottom-navigation {
 	margin-top: 2.5rem;
 }

@@ -738,6 +738,21 @@ function query_home_best_rated($user, $max_items) {
 	return query($final_query);
 }
 
+function query_series_by_slug($slug) {
+	$slug = escape($slug);
+	$final_query = "SELECT s.*, 
+				YEAR(s.publish_date) year,
+				GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres,
+				(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions
+			FROM series s
+				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
+				LEFT JOIN genre g ON sg.genre_id = g.id
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND slug='$slug'
+			GROUP BY s.id";
+	return query($final_query);
+}
+
 function query_related_series($user, $series_id, $series_author, $num_of_genres_in_common, $max_items, $own_type) {
 	$series_id=intval($series_id);
 	$series_author=escape($series_author);

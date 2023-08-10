@@ -4,7 +4,7 @@ require_once("common.inc.php");
 
 validate_hentai();
 
-$result = query("SELECT s.*, YEAR(s.publish_date) year, GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions FROM series s LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='".CATALOGUE_ITEM_TYPE."' AND slug='".escape(!empty($_GET['slug']) ? $_GET['slug'] : '')."' GROUP BY s.id");
+$result = query_series_by_slug(!empty($_GET['slug']) ? $_GET['slug'] : '');
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
@@ -29,7 +29,7 @@ $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 
 define('PAGE_TITLE', $series['name']);
 define('PAGE_PATH', '/'.$series['slug']);
-define('PAGE_DESCRIPTION', strip_tags($synopsis));
+define('PAGE_DESCRIPTION', str_replace("\n", " ", strip_tags($synopsis)));
 define('PAGE_PREVIEW_IMAGE', SITE_BASE_URL.'/preview/'.$series['slug'].'.jpg');
 
 define('PAGE_IS_SERIES', TRUE);
@@ -40,8 +40,8 @@ require_once("../common.fansubs.cat/header.inc.php");
 				<input id="autoopen_version_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['v']) ? (int)$_GET['v'] : ''); ?>"></input>
 				<input id="autoopen_file_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['f']) ? (int)$_GET['f'] : ''); ?>"></input>
 				<input id="seen_behavior" type="hidden" value="<?php echo 0; ?>"></input>
-				<div class="series_header">
-					<div class="img" style="background: url('<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['id']; ?>.jpg') no-repeat center; background-size: cover;"></div>
+				<div class="series-header">
+					<img class="background" src="<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
 					<div class="series_title_container">
 						<h2 class="series_title"><?php echo htmlspecialchars($series['name']); ?></h2>
 <?php

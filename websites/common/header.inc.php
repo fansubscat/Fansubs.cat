@@ -280,12 +280,7 @@ if (PAGE_STYLE_TYPE=='login') {
 		if (PAGE_STYLE_TYPE=='catalogue' && SITE_IS_HENTAI) {
 ?>
 						<div class="catalogues-explicit-category">
-							<span class="fa-stack" style="vertical-align: top;">
-								<i class="fa-solid fa-fw fa-pepper-hot fa-stack-2x"></i>
-								<i class="fa-solid fa-fw fa-plus fa-stack-1x"></i>
-								<i class="fa-solid fa-fw fa-1 fa-stack-1x"></i>
-								<i class="fa-solid fa-fw fa-8 fa-stack-1x"></i>
-							</span>
+							<i class="fsc fa-fw fsc-hentai fa-2x"></i>
 						</div>
 <?php
 		}
@@ -343,12 +338,7 @@ if (PAGE_STYLE_TYPE=='login') {
 	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH') && !defined('PAGE_IS_SERIES') && CATALOGUE_ITEM_TYPE!='liveaction' && !SITE_IS_HENTAI && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
 ?>
 						<a class="hentai-button" href="<?php echo CATALOGUE_ITEM_TYPE=='anime' ? HENTAI_ANIME_URL : HENTAI_MANGA_URL; ?>" title="Vés a l’apartat de hentai">
-							<span class="fa-stack" style="vertical-align: top;">
-								<i class="fa-solid fa-fw fa-pepper-hot fa-stack-2x"></i>
-								<i class="fa-solid fa-fw fa-plus fa-stack-1x"></i>
-								<i class="fa-solid fa-fw fa-1 fa-stack-1x"></i>
-								<i class="fa-solid fa-fw fa-8 fa-stack-1x"></i>
-							</span>
+							<i class="fsc fa-fw fsc-hentai fa-2x"></i>
 						</a>
 <?php
 	} else if (SITE_IS_HENTAI) {
@@ -361,10 +351,7 @@ if (PAGE_STYLE_TYPE=='login') {
 	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH')) {
 ?>
 						<a class="filter-button" href="<?php echo SITE_BASE_URL; ?>/cerca" title="Filtra i mostra tot el catàleg">
-							<span class="fa-stack" style="vertical-align: top;">
-								<i class="fa-solid fa-fw fa-grip fa-stack-2x"></i>
-								<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>
-							</span>
+							<i class="fsc fa-fw fsc-catalogue fa-2x"></i>
 						</a>
 						<div class="search-form">
 							<form id="search_form">
@@ -377,10 +364,7 @@ if (PAGE_STYLE_TYPE=='login') {
 	} else if (PAGE_STYLE_TYPE=='news' && !defined('PAGE_IS_SEARCH')) {
 ?>
 						<a class="filter-button" href="/cerca" title="Filtra i mostra totes les notícies">
-							<span class="fa-stack" style="vertical-align: top;">
-								<i class="fa-solid fa-fw fa-grip-lines fa-stack-2x"></i>
-								<i class="fa-solid fa-fw fa-filter fa-stack-1x"></i>
-							</span>
+							<i class="fsc fa-fw fsc-news fa-2x"></i>
 						</a>
 						<div class="search-form">
 							<form id="search_form">
