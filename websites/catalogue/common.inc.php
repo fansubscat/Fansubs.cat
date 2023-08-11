@@ -286,7 +286,7 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 		return;
 	}
 
-	$episode_title=htmlspecialchars(get_episode_title($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE));
+	$episode_title=get_episode_title($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
 
 	internal_print_episode($fansub_names, $episode_title, $result, $series, FALSE, $position);
 	mysqli_free_result($result);
@@ -295,36 +295,31 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 function print_extra($fansub_names, $row, $version_id, $series, $position){
 	$result = query("SELECT f.* FROM file f WHERE f.episode_id IS NULL AND f.extra_name='".escape($row['extra_name'])."' AND f.version_id=$version_id ORDER BY f.id ASC");
 
-	$episode_title=htmlspecialchars(get_episode_title($series['subtype'], NULL,NULL,NULL,NULL,NULL,$row['extra_name'], TRUE));
+	$episode_title=get_episode_title($series['subtype'], NULL,NULL,NULL,NULL,NULL,$row['extra_name'], TRUE);
 	
 	internal_print_episode($fansub_names, $episode_title, $result, $series, TRUE, $position);
 	mysqli_free_result($result);
 }
 
 function internal_print_episode($fansub_names, $episode_title, $result, $series, $is_extra, $position) {
-	if (mysqli_num_rows($result)==0){
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode episode-unavailable">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-ban icon-play"></span>'.$episode_title."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-		if ($series['type']!='manga') {
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right"></td>'."\n";
-		}
-		echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
-	} else if (mysqli_num_rows($result)>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode-multiple">'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title no-indent">'.$episode_title."</div>\n";
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-		if ($series['type']!='manga') {
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right"></td>'."\n";
-		}
-		echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
-
+//TABLE FORMAT: thumbnail, episode title + other data, seen
+	$num_variants = mysqli_num_rows($result);
+	if ($num_variants==0){ //Episode not available at all
+?>
+<tr class="episode episode-unavailable">
+	<td class="episode-thumbnail-cell">
+		<div class="episode-thumbnail">
+			<div class="play-button fa fa-fw fa-ban"></div>
+		</div>
+	</td>
+	<td class="episode-title-cell">
+		<div class="episode-title"><?php echo htmlspecialchars($episode_title); ?></div>
+	</td>
+	<td class="episode-seen-cell"></td>
+</tr>
+<?php
+	} else {
+		//Iterate all variants
 		while ($vrow = mysqli_fetch_assoc($result)){
 			if ($vrow['is_lost']==0) {
 				if ($series['type']!='manga') {
@@ -336,107 +331,75 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 					mysqli_free_result($resulti);
 					$links = filter_links($links);
 				}
-				
-				echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-				if (in_array($vrow['id'], get_cookie_viewed_files_ids())) {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-file-id="'.$vrow['id'].'" title="Ja l\'has '.($series['type']=='manga' ? 'llegit' : 'vist').'"><span class="fa fa-fw fa-eye"></span></span>'."\n";
-				} else {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-file-id="'.$vrow['id'].'" title="Encara no l\'has '.($series['type']=='manga' ? 'llegit' : 'vist').'"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
-				}
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="version episode-title">'."\n";
-				if ($series['type']=='manga') {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="file-launcher" data-file-id="'.$vrow['id'].'" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-title-short="'.htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-position="'.$position.'"><span class="fa fa-fw fa-book-open icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Llegeix-lo').'</a> '."\n";
-				} else {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="file-launcher" data-file-id="'.$vrow['id'].'" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-title-short="'.htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-position="'.$position.'"><span class="fa fa-fw fa-play icon-play"></span>'.(!empty($vrow['variant_name']) ? htmlspecialchars($vrow['variant_name']) : 'Reprodueix-lo').'</a> '."\n";
-				}
+?>
+<tr class="file-launcher episode<?php $num_variants>1 ? ' episode-indented' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" data-position="<?php echo $position; ?>">
+	<td class="episode-thumbnail-cell">
+<?php
+	if (file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg')) {
+?>
+		<div class="episode-thumbnail">
+			<img src="<?php echo STATIC_URL.'/images/files/'.$vrow['id'].'.jpg'; ?>" alt="">
+<?php
+	} else {
+?>
+		<div class="episode-thumbnail episode-thumbnail-missing">
+<?php
+	}
+?>
+			<span class="progress" style="width: 50%;"></span> <!-- TODO -->
+			<div class="play-button fa fa-fw <?php echo $series['type']=='manga' ? 'fa-book-open' : 'fa-play'; ?>"></div>
+		</div>
+	</td>
+	<td class="episode-title-cell">
+		<div class="episode-title"><?php echo htmlspecialchars($episode_title); ?><?php echo $num_variants>1 ? '<br>'.htmlspecialchars($vrow['variant_name']): ''; ?></div>
+<?php
 				if (!empty($vrow['comments'])){
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
+?>
+		<span class="version-info tooltip" title="<?php echo str_replace("\n", "<br>", htmlspecialchars($vrow['comments'])); ?>"><span class="fa fa-fw fa-info-circle"></span></span>
+<?php
 				}
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode tooltip'.(in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : '').'" data-file-id="'.$vrow['id'].'" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>'."\n";
+?>
+		<span class="new-episode tooltip<?php echo in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>
+<?php
 				}
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
 				if ($series['type']!='manga') {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($links).' tooltip tooltip-right" title="'."Vídeo: ".get_resolution($links).", servei: ".get_provider($links).'">'.htmlspecialchars(get_resolution_short($links)).'</span>'."\n";
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
+?>
+		<span class="version-resolution-<?php echo get_resolution_css($links); ?> tooltip tooltip-right" title="Vídeo: <?php echo get_resolution($links); ?>, servei: <?php echo get_provider($links); ?>"><?php echo htmlspecialchars(get_resolution_short($links)); ?></span>
+<?php
 				}
-				echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
+?>
+	</td>
+	<td class="episode-seen-cell">
+<?php
+				if (in_array($vrow['id'], get_cookie_viewed_files_ids())) {
+?>
+		<span class="viewed-indicator viewed" data-file-id="<?php echo $vrow['id']; ?>" title="Ja l\'has <?php echo $series['type']=='manga' ? 'llegit' : 'vist'; ?>"><span class="fa fa-fw fa-eye"></span></span>
+<?php
+				} else {
+?>
+		<span class="viewed-indicator not-viewed" data-file-id="<?php echo $vrow['id']; ?>" title="Encara no l\'has <?php echo $series['type']=='manga' ? 'llegit' : 'vist'; ?>"><span class="fa fa-fw fa-eye-slash"></span></span>
+<?php
+				}
+?>
+	</td>
+</tr>
+<?php
 			} else { //Lost file
-				echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode episode-unavailable">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-ban icon-play"></span>'.$episode_title."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-lost tooltip" title="Perdut, ens ajudes?"><span class="fa fa-fw fa-ghost"></span></span>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-				if ($series['type']!='manga') {
-					echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right"></td>'."\n";
-				}
-				echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
+?>
+<tr class="episode episode-unavailable">
+	<td class="episode-thumbnail-cell">
+		<div class="episode-thumbnail">
+			<div class="play-button fa fa-fw fa-ghost version-lost" title="Perdut, ens ajudes?"></div>
+		</div>
+	</td>
+	<td class="episode-title-cell">
+		<div class="episode-title"><?php echo htmlspecialchars($episode_title); ?></div>
+	</td>
+	<td class="episode-seen-cell"></td>
+</tr>
+<?php
 			}
-		}
-	} else { //Only one link
-		$vrow = mysqli_fetch_assoc($result);
-
-		if ($vrow['is_lost']==0) {
-			if ($series['type']!='manga') {
-				$links = array();
-				$resulti = query("SELECT l.* FROM link l WHERE l.file_id=${vrow['id']} ORDER BY l.url ASC");
-				while ($lirow = mysqli_fetch_assoc($resulti)){
-					array_push($links, $lirow);
-				}
-				mysqli_free_result($resulti);
-				$links = filter_links($links);
-			}
-
-			echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-			if (in_array($vrow['id'], get_cookie_viewed_files_ids())) {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator viewed" data-file-id="'.$vrow['id'].'" title="Ja l\'has '.($series['type']=='manga' ? 'llegit' : 'vist').'"><span class="fa fa-fw fa-eye"></span></span>'."\n";
-			} else {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="viewed-indicator not-viewed" data-file-id="'.$vrow['id'].'" title="Encara no l\'has '.($series['type']=='manga' ? 'llegit' : 'vist').'"><span class="fa fa-fw fa-eye-slash"></span></span>'."\n";
-			}
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-			if ($series['type']=='manga') {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="file-launcher" data-file-id="'.$vrow['id'].'" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-title-short="'.htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-position="'.$position.'"><span class="fa fa-fw fa-book-open icon-play"></span>'.$episode_title.'</a> '."\n";
-			} else {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<a class="file-launcher" data-file-id="'.$vrow['id'].'" data-title="'.htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-title-short="'.htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)).'" data-thumbnail="'.(file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg').'" data-position="'.$position.'"><span class="fa fa-fw fa-play icon-play"></span>'.$episode_title.'</a> '."\n";
-			}
-			if (!empty($vrow['comments'])){
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-info tooltip" title="'.str_replace("\n", "<br />", htmlspecialchars($vrow['comments'])).'"><span class="fa fa-fw fa-info-circle"></span></span>'."\n";
-			}
-			if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="new-episode tooltip'.(in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : '').'" data-file-id="'.$vrow['id'].'" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>'."\n";
-			}
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-			if ($series['type']!='manga') {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right">'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-resolution-'.get_resolution_css($links).' tooltip tooltip-right" title="'."Vídeo: ".get_resolution($links).", servei: ".get_provider($links).'">'.htmlspecialchars(get_resolution_short($links)).'</span>'."\n";
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-			}
-			echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
-		} else { //Lost file
-			echo "\t\t\t\t\t\t\t\t\t\t\t".'<tr class="episode episode-unavailable">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td></td>'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td>'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="episode-title">'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="fa fa-fw fa-ban icon-play"></span>'.$episode_title."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="version-lost tooltip" title="Perdut, ens ajudes?"><span class="fa fa-fw fa-ghost"></span></span>'."\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n";
-			echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</td>'."\n";
-			if ($series['type']!='manga') {
-				echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<td class="right"></td>'."\n";
-			}
-			echo "\t\t\t\t\t\t\t\t\t\t\t</tr>\n";
 		}
 	}
 }

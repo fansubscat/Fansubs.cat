@@ -93,6 +93,7 @@
 	--carousel-scaling: 1.25;
 	--background-image: url('../images/site/background_dark_uhd.jpg');
 	--background-image-opacity: 0.5;
+	--divider-border-height: 0.4rem;
 }
 
 .theme-dark {
@@ -244,7 +245,7 @@ a img {
 }
 
 .style-type-catalogue .header, .style-type-news .header, .style-type-fansubs .header, .style-type-settings .header {
-	border-bottom: 0.4rem solid rgb(var(--primary-color));
+	border-bottom: var(--divider-border-height) solid rgb(var(--primary-color));
 }
 
 .main-body, .overlay-page {
@@ -635,6 +636,10 @@ select:not(.date-month) {
 	margin-bottom: 2.5rem;
 	display: flex;
 	align-items: center;
+}
+
+.section-title-with-table {
+	margin-bottom: 1.5rem !important;
 }
 
 .section-title-main::after {

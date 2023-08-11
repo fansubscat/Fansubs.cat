@@ -1066,7 +1066,7 @@ function loadCatalogueIndex() {
 }
 
 function formatDoubleSliderInput(input, value) {
-	var format = $(input).attr('value-formatting');
+	var format = $(input).attr('data-value-formatting');
 	if (format=='time' || format=='time-max') {
 		//Convert minutes to time
 		if (value==120 && format=='time-max') {
@@ -1307,15 +1307,15 @@ $(document).ready(function() {
 		$(".version-missing-links-link").click(function(){
 			showContactScreen('version_lost');
 		});
-		$(".version_tab").click(function(){
-			$(".version_tab").each(function(){
-				$(this).removeClass("version_tab_selected");
+		$(".version-tab").click(function(){
+			$(".version-tab").each(function(){
+				$(this).removeClass("version-tab-selected");
 			});
-			$(".version_content").each(function(){
+			$(".version-content").each(function(){
 				$(this).addClass("hidden");
 			});
-			$(this).addClass("version_tab_selected");
-			$("#version_content_"+$(this).attr('data-version-id')).removeClass("hidden");
+			$(this).addClass("version-tab-selected");
+			$("#version-content-"+$(this).attr('data-version-id')).removeClass("hidden");
 		});
 
 		//Search form
@@ -1333,8 +1333,8 @@ $(document).ready(function() {
 
 		//Autoopen according to parameters
 		if ($('#autoopen_file_id').length>0 && $('#autoopen_file_id').val()!='') {
-			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
-			$('a[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
+			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
+			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}
 
 		$(window).resize(function() {

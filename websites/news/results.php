@@ -220,7 +220,7 @@ else{
 <?php
 if ($page>1 && mysqli_num_rows($result)>0){
 ?>
-							<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : '/pagina/'.($page-1)).'"'); ?>"><i class="fa fa-fw fa-arrow-left"></i> Notícies més noves</a>
+							<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : '/pagina/'.($page-1)).'"'); ?>><i class="fa fa-fw fa-arrow-left"></i> Notícies més noves</a>
 <?php
 }
 mysqli_free_result($result);
@@ -230,7 +230,7 @@ $result = query_latest_news($user, $text, $page+1, 20, $fansub_slug, $show_black
 
 if (mysqli_num_rows($result)>0){
 ?>
-							<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="/pagina/'.($page+1).'"'); ?>">Notícies més antigues <i class="fa fa-fw fa-arrow-right"></i></a>
+							<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="/pagina/'.($page+1).'"'); ?>>Notícies més antigues <i class="fa fa-fw fa-arrow-right"></i></a>
 <?php
 }
 ?>

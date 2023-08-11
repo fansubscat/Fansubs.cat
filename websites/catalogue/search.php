@@ -28,7 +28,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>
 							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
-							<label for="catalogue-search-type">Tipus</label>
+							<label>Tipus</label>
 							<div id="catalogue-search-type" class="singlechoice-selector singlechoice-type">
 								<div class="singlechoice-button singlechoice-selected" onclick="singlechoiceChange(this);" data-value="all"><i class="fa fa-fw fa-grip"></i>Tots</div>
 								<div class="singlechoice-button" onclick="singlechoiceChange(this);" data-value="<?php echo CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID; ?>"><i class="fa fa-fw <?php echo CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON; ?>"></i><?php echo CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME; ?></div>
@@ -46,39 +46,39 @@ foreach ($statuses as $status_id) {
 <?php
 }
 ?>
-							<label for="catalogue-search-duration">Durada mitjana</label>
+							<label>Durada mitjana</label>
 							<div id="catalogue-search-duration" class="double-slider-container">
 								<input id="duration-from-slider" class="double-slider-from" type="range" value="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '1' : '0'; ?>" min="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '1' : '0'; ?>" max="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '100' : '120'; ?>" onchange="loadSearchResults();">
 								<input id="duration-to-slider" class="double-slider-to" type="range" value="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '100' : '120'; ?>" min="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '1' : '0'; ?>" max="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '100' : '120'; ?>" onchange="loadSearchResults();">
-								<div id="duration-from-input" value-formatting="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'time'; ?>" class="double-slider-input-from"><?php echo CATALOGUE_ITEM_TYPE=='manga' ? '1 pàg.' : '0:00:00'; ?></div>
-								<div id="duration-to-input" value-formatting="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'time'; ?>-max" class="double-slider-input-to"><?php echo CATALOGUE_ITEM_TYPE=='manga' ? '100+ pàg.' : '2:00:00+'; ?></div>
+								<div id="duration-from-input" data-value-formatting="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'time'; ?>" class="double-slider-input-from"><?php echo CATALOGUE_ITEM_TYPE=='manga' ? '1 pàg.' : '0:00:00'; ?></div>
+								<div id="duration-to-input" data-value-formatting="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'time'; ?>-max" class="double-slider-input-to"><?php echo CATALOGUE_ITEM_TYPE=='manga' ? '100+ pàg.' : '2:00:00+'; ?></div>
 							</div>
 <?php
 if (!SITE_IS_HENTAI) {
 ?>
-							<label for="catalogue-search-rating">Valoració per edats</label>
+							<label>Valoració per edats</label>
 							<div id="catalogue-search-rating" class="double-slider-container">
 								<input id="rating-from-slider" class="double-slider-from" type="range" value="0" min="0" max="4" onchange="loadSearchResults();">
 								<input id="rating-to-slider" class="double-slider-to" type="range" value="4" min="0" max="4" onchange="loadSearchResults();">
-								<div id="rating-from-input" value-formatting="rating" class="double-slider-input-from">TP</div>
-								<div id="rating-to-input" value-formatting="rating" class="double-slider-input-to">+18</div>
+								<div id="rating-from-input" data-value-formatting="rating" class="double-slider-input-from">TP</div>
+								<div id="rating-to-input" data-value-formatting="rating" class="double-slider-input-to">+18</div>
 							</div>
 <?php
 }
 ?>
-							<label for="catalogue-search-score">Puntuació a <?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'MyDramaList' : 'MyAnimeList'; ?></label>
+							<label>Puntuació a <?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'MyDramaList' : 'MyAnimeList'; ?></label>
 							<div id="catalogue-search-score" class="double-slider-container">
 								<input id="score-from-slider" class="double-slider-from" type="range" value="0" min="0" max="100" onchange="loadSearchResults();">
 								<input id="score-to-slider" class="double-slider-to" type="range" value="100" min="0" max="100" onchange="loadSearchResults();">
-								<div id="score-from-input" value-formatting="score" class="double-slider-input-from">-</div>
-								<div id="score-to-input" value-formatting="score" class="double-slider-input-to">10,0</div>
+								<div id="score-from-input" data-value-formatting="score" class="double-slider-input-from">-</div>
+								<div id="score-to-input" data-value-formatting="score" class="double-slider-input-to">10,0</div>
 							</div>
-							<label for="catalogue-search-year">Any de primera <?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'publicació' : 'emissió'; ?></label>
+							<label>Any de primera <?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'publicació' : 'emissió'; ?></label>
 							<div id="catalogue-search-year" class="double-slider-container">
 								<input id="year-from-slider" class="double-slider-from" type="range" value="1950" min="1950" max="<?php echo date('Y'); ?>" onchange="loadSearchResults();">
 								<input id="year-to-slider" class="double-slider-to" type="range" value="<?php echo date('Y'); ?>" min="1950" max="<?php echo date('Y'); ?>" onchange="loadSearchResults();">
-								<div id="year-from-input" value-formatting="year" class="double-slider-input-from">-</div>
-								<div id="year-to-input" value-formatting="year" class="double-slider-input-to"><?php echo date('Y'); ?></div>
+								<div id="year-from-input" data-value-formatting="year" class="double-slider-input-from">-</div>
+								<div id="year-to-input" data-value-formatting="year" class="double-slider-input-to"><?php echo date('Y'); ?></div>
 							</div>
 							<label for="catalogue-search-fansub">Fansub</label>
 							<select id="catalogue-search-fansub" onchange="loadSearchResults();">

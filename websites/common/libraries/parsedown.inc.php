@@ -1452,11 +1452,11 @@ class Parsedown
     {
         if ($this->breaksEnabled)
         {
-            $text = preg_replace('/[ ]*\n/', "<br />\n", $text);
+            $text = preg_replace('/[ ]*\n/', "<br>\n", $text); /* FSC: Replaced "<br />" with "<br>" */
         }
         else
         {
-            $text = preg_replace('/(?:[ ][ ]+|[ ]*\\\\)\n/', "<br />\n", $text);
+            $text = preg_replace('/(?:[ ][ ]+|[ ]*\\\\)\n/', "<br>\n", $text); /* FSC: Replaced "<br />" with "<br>" */
             $text = str_replace(" \n", "\n", $text);
         }
 

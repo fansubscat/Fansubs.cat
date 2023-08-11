@@ -1028,7 +1028,7 @@
 	margin-left: calc(0rem - var(--page-padding));
 	margin-right: calc(0rem - var(--page-padding));
 	background-color: rgb(var(--secondary-color));
-	border-bottom: 0.4rem solid rgb(var(--primary-color));
+	border-bottom: var(--divider-border-height) solid rgb(var(--primary-color));
 	--swiper-pagination-bottom: 0;
 	--swiper-pagination-bullet-size: 1rem;
 	--swiper-pagination-bullet-inactive-color: rgb(var(--positive-color));
@@ -1095,7 +1095,7 @@
 	overflow: hidden;
 }
 
-.continue-watching-thumbnail .image-link > img {
+.continue-watching-thumbnail .image-link > img, .episode-thumbnail > img {
 	display: block;
 	width: 100%; 
 	height: 100%;
@@ -1159,7 +1159,7 @@
 	right: -0.1rem;
 }
 
-.continue-watching-thumbnail .play-button {
+.continue-watching-thumbnail .play-button, .episode-thumbnail .play-button {
 	font-size: 2rem;
 	width: 4rem; 
 	height: 4rem;
@@ -1176,7 +1176,7 @@
 	transition: opacity var(--fast-animation-duration) ease;
 }
 
-.continue-watching-thumbnail .play-button.fa-play::before {
+.continue-watching-thumbnail .play-button.fa-play::before, .episode-thumbnail .play-button.fa-play::before {
 	padding-left: 0.3rem;
 }
 
@@ -1191,7 +1191,7 @@
 	filter: drop-shadow(0 0 1px rgb(var(--always-negative-color)));
 }
 
-.continue-watching-thumbnail .progress {
+.continue-watching-thumbnail .progress, .episode-thumbnail .progress {
 	display: block;
 	height: 0.5rem;
 	background: rgb(var(--primary-color));
@@ -1293,6 +1293,14 @@
 
 /* Series screen */
 
+.is-series-page .header {
+	border-bottom: var(--divider-border-height) solid transparent;
+}
+
+.is-series-page .header > * {
+	z-index: 1;
+}
+
 .series-header {
 	width: 100%; 
 	height: 40rem;
@@ -1300,8 +1308,9 @@
 	position: relative;
 	overflow: hidden;
 	justify-content: center;
-	border-bottom: 0.4rem solid rgb(var(--primary-color));
-	box-sizing: content-box;
+	margin-top: calc(-1 * calc(var(--page-padding) + var(--page-padding) + var(--header-height) + var(--divider-border-height)));
+	-webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 30%);
+	mask-image: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 30%);
 }
 
 .series-header img.background {
@@ -1309,7 +1318,138 @@
 	width: 100%; 
 	height: 100%;
 	object-fit: cover;
+	-webkit-mask-image: linear-gradient(to bottom, rgba(255,255,255,1) 70%,rgba(255,255,255,0) 100%);
+	mask-image: linear-gradient(to bottom, rgba(255,255,255,1) 70%,rgba(255,255,255,0) 100%);
 }
+
+.series-data {
+	position: absolute;
+	bottom: 0;
+	padding-left: calc(2 * var(--page-padding) + 26rem);
+	padding-right: var(--page-padding);
+	width: 100%;
+	text-align: left;
+	display: flex;
+	flex-direction: row;
+	align-items: end;
+}
+
+.series-subheader {
+	display: flex;
+	flex-direction: row;
+}
+
+.series-thumbnail {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 0.8rem;
+}
+
+.series-thumbnail-holder {
+	margin-top: -31rem;
+	z-index: 1;
+	width: 26rem;
+	height: 36.8rem;
+	min-width: 26rem;
+	min-height: 36.8rem;
+	max-width: 26rem;
+	max-height: 36.8rem;
+	filter: drop-shadow(0 0 2.6rem rgba(var(--negative-color),0.5));
+}
+
+.series-titles {
+	flex-grow: 1;
+}
+
+.series-title {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 3.5rem;
+	line-height: 1.15;
+	margin: 0;
+}
+
+.series-alternate-names {
+	font-size: 1.85rem;
+	line-height: 1.3;
+}
+
+.series-synopsis {
+	width: 100%;
+	font-size: 1.5rem;
+	line-height: 1.2;
+	padding-left: var(--page-padding);
+	text-align: left;
+}
+
+.version-content {
+	font-size: 1.6rem;
+	text-align: left;
+}
+
+.episode-table {
+	width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+.episode-table tbody tr {
+	border-bottom: 0.1rem solid rgba(255,255,255,0.1);
+}
+
+.episode-table tbody tr:last-child {
+	border-bottom: none;
+}
+
+.episode-table tbody tr:nth-child(even){
+	background-color: rgba(255,255,255,0.02);
+}
+
+.episode-table td {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
+.episode-thumbnail-cell {
+	width: 21.3rem;
+}
+
+.episode-thumbnail {
+	width: 21.3rem;
+	height: 12rem;
+	position: relative;
+	transition: transform var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
+	overflow: hidden;
+	z-index: 1;
+	transform-style: preserve-3d;
+	border-radius: 1rem;
+}
+
+.episode-unavailable .episode-thumbnail, .episode-unavailable .episode-thumbnail .play-button {
+	background: rgb(var(--neutral-color));
+}
+
+.episode-thumbnail-missing {
+	background: rgb(var(--secondary-color));
+}
+
+.episode-title-cell {
+	padding: 0 var(--page-padding);
+}
+
+.episode-seen-cell {
+	width: 10rem;
+	text-align: right;
+}
+
+.file-launcher {
+	cursor: pointer;
+}
+
+.extra-content {
+	margin-top: 2.5rem;
+}
+
 /* TODO */
 
 @media (hover: hover) and (pointer: fine) {
@@ -1341,7 +1481,7 @@
 		opacity: 0;
 	}
 
-	.continue-watching-thumbnail:hover .image-link > img {
+	.continue-watching-thumbnail:hover .image-link > img, .file-launcher:hover .episode-thumbnail > img {
 		filter: brightness(0.8);
 		transform: scale(1.1);
 	}
@@ -1350,11 +1490,11 @@
 		opacity: 1;
 	}
 
-	.continue-watching-thumbnail .play-button {
+	.continue-watching-thumbnail .play-button, .file-launcher .episode-thumbnail .play-button {
 		opacity: 0;
 	}
 
-	.continue-watching-thumbnail:hover .play-button {
+	.continue-watching-thumbnail:hover .play-button, .file-launcher:hover .episode-thumbnail .play-button {
 		opacity: 1;
 	}
 
@@ -1412,6 +1552,10 @@
 
 	.video-js .vjs-volume-control:hover .vjs-volume-tooltip {
 		font-size: .6em;
+	}
+
+	.episode:not(.episode-unavailable):hover {
+		background-color: rgba(255,255,255,0.1);
 	}
 }
 
@@ -1498,7 +1642,7 @@
 		right: -0.1rem;
 	}
 
-	.continue-watching-thumbnail .play-button {
+	.continue-watching-thumbnail .play-button, .file-launcher .episode-thumbnail .play-button {
 		font-size: 1.4rem;
 		width: 3rem; 
 		height: 3rem;
@@ -1510,7 +1654,7 @@
 		font-size: 1.8rem;
 	}
 
-	.continue-watching-thumbnail .progress {
+	.continue-watching-thumbnail .progress, .file-launcher .episode-thumbnail .progress {
 		height: 0.3rem;
 	}
 
