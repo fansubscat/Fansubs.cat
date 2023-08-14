@@ -1303,8 +1303,8 @@ h2.section-title:first-of-type {
 
 .thumbnail .versions .version-status, .floating-info-versions-icons .version-status {
 	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
-	width: 0.5rem;
-	height: 0.5rem;
+	width: 0.6rem;
+	height: 0.6rem;
 	border-radius: 100%;
 	position: absolute;
 	bottom: 0;

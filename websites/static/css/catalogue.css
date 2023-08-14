@@ -1151,8 +1151,8 @@
 
 .continue-watching-thumbnail .image-link .versions .version-status {
 	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
-	width: 0.5rem;
-	height: 0.5rem;
+	width: 0.6rem;
+	height: 0.6rem;
 	border-radius: 100%;
 	position: absolute;
 	bottom: 0;
@@ -1390,15 +1390,8 @@
 .episode-table {
 	width: 100%;
 	border-spacing: 0;
-	border-collapse: collapse;
-}
-
-.episode-table tbody tr {
-	border-bottom: 0.1rem solid rgba(255,255,255,0.1);
-}
-
-.episode-table tbody tr:last-child {
-	border-bottom: none;
+	border-radius: 1rem;
+	overflow: hidden;
 }
 
 .episode-table tbody tr:nth-child(even){
@@ -1406,12 +1399,12 @@
 }
 
 .episode-table td {
-	padding-top: 1rem;
-	padding-bottom: 1rem;
+	padding: 1rem var(--page-padding);
 }
 
 .episode-thumbnail-cell {
 	width: 21.3rem;
+	padding-right: 0 !important;
 }
 
 .episode-thumbnail {
@@ -1434,7 +1427,6 @@
 }
 
 .episode-title-cell {
-	padding: 0 var(--page-padding);
 }
 
 .episode-seen-cell {
@@ -1448,6 +1440,135 @@
 
 .extra-content {
 	margin-top: 2.5rem;
+}
+
+.version-tab-container {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	margin-top: 1.1rem;
+	justify-content: center;
+}
+
+.version-tab-container .version-tab:first-child {
+	margin-left: 0;
+}
+
+.version-tab-container .version-tab:last-child {
+	margin-right: 0;
+}
+
+.version-tab {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	cursor: pointer;
+	flex-grow: 1;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+	padding-left: var(--page-padding);
+	padding-right: var(--page-padding);
+	font-size: 2rem;
+	flex-basis: 0;
+	justify-content: center;
+	align-self: stretch;
+	border: 0.1rem solid rgb(var(--neutral-color));
+	margin: 0 0.5rem;
+	border-radius: 1rem;
+	max-width: 50%;
+}
+
+.version-tab > * {
+	opacity: 0.5;
+}
+
+.version-tab-selected {
+	border: 0.1rem solid rgb(var(--primary-color));
+	border-radius: 1rem;
+	z-index: 2;
+	opacity: 1;
+}
+
+.version-tab-selected > * {
+	opacity: 1;
+}
+
+.division-header {
+	display: block;
+	font-size: 2rem;
+	padding: calc(var(--page-padding) / 2) 0;
+}
+
+.division-header-inner {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.division-cover {
+	margin-right: var(--page-padding);
+	height: 12rem;
+	width: 8.5rem;
+	object-fit: cover;
+	border-radius: 0.5rem;
+}
+
+.division-title {
+	line-height: 1;
+}
+
+.division-elements {
+	font-size: 1.5rem;
+}
+
+.division-arrow {
+	margin-left: 0.5rem;
+	transition: rotate var(--fast-animation-duration) ease-in-out;
+}
+
+details[open]:not(.closing) .division-arrow {
+	rotate: 90deg;
+}
+
+.division-unavailable, .episode-unavailable {
+	opacity: 0.5;
+}
+
+.version-fansub-icons .fansubs {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	margin-right: 1rem;
+}
+
+.version-fansub-icons .fansubs .fansub {
+	display: flex;
+	justify-content: left;
+	align-items: center;
+	margin-left: -0.4rem;
+}
+
+.version-fansub-icons .fansubs .fansub:first-child {
+	margin-left: 0;
+}
+
+.version-fansub-icons .fansubs .fansub img {
+	display: inline;
+	border-radius: 100%;
+	width: 3rem;
+	height: 3rem;
+}
+
+.version-fansub-icons .version-status {
+	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
+	width: 0.9rem;
+	height: 0.9rem;
+	border-radius: 100%;
+	position: absolute;
+	bottom: 0;
+	right: -0.1rem;
 }
 
 /* TODO */
@@ -1555,6 +1676,10 @@
 	}
 
 	.episode:not(.episode-unavailable):hover {
+		background-color: rgba(255,255,255,0.1);
+	}
+
+	.version-tab:not(.version-tab-selected):hover {
 		background-color: rgba(255,255,255,0.1);
 	}
 }

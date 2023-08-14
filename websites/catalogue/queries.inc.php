@@ -753,6 +753,78 @@ function query_series_by_slug($slug) {
 	return query($final_query);
 }
 
+function query_series_data_for_series_page($series_id, $include_hidden) {
+	$series_id = escape($series_id);
+	$final_query = "SELECT v.*,
+				GROUP_CONCAT(DISTINCT CONCAT(v.id, '___', v.status, '___', f.name, '___', f.type, '___', f.id)
+					ORDER BY f.name
+					SEPARATOR '|'
+				) fansub_info,
+				GROUP_CONCAT(DISTINCT f.name
+					ORDER BY f.name
+					SEPARATOR ' + ') fansub_name
+			FROM version v
+				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+				LEFT JOIN fansub f ON vf.fansub_id=f.id
+			WHERE ".($include_hidden ? '1' : 'v.is_hidden=0')."
+				AND v.series_id=$series_id
+			GROUP BY v.id
+			ORDER BY v.status ASC,
+				v.created ASC";
+	return query($final_query);
+}
+
+function query_episodes_for_series_version($series_id, $version_id) {
+	$series_id = escape($series_id);
+	$version_id = escape($version_id);
+	$final_query = "SELECT e.*,
+				IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title,
+				d.number division_number,
+				d.name division_name
+			FROM episode e
+				LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=$version_id
+				LEFT JOIN division d ON e.division_id=d.id
+			WHERE e.series_id=$series_id
+			ORDER BY d.number IS NULL ASC,
+				d.number ASC,
+				e.number IS NULL ASC,
+				e.number ASC,
+				IFNULL(et.title,e.description) ASC";
+	return query($final_query);
+}
+
+function query_available_files_in_version($version_id, $episode_ids, $linked_episode_ids) {
+	$version_id = escape($version_id);
+	$final_query = "SELECT f.*
+			FROM file f
+			WHERE ((f.episode_id IN (".implode(',',$episode_ids).") AND f.version_id=$version_id)
+				OR (f.episode_id IN (".implode(',',$linked_episode_ids).") AND f.version_id IN (
+					SELECT v2.id
+					FROM episode e2
+						LEFT JOIN series s ON e2.series_id=s.id
+						LEFT JOIN version v2 ON v2.series_id=s.id
+						LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id
+					WHERE vf.fansub_id IN (
+						SELECT fansub_id
+						FROM rel_version_fansub
+						WHERE version_id=$version_id)
+					)
+				)
+			) AND f.is_lost=0
+			ORDER BY f.id ASC";
+	return query($final_query);
+}
+
+function query_extras_by_version_id($version_id) {
+	$version_id = escape($version_id);
+	$final_query = "SELECT DISTINCT f.extra_name
+			FROM file f
+			WHERE version_id=$version_id
+				AND f.episode_id IS NULL
+			ORDER BY extra_name ASC";
+	return query($final_query);
+}
+
 function query_related_series($user, $series_id, $series_author, $num_of_genres_in_common, $max_items, $own_type) {
 	$series_id=intval($series_id);
 	$series_author=escape($series_author);

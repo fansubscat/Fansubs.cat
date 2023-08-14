@@ -34,7 +34,7 @@ function validate_hentai_ajax() {
 function get_fansub_preposition_name($text){
 	$first = mb_strtoupper(substr($text, 0, 1));
 	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
-		return "d'$text";
+		return "d’$text";
 	}
 	return "de $text";
 }
