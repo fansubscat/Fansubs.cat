@@ -1392,6 +1392,7 @@
 	border-spacing: 0;
 	border-radius: 1rem;
 	overflow: hidden;
+	background: rgba(var(--card-background-color),0.5);
 }
 
 .episode-table tbody tr:nth-child(even){

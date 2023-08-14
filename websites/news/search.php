@@ -20,16 +20,38 @@ if (!is_robot()) {
 
 require_once("../common.fansubs.cat/header.inc.php");
 
-$start_date = strtotime(date('2003-05-01'));
-$today_date = strtotime(date('Y-m-01'));
+function get_month_from_yyyy_mm($yyyymm){
+	$start_date = strtotime(date('2003-05-01'));
+	$start_year = date('Y', $start_date);
+	$start_month = date('m', $start_date);
+	$passed_date = strtotime(date($yyyymm.'-01'));
+	$passed_year = date('Y', $passed_date);
+	$passed_month = date('m', $passed_date);
+	return (($passed_year - $start_year) * 12) + ($passed_month - $start_month);
+}
 
-$start_year = date('Y', $start_date);
-$today_year = date('Y', $today_date);
+$max_date = get_month_from_yyyy_mm(date('Y-m'));
 
-$start_month = date('m', $start_date);
-$today_month = date('m', $today_date);
-
-$max_date = (($today_year - $start_year) * 12) + ($today_month - $start_month);
+//Check and restore search parameters
+if (isset($_GET['min_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_GET['min_month']) && $_GET['min_month']>='2003-05') {
+	$param_min_month_checked = $_GET['min_month'];
+	$param_min_month = get_month_from_yyyy_mm($param_min_month_checked);
+} else {
+	$param_min_month_checked = '2003-05';
+	$param_min_month = get_month_from_yyyy_mm('2003-05');
+}
+if (isset($_GET['max_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_GET['max_month']) && $_GET['max_month']<=date('Y-m')) {
+	$param_max_month_checked = $_GET['max_month'];
+	$param_max_month = get_month_from_yyyy_mm($param_max_month_checked);
+} else {
+	$param_max_month_checked = date('Y-m');
+	$param_max_month = get_month_from_yyyy_mm(date('Y-m'));
+}
+if (isset($_GET['fansub'])) {
+	$param_fansub = $_GET['fansub'];
+} else {
+	$param_fansub = -1;
+}
 ?>
 					<div class="search-layout">
 						<input class="search-base-url" type="hidden" value="<?php echo SITE_IS_HENTAI ? '/hentai/cerca' : '/cerca'; ?>">
@@ -39,30 +61,30 @@ $max_date = (($today_year - $start_year) * 12) + ($today_month - $start_month);
 							<input id="news-search-query" type="text" oninput="loadSearchResults(1);" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
 							<label for="news-search-date">Mes de publicació</label>
 							<div id="news-search-date" class="double-slider-container">
-								<input id="date-from-slider" class="double-slider-from" type="range" value="0" min="0" max="<?php echo $max_date; ?>" onchange="loadSearchResults(1);">
-								<input id="date-to-slider" class="double-slider-to" type="range" value="<?php echo $max_date; ?>" min="0" max="<?php echo $max_date; ?>" onchange="loadSearchResults(1);">
-								<div id="date-from-input" value-formatting="date" class="double-slider-input-from">05/2003</div>
-								<div id="date-to-input" value-formatting="date" class="double-slider-input-to"><?php echo date('m/Y'); ?></div>
+								<input id="date-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_month; ?>" min="0" max="<?php echo $max_date; ?>" onchange="loadSearchResults(1);">
+								<input id="date-to-slider" class="double-slider-to" type="range" value="<?php echo $param_max_month; ?>" min="0" max="<?php echo $max_date; ?>" onchange="loadSearchResults(1);">
+								<div id="date-from-input" value-formatting="date" class="double-slider-input-from"><?php echo date('m/Y',strtotime(date($param_min_month_checked.'-01'))); ?></div>
+								<div id="date-to-input" value-formatting="date" class="double-slider-input-to"><?php echo date('m/Y',strtotime(date($param_max_month_checked.'-01'))); ?></div>
 							</div>
 							<label for="news-search-fansub">Fansub</label>
 							<select id="news-search-fansub" onchange="loadSearchResults(1);">
 <?php
 if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
 ?>
-								<option value="-1">Tots (fins i tot llista negra)</option>
-								<option value="-2">Tots (excepte llista negra)</option>
-								<option value="-3">Només notícies de Fansubs.cat</option>
+								<option value="-1"<?php echo $param_fansub==-1 ? ' selected' : ''; ?>>Tots (fins i tot llista negra)</option>
+								<option value="-2"<?php echo $param_fansub==-2 ? ' selected' : ''; ?>>Tots (excepte llista negra)</option>
+								<option value="-3"<?php echo $param_fansub==-3 ? ' selected' : ''; ?>>Només notícies de Fansubs.cat</option>
 <?php
 } else {
 ?>
-								<option value="-1">Tots els fansubs</option>
-								<option value="-3">Notícies pròpies de Fansubs.cat</option>
+								<option value="-1"<?php echo $param_fansub==-1 ? ' selected' : ''; ?>>Tots els fansubs</option>
+								<option value="-3"<?php echo $param_fansub==-3 ? ' selected' : ''; ?>>Només notícies de Fansubs.cat</option>
 <?php
 }
 $result = query_all_fansubs_with_news($user);
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-								<option value="<?php echo $row['slug']; ?>"<?php echo (!empty($_GET['fansub']) && $_GET['fansub']==$row['slug']) ? ' selected' : ''; ?>><?php echo $row['name']; ?></option>
+								<option value="<?php echo $row['slug']; ?>"<?php echo $param_fansub==$row['slug'] ? ' selected' : ''; ?>><?php echo $row['name']; ?></option>
 <?php
 }
 ?>

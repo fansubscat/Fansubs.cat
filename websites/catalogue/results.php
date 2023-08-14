@@ -26,7 +26,7 @@ if (defined('PAGE_IS_SEARCH')) {
 	$length_type=(CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'minutes');
 	$fansub_slug = NULL;
 	$show_blacklisted_fansubs = TRUE;
-	$show_lost_content = TRUE;
+	$show_lost_content = FALSE;
 	$show_no_demographics = FALSE;
 	$demographics=array();
 	$genres_include=array();
@@ -36,7 +36,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		$min_score = intval($_POST['min_score'])/10;
 		$max_score = intval($_POST['max_score'])/10;
 	}
-	if (isset($_POST['min_rating']) && isset($_POST['max_rating']) && is_numeric($_POST['min_rating']) && is_numeric($_POST['max_rating'])) {
+	if (isset($_POST['min_rating']) && isset($_POST['max_rating']) && is_numeric($_POST['min_rating']) && is_numeric($_POST['max_rating']) && !SITE_IS_HENTAI) {
 		for ($i=intval($_POST['min_rating']); $i<=intval($_POST['max_rating']);$i++) {
 			switch($i) {
 				case 0:
@@ -72,8 +72,8 @@ if (defined('PAGE_IS_SEARCH')) {
 	if (!empty($_POST['fansub']) && $_POST['fansub']!='-1' && $_POST['fansub']!='-2') {
 		$fansub_slug = $_POST['fansub'];
 	}
-	if (!empty($_POST['hide_lost_content'])) {
-		$show_lost_content = FALSE;
+	if (!empty($_POST['show_lost_content'])) {
+		$show_lost_content = TRUE;
 	}
 	if (isset($_POST['demographics']) && is_array($_POST['demographics'])) {
 		$show_no_demographics = FALSE;

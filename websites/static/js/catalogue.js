@@ -1062,9 +1062,41 @@ function launchSearch(query) {
 	window.location.href=$('.filter-button').attr('href')+(query!='' ? '/'+encodeURIComponent(query) : '');
 }
 
+function formatCatalogueSearchQueryString(values) {
+	var queryString = "?";
+	queryString+='min_duration='+values.min_duration+'&max_duration='+values.max_duration;
+	queryString+='&min_rating='+values.min_rating+'&max_rating='+values.max_rating;
+	queryString+='&min_score='+values.min_score+'&max_score='+values.max_score;
+	queryString+='&min_year='+values.min_year+'&max_year='+values.max_year;
+	if (values.fansub!='-1') {
+		queryString+='&fansub='+values.fansub;
+	}
+	if (values.full_catalogue=='1') {
+		queryString+='&full_catalogue=1';
+	}
+	if (values.show_lost_content=='1') {
+		queryString+='&show_lost_content=1';
+	}
+	if (values.type!='all') {
+		queryString+='&type='+values.type;
+	}
+	for(var i=0;i<values['status[]'].length;i++) {
+		queryString+='&status[]='+values['status[]'][i];
+	}
+	for(var i=0;i<values['demographics[]'].length;i++) {
+		queryString+='&demographics[]='+values['demographics[]'][i];
+	}
+	for(var i=0;i<values['genres_include[]'].length;i++) {
+		queryString+='&genres_include[]='+values['genres_include[]'][i];
+	}
+	for(var i=0;i<values['genres_exclude[]'].length;i++) {
+		queryString+='&genres_exclude[]='+values['genres_exclude[]'][i];
+	}
+	return queryString;
+}
+
 function loadSearchResults() {
 	var query = $('#catalogue-search-query').val().trim();
-	history.replaceState(null, null, $('.search-base-url').val()+(query!='' ? '/'+encodeURIComponent(query) : ''));
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
 		$('.loading-message').text('S’està carregant el catàleg...');
 	} else {
@@ -1102,21 +1134,23 @@ function loadSearchResults() {
 	var values = {
 		'min_duration': $('#duration-from-slider').val(),
 		'max_duration': $('#duration-to-slider').val(),
-		'min_rating': $('#rating-from-slider').val(),
-		'max_rating': $('#rating-to-slider').val(),
+		'min_rating': $('#rating-from-slider').length>0 ? $('#rating-from-slider').val() : 0,
+		'max_rating': $('#rating-to-slider').length>0 ? $('#rating-to-slider').val() : 4,
 		'min_score': $('#score-from-slider').val(),
 		'max_score': $('#score-to-slider').val(),
 		'min_year': $('#year-from-slider').val(),
 		'max_year': $('#year-to-slider').val(),
 		'fansub': $('#catalogue-search-fansub').val(),
 		'full_catalogue': $('#catalogue-search-include-full-catalogue').is(':checked') ? 1 : 0,
-		'hide_lost_content': $('#catalogue-search-include-lost').is(':checked') ? 0 : 1,
+		'show_lost_content': $('#catalogue-search-include-lost').is(':checked') ? 1 : 0,
 		'type': $('#catalogue-search-type .singlechoice-selected').attr('data-value'),
 		'status[]': statuses,
 		'demographics[]': demographics,
 		'genres_include[]': includedGenres,
 		'genres_exclude[]': excludedGenres
 	};
+
+	history.replaceState(null, null, $('.search-base-url').val()+(query!='' ? '/'+encodeURIComponent(query) : '')+formatCatalogueSearchQueryString(values));
 
 	lastSearchRequest = $.post({
 		url: getBaseUrl()+"/results.php?search=1&query="+encodeURIComponent($('#catalogue-search-query').val()),
@@ -1452,10 +1486,11 @@ $(document).ready(function() {
 		initializeSearchAutocomplete();
 
 		//Remove parameters from URL
-		history.replaceState(null, null, window.location.pathname);
+		//history.replaceState(null, null, window.location.pathname);
 
 		//Autoopen according to parameters
 		if ($('#autoopen_file_id').length>0 && $('#autoopen_file_id').val()!='') {
+			$('.version-tab[data-version-id="'+$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].parentNode.parentNode.parentNode.parentNode.id.split('-').pop()+'"]').click();
 			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
 			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}

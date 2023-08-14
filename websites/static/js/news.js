@@ -5,13 +5,21 @@ function launchSearch(query) {
 	window.location.href='/cerca'+(query!='' ? '/'+encodeURIComponent(query) : '');
 }
 
+function formatNewsSearchQueryString(values) {
+	var queryString = "?";
+	queryString+='min_month='+values.min_month+'&max_month='+values.max_month;
+	if (values.fansub!='-1') {
+		queryString+='&fansub='+values.fansub;
+	}
+	return queryString;
+}
+
 function loadSearchResults(page) {
 	if (page!=currentPage) {
 		currentPage = page;
 		window.scrollTo(0, 0);
 	}
 	var query = $('#news-search-query').val();
-	history.replaceState(null, null, '/cerca'+(query!='' ? '/'+encodeURIComponent(query) : ''));
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
 		$('.loading-message').text('S’estan carregant les notícies...');
 	} else {
@@ -27,14 +35,17 @@ function loadSearchResults(page) {
 	}
 
 	var beginDate = new Date('2003-05-01T00:00:00');
+	var endDate = new Date('2003-05-01T00:00:00');
 	var selectedStartDate = formatDateInternal(addMonths(beginDate, $('#date-from-slider').val()));
-	var selectedEndDate = formatDateInternal(addMonths(beginDate, $('#date-to-slider').val()));
+	var selectedEndDate = formatDateInternal(addMonths(endDate, $('#date-to-slider').val()));
 
 	var values = {
 		'min_month': selectedStartDate,
 		'max_month': selectedEndDate,
 		'fansub': $('#news-search-fansub').val()
 	};
+
+	history.replaceState(null, null, '/cerca'+(query!='' ? '/'+encodeURIComponent(query) : '')+formatNewsSearchQueryString(values));
 
 	lastSearchRequest = $.post({
 		url: "/results.php?search=1&page="+currentPage+"&query="+encodeURIComponent($('#news-search-query').val()),
