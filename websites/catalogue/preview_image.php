@@ -8,6 +8,7 @@ define('IMAGE_HEIGHT', 628);
 define('COVER_WIDTH', 444);
 define('COVER_HEIGHT', 628);
 define('TEXT_MARGIN', 46);
+define('FONT_AWESOME', STATIC_DIRECTORY.'/fonts/font_awesome_solid.ttf');
 define('FONT_REGULAR', STATIC_DIRECTORY.'/fonts/lexend_deca_regular.ttf');
 define('FONT_BOLD', STATIC_DIRECTORY.'/fonts/lexend_deca_bold.ttf');
 define('FONT_LIGHT', STATIC_DIRECTORY.'/fonts/lexend_deca_light.ttf');
@@ -39,17 +40,34 @@ function scale_smallest_side($image, $desired_width, $desired_height) {
 function get_status_color($image, $id){
 	switch ($id){
 		case 1:
-			return imagecolorallocate($image, 0x00, 0x80, 0x00);
+			return imagecolorallocate($image, 0x19, 0x98, 0x00);
 		case 2:
-			return imagecolorallocate($image, 0xFF, 0xFF, 0x00);
+			return imagecolorallocate($image, 0xD1, 0xAD, 0x00);
 		case 3:
-			return imagecolorallocate($image, 0xAD, 0xFF, 0x2F);
+			return imagecolorallocate($image, 0x3C, 0x8E, 0xB1);
 		case 4:
-			return imagecolorallocate($image, 0xFF, 0x7F, 0x50);
+			return imagecolorallocate($image, 0xB3, 0x6E, 0x07);
 		case 5:
-			return imagecolorallocate($image, 0xFF, 0x00, 0x00);
+			return imagecolorallocate($image, 0xBB, 0x13, 0x04);
 		default:
 			return imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
+	}
+}
+
+function get_status_icon_code($id){
+	switch ($id){
+		case 1:
+			return "";
+		case 2:
+			return "";
+		case 3:
+			return "";
+		case 4:
+			return "";
+		case 5:
+			return "";
+		default:
+			return "";
 	}
 }
 
@@ -240,8 +258,8 @@ if (empty($failed)) {
 		foreach ($versions as $version) {
 			$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, FONT_REGULAR, get_text_without_missing_glyphs($version['fansub_name']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN);
 			$current_height = $current_height - 30;
-			imagefttext($image, 50.5, 0, TEXT_MARGIN, $current_height+16, imagecolorallocate($image, 0xFF, 0xFF, 0xFF), FONT_REGULAR, "•");
-			imagefttext($image, 42, 0, TEXT_MARGIN+2, $current_height+12, get_status_color($image, $version['status']), FONT_REGULAR, "•");
+			imagefttext($image, 16, 0, TEXT_MARGIN, $current_height, imagecolorallocate($image, 0xFF, 0xFF, 0xFF), FONT_AWESOME, "");
+			imagefttext($image, 14, 0, TEXT_MARGIN+1, $current_height-1, get_status_color($image, $version['status']), FONT_AWESOME, get_status_icon_code($version['status']));
 			if (substr_count($text, "\n")>0) {
 				$text = implode("\n",array_slice(explode("\n", $text), 0, 1)).'…';
 			}

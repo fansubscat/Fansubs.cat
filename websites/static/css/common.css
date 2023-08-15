@@ -94,6 +94,11 @@
 	--background-image: url('../images/site/background_dark_uhd.jpg');
 	--background-image-opacity: 0.5;
 	--divider-border-height: 0.4rem;
+	--completed-color: 25, 152, 0;
+	--semicompleted-color: 60, 142, 177;
+	--in-progress-color: 209, 173, 0;
+	--abandoned-color: 179, 110, 7;
+	--cancelled-color: 187, 19, 4;
 }
 
 .theme-dark {
@@ -1128,7 +1133,7 @@ h2.section-title:first-of-type {
 	font-size: 1.2rem;
 	padding: 0 1rem;
 	white-space: nowrap;
-	overflow: hidden;
+	overflow: visible;
 	text-overflow: ellipsis;
 	line-height: 1.2;
 	justify-content: center;
@@ -1225,10 +1230,9 @@ h2.section-title:first-of-type {
 }
 
 .status-indicator {
-	border: 0.1rem solid rgb(var(--always-positive-color));
-	width: 1.2rem;
-	height: 1.2rem;
-	border-radius: 99rem;
+	font-size: 1.2rem;
+	background: rgb(var(--always-positive-color));
+	border-radius: 100%;
 }
 
 .thumbnail .versions {
@@ -1244,7 +1248,7 @@ h2.section-title:first-of-type {
 	z-index: 2;
 	backface-visibility: hidden;
 	filter: drop-shadow(0 0 0.2rem rgb(var(--always-negative-color)));
-	padding: 0.2rem;
+	padding: 0.2rem 0.4rem;
 	pointer-events: none;
 }
 
@@ -1252,7 +1256,7 @@ h2.section-title:first-of-type {
 	display: flex;
 	justify-content: left;
 	flex-direction: row;
-	padding: 0.2rem;
+	padding: 0.2rem 0.4rem;
 	margin-right: 0.2rem;
 }
 
@@ -1303,32 +1307,34 @@ h2.section-title:first-of-type {
 
 .thumbnail .versions .version-status, .floating-info-versions-icons .version-status {
 	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
-	width: 0.6rem;
-	height: 0.6rem;
+	width: auto;
+	height: auto;
+	font-size: 0.9rem;
 	border-radius: 100%;
 	position: absolute;
-	bottom: 0;
-	right: -0.1rem;
+	bottom: -0.3rem;
+	right: -0.3rem;
+	background: rgb(var(--always-positive-color));
 }
 
 .status-completed .status-indicator, .version-status.status-completed  {
-	background: green;
+	color: rgb(var(--completed-color));
 }
 
 .status-in-progress .status-indicator, .version-status.status-in-progress  {
-	background: yellow;
+	color: rgb(var(--in-progress-color));
 }
 
 .status-partially-completed .status-indicator, .version-status.status-partially-completed  {
-	background: greenyellow;
+	color: rgb(var(--semicompleted-color));
 }
 
 .status-cancelled .status-indicator, .version-status.status-cancelled  {
-	background: red;
+	color: rgb(var(--cancelled-color));
 }
 
 .status-abandoned .status-indicator, .version-status.status-abandoned  {
-	background: coral;
+	color: rgb(var(--abandoned-color));
 }
 
 /* Begin double slider code from https://medium.com/@predragdavidovic10/native-dual-range-slider-html-css-javascript-91e778134816 */
@@ -1664,7 +1670,7 @@ input:checked + .slider:before {
 	}
 
 	.thumbnail:hover {
-		transform: scale(var(--carousel-scaling));
+		transform: scale(var(--carousel-scaling)) translate(2px, 2px); /*translate is needed to fix blurry text in Linux, WTF */
 		z-index: 9999; /*to go above other carousel elements (z-index 1)*/
 	}
 
@@ -1866,9 +1872,9 @@ input:checked + .slider:before {
 
 	.thumbnail .versions .version-status, .floating-info-versions-icons .version-status {
 		filter: drop-shadow(0 0 0.05rem rgb(var(--always-negative-color)));
-		width: 0.4rem;
-		height: 0.4rem;
-		right: -0.1rem;
+		font-size: 0.6rem;
+		bottom: -0.2rem;
+		right: -0.2rem;
 	}
 
 	.floating-info-bookmark.fas, .floating-info-bookmark.far {

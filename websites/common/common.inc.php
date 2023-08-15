@@ -108,6 +108,23 @@ function get_status_description($id){
 	}
 }
 
+function get_status_css_icons($id){
+	switch ($id){
+		case 1:
+			return "fa fa-fw fa-circle-check";
+		case 2:
+			return "fa fa-fw fa-circle-play";
+		case 3:
+			return "fa fa-fw fa-circle-check";
+		case 4:
+			return "fa fa-fw fa-circle-question";
+		case 5:
+			return "fa fa-fw fa-circle-stop";
+		default:
+			return "fa fa-fw fa-circle";
+	}
+}
+
 function get_prepared_versions($fansub_info) {
 	$fansubs = explode('|',$fansub_info);
 	$versions = array();
@@ -172,7 +189,7 @@ function get_fansub_icons($fansub_info, $versions, $specific_version_id) {
 		foreach ($version['fansubs'] as $fansub) {
 			$result_code.='<div class="fansub"><img src="'.$fansub['icon'].'" title="'.htmlspecialchars($fansub['name']).'"></div>'."\n";
 		}
-		$result_code.='<div class="version-status status-'.get_status($version['status']).'" title="'.htmlspecialchars(get_status_description($version['status'])).'"></div>';
+		$result_code.='<div class="version-status status-'.get_status($version['status']).' '.get_status_css_icons($version['status']).'" title="'.htmlspecialchars(get_status_description($version['status'])).'"></div>';
 		$result_code.='</div>';
 	}
 	return $result_code;

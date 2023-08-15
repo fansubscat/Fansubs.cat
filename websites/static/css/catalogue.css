@@ -788,8 +788,10 @@
 .recommendation .status-indicator {
 	margin-left: 1rem;
 	margin-right: 0.7rem;
-	width: 1.2rem;
-	height: 1.2rem;
+	width: auto;
+	height: auto;
+	font-size: 1.5rem;
+	padding: 0.1rem;
 }
 
 .recommendation .infoholder {
@@ -1151,12 +1153,14 @@
 
 .continue-watching-thumbnail .image-link .versions .version-status {
 	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
-	width: 0.6rem;
-	height: 0.6rem;
+	width: auto;
+	height: auto;
 	border-radius: 100%;
 	position: absolute;
-	bottom: 0;
-	right: -0.1rem;
+	font-size: 0.9rem;
+	bottom: -0.3rem;
+	right: -0.3rem;
+	background: rgb(var(--always-positive-color));
 }
 
 .continue-watching-thumbnail .play-button, .episode-thumbnail .play-button {
@@ -1231,9 +1235,12 @@
 
 .search-status .status-indicator {
 	display: inline-block;
-	width: 1.4rem;
-	height: 1.4rem;
-	margin-bottom: -0.2rem;
+	width: auto;
+	height: auto;
+	font-size: 1.6rem;
+	padding: 0.1rem;
+	position: relative;
+	bottom: -0.1rem;
 }
 
 .autocomplete-item {
@@ -1564,12 +1571,14 @@ details[open]:not(.closing) .division-arrow {
 
 .version-fansub-icons .version-status {
 	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
-	width: 0.9rem;
-	height: 0.9rem;
+	width: auto;
+	height: auto;
+	font-size: 1.5rem;
 	border-radius: 100%;
 	position: absolute;
-	bottom: 0;
-	right: -0.1rem;
+	bottom: -0.5rem;
+	right: -0.5rem;
+	background: rgb(var(--always-positive-color));
 }
 
 /* TODO */
@@ -1763,9 +1772,9 @@ details[open]:not(.closing) .division-arrow {
 
 	.continue-watching-thumbnail .image-link .versions .version-status {
 		filter: drop-shadow(0 0 0.05rem rgb(var(--always-negative-color)));
-		width: 0.4rem;
-		height: 0.4rem;
-		right: -0.1rem;
+		font-size: 0.6rem;
+		bottom: -0.2rem;
+		right: -0.2rem;
 	}
 
 	.continue-watching-thumbnail .play-button, .file-launcher .episode-thumbnail .play-button {

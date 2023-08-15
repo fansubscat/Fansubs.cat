@@ -159,7 +159,7 @@ foreach ($statuses as $status_id) {
 ?>
 							<div class="search-checkboxes search-status status-<?php echo get_status($status_id); ?>">
 								<input id="catalogue-search-status-<?php echo $status_id; ?>" data-id="<?php echo $status_id; ?>" type="checkbox" oninput="loadSearchResults();"<?php echo in_array($status_id, $param_status_array) ? ' checked' : ''; ?>>
-								<label for="catalogue-search-status-<?php echo $status_id; ?>" class="for-checkbox"><span class="status-indicator"></span> <?php echo get_status_description_short($status_id); ?></label>
+								<label for="catalogue-search-status-<?php echo $status_id; ?>" class="for-checkbox"><span class="status-indicator <?php echo get_status_css_icons($status_id); ?>"></span> <?php echo get_status_description_short($status_id); ?></label>
 							</div>
 <?php
 }
