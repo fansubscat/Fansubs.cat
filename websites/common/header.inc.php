@@ -318,11 +318,15 @@ if (PAGE_STYLE_TYPE=='login') {
 						<a href="<?php echo MAIN_URL; ?>/llista-de-fansubs" class="catalogue-selected">Fansubs</a>
 <?php
 			} else if (PAGE_STYLE_TYPE=='settings') {
+				if (!empty($user)) {
 ?>
 						<a href="<?php echo USERS_URL; ?>"<?php echo SETTINGS_ITEM_TYPE=='profile' ? ' class="catalogue-selected"' : ''; ?>>El meu perfil</a>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo USERS_URL; ?>/la-meva-llista"<?php echo SETTINGS_ITEM_TYPE=='list' ? ' class="catalogue-selected"' : ''; ?>>La meva llista</a>
 						<span class="catalogues-separator">|</span>
+<?php
+				}
+?>
 						<a href="<?php echo USERS_URL; ?>/configuracio"<?php echo SETTINGS_ITEM_TYPE=='settings' ? ' class="catalogue-selected"' : ''; ?>>Configuració</a>
 <?php
 			}
