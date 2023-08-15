@@ -102,7 +102,7 @@ if (defined('PAGE_IS_SEARCH')) {
 	}
 }
 
-$result = query_latest_news($user, $text, $page, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
+$result = query_latest_news(!empty($user) ? $user : NULL, $text, $page, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
 
 ?>
 <?php
@@ -226,7 +226,7 @@ if ($page>1 && mysqli_num_rows($result)>0){
 mysqli_free_result($result);
 
 //Do the same query but for the next page, to know if it exists
-$result = query_latest_news($user, $text, $page+1, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
+$result = query_latest_news(!empty($user) ? $user : NULL, $text, $page+1, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
 
 if (mysqli_num_rows($result)>0){
 ?>

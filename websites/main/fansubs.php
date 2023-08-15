@@ -11,7 +11,7 @@ $show_hentai = (is_robot() || (!empty($user) && is_adult() && empty($user['hide_
 						<div class="section">
 							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Actius</h2>
 <?php
-$result = query_fansubs($user, 1);
+$result = query_fansubs(!empty($user) ? $user : NULL, 1);
 
 if (mysqli_num_rows($result)==0){
 ?>
@@ -35,7 +35,7 @@ if ($show_hentai) {
 						<div class="section">
 							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Actius (hentai)</h2>
 <?php
-$result = query_hentai_fansubs($user, 1);
+$result = query_hentai_fansubs(!empty($user) ? $user : NULL, 1);
 
 if (mysqli_num_rows($result)==0){
 ?>
@@ -59,7 +59,7 @@ else{
 						<div class="section">
 							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Històrics</h2>
 <?php
-$result = query_fansubs($user, 0);
+$result = query_fansubs(!empty($user) ? $user : NULL, 0);
 
 if (mysqli_num_rows($result)==0){
 ?>
@@ -83,7 +83,7 @@ if ($show_hentai) {
 						<div class="section">
 							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Històrics (hentai)</h2>
 <?php
-$result = query_hentai_fansubs($user, 0);
+$result = query_hentai_fansubs(!empty($user) ? $user : NULL, 0);
 
 if (mysqli_num_rows($result)==0){
 ?>
