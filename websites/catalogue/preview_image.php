@@ -216,8 +216,8 @@ if (empty($failed)) {
 
 		if (!empty($score)) {
 			$orange = imagecolorallocate($image, 0xFF, 0xC1, 0x00);
-			imagefttext($image, 48, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-150, IMAGE_HEIGHT-TEXT_MARGIN, $orange, FONT_BOLD, number_format($score, 2, ',',' '));
-			imagefttext($image, 17, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-10, IMAGE_HEIGHT-TEXT_MARGIN-14, $white, FONT_REGULAR, "/10");
+			imagefttext($image, 48, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-130, IMAGE_HEIGHT-TEXT_MARGIN, $orange, FONT_BOLD, number_format($score, 2, ',',' '));
+			//imagefttext($image, 17, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-10, IMAGE_HEIGHT-TEXT_MARGIN-14, $white, FONT_REGULAR, "/10");
 		}
 
 		//Genres
@@ -229,7 +229,7 @@ if (empty($failed)) {
 		//First iteration to know the number of lines
 		foreach ($genres as $genre) {
 			$bbox = imagettfbbox(14, 0, FONT_LIGHT, $genre);
-			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2-8*2-10-140);
+			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2-8*2-10-100);
 			if (!$fits) {
 				$current_width = TEXT_MARGIN+10;
 				$lines++;
@@ -241,7 +241,7 @@ if (empty($failed)) {
 		$current_width = TEXT_MARGIN+10;
 		foreach ($genres as $genre) {
 			$bbox = imagettfbbox(14, 0, FONT_LIGHT, $genre);
-			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2-8*2-10-140);
+			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2-8*2-10-100);
 			if (!$fits) {
 				$current_width = TEXT_MARGIN+10;
 				$current_height = $current_height+36;

@@ -249,7 +249,8 @@ function query_insert_or_update_user_version_followed_by_file_id($user_id, $file
  									LEFT JOIN file f ON ufss.file_id=f.id
 									LEFT JOIN episode e ON f.episode_id=e.id
 									LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=f.version_id
-									WHERE f.version_id IN (SELECT f2.version_id
+									WHERE ufss.is_seen=1
+										AND f.version_id IN (SELECT f2.version_id
 												FROM file f2
 												WHERE f2.id=$file_id)
 									ORDER BY e.number IS NULL DESC,
@@ -262,13 +263,25 @@ function query_insert_or_update_user_version_followed_by_file_id($user_id, $file
  									LEFT JOIN file f ON ufss.file_id=f.id
 									LEFT JOIN episode e ON f.episode_id=e.id
 									LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=f.version_id
-									WHERE f.version_id IN (SELECT f2.version_id
+									WHERE ufss.is_seen=1
+										AND f.version_id IN (SELECT f2.version_id
 												FROM file f2
 												WHERE f2.id=$file_id)
 									ORDER BY e.number IS NULL DESC,
 										e.number DESC,
 										IFNULL(et.title, e.description) DESC
 									LIMIT 1),-1)";
+	return query($final_query);
+}
+
+function query_delete_user_version_followed_by_file_id($user_id, $file_id) {
+	$user_id = intval($user_id);
+	$file_id = intval($file_id);
+	$final_query = "DELETE FROM user_version_followed
+			WHERE user_id=$user_id
+				AND version_id=(SELECT f.version_id
+						FROM file f
+						WHERE f.id=$file_id)";
 	return query($final_query);
 }
 
@@ -591,6 +604,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 					AND s.type='".CATALOGUE_ITEM_TYPE."'
 					AND f.is_lost=0
 					AND ufss.is_seen=0
+					AND ufss.position>0
 					AND ".get_internal_hentai_condition()."
 				UNION
 				SELECT f.id file_id,
@@ -742,7 +756,7 @@ function query_series_by_slug($slug) {
 	$slug = escape($slug);
 	$final_query = "SELECT s.*, 
 				YEAR(s.publish_date) year,
-				GROUP_CONCAT(DISTINCT g.name ORDER BY g.name SEPARATOR ', ') genres,
+				GROUP_CONCAT(DISTINCT CONCAT(g.id,'|',g.type,'|',g.name) ORDER BY g.name SEPARATOR ' • ') genres,
 				(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions
 			FROM series s
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
@@ -815,6 +829,85 @@ function query_available_files_in_version($version_id, $episode_ids, $linked_epi
 	return query($final_query);
 }
 
+function query_files_by_episode_id_and_version_id($user_id, $episode_id, $version_id) {
+	//This ends up being printed to the episode list: we need to get the user progress and user seen status
+	$user_id = escape($user_id);
+	$episode_id = escape($episode_id);
+	$version_id = escape($version_id);
+	$final_query = "SELECT f.*,
+				IF(IFNULL(ufss.is_seen, 0)=1,0,IFNULL(ufss.position, 0)/f.length) progress_percent,
+				IFNULL(ufss.is_seen, 0) is_seen
+			FROM file f
+				LEFT JOIN user_file_seen_status ufss ON f.id=ufss.file_id AND ufss.user_id=$user_id
+			WHERE f.episode_id=$episode_id
+				AND f.version_id=$version_id
+			ORDER BY f.variant_name ASC,
+				f.id ASC";
+	return query($final_query);
+}
+
+function query_files_by_linked_episode_id_and_version_id($user_id, $linked_episode_id, $version_id) {
+	//This ends up being printed to the episode list: we need to get the user progress and user seen status
+	$user_id = escape($user_id);
+	$linked_episode_id = escape($linked_episode_id);
+	$version_id = escape($version_id);
+	$final_query = "SELECT f.*,
+				IF(IFNULL(ufss.is_seen, 0)=1,0,IFNULL(ufss.position, 0)/f.length) progress_percent,
+				IFNULL(ufss.is_seen, 0) is_seen
+			FROM file f
+				LEFT JOIN user_file_seen_status ufss ON f.id=ufss.file_id AND ufss.user_id=$user_id
+			WHERE f.episode_id=$linked_episode_id
+				AND f.version_id IN (
+					SELECT v2.id
+					FROM episode e2
+						LEFT JOIN series s ON e2.series_id=s.id
+						LEFT JOIN version v2 ON v2.series_id=s.id
+						LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id
+					WHERE vf.fansub_id IN (
+						SELECT fansub_id
+						FROM rel_version_fansub
+						WHERE version_id=$version_id
+					)
+						AND e2.id=$linked_episode_id
+				)
+			ORDER BY f.variant_name ASC,
+				f.id ASC";
+	return query($final_query);
+}
+
+function query_series_from_episode_id($episode_id) {
+	$episode_id = escape($episode_id);
+	$final_query = "SELECT s.*
+			FROM episode e
+				LEFT JOIN series s ON e.series_id=s.id
+			WHERE e.id=$episode_id";
+	return query($final_query);
+}
+
+function query_version_from_linked_episode_id_and_version_id($linked_episode_id, $version_id) {
+	$linked_episode_id = escape($linked_episode_id);
+	$version_id = escape($version_id);
+	$final_query = "SELECT v.*,
+				GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name
+			FROM version v
+				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+				LEFT JOIN fansub f ON vf.fansub_id=f.id
+			WHERE v.id IN (
+				SELECT v2.id
+				FROM episode e2
+					LEFT JOIN series s ON e2.series_id=s.id
+					LEFT JOIN version v2 ON v2.series_id=s.id
+					LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id
+				WHERE vf.fansub_id IN (
+					SELECT fansub_id
+					FROM rel_version_fansub
+					WHERE version_id=$version_id
+				)
+					AND e2.id=$linked_episode_id
+			)";
+	return query($final_query);
+}
+
 function query_extras_by_version_id($version_id) {
 	$version_id = escape($version_id);
 	$final_query = "SELECT DISTINCT f.extra_name
@@ -822,6 +915,23 @@ function query_extras_by_version_id($version_id) {
 			WHERE version_id=$version_id
 				AND f.episode_id IS NULL
 			ORDER BY extra_name ASC";
+	return query($final_query);
+}
+
+function query_extras_files_by_extra_name_and_version_id($user_id, $extra_name, $version_id) {
+	//This ends up being printed to the episode list: we need to get the user progress and user seen status
+	$user_id = escape($user_id);
+	$extra_name = escape($extra_name);
+	$version_id = escape($version_id);
+	$final_query = "SELECT f.*,
+				IF(IFNULL(ufss.is_seen, 0)=1,0,IFNULL(ufss.position, 0)/f.length) progress_percent,
+				IFNULL(ufss.is_seen, 0) is_seen
+			FROM file f
+				LEFT JOIN user_file_seen_status ufss ON f.id=ufss.file_id AND ufss.user_id=$user_id
+			WHERE f.episode_id IS NULL
+				AND f.extra_name='$extra_name'
+				AND f.version_id=$version_id
+			ORDER BY f.id ASC";
 	return query($final_query);
 }
 

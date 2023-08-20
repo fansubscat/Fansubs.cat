@@ -7,6 +7,7 @@ RewriteCond %{THE_REQUEST} ^(.+)\.php(\?\S*)?\ HTTP/ [NC]
 RewriteCond %{REQUEST_URI} !autocomplete\.php
 RewriteCond %{REQUEST_URI} !get_file_data\.php
 RewriteCond %{REQUEST_URI} !mark_as_seen\.php
+RewriteCond %{REQUEST_URI} !remove_from_continue_watching\.php
 RewriteCond %{REQUEST_URI} !report_file_status\.php
 RewriteCond %{REQUEST_URI} !error\.php
 RewriteCond %{REQUEST_URI} !counter\.php

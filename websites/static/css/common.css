@@ -27,8 +27,12 @@
 }
 
 @font-face {
-	font-family: 'fansubscat_icons';
+	font-family: "fansubscat_icons";
 	src: url('../fonts/fansubscat_icons.ttf');
+}
+
+b {
+	font-family: "lexend_deca_bold";
 }
 
 /* Custom icons */
@@ -1248,7 +1252,7 @@ h2.section-title:first-of-type {
 	z-index: 2;
 	backface-visibility: hidden;
 	filter: drop-shadow(0 0 0.2rem rgb(var(--always-negative-color)));
-	padding: 0.2rem 0.4rem;
+	padding: 0.2rem 0.5rem;
 	pointer-events: none;
 }
 
@@ -1258,6 +1262,7 @@ h2.section-title:first-of-type {
 	flex-direction: row;
 	padding: 0.2rem 0.4rem;
 	margin-right: 0.2rem;
+	filter: drop-shadow(0 0 0.2rem rgb(var(--always-negative-color)));
 }
 
 .thumbnail .versions .fansubs {
@@ -1306,7 +1311,6 @@ h2.section-title:first-of-type {
 }
 
 .thumbnail .versions .version-status, .floating-info-versions-icons .version-status {
-	filter: drop-shadow(0 0 0.1rem rgb(var(--always-negative-color)));
 	width: auto;
 	height: auto;
 	font-size: 0.9rem;
@@ -1670,7 +1674,7 @@ input:checked + .slider:before {
 	}
 
 	.thumbnail:hover {
-		transform: scale(var(--carousel-scaling)) translate(2px, 2px); /*translate is needed to fix blurry text in Linux, WTF */
+		transform: scale(var(--carousel-scaling)) translate(2px, 2px); /*translate is needed to fix blurry text in Chrome, WTF */
 		z-index: 9999; /*to go above other carousel elements (z-index 1)*/
 	}
 
@@ -1871,7 +1875,6 @@ input:checked + .slider:before {
 	}
 
 	.thumbnail .versions .version-status, .floating-info-versions-icons .version-status {
-		filter: drop-shadow(0 0 0.05rem rgb(var(--always-negative-color)));
 		font-size: 0.6rem;
 		bottom: -0.2rem;
 		right: -0.2rem;

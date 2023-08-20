@@ -19,6 +19,7 @@ var lastTimeUpdate = 0;
 var hasBeenCasted = false;
 var hasJumpedToInitialPosition = false;
 var lastDoubleClickStart = 0;
+var isCheckingAsSeenProgrammatically = false;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -910,7 +911,7 @@ function closeOverlay() {
 function getPreviousUnreadEpisodes(fileId) {
 	var position  = parseInt($('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-position'));
 	return $('.file-launcher').filter(function(){
-		return parseInt($(this).attr('data-position')) < position;
+		return parseInt($(this).attr('data-position')) < position && $(this).find('.episode-seen-cell input[type="checkbox"]:checked').length==0;
 	});
 }
 
@@ -919,10 +920,22 @@ function setSeenBehavior(value) {
 	$('#seen_behavior').val(value);
 }
 
+function toggleFileSeen(checkbox, fileId) {
+	if (!isCheckingAsSeenProgrammatically) {
+		if (!$(checkbox).is(':checked')) {
+			//Remove from seen
+			executeMarkAsSeen([fileId], false);
+		} else {
+			//Add to seen (and ask for previous if applicable)
+			markAsSeen(fileId, false);
+		}
+	}
+}
+
 function markAsSeen(fileId, dontAsk) {
 	var previouslyUnreadEpisodes = getPreviousUnreadEpisodes(fileId);
 	if (!dontAsk && $('#seen_behavior').val()==0 && previouslyUnreadEpisodes.length>0) {
-		showCustomDialog('Vols marcar també els capítols anteriors com a vistos?', 'La decisió que prenguis s’aplicarà automàticament a partir d’ara.', 'Podràs canviar-la a la configuració d’usuari.', true, true, [
+		showCustomDialog('Vols marcar també els capítols anteriors com a vistos?', 'La decisió que prenguis s’aplicarà automàticament a partir d’ara.', 'Podràs canviar-la a la configuració d’usuari.', false, true, [
 			{
 				text: 'Sí',
 				class: 'normal-button',
@@ -945,6 +958,12 @@ function markAsSeen(fileId, dontAsk) {
 	} else if ($('#seen_behavior').val()==1) {
 		//Mark as seen INCLUDING all unread episodes previous to the current one
 		var previouslyUnreadEpisodeIds = previouslyUnreadEpisodes.get().map(a => $(a).attr('data-file-id'));
+
+		isCheckingAsSeenProgrammatically = true;
+		for (var i=0;i<previouslyUnreadEpisodeIds.length;i++) {
+			$('.file-launcher[data-file-id="'+previouslyUnreadEpisodeIds[i]+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);;
+		}
+		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen(previouslyUnreadEpisodeIds.concat([fileId]), true);
 	} else {
 		//Mark only the current file
@@ -984,7 +1003,7 @@ function removeFromContinueWatching(element, fileId){
 	};
 
 	$.post({
-		url: getBaseUrl()+"/do_remove_from_continue_watching.php",
+		url: getBaseUrl()+"/remove_from_continue_watching.php",
 		data: values,
 		xhrFields: {
 			withCredentials: true

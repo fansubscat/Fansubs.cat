@@ -53,7 +53,7 @@ if (!empty($series['alternate_names'])) {
 }
 ?>
 							</div>
-							<div class="series-tags"><?php echo htmlspecialchars($series['genres']); ?></div>
+							<div class="series-tags"><?php echo get_genres_for_featured($series['genres'], $series['type'], $series['rating']); ?></div>
 						</div>
 					</div>
 					<div class="section series-subheader">
@@ -71,7 +71,7 @@ if ($count==0) {
 ?>
 						<div class="warning">
 							<span class="fa fa-fw fa-exclamation-triangle"></span>
-							<div class="section-content">Aquest <?php echo $cat_config['items_string_s']; ?> encara no disposa de cap versió editada en català. És probable que l’estiguem afegint ara mateix. Torna d’aquí a una estona!</div>
+							<div class="section-content">Encara no disposem de cap versió editada en català. És probable que l’estiguem afegint ara mateix. Torna d’aquí a una estona!</div>
 						</div>
 <?php
 } else {
@@ -203,15 +203,15 @@ if ($count==0) {
 <?php
 					}
 ?>
-								<details id="<?php echo $version['id'].'-'.$cat_config['division_name_lc']; ?>-<?php echo !empty($division['division_number']) ? floatval($division['division_number']) : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
+								<details id="version-<?php echo $version['id']; ?>-division-<?php echo !empty($division['division_number']) ? floatval($division['division_number']) : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
 <?php
 					if (CATALOGUE_ITEM_TYPE=='manga') {
 ?>
-									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Volum únic' : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? 'Volum '.floatval($division['division_number']) : 'Volum únic'))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i><br><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 capítol disponible' : $division_available_episodes[$index].' capítols disponibles') : 'No hi ha cap capítol disponible'; ?></span></div></div></summary>
+									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Volum únic' : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? 'Volum '.floatval($division['division_number']) : 'Volum únic'))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 capítol disponible' : $division_available_episodes[$index].' capítols disponibles') : 'No hi ha cap capítol disponible'; ?></span></div></div></summary>
 <?php
 					} else {
 ?>
-									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"></i><div class="division-title"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : (!empty($division['division_name']) ? $division['division_name'] : 'Temporada '.floatval($division['division_number']))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i><br><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 capítol disponible' : $division_available_episodes[$index].' capítols disponibles') : 'No hi ha cap capítol disponible'; ?></span></div></div></summary>
+									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"></i><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : (!empty($division['division_name']) ? $division['division_name'] : 'Temporada '.floatval($division['division_number']))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 capítol disponible' : $division_available_episodes[$index].' capítols disponibles') : 'No hi ha cap capítol disponible'; ?></span></div></div></summary>
 <?php
 					}
 ?>

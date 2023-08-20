@@ -195,6 +195,24 @@ function get_fansub_icons($fansub_info, $versions, $specific_version_id) {
 	return $result_code;
 }
 
+function get_genre_names_from_array($genre_names) {
+	if (empty($genre_names)) {
+		return "";
+	}
+	$genres_array = explode(' • ',$genre_names);
+	$result_code = '';
+
+	foreach ($genres_array as $genre_data) {
+		$genre = explode('|', $genre_data)[2];
+		if ($result_code!='') {
+			$result_code.=' • ';
+		}
+		$result_code.=htmlspecialchars($genre);
+	}
+
+	return $result_code;
+}
+
 function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	global $user;
 	$versions = get_prepared_versions($series['fansub_info']);
@@ -236,7 +254,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres-score-wrapper">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres-wrapper">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres">'.htmlspecialchars($series['genre_names']).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres">'.get_genre_names_from_array($series['genre_names']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-score">'.(!empty($series['score']) ? number_format($series['score'],2,","," ") : '-').'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";

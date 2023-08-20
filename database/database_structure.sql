@@ -275,11 +275,11 @@ CREATE TABLE `user_fansub_blacklist` (
   `fansub_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `user_file_progress` (
+CREATE TABLE `user_file_seen_status` (
   `user_id` int(11) NOT NULL,
   `file_id` int(11) NOT NULL,
   `is_seen` tinyint(1) NOT NULL DEFAULT 0,
-  `progress` int(11) NOT NULL DEFAULT 0,
+  `position` int(11) NOT NULL DEFAULT 0,
   `last_viewed` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -450,9 +450,9 @@ ALTER TABLE `user_fansub_blacklist`
   ADD PRIMARY KEY (`user_id`,`fansub_id`),
   ADD KEY `user_fansub_blacklist_ibfk_1` (`fansub_id`);
 
-ALTER TABLE `user_file_progress`
+ALTER TABLE `user_file_seen_status`
   ADD PRIMARY KEY (`user_id`,`file_id`),
-  ADD KEY `user_file_progress_ibfk_1` (`file_id`);
+  ADD KEY `user_file_seen_status_ibfk_1` (`file_id`);
 
 ALTER TABLE `user_series_list`
   ADD PRIMARY KEY (`user_id`,`series_id`),

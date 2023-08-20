@@ -118,7 +118,7 @@ function get_internal_catalogue_base_query_portion($user, $apply_hentai_rule=TRU
 				SEPARATOR '|'
 			) fansub_info,
 			GROUP_CONCAT(DISTINCT sg.genre_id) genres,
-			GROUP_CONCAT(DISTINCT REPLACE(REPLACE(g.name, ' ', ' '), '-', '‑')
+			GROUP_CONCAT(DISTINCT CONCAT(g.id,'|',g.type,'|',REPLACE(REPLACE(g.name, ' ', ' '), '-', '‑'))
 				ORDER BY g.name
 				SEPARATOR ' • '
 			) genre_names,

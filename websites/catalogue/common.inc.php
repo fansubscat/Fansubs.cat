@@ -268,18 +268,42 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 	}
 }
 
+function get_episode_title_formatted($series_subtype, $show_episode_numbers, $episode_number, $linked_episode_id, $title, $series_name, $extra_name, $is_extra) {
+	if ($is_extra) {
+		return '<b>'.htmlspecialchars($extra_name).'</b>';
+	}
+
+	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
+		if (!empty($title)){
+			return '<b>Capítol '.str_replace('.',',',floatval($episode_number)).'</b><br>'.htmlspecialchars($title);
+		}
+		else {
+			return '<b>Capítol '.str_replace('.',',',floatval($episode_number)).'</b>';
+		}
+	} else {
+		if (!empty($title)){
+			return '<b>'.htmlspecialchars($title).'</b>';
+		} else if ($series_subtype==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID) {
+			return '<b>'.htmlspecialchars($series_name).'</b>';
+		} else {
+			return '<b>Capítol sense nom</b>';
+		}
+	}
+}
+
 function print_episode($fansub_names, $row, $version_id, $series, $version, $position){
+	global $user;
 	if (!empty($row['linked_episode_id'])) {
-		$result = query("SELECT f.* FROM file f WHERE f.episode_id=".$row['linked_episode_id']." AND f.version_id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']}) ORDER BY f.variant_name ASC, f.id ASC");
-		$results = query("SELECT s.* FROM episode e LEFT JOIN series s ON e.series_id=s.id WHERE e.id=${row['linked_episode_id']}");
+		$result = query_files_by_linked_episode_id_and_version_id(!empty($user) ? $user['id'] : -1, $row['linked_episode_id'], $version_id);
+		$results = query_series_from_episode_id($row['linked_episode_id']);
 		$series = mysqli_fetch_assoc($results);
 		mysqli_free_result($results);
-		$resultv=query("SELECT v.*, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id IN (SELECT v2.id FROM episode e2 LEFT JOIN series s ON e2.series_id=s.id LEFT JOIN version v2 ON v2.series_id=s.id LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id WHERE vf.fansub_id IN (SELECT fansub_id FROM rel_version_fansub WHERE version_id=$version_id) AND e2.id=${row['linked_episode_id']})");
+		$resultv=query_version_from_linked_episode_id_and_version_id($row['linked_episode_id'], $version_id);
 		$version = mysqli_fetch_assoc($resultv);
 		$fansub_names = $version['fansub_name'];
 		mysqli_free_result($resultv);
 	} else {
-		$result = query("SELECT f.* FROM file f WHERE f.episode_id=".$row['id']." AND f.version_id=$version_id ORDER BY f.variant_name ASC, f.id ASC");
+		$result = query_files_by_episode_id_and_version_id(!empty($user) ? $user['id'] : -1, $row['id'], $version_id);
 	}
 
 	if (mysqli_num_rows($result)==0 && $version['show_unavailable_episodes']!=1){
@@ -287,22 +311,26 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 	}
 
 	$episode_title=get_episode_title($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
+	$episode_title_formatted=get_episode_title_formatted($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
 
-	internal_print_episode($fansub_names, $episode_title, $result, $series, FALSE, $position);
+	internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, FALSE, $position);
 	mysqli_free_result($result);
 }
 
 function print_extra($fansub_names, $row, $version_id, $series, $position){
-	$result = query("SELECT f.* FROM file f WHERE f.episode_id IS NULL AND f.extra_name='".escape($row['extra_name'])."' AND f.version_id=$version_id ORDER BY f.id ASC");
+	global $user;
+	$result = query_extras_files_by_extra_name_and_version_id(!empty($user) ? $user['id'] : -1, $row['extra_name'], $version_id);
 
 	$episode_title=get_episode_title($series['subtype'], NULL,NULL,NULL,NULL,NULL,$row['extra_name'], TRUE);
+	$episode_title_formatted=get_episode_title_formatted($series['subtype'], NULL,NULL,NULL,NULL,NULL,$row['extra_name'], TRUE);
 	
-	internal_print_episode($fansub_names, $episode_title, $result, $series, TRUE, $position);
+	internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, TRUE, $position);
 	mysqli_free_result($result);
 }
 
-function internal_print_episode($fansub_names, $episode_title, $result, $series, $is_extra, $position) {
-//TABLE FORMAT: thumbnail, episode title + other data, seen
+function internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, $is_extra, $position) {
+	global $user;
+	//TABLE FORMAT: thumbnail, episode title + other data, seen
 	$num_variants = mysqli_num_rows($result);
 	if ($num_variants==0){ //Episode not available at all
 ?>
@@ -313,7 +341,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 		</div>
 	</td>
 	<td class="episode-title-cell">
-		<div class="episode-title"><?php echo htmlspecialchars($episode_title); ?></div>
+		<div class="episode-title"><?php echo $episode_title_formatted; ?></div>
 	</td>
 	<td class="episode-seen-cell"></td>
 </tr>
@@ -346,12 +374,12 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 <?php
 	}
 ?>
-			<span class="progress" style="width: 50%;"></span> <!-- TODO -->
+			<span class="progress" style="width: <?php echo $vrow['progress_percent']*100; ?>%;"></span>
 			<div class="play-button fa fa-fw <?php echo $series['type']=='manga' ? 'fa-book-open' : 'fa-play'; ?>"></div>
 		</div>
 	</td>
 	<td class="episode-title-cell">
-		<div class="episode-title"><?php echo htmlspecialchars($episode_title); ?><?php echo $num_variants>1 ? '<br>'.htmlspecialchars($vrow['variant_name']): ''; ?></div>
+		<div class="episode-title"><?php echo $episode_title_formatted; ?><?php echo $num_variants>1 ? '<br>'.htmlspecialchars($vrow['variant_name']): ''; ?></div>
 <?php
 				if (!empty($vrow['comments'])){
 ?>
@@ -371,17 +399,10 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 ?>
 	</td>
 	<td class="episode-seen-cell">
-<?php
-				if (in_array($vrow['id'], get_cookie_viewed_files_ids())) {
-?>
-		<span class="viewed-indicator viewed" data-file-id="<?php echo $vrow['id']; ?>" title="Ja l\'has <?php echo $series['type']=='manga' ? 'llegit' : 'vist'; ?>"><span class="fa fa-fw fa-eye"></span></span>
-<?php
-				} else {
-?>
-		<span class="viewed-indicator not-viewed" data-file-id="<?php echo $vrow['id']; ?>" title="Encara no l\'has <?php echo $series['type']=='manga' ? 'llegit' : 'vist'; ?>"><span class="fa fa-fw fa-eye-slash"></span></span>
-<?php
-				}
-?>
+		<label class="switch" onclick="event.stopPropagation();">
+			<input type="checkbox"<?php echo ((!empty($user) && $vrow['is_seen']==1) || (empty($user) && in_array($vrow['id'], get_cookie_viewed_files_ids()))) ? ' checked' : ''; ?> onchange="toggleFileSeen(this, <?php echo $vrow['id']; ?>);">
+			<span class="viewed-slider"></span>
+		</label>
 	</td>
 </tr>
 <?php
@@ -394,7 +415,7 @@ function internal_print_episode($fansub_names, $episode_title, $result, $series,
 		</div>
 	</td>
 	<td class="episode-title-cell">
-		<div class="episode-title"><?php echo htmlspecialchars($episode_title); ?></div>
+		<div class="episode-title"><?php echo $episode_title_formatted; ?></div>
 	</td>
 	<td class="episode-seen-cell"></td>
 </tr>
@@ -452,10 +473,11 @@ function get_genres_for_featured($genre_names, $type, $rating) {
 	$genres_array = explode(' • ',$genre_names);
 	$result_code = '';
 
-	foreach ($genres_array as $genre) {
-		$genre_for_url = preg_replace('/\xC2\xA0/', ' ', $genre);
-		$genre_for_url = preg_replace('/‑/', '-', $genre_for_url);
-		$result_code.='<a class="genre" href="'.get_base_url_from_type_and_rating($type,$rating).'/cerca?categoria='.$genre_for_url.'">'.htmlspecialchars($genre).'</a>';
+	foreach ($genres_array as $genre_data) {
+		$genre_id = explode('|', $genre_data)[0];
+		$genre_type = explode('|', $genre_data)[1];
+		$genre = explode('|', $genre_data)[2];
+		$result_code.='<a class="genre" href="'.get_base_url_from_type_and_rating($type,$rating).'/cerca?'.($genre_type=='demographics' ? 'demographics' : 'genres_include').'[]='.$genre_id.'">'.htmlspecialchars($genre).'</a>';
 	}
 	return '<i class="fa fa-fw fa-tag fa-flip-horizontal"></i> '.$result_code;
 }

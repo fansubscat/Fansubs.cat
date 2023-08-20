@@ -134,7 +134,7 @@ if (isset($_GET['demographics']) && is_array($_GET['demographics']) && count($_G
 	$param_demographics_array = $_GET['demographics'];
 }
 if (isset($_GET['genres_include']) && is_array($_GET['genres_include']) && count($_GET['genres_include'])>0) {
-	$param_genres_include_array = $_GET['genres_exclude'];
+	$param_genres_include_array = $_GET['genres_include'];
 }
 if (isset($_GET['genres_exclude']) && is_array($_GET['genres_exclude']) && count($_GET['genres_exclude'])>0) {
 	$param_genres_exclude_array = $_GET['genres_exclude'];
