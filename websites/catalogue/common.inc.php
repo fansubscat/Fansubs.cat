@@ -456,12 +456,14 @@ function print_chapter_item($row) {
 				<div class="close-button fa fa-fw fa-times" onclick="removeFromContinueWatching(this, <?php echo $row['file_id']; ?>); return false;"></div>
 			</a>
 		</div>
-		<div class="title">
-			<?php echo $row['series_name']; ?>
-		</div>
-		<div class="subtitle">
-			<?php echo $row['division_name'].(($row['division_name']!='' && $row['episode_number']!='') ? ' • ' : '').($row['episode_number']!='' ? 'Cap. '.$row['episode_number'] : '').((($row['division_name']!='' || $row['episode_number']!='') && $row['episode_title']!='') ? ': ' : '').$row['episode_title']; ?>
-		</div>
+		<a class="continue-watching-episode-data" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug']; ?>">
+			<span class="title">
+				<?php echo $row['series_name']; ?>
+			</span>
+			<span class="subtitle">
+				<?php echo $row['division_name'].(($row['division_name']!='' && $row['episode_number']!='') ? ' • ' : '').($row['episode_number']!='' ? 'Cap. '.$row['episode_number'] : '').((($row['division_name']!='' || $row['episode_number']!='') && $row['episode_title']!='') ? ': ' : '').$row['episode_title']; ?>
+			</span>
+		</a>
 	</div>
 <?php
 }

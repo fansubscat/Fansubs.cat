@@ -2,7 +2,7 @@
 	--chapter-carousel-element-width: 21.2rem;
 	--chapter-carousel-element-height: 16.75rem;
 	--chapter-thumbnail-title-height: 1.6rem;
-	--chapter-thumbnail-subtitle-height: 1.6rem;
+	--chapter-thumbnail-subtitle-height: 2rem;
 }
 
 /* Header */
@@ -1101,6 +1101,10 @@
 	position: relative;
 	margin: var(--thumbnail-margin);
 	transition: width var(--fast-animation-duration) ease, transform var(--fast-animation-duration) ease, margin var(--fast-animation-duration) ease;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
+	background-color: rgb(var(--negative-color));
+	border-radius: 1.2rem;
+	overflow: hidden;
 }
 
 .continue-watching-thumbnail {
@@ -1118,7 +1122,6 @@
 	height: 100%;
 	position: absolute;
 	backface-visibility: hidden;
-	border-radius: 1.2rem;
 	overflow: hidden;
 }
 
@@ -1228,9 +1231,9 @@
 }
 
 .continue-watching-thumbnail-outer .title {
-	width: 100%;
-	padding-left: 0.5rem;
-	padding-right: 0.5rem;
+	display: block;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
 	font-size: 1.4rem;
 	text-align: left;
 	line-height: 1.15;
@@ -1242,11 +1245,15 @@
 	margin-bottom: 0.3rem;
 }
 
+.continue-watching-episode-data {
+	display: block;
+}
+
 .continue-watching-thumbnail-outer .subtitle {
+	display: block;
 	font-family: "lexend_deca_light", sans-serif;
-	width: 100%;
-	padding-left: 0.5rem;
-	padding-right: 0.5rem;
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
 	font-size: 1.4rem;
 	text-align: left;
 	line-height: 1.15;
@@ -1849,12 +1856,12 @@ input:checked + .viewed-slider:before {
 		display: none;
 	}
 
-	.continue-watching-thumbnail {
-		height: calc(100% - var(--chapter-thumbnail-title-height) - var(--chapter-thumbnail-subtitle-height) - 0.4rem);
+	.continue-watching-thumbnail-outer {
+		border-radius: 0.8rem;
 	}
 
-	.continue-watching-thumbnail .image-link {
-		border-radius: 0.8rem;
+	.continue-watching-thumbnail {
+		height: calc(100% - var(--chapter-thumbnail-title-height) - var(--chapter-thumbnail-subtitle-height) - 0.4rem);
 	}
 
 	.continue-watching-thumbnail .image-link .versions .fansubs .fansub img {
@@ -1885,8 +1892,8 @@ input:checked + .viewed-slider:before {
 	}
 
 	.continue-watching-thumbnail-outer .title {
-		padding-left: 0.3rem;
-		padding-right: 0.3rem;
+		margin-left: 0.3rem;
+		margin-right: 0.3rem;
 		font-size: 0.87rem;
 		text-align: left;
 		line-height: 1.15;
@@ -1899,8 +1906,8 @@ input:checked + .viewed-slider:before {
 	}
 
 	.continue-watching-thumbnail-outer .subtitle {
-		padding-left: 0.3rem;
-		padding-right: 0.3rem;
+		margin-left: 0.3rem;
+		margin-right: 0.3rem;
 		font-size: 0.87rem;
 	}
 

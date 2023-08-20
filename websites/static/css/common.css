@@ -1013,7 +1013,7 @@ h2.section-title:first-of-type {
 	width: 100%; 
 	height: 100%;
 	object-fit: cover;
-	border-radius: 0.4rem;
+	border-radius: 0.4rem 0.4rem 0 0;
 	transform: scale(1.0000001); /* Avoids weird flicker on Chrome when using img with object-fit: cover and scaling */
 	transition: border-radius var(--fast-animation-duration) ease;
 	transition-delay: 0s;
@@ -1097,6 +1097,14 @@ h2.section-title:first-of-type {
 	height: calc(100% - var(--thumbnail-text-height));
 	overflow: hidden;
 	transition: filter var(--fast-animation-duration) ease;
+}
+
+.floating-info-right .floating-info-main {
+	border-radius: 0 0.4rem 0.4rem 0;
+}
+
+.floating-info-left .floating-info-main {
+	border-radius: 0.4rem 0 0 0.4rem;
 }
 
 .floating-info-bookmark.fas{
