@@ -1431,9 +1431,25 @@
 .series-synopsis {
 	width: 100%;
 	font-size: 1.5rem;
-	line-height: 1.2;
 	padding-left: var(--page-padding);
 	text-align: left;
+}
+
+.series-synopsis-real {
+	line-height: 1.2;
+}
+
+.expandable-content-hidden {
+	overflow: hidden;
+	max-height: calc(1.2 * 1.5rem * 5);
+}
+
+.show-more {
+	font-family: "lexend_deca_bold", sans-serif;
+	display: inline-block;
+	margin-top: 0.5rem;
+	cursor: pointer;
+	color: rgb(var(--neutral-color));
 }
 
 .version-content {
@@ -1549,10 +1565,92 @@
 	opacity: 1;
 }
 
-.version-fansub-info, .tadaima-explanation {
+
+.tadaima-explanation {
 	font-size: 1.6rem;
 	line-height: 1.2;
 	text-align: left;
+}
+
+.version-fansub-info {
+	font-size: 1.6rem;
+	line-height: 1.2;
+	text-align: left;
+	margin-bottom: 2rem;
+}
+
+.version-fansub-list-and-rating {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+}
+
+.version-fansub-list {
+	flex-grow: 1;
+}
+
+.version-fansub-image {
+	width: 9.6rem;
+	height: 9.6rem;
+	object-fit: cover;
+	border-radius: 1rem;
+}
+
+.version-fansub-element {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.version-fansub-element + .version-fansub-element {
+	margin-top: 1rem;
+}
+
+.version-fansub-data {
+	margin-left: calc(var(--page-padding) / 2);
+	line-height: 1.2;
+}
+
+.version-fansub-name {
+	font-family: "lexend_deca_bold", sans-serif;
+	text-align: left;
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 2.2rem;
+}
+
+.version-fansub-links {
+	margin-top: 0.5rem;
+	font-size: 2.5rem;
+}
+
+.version-fansub-rating {
+	border-radius: 1rem;
+	overflow: hidden;
+	background: rgba(var(--card-background-color),0.5);
+	padding: var(--page-padding);
+	align-self: center;
+}
+
+.version-fansub-rating-title {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 1.8rem;
+}
+
+.version-fansub-rating-buttons {
+	text-align: center;
+	font-size: 3rem;
+}
+
+.version-fansub-rating-positive, .version-fansub-rating-negative {
+	opacity: 0.5;
+	cursor: pointer;
+}
+
+.version-fansub-rating-selected {
+	opacity: 1;
+	font-weight: 900;
+	color: rgb(var(--primary-color));
 }
 
 .tadaima-post {
@@ -1607,6 +1705,7 @@
 }
 
 .division-cover {
+	margin-left: var(--page-padding);
 	margin-right: var(--page-padding);
 	height: 12rem;
 	width: 8.5rem;
@@ -1902,6 +2001,10 @@ input:checked + .viewed-slider:before {
 
 	.version-tab:not(.version-tab-selected):hover {
 		background-color: rgba(255,255,255,0.1);
+	}
+
+	.version-fansub-rating-positive:hover, .version-fansub-rating-negative:hover {
+		opacity: 1;
 	}
 }
 
@@ -2278,8 +2381,52 @@ input:checked + .viewed-slider:before {
 		font-size: 1.3rem;
 	}
 
-	.version-resolution {
+	.version-resolution, .version-info {
 		display: none;
+	}
+
+	.version-fansub-list-and-rating {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.version-fansub-rating {
+		margin-top: 1.5rem;
+		width: 100%;
+		text-align: center;
+	}
+
+	.version-fansub-rating-title {
+		font-size: 1.5rem;
+	}
+
+	.version-fansub-rating-buttons {
+		font-size: 2.2rem;
+	}
+
+	.version-fansub-image {
+		width: 6.4rem;
+		height: 6.4rem;
+	}
+
+	.version-fansub-name {
+		font-size: 1.7rem;
+	}
+
+	.version-fansub-links {
+		font-size: 2rem;
+	}
+
+	.version-fansub-info {
+		margin-bottom: 1rem;
+	}
+
+	.version-fansub-data {
+		margin-left: var(--page-padding);
+	}
+
+	.episode-seen-cell .switch {
+		font-size: 0.5rem;
 	}
 }
 

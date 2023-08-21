@@ -333,7 +333,7 @@ function hasPrevFile() {
 		return false;
 	}
 	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.file-launcher').filter(function(){
+	var results = $('#version-content-'+currentSourceData.version_id+' .file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position-1;
 	});
 
@@ -348,7 +348,7 @@ function hasNextFile() {
 		return false;
 	}
 	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.file-launcher').filter(function(){
+	var results = $('#version-content-'+currentSourceData.version_id+' .file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position+1;
 	});
 
@@ -360,7 +360,7 @@ function hasNextFile() {
 
 function playPrevFile() {
 	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.file-launcher').filter(function(){
+	var results = $('#version-content-'+currentSourceData.version_id).first().find('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position-1;
 	});
 
@@ -374,7 +374,7 @@ function playPrevFile() {
 
 function getNextFileElement() {
 	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.file-launcher').filter(function(){
+	var results = $('#version-content-'+currentSourceData.version_id).first().find('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position+1;
 	});
 
@@ -387,7 +387,7 @@ function getNextFileElement() {
 
 function playNextFile() {
 	var position  = parseInt($('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().attr('data-position'));
-	var results = $('.file-launcher[data-file-id="'+currentSourceData.file_id+'"]').first().parent().parent().parent().parent().parent().find('.file-launcher').filter(function(){
+	var results = $('#version-content-'+currentSourceData.version_id).first().find('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) == position+1;
 	});
 
@@ -1383,6 +1383,29 @@ function requestFileData(fileId) {
 }
 
 $(document).ready(function() {
+	var maxSynopsisHeight = $('.series-synopsis-real').length>0 ? parseFloat(1.2 * 5 * parseFloat(getComputedStyle($('.series-synopsis-real')[0]).fontSize)) : 0;
+
+	if ($('.series-synopsis-real').height()>maxSynopsisHeight) {
+		$(".show-more").removeClass('hidden');
+		$('.series-synopsis-real').addClass('expandable-content-hidden');
+		$(".show-more").on("click", function() {
+			if($('.series-synopsis-real').hasClass('expandable-content-hidden')){
+				linkText = '<span class="fa fa-fw fa-caret-up"></span> Mostra’n menys <span class="fa fa-fw fa-caret-up"></span>';
+				$(".series-synopsis-real").removeClass("expandable-content-hidden");
+				$(".series-synopsis-real").addClass("expandable-content-shown");
+			} else {
+				linkText = '<span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span>';
+				$(".series-synopsis-real").removeClass("expandable-content-shown");
+				$(".series-synopsis-real").addClass("expandable-content-hidden");
+			};
+
+			$(this).html(linkText);
+		});
+	} else {
+		$(".show-more").addClass('hidden');
+		$('.series-synopsis-real').removeClass('expandable-content-hidden');
+	}
+
 	const Button = videojs.getComponent('Button');
 
 	class NextButton extends Button {
@@ -1449,7 +1472,6 @@ $(document).ready(function() {
 		}
 	}
 	if (!isEmbedPage()) {
-
 		document.querySelectorAll('details').forEach((el) => {
 			new Accordion(el);
 		});

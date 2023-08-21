@@ -93,7 +93,10 @@ if (!empty($series['score'])) {
 						<div class="series-thumbnail-holder">
 							<img class="series-thumbnail" src="<?php echo STATIC_URL; ?>/images/covers/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
 						</div>
-						<div class="series-synopsis"><?php echo $synopsis; ?></div>
+						<div class="series-synopsis">
+							<div class="series-synopsis-real"><?php echo $synopsis; ?></div>
+							<span class="show-more hidden"><span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span></span>
+						</div>
 					</div>
 					<div class="section">
 <?php
@@ -122,7 +125,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 							<div class="version-tab<?php echo ($version_found ? $version['id']==$passed_version : $i==0) ? ' version-tab-selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>">
 								<div class="version-fansub-icons"><?php echo get_fansub_icons($version['fansub_info'], get_prepared_versions($version['fansub_info']), $version['id']); ?></div>
-								<div class="version-tab-text"><?php echo htmlspecialchars('Versió '.get_fansub_preposition_name($version['fansub_name'])); ?></div>
+								<div class="version-tab-text"><?php echo htmlspecialchars('Versió '.get_fansub_preposition_name($version['fansub_name'])); ?><?php echo get_fansub_type(get_prepared_versions($version['fansub_info']), $version['id'])=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="Versió doblada"></span>' : ''; ?></div>
 							</div>
 <?php
 	$i++;
@@ -159,12 +162,12 @@ while ($version = mysqli_fetch_assoc($result)) {
 				if ($last_division_number!=-1) {
 					array_push($divisions, array(
 						'division_id' => $last_division_id,
-						'division_number' => $last_division_number,
+						'division_number' => floatval($last_division_number),
 						'division_name' => $last_division_name,
 						'episodes' => $current_division_episodes
 					));
 				}
-				$last_division_number=$row['division_number'];
+				$last_division_number=floatval($row['division_number']);
 				$last_division_id=$row['division_id'];
 				$last_division_name=$row['division_name'];
 				$current_division_episodes = array();
@@ -222,32 +225,25 @@ while ($version = mysqli_fetch_assoc($result)) {
 				if ($is_first_in_empty_batch && $version['show_unavailable_episodes']==1) {
 ?>
 								<div class="empty-divisions"<?php echo ($index==0 ? ' style="margin-top: 0;"' : '') ?>>
-									<a onclick="$(this.parentNode.parentNode).find('.division').removeClass('hidden');$(this.parentNode.parentNode).find('.empty-divisions').addClass('hidden');">Hi ha més temporades/volums sense capítols disponibles. Prem aquí per a mostrar-les totes.</a>
+									<a onclick="$(this.parentNode.parentNode).find('.division').removeClass('hidden');$(this.parentNode.parentNode).find('.empty-divisions').addClass('hidden');">Hi ha més temporades/volums sense elements disponibles. Prem aquí per a mostrar-les totes.</a>
 								</div>
 <?php
 				}
 ?>
-								<details id="version-<?php echo $version['id']; ?>-division-<?php echo !empty($division['division_number']) ? floatval($division['division_number']) : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
+								<details id="version-<?php echo $version['id']; ?>-division-<?php echo !empty($division['division_number']) ? $division['division_number'] : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
 <?php
 				if (CATALOGUE_ITEM_TYPE=='manga') {
 ?>
-									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Volum únic' : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? 'Volum '.floatval($division['division_number']) : 'Volum únic'))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 capítol disponible' : $division_available_episodes[$index].' capítols disponibles') : 'No hi ha cap capítol disponible'; ?></span></div></div></summary>
+									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Volum únic' : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? 'Volum '.$division['division_number'] : 'Volum únic'))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 element disponible' : $division_available_episodes[$index].' elements disponibles') : 'No hi ha cap element disponible'; ?></span></div></div></summary>
 <?php
 				} else {
 ?>
-									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"></i><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : (!empty($division['division_name']) ? $division['division_name'] : 'Temporada '.floatval($division['division_number']))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 capítol disponible' : $division_available_episodes[$index].' capítols disponibles') : 'No hi ha cap capítol disponible'; ?></span></div></div></summary>
+									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"></i><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : (!empty($division['division_name']) ? $division['division_name'] : 'Temporada '.$division['division_number'])) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 element disponible' : $division_available_episodes[$index].' elements disponibles') : 'No hi ha cap element disponible'; ?></span></div></div></summary>
 <?php
 				}
 ?>
 									<div class="division-container">
 <?php
-				if (file_exists($static_directory.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg')) {
-?>
-										<div class="division-image-container">
-											<img class="division-cover" src="<?php echo $static_url.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg'; ?>" alt="">
-										</div>
-<?php
-				}
 				if ($division_available_episodes[$index]>0 || $version['show_unavailable_episodes']==1) {
 ?>
 										<div style="width: 100%;">
@@ -271,55 +267,92 @@ while ($version = mysqli_fetch_assoc($result)) {
 <?php
 			}
 		}
-	}
-	$resulte = query_extras_by_version_id($version['id']);
-	$extras = array();
-	while ($row = mysqli_fetch_assoc($resulte)) {
-		array_push($extras, $row);
-	}
-	mysqli_free_result($resulte);
+
+		//Add extras
+		$resulte = query_extras_by_version_id($version['id']);
+		$extras = array();
+		while ($row = mysqli_fetch_assoc($resulte)) {
+			array_push($extras, $row);
+		}
+		mysqli_free_result($resulte);
 ?>
-							</div>
 <?php
 
-	if (count($extras)>0) {
+		if (count($extras)>0) {
 ?>
-							<div class="section-content extra-content">
-								<h2 class="section-title-main section-title-with-table">Extres</h2>
-								<div style="width: 100%;">
-									<table class="episode-table">
-										<tbody>
+								<details id="version-<?php echo $version['id']; ?>-division-extras" class="division">
+									<summary class="division-header"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_extras.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_extras.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable">Extres<i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo count($extras)==1 ? '1 element disponible' : count($extras).' elements disponibles'; ?></span></div></div></summary>
+									<div class="division-container">
+										<div style="width: 100%;">
+											<table class="episode-table">
+												<tbody>
 <?php
-		foreach ($extras as $row) {
-			print_extra($version['fansub_name'], $row, $version['id'], $series, $position);
-			$position++;
+			foreach ($extras as $episode) {
+				print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
+				$position++;
+			}
+?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</details>
+<?php
+
 		}
-?>
-										</tbody>
-									</table>
-								</div>
-							</div>
-<?php
 	}
 ?>
+							</div>
 							<div class="section-content extra-content">
 								<h2 class="section-title-main">Quant a aquesta versió</h2>
-								<div class="version-fansub-info">Aquesta versió en català ha estat possible gràcies als fansubs següents. No t’oblidis d’agrair-los la feina.</div>
-								<div class="version-fansub-list-and-rating">
-									<div class="version-fansub-list">
 <?php
 	$fansubs = query_fansubs_by_version_id($version['id']);
+?>
+								<div class="version-fansub-list-and-rating">
+									<div class="version-fansub-list">
+										<div class="version-fansub-info"><?php echo mysqli_num_rows($fansubs)>1 ? 'Aquesta versió en català és fruit de la feina dels fansubs següents. No t’oblidis d’agrair-los la feina.' : 'Aquesta versió en català és fruit de la feina del fansub següent. No t’oblidis d’agrair-li la feina.'; ?></div>
+<?php
 	foreach ($fansubs as $fansub) {
 ?>
 									<div class="version-fansub-element">
-										<img class="version-fansub-image">
-										<div class="version-fansub-name"><?php echo $fansub['name']; ?></div>
-										<div class="version-fansub-name"><?php echo $fansub['url']; ?></div>
-										<div class="version-fansub-name"><?php echo $fansub['twitter_url']; ?></div>
-										<div class="version-fansub-name"><?php echo $fansub['mastodon_url']; ?></div>
-										<div class="version-fansub-name"><?php echo $fansub['discord_url']; ?></div>
-										<div class="version-fansub-name"><?php echo $fansub['archive_url']; ?></div>
-										<div class="version-fansub-name"><?php echo $fansub['type']; ?></div>
+										<img class="version-fansub-image" src="<?php echo STATIC_URL.'/images/icons/'.$fansub['id'].'.png'; ?>" alt="">
+										<div class="version-fansub-data">
+											<div class="version-fansub-name"><?php echo $fansub['name'].($fansub['type']=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="És un fandub: fa doblatges."></span>' : ''); ?></div>
+											<div class="version-fansub-links">
+<?php
+		if (!empty($fansub['downloads_url'])) {
+			$url_arr=explode(';', $fansub['downloads_url']);
+			foreach ($url_arr as $url) {
+				if (preg_match(REGEXP_DL_LINK,$url)) {
+					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link fansub-downloads" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
+				} else {
+					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link" href="'.$url.'" target="_blank"></a>';
+				}
+			}
+		}
+		if (!empty(!empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url'])) {
+?>
+												<a class="fa fa-fw fa-earth-europe web-link" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['discord_url'])) {
+?>
+												<a class="fab fa-fw fa-discord discord-link" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['mastodon_url'])) {
+?>
+												<a class="fab fa-fw fa-mastodon mastodon-link" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['twitter_url'])) {
+?>
+												<a class="fab fa-fw fa-x-twitter twitter-link" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
+<?php
+		}
+?>
+											</div>
+										</div>
 									</div>
 <?php
 	}
@@ -328,8 +361,8 @@ while ($version = mysqli_fetch_assoc($result)) {
 									<div class="version-fansub-rating">
 										<div class="version-fansub-rating-title">Valora aquesta versió</div>
 										<div class="version-fansub-rating-buttons">
-											<span class="version-fansub-rating-positive fa fa-fw fa-thumbs-up"></span>
-											<span class="version-fansub-rating-negative fa fa-fw fa-thumbs-down"></span>
+											<span class="version-fansub-rating-positive fa far fa-fw fa-thumbs-up"></span>
+											<span class="version-fansub-rating-negative fa far fa-fw fa-thumbs-down"></span>
 										</div>
 									</div>
 								</div>

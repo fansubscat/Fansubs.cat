@@ -266,6 +266,15 @@ function get_fansub_icons($fansub_info, $versions, $specific_version_id) {
 	return $result_code;
 }
 
+function get_fansub_type($versions, $version_id) {
+	foreach ($versions as $version) {
+		if ($version['id']==$version_id) {
+			return $version['fansubs'][0]['type'];
+		}
+	}
+	return 'fansub';
+}
+
 function get_genre_names_from_array($genre_names) {
 	if (empty($genre_names)) {
 		return "";

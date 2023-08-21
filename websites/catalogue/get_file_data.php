@@ -150,6 +150,7 @@ function get_player_data(){
 
 		$data = array(
 			'file_id' => intval($file_id),
+			'version_id' => intval($row['version_id']),
 			'view_id' => $view_id,
 			'fansub' => $row['fansub_name'],
 			'series' => $row['series_name'],
