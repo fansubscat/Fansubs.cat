@@ -31,6 +31,77 @@ function get_nanoid($size=24) {
 	}
 }
 
+function get_relative_date($time) {
+	if (time()-$time<3600*24) {
+		$hours = intval((time()-$time)/3600);
+		if ($hours==1) {
+			return "fa 1 hora";
+		} else {
+			return "fa $hours hores";
+		}
+	}
+	else if (time()-$time<3600*24*30) {
+		$days = intval((time()-$time)/(3600*24));
+		if ($days==1) {
+			return "fa 1 dia";
+		} else {
+			return "fa $days dies";
+		}
+	}
+	else {
+		return get_catalan_formatted_date($time);
+	}
+}
+
+function get_catalan_formatted_date($date) {
+	$day = date('j', $date);
+	if ($day=='1') {
+		$day.='r';
+	}
+	$month = date('m', $date);
+	switch ($month) {
+		case '01':
+			$month = 'de gener';
+			break;
+		case '02':
+			$month = 'de febrer';
+			break;
+		case '03':
+			$month = 'de març';
+			break;
+		case '04':
+			$month = 'd’abril';
+			break;
+		case '05':
+			$month = 'de maig';
+			break;
+		case '06':
+			$month = 'de juny';
+			break;
+		case '07':
+			$month = 'de juliol';
+			break;
+		case '08':
+			$month = 'd’agost';
+			break;
+		case '09':
+			$month = 'de setembre';
+			break;
+		case '10':
+			$month = 'd’octubre';
+			break;
+		case '11':
+			$month = 'de novembre';
+			break;
+		case '12':
+		default:
+			$month = 'de desembre';
+			break;
+	}
+	$year = date('Y', $date);
+	return "$day $month del $year";
+}
+
 function get_cookie_blacklisted_fansub_ids() {
 	$fansub_ids = array();
 	if (!empty($_COOKIE['blacklisted_fansub_ids'])) {

@@ -118,6 +118,7 @@ function get_internal_length_condition($type, $length_type, $min_length, $max_le
 						LEFT JOIN version v ON s.id=v.series_id
 						LEFT JOIN file f ON v.id=f.version_id
 					WHERE s.type='$type'
+						AND f.is_lost=0
 					GROUP BY s.id HAVING AVG(f.length)>=".intval($min_length)." AND AVG(f.length)<=".intval($max_length==100 ? 1000000 : $max_length)."
 				)";
 		} else if ($min_length!=0 || $max_length!=120) {
@@ -130,6 +131,7 @@ function get_internal_length_condition($type, $length_type, $min_length, $max_le
 						LEFT JOIN version v ON s.id=v.series_id
 						LEFT JOIN file f ON v.id=f.version_id
 					WHERE s.type='$type'
+						AND f.is_lost=0
 					GROUP BY s.id HAVING AVG(f.length)>=".(intval($min_length)*60)." AND AVG(f.length)<=".(intval($max_length==120 ? 1000000 : $max_length)*60)."
 				)";
 		} else if ($min_length!=1 || $max_length!=100) {
@@ -394,7 +396,9 @@ function query_series_data_for_preview_image_by_slug($slug) {
 			FROM series s
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
 				LEFT JOIN genre g ON sg.genre_id = g.id
-			WHERE s.type='".CATALOGUE_ITEM_TYPE."' AND slug='$slug'
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND slug='$slug'
+				AND ".get_internal_hentai_condition()."
 			GROUP BY s.id";
 	return query($final_query);
 }
@@ -590,6 +594,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 					fa.id fansub_id,
 					ufss.position/f.length progress_percent,
 					ufss.last_viewed last_viewed,
+					f.length length,
 					1 origin
 				FROM user_file_seen_status ufss
 					LEFT JOIN file f ON ufss.file_id=f.id
@@ -645,6 +650,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 					fa.id fansub_id,
 					0 progress_percent,
 					CURRENT_TIMESTAMP last_viewed,
+					f.length length,
 					0 origin
 				FROM file f
 					LEFT JOIN version v ON f.version_id=v.id
@@ -752,7 +758,7 @@ function query_home_best_rated($user, $max_items) {
 	return query($final_query);
 }
 
-function query_series_by_slug($slug) {
+function query_series_by_slug($slug, $include_hidden) {
 	$slug = escape($slug);
 	$final_query = "SELECT s.*, 
 				YEAR(s.publish_date) year,
@@ -763,11 +769,25 @@ function query_series_by_slug($slug) {
 				LEFT JOIN genre g ON sg.genre_id = g.id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
 				AND slug='$slug'
+				AND ".get_internal_hentai_condition()."
+				AND ".($include_hidden ? '1' : '(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id)>0')."
 			GROUP BY s.id";
 	return query($final_query);
 }
 
-function query_series_data_for_series_page($series_id, $include_hidden) {
+function query_series_by_file_id($file_id) {
+	$file_id = escape($file_id);
+	$final_query = "SELECT s.*
+			FROM file f
+				LEFT JOIN version v ON f.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND ".get_internal_hentai_condition()."
+				AND f.id=$file_id";
+	return query($final_query);
+}
+
+function query_series_data_for_series_page($series_id) {
 	$series_id = escape($series_id);
 	$final_query = "SELECT v.*,
 				GROUP_CONCAT(DISTINCT CONCAT(v.id, '___', v.status, '___', f.name, '___', f.type, '___', f.id)
@@ -780,8 +800,7 @@ function query_series_data_for_series_page($series_id, $include_hidden) {
 			FROM version v
 				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
 				LEFT JOIN fansub f ON vf.fansub_id=f.id
-			WHERE ".($include_hidden ? '1' : 'v.is_hidden=0')."
-				AND v.series_id=$series_id
+			WHERE v.series_id=$series_id
 			GROUP BY v.id
 			ORDER BY v.status ASC,
 				v.created ASC";
@@ -932,6 +951,17 @@ function query_extras_files_by_extra_name_and_version_id($user_id, $extra_name, 
 				AND f.extra_name='$extra_name'
 				AND f.version_id=$version_id
 			ORDER BY f.id ASC";
+	return query($final_query);
+}
+
+function query_fansubs_by_version_id($version_id) {
+	$version_id = escape($version_id);
+	$final_query = "SELECT f.*,
+				vf.downloads_url
+			FROM rel_version_fansub vf
+				LEFT JOIN fansub f ON vf.fansub_id=f.id
+			WHERE vf.version_id=$version_id
+			ORDER BY f.name ASC";
 	return query($final_query);
 }
 

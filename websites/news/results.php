@@ -24,55 +24,6 @@ else{
 	$page = 1;
 }
 
-function get_catalan_formatted_date($date) {
-	$day = date('j', $date);
-	if ($day=='1') {
-		$day.='r';
-	}
-	$month = date('m', $date);
-	switch ($month) {
-		case '01':
-			$month = 'de gener';
-			break;
-		case '02':
-			$month = 'de febrer';
-			break;
-		case '03':
-			$month = 'de març';
-			break;
-		case '04':
-			$month = 'd’abril';
-			break;
-		case '05':
-			$month = 'de maig';
-			break;
-		case '06':
-			$month = 'de juny';
-			break;
-		case '07':
-			$month = 'de juliol';
-			break;
-		case '08':
-			$month = 'd’agost';
-			break;
-		case '09':
-			$month = 'de setembre';
-			break;
-		case '10':
-			$month = 'd’octubre';
-			break;
-		case '11':
-			$month = 'de novembre';
-			break;
-		case '12':
-		default:
-			$month = 'de desembre';
-			break;
-	}
-	$year = date('Y', $date);
-	return "$day $month del $year";
-}
-
 $show_blacklisted_fansubs = FALSE;
 $show_own_news = FALSE;
 $text = NULL;

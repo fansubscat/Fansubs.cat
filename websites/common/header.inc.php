@@ -53,7 +53,7 @@ if (SITE_IS_HENTAI) {
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
 <?php
-if (PAGE_STYLE_TYPE=='catalogue') {
+if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 ?>
 		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs.min.css?v=<?php echo VERSION; ?>">
 <?php
@@ -76,7 +76,7 @@ if (IS_FOOLS_DAY){
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <?php
-if (PAGE_STYLE_TYPE=='catalogue') {
+if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 ?>
 		<script>
 			window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = {
@@ -240,7 +240,7 @@ if (PAGE_STYLE_TYPE=='login') {
 			</div>
 <?php
 } else {
-	if (PAGE_STYLE_TYPE=='catalogue') {
+	if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 ?>
 			<div data-nosnippet id="overlay" class="hidden">
 				<div id="overlay-content"></div>
@@ -264,95 +264,98 @@ if (PAGE_STYLE_TYPE=='login') {
 	}
 ?>
 			<div class="main-body">
+<?php
+	if (PAGE_STYLE_TYPE!='embed') {
+?>
 				<div class="header">
 <?php
-	if (PAGE_STYLE_TYPE=='main') {
+		if (PAGE_STYLE_TYPE=='main') {
 ?>
-					<a class="social-link twitter-link fab fa-fw fa-x-twitter" href="https://x.com/fansubscat" target="_blank" title="X de Fansubs.cat"></a>
 					<a class="social-link mastodon-link fab fa-fw fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" title="Mastodon de Fansubs.cat"></a>
 					<a class="social-link telegram-link fab fa-fw fa-telegram" href="https://t.me/fansubscat" target="_blank" title="Telegram de Fansubs.cat"></a>
+					<a class="social-link twitter-link fab fa-fw fa-x-twitter" href="https://x.com/fansubscat" target="_blank" title="X de Fansubs.cat"></a>
 <?php
-	} else {
+		} else {
 ?>
 					<a class="logo-small" href="<?php echo SITE_IS_HENTAI ? SITE_BASE_URL : MAIN_URL; ?>" title="Torna a la pàgina d’inici<?php echo !SITE_IS_HENTAI ? " de Fansubs.cat" : ""; ?>">
 						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
 <?php
-		if (PAGE_STYLE_TYPE=='catalogue' && SITE_IS_HENTAI) {
+			if (PAGE_STYLE_TYPE=='catalogue' && SITE_IS_HENTAI) {
 ?>
 						<div class="catalogues-explicit-category">
 							<i class="fsc fa-fw fsc-hentai fa-2x"></i>
 						</div>
 <?php
-		}
+			}
 ?>
 					</a>
 <?php
-		if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='news' || PAGE_STYLE_TYPE=='fansubs' || PAGE_STYLE_TYPE=='settings') {
+			if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='news' || PAGE_STYLE_TYPE=='fansubs' || PAGE_STYLE_TYPE=='settings') {
 ?>
 					<div class="catalogues-navigation">
 <?php
-			if (PAGE_STYLE_TYPE=='catalogue') {
+				if (PAGE_STYLE_TYPE=='catalogue') {
 ?>
 						<a href="<?php echo (SITE_IS_HENTAI ? HENTAI_ANIME_URL : ANIME_URL); ?>"<?php echo CATALOGUE_ITEM_TYPE=='anime' ? ' class="catalogue-selected"' : ''; ?>>Anime</a>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo (SITE_IS_HENTAI ? HENTAI_MANGA_URL : MANGA_URL); ?>"<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
 <?php
-				if (!SITE_IS_HENTAI) {
+					if (!SITE_IS_HENTAI) {
 ?>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo LIVEACTION_URL; ?>"<?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Imatge real</a>
 <?php
-				}
+					}
 ?>
 <?php
-			} else if (PAGE_STYLE_TYPE=='news') {
+				} else if (PAGE_STYLE_TYPE=='news') {
 ?>
 						<a href="<?php echo NEWS_URL; ?>" class="catalogue-selected">Notícies</a>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo MAIN_URL; ?>/llista-de-fansubs">Fansubs</a>
 <?php
-			} else if (PAGE_STYLE_TYPE=='fansubs') {
+				} else if (PAGE_STYLE_TYPE=='fansubs') {
 ?>
 						<a href="<?php echo NEWS_URL; ?>">Notícies</a>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo MAIN_URL; ?>/llista-de-fansubs" class="catalogue-selected">Fansubs</a>
 <?php
-			} else if (PAGE_STYLE_TYPE=='settings') {
-				if (!empty($user)) {
+				} else if (PAGE_STYLE_TYPE=='settings') {
+					if (!empty($user)) {
 ?>
 						<a href="<?php echo USERS_URL; ?>"<?php echo SETTINGS_ITEM_TYPE=='profile' ? ' class="catalogue-selected"' : ''; ?>>El meu perfil</a>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo USERS_URL; ?>/la-meva-llista"<?php echo SETTINGS_ITEM_TYPE=='list' ? ' class="catalogue-selected"' : ''; ?>>La meva llista</a>
 						<span class="catalogues-separator">|</span>
 <?php
-				}
+					}
 ?>
 						<a href="<?php echo USERS_URL; ?>/configuracio"<?php echo SETTINGS_ITEM_TYPE=='settings' ? ' class="catalogue-selected"' : ''; ?>>Configuració</a>
 <?php
-			}
+				}
 ?>
 						<span class="catalogues-underline"></span>
 					</div>
 <?php
+			}
 		}
-	}
 ?>
 					<div class="separator">
 <?php
-	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH') && !defined('PAGE_IS_SERIES') && CATALOGUE_ITEM_TYPE!='liveaction' && !SITE_IS_HENTAI && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
+		if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH') && !defined('PAGE_IS_SERIES') && CATALOGUE_ITEM_TYPE!='liveaction' && !SITE_IS_HENTAI && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
 ?>
 						<a class="hentai-button" href="<?php echo CATALOGUE_ITEM_TYPE=='anime' ? HENTAI_ANIME_URL : HENTAI_MANGA_URL; ?>" title="Vés a l’apartat de hentai">
 							<i class="fsc fa-fw fsc-hentai fa-2x"></i>
 						</a>
 <?php
-	} else if (SITE_IS_HENTAI) {
+		} else if (SITE_IS_HENTAI) {
 ?>
 						<a class="hentai-button" href="<?php echo CATALOGUE_ITEM_TYPE=='anime' ? ANIME_URL : MANGA_URL; ?>" title="Vés al contingut general">
 							<i class="fa-solid fa-fw fa-house-chimney fa-2x"></i>
 						</a>
 <?php
-	}
-	if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH')) {
+		}
+		if (PAGE_STYLE_TYPE=='catalogue' && !defined('PAGE_IS_SEARCH')) {
 ?>
 						<a class="filter-button" href="<?php echo SITE_BASE_URL; ?>/cerca" title="Filtra i mostra tot el catàleg">
 							<i class="fsc fa-fw fsc-catalogue fa-2x"></i>
@@ -365,7 +368,7 @@ if (PAGE_STYLE_TYPE=='login') {
 							</form>
 						</div>
 <?php
-	} else if (PAGE_STYLE_TYPE=='news' && !defined('PAGE_IS_SEARCH')) {
+		} else if (PAGE_STYLE_TYPE=='news' && !defined('PAGE_IS_SEARCH')) {
 ?>
 						<a class="filter-button" href="/cerca" title="Filtra i mostra totes les notícies">
 							<i class="fsc fa-fw fsc-news fa-2x"></i>
@@ -377,60 +380,60 @@ if (PAGE_STYLE_TYPE=='login') {
 							</form>
 						</div>
 <?php
-	}
+		}
 ?>
 					</div>
 <?php
-	if (empty($user)) {
+		if (empty($user)) {
 ?>
 					<a class="user-login" href="<?php echo USERS_URL.'/inicia-la-sessio'; ?>"><span class="user-login-text">Inicia la sessió</span><span class="user-login-icon"><i class="fa fa-fw fa-sign-in"></i></span></a>
 <?php
-	}
+		}
 ?>
 					<div class="user-options">
 						<div class="dropdown-menu">
 <?php
-	if (!empty($user)) {
+		if (!empty($user)) {
 ?>
 							<img alt="Menú de l’usuari" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
 <?php
-	} else {
+		} else {
 ?>
 							<div onclick="showUserDropdown();" class="anon-avatar dropdown-button"><i class="fa fa-gear"></i></div>
 <?php
-	}
+		}
 ?>
 							<div id="user-dropdown" class="dropdown-content">
 								<div class="dropdown-title"><?php echo !empty($user) ? $user['username'] : 'Opcions'; ?></div>
 								<hr class="dropdown-separator">
 <?php
-	if (!empty($user)) {
+		if (!empty($user)) {
 ?>
 								<a href="<?php echo USERS_URL; ?>"><i class="fa fa-fw fa-user"></i> El meu perfil</a>
 								<a href="<?php echo USERS_URL.'/la-meva-llista'; ?>"><i class="fa fa-fw fa-bookmark"></i> La meva llista</a>
 								<hr class="dropdown-separator-secondary">
 <?php
-	}
+		}
 ?>
 								<a href="<?php echo USERS_URL.'/configuracio'; ?>"><i class="fa fa-fw fa-gear"></i> Configuració</a>
 <?php
-	if (!defined('SITE_THEME_FORCED')) {
+		if (!defined('SITE_THEME_FORCED')) {
 ?>
 								<a class="theme-button" onclick="toggleSiteTheme();"><i class="fa fa-fw fa-circle-half-stroke"></i> <span class="theme-button-text"><?php echo SITE_THEME=='light' ? 'Canvia al tema fosc' : 'Canvia al tema clar'; ?></span></a>
 <?php
-	}
+		}
 ?>
 								<hr class="dropdown-separator-secondary">
 <?php
-	if (!empty($user)) {
+		if (!empty($user)) {
 ?>
 								<a href="<?php echo USERS_URL.'/tanca-la-sessio'; ?>"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
 <?php
-	} else {
+		} else {
 ?>
 								<a href="<?php echo USERS_URL.'/inicia-la-sessio'; ?>"><i class="fa fa-fw fa-sign-in"></i> Inicia la sessió</a>
 <?php
-	}
+		}
 ?>
 							</div>
 						</div>
@@ -438,13 +441,14 @@ if (PAGE_STYLE_TYPE=='login') {
 				</div>
 <?php
 
-if (GLOBAL_MESSAGE!='' || IS_FOOLS_DAY){
+		if (GLOBAL_MESSAGE!='' || IS_FOOLS_DAY){
 ?>
 				<div data-nosnippet class="section">
 					<div class="site-message"><?php echo IS_FOOLS_DAY ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.STATIC_URL.'/various/innocents.png" target="_blank" style="color: black;">Més informació</a>.' : GLOBAL_MESSAGE; ?></div>
 				</div>
 <?php
-}
+		}
+	}
 ?>
 				<div class="main-section">
 <?php

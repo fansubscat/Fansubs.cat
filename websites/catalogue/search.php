@@ -26,7 +26,8 @@ function get_time_from_duration($duration){
 	if ($duration==120) {
 		return '2:00:00+';
 	}
-	return intdiv($duration, 60).':'. ($duration % 60).':00';
+	$minutes = $duration % 60;
+	return intdiv($duration, 60).':'. ($minutes>9 ? $minutes : '0'.$minutes).':00';
 }
 
 function get_pages_from_duration($duration){

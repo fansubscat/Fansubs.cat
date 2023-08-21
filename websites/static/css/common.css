@@ -203,7 +203,7 @@ body {
 	overflow: hidden;
 }
 
-body.style-type-catalogue, body.style-type-news, body.style-type-fansubs, body.style-type-users, body.style-type-settings {
+body.style-type-catalogue, body.style-type-news, body.style-type-fansubs, body.style-type-users, body.style-type-settings, body.style-type-embed {
 	background: rgb(var(--background-color-standard));
 }
 

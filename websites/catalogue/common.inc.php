@@ -177,9 +177,7 @@ function get_resolution_short($links){
 
 function get_resolution_css($links){
 	$resolution = str_replace('p', '', get_resolution_short($links));
-	if ($resolution>=1800) {
-		return "4k";
-	} else if ($resolution>=900) {
+	if ($resolution>=900) {
 		return "hd1080";
 	} else if ($resolution>=650) {
 		return "hd720";
@@ -212,14 +210,16 @@ function get_episode_player_title_short($series_name, $series_subtype, $episode_
 	}
 }
 
-function get_hours_or_minutes_formatted($time){
-	if ($time>=3600) {
-		$hours = floor($time/3600);
-		$time = $time-$hours*3600;
-		echo $hours." h ".round($time/60)." min";
-	} else {
-		echo round($time/60)." min";
+function get_length_formatted($length){
+	if (CATALOGUE_ITEM_TYPE=='manga') {
+		return $length.' pàg.';
 	}
+	//Else, time:
+	$secs = $length % 60;
+	$mins = (int)($length / 60) % 60;
+	$hrs = (int)($length / 3600);
+
+	return ($hrs>0 ? $hrs.':' : '').($mins>9 ? $mins : '0'.$mins).':'.($secs>9 ? $secs : '0'.$secs);
 }
 
 function get_comic_type($comic_type){
@@ -374,29 +374,32 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 <?php
 	}
 ?>
+			<div class="length"><?php echo get_length_formatted($vrow['length']); ?></div>
 			<span class="progress" style="width: <?php echo $vrow['progress_percent']*100; ?>%;"></span>
 			<div class="play-button fa fa-fw <?php echo $series['type']=='manga' ? 'fa-book-open' : 'fa-play'; ?>"></div>
 		</div>
 	</td>
 	<td class="episode-title-cell">
-		<div class="episode-title"><?php echo $episode_title_formatted; ?><?php echo $num_variants>1 ? '<br>'.htmlspecialchars($vrow['variant_name']): ''; ?></div>
+		<div class="episode-title">
+			<?php echo $episode_title_formatted; ?><?php echo $num_variants>1 ? '<br>'.htmlspecialchars($vrow['variant_name']): ''; ?>
 <?php
+				if ($series['type']!='manga') {
+?>
+			<span class="version-resolution <?php echo get_resolution_css($links); ?> tooltip tooltip-right" title="Vídeo: <?php echo get_resolution($links); ?>, servei: <?php echo get_provider($links); ?>"><?php echo htmlspecialchars(get_resolution_short($links)); ?></span>
+<?php
+				}
 				if (!empty($vrow['comments'])){
 ?>
-		<span class="version-info tooltip" title="<?php echo str_replace("\n", "<br>", htmlspecialchars($vrow['comments'])); ?>"><span class="fa fa-fw fa-info-circle"></span></span>
+			<span class="version-info tooltip" title="<?php echo str_replace("\n", "<br>", htmlspecialchars($vrow['comments'])); ?>"><span class="fa fa-fw fa-info"></span></span>
 <?php
 				}
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 ?>
-		<span class="new-episode tooltip<?php echo in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>
-<?php
-				}
-				if ($series['type']!='manga') {
-?>
-		<span class="version-resolution-<?php echo get_resolution_css($links); ?> tooltip tooltip-right" title="Vídeo: <?php echo get_resolution($links); ?>, servei: <?php echo get_provider($links); ?>"><?php echo htmlspecialchars(get_resolution_short($links)); ?></span>
+			<span class="new-episode tooltip<?php echo in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>
 <?php
 				}
 ?>
+		</div>
 	</td>
 	<td class="episode-seen-cell">
 		<label class="switch" onclick="event.stopPropagation();">
@@ -451,6 +454,7 @@ function print_chapter_item($row) {
 			<a class="image-link" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug']."?f=".$row['file_id']; ?>">
 				<div class="versions"><?php echo get_fansub_icons($row['fansub_info'], get_prepared_versions($row['fansub_info']), $row['version_id']); ?></div>
 				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'; ?>" alt="">
+				<div class="length"><?php echo get_length_formatted($row['length']); ?></div>
 				<span class="progress" style="width: <?php echo $row['progress_percent']*100; ?>%;"></span>
 				<div class="play-button fa fa-fw fa-<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'book-open' : 'play'; ?>"></div>
 				<div class="close-button fa fa-fw fa-times" onclick="removeFromContinueWatching(this, <?php echo $row['file_id']; ?>); return false;"></div>
@@ -557,18 +561,13 @@ function get_tadaima_info($thread_id) {
 		curl_close($ch);
 	}
 	if($response===FALSE) {
-		return "Comenta-ho a Tadaima.cat";
+		return array();
 	} else {
 		$json_response = json_decode($response);
 		if ($json_response->status!='ok') {
-			return "Comenta-ho a Tadaima.cat";
+			return array();
 		} else {
-			$number_of_posts = count($json_response->result->posts);
-			if ($number_of_posts==1){
-				return "Comenta-ho a Tadaima.cat (1 comentari)";
-			} else {
-				return "Comenta-ho a Tadaima.cat ($number_of_posts comentaris)";
-			}
+			return $json_response->result->posts;
 		}
 	}
 }

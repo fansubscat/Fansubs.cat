@@ -153,7 +153,7 @@ function showAlert(title, desc) {
 }
 
 function isEmbedPage(){
-	return $('#embed-page').length!=0;
+	return $('.style-type-embed').length!=0;
 }
 
 function formatTime(seconds, guide) {
@@ -589,7 +589,10 @@ function initializePlayer(){
 			if (player.techName_=='Html5') {
 				setTimeout(function(){
 					if (player) {
-						player.play();
+						player.play().catch(error => {
+							console.log("Autoplay blocked, setting has-started manually");
+							player.addClass('vjs-has-started');
+						});
 					}
 				}, 1);
 			}
@@ -725,8 +728,10 @@ function initializePlayer(){
 	player.controlBar.removeChild('NextButton');
 	player.controlBar.removeChild('PrevButtonDisabled');
 	player.controlBar.removeChild('NextButtonDisabled');
-	player.controlBar.addChild(hasPrevFile() ? "PrevButton" : "PrevButtonDisabled", {}, 5);
-	player.controlBar.addChild(hasNextFile() ? "NextButton" : "NextButtonDisabled", {}, 6);
+	if (!isEmbedPage()) {
+		player.controlBar.addChild(hasPrevFile() ? "PrevButton" : "PrevButtonDisabled", {}, 5);
+		player.controlBar.addChild(hasNextFile() ? "NextButton" : "NextButtonDisabled", {}, 6);
+	}
 
 	//We only support one source for now
 	if (currentSourceData.method=='mega') {
@@ -1464,24 +1469,11 @@ $(document).ready(function() {
 		});
 
 		//TODO PENDING
-		$(".viewed-indicator").click(function(){
-			if ($(this).hasClass('not-viewed')){
-				markFileAsViewed($(this).attr('data-file-id'));
-			} else {
-				markFileAsNotViewed($(this).attr('data-file-id'));
-			}
-		});
 		$(".contact-link").click(function(){
 			showContactScreen('generic');
 		});
 		$(".fansub-downloads").click(function(){
 			window.open(atob($(this).attr('data-url')));
-		});
-		$(".version-lost").click(function(){
-			showContactScreen('version_lost');
-		});
-		$(".version-missing-links-link").click(function(){
-			showContactScreen('version_lost');
 		});
 		$(".version-tab").click(function(){
 			$(".version-tab").each(function(){
@@ -1552,7 +1544,7 @@ $(document).ready(function() {
 		});
 
 		//Search page logic
-		if ($('#search_query').length>0) {
+		if ($('#search_query').length>0 && $('.is-series-page').length==0) {
 			var temp = $('#search_query').val();
 			$('#search_query').focus().val('').val(temp);
 		}
@@ -1606,19 +1598,18 @@ $(document).ready(function() {
 	} else {
 		//This is an embed
 		$('html').addClass('page-no-overflow');
-		if ($('#data-item-type').val()=='manga') {
-			beginReaderTracking($('#data-file-id').val());
-			initializeReader($('#data-file-id').val());
+		$('#overlay').removeClass('hidden');
+		
+		if ($('#overlay-content > .player_extra_upper').length==0) {
+			$('<div class="player_extra_upper"><div class="player_extra_title">'+$('.embed-data').attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
 		} else {
-			beginFileTracking($('#data-file-id').val(), $('#data-method').val());
-			initializeFileDisplayer($('#data-title').val(), $('#data-method').val(), $('#data-duration').val(), atob($('#data-sources').val()));
+			$('#overlay-content > .player_extra_upper').removeClass('hidden');
+			$('.player_extra_title').html($('.embed-data').attr('data-title'));
 		}
+		//Remove previous errors
+		$('.player-error').remove();
+		requestFileData($('.embed-data').attr('data-file-id'));
 		window.parent.postMessage('embedInitialized', '*');
-
-		$('#overlay-close').click(function(){
-			sendReadEndAjax();
-			window.parent.postMessage('embedClosed', '*');
-		});
 	}
 
 	$(window).on('visibilitychange', function() {
