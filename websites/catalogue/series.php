@@ -39,6 +39,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<input id="autoopen_version_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['v']) ? (int)$_GET['v'] : ''); ?>">
 					<input id="autoopen_file_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['f']) ? (int)$_GET['f'] : ''); ?>">
+					<input id="series_id" type="hidden" value="<?php echo htmlspecialchars($series['id']); ?>">
 					<input id="seen_behavior" type="hidden" value="<?php echo 0; ?>">
 					<div class="series-header">
 						<img class="background" src="<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
@@ -63,7 +64,7 @@ if ($series['divisions']>1) {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
-	$additional_data.=$series['divisions'].(CATALOGUE_ITEM_TYPE=='manga' ? ' volums' : ' temporades');
+	$additional_data.=$series['divisions'].CATALOGUE_SEASON_STRING_PLURAL;
 }
 if ($series['number_of_episodes']>1) {
 	if ($additional_data!='') {
@@ -81,7 +82,7 @@ if (!empty($series['score'])) {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
-	$additional_data .= number_format($series['score'],2,","," ").' a '.(CATALOGUE_ITEM_TYPE=='liveaction' ? 'MyDramaList' : 'MyAnimeList');
+	$additional_data .= number_format($series['score'],2,","," ").' a '.CATALOGUE_SCORE_SOURCE;
 }
 ?>
 								<div class="series-additional-data"><?php echo htmlspecialchars($additional_data); ?></div>
@@ -92,15 +93,26 @@ if (!empty($series['score'])) {
 					<div class="section series-subheader">
 						<div class="series-thumbnail-holder">
 							<img class="series-thumbnail" src="<?php echo STATIC_URL; ?>/images/covers/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
+<?php
+if (!empty($user) && in_array($series['id'], $user['series_list_ids'])) {
+?>
+							<div class="normal-button remove-from-my-list"><i class="fas fa-fw fa-bookmark"></i> A la meva llista</div>
+<?php
+} else if (!empty($user)) {
+?>
+							<div class="normal-button add-to-my-list"><i class="far fa-fw fa-bookmark"></i> Afegeix a la meva llista</div>
+<?php
+}
+?>
 						</div>
 						<div class="series-synopsis">
-							<div class="series-synopsis-real"><?php echo $synopsis; ?></div>
+							<div class="series-synopsis-real expandable-content-default"><?php echo $synopsis; ?></div>
 							<span class="show-more hidden"><span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span></span>
 						</div>
 					</div>
 					<div class="section">
 <?php
-$result = query_series_data_for_series_page($series['id']);
+$result = query_series_data_for_series_page($user, $series['id']);
 
 //Check if specified version exists
 $version_found = FALSE;
@@ -224,24 +236,12 @@ while ($version = mysqli_fetch_assoc($result)) {
 
 				if ($is_first_in_empty_batch && $version['show_unavailable_episodes']==1) {
 ?>
-								<div class="empty-divisions"<?php echo ($index==0 ? ' style="margin-top: 0;"' : '') ?>>
-									<a onclick="$(this.parentNode.parentNode).find('.division').removeClass('hidden');$(this.parentNode.parentNode).find('.empty-divisions').addClass('hidden');">Hi ha més temporades/volums sense elements disponibles. Prem aquí per a mostrar-les totes.</a>
-								</div>
+								<div class="empty-divisions"><?php echo CATALOGUE_MORE_SEASONS_AVAILABLE; ?></div>
 <?php
 				}
 ?>
 								<details id="version-<?php echo $version['id']; ?>-division-<?php echo !empty($division['division_number']) ? $division['division_number'] : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
-<?php
-				if (CATALOGUE_ITEM_TYPE=='manga') {
-?>
-									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Volum únic' : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? 'Volum '.$division['division_number'] : 'Volum únic'))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 element disponible' : $division_available_episodes[$index].' elements disponibles') : 'No hi ha cap element disponible'; ?></span></div></div></summary>
-<?php
-				} else {
-?>
-									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"></i><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? 'Capítols normals' : (!empty($division['division_name']) ? $division['division_name'] : 'Temporada '.$division['division_number'])) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 element disponible' : $division_available_episodes[$index].' elements disponibles') : 'No hi ha cap element disponible'; ?></span></div></div></summary>
-<?php
-				}
-?>
+									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? CATALOGUE_SEASON_STRING_UNIQUE : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'] : CATALOGUE_SEASON_STRING_UNIQUE))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 element disponible' : $division_available_episodes[$index].' elements disponibles') : 'No hi ha cap element disponible'; ?></span></div></div></summary>
 									<div class="division-container">
 <?php
 				if ($division_available_episodes[$index]>0 || $version['show_unavailable_episodes']==1) {
@@ -310,7 +310,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 								<div class="version-fansub-list-and-rating">
 									<div class="version-fansub-list">
-										<div class="version-fansub-info"><?php echo mysqli_num_rows($fansubs)>1 ? 'Aquesta versió en català és fruit de la feina dels fansubs següents. No t’oblidis d’agrair-los la feina.' : 'Aquesta versió en català és fruit de la feina del fansub següent. No t’oblidis d’agrair-li la feina.'; ?></div>
+										<div class="version-fansub-info"><?php echo mysqli_num_rows($fansubs)>1 ? 'Aquesta versió en català és fruit de la feina d’aquests fansubs. No t’oblidis d’agrair-los-ho.' : 'Aquesta versió en català és fruit de la feina d’aquest fansub. No t’oblidis d’agrair-li-ho.'; ?></div>
 <?php
 	foreach ($fansubs as $fansub) {
 ?>
@@ -358,13 +358,19 @@ while ($version = mysqli_fetch_assoc($result)) {
 	}
 ?>
 									</div>
+<?php
+	if (!empty($user)) {
+?>
 									<div class="version-fansub-rating">
 										<div class="version-fansub-rating-title">Valora aquesta versió</div>
 										<div class="version-fansub-rating-buttons">
-											<span class="version-fansub-rating-positive fa far fa-fw fa-thumbs-up"></span>
-											<span class="version-fansub-rating-negative fa far fa-fw fa-thumbs-down"></span>
+											<span class="version-fansub-rating-positive fa fa-fw fa-thumbs-up<?php echo $version['user_rating']==1 ? ' version-fansub-rating-selected' : ''; ?>"></span>
+											<span class="version-fansub-rating-negative fa fa-fw fa-thumbs-down<?php echo $version['user_rating']==-1 ? ' version-fansub-rating-selected' : ''; ?>"></span>
 										</div>
 									</div>
+<?php
+	}
+?>
 								</div>
 							</div>
 						</div>
@@ -416,7 +422,7 @@ $resultra = query_related_series($user, $series['id'], $series['author'], $num_o
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'Continguts d’imatge real amb temàtiques en comú' : (CATALOGUE_ITEM_TYPE=='anime' ? 'Animes'.(SITE_IS_HENTAI ? ' hentai' : '').' amb temàtiques en comú' : 'Mangues'.(SITE_IS_HENTAI ? ' hentai' : '').' amb temàtiques en comú'); ?></h2>
+						<h2 class="section-title-main"><?php echo CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE; ?></h2>
 						<div class="section-content carousel swiper">
 							<div class="swiper-wrapper">
 <?php
@@ -445,7 +451,7 @@ $resultrm = query_related_series($user, $series['id'], $series['author'], $num_o
 if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo SITE_IS_HENTAI ? (CATALOGUE_ITEM_TYPE=='anime' ? 'Mangues hentai amb temàtiques en comú' : 'Animes hentai amb temàtiques en comú') : "Altres continguts amb temàtiques en comú"; ?></h2>
+						<h2 class="section-title-main"><?php echo CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE; ?></h2>
 						<div class="section-content carousel swiper">
 							<div class="swiper-wrapper">
 <?php

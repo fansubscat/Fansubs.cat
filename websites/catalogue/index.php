@@ -14,13 +14,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 					<div class="results-layout catalogue-index<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){
-	if (CATALOGUE_ITEM_TYPE=='liveaction' || SITE_IS_HENTAI) {
-		$round_interval=25;
-	} else {
-		$round_interval=50;
-	}
-
-	$result = query_total_number_of_series($round_interval);
+	$result = query_total_number_of_series(CATALOGUE_ROUND_INTERVAL);
 	$row = mysqli_fetch_assoc($result);
 ?>
 						<div class="section featured-section">

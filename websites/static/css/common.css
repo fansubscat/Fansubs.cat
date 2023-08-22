@@ -645,6 +645,7 @@ select:not(.date-month) {
 	margin-bottom: 2.5rem;
 	display: flex;
 	align-items: center;
+	line-height: 1.2;
 }
 
 .section-title-with-table {

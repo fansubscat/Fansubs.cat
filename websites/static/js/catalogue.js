@@ -965,13 +965,17 @@ function markAsSeen(fileId, dontAsk) {
 		var previouslyUnreadEpisodeIds = previouslyUnreadEpisodes.get().map(a => $(a).attr('data-file-id'));
 
 		isCheckingAsSeenProgrammatically = true;
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
 		for (var i=0;i<previouslyUnreadEpisodeIds.length;i++) {
-			$('.file-launcher[data-file-id="'+previouslyUnreadEpisodeIds[i]+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);;
+			$('.file-launcher[data-file-id="'+previouslyUnreadEpisodeIds[i]+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
 		}
 		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen(previouslyUnreadEpisodeIds.concat([fileId]), true);
 	} else {
 		//Mark only the current file
+		isCheckingAsSeenProgrammatically = true;
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
+		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen([fileId], true);
 	}
 }
@@ -992,6 +996,32 @@ function executeMarkAsSeen(fileIds, isSeen) {
 
 function bookmarkRemoved(seriesId) {
 	//Just ignore it, this is a callback not used in the catalogue section
+}
+
+function toggleBookmarkFromSeriesPage(){
+	var action;
+	var seriesId = $('#series_id').val();
+	if ($('.remove-from-my-list').length>0)	{
+		$('.remove-from-my-list').addClass('add-to-my-list').removeClass('remove-from-my-list').html('<i class="far fa-fw fa-bookmark"></i> Afegeix a la meva llista');
+		action='remove';
+		bookmarkRemoved(seriesId);
+	} else {
+		$('.add-to-my-list').addClass('remove-from-my-list').removeClass('add-to-my-list').html('<i class="fas fa-fw fa-bookmark"></i> A la meva llista');
+		action='add';
+	}
+
+	var values = {
+		series_id: seriesId,
+		action: action
+	};
+
+	$.post({
+		url: USERS_URL+"/do_save_to_my_list.php",
+		data: values,
+		xhrFields: {
+			withCredentials: true
+		},
+	});
 }
 
 function removeFromContinueWatching(element, fileId){
@@ -1382,29 +1412,70 @@ function requestFileData(fileId) {
 	});
 }
 
-$(document).ready(function() {
+function applyVersionRating(pressedButton, oppositeButton, ratingClicked) {
+	var value;
+	if (pressedButton.hasClass("version-fansub-rating-selected")) {
+		//rated this way, mark as unrated
+		pressedButton.removeClass("version-fansub-rating-selected");
+		value = 0;
+	} else {
+		//not rated this way, mark as rated
+		pressedButton.addClass("version-fansub-rating-selected");
+		value = ratingClicked;
+		//remove other button
+		if (oppositeButton.hasClass("version-fansub-rating-selected")) {
+			oppositeButton.removeClass("version-fansub-rating-selected");
+		}
+	}
+
+	var values = {
+		version_id: +$('.version-tab-selected').attr('data-version-id'),
+		rating: value
+	};
+
+	$.post({
+		url: getBaseUrl()+"/rate_version.php",
+		data: values,
+		xhrFields: {
+			withCredentials: true
+		},
+	});
+}
+
+function resizeSynopsisHeight() {
 	var maxSynopsisHeight = $('.series-synopsis-real').length>0 ? parseFloat(1.2 * 5 * parseFloat(getComputedStyle($('.series-synopsis-real')[0]).fontSize)) : 0;
+
+	if ($('.series-synopsis-real').hasClass('expandable-content-default')) {
+		$('.series-synopsis-real').removeClass('expandable-content-default');
+	}
 
 	if ($('.series-synopsis-real').height()>maxSynopsisHeight) {
 		$(".show-more").removeClass('hidden');
-		$('.series-synopsis-real').addClass('expandable-content-hidden');
-		$(".show-more").on("click", function() {
-			if($('.series-synopsis-real').hasClass('expandable-content-hidden')){
-				linkText = '<span class="fa fa-fw fa-caret-up"></span> Mostra’n menys <span class="fa fa-fw fa-caret-up"></span>';
-				$(".series-synopsis-real").removeClass("expandable-content-hidden");
-				$(".series-synopsis-real").addClass("expandable-content-shown");
-			} else {
-				linkText = '<span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span>';
-				$(".series-synopsis-real").removeClass("expandable-content-shown");
-				$(".series-synopsis-real").addClass("expandable-content-hidden");
-			};
-
-			$(this).html(linkText);
-		});
-	} else {
+		$(".show-more").addClass('has-been-shown');
+		if (!$('.series-synopsis-real').hasClass('expandable-content-shown')) {
+			$('.series-synopsis-real').addClass('expandable-content-hidden');
+		}
+	} else if (!$(".show-more").hasClass('has-been-shown')) {
 		$(".show-more").addClass('hidden');
 		$('.series-synopsis-real').removeClass('expandable-content-hidden');
 	}
+}
+
+$(document).ready(function() {
+	$(".show-more").on("click", function() {
+		if($('.series-synopsis-real').hasClass('expandable-content-hidden')){
+			linkText = '<span class="fa fa-fw fa-caret-up"></span> Mostra’n menys <span class="fa fa-fw fa-caret-up"></span>';
+			$(".series-synopsis-real").removeClass("expandable-content-hidden");
+			$(".series-synopsis-real").addClass("expandable-content-shown");
+		} else {
+			linkText = '<span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span>';
+			$(".series-synopsis-real").removeClass("expandable-content-shown");
+			$(".series-synopsis-real").addClass("expandable-content-hidden");
+		};
+
+		$(this).html(linkText);
+	});
+	resizeSynopsisHeight();
 
 	const Button = videojs.getComponent('Button');
 
@@ -1490,10 +1561,15 @@ $(document).ready(function() {
 			requestFileData($(this).attr('data-file-id'));
 		});
 
-		//TODO PENDING
-		$(".contact-link").click(function(){
-			showContactScreen('generic');
+		$(".remove-from-my-list, .add-to-my-list").click(function(){
+			toggleBookmarkFromSeriesPage();
 		});
+
+		$(".empty-divisions").click(function(){
+			$(this).parent().parent().find('.division').removeClass('hidden');
+			$(this).parent().parent().find('.empty-divisions').addClass('hidden');
+		});
+
 		$(".fansub-downloads").click(function(){
 			window.open(atob($(this).attr('data-url')));
 		});
@@ -1507,6 +1583,14 @@ $(document).ready(function() {
 			$(this).addClass("version-tab-selected");
 			$("#version-content-"+$(this).attr('data-version-id')).removeClass("hidden");
 		});
+		$(".version-fansub-rating-positive").click(function(){
+			var oppositeButton = $(this).parent().find('.version-fansub-rating-negative');
+			applyVersionRating($(this), oppositeButton, 1);
+		});
+		$(".version-fansub-rating-negative").click(function(){
+			var oppositeButton = $(this).parent().find('.version-fansub-rating-positive');
+			applyVersionRating($(this), oppositeButton, -1);
+		});
 
 		//Search form
 		$('#search_form').submit(function(){
@@ -1518,9 +1602,6 @@ $(document).ready(function() {
 		});
 		initializeSearchAutocomplete();
 
-		//Remove parameters from URL
-		//history.replaceState(null, null, window.location.pathname);
-
 		//Autoopen according to parameters
 		if ($('#autoopen_file_id').length>0 && $('#autoopen_file_id').val()!='') {
 			$('.version-tab[data-version-id="'+$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].parentNode.parentNode.parentNode.parentNode.id.split('-').pop()+'"]').click();
@@ -1530,6 +1611,8 @@ $(document).ready(function() {
 
 		$(window).resize(function() {
 			if ($(window).width()!=lastWindowWidth) {
+				resizeSynopsisHeight();
+
 				//Reposition underline
 				var target = document.querySelector(".catalogues-underline");
 				var active = document.querySelector("a.catalogues-underline-active");

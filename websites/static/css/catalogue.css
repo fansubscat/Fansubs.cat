@@ -1389,8 +1389,8 @@
 }
 
 .series-thumbnail {
-	width: 100%;
-	height: 100%;
+	width: 26rem;
+	height: 36.8rem;
 	object-fit: cover;
 	border-radius: 0.8rem;
 }
@@ -1399,11 +1399,6 @@
 	margin-top: -31rem;
 	z-index: 1;
 	width: 26rem;
-	height: 36.8rem;
-	min-width: 26rem;
-	min-height: 36.8rem;
-	max-width: 26rem;
-	max-height: 36.8rem;
 	filter: drop-shadow(0 0 2.6rem rgba(var(--negative-color),0.5));
 }
 
@@ -1440,6 +1435,11 @@
 }
 
 .expandable-content-hidden {
+	overflow: hidden;
+	max-height: calc(1.2 * 1.5rem * 4);
+}
+
+.expandable-content-default {
 	overflow: hidden;
 	max-height: calc(1.2 * 1.5rem * 5);
 }
@@ -1538,8 +1538,8 @@
 	flex-grow: 1;
 	padding-top: 2rem;
 	padding-bottom: 2rem;
-	padding-left: var(--page-padding);
-	padding-right: var(--page-padding);
+	padding-left: calc(var(--page-padding) / 2);
+	padding-right: calc(var(--page-padding) / 2);
 	font-size: 2rem;
 	flex-basis: 0;
 	justify-content: center;
@@ -1643,7 +1643,7 @@
 }
 
 .version-fansub-rating-positive, .version-fansub-rating-negative {
-	opacity: 0.5;
+	opacity: 0.75;
 	cursor: pointer;
 }
 
@@ -1651,6 +1651,17 @@
 	opacity: 1;
 	font-weight: 900;
 	color: rgb(var(--primary-color));
+}
+
+.add-to-my-list {
+	width: 100%;
+	margin-top: 1rem;
+}
+
+.remove-from-my-list {
+	width: 100%;
+	background: rgb(var(--secondary-color));
+	margin-top: 1rem;
 }
 
 .tadaima-post {
@@ -1738,6 +1749,14 @@ details[open]:not(.closing) .division-arrow {
 
 .division-unavailable, .episode-unavailable {
 	opacity: 0.5;
+}
+
+.empty-divisions {
+	text-align: center;
+	background-color: rgba(var(--neutral-color), 0.2);
+	padding: 1rem;
+	font-size: 1.5rem;
+	cursor: pointer;
 }
 
 .version-fansub-icons .fansubs {
@@ -2006,6 +2025,14 @@ input:checked + .viewed-slider:before {
 	.version-fansub-rating-positive:hover, .version-fansub-rating-negative:hover {
 		opacity: 1;
 	}
+
+	.remove-from-my-list:hover {
+		background-color: rgb(var(--secondary-color-hover));
+	}
+
+	.empty-divisions:hover {
+		background-color: rgba(var(--neutral-color), 0.3);
+	}
 }
 
 @media (max-width: 1200px){
@@ -2051,6 +2078,14 @@ input:checked + .viewed-slider:before {
 
 	.recommendation .special-day .text {
 		display: none;
+	}
+
+	.version-tab {
+		font-size: 1.6rem;
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+		padding-left: 0.5rem;
+		padding-right: 0.5rem;
 	}
 }
 
@@ -2279,15 +2314,18 @@ input:checked + .viewed-slider:before {
 		align-items: center;
 	}
 
-	.series-thumbnail-holder {
-		margin-top: 0rem;
+	.series-thumbnail {
 		width: 13rem;
 		height: 18.4rem;
-		min-width: 13rem;
-		min-height: 18.4rem;
-		max-width: 13rem;
-		max-height: 18.4rem;
+	}
+
+	.series-thumbnail-holder {
+		margin-top: 0rem;
+		width: unset;
 		filter: drop-shadow(0 0 1.3rem rgba(var(--negative-color),0.5));
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	.series-title {
@@ -2427,6 +2465,18 @@ input:checked + .viewed-slider:before {
 
 	.episode-seen-cell .switch {
 		font-size: 0.5rem;
+	}
+
+	.add-to-my-list, .remove-from-my-list {
+		width: unset;
+	}
+
+	.expandable-content-hidden {
+		max-height: calc(1.2 * 1.3rem * 4);
+	}
+
+	.expandable-content-default {
+		max-height: calc(1.2 * 1.3rem * 5);
 	}
 }
 

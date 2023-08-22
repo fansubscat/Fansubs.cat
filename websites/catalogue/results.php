@@ -22,8 +22,8 @@ if (defined('PAGE_IS_SEARCH')) {
 	$min_year = 1950;
 	$max_year = date('Y');
 	$min_duration=0;
-	$max_duration=(CATALOGUE_ITEM_TYPE=='manga' ? 100 : 120);
-	$length_type=(CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'minutes');
+	$max_duration=CATALOGUE_MAXIMUM_DURATION;
+	$length_type=CATALOGUE_DURATION_SLIDER_FORMATTING;
 	$fansub_slug = NULL;
 	$show_blacklisted_fansubs = TRUE;
 	$show_lost_content = FALSE;
@@ -220,7 +220,7 @@ if (defined('PAGE_IS_SEARCH')) {
 	if (!empty($user)) {
 		array_push($sections, array(
 			'type' => 'chapters-carousel',
-			'title' => '<i class="fa fa-fw fa-eye"></i> Continua '.(CATALOGUE_ITEM_TYPE=='manga' ? 'llegint' : 'mirant'),
+			'title' => '<i class="fa fa-fw fa-eye"></i> '.CATALOGUE_CONTINUE_WATCHING_STRING,
 			'specific_version' => TRUE,
 			'result' => query_home_continue_watching_by_user_id($user['id']),
 		));

@@ -10,6 +10,11 @@ function string_ends_with($haystack, $needle) {
 	return substr($haystack, -$length) === $needle;
 }
 
+function sendRegistrationEmail($email, $username) {
+	$message = "Bon dia, $username,\n\nReps aquest correu perquè t’has registrat com a usuari a Fansubs.cat.\n\nSi mai n’oblides la contrasenya, fes servir l’opció «He oblidat la contrasenya» del següent enllaç: ".USERS_URL."/inicia-la-sessio\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\nFansubs.cat.";
+	mail($email,'Registre a Fansubs.cat', $message,'From: Fansubs.cat <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "Fansubs.cat"');
+}
+
 function register_user(){
 	//Check if we have all the data
 	if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) && is_numeric($_POST['birthday_day']) && is_numeric($_POST['birthday_month']) && is_numeric($_POST['birthday_year'])) {
@@ -79,6 +84,7 @@ function register_user(){
 
 	//Insert user
 	query_insert_registered_user($username, $password, $email_address, $birth_year."-".$birth_month."-".$birth_day);
+	sendRegistrationEmail($email_address, $username);
 
 	//Set the session username, the next request will fill in the $user variable automatically
 	$_SESSION['username']=$_POST['username'];

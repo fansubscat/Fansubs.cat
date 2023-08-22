@@ -277,7 +277,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 		} else {
 ?>
-					<a class="logo-small" href="<?php echo SITE_IS_HENTAI ? SITE_BASE_URL : MAIN_URL; ?>" title="Torna a la pàgina d’inici<?php echo !SITE_IS_HENTAI ? " de Fansubs.cat" : ""; ?>">
+					<a class="logo-small" href="<?php echo SITE_IS_HENTAI ? SITE_BASE_URL : MAIN_URL; ?>" title="Torna a la pàgina d’inici<?php echo !SITE_IS_HENTAI ? " de Fansubs.cat" : " del portal de hentai"; ?>">
 						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
 <?php
 			if (PAGE_STYLE_TYPE=='catalogue' && SITE_IS_HENTAI) {

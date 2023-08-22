@@ -76,15 +76,15 @@ if (isset($_GET['status']) && is_array($_GET['status']) && count($_GET['status']
 } else {
 	$param_status_array = array(1,3,2,4,5);
 }
-if (isset($_GET['min_duration']) && preg_match("/\\d*/", $_GET['min_duration']) && $_GET['min_duration']>=(CATALOGUE_ITEM_TYPE=='manga' ? 1 : 0) && $_GET['min_duration']<=(CATALOGUE_ITEM_TYPE=='manga' ? 100 : 120)) {
+if (isset($_GET['min_duration']) && preg_match("/\\d*/", $_GET['min_duration']) && $_GET['min_duration']>=CATALOGUE_MINIMUM_DURATION && $_GET['min_duration']<=CATALOGUE_MAXIMUM_DURATION) {
 	$param_min_duration = $_GET['min_duration'];
 } else {
-	$param_min_duration = (CATALOGUE_ITEM_TYPE=='manga' ? 1 : 0);
+	$param_min_duration = CATALOGUE_MINIMUM_DURATION;
 }
-if (isset($_GET['max_duration']) && preg_match("/\\d*/", $_GET['max_duration']) && $_GET['max_duration']>=(CATALOGUE_ITEM_TYPE=='manga' ? 1 : 0) && $_GET['max_duration']<=(CATALOGUE_ITEM_TYPE=='manga' ? 100 : 120)) {
+if (isset($_GET['max_duration']) && preg_match("/\\d*/", $_GET['max_duration']) && $_GET['max_duration']>=CATALOGUE_MINIMUM_DURATION && $_GET['max_duration']<=CATALOGUE_MAXIMUM_DURATION) {
 	$param_max_duration = $_GET['max_duration'];
 } else {
-	$param_max_duration = (CATALOGUE_ITEM_TYPE=='manga' ? '100' : '120');
+	$param_max_duration = CATALOGUE_MAXIMUM_DURATION;
 }
 if (isset($_GET['min_rating']) && preg_match("/\\d/", $_GET['min_rating']) && $_GET['min_rating']>=0 && $_GET['min_rating']<=4) {
 	$param_min_rating = $_GET['min_rating'];
@@ -167,10 +167,10 @@ foreach ($statuses as $status_id) {
 ?>
 							<label>Durada mitjana</label>
 							<div id="catalogue-search-duration" class="double-slider-container">
-								<input id="duration-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_duration; ?>" min="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '1' : '0'; ?>" max="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '100' : '120'; ?>" onchange="loadSearchResults();">
-								<input id="duration-to-slider" class="double-slider-to" type="range" value="<?php echo $param_max_duration; ?>" min="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '1' : '0'; ?>" max="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '100' : '120'; ?>" onchange="loadSearchResults();">
-								<div id="duration-from-input" data-value-formatting="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'time'; ?>" class="double-slider-input-from"><?php echo CATALOGUE_ITEM_TYPE=='manga' ? get_pages_from_duration($param_min_duration) : get_time_from_duration($param_min_duration); ?></div>
-								<div id="duration-to-input" data-value-formatting="<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'pages' : 'time'; ?>-max" class="double-slider-input-to"><?php echo CATALOGUE_ITEM_TYPE=='manga' ? get_pages_from_duration($param_max_duration) : get_time_from_duration($param_max_duration); ?></div>
+								<input id="duration-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_duration; ?>" min="<?php echo CATALOGUE_MINIMUM_DURATION; ?>" max="<?php echo CATALOGUE_MAXIMUM_DURATION; ?>" onchange="loadSearchResults();">
+								<input id="duration-to-slider" class="double-slider-to" type="range" value="<?php echo $param_max_duration; ?>" min="<?php echo CATALOGUE_MINIMUM_DURATION; ?>" max="<?php echo CATALOGUE_MAXIMUM_DURATION; ?>" onchange="loadSearchResults();">
+								<div id="duration-from-input" data-value-formatting="<?php echo CATALOGUE_DURATION_SLIDER_FORMATTING; ?>" class="double-slider-input-from"><?php echo CATALOGUE_DURATION_SLIDER_FORMATTING=='pages' ? get_pages_from_duration($param_min_duration) : get_time_from_duration($param_min_duration); ?></div>
+								<div id="duration-to-input" data-value-formatting="<?php echo CATALOGUE_DURATION_SLIDER_FORMATTING; ?>-max" class="double-slider-input-to"><?php echo CATALOGUE_DURATION_SLIDER_FORMATTING=='pages' ? get_pages_from_duration($param_max_duration) : get_time_from_duration($param_max_duration); ?></div>
 							</div>
 <?php
 if (!SITE_IS_HENTAI) {
@@ -185,14 +185,14 @@ if (!SITE_IS_HENTAI) {
 <?php
 }
 ?>
-							<label>Puntuació a <?php echo CATALOGUE_ITEM_TYPE=='liveaction' ? 'MyDramaList' : 'MyAnimeList'; ?></label>
+							<label>Puntuació a <?php echo CATALOGUE_SCORE_SOURCE; ?></label>
 							<div id="catalogue-search-score" class="double-slider-container">
 								<input id="score-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_score; ?>" min="0" max="100" onchange="loadSearchResults();">
 								<input id="score-to-slider" class="double-slider-to" type="range" value="<?php echo $param_max_score; ?>" min="0" max="100" onchange="loadSearchResults();">
 								<div id="score-from-input" data-value-formatting="score" class="double-slider-input-from"><?php echo get_score_from_integer($param_min_score); ?></div>
 								<div id="score-to-input" data-value-formatting="score" class="double-slider-input-to"><?php echo get_score_from_integer($param_max_score); ?></div>
 							</div>
-							<label>Any de primera <?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'publicació' : 'emissió'; ?></label>
+							<label><?php echo CATALOGUE_FIRST_PUBLISH_STRING; ?></label>
 							<div id="catalogue-search-year" class="double-slider-container">
 								<input id="year-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_year; ?>" min="1950" max="<?php echo date('Y'); ?>" onchange="loadSearchResults();">
 								<input id="year-to-slider" class="double-slider-to" type="range" value="<?php echo $param_max_year; ?>" min="1950" max="<?php echo date('Y'); ?>" onchange="loadSearchResults();">
@@ -230,7 +230,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 								<label for="catalogue-search-include-full-catalogue" class="for-checkbox">Altres resultats de la cerca</label>
 							</div>
 <?php
-if (CATALOGUE_ITEM_TYPE!='liveaction' && !SITE_IS_HENTAI) {
+if (CATALOGUE_HAS_DEMOGRAPHIES && !SITE_IS_HENTAI) {
 ?>
 							<label>Demografies</label>
 <?php

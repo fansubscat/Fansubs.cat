@@ -33,111 +33,6 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
 		break;
-	case 'manga.fansubs.online':
-		define('SITE_BASE_URL', 'https://manga.fansubs.online');
-		define('SITE_PATH', '');
-		define('SITE_TITLE', 'Manga en català | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga editat pels fansubs en català!');
-		define('SITE_INTERNAL_NAME', 'manga');
-		define('SITE_INTERNAL_TYPE', 'catalogue');
-		define('SITE_IS_CATALOGUE', TRUE);
-		define('SITE_IS_HENTAI', FALSE);
-		define('CATALOGUE_ITEM_TYPE', 'manga');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'oneshot');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'serialized');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-book-open');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-book');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'One-shots');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Serialitzats');
-		define('CATALOGUE_ITEM_STRING_SINGULAR', 'manga');
-		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet llegir en línia més de %d mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.');
-/*		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'One-shots');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME_SINGULAR', 'One-shot');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-book-open');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'oneshot');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_TADAIMA_ID', 9);
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Serialitzats');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME_SINGULAR', 'Serialitzat');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-book');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'serialized');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_TADAIMA_ID', 9);
-		define('CATALOGUE_DIVISION_NAME', 'Volum');
-		define('CATALOGUE_DIVISION_NAME', 9);
-			'division_name' => "Volum",
-			'division_name_lc' => "volum",
-			'preview_prefix' => "Manga",
-			//Sections
-			'section_continue_watching' => "<i class=\"fa fa-fw fa-eye\"></i> Continua llegint",
-			'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
-			'section_last_completed' => "<i class=\"fa fa-fw fa-check\"></i> Finalitzats recentment",
-			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l’atzar",
-			'section_popular' => "<i class=\"fa fa-fw fa-fire\"></i> Més populars",
-			'section_more_recent' => "<i class=\"fa fa-fw fa-stopwatch\"></i> Més actuals",
-			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
-			'section_search_anime' => "<i class=\"fa fa-fw fa-display\"></i> Resultats d’anime",
-			'section_search_manga' => "<i class=\"fa fa-fw fa-book-open\"></i> Resultats de manga",
-			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’imatge real",
-			'section_related' => "<i class=\"fa fa-fw fa-book-open\"></i> Mangues recomanats",
-			'option_show_cancelled' => "Mostra els mangues cancel·lats o abandonats pels fansubs",
-			'option_show_missing' => "Mostra els mangues amb algun capítol sense enllaç vàlid",
-		);*/
-		break;
-	case 'imatgereal.fansubs.online':
-		define('SITE_BASE_URL', 'https://imatgereal.fansubs.online');
-		define('SITE_PATH', '');
-		define('SITE_TITLE', 'Imatge real en català | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’imatge real subtitulat pels fansubs en català!');
-		define('SITE_INTERNAL_NAME', 'liveaction');
-		define('SITE_INTERNAL_TYPE', 'catalogue');
-		define('SITE_IS_CATALOGUE', TRUE);
-		define('SITE_IS_HENTAI', FALSE);
-		define('CATALOGUE_ITEM_TYPE', 'liveaction');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'movie');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'series');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-video');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-display');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'Films');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
-		define('CATALOGUE_ITEM_STRING_SINGULAR', 'contingut d’imatge real');
-		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet veure en streaming més de %d continguts d’imatge real subtitulats en català. Ara pots gaudir de tot el contingut d’imatge real de tots els fansubs en català en un únic lloc.');
-/*		$cat_config = array(
-			'site_robot_message' => "Fansubs.cat et permet veure en streaming més de %d continguts d’imatge real subtitulats en català. Ara pots gaudir de tot el contingut d’imatge real de tots els fansubs en català en un únic lloc.",
-			'site_robot_message_hentai' => "Fansubs.cat et permet veure en streaming més de %d continguts d’imatge real subtitulats en català. Ara pots gaudir de tot el contingut d’imatge real de tots els fansubs en català en un únic lloc.",
-			'items_type' => "liveaction",
-			'filmsoneshots' => "Films",
-			'filmsoneshots_icon' => "fa-video",
-			'filmsoneshots_s' => "Film",
-			'serialized' => "Sèries",
-			'serialized_icon' => "fa-display",
-			'filmsoneshots_db' => "movie",
-			'serialized_db' => "series",
-			'filmsoneshots_tadaima_forum_id' => "14",
-			'serialized_tadaima_forum_id' => "16",
-			'items_string_s' => "contingut d’imatge real",
-			'items_string_p' => "continguts d’imatge real",
-			'items_string_del' => "del contingut d’imatge real",
-			'being_published' => "en emissió",
-			'more_divisions_available' => "Hi ha més temporades sense contingut disponible. Prem per a mostrar-les totes.",
-			'division_name' => "Temporada",
-			'division_name_lc' => "temporada",
-			'preview_prefix' => "Imatge real",
-			//Sections
-			'section_continue_watching' => "<i class=\"fa fa-fw fa-eye\"></i> Continua mirant",
-			'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
-			'section_last_completed' => "<i class=\"fa fa-fw fa-check\"></i> Finalitzats recentment",
-			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l’atzar",
-			'section_popular' => "<i class=\"fa fa-fw fa-fire\"></i> Més populars",
-			'section_more_recent' => "<i class=\"fa fa-fw fa-stopwatch\"></i> Més actuals",
-			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
-			'section_search_anime' => "<i class=\"fa fa-fw fa-display\"></i> Resultats d’anime",
-			'section_search_manga' => "<i class=\"fa fa-fw fa-book-open\"></i> Resultats de manga",
-			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’imatge real",
-			'section_related' => "<i class=\"fa fa-fw fa-tv\"></i> Continguts d’imatge real recomanats",
-			'section_related_other' => "<i class=\"fa fa-fw fa-square-plus\"></i> Altres continguts recomanats",
-			'option_show_cancelled' => "Mostra els continguts d’imatge real cancel·lats o abandonats pels fansubs",
-			'option_show_missing' => "Mostra els continguts d’imatge real amb algun capítol sense enllaç vàlid",
-		);*/
-		break;
 	case 'anime.fansubs.online':
 	default:
 		define('SITE_BASE_URL', 'https://anime.fansubs.online');
@@ -157,41 +52,89 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
 		define('CATALOGUE_ITEM_STRING_SINGULAR', 'anime');
 		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet veure en streaming més de %d animes subtitulats en català. Ara pots gaudir de tot l’anime de tots els fansubs en català en un únic lloc.');
-		/*$cat_config = array(
-			'items_type' => "anime",
-			'filmsoneshots' => "Films",
-			'filmsoneshots_icon' => "fa-video",
-			'filmsoneshots_s' => "Film",
-			'serialized' => "Sèries",
-			'serialized_icon' => "fa-display",
-			'filmsoneshots_db' => "movie",
-			'serialized_db' => "series",
-			'filmsoneshots_tadaima_forum_id' => "14",
-			'serialized_tadaima_forum_id' => "10",
-			'items_string_s' => "anime",
-			'items_string_p' => "animes",
-			'items_string_del' => "de l’anime",
-			'being_published' => "en emissió",
-			'more_divisions_available' => "Hi ha més temporades sense contingut disponible. Prem per a mostrar-les totes.",
-			'division_name' => "Temporada",
-			'division_name_lc' => "temporada",
-			'preview_prefix' => "Anime",
-			//Sections
-			'section_continue_watching' => "<i class=\"fa fa-fw fa-eye\"></i> Continua mirant",
-			'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
-			'section_last_completed' => "<i class=\"fa fa-fw fa-check\"></i> Finalitzats recentment",
-			'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l’atzar",
-			'section_popular' => "<i class=\"fa fa-fw fa-fire\"></i> Més populars",
-			'section_more_recent' => "<i class=\"fa fa-fw fa-stopwatch\"></i> Més actuals",
-			'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
-			'section_search_anime' => "<i class=\"fa fa-fw fa-display\"></i> Resultats d’anime",
-			'section_search_manga' => "<i class=\"fa fa-fw fa-book-open\"></i> Resultats de manga",
-			'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’imatge real",
-			'section_related' => "<i class=\"fa fa-fw fa-tv\"></i> Animes recomanats",
-			'section_related_other' => "<i class=\"fa fa-fw fa-square-plus\"></i> Altres continguts recomanats",
-			'option_show_cancelled' => "Mostra els animes cancel·lats o abandonats pels fansubs",
-			'option_show_missing' => "Mostra els animes amb algun capítol sense enllaç vàlid",
-		);*/
+		define('CATALOGUE_MINIMUM_DURATION', 0);
+		define('CATALOGUE_MAXIMUM_DURATION', 120);
+		define('CATALOGUE_DURATION_SLIDER_FORMATTING', 'time');
+		define('CATALOGUE_SCORE_SOURCE', 'MyAnimeList');
+		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera emissió');
+		define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
+		define('CATALOGUE_ROUND_INTERVAL', 50);
+		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
+		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
+		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
+		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
+		define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Temporada');
+		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Animes amb temàtiques en comú');
+		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
+		define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més temporades sense elements disponibles. Prem aquí per a mostrar-les totes.');
+		break;
+	case 'manga.fansubs.online':
+		define('SITE_BASE_URL', 'https://manga.fansubs.online');
+		define('SITE_PATH', '');
+		define('SITE_TITLE', 'Manga en català | Fansubs.cat');
+		define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga editat pels fansubs en català!');
+		define('SITE_INTERNAL_NAME', 'manga');
+		define('SITE_INTERNAL_TYPE', 'catalogue');
+		define('SITE_IS_CATALOGUE', TRUE);
+		define('SITE_IS_HENTAI', FALSE);
+		define('CATALOGUE_ITEM_TYPE', 'manga');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'oneshot');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'serialized');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-book-open');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-book');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'One-shots');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Serialitzats');
+		define('CATALOGUE_ITEM_STRING_SINGULAR', 'manga');
+		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet llegir en línia més de %d mangues editats en català. Ara pots gaudir de tot el manga de tots els fansubs en català en un únic lloc.');
+		define('CATALOGUE_MINIMUM_DURATION', 1);
+		define('CATALOGUE_MAXIMUM_DURATION', 100);
+		define('CATALOGUE_DURATION_SLIDER_FORMATTING', 'pages');
+		define('CATALOGUE_SCORE_SOURCE', 'MyAnimeList');
+		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera publicació');
+		define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
+		define('CATALOGUE_ROUND_INTERVAL', 50);
+		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
+		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
+		define('CATALOGUE_SEASON_STRING_PLURAL', 'volums');
+		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Volum únic');
+		define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Volum');
+		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Mangues amb temàtiques en comú');
+		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
+		define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més volums sense elements disponibles. Prem aquí per a mostrar-los tots.');
+		break;
+	case 'imatgereal.fansubs.online':
+		define('SITE_BASE_URL', 'https://imatgereal.fansubs.online');
+		define('SITE_PATH', '');
+		define('SITE_TITLE', 'Imatge real en català | Fansubs.cat');
+		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’imatge real subtitulat pels fansubs en català!');
+		define('SITE_INTERNAL_NAME', 'liveaction');
+		define('SITE_INTERNAL_TYPE', 'catalogue');
+		define('SITE_IS_CATALOGUE', TRUE);
+		define('SITE_IS_HENTAI', FALSE);
+		define('CATALOGUE_ITEM_TYPE', 'liveaction');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'movie');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'series');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-video');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-display');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'Films');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
+		define('CATALOGUE_ITEM_STRING_SINGULAR', 'contingut d’imatge real');
+		define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet veure en streaming més de %d continguts d’imatge real subtitulats en català. Ara pots gaudir de tot el contingut d’imatge real de tots els fansubs en català en un únic lloc.');
+		define('CATALOGUE_MINIMUM_DURATION', 0);
+		define('CATALOGUE_MAXIMUM_DURATION', 120);
+		define('CATALOGUE_DURATION_SLIDER_FORMATTING', 'time');
+		define('CATALOGUE_SCORE_SOURCE', 'MyDramaList');
+		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera emissió');
+		define('CATALOGUE_HAS_DEMOGRAPHIES', FALSE);
+		define('CATALOGUE_ROUND_INTERVAL', 25);
+		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
+		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
+		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
+		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
+		define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Temporada');
+		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Continguts d’imatge real amb temàtiques en comú');
+		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
+		define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més temporades sense elements disponibles. Prem aquí per a mostrar-les totes.');
 		break;
 	case 'hentai.fansubs.online':
 		$path = explode('/', $_SERVER['REQUEST_URI']);
@@ -214,41 +157,21 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 			define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
 			define('CATALOGUE_ITEM_STRING_SINGULAR', 'anime');
 			define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet veure en streaming anime hentai subtitulat en català. Ara pots gaudir de tot l’anime hentai de tots els fansubs en català en un únic lloc.');
-			/*$cat_config = array(
-				'items_type' => "anime",
-				'filmsoneshots' => "Films",
-				'filmsoneshots_icon' => "fa-video",
-				'filmsoneshots_s' => "Film",
-				'serialized' => "Sèries",
-				'serialized_icon' => "fa-display",
-				'filmsoneshots_db' => "movie",
-				'serialized_db' => "series",
-				'filmsoneshots_tadaima_forum_id' => "14",
-				'serialized_tadaima_forum_id' => "10",
-				'items_string_s' => "anime",
-				'items_string_p' => "animes",
-				'items_string_del' => "de l’anime",
-				'being_published' => "en emissió",
-				'more_divisions_available' => "Hi ha més temporades sense contingut disponible. Prem per a mostrar-les totes.",
-				'division_name' => "Temporada",
-				'division_name_lc' => "temporada",
-				'preview_prefix' => "Anime",
-				//Sections
-				'section_continue_watching' => "<i class=\"fa fa-fw fa-eye\"></i> Continua mirant",
-				'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
-				'section_last_completed' => "<i class=\"fa fa-fw fa-check\"></i> Finalitzats recentment",
-				'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l’atzar",
-				'section_popular' => "<i class=\"fa fa-fw fa-fire\"></i> Més populars",
-				'section_more_recent' => "<i class=\"fa fa-fw fa-stopwatch\"></i> Més actuals",
-				'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
-				'section_search_anime' => "<i class=\"fa fa-fw fa-display\"></i> Resultats d’anime",
-				'section_search_manga' => "<i class=\"fa fa-fw fa-book-open\"></i> Resultats de manga",
-				'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’imatge real",
-				'section_related' => "<i class=\"fa fa-fw fa-tv\"></i> Animes recomanats",
-				'section_related_other' => "<i class=\"fa fa-fw fa-square-plus\"></i> Altres continguts recomanats",
-				'option_show_cancelled' => "Mostra els animes cancel·lats o abandonats pels fansubs",
-				'option_show_missing' => "Mostra els animes amb algun capítol sense enllaç vàlid",
-			);*/
+			define('CATALOGUE_MINIMUM_DURATION', 0);
+			define('CATALOGUE_MAXIMUM_DURATION', 120);
+			define('CATALOGUE_DURATION_SLIDER_FORMATTING', 'time');
+			define('CATALOGUE_SCORE_SOURCE', 'MyAnimeList');
+			define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera emissió');
+			define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
+			define('CATALOGUE_ROUND_INTERVAL', 25);
+			define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
+			define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
+			define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
+			define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
+			define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Temporada');
+			define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Animes hentai amb temàtiques en comú');
+			define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Mangues hentai amb temàtiques en comú');
+			define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més temporades sense elements disponibles. Prem aquí per a mostrar-les totes.');
 		} else if ($path=='manga') {
 			define('SITE_BASE_URL', 'https://hentai.fansubs.online/manga');
 			define('SITE_PATH', '/manga');
@@ -267,36 +190,21 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 			define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Serialitzats');
 			define('CATALOGUE_ITEM_STRING_SINGULAR', 'manga');
 			define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet llegir en línia manga hentai en català. Ara pots gaudir de tot el manga hentai de tots els fansubs en català en un únic lloc.');
-	/*		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'One-shots');
-			define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME_SINGULAR', 'One-shot');
-			define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-book-open');
-			define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'oneshot');
-			define('CATALOGUE_ITEM_SUBTYPE_SINGLE_TADAIMA_ID', 9);
-			define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Serialitzats');
-			define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME_SINGULAR', 'Serialitzat');
-			define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-book');
-			define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'serialized');
-			define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_TADAIMA_ID', 9);
-			define('CATALOGUE_DIVISION_NAME', 'Volum');
-			define('CATALOGUE_DIVISION_NAME', 9);
-				'division_name' => "Volum",
-				'division_name_lc' => "volum",
-				'preview_prefix' => "Manga",
-				//Sections
-				'section_continue_watching' => "<i class=\"fa fa-fw fa-eye\"></i> Continua llegint",
-				'section_last_updated' => "<i class=\"fa fa-fw fa-clock-rotate-left\"></i> Darreres actualitzacions",
-				'section_last_completed' => "<i class=\"fa fa-fw fa-check\"></i> Finalitzats recentment",
-				'section_random' => "<i class=\"fa fa-fw fa-dice\"></i> A l’atzar",
-				'section_popular' => "<i class=\"fa fa-fw fa-fire\"></i> Més populars",
-				'section_more_recent' => "<i class=\"fa fa-fw fa-stopwatch\"></i> Més actuals",
-				'section_best_rated' => "<i class=\"fa fa-fw fa-heart\"></i> Més ben valorats",
-				'section_search_anime' => "<i class=\"fa fa-fw fa-display\"></i> Resultats d’anime",
-				'section_search_manga' => "<i class=\"fa fa-fw fa-book-open\"></i> Resultats de manga",
-				'section_search_liveaction' => "<i class=\"fa fa-fw fa-clapperboard\"></i> Resultats d’imatge real",
-				'section_related' => "<i class=\"fa fa-fw fa-book-open\"></i> Mangues recomanats",
-				'option_show_cancelled' => "Mostra els mangues cancel·lats o abandonats pels fansubs",
-				'option_show_missing' => "Mostra els mangues amb algun capítol sense enllaç vàlid",
-			);*/
+			define('CATALOGUE_MINIMUM_DURATION', 1);
+			define('CATALOGUE_MAXIMUM_DURATION', 100);
+			define('CATALOGUE_DURATION_SLIDER_FORMATTING', 'pages');
+			define('CATALOGUE_SCORE_SOURCE', 'MyAnimeList');
+			define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera publicació');
+			define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
+			define('CATALOGUE_ROUND_INTERVAL', 25);
+			define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
+			define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
+			define('CATALOGUE_SEASON_STRING_PLURAL', 'volums');
+			define('CATALOGUE_SEASON_STRING_UNIQUE', 'Volum únic');
+			define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Volum');
+			define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Mangues hentai amb temàtiques en comú');
+			define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Animes hentai amb temàtiques en comú');
+			define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més volums sense elements disponibles. Prem aquí per a mostrar-los tots.');
 		} else { //Used for the error page when not using a path
 			define('SITE_BASE_URL', 'https://www.fansubs.online');
 			define('SITE_PATH', '');

@@ -211,7 +211,7 @@ function get_episode_player_title_short($series_name, $series_subtype, $episode_
 }
 
 function get_length_formatted($length){
-	if (CATALOGUE_ITEM_TYPE=='manga') {
+	if (CATALOGUE_DURATION_SLIDER_FORMATTING=='pages') {
 		return $length.' pàg.';
 	}
 	//Else, time:
@@ -456,7 +456,7 @@ function print_chapter_item($row) {
 				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'; ?>" alt="">
 				<div class="length"><?php echo get_length_formatted($row['length']); ?></div>
 				<span class="progress" style="width: <?php echo $row['progress_percent']*100; ?>%;"></span>
-				<div class="play-button fa fa-fw fa-<?php echo CATALOGUE_ITEM_TYPE=='manga' ? 'book-open' : 'play'; ?>"></div>
+				<div class="play-button fa fa-fw <?php echo CATALOGUE_PLAY_BUTTON_ICON; ?>"></div>
 				<div class="close-button fa fa-fw fa-times" onclick="removeFromContinueWatching(this, <?php echo $row['file_id']; ?>); return false;"></div>
 			</a>
 		</div>

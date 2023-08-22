@@ -125,7 +125,7 @@ function get_internal_length_condition($type, $length_type, $min_length, $max_le
 			return "0";
 		}
 	} else { //Anime and live action
-		if ($length_type=='minutes') {
+		if ($length_type=='time') {
 			return "s.id IN (SELECT DISTINCT s.id
 					FROM series s
 						LEFT JOIN version v ON s.id=v.series_id
@@ -162,6 +162,17 @@ function query_insert_or_update_user_seen_for_file_id($user_id, $file_id, $is_se
 				(user_id, file_id, is_seen, position, last_viewed)
 			VALUES ($user_id, $file_id, $is_seen, 0, NULL)
 			ON DUPLICATE KEY UPDATE is_seen=$is_seen,position=IF($is_seen=1,0,position)";
+	return query($final_query);
+}
+
+function query_insert_or_update_user_version_rating_for_version_id($user_id, $version_id, $rating) {
+	$version_id = intval($version_id);
+	$user_id = intval($user_id);
+	$rating = intval($rating);
+	$final_query = "INSERT INTO user_version_rating
+				(user_id, version_id, rating)
+			VALUES ($user_id, $version_id, $rating)
+			ON DUPLICATE KEY UPDATE rating=$rating";
 	return query($final_query);
 }
 
@@ -252,10 +263,11 @@ function query_insert_or_update_user_version_followed_by_file_id($user_id, $file
 									LEFT JOIN episode e ON f.episode_id=e.id
 									LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=f.version_id
 									WHERE ufss.is_seen=1
+										AND ufss.user_id=$user_id
 										AND f.version_id IN (SELECT f2.version_id
 												FROM file f2
 												WHERE f2.id=$file_id)
-									ORDER BY e.number IS NULL DESC,
+									ORDER BY e.number IS NULL ASC,
 										e.number DESC,
 										IFNULL(et.title, e.description) DESC
 									LIMIT 1),-1)
@@ -266,10 +278,11 @@ function query_insert_or_update_user_version_followed_by_file_id($user_id, $file
 									LEFT JOIN episode e ON f.episode_id=e.id
 									LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=f.version_id
 									WHERE ufss.is_seen=1
+										AND ufss.user_id=$user_id
 										AND f.version_id IN (SELECT f2.version_id
 												FROM file f2
 												WHERE f2.id=$file_id)
-									ORDER BY e.number IS NULL DESC,
+									ORDER BY e.number IS NULL ASC,
 										e.number DESC,
 										IFNULL(et.title, e.description) DESC
 									LIMIT 1),-1)";
@@ -787,7 +800,7 @@ function query_series_by_file_id($file_id) {
 	return query($final_query);
 }
 
-function query_series_data_for_series_page($series_id) {
+function query_series_data_for_series_page($user, $series_id) {
 	$series_id = escape($series_id);
 	$final_query = "SELECT v.*,
 				GROUP_CONCAT(DISTINCT CONCAT(v.id, '___', v.status, '___', f.name, '___', f.type, '___', f.id)
@@ -796,10 +809,12 @@ function query_series_data_for_series_page($series_id) {
 				) fansub_info,
 				GROUP_CONCAT(DISTINCT f.name
 					ORDER BY f.name
-					SEPARATOR ' + ') fansub_name
+					SEPARATOR ' + ') fansub_name,
+				uvr.rating user_rating
 			FROM version v
 				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
 				LEFT JOIN fansub f ON vf.fansub_id=f.id
+				LEFT JOIN user_version_rating uvr ON v.id=uvr.version_id AND uvr.user_id=".(!empty($user) ? $user['id'] : '0')."
 			WHERE v.series_id=$series_id
 			GROUP BY v.id
 			ORDER BY v.status ASC,
