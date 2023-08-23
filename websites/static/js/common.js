@@ -1,6 +1,8 @@
 const MAIN_URL = "https://www.fansubs.online";
 const USERS_URL='https://usuaris.fansubs.online';
 
+var lastWindowWidth=0;
+
 var cookieOptions = {
 	expires: 3650,
 	path: '/',
@@ -239,4 +241,26 @@ $(document).ready(function() {
 		}
 		container.addEventListener("mouseleave", menuOptionMouseLeave);
 	}
+
+	$(window).resize(function() {
+		if ($(window).width()!=lastWindowWidth) {
+			if (typeof resizeSynopsisHeight === "function") {
+				resizeSynopsisHeight();
+			}
+
+			//Reposition underline
+			var target = document.querySelector(".catalogues-underline");
+			var active = document.querySelector("a.catalogues-underline-active");
+			if (active) {
+				const left = active.getBoundingClientRect().left + window.pageXOffset;
+				const top = active.getBoundingClientRect().top + window.pageYOffset+2;
+				target.style.left = `${left}px`;
+				target.style.top = `${top}px`;
+			}
+
+			lastWindowWidth=$(window).width();
+		}
+	});
+
+	lastWindowWidth=$(window).width();
 });

@@ -74,7 +74,11 @@ if (isset($_GET['type'])) {
 if (isset($_GET['status']) && is_array($_GET['status']) && count($_GET['status'])>0) {
 	$param_status_array = $_GET['status'];
 } else {
-	$param_status_array = array(1,3,2,4,5);
+	if ((!empty($user) && $user['show_cancelled_projects']) || (empty($user) && !empty($_COOKIE['show_cancelled_projects']))) {
+		$param_status_array = array(1,3,2,4,5);
+	} else {
+		$param_status_array = array(1,3,2);
+	}
 }
 if (isset($_GET['min_duration']) && preg_match("/\\d*/", $_GET['min_duration']) && $_GET['min_duration']>=CATALOGUE_MINIMUM_DURATION && $_GET['min_duration']<=CATALOGUE_MAXIMUM_DURATION) {
 	$param_min_duration = $_GET['min_duration'];
@@ -124,7 +128,11 @@ if (isset($_GET['fansub'])) {
 if (isset($_GET['hide_lost_content']) && $_GET['hide_lost_content']==1) {
 	$param_hide_lost_content = TRUE;
 } else {
-	$param_hide_lost_content = FALSE;
+	if ((!empty($user) && $user['show_lost_projects']) || (empty($user) && !empty($_COOKIE['show_lost_projects']))) {
+		$param_hide_lost_content = FALSE;
+	} else {
+		$param_hide_lost_content = TRUE;
+	}
 }
 if (!isset($_GET['full_catalogue']) || (isset($_GET['full_catalogue']) && $_GET['full_catalogue']==1)) {
 	$param_show_full_catalogue = TRUE;

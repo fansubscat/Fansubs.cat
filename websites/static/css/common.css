@@ -1457,6 +1457,7 @@ input[type='range']::-webkit-slider-thumb:active {
 	background-color: rgb(var(--always-positive-color));
 	transition: var(--fast-animation-duration) ease;
 	border-radius: 50%;
+	filter: drop-shadow(0 0 0.2em rgba(var(--always-negative-color),0.5));
 }
 
 input:checked + .slider {
@@ -1964,5 +1965,14 @@ input:checked + .slider:before {
 @media (max-width: 350px){
 	.catalogues-navigation {
 		font-size: 1.6rem;
+	}
+
+	.style-type-settings .catalogues-navigation {
+		font-size: 1.2rem;
+	}
+
+	.style-type-settings .catalogues-separator {
+		margin-left: 0.4rem;
+		margin-right: 0.4rem;
 	}
 }

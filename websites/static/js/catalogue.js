@@ -1,5 +1,4 @@
 //General variables
-var lastWindowWidth=0;
 var lastSearchRequest = null;
 var lastAutocompleteRequest = null;
 //Player/Reader variables
@@ -971,12 +970,18 @@ function markAsSeen(fileId, dontAsk) {
 		}
 		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen(previouslyUnreadEpisodeIds.concat([fileId]), true);
-	} else {
+	} else if ($('#seen_behavior').val()==2) {
 		//Mark only the current file
 		isCheckingAsSeenProgrammatically = true;
 		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
 		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen([fileId], true);
+	} else {
+		//User logged out (3), do nothing
+		if (!dontAsk) {
+			showAlert('Cal iniciar la sessió', 'Per a poder fer un seguiment dels capítols, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		}
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', false);
 	}
 }
 
@@ -1608,26 +1613,6 @@ $(document).ready(function() {
 			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
 			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}
-
-		$(window).resize(function() {
-			if ($(window).width()!=lastWindowWidth) {
-				resizeSynopsisHeight();
-
-				//Reposition underline
-				var target = document.querySelector(".catalogues-underline");
-				var active = document.querySelector("a.catalogues-underline-active");
-				if (active) {
-					const left = active.getBoundingClientRect().left + window.pageXOffset;
-					const top = active.getBoundingClientRect().top + window.pageYOffset+2;
-					target.style.left = `${left}px`;
-					target.style.top = `${top}px`;
-				}
-
-				lastWindowWidth=$(window).width();
-			}
-		});
-
-		lastWindowWidth=$(window).width();
 
 		$(window).scroll(function () {
 			if ($('.search-layout').length>0) {

@@ -163,6 +163,8 @@ a.forgot-password {
 
 .style-type-settings .main-section {
 	width: calc(100% + var(--page-padding) + var(--page-padding));
+	margin-left: calc(0rem - var(--page-padding));
+	margin-right: calc(0rem - var(--page-padding));
 	justify-content: start;
 }
 
@@ -170,19 +172,35 @@ a.forgot-password {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
-	padding: 0 var(--page-padding);
+	padding-top: var(--page-padding);
+	padding-left: var(--page-padding);
+	padding-right: var(--page-padding);
+}
+
+.settings-section {
+	background-color: rgb(var(--card-background-color));
+	border-radius: 1.5rem;
+	padding: 2rem;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 }
 
 .profile-section {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background: rgb(var(--negative-color));
-	padding: 2rem 4rem 1.5rem;
-	border-radius: 1rem;
+	margin-right: var(--page-padding);
 	font-size: 1.4rem;
 	max-width: 30rem;
 	align-self: start;
+}
+
+.profile-avatar-name {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .profile-avatar {
@@ -221,18 +239,20 @@ a.forgot-password {
 	color: rgb(var(--always-positive-color));
 }
 
+.profile-details-section + .profile-details-section {
+	margin-left: 2rem;
+}
+
 .profile-name {
 	font-family: "lexend_deca_bold", sans-serif;
 	font-size: 2rem;
 	margin-top: 1rem;
+	margin-bottom: 2rem;
 }
 
-.profile-my-list-button {
-	color: rgb(var(--negative-color));
-	font-size: 1.4rem;
-	padding: 0.5rem 1rem;
-	margin-top: 0.8rem;
-	margin-bottom: 2.4rem;
+.profile-links {
+	display: flex;
+	flex-direction: column;
 }
 
 .profile-button {
@@ -245,16 +265,8 @@ a.forgot-password {
 	width: calc(100% + 8rem);
 }
 
-.profile-section + .content-section {
-	margin-left: 1.5rem;
-}
-
 .content-section {
 	flex-grow: 1;
-	background: rgb(var(--negative-color));
-	border-radius: 1rem;
-	display: flex;
-	flex-direction: column;
 }
 
 .content-tabs {
@@ -279,11 +291,24 @@ a.forgot-password {
 }
 
 .content-layout {
-	padding: 2rem;
 	flex-grow: 1;
 }
 
+#bottom-buttons {
+	margin-top: 2.5rem;
+}
+
+#bottom-buttons .normal-button {
+	min-width: 20rem;
+	margin: 0.5rem;
+}
+
 .profile-page {
+	background-color: rgb(var(--card-background-color));
+	border-radius: 1.5rem;
+	padding: 2rem;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
+	overflow: hidden;
 	display: flex;
 	flex-direction: row;
 	position: relative;
@@ -302,13 +327,12 @@ a.forgot-password {
 
 .profile-section-header, .settings-section-header {
 	font-family: "lexend_deca_bold", sans-serif;
-	font-size: 2rem;
-	margin-bottom: 2rem;
+	font-size: 2.2rem;
 }
 
 .profile-section-data-header {
 	font-family: "lexend_deca_bold", sans-serif;
-	font-size: 1.6rem;
+	font-size: 1.7rem;
 	margin-top: 2rem;
 }
 
@@ -319,40 +343,64 @@ a.forgot-password {
 }
 
 .settings-section-data {
-	margin-top: 1rem;
+	margin-top: 2rem;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 }
 
+.settings-section-data + .settings-section-data {
+	border-top: 0.1rem solid rgb(var(--primary-color));
+	padding-top: 2rem;
+}
+
 .settings-section-data-header {
-	font-size: 1.6rem;
+	font-size: 1.7rem;
 	flex-grow: 1;
+	flex-shrink: 1;
+}
+
+.settings-section-data-header-title {
+	font-family: "lexend_deca_bold", sans-serif;
+}
+
+.settings-section-data-header-subtitle {
+	font-size: 1.4rem;
+	margin-top: 0.5rem;
+}
+
+.settings-section-data-switch {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	align-items: center;
+}
+
+.settings-section-data-switch .settings-combo {
+	width: auto;
 }
 
 .settings-section-data-switch .switch {
 	display: flex;
 	font-size: 0.65rem;
-	margin-right: 1.5rem;
-	width: 100% !important;
+	flex-shrink: 0;
+	margin-left: 2rem;
 }
 
 .settings-section-data-switch .switch .slider {
 	width: 6em;
 }
 
-
-
 .settings-section-data-switch .switch .settings-section-data-header {
 	margin-left: 4rem;
 }
 
-.settings-display, .settings-seen-settings, .settings-reader {
+.settings-display, .settings-hentai, .settings-seen-settings, .settings-reader, .settings-blacklist {
 	text-align: left;
 }
 
-.settings-seen-settings, .settings-reader {
-	margin-top: 3rem;
+.settings-section + .settings-section {
+	margin-top: 2rem;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -439,5 +487,74 @@ a.forgot-password {
 
 	.login-point-icon {
 		font-size: 3rem;
+	}
+
+	.profile-layout {
+		flex-direction: column;
+	}
+
+	.settings-section {
+		padding: 1rem;
+	}
+
+	.settings-section-data-switch .switch {
+		margin-left: 1rem;
+	}
+
+	.profile-section-header, .settings-section-header {
+		font-size: 1.7rem;
+	}
+
+	.settings-section-data-header {
+		font-size: 1.5rem;
+	}
+
+	.profile-section-data-header {
+		font-size: 1.5rem;
+	}
+
+	.settings-section-data-header-subtitle {
+		font-size: 1.3rem;
+	}
+
+	.settings-section-data-switch .settings-combo {
+		width: 8rem;
+	}
+
+	.profile-section-data-info {
+		font-size: 1.3rem;
+	}
+
+	.profile-section {
+		max-width: unset;
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.profile-avatar-name {
+		margin-right: 1rem;
+		max-width: 40%;
+	}
+
+	.profile-avatar {
+		width: 9rem;
+		height: 9rem;
+	}
+
+	.profile-name {
+		font-size: 1.8rem;
+	}
+
+	.profile-details-section + .profile-details-section {
+		margin-left: 0;
+		margin-top: 2rem;
+	}
+
+	.profile-page {
+		flex-direction: column;
+		padding: 1rem;
 	}
 }

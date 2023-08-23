@@ -13,6 +13,26 @@ function query_user_by_email($email) {
 	return query($final_query);
 }
 
+function query_user_seen_data_by_user_id($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "SELECT (SELECT SUM(progress)
+				FROM view_session
+				WHERE user_id=$user_id
+					AND type='anime'
+				) total_anime_seen,
+				(SELECT SUM(progress)
+				FROM view_session
+				WHERE user_id=$user_id
+					AND type='manga'
+				) total_manga_seen,
+				(SELECT SUM(progress)
+				FROM view_session
+				WHERE user_id=$user_id
+					AND type='liveaction'
+				) total_liveaction_seen";
+	return query($final_query);
+}
+
 function query_my_list_by_type($user, $type, $hentai) {
 	$type = escape($type);
 	$final_query = get_internal_catalogue_base_query_portion($user, FALSE)."

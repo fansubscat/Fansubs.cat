@@ -5,113 +5,135 @@ define('PAGE_STYLE_TYPE', 'settings');
 define('SETTINGS_ITEM_TYPE', 'settings');
 
 require_once("../common.fansubs.cat/header.inc.php");
+
+if (!empty($user)) {
+	$show_cancelled = $user['show_cancelled_projects'];
+	$show_lost = $user['show_lost_projects'];
+	$show_hentai = empty($user['hide_hentai_access']);
+	$hentai_incognito_mode = $user['hentai_incognito_mode'];
+	$mark_as_seen = ($user['previous_chapters_read_behavior']==1);
+	$reader_type = $user['manga_reader_type'];
+	$blacklisted_fansub_ids = $user['blacklisted_fansub_ids'];
+} else {
+	$show_cancelled = !empty($_COOKIE['show_cancelled_projects']);
+	$show_lost = !empty($_COOKIE['show_lost_projects']);
+	$reader_type = $_COOKIE['manga_reader_type'];
+	$blacklisted_fansub_ids = get_cookie_blacklisted_fansub_ids();
+}
 ?>
 <div class="profile-layout">
-<?php
-if (!empty($user)) {
-?>
-	<div class="profile-section">
-		<div class="profile-avatar">
-			<img alt="Avatar de l’usuari" onclick="" class="profile-avatar-image" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
-			<input id="profile-upload-file" name="file" type="file" />
-			<div class="profile-avatar-change" onclick="chooseAvatar();"><i class="fa fa-fw fa-upload"></i>Canvia la imatge</div>
-		</div>
-		<div class="profile-name"><?php echo htmlspecialchars($user['username']); ?></div>
-		<a class="profile-my-list-button normal-button" href="/la-meva-llista"><i class="fa fa-fw fa-bookmark"></i> La meva llista</a>
-		<a class="profile-button" href="/edita-el-perfil"><i class="fa fa-fw fa-pen-to-square"></i> Edita el perfil</a>
-		<a class="profile-button" href="/canvia-la-contrasenya"><i class="fa fa-fw fa-key"></i> Canvia la contrasenya</a>
-		<div class="profile-h-divider"></div>
-		<a class="profile-button" href="/tanca-la-sessio"><i class="fa fa-fw fa-sign-out"></i> Tanca la sessió</a>
-	</div>
-<?php
-}
-?>
-	<div class="content-section">
-		<div class="content-tabs">
-<?php
-if (!empty($user)) {
-?>
-			<a class="content-tab" href="/"><i class="fa fa-fw fa-user"></i> Perfil</a>
-<?php
-}
-?>
-			<a class="content-tab content-tab-active"><i class="fa fa-fw fa-gear"></i> Configuració</a>
-		</div>
-		<div class="content-layout settings-page">
-			<div class="settings-display">
-				<div class="settings-section-header">Visualització</div>
-				<div class="settings-section-content">
-					<div class="settings-section-data">
-						<div class="settings-section-data-switch">
-							<label class="switch">
-								<input type="checkbox" id="show-cancelled">
-								<span class="slider"></span>
-								<div class="settings-section-data-header">Mostra els projectes cancel·lats o abandonats pels fansubs</div>
-							</label>
+	<div class="content-layout settings-page">
+		<div class="settings-display settings-section">
+			<div class="settings-section-header">Opcions de visualització</div>
+			<div class="settings-section-content">
+				<div class="settings-section-data">
+					<div class="settings-section-data-switch">
+						<div class="settings-section-data-header">
+							<div class="settings-section-data-header-title">Mostra projectes cancel·lats o abandonats</div>
+							<div class="settings-section-data-header-subtitle">Decideix si vols veure a les llistes del web els projectes que els fansubs han cancel·lat o abandonat. A la pàgina de cada contingut s’hi mostraran sempre.</div>
 						</div>
+						<label class="switch">
+							<input type="checkbox" id="show-cancelled"<?php echo $show_cancelled ? ' checked' : ''; ?>>
+							<span class="slider"></span>
+						</label>
 					</div>
-					<div class="settings-section-data">
-						<div class="settings-section-data-switch">
-							<label class="switch">
-								<input type="checkbox" id="show-lost">
-								<span class="slider"></span>
-								<div class="settings-section-data-header">Mostra els projectes amb capítols perduts (no visualitzables)</div>
-							</label>
+				</div>
+				<div class="settings-section-data">
+					<div class="settings-section-data-switch">
+						<div class="settings-section-data-header">
+							<div class="settings-section-data-header-title">Mostra projectes amb capítols perduts</div>
+							<div class="settings-section-data-header-subtitle">Decideix si vols veure a les llistes del web els projectes de fansubs històrics amb capítols perduts (editats fa anys però no recuperats). A la pàgina de cada contingut s’hi mostraran sempre.</div>
 						</div>
+						<label class="switch">
+							<input type="checkbox" id="show-lost"<?php echo $show_lost ? ' checked' : ''; ?>>
+							<span class="slider"></span>
+						</label>
 					</div>
 				</div>
 			</div>
-			<div class="settings-seen-settings">
-				<div class="settings-section-header">Acció en obrir un capítol</div>
-				<div class="settings-section-content">
-					<div class="settings-section-data">
-						<div class="settings-section-data-switch">
-							<label class="switch">
-								<input type="checkbox" id="show-cancelled">
-								<span class="slider"></span>
-								<div class="settings-section-data-header">Marca tots els capítols anteriors com a vistos</div>
-							</label>
+		</div>
+<?php
+if (!empty($user) && is_adult()) {
+?>
+		<div class="settings-hentai settings-section">
+			<div class="settings-section-header">Contingut per a adults</div>
+			<div class="settings-section-content">
+				<div class="settings-section-data">
+					<div class="settings-section-data-switch">
+						<div class="settings-section-data-header">
+							<div class="settings-section-data-header-title">Mostra la icona d’accés al portal de hentai</div>
+							<div class="settings-section-data-header-subtitle">Decideix si vols que es mostri la icona que permet l’accés al portal de hentai a la capçalera del web.</div>
 						</div>
+						<label class="switch">
+							<input type="checkbox" id="show-hentai"<?php echo $show_hentai ? ' checked' : ''; ?>>
+							<span class="slider"></span>
+						</label>
 					</div>
-					<div class="settings-section-data">
-						<div class="settings-section-data-switch">
-							<label class="switch">
-								<input type="checkbox" id="show-cancelled">
-								<span class="slider"></span>
-								<div class="settings-section-data-header">Demana’m què fer cada vegada</div>
-							</label>
+				</div>
+				<div class="settings-section-data">
+					<div class="settings-section-data-switch">
+						<div class="settings-section-data-header">
+							<div class="settings-section-data-header-title">Mode d’incògnit al portal de hentai</div>
+							<div class="settings-section-data-header-subtitle">Si està activat, no es desaran les visualitzacions de contingut hentai al teu perfil. Encara podràs afegir elements manualment a la teva llista.</div>
 						</div>
-					</div>
-					<div class="settings-section-data">
-						<div class="settings-section-data-switch">
-							<label class="switch">
-								<input type="checkbox" id="show-cancelled">
-								<span class="slider"></span>
-								<div class="settings-section-data-header">No facis res</div>
-							</label>
-						</div>
+						<label class="switch">
+							<input type="checkbox" id="hentai-incognito-mode"<?php echo $hentai_incognito_mode ? ' checked' : ''; ?>>
+							<span class="slider"></span>
+						</label>
 					</div>
 				</div>
 			</div>
-			<div class="settings-reader">
-				<div class="settings-section-header">Lector de manga</div>
-				<div class="settings-section-content">
-					<div class="settings-section-data">
-						<div class="settings-section-data-switch">
-							<label class="switch">
-								<input type="checkbox" id="always-use-vertical">
-								<span class="slider"></span>
-								<div class="settings-section-data-header">Llegeix el manga sempre en mode vertical</div>
-							</label>
+		</div>
+<?php
+}
+if (!empty($user)) {
+?>
+		<div class="settings-seen-settings settings-section">
+			<div class="settings-section-header">Funcionalitats</div>
+			<div class="settings-section-content">
+				<div class="settings-section-data">
+					<div class="settings-section-data-switch">
+						<div class="settings-section-data-header">
+							<div class="settings-section-data-header-title">Marca els capítols anteriors com a vistos o llegits</div>
+							<div class="settings-section-data-header-subtitle">Decideix si vols que, en obrir un capítol, tots els capítols anteriors d’aquell projecte es marquin automàticament com a vistos o llegits.</div>
 						</div>
+						<label class="switch">
+							<input type="checkbox" id="mark-previous-as-seen"<?php echo $mark_as_seen ? ' checked' : ''; ?>>
+							<span class="slider"></span>
+						</label>
 					</div>
-					<div class="settings-section-data">
-						<div class="settings-section-data-switch">
-							<label class="switch">
-								<input type="checkbox" id="force-western-order">
-								<span class="slider"></span>
-								<div class="settings-section-data-header">Força el sentit de lectura occidental al lector paginat</div>
-							</label>
+				</div>
+			</div>
+		</div>
+<?php
+}
+?>
+		<div class="settings-reader settings-section">
+			<div class="settings-section-header">Lectura de manga</div>
+			<div class="settings-section-content">
+				<div class="settings-section-data">
+					<div class="settings-section-data-switch">
+						<div class="settings-section-data-header">
+							<div class="settings-section-data-header-title">Tipus de lector</div>
+							<div class="settings-section-data-header-subtitle">Decideix quin lector de manga vols utilitzar per defecte: sentit oriental (de dreta a esquerra), sentit occidental (d’esquerra a dreta) o tira vertical. Alguns mangues poden ignorar aquesta preferència.</div>
+						</div>
+						<select id="reader-type" class="settings-combo">
+							<option value="rtl"<?php echo $reader_type==0 ? ' selected' : ''; ?>>Sentit oriental</option>
+							<option value="ltr"<?php echo $reader_type==1 ? ' selected' : ''; ?>>Sentit occidental</option>
+							<option value="strip"<?php echo $reader_type==2 ? ' selected' : ''; ?>>Tira vertical</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="settings-blacklist settings-section">
+			<div class="settings-section-header">Llista negra de fansubs</div>
+			<div class="settings-section-content">
+				<div class="settings-section-data">
+					<div class="settings-section-data-switch">
+						<div class="settings-section-data-header">
+							<div class="settings-section-data-header-title">Fansubs a la llista negra</div>
+							<div class="settings-section-data-header-subtitle">Els projectes dels fansubs que afegeixis aquí no es mostraran mai a les llistes del web. Encara es mostraran, tot i que amb un estil diferent, a les fitxes de cada contingut.</div>
 						</div>
 					</div>
 				</div>
