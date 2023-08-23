@@ -113,15 +113,15 @@ if (PAGE_STYLE_TYPE=='login') {
 						<div class="login-header">Registra’t a Fansubs.cat</div>
 						<div class="login-points">
 							<div class="login-point">
-								<div class="login-point-icon fas fa-fw fa-bars-staggered"></div>
+								<div class="login-point-icon fas fa-fw fa-bookmark"></div>
 								<div class="login-point-text">Podràs desar el contingut<br>en una llista personal</div>
 							</div>
 							<div class="login-point">
 								<div class="login-point-text">Rebràs recomanacions<br>personalitzades</div>
-								<div class="login-point-icon far fa-fw fa-thumbs-up"></div>
+								<div class="login-point-icon fas fa-fw fa-star"></div>
 							</div>
 							<div class="login-point">
-								<div class="login-point-icon far fa-fw fa-star-half-stroke"></div>
+								<div class="login-point-icon fas fa-fw fa-thumbs-up"></div>
 								<div class="login-point-text">Podràs valorar la qualitat<br>de les traduccions i edicions</div>
 							</div>
 							<div class="login-point">
