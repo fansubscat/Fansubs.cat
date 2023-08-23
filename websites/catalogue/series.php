@@ -94,11 +94,11 @@ if (!empty($series['score'])) {
 						<div class="series-thumbnail-holder">
 							<img class="series-thumbnail" src="<?php echo STATIC_URL; ?>/images/covers/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
 <?php
-if (!empty($user) && in_array($series['id'], $user['series_list_ids'])) {
+if (in_array($series['id'], !empty($user) ? $user['series_list_ids'] : array())) {
 ?>
 							<div class="normal-button remove-from-my-list"><i class="fas fa-fw fa-bookmark"></i> A la meva llista</div>
 <?php
-} else if (!empty($user)) {
+} else {
 ?>
 							<div class="normal-button add-to-my-list"><i class="far fa-fw fa-bookmark"></i> Afegeix a la meva llista</div>
 <?php

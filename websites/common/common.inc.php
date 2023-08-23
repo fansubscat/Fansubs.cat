@@ -304,9 +304,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="clickable-thumbnail" onclick="prepareClickableFloatingInfo(this);"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="floating-info">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-main">'."\n";
-	if (!empty($user)) {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark '.(in_array($series['id'], $user['series_list_ids']) ? 'fas' : 'far').' fa-fw fa-bookmark" data-series-id="'.$series['id'].'" onclick="toggleBookmark('.$series['id'].'); event.stopPropagation(); return false;"></div>'."\n";
-	}
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark '.(in_array($series['id'], !empty($user) ? $user['series_list_ids'] : array()) ? 'fas' : 'far').' fa-fw fa-bookmark" data-series-id="'.$series['id'].'" onclick="toggleBookmark('.$series['id'].'); event.stopPropagation(); return false;"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-title">'.htmlspecialchars($series['name']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-versions">'.get_carousel_fansub_info($series['fansub_info'], $versions, $specific_version ? $series['version_id'] : NULL).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-synopsis-wrapper">'."\n";

@@ -102,7 +102,7 @@ if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 		<script src="<?php echo STATIC_URL; ?>/js/common.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/<?php echo SITE_INTERNAL_TYPE; ?>.js?v=<?php echo VERSION; ?>"></script>
 	</head>
-	<body class="style-type-<?php echo PAGE_STYLE_TYPE; ?><?php echo defined('PAGE_EXTRA_BODY_CLASS') ? ' '.PAGE_EXTRA_BODY_CLASS : ''; ?>">
+	<body class="style-type-<?php echo PAGE_STYLE_TYPE; ?><?php echo defined('PAGE_EXTRA_BODY_CLASS') ? ' '.PAGE_EXTRA_BODY_CLASS : ''; ?><?php echo !empty($user) ? ' user-logged-in' : ''; ?>">
 		<div class="main-container<?php echo (PAGE_STYLE_TYPE=='login' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') ? ' obscured-background' : ''; ?>">
 <?php
 if (PAGE_STYLE_TYPE=='login') {

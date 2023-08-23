@@ -10,7 +10,6 @@ if (!empty($user)) {
 	$show_cancelled = $user['show_cancelled_projects'];
 	$show_lost = $user['show_lost_projects'];
 	$show_hentai = empty($user['hide_hentai_access']);
-	$hentai_incognito_mode = $user['hentai_incognito_mode'];
 	$mark_as_seen = ($user['previous_chapters_read_behavior']==1);
 	$reader_type = $user['manga_reader_type'];
 	$blacklisted_fansub_ids = $user['blacklisted_fansub_ids'];
@@ -61,23 +60,11 @@ if (!empty($user) && is_adult()) {
 				<div class="settings-section-data">
 					<div class="settings-section-data-switch">
 						<div class="settings-section-data-header">
-							<div class="settings-section-data-header-title">Mostra la icona d’accés al portal de hentai</div>
-							<div class="settings-section-data-header-subtitle">Decideix si vols que es mostri la icona que permet l’accés al portal de hentai a la capçalera del web.</div>
+							<div class="settings-section-data-header-title">Mostra els accessos al portal de hentai</div>
+							<div class="settings-section-data-header-subtitle">Decideix si vols que es mostri la icona que permet l’accés al portal de hentai a la capçalera del web i els fansubs que editen hentai a la llista de fansubs.</div>
 						</div>
 						<label class="switch">
 							<input type="checkbox" id="show-hentai"<?php echo $show_hentai ? ' checked' : ''; ?>>
-							<span class="slider"></span>
-						</label>
-					</div>
-				</div>
-				<div class="settings-section-data">
-					<div class="settings-section-data-switch">
-						<div class="settings-section-data-header">
-							<div class="settings-section-data-header-title">Mode d’incògnit al portal de hentai</div>
-							<div class="settings-section-data-header-subtitle">Si està activat, no es desaran les visualitzacions de contingut hentai al teu perfil. Encara podràs afegir elements manualment a la teva llista.</div>
-						</div>
-						<label class="switch">
-							<input type="checkbox" id="hentai-incognito-mode"<?php echo $hentai_incognito_mode ? ' checked' : ''; ?>>
 							<span class="slider"></span>
 						</label>
 					</div>

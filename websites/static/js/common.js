@@ -93,6 +93,10 @@ function toggleSiteTheme() {
 }
 
 function toggleBookmark(seriesId){
+	if ($('body.user-logged-in').length==0) {
+		showAlert('Cal iniciar la sessió', 'Per a poder afegir elements a la teva llista, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		return;
+	}
 	var action;
 	if ($('.floating-info-bookmark[data-series-id='+seriesId+']').hasClass('fas'))	{
 		$('.floating-info-bookmark[data-series-id='+seriesId+']').removeClass('fas').addClass('far');

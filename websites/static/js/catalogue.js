@@ -960,7 +960,7 @@ function markAsSeen(fileId, dontAsk) {
 			}
 		]);
 	} else if ($('#seen_behavior').val()==1) {
-		//Mark as seen INCLUDING all unread episodes previous to the current one
+		//1: Mark as seen INCLUDING all unread episodes previous to the current one
 		var previouslyUnreadEpisodeIds = previouslyUnreadEpisodes.get().map(a => $(a).attr('data-file-id'));
 
 		isCheckingAsSeenProgrammatically = true;
@@ -970,18 +970,18 @@ function markAsSeen(fileId, dontAsk) {
 		}
 		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen(previouslyUnreadEpisodeIds.concat([fileId]), true);
-	} else if ($('#seen_behavior').val()==2) {
-		//Mark only the current file
-		isCheckingAsSeenProgrammatically = true;
-		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
-		isCheckingAsSeenProgrammatically = false;
-		executeMarkAsSeen([fileId], true);
-	} else {
-		//User logged out (3), do nothing
+	} else if ($('#seen_behavior').val()==-1) {
+		//-1: User logged out, do nothing
 		if (!dontAsk) {
 			showAlert('Cal iniciar la sessió', 'Per a poder fer un seguiment dels capítols, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
 		}
 		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', false);
+	} else {
+		//2 (or 0 with dontAsk): Mark only the current file
+		isCheckingAsSeenProgrammatically = true;
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
+		isCheckingAsSeenProgrammatically = false;
+		executeMarkAsSeen([fileId], true);
 	}
 }
 
@@ -1004,6 +1004,10 @@ function bookmarkRemoved(seriesId) {
 }
 
 function toggleBookmarkFromSeriesPage(){
+	if ($('body.user-logged-in').length==0) {
+		showAlert('Cal iniciar la sessió', 'Per a poder afegir elements a la teva llista, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		return;
+	}
 	var action;
 	var seriesId = $('#series_id').val();
 	if ($('.remove-from-my-list').length>0)	{
