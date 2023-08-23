@@ -63,7 +63,9 @@ mysqli_free_result($result);
 	<div class="profile-section">
 		<div class="profile-avatar-name">
 			<div class="profile-avatar">
-				<img alt="Avatar de l’usuari" class="profile-avatar-image" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+				<img alt="Avatar de l’usuari" onclick="" class="profile-avatar-image" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+				<input id="profile-upload-file" name="file" type="file" />
+				<div class="profile-avatar-change" onclick="chooseAvatar();"><i class="fa fa-fw fa-upload"></i>Canvia la imatge</div>
 			</div>
 			<div class="profile-name"><?php echo htmlspecialchars($user['username']); ?></div>
 		</div>
@@ -107,7 +109,7 @@ mysqli_free_result($result);
 				</div>
 			</div>
 		</div>
-		<a class="profile-button remove-profile" href="/elimina-el-perfil">Elimina el perfil</a>
+		<a class="profile-button remove-profile" onclick="confirmDeleteProfile();">Elimina el perfil</a>
 	</div>
 </div>
 <?php

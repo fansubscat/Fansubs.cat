@@ -39,12 +39,7 @@ function get_internal_viewed_files_condition($user) {
 								FROM user_file_seen_status ufss
 								WHERE ufss.user_id=".intval($user['id']).")";
 	} else {
-		$cookie_viewed_files_ids = get_cookie_viewed_files_ids(); //Already escaped
-		if (count($cookie_viewed_files_ids)>0) {
-			$viewed_files_condition.="ls.id NOT IN (".implode(',',$cookie_viewed_files_ids).")";
-		} else {
-			$viewed_files_condition='1';
-		}
+		$viewed_files_condition='1';
 	}
 	return $viewed_files_condition;
 }

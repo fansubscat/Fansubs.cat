@@ -15,6 +15,7 @@ RewriteCond %{REQUEST_URI} !do_login\.php
 RewriteCond %{REQUEST_URI} !do_register\.php
 RewriteCond %{REQUEST_URI} !do_forgot_password\.php
 RewriteCond %{REQUEST_URI} !do_reset_password\.php
+RewriteCond %{REQUEST_URI} !do_save_settings\.php
 RewriteCond %{REQUEST_URI} !do_save_site_theme\.php
 RewriteCond %{REQUEST_URI} !do_save_to_my_list\.php
 RewriteCond %{REQUEST_URI} !error\.php
@@ -23,6 +24,9 @@ RewriteRule \.php$ - [F]
 #Normal pages
 RewriteRule ^la-meva-llista/?$ list.php [L]
 RewriteRule ^configuracio/?$ settings.php [L]
+RewriteRule ^edita-el-perfil/?$ edit_profile.php [L]
+RewriteRule ^canvia-la-contrasenya/?$ change_password.php [L]
+RewriteRule ^elimina-el-perfil/?$ delete_profile.php [L]
 RewriteRule ^inicia-la-sessio/?$ login.php [L]
 RewriteRule ^tanca-la-sessio/?$ logout.php [L]
 RewriteRule ^restableix-la-contrasenya/?$ reset_password.php [L]

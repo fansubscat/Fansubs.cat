@@ -328,3 +328,29 @@ function bookmarkRemoved(seriesId) {
 	}
 }
 
+function saveSettings() {
+	if ($('body.user-logged-in').length>0) {
+		var values = {
+			'show_cancelled_projects': $('#show-cancelled').prop('checked') ? 1 : 0,
+			'show_lost_projects': $('#show-lost').prop('checked') ? 1 : 0,
+			'manga_reader_type': $('#reader-type').val()=='strip' ? 2 : ($('#reader-type').val()=='ltr' ? 1 : 0),
+			'blacklisted_fansub_ids': '', //TODO
+			'hide_hentai_access': $('#show-hentai').prop('checked') ? 0 : 1,
+			'previous_chapters_read_behavior': $('#mark-previous-as-seen').prop('checked') ? 1 : 0
+		};
+		$.post({
+			url: USERS_URL+"/do_save_settings.php",
+			data: values,
+			xhrFields: {
+				withCredentials: true
+			},
+		});
+	} else {
+		//Set cookies
+		Cookies.set('show_cancelled_projects', $('#show-cancelled').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
+		Cookies.set('show_lost_projects', $('#show-lost').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
+		Cookies.set('manga_reader_type', $('#reader-type').val()=='strip' ? 2 : ($('#reader-type').val()=='ltr' ? 1 : 0), cookieOptions, {secure: true});
+		Cookies.set('blacklisted_fansub_ids', '', cookieOptions, {secure: true}); //TODO
+	}
+}
+

@@ -210,7 +210,6 @@ a.forgot-password {
 	overflow: hidden;
 	border-radius: 99rem;
 	border: 0.3rem solid rgb(var(--primary-color));
-	cursor: pointer;
 }
 
 .profile-avatar-image {
@@ -403,6 +402,25 @@ a.forgot-password {
 	margin-top: 2rem;
 }
 
+.blacklisted-fansubs-list-number {
+	font-size: 1.3rem;
+	color: rgb(var(--neutral-color));
+	text-align: center;
+	margin-top: 0.2rem;
+}
+
+.empty-list {
+	display: flex;
+	flex-grow: 1;
+	align-items: center;
+	justify-content: center;
+}
+
+.edit-blacklisted-fansubs {
+	white-space: nowrap;
+	margin-top: 0;
+}
+
 @media (hover: hover) and (pointer: fine) {
 	.login-close:hover {
 		filter: drop-shadow(0 0 0.4rem rgba(var(--positive-color), 0.5));
@@ -497,7 +515,7 @@ a.forgot-password {
 		padding: 1rem;
 	}
 
-	.settings-section-data-switch .switch {
+	.settings-section-data-switch .switch, .settings-section-data-switch .settings-combo, .settings-section-data-switch .settings-blacklist-chooser {
 		margin-left: 1rem;
 	}
 
@@ -515,10 +533,6 @@ a.forgot-password {
 
 	.settings-section-data-header-subtitle {
 		font-size: 1.3rem;
-	}
-
-	.settings-section-data-switch .settings-combo {
-		width: 8rem;
 	}
 
 	.profile-section-data-info {
@@ -556,5 +570,15 @@ a.forgot-password {
 	.profile-page {
 		flex-direction: column;
 		padding: 1rem;
+	}
+}
+
+@media (max-width: 350px){
+	.settings-section-data-switch .settings-combo, .settings-blacklist-chooser {
+		width: 8rem;
+	}
+
+	.edit-blacklisted-fansubs {
+		white-space: unset;
 	}
 }

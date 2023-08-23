@@ -78,18 +78,19 @@ function toggleSiteTheme() {
 	$('html')[0].offsetHeight; //Triggers reflow
 	$('html').removeClass('notransition');
 
-	values = {
-		'site_theme': newTheme
-	};
-
 	Cookies.set('site_theme', newTheme, cookieOptions, {secure: true});
-	$.post({
-		url: USERS_URL+"/do_save_site_theme.php",
-		data: values,
-		xhrFields: {
-			withCredentials: true
-		},
-	});
+	if ($('body.user-logged-in').length>0) {
+		var values = {
+			'site_theme': newTheme
+		};
+		$.post({
+			url: USERS_URL+"/do_save_site_theme.php",
+			data: values,
+			xhrFields: {
+				withCredentials: true
+			},
+		});
+	}
 }
 
 function toggleBookmark(seriesId){

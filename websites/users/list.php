@@ -67,7 +67,6 @@ if ($cnt>0) {
 }
 ?>
 					<div class="section empty-list<?php echo $cnt>0 ? ' hidden' : ''; ?>">
-						<h2 class="section-title-main"><i class="fa fa-fw fa-bookmark"></i> La meva llista</h2>
 						<div class="section-content section-empty"><div><i class="fa far fa-fw fa-bookmark"></i><br>No tens cap anime, manga ni contingut d’imatge real desat a la llista.<br>Pots afegir-n’hi fent clic a la icona de punt de llibre a cadascun dels portals.</div></div>
 					</div>
 <?php

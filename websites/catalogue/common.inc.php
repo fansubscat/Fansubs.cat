@@ -395,7 +395,7 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 				}
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 ?>
-			<span class="new-episode tooltip<?php echo in_array($vrow['id'], get_cookie_viewed_files_ids()) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>
+			<span class="new-episode tooltip<?php echo (!empty($user) && $vrow['is_seen']==1) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>
 <?php
 				}
 ?>
@@ -403,7 +403,7 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 	</td>
 	<td class="episode-seen-cell">
 		<label class="switch" onclick="event.stopPropagation();">
-			<input type="checkbox"<?php echo ((!empty($user) && $vrow['is_seen']==1) || (empty($user) && in_array($vrow['id'], get_cookie_viewed_files_ids()))) ? ' checked' : ''; ?> onchange="toggleFileSeen(this, <?php echo $vrow['id']; ?>);">
+			<input type="checkbox"<?php echo (!empty($user) && $vrow['is_seen']==1) ? ' checked' : ''; ?> onchange="toggleFileSeen(this, <?php echo $vrow['id']; ?>);">
 			<span class="viewed-slider"></span>
 		</label>
 	</td>

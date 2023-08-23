@@ -49,6 +49,27 @@ function query_my_list_total_items($user) {
 	return query($final_query);
 }
 
+function query_all_fansubs() {
+	$final_query = "SELECT *
+			FROM (SELECT f.*,
+					(SELECT COUNT(DISTINCT v.series_id)
+						FROM rel_version_fansub vf
+						LEFT JOIN version v ON vf.version_id=v.id
+						LEFT JOIN series s ON v.series_id=s.id
+						WHERE vf.fansub_id=f.id
+							AND v.is_hidden=0
+					) total_series,
+					(SELECT COUNT(*)
+						FROM news n
+						WHERE n.fansub_id=f.id
+					) total_news
+				FROM fansub f
+			) sq
+			WHERE total_series>0 OR total_news>0
+			ORDER BY sq.name ASC";
+	return query($final_query);
+}
+
 // INSERT
 
 function query_insert_registered_user($username, $password_hash, $email, $birthdate) {
@@ -58,6 +79,14 @@ function query_insert_registered_user($username, $password_hash, $email, $birthd
 	$birthdate_escaped = escape($birthdate);
 	$final_query = "INSERT INTO user (username, password, email, birthdate, created, created_by, updated, updated_by)
 			VALUES ('$username_escaped', '$password_hash_escaped', '$email_escaped', '$birthdate_escaped', CURRENT_TIMESTAMP, 'Themself', CURRENT_TIMESTAMP, 'Themself')";
+	return query($final_query);
+}
+
+function query_insert_user_blacklist($user_id, $blacklisted_fansub_id) {
+	$user_id = escape($user_id);
+	$blacklisted_fansub_id = escape($blacklisted_fansub_id);
+	$final_query = "INSERT INTO user_fansub_blacklist (user_id, fansub_id)
+			VALUES ($user_id, $blacklisted_fansub_id)";
 	return query($final_query);
 }
 
@@ -87,6 +116,32 @@ function query_update_user_site_theme_by_user_id($site_theme, $user_id) {
 	$final_query = "UPDATE user
 			SET site_theme='$site_theme_escaped'
 			WHERE id=$user_id";
+	return query($final_query);
+}
+
+function query_update_user_settings($user_id, $show_cancelled_projects, $show_lost_projects, $hide_hentai_access, $manga_reader_type, $previous_chapters_read_behavior) {
+	$user_id = escape($user_id);
+	$show_cancelled_projects = escape($show_cancelled_projects);
+	$show_lost_projects = escape($show_lost_projects);
+	$hide_hentai_access = escape($hide_hentai_access);
+	$manga_reader_type = escape($manga_reader_type);
+	$previous_chapters_read_behavior = escape($previous_chapters_read_behavior);
+	$final_query = "UPDATE user
+			SET show_cancelled_projects=$show_cancelled_projects,
+				show_lost_projects=$show_lost_projects,
+				hide_hentai_access=$hide_hentai_access,
+				manga_reader_type=$manga_reader_type,
+				previous_chapters_read_behavior=$previous_chapters_read_behavior
+			WHERE id=$user_id";
+	return query($final_query);
+}
+
+// DELETE
+
+function query_delete_user_blacklist($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "DELETE FROM user_fansub_blacklist
+			WHERE user_id=$user_id";
 	return query($final_query);
 }
 ?>
