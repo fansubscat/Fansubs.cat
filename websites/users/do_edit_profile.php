@@ -10,25 +10,20 @@ function string_ends_with($haystack, $needle) {
 	return substr($haystack, -$length) === $needle;
 }
 
-function sendRegistrationEmail($email, $username) {
-	$message = "Bon dia, $username,\n\nReps aquest correu perquè t’has registrat com a usuari a Fansubs.cat.\n\nSi mai n’oblides la contrasenya, fes servir l’opció «He oblidat la contrasenya» del següent enllaç: ".USERS_URL."/inicia-la-sessio\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\nFansubs.cat.";
-	mail($email,'Registre a Fansubs.cat', $message,'From: Fansubs.cat <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "Fansubs.cat"');
-}
-
-function register_user(){
+function edit_profile(){
+	global $user;
 	//Check if we have all the data
-	if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
+	if (empty($user) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || empty($_POST['avatar']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 1);
 	}
 
 	//Transfer to variables
-	$username = $_POST['username'];
-	$password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 	$email_address = $_POST['email_address'];
 	$birth_day = $_POST['birthday_day'];
 	$birth_month = $_POST['birthday_month'];
 	$birth_year = $_POST['birthday_year'];
+	$avatar = $_POST['avatar'];
 
 	//Check for valid date
 	if (!checkdate($birth_month, $birth_day, $birth_year)) {
@@ -66,31 +61,24 @@ function register_user(){
 		}
 	}
 
-	//Check if user exists
-	$result = query_user_by_username($username);
-	if (mysqli_num_rows($result)>0){
-		http_response_code(400);
-		mysqli_free_result($result);
-		return array('result' => 'ko', 'code' => 2);
-	}
-
 	//Check if email exists
-	$result = query_user_by_email($email_address);
+	$result = query_user_by_email_except_self($email_address, $user['id']);
 	if (mysqli_num_rows($result)>0){
 		http_response_code(400);
 		mysqli_free_result($result);
 		return array('result' => 'ko', 'code' => 3);
 	}
 
-	//Insert user
-	query_insert_registered_user($username, $password, $email_address, $birth_year."-".$birth_month."-".$birth_day);
-	sendRegistrationEmail($email_address, $username);
-
-	//Set the session username, the next request will fill in the $user variable automatically
-	$_SESSION['username']=$_POST['username'];
+	if (str_starts_with($avatar, 'http')) {
+		query_update_user_profile($user['id'], $email_address, $birth_year."-".$birth_month."-".$birth_day, NULL);
+	} else {
+		$avatar_filename = get_nanoid().'.png';
+		file_put_contents(STATIC_DIRECTORY.'/images/avatars/'.$avatar_filename, file_get_contents($avatar));
+		query_update_user_profile($user['id'], $email_address, $birth_year."-".$birth_month."-".$birth_day, $avatar_filename);
+	}
 
 	return array('result' => 'ok');
 }
 
-echo json_encode(register_user());
+echo json_encode(edit_profile());
 ?>

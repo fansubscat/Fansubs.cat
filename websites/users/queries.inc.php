@@ -13,6 +13,16 @@ function query_user_by_email($email) {
 	return query($final_query);
 }
 
+function query_user_by_email_except_self($email, $user_id) {
+	$email_escaped = escape($email);
+	$user_id = escape($user_id);
+	$final_query = "SELECT *
+			FROM user
+			WHERE email='$email_escaped'
+				AND id<>$user_id";
+	return query($final_query);
+}
+
 function query_user_seen_data_by_user_id($user_id) {
 	$user_id = escape($user_id);
 	$final_query = "SELECT (SELECT SUM(progress)
@@ -96,7 +106,9 @@ function query_update_user_reset_password_code_by_user_id($code, $user_id) {
 	$code_escaped = escape($code);
 	$user_id = escape($user_id);
 	$final_query = "UPDATE user
-			SET reset_password_code='$code_escaped'
+			SET reset_password_code='$code_escaped',
+				updated=CURRENT_TIMESTAMP,
+				updated_by='Themself'
 			WHERE id=$user_id";
 	return query($final_query);
 }
@@ -105,7 +117,10 @@ function query_update_user_password_hash_and_disable_reset_password_by_username(
 	$password_hash_escaped = escape($password_hash);
 	$username_escaped = escape($username);
 	$final_query = "UPDATE user
-			SET password='$password_hash_escaped', reset_password_code=NULL
+			SET password='$password_hash_escaped',
+				reset_password_code=NULL,
+				updated=CURRENT_TIMESTAMP,
+				updated_by='Themself'
 			WHERE username='$username_escaped'";
 	return query($final_query);
 }
@@ -114,7 +129,9 @@ function query_update_user_site_theme_by_user_id($site_theme, $user_id) {
 	$site_theme_escaped = escape($site_theme);
 	$user_id = escape($user_id);
 	$final_query = "UPDATE user
-			SET site_theme='$site_theme_escaped'
+			SET site_theme='$site_theme_escaped',
+				updated=CURRENT_TIMESTAMP,
+				updated_by='Themself'
 			WHERE id=$user_id";
 	return query($final_query);
 }
@@ -131,16 +148,76 @@ function query_update_user_settings($user_id, $show_cancelled_projects, $show_lo
 				show_lost_projects=$show_lost_projects,
 				hide_hentai_access=$hide_hentai_access,
 				manga_reader_type=$manga_reader_type,
-				previous_chapters_read_behavior=$previous_chapters_read_behavior
+				previous_chapters_read_behavior=$previous_chapters_read_behavior,
+				updated=CURRENT_TIMESTAMP,
+				updated_by='Themself'
+			WHERE id=$user_id";
+	return query($final_query);
+}
+
+function query_update_view_sessions_for_user_removal($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "UPDATE view_session
+			SET user_id=NULL,
+				anon_id='".escape(session_id())."'
+			WHERE user_id=$user_id";
+	return query($final_query);
+}
+
+function query_update_user_profile($user_id, $email_address, $birth_date, $avatar_filename) {
+	$user_id = escape($user_id);
+	$email_address = escape($email_address);
+	$birth_date = escape($birth_date);
+	$final_query = "UPDATE user
+			SET email='$email_address',
+				birthdate='$birth_date',
+				avatar_filename=".(!empty($avatar_filename) ? "'".escape($avatar_filename)."'" : "avatar_filename").",
+				updated=CURRENT_TIMESTAMP,
+				updated_by='Themself'
 			WHERE id=$user_id";
 	return query($final_query);
 }
 
 // DELETE
 
+function query_delete_user($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "DELETE FROM user
+			WHERE id=$user_id";
+	return query($final_query);
+}
+
 function query_delete_user_blacklist($user_id) {
 	$user_id = escape($user_id);
 	$final_query = "DELETE FROM user_fansub_blacklist
+			WHERE user_id=$user_id";
+	return query($final_query);
+}
+
+function query_delete_user_file_seen_status($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "DELETE FROM user_file_seen_status
+			WHERE user_id=$user_id";
+	return query($final_query);
+}
+
+function query_delete_user_series_list($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "DELETE FROM user_series_list
+			WHERE user_id=$user_id";
+	return query($final_query);
+}
+
+function query_delete_user_version_followed($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "DELETE FROM user_version_followed
+			WHERE user_id=$user_id";
+	return query($final_query);
+}
+
+function query_delete_user_version_rating($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "DELETE FROM user_version_rating
 			WHERE user_id=$user_id";
 	return query($final_query);
 }

@@ -11,9 +11,12 @@ ErrorDocument 403 /error.php?code=403
 
 #Hide internal files
 RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
+RewriteCond %{REQUEST_URI} !do_change_password\.php
+RewriteCond %{REQUEST_URI} !do_delete_profile\.php
+RewriteCond %{REQUEST_URI} !do_edit_profile\.php
 RewriteCond %{REQUEST_URI} !do_login\.php
-RewriteCond %{REQUEST_URI} !do_register\.php
 RewriteCond %{REQUEST_URI} !do_forgot_password\.php
+RewriteCond %{REQUEST_URI} !do_register\.php
 RewriteCond %{REQUEST_URI} !do_reset_password\.php
 RewriteCond %{REQUEST_URI} !do_save_settings\.php
 RewriteCond %{REQUEST_URI} !do_save_site_theme\.php

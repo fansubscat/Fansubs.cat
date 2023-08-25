@@ -177,6 +177,14 @@ a.forgot-password {
 	padding-right: var(--page-padding);
 }
 
+.account-profile-layout {
+	display: flex;
+	flex-direction: row;
+	padding-top: var(--page-padding);
+	padding-left: var(--page-padding);
+	padding-right: var(--page-padding);
+}
+
 .settings-section {
 	background-color: rgb(var(--card-background-color));
 	border-radius: 1.5rem;
@@ -313,6 +321,18 @@ a.forgot-password {
 	position: relative;
 }
 
+.account-profile-page {
+	background-color: rgb(var(--card-background-color));
+	border-radius: 1.5rem;
+	padding: 2rem;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	align-items: center;
+}
+
 .remove-profile {
 	position: absolute;
 	right: 2rem;
@@ -339,6 +359,11 @@ a.forgot-password {
 	font-size: 1.6rem;
 	margin-top: 0.5rem;
 	color: rgba(var(--positive-color), 0.7);
+}
+
+.profile-section-explanation {
+	font-size: 1.5rem;
+	margin: 1.5rem 0;
 }
 
 .settings-section-data {
@@ -419,6 +444,22 @@ a.forgot-password {
 .edit-blacklisted-fansubs {
 	white-space: nowrap;
 	margin-top: 0;
+}
+
+.account-button {
+	padding-left: 3rem;
+	padding-right: 3rem;
+	width: unset;
+	align-self: center;
+}
+
+.account-profile-layout form {
+	display: flex;
+	flex-direction: column;
+}
+
+#edit-profile-form .profile-avatar {
+	cursor: pointer;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -567,7 +608,7 @@ a.forgot-password {
 		margin-top: 2rem;
 	}
 
-	.profile-page {
+	.profile-page, .account-profile-page {
 		flex-direction: column;
 		padding: 1rem;
 	}

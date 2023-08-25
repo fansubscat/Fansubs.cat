@@ -2326,6 +2326,7 @@ input:checked + .viewed-slider:before {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		z-index: unset;
 	}
 
 	.series-title {
@@ -2517,5 +2518,14 @@ input:checked + .viewed-slider:before {
 @media (max-width: 350px){
 	.video-js .vjs-next-button, .video-js .vjs-prev-button {
 		display: none;
+	}
+
+	.catalogues-explicit-category {
+		margin-left: 0;
+	}
+
+	.hentai-button, .filter-button {
+		margin-right: 0;
+		font-size: 1.3rem;
 	}
 }

@@ -951,7 +951,7 @@ h2.section-title:first-of-type {
 	overflow: visible;
 }
 
-.style-type-login input:not([type='range']), .style-type-login select, .style-type-login textarea, .style-type-contact input:not([type='range']), .style-type-contact select, .style-type-contact textarea {
+.style-type-login input:not([type='range']), .style-type-login select, .style-type-login textarea, .style-type-contact input:not([type='range']), .style-type-contact select, .style-type-contact textarea, .account-profile-layout input:not([type='range']), .account-profile-layout select {
 	border: 0.1rem solid rgb(var(--positive-color));
 }
 
