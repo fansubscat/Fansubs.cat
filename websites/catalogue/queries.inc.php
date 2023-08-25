@@ -1101,7 +1101,8 @@ function query_player_details_by_file_id($file_id) {
 				e.number episode_number,
 				e.linked_episode_id,
 				IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title,
-				f.extra_name
+				f.extra_name,
+				s.reader_type
 			FROM file f
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id

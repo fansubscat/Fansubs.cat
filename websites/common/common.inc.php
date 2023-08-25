@@ -199,7 +199,7 @@ function get_prepared_versions($fansub_info) {
 			$current_version_status = $fields[1];
 			$current_version_fansubs = array();
 		}
-		array_push($current_version_fansubs, array('name' => $fields[2], 'type' => $fields[3], 'icon' => STATIC_URL.'/images/icons/'.$fields[4].'.png'));
+		array_push($current_version_fansubs, array('id' => $fields[4], 'name' => $fields[2], 'type' => $fields[3], 'icon' => STATIC_URL.'/images/icons/'.$fields[4].'.png'));
 	}
 	array_push($versions, array('id' => $current_version_id, 'status' => $current_version_status, 'fansubs' => $current_version_fansubs));
 	return $versions;

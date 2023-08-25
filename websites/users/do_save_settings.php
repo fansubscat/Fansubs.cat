@@ -16,7 +16,7 @@ function save_settings(){
 	$hide_hentai_access = ($_POST['hide_hentai_access']==1 ? 1 : 0);
 	$previous_chapters_read_behavior = ($_POST['previous_chapters_read_behavior']==1 ? 1 : 2);
 	$manga_reader_type = ($_POST['manga_reader_type']>=0 && $_POST['manga_reader_type']<=2 ? $_POST['manga_reader_type'] : 0);
-	$blacklisted_fansub_ids = array(); //TODO
+	$blacklisted_fansub_ids = explode(',',$_POST['blacklisted_fansub_ids']);
 
 	//Update DB
 	query_update_user_settings($user['id'], $show_cancelled_projects, $show_lost_projects, $hide_hentai_access, $manga_reader_type, $previous_chapters_read_behavior);

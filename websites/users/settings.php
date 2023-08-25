@@ -78,8 +78,13 @@ if (!empty($user) && is_adult()) {
 							<button class="normal-button edit-blacklisted-fansubs">Edita la llista</button>
 <?php
 $fansubs = query_all_fansubs();
+$all_fansubs = array();
 $blacklisted_fansubs = array();
 foreach ($fansubs as $fansub) {
+	array_push($all_fansubs, array(
+		'id' => (int)$fansub['id'],
+		'name' => $fansub['name']
+		));
 	if (in_array($fansub['id'], $blacklisted_fansub_ids)) {
 		array_push($blacklisted_fansubs, $fansub);
 	}
@@ -95,6 +100,8 @@ if (count($blacklisted_fansubs)==1) {
 <?php
 }
 ?>
+							<input id="blacklisted-fansubs-ids" type="hidden" value="<?php echo implode(',',$blacklisted_fansub_ids);?>">
+							<input id="all-fansubs-json" type="hidden" value="<?php echo htmlspecialchars(json_encode($all_fansubs));?>">
 						</div>	
 					</div>
 				</div>

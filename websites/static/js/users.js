@@ -328,13 +328,31 @@ function bookmarkRemoved(seriesId) {
 	}
 }
 
+function applyBlacklist() {
+	var elements = $('.blacklisted-fansubs-dialog-checkbox:checked');
+	var output = '';
+	for (var i=0; i<elements.length;i++){
+		if (output!='') {
+			output+=',';
+		}
+		output+=$(elements[i]).val();
+	}
+	$('#blacklisted-fansubs-ids').val(output);
+	if (elements.length==1) {
+		$('.blacklisted-fansubs-list-number').text('1 fansub blocat');
+	} else {
+		$('.blacklisted-fansubs-list-number').text(elements.length+' fansubs blocats');
+	}
+	saveSettings();
+}
+
 function saveSettings() {
 	if ($('body.user-logged-in').length>0) {
 		var values = {
 			'show_cancelled_projects': $('#show-cancelled').prop('checked') ? 1 : 0,
 			'show_lost_projects': $('#show-lost').prop('checked') ? 1 : 0,
 			'manga_reader_type': $('#reader-type').val()=='strip' ? 2 : ($('#reader-type').val()=='ltr' ? 1 : 0),
-			'blacklisted_fansub_ids': '', //TODO
+			'blacklisted_fansub_ids': $('#blacklisted-fansubs-ids').val(),
 			'hide_hentai_access': $('#show-hentai').prop('checked') ? 0 : 1,
 			'previous_chapters_read_behavior': $('#mark-previous-as-seen').prop('checked') ? 1 : 0
 		};
@@ -350,7 +368,7 @@ function saveSettings() {
 		Cookies.set('show_cancelled_projects', $('#show-cancelled').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
 		Cookies.set('show_lost_projects', $('#show-lost').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
 		Cookies.set('manga_reader_type', $('#reader-type').val()=='strip' ? 2 : ($('#reader-type').val()=='ltr' ? 1 : 0), cookieOptions, {secure: true});
-		Cookies.set('blacklisted_fansub_ids', '', cookieOptions, {secure: true}); //TODO
+		Cookies.set('blacklisted_fansub_ids', $('#blacklisted-fansubs-ids').val(), cookieOptions, {secure: true});
 	}
 }
 
@@ -591,3 +609,25 @@ function checkAvatarUpload() {
 	}
 }
 
+$(document).ready(function() {
+	$('.edit-blacklisted-fansubs').on("click", function() {
+		var code = '';
+		var fansubs = JSON.parse($('#all-fansubs-json').val());
+		var blacklistedFansubs = JSON.parse('['+$('#blacklisted-fansubs-ids').val()+']');
+		code+='<div class="blacklisted-fansubs-dialog-container">';
+		for(var i=0;i<fansubs.length;i++) {
+			code+='<div class="blacklisted-fansubs-dialog-element"><input class="blacklisted-fansubs-dialog-checkbox" type="checkbox"'+(blacklistedFansubs.includes(fansubs[i].id) ? ' checked' : '')+' value="'+fansubs[i].id+'" onchange="applyBlacklist();">'+fansubs[i].name+'</div>';
+		}
+		code+='</div>';
+		
+		showCustomDialog('Fansubs a la llista negra', code, null, true, true, [
+			{
+				text: 'Torna a la configuració',
+				class: 'normal-button',
+				onclick: function(){
+					closeCustomDialog();
+				}
+			}
+		]);
+	});
+});

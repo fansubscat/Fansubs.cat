@@ -460,6 +460,23 @@ a.forgot-password {
 
 #edit-profile-form .profile-avatar {
 	cursor: pointer;
+	margin-top: 0.2rem;
+	width: 12rem;
+	height: 12rem;
+}
+
+.blacklisted-fansubs-dialog-container {
+	display: flex;
+	flex-wrap: wrap;
+	text-align: left;
+}
+
+.blacklisted-fansubs-dialog-element {
+	width: 33.333%;
+	box-sizing: border-box;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -611,6 +628,10 @@ a.forgot-password {
 	.profile-page, .account-profile-page {
 		flex-direction: column;
 		padding: 1rem;
+	}
+
+	.blacklisted-fansubs-dialog-element {
+		width: 100%;
 	}
 }
 

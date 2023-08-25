@@ -588,4 +588,23 @@ function get_view_source_type($user_agent, $is_casted) {
 	}
 	return 'desktop';
 }
+
+function is_fansub_blacklisted($fansub_id) {
+	global $user;
+	return ((!empty($user) && in_array($fansub_id, $user['blacklisted_fansub_ids'])) || (empty($user) && in_array($fansub_id, get_cookie_blacklisted_fansub_ids())));
+}
+
+function is_any_fansub_blacklisted($versions, $version_id) {
+	foreach ($versions as $version) {
+		if ($version['id']==$version_id) {
+			foreach ($version['fansubs'] as $fansub) {
+				if (is_fansub_blacklisted($fansub['id'])) {
+					return TRUE;
+				}
+			}
+			return FALSE;
+		}
+	}
+	return FALSE;
+}
 ?>

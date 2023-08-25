@@ -1565,6 +1565,9 @@
 	opacity: 1;
 }
 
+.version-blacklisted > * {
+	filter: grayscale(1) brightness(0.5);
+}
 
 .tadaima-explanation {
 	font-size: 1.6rem;

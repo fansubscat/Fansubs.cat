@@ -1501,12 +1501,20 @@ input:checked + .slider:before {
 	font-size: 1.5rem;
 	background: rgb(var(--negative-color));
 	position: relative;
+	max-height: 90vh;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 }
 
 #dialog-title {
 	font-size: 2.5rem;
 	margin-top: 0;
 	margin-bottom: 2rem;
+}
+
+#dialog-message {
+	overflow-y: scroll;
 }
 
 #dialog-buttonbar {

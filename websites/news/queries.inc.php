@@ -36,7 +36,7 @@ function query_latest_news($user, $text, $page, $page_size, $fansub_slug, $show_
 			FROM news n
 				LEFT JOIN fansub f ON n.fansub_id=f.id
 			WHERE ".($text!==NULL ? "(n.title LIKE '%".escape($text)."%' OR n.contents LIKE '%".escape($text)."%')" : "1")."
-				AND ".($show_blacklisted_fansubs ? "1" : get_internal_blacklisted_fansubs_condition_news($user))."
+				AND ".(($show_blacklisted_fansubs || $show_own_news) ? "1" : get_internal_blacklisted_fansubs_condition_news($user))."
 				AND ".($show_own_news ? "n.fansub_id IS NULL" : "1")."
 				AND ".(!empty($fansub_slug) ? "f.slug='$fansub_slug'" : "1")."
 				AND n.date>='$min_month-01 00:00:00' AND n.date<='$max_month-31 23:59:59'

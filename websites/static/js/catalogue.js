@@ -411,8 +411,7 @@ function getCoverImageUrlForChromecast() {
 	return currentSourceData.cover;
 }
 
-function initializeReader() {
-	var type = 'rtl'; //'webtoon', 'rtl' or 'ltr'
+function initializeReader(type) {
 	var pagesCode = '';
 	for (var i=0; i<currentSourceData.pages.length;i++) {
 		pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" loading="lazy"></div>';
@@ -452,7 +451,7 @@ function initializeReader() {
 
 function initializeFileDisplayer(){
 	if (currentSourceData.method=='pages') {
-		initializeReader();
+		initializeReader(currentSourceData.reader_type);
 	} else {
 		initializePlayer();
 	}

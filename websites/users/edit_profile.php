@@ -44,7 +44,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 			<label for="edit_profile_avatar_file">Imatge de perfil</label>
 			<div class="profile-avatar">
 				<img alt="Avatar de l’usuari" onclick="" class="profile-avatar-image" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
-				<input id="edit_profile_avatar_file" name="file" type="file" onchange="checkAvatarUpload();" accept="image/png, image/gif, image/jpeg" />
+				<input id="edit_profile_avatar_file" class="hidden" name="file" type="file" onchange="checkAvatarUpload();" accept="image/png, image/gif, image/jpeg" />
 				<div class="profile-avatar-change" onclick="chooseAvatar();"><i class="fa fa-fw fa-upload"></i>Canvia la imatge</div>
 			</div>
 			<div id="edit_profile_generic_validation" class="validation-message-generic"></div>

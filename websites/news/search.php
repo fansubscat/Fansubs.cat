@@ -50,7 +50,11 @@ if (isset($_GET['max_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_GET['ma
 if (isset($_GET['fansub'])) {
 	$param_fansub = $_GET['fansub'];
 } else {
-	$param_fansub = -1;
+	if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
+		$param_fansub = -2;
+	} else {
+		$param_fansub = -1;
+	}
 }
 ?>
 					<div class="search-layout">
@@ -71,8 +75,8 @@ if (isset($_GET['fansub'])) {
 <?php
 if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
 ?>
-								<option value="-1"<?php echo $param_fansub==-1 ? ' selected' : ''; ?>>Tots (fins i tot llista negra)</option>
 								<option value="-2"<?php echo $param_fansub==-2 ? ' selected' : ''; ?>>Tots (excepte llista negra)</option>
+								<option value="-1"<?php echo $param_fansub==-1 ? ' selected' : ''; ?>>Tots (fins i tot llista negra)</option>
 								<option value="-3"<?php echo $param_fansub==-3 ? ' selected' : ''; ?>>Només notícies de Fansubs.cat</option>
 <?php
 } else {

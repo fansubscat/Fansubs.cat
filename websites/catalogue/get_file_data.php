@@ -161,6 +161,7 @@ function get_player_data(){
 			'length' => intval($row['length']),
 			'data_sources' => get_data_sources($links),
 			'pages' => $pages,
+			'reader_type' => $row['reader_type']=='strip' ? 'webtoon' : ((!empty($user) && $user['manga_reader_type']==1) ? 'ltr' : 'rtl'),
 			'method' => get_display_method($links),
 			'initial_position' => intval($current_position),
 			'initial_progress' => intval($initial_progress),
