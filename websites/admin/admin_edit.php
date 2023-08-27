@@ -35,18 +35,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['fansub_id']="NULL";
 		}
+		if (!empty($_POST['default_storage_processing']) && is_numeric($_POST['default_storage_processing'])) {
+			$data['default_storage_processing']=escape($_POST['default_storage_processing']);
+		} else {
+			crash("Dades invàlides: manca default_storage_processing");
+		}
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-admin-user", "S’ha actualitzat l’administrador «".$data['username']."»");
 			if ($data['password']!=NULL) {
-				query("UPDATE admin_user SET username='".$data['username']."',password='".$data['password']."',admin_level=".$data['admin_level'].",fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE username='".$data['username_old']."'");
+				query("UPDATE admin_user SET username='".$data['username']."',password='".$data['password']."',admin_level=".$data['admin_level'].",fansub_id=".$data['fansub_id'].",default_storage_processing=".$data['default_storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE username='".$data['username_old']."'");
 			} else {
-				query("UPDATE admin_user SET username='".$data['username']."',admin_level=".$data['admin_level'].",fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE username='".$data['username_old']."'");
+				query("UPDATE admin_user SET username='".$data['username']."',admin_level=".$data['admin_level'].",fansub_id=".$data['fansub_id'].",default_storage_processing=".$data['default_storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE username='".$data['username_old']."'");
 			}
 		}
 		else {
 			log_action("create-admin-user", "S’ha creat l’administrador «".$data['username']."»");
-			query("INSERT INTO admin_user (username,password,admin_level,fansub_id,created,created_by,updated,updated_by) VALUES ('".$data['username']."','".$data['password']."',".$data['admin_level'].",".$data['fansub_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO admin_user (username,password,admin_level,fansub_id,default_storage_processing,created,created_by,updated,updated_by) VALUES ('".$data['username']."','".$data['password']."',".$data['admin_level'].",".$data['fansub_id'].",".$data['default_storage_processing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 
 		$_SESSION['message']="S’han desat les dades correctament.";
@@ -111,6 +116,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	mysqli_free_result($result);
 ?>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="form-default_storage_processing" class="mandatory">Processament de fitxers per defecte</label>
+							<select class="form-select" name="default_storage_processing" id="form-default_storage_processing" required>
+								<option value="">- Selecciona un processament -</option>
+								<option value="1"<?php echo $row['default_storage_processing']==1 ? " selected" : ""; ?>>Recomprimeix el vídeo i l’àudio</option>
+								<option value="0"<?php echo $row['default_storage_processing']==0 ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l’àudio</option>
+								<option value="2"<?php echo $row['default_storage_processing']==2 ? " selected" : ""; ?>>Recomprimeix l’àudio, copia el vídeo</option>
+								<option value="3"<?php echo $row['default_storage_processing']==3 ? " selected" : ""; ?>>No recomprimeixis res (regenera l’MP4)</option>
+								<option value="4"<?php echo $row['default_storage_processing']==4 ? " selected" : ""; ?>>Copia sense cap canvi (còpia 1:1)</option>
+								<option value="5"<?php echo $row['default_storage_processing']==5 ? " selected" : ""; ?>>Omet l’emmagatzematge local</option>
 							</select>
 						</div>
 						<div class="mb-3 text-center pt-2">

@@ -160,6 +160,10 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 	log_action("debug-log", "Running: rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".ADMIN_STORAGES[0]['hostname'].":/home/storage/Manga/$file_id/ --delete");
 	exec("rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".ADMIN_STORAGES[0]['hostname'].":/home/storage/Manga/$file_id/ --delete", $output, $result_code);
 	log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
+	//Copy first file as preview
+	log_action("debug-log", "Copying first image from $cleaned_path as preview for file $file_id");
+	exec("ls -1 $cleaned_path | head -n1 | xargs -I {} convert $cleaned_path{} -resize 360x -format jpeg ".STATIC_DIRECTORY.'/images/files/'."$file_id.jpg", $output, $result_code);
+	log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
 	//Clean cleaned directory
 	log_action("debug-log", "Removing cleaned directory $cleaned_path for file $file_id");
 	rrmdir($cleaned_path);

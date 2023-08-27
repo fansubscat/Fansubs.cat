@@ -1612,7 +1612,14 @@ $(document).ready(function() {
 
 		//Autoopen according to parameters
 		if ($('#autoopen_file_id').length>0 && $('#autoopen_file_id').val()!='') {
-			$('.version-tab[data-version-id="'+$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].parentNode.parentNode.parentNode.parentNode.id.split('-').pop()+'"]').click();
+			//Select version
+			var versionTab = $('.version-tab[data-version-id="'+$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('.version-content')[0].id.split('-').pop()+'"]');
+			versionTab.click();
+			//Select season
+			if ($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('details').length>0) {
+				$($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('details')[0]).attr('open', true);
+			}
+			//Scroll and click file
 			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
 			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}

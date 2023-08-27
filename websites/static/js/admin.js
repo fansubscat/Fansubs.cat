@@ -1466,16 +1466,9 @@ function showLiveActionWithNoMdl() {
 
 function showHideEpisodeWarnings() {
 	var hidesEpisodeNumbers = !$('#form-show_episode_numbers').prop('checked');
-	var isAlphabetical = $('input[name="order_type"]:checked').val()!=0;
-	$("#warning-no-numbers-and-sort").addClass('d-none');
 	$("#warning-no-numbers").addClass('d-none');
-	$("#warning-sort").addClass('d-none');
-	if (hidesEpisodeNumbers && isAlphabetical) {
-		$("#warning-no-numbers-and-sort").removeClass('d-none');
-	} else if (hidesEpisodeNumbers) {
+	if (hidesEpisodeNumbers) {
 		$("#warning-no-numbers").removeClass('d-none');
-	} else if (isAlphabetical) {
-		$("#warning-sort").removeClass('d-none');
 	}
 }
 
@@ -1807,7 +1800,4 @@ $(document).ready(function() {
 		}
 	});
 	$("#form-show_episode_numbers").change(showHideEpisodeWarnings);
-	$("#form-order_type_standard").change(showHideEpisodeWarnings);
-	$("#form-order_type_alphabetic").change(showHideEpisodeWarnings);
-	$("#form-order_type_natural").change(showHideEpisodeWarnings);
 });
