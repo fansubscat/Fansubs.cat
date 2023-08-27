@@ -150,7 +150,7 @@ mysqli_data_seek($result, 0);
 $i=0;
 while ($version = mysqli_fetch_assoc($result)) {
 ?>
-						<div class="version-content<?php echo $count>1 ? ' version-content-multi' : ''; ?><?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version-content-<?php echo $version['id']; ?>">
+						<div class="version-content<?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version-content-<?php echo $version['id']; ?>">
 <?php
 	$position = 1;
 	$resulte = query_episodes_for_series_version($series['id'], $version['id']);
