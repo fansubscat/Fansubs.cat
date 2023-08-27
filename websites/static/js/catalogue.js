@@ -906,6 +906,9 @@ function closeOverlay() {
 	if (!isEmbedPage()) {
 		$('#overlay').addClass('hidden');
 		$('html').removeClass('page-no-overflow');
+		var url = new URL(window.location);
+		url.searchParams.delete('f');
+		history.replaceState(null, null, url);
 	} else {
 		window.parent.postMessage('embedClosed', '*');
 	}
@@ -1577,6 +1580,9 @@ $(document).ready(function() {
 			//Remove previous errors
 			$('.player-error').remove();
 			requestFileData($(this).attr('data-file-id'));
+			var url = new URL(window.location);
+			url.searchParams.set('f', $(this).attr('data-file-id'));
+			history.replaceState(null, null, url);
 		});
 
 		$(".remove-from-my-list, .add-to-my-list").click(function(){
@@ -1600,6 +1606,11 @@ $(document).ready(function() {
 			});
 			$(this).addClass("version-tab-selected");
 			$("#version-content-"+$(this).attr('data-version-id')).removeClass("hidden");
+			if ($(".version-tab").length>1) {
+				var url = new URL(window.location);
+				url.searchParams.set('v', $(this).attr('data-version-id'));
+				history.replaceState(null, null, url);
+			}
 		});
 		$(".version-fansub-rating-positive").click(function(){
 			var oppositeButton = $(this).parent().find('.version-fansub-rating-negative');
@@ -1623,15 +1634,17 @@ $(document).ready(function() {
 		//Autoopen according to parameters
 		if ($('#autoopen_file_id').length>0 && $('#autoopen_file_id').val()!='') {
 			//Select version
-			var versionTab = $('.version-tab[data-version-id="'+$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('.version-content')[0].id.split('-').pop()+'"]');
-			versionTab.click();
-			//Select season
-			if ($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('details').length>0) {
-				$($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('details')[0]).attr('open', true);
+			if ($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('.version-content').length>0) {
+				var versionTab = $('.version-tab[data-version-id="'+$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('.version-content')[0].id.split('-').pop()+'"]');
+				versionTab.click();
+				//Select season
+				if ($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('details').length>0) {
+					$($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('details')[0]).attr('open', true);
+				}
+				//Scroll and click file
+				$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
+				$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 			}
-			//Scroll and click file
-			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
-			$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 		}
 
 		$(window).scroll(function () {

@@ -280,20 +280,20 @@ function get_genre_names_from_array($genre_names) {
 	return $result_code;
 }
 
-function print_carousel_item($series, $specific_version, $show_new=TRUE) {
+function print_carousel_item($series, $specific_version, $use_version_param, $show_new=TRUE) {
 	global $user;
 	$versions = get_prepared_versions($series['fansub_info']);
-	$number_of_versions = count($versions);
+	$number_of_versions = $series['total_versions'];
 	echo "\t\t\t\t\t\t\t".'<div class="thumbnail-outer">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['id'].'" onmouseenter="prepareFloatingInfo(this);">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="versions">'.get_fansub_icons($series['fansub_info'], $versions, $specific_version ? $series['version_id'] : NULL).'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $number_of_versions>1) ? "?v=".$series['version_id'] : "").'"><img src="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="versions">'.get_fansub_icons($series['fansub_info'], $versions, $specific_version ? $versions[0]['id'] : NULL).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($use_version_param && $number_of_versions>1) ? "?v=".$versions[0]['id'] : "").'"><img src="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="clickable-thumbnail" onclick="prepareClickableFloatingInfo(this);"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="floating-info">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-main">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-bookmark '.(in_array($series['id'], !empty($user) ? $user['series_list_ids'] : array()) ? 'fas' : 'far').' fa-fw fa-bookmark" data-series-id="'.$series['id'].'" onclick="toggleBookmark('.$series['id'].'); event.stopPropagation(); return false;"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-title">'.htmlspecialchars($series['name']).'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-versions">'.get_carousel_fansub_info($series['fansub_info'], $versions, $specific_version ? $series['version_id'] : NULL).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-versions">'.get_carousel_fansub_info($series['fansub_info'], $versions, $specific_version ? $versions[0]['id'] : NULL).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-synopsis-wrapper">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-synopsis">'."\n";
 
@@ -303,7 +303,7 @@ function print_carousel_item($series, $specific_version, $show_new=TRUE) {
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $number_of_versions>1) ? "?v=".$series['version_id'] : "").'" onclick="event.stopPropagation();">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.$series['slug'].(($specific_version && $number_of_versions>1) ? "?v=".$versions[0]['id'] : "").'" onclick="event.stopPropagation();">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
 	if ($series['subtype']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">One-shot</div>'."\n";
 	} else if ($series['subtype']=='serialized') {

@@ -116,6 +116,7 @@ if (defined('PAGE_IS_SEARCH')) {
 				'type' => 'static',
 				'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 				'specific_version' => FALSE,
+				'use_version_param' => TRUE,
 				'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 			));
 			if ($is_full_catalogue) {
@@ -123,12 +124,14 @@ if (defined('PAGE_IS_SEARCH')) {
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-display"></i> Resultats d’anime',
 					'specific_version' => FALSE,
+					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
 					'specific_version' => FALSE,
+					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 				));
 			}
@@ -138,6 +141,7 @@ if (defined('PAGE_IS_SEARCH')) {
 				'type' => 'static',
 				'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
 				'specific_version' => FALSE,
+				'use_version_param' => TRUE,
 				'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 			));
 			if ($is_full_catalogue) {
@@ -145,12 +149,14 @@ if (defined('PAGE_IS_SEARCH')) {
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-display"></i> Resultats d’anime',
 					'specific_version' => FALSE,
+					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 					'specific_version' => FALSE,
+					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 				));
 			}
@@ -161,6 +167,7 @@ if (defined('PAGE_IS_SEARCH')) {
 				'type' => 'static',
 				'title' => '<i class="fa fa-fw fa-display"></i> Resultats d’anime',
 				'specific_version' => FALSE,
+				'use_version_param' => TRUE,
 				'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 			));
 			if ($is_full_catalogue) {
@@ -168,12 +175,14 @@ if (defined('PAGE_IS_SEARCH')) {
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
 					'specific_version' => FALSE,
+					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 					'specific_version' => FALSE,
+					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
 				));
 			}
@@ -188,6 +197,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		'type' => 'advent',
 		'title' => NULL,
 		'specific_version' => FALSE,
+		'use_version_param' => FALSE,
 		'result' => NULL,
 	));
 
@@ -214,6 +224,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		'type' => 'recommendations',
 		'title' => $special_day,
 		'specific_version' => TRUE,
+		'use_version_param' => TRUE,
 		'result' => query_home_recommended_items($user, $force_recommended_ids_list, 10),
 	));
 
@@ -222,6 +233,7 @@ if (defined('PAGE_IS_SEARCH')) {
 			'type' => 'chapters-carousel',
 			'title' => '<i class="fa fa-fw fa-eye"></i> '.CATALOGUE_CONTINUE_WATCHING_STRING,
 			'specific_version' => TRUE,
+			'use_version_param' => FALSE,
 			'result' => query_home_continue_watching_by_user_id($user['id']),
 		));
 	}
@@ -230,6 +242,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		'type' => 'carousel',
 		'title' => '<i class="fa fa-fw fa-clock-rotate-left"></i> Darreres actualitzacions',
 		'specific_version' => TRUE,
+		'use_version_param' => TRUE,
 		'result' => query_home_last_updated($user, $max_items),
 	));
 
@@ -237,6 +250,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		'type' => 'carousel',
 		'title' => '<i class="fa fa-fw fa-check"></i> Finalitzats recentment',
 		'specific_version' => TRUE,
+		'use_version_param' => TRUE,
 		'result' => query_home_last_finished($user, $max_items),
 	));
 
@@ -244,6 +258,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		'type' => 'carousel',
 		'title' => '<i class="fa fa-fw fa-dice"></i> A l’atzar',
 		'specific_version' => FALSE,
+		'use_version_param' => FALSE,
 		'result' => query_home_random($user, $max_items),
 	));
 
@@ -251,6 +266,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		'type' => 'carousel',
 		'title' => '<i class="fa fa-fw fa-fire"></i> Més populars',
 		'specific_version' => FALSE,
+		'use_version_param' => FALSE,
 		'result' => query_home_most_popular($user, $max_items),
 	));
 
@@ -258,6 +274,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		'type' => 'carousel',
 		'title' => '<i class="fa fa-fw fa-stopwatch"></i> Més actuals',
 		'specific_version' => FALSE,
+		'use_version_param' => FALSE,
 		'result' => query_home_more_recent($user, $max_items),
 	));
 
@@ -265,6 +282,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		'type' => 'carousel',
 		'title' => '<i class="fa fa-fw fa-heart"></i> Més ben valorats',
 		'specific_version' => FALSE,
+		'use_version_param' => FALSE,
 		'result' => query_home_best_rated($user, $max_items),
 	));
 }
@@ -324,11 +342,11 @@ foreach($sections as $section){
 							<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> <?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 <?php
 				if ($section['type']=='recommendations') {
-					print_featured_item($row, $section['title'], $section['specific_version']);
+					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param']);
 				} else if ($section['type']=='chapters-carousel'){
 					print_chapter_item($row);
 				} else {
-					print_carousel_item($row, $section['specific_version']);
+					print_carousel_item($row, $section['specific_version'], $section['use_version_param']);
 				}
 ?>
 							</div>

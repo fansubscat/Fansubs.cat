@@ -1070,7 +1070,7 @@ function query_autocomplete($user, $text, $type) {
 				AND s.type='$type'
 				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
 			GROUP BY s.id
-			ORDER BY s.name ASC";
+			ORDER BY s.name LIKE '$text%' DESC, s.name ASC";
 	return query($final_query);
 }
 

@@ -98,6 +98,11 @@ function get_internal_lost_projects_condition($user) {
 
 function get_internal_catalogue_base_query_portion($user, $apply_hentai_rule=TRUE) {
 	return "SELECT s.*,
+			(SELECT COUNT(*)
+				FROM version v
+				WHERE v.series_id=s.id
+					AND v.is_hidden=0
+			) total_versions,
 			(SELECT nv.id
 				FROM version nv
 				WHERE nv.files_updated=MAX(v.files_updated)

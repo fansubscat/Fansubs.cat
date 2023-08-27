@@ -37,7 +37,6 @@ define('PAGE_EXTRA_BODY_CLASS', 'has-carousel is-series-page');
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
-					<input id="autoopen_version_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['v']) ? (int)$_GET['v'] : ''); ?>">
 					<input id="autoopen_file_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['f']) ? (int)$_GET['f'] : ''); ?>">
 					<input id="series_id" type="hidden" value="<?php echo htmlspecialchars($series['id']); ?>">
 					<input id="seen_behavior" type="hidden" value="<?php echo !empty($user) ? $user['previous_chapters_read_behavior'] : -1; ?>">
