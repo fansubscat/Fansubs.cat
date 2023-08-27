@@ -430,7 +430,7 @@ if (mysqli_num_rows($resultra)>0) {
 ?>
 								<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> swiper-slide">
 <?php
-		print_carousel_item($row, FALSE);
+		print_carousel_item($row, FALSE, FALSE);
 ?>
 								</div>
 <?php
@@ -459,7 +459,7 @@ if (mysqli_num_rows($resultrm)>0) {
 ?>
 								<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> swiper-slide">
 <?php
-		print_carousel_item($row, FALSE);
+		print_carousel_item($row, FALSE, FALSE);
 ?>
 								</div>
 <?php

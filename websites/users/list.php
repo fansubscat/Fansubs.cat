@@ -53,7 +53,7 @@ if ($cnt>0) {
 	?>
 							<div<?php echo isset($row['best_status']) ? ' class="status-'.get_status($row['best_status']).'"' : ''; ?>>
 	<?php
-				print_carousel_item($row, FALSE);
+				print_carousel_item($row, FALSE, FALSE);
 	?>
 							</div>
 	<?php
