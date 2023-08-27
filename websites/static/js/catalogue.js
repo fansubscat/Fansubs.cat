@@ -919,8 +919,18 @@ function getPreviousUnreadEpisodes(fileId) {
 }
 
 function setSeenBehavior(value) {
-	//TODO Call server to save it
 	$('#seen_behavior').val(value);
+	var values = {
+		'previous_chapters_read_behavior': value,
+		'only_read_behavior' : 1
+	};
+	$.post({
+		url: USERS_URL+"/do_save_settings.php",
+		data: values,
+		xhrFields: {
+			withCredentials: true
+		},
+	});
 }
 
 function toggleFileSeen(checkbox, fileId) {
