@@ -588,7 +588,9 @@ function initializePlayer(){
 					if (player) {
 						player.play().catch(error => {
 							console.log("Autoplay blocked, setting has-started manually");
-							player.addClass('vjs-has-started');
+							if (player) {
+								player.addClass('vjs-has-started');
+							}
 						});
 					}
 				}, 1);
@@ -900,6 +902,7 @@ function hideEndCard() {
 
 function closeOverlay() {
 	addLog('Closed');
+	isDisplayerClosed = true;
 	sendCurrentFileTracking();
 	shutdownFileDisplayer(true);
 	if (!isEmbedPage()) {
@@ -1409,6 +1412,7 @@ function requestFileData(fileId) {
 	hasBeenCasted = false;
 	hasJumpedToInitialPosition = false
 	lastTimeUpdate = 0;
+	isDisplayerClosed = false;
 	var values = {
 		file_id: fileId
 	};
@@ -1420,15 +1424,19 @@ function requestFileData(fileId) {
 			withCredentials: true
 		},
 	}).done(function(data) {
-		var response = JSON.parse(data);
-		if (response.result=='ok') {
-			currentSourceData = response.data;
-			initializeFileDisplayer();
-		} else {
-			parsePlayerError('FAILED_TO_LOAD_ERROR');
+		if (!isDisplayerClosed) {
+			var response = JSON.parse(data);
+			if (response.result=='ok') {
+				currentSourceData = response.data;
+				initializeFileDisplayer();
+			} else {
+				parsePlayerError('FAILED_TO_LOAD_ERROR');
+			}
 		}
 	}).fail(function(data) {
-		parsePlayerError('FAILED_TO_LOAD_ERROR');
+		if (!isDisplayerClosed) {
+			parsePlayerError('FAILED_TO_LOAD_ERROR');
+		}
 	});
 }
 
