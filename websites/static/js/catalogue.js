@@ -504,14 +504,13 @@ function initializePlayer(){
 					"currentTimeDisplay",
 					"timeDivider",
 					"durationDisplay",
-					"muteToggle",
-					"volumeControl",
+					"volumePanel",
 					"fullscreenToggle"
 				],
-				/*volumePanel: {
+				volumePanel: {
 					vertical: true,
 					inline: false
-				}*/
+				}
 			},
 			techOrder: techOrders,
 			chromecast: {

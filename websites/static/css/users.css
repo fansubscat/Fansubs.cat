@@ -474,6 +474,45 @@ a.forgot-password {
 .blacklisted-fansubs-dialog-element {
 	width: 33.333%;
 	box-sizing: border-box;
+	border: 0.3rem solid transparent;
+	display: flex;
+	align-items: center;
+}
+
+.blacklisted-fansubs-dialog-container input[type="checkbox"] {
+	background-color: rgb(var(--always-positive-color));
+	appearance: none;
+	margin: 0;
+	font-size: 1.6rem;
+	cursor: pointer;
+	height: 2rem;
+	width: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: "Font Awesome 6 Free" !important;
+	font-weight: 900;
+	content: '\f00c' !important;
+	color: rgb(var(--always-positive-color));
+	margin-right: 0.6rem;
+}
+
+.blacklisted-fansubs-dialog-container input[type="checkbox"]:before {
+	font-family: "Font Awesome 6 Free" !important;
+	font-weight: 900;
+	content: '\f00c' !important;
+	color: rgb(var(--always-positive-color));
+}
+
+.blacklisted-fansubs-dialog-container input[type="checkbox"]:checked {
+	background-color: rgb(var(--primary-color));
+}
+
+.blacklisted-fansubs-dialog-container input[type="checkbox"]:checked:before {
+	color: rgb(var(--always-negative-color));
+}
+
+.blacklisted-fansubs-dialog-fansub-name {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
@@ -511,6 +550,10 @@ a.forgot-password {
 
 	.content-tab:not(.content-tab-active):hover {
 		color: rgb(var(--positive-color-button-hover));
+	}
+
+	.blacklisted-fansubs-dialog-container input[type="checkbox"]:hover {
+		filter: brightness(0.9);
 	}
 }
 

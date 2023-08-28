@@ -430,8 +430,8 @@
 }
 
 .video-js .vjs-volume-bar {
-	border-radius: 2em;
-	margin: 0.75em 0.3em;
+	height: unset;
+	margin: 0.5em auto;
 }
 
 .video-js .vjs-time-tooltip, .video-js .vjs-volume-tooltip {
@@ -589,6 +589,18 @@
 
 .vjs-button-disabled {
 	filter: brightness(0.5);
+}
+
+.video-js .vjs-volume-panel-vertical {
+	width: 3em !important;
+}
+
+.video-js .vjs-volume-vertical {
+	left: -3em !important;
+	bottom: 6em !important;
+	height: 6em !important;
+	background-color: rgba(var(--always-negative-color),0.4);
+	border-radius: 0.2em;
 }
 
 .video-js .vjs-prev-button {
@@ -2481,6 +2493,10 @@ input:checked + .viewed-slider:before {
 
 	.expandable-content-default {
 		max-height: calc(1.2 * 1.3rem * 5);
+	}
+
+	.video-js .vjs-volume-panel {
+		display: none;
 	}
 }
 

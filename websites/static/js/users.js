@@ -616,7 +616,7 @@ $(document).ready(function() {
 		var blacklistedFansubs = JSON.parse('['+$('#blacklisted-fansubs-ids').val()+']');
 		code+='<div class="blacklisted-fansubs-dialog-container">';
 		for(var i=0;i<fansubs.length;i++) {
-			code+='<div class="blacklisted-fansubs-dialog-element"><input class="blacklisted-fansubs-dialog-checkbox" type="checkbox"'+(blacklistedFansubs.includes(fansubs[i].id) ? ' checked' : '')+' value="'+fansubs[i].id+'" onchange="applyBlacklist();">'+fansubs[i].name+'</div>';
+			code+='<div class="blacklisted-fansubs-dialog-element"><input class="blacklisted-fansubs-dialog-checkbox" type="checkbox"'+(blacklistedFansubs.includes(fansubs[i].id) ? ' checked' : '')+' value="'+fansubs[i].id+'" onchange="applyBlacklist();"><div class="blacklisted-fansubs-dialog-fansub-name">'+fansubs[i].name+'</div></div>';
 		}
 		code+='</div>';
 		
