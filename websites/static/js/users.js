@@ -628,6 +628,6 @@ $(document).ready(function() {
 					closeCustomDialog();
 				}
 			}
-		]);
+		], true);
 	});
 });

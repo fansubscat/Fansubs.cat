@@ -950,7 +950,7 @@ function toggleFileSeen(checkbox, fileId) {
 function markAsSeen(fileId, dontAsk) {
 	var previouslyUnreadEpisodes = getPreviousUnreadEpisodes(fileId);
 	if (!dontAsk && $('#seen_behavior').val()==0 && previouslyUnreadEpisodes.length>0) {
-		showCustomDialog('Vols marcar també els capítols anteriors com a vistos?', 'La decisió que prenguis s’aplicarà automàticament a partir d’ara.', 'Podràs canviar-la a la configuració d’usuari.', false, true, [
+		showCustomDialog('Vols marcar també els capítols anteriors com a vistos?', 'La decisió que prenguis s’aplicarà automàticament a partir d’ara.<br>Podràs canviar-la a la configuració d’usuari.', null, false, true, [
 			{
 				text: 'Sí',
 				class: 'normal-button',

@@ -221,8 +221,18 @@
 		margin-bottom: 3rem;
 		margin-top: 1rem;
 	}
-	.main-button, .secondary-button {
+	.main-button {
 		padding: 1rem;
+		font-size: 2.8rem;
+		min-width: 24rem;
+	}
+	.main-buttons, .secondary-buttons {
+		margin-top: 1.5rem;
+	}
+	.secondary-button {
+		padding: 1rem;
+		font-size: 2rem;
+		min-width: 18rem;
 	}
 	.fansub {
 		width: 100%;
@@ -231,6 +241,11 @@
 	.fansubs-grouping {
 		gap: 1rem;
 	}
+
+	.content-button, .disabled-content-button {
+		font-size: 1.2rem;
+	}
+
 }
 
 @media (max-width: 350px){

@@ -679,7 +679,7 @@ select:not(.date-month) {
 
 .section-content {
 	font-weight: normal;
-	line-height: 1.5;
+	line-height: 1.2;
 }
 
 .section-title {
@@ -1508,12 +1508,12 @@ input:checked + .slider:before {
 }
 
 #dialog-title {
-	font-size: 2.5rem;
+	font-size: 2.4rem;
 	margin-top: 0;
 	margin-bottom: 2rem;
 }
 
-#dialog-message {
+.scrollable-dialog #dialog-message {
 	overflow-y: scroll;
 }
 
@@ -1522,7 +1522,7 @@ input:checked + .slider:before {
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	margin-top: 1rem;
+	margin-top: 2rem;
 }
 
 .dialog-button {
@@ -1561,24 +1561,8 @@ input:checked + .slider:before {
 		text-decoration: underline;
 	}
 
-	.twitter-link:hover {
-		color: #7ab0ff;
-	}
-
-	.mastodon-link:hover {
-		color: #6364ff;
-	}
-
-	.telegram-link:hover {
-		color: #229ED9;
-	}
-
-	.discord-link:hover {
-		color: #7289da;
-	}
-
-	.web-link:hover {
-		color: rgb(var(--primary-color-hover));
+	.twitter-link:hover, .mastodon-link:hover, .telegram-link:hover, .discord-link:hover, .web-link:hover {
+		color: rgb(var(--primary-color));
 	}
 
 	.anon-avatar:hover {
@@ -1777,6 +1761,10 @@ input:checked + .slider:before {
 		--thumbnail-text-height: 2.1rem;
 	}
 
+	h2 {
+		font-size: 1.8rem;
+	}
+
 	.style-type-catalogue .header, .style-type-news .header, .style-type-fansubs .header, .style-type-settings .header {
 		justify-content: left;
 		flex-wrap: wrap;
@@ -1878,8 +1866,8 @@ input:checked + .slider:before {
 	.thumbnail-outer .title {
 		padding-left: 0.25rem;
 		padding-right: 0.25rem;
-		font-size: 0.87rem;
-		line-height: 1.2;
+		font-size: 0.95rem;
+		line-height: 1.1;
 	}
 
 	.thumbnail .versions .fansubs .fansub img {
@@ -1888,14 +1876,20 @@ input:checked + .slider:before {
 	}
 
 	.floating-info-versions-icons .fansubs .fansub img {
-		width: 1.6rem;
-		height: 1.6rem;
+		width: 1.4rem;
+		height: 1.4rem;
 	}
 
-	.thumbnail .versions .version-status, .floating-info-versions-icons .version-status {
+	.thumbnail .versions .version-status {
 		font-size: 0.6rem;
 		bottom: -0.2rem;
 		right: -0.2rem;
+	}
+
+	.floating-info-versions-icons .version-status {
+		font-size: 0.6rem;
+		bottom: -0.1rem;
+		right: -0.1rem;
 	}
 
 	.floating-info-bookmark.fas, .floating-info-bookmark.far {
@@ -1911,15 +1905,16 @@ input:checked + .slider:before {
 	}
 
 	.floating-info-versions {
-		font-size: 0.9rem;
+		font-size: 0.8rem;
 		padding: 0 0.5rem;
 		margin-top: 0;
 	}
 
 	.floating-info-synopsis {
-		font-size: 0.85rem;
+		font-size: 0.8rem;
 		padding: 0 0.5rem;
-		-webkit-line-clamp: 6;
+		-webkit-line-clamp: 8;
+		line-height: 1.1;
 	}
 
 	.floating-info-watch-now {
@@ -1929,7 +1924,7 @@ input:checked + .slider:before {
 	}
 
 	.floating-info-divisions {
-		font-size: 0.85rem;
+		font-size: 0.8rem;
 		padding: 0 0.5rem;
 		margin-top: 0.4rem;
 	}
@@ -1941,14 +1936,19 @@ input:checked + .slider:before {
 	}
 
 	.floating-info-genres-wrapper {
-		font-size: 0.8rem;
+		font-size: 0.7rem;
 		padding: 0 0.5rem;
-		height: 1.7rem;
+		height: 1.5rem;
 	}
 
 	.floating-info-score {
 		font-size: 1.6rem;
 		padding: 0 0.5rem 0 0;
+	}
+
+	#dialog-title {
+		font-size: 2.2rem;
+		margin-bottom: 1rem;
 	}
 }
 

@@ -9,9 +9,9 @@ var cookieOptions = {
 	domain: ".fansubs.online"
 };
 
-function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray) {
+function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray, scrollable=false) {
 	$('#dialog-overlay').remove();
-	var code = '<div data-nosnippet id="dialog-overlay" class="flex'+(blurred ? ' dialog-overlay-blurred' : '')+'"><div id="dialog-overlay-content">';
+	var code = '<div data-nosnippet id="dialog-overlay" class="flex'+(blurred ? ' dialog-overlay-blurred' : '')+'"><div id="dialog-overlay-content"'+(scrollable ? ' class="scrollable-dialog"' : '')+'>';
 	if (closeable) {
 		code += '<a class="dialog-close-button fa fa-fw fa-times" title="Tanca" onclick="closeCustomDialog();"></a>'
 	}
