@@ -10,6 +10,7 @@ var cookieOptions = {
 };
 
 function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray, scrollable=false) {
+	$('html').addClass('page-no-overflow');
 	$('#dialog-overlay').remove();
 	var code = '<div data-nosnippet id="dialog-overlay" class="flex'+(blurred ? ' dialog-overlay-blurred' : '')+'"><div id="dialog-overlay-content"'+(scrollable ? ' class="scrollable-dialog"' : '')+'>';
 	if (closeable) {
@@ -28,6 +29,18 @@ function showCustomDialog(title, text, subtext, closeable=true, blurred=true, bu
 		button.click(buttonsArray[i].onclick);
 		button.appendTo('#dialog-buttonbar');
 	}
+}
+
+function showAlert(title, desc) {
+	showCustomDialog(title, desc, null, true, true, [
+		{
+			text: 'D’acord',
+			class: 'normal-button',
+			onclick: function(){
+				closeCustomDialog();
+			}
+		}
+	]);
 }
 
 function closeCustomDialog() {
@@ -144,7 +157,7 @@ function prepareFloatingInfo(element){
 	if (inCarouselPage && regexResult!=null && regexResult.length>1) {
 		translation = parseInt(regexResult[1]);
 	}
-	var maxWidth = $(window).width(); //If search layout is on the right: $('.search-layout').length>0 ? ($(window).width() - $('.search-layout').width()) : $(window).width();
+	var maxWidth = $('.main-body')[0].offsetLeft+$('.main-body')[0].offsetWidth; //If search layout is on the right: $('.search-layout').length>0 ? ($(window).width() - $('.search-layout').width()) : $(window).width();
 	$(element).removeClass('floating-info-right').removeClass('floating-info-left');
 	if ((offset[0]+translation+element.clientWidth*1.25*2)<maxWidth){
 		//We can fit it: right-side

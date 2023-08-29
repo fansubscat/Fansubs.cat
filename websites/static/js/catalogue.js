@@ -139,18 +139,6 @@ class Accordion {
   }
 }
 
-function showAlert(title, desc) {
-	showCustomDialog(title, desc, null, true, true, [
-		{
-			text: 'D’acord',
-			class: 'normal-button',
-			onclick: function(){
-				closeCustomDialog();
-			}
-		}
-	]);
-}
-
 function isEmbedPage(){
 	return $('.style-type-embed').length!=0;
 }
