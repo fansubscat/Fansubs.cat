@@ -1089,6 +1089,8 @@ h2.section-title:first-of-type {
 
 .thumbnail-clicked .floating-info-main {
 	filter: drop-shadow(0em 0em 0.65rem rgba(var(--always-negative-color),0.8));
+	border-radius: 0.4rem !important;
+	overflow: visible !important;
 }
 
 .thumbnail .floating-info-main {
@@ -1108,13 +1110,19 @@ h2.section-title:first-of-type {
 	border-radius: 0.4rem 0 0 0.4rem;
 }
 
+.floating-info-bookmark {
+	transition: padding-top var(--fast-animation-duration) ease, padding-bottom var(--fast-animation-duration) ease;
+}
+
 .floating-info-bookmark.fas{
 	color: rgb(var(--secondary-color));
 	position: absolute;
 	font-size: 2.2rem;
 	right: 0.4rem;
-	top: 0.1rem;
+	top: -0.2rem;
 	cursor: pointer;
+	padding-top: 0;
+	padding-bottom: 0.3rem;
 }
 
 .floating-info-bookmark.far{
@@ -1122,8 +1130,10 @@ h2.section-title:first-of-type {
 	position: absolute;
 	font-size: 2.2rem;
 	right: 0.4rem;
-	top: 0.1rem;
+	top: -0.2rem;
 	cursor: pointer;
+	padding-top: 0.3rem;
+	padding-bottom: 0;
 }
 
 .floating-info-title {
@@ -1194,6 +1204,7 @@ h2.section-title:first-of-type {
 	color: rgb(var(--negative-color));
 	margin-left: auto;
 	margin-right: auto;
+	line-height: 1.5;
 }
 
 .floating-info-divisions {
@@ -1895,7 +1906,6 @@ input:checked + .slider:before {
 	.floating-info-bookmark.fas, .floating-info-bookmark.far {
 		font-size: 1.4rem;
 		right: 0;
-		top: 0.1rem;
 	}
 
 	.floating-info-title {

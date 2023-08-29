@@ -161,7 +161,7 @@ function query_insert_or_update_user_seen_for_file_id($user_id, $file_id, $is_se
 	$final_query = "INSERT INTO user_file_seen_status
 				(user_id, file_id, is_seen, position, last_viewed)
 			VALUES ($user_id, $file_id, $is_seen, 0, NULL)
-			ON DUPLICATE KEY UPDATE is_seen=$is_seen,position=IF($is_seen=1,0,position)";
+			ON DUPLICATE KEY UPDATE is_seen=$is_seen,position=0";
 	return query($final_query);
 }
 
@@ -869,7 +869,7 @@ function query_files_by_episode_id_and_version_id($user_id, $episode_id, $versio
 	$episode_id = escape($episode_id);
 	$version_id = escape($version_id);
 	$final_query = "SELECT f.*,
-				IF(IFNULL(ufss.is_seen, 0)=1,0,IFNULL(ufss.position, 0)/f.length) progress_percent,
+				IF(IFNULL(ufss.is_seen, 0)=1,1,IFNULL(ufss.position, 0)/f.length) progress_percent,
 				IFNULL(ufss.is_seen, 0) is_seen
 			FROM file f
 				LEFT JOIN user_file_seen_status ufss ON f.id=ufss.file_id AND ufss.user_id=$user_id
@@ -886,7 +886,7 @@ function query_files_by_linked_episode_id_and_version_id($user_id, $linked_episo
 	$linked_episode_id = escape($linked_episode_id);
 	$version_id = escape($version_id);
 	$final_query = "SELECT f.*,
-				IF(IFNULL(ufss.is_seen, 0)=1,0,IFNULL(ufss.position, 0)/f.length) progress_percent,
+				IF(IFNULL(ufss.is_seen, 0)=1,1,IFNULL(ufss.position, 0)/f.length) progress_percent,
 				IFNULL(ufss.is_seen, 0) is_seen
 			FROM file f
 				LEFT JOIN user_file_seen_status ufss ON f.id=ufss.file_id AND ufss.user_id=$user_id
@@ -958,7 +958,7 @@ function query_extras_files_by_extra_name_and_version_id($user_id, $extra_name, 
 	$extra_name = escape($extra_name);
 	$version_id = escape($version_id);
 	$final_query = "SELECT f.*,
-				IF(IFNULL(ufss.is_seen, 0)=1,0,IFNULL(ufss.position, 0)/f.length) progress_percent,
+				IF(IFNULL(ufss.is_seen, 0)=1,1,IFNULL(ufss.position, 0)/f.length) progress_percent,
 				IFNULL(ufss.is_seen, 0) is_seen
 			FROM file f
 				LEFT JOIN user_file_seen_status ufss ON f.id=ufss.file_id AND ufss.user_id=$user_id

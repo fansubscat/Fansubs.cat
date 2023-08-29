@@ -160,7 +160,7 @@ function get_player_data(){
 			'thumbnail' => (file_exists(STATIC_DIRECTORY.'/images/files/'.$file_id.'.jpg') ? STATIC_URL.'/images/files/'.$file_id.'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'),
 			'length' => intval($row['length']),
 			'data_sources' => get_data_sources($links),
-			'pages' => $pages,
+			'pages' => array_values($pages),
 			'reader_type' => $row['reader_type']=='strip' ? 'webtoon' : ((!empty($user) && $user['manga_reader_type']==1) ? 'ltr' : 'rtl'),
 			'method' => get_display_method($links),
 			'initial_position' => intval($current_position),

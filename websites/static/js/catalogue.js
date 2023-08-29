@@ -943,6 +943,7 @@ function toggleFileSeen(checkbox, fileId) {
 		if (!$(checkbox).is(':checked')) {
 			//Remove from seen
 			executeMarkAsSeen([fileId], false);
+			$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 0%;');
 		} else {
 			//Add to seen (and ask for previous if applicable)
 			markAsSeen(fileId, false);
@@ -979,8 +980,10 @@ function markAsSeen(fileId, dontAsk) {
 
 		isCheckingAsSeenProgrammatically = true;
 		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 100%;');
 		for (var i=0;i<previouslyUnreadEpisodeIds.length;i++) {
 			$('.file-launcher[data-file-id="'+previouslyUnreadEpisodeIds[i]+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
+			$('.file-launcher[data-file-id="'+previouslyUnreadEpisodeIds[i]+'"]').find('.progress').attr('style', 'width: 100%;');
 		}
 		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen(previouslyUnreadEpisodeIds.concat([fileId]), true);
@@ -994,6 +997,7 @@ function markAsSeen(fileId, dontAsk) {
 		//2 (or 0 with dontAsk): Mark only the current file
 		isCheckingAsSeenProgrammatically = true;
 		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 100%;');
 		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen([fileId], true);
 	}

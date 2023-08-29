@@ -834,6 +834,7 @@
 	display: inline-block;
 	color: rgb(var(--positive-color));
 	margin-top: 2.2rem;
+	line-height: 1.5;
 }
 
 .recommendation .coverholder {
@@ -879,11 +880,11 @@
 	font-size: 1.6rem;
 	margin-top: 2.2rem;
 	line-height: 1.2;
-	/* For ellipsizing and max 7 lines */
+	/* For ellipsizing and max 8 lines */
 	text-overflow: ellipsis;
 	overflow: hidden;
 	display: -webkit-box;
-	-webkit-line-clamp: 7;
+	-webkit-line-clamp: 8;
 	-webkit-box-orient: vertical;
 }
 
