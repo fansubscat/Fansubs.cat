@@ -858,7 +858,7 @@ function query_available_files_in_version($version_id, $episode_ids, $linked_epi
 						WHERE version_id=$version_id)
 					)
 				)
-			) AND f.is_lost=0
+			)
 			ORDER BY f.id ASC";
 	return query($final_query);
 }

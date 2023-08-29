@@ -41,7 +41,7 @@ if (SITE_IS_HENTAI) {
 		<meta property="og:title" content="<?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?>">
 		<meta property="og:url" content="<?php echo htmlspecialchars(defined('PAGE_PATH') ? SITE_BASE_URL.PAGE_PATH : SITE_BASE_URL); ?>">
 		<meta property="og:description" content="<?php echo htmlspecialchars(defined('PAGE_DESCRIPTION') ? PAGE_DESCRIPTION : SITE_DESCRIPTION); ?>">
-		<meta property="og:image" content="<?php echo htmlspecialchars(defined('PAGE_PREVIEW_IMAGE') ? PAGE_PREVIEW_IMAGE : STATIC_URL.'/social/'.SITE_INTERNAL_NAME.'.jpg'); ?>">
+		<meta property="og:image" content="<?php echo htmlspecialchars(defined('PAGE_PREVIEW_IMAGE') ? PAGE_PREVIEW_IMAGE : STATIC_URL.'/social/'.SITE_PREVIEW_IMAGE.'.jpg'); ?>">
 		<meta property="og:image:type" content="image/jpeg">
 		<title><?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?></title>
 		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/apple-touch-icon.png">

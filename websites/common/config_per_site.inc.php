@@ -9,6 +9,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('SITE_TITLE', 'Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
 		define('SITE_INTERNAL_NAME', 'main');
+		define('SITE_PREVIEW_IMAGE', 'main');
 		define('SITE_INTERNAL_TYPE', 'main');
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
@@ -19,6 +20,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('SITE_TITLE', 'Notícies dels fansubs en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
 		define('SITE_INTERNAL_NAME', 'news');
+		define('SITE_PREVIEW_IMAGE', 'main');
 		define('SITE_INTERNAL_TYPE', 'news');
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
@@ -29,6 +31,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('SITE_TITLE', 'Fansubs.cat');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
 		define('SITE_INTERNAL_NAME', 'users');
+		define('SITE_PREVIEW_IMAGE', 'main');
 		define('SITE_INTERNAL_TYPE', 'users');
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
@@ -40,6 +43,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('SITE_TITLE', 'Anime en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot l’anime subtitulat pels fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'anime');
+		define('SITE_PREVIEW_IMAGE', 'anime');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
 		define('SITE_IS_CATALOGUE', TRUE);
 		define('SITE_IS_HENTAI', FALSE);
@@ -74,6 +78,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('SITE_TITLE', 'Manga en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga editat pels fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'manga');
+		define('SITE_PREVIEW_IMAGE', 'manga');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
 		define('SITE_IS_CATALOGUE', TRUE);
 		define('SITE_IS_HENTAI', FALSE);
@@ -108,6 +113,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('SITE_TITLE', 'Imatge real en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’imatge real subtitulat pels fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'liveaction');
+		define('SITE_PREVIEW_IMAGE', 'liveaction');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
 		define('SITE_IS_CATALOGUE', TRUE);
 		define('SITE_IS_HENTAI', FALSE);
@@ -145,6 +151,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 			define('SITE_TITLE', 'Anime hentai en català | Fansubs.cat');
 			define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot l’anime hentai subtitulat pels fansubs en català!');
 			define('SITE_INTERNAL_NAME', 'hentai');
+			define('SITE_PREVIEW_IMAGE', 'hentai_anime');
 			define('SITE_INTERNAL_TYPE', 'catalogue');
 			define('SITE_IS_CATALOGUE', TRUE);
 			define('SITE_IS_HENTAI', TRUE);
@@ -178,6 +185,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 			define('SITE_TITLE', 'Manga hentai en català | Fansubs.cat');
 			define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga hentai editat pels fansubs en català!');
 			define('SITE_INTERNAL_NAME', 'hentai');
+			define('SITE_PREVIEW_IMAGE', 'hentai_manga');
 			define('SITE_INTERNAL_TYPE', 'catalogue');
 			define('SITE_IS_CATALOGUE', TRUE);
 			define('SITE_IS_HENTAI', TRUE);

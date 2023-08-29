@@ -166,6 +166,23 @@ function get_status_description($id){
 	}
 }
 
+function get_status_description_long($id){
+	switch ($id){
+		case 1:
+			return "Aquest projecte està completat.";
+		case 2:
+			return "Aquest projecte està en procés. Només es mostren els capítols publicats, però en el futur se’n publicaran més.";
+		case 3:
+			return "Aquest projecte està parcialment completat. És possible que no es publiquin més capítols de la resta de parts.";
+		case 4:
+			return "Aquest projecte està abandonat. Probablement no se’n publicaran nous capítols.";
+		case 5:
+			return "Aquest projecte està cancel·lat. No se’n publicaran nous capítols.";
+		default:
+			return "Estat desconegut";
+	}
+}
+
 function get_status_css_icons($id){
 	switch ($id){
 		case 1:

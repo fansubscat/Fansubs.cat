@@ -164,6 +164,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 							<div class="section-content extra-content">
 <?php
+		//TODO REMOVE THIS
+		$version['show_unavailable_episodes']=0;
+		$version['show_expanded_divisions']=0;
 		$divisions = array();
 		$last_division_number = -1;
 		$last_division_id = -1;
@@ -234,14 +237,14 @@ while ($version = mysqli_fetch_assoc($result)) {
 				$is_inside_empty_batch = ($division_available_episodes[$index]==0 && (($index>0 && $division_available_episodes[$index-1]==0) || ($index<(count($division_available_episodes)-1) && $division_available_episodes[$index+1]==0)));
 				$is_first_in_empty_batch = $is_inside_empty_batch && ($index==0 || ($index>0 && $division_available_episodes[$index-1]!=0));
 
-				if ($is_first_in_empty_batch && $version['show_unavailable_episodes']==1) {
+				if ($is_first_in_empty_batch) {
 ?>
 								<div class="empty-divisions"><?php echo CATALOGUE_MORE_SEASONS_AVAILABLE; ?></div>
 <?php
 				}
 ?>
-								<details id="version-<?php echo $version['id']; ?>-division-<?php echo !empty($division['division_number']) ? $division['division_number'] : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo FALSE /*TODO ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0)*/ ? ' open' : ''; ?>>
-									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? CATALOGUE_SEASON_STRING_UNIQUE : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'] : CATALOGUE_SEASON_STRING_UNIQUE))) : 'Altres'; ?><i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 element disponible' : $division_available_episodes[$index].' elements disponibles') : 'No hi ha cap element disponible'; ?></span></div></div></summary>
+								<details id="version-<?php echo $version['id']; ?>-division-<?php echo !empty($division['division_number']) ? $division['division_number'] : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
+									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? CATALOGUE_SEASON_STRING_UNIQUE : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'] : CATALOGUE_SEASON_STRING_UNIQUE))) : 'Altres'; ?><?php echo ($division_available_episodes[$index]>0 || $version['show_unavailable_episodes']==1) ? '<i class="division-arrow fa fa-fw fa-angle-right"></i>' : ''; ?></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 element disponible' : $division_available_episodes[$index].' elements disponibles') : 'No hi ha cap element disponible'; ?></span></div></div></summary>
 									<div class="division-container">
 <?php
 				if ($division_available_episodes[$index]>0 || $version['show_unavailable_episodes']==1) {
@@ -302,6 +305,12 @@ while ($version = mysqli_fetch_assoc($result)) {
 		}
 	}
 ?>
+							<div class="version-status-explanation">
+<?php
+	echo '<div class="version-status status-'.get_status($version['status']).' '.get_status_css_icons($version['status']).'" title="'.htmlspecialchars(get_status_description($version['status'])).'"></div>';
+	echo '<div class="version-status-explanation-text">'.htmlspecialchars(get_status_description_long($version['status'])).'</div>';
+?>
+							</div>
 							</div>
 							<div class="section-content extra-content">
 								<h2 class="section-title-main">Quant a aquesta versió</h2>

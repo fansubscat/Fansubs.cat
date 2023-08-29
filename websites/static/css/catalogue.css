@@ -1927,6 +1927,29 @@ input:checked + .viewed-slider:before {
 	background: rgb(120, 100, 0);
 }
 
+.version-status-explanation {
+	text-align: center;
+	margin-top: 2rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.6rem;
+}
+
+.version-status-explanation .version-status {
+	width: auto;
+	height: auto;
+	font-size: 3rem;
+	border-radius: 100%;
+	background: rgb(var(--always-positive-color));
+	margin-right: 1rem;
+}
+
+.version-status-explanation .version-status-explanation-text{
+	text-align: left;
+}
+
 /* TODO */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2507,6 +2530,15 @@ input:checked + .viewed-slider:before {
 
 	.video-js .vjs-volume-panel {
 		display: none;
+	}
+
+	.version-status-explanation {
+		margin-top: 1rem;
+		font-size: 1.3rem;
+	}
+
+	.version-status-explanation .version-status {
+		font-size: 2rem;
 	}
 }
 
