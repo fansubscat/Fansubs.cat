@@ -907,7 +907,7 @@ function closeOverlay() {
 function getPreviousUnreadEpisodes(fileId) {
 	var position  = parseInt($('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-position'));
 	return $('.file-launcher').filter(function(){
-		return parseInt($(this).attr('data-position')) < position && $(this).find('.episode-seen-cell input[type="checkbox"]:checked').length==0;
+		return parseInt($(this).attr('data-position')) < position && $(this).find('.episode-info-seen-cell input[type="checkbox"]:checked').length==0;
 	});
 }
 
@@ -967,10 +967,10 @@ function markAsSeen(fileId, dontAsk) {
 		var previouslyUnreadEpisodeIds = previouslyUnreadEpisodes.get().map(a => $(a).attr('data-file-id'));
 
 		isCheckingAsSeenProgrammatically = true;
-		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-info-seen-cell input[type="checkbox"]').prop('checked', true);
 		$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 100%;');
 		for (var i=0;i<previouslyUnreadEpisodeIds.length;i++) {
-			$('.file-launcher[data-file-id="'+previouslyUnreadEpisodeIds[i]+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
+			$('.file-launcher[data-file-id="'+previouslyUnreadEpisodeIds[i]+'"]').find('.episode-info-seen-cell input[type="checkbox"]').prop('checked', true);
 			$('.file-launcher[data-file-id="'+previouslyUnreadEpisodeIds[i]+'"]').find('.progress').attr('style', 'width: 100%;');
 		}
 		isCheckingAsSeenProgrammatically = false;
@@ -980,11 +980,11 @@ function markAsSeen(fileId, dontAsk) {
 		if (!dontAsk) {
 			showAlert('Cal iniciar la sessió', 'Per a poder fer un seguiment dels capítols, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
 		}
-		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', false);
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-info-seen-cell input[type="checkbox"]').prop('checked', false);
 	} else {
 		//2 (or 0 with dontAsk): Mark only the current file
 		isCheckingAsSeenProgrammatically = true;
-		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-seen-cell input[type="checkbox"]').prop('checked', true);
+		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-info-seen-cell input[type="checkbox"]').prop('checked', true);
 		$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 100%;');
 		isCheckingAsSeenProgrammatically = false;
 		executeMarkAsSeen([fileId], true);

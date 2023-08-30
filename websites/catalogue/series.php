@@ -220,16 +220,14 @@ while ($version = mysqli_fetch_assoc($result)) {
 		if (count($divisions)<2) {
 			foreach ($divisions as $division) {
 ?>
-								<table class="episode-table">
-									<tbody>
+								<div class="episode-table">
 <?php
 				foreach ($division['episodes'] as $episode) {
 					print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
 					$position++;
 				}
 ?>
-									</tbody>
-								</table>
+								</div>
 <?php
 			}
 		} else { //Multiple divisions
@@ -249,17 +247,13 @@ while ($version = mysqli_fetch_assoc($result)) {
 <?php
 				if ($division_available_episodes[$index]>0 || $version['show_unavailable_episodes']==1) {
 ?>
-										<div style="width: 100%;">
-											<table class="episode-table">
-												<tbody>
+										<div class="episode-table">
 <?php
 					foreach ($division['episodes'] as $episode) {
 						print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
 						$position++;
 					}
 ?>
-												</tbody>
-											</table>
 										</div>
 									</div>
 <?php
@@ -286,17 +280,13 @@ while ($version = mysqli_fetch_assoc($result)) {
 								<details id="version-<?php echo $version['id']; ?>-division-extras" class="division">
 									<summary class="division-header"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_extras.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_extras.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable">Extres<i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo count($extras)==1 ? '1 element disponible' : count($extras).' elements disponibles'; ?></span></div></div></summary>
 									<div class="division-container">
-										<div style="width: 100%;">
-											<table class="episode-table">
-												<tbody>
+										<div class="episode-table">
 <?php
 			foreach ($extras as $episode) {
 				print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
 				$position++;
 			}
 ?>
-												</tbody>
-											</table>
 										</div>
 									</div>
 								</details>
@@ -313,22 +303,41 @@ while ($version = mysqli_fetch_assoc($result)) {
 							</div>
 							</div>
 							<div class="section-content extra-content">
-								<h2 class="section-title-main">Quant a aquesta versió</h2>
+								<h2 class="section-title-main">Autoria d’aquesta versió</h2>
 <?php
 	$fansubs = query_fansubs_by_version_id($version['id']);
 ?>
 								<div class="version-fansub-list-and-rating">
 									<div class="version-fansub-list">
-										<div class="version-fansub-info"><?php echo mysqli_num_rows($fansubs)>1 ? 'Aquesta versió en català és fruit de la feina d’aquests fansubs. No t’oblidis d’agrair-los-ho.' : 'Aquesta versió en català és fruit de la feina d’aquest fansub. No t’oblidis d’agrair-li-ho.'; ?></div>
 <?php
 	foreach ($fansubs as $fansub) {
 ?>
-									<div class="version-fansub-element">
-										<img class="version-fansub-image" src="<?php echo STATIC_URL.'/images/icons/'.$fansub['id'].'.png'; ?>" alt="">
-										<div class="version-fansub-data">
-											<div class="version-fansub-name"><?php echo $fansub['name'].($fansub['type']=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="És un fandub: fa doblatges."></span>' : ''); ?></div>
-											<div class="version-fansub-links">
+										<div class="version-fansub-element">
+											<img class="version-fansub-image" src="<?php echo STATIC_URL.'/images/icons/'.$fansub['id'].'.png'; ?>" alt="">
+											<div class="version-fansub-data">
+												<div class="version-fansub-name"><?php echo $fansub['name'].($fansub['type']=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="És un fandub: fa doblatges."></span>' : ''); ?></div>
+												<div class="version-fansub-links">
 <?php
+		if (!empty(!empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url'])) {
+?>
+													<a class="fa fa-fw fa-earth-europe web-link" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['discord_url'])) {
+?>
+													<a class="fab fa-fw fa-discord discord-link" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['mastodon_url'])) {
+?>
+													<a class="fab fa-fw fa-mastodon mastodon-link" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['twitter_url'])) {
+?>
+													<a class="fab fa-fw fa-x-twitter twitter-link" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
+<?php
+		}
 		if (!empty($fansub['downloads_url'])) {
 			$url_arr=explode(';', $fansub['downloads_url']);
 			foreach ($url_arr as $url) {
@@ -339,30 +348,10 @@ while ($version = mysqli_fetch_assoc($result)) {
 				}
 			}
 		}
-		if (!empty(!empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url'])) {
 ?>
-												<a class="fa fa-fw fa-earth-europe web-link" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
-<?php
-		}
-		if (!empty($fansub['discord_url'])) {
-?>
-												<a class="fab fa-fw fa-discord discord-link" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
-<?php
-		}
-		if (!empty($fansub['mastodon_url'])) {
-?>
-												<a class="fab fa-fw fa-mastodon mastodon-link" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
-<?php
-		}
-		if (!empty($fansub['twitter_url'])) {
-?>
-												<a class="fab fa-fw fa-x-twitter twitter-link" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
-<?php
-		}
-?>
+												</div>
 											</div>
 										</div>
-									</div>
 <?php
 	}
 ?>
@@ -389,22 +378,24 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 					</div>
 <?php
-if (!empty($series['tadaima_id'])) {
-	$tadaima_posts = get_tadaima_info($series['tadaima_id']);
+if (!SITE_IS_HENTAI) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main">Comentaris a Tadaima.cat</h2>
+						<h2 class="section-title-main">Darrers comentaris a Tadaima.cat</h2>
 						<div class="section-content">
 <?php
-	$num_posts = count($tadaima_posts);
-	if ($num_posts>5) {
-		$tadaima_posts = array_slice($tadaima_posts, -5);
-	}
+	if (!empty($series['tadaima_id'])) {
+		$tadaima_posts = get_tadaima_info($series['tadaima_id']);
 ?>
-							<div class="tadaima-explanation">Hi ha <b><?php echo $num_posts==1 ? '1 missatge' : $num_posts.' missatges'; ?></b> sobre aquest contingut a Tadaima.cat.<?php echo $num_posts>5 ? ' Aquests en són els darrers, però pots veure’ls tots prement el botó inferior.' : ''; ?> Recorda que la comunitat de Tadaima.cat no té cap vinculació amb Fansubs.cat.</div>
+<?php
+		$num_posts = count($tadaima_posts);
+		if ($num_posts>3) {
+			$tadaima_posts = array_slice($tadaima_posts, -3);
+		}
+?>
 							<div class="tadaima-posts">
 <?php
-	foreach ($tadaima_posts as $post) {
+		foreach ($tadaima_posts as $post) {
 ?>
 								<div class="tadaima-post">
 									<div class="tadaima-message"><?php echo strip_tags(str_replace('<br>',"\n",$post->text)); ?></div>
@@ -414,10 +405,19 @@ if (!empty($series['tadaima_id'])) {
 									</div>
 								</div>
 <?php
-	}
+		}
 ?>
 							</div>
+							<div class="tadaima-explanation">En total hi ha <b><?php echo $num_posts==1 ? '1 missatge' : $num_posts.' missatges'; ?></b>. Et vols unir a la conversa?<br><span>(recorda que Tadaima.cat no és qui edita aquest contingut)</span></div>
 							<a class="normal-button tadaima-cta" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><i class="fa fa-fw fa-comment-dots"></i> Digues-hi la teva a Tadaima.cat</a>
+<?php
+	} else {
+?>
+							<div class="tadaima-explanation">Encara no hi ha cap fil sobre aquest contingut a Tadaima.cat. T’animem a crear-ne un!<br><span>(recorda que Tadaima.cat no és qui edita aquest contingut)</span></div>
+							<a class="normal-button tadaima-cta" href="https://tadaima.cat/<?php echo CATALOGUE_ITEM_TYPE=='anime' ? 'anime-f10' : (CATALOGUE_ITEM_TYPE=='manga' ? 'manga-f9' : 'series-i-pel-licules-f14'); ?>.html" target="_blank"><i class="fa fa-fw fa-comment-dots"></i> Digues-hi la teva a Tadaima.cat</a>
+<?php
+	}
+?>
 						</div>
 					</div>
 <?php

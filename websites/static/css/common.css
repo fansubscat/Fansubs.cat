@@ -637,7 +637,7 @@ select:not(.date-month) {
 }
 
 .section:not(.series-subheader) {
-	overflow: hidden;
+	overflow-x: clip;
 }
 
 .featured-section {

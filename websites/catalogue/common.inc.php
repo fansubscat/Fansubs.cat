@@ -334,17 +334,17 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 	$num_variants = mysqli_num_rows($result);
 	if ($num_variants==0){ //Episode not available at all
 ?>
-<tr class="episode episode-unavailable">
-	<td class="episode-thumbnail-cell">
+<div class="episode episode-unavailable">
+	<div class="episode-thumbnail-cell">
 		<div class="episode-thumbnail">
 			<div class="play-button fa fa-fw fa-ban"></div>
 		</div>
-	</td>
-	<td class="episode-title-cell">
+	</div>
+	<div class="episode-title-cell">
 		<div class="episode-title"><?php echo $episode_title_formatted; ?></div>
-	</td>
-	<td class="episode-seen-cell"></td>
-</tr>
+	</div>
+	<div class="episode-info-seen-cell"></div>
+</div>
 <?php
 	} else {
 		//Iterate all variants
@@ -360,8 +360,8 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 					$links = filter_links($links);
 				}
 ?>
-<tr class="file-launcher episode<?php $num_variants>1 ? ' episode-indented' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" data-position="<?php echo $position; ?>">
-	<td class="episode-thumbnail-cell">
+<div class="file-launcher episode<?php $num_variants>1 ? ' episode-indented' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" data-position="<?php echo $position; ?>">
+	<div class="episode-thumbnail-cell">
 <?php
 	if (file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg')) {
 ?>
@@ -378,10 +378,21 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 			<span class="progress" style="width: <?php echo $vrow['progress_percent']*100; ?>%;"></span>
 			<div class="play-button fa fa-fw <?php echo $series['type']=='manga' ? 'fa-book-open' : 'fa-play'; ?>"></div>
 		</div>
-	</td>
-	<td class="episode-title-cell">
+	</div>
+	<div class="episode-title-cell">
 		<div class="episode-title">
-			<?php echo $episode_title_formatted; ?><?php echo $num_variants>1 ? '<br>'.htmlspecialchars($vrow['variant_name']): ''; ?>
+			<?php echo $episode_title_formatted; ?><?php echo $num_variants>1 ? '<br><b>'.htmlspecialchars($vrow['variant_name']).'</b>': ''; ?>
+<?php
+				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
+?>
+			<span class="new-episode tooltip<?php echo (!empty($user) && $vrow['is_seen']==1) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>
+<?php
+				}
+?>
+		</div>
+	</div>
+	<div class="episode-info-seen-cell">
+		<div class="episode-info">
 <?php
 				if ($series['type']!='manga') {
 ?>
@@ -400,28 +411,26 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 				}
 ?>
 		</div>
-	</td>
-	<td class="episode-seen-cell">
 		<label class="switch" onclick="event.stopPropagation();">
 			<input type="checkbox"<?php echo (!empty($user) && $vrow['is_seen']==1) ? ' checked' : ''; ?> onchange="toggleFileSeen(this, <?php echo $vrow['id']; ?>);">
 			<span class="viewed-slider"></span>
 		</label>
-	</td>
-</tr>
+	</div>
+</div>
 <?php
 			} else { //Lost file
 ?>
-<tr class="episode episode-unavailable">
-	<td class="episode-thumbnail-cell">
+<div class="episode episode-unavailable">
+	<div class="episode-thumbnail-cell">
 		<div class="episode-thumbnail">
-			<div class="play-button fa fa-fw fa-ghost version-lost" title="Perdut, ens ajudes?"></div>
+			<div class="play-button fa fa-fw fa-ghost version-lost" title="Capítol perdut: es va editar però no se’n conserva cap còpia"></div>
 		</div>
-	</td>
-	<td class="episode-title-cell">
+	</div>
+	<div class="episode-title-cell">
 		<div class="episode-title"><?php echo $episode_title_formatted; ?></div>
-	</td>
-	<td class="episode-seen-cell"></td>
-</tr>
+	</div>
+	<div class="episode-info-seen-cell"></div>
+</div>
 <?php
 			}
 		}

@@ -3,6 +3,8 @@
 	--chapter-carousel-element-height: 16.75rem;
 	--chapter-thumbnail-title-height: 1.6rem;
 	--chapter-thumbnail-subtitle-height: 2rem;
+	--episode-element-width: 29rem;
+	--episode-element-image-height: 16.3rem;
 }
 
 /* Header */
@@ -1139,7 +1141,7 @@
 	overflow: hidden;
 }
 
-.continue-watching-thumbnail .image-link > img, .episode-thumbnail > img {
+.continue-watching-thumbnail .image-link > img {
 	display: block;
 	width: 100%; 
 	height: 100%;
@@ -1472,36 +1474,47 @@
 }
 
 .episode-table {
-	width: 100%;
+	width: calc(100% + 2rem);
 	border-spacing: 0;
-	border-radius: 1rem;
 	overflow: hidden;
+	font-size: 1.5rem;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: left;
+	margin: 0 -1rem;
+}
+
+.episode {
+	margin: 1rem;
 	background: rgba(var(--card-background-color),0.5);
-	font-size: 1.6rem;
-}
-
-.episode-table tbody tr:nth-child(even){
-	background-color: rgba(255,255,255,0.02);
-}
-
-.episode-table td {
-	padding: 0.5rem var(--page-padding);
-}
-
-.episode-thumbnail-cell {
-	width: 14.2rem;
-	padding-right: 0 !important;
+	border-radius: 1rem;
+	width: var(--episode-element-width);
+	max-width: var(--episode-element-width);
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
 }
 
 .episode-thumbnail {
-	width: 14.2rem;
-	height: 8rem;
 	position: relative;
 	transition: transform var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
 	overflow: hidden;
 	z-index: 1;
 	transform-style: preserve-3d;
 	border-radius: 1rem;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	width: var(--episode-element-width);
+	height: var(--episode-element-image-height);
+}
+
+.episode-thumbnail > img {
+	display: block;
+	width: 100%; 
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
 }
 
 .episode-unavailable .episode-thumbnail, .episode-unavailable .episode-thumbnail .play-button {
@@ -1513,11 +1526,31 @@
 }
 
 .episode-title {
-	line-height: 1.3;
+	line-height: 1.15;
+	margin: 0.75rem 1rem;
+	margin-bottom: 0;
 }
 
-.episode-seen-cell {
-	text-align: right;
+.episode-title br {
+	display: block;
+	content: '';
+	margin-top: 0.2rem;
+}
+
+.episode-title .new-episode {
+	display: none;
+}
+
+.episode-title-cell {
+	flex-grow: 1;
+}
+
+.episode-info-seen-cell {
+	padding: 0.75rem 1rem;
+}
+
+.episode-info {
+	float: left;
 }
 
 .file-launcher {
@@ -1585,9 +1618,15 @@
 }
 
 .tadaima-explanation {
-	font-size: 1.6rem;
+	font-size: 1.4rem;
 	line-height: 1.2;
-	text-align: left;
+	text-align: center;
+	margin-top: 1.5rem;
+}
+
+.tadaima-explanation span {
+	font-size: 1.2rem;
+	opacity: 0.5;
 }
 
 .version-fansub-info {
@@ -1646,8 +1685,9 @@
 	border-radius: 1rem;
 	overflow: hidden;
 	background: rgba(var(--card-background-color),0.5);
-	padding: var(--page-padding);
+	padding: calc(var(--page-padding) / 2) var(--page-padding);
 	align-self: center;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
 }
 
 .version-fansub-rating-title {
@@ -1692,10 +1732,9 @@
 	border-radius: 1rem;
 	overflow: hidden;
 	background: rgba(var(--card-background-color),0.5);
-	padding-top: 2rem;
-	padding-left: var(--page-padding);
-	padding-right: var(--page-padding);
+	padding: 2rem;
 	padding-bottom: 1.5rem;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
 }
 
 .tadaima-post + .tadaima-post {
@@ -1722,7 +1761,7 @@
 
 .tadaima-message {
 	display: -webkit-box;
-	-webkit-line-clamp: 6;
+	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 }
@@ -1834,7 +1873,7 @@ details[open]:not(.closing) .division-arrow {
 
 .viewed-slider:before {
 	position: absolute;
-	content: "";
+	content: "\f070";
 	height: 1.5em;
 	width: 1.5em;
 	left: 0em;
@@ -1861,25 +1900,28 @@ input:focus + .viewed-slider {
 }
 
 input:checked + .viewed-slider:before {
-	content: "";
+	content: "\f06e";
 	transform: translateX(1.5em);
 }
 
-.episode-seen-cell .switch {
-	font-size: 0.75rem;
+.episode-info-seen-cell .switch {
+	font-size: 0.6rem;
 	display: inline-block;
-	border-top: 2rem solid rgba(0,0,0,0);
-	border-bottom: 2rem solid rgba(0,0,0,0);
+	border-top: 1rem solid rgba(0,0,0,0);
+	border-bottom: 1rem solid rgba(0,0,0,0);
 	box-sizing: content-box;
 	cursor: pointer;
+	float: right;
+	margin-top: -1rem !important;
+	margin-bottom: -1rem !important;
 }
 
 .version-resolution {
 	white-space: nowrap;
 	border-radius: 1rem;
 	padding: 0.2rem 0.5rem;
-	font-size: 1.1rem;
-	margin-left: 0.3rem;
+	font-size: 1.2rem;
+	margin-right: 0.4rem;
 	display: inline-block;
 	position: relative;
 	bottom: 0.1rem;
@@ -1890,28 +1932,26 @@ input:checked + .viewed-slider:before {
 	white-space: nowrap;
 	border-radius: 1rem;
 	padding: 0.2rem 0.3rem;
-	font-size: 1.1rem;
-	margin-left: 0.3rem;
+	font-size: 1.2rem;
+	margin-right: 0.4rem;
 	display: inline-block;
 	position: relative;
 	bottom: 0.1rem;
 	background: rgb(var(--primary-color));
 	color: rgb(var(--always-positive-color));
-	margin-left: 0.4rem;
 }
 
 .new-episode {
 	white-space: nowrap;
 	border-radius: 1rem;
 	padding: 0.2rem 0.3rem;
-	font-size: 1.1rem;
-	margin-left: 0.3rem;
+	font-size: 1.2rem;
+	margin-right: 0.4rem;
 	display: inline-block;
 	position: relative;
 	bottom: 0.1rem;
 	background: rgb(155, 0, 0);
 	color: rgb(var(--always-positive-color));
-	margin-left: 0.4rem;
 }
 
 .hd1080 {
@@ -2440,22 +2480,51 @@ input:checked + .viewed-slider:before {
 	.episode-thumbnail {
 		width: 10.65rem;
 		height: 6rem;
+		border-bottom-left-radius: 1rem;
+		border-bottom-right-radius: 1rem;
 	}
 
 	.episode-table {
+		width: 100%;
+		margin: 0;
 		font-size: 1.3rem;
+		display: block;
+	}
+
+	.episode {
+		flex-direction: row;
+		width: 100%;
+		max-width: 100%;
+		align-items: center;
 	}
 
 	.version-fansub-info, .tadaima-explanation {
-		font-size: 1.3rem;
+		font-size: 1.2rem;
+	}
+
+	.tadaima-explanation span {
+		font-size: 1.1rem;
+	}
+
+	.episode-title {
+		margin: 0 1rem;
+	}
+
+	.episode-info {
+		display: none;
+	}
+
+	.episode-info-seen-cell {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 1rem;
 	}
 
 	.tadaima-post {
 		margin-top: 1rem;
 		font-size: 1.2rem;
-		padding-top: 1.5rem;
-		padding-left: var(--page-padding);
-		padding-right: var(--page-padding);
+		padding: 1.5rem;
 		padding-bottom: 1rem;
 	}
 
@@ -2473,6 +2542,14 @@ input:checked + .viewed-slider:before {
 
 	.division-elements {
 		font-size: 1.3rem;
+	}
+
+	.episode-title .new-episode {
+		display: inline;
+	}
+
+	.episode-info .new-episode {
+		display: none;
 	}
 
 	.version-resolution, .version-info {
@@ -2519,7 +2596,7 @@ input:checked + .viewed-slider:before {
 		margin-left: var(--page-padding);
 	}
 
-	.episode-seen-cell .switch {
+	.episode-info-seen-cell .switch {
 		font-size: 0.5rem;
 	}
 
