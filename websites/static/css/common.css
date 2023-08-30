@@ -271,7 +271,6 @@ a img {
 	max-width: 1920px;
 	margin-left: auto;
 	margin-right: auto;
-	overflow: hidden;
 }
 
 .style-type-catalogue.has-carousel .main-body {
@@ -635,6 +634,10 @@ select:not(.date-month) {
 .section {
 	padding: 2.5rem var(--page-padding) 0 var(--page-padding);
 	width: 100%;
+}
+
+.section:not(.series-subheader) {
+	overflow: hidden;
 }
 
 .featured-section {

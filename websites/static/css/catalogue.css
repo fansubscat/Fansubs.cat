@@ -1369,20 +1369,20 @@
 	height: 40rem;
 	max-height: 40rem;
 	position: relative;
-	overflow: hidden;
 	justify-content: center;
 	margin-top: calc(-1 * calc(var(--page-padding) + var(--page-padding) + var(--header-height-local) + var(--divider-border-height)));
 }
 
 .series-header img.background {
 	display: block;
-	width: 100%; 
+	width: 100vw; 
 	height: 100%;
 	object-fit: cover;
-	-webkit-mask-image: linear-gradient(to top, transparent, white 40%), linear-gradient(to bottom, transparent, white 30%), linear-gradient(to right, transparent, white 2%), linear-gradient(to left, transparent, white 2%);
-	mask-image: linear-gradient(to top, transparent, white 40%), linear-gradient(to bottom, transparent, white 30%), linear-gradient(to right, transparent, white 2%), linear-gradient(to left, transparent, white 2%);
+	-webkit-mask-image: linear-gradient(to top, transparent, white 40%), linear-gradient(to bottom, transparent, white 30%);
+	mask-image: linear-gradient(to top, transparent, white 40%), linear-gradient(to bottom, transparent, white 30%);
 	-webkit-mask-composite: destination-in;
 	mask-composite: intersect;
+	margin-left: calc(-1 * (100vw - 1920px) / 2);
 }
 
 .series-data {
@@ -2129,6 +2129,13 @@ input:checked + .viewed-slider:before {
 		padding-bottom: 1rem;
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
+	}
+}
+
+@media (max-width: 1920px){
+	.series-header img.background {
+		margin-left: 0;
+		width: 100%;
 	}
 }
 
