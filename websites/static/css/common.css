@@ -1251,6 +1251,7 @@ h2.section-title:first-of-type {
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
+	word-break: break-word;
 }
 
 .floating-info-score {
