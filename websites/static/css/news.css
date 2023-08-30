@@ -1,4 +1,5 @@
 .style-type-news .main-section {
+	justify-content: start;
 	width: calc(100% + var(--page-padding) + var(--page-padding));
 	margin-left: calc(0rem - var(--page-padding));
 	margin-right: calc(0rem - var(--page-padding));

@@ -1382,7 +1382,7 @@
 	-webkit-mask-image: linear-gradient(to top, transparent, white 40%), linear-gradient(to bottom, transparent, white 30%), linear-gradient(to right, transparent, white 2%), linear-gradient(to left, transparent, white 2%);
 	mask-image: linear-gradient(to top, transparent, white 40%), linear-gradient(to bottom, transparent, white 30%), linear-gradient(to right, transparent, white 2%), linear-gradient(to left, transparent, white 2%);
 	-webkit-mask-composite: destination-in;
-	mask-composite: exclude;
+	mask-composite: intersect;
 }
 
 .series-data {
