@@ -521,6 +521,15 @@ a img {
 	user-select: none;
 }
 
+.logo-layer {
+	position: absolute;
+	pointer-events: none;
+	left: -6rem;
+	top: -6rem;
+	width: 48rem;
+	height: 22rem;
+}
+
 svg.main-logo g {
 	fill: rgb(var(--positive-color)) !important;
 }
@@ -607,6 +616,7 @@ select:not(.date-month) {
 	justify-content: center;
 	align-items: center;
 	order: 10;
+	position: relative;
 }
 
 .logo-small svg {
@@ -614,6 +624,14 @@ select:not(.date-month) {
 	width: 18rem;
 	height: 5rem;
 	z-index: 0;
+}
+
+.logo-layer-small {
+	position: absolute;
+	pointer-events: none;
+	width: 24rem;
+	height: 11rem;
+	left: -3rem;
 }
 
 .text-page {
@@ -657,6 +675,7 @@ select:not(.date-month) {
 	display: flex;
 	align-items: center;
 	line-height: 1.2;
+	position: relative;
 }
 
 .section-title-with-table {
@@ -676,7 +695,6 @@ select:not(.date-month) {
 .section-title-main i {
 	font-size: 2.6rem;
 	margin-right: 0.8rem;
-
 }
 
 .section-empty {
@@ -1783,6 +1801,18 @@ input:checked + .slider:before {
 		--thumbnail-text-height: 2.1rem;
 	}
 
+	.main-logo {
+		width: 24rem;
+		height: 6.667rem;
+	}
+
+	.logo-layer {
+		left: -4rem;
+		top: -4rem;
+		width: 32rem;
+		height: 14.667rem;
+	}
+
 	h2 {
 		font-size: 1.8rem;
 	}
@@ -1813,6 +1843,12 @@ input:checked + .slider:before {
 	.logo-small svg {
 		width: 12rem;
 		height: 3.333rem;
+	}
+
+	.logo-layer-small {
+		width: 16rem;
+		height: 7.333rem;
+		left: -2rem;
 	}
 
 	.text-page {

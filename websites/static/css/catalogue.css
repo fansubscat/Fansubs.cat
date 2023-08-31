@@ -1711,6 +1711,14 @@
 	color: rgb(var(--primary-color));
 }
 
+.sort-order {
+	background: rgb(var(--background-color-standard));
+	position: absolute;
+	right: 0;
+	font-size: 1.8rem;
+	cursor: pointer;
+}
+
 .add-to-my-list {
 	width: 100%;
 	margin-top: 1rem;
@@ -1793,7 +1801,6 @@
 
 .division-title-collapsable {
 	font-family: "lexend_deca_bold", sans-serif;
-	white-space: nowrap;
 }
 
 .division-elements {
@@ -2441,6 +2448,10 @@ input:checked + .viewed-slider:before {
 
 	.series-tags {
 		justify-content: center;
+	}
+
+	.sort-order {
+		font-size: 1.3rem;
 	}
 
 	.version-tab-container {

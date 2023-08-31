@@ -166,7 +166,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 <?php
 		//TODO REMOVE THIS
 		$version['show_unavailable_episodes']=0;
-		$version['show_expanded_divisions']=0;
+		$version['show_expanded_divisions']=1;
 		$divisions = array();
 		$last_division_number = -1;
 		$last_division_id = -1;
@@ -214,7 +214,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			mysqli_free_result($result_episodes);
 		}
 ?>
-								<h2 class="section-title-main<?php if (count($divisions)>1) { echo " section-title-with-table"; } ?>">Contingut</h2>
+								<h2 class="section-title-main<?php if (count($divisions)>1) { echo " section-title-with-table"; } ?>">Contingut<div class="sort-order sort-ascending"><span class="fa fa-fw fa-arrow-down-short-wide"></span> <span class="sort-description">De més antic a més nou</span></div></h2>
 <?php
 
 		if (count($divisions)<2) {

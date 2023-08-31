@@ -4,6 +4,13 @@ require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="main-site-logo">
 						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
+<?php
+if (date('m-d')=='12-25') {
+?>
+						<img class="logo-layer" src="<?php echo STATIC_URL; ?>/images/site/logo_layer_christmas.png">
+<?php
+}
+?>
 					</div>
 					<div class="main-buttons">
 						<a class="main-button" href="<?php echo ANIME_URL; ?>">Anime</a>

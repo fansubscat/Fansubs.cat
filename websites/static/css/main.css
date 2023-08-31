@@ -1,5 +1,6 @@
 .main-site-logo {
 	margin-bottom: 4.2rem;
+	position: relative;
 }
 
 .main-button {
@@ -216,8 +217,6 @@
 
 @media (max-width: 960px){
 	.main-site-logo {
-		width: 24rem;
-		height: 6.667rem;
 		margin-bottom: 3rem;
 		margin-top: 1rem;
 	}

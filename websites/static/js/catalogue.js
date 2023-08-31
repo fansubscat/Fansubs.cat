@@ -1619,6 +1619,41 @@ $(document).ready(function() {
 			var oppositeButton = $(this).parent().find('.version-fansub-rating-positive');
 			applyVersionRating($(this), oppositeButton, -1);
 		});
+		$(".sort-order").click(function(){
+			if ($(".sort-ascending").length>0) {
+				//Sort all descending
+				$(".sort-order").each(function(){
+					$(this).removeClass("sort-ascending");
+					$(this).addClass("sort-descending");
+					$(this).find('.fa-fw').removeClass('fa-arrow-down-short-wide');
+					$(this).find('.fa-fw').addClass('fa-arrow-down-wide-short');
+					$(this).find('.sort-description').text("De més nou a més antic");
+				});
+				$('.episode-table').each(function(){
+					var episodes = $(this).find('.episode');
+					episodes = episodes.get().reverse();
+					for (var i = 0; i<episodes.length; i++) {
+						$(episodes[i]).detach().appendTo($(this));
+					}
+				});
+			} else {
+				//Sort all ascending
+				$(".sort-order").each(function(){
+					$(this).removeClass("sort-descending");
+					$(this).addClass("sort-ascending");
+					$(this).find('.fa-fw').removeClass('fa-arrow-down-wide-short');
+					$(this).find('.fa-fw').addClass('fa-arrow-down-short-wide');
+					$(this).find('.sort-description').text("De més antic a més nou");
+				});
+				$('.episode-table').each(function(){
+					var episodes = $(this).find('.episode');
+					episodes = episodes.get().reverse();
+					for (var i = 0; i<episodes.length; i++) {
+						$(episodes[i]).detach().appendTo($(this));
+					}
+				});
+			}
+		});
 
 		//Search form
 		$('#search_form').submit(function(){
