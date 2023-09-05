@@ -250,7 +250,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 	$divisions = $new_divisions;
 }*/
 
-		if ((!empty($user) && $user['episode_sort_order']) || (empty($user) && !empty($_COOKIE['episode_sort_order']))) {
+		//false: ascending, true: descending
+		$sort_order = (!empty($user) && $user['episode_sort_order']) || (empty($user) && !empty($_COOKIE['episode_sort_order']));
+		if ($sort_order) {
 			//We need to resort the lists:
 			//First we separate normal divisions and special divisions, then reverse sort normal divisions, then append everything again.
 			$new_divisions = array();
@@ -282,6 +284,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 								<div class="episode-table<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' episode-table-manga' : ''; ?>">
 <?php
+			if ($version['status']!=1 && $sort_order) {
+					print_fake_episode($version['status']);
+			}
 			foreach ($divisions[0]['episodes'] as $episode) {
 				if ($divisions[0]['division_id']=='extras') {
 					print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
@@ -289,6 +294,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 					print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
 				}
 				$position++;
+			}
+			if ($version['status']!=1 && !$sort_order) {
+					print_fake_episode($version['status']);
 			}
 ?>
 								</div>
@@ -355,9 +363,11 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 										<div class="division-container<?php echo $division['available_episodes']>0 ? '' : ' division-unavailable'; ?><?php echo CATALOGUE_ITEM_TYPE=='manga' ? '' : ($division['division_id']==$selected_division_id ? '' : ' hidden'); ?>" id="division-container-<?php echo $version['id'].'-'.$division['division_id'];?>">
 											<div class="episode-table<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' episode-table-manga' : ''; ?>">
-												<div class="episode-table-empty"><span class="fa fa-fw fa-ban"></span>No hi ha cap element disponible.</div>
 <?php
 				if ($division['available_episodes']>0 || $version['show_unavailable_episodes']==1) {
+					if ($version['status']!=1 && $sort_order && $division['available_episodes']<count($division['episodes'])) {
+						print_fake_episode($version['status']);
+					}
 					foreach ($division['episodes'] as $episode) {
 						if ($division['division_id']=='extras') {
 							print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
@@ -366,6 +376,11 @@ while ($version = mysqli_fetch_assoc($result)) {
 						}
 						$position++;
 					}
+					if ($version['status']!=1 && !$sort_order && $division['available_episodes']<count($division['episodes'])) {
+						print_fake_episode($version['status']);
+					}
+				} else {
+					print_fake_episode($version['status']);
 				}
 ?>
 											</div>
@@ -385,12 +400,6 @@ while ($version = mysqli_fetch_assoc($result)) {
 		}
 	}
 ?>
-								<div class="version-status-explanation">
-	<?php
-		echo '<div class="version-status status-'.get_status($version['status']).' '.get_status_css_icons($version['status']).'" title="'.htmlspecialchars(get_status_description($version['status'])).'"></div>';
-		echo '<div class="version-status-explanation-text">'.htmlspecialchars(get_status_description_long($version['status'])).'</div>';
-	?>
-								</div>
 							</div>
 							<div class="section-content extra-content">
 								<h2 class="section-title-main">Autoria d’aquesta versió</h2>

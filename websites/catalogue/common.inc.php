@@ -437,6 +437,19 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 	}
 }
 
+function print_fake_episode($status) {
+?>
+<div class="episode episode-message">
+	<div class="version-status-explanation">
+<?php
+	echo '<div class="version-status status-'.get_status($status).' '.get_status_css_icons($status).'" title="'.htmlspecialchars(get_status_description($status)).'"></div>';
+	echo '<div class="version-status-explanation-text">'.get_status_description_long($status).'</div>';
+?>
+	</div>
+</div>
+<?php
+}
+
 function get_recommended_fansub_info($fansub_info, $versions, $specific_version_id) {
 	if (!empty($specific_version_id)) {
 		//We recreate the array with only one version (if not found, it stays the same)

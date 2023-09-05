@@ -171,13 +171,13 @@ function get_status_description_long($id){
 		case 1:
 			return "Aquest projecte està completat.";
 		case 2:
-			return "Aquest projecte està en procés. En el futur se’n publicaran més capítols.";
+			return "Aquest projecte està en procés.<br>En el futur se’n publicaran més capítols.";
 		case 3:
-			return "Aquest projecte està parcialment completat. És possible que no es publiquin més capítols de la resta de parts.";
+			return "Aquest projecte està parcialment completat.<br>És possible que no es publiquin més capítols de la resta de parts.";
 		case 4:
-			return "Aquest projecte està abandonat. Segurament no se’n publicaran més capítols.";
+			return "Aquest projecte està abandonat.<br>Segurament no se’n publicaran més capítols.";
 		case 5:
-			return "Aquest projecte està cancel·lat. No se’n publicaran més capítols.";
+			return "Aquest projecte està cancel·lat.<br>No se’n publicaran més capítols.";
 		default:
 			return "Estat desconegut";
 	}
@@ -188,7 +188,7 @@ function get_status_css_icons($id){
 		case 1:
 			return "fa fa-fw fa-circle-check";
 		case 2:
-			return "fa fa-fw fa-circle-play";
+			return "fa fa-fw fa-circle-arrow-right";
 		case 3:
 			return "fa fa-fw fa-circle-check";
 		case 4:
@@ -378,11 +378,10 @@ function get_special_day() {
 	} else if (date('m-d')>='12-25' && date('m-d')<='12-31') {
 		return 'nadal';
 	}
-	return 'nadal';
+	return NULL;
 }
 
 function is_advent_days() {
-	return TRUE;
 	return strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0;
 }
 ?>

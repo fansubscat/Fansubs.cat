@@ -1501,52 +1501,12 @@
 	margin: 0 -1rem;
 }
 
-.episode-table-empty {
-	display: none;
-}
-
-.episode-table:not(:has(.episode)) {
-	column-count: 1;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 100%;
-	padding: var(--page-padding);
-}
-
-.episode-table:not(:has(.episode)) .episode-table-empty {
-	display: flex;
-	text-align: center;
-	flex-direction: column;
-	align-items: center;
-	font-size: 1.6rem;
-}
-
-.episode-table:not(:has(.episode)) .episode-table-empty .fa {
-	font-size: 2.4rem;
-	margin-bottom: 0.5rem;
-}
-
 .episode-table-manga {
 	display: block;
 	margin: 0;
 	width: 100%;
 	padding: 0;
 	column-count: 3;
-}
-
-.episode-table-manga:not(:has(.episode)) {
-	justify-content: start;
-	padding: 0;
-}
-
-.episode-table-manga:not(:has(.episode)) .episode-table-empty {
-	flex-direction: row;
-}
-
-.episode-table-manga:not(:has(.episode)) .episode-table-empty .fa {
-	margin-right: 0.5rem;
-	margin-bottom: 0;
 }
 
 .episode {
@@ -1874,26 +1834,20 @@
 	order: 1;
 }
 
-.series-file-lists-reversed .version-status-explanation {
-	order: 2;
-	margin-top: 0;
-	margin-bottom: 2rem;
-}
-
 .series-file-lists-reversed .season-chooser {
-	order: 3;
+	order: 2;
 }
 
 .series-file-lists-reversed .division-container {
-	order: 4;
+	order: 3;
 }
 
 .series-file-lists-reversed .division-list {
-	order: 4;
+	order: 3;
 }
 
 .series-file-lists-reversed .episode-table {
-	order: 4;
+	order: 3;
 }
 
 .series-licensed-parts {
@@ -1965,7 +1919,7 @@ details[open]:not(.closing) .division-arrow {
 	rotate: 90deg;
 }
 
-.division-unavailable, .episode-unavailable {
+.episode-unavailable {
 	opacity: 0.5;
 }
 
@@ -2127,14 +2081,16 @@ input:checked + .viewed-slider:before {
 }
 
 .version-status-explanation {
+	padding: 1rem;
 	text-align: center;
-	margin-top: 2rem;
-	margin-bottom: 0;
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	font-size: 1.6rem;
+	font-size: 1.5rem;
+	height: 100%;
+	width: 100%;
+	min-height: 20rem;
 }
 
 .version-status-explanation .version-status {
@@ -2143,10 +2099,24 @@ input:checked + .viewed-slider:before {
 	font-size: 3rem;
 	border-radius: 100%;
 	background: rgb(var(--always-positive-color));
-	margin-right: 1rem;
+	margin-bottom: 1rem;
 }
 
 .version-status-explanation .version-status-explanation-text{
+	text-align: center;
+}
+
+.episode-table-manga .version-status-explanation {
+	flex-direction: row;
+	min-height: 7.5rem;
+}
+
+.episode-table-manga .version-status-explanation .version-status {
+	margin-bottom: 0;
+	margin-right: 1rem;
+}
+
+.episode-table-manga .version-status-explanation .version-status-explanation-text{
 	text-align: left;
 }
 
@@ -2258,7 +2228,7 @@ input:checked + .viewed-slider:before {
 		font-size: .6em;
 	}
 
-	.episode:not(.episode-unavailable):hover {
+	.episode:not(.episode-unavailable):not(.episode-message):hover {
 		background-color: rgba(255,255,255,0.1);
 	}
 
@@ -2685,14 +2655,6 @@ input:checked + .viewed-slider:before {
 		height: 6rem;
 	}
 
-	.episode-table:not(:has(.episode)) .episode-table-empty {
-		font-size: 1.2rem;
-	}
-
-	.episode-table:not(:has(.episode)) .episode-table-empty .fa {
-		font-size: 1.8rem;
-	}
-
 	.version-fansub-info, .tadaima-explanation {
 		font-size: 1.2rem;
 	}
@@ -2838,10 +2800,18 @@ input:checked + .viewed-slider:before {
 
 	.version-status-explanation {
 		font-size: 1.3rem;
+		flex-direction: row;
+		min-height: 6rem;
 	}
 
 	.version-status-explanation .version-status {
 		font-size: 2rem;
+		margin-bottom: 0;
+		margin-right: 0.5rem;
+	}
+
+	.version-status-explanation .version-status-explanation-text {
+		text-align: left;
 	}
 
 	.empty-divisions {
@@ -2852,10 +2822,9 @@ input:checked + .viewed-slider:before {
 		font-size: 1.3rem;
 	}
 
-	.episode-table-manga:not(:has(.episode)) {
-		justify-content: center;
-		padding: 1rem;
-		padding-top: 0;
+	.episode-table-manga .version-status-explanation {
+		flex-direction: row;
+		min-height: 6rem;
 	}
 
 	.extra-content {
