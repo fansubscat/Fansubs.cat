@@ -2,7 +2,6 @@
 require_once(dirname(__FILE__)."/user_init.inc.php");
 require_once(dirname(__FILE__)."/common.inc.php");
 
-define('IS_FOOLS_DAY', date('d')==28 && date('m')==12);
 /*if (PAGE_STYLE_TYPE=='main' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') {
 	define('SITE_THEME', 'dark');
 	define('SITE_THEME_FORCED', TRUE);
@@ -14,6 +13,8 @@ else */if (!empty($user)) {
 } else {
 	define('SITE_THEME', 'dark');
 }
+
+$special_day = get_special_day();
 ?>
 <!DOCTYPE html>
 <html lang="ca" class="theme-<?php echo SITE_THEME; ?><?php echo SITE_IS_HENTAI ? ' subtheme-hentai' : ''; ?><?php echo SITE_IS_HENTAI && empty($_COOKIE['hentai_warning_accepted']) ? ' page-no-overflow' : ''; ?>">
@@ -66,7 +67,7 @@ if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/common.css?v=<?php echo VERSION; ?>">
 		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/<?php echo SITE_INTERNAL_TYPE; ?>.css?v=<?php echo VERSION; ?>">
 <?php
-if (IS_FOOLS_DAY){
+if ($special_day=='fools'){
 ?>
 		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/28dec.css?v=<?php echo VERSION; ?>">
 <?php
@@ -280,7 +281,7 @@ if (PAGE_STYLE_TYPE=='login') {
 					<a class="logo-small" href="<?php echo SITE_IS_HENTAI ? SITE_BASE_URL : MAIN_URL; ?>" title="Torna a la pàgina d’inici<?php echo !SITE_IS_HENTAI ? " de Fansubs.cat" : " del portal de hentai"; ?>">
 						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
 <?php
-			if (date('m-d')=='12-25') {
+			if ($special_day=='nadal') {
 ?>
 						<img class="logo-layer-small" src="<?php echo STATIC_URL; ?>/images/site/logo_layer_christmas.png">
 <?php
@@ -446,10 +447,10 @@ if (PAGE_STYLE_TYPE=='login') {
 				</div>
 <?php
 
-		if (GLOBAL_MESSAGE!='' || IS_FOOLS_DAY){
+		if (GLOBAL_MESSAGE!='' || $special_day=='fools'){
 ?>
 				<div data-nosnippet class="section">
-					<div class="site-message"><?php echo IS_FOOLS_DAY ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.STATIC_URL.'/various/innocents.png" target="_blank" style="color: black;">Més informació</a>.' : GLOBAL_MESSAGE; ?></div>
+					<div class="site-message"><?php echo $special_day=='fools' ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.STATIC_URL.'/various/innocents.png" target="_blank" style="color: black;">Més informació</a>.' : GLOBAL_MESSAGE; ?></div>
 				</div>
 <?php
 		}

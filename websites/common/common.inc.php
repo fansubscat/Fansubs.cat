@@ -367,4 +367,22 @@ function get_base_url_from_type_and_rating($type, $rating) {
 	}
 	die("Unknown type passed");
 }
+
+function get_special_day() {
+	if (date('m-d')=='12-28') {
+		return 'fools';
+	} else if (date('m-d')=='04-23') { // Sant Jordi
+		return 'sant_jordi';
+	} else if (date('m-d')>='10-31' && date('m-d')<='11-01') {
+		return 'tots_sants';
+	} else if (date('m-d')>='12-25' && date('m-d')<='12-31') {
+		return 'nadal';
+	}
+	return 'nadal';
+}
+
+function is_advent_days() {
+	return TRUE;
+	return strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0;
+}
 ?>

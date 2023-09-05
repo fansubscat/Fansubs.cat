@@ -543,6 +543,24 @@ function query_version_ids_for_tots_sants($max_items) {
 	return query($final_query);
 }
 
+function query_version_ids_for_nadal($max_items) {
+	$max_items = intval($max_items);
+	//Best current year animes completed
+	$final_query = "SELECT v.id
+			FROM version v
+				LEFT JOIN series s ON v.series_id=s.id
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND s.year='".date('Y')."'
+				AND ".get_internal_hentai_condition()."
+				AND v.status=1
+				AND v.is_featurable=1
+				AND s.score IS NOT NULL
+				AND v.is_missing_episodes=0
+				ORDER BY s.score DESC
+				LIMIT $max_items";
+	return query($final_query);
+}
+
 function query_home_recommended_items($user, $force_recommended_ids_list, $max_items) {
 	$max_items = intval($max_items);
 	if (count($force_recommended_ids_list)>0) {

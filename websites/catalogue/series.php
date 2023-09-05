@@ -59,13 +59,13 @@ if (!empty($series['year'])) {
 	}
 	$additional_data.=$series['year'];
 }
-if ($series['divisions']>1) {
+if ($series['divisions']>1 && $series['subtype']!='movie') {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
 	$additional_data.=$series['divisions'].' '.CATALOGUE_SEASON_STRING_PLURAL;
 }
-if ($series['number_of_episodes']>1) {
+if ($series['number_of_episodes']>1 && $series['subtype']!='movie') {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}

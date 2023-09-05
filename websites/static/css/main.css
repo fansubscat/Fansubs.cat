@@ -32,6 +32,12 @@
 	text-align: center;
 }
 
+.advent-button {
+	font-size: 2.5rem;
+	padding: 1rem 2.2rem;
+	min-width: 32rem;
+}
+
 .principle {
 	margin-left: 1rem;
 }
@@ -220,19 +226,29 @@
 		margin-bottom: 3rem;
 		margin-top: 1rem;
 	}
+
 	.main-button {
 		padding: 1rem;
 		font-size: 2.8rem;
 		min-width: 24rem;
 	}
+
 	.main-buttons, .secondary-buttons {
 		margin-top: 1.5rem;
 	}
+
 	.secondary-button {
 		padding: 1rem;
 		font-size: 2rem;
 		min-width: 18rem;
 	}
+
+	.advent-button {
+		font-size: 2.3rem;
+		padding: 1rem;
+		min-width: 30rem;
+	}
+
 	.fansub {
 		width: 100%;
 	}
@@ -244,7 +260,6 @@
 	.content-button, .disabled-content-button {
 		font-size: 1.2rem;
 	}
-
 }
 
 @media (max-width: 350px){

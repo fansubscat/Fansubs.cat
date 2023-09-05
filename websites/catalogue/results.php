@@ -201,19 +201,17 @@ if (defined('PAGE_IS_SEARCH')) {
 		'result' => NULL,
 	));
 
-	$special_day = NULL;
 	$force_recommended_ids_list = array();
-	if (date('m-d')=='12-28') {
-		$special_day='fools';
-		$result = query_version_ids_for_fools_day(10);
-	} else if (date('m-d')=='04-23') { // Sant Jordi
-		$special_day='sant_jordi';
-		$result = query_version_ids_for_sant_jordi(10);
-	} else if (date('m-d')=='10-31' || date('m-d')=='11-01') { // Tots Sants
-		$special_day='tots_sants';
-		$result = query_version_ids_for_tots_sants(10);
-	}
 	if ($special_day!==NULL) {
+		if ($special_day=='fools') {
+			$result = query_version_ids_for_fools_day(10);
+		} else if ($special_day=='sant_jordi') {
+			$result = query_version_ids_for_sant_jordi(10);
+		} else if ($special_day=='tots_sants') {
+			$result = query_version_ids_for_tots_sants(10);
+		} else { //'nadal' (and catch-all)
+			$result = query_version_ids_for_nadal(10);
+		}
 		while ($row = mysqli_fetch_assoc($result)) {
 			array_push($force_recommended_ids_list, $row['id']);
 		}
@@ -296,7 +294,7 @@ foreach($sections as $section){
 	}
 
 	if ($section['type']=='advent') {
-		if (strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0){
+		/*if (is_advent_days()){
 ?>
 				<div class="section featured-section">
 					<h2 class="section-title-main"><?php echo $section['title']; ?></h2>
@@ -305,7 +303,7 @@ foreach($sections as $section){
 					</div>
 				</div>
 <?php
-		}
+		}*/ //TODO disabled for now
 		continue;
 	} else if ($section['type']=='chapters-carousel' && empty($user)) {
 		continue;
