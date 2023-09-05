@@ -1700,6 +1700,14 @@ $(document).ready(function() {
 					$(specialDivisions[i]).detach().appendTo($(this));
 				}
 			});
+
+			$('.series-file-lists').each(function(){
+				if ($(this).hasClass('series-file-lists-reversed')) {
+					$(this).removeClass('series-file-lists-reversed');
+				} else {
+					$(this).addClass('series-file-lists-reversed');
+				}
+			});
 		});
 
 		//Search form

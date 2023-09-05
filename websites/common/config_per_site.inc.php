@@ -67,6 +67,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
+		define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'Capítol únic');
 		define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Temporada');
 		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Animes amb temàtiques en comú');
 		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
@@ -102,6 +103,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'volums');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Volum únic');
+		define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'One-shot');
 		define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Volum');
 		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Mangues amb temàtiques en comú');
 		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
@@ -137,6 +139,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
+		define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'Capítol únic');
 		define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Temporada');
 		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Continguts d’imatge real amb temàtiques en comú');
 		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
@@ -175,6 +178,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 			define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
 			define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 			define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
+			define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'Capítol únic');
 			define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Temporada');
 			define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Animes hentai amb temàtiques en comú');
 			define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Mangues hentai amb temàtiques en comú');
@@ -209,6 +213,7 @@ switch (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'www.fansubs.onl
 			define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
 			define('CATALOGUE_SEASON_STRING_PLURAL', 'volums');
 			define('CATALOGUE_SEASON_STRING_UNIQUE', 'Volum únic');
+			define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'One-shot');
 			define('CATALOGUE_SEASON_STRING_SINGULAR_CAPS', 'Volum');
 			define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Mangues hentai amb temàtiques en comú');
 			define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Animes hentai amb temàtiques en comú');

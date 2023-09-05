@@ -1458,7 +1458,7 @@
 
 .expandable-content-default {
 	overflow: hidden;
-	max-height: calc(1.2 * 1.5rem * 5);
+	max-height: calc(1.2 * 1.5rem * 5 + 0.5rem);
 }
 
 .show-more {
@@ -1479,6 +1479,7 @@
 	outline: 0.1rem solid rgb(var(--always-negative-color));
 	margin-bottom: 1rem;
 	max-width: 100%;
+	align-self: start;
 }
 
 .season-chooser option:not(.season-unavailable) {
@@ -1642,6 +1643,8 @@
 }
 
 .extra-content {
+	display: flex;
+	flex-direction: column;
 	margin-top: 2.5rem;
 }
 
@@ -1649,7 +1652,6 @@
 	width: 100%;
 	display: flex;
 	flex-direction: row;
-	margin-bottom: -1.1rem;
 	justify-content: center;
 }
 
@@ -1868,8 +1870,56 @@
 	margin: var(--page-padding) 0;
 }
 
+.series-file-lists-reversed h2 {
+	order: 1;
+}
+
+.series-file-lists-reversed .version-status-explanation {
+	order: 2;
+	margin-top: 0;
+	margin-bottom: 2rem;
+}
+
+.series-file-lists-reversed .season-chooser {
+	order: 3;
+}
+
+.series-file-lists-reversed .division-container {
+	order: 4;
+}
+
+.series-file-lists-reversed .division-list {
+	order: 4;
+}
+
+.series-file-lists-reversed .episode-table {
+	order: 4;
+}
+
+.series-licensed-parts {
+	text-align: center;
+	background-color: rgba(var(--neutral-color), 0.2);
+	padding: 1rem;
+	font-size: 1.5rem;
+	border-radius: 1rem;
+	margin-top: 0;
+	margin-bottom: var(--page-padding);
+	width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.series-licensed-parts .fa {
+	font-size: 1.8rem;
+	margin-right: 0.5rem;
+}
+
 .division-list {
-	margin-top: -1rem;
+	margin-top: calc(-1 * var(--page-padding) + 1rem);
+	margin-bottom: calc(-1 * var(--page-padding) + 1rem);
 }
 
 .division-header {
@@ -2079,6 +2129,7 @@ input:checked + .viewed-slider:before {
 .version-status-explanation {
 	text-align: center;
 	margin-top: 2rem;
+	margin-bottom: 0;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -2572,7 +2623,6 @@ input:checked + .viewed-slider:before {
 
 	.version-tab-container {
 		flex-direction: column;
-		margin-bottom: -0.6rem;
 	}
 
 	.version-tab {
@@ -2623,7 +2673,7 @@ input:checked + .viewed-slider:before {
 		width: 100%;
 		max-width: 100%;
 		align-items: center;
-		margin: 0;
+		margin: 0.5rem 0;
 	}
 
 	.episode-table-manga {
@@ -2697,6 +2747,7 @@ input:checked + .viewed-slider:before {
 
 	.division-title {
 		max-width: unset;
+		margin-bottom: 1rem;
 	}
 
 	.division-cover {
@@ -2778,7 +2829,7 @@ input:checked + .viewed-slider:before {
 	}
 
 	.expandable-content-default {
-		max-height: calc(1.2 * 1.3rem * 5);
+		max-height: calc(1.2 * 1.3rem * 5 + 0.5rem);
 	}
 
 	.video-js .vjs-volume-panel {
@@ -2786,12 +2837,29 @@ input:checked + .viewed-slider:before {
 	}
 
 	.version-status-explanation {
-		margin-top: 1rem;
 		font-size: 1.3rem;
 	}
 
 	.version-status-explanation .version-status {
 		font-size: 2rem;
+	}
+
+	.empty-divisions {
+		font-size: 1.3rem;
+	}
+
+	.series-licensed-parts {
+		font-size: 1.3rem;
+	}
+
+	.episode-table-manga:not(:has(.episode)) {
+		justify-content: center;
+		padding: 1rem;
+		padding-top: 0;
+	}
+
+	.extra-content {
+		margin-top: 1.5rem;
 	}
 }
 
