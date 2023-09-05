@@ -27,10 +27,9 @@ include("header.inc.php");
 switch ($type) {
 	case 'anime':
 		$division_name='Temporades';
-		$division_name_singular='Temporada';
+		$division_explanation='(es mostra al selector de temporades i és el nom que s’utilitza per a anunciar capítols a les xarxes)';
 		$division_name_short='Temp.';
 		$division_one="una temporada";
-		$more_than_one="més d’una";
 		$open_series="Encara en emissió";
 		$content_apos="l’anime";
 		$content_one="un anime";
@@ -38,10 +37,9 @@ switch ($type) {
 		break;
 	case 'manga':
 		$division_name='Volums';
-		$division_name_singular='Volum';
+		$division_explanation='(es mostra com a capçalera del volum a la fitxa)';
 		$division_name_short='Vol.';
 		$division_one="un volum";
-		$more_than_one="més d’un";
 		$open_series="Encara en publicació";
 		$content_apos="el manga";
 		$content_one="un manga";
@@ -49,10 +47,9 @@ switch ($type) {
 		break;
 	case 'liveaction':
 		$division_name='Temporades';
-		$division_name_singular='Temporada';
+		$division_explanation='(es mostra al selector de temporades i és el nom que s’utilitza per a anunciar capítols a les xarxes)';
 		$division_name_short='Temp.';
 		$division_one="una temporada";
-		$more_than_one="més d’una";
 		$open_series="Encara en emissió";
 		$content_apos="el contingut d’imatge real";
 		$content_one="un contingut d’imatge real";
@@ -182,10 +179,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				crash("Dades invàlides: id de divisió no numèric");
 			}
-			if (!empty($_POST['form-division-list-number-'.$i]) && is_numeric($_POST['form-division-list-number-'.$i])) {
+			if ((!empty($_POST['form-division-list-number-'.$i]) || $_POST['form-division-list-number-'.$i]=='0') && is_numeric($_POST['form-division-list-number-'.$i])) {
 				$division['number']=escape($_POST['form-division-list-number-'.$i]);
 			} else {
-				crash("Dades invàlides: número de divisió buit o no numèric");
+				crash("Dades invàlides: número de divisió no numèric");
 			}
 			if (!empty($_POST['form-division-list-name-'.$i])) {
 				$division['name']="'".escape($_POST['form-division-list-name-'.$i])."'";
@@ -691,7 +688,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 10%;" class="mandatory">Núm.</th>
-													<th>Nom <small class="text-muted">(es mostra si n’hi ha més <?php echo $more_than_one; ?>; si està informat, no s’hi afegeix «<?php echo $division_name_singular; ?> X»)</small></th>
+													<th>Nom<span class="mandatory"></span> <small class="text-muted"><?php echo $division_explanation; ?></small></th>
 													<th class="mandatory" style="width: 15%;">Capítols</th>
 													<th style="width: 15%;">Id. <?php echo $external_provider; ?></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -707,7 +704,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-id-<?php echo $i+1; ?>" name="form-division-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $divisions[$i]['id']; ?>"/>
 													</td>
 													<td>
-														<input id="form-division-list-name-<?php echo $i+1; ?>" name="form-division-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($divisions[$i]['name']); ?>" placeholder="(Sense nom)"/>
+														<input id="form-division-list-name-<?php echo $i+1; ?>" name="form-division-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($divisions[$i]['name']); ?>" required/>
 													</td>
 													<td>
 														<input id="form-division-list-number_of_episodes-<?php echo $i+1; ?>" name="form-division-list-number_of_episodes-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $divisions[$i]['number_of_episodes']; ?>" required/>

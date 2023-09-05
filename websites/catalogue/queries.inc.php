@@ -623,6 +623,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 					AND f.is_lost=0
 					AND ufss.is_seen=0
 					AND ufss.position>0
+					AND v.id IN (SELECT version_id FROM user_version_followed uvf WHERE user_id=$user_id)
 					AND ".get_internal_hentai_condition()."
 				UNION
 				SELECT f.id file_id,
@@ -679,6 +680,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 							LEFT JOIN episode e2 ON f.episode_id=e2.id
 							LEFT JOIN episode_title et2 ON et2.episode_id=e2.id AND et2.version_id=f.version_id
 							WHERE f.version_id=v.id
+								AND f.episode_id IS NOT NULL
 								AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (e2.number>e1.number))
 							ORDER BY e2.number IS NULL ASC,
 								e2.number ASC,
@@ -697,6 +699,13 @@ function query_home_continue_watching_by_user_id($user_id) {
 						WHERE ufss.user_id=$user_id
 						AND f.is_lost=0
 						AND ufss.is_seen=0
+						AND ufss.position>0
+					)
+					AND f.id NOT IN (
+						SELECT ufss.file_id
+						FROM user_file_seen_status ufss
+						WHERE ufss.user_id=$user_id
+						AND ufss.is_seen=1
 					)
 					AND s.type='".CATALOGUE_ITEM_TYPE."'
 					AND f.is_lost=0

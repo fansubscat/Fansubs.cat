@@ -27,6 +27,7 @@ function report_file_status(){
 					$min_progress = max(10,min(intval($row['length']*0.05), 60));
 				}
 				if ($progress>=$min_progress) {
+					query_insert_or_update_user_version_followed_by_file_id($user['id'], $row['file_id']);
 					query_insert_or_update_user_position_for_file_id($user['id'], $row['file_id'], $_POST['position']);
 				}
 			}

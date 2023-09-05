@@ -263,7 +263,7 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 		} else if ($series_subtype==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID) {
 			return $series_name;
 		} else {
-			return 'Capítol sense nom';
+			return 'Capítol desconegut';
 		}
 	}
 }
@@ -286,7 +286,7 @@ function get_episode_title_formatted($series_subtype, $show_episode_numbers, $ep
 		} else if ($series_subtype==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID) {
 			return '<b>'.htmlspecialchars($series_name).'</b>';
 		} else {
-			return '<b>Capítol sense nom</b>';
+			return '<b>Capítol desconegut</b>';
 		}
 	}
 }
@@ -313,7 +313,7 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 	$episode_title=get_episode_title($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
 	$episode_title_formatted=get_episode_title_formatted($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
 
-	internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, FALSE, $position);
+	internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, FALSE, $position, $row['number']);
 	mysqli_free_result($result);
 }
 
@@ -324,11 +324,11 @@ function print_extra($fansub_names, $row, $version_id, $series, $position){
 	$episode_title=get_episode_title($series['subtype'], NULL,NULL,NULL,NULL,NULL,$row['extra_name'], TRUE);
 	$episode_title_formatted=get_episode_title_formatted($series['subtype'], NULL,NULL,NULL,NULL,NULL,$row['extra_name'], TRUE);
 	
-	internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, TRUE, $position);
+	internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, TRUE, $position, NULL);
 	mysqli_free_result($result);
 }
 
-function internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, $is_extra, $position) {
+function internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, $is_extra, $position, $number) {
 	global $user;
 	//TABLE FORMAT: thumbnail, episode title + other data, seen
 	$num_variants = mysqli_num_rows($result);
@@ -360,7 +360,7 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 					$links = filter_links($links);
 				}
 ?>
-<div class="file-launcher episode<?php $num_variants>1 ? ' episode-indented' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" data-position="<?php echo $position; ?>">
+<div class="file-launcher episode<?php $num_variants>1 ? ' episode-indented' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" data-position="<?php echo $position; ?>" data-is-special="<?php echo ($is_extra || empty($number)) ? 'true' : 'false'; ?>">
 	<div class="episode-thumbnail-cell">
 <?php
 	if (file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg')) {
@@ -537,7 +537,7 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 		if ($special_day=='fools') {
 			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-trophy"></i><span class="text">Els millors de l’any</span></div>'."\n";
 		} else if ($special_day=='sant_jordi') {
-			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-dragon"></i><span class="text">Especial Sant Jordi</span></div>'."\n";
+			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-heart"></i><span class="text">Especial Sant Jordi</span></div>'."\n";
 		} if ($special_day=='tots_sants') {
 			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-ghost"></i><span class="text">Especial Tots Sants</span></div>'."\n";
 		}

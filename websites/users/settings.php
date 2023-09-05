@@ -12,11 +12,13 @@ if (!empty($user)) {
 	$show_lost = $user['show_lost_projects'];
 	$show_hentai = empty($user['hide_hentai_access']);
 	$mark_as_seen = ($user['previous_chapters_read_behavior']==1);
+	$episode_sort_order = $user['episode_sort_order'];
 	$reader_type = $user['manga_reader_type'];
 	$blacklisted_fansub_ids = $user['blacklisted_fansub_ids'];
 } else {
 	$show_cancelled = !empty($_COOKIE['show_cancelled_projects']);
 	$show_lost = !empty($_COOKIE['show_lost_projects']);
+	$episode_sort_order = !empty($_COOKIE['episode_sort_order']);
 	$reader_type = $_COOKIE['manga_reader_type'];
 	$blacklisted_fansub_ids = get_cookie_blacklisted_fansub_ids();
 }
@@ -68,6 +70,18 @@ if (!empty($user) && is_adult()) {
 <?php
 }
 ?>
+				<div class="settings-section-data">
+					<div class="settings-section-data-switch">
+						<div class="settings-section-data-header">
+							<div class="settings-section-data-header-title">Mostra els últims capítols primer</div>
+							<div class="settings-section-data-header-subtitle">Si està activat, a les pàgines de contingut es mostraran els últims capítols en primer lloc. Per defecte, s’hi mostren els primers.</div>
+						</div>
+						<label class="switch">
+							<input type="checkbox" id="episode-sort-order"<?php echo $episode_sort_order ? ' checked' : ''; ?> onchange="saveSettings();">
+							<span class="slider"></span>
+						</label>
+					</div>
+				</div>
 				<div class="settings-section-data">
 					<div class="settings-section-data-switch">
 						<div class="settings-section-data-header">

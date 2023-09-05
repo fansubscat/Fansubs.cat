@@ -905,9 +905,13 @@ function closeOverlay() {
 }
 
 function getPreviousUnreadEpisodes(fileId) {
-	var position  = parseInt($('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-position'));
+	var isSpecial = $('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-is-special')=='true';
+	if (isSpecial) {
+		return $([]);
+	}
+	var position = parseInt($('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-position'));
 	return $('.file-launcher').filter(function(){
-		return parseInt($(this).attr('data-position')) < position && $(this).find('.episode-info-seen-cell input[type="checkbox"]:checked').length==0;
+		return parseInt($(this).attr('data-position')) < position && $(this).find('.episode-info-seen-cell input[type="checkbox"]:checked').length==0 && $(this).attr('data-is-special')!='true';
 	});
 }
 
@@ -1619,40 +1623,76 @@ $(document).ready(function() {
 			var oppositeButton = $(this).parent().find('.version-fansub-rating-positive');
 			applyVersionRating($(this), oppositeButton, -1);
 		});
+		$(".season-chooser").on('change', function(){
+			var versionId = $(this).closest('.version-content')[0].id.split('-').pop();
+			$('#version-content-'+versionId+' .division-container').addClass('hidden');
+			$('#division-container-'+versionId+'-'+$(this).val()).removeClass('hidden');
+			$(this).removeClass('season-unavailable');
+			if ($(this).find('option[value="'+$(this).val()+'"].season-unavailable').length>0) {
+				$(this).addClass('season-unavailable');
+			}
+		});
 		$(".sort-order").click(function(){
+			var userSetting = 0;
 			if ($(".sort-ascending").length>0) {
 				//Sort all descending
+				userSetting = 1;
 				$(".sort-order").each(function(){
 					$(this).removeClass("sort-ascending");
 					$(this).addClass("sort-descending");
 					$(this).find('.fa-fw').removeClass('fa-arrow-down-short-wide');
 					$(this).find('.fa-fw').addClass('fa-arrow-down-wide-short');
-					$(this).find('.sort-description').text("De més nou a més antic");
-				});
-				$('.episode-table').each(function(){
-					var episodes = $(this).find('.episode');
-					episodes = episodes.get().reverse();
-					for (var i = 0; i<episodes.length; i++) {
-						$(episodes[i]).detach().appendTo($(this));
-					}
+					$(this).find('.sort-description').text("De l’últim al primer");
 				});
 			} else {
 				//Sort all ascending
+				userSetting = 0;
 				$(".sort-order").each(function(){
 					$(this).removeClass("sort-descending");
 					$(this).addClass("sort-ascending");
 					$(this).find('.fa-fw').removeClass('fa-arrow-down-wide-short');
 					$(this).find('.fa-fw').addClass('fa-arrow-down-short-wide');
-					$(this).find('.sort-description').text("De més antic a més nou");
-				});
-				$('.episode-table').each(function(){
-					var episodes = $(this).find('.episode');
-					episodes = episodes.get().reverse();
-					for (var i = 0; i<episodes.length; i++) {
-						$(episodes[i]).detach().appendTo($(this));
-					}
+					$(this).find('.sort-description').text("Del primer a l’últim");
 				});
 			}
+
+			if ($('body.user-logged-in').length==0) {
+				//Set cookie preference
+				Cookies.set('episode_sort_order', userSetting, cookieOptions);
+			} else {
+				//Update on server
+				var values = {
+					'episode_sort_order': userSetting,
+					'only_episode_sort_order' : 1
+				};
+				$.post({
+					url: USERS_URL+"/do_save_settings.php",
+					data: values,
+					xhrFields: {
+						withCredentials: true
+					},
+				});
+			}
+
+			$('.episode-table').each(function(){
+				var episodes = $(this).find('.episode');
+				episodes = episodes.get().reverse();
+				for (var i = 0; i<episodes.length; i++) {
+					$(episodes[i]).detach().appendTo($(this));
+				}
+			});
+			$('.division-list').each(function(){
+				var divisions = $(this).find('.division:not([id$="-altres"]):not([id$="-extras"]), .empty-divisions');
+				var specialDivisions = $(this).find('.division[id$="-altres"], .division[id$="-extras"]');
+				divisions = divisions.get().reverse();
+				specialDivisions = specialDivisions.get();
+				for (var i = 0; i<divisions.length; i++) {
+					$(divisions[i]).detach().appendTo($(this));
+				}
+				for (var i = 0; i<specialDivisions.length; i++) {
+					$(specialDivisions[i]).detach().appendTo($(this));
+				}
+			});
 		});
 
 		//Search form

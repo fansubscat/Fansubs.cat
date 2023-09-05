@@ -136,17 +136,19 @@ function query_update_user_site_theme_by_user_id($site_theme, $user_id) {
 	return query($final_query);
 }
 
-function query_update_user_settings($user_id, $show_cancelled_projects, $show_lost_projects, $hide_hentai_access, $manga_reader_type, $previous_chapters_read_behavior) {
+function query_update_user_settings($user_id, $show_cancelled_projects, $show_lost_projects, $hide_hentai_access, $episode_sort_order, $manga_reader_type, $previous_chapters_read_behavior) {
 	$user_id = escape($user_id);
 	$show_cancelled_projects = escape($show_cancelled_projects);
 	$show_lost_projects = escape($show_lost_projects);
 	$hide_hentai_access = escape($hide_hentai_access);
+	$episode_sort_order = escape($episode_sort_order);
 	$manga_reader_type = escape($manga_reader_type);
 	$previous_chapters_read_behavior = escape($previous_chapters_read_behavior);
 	$final_query = "UPDATE user
 			SET show_cancelled_projects=$show_cancelled_projects,
 				show_lost_projects=$show_lost_projects,
 				hide_hentai_access=$hide_hentai_access,
+				episode_sort_order=$episode_sort_order,
 				manga_reader_type=$manga_reader_type,
 				previous_chapters_read_behavior=$previous_chapters_read_behavior,
 				updated=CURRENT_TIMESTAMP,

@@ -1255,6 +1255,7 @@
 	background: rgba(var(--always-negative-color),0.5);
 	border-radius: 0.5rem;
 	padding: 0rem 0.4rem;
+	color: rgb(var(--always-positive-color))
 }
 
 .continue-watching-thumbnail-outer .title {
@@ -1473,6 +1474,21 @@
 	text-align: left;
 }
 
+.season-chooser {
+	width: unset;
+	outline: 0.1rem solid rgb(var(--always-negative-color));
+	margin-bottom: 1rem;
+	max-width: 100%;
+}
+
+.season-chooser option:not(.season-unavailable) {
+	color: rgb(var(--always-negative-color));
+}
+
+.season-unavailable {
+	color: rgba(var(--always-negative-color), 0.3);
+}
+
 .episode-table {
 	width: calc(100% + 2rem);
 	border-spacing: 0;
@@ -1483,6 +1499,15 @@
 	flex-direction: row;
 	justify-content: left;
 	margin: 0 -1rem;
+}
+
+.episode-table-manga {
+	display: block;
+	margin: 0;
+	width: 100%;
+	padding: 0;
+	margin-top: 1.75rem;
+	column-count: 3;
 }
 
 .episode {
@@ -1496,6 +1521,15 @@
 	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
 }
 
+.episode-table-manga .episode {
+	display: inline-flex;
+	flex-direction: row;
+	width: 100%;
+	max-width: 100%;
+	align-items: center;
+	margin: 0.25rem 0;
+}
+
 .episode-thumbnail {
 	position: relative;
 	transition: transform var(--fast-animation-duration) ease, filter var(--fast-animation-duration) ease;
@@ -1507,6 +1541,17 @@
 	border-bottom-right-radius: 0;
 	width: var(--episode-element-width);
 	height: var(--episode-element-image-height);
+}
+
+.episode-table-manga .episode-title {
+	margin-top: 0;
+}
+
+.episode-table-manga .episode-thumbnail {
+	width: 12.4rem;
+	height: 7rem;
+	border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
 }
 
 .episode-thumbnail > img {
@@ -1529,6 +1574,7 @@
 	line-height: 1.15;
 	margin: 0.75rem 1rem;
 	margin-bottom: 0;
+	overflow-wrap: anywhere;
 }
 
 .episode-title br {
@@ -1584,8 +1630,8 @@
 	align-items: center;
 	cursor: pointer;
 	flex-grow: 1;
-	padding-top: 2rem;
-	padding-bottom: 2rem;
+	padding-top: 1.5rem;
+	padding-bottom: 1.5rem;
 	padding-left: calc(var(--page-padding) / 2);
 	padding-right: calc(var(--page-padding) / 2);
 	font-size: 2rem;
@@ -1717,16 +1763,19 @@
 	right: 0;
 	font-size: 1.8rem;
 	cursor: pointer;
+	padding-left: 1.2rem;
 }
 
 .add-to-my-list {
 	width: 100%;
+	background: rgba(var(--neutral-color), 0.2);
 	margin-top: 1rem;
+	color: rgb(var(--positive-color));
 }
 
 .remove-from-my-list {
 	width: 100%;
-	background: rgb(var(--secondary-color));
+	background: rgb(var(--primary-color));
 	margin-top: 1rem;
 }
 
@@ -1774,33 +1823,45 @@
 	overflow: hidden;
 }
 
-.division-header {
-	display: block;
-	font-size: 2rem;
-	padding: calc(var(--page-padding) / 2) 0;
-	cursor: pointer;
-}
-
-.division-header-inner {
+.division {
 	display: flex;
 	flex-direction: row;
-	align-items: center;
+	width: 100%;
+	margin: var(--page-padding) 0;
+}
+
+.division-list {
+	margin-top: -1rem;
+}
+
+.division-header {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: flex-start;
+	font-size: 2rem;
+	border-right: 0.2rem solid rgb(var(--primary-color));
+	margin-right: calc(var(--page-padding) / 2);
+	padding-right: calc(var(--page-padding) / 2);
 }
 
 .division-cover {
-	margin-right: var(--page-padding);
-	height: 12rem;
-	width: 8.5rem;
+	margin-top: 1.5rem;
+	width: 22.6rem;
+	height: 32rem;
 	object-fit: cover;
-	border-radius: 0.5rem;
+	border-radius: 1rem;
 }
 
 .division-title {
+	font-family: "lexend_deca_bold", sans-serif;
 	line-height: 1;
+	max-width: 22.6rem;
 }
 
-.division-title-collapsable {
-	font-family: "lexend_deca_bold", sans-serif;
+.division-container {
+	width: 100%;
+	margin-top: 1.5rem;
 }
 
 .division-elements {
@@ -1827,6 +1888,8 @@ details[open]:not(.closing) .division-arrow {
 	padding: 1rem;
 	font-size: 1.5rem;
 	cursor: pointer;
+	border-radius: 1rem;
+	margin: var(--page-padding) 0;
 }
 
 .version-fansub-icons .fansubs {
@@ -2116,12 +2179,29 @@ input:checked + .viewed-slider:before {
 		opacity: 1;
 	}
 
+	.add-to-my-list:hover {
+		background: rgba(var(--neutral-color), 0.3);
+	}
+
 	.remove-from-my-list:hover {
-		background-color: rgb(var(--secondary-color-hover));
+		background-color: rgb(var(--primary-color-hover));
 	}
 
 	.empty-divisions:hover {
 		background-color: rgba(var(--neutral-color), 0.3);
+	}
+}
+
+@media (max-width: 1920px){
+	.series-header img.background {
+		margin-left: 0;
+		width: 100%;
+	}
+}
+
+@media (max-width: 1650px){
+	.episode-table-manga {
+		column-count: 2;
 	}
 }
 
@@ -2177,12 +2257,8 @@ input:checked + .viewed-slider:before {
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
 	}
-}
-
-@media (max-width: 1920px){
-	.series-header img.background {
-		margin-left: 0;
-		width: 100%;
+	.episode-table-manga {
+		column-count: 1;
 	}
 }
 
@@ -2509,6 +2585,15 @@ input:checked + .viewed-slider:before {
 		align-items: center;
 	}
 
+	.episode-table-manga {
+		column-count: 1;
+	}
+
+	.episode-table-manga .episode-thumbnail {
+		width: 10.65rem;
+		height: 6rem;
+	}
+
 	.version-fansub-info, .tadaima-explanation {
 		font-size: 1.2rem;
 	}
@@ -2547,8 +2632,31 @@ input:checked + .viewed-slider:before {
 		font-size: 1.1rem;
 	}
 
+	.division {
+		flex-direction: column;
+
+	}
+
 	.division-header {
 		font-size: 1.5rem;
+		margin-right: 0;
+		padding-right: 0;
+		border-right: none;
+		align-items: center;
+	}
+
+	.division-title {
+		max-width: unset;
+	}
+
+	.division-cover {
+		margin-top: 0.5rem;
+		width: 11.3rem;
+		height: 16rem;
+	}
+
+	.division-list {
+		margin-top: -0.5rem;
 	}
 
 	.division-elements {

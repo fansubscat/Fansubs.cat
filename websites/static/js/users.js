@@ -354,6 +354,7 @@ function saveSettings() {
 			'manga_reader_type': $('#reader-type').val()=='strip' ? 2 : ($('#reader-type').val()=='ltr' ? 1 : 0),
 			'blacklisted_fansub_ids': $('#blacklisted-fansubs-ids').val(),
 			'hide_hentai_access': $('#show-hentai').prop('checked') ? 0 : 1,
+			'episode_sort_order': $('#episode-sort-order').prop('checked') ? 1 : 0,
 			'previous_chapters_read_behavior': $('#mark-previous-as-seen').prop('checked') ? 1 : 0
 		};
 		$.post({
@@ -367,6 +368,7 @@ function saveSettings() {
 		//Set cookies
 		Cookies.set('show_cancelled_projects', $('#show-cancelled').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
 		Cookies.set('show_lost_projects', $('#show-lost').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
+		Cookies.set('episode_sort_order', $('#episode-sort-order').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
 		Cookies.set('manga_reader_type', $('#reader-type').val()=='strip' ? 2 : ($('#reader-type').val()=='ltr' ? 1 : 0), cookieOptions, {secure: true});
 		Cookies.set('blacklisted_fansub_ids', $('#blacklisted-fansubs-ids').val(), cookieOptions, {secure: true});
 	}

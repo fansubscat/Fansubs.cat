@@ -149,6 +149,10 @@ mysqli_data_seek($result, 0);
 
 $i=0;
 while ($version = mysqli_fetch_assoc($result)) {
+		//TODO REMOVE THIS
+		$version['show_divisions']=1;
+		$version['show_expanded_divisions']=1;
+		$version['show_unavailable_episodes']=0;
 ?>
 						<div class="version-content<?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version-content-<?php echo $version['id']; ?>">
 <?php
@@ -164,27 +168,24 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 							<div class="section-content extra-content">
 <?php
-		//TODO REMOVE THIS
-		$version['show_unavailable_episodes']=0;
-		$version['show_expanded_divisions']=1;
 		$divisions = array();
 		$last_division_number = -1;
 		$last_division_id = -1;
 		$last_division_name = "";
 		$current_division_episodes = array();
 		foreach ($episodes as $row) {
-			if ($row['division_number']!=$last_division_number && ($version['show_divisions']==1 || empty($row['division_number']))){
+			if ((!empty($row['division_number']) ? floatval($row['division_number']) : 'altres')!=$last_division_number){
 				if ($last_division_number!=-1) {
 					array_push($divisions, array(
 						'division_id' => $last_division_id,
-						'division_number' => floatval($last_division_number),
+						'division_number' => $last_division_number,
 						'division_name' => $last_division_name,
 						'episodes' => $current_division_episodes
 					));
 				}
-				$last_division_number=floatval($row['division_number']);
+				$last_division_number=!empty($row['division_number']) ? floatval($row['division_number']) : 'altres';
 				$last_division_id=$row['division_id'];
-				$last_division_name=$row['division_name'];
+				$last_division_name=!empty($row['division_number']) ? $row['division_name'] : 'Capítols especials';
 				$current_division_episodes = array();
 			}
 
@@ -197,9 +198,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			'episodes' => $current_division_episodes
 		));
 
-		$division_available_episodes=array();
-
-		foreach ($divisions as $division) {
+		foreach ($divisions as $index => $division) {
 			$ids=array(-1);
 			$linked_ids=array(-1);
 			foreach ($division['episodes'] as $episode) {
@@ -210,59 +209,8 @@ while ($version = mysqli_fetch_assoc($result)) {
 				}
 			}
 			$result_episodes = query_available_files_in_version($version['id'], $ids, $linked_ids);
-			$division_available_episodes[] = mysqli_num_rows($result_episodes);
+			$divisions[$index]['available_episodes'] = mysqli_num_rows($result_episodes);
 			mysqli_free_result($result_episodes);
-		}
-?>
-								<h2 class="section-title-main<?php if (count($divisions)>1) { echo " section-title-with-table"; } ?>">Contingut<div class="sort-order sort-ascending"><span class="fa fa-fw fa-arrow-down-short-wide"></span> <span class="sort-description">De més antic a més nou</span></div></h2>
-<?php
-
-		if (count($divisions)<2) {
-			foreach ($divisions as $division) {
-?>
-								<div class="episode-table">
-<?php
-				foreach ($division['episodes'] as $episode) {
-					print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
-					$position++;
-				}
-?>
-								</div>
-<?php
-			}
-		} else { //Multiple divisions
-			foreach ($divisions as $index => $division) {
-				$is_inside_empty_batch = ($division_available_episodes[$index]==0 && (($index>0 && $division_available_episodes[$index-1]==0) || ($index<(count($division_available_episodes)-1) && $division_available_episodes[$index+1]==0)));
-				$is_first_in_empty_batch = $is_inside_empty_batch && ($index==0 || ($index>0 && $division_available_episodes[$index-1]!=0));
-
-				if ($is_first_in_empty_batch) {
-?>
-								<div class="empty-divisions"><?php echo CATALOGUE_MORE_SEASONS_AVAILABLE; ?></div>
-<?php
-				}
-?>
-								<details id="version-<?php echo $version['id']; ?>-division-<?php echo !empty($division['division_number']) ? $division['division_number'] : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>"<?php echo ($version['show_expanded_divisions']==1 && $division_available_episodes[$index]>0) ? ' open' : ''; ?>>
-									<summary class="division-header<?php echo $division_available_episodes[$index]>0 ? '' : ' division-unavailable'; ?>"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? CATALOGUE_SEASON_STRING_UNIQUE : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'] : CATALOGUE_SEASON_STRING_UNIQUE))) : 'Altres'; ?><?php echo ($division_available_episodes[$index]>0 || $version['show_unavailable_episodes']==1) ? '<i class="division-arrow fa fa-fw fa-angle-right"></i>' : ''; ?></div><span class="division-elements"><?php echo $division_available_episodes[$index]>0 ? ($division_available_episodes[$index]==1 ? '1 element disponible' : $division_available_episodes[$index].' elements disponibles') : 'No hi ha cap element disponible'; ?></span></div></div></summary>
-									<div class="division-container">
-<?php
-				if ($division_available_episodes[$index]>0 || $version['show_unavailable_episodes']==1) {
-?>
-										<div class="episode-table">
-<?php
-					foreach ($division['episodes'] as $episode) {
-						print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
-						$position++;
-					}
-?>
-										</div>
-									</div>
-<?php
-
-				}
-?>
-								</details>
-<?php
-			}
 		}
 
 		//Add extras
@@ -272,26 +220,143 @@ while ($version = mysqli_fetch_assoc($result)) {
 			array_push($extras, $row);
 		}
 		mysqli_free_result($resulte);
+		if (count($extras)>0) {
+			array_push($divisions, array(
+				'division_id' => 'extras',
+				'division_number' => 'extras',
+				'division_name' => 'Contingut extra',
+				'episodes' => $extras,
+				'available_episodes' => count($extras)
+			));
+		}
 ?>
+								<h2 class="section-title-main section-title-with-table">Contingut
 <?php
 
-		if (count($extras)>0) {
+//Remove empty seasons
+/*if ($version['show_unavailable_episodes']==0) {
+	$new_divisions = array();
+	foreach ($divisions as $index => $division) {
+		if ($division['available_episodes']>0) {
+			array_push($new_divisions, $division);
+		}
+	}
+	$divisions = $new_divisions;
+}*/
+
+if ((!empty($user) && $user['episode_sort_order']) || (empty($user) && !empty($_COOKIE['episode_sort_order']))) {
+	//We need to resort the lists:
+	//First we separate normal divisions and special divisions, then reverse sort normal divisions, then append everything again.
+	$new_divisions = array();
+	$special_divisions = array();
+	foreach ($divisions as $index => $division) {
+		if ($division['division_number']!='altres' && $division['division_number']!='extras') {
+			$division['episodes'] = array_reverse($division['episodes']);
+			array_push($new_divisions, $division);
+		} else {
+			array_push($special_divisions, $division);
+		}
+	}
+	$unsorted_divisions = $divisions;
+	$divisions = array_merge(array_reverse($new_divisions), $special_divisions);
+	
 ?>
-								<details id="version-<?php echo $version['id']; ?>-division-extras" class="division">
-									<summary class="division-header"><div class="division-header-inner"><img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_extras.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_extras.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>"><div class="division-title"><div class="division-title-collapsable">Extres<i class="division-arrow fa fa-fw fa-angle-right"></i></div><span class="division-elements"><?php echo count($extras)==1 ? '1 element disponible' : count($extras).' elements disponibles'; ?></span></div></div></summary>
-									<div class="division-container">
-										<div class="episode-table">
+									<div class="sort-order sort-descending"><span class="fa fa-fw fa-arrow-down-wide-short"></span> <span class="sort-description">De l’últim al primer</span></div>
 <?php
-			foreach ($extras as $episode) {
-				print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
+} else {
+	$unsorted_divisions = $divisions;
+	//Already sorted, no need to resort
+?>
+									<div class="sort-order sort-ascending"><span class="fa fa-fw fa-arrow-down-short-wide"></span> <span class="sort-description">Del primer a l’últim</span></div>
+<?php
+}
+?>
+								</h2>
+<?php
+		if (count($divisions)==1 && CATALOGUE_ITEM_TYPE!='manga') {
+?>
+								<div class="episode-table<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' episode-table-manga' : ''; ?>">
+<?php
+			foreach ($divisions[0]['episodes'] as $episode) {
+				if ($divisions[0]['division_id']=='extras') {
+					print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
+				} else {
+					print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
+				}
 				$position++;
 			}
 ?>
+								</div>
+<?php
+		} else { //Multiple divisions (or manga)
+			$selected_division_id = $unsorted_divisions[0]['division_id'];
+			if (CATALOGUE_ITEM_TYPE=='manga') {
+?>
+								<div class="division-list">
+<?php
+			}
+			else {
+				//Print list of seasons
+?>
+								<select class="season-chooser">
+<?php
+				foreach ($unsorted_divisions as $index => $division) {
+?>
+									<option value="<?php echo $division['division_id']; ?>"<?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?>><?php echo $division['division_name']; ?><?php echo count($division['episodes'])==1 ? ' — 1 element' : ' — '.count($division['episodes']).' elements'; ?></option>
+<?php
+				}
+?>
+								</select>
+<?php
+			}
+			foreach ($divisions as $index => $division) {
+				if (CATALOGUE_ITEM_TYPE=='manga') {
+					//Special case for displaying divisions without a chooser
+					$is_inside_empty_batch = ($division['available_episodes']==0 && (($index>0 && $divisions[$index-1]['available_episodes']==0) || ($index<(count($divisions)-1) && $divisions[$index+1]['available_episodes']==0)));
+					$is_first_in_empty_batch = $is_inside_empty_batch && ($index==0 || ($index>0 && $divisions[$index-1]['available_episodes']!=0));
+
+					if ($is_first_in_empty_batch) {
+?>
+								<div class="empty-divisions"><?php echo CATALOGUE_MORE_SEASONS_AVAILABLE; ?></div>
+<?php
+					}
+?>
+								<div id="version-<?php echo $version['id']; ?>-division-<?php echo !empty($division['division_number']) ? $division['division_number'] : 'altres'; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>">
+									<div class="division-header<?php echo $division['available_episodes']>0 ? '' : ' division-unavailable'; ?>">
+										<div class="division-title"><?php echo !empty($division['division_number']) ? (($version['show_divisions']!=1 || (count($divisions)==2 && empty($last_division_number))) ? CATALOGUE_SEASON_STRING_UNIQUE : (!empty($division['division_name']) ? $division['division_name'] : (count($divisions)>1 ? CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'] : CATALOGUE_SEASON_STRING_UNIQUE))) : 'Altres'; ?></div>
+										<img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>">
+									</div>
+<?php
+				}
+?>
+									<div class="division-container<?php echo CATALOGUE_ITEM_TYPE=='manga' ? '' : ($division['division_id']==$selected_division_id ? '' : ' hidden'); ?>" id="division-container-<?php echo $version['id'].'-'.$division['division_id'];?>">
+										<div class="episode-table<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' episode-table-manga' : ''; ?>">
+<?php
+				if ($division['available_episodes']>0 || $version['show_unavailable_episodes']==1) {
+					foreach ($division['episodes'] as $episode) {
+						if ($division['division_id']=='extras') {
+							print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
+						} else {
+							print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
+						}
+						$position++;
+					}
+				}
+?>
 										</div>
 									</div>
-								</details>
 <?php
-
+				if (CATALOGUE_ITEM_TYPE=='manga') {
+?>
+								</div>
+<?php
+				}
+			}
+			if (CATALOGUE_ITEM_TYPE=='manga') {
+?>
+								</div>
+<?php
+			}
 		}
 	}
 ?>

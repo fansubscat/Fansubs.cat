@@ -262,6 +262,7 @@ CREATE TABLE `user` (
   `hide_hentai_access` tinyint(1) NOT NULL DEFAULT 0,
   `show_cancelled_projects` tinyint(1) NOT NULL DEFAULT 0,
   `show_lost_projects` tinyint(1) NOT NULL DEFAULT 0,
+  `episode_sort_order` tinyint(1) NOT NULL DEFAULT 0,
   `manga_reader_type` tinyint(1) NOT NULL DEFAULT 0,
   `previous_chapters_read_behavior` int(11) NOT NULL DEFAULT 0,
   `site_theme` tinyint(1) NOT NULL DEFAULT 0,
