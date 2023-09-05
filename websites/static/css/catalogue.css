@@ -1492,7 +1492,6 @@
 .episode-table {
 	width: calc(100% + 2rem);
 	border-spacing: 0;
-	overflow: hidden;
 	font-size: 1.5rem;
 	display: flex;
 	flex-wrap: wrap;
@@ -1501,13 +1500,52 @@
 	margin: 0 -1rem;
 }
 
+.episode-table-empty {
+	display: none;
+}
+
+.episode-table:not(:has(.episode)) {
+	column-count: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	padding: var(--page-padding);
+}
+
+.episode-table:not(:has(.episode)) .episode-table-empty {
+	display: flex;
+	text-align: center;
+	flex-direction: column;
+	align-items: center;
+	font-size: 1.6rem;
+}
+
+.episode-table:not(:has(.episode)) .episode-table-empty .fa {
+	font-size: 2.4rem;
+	margin-bottom: 0.5rem;
+}
+
 .episode-table-manga {
 	display: block;
 	margin: 0;
 	width: 100%;
 	padding: 0;
-	margin-top: 1.75rem;
 	column-count: 3;
+}
+
+.episode-table-manga:not(:has(.episode)) {
+	justify-content: start;
+	padding: 0;
+}
+
+.episode-table-manga:not(:has(.episode)) .episode-table-empty {
+	flex-direction: row;
+}
+
+.episode-table-manga:not(:has(.episode)) .episode-table-empty .fa {
+	margin-right: 0.5rem;
+	margin-bottom: 0;
 }
 
 .episode {
@@ -1611,7 +1649,7 @@
 	width: 100%;
 	display: flex;
 	flex-direction: row;
-	margin-top: 1.1rem;
+	margin-bottom: -1.1rem;
 	justify-content: center;
 }
 
@@ -1837,7 +1875,7 @@
 .division-header {
 	display: flex;
 	flex-direction: column;
-	align-items: start;
+	align-items: center;
 	justify-content: flex-start;
 	font-size: 2rem;
 	border-right: 0.2rem solid rgb(var(--primary-color));
@@ -1846,7 +1884,6 @@
 }
 
 .division-cover {
-	margin-top: 1.5rem;
 	width: 22.6rem;
 	height: 32rem;
 	object-fit: cover;
@@ -1855,13 +1892,13 @@
 
 .division-title {
 	font-family: "lexend_deca_bold", sans-serif;
-	line-height: 1;
+	margin-top: 0.5rem;
 	max-width: 22.6rem;
 }
 
 .division-container {
 	width: 100%;
-	margin-top: 1.5rem;
+	margin: -0.25rem 0;
 }
 
 .division-elements {
@@ -1890,6 +1927,9 @@ details[open]:not(.closing) .division-arrow {
 	cursor: pointer;
 	border-radius: 1rem;
 	margin: var(--page-padding) 0;
+	width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .version-fansub-icons .fansubs {
@@ -2532,7 +2572,7 @@ input:checked + .viewed-slider:before {
 
 	.version-tab-container {
 		flex-direction: column;
-		margin-top: 0.6rem;
+		margin-bottom: -0.6rem;
 	}
 
 	.version-tab {
@@ -2583,6 +2623,7 @@ input:checked + .viewed-slider:before {
 		width: 100%;
 		max-width: 100%;
 		align-items: center;
+		margin: 0;
 	}
 
 	.episode-table-manga {
@@ -2592,6 +2633,14 @@ input:checked + .viewed-slider:before {
 	.episode-table-manga .episode-thumbnail {
 		width: 10.65rem;
 		height: 6rem;
+	}
+
+	.episode-table:not(:has(.episode)) .episode-table-empty {
+		font-size: 1.2rem;
+	}
+
+	.episode-table:not(:has(.episode)) .episode-table-empty .fa {
+		font-size: 1.8rem;
 	}
 
 	.version-fansub-info, .tadaima-explanation {
@@ -2643,6 +2692,7 @@ input:checked + .viewed-slider:before {
 		padding-right: 0;
 		border-right: none;
 		align-items: center;
+		margin-bottom: 0.5rem;
 	}
 
 	.division-title {

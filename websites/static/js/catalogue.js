@@ -271,6 +271,8 @@ function sendCurrentFileTracking(){
 			markAsSeen(currentSourceData.file_id, true);
 			currentSourceData.is_seen=true;
 		}
+		//Update bar
+		$('[data-file-id="'+currentSourceData.file_id+'"] .progress').attr('style', 'width: '+(position/currentSourceData.length)*100+'%;');;
 		var formData = new FormData();
 		//formData.append("log", loggedMessages);
 		formData.append("view_id", currentSourceData.view_id);
@@ -1571,6 +1573,11 @@ $(document).ready(function() {
 			new Accordion(el);
 		});
 		$(".file-launcher").click(function(){
+			//Select season - this will only be effective when invoking play next/prev
+			if ($(this).closest('.division-container').length>0) {
+				var seasonId = $(this).closest('.division-container')[0].id.split('-').pop();
+				$(this).closest('.section-content').find('.season-chooser').val(seasonId).trigger('change');
+			}
 			$('html').addClass('page-no-overflow');
 			$('#overlay').removeClass('hidden');
 			
@@ -1712,11 +1719,12 @@ $(document).ready(function() {
 				var versionTab = $('.version-tab[data-version-id="'+$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('.version-content')[0].id.split('-').pop()+'"]');
 				versionTab.click();
 				//Select season
-				if ($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('details').length>0) {
-					$($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('details')[0]).attr('open', true);
+				if ($('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('.division-container').length>0) {
+					var seasonId = $('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('.division-container')[0].id.split('-').pop();
+					$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').closest('.section-content').find('.season-chooser').val(seasonId).trigger('change');
 				}
 				//Scroll and click file
-				$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView();
+				$('[data-file-id="'+$('#autoopen_file_id').val()+'"]')[0].scrollIntoView(false);
 				$('[data-file-id="'+$('#autoopen_file_id').val()+'"]').click();
 			}
 		}
