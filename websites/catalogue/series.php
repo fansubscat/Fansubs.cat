@@ -65,11 +65,25 @@ if ($series['divisions']>1 && $series['subtype']!='movie') {
 	}
 	$additional_data.=$series['divisions'].' '.CATALOGUE_SEASON_STRING_PLURAL;
 }
-if ($series['number_of_episodes']>1 && $series['subtype']!='movie') {
+if ($series['number_of_episodes']>1) {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
-	$additional_data.=$series['number_of_episodes'].' capítols';
+	if ($series['subtype']!='movie') {
+		$additional_data.=$series['number_of_episodes'].' capítols';
+	} else {
+		$additional_data.=$series['number_of_episodes'].' films';
+	}
+} else if ($series['subtype']=='movie') {
+	if ($additional_data!='') {
+		$additional_data.=' • ';
+	}
+	$additional_data.='Film';
+} else if ($series['subtype']=='oneshot') {
+	if ($additional_data!='') {
+		$additional_data.=' • ';
+	}
+	$additional_data.='One-shot';
 }
 if (!SITE_IS_HENTAI) {
 	if ($additional_data!='') {
@@ -321,8 +335,15 @@ while ($version = mysqli_fetch_assoc($result)) {
 									<select class="season-chooser">
 <?php
 				foreach ($unsorted_divisions as $index => $division) {
+					if (!empty($division['division_name'])) {
+						$division_name = $division['division_name'];
+					} else if (count($divisions)>1){
+						$division_name = $series['name']. ' - '.CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'];
+					} else {
+						$division_name = CATALOGUE_SEASON_STRING_UNIQUE;
+					}
 ?>
-									<option value="<?php echo $division['division_id']; ?>"<?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?><?php echo $division['division_id']==$selected_division_id ? ' selected' : ''; ?>><?php echo $division['division_name']; ?></option>
+									<option value="<?php echo $division['division_id']; ?>"<?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?><?php echo $division['division_id']==$selected_division_id ? ' selected' : ''; ?>><?php echo $division_name; ?></option>
 <?php
 				}
 ?>

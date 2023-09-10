@@ -484,10 +484,10 @@ function print_chapter_item($row) {
 		</div>
 		<a class="continue-watching-episode-data" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug']; ?>">
 			<span class="title">
-				<?php echo $row['series_name']; ?>
+				<?php echo htmlspecialchars($row['series_name']); ?>
 			</span>
 			<span class="subtitle">
-				<?php echo $row['division_name'].(($row['division_name']!='' && $row['episode_number']!='') ? ' • ' : '').($row['episode_number']!='' ? 'Cap. '.$row['episode_number'] : '').((($row['division_name']!='' || $row['episode_number']!='') && $row['episode_title']!='') ? ': ' : '').$row['episode_title']; ?>
+				<?php echo htmlspecialchars(!empty($row['extra_name']) ? $row['extra_name'] : ($row['division_name'].(($row['division_name']!='' && $row['episode_number']!='') ? ' • ' : '').($row['episode_number']!='' ? 'Cap. '.$row['episode_number'] : '').((($row['division_name']!='' || $row['episode_number']!='') && $row['episode_title']!='') ? ': ' : '').$row['episode_title'])); ?>
 			</span>
 		</a>
 	</div>

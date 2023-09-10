@@ -27,7 +27,8 @@ include("header.inc.php");
 switch ($type) {
 	case 'anime':
 		$division_name='Temporades';
-		$division_explanation='(es mostra al selector de temporades i és el nom que s’utilitza per a anunciar capítols a les xarxes)';
+		$division_name_mandatory=TRUE;
+		$division_explanation='(es mostra al selector de temporades i s’utilitza per a anunciar capítols a les xarxes)';
 		$division_name_short='Temp.';
 		$division_one="una temporada";
 		$open_series="Encara en emissió";
@@ -37,7 +38,8 @@ switch ($type) {
 		break;
 	case 'manga':
 		$division_name='Volums';
-		$division_explanation='(es mostra com a capçalera del volum a la fitxa)';
+		$division_name_mandatory=FALSE;
+		$division_explanation='(capçalera del volum a la fitxa; si no s’informa, s’hi mostra «Volum X», «Volum únic» o «One-shot»)';
 		$division_name_short='Vol.';
 		$division_one="un volum";
 		$open_series="Encara en publicació";
@@ -47,7 +49,8 @@ switch ($type) {
 		break;
 	case 'liveaction':
 		$division_name='Temporades';
-		$division_explanation='(es mostra al selector de temporades i és el nom que s’utilitza per a anunciar capítols a les xarxes)';
+		$division_name_mandatory=TRUE;
+		$division_explanation='(es mostra al selector de temporades i s’utilitza per a anunciar capítols a les xarxes)';
 		$division_name_short='Temp.';
 		$division_one="una temporada";
 		$open_series="Encara en emissió";
@@ -688,7 +691,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 10%;" class="mandatory">Núm.</th>
-													<th>Nom<span class="mandatory"></span> <small class="text-muted"><?php echo $division_explanation; ?></small></th>
+													<th>Nom<?php echo $division_name_mandatory ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted"><?php echo $division_explanation; ?></small></th>
 													<th class="mandatory" style="width: 15%;">Capítols</th>
 													<th style="width: 15%;">Id. <?php echo $external_provider; ?></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -704,7 +707,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-id-<?php echo $i+1; ?>" name="form-division-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $divisions[$i]['id']; ?>"/>
 													</td>
 													<td>
-														<input id="form-division-list-name-<?php echo $i+1; ?>" name="form-division-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($divisions[$i]['name']); ?>" required/>
+														<input id="form-division-list-name-<?php echo $i+1; ?>" name="form-division-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($divisions[$i]['name']); ?>"<?php echo $division_name_mandatory ? ' required' : ''; ?>/>
 													</td>
 													<td>
 														<input id="form-division-list-number_of_episodes-<?php echo $i+1; ?>" name="form-division-list-number_of_episodes-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $divisions[$i]['number_of_episodes']; ?>" required/>

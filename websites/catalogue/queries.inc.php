@@ -613,6 +613,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 							)
 						)
 					) episode_title,
+					f.extra_name,
 					v.series_id,
 					v.status,
 					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
@@ -670,6 +671,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 							)
 						)
 					) episode_title,
+					f.extra_name,
 					v.series_id,
 					v.status,
 					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
