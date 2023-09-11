@@ -320,14 +320,8 @@ function fetch_via_animugen($fansub_slug, $url, $last_fetched_item_date){
 					$item[2]=parse_description($description);
 					$datetext = $article->find('span.mg-blog-date a', 0)->innertext;
 
-					//Don't forget to replace Spanish into English or the script crashes...
-					$datetext = str_ireplace('Ene', 'Jan', $datetext);
-					$datetext = str_ireplace('Abr', 'Apr', $datetext);
-					$datetext = str_ireplace('Ago', 'Aug', $datetext);
-					$datetext = str_ireplace('Dic', 'Dec', $datetext);
-
 					//News have no time, so we assume 00:00:00, if there are any other news on the same day, these will show below them...
-					$date = date_create_from_format('M j, Y H:i:s', $datetext . ' 00:00:00');
+					$date = date_create_from_format('d/m/Y H:i:s', $datetext . ' 00:00:00');
 					$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 					$item[3]= $date->format('Y-m-d H:i:s');
 					$item[4]=$article->find('a', 0)->href;
