@@ -14,7 +14,13 @@ if (is_robot()) {
 
 $_GET['query']=str_replace('%2F', '/', isset($_GET['query']) ? $_GET['query'] : '');
 
-define('PAGE_PATH', SITE_PATH.'/cerca'.(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
+if (SITE_BASE_URL==HENTAI_ANIME_URL || SITE_BASE_URL==HENTAI_MANGA_URL) {
+	$site_path = '/'.explode('/', $_SERVER['REQUEST_URI'])[1];
+} else {
+	$site_path = '';
+}
+
+define('PAGE_PATH', $site_path.'/cerca'.(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
 define('PAGE_IS_SEARCH', TRUE);
 if (!is_robot()) {
 	define('SKIP_FOOTER', TRUE);
@@ -154,7 +160,7 @@ if (isset($_GET['genres_exclude']) && is_array($_GET['genres_exclude']) && count
 }
 ?>
 					<div class="search-layout">
-						<input class="search-base-url" type="hidden" value="<?php echo SITE_PATH.'/cerca'; ?>">
+						<input class="search-base-url" type="hidden" value="<?php echo $site_path.'/cerca'; ?>">
 						<div class="search-filter-title">Filtres del catàleg</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>

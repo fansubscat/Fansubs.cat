@@ -1,5 +1,5 @@
 <?php
-require_once("config.inc.php");
+require_once("../common.fansubs.cat/config.inc.php");
 
 session_name(ADMIN_COOKIE_NAME);
 session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);

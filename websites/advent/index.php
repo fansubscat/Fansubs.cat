@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require_once('db.inc.php');
+require_once('../common.fansubs.cat/db.inc.php');
 
 function seededShuffle(array &$array, $seed) {
 	mt_srand($seed);
@@ -63,9 +63,9 @@ if (!empty($_COOKIE['advent_'.$row['year']])) {
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="theme-color" content="#888888" />
 		<meta property="og:title" content="Calendari d'advent <?php echo $row['year']; ?> - Fansubs.cat" />
-		<meta property="og:url" content="<?php echo $base_url; ?>/" />
+		<meta property="og:url" content="<?php echo ADVENT_URL; ?>/" />
 		<meta property="og:description" content="Segueix el calendari d'advent dels fansubs en català! Cada dia hi trobaràs un petit regalet en forma d'anime o manga editat en català!" />
-		<meta property="og:image" content="<?php echo $static_url; ?>/images/advent/preview_<?php echo $row['year']; ?>.jpg" />
+		<meta property="og:image" content="<?php echo STATIC_URL; ?>/images/advent/preview_<?php echo $row['year']; ?>.jpg" />
 		<meta name="twitter:card" content="summary_large_image" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
@@ -75,7 +75,7 @@ if (!empty($_COOKIE['advent_'.$row['year']])) {
 					var openedDays = $.map($('.checkavailable:checked'), function(n, i){
 						return n.value;
 					}).join(',');
-					Cookies.set('advent_<?php echo $row['year']; ?>', openedDays, { expires: 3650, path: '/', domain: 'fansubs.online' });
+					Cookies.set('advent_<?php echo $row['year']; ?>', openedDays, { expires: 3650, path: '/', domain: '<?php echo COOKIE_DOMAIN; ?>' });
 <?php
 if (!empty($_GET['twitter'])) {
 ?>
@@ -129,7 +129,7 @@ switch ($row['year']) {
 				min-height: 100vh;
 			}
 			body {
-				background-image: url("<?php echo $static_url; ?>/images/advent/background_<?php echo $row['year']; ?>.jpg");
+				background-image: url("<?php echo STATIC_URL; ?>/images/advent/background_<?php echo $row['year']; ?>.jpg");
 <?php
 	if ($row['year']=='2022') {
 ?>
@@ -367,7 +367,7 @@ for ($i=1;$i<25;$i++){
 				grid-area: d<?php echo $i; ?>;
 			}
 			.day-<?php echo $i; ?> .back {
-				background-image: url("<?php echo is_day_ready($i) ? $static_url.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg' : '/images/empty.png'; ?>");
+				background-image: url("<?php echo is_day_ready($i) ? STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg' : '/images/empty.png'; ?>");
 			}
 <?php
 }

@@ -224,15 +224,9 @@ function get_anonymized_username($user_id, $anon_id) {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$charactersLength = strlen($characters);
 	$randomString = '';
-	for ($i = 0; $i < 8; $i++) {
+	for ($i = 0; $i < 16; $i++) {
 		$randomString .= $characters[rand(0, $charactersLength - 1)];
 	}
-	$colors = '012345678';
-	$colorsLength = strlen($colors);
-	$randomColor = '';
-	for ($i = 0; $i < 6; $i++) {
-		$randomColor .= $colors[rand(0, $colorsLength - 1)];
-	}
-	return '<span style="color: #' . $randomColor . ';">' . $randomString . '</span>';
+	return '<img src="https://api.multiavatar.com/'.$randomString.'.svg" style="width: 2rem; height: 2rem; margin: -1rem;">';
 }
 ?>

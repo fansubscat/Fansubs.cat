@@ -1,7 +1,8 @@
 <?php
-include_once('db.inc.php');
+require_once("../common.fansubs.cat/config.inc.php");
+require_once('db.inc.php');
 ob_start();
-$request = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+$request = explode('/', trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/'));
 $max_items = 20;
 
 function get_nanoid($size=24) {
@@ -25,15 +26,28 @@ function get_nanoid($size=24) {
 	}
 }
 
+function get_random_string_from_seed($seed) {
+	srand(crc32($seed));
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$charactersLength = strlen($characters);
+	$randomString = '';
+	for ($i = 0; $i < 16; $i++) {
+		$randomString .= $characters[rand(0, $charactersLength - 1)];
+	}
+	return $randomString;
+}
+
 function get_api_session_id() {
 	if (!empty($_GET['api_session_id'])) {
 		return $_GET['api_session_id'];
 	}
-	return get_nanoid(32);
+	$seed = (!empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown');
+	$seed .= (!empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Unknown');
+	return get_random_string_from_seed($seed);
 }
 
 function is_hentai() {
-	if (!empty($_GET['is_hentai'])) {
+	if (!empty($_GET['hentai'])) {
 		return TRUE;
 	}
 	return FALSE;
@@ -247,12 +261,11 @@ else if ($method === 'manga'){
 		}
 	} else if ($submethod=='search') {
 		$page = array_shift($request);
-		$page = explode('?', $page)[0];
 		$query = escape($_GET['query']);
 		if ($page>0) {
 			$offset = ($page-1)*20;
 
-			$result = query("SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='manga' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND ".(is_hentai() ? "s.rating='XXX'" : "s.rating<>'XXX'")." AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%') OR s.id IN (SELECT mg.series_id FROM rel_series_genre mg LEFT JOIN genre g ON mg.genre_id=g.id LEFT JOIN series s2 ON mg.series_id=s2.id WHERE s.type='manga' AND g.name='$query') GROUP BY s.id ORDER BY s.name ASC LIMIT $max_items OFFSET $offset");
+			$result = query("SELECT s.*, (SELECT nv.id FROM version nv WHERE nv.files_updated=MAX(v.files_updated) AND v.series_id=s.id AND nv.is_hidden=0 LIMIT 1) version_id, GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR '|') fansub_name, GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres, MIN(v.status) best_status, MAX(v.files_updated) last_updated, (SELECT COUNT(d.id) FROM division d WHERE d.series_id=s.id) divisions, s.number_of_episodes, (SELECT MAX(ls.created) FROM file ls LEFT JOIN version vs ON ls.version_id=vs.id WHERE vs.series_id=s.id AND vs.is_hidden=0) last_file_created FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN rel_series_genre sg ON s.id=sg.series_id LEFT JOIN genre g ON sg.genre_id = g.id WHERE s.type='manga' AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0 AND ".(is_hentai() ? "s.rating='XXX'" : "s.rating<>'XXX'")." AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%' OR s.id IN (SELECT mg.series_id FROM rel_series_genre mg LEFT JOIN genre g ON mg.genre_id=g.id LEFT JOIN series s2 ON mg.series_id=s2.id WHERE s.type='manga' AND g.name='$query')) GROUP BY s.id ORDER BY s.name ASC LIMIT $max_items OFFSET $offset");
 			$elements = array();
 			while($row = mysqli_fetch_assoc($result)){
 				$elements[] = array(
@@ -331,45 +344,48 @@ else if ($method === 'manga'){
 			$file_id+=10000;
 		}
 
-		$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
-		$files = list_remote_files($base_path);
+		$result = query("SELECT f.* FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE v.is_hidden=0 AND ".(is_hentai() ? "s.rating='XXX'" : "s.rating<>'XXX'")." AND f.id=$file_id");
+		if ($row = mysqli_fetch_assoc($result)) {
+			$my_api_session_id = escape(get_api_session_id());
+			//Check if this view is already in the database: same user agent, same IP and same file in the last hour
+			$exists_result = query("SELECT * FROM view_session WHERE file_id=$file_id AND anon_id='API-$my_api_session_id'");
+			if (mysqli_num_rows($exists_result)==0) {
+				$date = date('Y-m-d');
+				$length = intval($row['length']);
+				$ip = escape($_SERVER['REMOTE_ADDR']);
+				$user_agent = escape($_SERVER['HTTP_USER_AGENT']);
+				query("INSERT INTO view_session (id, file_id, type, user_id, anon_id, progress, length, created, updated, view_counted, is_casted, source, ip, user_agent) VALUES ('".get_nanoid()."', $file_id, 'manga', NULL, 'API-$my_api_session_id', $length, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 'api', '$ip', '$user_agent')");
+				query("REPLACE INTO views
+					SELECT $file_id,
+						'$date',
+						'manga',
+						IFNULL((SELECT clicks+1 FROM views WHERE file_id=$file_id AND day='$date'),1),
+						IFNULL((SELECT views+1 FROM views WHERE file_id=$file_id AND day='$date'),1),
+						IFNULL((SELECT total_length+$length FROM views WHERE file_id=$file_id AND day='$date'),$length)");
+			}
 
-		if (count($files)<1) {
-			show_invalid('No valid file specified.');
-		} else {
-			$result = query("SELECT f.* FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE v.is_hidden=0 AND ".(is_hentai() ? "s.rating='XXX'" : "s.rating<>'XXX'")." AND f.id=$file_id");
-			if ($row = mysqli_fetch_assoc($result)) {
-				$my_api_session_id = escape(get_api_session_id());
-				//Check if this view is already in the database: same user agent, same IP and same file in the last hour
-				$exists_result = query("SELECT * FROM view_session WHERE file_id=$file_id AND anon_id='API-$my_session_id'");
-				if (mysqli_num_rows($exists_result)==0) {
-					$date = date('Y-m-d');
-					$length = intval($row['length']);
-					$ip = escape($_SERVER['REMOTE_ADDR']);
-					$user_agent = escape($_SERVER['HTTP_USER_AGENT']);
-					query("INSERT INTO view_session (id, file_id, type, user_id, anon_id, progress, length, created, updated, view_counted, is_casted, source, ip, user_agent) VALUES ('".get_nanoid()."', $file_id, 'manga', NULL, 'API-$my_api_session_id', 0, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, 'api', '$ip', '$user_agent')");
-					query("REPLACE INTO views
-						SELECT $file_id,
-							'$date',
-							'manga',
-							IFNULL((SELECT clicks+1 FROM views WHERE file_id=$file_id AND day='$date'),0),
-							IFNULL((SELECT views+1 FROM views WHERE file_id=$file_id AND day='$date'),1),
-							IFNULL((SELECT total_length+$length FROM views WHERE file_id=$file_id AND day='$date'),$length)");
+			$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
+			$files = list_remote_files($base_path);
+			if (count($files)<1) {
+				show_invalid('No valid file specified.');
+			} else {
+				natsort($files);
+				$elements = array();
+				foreach ($files as $file) {
+					$elements[] = array(
+						'url' => $file
+					);
 				}
-			}
-			natsort($files);
-			$elements = array();
-			foreach ($files as $file) {
-				$elements[] = array(
-					'url' => $file
-				);
-			}
 
-			$response = array(
-				'status' => 'ok',
-				'result' => $elements
-			);
-			echo json_encode($response);
+				$response = array(
+					'status' => 'ok',
+					'result' => $elements
+				);
+				echo json_encode($response);
+			}
+		} else {
+			//Not in database - no file with this id or file has been removed
+			show_invalid('No valid file specified.');
 		}
 	} else {
 		show_invalid('No valid submethod specified.');

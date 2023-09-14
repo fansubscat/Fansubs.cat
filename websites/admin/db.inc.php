@@ -1,5 +1,5 @@
 <?php
-require_once('config.inc.php');
+require_once('../common.fansubs.cat/config.inc.php');
 
 function log_action($action, $text=NULL){
 	global $db_connection;

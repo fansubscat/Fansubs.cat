@@ -1,6 +1,5 @@
 <?php
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
-require_once('config_per_site.inc.php');
 
 define('VERSION', '5.0.0-WIP-'.date('Ymd'));
 
@@ -23,15 +22,17 @@ define('USERS_URL', 'https://usuaris.fansubs.cat');
 define('STATIC_URL', 'https://static.fansubs.cat');
 define('ADMIN_URL', 'https://admin.fansubs.cat');
 define('API_URL', 'https://api.fansubs.cat');
+define('HENTAI_URL', 'https://hentai.fansubs.cat');
 define('HENTAI_ANIME_URL', 'https://hentai.fansubs.cat/anime');
 define('HENTAI_MANGA_URL', 'https://hentai.fansubs.cat/manga');
 
-//Internal path (no final slash)
+//Internal paths (no final slash)
+define('SERVICES_DIRECTORY', '/srv/services/fansubs.cat');
 define('STATIC_DIRECTORY', '/srv/websites/static.fansubs.cat');
 
 //Memcached access (for storing remote requests cache)
 define('MEMCACHED_HOST', 'YOUR_MEMCACHED_HOST_HERE');
-define('MEMCACHED_PORT', YOUR_MEMCACHED_PORT_HERE);
+define('MEMCACHED_PORT', 12345);
 define('MEMCACHED_EXPIRY_TIME', 12*3600);
 
 //Cookie params
@@ -41,6 +42,9 @@ define('COOKIE_DOMAIN', '.fansubs.cat');
 define('ADMIN_COOKIE_NAME', 'admin_session_id');
 define('ADMIN_COOKIE_DURATION', 60*60*24*30);
 define('ADMIN_COOKIE_DOMAIN', '.fansubs.cat');
+
+//Used to check internal API calls only
+define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN_HERE');
 
 //Populate this variable if you want to display a message on all listing pages
 define('GLOBAL_MESSAGE', '');
@@ -56,9 +60,36 @@ define('STORAGES', array(
 	'https://YOUR_STORAGE_SERVERS/'
 ));
 
+//Link to the admin tutorial
+define('ADMIN_TUTORIAL_URL', 'YOUR_TUTORIAL_URL');
+
+//Token to bypass admin authentication in twitter_image.php
+define('INTERNAL_TOKEN', 'YOUR_TOKEN');
+
+//Lock file for MEGA sync processes (shared with background services)
+define('MEGA_LOCK_FILE', '/tmp/mega_fetch.lock');
+
+//Password salt for hashes (used only for the admin site)
+define('PASSWORD_SALT', 'YOUR_PASSWORD_SALT');
+
+//Storages (used only for the admin site), array of arrays
+define('ADMIN_STORAGES', array(
+//		array(
+//			'hostname' => 'whatever.xyz',
+//			'base_url' => 'https://www.whatever.xyz/files/',
+//			'api_url' => 'https://whatever.api/endpoint/',
+//			'api_username' => 'my_user',
+//			'api_password' => 'my_password'
+//		)
+	)
+);
+
 //Storage URL customization
 function generate_storage_url($url) {
 	//Your custom code
 	return $url;
 }
+
+//Keep this at the end
+require_once('config_per_site.inc.php');
 ?>
