@@ -8,7 +8,7 @@
 	display: inline-block;
 	background-color: rgb(var(--always-positive-color));
 	color: rgb(var(--always-negative-color));
-	padding: 1.4rem 2.2rem;
+	padding: 1.4rem 2rem;
 	margin: 1.5rem 0.75rem 0;
 	min-width: 26rem;
 	font-size: 3rem;
@@ -22,7 +22,7 @@
 	display: inline-block;
 	background: rgba(var(--negative-color),0.5);
 	color: rgb(var(--positive-color));
-	padding: 1.1rem 2.2rem;
+	padding: 1.1rem 2rem;
 	margin: 1.5rem 0.75rem 0;
 	min-width: 18rem;
 	font-size: 2.4rem;
@@ -47,10 +47,11 @@
 	margin-left: calc(0rem - var(--page-padding));
 	margin-right: calc(0rem - var(--page-padding));
 	justify-content: start;
-	flex-direction: row;
+	flex-direction: column;
+	align-items: start;
 }
 
-.fansubs-index {
+.fansubs-index, .community-index {
 	width: 100%;
 }
 
@@ -73,7 +74,7 @@
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	width: calc((100% / 3) - (((3 - 1) / 3) * 1.5em));
+	width: calc((100% / 3) - (((3 - 1) / 3) * 1.5rem));
 }
 
 .fansub-icon {
@@ -195,7 +196,7 @@
 		flex-direction: column;
 		border-radius: 1rem;
 		padding: 1rem;
-		width: calc((100% / 2) - (((2 - 1) / 2) * 1.5em));
+		width: calc((100% / 2) - (((2 - 1) / 2) * 1.5rem));
 	}
 
 	.fansub-content {

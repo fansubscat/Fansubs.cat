@@ -31,4 +31,5 @@ RewriteRule ^qui-som/?$ about.php [L]
 RewriteRule ^politica-de-privadesa/?$ privacy.php [L]
 RewriteRule ^contacta-amb-nosaltres/?$ contact.php [L]
 RewriteRule ^llista-de-fansubs/?$ fansubs.php [L]
+RewriteRule ^comunitat/?$ community.php [L]
 
