@@ -57,12 +57,12 @@ if (isset($_GET['fansub'])) {
 	}
 }
 ?>
-					<div class="search-layout">
+					<div class="search-layout<?php echo !empty($_GET['focus']) ? ' search-layout-visible' : ''; ?>">
 						<input class="search-base-url" type="hidden" value="<?php echo SITE_IS_HENTAI ? '/hentai/cerca' : '/cerca'; ?>">
 						<div class="search-filter-title">Filtres de les notícies</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="news-search-query">Text a cercar</label>
-							<input id="news-search-query" type="text" oninput="loadSearchResults(1);" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
+							<input id="news-search-query" type="text" oninput="loadSearchResults(1);" value="<?php echo !empty($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo !empty($_GET['focus']) ? ' autofocus' : ''; ?>>
 							<label for="news-search-date">Mes de publicació</label>
 							<div id="news-search-date" class="double-slider-container">
 								<input id="date-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_month; ?>" min="0" max="<?php echo $max_date; ?>" onchange="loadSearchResults(1);">
@@ -95,7 +95,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 							</select>
 						</form>
 					</div>
-					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
+					<div class="search-layout-toggle-button<?php echo !empty($_GET['focus']) ? ' search-layout-toggle-button-visible' : ''; ?>" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
 					<div class="results-layout news-search<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){

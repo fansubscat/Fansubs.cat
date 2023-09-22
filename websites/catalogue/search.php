@@ -159,12 +159,12 @@ if (isset($_GET['genres_exclude']) && is_array($_GET['genres_exclude']) && count
 	$param_genres_exclude_array = $_GET['genres_exclude'];
 }
 ?>
-					<div class="search-layout">
+					<div class="search-layout<?php echo !empty($_GET['focus']) ? ' search-layout-visible' : ''; ?>">
 						<input class="search-base-url" type="hidden" value="<?php echo $site_path.'/cerca'; ?>">
 						<div class="search-filter-title">Filtres del catàleg</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="catalogue-search-query">Text a cercar</label>
-							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca...">
+							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo !empty($_GET['focus']) ? ' autofocus' : ''; ?>>
 							<label>Tipus</label>
 							<div id="catalogue-search-type" class="singlechoice-selector singlechoice-type">
 								<div class="singlechoice-button<?php echo $param_type=='all' ? ' singlechoice-selected' : ''; ?>" onclick="singlechoiceChange(this);" data-value="all"><i class="fa fa-fw fa-grip"></i>Tots</div>
@@ -302,7 +302,7 @@ mysqli_free_result($result);
 ?>
 						</form>
 					</div>
-					<div class="search-layout-toggle-button" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
+					<div class="search-layout-toggle-button<?php echo !empty($_GET['focus']) ? ' search-layout-toggle-button-visible' : ''; ?>" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
 					<div class="results-layout catalogue-search<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){

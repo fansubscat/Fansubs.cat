@@ -2877,7 +2877,7 @@ input:checked + .viewed-slider:before {
 	}
 
 	.hentai-button, .filter-button {
-		margin-right: 0;
-		font-size: 1.3rem;
+		margin-right: 0.1rem;
+		font-size: 1.1rem;
 	}
 }

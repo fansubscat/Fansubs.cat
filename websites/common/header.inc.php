@@ -366,6 +366,9 @@ if (PAGE_STYLE_TYPE=='login') {
 						<a class="filter-button" href="<?php echo SITE_BASE_URL; ?>/cerca" title="Filtra i mostra tot el catàleg">
 							<i class="fsc fa-fw fsc-catalogue fa-2x"></i>
 						</a>
+						<a class="filter-button mobile-search-button" href="<?php echo SITE_BASE_URL; ?>/cerca?focus=1" title="Cerca">
+							<i class="fa fa-fw fa-search fa-2x"></i>
+						</a>
 						<div class="search-form">
 							<form id="search_form">
 								<input id="search_query" type="text" value="" placeholder="Cerca..." autocomplete="off">
@@ -378,6 +381,9 @@ if (PAGE_STYLE_TYPE=='login') {
 ?>
 						<a class="filter-button" href="/cerca" title="Filtra i mostra totes les notícies">
 							<i class="fsc fa-fw fsc-news fa-2x"></i>
+						</a>
+						<a class="filter-button mobile-search-button" href="<?php echo SITE_BASE_URL; ?>/cerca?focus=1" title="Cerca">
+							<i class="fa fa-fw fa-search fa-2x"></i>
 						</a>
 						<div class="search-form">
 							<form id="search_form">
