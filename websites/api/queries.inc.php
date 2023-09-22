@@ -70,6 +70,58 @@ function query_save_view_completed($file_id, $type, $date, $length) {
 	return query($final_query);
 }
 
+function query_get_all_manga_files() {
+	$final_query = "SELECT f.*,
+				s.slug,
+				IF(f.extra_name IS NULL, FALSE, TRUE) is_extra
+			FROM file f
+				LEFT JOIN version v ON f.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
+			WHERE s.type='manga'
+				AND f.is_lost=0
+			ORDER BY s.name ASC,
+				f.original_filename ASC";
+	return query($final_query);
+}
+
+function query_get_unconverted_links($file_id) {
+	$file_id_condition = (!empty($file_id) ? 'f.id>='.intval($file_id) : '1');
+	$final_query = "SELECT l.*,
+				s.type,
+				v.storage_folder,
+				v.storage_processing,
+				IF(f.extra_name IS NULL, FALSE, TRUE) is_extra
+			FROM link l
+				LEFT JOIN file f ON l.file_id=f.id
+				LEFT JOIN version v ON f.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
+			WHERE url NOT LIKE 'storage://%'
+				AND $file_id_condition
+				AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%')
+			ORDER BY s.name ASC,
+				f.id ASC";
+	return query($final_query);
+}
+
+function query_get_converted_links($file_id) {
+	$file_id_condition = (!empty($file_id) ? 'f.id>='.intval($file_id) : '1');
+	$final_query = "SELECT l.*,
+				s.type,
+				v.storage_folder,
+				v.storage_processing,
+				IF(f.extra_name IS NULL, FALSE, TRUE) is_extra,
+				f.length
+			FROM link l
+				LEFT JOIN file f ON l.file_id=f.id
+				LEFT JOIN version v ON f.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
+			WHERE url LIKE 'storage://%'
+				AND $file_id_condition
+			ORDER BY s.name ASC,
+				f.id ASC";
+	return query($final_query);
+}
+
 function query_insert_link($file_id, $url, $original_url, $resolution) {
 	$file_id=intval($file_id);
 	$url=escape($url);

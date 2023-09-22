@@ -361,10 +361,10 @@ else if ($method === 'manga'){
 		show_invalid('No valid submethod specified.');
 	}
 }
-else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$internal_token){
+else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===INTERNAL_SERVICES_TOKEN){
 	$submethod = array_shift($request);
 	if ($submethod=='get_manga_files') {
-		$result = query("SELECT f.*, s.slug, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0 ORDER BY s.name ASC, f.original_filename ASC");
+		$result = query_get_all_manga_files();
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
@@ -382,13 +382,7 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$i
 		);
 		echo json_encode($response);
 	} else if ($submethod=='get_unconverted_links') {
-		if (!empty($_POST['file_id']) && is_numeric($_POST['file_id'])) {
-			$file_id=intval($file_id);
-		}
-		else{
-			$file_id = NULL;
-		}
-		$result = query("SELECT l.*, s.type, v.storage_folder, v.storage_processing, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url NOT LIKE 'storage://%'".(!empty($file_id) ? " AND f.id>=$file_id" : '')." AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%') ORDER BY s.name ASC, f.id ASC");
+		$result = query_get_unconverted_links(!empty($_POST['file_id']) ? $_POST['file_id'] : NULL);
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
@@ -414,7 +408,7 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===$i
 		else{
 			$file_id = NULL;
 		}
-		$result = query("SELECT l.*, s.type, v.storage_folder, v.storage_processing, IF(f.extra_name IS NULL,FALSE,TRUE) is_extra, f.length FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE url LIKE 'storage://%'".(!empty($file_id) ? " AND f.id>=$file_id" : '')." ORDER BY s.name ASC, f.id ASC");
+		$result = query_get_converted_links(!empty($_POST['file_id']) ? $_POST['file_id'] : NULL);
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
