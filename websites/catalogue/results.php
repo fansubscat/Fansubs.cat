@@ -6,6 +6,8 @@ require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("common.inc.php");
 require_once("queries.inc.php");
 
+$special_day = get_special_day();
+
 validate_hentai_ajax();
 
 if (isset($_GET['search'])) {

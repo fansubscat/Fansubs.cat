@@ -3,6 +3,6 @@
 	src: url('../fonts/comic_sans.ttf');
 }
 
-:not(.fa):not(.fab):not([class^="vjs-"]) {
+:not(.fa):not(.fab):not(.fas):not(.far):not(.fsc):not([class^="vjs-"]) {
 	font-family: "comic_sans", sans-serif !important;
 }

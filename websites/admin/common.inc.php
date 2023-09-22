@@ -227,6 +227,6 @@ function get_anonymized_username($user_id, $anon_id) {
 	for ($i = 0; $i < 16; $i++) {
 		$randomString .= $characters[rand(0, $charactersLength - 1)];
 	}
-	return '<img src="https://api.multiavatar.com/'.$randomString.'.svg" style="width: 2rem; height: 2rem; margin: -1rem;">';
+	return '<img src="https://api.multiavatar.com/'.$randomString.'.svg?apikey='.MULTIAVATAR_API_KEY.'" style="width: 2rem; height: 2rem; margin: -1rem;">';
 }
 ?>

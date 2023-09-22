@@ -17,6 +17,12 @@ if ($special_day=='nadal') {
 						<a class="main-button" href="<?php echo MANGA_URL; ?>">Manga</a>
 						<a class="main-button" href="<?php echo LIVEACTION_URL; ?>">Imatge real</a>
 					</div>
+					<div class="secondary-buttons">
+						<a class="secondary-button" href="<?php echo NEWS_URL; ?>">Notícies</a>
+						<a class="secondary-button" href="/llista-de-fansubs">Fansubs</a>
+						<a class="secondary-button" href="/qui-som">Qui som?</a>
+						<a class="secondary-button" href="/comunitat">Comunitat</a>
+					</div>
 <?php
 if (is_advent_days()) {
 ?>
@@ -26,12 +32,6 @@ if (is_advent_days()) {
 <?php
 }
 ?>
-					<div class="secondary-buttons">
-						<a class="secondary-button" href="<?php echo NEWS_URL; ?>">Notícies</a>
-						<a class="secondary-button" href="/llista-de-fansubs">Fansubs</a>
-						<a class="secondary-button" href="/qui-som">Qui som?</a>
-						<a class="secondary-button" href="/comunitat">Comunitat</a>
-					</div>
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");
 ?>

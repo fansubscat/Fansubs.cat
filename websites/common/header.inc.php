@@ -449,9 +449,7 @@ if (PAGE_STYLE_TYPE=='login') {
 
 		if (GLOBAL_MESSAGE!='' || $special_day=='fools'){
 ?>
-				<div data-nosnippet class="section">
-					<div class="site-message"><?php echo $special_day=='fools' ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.STATIC_URL.'/various/innocents.png" target="_blank" style="color: black;">Més informació</a>.' : GLOBAL_MESSAGE; ?></div>
-				</div>
+				<div data-nosnippet class="site-message"><?php echo $special_day=='fools' ? 'Estem millorant el disseny de la pàgina. De moment hi hem afegit Comic Sans, que li donarà un toc més modern. <a href="'.STATIC_URL.'/various/innocents.png" target="_blank" style="color: black;">Més informació</a>.' : GLOBAL_MESSAGE; ?></div>
 <?php
 		}
 	}
