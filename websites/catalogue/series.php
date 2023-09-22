@@ -518,7 +518,7 @@ if (!SITE_IS_HENTAI) {
 		foreach ($tadaima_posts as $post) {
 ?>
 								<div class="tadaima-post">
-									<div class="tadaima-message"><?php echo strip_tags(str_replace('<br>',"\n",$post->text)); ?></div>
+									<div class="tadaima-message"><?php echo strip_tags(str_replace('Prem per veure el contingut multimèdia', '[Contingut multimèdia] ', str_replace('<br>',"\n",$post->text))); ?></div>
 									<div class="tadaima-author">
 										<img class="tadaima-avatar" src="<?php echo $post->user->avatar; ?>">
 										<span class="tadaima-user"><?php echo $post->user->name; ?></span> • <span class="tadaima-date"><?php echo get_relative_date($post->time); ?></span>

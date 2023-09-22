@@ -559,6 +559,34 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }
 
+function get_current_advent_day() {
+	if (date('H:i:s')>='12:00:00') {
+		return date('d');
+	} else {
+		return date('d')-1;
+	}
+}
+
+function print_featured_advent() {
+	echo "\t\t\t\t\t\t\t".'<div class="recommendation advent-recommendation" data-series-id="special-advent">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/advent/header_'.date('Y').'.jpg" alt="Calendari d’advent '.date('Y').'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder" data-swiper-parallax="-30%">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.ADVENT_URL.'"><img class="cover" src="'.STATIC_URL.'/images/advent/background_'.date('Y').'.jpg" alt="Calendari d’advent '.date('Y').'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">Calendari d’advent '.date('Y').'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Dia '.get_current_advent_day().' de 24</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\tTens ganes que arribi Nadal? Per a fer més amena l’espera, entre els diferents fansubs en català publicarem cada dia un petit present al nostre calendari d’advent. Hi trobaràs tota mena de curts i one-shots de poca durada. Cada matí a les 12.00 podràs obrir-ne una nova casella i gaudir d’un petit premi en forma d’anime o manga!\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.ADVENT_URL.'">Vés-hi ara</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t".'</div>'."\n";
+}
+
+
 function get_tadaima_info($thread_id) {
 	global $memcached;
 

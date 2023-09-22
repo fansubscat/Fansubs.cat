@@ -550,7 +550,8 @@ function query_version_ids_for_nadal($max_items) {
 			FROM version v
 				LEFT JOIN series s ON v.series_id=s.id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
-				AND s.year='".date('Y')."'
+				AND s.publish_date IS NOT NULL
+				AND YEAR(s.publish_date)=".date('Y')."
 				AND ".get_internal_hentai_condition()."
 				AND v.status=1
 				AND v.is_featurable=1
@@ -558,6 +559,13 @@ function query_version_ids_for_nadal($max_items) {
 				AND v.is_missing_episodes=0
 				ORDER BY s.score DESC
 				LIMIT $max_items";
+	return query($final_query);
+}
+
+function query_current_advent_calendar() {
+	$final_query = "SELECT *
+			FROM advent_calendar ac
+			WHERE ac.year=".date('Y');
 	return query($final_query);
 }
 

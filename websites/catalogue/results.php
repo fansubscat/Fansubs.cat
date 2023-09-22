@@ -195,14 +195,6 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	$sections = array();
 
-	array_push($sections, array(
-		'type' => 'advent',
-		'title' => NULL,
-		'specific_version' => FALSE,
-		'use_version_param' => FALSE,
-		'result' => NULL,
-	));
-
 	$force_recommended_ids_list = array();
 	if ($special_day!==NULL) {
 		if ($special_day=='fools') {
@@ -295,19 +287,7 @@ foreach($sections as $section){
 		$uses_swiper = TRUE;
 	}
 
-	if ($section['type']=='advent') {
-		/*if (is_advent_days()){
-?>
-				<div class="section featured-section">
-					<h2 class="section-title-main"><?php echo $section['title']; ?></h2>
-					<div class="section-content">
-						<a class="advent" href="<?php echo ADVENT_URL; ?>" target="_blank"><img src="<?php echo STATIC_URL; ?>/images/advent/header_<?php echo date('Y'); ?>.jpg" alt="Calendari d’advent dels fansubs en català" /></a>
-					</div>
-				</div>
-<?php
-		}*/ //TODO disabled for now
-		continue;
-	} else if ($section['type']=='chapters-carousel' && empty($user)) {
+	if ($section['type']=='chapters-carousel' && empty($user)) {
 		continue;
 	} else if (mysqli_num_rows($result)>0 || ($section['type']=='static')){
 ?>
@@ -335,6 +315,15 @@ foreach($sections as $section){
 			if ($uses_swiper) {
 ?>
 						<div class="<?php echo $uses_swiper ? 'swiper-wrapper' : 'static-wrapper'; ?>">
+<?php
+			}
+			if ($section['type']=='recommendations' && is_advent_days() && mysqli_num_rows(query_current_advent_calendar())>0 && !SITE_IS_HENTAI) {
+?>
+							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
+<?php
+					print_featured_advent();
+?>
+							</div>
 <?php
 			}
 			while ($row = mysqli_fetch_assoc($result)){
