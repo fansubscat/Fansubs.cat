@@ -306,12 +306,12 @@ function print_episode($fansub_names, $row, $version_id, $series, $version, $pos
 		$result = query_files_by_episode_id_and_version_id(!empty($user) ? $user['id'] : -1, $row['id'], $version_id);
 	}
 
-	if (mysqli_num_rows($result)==0 && $version['show_unavailable_episodes']!=1){
+	if (mysqli_num_rows($result)==0){
 		return;
 	}
 
-	$episode_title=get_episode_title($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
-	$episode_title_formatted=get_episode_title_formatted($series['subtype'], $version['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
+	$episode_title=get_episode_title($series['subtype'], $series['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
+	$episode_title_formatted=get_episode_title_formatted($series['subtype'], $series['show_episode_numbers'],$row['number'],$row['linked_episode_id'],$row['title'],$series['name'], NULL, FALSE);
 
 	internal_print_episode($fansub_names, $episode_title, $episode_title_formatted, $result, $series, FALSE, $position, $row['number']);
 	mysqli_free_result($result);

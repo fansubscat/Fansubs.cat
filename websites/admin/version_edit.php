@@ -124,26 +124,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['is_always_featured']=0;
 		}
-		if (!empty($_POST['show_divisions'])){
-			$data['show_divisions']=1;
-		} else {
-			$data['show_divisions']=0;
-		}
-		if (!empty($_POST['show_expanded_divisions'])){
-			$data['show_expanded_divisions']=1;
-		} else {
-			$data['show_expanded_divisions']=0;
-		}
-		if (!empty($_POST['show_episode_numbers'])){
-			$data['show_episode_numbers']=1;
-		} else {
-			$data['show_episode_numbers']=0;
-		}
-		if (!empty($_POST['show_unavailable_episodes'])){
-			$data['show_unavailable_episodes']=1;
-		} else {
-			$data['show_unavailable_episodes']=0;
-		}
 		if (!empty($_POST['storage_folder'])) {
 			$data['storage_folder']="'".escape($_POST['storage_folder'])."'";
 		} else if ($type!='manga') {
@@ -384,7 +364,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			log_action("update-version", "S’ha actualitzat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",show_divisions=".$data['show_divisions'].",show_expanded_divisions=".$data['show_expanded_divisions'].",show_episode_numbers=".$data['show_episode_numbers'].",show_unavailable_episodes=".$data['show_unavailable_episodes'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",default_resolution=".$data['default_resolution'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",default_resolution=".$data['default_resolution'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -591,7 +571,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S’ha creat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."»");
-			query("INSERT INTO version (series_id,status,is_missing_episodes,is_featurable,is_always_featured,show_divisions,show_expanded_divisions,show_episode_numbers,show_unavailable_episodes,is_hidden,completed_date,storage_folder,storage_processing,default_resolution,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['is_featurable'].",".$data['is_always_featured'].",".$data['show_divisions'].",".$data['show_expanded_divisions'].",".$data['show_episode_numbers'].",".$data['show_unavailable_episodes'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,is_missing_episodes,is_featurable,is_always_featured,is_hidden,completed_date,storage_folder,storage_processing,default_resolution,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['is_featurable'].",".$data['is_always_featured'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -685,20 +665,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$results = query("SELECT s.* FROM series s WHERE id=".escape($_GET['series_id']));
 		$series = mysqli_fetch_assoc($results) or crash('Series not found');
 		mysqli_free_result($results);
-
-		if ($series['subtype']=='movie' || $series['subtype']=='oneshot') {
-			$row['show_divisions']=1;
-			$row['show_expanded_divisions']=1;
-			$row['show_episode_numbers']=0;
-			$row['show_unavailable_episodes']=1;
-			$row['storage_processing']=1;
-		} else {
-			$row['show_divisions']=1;
-			$row['show_expanded_divisions']=1;
-			$row['show_episode_numbers']=1;
-			$row['show_unavailable_episodes']=1;
-			$row['storage_processing']=1;
-		}
 
 		$fansubs = array();
 
@@ -1045,7 +1011,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<option value="480p">
 									<option value="360p">
 								</datalist>
-								<div id="warning-no-numbers" class="alert alert-warning<?php echo $row['show_episode_numbers']==0 ? '' : ' d-none'; ?>">
+								<div id="warning-no-numbers" class="alert alert-warning<?php echo $series['show_episode_numbers']==0 ? '' : ' d-none'; ?>">
 									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura’t d’afegir-los allà on sigui necessari.</div>
 								</div>
 <?php
@@ -1423,27 +1389,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<div class="w-100 text-center"><button onclick="addVersionExtraRow();" type="button" class="btn btn-primary btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix un altre material extra</button></div>
 										</div>
 									</div>
-								</div>
-							</div>
-						</div>
-						<div class="mb-3">
-							<label for="form-view-options">Opcions de visualització de la fitxa pública</label>
-							<div id="form-view-options" class="row ps-3 pe-3">
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols <small class="text-muted">(normalment activat només en <?php echo $series_name; ?>; afegeix "Capítol X: " davant del nom dels capítols no especials)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="show_divisions" id="form-show_divisions" value="1"<?php echo $row['show_divisions']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_divisions">Separa per <?php echo $division_pl; ?> i mostra’n els noms <small class="text-muted">(normalment activat; si només n’hi ha <?php echo $division_one; ?>, no es mostrarà)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="show_expanded_divisions" id="form-show_expanded_divisions" value="1"<?php echo $row['show_expanded_divisions']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_expanded_divisions">Mostra <?php echo $division_pl_expanded; ?> per defecte <small class="text-muted">(normalment activat; si n’hi ha <?php echo $division_many; ?>, es pot desmarcar)</small></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="checkbox" name="show_unavailable_episodes" id="form-show_unavailable_episodes" value="1"<?php echo $row['show_unavailable_episodes']==1 ? " checked" : ""; ?>>
-									<label class="form-check-label" for="form-show_unavailable_episodes">Mostra els capítols que no tinguin cap enllaç <small class="text-muted">(normalment activat; apareixen en gris)</small></label>
 								</div>
 							</div>
 						</div>

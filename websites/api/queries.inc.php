@@ -334,7 +334,7 @@ function query_get_manga_chapters_by_slug($slug) {
 	$final_query = "SELECT s.subtype,
 			s.slug,
 			s.name,
-			v.show_episode_numbers,
+			s.show_episode_numbers,
 			fi.id,
 			fi.created,
 			c.number,

@@ -1495,6 +1495,15 @@ $(document).ready(function() {
 		$("#form-slug").val(string_to_slug($("#form-name-with-autocomplete").val()));
 	});
 
+	$('#form-subtype').on('change', function() {
+		var value = $("#form-subtype").val();
+		if (value=='movie' || value=='oneshot') {
+			$("#form-show_episode_numbers").prop('checked', false);
+		} else {
+			$("#form-show_episode_numbers").prop('checked', true);
+		}
+	});
+
 	$("#import-from-mal").click(function() {
 		if ($("#form-external_id").val()=='') {
 			if ($('#type').val()=='manga') {

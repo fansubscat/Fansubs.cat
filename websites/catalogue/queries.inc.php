@@ -597,14 +597,14 @@ function query_home_continue_watching_by_user_id($user_id) {
 				) fansub_info
 			FROM (SELECT f.id file_id,
 					f.version_id,
-					IF(s.type='manga' AND v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
+					IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
 						IF(d.name IS NULL,
 							CONCAT('Vol. ', REPLACE(TRIM(d.number)+0,'.',',')),
 							d.name
 						),
 						NULL
 					) division_name,
-					IF(v.show_episode_numbers=1,
+					IF(s.show_episode_numbers=1,
 						REPLACE(TRIM(e.number)+0, '.', ','),
 						NULL
 					) episode_number,
@@ -624,7 +624,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 					f.extra_name,
 					v.series_id,
 					v.status,
-					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
+					IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
 						d.name,
 						s.name
 					) series_name,
@@ -655,14 +655,14 @@ function query_home_continue_watching_by_user_id($user_id) {
 				UNION
 				SELECT f.id file_id,
 					f.version_id,
-					IF(s.type='manga' AND v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
+					IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
 						IF(d.name IS NULL,
 							CONCAT('Vol. ', REPLACE(TRIM(d.number)+0,'.',',')),
 							d.name
 						),
 						NULL
 					) division_name,
-					IF(v.show_episode_numbers=1,
+					IF(s.show_episode_numbers=1,
 						REPLACE(TRIM(e.number)+0, '.', ','),
 						NULL
 					) episode_number,
@@ -682,7 +682,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 					f.extra_name,
 					v.series_id,
 					v.status,
-					IF(v.show_divisions=1 AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
+					IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
 						d.name,
 						s.name
 					) series_name,
@@ -1129,7 +1129,7 @@ function query_player_details_by_file_id($file_id) {
 	$final_query = "SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') fansub_name,
 				v.series_id series_id,
 				f.version_id version_id,
-				v.show_episode_numbers,
+				s.show_episode_numbers,
 				s.name series_name,
 				s.type series_type,
 				s.subtype series_subtype,

@@ -169,10 +169,6 @@ mysqli_data_seek($result, 0);
 
 $i=0;
 while ($version = mysqli_fetch_assoc($result)) {
-		//TODO REMOVE THIS
-		$version['show_divisions']=1;
-		$version['show_expanded_divisions']=1;
-		$version['show_unavailable_episodes']=0;
 ?>
 						<div class="version-content<?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version-content-<?php echo $version['id']; ?>">
 <?php
@@ -252,18 +248,6 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 								<h2 class="section-title-main section-title-with-table">Contingut
 <?php
-
-//Remove empty seasons
-/*if ($version['show_unavailable_episodes']==0) {
-	$new_divisions = array();
-	foreach ($divisions as $index => $division) {
-		if ($division['available_episodes']>0) {
-			array_push($new_divisions, $division);
-		}
-	}
-	$divisions = $new_divisions;
-}*/
-
 		//false: ascending, true: descending
 		$sort_order = (!empty($user) && $user['episode_sort_order']) || (empty($user) && !empty($_COOKIE['episode_sort_order']));
 		if ($sort_order) {
@@ -385,7 +369,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 										<div class="division-container<?php echo $division['available_episodes']>0 ? '' : ' division-unavailable'; ?><?php echo CATALOGUE_ITEM_TYPE=='manga' ? '' : ($division['division_id']==$selected_division_id ? '' : ' hidden'); ?>" id="division-container-<?php echo $version['id'].'-'.$division['division_id'];?>">
 											<div class="episode-table<?php echo CATALOGUE_ITEM_TYPE=='manga' ? ' episode-table-manga' : ''; ?>">
 <?php
-				if ($division['available_episodes']>0 || $version['show_unavailable_episodes']==1) {
+				if ($division['available_episodes']>0) {
 					if ($version['status']!=1 && $sort_order && $division['available_episodes']<count($division['episodes'])) {
 						print_fake_episode($version['status']);
 					}
