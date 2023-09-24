@@ -302,7 +302,7 @@ mysqli_free_result($result);
 ?>
 						</form>
 					</div>
-					<div class="search-layout-toggle-button<?php echo !empty($_GET['focus']) ? ' search-layout-toggle-button-visible' : ''; ?>" onclick="toggleSearchLayout();"><i class="fa fa-fw fa-chevron-right"></i></div>
+					<div class="search-layout-toggle-button<?php echo !empty($_GET['focus']) ? ' search-layout-toggle-button-visible' : ''; ?>"><i class="fa fa-fw fa-chevron-right" onclick="toggleSearchLayout();"></i></div>
 					<div class="results-layout catalogue-search<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
 if (is_robot()){

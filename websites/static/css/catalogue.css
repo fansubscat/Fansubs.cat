@@ -2831,6 +2831,10 @@ input:checked + .viewed-slider:before {
 	.extra-content {
 		margin-top: 1.5rem;
 	}
+
+	.hentai-button, .filter-button {
+		font-size: 1.1rem;
+	}
 }
 
 @media (max-width: 600px){
@@ -2878,6 +2882,5 @@ input:checked + .viewed-slider:before {
 
 	.hentai-button, .filter-button {
 		margin-right: 0.1rem;
-		font-size: 1.1rem;
 	}
 }
