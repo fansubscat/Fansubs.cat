@@ -61,7 +61,6 @@ RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^serialitzats/([^/]+)/?$ migration.php?migration_type=v4_slug&id=$1&type=manga [QSA,L]
 
 #Normal v5 pages
-RewriteRule ^preview/([^/]*)\.jpg$ preview_image.php?slug=$1 [L]
 RewriteRule ^cerca/?$ search.php [L]
 RewriteRule ^cerca/([^/]+)/?$ search.php?query=$1 [B,QSA,L]
 RewriteRule ^embed/([^/]+)/?$ embed.php?file_id=$1 [L]

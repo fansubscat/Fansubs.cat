@@ -1,8 +1,7 @@
 <?php
-require_once('../common.fansubs.cat/db.inc.php');
-require_once('common.inc.php');
-require_once('queries.inc.php');
-require_once('../common.fansubs.cat/libraries/linebreaks4imagettftext.php');
+require_once(dirname(__FILE__).'/../db.inc.php');
+require_once(dirname(__FILE__).'/linebreaks4imagettftext.php');
+
 define('IMAGE_WIDTH', 1200);
 define('IMAGE_HEIGHT', 628);
 define('COVER_WIDTH', 444);
@@ -16,7 +15,45 @@ define('FONT_LIGHT', STATIC_DIRECTORY.'/fonts/lexend_deca_light.ttf');
 //Obtained from running: `fc-query --format='%{charset}\n' font.ttf`
 define('SUPPORTED_CHARS_REGEX', '/[^\n\x{20}-\x{7e}\x{a0}-\x{17e}\x{18f}\x{192}\x{19d}\x{1a0}-\x{1a1}\x{1af}-\x{1b0}\x{1c4}-\x{1d4}\x{1e6}-\x{1e7}\x{1ea}-\x{1eb}\x{1f1}-\x{1f2}\x{1fa}-\x{21b}\x{22a}-\x{22d}\x{230}-\x{233}\x{237}\x{259}\x{272}\x{2bb}-\x{2bc}\x{2be}-\x{2bf}\x{2c6}-\x{2c8}\x{2cc}\x{2d8}-\x{2dd}\x{300}-\x{304}\x{306}-\x{30c}\x{30f}\x{311}-\x{312}\x{31b}\x{323}-\x{324}\x{326}-\x{328}\x{32e}\x{331}\x{335}\x{394}\x{3a9}\x{3bc}\x{3c0}\x{1e08}-\x{1e09}\x{1e0c}-\x{1e0f}\x{1e14}-\x{1e17}\x{1e1c}-\x{1e1d}\x{1e20}-\x{1e21}\x{1e24}-\x{1e25}\x{1e2a}-\x{1e2b}\x{1e2e}-\x{1e2f}\x{1e36}-\x{1e37}\x{1e3a}-\x{1e3b}\x{1e42}-\x{1e49}\x{1e4c}-\x{1e53}\x{1e5a}-\x{1e5b}\x{1e5e}-\x{1e69}\x{1e6c}-\x{1e6f}\x{1e78}-\x{1e7b}\x{1e80}-\x{1e85}\x{1e8e}-\x{1e8f}\x{1e92}-\x{1e93}\x{1e97}\x{1e9e}\x{1ea0}-\x{1ef9}\x{2007}-\x{200b}\x{2010}\x{2012}-\x{2015}\x{2018}-\x{201a}\x{201c}-\x{201e}\x{2020}-\x{2022}\x{2026}\x{2030}\x{2033}\x{2039}-\x{203a}\x{2044}\x{2070}\x{2074}-\x{2079}\x{2080}-\x{2089}\x{20a1}\x{20a3}-\x{20a4}\x{20a6}-\x{20a7}\x{20a9}\x{20ab}-\x{20ad}\x{20b1}-\x{20b2}\x{20b5}\x{20b9}-\x{20ba}\x{20bc}-\x{20bd}\x{2113}\x{2116}\x{2122}\x{2126}\x{212e}\x{215b}-\x{215e}\x{2202}\x{2205}-\x{2206}\x{220f}\x{2211}-\x{2212}\x{2215}\x{2219}-\x{221a}\x{221e}\x{222b}\x{2248}\x{2260}\x{2264}-\x{2265}\x{25ca}\x{fb01}-\x{fb02}]/u');
 
-ob_start();
+function query_series_data_for_preview_image_by_id($id) {
+	$id = intval($id);
+	$final_query = "SELECT s.*,
+				YEAR(s.publish_date) year,
+				GROUP_CONCAT(DISTINCT g.name
+					ORDER BY g.name
+					SEPARATOR ', '
+					) genres,
+				(SELECT COUNT(DISTINCT d.id)
+					FROM division d
+					WHERE d.series_id=s.id
+					AND d.number_of_episodes>0
+				) divisions
+			FROM series s
+				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
+				LEFT JOIN genre g ON sg.genre_id = g.id
+			WHERE s.id=$id
+			GROUP BY s.id";
+	return query($final_query);
+}
+
+function query_version_data_for_preview_image_by_series_id($series_id) {
+	$series_id = intval($series_id);
+	$final_query = "SELECT v.*,
+				GROUP_CONCAT(DISTINCT f.name
+					ORDER BY f.name
+					SEPARATOR ' + '
+				) fansub_name
+			FROM version v
+				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+				LEFT JOIN fansub f ON vf.fansub_id=f.id
+				LEFT JOIN series s ON v.series_id=s.id
+			WHERE v.is_hidden=0
+				AND v.series_id=$series_id
+			GROUP BY v.id
+			ORDER BY v.status DESC,
+				v.created DESC";
+	return query($final_query);
+}
 
 function scale_smallest_side($image, $desired_width, $desired_height) {
 	$width = imagesx($image);
@@ -68,6 +105,19 @@ function get_status_icon_code($id){
 			return "";
 		default:
 			return "";
+	}
+}
+
+function get_comic_type($comic_type){
+	switch ($comic_type) {
+		case 'manga':
+			return 'Manga';
+		case 'manhwa':
+			return 'Manhwa';
+		case 'manhua':
+			return 'Manhua';
+		default:
+			return 'Còmic';
 	}
 }
 
@@ -135,13 +185,12 @@ function get_series_type_summary($series) {
 	return $text;
 }
 
-$result = query_series_data_for_preview_image_by_slug(!empty($_GET['slug']) ? $_GET['slug'] : '');
-$series = mysqli_fetch_assoc($result) or $failed=TRUE;
-mysqli_free_result($result);
+function update_series_preview($id) {
+	$result = query_series_data_for_preview_image_by_id($id);
+	$series = mysqli_fetch_assoc($result) or $failed=TRUE;
+	mysqli_free_result($result);
 
-if (empty($failed)) {
-	$id = $series['id'];
-	if (TRUE) { //!file_exists(STATIC_DIRECTORY."/social/series_".$id.".jpg") || filemtime(STATIC_DIRECTORY."/social/series_".$id.".jpg")<(date('U')-3600*8)) {
+	if (empty($failed)) {
 		$result = query_version_data_for_preview_image_by_series_id($id);
 		$versions = array();
 		while ($version = mysqli_fetch_assoc($result)) {
@@ -269,10 +318,5 @@ if (empty($failed)) {
 		imagejpeg($image, STATIC_DIRECTORY."/social/series_".$id.".jpg", 80);
 		imagedestroy($image);
 	}
-
-	header('Content-Type: image/jpeg');
-	readfile(STATIC_DIRECTORY."/social/series_".$id.".jpg");
-} else {
-	echo "Aquest element no existeix.";
 }
 ?>

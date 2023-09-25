@@ -24,9 +24,9 @@ function print_fansub($row, $is_hentai) {
 	}
 ?>
 <?php
-	if ($row['twitter_url']!=NULL){
+	if ($row['discord_url']!=NULL){
 ?>
-												<a class="fab fa-fw fa-twitter twitter-link" href="<?php echo $row['twitter_url']; ?>" target="_blank"></a>
+												<a class="fab fa-fw fa-discord discord-link" href="<?php echo $row['discord_url']; ?>" target="_blank"></a>
 <?php
 	}
 ?>
@@ -38,9 +38,9 @@ function print_fansub($row, $is_hentai) {
 	}
 ?>
 <?php
-	if ($row['discord_url']!=NULL){
+	if ($row['twitter_url']!=NULL){
 ?>
-												<a class="fab fa-fw fa-discord discord-link" href="<?php echo $row['discord_url']; ?>" target="_blank"></a>
+												<a class="fab fa-fw fa-x-twitter twitter-link" href="<?php echo $row['twitter_url']; ?>" target="_blank"></a>
 <?php
 	}
 ?>

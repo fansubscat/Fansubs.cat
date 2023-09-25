@@ -30,7 +30,7 @@ $synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
 define('PAGE_TITLE', $series['name']);
 define('PAGE_PATH', '/'.$series['slug']);
 define('PAGE_DESCRIPTION', str_replace("\n", " ", strip_tags($synopsis)));
-define('PAGE_PREVIEW_IMAGE', SITE_BASE_URL.'/preview/'.$series['slug'].'.jpg');
+define('PAGE_PREVIEW_IMAGE', STATIC_URL.'/social/series_'.$series['id'].'.jpg');
 
 define('PAGE_IS_SERIES', TRUE);
 define('PAGE_EXTRA_BODY_CLASS', 'has-carousel is-series-page');

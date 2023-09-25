@@ -1,4 +1,5 @@
 <?php
+require_once('libraries/preview_image_generator.php');
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
@@ -315,6 +316,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/'.$data['id'].'.jpg');
 			}
 
+			update_series_preview($data['id']);
+
 			$_SESSION['message']="S’han desat les dades correctament.";
 		}
 		else {
@@ -344,6 +347,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
 				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/'.$inserted_id.'.jpg');
 			}
+
+			update_series_preview($data['id']);
 
 			$_SESSION['message']="S’han desat les dades correctament.<br /><a class=\"btn btn-primary mt-2\" href=\"version_edit.php?type=$type&series_id=$inserted_id\"><span class=\"fa fa-plus pe-2\"></span>Crea’n una versió</a>";
 		}

@@ -393,48 +393,6 @@ function query_series_data_from_slug_and_type($slug, $type) {
 	return query($final_query);
 }
 
-function query_series_data_for_preview_image_by_slug($slug) {
-	$slug = escape($slug);
-	$final_query = "SELECT s.*,
-				YEAR(s.publish_date) year,
-				GROUP_CONCAT(DISTINCT g.name
-					ORDER BY g.name
-					SEPARATOR ', '
-					) genres,
-				(SELECT COUNT(DISTINCT d.id)
-					FROM division d
-					WHERE d.series_id=s.id
-					AND d.number_of_episodes>0
-				) divisions
-			FROM series s
-				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
-				LEFT JOIN genre g ON sg.genre_id = g.id
-			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
-				AND slug='$slug'
-				AND ".get_internal_hentai_condition()."
-			GROUP BY s.id";
-	return query($final_query);
-}
-
-function query_version_data_for_preview_image_by_series_id($series_id) {
-	$series_id = intval($series_id);
-	$final_query = "SELECT v.*,
-				GROUP_CONCAT(DISTINCT f.name
-					ORDER BY f.name
-					SEPARATOR ' + '
-				) fansub_name
-			FROM version v
-				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
-				LEFT JOIN fansub f ON vf.fansub_id=f.id
-				LEFT JOIN series s ON v.series_id=s.id
-			WHERE v.is_hidden=0
-				AND v.series_id=$series_id
-			GROUP BY v.id
-			ORDER BY v.status DESC,
-				v.created DESC";
-	return query($final_query);
-}
-
 function query_filter_demographics() {
 	$final_query = "SELECT *
 			FROM genre

@@ -1,5 +1,6 @@
 <?php
 require_once('db.inc.php');
+require_once('libs/preview_image_generator.php');
 
 log_action('cron-scores-started', "S’ha iniciat l’actualització de la puntuació de les sèries");
 
@@ -64,6 +65,7 @@ while ($series = mysqli_fetch_assoc($result)) {
 				echo "Previous score: ".$series['score']." / New score: $new_score\n";
 				log_action('cron-score-updated', "La puntuació de la sèrie «".$series['name']."» ha canviat de ".$series['score'].' a '.$new_score);
 				query("UPDATE series SET score=".escape($new_score)." WHERE id=".$series['id']);
+				update_series_preview($series['id']);
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 <?php
+require_once('libraries/preview_image_generator.php');
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
@@ -47,6 +48,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM rel_version_fansub WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE id=".escape($_GET['delete_id']));
+		update_series_preview(query_single("SELECT s.id FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".escape($_GET['delete_id'])));
 		//Views will NOT be removed in order to keep consistent stats history
 		$_SESSION['message']="S’ha suprimit correctament.";
 	}
