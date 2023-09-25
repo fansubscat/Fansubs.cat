@@ -351,6 +351,7 @@ a img {
 .obscured-background {
 	background: linear-gradient(to bottom, transparent 0%, rgba(var(--primary-color),0.35) 25% 75%, transparent 100%);
 	backdrop-filter: grayscale(1);
+	background-attachment: fixed;
 }
 
 .overlay-page {
