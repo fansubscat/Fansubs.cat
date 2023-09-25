@@ -30,6 +30,18 @@ CREATE TABLE `advent_day` (
   `link_url` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `community` (
+  `id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `category` varchar(200) NOT NULL DEFAULT 'featured',
+  `url` varchar(200) DEFAULT NULL,
+  `description` varchar(200) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_by` varchar(200) NOT NULL,
+  `updated` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_by` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE `division` (
   `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
@@ -362,6 +374,9 @@ ALTER TABLE `advent_calendar`
 
 ALTER TABLE `advent_day`
   ADD PRIMARY KEY (`year`,`day`);
+
+ALTER TABLE `community`
+  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `division`
   ADD PRIMARY KEY (`id`),

@@ -137,6 +137,9 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 								<a class="dropdown-item" href="admin_list.php">Llista d’administradors</a>
 								<a class="dropdown-item" href="admin_edit.php">Afegeix un administrador nou</a>
 								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="community_list.php">Llista de comunitats</a>
+								<a class="dropdown-item" href="community_edit.php">Afegeix una comunitat nova</a>
+								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="advent_list.php">Llista de calendaris d’advent</a>
 							</div>
 						</li>

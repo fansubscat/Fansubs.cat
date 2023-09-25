@@ -111,4 +111,13 @@ function query_hentai_fansubs($user, $status) {
 			ORDER BY sq.name ASC";
 	return query($final_query);
 }
+
+function query_communities_by_category($category) {
+	$category = escape($category);
+	$final_query = "SELECT *
+			FROM community c
+			WHERE c.category='$category'
+			ORDER BY c.name ASC";
+	return query($final_query);
+}
 ?>

@@ -200,6 +200,7 @@ body {
 	background: linear-gradient(to bottom, rgba(var(--negative-color),1) 0%, rgba(var(--negative-color),var(--background-image-opacity)) 25% 75%, rgba(var(--negative-color),1) 100%), var(--background-image);
 	background-size: cover;
 	background-position: center;
+	background-attachment: fixed;
 	overflow: hidden;
 }
 
@@ -636,6 +637,7 @@ select:not(.date-month) {
 }
 
 .text-page {
+	width: 100%;
 	max-width: 1500px;
 	padding: 2.8rem;
 	border-radius: 1.5rem;
@@ -713,7 +715,7 @@ select:not(.date-month) {
 }
 
 .section-title {
-	margin-top: 1.5rem;
+	margin-top: 2.5rem;
 	margin-bottom: 1rem;
 }
 

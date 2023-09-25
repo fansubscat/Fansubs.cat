@@ -38,7 +38,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body text-center">
-					<h4 class="card-title mb-4 mt-1">Servidor "<?php echo $storage['hostname']; ?>"</h4>
+					<h4 class="card-title mb-4 mt-1">Servidor «<?php echo $storage['hostname']; ?>»</h4>
 					<hr>
 					<h5 class="mb-3">Operacions d’entrada/sortida per segon (màx. 150)</h5>
 					<img src="<?php echo get_image_type_url($response, 'iops_daily'); ?>" alt="" />

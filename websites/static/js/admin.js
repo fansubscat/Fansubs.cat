@@ -968,6 +968,15 @@ function checkFansub() {
 	return true;
 }
 
+function checkCommunity() {
+	if (!$('#form-id').val() && !$('#form-logo').val()) {
+		alert('Cal que pugis un logo.');
+		return false;
+	}
+
+	return true;
+}
+
 function checkNumberOfLinks() {
 	if (isAutoFetchActive()){
 		var linkTables = $('[id^=files-list-table-]');
