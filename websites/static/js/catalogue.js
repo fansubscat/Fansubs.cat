@@ -1068,7 +1068,9 @@ function removeFromContinueWatching(element, fileId){
 }
 
 function initializeCarousels() {
-	$('.style-type-catalogue').addClass('has-carousel');
+	if ($('.swiper').length>0) {
+		$('.style-type-catalogue').addClass('has-carousel');
+	}
 	new Swiper('.recommendations', {
 		slidesPerView: 1,
 		direction: 'horizontal',

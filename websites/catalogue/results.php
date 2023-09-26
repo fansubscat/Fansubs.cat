@@ -280,6 +280,7 @@ if (defined('PAGE_IS_SEARCH')) {
 }
 
 $i=0;
+$has_some_result = FALSE;
 foreach($sections as $section){
 	$result = $section['result'];
 	$uses_swiper = FALSE;
@@ -290,6 +291,7 @@ foreach($sections as $section){
 	if ($section['type']=='chapters-carousel' && empty($user)) {
 		continue;
 	} else if (mysqli_num_rows($result)>0 || ($section['type']=='static')){
+		$has_some_result = TRUE;
 ?>
 				<div class="section<?php echo $section['type']=='recommendations' ? ' featured-section' : ''; ?>">
 <?php
@@ -363,6 +365,14 @@ foreach($sections as $section){
 	}
 	mysqli_free_result($result);
 	$i++;
+}
+
+if (!$has_some_result) {
+?>
+				<div class="section">
+					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>Aquí no hi ha absolutament res...</div></div>
+				</div>
+<?php
 }
 
 if (defined('PAGE_IS_SEARCH')) {

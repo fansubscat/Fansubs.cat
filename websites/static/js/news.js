@@ -19,7 +19,7 @@ function loadSearchResults(page) {
 		currentPage = page;
 		window.scrollTo(0, 0);
 	}
-	var query = $('#news-search-query').val();
+	var query = $('#news-search-query').val().trim();
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
 		$('.loading-message').text('S’estan carregant les notícies...');
 	} else {

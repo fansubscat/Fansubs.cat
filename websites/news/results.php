@@ -25,7 +25,8 @@ else{
 }
 
 $show_blacklisted_fansubs = FALSE;
-$show_own_news = FALSE;
+$show_own_news = TRUE;
+$show_only_own_news = FALSE;
 $text = NULL;
 $fansub_slug = NULL;
 $min_month = '2003-05';
@@ -42,7 +43,9 @@ if (defined('PAGE_IS_SEARCH')) {
 		}
 	}
 	if (!empty($_POST['fansub']) && $_POST['fansub']=='-3') {
-		$show_own_news = TRUE;
+		$show_only_own_news = TRUE;
+	} else if (!empty($_POST['fansub']) && $_POST['fansub']>0) {
+		$show_own_news = FALSE;
 	}
 	if (isset($_POST['min_month']) && isset($_POST['max_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_POST['min_month']) && preg_match("/\\d\\d\\d\\d\\-\\d\\d/", $_POST['max_month'])) {
 		$min_month = $_POST['min_month'];
@@ -53,7 +56,7 @@ if (defined('PAGE_IS_SEARCH')) {
 	}
 }
 
-$result = query_latest_news(!empty($user) ? $user : NULL, $text, $page, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
+$result = query_latest_news(!empty($user) ? $user : NULL, $text, $page, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $show_only_own_news, $min_month, $max_month);
 
 ?>
 <?php
@@ -68,7 +71,6 @@ if (mysqli_num_rows($result)==0){
 	} else {
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Darreres notícies</h2>
 							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No hem trobat cap notícia! I que no hi hagi cap notícia és una mala notícia...</div></div>
 						</div>
 <?php
@@ -166,10 +168,13 @@ else{
 						</div>
 <?php
 }
+
+$has_printed_navigation = FALSE;
+if ($page>1 && mysqli_num_rows($result)>0){
 ?>
 						<div id="bottom-navigation">
 <?php
-if ($page>1 && mysqli_num_rows($result)>0){
+	$has_printed_navigation = TRUE;
 ?>
 							<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : '/pagina/'.($page-1)).'"'); ?>><i class="fa fa-fw fa-arrow-left"></i> Notícies més noves</a>
 <?php
@@ -177,17 +182,26 @@ if ($page>1 && mysqli_num_rows($result)>0){
 mysqli_free_result($result);
 
 //Do the same query but for the next page, to know if it exists
-$result = query_latest_news(!empty($user) ? $user : NULL, $text, $page+1, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $min_month, $max_month);
+$result = query_latest_news(!empty($user) ? $user : NULL, $text, $page+1, 20, $fansub_slug, $show_blacklisted_fansubs, $show_own_news, $show_only_own_news, $min_month, $max_month);
 
 if (mysqli_num_rows($result)>0){
+	if (!$has_printed_navigation) {
+		$has_printed_navigation = TRUE;
+?>
+						<div id="bottom-navigation">
+<?php
+	}
 ?>
 							<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="/pagina/'.($page+1).'"'); ?>>Notícies més antigues <i class="fa fa-fw fa-arrow-right"></i></a>
 <?php
 }
+mysqli_free_result($result);
+
+if ($has_printed_navigation) {
 ?>
 						</div>
 <?php
-mysqli_free_result($result);
+}
 
 if (defined('PAGE_IS_SEARCH')) {
 	require_once("../common.fansubs.cat/footer_text.inc.php");

@@ -1,10 +1,12 @@
 .style-type-news .main-section {
-	justify-content: start;
 	width: calc(100% + var(--page-padding) + var(--page-padding));
 	margin-left: calc(0rem - var(--page-padding));
 	margin-right: calc(0rem - var(--page-padding));
+}
+
+.style-type-news.has-search-results .main-section {
+	justify-content: start;
 	flex-direction: row;
-	display: block;
 }
 
 .news-index {
@@ -44,8 +46,8 @@
 .news-image {
 	max-height: 30rem;
 	max-width: 60rem;
-	height: auto;
-	width: auto;	
+	height: fit-content;
+	width: fit-content;	
 	cursor: zoom-in;
 	border-radius: 0.6rem;
 	margin-left: 2rem;
