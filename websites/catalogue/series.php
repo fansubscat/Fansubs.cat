@@ -266,13 +266,13 @@ while ($version = mysqli_fetch_assoc($result)) {
 			$unsorted_divisions = $divisions;
 			$divisions = array_merge(array_reverse($new_divisions), $special_divisions);
 ?>
-									<div class="sort-order sort-descending"><span class="fa fa-fw fa-arrow-down-wide-short"></span> <span class="sort-description">De l’últim al primer</span></div>
+									<span class="sort-order sort-descending"><span class="fa fa-fw fa-arrow-down-wide-short"></span> <span class="sort-description">De l’últim al primer</span></span>
 <?php
 		} else {
 			$unsorted_divisions = $divisions;
 			//Already sorted, no need to resort
 ?>
-									<div class="sort-order sort-ascending"><span class="fa fa-fw fa-arrow-down-short-wide"></span> <span class="sort-description">Del primer a l’últim</span></div>
+									<span class="sort-order sort-ascending"><span class="fa fa-fw fa-arrow-down-short-wide"></span> <span class="sort-description">Del primer a l’últim</span></span>
 <?php
 		}
 ?>

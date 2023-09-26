@@ -93,7 +93,7 @@ function print_fansub($row, $is_hentai) {
 function print_community($row) {
 ?>
 							<a class="community-item" href="<?php echo htmlspecialchars($row['url']); ?>" target="_blank">
-								<img class="community-icon" src="<?php echo STATIC_URL.'/images/communities/'.$row['id'].'.png'; ?>" alt="" />
+								<img class="community-icon" src="<?php echo STATIC_URL.'/images/communities/'.$row['id'].'.png'; ?>" alt="">
 								<div class="community-data">
 									<div class="community-title"><?php echo htmlspecialchars($row['name']); ?></div>
 									<div class="community-description"><?php echo htmlspecialchars($row['description']); ?></div>

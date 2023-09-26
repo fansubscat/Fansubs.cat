@@ -137,7 +137,7 @@ else{
 <?php
 		if ($row['image']!=NULL){
 ?>
-										<img class="news-image-mobile" src="<?php echo STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt=""/>
+										<img class="news-image-mobile" src="<?php echo STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt="">
 <?php
 		}
 ?>
@@ -155,7 +155,7 @@ else{
 <?php
 		if ($row['image']!=NULL){
 ?>
-								<img class="news-image" src="<?php echo STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt=""/>
+								<img class="news-image" src="<?php echo STATIC_URL.'/images/news/'.$row['fansub_slug'].'/'.$row['image']; ?>" alt="">
 <?php
 		}
 ?>

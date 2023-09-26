@@ -505,7 +505,7 @@ function get_genres_for_featured($genre_names, $type, $rating) {
 		$genre_id = explode('|', $genre_data)[0];
 		$genre_type = explode('|', $genre_data)[1];
 		$genre = explode('|', $genre_data)[2];
-		$result_code.='<a class="genre" href="'.get_base_url_from_type_and_rating($type,$rating).'/cerca?'.($genre_type=='demographics' ? 'demographics' : 'genres_include').'[]='.$genre_id.'">'.htmlspecialchars($genre).'</a>';
+		$result_code.='<a class="genre" href="'.get_base_url_from_type_and_rating($type,$rating).'/cerca?'.($genre_type=='demographics' ? 'demographics' : 'genres_include').'%5B%5D='.$genre_id.'">'.htmlspecialchars($genre).'</a>';
 	}
 	return '<i class="fa fa-fw fa-tag fa-flip-horizontal"></i> '.$result_code;
 }
