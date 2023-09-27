@@ -609,7 +609,7 @@ select:not(.date-month) {
 	border-radius: 0.7rem;
 }
 
-.error-page a {
+.error-page a, a.secondary-link {
 	color: rgb(var(--secondary-color));
 }
 
@@ -1618,6 +1618,11 @@ input:checked + .slider:before {
 
 	.site-message a:hover {
 		color: rgb(var(--secondary-color));
+		text-decoration: underline;
+	}
+
+	a.secondary-link:hover {
+		color: rgb(var(--secondary-color-hover));
 		text-decoration: underline;
 	}
 

@@ -20,6 +20,13 @@ var hasJumpedToInitialPosition = false;
 var lastDoubleClickStart = 0;
 var isCheckingAsSeenProgrammatically = false;
 var pagesRead = [];
+var isUserActive = true;
+//Used for tracking user activity in manga reader
+var mouseInProgress;
+var lastMoveX;
+var lastMoveY;
+var inactivityTimeout;
+var activityCheckInterval;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -434,6 +441,174 @@ function imageReload(button) {
 	image.src=image.src;
 }
 
+function mangaHasMusic() {
+	//Not for now
+	return false;
+}
+
+function requestMangaReaderFullscreen() {
+	if (document.fullscreenElement==$('#overlay-content')[0]) {
+		document.exitFullscreen();
+	} else {
+		$('#overlay-content')[0].requestFullscreen();
+	}
+}
+
+function handleMangaReaderFullscreen(e) {
+	if (document.fullscreenElement==$('#overlay-content')[0]) {
+		$('.manga-bar').addClass('vjs-fullscreen');
+	} else {
+		$('.manga-bar').removeClass('vjs-fullscreen');
+	}
+}
+
+function showMangaReaderConfig() {
+	showCustomDialog('Configuració', 'Lector de manga: Tria quin lector de manga vols utilitzar: sentit oriental (de dreta a esquerra), sentit occidental (d’esquerra a dreta) o tira vertical.<br><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de Fansubs.cat per al <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a>.', null, false, true, [
+		{
+			text: 'D’acord',
+			class: 'normal-button',
+			onclick: function(){
+				//TODO CHANGE MODE
+				closeCustomDialog();
+			}
+		},
+		{
+			text: 'Cancel·la',
+			class: 'normal-button',
+			onclick: function(){
+				closeCustomDialog();
+			}
+		}
+	]);
+}
+
+function reportUserActivity() {
+	isUserActive = true;
+}
+
+function listenForUserActivityInMangaReader() {
+	//Function stolen from videojs: player.js / listenForUserActivity_
+
+	const handleMouseMove = function(e) {
+		// #1068 - Prevent mousemove spamming
+		// Chrome Bug: https://code.google.com/p/chromium/issues/detail?id=366970
+		if (e.screenX !== lastMoveX || e.screenY !== lastMoveY) {
+			lastMoveX = e.screenX;
+			lastMoveY = e.screenY;
+			reportUserActivity();
+		}
+	};
+
+	const handleMouseDown = function() {
+		reportUserActivity();
+		// For as long as the they are touching the device or have their mouse down,
+		// we consider them active even if they're not moving their finger or mouse.
+		// So we want to continue to update that they are active
+		clearInterval(mouseInProgress);
+		// Setting userActivity=true now and setting the interval to the same time
+		// as the activityCheck interval (250) should ensure we never miss the
+		// next activityCheck
+		mouseInProgress = setInterval(reportUserActivity, 250);
+	};
+
+	const handleMouseUpAndMouseLeave = function(event) {
+		reportUserActivity();
+		// Stop the interval that maintains activity if the mouse/touch is down
+		clearInterval(mouseInProgress);
+	};
+
+	// Any mouse movement will be considered user activity
+	//$('#overlay-content').on('mousedown', handleMouseDown);
+	$('#overlay-content').on('mousemove', handleMouseMove);
+	//$('#overlay-content').on('mouseup', handleMouseUpAndMouseLeave);
+	$('#overlay-content').on('mouseleave', handleMouseUpAndMouseLeave);
+	$('#overlay-content').on('click', reportUserActivity);
+
+/*	const controlBar = this.getChild('controlBar');
+
+	// Fixes bug on Android & iOS where when tapping progressBar (when control bar is displayed)
+	// controlBar would no longer be hidden by default timeout.
+	if (controlBar && !browser.IS_IOS && !browser.IS_ANDROID) {
+		controlBar.on('mouseenter', function(event) {
+			if (this.player().options_.inactivityTimeout !== 0) {
+				this.player().cache_.inactivityTimeout = this.player().options_.inactivityTimeout;
+			}
+			this.player().options_.inactivityTimeout = 0;
+		});
+
+		controlBar.on('mouseleave', function(event) {
+			this.player().options_.inactivityTimeout = this.player().cache_.inactivityTimeout;
+		});
+	}*/
+
+	// Listen for keyboard navigation
+	// Shouldn't need to use inProgress interval because of key repeat
+	//$('#overlay-content').on('keydown', reportUserActivity);
+	//$('#overlay-content').on('keyup', reportUserActivity);
+
+	// Run an interval every 250 milliseconds instead of stuffing everything into
+	// the mousemove/touchmove function itself, to prevent performance degradation.
+	// `this.reportUserActivity` simply sets this.userActivity_ to true, which
+	// then gets picked up by this loop
+	// http://ejohn.org/blog/learning-from-twitter/
+
+	/** @this Player */
+	const activityCheck = function() {
+		// Check to see if mouse/touch activity has happened
+		if (!isUserActive) {
+			return;
+		}
+
+		// Reset the activity tracker
+		isUserActive = false;
+
+		// If the user state was inactive, set the state to active
+		$('.player_extra_upper').removeClass('vjs-user-inactive');
+
+		// Clear any existing inactivity timeout to start the timer over
+		clearTimeout(inactivityTimeout);
+
+		// In <timeout> milliseconds, if no more activity has occurred the
+		// user will be considered inactive
+		inactivityTimeout = setTimeout(function() {
+			// Protect against the case where the inactivityTimeout can trigger just
+			// before the next user activity is picked up by the activity check loop
+			// causing a flicker
+			if (!isUserActive) {
+				$('.player_extra_upper').addClass('vjs-user-inactive');
+			}
+		}, 2000);
+
+	};
+
+	activityCheckInterval = setInterval(activityCheck, 250);
+}
+
+function stopListeningForUserActivityInMangaReader() {
+	clearInterval(activityCheckInterval);
+	clearInterval(mouseInProgress);
+	clearTimeout(inactivityTimeout);
+}
+
+function buildMangaReaderBar(current, total) {
+	var c = '<div class="manga-bar video-js vjs-has-started vjs-playing vjs-default-skin vjs-big-play-centered vjs-controls-enabled vjs-workinghover vjs-v8 vjs-has-started player-dimensions vjs-user-active'+(document.fullscreenElement==$('#overlay-content')[0] ? ' vjs-fullscreen' : '')+'">';
+	c += '		<div class="vjs-control-bar" dir="ltr">';
+	c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div></div>';
+	c += '		</div>';
+	c += '		<div class="vjs-current-time vjs-time-control vjs-control">'+current+' / '+total+'</div>';
+	if (!isEmbedPage()) {
+		c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button><button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
+	}
+	if (mangaHasMusic()) {
+		c += '		<div class="vjs-volume-panel vjs-control vjs-volume-panel-vertical"><button class="vjs-mute-control vjs-control vjs-button vjs-vol-3" type="button" title="Silencia" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Silencia</span></button></div>';
+	}
+	c += '		<button class="vjs-config-button vjs-control vjs-button" type="button" aria-disabled="false" title="Configuració del lector de manga" onclick="showMangaReaderConfig();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Configuració del lector de manga</span></button>';
+	c += '		<button class="vjs-fullscreen-control vjs-control vjs-button" type="button" title="Pantalla completa" aria-disabled="false" onclick="requestMangaReaderFullscreen();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Pantalla completa</span></button>';
+	c += '</div>';
+
+	return c;
+}
+
 function initializeReader(type) {
 	var pagesCode = '';
 	pagesRead = new Array(currentSourceData.pages.length);
@@ -446,7 +621,10 @@ function initializeReader(type) {
 		initialPosition = currentSourceData.initial_position;
 	}
 	pagesRead[initialPosition-1]=true;
+	$('.player_extra_upper').removeClass('vjs-user-inactive');
+	$('#overlay-content .manga-reader').remove();
 	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'"><div class="swiper-wrapper">'+pagesCode+'</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
+	$('#overlay-content').on('fullscreenchange', (e) => handleMangaReaderFullscreen(e));
 	
 	new Swiper('.player-popup', {
 		initialSlide: initialPosition-1,
@@ -466,12 +644,9 @@ function initializeReader(type) {
 		pagination: {
 			el: '.swiper-pagination',
 			clickable: true,
-			type: "progressbar",
+			type: "custom",
 			renderCustom: function (swiper, current, total) {
-				return '<div class="manga-bar"><div>AAA</div>'+current + ' of ' + total+'<div>BBBBB</div></div>';
-			},
-			renderProgressbar: function (progressbarFillClass) {
-				return '<span class="' + progressbarFillClass + '"></span>';
+				return buildMangaReaderBar(current, total);
 			},
 		},
 		navigation: {
@@ -484,6 +659,7 @@ function initializeReader(type) {
 			},
 		},
 	});
+	listenForUserActivityInMangaReader();
 }
 
 function initializeFileDisplayer(){
@@ -940,6 +1116,10 @@ function hideEndCard() {
 function closeOverlay() {
 	addLog('Closed');
 	isDisplayerClosed = true;
+	stopListeningForUserActivityInMangaReader();
+	if (document.fullscreenElement==$('#overlay-content')[0]) {
+		document.exitFullscreen();
+	}
 	sendCurrentFileTracking();
 	shutdownFileDisplayer(true);
 	if (!isEmbedPage()) {

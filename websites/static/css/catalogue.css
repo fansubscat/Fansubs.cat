@@ -118,6 +118,10 @@
 	align-items: center;
 }
 
+.manga-reader .manga-page {
+	font-size: 1rem;
+}
+
 .manga-reader .manga-page img {
 	max-width: 100%;
 	max-height: 100%;
@@ -175,20 +179,43 @@
 	margin: 0 auto;
 }
 
+.manga-reader .swiper-pagination-custom {
+	bottom: 0;
+}
+
+.manga-reader-rtl .video-js .vjs-play-progress:before {
+	right: auto;
+	left: -.5em;
+}
+
+.manga-reader-rtl .vjs-progress-control {
+	direction: rtl;
+}
+
+.video-js .vjs-config-button .vjs-icon-placeholder:before {
+	content: '\f013';
+}
+
+.manga-reader .video-js.vjs-fullscreen {
+	height: 7.5rem !important;
+}
+
 .manga-bar {
 	display: flex;
 	visibility: visible;
 	opacity: 1;
-	height: 7.5rem;
+	width: 100%;
+	height: 7.5rem !important;
 	padding: 1.5rem;
-	font-size: 1.5rem;
+	font-size: 1rem;
 	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
 	background: linear-gradient(to bottom, rgba(var(--always-negative-color),0) 0%, rgba(var(--always-negative-color),1) 100%);
+	user-select: none;
 }
 
 .image-loading {
 	direction: ltr;
-	font-size: 2rem;
+	font-size: 3.2em;
 	color: rgb(var(--primary-color));
 	padding: 4rem;
 }
@@ -494,13 +521,13 @@
 	cursor: none;
 }
 
-.video-js.vjs-has-started.vjs-user-inactive.vjs-playing .player_extra_upper {
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing .player_extra_upper, .player_extra_upper.vjs-user-inactive {
 	opacity: 0;
 	pointer-events: none;
 	transform: translateY(-100%);
 }
 
-.video-js.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {
+.video-js.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar, .player_extra_upper.vjs-user-inactive + .manga-reader .manga-bar {
 	transform: translateY(100%);
 	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
 }
@@ -2251,7 +2278,7 @@ input:checked + .viewed-slider:before {
 		background-color: rgb(var(--primary-color-hover));
 	}
 
-	.vjs-button:hover, .video-js .vjs-chromecast-button:hover {
+	.vjs-button:hover {
 		color: rgba(var(--always-positive-color), 0.8);
 	}
 
@@ -2260,6 +2287,10 @@ input:checked + .viewed-slider:before {
 	}
 
 	.video-js .vjs-chromecast-button:hover {
+		cursor:pointer;
+	}
+
+	.video-js .vjs-config-button:hover {
 		cursor:pointer;
 	}
 
@@ -2301,6 +2332,10 @@ input:checked + .viewed-slider:before {
 
 	.empty-divisions:hover {
 		background-color: rgba(var(--neutral-color), 0.3);
+	}
+
+	.manga-reader .manga-page {
+		cursor: pointer;
 	}
 }
 
@@ -2583,7 +2618,7 @@ input:checked + .viewed-slider:before {
 		font-size: 2.5rem;
 	}
 
-	.video-js, .player_extra_upper {
+	.video-js, .player_extra_upper, .manga-reader .manga-page {
 		font-size: 0.7rem;
 	}
 
