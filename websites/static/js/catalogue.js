@@ -19,6 +19,7 @@ var hasBeenCasted = false;
 var hasJumpedToInitialPosition = false;
 var lastDoubleClickStart = 0;
 var isCheckingAsSeenProgrammatically = false;
+var pagesRead = [];
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -253,13 +254,22 @@ function getPlayerPlayedSeconds() {
 }
 
 function getReaderCurrentPage() {
-	//TODO IMPLEMENT READER
-	return 0;
+	var elements = $('.player-popup');
+	if (elements.length>0) {
+		return elements[0].swiper.activeIndex+1;
+	} else {
+		return 0;
+	}
 }
 
 function getReaderReadPages() {
-	//TODO IMPLEMENT READER
-	return 0;
+	var result = 0;
+	for (var i=0;i<pagesRead.length;i++) {
+		if (pagesRead[i]) {
+			result++;
+		}
+	}
+	return result;
 }
 
 function sendCurrentFileTracking(){
@@ -401,13 +411,45 @@ function getCoverImageUrlForChromecast() {
 	return currentSourceData.cover;
 }
 
+function imageLoaded(image) {
+	var element = $(image);
+	element.css({"width": "auto", "height": "auto"});
+	element.parent().find('.image-loading').addClass('hidden');
+	element.parent().find('.image-error').addClass('hidden');
+}
+
+function imageError(image) {
+	var element = $(image);
+	element.css({"width": "0", "height": "0"});
+	element.parent().find('.image-loading').addClass('hidden');
+	element.parent().find('.image-error').removeClass('hidden');
+}
+
+function imageReload(button) {
+	var element = $(button);
+	var image = element.parent().parent().find('img')[0];
+	$(image).css({"width": "0", "height": "0"});
+	$(image).parent().find('.image-loading').removeClass('hidden');
+	$(image).parent().find('.image-error').addClass('hidden');
+	image.src=image.src;
+}
+
 function initializeReader(type) {
 	var pagesCode = '';
+	pagesRead = new Array(currentSourceData.pages.length);
 	for (var i=0; i<currentSourceData.pages.length;i++) {
-		pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" loading="lazy"></div>';
+		pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="lazy" onload="imageLoaded(this);" onerror="imageError(this);"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">No s’ha pogut carregar aquesta imatge.<br><button class="normal-button" onclick="imageReload(this);">Torna-ho a provar</button></div></div>';
+		pagesRead[i]=false;
 	}
+	var initialPosition = 1;
+	if (currentSourceData.initial_position>0 && currentSourceData.initial_position<currentSourceData.pages.length) {
+		initialPosition = currentSourceData.initial_position;
+	}
+	pagesRead[initialPosition-1]=true;
 	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'"><div class="swiper-wrapper">'+pagesCode+'</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
+	
 	new Swiper('.player-popup', {
+		initialSlide: initialPosition-1,
 		slidesPerView: type=='webtoon' ? 'auto' : 1,
 		direction: type=='webtoon' ? 'vertical' : 'horizontal',
 		freeMode: type=='webtoon' ? true : false,
@@ -435,6 +477,11 @@ function initializeReader(type) {
 		navigation: {
 			nextEl: '.swiper-button-next',
 			prevEl: '.swiper-button-prev',
+		},
+		on: {
+			slideChange: function () {
+				pagesRead[$('.player-popup')[0].swiper.activeIndex]=true;
+			},
 		},
 	});
 }
@@ -640,7 +687,7 @@ function initializePlayer(){
 			$('#overlay-content > .player_extra_upper').addClass('hidden');
 			//Install the top, movement and ended bar
 			if ($('.video-js .player_extra_upper').length==0) {
-				$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentSourceData.title).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
+				$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentSourceData.title).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
 				$('<div class="player_extra_movement"><div class="player_extra_backward"><i class="fas fa-backward"></i><span><span class="player_extra_backward_time">0</span> s</span></div><div class="player_extra_forward"><i class="fas fa-forward"></i><span><span class="player_extra_forward_time">0</span> s</span></div></div>').appendTo(".video-js");
 			} else {
 				$('.player_extra_title').html(currentSourceData.title);
@@ -1584,7 +1631,7 @@ $(document).ready(function() {
 			$('#overlay').removeClass('hidden');
 			
 			if ($('#overlay-content > .player_extra_upper').length==0) {
-				$('<div class="player_extra_upper"><div class="player_extra_title">'+$(this).attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
+				$('<div class="player_extra_upper"><div class="player_extra_title">'+$(this).attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
 			} else {
 				$('#overlay-content > .player_extra_upper').removeClass('hidden');
 				$('.player_extra_title').html($(this).attr('data-title'));
@@ -1816,7 +1863,7 @@ $(document).ready(function() {
 		$('#overlay').removeClass('hidden');
 		
 		if ($('#overlay-content > .player_extra_upper').length==0) {
-			$('<div class="player_extra_upper"><div class="player_extra_title">'+$('.embed-data').attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-fw fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
+			$('<div class="player_extra_upper"><div class="player_extra_title">'+$('.embed-data').attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
 		} else {
 			$('#overlay-content > .player_extra_upper').removeClass('hidden');
 			$('.player_extra_title').html($('.embed-data').attr('data-title'));

@@ -234,7 +234,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		//Paste into canvas
 		imagecopy($image, $background, 0, 0, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 	} else {
-		imagefttext($image, 30, 0, 333, 350, imagecolorallocate($image, 0xCC, 0xCC, 0xCC), FONT_REGULAR, "No hi ha res vist en aquest període.");
+		imagefttext($image, 26, 0, 300, 350, imagecolorallocate($image, 0xCC, 0xCC, 0xCC), FONT_REGULAR, "No hi ha res vist en aquest període.");
 	}
 
 
