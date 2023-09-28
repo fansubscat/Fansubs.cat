@@ -9,10 +9,10 @@ var cookieOptions = {
 	domain: ".fansubs.online"
 };
 
-function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray, scrollable=false) {
+function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray, scrollable=false, keepNonScrollable=false) {
 	$('html').addClass('page-no-overflow');
 	$('#dialog-overlay').remove();
-	var code = '<div data-nosnippet id="dialog-overlay" class="flex'+(blurred ? ' dialog-overlay-blurred' : '')+'"><div id="dialog-overlay-content"'+(scrollable ? ' class="scrollable-dialog"' : '')+'>';
+	var code = '<div data-nosnippet id="dialog-overlay" class="flex'+(blurred ? ' dialog-overlay-blurred' : '')+(keepNonScrollable ? ' dialog-overlay-keep-non-scroll' : '')+'"><div id="dialog-overlay-content"'+(scrollable ? ' class="scrollable-dialog"' : '')+'>';
 	if (closeable) {
 		code += '<a class="dialog-close-button fa fa-fw fa-times" title="Tanca" onclick="closeCustomDialog();"></a>'
 	}
@@ -44,8 +44,10 @@ function showAlert(title, desc) {
 }
 
 function closeCustomDialog() {
+	if (!$('#dialog-overlay').hasClass('dialog-overlay-keep-non-scroll')) {
+		$('html').removeClass('page-no-overflow');
+	}
 	$('#dialog-overlay').remove();
-	$('html').removeClass('page-no-overflow');
 }
 
 function getBaseUrl() {

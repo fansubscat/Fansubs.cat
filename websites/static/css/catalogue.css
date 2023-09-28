@@ -152,13 +152,33 @@
 }
 
 .manga-reader .swiper-button-prev, .manga-reader.swiper-rtl .swiper-button-next {
+	background: rgba(var(--always-negative-color),0.8);
+	border-radius: 0.5rem;
+	filter: brightness(1.2);
 	left: 1.6rem;
 	right: auto;
+	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
 }
 
 .manga-reader .swiper-button-next, .manga-reader.swiper-rtl .swiper-button-prev {
+	background: rgba(var(--always-negative-color),0.8);
+	border-radius: 0.5rem;
+	filter: brightness(1.2);
 	right: 1.6rem;
 	left: auto;
+	transition: opacity .4s ease-in-out, transform .4s ease-in-out;
+}
+
+.player_extra_upper.vjs-user-inactive + .manga-reader .swiper-button-prev, .player_extra_upper.vjs-user-inactive + .manga-reader.swiper-rtl .swiper-button-next {
+	opacity: 0;
+	pointer-events: none;
+	transform: translateX(-200%);
+}
+
+.player_extra_upper.vjs-user-inactive + .manga-reader .swiper-button-next, .player_extra_upper.vjs-user-inactive + .manga-reader.swiper-rtl .swiper-button-prev {
+	opacity: 0;
+	pointer-events: none;
+	transform: translateX(200%);
 }
 
 .manga-reader .swiper-pagination-progressbar {
@@ -2198,6 +2218,33 @@ input:checked + .viewed-slider:before {
 	text-align: left;
 }
 
+.reader-settings-data-element {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	align-items: center;
+	text-align: left;
+}
+
+.settings-combo {
+	width: auto;
+}
+
+.reader-settings-data-header {
+	font-size: 1.7rem;
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+
+.reader-settings-data-header-title {
+	font-family: "lexend_deca_bold", sans-serif;
+}
+
+.reader-settings-data-header-subtitle {
+	font-size: 1.4rem;
+	margin-top: 0.5rem;
+}
+
 /* TODO */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2336,6 +2383,12 @@ input:checked + .viewed-slider:before {
 
 	.manga-reader .manga-page {
 		cursor: pointer;
+	}
+
+	.player_extra_upper.vjs-user-inactive + .manga-reader .swiper-button-prev:hover, .player_extra_upper.vjs-user-inactive + .manga-reader .swiper-button-next:hover {
+		opacity: 1;
+		pointer-events: auto;
+		transform: none;
 	}
 }
 
@@ -2920,6 +2973,18 @@ input:checked + .viewed-slider:before {
 	.hentai-button, .filter-button {
 		font-size: 1.1rem;
 	}
+
+	.settings-combo {
+		margin-left: 1rem;
+	}
+
+	.reader-settings-data-header {
+		font-size: 1.5rem;
+	}
+
+	.reader-settings-data-header-subtitle {
+		font-size: 1.3rem;
+	}
 }
 
 @media (max-width: 600px){
@@ -2967,5 +3032,9 @@ input:checked + .viewed-slider:before {
 
 	.hentai-button, .filter-button {
 		margin-right: 0.1rem;
+	}
+
+	.settings-combo {
+		width: 8rem;
 	}
 }

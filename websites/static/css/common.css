@@ -609,6 +609,21 @@ select:not(.date-month) {
 	border-radius: 0.7rem;
 }
 
+.cancel-button {
+	font-family: inherit;
+	border: none;
+	cursor: pointer;
+	text-align: center;
+	margin-top: 1.5rem;
+	font-weight: normal;
+	display: inline-block;
+	background: rgb(var(--neutral-color));
+	color: rgb(var(--positive-color));
+	padding: 0.7rem 2.2rem;
+	font-size: 1.5rem;
+	border-radius: 0.7rem;
+}
+
 .error-page a, a.secondary-link {
 	color: rgb(var(--secondary-color));
 }
@@ -1573,8 +1588,16 @@ input:checked + .slider:before {
 	margin-bottom: 2rem;
 }
 
+#dialog-message {
+	margin: 0 -3rem;
+}
+
 .scrollable-dialog #dialog-message {
 	overflow-y: scroll;
+}
+
+#dialog-message hr {
+	border: 0.1rem solid rgb(var(--primary-color));
 }
 
 #dialog-buttonbar {
@@ -1665,6 +1688,10 @@ input:checked + .slider:before {
 
 	.normal-button:hover {
 		background-color: rgb(var(--primary-color-hover));
+	}
+
+	.cancel-button:hover {
+		filter: brightness(0.8);
 	}
 
 	.error-page a:hover {
@@ -2033,7 +2060,7 @@ input:checked + .slider:before {
 		margin-bottom: 1rem;
 	}
 
-	.normal-button, .login-button {
+	.normal-button, .login-button, .cancel-button {
 		font-size: 1.4rem;
 	}
 

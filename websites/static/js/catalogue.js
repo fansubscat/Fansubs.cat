@@ -447,39 +447,73 @@ function mangaHasMusic() {
 }
 
 function requestMangaReaderFullscreen() {
-	if (document.fullscreenElement==$('#overlay-content')[0]) {
+	if (document.fullscreenElement==$('.main-container')[0]) {
 		document.exitFullscreen();
 	} else {
-		$('#overlay-content')[0].requestFullscreen();
+		$('.main-container')[0].requestFullscreen();
 	}
 }
 
 function handleMangaReaderFullscreen(e) {
-	if (document.fullscreenElement==$('#overlay-content')[0]) {
+	if (document.fullscreenElement==$('.main-container')[0]) {
 		$('.manga-bar').addClass('vjs-fullscreen');
 	} else {
 		$('.manga-bar').removeClass('vjs-fullscreen');
 	}
 }
 
+function applyMangaReaderType(type) {
+	if (type!=currentSourceData.reader_type) {
+		currentSourceData.reader_type=type;
+		sendCurrentFileTracking(); //sync with server
+		//Update this like if they came from the server
+		currentSourceData.initial_position = getDisplayerCurrentPosition();
+		currentSourceData.initial_progress = currentSourceData.initial_progress+getDisplayerCurrentProgress();
+		stopListeningForUserActivityInMangaReader();
+
+		if ($('body.user-logged-in').length==0) {
+			//Set cookie preference
+			Cookies.set('manga_reader_type', (type=='strip' ? 2 : (type=='ltr' ? 1 : 0)), cookieOptions, {secure: true});
+		} else {
+			//Update on server
+			var values = {
+				'manga_reader_type': (type=='strip' ? 2 : (type=='ltr' ? 1 : 0)),
+				'only_manga_reader_type' : 1
+			};
+			$.post({
+				url: USERS_URL+"/do_save_settings.php",
+				data: values,
+				xhrFields: {
+					withCredentials: true
+				},
+			});
+		}
+
+		initializeReader(type);
+	}
+}
+
 function showMangaReaderConfig() {
-	showCustomDialog('Configuració', 'Lector de manga: Tria quin lector de manga vols utilitzar: sentit oriental (de dreta a esquerra), sentit occidental (d’esquerra a dreta) o tira vertical.<br><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de Fansubs.cat per al <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a>.', null, false, true, [
+	var disabled = (currentSourceData.default_reader_type=='strip');
+	showCustomDialog('Configuració', '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">Lector de manga</div><div class="reader-settings-data-header-subtitle">'+(disabled ? 'Aquest manga no permet triar cap ordre de lectura diferent del mode de tira vertical.' : 'Tria quin lector de manga vols utilitzar: sentit oriental (de dreta a esquerra), sentit occidental (d’esquerra a dreta) o tira vertical.')+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="rtl"'+(!disabled && currentSourceData.reader_type=='rtl' ? ' selected' : '')+'>Sentit oriental</option><option value="ltr"'+(!disabled && currentSourceData.reader_type=='ltr' ? ' selected' : '')+'>Sentit occidental</option><option value="strip"'+(disabled || currentSourceData.reader_type=='strip' ? ' selected' : '')+'>Tira vertical</option></select></div><br><hr><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de Fansubs.cat per al <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a>.', null, true, true, [
 		{
 			text: 'D’acord',
 			class: 'normal-button',
 			onclick: function(){
-				//TODO CHANGE MODE
+				if (!$('#reader-type').prop('disabled')) {
+					applyMangaReaderType($('#reader-type').val());
+				}
 				closeCustomDialog();
 			}
 		},
 		{
 			text: 'Cancel·la',
-			class: 'normal-button',
+			class: 'cancel-button',
 			onclick: function(){
 				closeCustomDialog();
 			}
 		}
-	]);
+	], false, true);
 }
 
 function reportUserActivity() {
@@ -522,7 +556,7 @@ function listenForUserActivityInMangaReader() {
 	$('#overlay-content').on('mousemove', handleMouseMove);
 	//$('#overlay-content').on('mouseup', handleMouseUpAndMouseLeave);
 	$('#overlay-content').on('mouseleave', handleMouseUpAndMouseLeave);
-	$('#overlay-content').on('click', reportUserActivity);
+	$('#overlay-content .swiper-wrapper').on('click', reportUserActivity);
 
 /*	const controlBar = this.getChild('controlBar');
 
@@ -591,7 +625,7 @@ function stopListeningForUserActivityInMangaReader() {
 }
 
 function buildMangaReaderBar(current, total) {
-	var c = '<div class="manga-bar video-js vjs-has-started vjs-playing vjs-default-skin vjs-big-play-centered vjs-controls-enabled vjs-workinghover vjs-v8 vjs-has-started player-dimensions vjs-user-active'+(document.fullscreenElement==$('#overlay-content')[0] ? ' vjs-fullscreen' : '')+'">';
+	var c = '<div class="manga-bar video-js vjs-has-started vjs-playing vjs-default-skin vjs-big-play-centered vjs-controls-enabled vjs-workinghover vjs-v8 vjs-has-started player-dimensions vjs-user-active'+(document.fullscreenElement==$('.main-container')[0] ? ' vjs-fullscreen' : '')+'">';
 	c += '		<div class="vjs-control-bar" dir="ltr">';
 	c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div></div>';
 	c += '		</div>';
@@ -624,13 +658,13 @@ function initializeReader(type) {
 	$('.player_extra_upper').removeClass('vjs-user-inactive');
 	$('#overlay-content .manga-reader').remove();
 	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'"><div class="swiper-wrapper">'+pagesCode+'</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
-	$('#overlay-content').on('fullscreenchange', (e) => handleMangaReaderFullscreen(e));
+	$('.main-container').on('fullscreenchange', (e) => handleMangaReaderFullscreen(e));
 	
 	new Swiper('.player-popup', {
 		initialSlide: initialPosition-1,
-		slidesPerView: type=='webtoon' ? 'auto' : 1,
-		direction: type=='webtoon' ? 'vertical' : 'horizontal',
-		freeMode: type=='webtoon' ? true : false,
+		slidesPerView: type=='strip' ? 'auto' : 1,
+		direction: type=='strip' ? 'vertical' : 'horizontal',
+		freeMode: type=='strip' ? true : false,
 		effect: 'slide',
 		mousewheel: {
 			enabled: true,
@@ -655,7 +689,9 @@ function initializeReader(type) {
 		},
 		on: {
 			slideChange: function () {
-				pagesRead[$('.player-popup')[0].swiper.activeIndex]=true;
+				if ($('.player-popup').length>0) {
+					pagesRead[$('.player-popup')[0].swiper.activeIndex]=true;
+				}
 			},
 		},
 	});
@@ -1117,7 +1153,7 @@ function closeOverlay() {
 	addLog('Closed');
 	isDisplayerClosed = true;
 	stopListeningForUserActivityInMangaReader();
-	if (document.fullscreenElement==$('#overlay-content')[0]) {
+	if (document.fullscreenElement==$('.main-container')[0]) {
 		document.exitFullscreen();
 	}
 	sendCurrentFileTracking();

@@ -172,7 +172,6 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 						<div class="version-content<?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version-content-<?php echo $version['id']; ?>">
 <?php
-	$position = 1;
 	$resulte = query_episodes_for_series_version($series['id'], $version['id']);
 	$episodes = array();
 	while ($row = mysqli_fetch_assoc($resulte)) {
@@ -189,6 +188,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 		$last_division_id = -1;
 		$last_division_name = "";
 		$current_division_episodes = array();
+		$position = 1;
 		foreach ($episodes as $row) {
 			if ((!empty($row['division_number']) ? floatval($row['division_number']) : 'altres')!=$last_division_number){
 				if ($last_division_number!=-1) {
@@ -205,7 +205,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 				$current_division_episodes = array();
 			}
 
+			$row['position'] = $position;
 			array_push($current_division_episodes, $row);
+			$position++;
 		}
 		array_push($divisions, array(
 			'division_id' => $last_division_id,
@@ -287,11 +289,10 @@ while ($version = mysqli_fetch_assoc($result)) {
 			}
 			foreach ($divisions[0]['episodes'] as $episode) {
 				if ($divisions[0]['division_id']=='extras') {
-					print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
+					print_extra($version['fansub_name'], $episode, $version['id'], $series, $episode['position']);
 				} else {
-					print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
+					print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $episode['position']);
 				}
-				$position++;
 			}
 			if ($version['status']!=1 && !$sort_order) {
 					print_fake_episode($version['status']);
@@ -375,11 +376,10 @@ while ($version = mysqli_fetch_assoc($result)) {
 					}
 					foreach ($division['episodes'] as $episode) {
 						if ($division['division_id']=='extras') {
-							print_extra($version['fansub_name'], $episode, $version['id'], $series, $position);
+							print_extra($version['fansub_name'], $episode, $version['id'], $series, $episode['position']);
 						} else {
-							print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $position);
+							print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $episode['position']);
 						}
-						$position++;
 					}
 					if ($version['status']!=1 && !$sort_order && $division['available_episodes']<count($division['episodes'])) {
 						print_fake_episode($version['status']);
