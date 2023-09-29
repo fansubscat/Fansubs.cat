@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 8.2.1 <http://videojs.com/>
+ * Video.js 8.5.2 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 })(this, (function () { 'use strict';
 
-  var version$5 = "8.2.1";
+  var version$5 = "8.5.2";
 
   /**
    * An Object that contains lifecycle hooks as keys which point to an array
@@ -30,7 +30,7 @@
    * Get a list of hooks for a specific lifecycle
    *
    * @param  {string} type
-   *         the lifecyle to get hooks from
+   *         the lifecycle to get hooks from
    *
    * @param  {Function|Function[]} [fn]
    *         Optionally add a hook (or hooks) to the lifecycle that your are getting.
@@ -119,11 +119,7 @@
   // browser API methods
   const apiMap = [['requestFullscreen', 'exitFullscreen', 'fullscreenElement', 'fullscreenEnabled', 'fullscreenchange', 'fullscreenerror', 'fullscreen'],
   // WebKit
-  ['webkitRequestFullscreen', 'webkitExitFullscreen', 'webkitFullscreenElement', 'webkitFullscreenEnabled', 'webkitfullscreenchange', 'webkitfullscreenerror', '-webkit-full-screen'],
-  // Mozilla
-  ['mozRequestFullScreen', 'mozCancelFullScreen', 'mozFullScreenElement', 'mozFullScreenEnabled', 'mozfullscreenchange', 'mozfullscreenerror', '-moz-full-screen'],
-  // Microsoft
-  ['msRequestFullscreen', 'msExitFullscreen', 'msFullscreenElement', 'msFullscreenEnabled', 'MSFullscreenChange', 'MSFullscreenError', '-ms-fullscreen']];
+  ['webkitRequestFullscreen', 'webkitExitFullscreen', 'webkitFullscreenElement', 'webkitFullscreenEnabled', 'webkitfullscreenchange', 'webkitfullscreenerror', '-webkit-full-screen']];
   const specApi = apiMap[0];
   let browserApi;
 
@@ -230,7 +226,7 @@
      * `undefined`
      *
      * @namespace
-     * @param    {(*|*[])} args
+     * @param    {...*} args
      *           One or more messages or objects that should be logged.
      */
     const log = function (...args) {
@@ -365,7 +361,7 @@
     /**
      * Logs error messages. Similar to `console.error`.
      *
-     * @param {(*|*[])} args
+     * @param {...*} args
      *        One or more messages or objects that should be logged as an error
      */
     log.error = (...args) => logByType('error', level, args);
@@ -373,7 +369,7 @@
     /**
      * Logs warning messages. Similar to `console.warn`.
      *
-     * @param {(*|*[])} args
+     * @param {...*} args
      *        One or more messages or objects that should be logged as a warning.
      */
     log.warn = (...args) => logByType('warn', level, args);
@@ -382,7 +378,7 @@
      * Logs debug messages. Similar to `console.debug`, but may also act as a comparable
      * log if `console.debug` is not available
      *
-     * @param {(*|*[])} args
+     * @param {...*} args
      *        One or more messages or objects that should be logged as debug.
      */
     log.debug = (...args) => logByType('debug', level, args);
@@ -540,6 +536,23 @@
   }
 
   /**
+   * Returns an array of values for a given object
+   *
+   * @param  {Object} source - target object
+   * @return {Array<unknown>} - object values
+   */
+  function values$1(source = {}) {
+    const result = [];
+    for (const key in source) {
+      if (source.hasOwnProperty(key)) {
+        const value = source[key];
+        result.push(value);
+      }
+    }
+    return result;
+  }
+
+  /**
    * Object.defineProperty but "lazy", which means that the value is only set after
    * it is retrieved the first time, rather than being set right away.
    *
@@ -576,6 +589,7 @@
     isObject: isObject$1,
     isPlain: isPlain,
     merge: merge$2,
+    values: values$1,
     defineLazyProperty: defineLazyProperty
   });
 
@@ -646,7 +660,7 @@
    * This will also be `true` for Chrome on iOS, which will have different support
    * as it is actually Safari under the hood.
    *
-   * Depreacted, as the behaviour to not match Edge was to prevent Legacy Edge's UA matching.
+   * Deprecated, as the behaviour to not match Edge was to prevent Legacy Edge's UA matching.
    * IS_CHROMIUM should be used instead.
    * "Chromium but not Edge" could be explicitly tested with IS_CHROMIUM && !IS_EDGE
    *
@@ -667,7 +681,7 @@
   /**
    * The detected Google Chrome version - or `null`.
    * This has always been the _Chromium_ version, i.e. would return on Chromium Edge.
-   * Depreacted, use CHROMIUM_VERSION instead.
+   * Deprecated, use CHROMIUM_VERSION instead.
    *
    * @static
    * @deprecated
@@ -741,7 +755,7 @@
     IS_WINDOWS = UAD.platform === 'Windows';
   }
 
-  // If the broser is not Chromium, either userAgentData is not present which could be an old Chromium browser,
+  // If the browser is not Chromium, either userAgentData is not present which could be an old Chromium browser,
   //  or it's a browser that has added userAgentData since that we don't have tests for yet. In either case,
   // the checks need to be made agiainst the regular userAgent string.
   if (!IS_CHROMIUM) {
@@ -987,7 +1001,7 @@
   /**
    * Injects text into an element, replacing any existing contents entirely.
    *
-   * @param  {Element} el
+   * @param  {HTMLElement} el
    *         The element to add text content into
    *
    * @param  {string} text
@@ -1163,16 +1177,17 @@
     // known boolean attributes
     // we can check for matching boolean properties, but not all browsers
     // and not all tags know about these attributes, so, we still want to check them manually
-    const knownBooleans = ',' + 'autoplay,controls,playsinline,loop,muted,default,defaultMuted' + ',';
+    const knownBooleans = ['autoplay', 'controls', 'playsinline', 'loop', 'muted', 'default', 'defaultMuted'];
     if (tag && tag.attributes && tag.attributes.length > 0) {
       const attrs = tag.attributes;
       for (let i = attrs.length - 1; i >= 0; i--) {
         const attrName = attrs[i].name;
+        /** @type {boolean|string} */
         let attrVal = attrs[i].value;
 
         // check for known booleans
         // the matching element property will return a value for typeof
-        if (typeof tag[attrName] === 'boolean' || knownBooleans.indexOf(',' + attrName + ',') !== -1) {
+        if (knownBooleans.includes(attrName)) {
           // the value of an included boolean attribute is typically an empty
           // string ('') which would equal false if we just check for a false value.
           // we also don't want support bad code like autoplay='false'
@@ -1527,7 +1542,7 @@
   /**
    * Check if an event was a single left click.
    *
-   * @param  {Event} event
+   * @param  {MouseEvent} event
    *         Event object.
    *
    * @return {boolean}
@@ -1645,6 +1660,32 @@
     return '';
   }
 
+  /**
+   * Copy document style sheets to another window.
+   *
+   * @param    {Window} win
+   *           The window element you want to copy the document style sheets to.
+   *
+   */
+  function copyStyleSheetsToWindow(win) {
+    [...document.styleSheets].forEach(styleSheet => {
+      try {
+        const cssRules = [...styleSheet.cssRules].map(rule => rule.cssText).join('');
+        const style = document.createElement('style');
+        style.textContent = cssRules;
+        win.document.head.appendChild(style);
+      } catch (e) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = styleSheet.type;
+        // For older Safari this has to be the string; on other browsers setting the MediaList works
+        link.media = styleSheet.media.mediaText;
+        link.href = styleSheet.href;
+        win.document.head.appendChild(link);
+      }
+    });
+  }
+
   var Dom = /*#__PURE__*/Object.freeze({
     __proto__: null,
     isReal: isReal,
@@ -1675,7 +1716,8 @@
     isSingleLeftClick: isSingleLeftClick,
     $: $,
     $$: $$,
-    computedStyle: computedStyle
+    computedStyle: computedStyle,
+    copyStyleSheetsToWindow: copyStyleSheetsToWindow
   });
 
   /**
@@ -1783,7 +1825,7 @@
    */
 
   /**
-   * Create a DOM syle element given a className for it.
+   * Create a DOM style element given a className for it.
    *
    * @param {string} className
    *        The className to add to the created style element.
@@ -2727,7 +2769,7 @@
   /**
    * Adds a callback to run after the evented mixin applied.
    *
-   * @param  {Object} object
+   * @param  {Object} target
    *         An object to Add
    * @param  {Function} callback
    *         The callback to run.
@@ -2998,7 +3040,7 @@
       } else {
         // TODO: This wrapper is incorrect! It should only
         //       remove the wrapper for the event type that called it.
-        //       Instead all listners are removed on the first trigger!
+        //       Instead all listeners are removed on the first trigger!
         //       see https://github.com/videojs/video.js/issues/5962
         const wrapper = (...largs) => {
           this.off(target, type, wrapper);
@@ -3557,11 +3599,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   * @typedef { import('./event-target').Event} Event
-  */
-
-  /**
    * Base class for all UI Components.
    * Components are UI objects which represent both a javascript object and an element
    * in the DOM. They can be children of other components, and can have
@@ -3581,14 +3618,14 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
      *        The key/value store of component options.
      *
      * @param {Object[]} [options.children]
-     *        An array of children objects to intialize this component with. Children objects have
+     *        An array of children objects to initialize this component with. Children objects have
      *        a name property that will be used if more than one component of the same type needs to be
      *        added.
      *
@@ -3745,8 +3782,11 @@
      * @param {string|Event|Object} event
      *        The name of the event, an `Event`, or an object with a key of type set to
      *        an event name.
+     *
+     * @param {Object} [hash]
+     *        Optionally extra argument to pass through to an event listener
      */
-    trigger(event) {}
+    trigger(event, hash) {}
 
     /**
      * Dispose of the `Component` and all child components.
@@ -3824,7 +3864,7 @@
     /**
      * Return the {@link Player} that the `Component` has attached to.
      *
-     * @return {Player}
+     * @return { import('./player').default }
      *         The player that this `Component` has attached to.
      */
     player() {
@@ -3943,7 +3983,7 @@
     }
 
     /**
-     * Handles language change for the player in components. Should be overriden by sub-components.
+     * Handles language change for the player in components. Should be overridden by sub-components.
      *
      * @abstract
      */
@@ -4045,6 +4085,53 @@
         }
       }
       return currentChild;
+    }
+
+    /**
+     * Adds an SVG icon element to another element or component.
+     *
+     * @param {string} iconName
+     *        The name of icon. A list of all the icon names can be found at 'sandbox/svg-icons.html'
+     *
+     * @param {Element} [el=this.el()]
+     *        Element to set the title on. Defaults to the current Component's element.
+     *
+     * @return {Element}
+     *        The newly created icon element.
+     */
+    setIcon(iconName, el = this.el()) {
+      // TODO: In v9 of video.js, we will want to remove font icons entirely.
+      // This means this check, as well as the others throughout the code, and
+      // the unecessary CSS for font icons, will need to be removed.
+      // See https://github.com/videojs/video.js/pull/8260 as to which components
+      // need updating.
+      if (!this.player_.options_.experimentalSvgIcons) {
+        return;
+      }
+      const xmlnsURL = 'http://www.w3.org/2000/svg';
+
+      // The below creates an element in the format of:
+      // <span><svg><use>....</use></svg></span>
+      const iconContainer = createEl('span', {
+        className: 'vjs-icon-placeholder vjs-svg-icon'
+      }, {
+        'aria-hidden': 'true'
+      });
+      const svgEl = document.createElementNS(xmlnsURL, 'svg');
+      svgEl.setAttributeNS(null, 'viewBox', '0 0 512 512');
+      const useEl = document.createElementNS(xmlnsURL, 'use');
+      svgEl.appendChild(useEl);
+      useEl.setAttributeNS(null, 'href', `#vjs-icon-${iconName}`);
+      iconContainer.appendChild(svgEl);
+
+      // Replace a pre-existing icon if one exists.
+      if (this.iconIsSet_) {
+        el.replaceChild(iconContainer, el.querySelector('.vjs-icon-placeholder'));
+      } else {
+        el.appendChild(iconContainer);
+      }
+      this.iconIsSet_ = true;
+      return iconContainer;
     }
 
     /**
@@ -4249,7 +4336,7 @@
           };
         }).filter(child => {
           // we have to make sure that child.name isn't in the techOrder since
-          // techs are registerd as Components but can't aren't compatible
+          // techs are registered as Components but can't aren't compatible
           // See https://github.com/videojs/video.js/issues/2772
           const c = Component$1.getComponent(child.opts.componentClass || toTitleCase$1(child.name));
           return c && !Tech.isTech(c);
@@ -4258,7 +4345,7 @@
     }
 
     /**
-     * Builds the default DOM class name. Should be overriden by sub-components.
+     * Builds the default DOM class name. Should be overridden by sub-components.
      *
      * @return {string}
      *         The DOM class name for this object.
@@ -4469,7 +4556,7 @@
      *         - The value of the attribute that was asked for.
      *         - Can be an empty string on some browsers if the attribute does not exist
      *           or has no value
-     *         - Most browsers will return null if the attibute does not exist or has
+     *         - Most browsers will return null if the attribute does not exist or has
      *           no value.
      *
      * @see [DOM API]{@link https://developer.mozilla.org/en-US/docs/Web/API/Element/getAttribute}
@@ -4736,7 +4823,7 @@
      * When this Component receives a `keydown` event which it does not process,
      *  it passes the event to the Player for handling.
      *
-     * @param {Event} event
+     * @param {KeyboardEvent} event
      *        The `keydown` event that caused this function to be called.
      */
     handleKeyDown(event) {
@@ -4843,7 +4930,7 @@
              * Triggered when a `Component` is tapped.
              *
              * @event Component#tap
-             * @type {Event}
+             * @type {MouseEvent}
              */
             this.trigger('tap');
             // It may be good to copy the touchend event object and change the
@@ -5007,7 +5094,7 @@
 
     /**
      * Clears an interval that gets created via `window.setInterval` or
-     * {@link Component#setInterval}. If you set an inteval via {@link Component#setInterval}
+     * {@link Component#setInterval}. If you set an interval via {@link Component#setInterval}
      * use this function instead of `window.clearInterval`. If you don't your dispose
      * listener will not get cleaned up until {@link Component#dispose}!
      *
@@ -5485,13 +5572,9 @@
    */
 
   /**
-   * @typedef { import('./time').TimeRange } TimeRange
-   */
-
-  /**
    * Compute the percentage of the media that has been buffered.
    *
-   * @param {TimeRange} buffered
+   * @param { import('./time').TimeRange } buffered
    *        The current `TimeRanges` object representing buffered time ranges
    *
    * @param {number} duration
@@ -5679,10 +5762,6 @@
    */
 
   /**
-   * @typedef { import('../tech/tech').default } Tech
-   */
-
-  /**
    * Examine a single {@link TextTrack} and return a JSON-compatible javascript object that
    * represents the {@link TextTrack}'s state.
    *
@@ -5717,7 +5796,7 @@
    * state of all {@link TextTrack}s currently configured. The return array is compatible with
    * {@link text-track-list-converter:jsonToTextTracks}.
    *
-   * @param {Tech} tech
+   * @param { import('../tech/tech').default } tech
    *        The tech object to query
    *
    * @return {Array}
@@ -5768,12 +5847,6 @@
   /**
    * @file modal-dialog.js
    */
-
-  /**
-   * @typedef { import('./player').default } Player
-   * @typedef { import('./utils/dom').ContentDescriptor} ContentDescriptor
-   */
-
   const MODAL_CLASS_NAME = 'vjs-modal-dialog';
 
   /**
@@ -5789,13 +5862,13 @@
     /**
      * Create an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
      *        The key/value store of player options.
      *
-     * @param {ContentDescriptor} [options.content=undefined]
+     * @param { import('./utils/dom').ContentDescriptor} [options.content=undefined]
      *        Provide customized content for this modal.
      *
      * @param {string} [options.description]
@@ -6071,7 +6144,7 @@
      * @fires ModalDialog#beforemodalfill
      * @fires ModalDialog#modalfill
      *
-     * @param {ContentDescriptor} [content]
+     * @param { import('./utils/dom').ContentDescriptor} [content]
      *        The same rules apply to this as apply to the `content` option.
      */
     fillWith(content) {
@@ -6147,12 +6220,12 @@
      * This does not update the DOM or fill the modal, but it is called during
      * that process.
      *
-     * @param  {ContentDescriptor} [value]
+     * @param  { import('./utils/dom').ContentDescriptor} [value]
      *         If defined, sets the internal content value to be used on the
      *         next call(s) to `fill`. This value is normalized before being
      *         inserted. To "clear" the internal content value, pass `null`.
      *
-     * @return {ContentDescriptor}
+     * @return { import('./utils/dom').ContentDescriptor}
      *         The current content of the modal dialog
      */
     content(value) {
@@ -6258,10 +6331,6 @@
    */
 
   /**
-   * @typedef { import('./track').default } Track
-   */
-
-  /**
    * Common functionaliy between {@link TextTrackList}, {@link AudioTrackList}, and
    * {@link VideoTrackList}
    *
@@ -6271,7 +6340,7 @@
     /**
      * Create an instance of this class
      *
-     * @param {Track[]} tracks
+     * @param { import('./track').default[] } tracks
      *        A list of tracks to initialize the list with.
      *
      * @abstract
@@ -6299,7 +6368,7 @@
     /**
      * Add a {@link Track} to the `TrackList`
      *
-     * @param {Track} track
+     * @param { import('./track').default } track
      *        The audio, video, or text track to add to the list.
      *
      * @fires TrackList#addtrack
@@ -6355,7 +6424,7 @@
     /**
      * Remove a {@link Track} from the `TrackList`
      *
-     * @param {Track} rtrack
+     * @param { import('./track').default } rtrack
      *        The audio, video, or text track to remove from the list.
      *
      * @fires TrackList#removetrack
@@ -6396,7 +6465,7 @@
      *
      * @param {string} id - the id of the track to get
      * @method getTrackById
-     * @return {Track}
+     * @return { import('./track').default }
      * @private
      */
     getTrackById(id) {
@@ -6442,17 +6511,13 @@
    */
 
   /**
-   * @typedef { import('./audio-track').default } AudioTrack
-   */
-
-  /**
    * Anywhere we call this function we diverge from the spec
    * as we only support one enabled audiotrack at a time
    *
    * @param {AudioTrackList} list
    *        list to work on
    *
-   * @param {AudioTrack} track
+   * @param { import('./audio-track').default } track
    *        The track to skip
    *
    * @private
@@ -6496,7 +6561,7 @@
     /**
      * Add an {@link AudioTrack} to the `AudioTrackList`.
      *
-     * @param {AudioTrack} track
+     * @param { import('./audio-track').default } track
      *        The AudioTrack to add to the list
      *
      * @fires TrackList#addtrack
@@ -6543,16 +6608,12 @@
    */
 
   /**
-   * @typedef { import('./video-track').default } VideoTrack
-   */
-
-  /**
    * Un-select all other {@link VideoTrack}s that are selected.
    *
    * @param {VideoTrackList} list
    *        list to work on
    *
-   * @param {VideoTrack} track
+   * @param { import('./video-track').default } track
    *        The track to skip
    *
    * @private
@@ -6612,7 +6673,7 @@
     /**
      * Add a {@link VideoTrack} to the `VideoTrackList`.
      *
-     * @param {VideoTrack} track
+     * @param { import('./video-track').default } track
      *        The VideoTrack to add to the list
      *
      * @fires TrackList#addtrack
@@ -6656,10 +6717,6 @@
    */
 
   /**
-   * @typedef { import('./text-track').default } TextTrack
-   */
-
-  /**
    * The current list of {@link TextTrack} for a media file.
    *
    * @see [Spec]{@link https://html.spec.whatwg.org/multipage/embedded-content.html#texttracklist}
@@ -6669,7 +6726,7 @@
     /**
      * Add a {@link TextTrack} to the `TextTrackList`
      *
-     * @param {TextTrack} track
+     * @param { import('./text-track').default } track
      *        The text track to add to the list.
      *
      * @fires TrackList#addtrack
@@ -7593,10 +7650,6 @@
    */
 
   /**
-   * @typedef { import('../tech/tech').default } Tech
-   */
-
-  /**
    * Takes a webvtt file contents and parses it into cues
    *
    * @param {string} srcContent
@@ -7697,7 +7750,7 @@
      * @param {Object} options={}
      *        Object of option names and values
      *
-     * @param {Tech} options.tech
+     * @param { import('../tech/tech').default } options.tech
      *        A reference to the tech that owns this TextTrack.
      *
      * @param {TextTrack~Kind} [options.kind='subtitles']
@@ -7927,7 +7980,7 @@
      */
     addCue(originalCue) {
       let cue = originalCue;
-      if (window.vttjs && !(originalCue instanceof window.vttjs.VTTCue)) {
+      if (cue.constructor && cue.constructor.name !== 'VTTCue') {
         cue = new window.vttjs.VTTCue(originalCue.startTime, originalCue.endTime, originalCue.text);
         for (const prop in originalCue) {
           if (!(prop in cue)) {
@@ -8139,10 +8192,6 @@
    */
 
   /**
-   * @typedef { import('../tech/tech').default } Tech
-   */
-
-  /**
    * A single track represented in the DOM.
    *
    * @see [Spec]{@link https://html.spec.whatwg.org/multipage/embedded-content.html#htmltrackelement}
@@ -8155,7 +8204,7 @@
      * @param {Object} options={}
      *        Object of option names and values
      *
-     * @param {Tech} options.tech
+     * @param { import('../tech/tech').default } options.tech
      *        A reference to the tech that owns this HTMLTrackElement.
      *
      * @param {TextTrack~Kind} [options.kind='subtitles']
@@ -8874,12 +8923,14 @@
     var textPos = 0;
     switch (cue.positionAlign) {
       case "start":
+      case "line-left":
         textPos = cue.position;
         break;
       case "center":
         textPos = cue.position - cue.size / 2;
         break;
       case "end":
+      case "line-right":
         textPos = cue.position - cue.size;
         break;
     }
@@ -10022,10 +10073,6 @@
    */
 
   /**
-   * @typedef { import('../utils/time').TimeRange } TimeRange
-   */
-
-  /**
    * An Object containing a structure like: `{src: 'url', type: 'mimetype'}` or string
    * that just contains the src url alone.
    * * `var SourceObject = {src: 'http://ex.com/video.mp4', type: 'video/mp4'};`
@@ -10262,7 +10309,7 @@
     /**
      * Get and create a `TimeRange` object for buffering.
      *
-     * @return {TimeRange}
+     * @return { import('../utils/time').TimeRange }
      *         The time range object that was created.
      */
     buffered() {
@@ -11317,7 +11364,7 @@
     _Tech.prototype.setSource = function (source) {
       let sh = _Tech.selectSourceHandler(source, this.options_);
       if (!sh) {
-        // Fall back to a native source hander when unsupported sources are
+        // Fall back to a native source handler when unsupported sources are
         // deliberately set
         if (_Tech.nativeSourceHandler) {
           sh = _Tech.nativeSourceHandler;
@@ -11377,12 +11424,6 @@
    * @file middleware.js
    * @module middleware
    */
-
-  /**
-   * @typedef { import('../player').default } Player
-   * @typedef { import('../tech/tech').default } Tech
-   */
-
   const middlewares = {};
   const middlewareInstances = {};
   const TERMINATOR = {};
@@ -11405,7 +11446,7 @@
    * passed in as an argument.
    *
    * @callback MiddlewareFactory
-   * @param {Player} player
+   * @param { import('../player').default } player
    *        A Video.js player.
    */
 
@@ -11430,7 +11471,7 @@
    * matching middlewares and calling `setSource` on each, passing along the
    * previous returned value each time.
    *
-   * @param  {Player} player
+   * @param  { import('../player').default } player
    *         A {@link Player} instance.
    *
    * @param  {Tech~SourceObject} src
@@ -11449,7 +11490,7 @@
    * @param {Object[]} middleware
    *        An array of middleware instances.
    *
-   * @param {Tech} tech
+   * @param { import('../tech/tech').default } tech
    *        A Video.js tech.
    */
   function setTech(middleware, tech) {
@@ -11463,7 +11504,7 @@
    * @param  {Object[]} middleware
    *         An array of middleware instances.
    *
-   * @param  {Tech} tech
+   * @param  { import('../tech/tech').default } tech
    *         The current tech.
    *
    * @param  {string} method
@@ -11483,7 +11524,7 @@
    * @param  {Object[]} middleware
    *         An array of middleware instances.
    *
-   * @param  {Tech} tech
+   * @param  { import('../tech/tech').default } tech
    *         The current tech.
    *
    * @param  {string} method
@@ -11509,7 +11550,7 @@
    * @param  {Object[]} middleware
    *         An array of middleware instances.
    *
-   * @param  {Tech} tech
+   * @param  { import('../tech/tech').default } tech
    *         The current tech.
    *
    * @param  {string} method
@@ -11594,7 +11635,7 @@
   /**
    * Clear the middleware cache for a player.
    *
-   * @param  {Player} player
+   * @param  { import('../player').default } player
    *         A {@link Player} instance.
    */
   function clearCacheForPlayer(player) {
@@ -11670,10 +11711,6 @@
   }
 
   /**
-   * @typedef { import('../player').default } Player
-   */
-
-  /**
    * Mimetypes
    *
    * @see https://www.iana.org/assignments/media-types/media-types.xhtml
@@ -11723,7 +11760,7 @@
    * Find the mime type of a given source string if possible. Uses the player
    * source cache.
    *
-   * @param {Player} player
+   * @param { import('../player').default } player
    *        The player object
    *
    * @param {string} src
@@ -11763,10 +11800,6 @@
 
   /**
    * @module filter-source
-   */
-
-  /**
-   * @typedef { import('../tech/tech').default } Tech
    */
 
   /**
@@ -11828,12 +11861,10 @@
     return src;
   }
 
-  /**
-   * @file loader.js
-   */
+  var icons = "<svg xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <symbol viewBox=\"0 0 16 16\" id=\"vjs-icon-play\">\n      <path d=\"M2 1v14l12-7z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-pause\">\n       <path d=\"M10 4H5v16h5V4zm9 0h-5v16h5V4z\"/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-audio\">\n      <g><rect fill='none' height='24' width='24'/></g><g><path d='M12,3c-4.97,0-9,4.03-9,9v7c0,1.1,0.9,2,2,2h4v-8H5v-1c0-3.87,3.13-7,7-7s7,3.13,7,7v1h-4v8h4c1.1,0,2-0.9,2-2v-7 C21,7.03,16.97,3,12,3z'/></g>\n    </symbol>\n    <symbol viewBox=\"0 0 576 512\" id=\"vjs-icon-captions\">\n      <path d='M0 96C0 60.7 28.7 32 64 32H512c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM200 208c14.2 0 27 6.1 35.8 16c8.8 9.9 24 10.7 33.9 1.9s10.7-24 1.9-33.9c-17.5-19.6-43.1-32-71.5-32c-53 0-96 43-96 96s43 96 96 96c28.4 0 54-12.4 71.5-32c8.8-9.9 8-25-1.9-33.9s-25-8-33.9 1.9c-8.8 9.9-21.6 16-35.8 16c-26.5 0-48-21.5-48-48s21.5-48 48-48zm144 48c0-26.5 21.5-48 48-48c14.2 0 27 6.1 35.8 16c8.8 9.9 24 10.7 33.9 1.9s10.7-24 1.9-33.9c-17.5-19.6-43.1-32-71.5-32c-53 0-96 43-96 96s43 96 96 96c28.4 0 54-12.4 71.5-32c8.8-9.9 8-25-1.9-33.9s-25-8-33.9 1.9c-8.8 9.9-21.6 16-35.8 16c-26.5 0-48-21.5-48-48z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-subtitles\">\n      <path d='M0 0h24v24H0z' fill='none'/><path d='M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM4 12h4v2H4v-2zm10 6H4v-2h10v2zm6 0h-4v-2h4v2zm0-4H10v-2h10v2z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 448 512\" id=\"vjs-icon-fullscreen-enter\">\n      <path d='M0 180V56c0-13.3 10.7-24 24-24h124c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H64v84c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12zM288 44v40c0 6.6 5.4 12 12 12h84v84c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12V56c0-13.3-10.7-24-24-24H300c-6.6 0-12 5.4-12 12zm148 276h-40c-6.6 0-12 5.4-12 12v84h-84c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h124c13.3 0 24-10.7 24-24V332c0-6.6-5.4-12-12-12zM160 468v-40c0-6.6-5.4-12-12-12H64v-84c0-6.6-5.4-12-12-12H12c-6.6 0-12 5.4-12 12v124c0 13.3 10.7 24 24 24h124c6.6 0 12-5.4 12-12z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-fullscreen-exit\">\n      <path d=\"M16,9h5a1,1,0,0,0,0-2H17V3a1,1,0,0,0-2,0V8A1,1,0,0,0,16,9ZM8,15H3a1,1,0,0,0,0,2H7v4a1,1,0,0,0,2,0V16A1,1,0,0,0,8,15ZM8,2A1,1,0,0,0,7,3V7H3A1,1,0,0,0,3,9H8A1,1,0,0,0,9,8V3A1,1,0,0,0,8,2ZM21,15H16a1,1,0,0,0-1,1v5a1,1,0,0,0,2,0V17h4a1,1,0,0,0,0-2Z\"/>\n    </symbol>\n    <symbol viewBox=\"0 0 512 512\" id=\"vjs-icon-play-circle\">\n      <path d='M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c7.6-4.2 16.8-4.1 24.3 .5l144 88c7.1 4.4 11.5 12.1 11.5 20.5s-4.4 16.1-11.5 20.5l-144 88c-7.4 4.5-16.7 4.7-24.3 .5s-12.3-12.2-12.3-20.9V168c0-8.7 4.7-16.7 12.3-20.9z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-volume-mute\">\n      <path d='M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-volume-low\">\n      <path d=\"M0 0h24v24H0z\" fill=\"none\"/><path d=\"M7 9v6h4l5 5V4l-5 5H7z\"/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-volume-medium\">\n      <path d=\"M0 0h24v24H0z\" fill=\"none\"/><path d=\"M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z\"/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-volume-high\">\n      <path d=\"M0 0h24v24H0z\" fill=\"none\"/><path d=\"M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z\"/>\n    </symbol>\n    <symbol viewBox=\"0 0 512 512\" id=\"vjs-icon-spinner\">\n      <path d='M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-hd\">\n      <path d='M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 12H9.5v-2h-2v2H6V9h1.5v2.5h2V9H11v6zm2-6h4c.55 0 1 .45 1 1v4c0 .55-.45 1-1 1h-4V9zm1.5 4.5h2v-3h-2v3z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-chapters\">\n      <path d='M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-downloading\">\n      <path d='M18.32,4.26C16.84,3.05,15.01,2.25,13,2.05v2.02c1.46,0.18,2.79,0.76,3.9,1.62L18.32,4.26z M19.93,11h2.02 c-0.2-2.01-1-3.84-2.21-5.32L18.31,7.1C19.17,8.21,19.75,9.54,19.93,11z M18.31,16.9l1.43,1.43c1.21-1.48,2.01-3.32,2.21-5.32 h-2.02C19.75,14.46,19.17,15.79,18.31,16.9z M13,19.93v2.02c2.01-0.2,3.84-1,5.32-2.21l-1.43-1.43 C15.79,19.17,14.46,19.75,13,19.93z M15.59,10.59L13,13.17V7h-2v6.17l-2.59-2.59L7,12l5,5l5-5L15.59,10.59z M11,19.93v2.02 c-5.05-0.5-9-4.76-9-9.95s3.95-9.45,9-9.95v2.02C7.05,4.56,4,7.92,4,12S7.05,19.44,11,19.93z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-file-download\">\n      <path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M17,11l-1.41-1.41L13,12.17V4h-2v8.17L8.41,9.59L7,11l5,5 L17,11z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-file-download-done\">\n      <polygon points='20.13,5.41 18.72,4 9.53,13.19 5.28,8.95 3.87,10.36 9.53,16.02'/><rect height='2' width='14' x='5' y='18'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-file-download-off\">\n      <path d='M18,15.17V15h2v2.17L18,15.17z M15.41,12.59L17,11l-1.41-1.41L14,11.17L15.41,12.59z M13,10.17V4h-2v4.17L13,10.17z M21.19,21.19l-1.78-1.78L2.81,2.81L1.39,4.22l6.19,6.19L7,11l5,5l0.59-0.59L15.17,18H6v-3H4v3c0,1.1,0.9,2,2,2h11.17l2.61,2.61 L21.19,21.19z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-share\">\n      <path d='M0 0h24v24H0z' fill='none'/><path d='M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-cog\">\n      <path d='M0,0h24v24H0V0z' fill='none'/><path d='M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 448 512\" id=\"vjs-icon-square\">\n      <path d='M384 80c8.8 0 16 7.2 16 16V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16H384zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 512 512\" id=\"vjs-icon-circle\">\n      <path d='M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-circle-outline\">\n      <path d='M12,2C6.47,2,2,6.47,2,12c0,5.53,4.47,10,10,10s10-4.47,10-10C22,6.47,17.53,2,12,2z M12,20c-4.42,0-8-3.58-8-8 c0-4.42,3.58-8,8-8s8,3.58,8,8C20,16.42,16.42,20,12,20z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-circle-inner-circle\">\n      <path d='M12 2C6.49 2 2 6.49 2 12s4.49 10 10 10 10-4.49 10-10S17.51 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3-8c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-cancel\">\n      <path d='M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-repeat\">\n      <path d='M0 0h24v24H0z' fill='none'/><path d='M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-replay\">\n      <path d='M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z'/>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-5\">\n      <path d='m17.68852 98-8.69633 8.69633 8.69633 8.69634 2.48665-2.48434-4.31928-4.31928h1.3011c4.93015 0 9.07149 1.72189 12.42399 5.16511 3.35251 3.44322 5.02876 7.63753 5.02876 12.58345h3.54972c0-2.95809-.55264-5.7293-1.657-8.3127-1.10435-2.5834-2.62238-4.84095-4.555-6.77357-1.93262-1.93262-4.19017-3.45065-6.77357-4.55501-2.5834-1.10435-5.35462-1.65699-8.31271-1.65699H15.5l4.61508-4.61509zm-8.07929 21.65879v13.86144h11.35631v5.00796H9.60923V143h12.699c.83466 0 1.55075-.29818 2.14693-.89436.59619-.59619.89436-1.30996.89436-2.14462v-7.78117c0-.83466-.29817-1.55075-.89436-2.14693-.59618-.59618-1.31227-.89436-2.14693-.89436h-8.22719v-5.09578h11.26848v-4.38399z'/>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-10\">\n      <path d='M42.314792 125.62978c0-4.99676-1.693476-9.23445-5.080438-12.71305-3.386962-3.47861-7.570851-5.21791-12.551676-5.21791h-1.314946l4.363203 4.3632-2.510335 2.51034-8.786174-8.78619L25.2206 97l2.450567 2.45057-4.662053 4.66205h1.374714c2.988489 0 5.787713.55785 8.397671 1.67355 2.609949 1.11571 4.891163 2.64981 6.843654 4.60229 1.952481 1.95248 3.486576 4.2337 4.602275 6.84365 1.115709 2.60995 1.673563 5.40917 1.673563 8.39767zM8.1829433 142v-19.65677H3.17603v-4.5433h9.642939V142Zm13.6299297 0c-1.155923 0-2.126398-.39251-2.911424-1.17755-.778861-.77885-1.168286-1.74624-1.168286-2.90215v-16.04066c0-1.15593.392524-2.1264 1.17755-2.91144.77886-.77885 1.746237-1.16827 2.90216-1.16827h7.695814c1.155914 0 2.126388.39251 2.911425 1.17755.77885.77886 1.168275 1.74623 1.168275 2.90216v16.04066c0 1.15591-.392513 2.12639-1.177549 2.91142-.778851.77885-1.746237 1.16828-2.902151 1.16828Zm.556316-4.63603h6.583172v-15.02074h-6.583172z'/>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-30\">\n      <path d='m26.046875 97-8.732422 8.73242 8.732422 8.73242 2.496094-2.49414-4.335938-4.33789h1.306641c4.950749 0 9.108097 1.72991 12.474609 5.1875 3.366504 3.4576 5.050781 7.66818 5.050781 12.63477h3.564454c0-2.97045-.555098-5.75152-1.664063-8.3457-1.108965-2.59419-2.633522-4.86205-4.574219-6.80274-1.940688-1.94069-4.208545-3.46525-6.802734-4.57422-2.59419-1.10897-5.375262-1.66406-8.345703-1.66406h-1.367188l4.634766-4.63477zM2.5546875 117.53125v4.6875H12.851562v5.25H5.8730469v4.6875h6.9785151v5.15625H2.5546875V142H13.361328c1.06088 0 1.950319-.39495 2.667969-1.18555.71765-.79059 1.076172-1.7727 1.076172-2.9414v-16.2168c0-1.1687-.358522-2.14886-1.076172-2.93945-.71765-.79059-1.607089-1.18555-2.667969-1.18555zm22.4824215.14063c-1.148936 0-2.110612.38991-2.884765 1.16406-.780292.78029-1.171875 1.74365-1.171875 2.89258v15.94336c0 1.14892.387966 2.1106 1.162109 2.88476.780302.78029 1.745595 1.17188 2.894531 1.17188h7.648438c1.148936 0 2.110613-.38795 2.884765-1.16211.780294-.78029 1.169922-1.74561 1.169922-2.89453v-15.94336c0-1.14893-.386013-2.11061-1.160156-2.88477-.780293-.78029-1.745595-1.17187-2.894531-1.17187zm.552735 4.51757h6.544922v14.92969h-6.544922z'/>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-5\">\n      <path d='m29.50843 97-2.43193 2.42962 4.6253 4.6253h-1.3642c-2.96464 0-5.74198.55386-8.3311 1.66066-2.58912 1.1068-4.85167 2.62819-6.78857 4.56508-1.93689 1.9369-3.45828 4.19945-4.56508 6.78857-1.1068 2.58911-1.66066 5.36646-1.66066 8.3311h3.55757c0-4.95687 1.67996-9.16047 5.03989-12.6113 3.35992-3.45084 7.51042-5.17654 12.45149-5.17654h1.30398l-4.32653 4.32883 2.48984 2.48984 8.71558-8.71558zm-9.78332 21.60945v13.8898h11.38144v5.01905H19.72511V142h12.72711c.83651 0 1.55186-.29884 2.14937-.89634.5975-.59751.89634-1.31286.89634-2.14936v-7.7984c0-.83651-.29884-1.55418-.89634-2.15168-.59751-.5975-1.31286-.89634-2.14937-.89634h-8.2454v-5.10706h11.29111v-4.39137z'/>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-10\">\n      <path d='m23.118923 97-2.385761 2.38349 4.537491 4.53749h-1.338298c-2.908354 0-5.632974.54335-8.172936 1.62913-2.539963 1.08579-4.759558 2.57829-6.659682 4.47842-1.900125 1.90012-3.39263 4.11972-4.478415 6.65968-1.085785 2.53996-1.629134 5.26458-1.629134 8.17294h3.490028c0-4.86277 1.648071-8.98656 4.944206-12.37188 3.296134-3.38532 7.367841-5.07826 12.215097-5.07826h1.279222l-4.244383 4.24665 2.442565 2.44257 8.550114-8.55012zm-9.520322 21.44913v4.42161h4.871497V142h4.512496v-23.55087zm18.136328 0c-1.124919 0-2.06632.37811-2.824287 1.13608-.763982.76398-1.147437 1.70845-1.147437 2.83337v15.61197c0 1.12492.380382 2.06631 1.138349 2.82428.763983.76398 1.708456 1.14517 2.833375 1.14517h7.489021c1.12492 0 2.06632-.37811 2.82428-1.13608.76399-.76398 1.14517-1.70845 1.14517-2.83337v-15.61197c0-1.12492-.37811-2.06632-1.13608-2.82429-.76398-.76398-1.70845-1.14516-2.83337-1.14516zm.540773 4.42161h6.407468v14.61676h-6.407468z'/>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-30\">\n      <path d='m25.548631 97-2.436697 2.43438 4.634367 4.63436H26.37943c-2.970448 0-5.753239.55495-8.347429 1.66392-2.594191 1.10897-4.861176 2.63334-6.801867 4.57403-1.940693 1.94069-3.465063 4.20767-4.57403 6.80187-1.108967 2.59419-1.663916 5.37698-1.663916 8.34742h3.56454c0-4.96658 1.683258-9.17841 5.049766-12.63601 3.366507-3.4576 7.525145-5.18669 12.475891-5.18669h1.306534l-4.335002 4.33733 2.494714 2.49471 8.73266-8.73266zm-11.552266 20.53092v4.68774h10.296787v5.24934h-6.978237v4.68774h6.978237v5.15652H13.996365V142h10.807333c1.060879 0 1.94879-.39527 2.666443-1.18586.717653-.79059 1.076789-1.77158 1.076789-2.94028v-16.2168c0-1.1687-.359136-2.14969-1.076789-2.94028-.717653-.79059-1.605564-1.18586-2.666443-1.18586zm21.173741.16708c-1.148937 0-2.110436.38851-2.884586 1.16266-.780294.78029-1.171935 1.74493-1.171935 2.89387v15.94296c0 1.14894.388502 2.11043 1.162652 2.88458.780294.78029 1.744932 1.16962 2.893869 1.16962h7.648904c1.14894 0 2.11044-.38619 2.88459-1.16033.78029-.7803 1.16961-1.74493 1.16961-2.89387v-15.94296c0-1.14894-.38618-2.11044-1.16033-2.88459-.78029-.78029-1.74493-1.17194-2.89387-1.17194zm.552317 4.51602h6.541957v14.93115h-6.541957z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 512 512\" xmlns:sketch='http://www.bohemiancoding.com/sketch/ns' id=\"vjs-icon-audio-description\">\n      <g id='Page-1' stroke='none' stroke-width='1' sketch:type='MSPage'><g id='AD' sketch:type='MSArtboardGroup'><g id='g24' sketch:type='MSLayerGroup' transform='translate(226.904216, 162.124958)'><path d='M0.385466989,219.226204 L0.385466989,0.867948105 C50.7660025,-0.149278544 89.4938709,-2.16027378 118.016886,17.9940357 C145.39121,37.3362698 166.750707,74.9591545 162.906445,123.318579 C158.839382,174.474203 121.571663,217.457893 73.1311827,221.793795 C49.0460488,223.949377 1.1583283,221.793795 1.1583283,221.793795 C1.1583283,221.793795 0.318395733,220.441758 0.385466989,219.226204 M49.1404882,164.421786 C80.5703101,165.681697 102.34881,147.788744 105.636072,119.036417 C110.038491,80.5268177 84.4473371,55.4838492 47.5943801,58.2399576 L47.5943801,161.852062 C47.5585317,163.318404 48.1702678,164.071194 49.1404882,164.421786' id='path26' sketch:type='MSShapeGroup'></path></g><g id='g28' sketch:type='MSLayerGroup' transform='translate(383.779991, 168.926023)'><path d='M0,212.402042 C13.3360014,216.111401 17.386874,201.342635 23.2151349,190.99422 C35.936702,168.422877 45.5086182,139.400143 45.6604922,106.220214 C45.8813648,58.6259492 27.3172746,23.7033002 10.059532,0.0383859113 L1.54919183,0.0383859113 C0.96289654,3.91152436 3.77564916,7.35260805 5.41542574,10.3142944 C18.5814362,34.0755999 30.7818519,66.8674044 30.9556975,104.507776 C31.1545985,147.683822 16.7932549,183.786198 0,212.402042' id='path30' sketch:type='MSShapeGroup'></path></g><g id='g32' sketch:type='MSLayerGroup' transform='translate(425.153705, 168.926023)'><path d='M0,212.402042 C13.3360014,216.111401 17.3841758,201.340502 23.2151349,190.99422 C35.936702,168.422877 45.5066909,139.400143 45.6604922,106.220214 C45.8813648,58.6259492 27.3172746,23.7033002 10.059532,0.0383859113 L1.54919183,0.0383859113 C0.96289654,3.91152436 3.77487823,7.35346107 5.41542574,10.3142944 C18.5814362,34.0755999 30.7822374,66.8674044 30.9556975,104.507776 C31.1545985,147.683822 16.7932549,183.786198 0,212.402042' id='path34' sketch:type='MSShapeGroup'></path></g><g id='g36' sketch:type='MSLayerGroup' transform='translate(466.260868, 168.926023)'><path d='M0,212.402042 C13.3360014,216.111401 17.3841758,201.340502 23.2151349,190.99422 C35.936702,168.422877 45.5066909,139.400143 45.6604922,106.220214 C45.8813648,58.6259492 27.3172746,23.7033002 10.059532,0.0383859113 L1.54919183,0.0383859113 C0.96289654,3.91152436 3.77487823,7.35303456 5.41542574,10.3142944 C18.5814362,34.0755999 30.7818519,66.8674044 30.9556975,104.507776 C31.1545985,147.683822 16.7932549,183.786198 0,212.402042' id='path38' sketch:type='MSShapeGroup'></path></g><path d='M4.4765625,383.005158 L72.5800993,383.005158 L91.1530552,354.521486 L155.321745,354.386058 C155.321745,354.386058 155.386889,373.799083 155.386889,383.005158 L204.142681,383.005158 L204.142681,160.308263 L145.326586,160.308263 C139.673713,169.845383 4.4765625,383.005158 4.4765625,383.005158 L4.4765625,383.005158 Z M157.144233,237.722611 L157.144233,308.881058 L116.6914,308.610203 L157.144233,237.722611 L157.144233,237.722611 Z' id='path22' sketch:type='MSShapeGroup'></path></g></g>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-next-item\">\n      <path d='M0 0h24v24H0z' fill='none'/><path d='M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-previous-item\">\n      <path d='M0 0h24v24H0z' fill='none'/><path d='M6 6h2v12H6zm3.5 6l8.5 6V6z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-shuffle\">\n      <path d='M0 0h24v24H0z' fill='none'/><path d='M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-cast\">\n      <path d='M0 0h24v24H0z' fill='none'/><path d='M0 0h24v24H0z' fill='none' opacity='.1'/><path d='M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-picture-in-picture-enter\">\n      <path d='M0 0h24v24H0V0z' fill='none'/><path d='M19 11h-8v6h8v-6zm4 8V4.98C23 3.88 22.1 3 21 3H3c-1.1 0-2 .88-2 1.98V19c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 .02H3V4.97h18v14.05z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 22 18\" id=\"vjs-icon-picture-in-picture-exit\">\n      <path d='M18 4H4v10h14V4zm4 12V1.98C22 .88 21.1 0 20 0H2C.9 0 0 .88 0 1.98V16c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 .02H2V1.97h18v14.05z'/><path fill='none' d='M-1-3h24v24H-1z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 320 512\" id=\"vjs-icon-facebook\">\n      <path d='M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 448 512\" id=\"vjs-icon-linkedin\">\n      <path d='M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 512 512\" id=\"vjs-icon-twitter\">\n      <path d='M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 320 512\" id=\"vjs-icon-tumblr\">\n      <path d='M309.8 480.3c-13.6 14.5-50 31.7-97.4 31.7-120.8 0-147-88.8-147-140.6v-144H17.9c-5.5 0-10-4.5-10-10v-68c0-7.2 4.5-13.6 11.3-16 62-21.8 81.5-76 84.3-117.1.8-11 6.5-16.3 16.1-16.3h70.9c5.5 0 10 4.5 10 10v115.2h83c5.5 0 10 4.4 10 9.9v81.7c0 5.5-4.5 10-10 10h-83.4V360c0 34.2 23.7 53.6 68 35.8 4.8-1.9 9-3.2 12.7-2.2 3.5.9 5.8 3.4 7.4 7.9l22 64.3c1.8 5 3.3 10.6-.4 14.5z'/>\n    </symbol>\n    <symbol viewBox=\"0 0 496 512\" id=\"vjs-icon-pinterest\">\n      <path d='M496 256c0 137-111 248-248 248-25.6 0-50.2-3.9-73.4-11.1 10.1-16.5 25.2-43.5 30.8-65 3-11.6 15.4-59 15.4-59 8.1 15.4 31.7 28.5 56.8 28.5 74.8 0 128.7-68.8 128.7-154.3 0-81.9-66.9-143.2-152.9-143.2-107 0-163.9 71.8-163.9 150.1 0 36.4 19.4 81.7 50.3 96.1 4.7 2.2 7.2 1.2 8.3-3.3.8-3.4 5-20.3 6.9-28.1.6-2.5.3-4.7-1.7-7.1-10.1-12.5-18.3-35.3-18.3-56.6 0-54.7 41.4-107.6 112-107.6 60.9 0 103.6 41.5 103.6 100.9 0 67.1-33.9 113.6-78 113.6-24.3 0-42.6-20.1-36.7-44.8 7-29.5 20.5-61.3 20.5-82.6 0-19-10.2-34.9-31.4-34.9-24.9 0-44.9 25.7-44.9 60.2 0 22 7.4 36.8 7.4 36.8s-24.5 103.8-29 123.2c-5 21.4-3 51.6-.9 71.2C65.4 450.9 0 361.1 0 256 0 119 111 8 248 8s248 111 248 248z'/>\n    </symbol>\n  </defs>\n</svg>";
 
   /**
-   * @typedef { import('../player').default } Player
+   * @file loader.js
    */
 
   /**
@@ -11846,7 +11877,7 @@
     /**
      * Create an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../player').default } player
      *        The `Player` that this class should attach to.
      *
      * @param {Object} [options]
@@ -11898,10 +11929,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * Component which is clickable or keyboard actionable, but is not a
    * native HTML button.
    *
@@ -11911,7 +11938,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param  {Player} player
+     * @param  { import('./player').default } player
      *         The `Player` that this class should be attached to.
      *
      * @param  {Object} [options]
@@ -11970,11 +11997,13 @@
       }, attributes);
       this.tabIndex_ = props.tabIndex;
       const el = createEl(tag, props, attributes);
-      el.appendChild(createEl('span', {
-        className: 'vjs-icon-placeholder'
-      }, {
-        'aria-hidden': true
-      }));
+      if (!this.player_.options_.experimentalSvgIcons) {
+        el.appendChild(createEl('span', {
+          className: 'vjs-icon-placeholder'
+        }, {
+          'aria-hidden': true
+        }));
+      }
       this.createControlTextEl(el);
       return el;
     }
@@ -12134,10 +12163,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * A `ClickableComponent` that handles showing the poster image for the player.
    *
    * @extends ClickableComponent
@@ -12146,7 +12171,7 @@
     /**
      * Create an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should attach to.
      *
      * @param {Object} [options]
@@ -12311,12 +12336,6 @@
   /**
    * @file text-track-display.js
    */
-
-  /**
-   * @typedef { import('./player').default } Player
-   * @typedef { import('./tech/tech').default } Tech
-   */
-
   const darkGray = '#222';
   const lightGray = '#ccc';
   const fontMap = {
@@ -12383,6 +12402,21 @@
   }
 
   /**
+   * Converts the CSS top/right/bottom/left property numeric value to string in pixels.
+   *
+   * @param {number} position
+   *        The CSS top/right/bottom/left property value.
+   *
+   * @return {string}
+   *          The CSS property value that was created, like '10px'.
+   *
+   * @private
+   */
+  function getCSSPositionValue(position) {
+    return position ? `${position}px` : '';
+  }
+
+  /**
    * The component for displaying text track cues.
    *
    * @extends Component
@@ -12391,7 +12425,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -12402,10 +12436,17 @@
      */
     constructor(player, options, ready) {
       super(player, options, ready);
-      const updateDisplayHandler = e => this.updateDisplay(e);
+      const updateDisplayTextHandler = e => this.updateDisplay(e);
+      const updateDisplayHandler = e => {
+        this.updateDisplayOverlay();
+        this.updateDisplay(e);
+      };
       player.on('loadstart', e => this.toggleDisplay(e));
-      player.on('texttrackchange', updateDisplayHandler);
-      player.on('loadedmetadata', e => this.preselectTrack(e));
+      player.on('texttrackchange', updateDisplayTextHandler);
+      player.on('loadedmetadata', e => {
+        this.updateDisplayOverlay();
+        this.preselectTrack(e);
+      });
 
       // This used to be called during player init, but was causing an error
       // if a track should show by default and the display hadn't loaded yet.
@@ -12583,6 +12624,33 @@
     }
 
     /**
+     * Updates the displayed TextTrack to be sure it overlays the video when a either
+     * a {@link Player#texttrackchange} or a {@link Player#fullscreenchange} is fired.
+     */
+    updateDisplayOverlay() {
+      // inset-inline and inset-block are not supprted on old chrome, but these are
+      // only likely to be used on TV devices
+      if (!this.player_.videoHeight() || !window.CSS.supports('inset-inline: 10px')) {
+        return;
+      }
+      const playerWidth = this.player_.currentWidth();
+      const playerHeight = this.player_.currentHeight();
+      const playerAspectRatio = playerWidth / playerHeight;
+      const videoAspectRatio = this.player_.videoWidth() / this.player_.videoHeight();
+      let insetInlineMatch = 0;
+      let insetBlockMatch = 0;
+      if (Math.abs(playerAspectRatio - videoAspectRatio) > 0.1) {
+        if (playerAspectRatio > videoAspectRatio) {
+          insetInlineMatch = Math.round((playerWidth - playerHeight * videoAspectRatio) / 2);
+        } else {
+          insetBlockMatch = Math.round((playerHeight - playerWidth / videoAspectRatio) / 2);
+        }
+      }
+      tryUpdateStyle(this.el_, 'insetInline', getCSSPositionValue(insetInlineMatch));
+      tryUpdateStyle(this.el_, 'insetBlock', getCSSPositionValue(insetBlockMatch));
+    }
+
+    /**
      * Style {@Link TextTrack} activeCues according to {@Link TextTrackSettings}.
      *
      * @param {TextTrack} track
@@ -12720,6 +12788,13 @@
       el.appendChild(controlText);
       return el;
     }
+
+    /**
+     * Update control text on languagechange
+     */
+    handleLanguagechange() {
+      this.$('.vjs-control-text').textContent = this.localize('{1} is loading.', [this.player_.isAudio() ? 'Audio Player' : 'Video Player']);
+    }
   }
   Component$1.registerComponent('LoadingSpinner', LoadingSpinner);
 
@@ -12761,11 +12836,13 @@
         type: 'button'
       }, attributes);
       const el = createEl(tag, props, attributes);
-      el.appendChild(createEl('span', {
-        className: 'vjs-icon-placeholder'
-      }, {
-        'aria-hidden': true
-      }));
+      if (!this.player_.options_.experimentalSvgIcons) {
+        el.appendChild(createEl('span', {
+          className: 'vjs-icon-placeholder'
+        }, {
+          'aria-hidden': true
+        }));
+      }
       this.createControlTextEl(el);
       return el;
     }
@@ -12843,10 +12920,6 @@
    */
 
   /**
-   *  @typedef {import('../event-target').Event} Event
-   */
-
-  /**
    * The initial play button that shows before the video has played. The hiding of the
    * `BigPlayButton` get done via CSS and `Player` states.
    *
@@ -12856,6 +12929,7 @@
     constructor(player, options) {
       super(player, options);
       this.mouseused_ = false;
+      this.setIcon('play');
       this.on('mousedown', e => this.handleMouseDown(e));
     }
 
@@ -12873,7 +12947,7 @@
      * This gets called when a `BigPlayButton` "clicked". See {@link ClickableComponent}
      * for more detailed information on what a click can be.
      *
-     * @param {Event} event
+     * @param {KeyboardEvent} event
      *        The `keydown`, `tap`, or `click` event that caused this function to be
      *        called.
      *
@@ -12927,10 +13001,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * The `CloseButton` is a `{@link Button}` that fires a `close` event when
    * it gets clicked.
    *
@@ -12940,7 +13010,7 @@
     /**
     * Creates an instance of the this class.
     *
-    * @param  {Player} player
+    * @param  { import('./player').default } player
     *         The `Player` that this class should be attached to.
     *
     * @param  {Object} [options]
@@ -12948,6 +13018,7 @@
     */
     constructor(player, options) {
       super(player, options);
+      this.setIcon('cancel');
       this.controlText(options && options.controlText || this.localize('Close'));
     }
 
@@ -13020,10 +13091,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * Button to toggle between play and pause.
    *
    * @extends Button
@@ -13032,7 +13099,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options={}]
@@ -13043,6 +13110,7 @@
 
       // show or hide replay icon
       options.replay = options.replay === undefined || options.replay;
+      this.setIcon('play');
       this.on(player, 'play', e => this.handlePlay(e));
       this.on(player, 'pause', e => this.handlePause(e));
       if (options.replay) {
@@ -13109,6 +13177,7 @@
       this.removeClass('vjs-ended', 'vjs-paused');
       this.addClass('vjs-playing');
       // change the button text to "Pause"
+      this.setIcon('pause');
       this.controlText('Pause');
     }
 
@@ -13124,6 +13193,7 @@
       this.removeClass('vjs-playing');
       this.addClass('vjs-paused');
       // change the button text to "Play"
+      this.setIcon('play');
       this.controlText('Play');
     }
 
@@ -13139,6 +13209,7 @@
       this.removeClass('vjs-playing');
       this.addClass('vjs-ended');
       // change the button text to "Replay"
+      this.setIcon('replay');
       this.controlText('Replay');
 
       // on the next seek remove the replay button
@@ -13160,10 +13231,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * Displays time information about the video
    *
    * @extends Component
@@ -13172,7 +13239,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -13205,13 +13272,11 @@
       this.contentEl_ = createEl('span', {
         className: `${className}-display`
       }, {
-        // tell screen readers not to automatically read the time as it changes
-        'aria-live': 'off',
         // span elements have no implicit role, but some screen readers (notably VoiceOver)
         // treat them as a break between items in the DOM when using arrow keys
         // (or left-to-right swipes on iOS) to read contents of a page. Using
         // role='presentation' causes VoiceOver to NOT treat this span as a break.
-        'role': 'presentation'
+        role: 'presentation'
       });
       el.appendChild(this.contentEl_);
       return el;
@@ -13351,10 +13416,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * Displays the duration
    *
    * @extends Component
@@ -13363,7 +13424,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -13477,10 +13538,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * Displays the time left in the video
    *
    * @extends Component
@@ -13489,7 +13546,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -13511,7 +13568,7 @@
     }
 
     /**
-     * Create the `Component`'s DOM element with the "minus" characted prepend to the time
+     * Create the `Component`'s DOM element with the "minus" character prepend to the time
      *
      * @return {Element}
      *         The element that was created.
@@ -13577,10 +13634,6 @@
    * @file live-display.js
    */
 
-  /**
-   * @typedef { import('./player').default } Player
-   */
-
   // TODO - Future make it click to snap to live
 
   /**
@@ -13592,7 +13645,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -13656,10 +13709,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * Displays the live indicator when duration is Infinity.
    *
    * @extends Component
@@ -13668,7 +13717,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -13693,6 +13742,7 @@
       const el = super.createEl('button', {
         className: 'vjs-seek-to-live-control vjs-control'
       });
+      this.setIcon('circle', el);
       this.textEl_ = createEl('span', {
         className: 'vjs-seek-to-live-text',
         textContent: this.localize('LIVE')
@@ -13783,11 +13833,6 @@
    */
 
   /**
-   * @typedef { import('../player').default } Player
-   * @typedef {import('../event-target').Event} Event
-   */
-
-  /**
    * The base functionality for a slider. Can be vertical or horizontal.
    * For instance the volume bar or the seek bar on a video is a slider.
    *
@@ -13797,7 +13842,7 @@
     /**
     * Create an instance of this class
     *
-    * @param {Player} player
+    * @param { import('../player').default } player
     *        The `Player` that this class should be attached to.
     *
     * @param {Object} [options]
@@ -13910,7 +13955,7 @@
     /**
      * Handle `mousedown` or `touchstart` events on the `Slider`.
      *
-     * @param {Event} event
+     * @param {MouseEvent} event
      *        `mousedown` or `touchstart` event that triggered this function
      *
      * @listens mousedown
@@ -13924,7 +13969,7 @@
       }
       // Do not call preventDefault() on touchstart in Chrome
       // to avoid console warnings. Use a 'touch-action: none' style
-      // instead to prevent unintented scrolling.
+      // instead to prevent unintended scrolling.
       // https://developers.google.com/web/updates/2017/01/scrolling-intervention
       if (event.type === 'touchstart' && !IS_CHROME) {
         event.preventDefault();
@@ -13935,7 +13980,7 @@
        * Triggered when the slider is in an active state
        *
        * @event Slider#slideractive
-       * @type {Event}
+       * @type {MouseEvent}
        */
       this.trigger('slideractive');
       this.on(doc, 'mousemove', this.handleMouseMove_);
@@ -13951,7 +13996,7 @@
      * `mousedown` and `touchstart`. This is due to {@link Slider#handleMouseDown} and
      * {@link Slider#handleMouseUp}.
      *
-     * @param {Event} event
+     * @param {MouseEvent} event
      *        `mousedown`, `mousemove`, `touchstart`, or `touchmove` event that triggered
      *        this function
      * @param {boolean} mouseDown this is a flag that should be set to true if `handleMouseMove` is called directly. It allows us to skip things that should not happen if coming from mouse down but should happen on regular mouse move handler. Defaults to false.
@@ -13964,7 +14009,7 @@
     /**
      * Handle `mouseup` or `touchend` events on the `Slider`.
      *
-     * @param {Event} event
+     * @param {MouseEvent} event
      *        `mouseup` or `touchend` event that triggered this function.
      *
      * @listens touchend
@@ -14053,11 +14098,11 @@
     }
 
     /**
-     * Handle a `keydown` event on the `Slider`. Watches for left, rigth, up, and down
+     * Handle a `keydown` event on the `Slider`. Watches for left, right, up, and down
      * arrow keys. This function will only be called when the slider has focus. See
      * {@link Slider#handleFocus} and {@link Slider#handleBlur}.
      *
-     * @param {Event} event
+     * @param {KeyboardEvent} event
      *        the `keydown` event that caused this function to run.
      *
      * @listens keydown
@@ -14121,10 +14166,6 @@
    * @file load-progress-bar.js
    */
 
-  /**
-   * @typedef { import('../../player').default } Player
-   */
-
   // get the percent width of a time compared to the total end
   const percentify = (time, end) => clamp(time / end * 100, 0, 100).toFixed(2) + '%';
 
@@ -14137,7 +14178,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -14243,10 +14284,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * Time tooltips display a time above the progress bar.
    *
    * @extends Component
@@ -14255,7 +14292,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The {@link Player} that this class should be attached to.
      *
      * @param {Object} [options]
@@ -14395,10 +14432,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * Used by {@link SeekBar} to display media playback progress as part of the
    * {@link ProgressControl}.
    *
@@ -14408,7 +14441,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The {@link Player} that this class should be attached to.
      *
      * @param {Object} [options]
@@ -14416,6 +14449,7 @@
      */
     constructor(player, options) {
       super(player, options);
+      this.setIcon('circle');
       this.update = throttle(bind_(this, this.update), UPDATE_REFRESH_INTERVAL);
     }
 
@@ -14475,10 +14509,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The {@link MouseTimeDisplay} component tracks mouse movement over the
    * {@link ProgressControl}. It displays an indicator and a {@link TimeTooltip}
    * indicating the time which is represented by a given point in the
@@ -14490,7 +14520,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The {@link Player} that this class should be attached to.
      *
      * @param {Object} [options]
@@ -14547,11 +14577,6 @@
    * @file seek-bar.js
    */
 
-  /**
-   * @typedef { import('../../player').default } Player
-   * @typedef {import('../event-target').Event} Event
-   */
-
   // The number of seconds the `step*` functions move the timeline.
   const STEP_SECONDS = 5;
 
@@ -14568,7 +14593,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -14749,7 +14774,7 @@
     /**
      * Handle mouse down on seek bar
      *
-     * @param {Event} event
+     * @param {MouseEvent} event
      *        The `mousedown` event that caused this to run.
      *
      * @listens mousedown
@@ -14769,14 +14794,14 @@
     /**
      * Handle mouse move on seek bar
      *
-     * @param {Event} event
+     * @param {MouseEvent} event
      *        The `mousemove` event that caused this to run.
      * @param {boolean} mouseDown this is a flag that should be set to true if `handleMouseMove` is called directly. It allows us to skip things that should not happen if coming from mouse down but should happen on regular mouse move handler. Defaults to false
      *
      * @listens mousemove
      */
     handleMouseMove(event, mouseDown = false) {
-      if (!isSingleLeftClick(event)) {
+      if (!isSingleLeftClick(event) || isNaN(this.player_.duration())) {
         return;
       }
       if (!mouseDown && !this.player_.scrubbing()) {
@@ -14843,7 +14868,7 @@
     /**
      * Handle mouse up on seek bar
      *
-     * @param {Event} event
+     * @param {MouseEvent} event
      *        The `mouseup` event that caused this to run.
      *
      * @listens mouseup
@@ -14896,7 +14921,7 @@
      * Toggles the playback state of the player
      * This gets called when enter or space is used on the seekbar
      *
-     * @param {Event} event
+     * @param {KeyboardEvent} event
      *        The `keydown` event that caused this function to be called
      *
      */
@@ -14919,7 +14944,7 @@
      *   PageDown key moves back a larger step than ArrowDown
      *   PageUp key moves forward a large step
      *
-     * @param {Event} event
+     * @param {KeyboardEvent} event
      *        The `keydown` event that caused this function to be called.
      *
      * @listens keydown
@@ -15004,10 +15029,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The Progress Control component contains the seek bar, load progress,
    * and play progress.
    *
@@ -15017,7 +15038,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -15220,10 +15241,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * Toggle Picture-in-Picture mode
    *
    * @extends Button
@@ -15232,7 +15249,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -15243,20 +15260,10 @@
      */
     constructor(player, options) {
       super(player, options);
+      this.setIcon('picture-in-picture-enter');
       this.on(player, ['enterpictureinpicture', 'leavepictureinpicture'], e => this.handlePictureInPictureChange(e));
       this.on(player, ['disablepictureinpicturechanged', 'loadedmetadata'], e => this.handlePictureInPictureEnabledChange(e));
-      this.on(player, ['loadedmetadata', 'audioonlymodechange', 'audiopostermodechange'], () => {
-        // This audio detection will not detect HLS or DASH audio-only streams because there was no reliable way to detect them at the time
-        const isSourceAudio = player.currentType().substring(0, 5) === 'audio';
-        if (isSourceAudio || player.audioPosterMode() || player.audioOnlyMode()) {
-          if (player.isInPictureInPicture()) {
-            player.exitPictureInPicture();
-          }
-          this.hide();
-        } else {
-          this.show();
-        }
-      });
+      this.on(player, ['loadedmetadata', 'audioonlymodechange', 'audiopostermodechange'], () => this.handlePictureInPictureAudioModeChange());
 
       // TODO: Deactivate button on player emptied event.
       this.disable();
@@ -15269,15 +15276,38 @@
      *         The DOM `className` for this object.
      */
     buildCSSClass() {
-      return `vjs-picture-in-picture-control ${super.buildCSSClass()}`;
+      return `vjs-picture-in-picture-control vjs-hidden ${super.buildCSSClass()}`;
     }
 
     /**
-     * Enables or disables button based on document.pictureInPictureEnabled property value
-     * or on value returned by player.disablePictureInPicture() method.
+     * Displays or hides the button depending on the audio mode detection.
+     * Exits picture-in-picture if it is enabled when switching to audio mode.
+     */
+    handlePictureInPictureAudioModeChange() {
+      // This audio detection will not detect HLS or DASH audio-only streams because there was no reliable way to detect them at the time
+      const isSourceAudio = this.player_.currentType().substring(0, 5) === 'audio';
+      const isAudioMode = isSourceAudio || this.player_.audioPosterMode() || this.player_.audioOnlyMode();
+      if (!isAudioMode) {
+        this.show();
+        return;
+      }
+      if (this.player_.isInPictureInPicture()) {
+        this.player_.exitPictureInPicture();
+      }
+      this.hide();
+    }
+
+    /**
+     * Enables or disables button based on availability of a Picture-In-Picture mode.
+     *
+     * Enabled if
+     * - `player.options().enableDocumentPictureInPicture` is true and
+     *   window.documentPictureInPicture is available; or
+     * - `player.disablePictureInPicture()` is false and
+     *   element.requestPictureInPicture is available
      */
     handlePictureInPictureEnabledChange() {
-      if (document.pictureInPictureEnabled && this.player_.disablePictureInPicture() === false) {
+      if (document.pictureInPictureEnabled && this.player_.disablePictureInPicture() === false || this.player_.options_.enableDocumentPictureInPicture && 'documentPictureInPicture' in window) {
         this.enable();
       } else {
         this.disable();
@@ -15296,8 +15326,10 @@
      */
     handlePictureInPictureChange(event) {
       if (this.player_.isInPictureInPicture()) {
+        this.setIcon('picture-in-picture-exit');
         this.controlText('Exit Picture-in-Picture');
       } else {
+        this.setIcon('picture-in-picture-enter');
         this.controlText('Picture-in-Picture');
       }
       this.handlePictureInPictureEnabledChange();
@@ -15321,6 +15353,18 @@
         this.player_.exitPictureInPicture();
       }
     }
+
+    /**
+     * Show the `Component`s element if it is hidden by removing the
+     * 'vjs-hidden' class name from it only in browsers that support the Picture-in-Picture API.
+     */
+    show() {
+      // Does not allow to display the pictureInPictureToggle in browsers that do not support the Picture-in-Picture API, e.g. Firefox.
+      if (typeof document.exitPictureInPicture !== 'function') {
+        return;
+      }
+      super.show();
+    }
   }
 
   /**
@@ -15337,10 +15381,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * Toggle fullscreen video
    *
    * @extends Button
@@ -15349,7 +15389,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -15357,6 +15397,7 @@
      */
     constructor(player, options) {
       super(player, options);
+      this.setIcon('fullscreen-enter');
       this.on(player, 'fullscreenchange', e => this.handleFullscreenChange(e));
       if (document[player.fsApi_.fullscreenEnabled] === false) {
         this.disable();
@@ -15385,8 +15426,10 @@
     handleFullscreenChange(event) {
       if (this.player_.isFullscreen()) {
         this.controlText('Exit Fullscreen');
+        this.setIcon('fullscreen-exit');
       } else {
         this.controlText('Fullscreen');
+        this.setIcon('fullscreen-enter');
       }
     }
 
@@ -15420,18 +15463,13 @@
   Component$1.registerComponent('FullscreenToggle', FullscreenToggle);
 
   /**
-   * @typedef { import('../../player').default } Player
-   * @typedef { import('../../component').default } Component
-   */
-
-  /**
    * Check if volume control is supported and if it isn't hide the
    * `Component` that was passed  using the `vjs-hidden` class.
    *
-   * @param {Component} self
+   * @param { import('../../component').default } self
    *        The component that should be hidden if volume is unsupported
    *
-   * @param {Player} player
+   * @param { import('../../player').default } player
    *        A reference to the player
    *
    * @private
@@ -15470,6 +15508,7 @@
       const el = super.createEl('div', {
         className: 'vjs-volume-level'
       });
+      this.setIcon('circle', el);
       el.appendChild(super.createEl('span', {
         className: 'vjs-control-text'
       }));
@@ -15483,10 +15522,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * Volume level tooltips display a volume above or side by side the volume bar.
    *
    * @extends Component
@@ -15495,7 +15530,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The {@link Player} that this class should be attached to.
      *
      * @param {Object} [options]
@@ -15605,7 +15640,7 @@
   Component$1.registerComponent('VolumeLevelTooltip', VolumeLevelTooltip);
 
   /**
-   * @typedef { import('../../player').default } Player
+   * @file mouse-volume-level-display.js
    */
 
   /**
@@ -15620,7 +15655,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The {@link Player} that this class should be attached to.
      *
      * @param {Object} [options]
@@ -15687,11 +15722,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   * @typedef {import('../../event-target').Event} Event
-   */
-
-  /**
    * The bar that contains the volume level and can be clicked on to adjust the level
    *
    * @extends Slider
@@ -15700,7 +15730,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -15880,10 +15910,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The component for controlling the volume level
    *
    * @extends Component
@@ -15892,7 +15918,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options={}]
@@ -16007,18 +16033,13 @@
   Component$1.registerComponent('VolumeControl', VolumeControl);
 
   /**
-   * @typedef { import('../../player').default } Player
-   * @typedef { import('../../component').default } Component
-   */
-
-  /**
    * Check if muting volume is supported and if it isn't hide the mute toggle
    * button.
    *
-   * @param {Component} self
+   * @param { import('../../component').default } self
    *        A reference to the mute toggle button
    *
-   * @param {Player} player
+   * @param { import('../../player').default } player
    *        A reference to the player
    *
    * @private
@@ -16042,10 +16063,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * A button component for muting the audio.
    *
    * @extends Button
@@ -16054,7 +16071,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -16131,6 +16148,7 @@
     updateIcon_() {
       const vol = this.player_.volume();
       let level = 3;
+      this.setIcon('volume-high');
 
       // in iOS when a player is loaded with muted attribute
       // and volume is changed with a native mute button
@@ -16139,10 +16157,13 @@
         this.player_.muted(this.player_.tech_.el_.muted);
       }
       if (vol === 0 || this.player_.muted()) {
+        this.setIcon('volume-mute');
         level = 0;
       } else if (vol < 0.33) {
+        this.setIcon('volume-low');
         level = 1;
       } else if (vol < 0.67) {
+        this.setIcon('volume-medium');
         level = 2;
       }
       removeClass(this.el_, [0, 1, 2, 3].reduce((str, i) => str + `${i ? ' ' : ''}vjs-vol-${i}`, ''));
@@ -16188,7 +16209,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options={}]
@@ -16375,6 +16396,7 @@
       this.validOptions = [5, 10, 30];
       this.skipTime = this.getSkipForwardTime();
       if (this.skipTime && this.validOptions.includes(this.skipTime)) {
+        this.setIcon(`forward-${this.skipTime}`);
         this.controlText(this.localize('Skip forward {1} seconds', [this.skipTime]));
         this.show();
       } else {
@@ -16401,6 +16423,9 @@
      *        to be called
      */
     handleClick(event) {
+      if (isNaN(this.player_.duration())) {
+        return;
+      }
       const currentVideoTime = this.player_.currentTime();
       const liveTracker = this.player_.liveTracker;
       const duration = liveTracker && liveTracker.isLive() ? liveTracker.seekableEnd() : this.player_.duration();
@@ -16411,6 +16436,13 @@
         newTime = duration;
       }
       this.player_.currentTime(newTime);
+    }
+
+    /**
+     * Update control text on languagechange
+     */
+    handleLanguagechange() {
+      this.controlText(this.localize('Skip forward {1} seconds', [this.skipTime]));
     }
   }
   Component$1.registerComponent('SkipForward', SkipForward);
@@ -16429,6 +16461,7 @@
       this.validOptions = [5, 10, 30];
       this.skipTime = this.getSkipBackwardTime();
       if (this.skipTime && this.validOptions.includes(this.skipTime)) {
+        this.setIcon(`replay-${this.skipTime}`);
         this.controlText(this.localize('Skip backward {1} seconds', [this.skipTime]));
         this.show();
       } else {
@@ -16468,16 +16501,19 @@
       }
       this.player_.currentTime(newTime);
     }
+
+    /**
+     * Update control text on languagechange
+     */
+    handleLanguagechange() {
+      this.controlText(this.localize('Skip backward {1} seconds', [this.skipTime]));
+    }
   }
   SkipBackward.prototype.controlText_ = 'Skip Backward';
   Component$1.registerComponent('SkipBackward', SkipBackward);
 
   /**
    * @file menu.js
-   */
-
-  /**
-   * @typedef { import('../player').default } Player
    */
 
   /**
@@ -16490,7 +16526,7 @@
     /**
      * Create an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../player').default } player
      *        the player that this component should attach to
      *
      * @param {Object} [options]
@@ -16730,10 +16766,6 @@
    */
 
   /**
-   * @typedef { import('../player').default } Player
-   */
-
-  /**
    * A `MenuButton` class for any popup {@link Menu}.
    *
    * @extends Component
@@ -16742,7 +16774,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options={}]
@@ -16864,6 +16896,17 @@
       return super.createEl('div', {
         className: this.buildWrapperCSSClass()
       }, {});
+    }
+
+    /**
+     * Overwrites the `setIcon` method from `Component`.
+     * In this case, we want the icon to be appended to the menuButton.
+     *
+     * @param {string} name
+     *         The icon name to be added.
+     */
+    setIcon(name) {
+      super.setIcon(name, this.menuButton_.el_);
     }
 
     /**
@@ -17118,10 +17161,6 @@
    */
 
   /**
-   * @typedef { import('./player').default } Player
-   */
-
-  /**
    * The base class for buttons that toggle specific  track types (e.g. subtitles).
    *
    * @extends MenuButton
@@ -17130,7 +17169,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -17178,10 +17217,6 @@
    */
 
   /**
-   * @typedef { import('../player').default } Player
-   */
-
-  /**
    * The component for a menu item. `<li>`
    *
    * @extends ClickableComponent
@@ -17190,7 +17225,7 @@
     /**
      * Creates an instance of the this class.
      *
-     * @param {Player} player
+     * @param { import('../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options={}]
@@ -17238,10 +17273,17 @@
       }, props), attrs);
 
       // swap icon with menu item text.
-      el.replaceChild(createEl('span', {
+      const menuItemEl = createEl('span', {
         className: 'vjs-menu-item-text',
         textContent: this.localize(this.options_.label)
-      }), el.querySelector('.vjs-icon-placeholder'));
+      });
+
+      // If using SVG icons, the element with vjs-icon-placeholder will be added separately.
+      if (this.player_.options_.experimentalSvgIcons) {
+        el.appendChild(menuItemEl);
+      } else {
+        el.replaceChild(menuItemEl, el.querySelector('.vjs-icon-placeholder'));
+      }
       return el;
     }
 
@@ -17308,10 +17350,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The specific menu item type for selecting a language within a text track kind
    *
    * @extends MenuItem
@@ -17320,7 +17358,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -17469,10 +17507,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * A special menu item for turning of a specific type of text track
    *
    * @extends TextTrackMenuItem
@@ -17481,7 +17515,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -17555,15 +17589,19 @@
         };
       }
     }
+
+    /**
+     * Update control text and label on languagechange
+     */
+    handleLanguagechange() {
+      this.$('.vjs-menu-item-text').textContent = this.player_.localize(this.options_.label);
+      super.handleLanguagechange();
+    }
   }
   Component$1.registerComponent('OffTextTrackMenuItem', OffTextTrackMenuItem);
 
   /**
    * @file text-track-button.js
-   */
-
-  /**
-   * @typedef { import('../../player').default } Player
    */
 
   /**
@@ -17575,7 +17613,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options={}]
@@ -17641,10 +17679,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The chapter track menu item
    *
    * @extends MenuItem
@@ -17653,7 +17687,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -17697,12 +17731,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   * @typedef { import('../../menu/menu').default } Menu
-   * @typedef { import('../text-track-menu-item/menu/').default } TextTrackMenuItem
-   */
-
-  /**
    * The button component for toggling and selecting chapters
    * Chapters act much differently than other text tracks
    * Cues are navigation vs. other tracks of alternative languages
@@ -17713,7 +17741,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -17724,6 +17752,7 @@
      */
     constructor(player, options, ready) {
       super(player, options, ready);
+      this.setIcon('chapters');
       this.selectCurrentItem_ = () => {
         this.items.forEach(item => {
           item.selected(this.track_.activeCues[0] === item.cue);
@@ -17839,7 +17868,7 @@
     /**
      * Create menu from chapter track
      *
-     * @return {Menu}
+     * @return { import('../../menu/menu').default }
      *         New menu for the chapter buttons
      */
     createMenu() {
@@ -17850,7 +17879,7 @@
     /**
      * Create a menu item for each text track
      *
-     * @return {TextTrackMenuItem[]}
+     * @return  { import('./text-track-menu-item').default[] }
      *         Array of menu items
      */
     createItems() {
@@ -17896,10 +17925,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The button component for toggling and selecting descriptions
    *
    * @extends TextTrackButton
@@ -17908,7 +17933,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -17919,6 +17944,7 @@
      */
     constructor(player, options, ready) {
       super(player, options, ready);
+      this.setIcon('audio-description');
       const tracks = player.textTracks();
       const changeHandler = bind_(this, this.handleTracksChange);
       tracks.addEventListener('change', changeHandler);
@@ -17992,10 +18018,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The button component for toggling and selecting subtitles
    *
    * @extends TextTrackButton
@@ -18004,7 +18026,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -18015,6 +18037,7 @@
      */
     constructor(player, options, ready) {
       super(player, options, ready);
+      this.setIcon('subtitles');
     }
 
     /**
@@ -18053,10 +18076,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The menu item for caption track settings menu
    *
    * @extends TextTrackMenuItem
@@ -18065,7 +18084,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -18103,15 +18122,19 @@
     handleClick(event) {
       this.player().getChild('textTrackSettings').open();
     }
+
+    /**
+     * Update control text and label on languagechange
+     */
+    handleLanguagechange() {
+      this.$('.vjs-menu-item-text').textContent = this.player_.localize(this.options_.kind + ' settings');
+      super.handleLanguagechange();
+    }
   }
   Component$1.registerComponent('CaptionSettingsMenuItem', CaptionSettingsMenuItem);
 
   /**
    * @file captions-button.js
-   */
-
-  /**
-   * @typedef { import('../../player').default } Player
    */
 
   /**
@@ -18123,7 +18146,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -18134,6 +18157,7 @@
      */
     constructor(player, options, ready) {
       super(player, options, ready);
+      this.setIcon('captions');
     }
 
     /**
@@ -18199,11 +18223,15 @@
       const el = super.createEl(type, props, attrs);
       const parentSpan = el.querySelector('.vjs-menu-item-text');
       if (this.options_.track.kind === 'captions') {
-        parentSpan.appendChild(createEl('span', {
-          className: 'vjs-icon-placeholder'
-        }, {
-          'aria-hidden': true
-        }));
+        if (this.player_.options_.experimentalSvgIcons) {
+          this.setIcon('captions', el);
+        } else {
+          parentSpan.appendChild(createEl('span', {
+            className: 'vjs-icon-placeholder'
+          }, {
+            'aria-hidden': true
+          }));
+        }
         parentSpan.appendChild(createEl('span', {
           className: 'vjs-control-text',
           // space added as the text will visually flow with the
@@ -18221,10 +18249,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The button component for toggling and selecting captions and/or subtitles
    *
    * @extends TextTrackButton
@@ -18233,7 +18257,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -18248,8 +18272,10 @@
       // Although North America uses "captions" in most cases for
       // "captions and subtitles" other locales use "subtitles"
       this.label_ = 'subtitles';
+      this.setIcon('subtitles');
       if (['en', 'en-us', 'en-ca', 'fr-ca'].indexOf(this.player_.language_) > -1) {
         this.label_ = 'captions';
+        this.setIcon('captions');
       }
       this.menuButton_.controlText(toTitleCase$1(this.label_));
     }
@@ -18309,10 +18335,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * An {@link AudioTrack} {@link MenuItem}
    *
    * @extends MenuItem
@@ -18321,7 +18343,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -18348,7 +18370,7 @@
     createEl(type, props, attrs) {
       const el = super.createEl(type, props, attrs);
       const parentSpan = el.querySelector('.vjs-menu-item-text');
-      if (this.options_.track.kind === 'main-desc') {
+      if (['main-desc', 'description'].indexOf(this.options_.track.kind) >= 0) {
         parentSpan.appendChild(createEl('span', {
           className: 'vjs-icon-placeholder'
         }, {
@@ -18431,6 +18453,7 @@
     constructor(player, options = {}) {
       options.tracks = player.audioTracks();
       super(player, options);
+      this.setIcon('audio');
     }
 
     /**
@@ -18487,10 +18510,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The specific menu item type for selecting a playback rate.
    *
    * @extends MenuItem
@@ -18499,7 +18518,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -18563,10 +18582,6 @@
    */
 
   /**
-   * @typedef { import('../../player').default } Player
-   */
-
-  /**
    * The component for controlling the playback rate.
    *
    * @extends MenuButton
@@ -18575,7 +18590,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../../player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -18818,19 +18833,12 @@
    * @private
    */
   ControlBar.prototype.options_ = {
-    children: ['playToggle', 'skipBackward', 'skipForward', 'volumePanel', 'currentTimeDisplay', 'timeDivider', 'durationDisplay', 'progressControl', 'liveDisplay', 'seekToLive', 'remainingTimeDisplay', 'customControlSpacer', 'playbackRateMenuButton', 'chaptersButton', 'descriptionsButton', 'subsCapsButton', 'audioTrackButton', 'fullscreenToggle']
+    children: ['playToggle', 'skipBackward', 'skipForward', 'volumePanel', 'currentTimeDisplay', 'timeDivider', 'durationDisplay', 'progressControl', 'liveDisplay', 'seekToLive', 'remainingTimeDisplay', 'customControlSpacer', 'playbackRateMenuButton', 'chaptersButton', 'descriptionsButton', 'subsCapsButton', 'audioTrackButton', 'pictureInPictureToggle', 'fullscreenToggle']
   };
-  if ('exitPictureInPicture' in document) {
-    ControlBar.prototype.options_.children.splice(ControlBar.prototype.options_.children.length - 1, 0, 'pictureInPictureToggle');
-  }
   Component$1.registerComponent('ControlBar', ControlBar);
 
   /**
    * @file error-display.js
-   */
-
-  /**
-   * @typedef { import('./player').default } Player
    */
 
   /**
@@ -18843,7 +18851,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param  {Player} player
+     * @param  { import('./player').default } player
      *         The `Player` that this class should be attached to.
      *
      * @param  {Object} [options]
@@ -18894,11 +18902,6 @@
   /**
    * @file text-track-settings.js
    */
-
-  /**
-   * @typedef { import('../player').default } Player
-   */
-
   const LOCAL_STORAGE_KEY$1 = 'vjs-text-track-settings';
   const COLOR_BLACK = ['#000', 'Black'];
   const COLOR_BLUE = ['#00F', 'Blue'];
@@ -18946,7 +18949,7 @@
       selector: '.vjs-edge-style > select',
       id: '%s',
       label: 'Text Edge Style',
-      options: [['none', 'None'], ['raised', 'Raised'], ['depressed', 'Depressed'], ['uniform', 'Uniform'], ['dropshadow', 'Dropshadow']]
+      options: [['none', 'None'], ['raised', 'Raised'], ['depressed', 'Depressed'], ['uniform', 'Uniform'], ['dropshadow', 'Drop shadow']]
     },
     fontFamily: {
       selector: '.vjs-font-family > select',
@@ -19066,7 +19069,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('../player').default } player
      *         The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -19327,6 +19330,13 @@
         ccBtn.focus();
       }
     }
+
+    /**
+     * Repopulate dialog with new localizations on languagechange
+     */
+    handleLanguagechange() {
+      this.fill();
+    }
   }
   Component$1.registerComponent('TextTrackSettings', TextTrackSettings);
 
@@ -19462,10 +19472,6 @@
   }
   Component$1.registerComponent('ResizeManager', ResizeManager);
 
-  /**
-   * @typedef { import('./player').default } Player
-   */
-
   const defaults = {
     trackingThreshold: 20,
     liveTolerance: 15
@@ -19482,7 +19488,7 @@
     /**
      * Creates an instance of this class.
      *
-     * @param {Player} player
+     * @param { import('./player').default } player
      *        The `Player` that this class should be attached to.
      *
      * @param {Object} [options]
@@ -19496,7 +19502,7 @@
      *        Number of seconds behind live that we have to be
      *        before we will be considered non-live. Note that this will only
      *        be used when playing at the live edge. This allows large seekable end
-     *        changes to not effect wether we are live or not.
+     *        changes to not effect whether we are live or not.
      */
     constructor(player, options) {
       // LiveTracker does not need an element
@@ -19734,7 +19740,7 @@
      * is tracking live playback or not
      *
      * @return {boolean}
-     *         Wether liveTracker is tracking
+     *         Whether liveTracker is tracking
      */
     isLive() {
       return this.isTracking();
@@ -19745,7 +19751,7 @@
      * on each seekableendchange
      *
      * @return {boolean}
-     *         Wether playback is at the live edge
+     *         Whether playback is at the live edge
      */
     atLiveEdge() {
       return !this.behindLiveEdge();
@@ -19762,7 +19768,7 @@
     }
 
     /**
-     * The number of seconds that have occured after seekable end
+     * The number of seconds that have occurred after seekable end
      * changed. This will be reset to 0 once seekable end changes.
      *
      * @return {number}
@@ -19789,7 +19795,7 @@
     }
 
     /**
-     * Wether live tracker is currently tracking or not.
+     * Whether live tracker is currently tracking or not.
      */
     isTracking() {
       return typeof this.trackingInterval_ === 'number';
@@ -19852,7 +19858,7 @@
       };
       return createEl('div', {
         className: 'vjs-title-bar'
-      }, {}, Object.values(this.els));
+      }, {}, values$1(this.els));
     }
 
     /**
@@ -19940,17 +19946,13 @@
   Component$1.registerComponent('TitleBar', TitleBar);
 
   /**
-   * @typedef { import('./html5').default } Html5
-   */
-
-  /**
    * This function is used to fire a sourceset when there is something
    * similar to `mediaEl.load()` being called. It will try to find the source via
    * the `src` attribute and then the `<source>` elements. It will then fire `sourceset`
    * with the source that was found or empty string if we cannot know. If it cannot
    * find a source then `sourceset` will not be fired.
    *
-   * @param {Html5} tech
+   * @param { import('./html5').default } tech
    *        The tech object that sourceset was setup on
    *
    * @return {boolean}
@@ -20543,7 +20545,7 @@
           el = clone;
         } else {
           el = document.createElement('video');
-          el.disableRemotePlayback=true; //ADDED FANSUBS.CAT
+          //el.disableRemotePlayback=true; //ADDED FANSUBS.CAT
 
           // determine if native controls should be used
           const tagAttributes = this.options_.tag && getAttributes(this.options_.tag);
@@ -20780,7 +20782,7 @@
         this.trigger('fullscreenchange', {
           isFullscreen: false
         });
-        // Safari will sometimes set contols on the videoelement when existing fullscreen.
+        // Safari will sometimes set controls on the videoelement when existing fullscreen.
         if (this.el_.controls && !this.options_.nativeControlsForTouch && this.controls()) {
           this.el_.controls = false;
         }
@@ -22141,11 +22143,6 @@
    * @file player.js
    */
 
-  /**
-   * @typedef { import('./tracks/html-track-element').default } HtmlTrackElement
-   * @typedef { import('./utils/time').TimeRange } TimeRange
-   */
-
   // The following tech events are simply re-triggered
   // on the player when they happen
   const TECH_EVENTS_RETRIGGER = [
@@ -22375,6 +22372,7 @@
      */
     constructor(tag, options, ready) {
       // Make sure tag ID exists
+      // also here.. probably better
       tag.id = tag.id || options.id || `vjs_video_${newGUID()}`;
 
       // Set Options
@@ -22491,9 +22489,11 @@
       this.resetCache_();
 
       // Set poster
+      /** @type string */
       this.poster_ = options.poster || '';
 
       // Set controls
+      /** @type {boolean} */
       this.controls_ = !!options.controls;
 
       // Original tag settings stored in options
@@ -22568,6 +22568,21 @@
       this.options_.playerOptions = playerOptionsCopy;
       this.middleware_ = [];
       this.playbackRates(options.playbackRates);
+      if (options.experimentalSvgIcons) {
+        // Add SVG Sprite to the DOM
+        const parser = new window.DOMParser();
+        const parsedSVG = parser.parseFromString(icons, 'image/svg+xml');
+        const errorNode = parsedSVG.querySelector('parsererror');
+        if (errorNode) {
+          log$1.warn('Failed to load SVG Icons. Falling back to Font Icons.');
+          this.options_.experimentalSvgIcons = null;
+        } else {
+          const sprite = parsedSVG.documentElement;
+          sprite.style.display = 'none';
+          this.el_.appendChild(sprite);
+          this.addClass('vjs-svg-icons-enabled');
+        }
+      }
       this.initChildren();
 
       // Set isAudio based on whether or not an audio tag was used
@@ -22791,7 +22806,7 @@
       this.addClass('vjs-paused');
 
       // Add a style element in the player that we'll use to set the width/height
-      // of the player in a way that's still overrideable by CSS, just like the
+      // of the player in a way that's still overridable by CSS, just like the
       // video element
       if (window.VIDEOJS_NO_DYNAMIC_STYLE !== true) {
         this.styleEl_ = createStyleElement('vjs-styles-dimensions');
@@ -22880,11 +22895,12 @@
      * A getter/setter for the `Player`'s width. Returns the player's configured value.
      * To get the current width use `currentWidth()`.
      *
-     * @param {number} [value]
-     *        The value to set the `Player`'s width to.
+     * @param {number|string} [value]
+     *        CSS value to set the `Player`'s width to.
      *
-     * @return {number}
-     *         The current width of the `Player` when getting.
+     * @return {number|undefined}
+     *         - The current width of the `Player` when getting.
+     *         - Nothing when setting
      */
     width(value) {
       return this.dimension('width', value);
@@ -22894,11 +22910,12 @@
      * A getter/setter for the `Player`'s height. Returns the player's configured value.
      * To get the current height use `currentheight()`.
      *
-     * @param {number} [value]
-     *        The value to set the `Player`'s heigth to.
+     * @param {number|string} [value]
+     *        CSS value to set the `Player`'s height to.
      *
-     * @return {number}
-     *         The current height of the `Player` when getting.
+     * @return {number|undefined}
+     *         - The current height of the `Player` when getting.
+     *         - Nothing when setting
      */
     height(value) {
       return this.dimension('height', value);
@@ -22912,7 +22929,7 @@
      *        - 'width'
      *        - 'height'
      *
-     * @param {number} [value]
+     * @param {number|string} [value]
      *        Value for dimension specified in the first argument.
      *
      * @return {number}
@@ -23081,7 +23098,7 @@
         // Use any width that's been specifically set
         width = this.width_;
       } else if (this.height_ !== undefined) {
-        // Or calulate the width from the aspect ratio if a height has been set
+        // Or calculate the width from the aspect ratio if a height has been set
         width = this.height_ / ratioMultiplier;
       } else {
         // Or use the video's metadata, or use the video el's default of 300
@@ -23589,7 +23606,7 @@
             if (e.type === 'sourceset') {
               return;
             }
-            const techSrc = this.techGet('currentSrc');
+            const techSrc = this.techGet_('currentSrc');
             this.lastSource_.tech = techSrc;
             this.updateSourceCaches_(techSrc);
           });
@@ -23997,8 +24014,6 @@
       let isFs = document[this.fsApi_.fullscreenElement] === el;
       if (!isFs && el.matches) {
         isFs = el.matches(':' + this.fsApi_.fullscreen);
-      } else if (!isFs && el.msMatchesSelector) {
-        isFs = el.msMatchesSelector(':' + this.fsApi_.fullscreen);
       }
       this.isFullscreen(isFs);
     }
@@ -24146,7 +24161,7 @@
      * @param {string} [method]
      *        the method to call
      *
-     * @param {Object} arg
+     * @param {Object} [arg]
      *        the argument to pass
      *
      * @private
@@ -24289,7 +24304,7 @@
     /**
      * These functions will be run when if play is terminated. If play
      * runPlayCallbacks_ is run these function will not be run. This allows us
-     * to differenciate between a terminated play and an actual call to play.
+     * to differentiate between a terminated play and an actual call to play.
      */
     runPlayTerminatedQueue_() {
       const queue = this.playTerminatedQueue_.slice(0);
@@ -24320,9 +24335,6 @@
 
     /**
      * Pause the video playback
-     *
-     * @return {Player}
-     *         A reference to the player object this function was called on
      */
     pause() {
       this.techCall_('pause');
@@ -24344,7 +24356,7 @@
      * Get a TimeRange object representing the current ranges of time that the user
      * has played.
      *
-     * @return {TimeRange}
+     * @return { import('./utils/time').TimeRange }
      *         A time range object that represents all the increments of time that have
      *         been played.
      */
@@ -24353,15 +24365,16 @@
     }
 
     /**
-     * Returns whether or not the user is "scrubbing". Scrubbing is
+     * Sets or returns whether or not the user is "scrubbing". Scrubbing is
      * when the user has clicked the progress bar handle and is
      * dragging it along the progress bar.
      *
      * @param {boolean} [isScrubbing]
      *        whether the user is or is not scrubbing
      *
-     * @return {boolean}
-     *         The value of scrubbing when getting
+     * @return {boolean|undefined}
+     *         - The value of scrubbing when getting
+     *         - Nothing when setting
      */
     scrubbing(isScrubbing) {
       if (typeof isScrubbing === 'undefined') {
@@ -24382,33 +24395,35 @@
      * @param {number|string} [seconds]
      *        The time to seek to in seconds
      *
-     * @return {number}
+     * @return {number|undefined}
      *         - the current time in seconds when getting
+     *         - Nothing when setting
      */
     currentTime(seconds) {
-      if (typeof seconds !== 'undefined') {
-        if (seconds < 0) {
-          seconds = 0;
-        }
-        if (!this.isReady_ || this.changingSrc_ || !this.tech_ || !this.tech_.isReady_) {
-          this.cache_.initTime = seconds;
-          this.off('canplay', this.boundApplyInitTime_);
-          this.one('canplay', this.boundApplyInitTime_);
-          return;
-        }
-        this.techCall_('setCurrentTime', seconds);
-        this.cache_.initTime = 0;
+      if (seconds === undefined) {
+        // cache last currentTime and return. default to 0 seconds
+        //
+        // Caching the currentTime is meant to prevent a massive amount of reads on the tech's
+        // currentTime when scrubbing, but may not provide much performance benefit after all.
+        // Should be tested. Also something has to read the actual current time or the cache will
+        // never get updated.
+        this.cache_.currentTime = this.techGet_('currentTime') || 0;
+        return this.cache_.currentTime;
+      }
+      if (seconds < 0) {
+        seconds = 0;
+      }
+      if (!this.isReady_ || this.changingSrc_ || !this.tech_ || !this.tech_.isReady_) {
+        this.cache_.initTime = seconds;
+        this.off('canplay', this.boundApplyInitTime_);
+        this.one('canplay', this.boundApplyInitTime_);
         return;
       }
-
-      // cache last currentTime and return. default to 0 seconds
-      //
-      // Caching the currentTime is meant to prevent a massive amount of reads on the tech's
-      // currentTime when scrubbing, but may not provide much performance benefit afterall.
-      // Should be tested. Also something has to read the actual current time or the cache will
-      // never get updated.
-      this.cache_.currentTime = this.techGet_('currentTime') || 0;
-      return this.cache_.currentTime;
+      this.techCall_('setCurrentTime', seconds);
+      this.cache_.initTime = 0;
+      if (isFinite(seconds)) {
+        this.cache_.currentTime = Number(seconds);
+      }
     }
 
     /**
@@ -24433,8 +24448,9 @@
      * @param {number} [seconds]
      *        The duration of the video to set in seconds
      *
-     * @return {number}
+     * @return {number|undefined}
      *         - The duration of the video in seconds when getting
+     *         - Nothing when setting
      */
     duration(seconds) {
       if (seconds === undefined) {
@@ -24480,7 +24496,7 @@
     }
 
     /**
-     * A remaining time function that is intented to be used when
+     * A remaining time function that is intended to be used when
      * the time is to be displayed directly to the user.
      *
      * @return {number}
@@ -24500,7 +24516,7 @@
      *
      * @see [Buffered Spec]{@link http://dev.w3.org/html5/spec/video.html#dom-media-buffered}
      *
-     * @return {TimeRange}
+     * @return { import('./utils/time').TimeRange }
      *         A mock {@link TimeRanges} object (following HTML spec)
      */
     buffered() {
@@ -24549,14 +24565,14 @@
      *         - 1.0 is 100%/full
      *         - 0.5 is half volume or 50%
      *
-     * @return {number}
+     * @return {number|undefined}
      *         The current volume as a percent when getting
      */
     volume(percentAsDecimal) {
       let vol;
       if (percentAsDecimal !== undefined) {
         // Force value to between 0 and 1
-        vol = Math.max(0, Math.min(1, parseFloat(percentAsDecimal)));
+        vol = Math.max(0, Math.min(1, percentAsDecimal));
         this.cache_.volume = vol;
         this.techCall_('setVolume', vol);
         if (vol > 0) {
@@ -24577,9 +24593,10 @@
      *        - true to mute
      *        - false to unmute
      *
-     * @return {boolean}
+     * @return {boolean|undefined}
      *         - true if mute is on and getting
      *         - false if mute is off and getting
+     *         - nothing if setting
      */
     muted(muted) {
       if (muted !== undefined) {
@@ -24610,14 +24627,14 @@
      *        - true to mute
      *        - false to unmute
      *
-     * @return {boolean|Player}
+     * @return {boolean|undefined}
      *         - true if defaultMuted is on and getting
      *         - false if defaultMuted is off and getting
-     *         - A reference to the current player when setting
+     *         - Nothing when setting
      */
     defaultMuted(defaultMuted) {
       if (defaultMuted !== undefined) {
-        return this.techCall_('setDefaultMuted', defaultMuted);
+        this.techCall_('setDefaultMuted', defaultMuted);
       }
       return this.techGet_('defaultMuted') || false;
     }
@@ -24631,8 +24648,9 @@
      *         - 1.0 is 100%/full
      *         - 0.5 is half volume or 50%
      *
-     * @return {number}
-     *         the current value of lastVolume as a percent when getting
+     * @return {number|undefined}
+     *         - The current value of lastVolume as a percent when getting
+     *         - Nothing when setting
      *
      * @private
      */
@@ -24666,9 +24684,10 @@
      * @param  {boolean} [isFS]
      *         Set the players current fullscreen state
      *
-     * @return {boolean}
+     * @return {boolean|undefined}
      *         - true if fullscreen is on and getting
      *         - false if fullscreen is off and getting
+     *         - Nothing when setting
      */
     isFullscreen(isFS) {
       if (isFS !== undefined) {
@@ -24892,9 +24911,9 @@
     }
 
     /**
-     * Disable Picture-in-Picture mode.
+     * Get or set disable Picture-in-Picture mode.
      *
-     * @param {boolean} value
+     * @param {boolean} [value]
      *                  - true will disable Picture-in-Picture mode
      *                  - false will enable Picture-in-Picture mode
      */
@@ -24914,9 +24933,10 @@
      * @param  {boolean} [isPiP]
      *         Set the players current Picture-in-Picture state
      *
-     * @return {boolean}
+     * @return {boolean|undefined}
      *         - true if Picture-in-Picture is on and getting
      *         - false if Picture-in-Picture is off and getting
+     *         - nothing if setting
      */
     isInPictureInPicture(isPiP) {
       if (isPiP !== undefined) {
@@ -24932,7 +24952,14 @@
      * continue consuming media while they interact with other content sites, or
      * applications on their device.
      *
-     * @see [Spec]{@link https://wicg.github.io/picture-in-picture}
+     * This can use document picture-in-picture or element picture in picture
+     *
+     * Set `enableDocumentPictureInPicture` to `true` to use docPiP on a supported browser
+     * Else set `disablePictureInPicture` to `false` to disable elPiP on a supported browser
+     *
+     *
+     * @see [Spec]{@link https://w3c.github.io/picture-in-picture/}
+     * @see [Spec]{@link https://wicg.github.io/document-picture-in-picture/}
      *
      * @fires Player#enterpictureinpicture
      *
@@ -24940,6 +24967,41 @@
      *         A promise with a Picture-in-Picture window.
      */
     requestPictureInPicture() {
+      if (this.options_.enableDocumentPictureInPicture && window.documentPictureInPicture) {
+        const pipContainer = document.createElement(this.el().tagName);
+        pipContainer.classList = this.el().classList;
+        pipContainer.classList.add('vjs-pip-container');
+        if (this.posterImage) {
+          pipContainer.appendChild(this.posterImage.el().cloneNode(true));
+        }
+        if (this.titleBar) {
+          pipContainer.appendChild(this.titleBar.el().cloneNode(true));
+        }
+        pipContainer.appendChild(createEl('p', {
+          className: 'vjs-pip-text'
+        }, {}, this.localize('Playing in picture-in-picture')));
+        return window.documentPictureInPicture.requestWindow({
+          // The aspect ratio won't be correct, Chrome bug https://crbug.com/1407629
+          width: this.videoWidth(),
+          height: this.videoHeight()
+        }).then(pipWindow => {
+          copyStyleSheetsToWindow(pipWindow);
+          this.el_.parentNode.insertBefore(pipContainer, this.el_);
+          pipWindow.document.body.appendChild(this.el_);
+          pipWindow.document.body.classList.add('vjs-pip-window');
+          this.player_.isInPictureInPicture(true);
+          this.player_.trigger('enterpictureinpicture');
+
+          // Listen for the PiP closing event to move the video back.
+          pipWindow.addEventListener('pagehide', event => {
+            const pipVideo = event.target.querySelector('.video-js');
+            pipContainer.parentNode.replaceChild(pipVideo, pipContainer);
+            this.player_.isInPictureInPicture(false);
+            this.player_.trigger('leavepictureinpicture');
+          });
+          return pipWindow;
+        });
+      }
       if ('pictureInPictureEnabled' in document && this.disablePictureInPicture() === false) {
         /**
          * This event fires when the player enters picture in picture mode
@@ -24949,6 +25011,7 @@
          */
         return this.techGet_('requestPictureInPicture');
       }
+      return Promise.reject('No PiP mode is available');
     }
 
     /**
@@ -24962,6 +25025,11 @@
      *         A promise.
      */
     exitPictureInPicture() {
+      if (window.documentPictureInPicture && window.documentPictureInPicture.window) {
+        // With documentPictureInPicture, Player#leavepictureinpicture is fired in the pagehide handler
+        window.documentPictureInPicture.window.close();
+        return Promise.resolve();
+      }
       if ('pictureInPictureEnabled' in document) {
         /**
          * This event fires when the player leaves picture in picture mode
@@ -25183,7 +25251,7 @@
      *        algorithms can take the `type` into account.
      *
      *        If not provided, this method acts as a getter.
-     * @param {boolean} isRetry
+     * @param {boolean} [isRetry]
      *        Indicates whether this is being called internally as a result of a retry
      *
      * @return {string|undefined}
@@ -25348,6 +25416,12 @@
      * Begin loading the src data.
      */
     load() {
+      // Workaround to use the load method with the VHS.
+      // Does not cover the case when the load method is called directly from the mediaElement.
+      if (this.tech_ && this.tech_.vhs) {
+        this.src(this.currentSource());
+        return;
+      }
       this.techCall_('load');
     }
 
@@ -25394,14 +25468,28 @@
     resetProgressBar_() {
       this.currentTime(0);
       const {
+        currentTimeDisplay,
         durationDisplay,
+        progressControl,
         remainingTimeDisplay
       } = this.controlBar || {};
+      const {
+        seekBar
+      } = progressControl || {};
+      if (currentTimeDisplay) {
+        currentTimeDisplay.updateContent();
+      }
       if (durationDisplay) {
         durationDisplay.updateContent();
       }
       if (remainingTimeDisplay) {
         remainingTimeDisplay.updateContent();
+      }
+      if (seekBar) {
+        seekBar.update();
+        if (seekBar.loadProgressBar) {
+          seekBar.loadProgressBar.update();
+        }
       }
     }
 
@@ -25474,12 +25562,12 @@
     /**
      * Get or set the preload attribute
      *
-     * @param {boolean} [value]
-     *        - true means that we should preload
-     *        - false means that we should not preload
+     * @param {'none'|'auto'|'metadata'} [value]
+     *        Preload mode to pass to tech
      *
-     * @return {string}
-     *         The preload attribute value when getting
+     * @return {string|undefined}
+     *         - The preload attribute value when getting
+     *         - Nothing when setting
      */
     preload(value) {
       if (value !== undefined) {
@@ -25495,7 +25583,7 @@
      * modify the attribute on the tech. When this is a string the attribute on
      * the tech will be removed and `Player` will handle autoplay on loadstarts.
      *
-     * @param {boolean|string} [value]
+     * @param {boolean|'play'|'muted'|'any'} [value]
      *        - true: autoplay using the browser behavior
      *        - false: do not autoplay
      *        - 'play': call play() on every loadstart
@@ -25503,8 +25591,9 @@
      *        - 'any': call play() on every loadstart. if that fails call muted() then play().
      *        - *: values other than those listed here will be set `autoplay` to true
      *
-     * @return {boolean|string}
-     *         The current value of autoplay when getting
+     * @return {boolean|string|undefined}
+     *         - The current value of autoplay when getting
+     *         - Nothing when setting
      */
     autoplay(value) {
       // getter usage
@@ -25549,9 +25638,9 @@
      *          which in most cases is inline. iOS Safari is a notable exception
      *          and plays fullscreen by default.
      *
-     * @return {string|Player}
+     * @return {string|undefined}
      *         - the current value of playsinline
-     *         - the player when setting
+     *         - Nothing when setting
      *
      * @see [Spec]{@link https://html.spec.whatwg.org/#attr-video-playsinline}
      */
@@ -25559,7 +25648,6 @@
       if (value !== undefined) {
         this.techCall_('setPlaysinline', value);
         this.options_.playsinline = value;
-        return this;
       }
       return this.techGet_('playsinline');
     }
@@ -25571,8 +25659,9 @@
      *        - true means that we should loop the video
      *        - false means that we should not loop the video
      *
-     * @return {boolean}
-     *         The current value of loop when getting
+     * @return {boolean|undefined}
+     *         - The current value of loop when getting
+     *         - Nothing when setting
      */
     loop(value) {
       if (value !== undefined) {
@@ -25591,8 +25680,9 @@
      * @param {string} [src]
      *        Poster image source URL
      *
-     * @return {string}
-     *         The current value of poster when getting
+     * @return {string|undefined}
+     *         - The current value of poster when getting
+     *         - Nothing when setting
      */
     poster(src) {
       if (src === undefined) {
@@ -25659,8 +25749,9 @@
      *        - true to turn controls on
      *        - false to turn controls off
      *
-     * @return {boolean}
-     *         The current value of controls when getting
+     * @return {boolean|undefined}
+     *         - The current value of controls when getting
+     *         - Nothing when setting
      */
     controls(bool) {
       if (bool === undefined) {
@@ -25715,8 +25806,9 @@
      *        - true to turn native controls on
      *        - false to turn native controls off
      *
-     * @return {boolean}
-     *         The current value of native controls when getting
+     * @return {boolean|undefined}
+     *         - The current value of native controls when getting
+     *         - Nothing when setting
      */
     usingNativeControls(bool) {
       if (bool === undefined) {
@@ -25761,8 +25853,9 @@
      *         A MediaError or a string/number to be turned
      *         into a MediaError
      *
-     * @return {MediaError|null}
-     *         The current MediaError when getting (or null)
+     * @return {MediaError|null|undefined}
+     *         - The current MediaError when getting (or null)
+     *         - Nothing when setting
      */
     error(err) {
       if (err === undefined) {
@@ -25795,7 +25888,7 @@
 
       // restoring to default
       if (err === null) {
-        this.error_ = err;
+        this.error_ = null;
         this.removeClass('vjs-error');
         if (this.errorDisplay) {
           this.errorDisplay.close();
@@ -25842,8 +25935,9 @@
      *        - true if the user is active
      *        - false if the user is inactive
      *
-     * @return {boolean}
-     *         The current value of userActive when getting
+     * @return {boolean|undefined}
+     *         - The current value of userActive when getting
+     *         - Nothing when setting
      */
     userActive(bool) {
       if (bool === undefined) {
@@ -25958,7 +26052,9 @@
       // then gets picked up by this loop
       // http://ejohn.org/blog/learning-from-twitter/
       let inactivityTimeout;
-      this.setInterval(function () {
+
+      /** @this Player */
+      const activityCheck = function () {
         // Check to see if mouse/touch activity has happened
         if (!this.userActivity_) {
           return;
@@ -25987,7 +26083,8 @@
             this.userActive(false);
           }
         }, timeout);
-      }, 250);
+      };
+      this.setInterval(activityCheck, 250);
     }
 
     /**
@@ -26000,8 +26097,9 @@
      * @param {number} [rate]
      *       New playback rate to set.
      *
-     * @return {number}
-     *         The current playback rate when getting or 1.0
+     * @return {number|undefined}
+     *         - The current playback rate when getting or 1.0
+     *         - Nothing when setting
      */
     playbackRate(rate) {
       if (rate !== undefined) {
@@ -26027,9 +26125,9 @@
      * @param {number} [rate]
      *       New default playback rate to set.
      *
-     * @return {number|Player}
+     * @return {number|undefined}
      *         - The default playback rate when getting or 1.0
-     *         - the player when setting
+     *         - Nothing when setting
      */
     defaultPlaybackRate(rate) {
       if (rate !== undefined) {
@@ -26044,12 +26142,13 @@
     /**
      * Gets or sets the audio flag
      *
-     * @param {boolean} bool
+     * @param {boolean} [bool]
      *        - true signals that this is an audio player
      *        - false signals that this is not an audio player
      *
-     * @return {boolean}
-     *         The current value of isAudio when getting
+     * @return {boolean|undefined}
+     *         - The current value of isAudio when getting
+     *         - Nothing when setting
      */
     isAudio(bool) {
       if (bool !== undefined) {
@@ -26219,7 +26318,7 @@
      *                                        from the TextTrackList and HtmlTrackElementList
      *                                        after a source change
      *
-     * @return {HtmlTrackElement}
+     * @return { import('./tracks/html-track-element').default }
      *         the HTMLTrackElement that was created and added
      *         to the HtmlTrackElementList and the remote
      *         TextTrackList
@@ -26292,7 +26391,7 @@
     }
 
     /**
-     * The player's language code.
+     * Set or get the player's language code.
      *
      * Changing the language will trigger
      * [languagechange]{@link Player#event:languagechange}
@@ -26305,8 +26404,9 @@
      * @param {string} [code]
      *        the language code to set the player to
      *
-     * @return {string}
-     *         The current language code when getting
+     * @return {string|undefined}
+     *         - The current language code when getting
+     *         - Nothing when setting
      */
     language(code) {
       if (code === undefined) {
@@ -26341,7 +26441,7 @@
     }
 
     /**
-     * returns a JavaScript object reperesenting the current track
+     * returns a JavaScript object representing the current track
      * information. **DOES not return it as JSON**
      *
      * @return {Object}
@@ -26490,13 +26590,14 @@
      * Get or set a flag indicating whether or not this player should adjust
      * its UI based on its dimensions.
      *
-     * @param  {boolean} value
+     * @param  {boolean} [value]
      *         Should be `true` if the player should adjust its UI based on its
      *         dimensions; otherwise, should be `false`.
      *
-     * @return {boolean}
+     * @return {boolean|undefined}
      *         Will be `true` if this player should adjust its UI based on its
      *         dimensions; otherwise, will be `false`.
+     *         Nothing if setting
      */
     responsive(value) {
       // Used as a getter.
@@ -26609,6 +26710,7 @@
       if (!media || typeof media !== 'object') {
         return;
       }
+      const crossOrigin = this.crossOrigin();
       this.reset();
 
       // Clone the media object so it cannot be mutated from outside.
@@ -26629,6 +26731,9 @@
           src: poster,
           type: getMimetype(poster)
         }];
+      }
+      if (crossOrigin) {
+        this.crossOrigin(crossOrigin);
       }
       if (src) {
         this.src(src);
@@ -26741,6 +26846,7 @@
      * @param {boolean} enabled
      * @fires Player#debugon
      * @fires Player#debugoff
+     * @return {boolean|undefined}
      */
     debug(enabled) {
       if (enabled === undefined) {
@@ -27733,7 +27839,11 @@
     // This will make sure that the element is indeed in the dom of that document.
     // Additionally, check that the document in question has a default view.
     // If the document is no longer attached to the dom, the defaultView of the document will be null.
-    if (!el.ownerDocument.defaultView || !el.ownerDocument.body.contains(el)) {
+    // If element is inside Shadow DOM (e.g. is part of a Custom element), ownerDocument.body
+    // always returns false. Instead, use the Shadow DOM root.
+    const inShadowDom = 'getRootNode' in el ? el.getRootNode() instanceof window.ShadowRoot : false;
+    const rootNode = inShadowDom ? el.getRootNode() : el.ownerDocument.body;
+    if (!el.ownerDocument.defaultView || !rootNode.contains(el)) {
       log$1.warn('The element supplied is not included in the DOM');
     }
     options = options || {};
@@ -27893,7 +28003,7 @@
     if (Tech.isTech(comp)) {
       log$1.warn(`The ${name} tech was registered as a component. It should instead be registered using videojs.registerTech(name, tech)`);
     }
-    Component$1.registerComponent.call(Component$1, name, comp);
+    return Component$1.registerComponent.call(Component$1, name, comp);
   };
   videojs.getTech = Tech.getTech;
   videojs.registerTech = Tech.registerTech;
@@ -28153,7 +28263,7 @@
   videojs.url = Url;
 
   createCommonjsModule(function (module, exports) {
-    /*! @name videojs-contrib-quality-levels @version 3.0.0 @license Apache-2.0 */
+    /*! @name videojs-contrib-quality-levels @version 4.0.0 @license Apache-2.0 */
     (function (global, factory) {
       module.exports = factory(videojs) ;
     })(commonjsGlobal, function (videojs) {
@@ -28245,6 +28355,9 @@
        */
 
       class QualityLevelList extends videojs__default['default'].EventTarget {
+        /**
+         * Creates a QualityLevelList.
+         */
         constructor() {
           super();
           let list = this; // eslint-disable-line
@@ -28275,6 +28388,7 @@
               return list.levels_.length;
             }
           });
+          list[Symbol.iterator] = () => list.levels_.values();
           return list;
         }
         /**
@@ -28316,7 +28430,7 @@
         /**
          * Removes a quality level from the list.
          *
-         * @param {QualityLevel} remove QualityLevel to remove to the list.
+         * @param {QualityLevel} qualityLevel The QualityLevel to remove from the list.
          * @return {QualityLevel|null} the QualityLevel removed or null if nothing removed
          * @method removeQualityLevel
          */
@@ -28385,15 +28499,15 @@
       for (const event in QualityLevelList.prototype.allowedEvents_) {
         QualityLevelList.prototype['on' + event] = null;
       }
-      var version = "3.0.0";
-      const registerPlugin = videojs__default['default'].registerPlugin || videojs__default['default'].plugin;
+      var version = "4.0.0";
+
       /**
        * Initialization function for the qualityLevels plugin. Sets up the QualityLevelList and
        * event handlers.
        *
        * @param {Player} player Player object.
        * @param {Object} options Plugin options object.
-       * @function initPlugin
+       * @return {QualityLevelList} a list of QualityLevels
        */
 
       const initPlugin = function (player, options) {
@@ -28418,14 +28532,14 @@
        * to you; if not, remove the wait for "ready"!
        *
        * @param {Object} options Plugin options object
-       * @function qualityLevels
+       * @return {QualityLevelList} a list of QualityLevels
        */
 
       const qualityLevels = function (options) {
-        return initPlugin(this, videojs__default['default'].mergeOptions({}, options));
+        return initPlugin(this, videojs__default['default'].obj.merge({}, options));
       }; // Register the plugin with video.js.
 
-      registerPlugin('qualityLevels', qualityLevels); // Include the version number.
+      videojs__default['default'].registerPlugin('qualityLevels', qualityLevels); // Include the version number.
 
       qualityLevels.VERSION = version;
       return qualityLevels;
@@ -28741,7 +28855,7 @@
     return array;
   }
 
-  /*! @name m3u8-parser @version 6.0.0 @license Apache-2.0 */
+  /*! @name m3u8-parser @version 7.1.0 @license Apache-2.0 */
 
   /**
    * @file m3u8/line-stream.js
@@ -29297,6 +29411,68 @@
           });
           this.trigger('data', event);
           return;
+        }
+        match = /^#EXT-X-DATERANGE:(.*)$/.exec(newLine);
+        if (match && match[1]) {
+          event = {
+            type: 'tag',
+            tagType: 'daterange'
+          };
+          event.attributes = parseAttributes$1(match[1]);
+          ['ID', 'CLASS'].forEach(function (key) {
+            if (event.attributes.hasOwnProperty(key)) {
+              event.attributes[key] = String(event.attributes[key]);
+            }
+          });
+          ['START-DATE', 'END-DATE'].forEach(function (key) {
+            if (event.attributes.hasOwnProperty(key)) {
+              event.attributes[key] = new Date(event.attributes[key]);
+            }
+          });
+          ['DURATION', 'PLANNED-DURATION'].forEach(function (key) {
+            if (event.attributes.hasOwnProperty(key)) {
+              event.attributes[key] = parseFloat(event.attributes[key]);
+            }
+          });
+          ['END-ON-NEXT'].forEach(function (key) {
+            if (event.attributes.hasOwnProperty(key)) {
+              event.attributes[key] = /YES/i.test(event.attributes[key]);
+            }
+          });
+          ['SCTE35-CMD', ' SCTE35-OUT', 'SCTE35-IN'].forEach(function (key) {
+            if (event.attributes.hasOwnProperty(key)) {
+              event.attributes[key] = event.attributes[key].toString(16);
+            }
+          });
+          const clientAttributePattern = /^X-([A-Z]+-)+[A-Z]+$/;
+          for (const key in event.attributes) {
+            if (!clientAttributePattern.test(key)) {
+              continue;
+            }
+            const isHexaDecimal = /[0-9A-Fa-f]{6}/g.test(event.attributes[key]);
+            const isDecimalFloating = /^\d+(\.\d+)?$/.test(event.attributes[key]);
+            event.attributes[key] = isHexaDecimal ? event.attributes[key].toString(16) : isDecimalFloating ? parseFloat(event.attributes[key]) : String(event.attributes[key]);
+          }
+          this.trigger('data', event);
+          return;
+        }
+        match = /^#EXT-X-INDEPENDENT-SEGMENTS/.exec(newLine);
+        if (match) {
+          this.trigger('data', {
+            type: 'tag',
+            tagType: 'independent-segments'
+          });
+          return;
+        }
+        match = /^#EXT-X-CONTENT-STEERING:(.*)$/.exec(newLine);
+        if (match) {
+          event = {
+            type: 'tag',
+            tagType: 'content-steering'
+          };
+          event.attributes = parseAttributes$1(match[1]);
+          this.trigger('data', event);
+          return;
         } // unknown tag type
 
         this.trigger('data', {
@@ -29439,6 +29615,7 @@
       this.lineStream = new LineStream();
       this.parseStream = new ParseStream();
       this.lineStream.pipe(this.parseStream);
+      this.lastProgramDateTime = null;
       /* eslint-disable consistent-this */
 
       const self = this;
@@ -29467,6 +29644,7 @@
       this.manifest = {
         allowCache: true,
         discontinuityStarts: [],
+        dateRanges: [],
         segments: []
       }; // keep track of the last seen segment's byte range end, as segments are not required
       // to provide the offset, in which case it defaults to the next byte after the
@@ -29475,6 +29653,7 @@
       let lastByterangeEnd = 0; // keep track of the last seen part's byte range end.
 
       let lastPartByterangeEnd = 0;
+      const dateRangeTags = {};
       this.on('end', () => {
         // only add preloadSegment if we don't yet have a uri for it.
         // and we actually have parts/preloadHints
@@ -29554,6 +29733,9 @@
                   this.trigger('info', {
                     message: 'defaulting discontinuity sequence to zero'
                   });
+                }
+                if (entry.title) {
+                  currentUri.title = entry.title;
                 }
                 if (entry.duration > 0) {
                   currentUri.duration = entry.duration;
@@ -29764,6 +29946,21 @@
                 }
                 currentUri.dateTimeString = entry.dateTimeString;
                 currentUri.dateTimeObject = entry.dateTimeObject;
+                const {
+                  lastProgramDateTime
+                } = this;
+                this.lastProgramDateTime = new Date(entry.dateTimeString).getTime(); // We should extrapolate Program Date Time backward only during first program date time occurrence.
+                // Once we have at least one program date time point, we can always extrapolate it forward using lastProgramDateTime reference.
+
+                if (lastProgramDateTime === null) {
+                  // Extrapolate Program Date Time backward
+                  // Since it is first program date time occurrence we're assuming that
+                  // all this.manifest.segments have no program date time info
+                  this.manifest.segments.reduceRight((programDateTime, segment) => {
+                    segment.programDateTime = programDateTime - segment.duration * 1000;
+                    return segment.programDateTime;
+                  }, this.lastProgramDateTime);
+                }
               },
               targetduration() {
                 if (!isFinite(entry.duration) || entry.duration < 0) {
@@ -29893,6 +30090,68 @@
                   this.manifest.partTargetDuration = this.manifest.partInf.partTarget;
                 }
                 setHoldBack.call(this, this.manifest);
+              },
+              'daterange'() {
+                this.manifest.dateRanges.push(camelCaseKeys(entry.attributes));
+                const index = this.manifest.dateRanges.length - 1;
+                this.warnOnMissingAttributes_(`#EXT-X-DATERANGE #${index}`, entry.attributes, ['ID', 'START-DATE']);
+                const dateRange = this.manifest.dateRanges[index];
+                if (dateRange.endDate && dateRange.startDate && new Date(dateRange.endDate) < new Date(dateRange.startDate)) {
+                  this.trigger('warn', {
+                    message: 'EXT-X-DATERANGE END-DATE must be equal to or later than the value of the START-DATE'
+                  });
+                }
+                if (dateRange.duration && dateRange.duration < 0) {
+                  this.trigger('warn', {
+                    message: 'EXT-X-DATERANGE DURATION must not be negative'
+                  });
+                }
+                if (dateRange.plannedDuration && dateRange.plannedDuration < 0) {
+                  this.trigger('warn', {
+                    message: 'EXT-X-DATERANGE PLANNED-DURATION must not be negative'
+                  });
+                }
+                const endOnNextYes = !!dateRange.endOnNext;
+                if (endOnNextYes && !dateRange.class) {
+                  this.trigger('warn', {
+                    message: 'EXT-X-DATERANGE with an END-ON-NEXT=YES attribute must have a CLASS attribute'
+                  });
+                }
+                if (endOnNextYes && (dateRange.duration || dateRange.endDate)) {
+                  this.trigger('warn', {
+                    message: 'EXT-X-DATERANGE with an END-ON-NEXT=YES attribute must not contain DURATION or END-DATE attributes'
+                  });
+                }
+                if (dateRange.duration && dateRange.endDate) {
+                  const startDate = dateRange.startDate;
+                  const newDateInSeconds = startDate.getTime() + dateRange.duration * 1000;
+                  this.manifest.dateRanges[index].endDate = new Date(newDateInSeconds);
+                }
+                if (!dateRangeTags[dateRange.id]) {
+                  dateRangeTags[dateRange.id] = dateRange;
+                } else {
+                  for (const attribute in dateRangeTags[dateRange.id]) {
+                    if (!!dateRange[attribute] && JSON.stringify(dateRangeTags[dateRange.id][attribute]) !== JSON.stringify(dateRange[attribute])) {
+                      this.trigger('warn', {
+                        message: 'EXT-X-DATERANGE tags with the same ID in a playlist must have the same attributes values'
+                      });
+                      break;
+                    }
+                  } // if tags with the same ID do not have conflicting attributes, merge them
+
+                  const dateRangeWithSameId = this.manifest.dateRanges.findIndex(dateRangeToFind => dateRangeToFind.id === dateRange.id);
+                  this.manifest.dateRanges[dateRangeWithSameId] = _extends$1(this.manifest.dateRanges[dateRangeWithSameId], dateRange);
+                  dateRangeTags[dateRange.id] = _extends$1(dateRangeTags[dateRange.id], dateRange); // after merging, delete the duplicate dateRange that was added last
+
+                  this.manifest.dateRanges.pop();
+                }
+              },
+              'independent-segments'() {
+                this.manifest.independentSegments = true;
+              },
+              'content-steering'() {
+                this.manifest.contentSteering = camelCaseKeys(entry.attributes);
+                this.warnOnMissingAttributes_('#EXT-X-CONTENT-STEERING', entry.attributes, ['SERVER-URI']);
               }
             })[entry.tagType] || noop).call(self);
           },
@@ -29916,7 +30175,12 @@
               currentUri.map = currentMap;
             } // reset the last byterange end as it needs to be 0 between parts
 
-            lastPartByterangeEnd = 0; // prepare for the next URI
+            lastPartByterangeEnd = 0; // Once we have at least one program date time we can always extrapolate it forward
+
+            if (this.lastProgramDateTime !== null) {
+              currentUri.programDateTime = this.lastProgramDateTime;
+              this.lastProgramDateTime += currentUri.duration * 1000;
+            } // prepare for the next URI
 
             currentUri = {};
           },
@@ -29966,6 +30230,12 @@
     end() {
       // flush any buffered input
       this.lineStream.push('\n');
+      if (this.manifest.dateRanges.length && this.lastProgramDateTime === null) {
+        this.trigger('warn', {
+          message: 'A playlist with EXT-X-DATERANGE tag must contain atleast one EXT-X-PROGRAM-DATE-TIME tag'
+        });
+      }
+      this.lastProgramDateTime = null;
       this.trigger('end');
     }
     /**
@@ -29973,7 +30243,7 @@
      *
      * @param {Object}   options              a map of options for the added parser
      * @param {RegExp}   options.expression   a regular expression to match the custom header
-     * @param {string}   options.type         the type to register to the output
+     * @param {string}   options.customType   the custom type to register to the output
      * @param {Function} [options.dataParser] function to parse the line into an object
      * @param {boolean}  [options.segment]    should tag data be attached to the segment object
      */
@@ -33719,7 +33989,7 @@
 
   var DOMParser = domParser.DOMParser;
 
-  /*! @name mpd-parser @version 1.0.1 @license Apache-2.0 */
+  /*! @name mpd-parser @version 1.1.1 @license Apache-2.0 */
   const isObject = obj => {
     return !!obj && typeof obj === 'object';
   };
@@ -34579,7 +34849,7 @@
   };
   const organizeVttPlaylists = (playlists, sidxMapping = {}) => {
     return playlists.reduce((a, playlist) => {
-      const label = playlist.attributes.lang || 'text';
+      const label = playlist.attributes.label || playlist.attributes.lang || 'text';
       if (!a[label]) {
         a[label] = {
           language: label,
@@ -34739,7 +35009,8 @@
     dashPlaylists,
     locations,
     sidxMapping = {},
-    previousManifest
+    previousManifest,
+    eventStream
   }) => {
     if (!dashPlaylists.length) {
       return {};
@@ -34778,6 +35049,9 @@
     }
     if (type === 'dynamic') {
       manifest.suggestedPresentationDelay = suggestedPresentationDelay;
+    }
+    if (eventStream && eventStream.length > 0) {
+      manifest.eventStream = eventStream;
     }
     const isAudioOnly = manifest.playlists.length === 0;
     const organizedAudioGroup = audioPlaylists.length ? organizeAudioPlaylists(audioPlaylists, sidxMapping, isAudioOnly) : null;
@@ -35486,6 +35760,18 @@
       return parseInt(value, 10);
     },
     /**
+     * Specifies the presentationTime.
+     *
+     * @param {string} value
+     *        value of the attribute as a string
+     *
+     * @return {number}
+     *         The parsed presentationTime
+     */
+    presentationTime(value) {
+      return parseInt(value, 10);
+    },
+    /**
      * Default parser for all other attributes. Acts as a no-op and just returns the value
      * as a string
      *
@@ -35765,6 +36051,40 @@
     }
   };
   /**
+   * A map callback that will parse all event stream data for a collection of periods
+   * DASH ISO_IEC_23009 5.10.2.2
+   * https://dashif-documents.azurewebsites.net/Events/master/event.html#mpd-event-timing
+   *
+   * @param {PeriodInformation} period object containing necessary period information
+   * @return a collection of parsed eventstream event objects
+   */
+
+  const toEventStream = period => {
+    // get and flatten all EventStreams tags and parse attributes and children
+    return flatten(findChildren(period.node, 'EventStream').map(eventStream => {
+      const eventStreamAttributes = parseAttributes(eventStream);
+      const schemeIdUri = eventStreamAttributes.schemeIdUri; // find all Events per EventStream tag and map to return objects
+
+      return findChildren(eventStream, 'Event').map(event => {
+        const eventAttributes = parseAttributes(event);
+        const presentationTime = eventAttributes.presentationTime || 0;
+        const timescale = eventStreamAttributes.timescale || 1;
+        const duration = eventAttributes.duration || 0;
+        const start = presentationTime / timescale + period.attributes.start;
+        return {
+          schemeIdUri,
+          value: eventStreamAttributes.value,
+          id: eventAttributes.id,
+          start,
+          end: start + duration / timescale,
+          messageData: getContent(event) || eventAttributes.messageData,
+          contentEncoding: eventStreamAttributes.contentEncoding,
+          presentationTimeOffset: eventStreamAttributes.presentationTimeOffset || 0
+        };
+      });
+    }));
+  };
+  /**
    * Maps an AdaptationSet node to a list of Representation information objects
    *
    * @name toRepresentationsCallback
@@ -35985,7 +36305,8 @@
     });
     return {
       locations: mpdAttributes.locations,
-      representationInfo: flatten(periods.map(toAdaptationSets(mpdAttributes, mpdBaseUrls)))
+      representationInfo: flatten(periods.map(toAdaptationSets(mpdAttributes, mpdBaseUrls))),
+      eventStream: flatten(periods.map(toEventStream))
     };
   };
   const stringToMpdXml = manifestString => {
@@ -36066,7 +36387,8 @@
       dashPlaylists: playlists,
       locations: parsedManifestInfo.locations,
       sidxMapping: options.sidxMapping,
-      previousManifest: options.previousManifest
+      previousManifest: options.previousManifest,
+      eventStream: parsedManifestInfo.eventStream
     });
   };
   /**
@@ -36740,7 +37062,7 @@
   };
   var clock_1 = clock.ONE_SECOND_IN_TS;
 
-  /*! @name @videojs/http-streaming @version 3.0.2 @license Apache-2.0 */
+  /*! @name @videojs/http-streaming @version 3.5.3 @license Apache-2.0 */
 
   /**
    * @file resolve-url.js - Handling how URLs are resolved and manipulated
@@ -38087,6 +38409,94 @@
     setupMediaPlaylists(main);
     resolveMediaGroupUris(main);
   };
+  class DateRangesStorage {
+    constructor() {
+      this.offset_ = null;
+      this.pendingDateRanges_ = new Map();
+      this.processedDateRanges_ = new Map();
+    }
+    setOffset(segments = []) {
+      // already set
+      if (this.offset_ !== null) {
+        return;
+      } // no segment to process
+
+      if (!segments.length) {
+        return;
+      }
+      const [firstSegment] = segments; // no program date time
+
+      if (firstSegment.programDateTime === undefined) {
+        return;
+      } // Set offset as ProgramDateTime for the very first segment of the very first playlist load:
+
+      this.offset_ = firstSegment.programDateTime / 1000;
+    }
+    setPendingDateRanges(dateRanges = []) {
+      if (!dateRanges.length) {
+        return;
+      }
+      const [dateRange] = dateRanges;
+      const startTime = dateRange.startDate.getTime();
+      this.trimProcessedDateRanges_(startTime);
+      this.pendingDateRanges_ = dateRanges.reduce((map, pendingDateRange) => {
+        map.set(pendingDateRange.id, pendingDateRange);
+        return map;
+      }, new Map());
+    }
+    processDateRange(dateRange) {
+      this.pendingDateRanges_.delete(dateRange.id);
+      this.processedDateRanges_.set(dateRange.id, dateRange);
+    }
+    getDateRangesToProcess() {
+      if (this.offset_ === null) {
+        return [];
+      }
+      const dateRangeClasses = {};
+      const dateRangesToProcess = [];
+      this.pendingDateRanges_.forEach((dateRange, id) => {
+        if (this.processedDateRanges_.has(id)) {
+          return;
+        }
+        dateRange.startTime = dateRange.startDate.getTime() / 1000 - this.offset_;
+        dateRange.processDateRange = () => this.processDateRange(dateRange);
+        dateRangesToProcess.push(dateRange);
+        if (!dateRange.class) {
+          return;
+        }
+        if (dateRangeClasses[dateRange.class]) {
+          const length = dateRangeClasses[dateRange.class].push(dateRange);
+          dateRange.classListIndex = length - 1;
+        } else {
+          dateRangeClasses[dateRange.class] = [dateRange];
+          dateRange.classListIndex = 0;
+        }
+      });
+      for (const dateRange of dateRangesToProcess) {
+        const classList = dateRangeClasses[dateRange.class] || [];
+        if (dateRange.endDate) {
+          dateRange.endTime = dateRange.endDate.getTime() / 1000 - this.offset_;
+        } else if (dateRange.endOnNext && classList[dateRange.classListIndex + 1]) {
+          dateRange.endTime = classList[dateRange.classListIndex + 1].startTime;
+        } else if (dateRange.duration) {
+          dateRange.endTime = dateRange.startTime + dateRange.duration;
+        } else if (dateRange.plannedDuration) {
+          dateRange.endTime = dateRange.startTime + dateRange.plannedDuration;
+        } else {
+          dateRange.endTime = dateRange.startTime;
+        }
+      }
+      return dateRangesToProcess;
+    }
+    trimProcessedDateRanges_(startTime) {
+      const copy = new Map(this.processedDateRanges_);
+      copy.forEach((dateRange, id) => {
+        if (dateRange.startDate.getTime() < startTime) {
+          this.processedDateRanges_.delete(id);
+        }
+      });
+    }
+  }
 
   /**
    * @file playlist-loader.js
@@ -38417,15 +38827,31 @@
       this.src = src;
       this.vhs_ = vhs;
       this.withCredentials = withCredentials;
+      this.addDateRangesToTextTrack_ = options.addDateRangesToTextTrack;
       const vhsOptions = vhs.options_;
       this.customTagParsers = vhsOptions && vhsOptions.customTagParsers || [];
       this.customTagMappers = vhsOptions && vhsOptions.customTagMappers || [];
-      this.llhls = vhsOptions && vhsOptions.llhls; // initialize the loader state
+      this.llhls = vhsOptions && vhsOptions.llhls;
+      this.dateRangesStorage_ = new DateRangesStorage(); // initialize the loader state
 
       this.state = 'HAVE_NOTHING'; // live playlist staleness timeout
 
       this.handleMediaupdatetimeout_ = this.handleMediaupdatetimeout_.bind(this);
       this.on('mediaupdatetimeout', this.handleMediaupdatetimeout_);
+      this.on('loadedplaylist', this.handleLoadedPlaylist_.bind(this));
+    }
+    handleLoadedPlaylist_() {
+      const mediaPlaylist = this.media();
+      if (!mediaPlaylist) {
+        return;
+      }
+      this.dateRangesStorage_.setOffset(mediaPlaylist.segments);
+      this.dateRangesStorage_.setPendingDateRanges(mediaPlaylist.dateRanges);
+      const availableDateRanges = this.dateRangesStorage_.getDateRangesToProcess();
+      if (!availableDateRanges.length || !this.addDateRangesToTextTrack_) {
+        return;
+      }
+      this.addDateRangesToTextTrack_(availableDateRanges);
     }
     handleMediaupdatetimeout_() {
       if (this.state !== 'HAVE_METADATA') {
@@ -38546,6 +38972,7 @@
       this.stopRequest();
       window.clearTimeout(this.mediaUpdateTimeout);
       window.clearTimeout(this.finalRenditionTimeout);
+      this.dateRangesStorage_ = new DateRangesStorage();
       this.off();
     }
     stopRequest() {
@@ -38903,6 +39330,41 @@
     }
     callback(error, request);
   };
+  /**
+   * Iterates over the request hooks Set and calls them in order
+   *
+   * @param {Set} hooks the hook Set to iterate over
+   * @param {Object} options the request options to pass to the xhr wrapper
+   * @return the callback hook function return value, the modified or new options Object.
+   */
+
+  const callAllRequestHooks = (requestSet, options) => {
+    if (!requestSet || !requestSet.size) {
+      return;
+    }
+    let newOptions = options;
+    requestSet.forEach(requestCallback => {
+      newOptions = requestCallback(newOptions);
+    });
+    return newOptions;
+  };
+  /**
+   * Iterates over the response hooks Set and calls them in order.
+   *
+   * @param {Set} hooks the hook Set to iterate over
+   * @param {Object} request the xhr request object
+   * @param {Object} error the xhr error object
+   * @param {Object} response the xhr response object
+   */
+
+  const callAllResponseHooks = (responseSet, request, error, response) => {
+    if (!responseSet || !responseSet.size) {
+      return;
+    }
+    responseSet.forEach(responseCallback => {
+      responseCallback(request, error, response);
+    });
+  };
   const xhrFactory = function () {
     const xhr = function XhrFunction(options, callback) {
       // Add a default timeout
@@ -38910,18 +39372,28 @@
         timeout: 45e3
       }, options); // Allow an optional user-specified function to modify the option
       // object before we construct the xhr request
+      // TODO: Remove beforeRequest in the next major release.
 
-      const beforeRequest = XhrFunction.beforeRequest || videojs.Vhs.xhr.beforeRequest;
+      const beforeRequest = XhrFunction.beforeRequest || videojs.Vhs.xhr.beforeRequest; // onRequest and onResponse hooks as a Set, at either the player or global level.
+      // TODO: new Set added here for beforeRequest alias. Remove this when beforeRequest is removed.
+
+      const _requestCallbackSet = XhrFunction._requestCallbackSet || videojs.Vhs.xhr._requestCallbackSet || new Set();
+      const _responseCallbackSet = XhrFunction._responseCallbackSet || videojs.Vhs.xhr._responseCallbackSet;
       if (beforeRequest && typeof beforeRequest === 'function') {
-        const newOptions = beforeRequest(options);
-        if (newOptions) {
-          options = newOptions;
-        }
+        videojs.log.warn('beforeRequest is deprecated, use onRequest instead.');
+        _requestCallbackSet.add(beforeRequest);
       } // Use the standard videojs.xhr() method unless `videojs.Vhs.xhr` has been overriden
       // TODO: switch back to videojs.Vhs.xhr.name === 'XhrFunction' when we drop IE11
 
-      const xhrMethod = videojs.Vhs.xhr.original === true ? videojsXHR : videojs.Vhs.xhr;
-      const request = xhrMethod(options, function (error, response) {
+      const xhrMethod = videojs.Vhs.xhr.original === true ? videojsXHR : videojs.Vhs.xhr; // call all registered onRequest hooks, assign new options.
+
+      const beforeRequestOptions = callAllRequestHooks(_requestCallbackSet, options); // Remove the beforeRequest function from the hooks set so stale beforeRequest functions are not called.
+
+      _requestCallbackSet.delete(beforeRequest); // xhrMethod will call XMLHttpRequest.open and XMLHttpRequest.send
+
+      const request = xhrMethod(beforeRequestOptions || options, function (error, response) {
+        // call all registered onResponse hooks
+        callAllResponseHooks(_responseCallbackSet, request, error, response);
         return callbackWrapper(request, error, response, callback);
       });
       const originalAbort = request.abort;
@@ -39159,13 +39631,13 @@
       return null;
     }
     let segment = playlist.segments[0];
-    if (dateTimeObject < segment.dateTimeObject) {
+    if (dateTimeObject < new Date(segment.dateTimeObject)) {
       // Requested time is before stream start.
       return null;
     }
     for (let i = 0; i < playlist.segments.length - 1; i++) {
       segment = playlist.segments[i];
-      const nextSegmentStart = playlist.segments[i + 1].dateTimeObject;
+      const nextSegmentStart = new Date(playlist.segments[i + 1].dateTimeObject);
       if (dateTimeObject < nextSegmentStart) {
         break;
       }
@@ -39178,7 +39650,7 @@
       // Beyond the end of the stream, or our best guess of the end of the stream.
       return null;
     }
-    if (dateTimeObject > lastSegmentStart) {
+    if (dateTimeObject > new Date(lastSegmentStart)) {
       segment = lastSegment;
     }
     return {
@@ -39734,6 +40206,7 @@
       } = options;
       this.vhs_ = vhs;
       this.withCredentials = withCredentials;
+      this.addMetadataToTextTrack = options.addMetadataToTextTrack;
       if (!srcUrlOrPlaylist) {
         throw new Error('A non-empty playlist URL or object is required');
       } // event naming?
@@ -40128,6 +40601,7 @@
       if (!oldMain || newMain && newMain.minimumUpdatePeriod !== oldMain.minimumUpdatePeriod) {
         this.updateMinimumUpdatePeriodTimeout_();
       }
+      this.addEventStreamToMetadataTrack_(newMain);
       return Boolean(newMain);
     }
     updateMinimumUpdatePeriodTimeout_() {
@@ -40234,6 +40708,27 @@
       }
       this.trigger('loadedplaylist');
     }
+    /**
+     * Takes eventstream data from a parsed DASH manifest and adds it to the metadata text track.
+     *
+     * @param {manifest} newMain the newly parsed manifest
+     */
+
+    addEventStreamToMetadataTrack_(newMain) {
+      // Only add new event stream metadata if we have a new manifest.
+      if (newMain && this.mainPlaylistLoader_.main.eventStream) {
+        // convert EventStream to ID3-like data.
+        const metadataArray = this.mainPlaylistLoader_.main.eventStream.map(eventStreamNode => {
+          return {
+            cueTime: eventStreamNode.start,
+            frames: [{
+              data: eventStreamNode.messageData
+            }]
+          };
+        });
+        this.addMetadataToTextTrack('EventStream', metadataArray, this.mainPlaylistLoader_.main.duration);
+      }
+    }
   }
   var Config = {
     GOAL_BUFFER_LENGTH: 30,
@@ -40303,7 +40798,7 @@
     return fn.toString().replace(/^function.+?{/, '').slice(0, -1);
   };
 
-  /* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/http-streaming/src/transmuxer-worker.js */
+  /* rollup-plugin-worker-factory start for worker!/home/runner/work/http-streaming/http-streaming/src/transmuxer-worker.js */
   const workerCode$1 = transform(getWorkerString(function () {
     var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
     /**
@@ -43172,12 +43667,18 @@
 
     var ROWS = [0x1100, 0x1120, 0x1200, 0x1220, 0x1500, 0x1520, 0x1600, 0x1620, 0x1700, 0x1720, 0x1000, 0x1300, 0x1320, 0x1400, 0x1420]; // CEA-608 captions are rendered onto a 34x15 matrix of character
     // cells. The "bottom" row is the last element in the outer array.
+    // We keep track of positioning information as we go by storing the
+    // number of indentations and the tab offset in this buffer.
 
     var createDisplayBuffer = function () {
       var result = [],
         i = BOTTOM_ROW + 1;
       while (i--) {
-        result.push('');
+        result.push({
+          text: '',
+          indent: 0,
+          offset: 0
+        });
       }
       return result;
     };
@@ -43240,9 +43741,9 @@
           this.startPts_ = packet.pts;
         } else if (data === this.BACKSPACE_) {
           if (this.mode_ === 'popOn') {
-            this.nonDisplayed_[this.row_] = this.nonDisplayed_[this.row_].slice(0, -1);
+            this.nonDisplayed_[this.row_].text = this.nonDisplayed_[this.row_].text.slice(0, -1);
           } else {
-            this.displayed_[this.row_] = this.displayed_[this.row_].slice(0, -1);
+            this.displayed_[this.row_].text = this.displayed_[this.row_].text.slice(0, -1);
           }
         } else if (data === this.ERASE_DISPLAYED_MEMORY_) {
           this.flushDisplayed(packet.pts);
@@ -43274,9 +43775,9 @@
           // backspace the "e" and insert "è".
           // Delete the previous character
           if (this.mode_ === 'popOn') {
-            this.nonDisplayed_[this.row_] = this.nonDisplayed_[this.row_].slice(0, -1);
+            this.nonDisplayed_[this.row_].text = this.nonDisplayed_[this.row_].text.slice(0, -1);
           } else {
-            this.displayed_[this.row_] = this.displayed_[this.row_].slice(0, -1);
+            this.displayed_[this.row_].text = this.displayed_[this.row_].text.slice(0, -1);
           } // Bitmask char0 so that we can apply character transformations
           // regardless of field and data channel.
           // Then byte-shift to the left and OR with char1 so we can pass the
@@ -43304,7 +43805,11 @@
           // increments, with an additional offset code of 1-3 to reach any
           // of the 32 columns specified by CEA-608. So all we need to do
           // here is increment the column cursor by the given offset.
-          this.column_ += char1 & 0x03; // Detect PACs (Preamble Address Codes)
+          const offset = char1 & 0x03; // For an offest value 1-3, set the offset for that caption
+          // in the non-displayed array.
+
+          this.nonDisplayed_[this.row_].offset = offset;
+          this.column_ += offset; // Detect PACs (Preamble Address Codes)
         } else if (this.isPAC(char0, char1)) {
           // There's no logic for PAC -> row mapping, so we have to just
           // find the row code in an array and use its index :(
@@ -43334,7 +43839,10 @@
             // increments the column cursor by 4, so we can get the desired
             // column position by bit-shifting to the right (to get n/2)
             // and multiplying by 4.
-            this.column_ = ((data & 0xe) >> 1) * 4;
+            const indentations = (data & 0xe) >> 1;
+            this.column_ = indentations * 4; // add to the number of indentations for positioning
+
+            this.nonDisplayed_[this.row_].indent += indentations;
           }
           if (this.isColorPAC(char1)) {
             // it's a color code, though we only support white, which
@@ -43361,28 +43869,47 @@
     // display buffer
 
     Cea608Stream.prototype.flushDisplayed = function (pts) {
-      var content = this.displayed_ // remove spaces from the start and end of the string
-      .map(function (row, index) {
-        try {
-          return row.trim();
-        } catch (e) {
-          // Ordinarily, this shouldn't happen. However, caption
-          // parsing errors should not throw exceptions and
-          // break playback.
-          this.trigger('log', {
-            level: 'warn',
-            message: 'Skipping a malformed 608 caption at index ' + index + '.'
-          });
-          return '';
+      const logWarning = index => {
+        this.trigger('log', {
+          level: 'warn',
+          message: 'Skipping a malformed 608 caption at index ' + index + '.'
+        });
+      };
+      const content = [];
+      this.displayed_.forEach((row, i) => {
+        if (row && row.text && row.text.length) {
+          try {
+            // remove spaces from the start and end of the string
+            row.text = row.text.trim();
+          } catch (e) {
+            // Ordinarily, this shouldn't happen. However, caption
+            // parsing errors should not throw exceptions and
+            // break playback.
+            logWarning(i);
+          } // See the below link for more details on the following fields:
+          // https://dvcs.w3.org/hg/text-tracks/raw-file/default/608toVTT/608toVTT.html#positioning-in-cea-608
+
+          if (row.text.length) {
+            content.push({
+              // The text to be displayed in the caption from this specific row, with whitespace removed.
+              text: row.text,
+              // Value between 1 and 15 representing the PAC row used to calculate line height.
+              line: i + 1,
+              // A number representing the indent position by percentage (CEA-608 PAC indent code).
+              // The value will be a number between 10 and 80. Offset is used to add an aditional
+              // value to the position if necessary.
+              position: 10 + Math.min(70, row.indent * 10) + row.offset * 2.5
+            });
+          }
+        } else if (row === undefined || row === null) {
+          logWarning(i);
         }
-      }, this) // combine all text rows to display in one cue
-      .join('\n') // and remove blank rows from the start and end, but not the middle
-      .replace(/^\n+|\n+$/g, '');
+      });
       if (content.length) {
         this.trigger('data', {
           startPts: this.startPts_,
           endPts: pts,
-          text: content,
+          content,
           stream: this.name_
         });
       }
@@ -43579,7 +44106,11 @@
         // move currently displayed captions (up or down) to the new base row
         for (var i = 0; i < this.rollUpRows_; i++) {
           this.displayed_[newBaseRow - i] = this.displayed_[this.row_ - i];
-          this.displayed_[this.row_ - i] = '';
+          this.displayed_[this.row_ - i] = {
+            text: '',
+            indent: 0,
+            offset: 0
+          };
         }
       }
       if (newBaseRow === undefined) {
@@ -43610,36 +44141,48 @@
     }; // Mode Implementations
 
     Cea608Stream.prototype.popOn = function (pts, text) {
-      var baseRow = this.nonDisplayed_[this.row_]; // buffer characters
+      var baseRow = this.nonDisplayed_[this.row_].text; // buffer characters
 
       baseRow += text;
-      this.nonDisplayed_[this.row_] = baseRow;
+      this.nonDisplayed_[this.row_].text = baseRow;
     };
     Cea608Stream.prototype.rollUp = function (pts, text) {
-      var baseRow = this.displayed_[this.row_];
+      var baseRow = this.displayed_[this.row_].text;
       baseRow += text;
-      this.displayed_[this.row_] = baseRow;
+      this.displayed_[this.row_].text = baseRow;
     };
     Cea608Stream.prototype.shiftRowsUp_ = function () {
       var i; // clear out inactive rows
 
       for (i = 0; i < this.topRow_; i++) {
-        this.displayed_[i] = '';
+        this.displayed_[i] = {
+          text: '',
+          indent: 0,
+          offset: 0
+        };
       }
       for (i = this.row_ + 1; i < BOTTOM_ROW + 1; i++) {
-        this.displayed_[i] = '';
+        this.displayed_[i] = {
+          text: '',
+          indent: 0,
+          offset: 0
+        };
       } // shift displayed rows up
 
       for (i = this.topRow_; i < this.row_; i++) {
         this.displayed_[i] = this.displayed_[i + 1];
       } // clear out the bottom row
 
-      this.displayed_[this.row_] = '';
+      this.displayed_[this.row_] = {
+        text: '',
+        indent: 0,
+        offset: 0
+      };
     };
     Cea608Stream.prototype.paintOn = function (pts, text) {
-      var baseRow = this.displayed_[this.row_];
+      var baseRow = this.displayed_[this.row_].text;
       baseRow += text;
-      this.displayed_[this.row_] = baseRow;
+      this.displayed_[this.row_].text = baseRow;
     }; // exports
 
     var captionStream = {
@@ -46212,7 +46755,7 @@
       this.push = function (output) {
         // buffer incoming captions until the associated video segment
         // finishes
-        if (output.text) {
+        if (output.content || output.text) {
           return this.pendingCaptions.push(output);
         } // buffer incoming id3 tags until the final flush
 
@@ -47070,7 +47613,10 @@
       * @return {?Object[]} parsedCaptions - A list of captions or null if no video tracks
       * @return {Number} parsedCaptions[].startTime - The time to show the caption in seconds
       * @return {Number} parsedCaptions[].endTime - The time to stop showing the caption in seconds
-      * @return {String} parsedCaptions[].text - The visible content of the caption
+      * @return {Object[]} parsedCaptions[].content - A list of individual caption segments
+      * @return {String} parsedCaptions[].content.text - The visible content of the caption segment
+      * @return {Number} parsedCaptions[].content.line - The line height from 1-15 for positioning of the caption segment
+      * @return {Number} parsedCaptions[].content.position - The column indent percentage for cue positioning from 10-80
      **/
 
     var parseEmbeddedCaptions = function (segment, trackId, timescale) {
@@ -48628,6 +49174,26 @@
         }, [data.buffer]);
       }
       /**
+       * Probes an mp4 segment for EMSG boxes containing ID3 data.
+       * https://aomediacodec.github.io/id3-emsg/
+       *
+       * @param {Uint8Array} data segment data
+       * @param {number} offset segment start time
+       * @return {Object[]} an array of ID3 frames
+       */
+
+      probeEmsgID3({
+        data,
+        offset
+      }) {
+        const id3Frames = probe$2.getEmsgID3(data, offset);
+        this.self.postMessage({
+          action: 'probeEmsgID3',
+          id3Frames,
+          emsgData: data
+        }, [data.buffer]);
+      }
+      /**
        * Probe an mpeg2-ts segment to determine the start time of the segment in it's
        * internal "media time," as well as whether it contains video and/or audio.
        *
@@ -48767,7 +49333,7 @@
     };
   }));
   var TransmuxWorker = factory(workerCode$1);
-  /* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/http-streaming/src/transmuxer-worker.js */
+  /* rollup-plugin-worker-factory end for worker!/home/runner/work/http-streaming/http-streaming/src/transmuxer-worker.js */
 
   const handleData_ = (event, transmuxedData, callback) => {
     const {
@@ -49447,7 +50013,7 @@
       // that is the true start of the segment (where the playback engine should begin
       // decoding).
 
-      const finishLoading = captions => {
+      const finishLoading = (captions, id3Frames) => {
         // if the track still has audio at this point it is only possible
         // for it to be audio only. See `tracks.video && tracks.audio` if statement
         // above.
@@ -49456,6 +50022,9 @@
           data: bytesAsUint8Array,
           type: trackInfo.hasAudio && !trackInfo.isMuxed ? 'audio' : 'video'
         });
+        if (id3Frames && id3Frames.length) {
+          id3Fn(segment, id3Frames);
+        }
         if (captions && captions.length) {
           captionsFn(segment, captions);
         }
@@ -49478,30 +50047,44 @@
           }
           if (trackInfo.hasVideo) {
             timingInfoFn(segment, 'video', 'start', startTime);
-          } // Run through the CaptionParser in case there are captions.
-          // Initialize CaptionParser if it hasn't been yet
-
-          if (!tracks.video || !data.byteLength || !segment.transmuxer) {
-            finishLoading();
-            return;
           }
           workerCallback({
-            action: 'pushMp4Captions',
-            endAction: 'mp4Captions',
-            transmuxer: segment.transmuxer,
+            action: 'probeEmsgID3',
             data: bytesAsUint8Array,
-            timescales: segment.map.timescales,
-            trackIds: [tracks.video.id],
-            callback: message => {
+            transmuxer: segment.transmuxer,
+            offset: startTime,
+            callback: ({
+              emsgData,
+              id3Frames
+            }) => {
               // transfer bytes back to us
-              bytes = message.data.buffer;
-              segment.bytes = bytesAsUint8Array = message.data;
-              message.logs.forEach(function (log) {
-                onTransmuxerLog(merge(log, {
-                  stream: 'mp4CaptionParser'
-                }));
+              bytes = emsgData.buffer;
+              segment.bytes = bytesAsUint8Array = emsgData; // Run through the CaptionParser in case there are captions.
+              // Initialize CaptionParser if it hasn't been yet
+
+              if (!tracks.video || !data.byteLength || !segment.transmuxer) {
+                finishLoading(undefined, id3Frames);
+                return;
+              }
+              workerCallback({
+                action: 'pushMp4Captions',
+                endAction: 'mp4Captions',
+                transmuxer: segment.transmuxer,
+                data: bytesAsUint8Array,
+                timescales: segment.map.timescales,
+                trackIds: [tracks.video.id],
+                callback: message => {
+                  // transfer bytes back to us
+                  bytes = message.data.buffer;
+                  segment.bytes = bytesAsUint8Array = message.data;
+                  message.logs.forEach(function (log) {
+                    onTransmuxerLog(merge(log, {
+                      stream: 'mp4CaptionParser'
+                    }));
+                  });
+                  finishLoading(message.captions, id3Frames);
+                }
               });
-              finishLoading(message.captions);
             }
           });
         }
@@ -50627,8 +51210,22 @@
     }
     const Cue = window.WebKitDataCue || window.VTTCue;
     captionArray.forEach(caption => {
-      const track = caption.stream;
-      inbandTextTracks[track].addCue(new Cue(caption.startTime + timestampOffset, caption.endTime + timestampOffset, caption.text));
+      const track = caption.stream; // in CEA 608 captions, video.js/mux.js sends a content array
+      // with positioning data
+
+      if (caption.content) {
+        caption.content.forEach(value => {
+          const cue = new Cue(caption.startTime + timestampOffset, caption.endTime + timestampOffset, value.text);
+          cue.line = value.line;
+          cue.align = 'left';
+          cue.position = value.position;
+          cue.positionAlign = 'line-left';
+          inbandTextTracks[track].addCue(cue);
+        });
+      } else {
+        // otherwise, a text value with combined captions is sent
+        inbandTextTracks[track].addCue(new Cue(caption.startTime + timestampOffset, caption.endTime + timestampOffset, caption.text));
+      }
     });
   };
   /**
@@ -50695,6 +51292,10 @@
 
       if (typeof time !== 'number' || window.isNaN(time) || time < 0 || !(time < Infinity)) {
         return;
+      } // If we have no frames, we can't create a cue.
+
+      if (!metadata.frames || !metadata.frames.length) {
+        return;
       }
       metadata.frames.forEach(frame => {
         const cue = new Cue(time, time, frame.value || frame.url || frame.data || '');
@@ -50731,11 +51332,64 @@
 
     sortedStartTimes.forEach((startTime, idx) => {
       const cueGroup = cuesGroupedByStartTime[startTime];
-      const nextTime = Number(sortedStartTimes[idx + 1]) || videoDuration; // Map each cue's endTime the next group's startTime
+      const finiteDuration = isFinite(videoDuration) ? videoDuration : 0;
+      const nextTime = Number(sortedStartTimes[idx + 1]) || finiteDuration; // Map each cue's endTime the next group's startTime
 
       cueGroup.forEach(cue => {
         cue.endTime = nextTime;
       });
+    });
+  }; // object for mapping daterange attributes
+
+  const dateRangeAttr = {
+    id: 'ID',
+    class: 'CLASS',
+    startDate: 'START-DATE',
+    duration: 'DURATION',
+    endDate: 'END-DATE',
+    endOnNext: 'END-ON-NEXT',
+    plannedDuration: 'PLANNED-DURATION',
+    scte35Out: 'SCTE35-OUT',
+    scte35In: 'SCTE35-IN'
+  };
+  const dateRangeKeysToOmit = new Set(['id', 'class', 'startDate', 'duration', 'endDate', 'endOnNext', 'startTime', 'endTime', 'processDateRange']);
+  /**
+   * Add DateRange metadata text track to a source handler given an array of metadata
+   *
+   * @param {Object}
+   *   @param {Object} inbandTextTracks the inband text tracks
+   *   @param {Array} dateRanges parsed media playlist
+   * @private
+   */
+
+  const addDateRangeMetadata = ({
+    inbandTextTracks,
+    dateRanges
+  }) => {
+    const metadataTrack = inbandTextTracks.metadataTrack_;
+    if (!metadataTrack) {
+      return;
+    }
+    const Cue = window.WebKitDataCue || window.VTTCue;
+    dateRanges.forEach(dateRange => {
+      // we generate multiple cues for each date range with different attributes
+      for (const key of Object.keys(dateRange)) {
+        if (dateRangeKeysToOmit.has(key)) {
+          continue;
+        }
+        const cue = new Cue(dateRange.startTime, dateRange.endTime, '');
+        cue.id = dateRange.id;
+        cue.type = 'com.apple.quicktime.HLS';
+        cue.value = {
+          key: dateRangeAttr[key],
+          data: dateRange[key]
+        };
+        if (key === 'scte35Out' || key === 'scte35In') {
+          cue.value.data = new Uint8Array(cue.value.data.match(/[\da-f]{2}/gi)).buffer;
+        }
+        metadataTrack.addCue(cue);
+      }
+      dateRange.processDateRange();
     });
   };
   /**
@@ -50755,7 +51409,9 @@
       kind: 'metadata',
       label: 'Timed Metadata'
     }, false).track;
-    inbandTextTracks.metadataTrack_.inBandMetadataTrackDispatchType = dispatchType;
+    if (!videojs.browser.IS_ANY_SAFARI) {
+      inbandTextTracks.metadataTrack_.inBandMetadataTrackDispatchType = dispatchType;
+    }
   };
   /**
    * Remove cues from a track on video.js.
@@ -50797,19 +51453,14 @@
     if (!cues) {
       return;
     }
-    for (let i = 0; i < cues.length; i++) {
-      const duplicates = [];
-      let occurrences = 0;
-      for (let j = 0; j < cues.length; j++) {
-        if (cues[i].startTime === cues[j].startTime && cues[i].endTime === cues[j].endTime && cues[i].text === cues[j].text) {
-          occurrences++;
-          if (occurrences > 1) {
-            duplicates.push(cues[j]);
-          }
-        }
-      }
-      if (duplicates.length) {
-        duplicates.forEach(dupe => track.removeCue(dupe));
+    const uniqueCues = {};
+    for (let i = cues.length - 1; i >= 0; i--) {
+      const cue = cues[i];
+      const cueKey = `${cue.startTime}-${cue.endTime}-${cue.text}`;
+      if (uniqueCues[cueKey]) {
+        track.removeCue(cue);
+      } else {
+        uniqueCues[cueKey] = cue;
       }
     }
   };
@@ -51431,7 +52082,8 @@
       this.parse708captions_ = settings.parse708captions;
       this.useDtsForTimestampOffset_ = settings.useDtsForTimestampOffset;
       this.captionServices_ = settings.captionServices;
-      this.exactManifestTimings = settings.exactManifestTimings; // private instance variables
+      this.exactManifestTimings = settings.exactManifestTimings;
+      this.addMetadataToTextTrack = settings.addMetadataToTextTrack; // private instance variables
 
       this.checkBufferTimeout_ = null;
       this.error_ = void 0;
@@ -51444,7 +52096,7 @@
 
       this.gopBuffer_ = [];
       this.timeMapping_ = 0;
-      this.safeAppend_ = videojs.browser.IE_VERSION >= 11;
+      this.safeAppend_ = false;
       this.appendInitSegment_ = {
         audio: true,
         video: true
@@ -51490,7 +52142,9 @@
         }
       }); // ...for determining the fetch location
 
-      this.fetchAtBuffer_ = false;
+      this.fetchAtBuffer_ = false; // For comparing with currentTime when overwriting segments on fastQualityChange_ changes. Use -1 as the inactive flag.
+
+      this.replaceSegmentsUntil_ = -1;
       this.logger_ = logger(`SegmentLoader[${this.loaderType_}]`);
       Object.defineProperty(this, 'state', {
         get() {
@@ -51868,13 +52522,14 @@
         if (this.mediaIndex !== null) {
           // we must reset/resync the segment loader when we switch renditions and
           // the segment loader is already synced to the previous rendition
-          // on playlist changes we want it to be possible to fetch
-          // at the buffer for vod but not for live. So we use resetLoader
-          // for live and resyncLoader for vod. We want this because
-          // if a playlist uses independent and non-independent segments/parts the
-          // buffer may not accurately reflect the next segment that we should try
-          // downloading.
-          if (!newPlaylist.endList) {
+          // We only want to reset the loader here for LLHLS playback, as resetLoader sets fetchAtBuffer_
+          // to false, resulting in fetching segments at currentTime and causing repeated
+          // same-segment requests on playlist change. This erroneously drives up the playback watcher
+          // stalled segment count, as re-requesting segments at the currentTime or browser cached segments
+          // will not change the buffer.
+          // Reference for LLHLS fixes: https://github.com/videojs/http-streaming/pull/1201
+          const isLLHLS = !newPlaylist.endList && typeof newPlaylist.partTargetDuration === 'number';
+          if (isLLHLS) {
             this.resetLoader();
           } else {
             this.resyncLoader();
@@ -51961,6 +52616,18 @@
       return this.checkBufferTimeout_ === null;
     }
     /**
+     * Resets the segment loader ended and init properties.
+     */
+
+    resetLoaderProperties() {
+      this.ended_ = false;
+      this.activeInitSegmentId_ = null;
+      this.appendInitSegment_ = {
+        audio: true,
+        video: true
+      };
+    }
+    /**
      * Delete all the buffered data and reset the SegmentLoader
      *
      * @param {Function} [done] an optional callback to be executed when the remove
@@ -51968,12 +52635,7 @@
      */
 
     resetEverything(done) {
-      this.ended_ = false;
-      this.activeInitSegmentId_ = null;
-      this.appendInitSegment_ = {
-        audio: true,
-        video: true
-      };
+      this.resetLoaderProperties();
       this.resetLoader(); // remove from 0, the earliest point, to Infinity, to signify removal of everything.
       // VTT Segment Loader doesn't need to do anything but in the regular SegmentLoader,
       // we then clamp the value to duration if necessary.
@@ -52242,12 +52904,16 @@
       if (typeof next.partIndex !== 'number' && nextSegment.parts) {
         next.partIndex = 0;
         nextPart = nextSegment.parts[0];
-      } // if we have no buffered data then we need to make sure
+      } // independentSegments applies to every segment in a playlist. If independentSegments appears in a main playlist,
+      // it applies to each segment in each media playlist.
+      // https://datatracker.ietf.org/doc/html/draft-pantos-http-live-streaming-23#section-4.3.5.1
+
+      const hasIndependentSegments = this.vhs_.playlists && this.vhs_.playlists.main && this.vhs_.playlists.main.independentSegments || this.playlist_.independentSegments; // if we have no buffered data then we need to make sure
       // that the next part we append is "independent" if possible.
       // So we check if the previous part is independent, and request
       // it if it is.
 
-      if (!bufferedTime && nextPart && !nextPart.independent) {
+      if (!bufferedTime && nextPart && !hasIndependentSegments && !nextPart.independent) {
         if (next.partIndex === 0) {
           const lastSegment = segments[next.mediaIndex - 1];
           const lastSegmentLastPart = lastSegment.parts && lastSegment.parts.length && lastSegment.parts[lastSegment.parts.length - 1];
@@ -52561,17 +53227,7 @@
         this.metadataQueue_.id3.push(this.handleId3_.bind(this, simpleSegment, id3Frames, dispatchType));
         return;
       }
-      const timestampOffset = this.sourceUpdater_.videoTimestampOffset() === null ? this.sourceUpdater_.audioTimestampOffset() : this.sourceUpdater_.videoTimestampOffset(); // There's potentially an issue where we could double add metadata if there's a muxed
-      // audio/video source with a metadata track, and an alt audio with a metadata track.
-      // However, this probably won't happen, and if it does it can be handled then.
-
-      createMetadataTrackIfNotExists(this.inbandTextTracks_, dispatchType, this.vhs_.tech_);
-      addMetadata({
-        inbandTextTracks: this.inbandTextTracks_,
-        metadataArray: id3Frames,
-        timestampOffset,
-        videoDuration: this.duration_()
-      });
+      this.addMetadataToTextTrack(dispatchType, id3Frames, this.duration_());
     }
     processMetadataQueue_() {
       this.metadataQueue_.id3.forEach(fn => fn());
@@ -53579,7 +54235,10 @@
       }
       this.logger_(`Appended ${segmentInfoString(segmentInfo)}`);
       this.addSegmentMetadataCue_(segmentInfo);
-      this.fetchAtBuffer_ = true;
+      if (this.currentTime_() >= this.replaceSegmentsUntil_) {
+        this.replaceSegmentsUntil_ = -1;
+        this.fetchAtBuffer_ = true;
+      }
       if (this.currentTimeline_ !== segmentInfo.timeline) {
         this.timelineChangeController_.lastTimelineChange({
           type: this.loaderType_,
@@ -53692,6 +54351,7 @@
         custom: segment.custom,
         dateTimeObject: segment.dateTimeObject,
         dateTimeString: segment.dateTimeString,
+        programDateTime: segment.programDateTime,
         bandwidth: segmentInfo.playlist.attributes.BANDWIDTH,
         resolution: segmentInfo.playlist.attributes.RESOLUTION,
         codecs: segmentInfo.playlist.attributes.CODECS,
@@ -53708,6 +54368,18 @@
 
       cue.value = value;
       this.segmentMetadataTrack_.addCue(cue);
+    }
+    /**
+     * Public setter for defining the private replaceSegmentsUntil_ property, which
+     * determines when we can return fetchAtBuffer to true if overwriting the buffer.
+     *
+     * @param {number} bufferedEnd the end of the buffered range to replace segments
+     * until currentTime reaches this time.
+     */
+
+    set replaceSegmentsUntil(bufferedEnd) {
+      this.logger_(`Replacing currently buffered segments until ${bufferedEnd}`);
+      this.replaceSegmentsUntil_ = bufferedEnd;
     }
   }
   function noop() {}
@@ -54114,11 +54786,9 @@
      */
 
     canRemoveSourceBuffer() {
-      // IE reports that it supports removeSourceBuffer, but often throws
-      // errors when attempting to use the function. So we report that it
-      // does not support removeSourceBuffer. As of Firefox 83 removeSourceBuffer
-      // throws errors, so we report that it does not support this as well.
-      return !videojs.browser.IE_VERSION && !videojs.browser.IS_FIREFOX && window.MediaSource && window.MediaSource.prototype && typeof window.MediaSource.prototype.removeSourceBuffer === 'function';
+      // As of Firefox 83 removeSourceBuffer
+      // throws errors, so we report that it does not support this.
+      return !videojs.browser.IS_FIREFOX && window.MediaSource && window.MediaSource.prototype && typeof window.MediaSource.prototype.removeSourceBuffer === 'function';
     }
     /**
      * Whether or not the changeType function is supported
@@ -55551,7 +56221,7 @@
     }
   }
 
-  /* rollup-plugin-worker-factory start for worker!/Users/ddashkevich/projects/http-streaming/src/decrypter-worker.js */
+  /* rollup-plugin-worker-factory start for worker!/home/runner/work/http-streaming/http-streaming/src/decrypter-worker.js */
   const workerCode = transform(getWorkerString(function () {
     /**
      * @file stream.js
@@ -56148,7 +56818,7 @@
   }));
 
   var Decrypter = factory(workerCode);
-  /* rollup-plugin-worker-factory end for worker!/Users/ddashkevich/projects/http-streaming/src/decrypter-worker.js */
+  /* rollup-plugin-worker-factory end for worker!/home/runner/work/http-streaming/http-streaming/src/decrypter-worker.js */
 
   /**
    * Convert the properties of an HLS track into an audioTrackKind.
@@ -56639,7 +57309,7 @@
           groups[groupId] = [];
         }
         for (const variantLabel in mediaGroups[type][groupId]) {
-          if (mediaGroups[type][groupId][variantLabel].forced) {
+          if (!vhs.options_.useForcedSubtitles && mediaGroups[type][groupId][variantLabel].forced) {
             // Subtitle playlists with the forced attribute are not selectable in Safari.
             // According to Apple's HLS Authoring Specification:
             //   If content has forced subtitles and regular subtitles in a given language,
@@ -57013,7 +57683,7 @@
   /**
    * @file playlist-controller.js
    */
-  const ABORT_EARLY_EXCLUSION_SECONDS = 60 * 2;
+  const ABORT_EARLY_EXCLUSION_SECONDS = 10;
   let Vhs$1; // SegmentLoader stats that need to have each loader's
   // values summed to calculate the final value
 
@@ -57195,13 +57865,18 @@
         cacheEncryptionKeys,
         sourceUpdater: this.sourceUpdater_,
         timelineChangeController: this.timelineChangeController_,
-        exactManifestTimings: options.exactManifestTimings
+        exactManifestTimings: options.exactManifestTimings,
+        addMetadataToTextTrack: this.addMetadataToTextTrack.bind(this)
       }; // The source type check not only determines whether a special DASH playlist loader
       // should be used, but also covers the case where the provided src is a vhs-json
       // manifest object (instead of a URL). In the case of vhs-json, the default
       // PlaylistLoader should be used.
 
-      this.mainPlaylistLoader_ = this.sourceType_ === 'dash' ? new DashPlaylistLoader(src, this.vhs_, this.requestOptions_) : new PlaylistLoader(src, this.vhs_, this.requestOptions_);
+      this.mainPlaylistLoader_ = this.sourceType_ === 'dash' ? new DashPlaylistLoader(src, this.vhs_, merge(this.requestOptions_, {
+        addMetadataToTextTrack: this.addMetadataToTextTrack.bind(this)
+      })) : new PlaylistLoader(src, this.vhs_, merge(this.requestOptions_, {
+        addDateRangesToTextTrack: this.addDateRangesToTextTrack_.bind(this)
+      }));
       this.setupMainPlaylistLoaderListeners_(); // setup segment loaders
       // combined audio/video or just video when alternate audio track is selected
 
@@ -57788,9 +58463,9 @@
     }
     /**
      * Re-tune playback quality level for the current player
-     * conditions. This method will perform destructive actions like removing
-     * already buffered content in order to readjust the currently active
-     * playlist quickly. This is good for manual quality changes
+     * conditions. This will reset the main segment loader
+     * and the next segment position to the currentTime.
+     * This is good for manual quality changes.
      *
      * @private
      */
@@ -57800,22 +58475,27 @@
         this.logger_('skipping fastQualityChange because new media is same as old');
         return;
       }
-      this.switchMedia_(media, 'fast-quality'); // Delete all buffered data to allow an immediate quality switch, then seek to give
-      // the browser a kick to remove any cached frames from the previous rendtion (.04 seconds
-      // ahead is roughly the minimum that will accomplish this across a variety of content
-      // in IE and Edge, but seeking in place is sufficient on all other browsers)
-      // Edge/IE bug: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/14600375/
-      // Chrome bug: https://bugs.chromium.org/p/chromium/issues/detail?id=651904
+      this.switchMedia_(media, 'fast-quality'); // Reset main segment loader properties and next segment position information.
+      // Don't need to reset audio as it is reset when media changes.
+      // We resetLoaderProperties separately here as we want to fetch init segments if
+      // necessary and ensure we're not in an ended state when we switch playlists.
 
-      this.mainSegmentLoader_.resetEverything(() => {
-        // Since this is not a typical seek, we avoid the seekTo method which can cause segments
-        // from the previously enabled rendition to load before the new playlist has finished loading
-        if (videojs.browser.IE_VERSION || videojs.browser.IS_EDGE) {
-          this.tech_.setCurrentTime(this.tech_.currentTime() + 0.04);
-        } else {
-          this.tech_.setCurrentTime(this.tech_.currentTime());
-        }
-      }); // don't need to reset audio as it is reset when media changes
+      this.resetMainLoaderReplaceSegments();
+    }
+    /**
+     * Sets the replaceUntil flag on the main segment soader to the buffered end
+     * and resets the main segment loaders properties.
+     */
+
+    resetMainLoaderReplaceSegments() {
+      const buffered = this.tech_.buffered();
+      const bufferedEnd = buffered.end(buffered.length - 1); // Set the replace segments flag to the buffered end, this forces fetchAtBuffer
+      // on the main loader to remain, false after the resetLoader call, until we have
+      // replaced all content buffered ahead of the currentTime.
+
+      this.mainSegmentLoader_.replaceSegmentsUntil = bufferedEnd;
+      this.mainSegmentLoader_.resetLoaderProperties();
+      this.mainSegmentLoader_.resetLoader();
     }
     /**
      * Begin playback.
@@ -57854,29 +58534,29 @@
 
       if (!media || this.tech_.paused() || this.hasPlayed_) {
         return false;
-      } // when the video is a live stream
+      } // when the video is a live stream and/or has a start time
 
-      if (!media.endList) {
+      if (!media.endList || media.start) {
         const seekable = this.seekable();
         if (!seekable.length) {
-          // without a seekable range, the player cannot seek to begin buffering at the live
-          // point
+          // without a seekable range, the player cannot seek to begin buffering at the
+          // live or start point
           return false;
         }
-        if (videojs.browser.IE_VERSION && this.tech_.readyState() === 0) {
-          // IE11 throws an InvalidStateError if you try to set currentTime while the
-          // readyState is 0, so it must be delayed until the tech fires loadedmetadata.
-          this.tech_.one('loadedmetadata', () => {
-            this.trigger('firstplay');
-            this.tech_.setCurrentTime(seekable.end(0));
-            this.hasPlayed_ = true;
-          });
-          return false;
+        const seekableEnd = seekable.end(0);
+        let startPoint = seekableEnd;
+        if (media.start) {
+          const offset = media.start.timeOffset;
+          if (offset < 0) {
+            startPoint = Math.max(seekableEnd + offset, seekable.start(0));
+          } else {
+            startPoint = Math.min(seekableEnd, offset);
+          }
         } // trigger firstplay to inform the source handler to ignore the next seek event
 
         this.trigger('firstplay'); // seek to the live point
 
-        this.tech_.setCurrentTime(seekable.end(0));
+        this.tech_.setCurrentTime(startPoint);
       }
       this.hasPlayed_ = true; // we can begin loading now that everything is ready
 
@@ -58189,14 +58869,11 @@
       // location
 
       this.mainSegmentLoader_.resetEverything();
-      this.mainSegmentLoader_.abort();
       if (this.mediaTypes_.AUDIO.activePlaylistLoader) {
         this.audioSegmentLoader_.resetEverything();
-        this.audioSegmentLoader_.abort();
       }
       if (this.mediaTypes_.SUBTITLES.activePlaylistLoader) {
         this.subtitleSegmentLoader_.resetEverything();
-        this.subtitleSegmentLoader_.abort();
       } // start segment loader loading in case they are paused
 
       this.load();
@@ -58704,6 +59381,26 @@
     }
     bufferHighWaterLine() {
       return Config.BUFFER_HIGH_WATER_LINE;
+    }
+    addDateRangesToTextTrack_(dateRanges) {
+      createMetadataTrackIfNotExists(this.inbandTextTracks_, 'com.apple.streaming', this.tech_);
+      addDateRangeMetadata({
+        inbandTextTracks: this.inbandTextTracks_,
+        dateRanges
+      });
+    }
+    addMetadataToTextTrack(dispatchType, metadataArray, videoDuration) {
+      const timestampOffset = this.sourceUpdater_.videoBuffer ? this.sourceUpdater_.videoTimestampOffset() : this.sourceUpdater_.audioTimestampOffset(); // There's potentially an issue where we could double add metadata if there's a muxed
+      // audio/video source with a metadata track, and an alt audio with a metadata track.
+      // However, this probably won't happen, and if it does it can be handled then.
+
+      createMetadataTrackIfNotExists(this.inbandTextTracks_, dispatchType, this.tech_);
+      addMetadata({
+        inbandTextTracks: this.inbandTextTracks_,
+        metadataArray,
+        timestampOffset,
+        videoDuration
+      });
     }
   }
 
@@ -59215,7 +59912,8 @@
       }
       let allowedEnd = seekable.end(seekable.length - 1) + SAFE_TIME_DELTA;
       const isLive = !playlist.endList;
-      if (isLive && allowSeeksWithinUnsafeLiveWindow) {
+      const isLLHLS = typeof playlist.partTargetDuration === 'number';
+      if (isLive && (isLLHLS || allowSeeksWithinUnsafeLiveWindow)) {
         allowedEnd = seekable.end(seekable.length - 1) + playlist.targetDuration * 3;
       }
       if (currentTime > allowedEnd) {
@@ -59452,10 +60150,10 @@
   const reloadSourceOnError = function (options) {
     initPlugin(this, options);
   };
-  var version$4 = "3.0.2";
-  var version$3 = "6.3.0";
-  var version$2 = "1.0.1";
-  var version$1 = "6.0.0";
+  var version$4 = "3.5.3";
+  var version$3 = "7.0.0";
+  var version$2 = "1.1.1";
+  var version$1 = "7.1.0";
   var version = "4.0.1";
 
   /**
@@ -59666,8 +60364,8 @@
     const keySystemsOptionsArr = getAllPsshKeySystemsOptions(playlists, Object.keys(sourceKeySystems));
     const initializationFinishedPromises = [];
     const keySessionCreatedPromises = []; // Since PSSH values are interpreted as initData, EME will dedupe any duplicates. The
-    // only place where it should not be deduped is for ms-prefixed APIs, but the early
-    // return for IE11 above, and the existence of modern EME APIs in addition to
+    // only place where it should not be deduped is for ms-prefixed APIs, but
+    // the existence of modern EME APIs in addition to
     // ms-prefixed APIs on Edge should prevent this from being a concern.
     // initializeMediaKeys also won't use the webkit-prefixed APIs.
 
@@ -59791,6 +60489,64 @@
     return dataUri;
   };
   /**
+   * Adds a request hook to an xhr object
+   *
+   * @param {Object} xhr object to add the onRequest hook to
+   * @param {function} callback hook function for an xhr request
+   */
+
+  const addOnRequestHook = (xhr, callback) => {
+    if (!xhr._requestCallbackSet) {
+      xhr._requestCallbackSet = new Set();
+    }
+    xhr._requestCallbackSet.add(callback);
+  };
+  /**
+   * Adds a response hook to an xhr object
+   *
+   * @param {Object} xhr object to add the onResponse hook to
+   * @param {function} callback hook function for an xhr response
+   */
+
+  const addOnResponseHook = (xhr, callback) => {
+    if (!xhr._responseCallbackSet) {
+      xhr._responseCallbackSet = new Set();
+    }
+    xhr._responseCallbackSet.add(callback);
+  };
+  /**
+   * Removes a request hook on an xhr object, deletes the onRequest set if empty.
+   *
+   * @param {Object} xhr object to remove the onRequest hook from
+   * @param {function} callback hook function to remove
+   */
+
+  const removeOnRequestHook = (xhr, callback) => {
+    if (!xhr._requestCallbackSet) {
+      return;
+    }
+    xhr._requestCallbackSet.delete(callback);
+    if (!xhr._requestCallbackSet.size) {
+      delete xhr._requestCallbackSet;
+    }
+  };
+  /**
+   * Removes a response hook on an xhr object, deletes the onResponse set if empty.
+   *
+   * @param {Object} xhr object to remove the onResponse hook from
+   * @param {function} callback hook function to remove
+   */
+
+  const removeOnResponseHook = (xhr, callback) => {
+    if (!xhr._responseCallbackSet) {
+      return;
+    }
+    xhr._responseCallbackSet.delete(callback);
+    if (!xhr._responseCallbackSet.size) {
+      delete xhr._responseCallbackSet;
+    }
+  };
+  /**
    * Whether the browser has built-in HLS support.
    */
 
@@ -59841,6 +60597,42 @@
 
   Vhs.isSupported = function () {
     return videojs.log.warn('VHS is no longer a tech. Please remove it from ' + 'your player\'s techOrder.');
+  };
+  /**
+   * A global function for setting an onRequest hook
+   *
+   * @param {function} callback for request modifiction
+   */
+
+  Vhs.xhr.onRequest = function (callback) {
+    addOnRequestHook(Vhs.xhr, callback);
+  };
+  /**
+   * A global function for setting an onResponse hook
+   *
+   * @param {callback} callback for response data retrieval
+   */
+
+  Vhs.xhr.onResponse = function (callback) {
+    addOnResponseHook(Vhs.xhr, callback);
+  };
+  /**
+   * Deletes a global onRequest callback if it exists
+   *
+   * @param {function} callback to delete from the global set
+   */
+
+  Vhs.xhr.offRequest = function (callback) {
+    removeOnRequestHook(Vhs.xhr, callback);
+  };
+  /**
+   * Deletes a global onResponse callback if it exists
+   *
+   * @param {function} callback to delete from the global set
+   */
+
+  Vhs.xhr.offResponse = function (callback) {
+    removeOnResponseHook(Vhs.xhr, callback);
   };
   const Component = videojs.getComponent('Component');
   /**
@@ -59917,6 +60709,7 @@
       this.options_.limitRenditionByPlayerDimensions = this.options_.limitRenditionByPlayerDimensions === false ? false : true;
       this.options_.useDevicePixelRatio = this.options_.useDevicePixelRatio || false;
       this.options_.useBandwidthFromLocalStorage = typeof this.source_.useBandwidthFromLocalStorage !== 'undefined' ? this.source_.useBandwidthFromLocalStorage : this.options_.useBandwidthFromLocalStorage || false;
+      this.options_.useForcedSubtitles = this.options_.useForcedSubtitles || false;
       this.options_.useNetworkInformationApi = this.options_.useNetworkInformationApi || false;
       this.options_.useDtsForTimestampOffset = this.options_.useDtsForTimestampOffset || false;
       this.options_.customTagParsers = this.options_.customTagParsers || [];
@@ -59925,7 +60718,7 @@
       this.options_.llhls = this.options_.llhls === false ? false : true;
       this.options_.bufferBasedABR = this.options_.bufferBasedABR || false;
       if (typeof this.options_.playlistExclusionDuration !== 'number') {
-        this.options_.playlistExclusionDuration = 5 * 60;
+        this.options_.playlistExclusionDuration = 60;
       }
       if (typeof this.options_.bandwidth !== 'number') {
         if (this.options_.useBandwidthFromLocalStorage) {
@@ -59955,7 +60748,7 @@
 
       this.options_.enableLowInitialPlaylist = this.options_.enableLowInitialPlaylist && this.options_.bandwidth === Config.INITIAL_BANDWIDTH; // grab options passed to player.src
 
-      ['withCredentials', 'useDevicePixelRatio', 'limitRenditionByPlayerDimensions', 'bandwidth', 'customTagParsers', 'customTagMappers', 'cacheEncryptionKeys', 'playlistSelector', 'initialPlaylistSelector', 'bufferBasedABR', 'liveRangeSafeTimeDelta', 'llhls', 'useNetworkInformationApi', 'useDtsForTimestampOffset', 'exactManifestTimings', 'leastPixelDiffSelector'].forEach(option => {
+      ['withCredentials', 'useDevicePixelRatio', 'limitRenditionByPlayerDimensions', 'bandwidth', 'customTagParsers', 'customTagMappers', 'cacheEncryptionKeys', 'playlistSelector', 'initialPlaylistSelector', 'bufferBasedABR', 'liveRangeSafeTimeDelta', 'llhls', 'useForcedSubtitles', 'useNetworkInformationApi', 'useDtsForTimestampOffset', 'exactManifestTimings', 'leastPixelDiffSelector'].forEach(option => {
         if (typeof this.source_[option] !== 'undefined') {
           this.options_[option] = this.source_[option];
         }
@@ -60298,14 +61091,13 @@
         if (excludedHDPlaylists.length) {
           videojs.log.warn('DRM keystatus changed to "output-restricted." Removing the following HD playlists ' + 'that will most likely fail to play and clearing the buffer. ' + 'This may be due to HDCP restrictions on the stream and the capabilities of the current device.', ...excludedHDPlaylists); // Clear the buffer before switching playlists, since it may already contain unplayable segments
 
+          this.playlistController_.mainSegmentLoader_.resetEverything();
           this.playlistController_.fastQualityChange_();
         }
       });
       this.handleWaitingForKey_ = this.handleWaitingForKey_.bind(this);
-      this.player_.tech_.on('waitingforkey', this.handleWaitingForKey_); // In IE11 this is too early to initialize media keys, and IE11 does not support
-      // promises.
-
-      if (videojs.browser.IE_VERSION === 11 || !didSetupEmeOptions) {
+      this.player_.tech_.on('waitingforkey', this.handleWaitingForKey_);
+      if (!didSetupEmeOptions) {
         // If EME options were not set up, we've done all we could to initialize EME.
         this.playlistController_.sourceUpdater_.initializedEme();
         return;
@@ -60430,6 +61222,51 @@
         callback
       });
     }
+    /**
+     * Adds the onRequest, onResponse, offRequest and offResponse functions
+     * to the VhsHandler xhr Object.
+     */
+
+    setupXhrHooks_() {
+      /**
+       * A player function for setting an onRequest hook
+       *
+       * @param {function} callback for request modifiction
+       */
+      this.xhr.onRequest = callback => {
+        addOnRequestHook(this.xhr, callback);
+      };
+      /**
+       * A player function for setting an onResponse hook
+       *
+       * @param {callback} callback for response data retrieval
+       */
+
+      this.xhr.onResponse = callback => {
+        addOnResponseHook(this.xhr, callback);
+      };
+      /**
+       * Deletes a player onRequest callback if it exists
+       *
+       * @param {function} callback to delete from the player set
+       */
+
+      this.xhr.offRequest = callback => {
+        removeOnRequestHook(this.xhr, callback);
+      };
+      /**
+       * Deletes a player onResponse callback if it exists
+       *
+       * @param {function} callback to delete from the player set
+       */
+
+      this.xhr.offResponse = callback => {
+        removeOnResponseHook(this.xhr, callback);
+      }; // Trigger an event on the player to notify the user that vhs is ready to set xhr hooks.
+      // This allows hooks to be set before the source is set to vhs when handleSource is called.
+
+      this.player_.trigger('xhr-hooks-ready');
+    }
   }
   /**
    * The Source Handler object, which informs video.js what additional
@@ -60450,6 +61287,7 @@
       const localOptions = merge(videojs.options, options);
       tech.vhs = new VhsHandler(source, tech, localOptions);
       tech.vhs.xhr = xhrFactory();
+      tech.vhs.setupXhrHooks_();
       tech.vhs.src(source.src, source.type);
       return tech.vhs;
     },

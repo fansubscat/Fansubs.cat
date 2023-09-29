@@ -659,14 +659,11 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 .vjs-loading-spinner {
 	color: rgb(var(--primary-color));
 	z-index: 2; /* Higher than Cast screen */
-	margin: -0.3em 0 0 -0.3em;
 	border: none;
 	opacity: 1;
 	font-size: 3.2em;
 	width: 3em;
 	height: 3em;
-	margin-top: -1.5em;
-	margin-left: -1.5em;
 }
 
 .vjs-loading-spinner:before {
@@ -794,6 +791,16 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 
 .video-js .vjs-play-control.vjs-ended .vjs-icon-placeholder:before,.vjs-icon-replay:before {
 	content: "\f2ea"
+}
+
+.video-js .vjs-picture-in-picture-control .vjs-icon-placeholder:before, .vjs-icon-picture-in-picture-enter:before {
+	font-weight: normal;
+	content: "\f24d"
+}
+
+.video-js.vjs-picture-in-picture .vjs-picture-in-picture-control .vjs-icon-placeholder:before, .vjs-icon-picture-in-picture-exit:before {
+	font-weight: 600;
+	content: "\f24d"
 }
 
 .video-js .vjs-chromecast-button .vjs-icon-placeholder:before {

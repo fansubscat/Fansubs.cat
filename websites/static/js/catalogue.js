@@ -4,6 +4,7 @@ var lastAutocompleteRequest = null;
 //Player/Reader variables
 var player = null;
 var streamer = null;
+var currentMegaFile = null;
 var currentTechOrders = [];
 var currentSourceData = null;
 var lastRequestedFileId=null;
@@ -780,6 +781,7 @@ function initializePlayer(){
 					"timeDivider",
 					"durationDisplay",
 					"volumePanel",
+					"pictureInPictureToggle",
 					"fullscreenToggle"
 				],
 				volumePanel: {
@@ -1127,7 +1129,8 @@ function parsePlayerError(error){
 }
 
 function loadMegaStream(url){
-	window.mega.file(url).loadAttributes((error, file) => {
+	currentMegaFile = window.mega.file(url);
+	currentMegaFile.loadAttributes((error, file) => {
 		if (error){
 			parsePlayerError('E_MEGA_LOAD_ERROR: '+error);
 		} else {
