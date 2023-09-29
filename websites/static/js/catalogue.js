@@ -269,6 +269,21 @@ function getReaderCurrentPage() {
 	}
 }
 
+function setReaderCurrentPage(page) {
+	var elements = $('.player-popup');
+	if (elements.length>0) {
+		return elements[0].swiper.slideTo(page);
+	} else {
+		return 0;
+	}
+}
+
+function setSeekCurrentPage(page, total) {
+	$('.manga-slider-bar').val(page);
+	$('.manga-fake-slider-bar').width((page-1)/(total-1)*100+'%');
+	$('.vjs-current-time').text(page+' / '+total);
+}
+
 function getReaderReadPages() {
 	var result = 0;
 	for (var i=0;i<pagesRead.length;i++) {
@@ -520,6 +535,16 @@ function reportUserActivity() {
 	isUserActive = true;
 }
 
+function toggleUserActivity() {
+console.log('toggleUserActivity');
+	if ($('.player_extra_upper').hasClass('vjs-user-inactive')) {
+		reportUserActivity();
+	} else {
+		isUserActive = false;
+		$('.player_extra_upper').addClass('vjs-user-inactive');
+	}
+}
+
 function listenForUserActivityInMangaReader() {
 	//Function stolen from videojs: player.js / listenForUserActivity_
 
@@ -556,7 +581,7 @@ function listenForUserActivityInMangaReader() {
 	$('#overlay-content').on('mousemove', handleMouseMove);
 	//$('#overlay-content').on('mouseup', handleMouseUpAndMouseLeave);
 	$('#overlay-content').on('mouseleave', handleMouseUpAndMouseLeave);
-	$('#overlay-content .swiper-wrapper').on('click', reportUserActivity);
+	$('#overlay-content .swiper-wrapper').on('click', toggleUserActivity);
 
 /*	const controlBar = this.getChild('controlBar');
 
@@ -624,21 +649,30 @@ function stopListeningForUserActivityInMangaReader() {
 	clearTimeout(inactivityTimeout);
 }
 
-function buildMangaReaderBar(current, total) {
-	var c = '<div class="manga-bar video-js vjs-has-started vjs-playing vjs-default-skin vjs-big-play-centered vjs-controls-enabled vjs-workinghover vjs-v8 vjs-has-started player-dimensions vjs-user-active'+(document.fullscreenElement==$('.main-container')[0] ? ' vjs-fullscreen' : '')+'">';
+function buildMangaReaderBar(current, total, type) {
+	var c = '<div class="manga-bar video-js vjs-has-started vjs-playing vjs-default-skin vjs-big-play-centered vjs-controls-enabled vjs-workinghover vjs-v8 vjs-has-started player-dimensions'+(document.fullscreenElement==$('.main-container')[0] ? ' vjs-fullscreen' : '')+'">';
 	c += '		<div class="vjs-control-bar" dir="ltr">';
-	c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div></div>';
-	c += '		</div>';
-	c += '		<div class="vjs-current-time vjs-time-control vjs-control">'+current+' / '+total+'</div>';
+	c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="1" max="'+total+'" value="'+current+'" oninput="setSeekCurrentPage(this.value, '+total+');setReaderCurrentPage(this.value-1);" onchange="setSeekCurrentPage(this.value, '+total+');setReaderCurrentPage(this.value-1);"></input></div></div>';
+	c += '			<div class="vjs-current-time vjs-time-control vjs-control">'+current+' / '+total+'</div>';
 	if (!isEmbedPage()) {
-		c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button><button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
+		if (hasPrevFile()) {
+			c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="Capítol anterior" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol anterior</span></button>';
+		} else {
+			c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+		}
+		if (hasNextFile()) {
+			c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
+		} else {
+			c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+		}
 	}
 	if (mangaHasMusic()) {
-		c += '		<div class="vjs-volume-panel vjs-control vjs-volume-panel-vertical"><button class="vjs-mute-control vjs-control vjs-button vjs-vol-3" type="button" title="Silencia" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Silencia</span></button></div>';
+		c += '		<div class="vjs-volume-panel vjs-control vjs-volume-panel-vertical"><button class="vjs-mute-control vjs-control vjs-button vjs-vol-3" type="button" title="Silencia" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Silencia</span></button><audio id="manga-music" autoplay loop><source src="https://w3schools.com/tags/horse.mp3" type="audio/mpeg"></audio></div>';
 	}
-	c += '		<button class="vjs-config-button vjs-control vjs-button" type="button" aria-disabled="false" title="Configuració del lector de manga" onclick="showMangaReaderConfig();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Configuració del lector de manga</span></button>';
-	c += '		<button class="vjs-fullscreen-control vjs-control vjs-button" type="button" title="Pantalla completa" aria-disabled="false" onclick="requestMangaReaderFullscreen();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Pantalla completa</span></button>';
-	c += '</div>';
+	c += '			<button class="vjs-config-button vjs-control vjs-button" type="button" aria-disabled="false" title="Configuració del lector de manga" onclick="showMangaReaderConfig();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Configuració del lector de manga</span></button>';
+	c += '			<button class="vjs-fullscreen-control vjs-control vjs-button" type="button" title="Pantalla completa" aria-disabled="false" onclick="requestMangaReaderFullscreen();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Pantalla completa</span></button>';
+	c += '		</div>';
+	c += '	</div>';
 
 	return c;
 }
@@ -657,14 +691,14 @@ function initializeReader(type) {
 	pagesRead[initialPosition-1]=true;
 	$('.player_extra_upper').removeClass('vjs-user-inactive');
 	$('#overlay-content .manga-reader').remove();
-	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'"><div class="swiper-wrapper">'+pagesCode+'</div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
+	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'"><div class="swiper-wrapper">'+pagesCode+'</div><div class="swiper-pagination swiper-pagination-custom swiper-pagination-horizontal">'+buildMangaReaderBar(initialPosition,currentSourceData.pages.length, type)+'</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
 	$('.main-container').on('fullscreenchange', (e) => handleMangaReaderFullscreen(e));
 	
 	new Swiper('.player-popup', {
 		initialSlide: initialPosition-1,
 		slidesPerView: type=='strip' ? 'auto' : 1,
 		direction: type=='strip' ? 'vertical' : 'horizontal',
-		freeMode: type=='strip' ? true : false,
+		freeMode: type=='strip' ? {enabled: true, minimumVelocity: 0, momentum: true} : false,
 		effect: 'slide',
 		mousewheel: {
 			enabled: true,
@@ -675,23 +709,15 @@ function initializeReader(type) {
 			onlyInViewport: false,
 		},
 		speed: 300,
-		pagination: {
-			el: '.swiper-pagination',
-			clickable: true,
-			type: "custom",
-			renderCustom: function (swiper, current, total) {
-				return buildMangaReaderBar(current, total);
-			},
-		},
+		pagination: false,
 		navigation: {
 			nextEl: '.swiper-button-next',
 			prevEl: '.swiper-button-prev',
 		},
 		on: {
-			slideChange: function () {
-				if ($('.player-popup').length>0) {
-					pagesRead[$('.player-popup')[0].swiper.activeIndex]=true;
-				}
+			slideChange: function (swiper) {
+				setSeekCurrentPage(swiper.activeIndex+1, currentSourceData.pages.length);
+				pagesRead[swiper.activeIndex]=true;
 			},
 		},
 	});
