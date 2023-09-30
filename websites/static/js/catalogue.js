@@ -21,6 +21,8 @@ var hasJumpedToInitialPosition = false;
 var lastDoubleClickStart = 0;
 var isCheckingAsSeenProgrammatically = false;
 var pagesRead = [];
+var stripImagesLoaded = 0;
+var stripImagesLoadedReqNo = 0;
 var isUserActive = true;
 //Used for tracking user activity in manga reader
 var mouseInProgress;
@@ -264,25 +266,64 @@ function getPlayerPlayedSeconds() {
 function getReaderCurrentPage() {
 	var elements = $('.player-popup');
 	if (elements.length>0) {
-		return elements[0].swiper.activeIndex+1;
+		if (currentSourceData.reader_type=='strip') {
+			var parentBottom = $('.strip-images')[0].scrollTop+$('.strip-images')[0].offsetHeight;
+			var firstPage, lastPage;
+			$(".manga-page").each(function() {
+				if (this.getBoundingClientRect().top >= 0 && this.getBoundingClientRect().top<=$('.strip-images')[0].offsetHeight) {
+					firstPage = $(this).attr('data-page-number');
+				}
+			});
+			$(".manga-page").each(function() {
+				if (this.getBoundingClientRect().top <= $('.strip-images')[0].offsetHeight) {
+					lastPage = $(this).attr('data-page-number');
+				}
+			});
+			if (firstPage==1) {
+				return firstPage;
+			} else {
+				return lastPage;
+			}
+		} else {
+			return elements[0].swiper.activeIndex+1;
+		}
 	} else {
 		return 0;
 	}
 }
 
 function setReaderCurrentPage(page) {
+	//This accepts:
+	// - Strip readers: value from 0 to 100000, representing a relative value from top to bottom
+	// - Other readers: value from 0 to currentSourceData.length-1, representing a page (must be +1'd)
 	var elements = $('.player-popup');
 	if (elements.length>0) {
-		return elements[0].swiper.slideTo(page);
-	} else {
-		return 0;
+		if (currentSourceData.reader_type=='strip') {
+			$('.strip-images')[0].scrollTo(0, ($('.strip-images')[0].scrollHeight-$('.strip-images')[0].offsetHeight)*(page/100000));
+		} else {
+			elements[0].swiper.slideTo(page+1);
+		}
 	}
 }
 
 function setSeekCurrentPage(page, total) {
 	$('.manga-slider-bar').val(page);
 	$('.manga-fake-slider-bar').width((page-1)/(total-1)*100+'%');
-	$('.vjs-current-time').text(page+' / '+total);
+	if (currentSourceData.reader_type=='strip') {
+		$('.vjs-current-time').text(getReaderCurrentPage()+' / '+currentSourceData.length);
+	} else {
+		$('.vjs-current-time').text(page+' / '+currentSourceData.length);
+	}
+	pagesRead[getReaderCurrentPage()-1]=true;
+}
+
+function setSeekCurrentPageOnScroll(element) {
+	//Only used for strip readers: calculate value from current scroll
+	var value = element.scrollTop/(element.scrollHeight-element.offsetHeight)*100; 
+	$('.manga-slider-bar').val(value*1000);
+	$('.manga-fake-slider-bar').width(value+'%');
+	$('.vjs-current-time').text(getReaderCurrentPage()+' / '+currentSourceData.length);
+	pagesRead[getReaderCurrentPage()-1]=true;
 }
 
 function getReaderReadPages() {
@@ -441,6 +482,40 @@ function imageLoaded(image) {
 	element.parent().find('.image-error').addClass('hidden');
 }
 
+function stripImageLoaded(reqNo) {
+	if (currentSourceData!=null && reqNo==stripImagesLoadedReqNo) {
+		stripImagesLoaded++;
+		if (stripImagesLoaded==currentSourceData.length) {
+			stripSyncAndShowImages();
+		}
+	}
+}
+
+function stripImageError(reqNo) {
+	if (currentSourceData!=null && reqNo==stripImagesLoadedReqNo) {
+		$('.strip-images-loading').addClass('hidden');
+		$('.strip-images-error').removeClass('hidden');
+		$('.strip-images').addClass('hidden');
+	}
+}
+
+function stripImagesReload() {
+	$('.strip-images-loading').removeClass('hidden');
+	$('.strip-images-error').addClass('hidden');
+	$('.strip-images').addClass('hidden');
+	initializeReader('strip');
+}
+
+function stripSyncAndShowImages() {
+	$('.strip-images-loading').addClass('hidden');
+	$('.strip-images-error').addClass('hidden');
+	$('.strip-images').removeClass('hidden');
+	$('.swiper-pagination').removeClass('hidden');
+	if (currentSourceData.initial_position>0 && currentSourceData.initial_position<currentSourceData.length) {
+		$('[data-page-number="'+currentSourceData.initial_position+'"]')[0].scrollIntoView({ behavior: "instant", block: "start", inline: "nearest" });
+	}
+}
+
 function imageError(image) {
 	var element = $(image);
 	element.css({"width": "0", "height": "0"});
@@ -511,7 +586,7 @@ function applyMangaReaderType(type) {
 
 function showMangaReaderConfig() {
 	var disabled = (currentSourceData.default_reader_type=='strip');
-	showCustomDialog('Configuració', '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">Lector de manga</div><div class="reader-settings-data-header-subtitle">'+(disabled ? 'Aquest manga no permet triar cap ordre de lectura diferent del mode de tira vertical.' : 'Tria quin lector de manga vols utilitzar: sentit oriental (de dreta a esquerra), sentit occidental (d’esquerra a dreta) o tira vertical.')+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="rtl"'+(!disabled && currentSourceData.reader_type=='rtl' ? ' selected' : '')+'>Sentit oriental</option><option value="ltr"'+(!disabled && currentSourceData.reader_type=='ltr' ? ' selected' : '')+'>Sentit occidental</option><option value="strip"'+(disabled || currentSourceData.reader_type=='strip' ? ' selected' : '')+'>Tira vertical</option></select></div><br><hr><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de Fansubs.cat per al <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a>.', null, true, true, [
+	showCustomDialog('Configuració', '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">Lector de manga</div><div class="reader-settings-data-header-subtitle">'+(disabled ? 'Aquest manga no permet triar cap lector diferent.' : 'Tria quin lector de manga vols utilitzar: sentit oriental (de dreta a esquerra), sentit occidental (d’esquerra a dreta) o tira vertical. Altres mangues poden ignorar aquesta preferència.')+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="rtl"'+(!disabled && currentSourceData.reader_type=='rtl' ? ' selected' : '')+'>Sentit oriental</option><option value="ltr"'+(!disabled && currentSourceData.reader_type=='ltr' ? ' selected' : '')+'>Sentit occidental</option><option value="strip"'+(disabled || currentSourceData.reader_type=='strip' ? ' selected' : '')+'>Tira vertical</option></select></div><br><hr><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de Fansubs.cat per al <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a>.', null, true, true, [
 		{
 			text: 'D’acord',
 			class: 'normal-button',
@@ -653,7 +728,11 @@ function stopListeningForUserActivityInMangaReader() {
 function buildMangaReaderBar(current, total, type) {
 	var c = '<div class="manga-bar video-js vjs-has-started vjs-playing vjs-default-skin vjs-big-play-centered vjs-controls-enabled vjs-workinghover vjs-v8 vjs-has-started player-dimensions'+(document.fullscreenElement==$('.main-container')[0] ? ' vjs-fullscreen' : '')+'">';
 	c += '		<div class="vjs-control-bar" dir="ltr">';
-	c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="1" max="'+total+'" value="'+current+'" oninput="setSeekCurrentPage(this.value, '+total+');setReaderCurrentPage(this.value-1);" onchange="setSeekCurrentPage(this.value, '+total+');setReaderCurrentPage(this.value-1);"></input></div></div>';
+	if (type=='strip') {
+		c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: 0%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="0" max="100000" value="0" oninput="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, 100000);" onchange="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, 100000);"></input></div></div>';
+	} else {
+		c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="1" max="'+total+'" value="'+current+'" oninput="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, '+total+');" onchange="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, '+total+');"></input></div></div>';
+	}
 	c += '			<div class="vjs-current-time vjs-time-control vjs-control">'+current+' / '+total+'</div>';
 	if (!isEmbedPage()) {
 		if (hasPrevFile()) {
@@ -680,48 +759,66 @@ function buildMangaReaderBar(current, total, type) {
 
 function initializeReader(type) {
 	var pagesCode = '';
-	pagesRead = new Array(currentSourceData.pages.length);
-	for (var i=0; i<currentSourceData.pages.length;i++) {
-		pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="lazy" onload="imageLoaded(this);" onerror="imageError(this);"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">No s’ha pogut carregar aquesta imatge.<br><button class="normal-button" onclick="imageReload(this);">Torna-ho a provar</button></div></div>';
+	pagesRead = new Array(currentSourceData.length);
+	if (type=='strip') {
+		stripImagesLoadedReqNo++;
+		stripImagesLoaded = 0;
+		pagesCode+='<div class="swiper-wrapper"><div class="strip-images-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="strip-images-error hidden">No s’han pogut carregar totes les imatges.<br><button class="normal-button" onclick="stripImagesReload();">Torna-ho a provar</button></div><div class="strip-images hidden" onscroll="setSeekCurrentPageOnScroll(this);">';
+	} else {
+		pagesCode+='<div class="swiper-wrapper">';
+	}
+	for (var i=0; i<currentSourceData.length;i++) {
+		if (type=='strip') {
+			pagesCode+='<div class="manga-page" data-page-number="'+(i+1)+'"><img src="'+currentSourceData.pages[i]+'" draggable="false" onload="stripImageLoaded('+stripImagesLoadedReqNo+');" onerror="stripImageError('+stripImagesLoadedReqNo+');"></div>';
+		} else {
+			pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="lazy" draggable="false" onload="imageLoaded(this);" onerror="imageError(this);"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">No s’ha pogut carregar aquesta imatge.<br><button class="normal-button" onclick="imageReload(this);">Torna-ho a provar</button></div></div>';
+		}
 		pagesRead[i]=false;
 	}
+	if (type=='strip') {
+		pagesCode+='</div></div>';
+	} else {
+		pagesCode+='</div>';
+	}
 	var initialPosition = 1;
-	if (currentSourceData.initial_position>0 && currentSourceData.initial_position<currentSourceData.pages.length) {
+	if (currentSourceData.initial_position>0 && currentSourceData.initial_position<currentSourceData.length) {
 		initialPosition = currentSourceData.initial_position;
 	}
 	pagesRead[initialPosition-1]=true;
 	$('.player_extra_upper').removeClass('vjs-user-inactive');
 	$('#overlay-content .manga-reader').remove();
-	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'"><div class="swiper-wrapper">'+pagesCode+'</div><div class="swiper-pagination swiper-pagination-custom swiper-pagination-horizontal">'+buildMangaReaderBar(initialPosition,currentSourceData.pages.length, type)+'</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
+	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'">'+pagesCode+'<div class="swiper-pagination swiper-pagination-custom swiper-pagination-horizontal'+(type=='strip' ? ' hidden' : '')+'">'+buildMangaReaderBar(initialPosition,currentSourceData.length, type)+'</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
 	$('.main-container').on('fullscreenchange', (e) => handleMangaReaderFullscreen(e));
 	
-	new Swiper('.player-popup', {
-		initialSlide: initialPosition-1,
-		slidesPerView: type=='strip' ? 'auto' : 1,
-		direction: type=='strip' ? 'vertical' : 'horizontal',
-		freeMode: type=='strip' ? {enabled: true, minimumVelocity: 0, momentum: true} : false,
-		effect: 'slide',
-		mousewheel: {
-			enabled: true,
-			forceToAxis: true,
-		},
-		keyboard: {
-			enabled: true,
-			onlyInViewport: false,
-		},
-		speed: 300,
-		pagination: false,
-		navigation: {
-			nextEl: '.swiper-button-next',
-			prevEl: '.swiper-button-prev',
-		},
-		on: {
-			slideChange: function (swiper) {
-				setSeekCurrentPage(swiper.activeIndex+1, currentSourceData.pages.length);
-				pagesRead[swiper.activeIndex]=true;
+	if (type!='strip') {
+		new Swiper('.player-popup', {
+			initialSlide: initialPosition-1,
+			slidesPerView: type=='strip' ? 'auto' : 1,
+			direction: type=='strip' ? 'vertical' : 'horizontal',
+			freeMode: type=='strip' ? {enabled: true, minimumVelocity: 0, momentum: true} : false,
+			effect: 'slide',
+			mousewheel: {
+				enabled: true,
+				forceToAxis: true,
 			},
-		},
-	});
+			keyboard: {
+				enabled: true,
+				onlyInViewport: false,
+			},
+			speed: 300,
+			pagination: false,
+			navigation: {
+				nextEl: '.swiper-button-next',
+				prevEl: '.swiper-button-prev',
+			},
+			on: {
+				slideChange: function (swiper) {
+					setSeekCurrentPage(swiper.activeIndex+1, currentSourceData.length);
+					pagesRead[swiper.activeIndex]=true;
+				},
+			},
+		});
+	}
 	listenForUserActivityInMangaReader();
 }
 

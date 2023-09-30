@@ -5026,7 +5026,7 @@ var ChromecastSessionManager = /*#__PURE__*/function () {
           if (!window.player.currentSource() || window.currentSourceData.method == 'mega') {
             // Do not cast if there is no media item loaded in the player
             if (window.currentSourceData.method == 'mega') {
-              showAlert("No es pot emetre", "Els vídeos acabats de penjar estan allotjats a MEGA i no es poden emetre. Si vols emetre'l, caldrà que esperis un parell d'hores i refresquis la pàgina.");
+              showAlert("No es pot emetre", "Els vídeos acabats de penjar estan allotjats a MEGA i no es poden emetre. Si vols emetre’l, caldrà que esperis un parell d’hores i actualitzis la pàgina.");
             } else {
               showAlert("No es pot emetre", "Aquest vídeo no es pot emetre.");
             }
@@ -5128,7 +5128,7 @@ var ChromecastSessionManager = /*#__PURE__*/function () {
       player.src(sources);
       player.ready(function () {
         if (window.isChromecastDead) {
-          showAlert("Error en emetre", "S'ha perdut la connexió amb el dispositiu al qual s'emetia. Si vols continuar controlant el Chromecast des d'aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
+          showAlert("Error en emetre", "S’ha perdut la connexió amb el dispositiu al qual s’emetia. Si vols continuar controlant el Chromecast des d’aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
           player.pause();
           //Purely a visual change:
           setTimeout(function () {
@@ -5372,6 +5372,10 @@ module.exports = function (videojs) {
         this._isChromecastConnected = true;
         this._reloadCSSClasses();
         this.player().addClass('vjs-casting');
+        if (this.player().isInPictureInPicture()) {
+          this.player().exitPictureInPicture();
+        }
+        this.player().addClass('vjs-casting');
         this._updateCastLabelText();
       }
 
@@ -5489,7 +5493,7 @@ function onChromecastRequested(player) {
   if (!window.isChromecastDead) {
     window.chromecastSessionManager.openCastMenu();
   } else {
-    showAlert("Error en emetre", "S'ha perdut la connexió amb el dispositiu al qual s'emetia. Si vols continuar controlant el Chromecast des d'aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
+    showAlert("Error en emetre", "S’ha perdut la connexió amb el dispositiu al qual s’emetia. Si vols continuar controlant el Chromecast des d’aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
   }
 }
 
