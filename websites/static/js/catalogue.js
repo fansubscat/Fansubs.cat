@@ -279,8 +279,8 @@ function getReaderCurrentPage() {
 					lastPage = $(this).attr('data-page-number');
 				}
 			});
-			if (firstPage==1) {
-				return firstPage;
+			if ($('.strip-images')[0].scrollTop==0) {
+				return 1;
 			} else {
 				return lastPage;
 			}
@@ -555,11 +555,11 @@ function handleMangaReaderFullscreen(e) {
 
 function applyMangaReaderType(type) {
 	if (type!=currentSourceData.reader_type) {
-		currentSourceData.reader_type=type;
 		sendCurrentFileTracking(); //sync with server
 		//Update this like if they came from the server
 		currentSourceData.initial_position = getDisplayerCurrentPosition();
 		currentSourceData.initial_progress = currentSourceData.initial_progress+getDisplayerCurrentProgress();
+		currentSourceData.reader_type=type;
 		stopListeningForUserActivityInMangaReader();
 
 		if ($('body.user-logged-in').length==0) {
