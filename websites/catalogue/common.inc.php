@@ -110,6 +110,28 @@ function list_remote_files($url) {
 	return $files;
 }
 
+function filter_remote_files($files, $type) {
+	if ($type=='audio') {
+		$result = array();
+		foreach ($files as $file) {
+			if (preg_match('/.*\.(mp3|ogg)$/i', $file)) {
+				array_push($result, $file);
+			}
+		}
+		return $result;
+	} else if ($type=='images') {
+		$result = array();
+		foreach ($files as $file) {
+			if (preg_match('/.*\.(jpe?g|png)$/i', $file)) {
+				array_push($result, $file);
+			}
+		}
+		return $result;
+	} else {
+		return $files;
+	}
+}
+
 function filter_links($links){
 	$methods = array();
 	$links_mega = array();

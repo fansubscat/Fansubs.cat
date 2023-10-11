@@ -81,10 +81,14 @@ function get_player_data(){
 		}
 
 		$pages = array();
+		$music = array();
 		if (CATALOGUE_ITEM_TYPE=='manga') {
 			$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
-			$pages = list_remote_files($base_path);
+			$files = list_remote_files($base_path);
+			$pages = filter_remote_files($files, 'images');
+			$music = filter_remote_files($files, 'audio');
 			natsort($pages);
+			natsort($music);
 
 			if (count($pages)<1) {
 				return array('result' => 'ko', 'code' => 3);
@@ -161,6 +165,7 @@ function get_player_data(){
 			'length' => intval($row['length']),
 			'data_sources' => get_data_sources($links),
 			'pages' => array_values($pages),
+			'music' => array_values($music),
 			'reader_type' => $row['reader_type']=='strip' ? 'strip' : (((!empty($user) && $user['manga_reader_type']==1) || (empty($user) && $_COOKIE['manga_reader_type']==1)) ? 'ltr' : (((!empty($user) && $user['manga_reader_type']==2) || (empty($user) && $_COOKIE['manga_reader_type']==2)) ? 'strip' : 'rtl')),
 			'default_reader_type' => $row['reader_type'],
 			'method' => get_display_method($links),
