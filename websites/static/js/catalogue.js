@@ -293,6 +293,8 @@ function getReaderCurrentPage() {
 }
 
 function setReaderCurrentPage(page) {
+	page = parseInt(page);
+	//console.log("setReaderCurrentPage "+page);
 	//This accepts:
 	// - Strip readers: value from 0 to 100000, representing a relative value from top to bottom
 	// - Other readers: value from 0 to currentSourceData.length-1, representing a page (must be +1'd)
@@ -301,12 +303,14 @@ function setReaderCurrentPage(page) {
 		if (currentSourceData.reader_type=='strip') {
 			$('.strip-images')[0].scrollTo(0, ($('.strip-images')[0].scrollHeight-$('.strip-images')[0].offsetHeight)*(page/100000));
 		} else {
-			elements[0].swiper.slideTo(page+1);
+			elements[0].swiper.slideTo(page-1);
 		}
 	}
 }
 
 function setSeekCurrentPage(page, total) {
+	page = parseInt(page);
+	//console.log("setSeekCurrentPage "+page);
 	$('.manga-slider-bar').val(page);
 	$('.manga-fake-slider-bar').width((page-1)/(total-1)*100+'%');
 	if (currentSourceData.reader_type=='strip') {
@@ -485,6 +489,7 @@ function imageLoaded(image) {
 function stripImageLoaded(reqNo) {
 	if (currentSourceData!=null && reqNo==stripImagesLoadedReqNo) {
 		stripImagesLoaded++;
+		$('.strip-images-loading-progress').text(stripImagesLoaded+' / '+currentSourceData.length);
 		if (stripImagesLoaded==currentSourceData.length) {
 			stripSyncAndShowImages();
 		}
@@ -612,7 +617,7 @@ function reportUserActivity() {
 }
 
 function toggleUserActivity() {
-console.log('toggleUserActivity');
+	//console.log('toggleUserActivity');
 	if ($('.player_extra_upper').hasClass('vjs-user-inactive')) {
 		reportUserActivity();
 	} else {
@@ -729,21 +734,34 @@ function buildMangaReaderBar(current, total, type) {
 	var c = '<div class="manga-bar video-js vjs-has-started vjs-playing vjs-default-skin vjs-big-play-centered vjs-controls-enabled vjs-workinghover vjs-v8 vjs-has-started player-dimensions'+(document.fullscreenElement==$('.main-container')[0] ? ' vjs-fullscreen' : '')+'">';
 	c += '		<div class="vjs-control-bar" dir="ltr">';
 	if (type=='strip') {
-		c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: 0%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="0" max="100000" value="0" oninput="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, 100000);" onchange="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, 100000);"></input></div></div>';
+		c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: 0%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="0" max="100000" value="0" oninput="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, 100000);"></input></div></div>';
 	} else {
-		c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="1" max="'+total+'" value="'+current+'" oninput="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, '+total+');" onchange="setReaderCurrentPage(this.value);setSeekCurrentPage(this.value, '+total+');"></input></div></div>';
+		c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="1" max="'+total+'" value="'+current+'" oninput="setSeekCurrentPage(this.value, '+total+');setReaderCurrentPage(this.value);"></input></div></div>';
 	}
 	c += '			<div class="vjs-current-time vjs-time-control vjs-control">'+current+' / '+total+'</div>';
 	if (!isEmbedPage()) {
-		if (hasPrevFile()) {
-			c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="Capítol anterior" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol anterior</span></button>';
+		if (type=='rtl') {
+			if (hasNextFile()) {
+				c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
+			} else {
+				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+			}
+			if (hasPrevFile()) {
+				c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol anterior" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol anterior</span></button>';
+			} else {
+				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+			}
 		} else {
-			c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
-		}
-		if (hasNextFile()) {
-			c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
-		} else {
-			c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+			if (hasPrevFile()) {
+				c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="Capítol anterior" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol anterior</span></button>';
+			} else {
+				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+			}
+			if (hasNextFile()) {
+				c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
+			} else {
+				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+			}
 		}
 	}
 	if (mangaHasMusic()) {
@@ -763,7 +781,7 @@ function initializeReader(type) {
 	if (type=='strip') {
 		stripImagesLoadedReqNo++;
 		stripImagesLoaded = 0;
-		pagesCode+='<div class="swiper-wrapper"><div class="strip-images-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="strip-images-error hidden">No s’han pogut carregar totes les imatges.<br><button class="normal-button" onclick="stripImagesReload();">Torna-ho a provar</button></div><div class="strip-images hidden" onscroll="setSeekCurrentPageOnScroll(this);">';
+		pagesCode+='<div class="swiper-wrapper"><div class="strip-images-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i><span class="strip-images-loading-progress">0 / '+currentSourceData.length+'</span></div><div class="strip-images-error hidden">No s’han pogut carregar totes les imatges.<br><button class="normal-button" onclick="stripImagesReload();">Torna-ho a provar</button></div><div class="strip-images hidden" onscroll="setSeekCurrentPageOnScroll(this);">';
 	} else {
 		pagesCode+='<div class="swiper-wrapper">';
 	}
@@ -813,6 +831,7 @@ function initializeReader(type) {
 			},
 			on: {
 				slideChange: function (swiper) {
+					//console.log("slideChange "+(swiper.activeIndex+1));
 					setSeekCurrentPage(swiper.activeIndex+1, currentSourceData.length);
 					pagesRead[swiper.activeIndex]=true;
 				},
