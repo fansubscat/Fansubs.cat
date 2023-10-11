@@ -542,9 +542,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<label for="form-comic_type" class="mandatory">Tipus de còmic</label>
 									<select class="form-select" name="comic_type" id="form-comic_type" required>
 										<option value="manga"<?php echo $row['comic_type']=='manga' ? " selected" : ""; ?>>Manga (còmic japonès)</option>
-										<option value="manhwa"<?php echo $row['comic_type']=='manhwa' ? " selected" : ""; ?>>Manhwa (còmic coreà)</option>
 										<option value="manhua"<?php echo $row['comic_type']=='manhua' ? " selected" : ""; ?>>Manhua (còmic xinès)</option>
-										<option value="other"<?php echo $row['comic_type']=='other' ? " selected" : ""; ?>>Altres</option>
+										<option value="manhwa"<?php echo $row['comic_type']=='manhwa' ? " selected" : ""; ?>>Manhwa (còmic coreà)</option>
+										<option value="novel"<?php echo $row['comic_type']=='novel' ? " selected" : ""; ?>>Novel·la lleugera</option>
 									</select>
 								</div>
 							</div>

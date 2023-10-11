@@ -42,8 +42,8 @@ switch ($server_url) {
 		define('CATALOGUE_ITEM_TYPE', 'anime');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'movie');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'series');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-video');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-display');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-film');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-tv');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'Films');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
 		define('CATALOGUE_ITEM_STRING_SINGULAR', 'anime');
@@ -54,6 +54,7 @@ switch ($server_url) {
 		define('CATALOGUE_SCORE_SOURCE', 'MyAnimeList');
 		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera emissió');
 		define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
+		define('CATALOGUE_HAS_ORIGIN', FALSE);
 		define('CATALOGUE_ROUND_INTERVAL', 50);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
@@ -88,6 +89,7 @@ switch ($server_url) {
 		define('CATALOGUE_SCORE_SOURCE', 'MyAnimeList');
 		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera publicació');
 		define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
+		define('CATALOGUE_HAS_ORIGIN', TRUE);
 		define('CATALOGUE_ROUND_INTERVAL', 50);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
@@ -122,6 +124,7 @@ switch ($server_url) {
 		define('CATALOGUE_SCORE_SOURCE', 'MyDramaList');
 		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera emissió');
 		define('CATALOGUE_HAS_DEMOGRAPHIES', FALSE);
+		define('CATALOGUE_HAS_ORIGIN', FALSE);
 		define('CATALOGUE_ROUND_INTERVAL', 25);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
@@ -156,6 +159,7 @@ switch ($server_url) {
 		define('CATALOGUE_SCORE_SOURCE', 'MyAnimeList');
 		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera emissió');
 		define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
+		define('CATALOGUE_HAS_ORIGIN', FALSE);
 		define('CATALOGUE_ROUND_INTERVAL', 25);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
@@ -190,6 +194,7 @@ switch ($server_url) {
 		define('CATALOGUE_SCORE_SOURCE', 'MyAnimeList');
 		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera publicació');
 		define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
+		define('CATALOGUE_HAS_ORIGIN', TRUE);
 		define('CATALOGUE_ROUND_INTERVAL', 25);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');

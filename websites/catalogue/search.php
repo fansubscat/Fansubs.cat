@@ -152,6 +152,9 @@ if (!isset($_GET['full_catalogue']) || (isset($_GET['full_catalogue']) && $_GET[
 if (isset($_GET['demographics']) && is_array($_GET['demographics']) && count($_GET['demographics'])>0) {
 	$param_demographics_array = $_GET['demographics'];
 }
+if (isset($_GET['origins']) && is_array($_GET['origins']) && count($_GET['origins'])>0) {
+	$param_origins_array = $_GET['origins'];
+}
 if (isset($_GET['genres_include']) && is_array($_GET['genres_include']) && count($_GET['genres_include'])>0) {
 	$param_genres_include_array = $_GET['genres_include'];
 }
@@ -238,6 +241,27 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 ?>
 							</select>
+<?php
+if (CATALOGUE_HAS_ORIGIN && !SITE_IS_HENTAI) {
+?>
+							<label>Categoria</label>
+<?php
+	$origins=array(
+		'manga' => 'Manga (còmic japonès)',
+		'manhua' => 'Manhua (còmic xinès)',
+		'manhwa' => 'Manhwa (còmic coreà)',
+		'novel' => 'Novel·la lleugera',
+	);
+	foreach ($origins as $key => $value) {
+?>
+							<div class="search-checkboxes search-origins">
+								<input id="catalogue-search-origins-<?php echo $key; ?>" data-id="<?php echo $key; ?>" type="checkbox" oninput="loadSearchResults();"<?php echo (isset($param_origins_array) && !in_array($key, $param_origins_array)) ? '' : ' checked'; ?>>
+								<label for="catalogue-search-origins-<?php echo $key; ?>" class="for-checkbox"><?php echo $value; ?></label>
+							</div>
+<?php
+	}
+}
+?>
 							<label>Inclou-hi també...</label>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-lost" type="checkbox" oninput="loadSearchResults();"<?php echo $param_hide_lost_content ? '' : ' checked'; ?>>

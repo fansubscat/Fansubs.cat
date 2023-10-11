@@ -182,6 +182,10 @@
 	transform: translateX(200%);
 }
 
+.player_extra_upper.vjs-user-inactive + .manga-reader .swiper-pagination-custom {
+	pointer-events: none;
+}
+
 .manga-reader .swiper-slide {
 	height: unset;
 	display: flex;

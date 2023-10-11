@@ -31,6 +31,7 @@ if (defined('PAGE_IS_SEARCH')) {
 	$show_lost_content = FALSE;
 	$show_no_demographics = FALSE;
 	$demographics=array();
+	$origins=array();
 	$genres_include=array();
 	$genres_exclude=array();
 	$statuses=array();
@@ -87,6 +88,11 @@ if (defined('PAGE_IS_SEARCH')) {
 			}
 		}
 	}
+	if (isset($_POST['origins']) && is_array($_POST['origins'])) {
+		foreach ($_POST['origins'] as $origin) {
+			array_push($origins, escape($origin));
+		}
+	}
 	if (isset($_POST['genres_include']) && is_array($_POST['genres_include'])) {
 		foreach ($_POST['genres_include'] as $genre) {
 			array_push($genres_include, intval($genre));
@@ -119,7 +125,7 @@ if (defined('PAGE_IS_SEARCH')) {
 				'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 				'specific_version' => FALSE,
 				'use_version_param' => TRUE,
-				'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+				'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 			));
 			if ($is_full_catalogue) {
 				array_push($sections, array(
@@ -127,14 +133,14 @@ if (defined('PAGE_IS_SEARCH')) {
 					'title' => '<i class="fa fa-fw fa-display"></i> Resultats d’anime',
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
-					'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+					'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
-					'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+					'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 			}
 			break;
@@ -144,7 +150,7 @@ if (defined('PAGE_IS_SEARCH')) {
 				'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
 				'specific_version' => FALSE,
 				'use_version_param' => TRUE,
-				'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+				'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 			));
 			if ($is_full_catalogue) {
 				array_push($sections, array(
@@ -152,14 +158,14 @@ if (defined('PAGE_IS_SEARCH')) {
 					'title' => '<i class="fa fa-fw fa-display"></i> Resultats d’anime',
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
-					'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+					'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
-					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 			}
 			break;
@@ -170,7 +176,7 @@ if (defined('PAGE_IS_SEARCH')) {
 				'title' => '<i class="fa fa-fw fa-display"></i> Resultats d’anime',
 				'specific_version' => FALSE,
 				'use_version_param' => TRUE,
-				'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+				'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 			));
 			if ($is_full_catalogue) {
 				array_push($sections, array(
@@ -178,14 +184,14 @@ if (defined('PAGE_IS_SEARCH')) {
 					'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
-					'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+					'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
 					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
-					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $genres_include, $genres_exclude, $statuses),
+					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 			}
 			break;

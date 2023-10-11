@@ -165,7 +165,7 @@ function get_player_data(){
 			'length' => intval($row['length']),
 			'data_sources' => get_data_sources($links),
 			'pages' => array_values($pages),
-			'music' => array_values($music),
+			'music' => !empty($music) ? $music[0] : NULL,
 			'reader_type' => $row['reader_type']=='strip' ? 'strip' : (((!empty($user) && $user['manga_reader_type']==1) || (empty($user) && $_COOKIE['manga_reader_type']==1)) ? 'ltr' : (((!empty($user) && $user['manga_reader_type']==2) || (empty($user) && $_COOKIE['manga_reader_type']==2)) ? 'strip' : 'rtl')),
 			'default_reader_type' => $row['reader_type'],
 			'method' => get_display_method($links),

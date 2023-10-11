@@ -143,7 +143,7 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 	$iterator = new RecursiveIteratorIterator($directory);
 	foreach ($iterator as $file){
 		$ext = pathinfo(strtolower(basename($file)), PATHINFO_EXTENSION);
-		if (strpos($file, '__MACOSX')===FALSE && ($ext=='jpg' || $ext=='jpeg' || $ext=='png')) {
+		if (strpos($file, '__MACOSX')===FALSE && ($ext=='jpg' || $ext=='jpeg' || $ext=='png' || $ext=='mp3' || $ext=='ogg')) {
 			copy($file, $cleaned_path.preg_replace('/[^0-9a-zA-Z_\.]/u','_', strtolower(basename($file))));
 		}
 	}

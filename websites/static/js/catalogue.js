@@ -542,7 +542,7 @@ function imageReload(button) {
 }
 
 function mangaHasMusic() {
-	return currentSourceData.music.length>0;
+	return currentSourceData.music!=null;
 }
 
 function toggleMangaMusic() {
@@ -786,7 +786,7 @@ function buildMangaReaderBar(current, total, type) {
 		}
 	}
 	if (mangaHasMusic()) {
-		c += '		<button class="vjs-mute-control vjs-control vjs-button vjs-vol-0" type="button" title="Commuta la música de fons" aria-disabled="false" onclick="toggleMangaMusic();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Commuta la música de fons</span></button><audio id="manga-music" loop><source src="'+currentSourceData.music[0]+'" type="audio/mpeg"></audio>';
+		c += '		<button class="vjs-mute-control vjs-control vjs-button vjs-vol-0" type="button" title="Commuta la música de fons" aria-disabled="false" onclick="toggleMangaMusic();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Commuta la música de fons</span></button><audio id="manga-music" loop><source src="'+currentSourceData.music+'" type="audio/mpeg"></audio>';
 	}
 	c += '			<button class="vjs-config-button vjs-control vjs-button" type="button" aria-disabled="false" title="Configuració del lector de manga" onclick="showMangaReaderConfig();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Configuració del lector de manga</span></button>';
 	c += '			<button class="vjs-fullscreen-control vjs-control vjs-button" type="button" title="Pantalla completa" aria-disabled="false" onclick="requestMangaReaderFullscreen();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Pantalla completa</span></button>';
@@ -1593,6 +1593,9 @@ function formatCatalogueSearchQueryString(values) {
 	for(var i=0;i<values['demographics[]'].length;i++) {
 		queryString+='&demographics[]='+values['demographics[]'][i];
 	}
+	for(var i=0;i<values['origins[]'].length;i++) {
+		queryString+='&origins[]='+values['origins[]'][i];
+	}
 	for(var i=0;i<values['genres_include[]'].length;i++) {
 		queryString+='&genres_include[]='+values['genres_include[]'][i];
 	}
@@ -1628,6 +1631,11 @@ function loadSearchResults() {
 		demographics.push($(element).attr('data-id'));
 	}
 
+	var origins = Array();
+	for (element of $('.search-origins input:checked')) {
+		origins.push($(element).attr('data-id'));
+	}
+
 	var includedGenres = Array();
 	for (element of $('.tristate-genres .tristate-include.tristate-selected')) {
 		includedGenres.push($(element).parent().attr('data-id'));
@@ -1653,6 +1661,7 @@ function loadSearchResults() {
 		'type': $('#catalogue-search-type .singlechoice-selected').attr('data-value'),
 		'status[]': statuses,
 		'demographics[]': demographics,
+		'origins[]': origins,
 		'genres_include[]': includedGenres,
 		'genres_exclude[]': excludedGenres
 	};

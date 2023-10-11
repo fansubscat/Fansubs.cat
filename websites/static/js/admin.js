@@ -501,6 +501,7 @@ function uncompressFile(fileInput) {
 			console.info('Uncompressing ' + archive.archive_type + ' ...');
 			var count=0;
 			var countImages=0;
+			var countMusic=0;
 			var countRepeated=0;
 			var foundNames = [];
 			archive.entries.forEach(function(entry) {
@@ -508,6 +509,9 @@ function uncompressFile(fileInput) {
 					if (!entry.name.includes('__MACOSX') ) {
 						if (entry.name.toLowerCase().endsWith(".jpg") || entry.name.toLowerCase().endsWith(".png") || entry.name.toLowerCase().endsWith(".jpeg")) {
 							countImages++;
+						}
+						if (entry.name.toLowerCase().endsWith(".mp3") || entry.name.toLowerCase().endsWith(".ogg")) {
+							countMusic++;
 						}
 						var shortName = entry.name.split('/').pop().replace(/[^0-9a-zA-Z_\.]/g,'_');
 						if (foundNames.includes(shortName)){
@@ -519,8 +523,18 @@ function uncompressFile(fileInput) {
 				}
 			});
 
-			if (countImages==count && countRepeated==0) {
-				detailsElement.html("<span style=\"color: #1e7e34;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L’arxiu consta de <strong>"+countImages+" imatges</strong> en total.</span>");
+			if (countMusic>1) {
+				detailsElement.html("<span style=\"color: #bd2130;\"><span class=\"fa fa-times fa-fw\"></span> <strong>No es pot pujar</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>L’arxiu conté "+countMusic+" fitxers de música. El màxim és 1.</span>");
+				fileInput.value="";
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
+				$('label[for="'+fileInput.id+'"]').removeClass("btn-success");
+				$('label[for="'+fileInput.id+'"]').addClass("btn-danger");
+				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pe-2"></span>Puja un fitxer...');
+				numberOfPagesElement.val(0);
+			} else if ((countImages+countMusic)==count && countRepeated==0) {
+				detailsElement.html("<span style=\"color: #1e7e34;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L’arxiu consta de <strong>"+countImages+" imatges</strong>"+(countMusic>0 ? " i <strong>1 fitxer de música</strong>" : "")+" en total.</span>");
 				numberOfPagesElement.val(countImages);
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-danger");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
@@ -549,7 +563,7 @@ function uncompressFile(fileInput) {
 				$('label[for="'+fileInput.id+'"]').addClass("btn-danger");
 				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-upload pe-2"></span>Puja un fitxer...');
 			} else {
-				detailsElement.html("<span style=\"color: #d39e00;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L’arxiu consta de <strong>"+countImages+" imatges</strong> en total.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>Compte: L’arxiu conté "+(count-countImages)+" fitxers que no són imatges i es descartaran.</span>");
+				detailsElement.html("<span style=\"color: #d39e00;\"><span class=\"fa fa-check fa-fw\"></span> <strong>Es pujarà</strong> el fitxer <strong>"+file.name+"</strong>.<br /><span class=\"fa fa-file-archive fa-fw\"></span> L’arxiu consta de <strong>"+countImages+" imatges</strong>"+(countMusic>0 ? " i <strong>1 fitxer de música</strong>" : "")+" en total.<br /><span class=\"fa fa-exclamation-triangle fa-fw\"></span> <strong>Compte: L’arxiu conté "+(count-countImages-countMusic)+" fitxers que no estan suportats i es descartaran.</span>");
 				numberOfPagesElement.val(countImages);
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-danger");
 				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
