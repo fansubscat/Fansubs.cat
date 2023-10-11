@@ -56,7 +56,7 @@ if (SITE_IS_HENTAI) {
 <?php
 if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 ?>
-		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/videojs.min.css?v=<?php echo VERSION; ?>">
+		<link rel="stylesheet" href="https://vjs.zencdn.net/8.5.2/video-js.css">
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>
@@ -85,7 +85,7 @@ if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 			};
 		</script>
 		<script src="https://unpkg.com/megajs@1.1.4/dist/main.browser-umd.js"></script>
-		<script src="<?php echo STATIC_URL; ?>/js/video.js?v=<?php echo VERSION; ?>"></script>
+		<script src="https://vjs.zencdn.net/8.5.2/video.min.js"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videostream.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videojs-lang_ca.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videojs-chromecast.js?v=<?php echo VERSION; ?>"></script>
