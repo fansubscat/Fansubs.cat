@@ -56,14 +56,17 @@ function get_storage_url($url, $clean=FALSE) {
 	}
 }
 
-function list_remote_files($url) {
+function list_remote_image_files($url) {
 	$contents = @file_get_contents($url);
 	preg_match_all("|href=[\"'](.*?)[\"']|", $contents, $hrefs);
 	$hrefs = array_slice($hrefs[1], 1);
 	
 	$files = array();
 	foreach ($hrefs as $href) {
-		array_push($files, $url.$href);
+		//We filter out audio files
+		if (preg_match('/.*\.(jpe?g|png)$/i', $href)) {
+			array_push($files, $url.$href);
+		}
 	}
 	return $files;
 }
@@ -335,7 +338,7 @@ else if ($method === 'manga'){
 			}
 
 			$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
-			$files = list_remote_files($base_path);
+			$files = list_remote_image_files($base_path);
 			if (count($files)<1) {
 				show_invalid('No valid file specified.');
 			} else {
