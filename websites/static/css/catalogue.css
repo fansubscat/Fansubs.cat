@@ -205,8 +205,8 @@
 }
 
 .manga-reader.manga-reader-strip .swiper-pagination-custom {
-	width: 100vh;
-	transform: translateX(calc(50% - 3.2rem)) rotate(90deg);
+	width: 100dvh;
+	transform: translateX(calc(50% - 3.1rem)) rotate(90deg);
 	right: 0;
 	bottom: unset;
 	top: unset;
@@ -214,7 +214,7 @@
 }
 
 .manga-reader.manga-reader-strip .swiper-pagination-custom .manga-bar .vjs-control-bar {
-	padding-left: 7rem;
+	padding-left: 6.5rem;
 }
 
 .manga-reader.manga-reader-strip .swiper-pagination-custom .manga-slider-bar {
@@ -3132,7 +3132,11 @@ input:checked + .viewed-slider:before {
 	}
 
 	.manga-reader.manga-reader-strip .swiper-pagination-custom {
-		transform: translateX(calc(50% - 1.6rem)) rotate(90deg);
+		transform: translateX(calc(50% - 1.55rem)) rotate(90deg);
+	}
+
+	.manga-reader.manga-reader-strip .swiper-pagination-custom .manga-bar .vjs-control-bar {
+		padding-left: 5rem;
 	}
 }
 
@@ -3167,6 +3171,10 @@ input:checked + .viewed-slider:before {
 
 	.video-js .vjs-time-divider, .video-js .vjs-duration {
 		display: none;
+	}
+
+	.strip-images::-webkit-scrollbar {
+		width: 1px; /* This should be 0, but then bars are displayed: must be here because this also affects desktop browsers */
 	}
 }
 
