@@ -561,7 +561,12 @@ function query_home_continue_watching_by_user_id($user_id) {
 				GROUP_CONCAT(DISTINCT CONCAT(t.version_id, '___', t.status, '___', t.fansub_name, '___', t.fansub_type, '___', t.fansub_id)
 					ORDER BY t.fansub_name
 					SEPARATOR '|'
-				) fansub_info
+				) fansub_info,
+			(SELECT COUNT(*)
+				FROM version v
+				WHERE v.series_id=t.series_id
+					AND v.is_hidden=0
+			) total_versions
 			FROM (SELECT f.id file_id,
 					f.version_id,
 					IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
@@ -730,9 +735,75 @@ function query_home_most_popular($user, $max_items) {
 
 function query_home_last_updated($user, $max_items) {
 	$max_items = intval($max_items);
-	$final_query = get_internal_home_base_query($user)."
-			GROUP BY v.id
-			ORDER BY last_updated DESC
+	$final_query = "SELECT *,
+				GROUP_CONCAT(DISTINCT CONCAT(t.version_id, '___', t.status, '___', t.fansub_name, '___', t.fansub_type, '___', t.fansub_id)
+					ORDER BY t.fansub_name
+					SEPARATOR '|'
+				) fansub_info,
+			(SELECT COUNT(*)
+				FROM version v
+				WHERE v.series_id=t.series_id
+					AND v.is_hidden=0
+			) total_versions,
+			UNIX_TIMESTAMP(t.file_created) file_created
+			FROM (SELECT f.id file_id,
+					f.created file_created,
+					f.version_id,
+					IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
+						IF(d.name IS NULL,
+							CONCAT('Vol. ', REPLACE(TRIM(d.number)+0,'.',',')),
+							d.name
+						),
+						NULL
+					) division_name,
+					IF(s.show_episode_numbers=1,
+						REPLACE(TRIM(e.number)+0, '.', ','),
+						NULL
+					) episode_number,
+					IF(s.subtype='oneshot',
+						'One-shot',
+						IF(s.subtype='movie' AND s.number_of_episodes=1,
+							'Film',
+							IF(et.title IS NOT NULL,
+								et.title,
+								IF(e.number IS NULL,
+									e.description,
+									et.title
+								)
+							)
+						)
+					) episode_title,
+					f.extra_name,
+					v.series_id,
+					v.status,
+					IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
+						d.name,
+						s.name
+					) series_name,
+					s.slug series_slug,
+					fa.name fansub_name,
+					fa.type fansub_type,
+					fa.id fansub_id,
+					f.length length
+				FROM file f
+					LEFT JOIN version v ON f.version_id=v.id
+					LEFT JOIN series s ON v.series_id=s.id
+					LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id
+					LEFT JOIN fansub fa ON vf.fansub_id=fa.id
+					LEFT JOIN episode e ON f.episode_id=e.id
+					LEFT JOIN division d ON e.division_id=d.id
+					LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
+				WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+					AND f.is_lost=0
+					AND ".get_internal_hentai_condition()."
+					AND f.created>='".date("Y-m-d",strtotime("-6 months"))."'
+					AND ".get_internal_blacklisted_fansubs_condition($user)."
+					AND ".get_internal_cancelled_projects_condition($user)."
+					AND ".get_internal_lost_projects_condition($user)."
+			) t
+			GROUP BY t.file_id
+			ORDER BY t.file_created DESC,
+				t.file_id DESC
 			LIMIT $max_items";
 	return query($final_query);
 }

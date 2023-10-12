@@ -1483,6 +1483,18 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	color: rgb(var(--always-positive-color))
 }
 
+.continue-watching-thumbnail .date {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 1.2rem;
+	margin: 0.4rem;
+	background: rgba(var(--always-negative-color),0.5);
+	border-radius: 0.5rem;
+	padding: 0rem 0.4rem;
+	color: rgb(var(--always-positive-color))
+}
+
 .continue-watching-thumbnail-outer .title {
 	display: block;
 	margin-left: 0.5rem;

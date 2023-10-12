@@ -504,7 +504,68 @@ function print_chapter_item($row) {
 				<div class="close-button fa fa-fw fa-times" onclick="removeFromContinueWatching(this, <?php echo $row['file_id']; ?>); return false;"></div>
 			</a>
 		</div>
-		<a class="continue-watching-episode-data" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug']; ?>">
+		<a class="continue-watching-episode-data" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug'].($row['total_versions']>1 ? "?v=".$row['version_id'] : ""); ?>">
+			<span class="title">
+				<?php echo htmlspecialchars($row['series_name']); ?>
+			</span>
+			<span class="subtitle">
+				<?php echo htmlspecialchars(!empty($row['extra_name']) ? $row['extra_name'] : ($row['division_name'].(($row['division_name']!='' && $row['episode_number']!='') ? ' • ' : '').($row['episode_number']!='' ? 'Cap. '.$row['episode_number'] : '').((($row['division_name']!='' || $row['episode_number']!='') && $row['episode_title']!='') ? ': ' : '').$row['episode_title'])); ?>
+			</span>
+		</a>
+	</div>
+<?php
+}
+
+function get_relative_date_last_update($time) {
+	if (time()-$time<3600) {
+		$minutes = intval((time()-$time)/60);
+		if ($minutes==1) {
+			return "fa 1 minut";
+		} else {
+			return "fa $minutes minuts";
+		}
+	}
+	else if (time()-$time<3600*24) {
+		$hours = intval((time()-$time)/3600);
+		if ($hours==1) {
+			return "fa 1 hora";
+		} else {
+			return "fa $hours hores";
+		}
+	}
+	else if (time()-$time<3600*24*30) {
+		$days = intval((time()-$time)/(3600*24));
+		if ($days==1) {
+			return "fa 1 dia";
+		} else {
+			return "fa $days dies";
+		}
+	}
+	else if (time()-$time<3600*24*30*6) {
+		$months = intval((time()-$time)/(3600*24*30));
+		if ($months==1) {
+			return "fa 1 mes";
+		} else {
+			return "fa $months mesos";
+		}
+	}
+	else {
+		return "fa molt de temps";
+	}
+}
+
+function print_chapter_item_last_update($row) {	
+?>
+	<div class="continue-watching-thumbnail-outer">
+		<div class="continue-watching-thumbnail">
+			<a class="image-link" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug']."?f=".$row['file_id']; ?>">
+				<div class="versions"><?php echo get_fansub_icons($row['fansub_info'], get_prepared_versions($row['fansub_info']), $row['version_id']); ?></div>
+				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'; ?>" alt="">
+				<div class="date"><?php echo get_relative_date_last_update($row['file_created']); ?></div>
+				<div class="play-button fa fa-fw <?php echo CATALOGUE_PLAY_BUTTON_ICON; ?>"></div>
+			</a>
+		</div>
+		<a class="continue-watching-episode-data" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug'].($row['total_versions']>1 ? "?v=".$row['version_id'] : ""); ?>">
 			<span class="title">
 				<?php echo htmlspecialchars($row['series_name']); ?>
 			</span>

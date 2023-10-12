@@ -231,14 +231,14 @@ if (defined('PAGE_IS_SEARCH')) {
 			'type' => 'chapters-carousel',
 			'title' => '<i class="fa fa-fw fa-eye"></i> '.CATALOGUE_CONTINUE_WATCHING_STRING,
 			'specific_version' => TRUE,
-			'use_version_param' => FALSE,
+			'use_version_param' => TRUE,
 			'result' => query_home_continue_watching_by_user_id($user['id']),
 		));
 	}
 
 	array_push($sections, array(
-		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-clock-rotate-left"></i> Darreres actualitzacions',
+		'type' => 'chapters-carousel-last-update',
+		'title' => '<i class="fa fa-fw fa-clock-rotate-left"></i> Darreres novetats',
 		'specific_version' => TRUE,
 		'use_version_param' => TRUE,
 		'result' => query_home_last_updated($user, $max_items),
@@ -290,7 +290,7 @@ $has_some_result = FALSE;
 foreach($sections as $section){
 	$result = $section['result'];
 	$uses_swiper = FALSE;
-	if ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='recommendations') {
+	if ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update' || $section['type']=='recommendations') {
 		$uses_swiper = TRUE;
 	}
 
@@ -318,7 +318,7 @@ foreach($sections as $section){
 			}
 		} else {
 ?>
-					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel') ? ' carousel' : ($section['type']=='recommendations' ? ' recommendations theme-dark' : ' catalogue'); ?>">
+					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update') ? ' carousel' : ($section['type']=='recommendations' ? ' recommendations theme-dark' : ' catalogue'); ?>">
 <?php
 			if ($uses_swiper) {
 ?>
@@ -342,6 +342,8 @@ foreach($sections as $section){
 					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param']);
 				} else if ($section['type']=='chapters-carousel'){
 					print_chapter_item($row);
+				} else if ($section['type']=='chapters-carousel-last-update'){
+					print_chapter_item_last_update($row);
 				} else {
 					print_carousel_item($row, $section['specific_version'], $section['use_version_param']);
 				}
