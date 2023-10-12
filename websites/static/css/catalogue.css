@@ -819,6 +819,10 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	cursor: pointer;
 }
 
+.video-js .vjs-play-speed-button:before {
+	font-size: 2em;
+}
+
 .video-js .vjs-prev-button .vjs-icon-placeholder:before {
 	content: "\f048"
 }
@@ -975,6 +979,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	background: rgb(var(--secondary-color)) 0% 0% no-repeat padding-box;
 	mix-blend-mode: screen;
 	justify-content: center;
+	cursor: default;
 }
 
 .advent {
@@ -2403,17 +2408,9 @@ input:checked + .viewed-slider:before {
 		background-color: rgb(var(--positive-color-button-hover));
 	}
 
-	.continue-watching-thumbnail .image-link .versions {
-		opacity: 0;
-	}
-
 	.continue-watching-thumbnail:hover .image-link > img, .file-launcher:hover .episode-thumbnail > img {
 		filter: brightness(0.8);
 		transform: scale(1.1);
-	}
-
-	.continue-watching-thumbnail:hover .image-link .versions {
-		opacity: 1;
 	}
 
 	.continue-watching-thumbnail .play-button, .file-launcher .episode-thumbnail .play-button {
@@ -2425,10 +2422,6 @@ input:checked + .viewed-slider:before {
 	}
 
 	.continue-watching-thumbnail .close-button {
-		opacity: 0;
-	}
-
-	.continue-watching-thumbnail:hover .close-button {
 		opacity: 0.8;
 	}
 
@@ -2889,7 +2882,7 @@ input:checked + .viewed-slider:before {
 		height: 6rem;
 	}
 
-	.continue-watching-thumbnail .length, .episode-thumbnail .length {
+	.continue-watching-thumbnail .length, .continue-watching-thumbnail .date, .episode-thumbnail .length {
 		font-size: 1rem;
 		margin: 0.2rem;
 	}

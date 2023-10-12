@@ -30,6 +30,7 @@ var lastMoveX;
 var lastMoveY;
 var inactivityTimeout;
 var activityCheckInterval;
+var currentPlayRate=1;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -1087,6 +1088,7 @@ function initializePlayer(){
 		});
 		
 		player.on('playing', function(){
+			player.playbackRate(window.currentPlayRate);
 			addLog('Playing');
 			hideEndCard();
 		});
@@ -1142,10 +1144,12 @@ function initializePlayer(){
 	player.controlBar.removeChild('NextButton');
 	player.controlBar.removeChild('PrevButtonDisabled');
 	player.controlBar.removeChild('NextButtonDisabled');
+	player.controlBar.removeChild('PlaySpeedButton');
 	if (!isEmbedPage()) {
 		player.controlBar.addChild(hasPrevFile() ? "PrevButton" : "PrevButtonDisabled", {}, 5);
 		player.controlBar.addChild(hasNextFile() ? "NextButton" : "NextButtonDisabled", {}, 6);
 	}
+	player.controlBar.addChild('PlaySpeedButton', {}, 8);
 
 	//We only support one source for now
 	if (currentSourceData.method=='mega') {
@@ -1987,10 +1991,59 @@ $(document).ready(function() {
 		}
 	}
 
+	class PlaySpeedButton extends Button {
+		constructor(player, options) {
+			super(player, options);
+			this.applyValue();
+		}
+		handleClick() {
+			if (window.currentPlayRate==1) {
+				window.currentPlayRate=1.25;
+			} else if (window.currentPlayRate==1.25) {
+				window.currentPlayRate=1.5;
+			} else if (window.currentPlayRate==1.5) {
+				window.currentPlayRate=0.5;
+			} else if (window.currentPlayRate==0.5) {
+				window.currentPlayRate=0.75;
+			} else {
+				window.currentPlayRate=1;
+			}
+			this.applyValue();
+		}
+		applyValue() {
+			this.player().playbackRate(window.currentPlayRate);
+			this.removeClass('fsc-play-speed-ultrafast');
+			this.removeClass('fsc-play-speed-fast');
+			this.removeClass('fsc-play-speed-normal');
+			this.removeClass('fsc-play-speed-slow');
+			this.removeClass('fsc-play-speed-ultraslow');
+			if (window.currentPlayRate==1) {
+				this.addClass('fsc-play-speed-normal');
+				this.controlText('Velocitat de reproducció: Normal');
+			} else if (window.currentPlayRate==1.25) {
+				this.addClass('fsc-play-speed-fast');
+				this.controlText('Velocitat de reproducció: 1,25x');
+			} else if (window.currentPlayRate==1.5) {
+				this.addClass('fsc-play-speed-ultrafast');
+				this.controlText('Velocitat de reproducció: 1,5x');
+			} else if (window.currentPlayRate==0.5) {
+				this.addClass('fsc-play-speed-ultraslow');
+				this.controlText('Velocitat de reproducció: 0,5x');
+			} else {
+				this.addClass('fsc-play-speed-slow');
+				this.controlText('Velocitat de reproducció: 0,75x');
+			}
+		}
+		buildCSSClass() {
+			return `${super.buildCSSClass()} vjs-play-speed-button`;
+		}
+	}
+
 	videojs.registerComponent('NextButton', NextButton);
 	videojs.registerComponent('NextButtonDisabled', NextButtonDisabled);
 	videojs.registerComponent('PrevButton', PrevButton);
 	videojs.registerComponent('PrevButtonDisabled', PrevButtonDisabled);
+	videojs.registerComponent('PlaySpeedButton', PlaySpeedButton);
 
 	videojs.time.setFormatTime(formatTime);
 

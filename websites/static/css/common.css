@@ -68,6 +68,21 @@ b {
 .fsc-hentai:before {
 	content: '\e802';
 }
+.fsc-play-speed-ultraslow:before {
+	content: '\e803';
+}
+.fsc-play-speed-slow:before {
+	content: '\e804';
+}
+.fsc-play-speed-normal:before {
+	content: '\e805';
+}
+.fsc-play-speed-fast:before {
+	content: '\e806';
+}
+.fsc-play-speed-ultrafast:before {
+	content: '\e807';
+}
 
 :root {
 	--header-height: 4.2rem;
@@ -1125,6 +1140,7 @@ h2.section-title:first-of-type {
 	position: absolute;
 	z-index: -1; /* to hide behind the image (z-index unset) */
 	backface-visibility: hidden;
+	cursor: default;
 }
 
 .thumbnail .clickable-thumbnail {
