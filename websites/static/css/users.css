@@ -516,6 +516,7 @@ a.forgot-password {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
+	margin-top: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
