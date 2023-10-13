@@ -819,6 +819,10 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	cursor: pointer;
 }
 
+.video-js .vjs-play-speed-button {
+	cursor: pointer;
+}
+
 .video-js .vjs-play-speed-button:before {
 	font-size: 2em;
 }

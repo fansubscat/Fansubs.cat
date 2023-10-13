@@ -988,7 +988,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 						<div class="mb-3">
-							<label for="form-division-list">Portades <?php echo $division_prep; ?> <small class="text-muted">(JPEG, ~156x220, ≤300x400, ≤100 KiB)</small></label>
+							<label for="form-division-list">Portades <?php echo $division_prep; ?> <small class="text-muted">(JPEG, ≥300x400, ≤150 KiB)</small></label>
 							<div class="row flex" id="form-division-list">
 <?php
 		foreach ($divisions as $division) {
@@ -1000,7 +1000,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 										<img id="form-division_cover_<?php echo $division['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg" data-original="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg"' : ''; ?> alt=""><br />
 										<label for="form-division_cover_<?php echo $division['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-										<input id="form-division_cover_<?php echo $division['id']; ?>" name="division_cover_<?php echo $division['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 102400, 'form-division_cover_<?php echo $division['id']; ?>_preview');"/>
+										<input id="form-division_cover_<?php echo $division['id']; ?>" name="division_cover_<?php echo $division['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 153600, 'form-division_cover_<?php echo $division['id']; ?>_preview');"/>
 								</div>
 <?php
 		}

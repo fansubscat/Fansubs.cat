@@ -11,19 +11,27 @@
 	- S’ha canviat el formulari de contacte.
 	- S’ha afegit la política de privacitat.
 	- S’ha modificat l’apartat «Qui som?».
+	- S’ha afegit l’apartat «Comunitat».
 - **Usuaris:**
 	- Versió inicial. S’ha implementat el registre i l’inici de sessió.
 - **Catàleg:**
-	- S’han canviat les URLs de les sèries: ja no tenen el tipus.
 	- S’ha reimplementat la cerca i el filtrat de sèries.
 	- S’ha implementat l’autocompleció en cercar.
 	- S’ha mogut tot el contingut explícit a subportals nous.
 	- S’ha reimplementat el seguiment de visualitzacions.
+	- El reproductor de vídeo permet el mode imatge sobre imatge i triar la velocitat de reproducció.
+	- Nou lector de manga amb possibilitat de saltar entre capítols i canviar la configuració al moment.
+	- S’han canviat les URLs de les sèries: ja no tenen el tipus.
 - **Notícies:**
 	- S’ha reimplementat la cerca i el filtrat de notícies.
 	- S’ha eliminat l’apartat d’estadístiques, l’arxiu i la llista de fansubs.
 - **Administració:**
-	- Es valida que el camp «Altres noms» no tingui caràcters en japonès.
+	- L’opció de mostrar els números dels capítols s’ha mogut de la versió a la sèrie.
+	- Canvis en les resolucions de les imatges que cal pujar a les fitxes.
+	- Es permet penjar un fitxer de música amb el manga per a utilitzar-lo com a música de fons (actualment no s’utilitza).
+	- Noves pàgines de gestió de la comunitat.
+	- L’apartat «Continguts més populars» ara discrimina entre contingut normal i explícit.
+	- S’elimina l’apartat «Historial de cerques».
 
 ## 2023-07-15 - Versió 4.3.1
 - **Serveis:**

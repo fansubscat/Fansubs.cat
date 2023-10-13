@@ -25,17 +25,17 @@ function query_user_by_email_except_self($email, $user_id) {
 
 function query_user_seen_data_by_user_id($user_id) {
 	$user_id = escape($user_id);
-	$final_query = "SELECT (SELECT SUM(progress)
+	$final_query = "SELECT (SELECT IFNULL(SUM(progress),0)
 				FROM view_session
 				WHERE user_id=$user_id
 					AND type='anime'
 				) total_anime_seen,
-				(SELECT SUM(progress)
+				(SELECT IFNULL(SUM(progress),0)
 				FROM view_session
 				WHERE user_id=$user_id
 					AND type='manga'
 				) total_manga_seen,
-				(SELECT SUM(progress)
+				(SELECT IFNULL(SUM(progress),0)
 				FROM view_session
 				WHERE user_id=$user_id
 					AND type='liveaction'
