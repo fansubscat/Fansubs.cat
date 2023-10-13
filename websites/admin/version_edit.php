@@ -213,12 +213,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$link = array();
 					$link['id'] = $_POST['form-files-list-'.$episode_id.'-file-'.$i.'-link-'.$j.'-id'];
 					if (!empty($_POST['form-files-list-'.$episode_id.'-file-'.$i.'-link-'.$j.'-url'])) {
-						$link['url']="'".escape($_POST['form-files-list-'.$episode_id.'-file-'.$i.'-link-'.$j.'-url'])."'";
+						$link['url']="'".escape(trim($_POST['form-files-list-'.$episode_id.'-file-'.$i.'-link-'.$j.'-url']))."'";
 					} else {
 						$link['url']="NULL";
 					}
 					if (!empty($_POST['form-files-list-'.$episode_id.'-file-'.$i.'-link-'.$j.'-resolution'])) {
-						$link['resolution']="'".escape($_POST['form-files-list-'.$episode_id.'-file-'.$i.'-link-'.$j.'-resolution'])."'";
+						$link['resolution']="'".escape(trim($_POST['form-files-list-'.$episode_id.'-file-'.$i.'-link-'.$j.'-resolution']))."'";
 					} else {
 						$link['resolution']="NULL";
 					}
@@ -295,12 +295,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$link = array();
 				$link['id'] = $_POST['form-extras-list-'.$i.'-link-'.$j.'-id'];
 				if (!empty($_POST['form-extras-list-'.$i.'-link-'.$j.'-id'])) {
-					$link['url']="'".escape($_POST['form-extras-list-'.$i.'-link-'.$j.'-url'])."'";
+					$link['url']="'".escape(trim($_POST['form-extras-list-'.$i.'-link-'.$j.'-url']))."'";
 				} else {
 					$link['url']="NULL";
 				}
 				if (!empty($_POST['form-extras-list-'.$i.'-link-'.$j.'-resolution'])) {
-					$link['resolution']="'".escape($_POST['form-extras-list-'.$i.'-link-'.$j.'-resolution'])."'";
+					$link['resolution']="'".escape(trim($_POST['form-extras-list-'.$i.'-link-'.$j.'-resolution']))."'";
 				} else {
 					$link['resolution']="NULL";
 				}
