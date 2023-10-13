@@ -620,7 +620,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 			foreach ($divisions as $division) {
 				if (is_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'])) {
-					move_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'], STATIC_DIRECTORY."/images/divisions/".$inserted_id."_".$volume['id'].".jpg");
+					move_uploaded_file($_FILES['division_cover_'.$division['id']]['tmp_name'], STATIC_DIRECTORY."/images/divisions/".$inserted_id."_".$division['id'].".jpg");
 				}
 			}
 
