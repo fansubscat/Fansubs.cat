@@ -609,7 +609,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-3">
 								<div class="mb-3">
-									<label>Imatge de portada<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ~300x424, ≤450x600, ≤150 KiB)</small></label><br>
+									<label>Imatge de portada<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ≥300x400, ≤150 KiB)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/covers/'.$row['id'].'.jpg');
 ?>
@@ -627,7 +627,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-3">
 								<div class="mb-3">
-									<label>Imatge de capçalera<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ~1104x256, ≤1200x400, ≤300 KiB)</small></label><br>
+									<label>Imatge de capçalera<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ≥1920x400, ≤300 KiB)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/featured/'.$row['id'].'.jpg');
 ?>

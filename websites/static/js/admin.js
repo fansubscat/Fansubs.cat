@@ -25,7 +25,7 @@ function copyToClipboard(text, el) {
 		copyTextArea.select();
 		try {
 			var successful = document.execCommand('copy');
-			var msg = successful ? 'Copiat!' : 'No s\'ha pogut copiar!';
+			var msg = successful ? 'Copiat!' : 'No s’ha pogut copiar!';
 			el.attr('data-original-title', msg).tooltip({trigger: 'manual'});
 			el.attr('data-original-title', msg).tooltip('show');
 
@@ -366,7 +366,7 @@ function deleteEpìsodeRow(id) {
 		alert('La fitxa ha de tenir un capítol, com a mínim!');
 	}
 	else if ($('#form-episode-list-has_version-'+id).val()==1) {
-		alert('Aquest capítol ja té fitxers en alguna versió d\'algun fansub. No es pot suprimir perquè els fitxers d\'aquella versió deixarien de funcionar. Si realment el vols suprimir, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+		alert('Aquest capítol ja té fitxers en alguna versió d’algun fansub. No es pot suprimir perquè els fitxers d’aquella versió deixarien de funcionar. Si realment el vols suprimir, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 	} else {
 		$("#form-episode-list-row-"+id).remove();
 		for (var j=id+1;j<i+1;j++) {
@@ -946,7 +946,7 @@ function checkNumberOfEpisodes() {
 	}
 
 	if ($('#form-name-with-autocomplete').val()==$('#form-alternate_names').val()) {
-		alert('El nom i el camp "altres noms" no poden ser iguals. Si no se\'n tradueix el nom, el camp "altres noms" ha de romandre buit o amb altres noms diferents, si s\'escau (en anglès, per exemple).');
+		alert('El nom i el camp "altres noms" no poden ser iguals. Si no se’n tradueix el nom, el camp "altres noms" ha de romandre buit o amb altres noms diferents, si s’escau (en anglès, per exemple).');
 		return false;
 	}
 
@@ -956,18 +956,18 @@ function checkNumberOfEpisodes() {
 		return false;
 	}
 
-	if (document.getElementById('form-image-preview').naturalWidth>450 || document.getElementById('form-image-preview').naturalHeight>600) {
-		alert('La imatge de portada té unes dimensions massa grosses. El màxim són 450x600 píxels.');
+	if (document.getElementById('form-image-preview').naturalWidth<300 || document.getElementById('form-image-preview').naturalHeight<400) {
+		alert('La imatge de portada té unes dimensions massa petites. El mínim són 300x400 píxels.');
 		return false;
 	}
 
-	if (document.getElementById('form-featured-image-preview').naturalWidth>1200 || document.getElementById('form-featured-image-preview').naturalHeight>400) {
-		alert('La imatge de capçalera té unes dimensions massa grosses. El màxim són 1200x400 píxels.');
+	if (document.getElementById('form-featured-image-preview').naturalWidth<1920 || document.getElementById('form-featured-image-preview').naturalHeight<400) {
+		alert('La imatge de capçalera té unes dimensions massa petites. El mínim són 1920x400 píxels.');
 		return false;
 	}
 
 	if ($('#form-old_slug').val()!='' && $('#form-old_slug').val()!=$('#form-slug').val()) {
-		return confirm('Has canviat (o s\'ha canviat automàticament perquè has modificat el nom) l\'identificador de la fitxa de "'+$('#form-old_slug').val()+'" a "'+$('#form-slug').val()+'". Això farà que tots els enllaços externs que apuntin a la fitxa deixin de funcionar. Segur que és el que vols? Si no és el que vols, prem \'Cancel·la\' i torna a posar-hi el valor original.');
+		return confirm('Has canviat (o s’ha canviat automàticament perquè has modificat el nom) l’identificador de la fitxa de "'+$('#form-old_slug').val()+'" a "'+$('#form-slug').val()+'". Això farà que tots els enllaços externs que apuntin a la fitxa deixin de funcionar. Segur que és el que vols? Si no és el que vols, prem «Cancel·la» i torna a posar-hi el valor original.');
 	}
 
 	return true;
@@ -1041,13 +1041,13 @@ function checkNumberOfLinks() {
 	var covers = $('[id$=_preview]');
 	var affectedCovers='';
 	for (var i=0;i<covers.length;i++){
-		if (covers[i].naturalWidth>300 || covers[i].naturalHeight>400) {
+		if (covers[i].naturalWidth<300 || covers[i].naturalHeight<400) {
 			affectedCovers+=("\n- "+$($(covers[i].parentElement).find('label')[0]).text());
 		}
 	}
 
 	if (affectedCovers!='') {
-		alert('Les imatges de portada següents tenen unes dimensions massa grosses (el màxim són 300x400 píxels):'+affectedCovers);
+		alert('Les imatges de portada següents tenen unes dimensions massa petites (el mínim són 300x400 píxels):'+affectedCovers);
 		return false;
 	}
 
@@ -1060,7 +1060,7 @@ function checkNumberOfLinks() {
 	}
 
 	if (totalBytes>262144000) {
-		alert('La mida total dels fitxers pujats no pot excedir de 250 MiB. Si us plau, puja\'ls en diverses tandes.');
+		alert('La mida total dels fitxers pujats no pot excedir de 250 MiB. Si us plau, puja’ls en diverses tandes.');
 		return false;
 	}
 
@@ -1622,11 +1622,11 @@ $(document).ready(function() {
 	$("#import-from-mal-episodes").click(function() {
 		if ($("#import-from-mal-episodes").hasClass('disabled')) {
 			if ($('#type').val()=='manga') {
-				alert('Aquest manga ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+				alert('Aquest manga ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			} else if ($('#type').val()=='liveaction') {
-				alert('Aquest contingut d\'imatge real ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+				alert('Aquest contingut d’imatge real ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			} else {
-				alert('Aquest anime ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+				alert('Aquest anime ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			}
 			return false;
 		}
@@ -1667,11 +1667,11 @@ $(document).ready(function() {
 	$("#generate-episodes").click(function() {
 		if ($("#generate-episodes").hasClass('disabled')) {
 			if ($('#type').val()=='manga') {
-				alert('Aquest manga ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+				alert('Aquest manga ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			} else if ($('#type').val()=='liveaction') {
-				alert('Aquest contingut d\'imatge real ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+				alert('Aquest contingut d’imatge real ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			} else {
-				alert('Aquest anime ja té capítols amb fitxers en alguna versió d\'algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d\'aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
+				alert('Aquest anime ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden generar capítols automàticament perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a generar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
 			}
 			return false;
 		}
