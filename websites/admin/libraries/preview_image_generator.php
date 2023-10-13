@@ -6,7 +6,8 @@ define('IMAGE_WIDTH', 1200);
 define('IMAGE_HEIGHT', 628);
 define('COVER_WIDTH', 444);
 define('COVER_HEIGHT', 628);
-define('TEXT_MARGIN', 46);
+define('TEXT_MARGIN_HORIZONTAL', 46);
+define('TEXT_MARGIN_VERTICAL', 80);
 define('FONT_AWESOME', STATIC_DIRECTORY.'/fonts/font_awesome_solid.ttf');
 define('FONT_REGULAR', STATIC_DIRECTORY.'/fonts/lexend_deca_regular.ttf');
 define('FONT_BOLD', STATIC_DIRECTORY.'/fonts/lexend_deca_bold.ttf');
@@ -224,36 +225,36 @@ function update_series_preview($id) {
 		$gradient_to_color = imagecolorallocatealpha($image,0,0,0,0);
 		gradient_region($image, IMAGE_WIDTH-COVER_WIDTH-80, 0, 80, IMAGE_HEIGHT, $gradient_from_color, $gradient_to_color, 128, 0);
 
-		$current_height = TEXT_MARGIN+34;
+		$current_height = TEXT_MARGIN_VERTICAL+18;
 
 		//Type
 		$text = get_series_type_summary($series);
 
 		$gray = imagecolorallocate($image, 0xDC, 0xDC, 0xDC);
-		imagefttext($image, 23.5, 0, TEXT_MARGIN, $current_height, $gray, FONT_REGULAR, get_text_without_missing_glyphs($text));
-		$current_height = $current_height+90;
+		imagefttext($image, 23.5, 0, TEXT_MARGIN_HORIZONTAL, $current_height, $gray, FONT_REGULAR, get_text_without_missing_glyphs($text));
+		$current_height = $current_height+72;
 
 		//Name
-		$text = \andrewgjohnson\linebreaks4imagettftext(42, 0, FONT_BOLD, get_text_without_missing_glyphs($series['name']), IMAGE_WIDTH-COVER_WIDTH-(TEXT_MARGIN+4)*2);
+		$text = \andrewgjohnson\linebreaks4imagettftext(42, 0, FONT_BOLD, get_text_without_missing_glyphs($series['name']), IMAGE_WIDTH-COVER_WIDTH-(TEXT_MARGIN_HORIZONTAL+4)*2);
 		if (substr_count($text, "\n")>2) {
 			$text = implode("\n",array_slice(explode("\n", $text), 0, 3)).'…';
 		}
 		$white = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
 		for ($i=0;$i<=substr_count($text, "\n");$i++) {
-			imagefttext($image, 42, 0, TEXT_MARGIN-4, $current_height, $white, FONT_BOLD, explode("\n", get_text_without_missing_glyphs($text))[$i]);
+			imagefttext($image, 42, 0, TEXT_MARGIN_HORIZONTAL-4, $current_height, $white, FONT_BOLD, explode("\n", get_text_without_missing_glyphs($text))[$i]);
 			$current_height = $current_height+54;
 		}
 			$current_height = $current_height-2;
 
 		//Alternate names
 		if (!empty($series['alternate_names'])) {
-			$text = \andrewgjohnson\linebreaks4imagettftext(23.5, 0, FONT_LIGHT, get_text_without_missing_glyphs($series['alternate_names']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2);
+			$text = \andrewgjohnson\linebreaks4imagettftext(23.5, 0, FONT_LIGHT, get_text_without_missing_glyphs($series['alternate_names']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2);
 			if (substr_count($text, "\n")>1) {
 				$text = implode("\n",array_slice(explode("\n", $text), 0, 2)).'…';
 			}
 			$yellow = imagecolorallocate($image, 0xA3, 0xA3, 0xA3);
 			for ($i=0;$i<=substr_count($text, "\n");$i++) {
-				imagefttext($image, 23.5, 0, TEXT_MARGIN, $current_height, $yellow, FONT_LIGHT, explode("\n", get_text_without_missing_glyphs($text))[$i]);
+				imagefttext($image, 23.5, 0, TEXT_MARGIN_HORIZONTAL, $current_height, $yellow, FONT_LIGHT, explode("\n", get_text_without_missing_glyphs($text))[$i]);
 				$current_height = $current_height+38;
 			}
 		} else {
@@ -265,12 +266,12 @@ function update_series_preview($id) {
 
 		if (!empty($score)) {
 			$orange = imagecolorallocate($image, 0xFF, 0xC1, 0x00);
-			imagefttext($image, 48, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-130, IMAGE_HEIGHT-TEXT_MARGIN, $orange, FONT_BOLD, number_format($score, 2, ',',' '));
-			//imagefttext($image, 17, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN-10, IMAGE_HEIGHT-TEXT_MARGIN-14, $white, FONT_REGULAR, "/10");
+			imagefttext($image, 48, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL-130, IMAGE_HEIGHT-TEXT_MARGIN_VERTICAL, $orange, FONT_BOLD, number_format($score, 2, ',',' '));
+			//imagefttext($image, 17, 0, IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL-10, IMAGE_HEIGHT-TEXT_MARGIN_HORIZONTAL-14, $white, FONT_REGULAR, "/10");
 		}
 
 		//Genres
-		$current_width = TEXT_MARGIN+10;
+		$current_width = TEXT_MARGIN_HORIZONTAL+10;
 		$genres = !empty($series['genres']) ? explode(', ',$series['genres']) : array();
 
 		$tag_bg_color = imagecolorallocatealpha($image, 0xFF, 0xFF, 0xFF, 95);
@@ -278,21 +279,21 @@ function update_series_preview($id) {
 		//First iteration to know the number of lines
 		foreach ($genres as $genre) {
 			$bbox = imagettfbbox(14, 0, FONT_LIGHT, $genre);
-			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2-8*2-10-100);
+			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2-8*2-10-100);
 			if (!$fits) {
-				$current_width = TEXT_MARGIN+10;
+				$current_width = TEXT_MARGIN_HORIZONTAL+10;
 				$lines++;
 			}
 			$current_width+=$bbox[2]+6*2+12;
 		}
 
-		$current_height = IMAGE_HEIGHT-TEXT_MARGIN-9-36*($lines-1);
-		$current_width = TEXT_MARGIN+10;
+		$current_height = IMAGE_HEIGHT-TEXT_MARGIN_VERTICAL-9-36*($lines-1);
+		$current_width = TEXT_MARGIN_HORIZONTAL+10;
 		foreach ($genres as $genre) {
 			$bbox = imagettfbbox(14, 0, FONT_LIGHT, $genre);
-			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN*2-8*2-10-100);
+			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2-8*2-10-100);
 			if (!$fits) {
-				$current_width = TEXT_MARGIN+10;
+				$current_width = TEXT_MARGIN_HORIZONTAL+10;
 				$current_height = $current_height+36;
 			}
 			imageroundedrectangle($image, $current_width-8, $current_height-20, $current_width+$bbox[2]+8, $current_height+8, 14, $tag_bg_color);
@@ -305,14 +306,14 @@ function update_series_preview($id) {
 		$current_fansub_line = 0;
 
 		foreach ($versions as $version) {
-			$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, FONT_REGULAR, get_text_without_missing_glyphs($version['fansub_name']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN);
+			$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, FONT_REGULAR, get_text_without_missing_glyphs($version['fansub_name']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL);
 			$current_height = $current_height - 30;
-			imagefttext($image, 16, 0, TEXT_MARGIN, $current_height, imagecolorallocate($image, 0xFF, 0xFF, 0xFF), FONT_AWESOME, "");
-			imagefttext($image, 14, 0, TEXT_MARGIN+1, $current_height-1, get_status_color($image, $version['status']), FONT_AWESOME, get_status_icon_code($version['status']));
+			imagefttext($image, 16, 0, TEXT_MARGIN_HORIZONTAL, $current_height, imagecolorallocate($image, 0xFF, 0xFF, 0xFF), FONT_AWESOME, "");
+			imagefttext($image, 14, 0, TEXT_MARGIN_HORIZONTAL+1, $current_height-1, get_status_color($image, $version['status']), FONT_AWESOME, get_status_icon_code($version['status']));
 			if (substr_count($text, "\n")>0) {
 				$text = implode("\n",array_slice(explode("\n", $text), 0, 1)).'…';
 			}
-			imagefttext($image, 17, 0, TEXT_MARGIN+28, $current_height, $white, FONT_REGULAR, get_text_without_missing_glyphs($text));
+			imagefttext($image, 17, 0, TEXT_MARGIN_HORIZONTAL+28, $current_height, $white, FONT_REGULAR, get_text_without_missing_glyphs($text));
 			$current_fansub_line++;
 		}
 		imagejpeg($image, STATIC_DIRECTORY."/social/series_".$id.".jpg", 80);
