@@ -235,7 +235,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 		$resulte = query_extras_by_version_id($version['id']);
 		$extras = array();
 		while ($row = mysqli_fetch_assoc($resulte)) {
+			$row['position'] = $position;
 			array_push($extras, $row);
+			$position++;
 		}
 		mysqli_free_result($resulte);
 		if (count($extras)>0) {

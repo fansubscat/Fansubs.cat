@@ -19,7 +19,7 @@ if (!empty($user)) {
 	$show_cancelled = !empty($_COOKIE['show_cancelled_projects']);
 	$show_lost = !empty($_COOKIE['show_lost_projects']);
 	$episode_sort_order = !empty($_COOKIE['episode_sort_order']);
-	$reader_type = $_COOKIE['manga_reader_type'];
+	$reader_type = (isset($_COOKIE['manga_reader_type']) ? $_COOKIE['manga_reader_type'] : 0);
 	$blacklisted_fansub_ids = get_cookie_blacklisted_fansub_ids();
 }
 ?>

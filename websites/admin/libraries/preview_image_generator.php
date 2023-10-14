@@ -97,7 +97,7 @@ function get_status_icon_code($id){
 		case 1:
 			return "";
 		case 2:
-			return "";
+			return "";
 		case 3:
 			return "";
 		case 4:

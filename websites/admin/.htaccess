@@ -2,3 +2,9 @@ php_value max_input_vars 10000
 php_value post_max_size 300M
 php_value upload_max_filesize 300M
 php_value max_file_uploads 50
+
+#Protect Directory
+AuthName "Fansubs.cat"
+AuthType Basic
+AuthUserFile /srv/websites/admin.fansubs.online/.htpasswd
+Require valid-user
