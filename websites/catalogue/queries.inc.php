@@ -49,6 +49,49 @@ function get_internal_most_popular_series_from_date($since_date) {
 	return query($final_query);
 }
 
+function get_internal_recommendations_by_user_id($user_id) {
+	//Input is already escaped
+	$final_query = "SELECT s.id
+			FROM rel_series_genre sg
+				LEFT JOIN series s ON sg.series_id=s.id
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND sg.series_id NOT IN (SELECT DISTINCT v.series_id
+					    FROM user_file_seen_status ufss
+					    LEFT JOIN file f ON ufss.file_id=f.id
+					    LEFT JOIN version v ON f.version_id=v.id
+						WHERE ufss.is_seen=1
+						AND ufss.user_id=$user_id
+						AND ufss.last_viewed>='".date("Y-m-d",strtotime("-3 months"))."')
+			GROUP BY series_id
+			HAVING COUNT(CASE WHEN genre_id IN (SELECT g.id
+					FROM series s
+					LEFT JOIN rel_series_genre sg ON sg.series_id=s.id
+					LEFT JOIN genre g ON sg.genre_id=g.id
+					WHERE s.id IN (SELECT DISTINCT v.series_id
+					    FROM user_file_seen_status ufss
+					    LEFT JOIN file f ON ufss.file_id=f.id
+					    LEFT JOIN version v ON f.version_id=v.id
+						WHERE ufss.is_seen=1
+						AND ufss.user_id=$user_id
+						AND ufss.last_viewed>='".date("Y-m-d",strtotime("-3 months"))."')
+					GROUP BY g.id) THEN 1 END)>=2
+			ORDER BY 
+				COUNT(CASE WHEN genre_id IN (SELECT g.id
+					FROM series s
+					LEFT JOIN rel_series_genre sg ON sg.series_id=s.id
+					LEFT JOIN genre g ON sg.genre_id=g.id
+					WHERE s.id IN (SELECT DISTINCT v.series_id
+					    FROM user_file_seen_status ufss
+					    LEFT JOIN file f ON ufss.file_id=f.id
+					    LEFT JOIN version v ON f.version_id=v.id
+						WHERE ufss.is_seen=1
+						AND ufss.user_id=$user_id
+						AND ufss.last_viewed>='".date("Y-m-d",strtotime("-3 months"))."')
+					GROUP BY g.id) THEN 1 END) DESC,
+				RAND()";
+	return query($final_query);
+}
+
 function get_internal_demographics_condition($demographic_ids, $show_no_demographics) {
 	//Input is already escaped
 	$demographics_condition = defined('ROBOT_INCLUDED') ? "1" : "0";
@@ -818,6 +861,34 @@ function query_home_last_finished($user, $max_items) {
 	return query($final_query);
 }
 
+function query_home_by_genre($user, $genre_id, $max_items) {
+	$max_items = intval($max_items);
+	$genre_id = intval($genre_id);
+	$final_query = get_internal_home_base_query($user)."
+				AND g.id=$genre_id
+			GROUP BY s.id
+			ORDER BY RAND()
+			LIMIT $max_items";
+	return query($final_query);
+}
+
+function query_home_user_recommendations_by_user_id($user_id, $max_items) {
+	$max_items = intval($max_items);
+	$user_id = intval($user_id);
+	$result = get_internal_recommendations_by_user_id($user_id);
+	$sort_by_recommendations_in_clause = '0';
+	while ($row = mysqli_fetch_assoc($result)){
+		$sort_by_recommendations_in_clause .= ',' . $row['id'];
+	}
+	mysqli_free_result($result);
+	$final_query = get_internal_home_base_query($user)."
+				AND s.id IN ($sort_by_recommendations_in_clause)
+			GROUP BY s.id
+			ORDER BY FIELD(s.id, $sort_by_recommendations_in_clause)
+			LIMIT $max_items";
+	return query($final_query);
+}
+
 function query_home_random($user, $max_items) {
 	$max_items = intval($max_items);
 	$final_query = get_internal_home_base_query($user)."
@@ -832,7 +903,7 @@ function query_home_more_recent($user, $max_items) {
 	$max_items = intval($max_items);
 	$final_query = get_internal_home_base_query($user)."
 			GROUP BY s.id
-			ORDER BY s.publish_date DESC
+			ORDER BY s.number_of_episodes=-1 DESC, s.publish_date DESC
 			LIMIT $max_items";
 	return query($final_query);
 }

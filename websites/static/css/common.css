@@ -2101,23 +2101,10 @@ input:checked + .slider:before {
 	.user-login-icon {
 		display: inline;
 	}
-
-	.style-type-settings .catalogues-navigation {
-		font-size: 1.4rem;
-	}
 }
 
 @media (max-width: 350px){
 	.catalogues-navigation {
 		font-size: 1.6rem;
-	}
-
-	.style-type-settings .catalogues-navigation {
-		font-size: 1.2rem;
-	}
-
-	.style-type-settings .catalogues-separator {
-		margin-left: 0.4rem;
-		margin-right: 0.4rem;
 	}
 }

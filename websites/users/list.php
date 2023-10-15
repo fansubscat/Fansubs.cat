@@ -21,23 +21,23 @@ if ($cnt>0) {
 	$sections = array();
 
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> Animes desats',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista: Animes',
 		'result' => query_my_list_by_type($user, 'anime', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> Mangues desats',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista: Mangues',
 		'result' => query_my_list_by_type($user, 'manga', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i>Continguts d’imatge real desats',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i>La meva llista: Continguts d’imatge real',
 		'result' => query_my_list_by_type($user, 'liveaction', FALSE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> Animes hentai desats',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista: Animes hentai',
 		'result' => query_my_list_by_type($user, 'anime', TRUE)
 	));
 	array_push($sections, array(
-		'title' => '<i class="fa fa-fw fa-bookmark"></i> Mangues hentai desats',
+		'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista: Mangues hentai',
 		'result' => query_my_list_by_type($user, 'manga', TRUE)
 	));
 
@@ -66,9 +66,10 @@ if ($cnt>0) {
 	}
 }
 ?>
-					<div class="section empty-list<?php echo $cnt>0 ? ' hidden' : ''; ?>">
-						<div class="section-content section-empty"><div><i class="fa far fa-fw fa-bookmark"></i><br>No tens cap anime, manga ni contingut d’imatge real desat a la llista.<br>Pots afegir-n’hi fent clic a la icona de punt de llibre a cadascun dels portals.</div></div>
-					</div>
+<div class="section empty-list<?php echo $cnt>0 ? ' hidden' : ''; ?>">
+	<h2 class="section-title-main"><i class="fa fa-fw fa-bookmark"></i> La meva llista</h2>
+	<div class="section-content section-empty"><div><i class="fa far fa-fw fa-bookmark"></i><br>No tens cap anime, manga ni contingut d’imatge real desat a la llista.<br>Pots afegir-n’hi fent clic a la icona de punt de llibre a cadascun dels portals.</div></div>
+</div>
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");
 ?>

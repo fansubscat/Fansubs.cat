@@ -58,6 +58,7 @@ switch ($server_url) {
 		define('CATALOGUE_ROUND_INTERVAL', 50);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
+		define('CATALOGUE_MOST_RECENT_STRING', 'Animes d’emissió recent');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
 		define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'Capítol únic');
@@ -93,6 +94,7 @@ switch ($server_url) {
 		define('CATALOGUE_ROUND_INTERVAL', 50);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
+		define('CATALOGUE_MOST_RECENT_STRING', 'Mangues de publicació recent');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'volums');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Volum únic');
 		define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'One-shot');
@@ -128,6 +130,7 @@ switch ($server_url) {
 		define('CATALOGUE_ROUND_INTERVAL', 25);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
+		define('CATALOGUE_MOST_RECENT_STRING', 'Continguts d’emissió recent');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
 		define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'Capítol únic');
@@ -163,6 +166,7 @@ switch ($server_url) {
 		define('CATALOGUE_ROUND_INTERVAL', 25);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
+		define('CATALOGUE_MOST_RECENT_STRING', 'Animes d’emissió recent');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
 		define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'Capítol únic');
@@ -198,6 +202,7 @@ switch ($server_url) {
 		define('CATALOGUE_ROUND_INTERVAL', 25);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
+		define('CATALOGUE_MOST_RECENT_STRING', 'Mangues de publicació recent');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'volums');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Volum únic');
 		define('CATALOGUE_SEASON_STRING_UNIQUE_SINGLE', 'One-shot');

@@ -24,10 +24,24 @@
 	color: rgb(var(--positive-color));
 	padding: 1.1rem 2rem;
 	margin: 1.5rem 0.75rem 0;
-	min-width: 18rem;
+	min-width: 24rem;
 	font-size: 2.4rem;
 	border-radius: 0.5rem;
 	border: 0.2rem solid rgb(var(--positive-color));
+	transition: border .3s, letter-spacing .3s;
+	text-align: center;
+}
+
+.tertiary-button {
+	display: inline-block;
+	background: rgba(var(--negative-color),0.5);
+	color: rgb(var(--positive-color));
+	padding: 1.1rem 2rem;
+	margin: 1.25rem 0.25rem 0;
+	min-width: 16rem;
+	font-size: 2rem;
+	border-radius: 0.5rem;
+	border: 0.2rem solid rgb(var(--neutral-color));
 	transition: border .3s, letter-spacing .3s;
 	text-align: center;
 }
@@ -243,7 +257,7 @@
 		letter-spacing: 0.15rem;
 	}
 
-	.secondary-button:hover {
+	.secondary-button:hover, .tertiary-button:hover {
 		border: 0.2rem solid rgb(var(--primary-color));
 		letter-spacing: 0.15rem;
 	}
@@ -303,15 +317,18 @@
 		margin: 1rem 0.375rem 0;
 	}
 
-	.main-buttons, .secondary-buttons {
-		margin-top: 1rem;
-	}
-
 	.secondary-button {
 		padding: 1rem;
 		font-size: 2rem;
 		min-width: 20rem;
 		margin: 1rem 0.375rem 0;
+	}
+
+	.tertiary-button {
+		padding: 1rem;
+		font-size: 1.6rem;
+		min-width: 13rem;
+		margin: 0.5rem 0.25rem 0;
 	}
 
 	.advent-button {
@@ -336,6 +353,14 @@
 		width: calc(100% - 1rem);
 		flex-grow: unset;
 		flex-basis: unset;
+	}
+}
+
+@media (max-width: 600px){
+	.main-buttons, .secondary-buttons, .tertiary-buttons {
+		margin-top: 1rem;
+		display: flex;
+		flex-direction: column;
 	}
 }
 

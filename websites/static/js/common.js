@@ -187,7 +187,7 @@ function menuOptionUnderlineSetup(element) {
 	var target = document.querySelector(".catalogues-underline");
 	var links = document.querySelectorAll(".catalogues-navigation a");
 	var originalLink = document.querySelector(".catalogue-selected");
-	if (!originalLink.classList.contains("catalogue-selected-processed")) {
+	if (originalLink!=null && !originalLink.classList.contains("catalogue-selected-processed")) {
 		originalLink.classList.add("catalogue-selected-processed");
 		target.classList.add('catalogues-underline-noanim');
 
@@ -216,6 +216,7 @@ function menuOptionUnderlineSetup(element) {
 		const left = element.getBoundingClientRect().left + window.pageXOffset;
 		const top = element.getBoundingClientRect().top + window.pageYOffset+2;
 
+		target.style.opacity = `1`;
 		target.style.width = `${width}px`;
 		target.style.height = `${height}px`;
 		target.style.left = `${left}px`;
@@ -237,18 +238,22 @@ function menuOptionMouseLeave() {
 	}
 
 	var originalLink = document.querySelector(".catalogue-selected");
-	originalLink.classList.add("catalogues-underline-active");
+	if (originalLink!=null) {
+		originalLink.classList.add("catalogues-underline-active");
 
-	const width = originalLink.getBoundingClientRect().width;
-	const height = originalLink.getBoundingClientRect().height;
-	const left = originalLink.getBoundingClientRect().left + window.pageXOffset;
-	const top = originalLink.getBoundingClientRect().top + window.pageYOffset+2;
+		const width = originalLink.getBoundingClientRect().width;
+		const height = originalLink.getBoundingClientRect().height;
+		const left = originalLink.getBoundingClientRect().left + window.pageXOffset;
+		const top = originalLink.getBoundingClientRect().top + window.pageYOffset+2;
 
-	target.style.width = `${width}px`;
-	target.style.height = `${height}px`;
-	target.style.left = `${left}px`;
-	target.style.top = `${top}px`;
-	target.style.transform = "none";
+		target.style.width = `${width}px`;
+		target.style.height = `${height}px`;
+		target.style.left = `${left}px`;
+		target.style.top = `${top}px`;
+		target.style.transform = "none";
+	} else {
+		target.style.opacity = `0`;
+	}
 }
 
 $(document).ready(function() {

@@ -97,7 +97,7 @@ else{
 				$first = FALSE;
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> <?php echo get_catalan_formatted_date(strtotime($row['date'])); ?></h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Notícies del <?php echo get_catalan_formatted_date(strtotime($row['date'])); ?></h2>
 <?php
 			}
 		}

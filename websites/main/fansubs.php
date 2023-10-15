@@ -9,7 +9,7 @@ $show_hentai = (is_robot() || (!empty($user) && is_adult() && empty($user['hide_
 ?>
 					<div class="fansubs-index">
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Actius</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Fansubs actius</h2>
 <?php
 $result = query_fansubs(!empty($user) ? $user : NULL, 1);
 
@@ -33,7 +33,7 @@ else{
 if ($show_hentai) {
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Actius (hentai)</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Fansubs actius (hentai)</h2>
 <?php
 $result = query_hentai_fansubs(!empty($user) ? $user : NULL, 1);
 
@@ -57,7 +57,7 @@ else{
 }
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Històrics</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Fansubs històrics</h2>
 <?php
 $result = query_fansubs(!empty($user) ? $user : NULL, 0);
 
@@ -81,7 +81,7 @@ else{
 if ($show_hentai) {
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Històrics (hentai)</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Fansubs històrics (hentai)</h2>
 <?php
 $result = query_hentai_fansubs(!empty($user) ? $user : NULL, 0);
 

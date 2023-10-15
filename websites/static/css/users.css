@@ -172,9 +172,6 @@ a.forgot-password {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
-	padding-top: var(--page-padding);
-	padding-left: var(--page-padding);
-	padding-right: var(--page-padding);
 }
 
 .account-profile-layout {
@@ -438,7 +435,7 @@ a.forgot-password {
 	display: flex;
 	flex-grow: 1;
 	align-items: center;
-	justify-content: center;
+	flex-direction: column;
 }
 
 .edit-blacklisted-fansubs {

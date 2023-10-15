@@ -53,6 +53,18 @@ if (!empty($series['alternate_names'])) {
 }
 
 $additional_data = '';
+if (CATALOGUE_ITEM_TYPE=='manga' && !empty($series['author'])) {
+	if ($additional_data!='') {
+		$additional_data.=' • ';
+	}
+	$additional_data.=$series['author'];
+}
+if (CATALOGUE_ITEM_TYPE!='manga' && !empty($series['studio'])) {
+	if ($additional_data!='') {
+		$additional_data.=' • ';
+	}
+	$additional_data.=$series['studio'];
+}
 if (!empty($series['year'])) {
 	if ($additional_data!='') {
 		$additional_data.=' • ';

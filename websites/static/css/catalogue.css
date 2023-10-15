@@ -1259,7 +1259,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
 	color: rgb(var(--positive-color));
-	font-size: 3rem;
+	font-size: 4.5rem;
 	padding: var(--page-padding);
 	-webkit-text-stroke: 0.15rem rgb(var(--negative-color));
 }
@@ -1268,7 +1268,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
 	color: rgb(var(--negative-color));
-	font-size: 3rem;
+	font-size: 4.5rem;
 	padding: 3rem;
 }
 
@@ -2393,6 +2393,14 @@ input:checked + .viewed-slider:before {
 	margin-top: 0.5rem;
 }
 
+#bottom-navigation {
+	margin-top: 2.5rem;
+}
+
+#bottom-navigation .normal-button {
+	margin: 0.5rem;
+}
+
 /* TODO */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2792,7 +2800,7 @@ input:checked + .viewed-slider:before {
 	}
 
 	.recommendations .swiper-button-prev::after, .recommendations .swiper-button-next::after {
-		font-size: 2rem;
+		font-size: 2.5rem;
 	}
 
 	.recommendations .swiper-button-prev::after {

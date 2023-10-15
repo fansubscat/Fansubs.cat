@@ -59,55 +59,58 @@ if ($total_manga_seen==1) {
 
 mysqli_free_result($result);
 ?>
-<div class="profile-layout">
-	<div class="profile-section">
-		<div class="profile-avatar-name">
-			<div class="profile-avatar">
-				<img alt="Avatar de l’usuari" class="profile-avatar-image" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+<div class="section">
+	<h2 class="section-title-main"><i class="fa fa-fw fa-user"></i> El meu perfil</h2>
+	<div class="profile-layout">
+		<div class="profile-section">
+			<div class="profile-avatar-name">
+				<div class="profile-avatar">
+					<img alt="Avatar de l’usuari" class="profile-avatar-image" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+				</div>
+				<div class="profile-name"><?php echo htmlspecialchars($user['username']); ?></div>
 			</div>
-			<div class="profile-name"><?php echo htmlspecialchars($user['username']); ?></div>
-		</div>
-		<div class="profile-links">
-			<a class="profile-button" href="/edita-el-perfil"><i class="fa fa-fw fa-pen-to-square"></i> Edita el perfil</a>
-			<a class="profile-button" href="/canvia-la-contrasenya"><i class="fa fa-fw fa-key"></i> Canvia la contrasenya</a>
-		</div>
-	</div>
-	<div class="content-layout profile-page">
-		<div class="profile-basic-info profile-details-section">
-			<div class="profile-section-header">Informació bàsica</div>
-			<div class="profile-section-content">
-				<div class="profile-section-data">
-					<div class="profile-section-data-header">Adreça electrònica</div>
-					<div class="profile-section-data-info"><?php echo $user['email']; ?></div>
-				</div>
-				<div class="profile-section-data">
-					<div class="profile-section-data-header">Data de naixement</div>
-					<div class="profile-section-data-info"><?php echo date_format(date_create_from_format('Y-m-d', $user['birthdate']), 'd/m/Y'); ?></div>
-				</div>
-				<div class="profile-section-data">
-					<div class="profile-section-data-header">Data de registre a Fansubs.cat</div>
-					<div class="profile-section-data-info"><?php echo date_format(date_create_from_format('Y-m-d H:i:s', $user['created']), 'd/m/Y'); ?></div>
-				</div>
+			<div class="profile-links">
+				<a class="profile-button" href="/edita-el-perfil"><i class="fa fa-fw fa-pen-to-square"></i> Edita el perfil</a>
+				<a class="profile-button" href="/canvia-la-contrasenya"><i class="fa fa-fw fa-key"></i> Canvia la contrasenya</a>
 			</div>
 		</div>
-		<div class="profile-statistics profile-details-section">
-			<div class="profile-section-header">Estadístiques</div>
-			<div class="profile-section-content">
-				<div class="profile-section-data">
-					<div class="profile-section-data-header">Total d’anime vist</div>
-					<div class="profile-section-data-info"><?php echo $total_anime_seen; ?></div>
-				</div>
-				<div class="profile-section-data">
-					<div class="profile-section-data-header">Total de manga llegit</div>
-					<div class="profile-section-data-info"><?php echo $total_manga_seen; ?></div>
-				</div>
-				<div class="profile-section-data">
-					<div class="profile-section-data-header">Total d’imatge real vist</div>
-					<div class="profile-section-data-info"><?php echo $total_liveaction_seen; ?></div>
+		<div class="content-layout profile-page">
+			<div class="profile-basic-info profile-details-section">
+				<div class="profile-section-header">Informació bàsica</div>
+				<div class="profile-section-content">
+					<div class="profile-section-data">
+						<div class="profile-section-data-header">Adreça electrònica</div>
+						<div class="profile-section-data-info"><?php echo $user['email']; ?></div>
+					</div>
+					<div class="profile-section-data">
+						<div class="profile-section-data-header">Data de naixement</div>
+						<div class="profile-section-data-info"><?php echo date_format(date_create_from_format('Y-m-d', $user['birthdate']), 'd/m/Y'); ?></div>
+					</div>
+					<div class="profile-section-data">
+						<div class="profile-section-data-header">Data de registre a Fansubs.cat</div>
+						<div class="profile-section-data-info"><?php echo date_format(date_create_from_format('Y-m-d H:i:s', $user['created']), 'd/m/Y'); ?></div>
+					</div>
 				</div>
 			</div>
+			<div class="profile-statistics profile-details-section">
+				<div class="profile-section-header">Estadístiques</div>
+				<div class="profile-section-content">
+					<div class="profile-section-data">
+						<div class="profile-section-data-header">Total d’anime vist</div>
+						<div class="profile-section-data-info"><?php echo $total_anime_seen; ?></div>
+					</div>
+					<div class="profile-section-data">
+						<div class="profile-section-data-header">Total de manga llegit</div>
+						<div class="profile-section-data-info"><?php echo $total_manga_seen; ?></div>
+					</div>
+					<div class="profile-section-data">
+						<div class="profile-section-data-header">Total d’imatge real vist</div>
+						<div class="profile-section-data-info"><?php echo $total_liveaction_seen; ?></div>
+					</div>
+				</div>
+			</div>
+			<a class="profile-button remove-profile" href="/elimina-el-perfil">Elimina el perfil</a>
 		</div>
-		<a class="profile-button remove-profile" href="/elimina-el-perfil">Elimina el perfil</a>
 	</div>
 </div>
 <?php

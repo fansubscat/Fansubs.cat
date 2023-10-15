@@ -238,7 +238,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'chapters-carousel-last-update',
-		'title' => '<i class="fa fa-fw fa-clock-rotate-left"></i> Darreres novetats',
+		'title' => '<i class="fa fa-fw fa-clock-rotate-left"></i> Darrers capítols publicats',
 		'specific_version' => TRUE,
 		'use_version_param' => TRUE,
 		'result' => query_home_last_updated($user, $max_items),
@@ -246,23 +246,41 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-check"></i> Finalitzats recentment',
+		'title' => '<i class="fa fa-fw far fa-clock"></i> '.CATALOGUE_MOST_RECENT_STRING,
+		'specific_version' => FALSE,
+		'use_version_param' => FALSE,
+		'result' => query_home_more_recent($user, $max_items),
+	));
+
+	if (!empty($user)) {
+		array_push($sections, array(
+			'type' => 'carousel',
+			'title' => '<i class="fa fa-fw fa-star"></i> Recomanats per a tu',
+			'specific_version' => FALSE,
+			'use_version_param' => FALSE,
+			'result' => query_home_user_recommendations_by_user_id($user['id'], $max_items),
+		));
+	}
+
+	array_push($sections, array(
+		'type' => 'carousel',
+		'title' => '<i class="fa fa-fw far fa-circle-check"></i> Completats fa poc temps',
 		'specific_version' => TRUE,
 		'use_version_param' => TRUE,
 		'result' => query_home_last_finished($user, $max_items),
 	));
 
-	array_push($sections, array(
-		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-dice"></i> A l’atzar',
-		'specific_version' => FALSE,
-		'use_version_param' => FALSE,
-		'result' => query_home_random($user, $max_items),
-	));
+	/*array_push($sections, array(
+		'type' => 'recommendations-tag',
+		'title' => '<i class="fa fa-fw far fa-heart"></i> Amor',
+		'specific_version' => TRUE,
+		'use_version_param' => TRUE,
+		'result' => query_home_by_genre($user, 1, $max_items),
+	));*/
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-fire"></i> Més populars',
+		'title' => '<i class="fa fa-fw fa-chart-simple"></i> Els més populars a Fansubs.cat',
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
 		'result' => query_home_most_popular($user, $max_items),
@@ -270,18 +288,10 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-stopwatch"></i> Més actuals',
+		'title' => '<i class="fa fa-fw fa-dice"></i> Vols provar sort?',
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
-		'result' => query_home_more_recent($user, $max_items),
-	));
-
-	array_push($sections, array(
-		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-heart"></i> Més ben valorats',
-		'specific_version' => FALSE,
-		'use_version_param' => FALSE,
-		'result' => query_home_best_rated($user, $max_items),
+		'result' => query_home_random($user, $max_items),
 	));
 }
 
@@ -290,7 +300,7 @@ $has_some_result = FALSE;
 foreach($sections as $section){
 	$result = $section['result'];
 	$uses_swiper = FALSE;
-	if ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update' || $section['type']=='recommendations') {
+	if ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update' || $section['type']=='recommendations' || $section['type']=='recommendations-tag') {
 		$uses_swiper = TRUE;
 	}
 
@@ -318,7 +328,7 @@ foreach($sections as $section){
 			}
 		} else {
 ?>
-					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update') ? ' carousel' : ($section['type']=='recommendations' ? ' recommendations theme-dark' : ' catalogue'); ?>">
+					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update') ? ' carousel' : (($section['type']=='recommendations' || $section['type']=='recommendations-tag') ? ' recommendations theme-dark' : ' catalogue'); ?>">
 <?php
 			if ($uses_swiper) {
 ?>
@@ -339,6 +349,8 @@ foreach($sections as $section){
 							<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> <?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 <?php
 				if ($section['type']=='recommendations') {
+					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param']);
+				} else if ($section['type']=='recommendations-tag') {
 					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param']);
 				} else if ($section['type']=='chapters-carousel'){
 					print_chapter_item($row);
@@ -385,5 +397,11 @@ if (!$has_some_result) {
 
 if (defined('PAGE_IS_SEARCH')) {
 	require_once("../common.fansubs.cat/footer_text.inc.php");
+} else {
+?>
+				<div id="bottom-navigation">
+					<a class="normal-button" href="<?php echo SITE_BASE_URL; ?>/cerca">Explora tot el catàleg <i class="fa fa-fw fa-arrow-right"></i></a>
+				</div>
+<?php
 }
 ?>
