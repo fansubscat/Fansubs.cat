@@ -61,8 +61,6 @@ switch ($server_url) {
 		define('CATALOGUE_MOST_RECENT_STRING', 'Animes d’emissió recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Sèries ben valorades');
 		define('CATALOGUE_BEST_SINGLE_STRING', 'Els millors films');
-		define('CATALOGUE_BEST_SERIALIZED_ICON', 'tv');
-		define('CATALOGUE_BEST_SINGLE_ICON', 'film');
 		define('CATALOGUE_FEATURED_SINGLE_STRING', 'Anime destacat');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
@@ -71,6 +69,8 @@ switch ($server_url) {
 		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Animes amb temàtiques en comú');
 		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
 		define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més temporades sense elements disponibles. Prem aquí per a mostrar-les totes.');
+		define('CATALOGUE_SEASONAL_SERIES_STRING', 'Anime de temporada');
+		define('CATALOGUE_SEASONAL_SERIES_ICON', 'fa-fire');
 		break;
 	case MANGA_URL:
 		define('SITE_TITLE', 'Manga en català | Fansubs.cat');
@@ -102,8 +102,6 @@ switch ($server_url) {
 		define('CATALOGUE_MOST_RECENT_STRING', 'Mangues de publicació recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Mangues ben valorats');
 		define('CATALOGUE_BEST_SINGLE_STRING', 'Els millors one-shots');
-		define('CATALOGUE_BEST_SERIALIZED_ICON', 'book');
-		define('CATALOGUE_BEST_SINGLE_ICON', 'book-open');
 		define('CATALOGUE_FEATURED_SINGLE_STRING', 'Manga destacat');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'volums');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Volum únic');
@@ -112,6 +110,8 @@ switch ($server_url) {
 		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Mangues amb temàtiques en comú');
 		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
 		define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més volums sense elements disponibles. Prem aquí per a mostrar-los tots.');
+		define('CATALOGUE_SEASONAL_SERIES_STRING', 'Manga en publicació');
+		define('CATALOGUE_SEASONAL_SERIES_ICON', 'fa-fire');
 		break;
 	case LIVEACTION_URL:
 		define('SITE_TITLE', 'Imatge real en català | Fansubs.cat');
@@ -143,8 +143,6 @@ switch ($server_url) {
 		define('CATALOGUE_MOST_RECENT_STRING', 'Continguts d’emissió recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Sèries ben valorades');
 		define('CATALOGUE_BEST_SINGLE_STRING', 'Els millors films');
-		define('CATALOGUE_BEST_SERIALIZED_ICON', 'tv');
-		define('CATALOGUE_BEST_SINGLE_ICON', 'film');
 		define('CATALOGUE_FEATURED_SINGLE_STRING', 'Contingut destacat');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
@@ -153,6 +151,8 @@ switch ($server_url) {
 		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Continguts d’imatge real amb temàtiques en comú');
 		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
 		define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més temporades sense elements disponibles. Prem aquí per a mostrar-les totes.');
+		define('CATALOGUE_SEASONAL_SERIES_STRING', 'Contingut de temporada');
+		define('CATALOGUE_SEASONAL_SERIES_ICON', 'fa-fire');
 		break;
 	case HENTAI_ANIME_URL:
 		define('SITE_TITLE', 'Anime hentai en català | Fansubs.cat');
@@ -184,8 +184,6 @@ switch ($server_url) {
 		define('CATALOGUE_MOST_RECENT_STRING', 'Animes d’emissió recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Sèries ben valorades');
 		define('CATALOGUE_BEST_SINGLE_STRING', 'Els millors films');
-		define('CATALOGUE_BEST_SERIALIZED_ICON', 'tv');
-		define('CATALOGUE_BEST_SINGLE_ICON', 'film');
 		define('CATALOGUE_FEATURED_SINGLE_STRING', 'Anime destacat');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'temporades');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Capítols normals');
@@ -194,6 +192,8 @@ switch ($server_url) {
 		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Animes hentai amb temàtiques en comú');
 		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Mangues hentai amb temàtiques en comú');
 		define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més temporades sense elements disponibles. Prem aquí per a mostrar-les totes.');
+		define('CATALOGUE_SEASONAL_SERIES_STRING', 'Anime de temporada');
+		define('CATALOGUE_SEASONAL_SERIES_ICON', 'fa-fire');
 		break;
 	case HENTAI_MANGA_URL:
 		define('SITE_TITLE', 'Manga hentai en català | Fansubs.cat');
@@ -225,8 +225,6 @@ switch ($server_url) {
 		define('CATALOGUE_MOST_RECENT_STRING', 'Mangues de publicació recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Mangues ben valorats');
 		define('CATALOGUE_BEST_SINGLE_STRING', 'Els millors one-shots');
-		define('CATALOGUE_BEST_SERIALIZED_ICON', 'book');
-		define('CATALOGUE_BEST_SINGLE_ICON', 'book-open');
 		define('CATALOGUE_FEATURED_SINGLE_STRING', 'Manga destacat');
 		define('CATALOGUE_SEASON_STRING_PLURAL', 'volums');
 		define('CATALOGUE_SEASON_STRING_UNIQUE', 'Volum únic');
@@ -235,6 +233,8 @@ switch ($server_url) {
 		define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Mangues hentai amb temàtiques en comú');
 		define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Animes hentai amb temàtiques en comú');
 		define('CATALOGUE_MORE_SEASONS_AVAILABLE', 'Hi ha més volums sense elements disponibles. Prem aquí per a mostrar-los tots.');
+		define('CATALOGUE_SEASONAL_SERIES_STRING', 'Manga en publicació');
+		define('CATALOGUE_SEASONAL_SERIES_ICON', 'fa-fire');
 		break;
 	case HENTAI_URL:
 		define('SITE_TITLE', 'Fansubs.cat');

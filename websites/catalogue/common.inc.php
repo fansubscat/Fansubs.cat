@@ -637,6 +637,8 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 		} if ($special_day=='tots_sants') {
 			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-ghost"></i><span class="text">Especial Tots Sants</span></div>'."\n";
 		}
+	} else if ($series['best_status']==2) {
+		echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw '.CATALOGUE_SEASONAL_SERIES_ICON.'"></i><span class="text">'.CATALOGUE_SEASONAL_SERIES_STRING.'</span></div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t".'<div class="genres">'.get_genres_for_featured($series['genre_names'], $series['type'], $series['rating']).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";

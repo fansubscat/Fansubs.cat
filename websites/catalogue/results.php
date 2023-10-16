@@ -280,7 +280,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-'.CATALOGUE_BEST_SERIALIZED_ICON.'"></i> '.CATALOGUE_BEST_SERIALIZED_STRING,
+		'title' => '<i class="fa fa-fw '.CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON.'"></i> '.CATALOGUE_BEST_SERIALIZED_STRING,
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
 		'result' => query_home_best_rated($user, CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID, $max_items),
@@ -288,7 +288,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-'.CATALOGUE_BEST_SINGLE_ICON.'"></i> '.CATALOGUE_BEST_SINGLE_STRING,
+		'title' => '<i class="fa fa-fw '.CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON.'"></i> '.CATALOGUE_BEST_SINGLE_STRING,
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
 		'result' => query_home_best_rated($user, CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID, $max_items),
