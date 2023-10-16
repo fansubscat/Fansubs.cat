@@ -861,20 +861,23 @@ function query_home_last_finished($user, $max_items) {
 	return query($final_query);
 }
 
-function query_home_by_genre($user, $genre_id, $max_items) {
+function query_home_featured_singles($user, $max_items) {
 	$max_items = intval($max_items);
-	$genre_id = intval($genre_id);
 	$final_query = get_internal_home_base_query($user)."
-				AND g.id=$genre_id
+				AND v.status IN (1, 3)
+				AND s.id NOT IN (SELECT v.series_id
+						FROM recommendation r
+						LEFT JOIN version v ON r.version_id=v.id
+					)
 			GROUP BY s.id
 			ORDER BY RAND()
 			LIMIT $max_items";
 	return query($final_query);
 }
 
-function query_home_user_recommendations_by_user_id($user_id, $max_items) {
+function query_home_user_recommendations_by_user_id($user, $max_items) {
 	$max_items = intval($max_items);
-	$user_id = intval($user_id);
+	$user_id = intval($user['id']);
 	$result = get_internal_recommendations_by_user_id($user_id);
 	$sort_by_recommendations_in_clause = '0';
 	while ($row = mysqli_fetch_assoc($result)){
@@ -908,11 +911,14 @@ function query_home_more_recent($user, $max_items) {
 	return query($final_query);
 }
 
-function query_home_best_rated($user, $max_items) {
+function query_home_best_rated($user, $type, $max_items) {
+	//type is already escaped, comes from code
 	$max_items = intval($max_items);
 	$final_query = get_internal_home_base_query($user)."
+				AND s.subtype='".$type."'
+				AND s.score>6.5
 			GROUP BY s.id
-			ORDER BY s.score DESC
+			ORDER BY RAND()
 			LIMIT $max_items";
 	return query($final_query);
 }

@@ -258,7 +258,7 @@ if (defined('PAGE_IS_SEARCH')) {
 			'title' => '<i class="fa fa-fw fa-star"></i> Recomanats per a tu',
 			'specific_version' => FALSE,
 			'use_version_param' => FALSE,
-			'result' => query_home_user_recommendations_by_user_id($user['id'], $max_items),
+			'result' => query_home_user_recommendations_by_user_id($user, $max_items),
 		));
 	}
 
@@ -270,20 +270,28 @@ if (defined('PAGE_IS_SEARCH')) {
 		'result' => query_home_last_finished($user, $max_items),
 	));
 
-	/*array_push($sections, array(
-		'type' => 'recommendations-tag',
-		'title' => '<i class="fa fa-fw far fa-heart"></i> Amor',
-		'specific_version' => TRUE,
-		'use_version_param' => TRUE,
-		'result' => query_home_by_genre($user, 1, $max_items),
-	));*/
-
 	array_push($sections, array(
 		'type' => 'carousel',
 		'title' => '<i class="fa fa-fw fa-chart-simple"></i> Els més populars a Fansubs.cat',
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
 		'result' => query_home_most_popular($user, $max_items),
+	));
+
+	array_push($sections, array(
+		'type' => 'carousel',
+		'title' => '<i class="fa fa-fw fa-'.CATALOGUE_BEST_SERIALIZED_ICON.'"></i> '.CATALOGUE_BEST_SERIALIZED_STRING,
+		'specific_version' => FALSE,
+		'use_version_param' => FALSE,
+		'result' => query_home_best_rated($user, CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID, $max_items),
+	));
+
+	array_push($sections, array(
+		'type' => 'carousel',
+		'title' => '<i class="fa fa-fw fa-'.CATALOGUE_BEST_SINGLE_ICON.'"></i> '.CATALOGUE_BEST_SINGLE_STRING,
+		'specific_version' => FALSE,
+		'use_version_param' => FALSE,
+		'result' => query_home_best_rated($user, CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID, $max_items),
 	));
 
 	array_push($sections, array(
@@ -295,12 +303,15 @@ if (defined('PAGE_IS_SEARCH')) {
 	));
 }
 
+$featured_single_result = query_home_featured_singles($user, $max_items);
+
 $i=0;
 $has_some_result = FALSE;
+$real_carousels = 0;
 foreach($sections as $section){
 	$result = $section['result'];
 	$uses_swiper = FALSE;
-	if ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update' || $section['type']=='recommendations' || $section['type']=='recommendations-tag') {
+	if ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update' || $section['type']=='recommendations') {
 		$uses_swiper = TRUE;
 	}
 
@@ -308,6 +319,9 @@ foreach($sections as $section){
 		continue;
 	} else if (mysqli_num_rows($result)>0 || ($section['type']=='static')){
 		$has_some_result = TRUE;
+		if (!defined('PAGE_IS_SEARCH') && $section['type']=='carousel') {
+			$real_carousels++;
+		}
 ?>
 				<div class="section<?php echo $section['type']=='recommendations' ? ' featured-section' : ''; ?>">
 <?php
@@ -328,7 +342,7 @@ foreach($sections as $section){
 			}
 		} else {
 ?>
-					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update') ? ' carousel' : (($section['type']=='recommendations' || $section['type']=='recommendations-tag') ? ' recommendations theme-dark' : ' catalogue'); ?>">
+					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update') ? ' carousel' : ($section['type']=='recommendations' ? ' recommendations theme-dark' : ' catalogue'); ?>">
 <?php
 			if ($uses_swiper) {
 ?>
@@ -349,8 +363,6 @@ foreach($sections as $section){
 							<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> <?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 <?php
 				if ($section['type']=='recommendations') {
-					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param']);
-				} else if ($section['type']=='recommendations-tag') {
 					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param']);
 				} else if ($section['type']=='chapters-carousel'){
 					print_chapter_item($row);
@@ -384,8 +396,23 @@ foreach($sections as $section){
 <?php
 	}
 	mysqli_free_result($result);
+
+	if ($real_carousels==2 && $i<count($sections)-1 && $row = mysqli_fetch_assoc($featured_single_result)) {
+?>
+				<div class="section">
+					<h2 class="section-title-main"><i class="fa fa-fw fa-torii-gate"></i> <?php echo CATALOGUE_FEATURED_SINGLE_STRING; ?></h2>
+					<div class="section-content theme-dark">
+<?php
+		print_featured_item_single($row, FALSE, FALSE);
+?>
+					</div>
+				</div>
+<?php
+		$real_carousels=0;
+	}
 	$i++;
 }
+mysqli_free_result($featured_single_result);
 
 if (!$has_some_result) {
 ?>

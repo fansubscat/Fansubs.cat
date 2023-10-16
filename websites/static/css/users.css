@@ -127,7 +127,6 @@ a.forgot-password {
 }
 
 .checkbox-layout input, .checkbox-layout label {
-	width: auto;
 	margin: 0;
 }
 
@@ -663,6 +662,7 @@ a.forgot-password {
 
 	.profile-name {
 		font-size: 1.8rem;
+		margin-bottom: 0;
 	}
 
 	.profile-details-section + .profile-details-section {
@@ -673,6 +673,7 @@ a.forgot-password {
 	.profile-page, .account-profile-page {
 		flex-direction: column;
 		padding: 1rem;
+		margin-top: 2rem;
 	}
 
 	.blacklisted-fansubs-dialog-element {

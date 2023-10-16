@@ -954,7 +954,7 @@ h2.section-title:first-of-type {
 	padding: 0.1rem 0;
 }
 
-.search-checkboxes input[type="checkbox"] {
+input[type="checkbox"] {
 	background-color: rgb(var(--always-positive-color));
 	appearance: none;
 	margin: 0;
@@ -971,22 +971,22 @@ h2.section-title:first-of-type {
 	color: rgb(var(--always-positive-color));
 }
 
-.search-checkboxes input[type="checkbox"]:before {
+input[type="checkbox"]:before {
 	font-family: "Font Awesome 6 Free" !important;
 	font-weight: 900;
 	content: '\f00c' !important;
 	color: rgb(var(--always-positive-color));
 }
 
-.search-checkboxes input[type="checkbox"]:checked {
+input[type="checkbox"]:checked {
 	background-color: rgb(var(--primary-color));
 }
 
-.search-checkboxes input[type="checkbox"]:disabled {
+input[type="checkbox"]:disabled {
 	background-color: rgb(var(--neutral-color));
 }
 
-.search-checkboxes input[type="checkbox"]:checked:before {
+input[type="checkbox"]:checked:before {
 	color: rgb(var(--always-negative-color));
 }
 
@@ -1029,7 +1029,7 @@ h2.section-title:first-of-type {
 	overflow: visible;
 }
 
-.style-type-login input:not([type='range']), .style-type-login select, .style-type-login textarea, .style-type-contact input:not([type='range']), .style-type-contact select, .style-type-contact textarea, .account-profile-layout input:not([type='range']), .account-profile-layout select {
+.style-type-login input:not([type='range']):not([type='checkbox']), .style-type-login select, .style-type-login textarea, .style-type-contact input:not([type='range']), .style-type-contact select, .style-type-contact textarea, .account-profile-layout input:not([type='range']), .account-profile-layout select {
 	border: 0.1rem solid rgb(var(--positive-color));
 }
 
@@ -1590,7 +1590,7 @@ input:checked + .slider:before {
 	padding: 2rem 5rem;
 	text-align: center;
 	font-size: 1.5rem;
-	background: rgb(var(--negative-color));
+	background: rgb(var(--background-color-standard));
 	position: relative;
 	max-height: 90vh;
 	overflow: hidden;
@@ -1614,6 +1614,20 @@ input:checked + .slider:before {
 
 #dialog-message hr {
 	border: 0.1rem solid rgb(var(--primary-color));
+}
+
+#dialog-center-checkbox {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-top: 1rem;
+}
+
+#dialog-center-checkbox label {
+	margin-top: 0;
+	margin-left: 0.5rem;
+	width: auto;
 }
 
 #dialog-buttonbar {
@@ -1719,11 +1733,11 @@ input:checked + .slider:before {
 		color: rgb(var(--icon-button-color-hover));
 	}
 
-	.search-checkboxes input[type="checkbox"]:hover {
+	input[type="checkbox"]:hover {
 		filter: brightness(0.9);
 	}
 
-	.search-checkboxes input[type="checkbox"]:disabled:hover {
+	input[type="checkbox"]:disabled:hover {
 		filter: none;
 	}
 

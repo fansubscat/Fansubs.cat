@@ -16,7 +16,10 @@ function showCustomDialog(title, text, subtext, closeable=true, blurred=true, bu
 	if (closeable) {
 		code += '<a class="dialog-close-button fa fa-fw fa-times" title="Tanca" onclick="closeCustomDialog();"></a>'
 	}
-	code += '<h2 id="dialog-title">'+title+'</h2><div id="dialog-message">'+text+'</div>';
+	code += '<h2 id="dialog-title">'+title+'</h2>';
+	if (text!=null) {
+		code += '<div id="dialog-message">'+text+'</div>';
+	}
 	if (subtext!=null) {
 		code += '<div id="dialog-post-explanation">'+subtext+'</div>';
 	}
@@ -178,7 +181,7 @@ function prepareClickableFloatingInfo(element){
 
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
-	if (!event.target.matches('.dropdown-button')) {
+	if (!event.target.matches('.dropdown-button') && !event.target.matches('.theme-button') && !event.target.matches('.fa-circle-half-stroke') && !event.target.matches('.theme-button-text')) {
 		$('.dropdown-content').removeClass('dropdown-show');
 	}
 }

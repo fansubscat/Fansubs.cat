@@ -642,6 +642,42 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
 }
 
+function print_featured_item_single($series, $specific_version=TRUE, $use_version_param=TRUE) {
+	$versions = get_prepared_versions($series['fansub_info']);
+	$number_of_versions = $series['total_versions'];
+	echo "\t\t\t\t\t\t\t".'<a class="recommendation single-feature" data-series-id="'.$series['id'].'" href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.$series['slug'].(($use_version_param && $number_of_versions>1) ? "?v=".$versions[0]['id'] : "").'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/featured/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="cover" src="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlspecialchars($series['name']).'</div>'."\n";
+	if ($series['subtype']=='oneshot') {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">One-shot</div>'."\n";
+	} else if ($series['subtype']=='serialized') {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Serialitzat • '.($series['divisions']==1 ? "1 volum" : $series['divisions'].' volums').' • '.($series['number_of_episodes']==-1 ? 'En publicació' : ($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols')).'</div>'."\n";
+	} else if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Conjunt de '.$series['number_of_episodes'].' films</div>'."\n";
+	} else if ($series['subtype']=='movie') {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Film</div>'."\n";
+	} else if ($series['divisions']>1) {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.$series['divisions'].' temporades • '.($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols').'</div>'."\n";
+	} else {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.($series['number_of_episodes']==-1 ? 'En emissió' : ($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols')).'</div>'."\n";
+	}
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
+
+	$Parsedown = new Parsedown();
+	$synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
+
+	echo "\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
+	echo "\t\t\t\t\t\t\t".'</a>'."\n";
+}
+
 function get_current_advent_day() {
 	if (date('H:i:s')>='12:00:00') {
 		return date('d');

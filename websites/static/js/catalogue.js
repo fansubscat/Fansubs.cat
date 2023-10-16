@@ -1346,13 +1346,23 @@ function getPreviousUnreadEpisodes(fileId) {
 		return $([]);
 	}
 	var position = parseInt($('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-position'));
-	return $('.file-launcher').filter(function(){
+	return $('.file-launcher[data-file-id="'+fileId+'"]').closest('.version-content').find('.file-launcher').filter(function(){
 		return parseInt($(this).attr('data-position')) < position && $(this).find('.episode-info-seen-cell input[type="checkbox"]:checked').length==0 && $(this).attr('data-is-special')!='true';
 	});
 }
 
-function setSeenBehavior(value) {
-	$('#seen_behavior').val(value);
+function getNextReadEpisodes(fileId) {
+	var isSpecial = $('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-is-special')=='true';
+	if (isSpecial) {
+		return $([]);
+	}
+	var position = parseInt($('.file-launcher[data-file-id="'+fileId+'"]').first().attr('data-position'));
+	return $('.file-launcher[data-file-id="'+fileId+'"]').closest('.version-content').find('.file-launcher').filter(function(){
+		return parseInt($(this).attr('data-position')) > position && $(this).find('.episode-info-seen-cell input[type="checkbox"]:checked').length==1 && $(this).attr('data-is-special')!='true';
+	});
+}
+
+function setSeenBehaviorInServer(value) {
 	var values = {
 		'previous_chapters_read_behavior': value,
 		'only_read_behavior' : 1
@@ -1369,9 +1379,49 @@ function setSeenBehavior(value) {
 function toggleFileSeen(checkbox, fileId) {
 	if (!isCheckingAsSeenProgrammatically) {
 		if (!$(checkbox).is(':checked')) {
-			//Remove from seen
-			executeMarkAsSeen([fileId], false);
-			$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 0%;');
+			var nextReadEpisodes = getNextReadEpisodes(fileId);
+			if (nextReadEpisodes.length>0) {
+				var text;
+				if (nextReadEpisodes.length==1) {
+					text = 'Es marcaran aquest capítol i 1 capítol posterior com a no vistos.';
+				} else {
+					text = 'Es marcaran aquest capítol i '+nextReadEpisodes.length+' capítols posteriors com a no vistos.';
+				}
+				showCustomDialog('Vols marcar també els capítols posteriors com a no vistos?', text, null, false, true, [
+					{
+						text: 'Sí',
+						class: 'normal-button',
+						onclick: function(){
+							//Remove from seen
+							var nextReadEpisodeIds = nextReadEpisodes.get().map(a => $(a).attr('data-file-id'));
+							isCheckingAsSeenProgrammatically = true;
+							$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-info-seen-cell input[type="checkbox"]').prop('checked', false);
+							$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 0%;');
+							for (var i=0;i<nextReadEpisodeIds.length;i++) {
+								$('.file-launcher[data-file-id="'+nextReadEpisodeIds[i]+'"]').find('.episode-info-seen-cell input[type="checkbox"]').prop('checked', false);
+								$('.file-launcher[data-file-id="'+nextReadEpisodeIds[i]+'"]').find('.progress').attr('style', 'width: 0%;');
+							}
+							isCheckingAsSeenProgrammatically = false;
+							executeMarkAsSeen(nextReadEpisodeIds.concat([fileId]), false);
+							closeCustomDialog();
+						}
+					},
+					{
+						text: 'No',
+						class: 'normal-button',
+						onclick: function(){
+							//Remove from seen
+							executeMarkAsSeen([fileId], false);
+							$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 0%;');
+							closeCustomDialog();
+						}
+					}
+				]);
+			} else {
+				//Remove from seen
+				executeMarkAsSeen([fileId], false);
+				$('.file-launcher[data-file-id="'+fileId+'"]').find('.progress').attr('style', 'width: 0%;');
+			}
 		} else {
 			//Add to seen (and ask for previous if applicable)
 			markAsSeen(fileId, false);
@@ -1382,13 +1432,24 @@ function toggleFileSeen(checkbox, fileId) {
 function markAsSeen(fileId, dontAsk) {
 	var previouslyUnreadEpisodes = getPreviousUnreadEpisodes(fileId);
 	if (!dontAsk && $('#seen_behavior').val()==0 && previouslyUnreadEpisodes.length>0) {
-		showCustomDialog('Vols marcar també els capítols anteriors com a vistos?', 'La decisió que prenguis s’aplicarà automàticament a partir d’ara.<br>Podràs canviar-la a la configuració d’usuari.', null, false, true, [
+		var text;
+		if (previouslyUnreadEpisodes.length==1) {
+			text = 'Es marcaran aquest capítol i 1 capítol anterior com a vistos.';
+		} else {
+			text = 'Es marcaran aquest capítol i '+previouslyUnreadEpisodes.length+' capítols anteriors com a vistos.';
+		}
+		showCustomDialog('Vols marcar també els capítols anteriors com a vistos?', text, '<div id="dialog-center-checkbox"><input type="checkbox" id="seen-behavior-dont-ask"><label for="seen-behavior-dont-ask">No ho tornis a demanar</label></div>', false, true, [
 			{
 				text: 'Sí',
 				class: 'normal-button',
 				onclick: function(){
-					setSeenBehavior(1);
+					$('#seen_behavior').val(1);
 					markAsSeen(fileId, true);
+					if ($('#seen-behavior-dont-ask').prop('checked')) {
+						setSeenBehaviorInServer(1);
+					} else {
+						$('#seen_behavior').val(0);
+					}
 					closeCustomDialog();
 				}
 			},
@@ -1396,8 +1457,13 @@ function markAsSeen(fileId, dontAsk) {
 				text: 'No',
 				class: 'normal-button',
 				onclick: function(){
-					setSeenBehavior(2);
+					$('#seen_behavior').val(2);
 					markAsSeen(fileId, true);
+					if ($('#seen-behavior-dont-ask').prop('checked')) {
+						setSeenBehaviorInServer(2);
+					} else {
+						$('#seen_behavior').val(0);
+					}
 					closeCustomDialog();
 				}
 			}

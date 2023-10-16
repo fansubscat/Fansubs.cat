@@ -11,7 +11,7 @@ if (!empty($user)) {
 	$show_cancelled = $user['show_cancelled_projects'];
 	$show_lost = $user['show_lost_projects'];
 	$show_hentai = empty($user['hide_hentai_access']);
-	$mark_as_seen = ($user['previous_chapters_read_behavior']==1);
+	$mark_as_seen = $user['previous_chapters_read_behavior'];
 	$episode_sort_order = $user['episode_sort_order'];
 	$reader_type = $user['manga_reader_type'];
 	$blacklisted_fansub_ids = $user['blacklisted_fansub_ids'];
@@ -132,13 +132,14 @@ if (!empty($user)) {
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Marca els capítols anteriors com a vistos o llegits</div>
-								<div class="settings-section-data-header-subtitle">Tria si vols que, en obrir un capítol, tots els capítols anteriors d’aquell projecte es marquin automàticament com a vistos o llegits.</div>
+								<div class="settings-section-data-header-title">Marca els capítols anteriors com a vistos</div>
+								<div class="settings-section-data-header-subtitle">Tria si vols que, en marcar un capítol com a vist, tots els capítols anteriors es marquin automàticament com a vistos.</div>
 							</div>
-							<label class="switch">
-								<input type="checkbox" id="mark-previous-as-seen"<?php echo $mark_as_seen ? ' checked' : ''; ?> onchange="saveSettings();">
-								<span class="slider"></span>
-							</label>
+							<select id="mark-previous-as-seen" class="settings-combo" onchange="saveSettings();">
+								<option value="0"<?php echo $mark_as_seen==0 ? ' selected' : ''; ?>>Demana-ho</option>
+								<option value="1"<?php echo $mark_as_seen==1 ? ' selected' : ''; ?>>Marca’ls sempre</option>
+								<option value="2"<?php echo $mark_as_seen==2 ? ' selected' : ''; ?>>No facis res</option>
+							</select>
 						</div>
 					</div>
 <?php

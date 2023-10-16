@@ -355,7 +355,7 @@ function saveSettings() {
 			'blacklisted_fansub_ids': $('#blacklisted-fansubs-ids').val(),
 			'hide_hentai_access': $('#show-hentai').prop('checked') ? 0 : 1,
 			'episode_sort_order': $('#episode-sort-order').prop('checked') ? 1 : 0,
-			'previous_chapters_read_behavior': $('#mark-previous-as-seen').prop('checked') ? 1 : 0
+			'previous_chapters_read_behavior': $('#mark-previous-as-seen').val()
 		};
 		$.post({
 			url: USERS_URL+"/do_save_settings.php",

@@ -36,7 +36,7 @@
 	display: inline-block;
 	background: rgba(var(--negative-color),0.5);
 	color: rgb(var(--positive-color));
-	padding: 1.1rem 2rem;
+	padding: 0.75rem 2rem;
 	margin: 1.25rem 0.25rem 0;
 	min-width: 16rem;
 	font-size: 2rem;
@@ -325,7 +325,7 @@
 	}
 
 	.tertiary-button {
-		padding: 1rem;
+		padding: 0.75rem;
 		font-size: 1.6rem;
 		min-width: 13rem;
 		margin: 0.5rem 0.25rem 0;
