@@ -2567,7 +2567,7 @@ input:checked + .viewed-slider:before {
 
 	.recommendation.single-feature:hover .background {
 		filter: brightness(0.8);
-		transform: scale(1.05);
+		transform: scale(1.025);
 	}
 }
 
