@@ -281,9 +281,9 @@ if (PAGE_STYLE_TYPE=='login') {
 					<a class="logo-small" href="<?php echo SITE_IS_HENTAI ? SITE_BASE_URL : MAIN_URL; ?>" title="Torna a la pàgina d’inici<?php echo !SITE_IS_HENTAI ? " de Fansubs.cat" : " del portal de hentai"; ?>">
 						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
 <?php
-			if ($special_day=='nadal') {
+if (!empty($special_day) && file_exists(STATIC_DIRECTORY.'/images/site/logo_layer_'.$special_day.'.png')) {
 ?>
-						<img class="logo-layer-small" src="<?php echo STATIC_URL; ?>/images/site/logo_layer_christmas.png">
+						<img class="logo-layer-small" src="<?php echo STATIC_URL; ?>/images/site/logo_layer_<?php echo $special_day; ?>.png">
 <?php
 			}
 			if (PAGE_STYLE_TYPE=='catalogue' && SITE_IS_HENTAI) {
