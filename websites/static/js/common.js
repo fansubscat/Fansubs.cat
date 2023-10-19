@@ -1,5 +1,6 @@
 const MAIN_URL = "https://www.fansubs.online";
 const USERS_URL='https://usuaris.fansubs.online';
+const STATIC_URL='https://static.fansubs.online';
 
 var lastWindowWidth=0;
 

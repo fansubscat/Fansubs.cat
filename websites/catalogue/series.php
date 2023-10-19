@@ -39,6 +39,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<input id="autoopen_file_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['f']) ? (int)$_GET['f'] : ''); ?>">
 					<input id="series_id" type="hidden" value="<?php echo htmlspecialchars($series['id']); ?>">
+					<input id="catalogue_type" type="hidden" value="<?php echo SITE_INTERNAL_NAME; ?>">
 					<input id="seen_behavior" type="hidden" value="<?php echo !empty($user) ? $user['previous_chapters_read_behavior'] : -1; ?>">
 					<div class="series-header">
 						<img class="background" src="<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
