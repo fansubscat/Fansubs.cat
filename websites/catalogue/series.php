@@ -262,7 +262,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			));
 		}
 ?>
-								<h2 class="section-title-main section-title-with-table">Contingut
+								<h2 class="section-title-main section-title-with-table"><i class="fa fa-fw <?php echo $series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON : CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON; ?>"></i> Contingut
 <?php
 		//false: ascending, true: descending
 		$sort_order = (!empty($user) && $user['episode_sort_order']) || (empty($user) && !empty($_COOKIE['episode_sort_order']));
@@ -421,7 +421,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 							</div>
 							<div class="section-content extra-content">
-								<h2 class="section-title-main">Autoria d’aquesta versió</h2>
+								<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Autoria d’aquesta versió</h2>
 <?php
 	$fansubs = query_fansubs_by_version_id($version['id']);
 ?>
@@ -499,7 +499,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 if (!SITE_IS_HENTAI) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main">Darrers comentaris a Tadaima.cat</h2>
+						<h2 class="section-title-main"><i class="fa fa-fw fa-comment"></i> Darrers comentaris a Tadaima.cat</h2>
 						<div class="section-content">
 <?php
 	if (!empty($series['tadaima_id'])) {
@@ -549,7 +549,7 @@ $resultra = query_related_series($user, $series['id'], $series['author'], $num_o
 if (mysqli_num_rows($resultra)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE; ?></h2>
+						<h2 class="section-title-main"><i class="fa fa-fw fa-arrow-right-arrow-left"></i> <?php echo CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE; ?></h2>
 						<div class="section-content carousel swiper">
 							<div class="swiper-wrapper">
 <?php
@@ -578,7 +578,7 @@ $resultrm = query_related_series($user, $series['id'], $series['author'], $num_o
 if (mysqli_num_rows($resultrm)>0) {
 ?>
 					<div class="section">
-						<h2 class="section-title-main"><?php echo CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE; ?></h2>
+						<h2 class="section-title-main"><i class="fa fa-fw fa-arrows-turn-right fa-flip-vertical"></i> <?php echo CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE; ?></h2>
 						<div class="section-content carousel swiper">
 							<div class="swiper-wrapper">
 <?php

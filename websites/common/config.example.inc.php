@@ -87,6 +87,9 @@ define('ADMIN_STORAGES', array(
 //API key for Multiavatar - used only in the admin section
 define('MULTIAVATAR_API_KEY', 'YOUR_API_KEY');
 
+//Whether mascot is enabled or not
+define('MASCOT_ENABLED', FALSE);
+
 //Storage URL customization
 function generate_storage_url($url) {
 	//Your custom code

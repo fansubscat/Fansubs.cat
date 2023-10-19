@@ -124,8 +124,8 @@ switch ($server_url) {
 		define('CATALOGUE_ITEM_TYPE', 'liveaction');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'movie');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'series');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-video');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-display');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-film');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-tv');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'Films');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
 		define('CATALOGUE_ITEM_STRING_SINGULAR', 'contingut d’imatge real');
@@ -165,8 +165,8 @@ switch ($server_url) {
 		define('CATALOGUE_ITEM_TYPE', 'anime');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID', 'movie');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID', 'series');
-		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-video');
-		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-display');
+		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON', 'fa-film');
+		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON', 'fa-tv');
 		define('CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME', 'Films');
 		define('CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME', 'Sèries');
 		define('CATALOGUE_ITEM_STRING_SINGULAR', 'anime');

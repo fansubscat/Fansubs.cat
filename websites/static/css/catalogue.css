@@ -1013,6 +1013,26 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	-webkit-line-clamp: 6;
 }
 
+.recommendation.special-day-header .infoholder {
+	padding: 0;
+	justify-content: center;
+}
+
+.recommendation.special-day-header .dataholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.recommendation.special-day-header .dataholder {
+	text-align: center;
+}
+
+.recommendation.special-day-header .divisions {
+	display: block;
+}
+
 .advent {
 	display: block;
 	width: 100%; 

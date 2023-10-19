@@ -205,12 +205,22 @@ if (defined('PAGE_IS_SEARCH')) {
 	if ($special_day!==NULL) {
 		if ($special_day=='fools') {
 			$result = query_version_ids_for_fools_day(10);
+			$special_day_title = "Els millors d’aquest ".date('Y');
+			$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
 		} else if ($special_day=='sant_jordi') {
 			$result = query_version_ids_for_sant_jordi(10);
+			$special_day_title = "Selecció especial de Sant Jordi";
+			$special_day_description = "Fansubs.cat et desitja un bon Sant Jordi!<br>Mira quina selecció de títols romàntics que hem preparat!";
 		} else if ($special_day=='tots_sants') {
 			$result = query_version_ids_for_tots_sants(10);
-		} else { //'nadal' (and catch-all)
+			$special_day_title = "Selecció especial de Tots Sants";
+			$special_day_description = "Fansubs.cat et desitja una bona castanyada!<br>Hem preparat una selecció dels millors títols de terror.";
+		} else if ($special_day=='nadal') {
 			$result = query_version_ids_for_nadal(10);
+			$special_day_title = "Els millors d’aquest ".date('Y');
+			$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
+		} else {
+			die("Unsupported special day $special_day!");
 		}
 		while ($row = mysqli_fetch_assoc($result)) {
 			array_push($force_recommended_ids_list, $row['id']);
@@ -349,7 +359,8 @@ foreach($sections as $section){
 						<div class="<?php echo $uses_swiper ? 'swiper-wrapper' : 'static-wrapper'; ?>">
 <?php
 			}
-			if ($section['type']=='recommendations' && is_advent_days() && mysqli_num_rows(query_current_advent_calendar())>0 && !SITE_IS_HENTAI) {
+			if ($section['type']=='recommendations') {
+				if (is_advent_days() && mysqli_num_rows(query_current_advent_calendar())>0 && !SITE_IS_HENTAI) {
 ?>
 							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 <?php
@@ -357,6 +368,28 @@ foreach($sections as $section){
 ?>
 							</div>
 <?php
+				} else if ($special_day!==NULL) {
+?>
+							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
+								<div class="recommendation special-day-header">
+									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark_hd.jpg'; ?>" alt="">
+									<div class="infoholder" data-swiper-parallax="-30%">
+										<div class="dataholder">
+<?php
+					if (MASCOT_ENABLED) {
+?>
+											<img class="special-day-image" src="<?php echo STATIC_URL.'/images/mascot/'.$special_day.'.png'; ?>" alt="">
+<?php
+					}
+?>
+											<div class="title"><?php echo $special_day_title; ?></div>
+											<div class="divisions"><?php echo $special_day_description; ?></div>
+										</div>
+									</div>
+								</div>
+							</div>
+<?php
+				}
 			}
 			while ($row = mysqli_fetch_assoc($result)){
 ?>

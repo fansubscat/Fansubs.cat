@@ -14,7 +14,17 @@ require_once(dirname(__FILE__)."/header.inc.php");
 				<div class="text-page centered error-page">
 					<h2 class="section-title"><?php echo $code==403 ? "Ostres! Sembla que no tens permís..." : ($code==451 ? "Ostres! No es pot accedir a aquest contingut..." : "Ostres! Sembla que la pàgina no existeix..."); ?></h2>
 					<div class="section-content">
-						<img src="https://i.imgur.com/RYbcQlZ.gif" alt="Quina llàstima..." style="max-width: 100%;">
+<?php
+if (MASCOT_ENABLED) {
+?>
+						<img class="mascot-error" src="<?php echo STATIC_URL; ?>/images/mascot/error.png" alt="">
+<?php
+} else {
+?>
+						<img src="https://i.imgur.com/RYbcQlZ.gif" alt="" style="max-width: 100%;">
+<?php
+}
+?>
 					</div>
 					<div class="section-content new-paragraph">
 <?php

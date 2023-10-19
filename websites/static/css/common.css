@@ -1660,6 +1660,15 @@ input:checked + .slider:before {
 	color: rgb(var(--error-color));
 }
 
+.mascot-big {
+	float: right;
+	margin-left: 2rem;
+}
+
+.mascot-error {
+	max-width: 100%;
+}
+
 @media (hover: hover) and (pointer: fine) {
 	:root {
 		--is-hovering-device: 1;
