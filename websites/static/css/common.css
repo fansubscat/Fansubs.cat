@@ -1660,12 +1660,7 @@ input:checked + .slider:before {
 	color: rgb(var(--error-color));
 }
 
-.mascot-big {
-	float: right;
-	margin-left: 2rem;
-}
-
-.mascot-error {
+.error-image {
 	max-width: 100%;
 }
 

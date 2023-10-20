@@ -1290,6 +1290,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	height: 110%;
 	top: 0;
 	margin-top: 0;
+	margin-left: calc(0rem - var(--page-padding));
 }
 
 .carousel .swiper-button-next {
@@ -1299,6 +1300,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	height: 110%;
 	top: 0;
 	margin-top: 0;
+	margin-right: calc(0rem - var(--page-padding));
 }
 
 .carousel .swiper-button-prev::after, .carousel .swiper-button-next::after {
@@ -1359,14 +1361,6 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 
 .swiper {
 	overflow: visible;
-}
-
-.carousel .swiper-button-prev {
-	margin-left: calc(0rem - var(--page-padding));
-}
-
-.carousel .swiper-button-next {
-	margin-right: calc(0rem - var(--page-padding));
 }
 
 .swiper-button-disabled {
@@ -2852,11 +2846,11 @@ input:checked + .viewed-slider:before {
 	}
 
 	.carousel .swiper-button-prev {
-		width: 2rem;
+		width: 3rem;
 	}
 
 	.carousel .swiper-button-next {
-		width: 2rem;
+		width: 3rem;
 	}
 
 	.recommendations .swiper-button-prev::after, .recommendations .swiper-button-next::after {
@@ -2864,11 +2858,11 @@ input:checked + .viewed-slider:before {
 	}
 
 	.recommendations .swiper-button-prev::after {
-		padding-left: 0;
+		padding-left: 1.5rem;
 	}
 
 	.recommendations .swiper-button-next::after {
-		padding-right: 0;
+		padding-right: 1.5rem;
 	}
 
 	.carousel .swiper-button-prev::after, .carousel .swiper-button-next::after {
@@ -3251,6 +3245,10 @@ input:checked + .viewed-slider:before {
 
 	.strip-images::-webkit-scrollbar {
 		width: 1px; /* This should be 0, but then bars are displayed: must be here because this also affects desktop browsers */
+	}
+
+	.carousel .swiper-button-prev, .carousel .swiper-button-next, .recommendations .swiper-button-prev, .recommendations .swiper-button-next {
+		display: none;
 	}
 }
 

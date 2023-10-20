@@ -306,7 +306,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-dice"></i> Vols provar sort?',
+		'title' => '<i class="fa fa-fw fa-dice"></i> Vols provar sort? <span class="sort-order refresh-random-button" onclick="refreshRandomResults();"><span class="fa fa-fw fa-refresh"></span> <span class="sort-description">Torna-hi!</span></span>',
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
 		'result' => query_home_random($user, $max_items),
@@ -460,6 +460,7 @@ if (defined('PAGE_IS_SEARCH')) {
 } else {
 ?>
 				<div id="bottom-navigation">
+					<a class="normal-button" href="<?php echo SITE_BASE_URL; ?>/atzar" rel="nofollow">Obre una fitxa a l’atzar <i class="fa fa-fw fa-shuffle"></i></a>
 					<a class="normal-button" href="<?php echo SITE_BASE_URL; ?>/cerca">Explora tot el catàleg <i class="fa fa-fw fa-arrow-right"></i></a>
 				</div>
 <?php

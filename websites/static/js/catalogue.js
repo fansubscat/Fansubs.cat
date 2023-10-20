@@ -31,7 +31,7 @@ var lastMoveY;
 var inactivityTimeout;
 var activityCheckInterval;
 var currentPlayRate = 1;
-var mascotEnabled = false;
+var mascotEnabled = true;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -183,6 +183,42 @@ function formatTime(seconds, guide) {
 	// Check if leading zero is need for seconds
 	s = s < 10 ? '0' + s : s;
 	return h + m + s;
+}
+
+function refreshRandomResults() {
+	$('.sort-order').find('.fa-refresh').addClass('fa-spin');
+	$.post({
+		url: getBaseUrl()+"/random_results.php",
+		data: null,
+		xhrFields: {
+			withCredentials: true
+		},
+	}).done(function(data) {
+		$('.sort-order').parent().parent().find('.carousel')[0].outerHTML=data;
+		new Swiper($('.sort-order').parent().parent().find('.carousel')[0], {
+			slidesPerView: "auto",
+			slidesPerGroupAuto: true,
+			maxBackfaceHiddenSlides: 0,
+			direction: 'horizontal',
+			navigation: {
+				nextEl: '.swiper-button-next',
+				prevEl: '.swiper-button-prev',
+			},
+		});
+
+		//UGLY HACK! slidesPerViewDynamic are wrongly computed, which results in this issue: https://github.com/nolimits4web/swiper/issues/4964
+		//We override the function in order to use our logic. It works, but this assumes that all elements are the same width and WILL BREAK otherwise.
+		for (element of $('.sort-order').parent().parent().find('.carousel')) {
+			element.swiper.slidesPerViewDynamic = function(){
+				var totalWidth = $(this.wrapperEl).width();
+				var elementWidth = $($(this.wrapperEl).find('.swiper-slide')[0]).width();
+				return Math.floor(totalWidth / elementWidth);
+			};
+		}
+		$('.sort-order').find('.fa-refresh').removeClass('fa-spin');
+	}).fail(function(xhr, status, error) {
+		$('.sort-order').find('.fa-refresh').removeClass('fa-spin');
+	});
 }
 
 function addLog(message){
@@ -1174,7 +1210,7 @@ function parsePlayerError(error){
 	var message = null;
 	var critical = false;
 	var retryFullProcess = false;
-	var isManga = $('#catalogue_type').length>0
+	var isManga = $('#catalogue_type').length>0 && $('#catalogue_type').val()=='manga';
 	switch (true) {
 		case /EINTERNAL \(\-1\)/.test(error):
 		case /EARGS \(\-2\)/.test(error):

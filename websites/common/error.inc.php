@@ -17,11 +17,11 @@ require_once(dirname(__FILE__)."/header.inc.php");
 <?php
 if (MASCOT_ENABLED) {
 ?>
-						<img class="mascot-error" src="<?php echo STATIC_URL; ?>/images/mascot/error.png" alt="">
+						<img class="error-image" src="<?php echo STATIC_URL; ?>/images/mascot/error.png" alt="">
 <?php
 } else {
 ?>
-						<img src="https://i.imgur.com/RYbcQlZ.gif" alt="" style="max-width: 100%;">
+						<img class="error-image" src="https://i.imgur.com/RYbcQlZ.gif" alt="">
 <?php
 }
 ?>

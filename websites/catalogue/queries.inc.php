@@ -397,6 +397,21 @@ function query_total_number_of_series($round_interval) {
 	return query($final_query);
 }
 
+function query_random_series() {
+	$final_query = "SELECT *
+			FROM series s
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND ".get_internal_hentai_condition()."
+				AND EXISTS(SELECT id
+					FROM version v
+					WHERE v.series_id=s.id
+						AND v.is_hidden=0
+					)
+			ORDER BY RAND()
+			LIMIT 1";
+	return query($final_query);
+}
+
 function query_manga_division_data_from_file_with_old_piwigo_id($old_piwigo_id) {
 	$old_piwigo_id = intval($old_piwigo_id);
 	$final_query = "SELECT s.subtype,

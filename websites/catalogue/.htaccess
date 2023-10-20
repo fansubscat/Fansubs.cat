@@ -15,6 +15,7 @@ RewriteCond %{REQUEST_URI} !counter\.php
 RewriteCond %{REQUEST_URI} !reader\.php
 RewriteCond %{REQUEST_URI} !strip_reader\.php
 RewriteCond %{REQUEST_URI} !results\.php
+RewriteCond %{REQUEST_URI} !random_results\.php
 RewriteRule \.php$ - [F]
 
 #OLD REDIRECTS: v2->v5 migration for old 2020 press release images
@@ -64,6 +65,7 @@ RewriteRule ^serialitzats/([^/]+)/?$ migration.php?migration_type=v4_slug&id=$1&
 RewriteRule ^cerca/?$ search.php [L]
 RewriteRule ^cerca/([^/]+)/?$ search.php?query=$1 [B,QSA,L]
 RewriteRule ^embed/([^/]+)/?$ embed.php?file_id=$1 [L]
+RewriteRule ^atzar/?$ random.php [L]
 RewriteRule ^/?$ index.php [L]
 
 #If it is anything else not treated until now, let's assume it is a series
