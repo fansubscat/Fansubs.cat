@@ -2055,6 +2055,10 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	padding-left: 1.2rem;
 }
 
+.refresh-random-button {
+	--fa-animation-duration: 1s;
+}
+
 .add-to-my-list {
 	width: 100%;
 	background: rgba(var(--neutral-color), 0.2);
