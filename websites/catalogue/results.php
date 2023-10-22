@@ -368,7 +368,7 @@ foreach($sections as $section){
 ?>
 							</div>
 <?php
-				} else if ($special_day!==NULL) {
+				} else if ($special_day!==NULL && !empty($force_recommended_ids_list)) {
 ?>
 							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 								<div class="recommendation special-day-header">
