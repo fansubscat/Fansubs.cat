@@ -563,7 +563,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<label for="form-view-options">Visualització al web públic</label>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
-										<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols</label>
+										<label class="form-check-label" for="form-show_episode_numbers">Mostra la numeració dels capítols</label>
 									</div>
 								</div>
 							</div>

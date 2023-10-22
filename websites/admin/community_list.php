@@ -3,6 +3,21 @@ $header_title="Llista de comunitats - Altres";
 $page="other";
 include("header.inc.php");
 
+function get_category_name_by_id($id) {
+	switch ($id) {
+		case 'featured':
+			return "Destacats";
+		case 'creators':
+			return "Creadors";
+		case 'music':
+			return "Música";
+		case 'podcasts':
+			return "Pòdcasts";
+		default:
+			return "Desconeguda";
+	}
+}
+
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
 		log_action("delete-community", "S’ha suprimit la comunitat «".query_single("SELECT name FROM community WHERE id=".escape($_GET['delete_id']))."» (id. de comunitat: ".$_GET['delete_id'].")");
@@ -47,7 +62,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<tr>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
-								<td class="align-middle text-center"><?php echo $row['category']=='featured' ? 'Destacats' : ($row['category']=='creators' ? 'Creadors': 'Desconeguda'); ?></td>
+								<td class="align-middle text-center"><?php echo get_category_name_by_id($row['category']); ?></td>
 								<td class="align-middle text-center text-nowrap"><a href="community_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="community_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la comunitat «".$row['name']."»? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php

@@ -88,6 +88,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value="">- Selecciona una categoria -</option>
 							<option value="featured"<?php echo $row['category']=='featured' ? " selected" : ""; ?>>Destacats</option>
 							<option value="creators"<?php echo $row['category']=='creators' ? " selected" : ""; ?>>Creadors</option>
+							<option value="music"<?php echo $row['category']=='music' ? " selected" : ""; ?>>Música</option>
+							<option value="podcasts"<?php echo $row['category']=='podcasts' ? " selected" : ""; ?>>Pòdcasts</option>
 						</select>
 					</div>
 					<div class="row">

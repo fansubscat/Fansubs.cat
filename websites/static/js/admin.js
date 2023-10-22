@@ -1301,11 +1301,7 @@ function generateStorageFolder() {
 		string+=fansubs[i].replaceAll('/','-').replaceAll(' +','');
 	}
 	string+='/';
-	if ($('#series_subtype').val()=='movie') {
-		string+='Films';
-	} else {
-		string+=$('#form-series').text().replaceAll('/','-').replaceAll(':',' -').replaceAll('?','').replaceAll('*','').replaceAll('♡',' ').replaceAll(';',' ').replaceAll('★',' ').replaceAll('"','');
-	}
+	string+=$('#form-series').text().replaceAll('/','-').replaceAll(':',' -').replaceAll('?','').replaceAll('*','').replaceAll('♡',' ').replaceAll(';',' ').replaceAll('★',' ').replaceAll('"','');
 	string = string.replaceAll('/.','/');
 	if (string.startsWith('.')) {
 		string = string.substring(1, string.length);

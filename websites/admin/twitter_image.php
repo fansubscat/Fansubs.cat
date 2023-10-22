@@ -6,8 +6,8 @@ ob_start();
 
 define('IMAGE_WIDTH', 1200);
 define('IMAGE_HEIGHT', 675);
-define('COVER_WIDTH', 85);
-define('COVER_HEIGHT', 120);
+define('COVER_WIDTH', 82);
+define('COVER_HEIGHT', 116);
 define('LOGO_WIDTH', 178);
 define('LOGO_HEIGHT', 50);
 define('FONT_REGULAR', STATIC_DIRECTORY.'/fonts/lexend_deca_regular.ttf');
@@ -361,11 +361,12 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		//Load cover and scale it as needed
 		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/".$series[$i]['id'].".jpg");
 		$cover = scale_smallest_side($cover, COVER_WIDTH, COVER_HEIGHT);
+		$cover = round_corners($cover, 4);
 		imagecopy($image, $cover, $i>4 ? 624+72 : 24+72, $current_height, 0, 0, COVER_WIDTH, COVER_HEIGHT);
 		$current_height = $current_height+COVER_HEIGHT;
 		if (($i>=0 && $i<4) || ($i>=5 && $i<9)) {
-			imageline($image, $i>4 ? 624 : 24, $current_height, $i>4 ? IMAGE_WIDTH-24 : 600-24, $current_height, $darker_gray);
-			$current_height = $current_height+1;
+			//imageline($image, $i>4 ? 624 : 24, $current_height, $i>4 ? IMAGE_WIDTH-24 : 600-24, $current_height, $darker_gray);
+			$current_height = $current_height+5;
 		} else if ($i==4){
 			$current_height = 71;
 		}

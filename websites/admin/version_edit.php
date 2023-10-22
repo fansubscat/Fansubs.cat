@@ -642,7 +642,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$series = mysqli_fetch_assoc($results) or crash('Series not found');
 		mysqli_free_result($results);
 
-		$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".$row['series_id']." ORDER BY d.number ASC");
+		$resultd = query("SELECT d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d WHERE d.series_id=".$row['series_id']." ORDER BY d.number ASC");
 		$divisions = array();
 		while ($rowd = mysqli_fetch_assoc($resultd)) {
 			array_push($divisions, $rowd);
@@ -986,6 +986,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 <?php
 	}
+	if ($type=='manga') {
 ?>
 						<div class="mb-3">
 							<label for="form-division-list">Portades <?php echo $division_prep; ?> <small class="text-muted">(JPEG, ≥300x400, ≤150 KiB)</small></label>
@@ -994,7 +995,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		foreach ($divisions as $division) {
 ?>
 								<div class="col-sm-2 text-center pe-1 ps-1">
-										<label><?php echo $division_name." ".$division['number'].(!empty($division['name']) ? " (".$division['name'].")" : ""); ?>:</label>
+										<label><?php echo $division_name." ".$division['number'].(!empty($division['name']) ? " (".$division['name'].")" : ""); ?>:</label><br>
 <?php
 		$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg');
 ?>
@@ -1007,6 +1008,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							</div>
 						</div>
+<?php
+}
+?>
 						<div class="mb-3">
 							<label for="form-episode-list">Capítols, variants i <?php echo $type=='manga' ? 'fitxers' : 'enllaços'; ?></label>
 							<div class="container" id="form-episode-list">
