@@ -2430,6 +2430,7 @@ input:checked + .viewed-slider:before {
 	font-size: 1.7rem;
 	flex-grow: 1;
 	flex-shrink: 1;
+	padding-right: 1rem;
 }
 
 .reader-settings-data-header-title {

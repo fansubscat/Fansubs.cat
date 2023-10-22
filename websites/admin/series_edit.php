@@ -552,8 +552,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="mb-3">
 									<label for="form-reader_type" class="mandatory">Tipus de lector</label>
 									<select class="form-select" name="reader_type" id="form-reader_type" required>
-										<option value="paged"<?php echo $row['reader_type']!='strip' ? " selected" : ""; ?>>Paginat (lectura normal pàgina a pàgina)</option>
-										<option value="strip"<?php echo $row['reader_type']=='strip' ? " selected" : ""; ?>>Webtoon (lectura per desplaçament, tira llarga)</option>
+										<option value="rtl"<?php echo $row['reader_type']=='rtl' ? " selected" : ""; ?>>Paginat (dreta a esquerra)</option>
+										<option value="ltr"<?php echo $row['reader_type']=='ltr' ? " selected" : ""; ?>>Paginat (esquerra a dreta)</option>
+										<option value="strip"<?php echo $row['reader_type']=='strip' ? " selected" : ""; ?>>Tira vertical</option>
 									</select>
 								</div>
 							</div>

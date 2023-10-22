@@ -152,6 +152,22 @@ function get_player_data(){
 			}
 		}
 
+		$user_reader_preference = 0;
+		if (!empty($user)) {
+			$user_reader_preference = $user['manga_reader_type'];
+		} else if (!empty($_COOKIE['manga_reader_type'])) {
+			$user_reader_preference = $_COOKIE['manga_reader_type'];
+		}
+		$real_reader_used = $row['reader_type'];
+		if ($user_reader_preference==3) {
+			$real_reader_used = 'strip';
+		} else if ($row['reader_type']!='strip' && $user_reader_preference==1) {
+			$real_reader_used = 'rtl';
+		} else if ($row['reader_type']!='strip' && $user_reader_preference==2) {
+			$real_reader_used = 'ltr';
+		}
+		
+
 		$data = array(
 			'file_id' => intval($file_id),
 			'version_id' => intval($row['version_id']),
@@ -166,7 +182,8 @@ function get_player_data(){
 			'data_sources' => get_data_sources($links),
 			'pages' => array_values($pages),
 			'music' => !empty($music) ? $music[0] : NULL,
-			'reader_type' => $row['reader_type']=='strip' ? 'strip' : (((!empty($user) && $user['manga_reader_type']==1) || (empty($user) && $_COOKIE['manga_reader_type']==1)) ? 'ltr' : (((!empty($user) && $user['manga_reader_type']==2) || (empty($user) && $_COOKIE['manga_reader_type']==2)) ? 'strip' : 'rtl')),
+			'reader_type' => $real_reader_used,
+			'user_reader_preference' => $user_reader_preference,
 			'default_reader_type' => $row['reader_type'],
 			'method' => get_display_method($links),
 			'initial_position' => intval($current_position),

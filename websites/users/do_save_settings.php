@@ -36,7 +36,7 @@ function save_settings(){
 		$hide_hentai_access = $user['hide_hentai_access'];
 		$previous_chapters_read_behavior = $user['previous_chapters_read_behavior'];
 		$episode_sort_order = $user['episode_sort_order'];
-		$manga_reader_type = ($_POST['manga_reader_type']==1 ? 1 : ($_POST['manga_reader_type']==2 ? 2 : 0));
+		$manga_reader_type = ($_POST['manga_reader_type']>=0 && $_POST['manga_reader_type']<=3 ? $_POST['manga_reader_type'] : 0);
 		$blacklisted_fansub_ids = $user['blacklisted_fansub_ids'];
 	} else {
 		$show_cancelled_projects = ($_POST['show_cancelled_projects']==1 ? 1 : 0);
@@ -44,7 +44,7 @@ function save_settings(){
 		$hide_hentai_access = ($_POST['hide_hentai_access']==1 ? 1 : 0);
 		$previous_chapters_read_behavior = intval($_POST['previous_chapters_read_behavior']);
 		$episode_sort_order = ($_POST['episode_sort_order']==1 ? 1 : 0);
-		$manga_reader_type = ($_POST['manga_reader_type']>=0 && $_POST['manga_reader_type']<=2 ? $_POST['manga_reader_type'] : 0);
+		$manga_reader_type = ($_POST['manga_reader_type']>=0 && $_POST['manga_reader_type']<=3 ? $_POST['manga_reader_type'] : 0);
 		$blacklisted_fansub_ids = !empty($_POST['blacklisted_fansub_ids']) ? explode(',',$_POST['blacklisted_fansub_ids']) : array();
 	}
 

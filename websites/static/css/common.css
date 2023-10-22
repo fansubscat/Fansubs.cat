@@ -1572,7 +1572,7 @@ input:checked + .slider:before {
 	right: 0;
 	bottom: 0;
 	background-color: rgba(var(--negative-color),0.5);
-	z-index: 9001; /* OVER 9000! */
+	z-index: 10000;
 	display: flex;
 	align-items: center;
 	justify-content: center;

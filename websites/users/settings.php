@@ -138,7 +138,7 @@ if (!empty($user)) {
 							<select id="mark-previous-as-seen" class="settings-combo" onchange="saveSettings();">
 								<option value="0"<?php echo $mark_as_seen==0 ? ' selected' : ''; ?>>Demana-ho</option>
 								<option value="1"<?php echo $mark_as_seen==1 ? ' selected' : ''; ?>>Marca’ls sempre</option>
-								<option value="2"<?php echo $mark_as_seen==2 ? ' selected' : ''; ?>>No facis res</option>
+								<option value="2"<?php echo $mark_as_seen==2 ? ' selected' : ''; ?>>No els marquis mai</option>
 							</select>
 						</div>
 					</div>
@@ -149,12 +149,13 @@ if (!empty($user)) {
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
 								<div class="settings-section-data-header-title">Lector de manga</div>
-								<div class="settings-section-data-header-subtitle">Tria quin lector de manga vols utilitzar: sentit oriental (de dreta a esquerra), sentit occidental (d’esquerra a dreta) o tira vertical. Alguns mangues poden ignorar aquesta preferència.</div>
+								<div class="settings-section-data-header-subtitle">Tria quin lector de manga vols utilitzar: el recomanat per a cada manga, sempre en sentit oriental (de dreta a esquerra), sempre en sentit occidental (d’esquerra a dreta) o sempre en tira vertical.</div>
 							</div>
 							<select id="reader-type" class="settings-combo" onchange="saveSettings();">
-								<option value="rtl"<?php echo $reader_type==0 ? ' selected' : ''; ?>>Sentit oriental</option>
-								<option value="ltr"<?php echo $reader_type==1 ? ' selected' : ''; ?>>Sentit occidental</option>
-								<option value="strip"<?php echo $reader_type==2 ? ' selected' : ''; ?>>Tira vertical</option>
+								<option value="0"<?php echo $reader_type==0 ? ' selected' : ''; ?>>Opció recomanada</option>
+								<option value="1"<?php echo $reader_type==1 ? ' selected' : ''; ?>>Sentit oriental</option>
+								<option value="2"<?php echo $reader_type==2 ? ' selected' : ''; ?>>Sentit occidental</option>
+								<option value="3"<?php echo $reader_type==3 ? ' selected' : ''; ?>>Tira vertical</option>
 							</select>
 						</div>
 					</div>

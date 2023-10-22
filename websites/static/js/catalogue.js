@@ -618,39 +618,53 @@ function handleMangaReaderFullscreen(e) {
 }
 
 function applyMangaReaderType(type) {
-	if (type!=currentSourceData.reader_type) {
+	currentSourceData.user_reader_preference = type;
+	//Save to server
+	if ($('body.user-logged-in').length==0) {
+		//Set cookie preference
+		Cookies.set('manga_reader_type', type, cookieOptions, {secure: true});
+	} else {
+		//Update on server
+		var values = {
+			'manga_reader_type': type,
+			'only_manga_reader_type' : 1
+		};
+		$.post({
+			url: USERS_URL+"/do_save_settings.php",
+			data: values,
+			xhrFields: {
+				withCredentials: true
+			},
+		});
+	}
+
+	//Process possible changes
+	var newReaderType;
+	if (type==0) {
+		newReaderType=currentSourceData.default_reader_type;
+	} else if (type==1) {
+		newReaderType='rtl';
+	} else if (type==2) {
+		newReaderType='ltr';
+	} else if (type==3) {
+		newReaderType='strip';
+	}
+
+	if (newReaderType!=currentSourceData.reader_type) {
 		sendCurrentFileTracking(); //sync with server
 		//Update this like if they came from the server
 		currentSourceData.initial_position = getDisplayerCurrentPosition();
 		currentSourceData.initial_progress = currentSourceData.initial_progress+getDisplayerCurrentProgress();
-		currentSourceData.reader_type=type;
+		currentSourceData.reader_type=newReaderType;
 		stopListeningForUserActivityInMangaReader();
 
-		if ($('body.user-logged-in').length==0) {
-			//Set cookie preference
-			Cookies.set('manga_reader_type', (type=='strip' ? 2 : (type=='ltr' ? 1 : 0)), cookieOptions, {secure: true});
-		} else {
-			//Update on server
-			var values = {
-				'manga_reader_type': (type=='strip' ? 2 : (type=='ltr' ? 1 : 0)),
-				'only_manga_reader_type' : 1
-			};
-			$.post({
-				url: USERS_URL+"/do_save_settings.php",
-				data: values,
-				xhrFields: {
-					withCredentials: true
-				},
-			});
-		}
-
-		initializeReader(type);
+		initializeReader(newReaderType);
 	}
 }
 
 function showMangaReaderConfig() {
 	var disabled = (currentSourceData.default_reader_type=='strip');
-	showCustomDialog('Configuració', '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">Lector de manga</div><div class="reader-settings-data-header-subtitle">'+(disabled ? 'Aquest manga no permet triar cap lector diferent.' : 'Tria quin lector de manga vols utilitzar: sentit oriental (de dreta a esquerra), sentit occidental (d’esquerra a dreta) o tira vertical. Altres mangues poden ignorar aquesta preferència.')+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="rtl"'+(!disabled && currentSourceData.reader_type=='rtl' ? ' selected' : '')+'>Sentit oriental</option><option value="ltr"'+(!disabled && currentSourceData.reader_type=='ltr' ? ' selected' : '')+'>Sentit occidental</option><option value="strip"'+(disabled || currentSourceData.reader_type=='strip' ? ' selected' : '')+'>Tira vertical</option></select></div><br><hr><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de Fansubs.cat per al <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a>.', null, true, true, [
+	showCustomDialog('Opcions de lectura', '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">Lector de manga</div><div class="reader-settings-data-header-subtitle">'+(disabled ? 'Aquest manga no permet triar cap lector diferent: es mostra sempre com a tira vertical.' : 'Tria quin lector de manga vols utilitzar: el recomanat per a cada manga, sempre en sentit oriental (de dreta a esquerra), sempre en sentit occidental (d’esquerra a dreta) o sempre en tira vertical.')+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="0"'+(currentSourceData.user_reader_preference==0 ? ' selected' : '')+'>Opció recomanada</option><option value="1"'+(currentSourceData.user_reader_preference==1 ? ' selected' : '')+'>Sentit oriental</option><option value="2"'+(currentSourceData.user_reader_preference==2 ? ' selected' : '')+'>Sentit occidental</option><option value="3"'+(disabled || currentSourceData.user_reader_preference==3 ? ' selected' : '')+'>Tira vertical</option></select></div><br><hr><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de Fansubs.cat per al <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a>.', null, true, true, [
 		{
 			text: 'D’acord',
 			class: 'normal-button',
