@@ -4,6 +4,9 @@
 require_once('db.inc.php');
 require_once('functions.inc.php');
 
+//TODO Comment this out when entering production fansubs.online
+define('DRY_RUN', TRUE);
+
 $res_fansubs = query("SELECT id,slug FROM fansub ORDER BY id");
 
 while ($row_fansubs=mysqli_fetch_assoc($res_fansubs)){
@@ -19,6 +22,9 @@ while ($row_fansubs=mysqli_fetch_assoc($res_fansubs)){
 		foreach ($files as $file){
 			if (!in_array($file, $values)){
 				echo "Removing ".STATIC_DIRECTORY.'/images/news/'.$row_fansubs['slug']."/$file\n";
+				if (defined('DRY_RUN')) {
+					continue;
+				}
 				unlink(STATIC_DIRECTORY.'/images/news/'.$row_fansubs['slug']."/$file");
 			}
 		}
