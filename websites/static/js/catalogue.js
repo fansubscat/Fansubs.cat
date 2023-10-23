@@ -1065,15 +1065,14 @@ function initializePlayer(){
 
 			//Install double click on sides to FF/RW on touch devices
 			if (player.el_.classList.contains("vjs-touch-enabled")) {
-				document.querySelector(".vjs-text-track-display").style.pointerEvents = "auto";
-				document.querySelector(".vjs-text-track-display").addEventListener("click", function (e) {
+				document.querySelector("#player").addEventListener("touchstart", function (e) {
 					if (lastDoubleClickStart == 0) {
 						lastDoubleClickStart = new Date().getTime();
 					} else {
 						if (((new Date().getTime()) - lastDoubleClickStart) < 500) {
 							lastDoubleClickStart = 0;
 							const playerWidth = document.querySelector("#player").getBoundingClientRect().width;
-							if (0.66 * playerWidth < e.offsetX) {
+							if (0.66 * playerWidth < e.touches[0].pageX) {
 								if ((player.currentTime()+10)<player.duration()) {
 									player.currentTime(player.currentTime() + 10);
 									clearTimeout($('.player_extra_backward').stop().data('timer'));
@@ -1087,7 +1086,7 @@ function initializePlayer(){
 										$('.player_extra_forward_time').html('0');
 									}, 1000));
 								}
-							} else if (e.offsetX < 0.33 * playerWidth) {
+							} else if (e.touches[0].pageX < 0.33 * playerWidth) {
 								if ((player.currentTime()-10)>=0) {
 									player.currentTime(player.currentTime() - 10);
 									clearTimeout($('.player_extra_forward').stop().data('timer'));
