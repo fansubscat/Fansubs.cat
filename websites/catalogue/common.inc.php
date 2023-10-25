@@ -541,7 +541,7 @@ function get_relative_date_last_update($time) {
 			return "fa $days dies";
 		}
 	}
-	else if (time()-$time<3600*24*30*6) {
+	else if (time()-$time<3600*24*30*12) {
 		$months = intval((time()-$time)/(3600*24*30));
 		if ($months==1) {
 			return "fa 1 mes";
@@ -550,7 +550,12 @@ function get_relative_date_last_update($time) {
 		}
 	}
 	else {
-		return "fa molt de temps";
+		$years = intval((time()-$time)/(3600*24*365));
+		if ($years==1) {
+			return "fa 1 any";
+		} else {
+			return "fa $years anys";
+		}
 	}
 }
 

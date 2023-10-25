@@ -834,7 +834,7 @@ function query_home_last_updated($user, $max_items) {
 					f.extra_name,
 					v.series_id,
 					v.status,
-					IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
+					IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL AND s.type<>'manga',
 						d.name,
 						s.name
 					) series_name,
@@ -854,7 +854,6 @@ function query_home_last_updated($user, $max_items) {
 				WHERE s.type='".CATALOGUE_ITEM_TYPE."'
 					AND f.is_lost=0
 					AND ".get_internal_hentai_condition()."
-					AND f.created>='".date("Y-m-d",strtotime("-6 months"))."'
 					AND ".get_internal_blacklisted_fansubs_condition($user)."
 					AND ".get_internal_cancelled_projects_condition($user)."
 					AND ".get_internal_lost_projects_condition($user)."

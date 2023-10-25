@@ -377,7 +377,7 @@ a img {
 	font-size: 3.6rem;
 	text-align: left;
 	transition: color var(--fast-animation-duration);
-	margin-right: 0.9rem;
+	margin-right: 2.2rem;
 }
 
 .separator {
@@ -1924,6 +1924,7 @@ input:checked + .slider:before {
 
 	.social-link {
 		font-size: 2.6rem;
+		margin-right: 1rem;
 	}
 
 	.logo-small svg {
