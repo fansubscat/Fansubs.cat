@@ -15,8 +15,8 @@ RewriteRule \.php$ - [F]
 # The following no longer exist:
 RewriteRule ^arxiu/?$ https://noticies.fansubs.online [R=301,L]
 RewriteRule ^estadistiques/$ https://noticies.fansubs.online [R=301,L]
-RewriteRule ^fansub/(.+)/pagina/(.+)/?$ https://noticies.fansubs.online [R=301,L]
-RewriteRule ^fansub/(.+)/?$ https://noticies.fansubs.online [R=301,L]
+RewriteRule ^fansub/(.+)/pagina/(.+)/?$ https://noticies.fansubs.online/cerca?fansub=$1 [R=301,L]
+RewriteRule ^fansub/(.+)/?$ https://noticies.fansubs.online/cerca?fansub=$1 [R=301,L]
 # Old advent calendar for 2020 (pre-v4):
 RewriteRule ^nadal/?$ https://advent.fansubs.online/2020 [R=301,L]
 # These still exist, but on a different location or domain

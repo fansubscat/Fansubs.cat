@@ -7,12 +7,30 @@ function get_category_name_by_id($id) {
 	switch ($id) {
 		case 'featured':
 			return "Destacats";
+		case 'blogs':
+			return "Blogs";
+		case 'catalogs':
+			return "Catàlegs";
+		case 'art':
+			return "Còmic i arts visuals";
+		case 'forums':
+			return "Comunitats i fòrums";
 		case 'creators':
 			return "Creadors";
+		case 'culture':
+			return "Cultura asiàtica";
+		case 'dubbing':
+			return "Doblatge";
 		case 'music':
-			return "Música";
+			return "Música i versions";
+		case 'nostalgia':
+			return "Nostàlgia";
 		case 'podcasts':
 			return "Pòdcasts";
+		case 'preservation':
+			return "Preservació";
+		case 'others':
+			return "Altres";
 		default:
 			return "Desconeguda";
 	}
@@ -50,7 +68,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT c.* FROM community c ORDER BY c.category='featured' DESC, c.category ASC, c.name ASC");
+	$result = query("SELECT c.* FROM community c ORDER BY c.category='featured' DESC, c.name ASC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>

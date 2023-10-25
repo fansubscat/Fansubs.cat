@@ -102,6 +102,15 @@ small {
 	padding-right: 0.25em;
 }
 
+.fa-custom-hentai:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'H';
+	background-color: #dc3545 !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
 .fa-custom-resources:before {
 	font-family: Arial;
 	font-weight: bold;

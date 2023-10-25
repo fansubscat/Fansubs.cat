@@ -87,9 +87,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<select class="form-select" name="category" id="form-category" required>
 							<option value="">- Selecciona una categoria -</option>
 							<option value="featured"<?php echo $row['category']=='featured' ? " selected" : ""; ?>>Destacats</option>
+							<option value="blogs"<?php echo $row['category']=='blogs' ? " selected" : ""; ?>>Blogs</option>
+							<option value="catalogs"<?php echo $row['category']=='catalogs' ? " selected" : ""; ?>>Catàlegs</option>
+							<option value="art"<?php echo $row['category']=='art' ? " selected" : ""; ?>>Còmic i arts visuals</option>
+							<option value="forums"<?php echo $row['category']=='forums' ? " selected" : ""; ?>>Comunitats i fòrums</option>
 							<option value="creators"<?php echo $row['category']=='creators' ? " selected" : ""; ?>>Creadors</option>
+							<option value="culture"<?php echo $row['category']=='culture' ? " selected" : ""; ?>>Cultura asiàtica</option>
+							<option value="dubbing"<?php echo $row['category']=='dubbing' ? " selected" : ""; ?>>Doblatge</option>
 							<option value="music"<?php echo $row['category']=='music' ? " selected" : ""; ?>>Música</option>
+							<option value="nostalgia"<?php echo $row['category']=='nostalgia' ? " selected" : ""; ?>>Nostàlgia</option>
 							<option value="podcasts"<?php echo $row['category']=='podcasts' ? " selected" : ""; ?>>Pòdcasts</option>
+							<option value="preservation"<?php echo $row['category']=='preservation' ? " selected" : ""; ?>>Preservació</option>
+							<option value="others"<?php echo $row['category']=='others' ? " selected" : ""; ?>>Altres</option>
 						</select>
 					</div>
 					<div class="row">
