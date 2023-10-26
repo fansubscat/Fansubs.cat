@@ -1,14 +1,14 @@
 <?php
-define('PAGE_TITLE', 'Comunitat');
-define('PAGE_PATH', '/comunitat');
+define('PAGE_TITLE', 'Enllaços');
+define('PAGE_PATH', '/enllacos');
 define('PAGE_STYLE_TYPE', 'text');
 require_once("../common.fansubs.cat/header.inc.php");
 require_once("common.inc.php");
 require_once("queries.inc.php");
 ?>
 					<div class="text-page">
-						<h2 class="section-title"><i class="fa fa-fw fa-people-group"></i> Comunitat</h2>
-						<div class="section-content">A banda dels diferents fansubs en català, la comunitat otaku en la nostra llengua és molt extensa. Hem cregut convenient fer un recull dels principals mitjans i creadors que fan contingut en català. No tenen cap mena de relació amb Fansubs.cat, però volem fer-ne promoció i et convidem a seguir-los i donar-los suport!</div>
+						<h2 class="section-title"><i class="fa fa-fw fa-link"></i> Enllaços</h2>
+						<div class="section-content">Hem cregut convenient fer un recull d’enllaços als principals mitjans i creadors que fan contingut en català relacionat amb el manga i l’anime. Fansubs.cat no hi té cap mena de relació, però creiem convenient fer-ne promoció i et convidem a seguir-los i donar-los suport!</div>
 <?php
 	$categories = array(
 		'featured' => '<i class="fa fa-fw fa-star"></i> Destacats',

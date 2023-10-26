@@ -1004,18 +1004,26 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	cursor: pointer;
 }
 
+.recommendation.single-feature .gradient {
+	height: 100%;
+	position: absolute;
+	width: 100%;
+	background: linear-gradient(90deg, transparent, rgba(var(--negative-color), 0.3) 10%, rgba(var(--negative-color), 0.5) 20%,rgba(var(--negative-color), 0.5) 80%, rgba(var(--negative-color), 0.3) 90%, transparent);
+}
+
 .recommendation.single-feature img.background {
 	filter: none;
 	opacity: 1;
 	transition: var(--fast-animation-duration) ease-in-out;
 }
 
-.recommendation.single-feature .infoholder {
-	background: linear-gradient(90deg, transparent, rgba(var(--positive-color), 0.75) 10% 90%, transparent);
-}
-
 .recommendation.single-feature .coverholder {
 	height: 100%;
+}
+
+.recommendation.single-feature .dataholder {
+	color: rgb(var(--positive-color));
+	text-shadow: 0 0 0.5rem rgba(var(--negative-color),1);
 }
 
 .recommendation.single-feature .synopsis {
@@ -1294,7 +1302,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 
 .carousel .swiper-button-prev {
 	background-image: linear-gradient(90deg,rgb(var(--background-color-standard)), transparent);
-	transform: translateX(-1.1rem) translateY(-10%);
+	transform: translateX(-1.1rem) translateY(-8.5%);
 	width: 4rem;
 	height: 110%;
 	top: 0;
@@ -1304,7 +1312,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 
 .carousel .swiper-button-next {
 	background-image: linear-gradient(-90deg,rgb(var(--background-color-standard)), transparent);
-	transform: translateX(1.1rem) translateY(-10%);
+	transform: translateX(1.1rem) translateY(-8.5%);
 	width: 4rem;
 	height: 110%;
 	top: 0;

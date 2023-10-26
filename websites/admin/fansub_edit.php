@@ -184,7 +184,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 						<input class="form-control" type="url" name="discord_url" id="form-discord_url" maxlength="200" value="<?php echo htmlspecialchars($row['discord_url']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-mastodon_url">URL del perfil de Mastodon</label>
+						<label for="form-mastodon_url">URL del perfil a Mastodon</label>
 						<input class="form-control" type="url" name="mastodon_url" id="form-mastodon_url" maxlength="200" value="<?php echo htmlspecialchars($row['mastodon_url']); ?>">
 					</div>
 					<div class="mb-3">
@@ -192,11 +192,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 						<input class="form-control" name="mastodon_handle" id="form-mastodon_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['mastodon_handle']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-twitter_url">URL del perfil de Twitter</label>
+						<label for="form-twitter_url">URL del perfil a X</label>
 						<input class="form-control" type="url" name="twitter_url" id="form-twitter_url" maxlength="200" value="<?php echo htmlspecialchars($row['twitter_url']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-twitter_handle">Nom a Twitter<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
+						<label for="form-twitter_handle">Nom a X<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
 						<input class="form-control" name="twitter_handle" id="form-twitter_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['twitter_handle']); ?>">
 					</div>
 					<div class="mb-3">

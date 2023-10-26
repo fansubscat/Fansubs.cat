@@ -654,6 +654,7 @@ function print_featured_item_single($series, $specific_version=TRUE, $use_versio
 	$number_of_versions = $series['total_versions'];
 	echo "\t\t\t\t\t\t\t".'<a class="recommendation single-feature" data-series-id="'.$series['id'].'" href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.$series['slug'].(($use_version_param && $number_of_versions>1) ? "?v=".$versions[0]['id'] : "").'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/featured/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<div class="gradient"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="cover" src="'.STATIC_URL.'/images/covers/'.$series['id'].'.jpg" alt="'.htmlspecialchars($series['name']).'">'."\n";

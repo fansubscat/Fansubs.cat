@@ -32,7 +32,7 @@ if (is_advent_days()) {
 ?>
 					<div class="tertiary-buttons">
 						<a class="tertiary-button" href="/qui-som">Qui som?</a>
-						<a class="tertiary-button" href="/comunitat">Comunitat</a>
+						<a class="tertiary-button" href="/enllacos">Enllaços</a>
 					</div>
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");
