@@ -355,9 +355,9 @@ function setSeekCurrentPage(page, total, isFromInput) {
 	$('.manga-slider-bar').val(page);
 	$('.manga-fake-slider-bar').width((page-1)/(total-1)*100+'%');
 	if (currentSourceData.reader_type=='strip') {
-		$('.vjs-current-time').text(getReaderCurrentPage()+' / '+currentSourceData.length);
+		$('.vjs-current-time').text(getReaderCurrentPage());
 	} else {
-		$('.vjs-current-time').text(page+' / '+currentSourceData.length);
+		$('.vjs-current-time').text(page);
 	}
 	pagesRead[getReaderCurrentPage()-1]=true;
 }
@@ -367,7 +367,7 @@ function setSeekCurrentPageOnScroll(element) {
 	var value = element.scrollTop/(element.scrollHeight-element.offsetHeight)*100; 
 	$('.manga-slider-bar').val(value*1000);
 	$('.manga-fake-slider-bar').width(value+'%');
-	$('.vjs-current-time').text(getReaderCurrentPage()+' / '+currentSourceData.length);
+	$('.vjs-current-time').text(getReaderCurrentPage());
 	pagesRead[getReaderCurrentPage()-1]=true;
 }
 
@@ -811,7 +811,6 @@ function buildMangaReaderBar(current, total, type) {
 	} else {
 		c += '			<div class="vjs-progress-control vjs-control"><div tabindex="0" class="vjs-progress-holder vjs-slider vjs-slider-horizontal" role="slider"><div class="vjs-play-progress vjs-slider-bar manga-fake-slider-bar" aria-hidden="true" style="width: '+(parseFloat((current-1)/(total-1)*100))+'%;"></div><input type="range" class="vjs-play-progress vjs-slider-bar manga-slider-bar" aria-hidden="true" min="1" max="'+total+'" value="'+current+'" oninput="setSeekCurrentPage(this.value, '+total+', true);setReaderCurrentPage(this.value);"></input></div></div>';
 	}
-	c += '			<div class="vjs-current-time vjs-time-control vjs-control">'+current+' / '+total+'</div>';
 	if (!isEmbedPage()) {
 		if (type=='rtl') {
 			if (hasNextFile()) {
@@ -837,6 +836,9 @@ function buildMangaReaderBar(current, total, type) {
 			}
 		}
 	}
+	c += '			<div class="vjs-current-time vjs-time-control vjs-control">'+current+'</div>';
+	c += '			<div class="vjs-time-control vjs-time-divider"><div><span>/</span></div></div>';
+	c += '			<div class="vjs-duration vjs-time-control vjs-control">'+total+'</div>';
 	if (mangaHasMusic()) {
 		c += '		<button class="vjs-mute-control vjs-control vjs-button vjs-vol-0" type="button" title="Commuta la música de fons" aria-disabled="false" onclick="toggleMangaMusic();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Commuta la música de fons</span></button><audio id="manga-music" loop><source src="'+currentSourceData.music+'" type="audio/mpeg"></audio>';
 	}
@@ -1040,6 +1042,7 @@ function initializePlayer(){
 		});
 
 		player.on('canplay', event => {
+			console.log('Canplay');
 			//Recover from errors if needed
 			if (lastErrorTimestamp) {
 				player.currentTime(lastErrorTimestamp);
@@ -1050,6 +1053,7 @@ function initializePlayer(){
 			}
 		});
 		player.on('ready', function(){
+			console.log('Ready');
 			if (player.techName_=='Html5') {
 				setTimeout(function(){
 					if (player) {
@@ -1111,8 +1115,6 @@ function initializePlayer(){
 					}
 				});
 			}
-		});
-		player.on('loadstart', function(){
 			$('#overlay-content > .player_extra_upper').addClass('hidden');
 			//Install the top, movement and ended bar
 			if ($('.video-js .player_extra_upper').length==0) {
@@ -1135,6 +1137,9 @@ function initializePlayer(){
 				$('.player_extra_ended_title')[0].innerHTML=new Option('').innerHTML;
 				$('.player_extra_ended_thumbnail img')[0].src='';
 			}
+		});
+		player.on('loadstart', function(){
+			console.log('Loadstart');
 		});
 		
 		player.on('playing', function(){
@@ -1196,8 +1201,8 @@ function initializePlayer(){
 	player.controlBar.removeChild('NextButtonDisabled');
 	player.controlBar.removeChild('PlaySpeedButton');
 	if (!isEmbedPage()) {
-		player.controlBar.addChild(hasPrevFile() ? "PrevButton" : "PrevButtonDisabled", {}, 5);
-		player.controlBar.addChild(hasNextFile() ? "NextButton" : "NextButtonDisabled", {}, 6);
+		player.controlBar.addChild(hasPrevFile() ? "PrevButton" : "PrevButtonDisabled", {}, 2);
+		player.controlBar.addChild(hasNextFile() ? "NextButton" : "NextButtonDisabled", {}, 3);
 	}
 	player.controlBar.addChild('PlaySpeedButton', {}, 8);
 
@@ -2195,7 +2200,10 @@ $(document).ready(function() {
 			if ($('#overlay-content > .player_extra_upper').length==0) {
 				$('<div class="player_extra_upper"><div class="player_extra_title">'+$(this).attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
 			} else {
-				$('#overlay-content > .player_extra_upper').removeClass('hidden');
+				if ($('.video-js .player_extra_upper').length==0) {
+					//Only if player is not loaded already
+					$('#overlay-content > .player_extra_upper').removeClass('hidden');
+				}
 				$('.player_extra_title').html($(this).attr('data-title'));
 			}
 			//Remove previous errors
@@ -2427,7 +2435,10 @@ $(document).ready(function() {
 		if ($('#overlay-content > .player_extra_upper').length==0) {
 			$('<div class="player_extra_upper"><div class="player_extra_title">'+$('.embed-data').attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
 		} else {
-			$('#overlay-content > .player_extra_upper').removeClass('hidden');
+			if ($('.video-js .player_extra_upper').length==0) {
+				//Only if player is not loaded already
+				$('#overlay-content > .player_extra_upper').removeClass('hidden');
+			}
 			$('.player_extra_title').html($('.embed-data').attr('data-title'));
 		}
 		//Remove previous errors

@@ -5369,12 +5369,12 @@ module.exports = function (videojs) {
     }, {
       key: "_onChromecastConnected",
       value: function _onChromecastConnected() {
-        this._isChromecastConnected = true;
-        this._reloadCSSClasses();
-        this.player().addClass('vjs-casting');
         if (this.player().isInPictureInPicture()) {
           this.player().exitPictureInPicture();
+          this.player().isInPictureInPicture(false);
         }
+        this._isChromecastConnected = true;
+        this._reloadCSSClasses();
         this.player().addClass('vjs-casting');
         this._updateCastLabelText();
       }
