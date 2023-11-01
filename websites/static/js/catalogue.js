@@ -31,7 +31,7 @@ var lastMoveY;
 var inactivityTimeout;
 var activityCheckInterval;
 var currentPlayRate = 1;
-var mascotEnabled = true;
+var mascotEnabled = false;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -622,7 +622,7 @@ function applyMangaReaderType(type) {
 	//Save to server
 	if ($('body.user-logged-in').length==0) {
 		//Set cookie preference
-		Cookies.set('manga_reader_type', type, cookieOptions, {secure: true});
+		Cookies.set('manga_reader_type', type, cookieOptions);
 	} else {
 		//Update on server
 		var values = {
@@ -816,23 +816,23 @@ function buildMangaReaderBar(current, total, type) {
 			if (hasNextFile()) {
 				c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
 			} else {
-				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false" title="No hi ha capítol següent"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">No hi ha capítol següent</span></button>';
 			}
 			if (hasPrevFile()) {
 				c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol anterior" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol anterior</span></button>';
 			} else {
-				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false" title="No hi ha capítol anterior"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">No hi ha capítol anterior</span></button>';
 			}
 		} else {
 			if (hasPrevFile()) {
 				c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="Capítol anterior" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol anterior</span></button>';
 			} else {
-				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false" title="No hi ha capítol anterior"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">No hi ha capítol anterior</span></button>';
 			}
 			if (hasNextFile()) {
 				c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
 			} else {
-				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite"></span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false" title="No hi ha capítol següent"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">No hi ha capítol següent</span></button>';
 			}
 		}
 	}
@@ -2099,6 +2099,7 @@ $(document).ready(function() {
 	class NextButtonDisabled extends Button {
 		constructor(player, options) {
 			super(player, options);
+			this.controlText('No hi ha capítol següent');
 		}
 		buildCSSClass() {
 			return `${super.buildCSSClass()} vjs-next-button vjs-button-disabled`;
@@ -2107,6 +2108,7 @@ $(document).ready(function() {
 	class PrevButtonDisabled extends Button {
 		constructor(player, options) {
 			super(player, options);
+			this.controlText('No hi ha capítol anterior');
 		}
 		buildCSSClass() {
 			return `${super.buildCSSClass()} vjs-prev-button vjs-button-disabled`;

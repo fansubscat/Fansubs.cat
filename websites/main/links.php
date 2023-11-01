@@ -8,7 +8,7 @@ require_once("queries.inc.php");
 ?>
 					<div class="text-page">
 						<h2 class="section-title"><i class="fa fa-fw fa-link"></i> Enllaços</h2>
-						<div class="section-content">Hem cregut convenient fer un recull d’enllaços als principals mitjans i creadors que fan contingut en català relacionat amb el manga i l’anime. Fansubs.cat no hi té cap mena de relació, però creiem convenient fer-ne promoció i et convidem a seguir-los i donar-los suport!</div>
+						<div class="section-content">Aquí trobaràs un recull d’enllaços als principals mitjans i divulgadors que fan contingut en català relacionat amb el manga i l’anime. Fansubs.cat no hi té cap mena de relació, però creiem convenient fer-ne promoció i et convidem a seguir-los i donar-los suport!</div>
 <?php
 	$categories = array(
 		'featured' => '<i class="fa fa-fw fa-star"></i> Destacats',

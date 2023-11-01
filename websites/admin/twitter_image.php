@@ -348,15 +348,15 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 			$text = explode("\n", $text)[0].'...';
 		}
 		imagefttext($image, 17, 0, $i>4 ? 624+172 : 24+172, $current_height+68, $not_so_darker_gray, FONT_REGULAR, $text);
-		imagefttext($image, 20, 0, $i>4 ? 624+172 : 24+172, $current_height+102, $gray, FONT_REGULAR, $series[$i]['views'].($mode!='all' ? ' (' : ''));
-		if ($mode!='all') {
+		imagefttext($image, 20, 0, $i>4 ? 624+172 : 24+172, $current_height+102, $gray, FONT_REGULAR, $series[$i]['views']/*.($mode!='all' ? ' (' : '')*/);
+		/*if ($mode!='all') {
 			$bbox = imageftbbox(20, 0, FONT_REGULAR, $series[$i]['views'].' (');
 			$views_change_position = ($i>4 ? 624+172 : 24+172) + ($bbox[2]-$bbox[0]);
 			imagefttext($image, 20, 0, $views_change_position, $current_height+102, $change_in_views_color, FONT_NUMBERS, $change_in_views_text);
 			$bbox = imageftbbox(20, 0, FONT_NUMBERS, $change_in_views_text);
 			$views_change_position = $views_change_position + ($bbox[2]-$bbox[0]);
 			imagefttext($image, 20, 0, $views_change_position, $current_height+102, $gray, FONT_REGULAR, ')');
-		}
+		}*/
 
 		//Load cover and scale it as needed
 		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/".$series[$i]['id'].".jpg");

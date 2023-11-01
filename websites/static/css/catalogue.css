@@ -3281,6 +3281,11 @@ input:checked + .viewed-slider:before {
 		bottom: 2rem;
 	}
 
+	.recommendation .special-day-image {
+		width: 360px;
+		height: 150px;
+	}
+
 	.recommendation .genres {
 		max-width: 70vw;
 		max-height: 2.2rem;

@@ -7,7 +7,9 @@ var lastWindowWidth=0;
 var cookieOptions = {
 	expires: 3650,
 	path: '/',
-	domain: ".fansubs.online"
+	domain: ".fansubs.online",
+	sameSite: "None",
+	secure: true
 };
 
 function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray, scrollable=false, keepNonScrollable=false) {
@@ -97,7 +99,7 @@ function toggleSiteTheme() {
 	$('html')[0].offsetHeight; //Triggers reflow
 	$('html').removeClass('notransition');
 
-	Cookies.set('site_theme', newTheme, cookieOptions, {secure: true});
+	Cookies.set('site_theme', newTheme, cookieOptions);
 	if ($('body.user-logged-in').length>0) {
 		var values = {
 			'site_theme': newTheme

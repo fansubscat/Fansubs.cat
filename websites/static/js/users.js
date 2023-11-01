@@ -366,11 +366,11 @@ function saveSettings() {
 		});
 	} else {
 		//Set cookies
-		Cookies.set('show_cancelled_projects', $('#show-cancelled').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
-		Cookies.set('show_lost_projects', $('#show-lost').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
-		Cookies.set('episode_sort_order', $('#episode-sort-order').prop('checked') ? 1 : 0, cookieOptions, {secure: true});
-		Cookies.set('manga_reader_type', $('#reader-type').val(), cookieOptions, {secure: true});
-		Cookies.set('blacklisted_fansub_ids', $('#blacklisted-fansubs-ids').val(), cookieOptions, {secure: true});
+		Cookies.set('show_cancelled_projects', $('#show-cancelled').prop('checked') ? 1 : 0, cookieOptions);
+		Cookies.set('show_lost_projects', $('#show-lost').prop('checked') ? 1 : 0, cookieOptions);
+		Cookies.set('episode_sort_order', $('#episode-sort-order').prop('checked') ? 1 : 0, cookieOptions);
+		Cookies.set('manga_reader_type', $('#reader-type').val(), cookieOptions);
+		Cookies.set('blacklisted_fansub_ids', $('#blacklisted-fansubs-ids').val(), cookieOptions);
 	}
 }
 

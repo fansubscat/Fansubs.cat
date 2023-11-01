@@ -4,7 +4,14 @@ require_once(dirname(__FILE__)."/queries.inc.php");
 
 ob_start();
 session_name(COOKIE_NAME);
-session_set_cookie_params(COOKIE_DURATION, '/', COOKIE_DOMAIN, TRUE, FALSE);
+session_set_cookie_params([
+	'lifetime' =>  COOKIE_DURATION,
+	'path' => '/',
+	'domain' => COOKIE_DOMAIN,
+	'secure' => TRUE,
+	'httponly' => FALSE,
+	'samesite' => 'None',
+]);
 session_start();
 
 if (!empty($_SESSION['username'])){
