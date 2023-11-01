@@ -16,13 +16,14 @@ require_once("queries.inc.php");
 		'catalogs' => '<i class="fa fa-fw fa-signs-post"></i> Catàlegs',
 		'art' => '<i class="fa fa-fw fa-palette"></i> Còmic i arts visuals',
 		'forums' => '<i class="fa fa-fw fa-comments"></i> Comunitats i fòrums',
-		'creators' => '<i class="fa fa-fw fa-user"></i> Creadors',
 		'culture' => '<i class="fa fa-fw fa-torii-gate"></i> Cultura asiàtica',
+		'creators' => '<i class="fa fa-fw fa-user"></i> Divulgadors',
 		'dubbing' => '<i class="fa fa-fw fa-microphone"></i> Doblatge',
 		'music' => '<i class="fa fa-fw fa-music"></i> Música i versions',
 		'nostalgia' => '<i class="fa fa-fw fa-heart"></i> Nostàlgia',
 		'podcasts' => '<i class="fa fa-fw fa-radio"></i> Pòdcasts',
 		'preservation' => '<i class="fa fa-fw fa-landmark"></i> Preservació',
+		'subtitles' => '<i class="fa fa-fw fa-message"></i> Subtítols',
 		'others' => '<i class="fa fa-fw fa-maximize"></i> Altres',
 	);
 	foreach ($categories as $id => $title) {

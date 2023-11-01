@@ -8,17 +8,17 @@ function get_category_name_by_id($id) {
 		case 'featured':
 			return "Destacats";
 		case 'blogs':
-			return "Blogs";
+			return "Blogs i notícies";
 		case 'catalogs':
 			return "Catàlegs";
 		case 'art':
 			return "Còmic i arts visuals";
 		case 'forums':
 			return "Comunitats i fòrums";
-		case 'creators':
-			return "Creadors";
 		case 'culture':
 			return "Cultura asiàtica";
+		case 'creators':
+			return "Divulgadors";
 		case 'dubbing':
 			return "Doblatge";
 		case 'music':
@@ -29,6 +29,8 @@ function get_category_name_by_id($id) {
 			return "Pòdcasts";
 		case 'preservation':
 			return "Preservació";
+		case 'subtitles':
+			return "Subtítols";
 		case 'others':
 			return "Altres";
 		default:
