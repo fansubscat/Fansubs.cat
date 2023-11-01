@@ -2,6 +2,7 @@
 define('PAGE_TITLE', 'Llista de fansubs en català');
 define('PAGE_PATH', '/llista-de-fansubs');
 define('PAGE_STYLE_TYPE', 'fansubs');
+define('PAGE_DESCRIPTION', 'Consulta la llista de tots els fansubs en català a Fansubs.cat, el portal que en recopila tot el material!');
 require_once("../common.fansubs.cat/header.inc.php");
 require_once("common.inc.php");
 require_once("queries.inc.php");

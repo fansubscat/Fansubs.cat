@@ -15,6 +15,7 @@ define('SITE_BASE_URL', $server_url);
 switch ($server_url) {
 	case NEWS_URL:
 		define('SITE_TITLE', 'Notícies dels fansubs en català | Fansubs.cat');
+		define('SITE_DESCRIPTION', 'Consulta les darreres notícies dels fansubs en català a Fansubs.cat, el portal que en recopila totes les novetats!');
 		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
 		define('SITE_INTERNAL_NAME', 'news');
 		define('SITE_PREVIEW_IMAGE', 'main');
@@ -24,7 +25,7 @@ switch ($server_url) {
 		break;
 	case USERS_URL:
 		define('SITE_TITLE', 'Fansubs.cat');
-		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
+		define('SITE_DESCRIPTION', 'Fansubs.cat és el portal on podràs gaudir de l’anime, del manga i de tota la resta de contingut dels fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'users');
 		define('SITE_PREVIEW_IMAGE', 'main');
 		define('SITE_INTERNAL_TYPE', 'users');
@@ -33,7 +34,7 @@ switch ($server_url) {
 		break;
 	case ANIME_URL:
 		define('SITE_TITLE', 'Anime en català | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot l’anime subtitulat pels fansubs en català!');
+		define('SITE_DESCRIPTION', 'Gaudeix de l’anime en català a Fansubs.cat, el portal que recopila tot l’anime subtitulat pels diferents fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'anime');
 		define('SITE_PREVIEW_IMAGE', 'anime');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
@@ -74,7 +75,7 @@ switch ($server_url) {
 		break;
 	case MANGA_URL:
 		define('SITE_TITLE', 'Manga en català | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga editat pels fansubs en català!');
+		define('SITE_DESCRIPTION', 'Gaudeix del manga en català a Fansubs.cat, el portal que recopila tot el manga editat pels diferents fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'manga');
 		define('SITE_PREVIEW_IMAGE', 'manga');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
@@ -115,7 +116,7 @@ switch ($server_url) {
 		break;
 	case LIVEACTION_URL:
 		define('SITE_TITLE', 'Imatge real en català | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot el contingut d’imatge real subtitulat pels fansubs en català!');
+		define('SITE_DESCRIPTION', 'Gaudeix de contingut d’imatge real en català a Fansubs.cat, el portal que recopila tot el «live action» subtitulat pels diferents fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'liveaction');
 		define('SITE_PREVIEW_IMAGE', 'liveaction');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
@@ -156,7 +157,7 @@ switch ($server_url) {
 		break;
 	case HENTAI_ANIME_URL:
 		define('SITE_TITLE', 'Anime hentai en català | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'Aquí podràs veure en línia tot l’anime hentai subtitulat pels fansubs en català!');
+		define('SITE_DESCRIPTION', 'Mira anime hentai en català a Fansubs.cat, el portal que recopila tot l’anime hentai subtitulat pels diferents fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'hentai');
 		define('SITE_PREVIEW_IMAGE', 'hentai_anime');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
@@ -197,7 +198,7 @@ switch ($server_url) {
 		break;
 	case HENTAI_MANGA_URL:
 		define('SITE_TITLE', 'Manga hentai en català | Fansubs.cat');
-		define('SITE_DESCRIPTION', 'Aquí podràs llegir en línia tot el manga hentai editat pels fansubs en català!');
+		define('SITE_DESCRIPTION', 'Llegeix manga hentai en català a Fansubs.cat, el portal que recopila tot el manga hentai editat pels diferents fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'hentai');
 		define('SITE_PREVIEW_IMAGE', 'hentai_manga');
 		define('SITE_INTERNAL_TYPE', 'catalogue');
@@ -236,17 +237,9 @@ switch ($server_url) {
 		define('CATALOGUE_SEASONAL_SERIES_STRING', 'Manga en publicació');
 		define('CATALOGUE_SEASONAL_SERIES_ICON', 'fa-fire');
 		break;
-	case HENTAI_URL:
-		define('SITE_TITLE', 'Fansubs.cat');
-		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
-		define('SITE_INTERNAL_NAME', 'main');
-		define('SITE_INTERNAL_TYPE', 'main');
-		define('SITE_IS_CATALOGUE', FALSE);
-		define('SITE_IS_HENTAI', FALSE);
-		break;
 	case MAIN_URL:
 		define('SITE_TITLE', 'Fansubs.cat');
-		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
+		define('SITE_DESCRIPTION', 'Fansubs.cat és el portal on podràs gaudir de l’anime, del manga i de tota la resta de contingut dels fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'main');
 		define('SITE_PREVIEW_IMAGE', 'main');
 		define('SITE_INTERNAL_TYPE', 'main');

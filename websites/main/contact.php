@@ -1,7 +1,8 @@
 <?php
-define('PAGE_TITLE', 'Contacta amb nosaltres?');
+define('PAGE_TITLE', 'Contacta amb nosaltres');
 define('PAGE_PATH', '/contacta-amb-nosaltres');
 define('PAGE_STYLE_TYPE', 'contact');
+define('PAGE_DESCRIPTION', 'Omple el següent formulari per a contactar amb nosaltres. Et respondrem tan aviat com ens sigui possible.');
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="text-page" id="contact-form">

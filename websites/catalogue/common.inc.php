@@ -598,7 +598,7 @@ function get_genres_for_featured($genre_names, $type, $rating) {
 	return '<i class="fa fa-fw fa-tag fa-flip-horizontal"></i> '.$result_code;
 }
 
-function print_featured_item($series, $special_day=NULL, $specific_version=TRUE, $use_version_param=TRUE) {
+function print_featured_item($series, $special_day=NULL, $specific_version=TRUE, $use_version_param=TRUE, $show_special_day=TRUE) {
 	$versions = get_prepared_versions($series['fansub_info']);
 	$number_of_versions = $series['total_versions'];
 	echo "\t\t\t\t\t\t\t".'<div class="recommendation" data-series-id="'.$series['id'].'">'."\n";
@@ -634,7 +634,7 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="fansubs">'.get_recommended_fansub_info($series['fansub_info'], $versions, $versions[0]['id']).'</div>'."\n";
-	if (!empty($special_day)) {
+	if (!empty($special_day) && $show_special_day) {
 		if ($special_day=='fools') {
 			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-trophy"></i><span class="text">Els millors de l’any</span></div>'."\n";
 		} else if ($special_day=='sant_jordi') {

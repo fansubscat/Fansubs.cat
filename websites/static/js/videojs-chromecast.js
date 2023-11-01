@@ -5026,7 +5026,7 @@ var ChromecastSessionManager = /*#__PURE__*/function () {
           if (!window.player.currentSource() || window.currentSourceData.method == 'mega') {
             // Do not cast if there is no media item loaded in the player
             if (window.currentSourceData.method == 'mega') {
-              showAlert("No es pot emetre", "Els vídeos acabats de penjar estan allotjats a MEGA i no es poden emetre. Si vols emetre’l, caldrà que esperis un parell d’hores i actualitzis la pàgina.");
+              showAlert("No es pot emetre", "Els vídeos acabats de penjar estan allotjats a MEGA i no es poden emetre. Si vols emetre’l, caldrà que esperis una estona i actualitzis la pàgina.");
             } else {
               showAlert("No es pot emetre", "Aquest vídeo no es pot emetre.");
             }

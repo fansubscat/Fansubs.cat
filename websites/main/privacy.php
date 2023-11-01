@@ -2,6 +2,7 @@
 define('PAGE_TITLE', 'Política de privadesa');
 define('PAGE_PATH', '/politica-de-privadesa');
 define('PAGE_STYLE_TYPE', 'text');
+define('PAGE_DESCRIPTION', 'Aquesta política de privadesa defineix la manera en què Fansubs.cat («nosaltres») recopila, emmagatzema, utilitza, manté i comparteix la informació («informació» o «dades») recopilada dels usuaris (cadascun, un «usuari», o «tu») del lloc web de Fansubs.cat («lloc web»). Aquesta política de privadesa s’aplica a tots els productes i serveis oferts per Fansubs.cat en relació amb el lloc web («serveis»). Si tens qualsevol dubte relatiu a aquesta política de privadesa o a l’ús que fem de les teves dades, te’l podem resoldre si ens escrius fent servir l’enllaç de contacte de la part inferior de la pàgina.');
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="text-page">

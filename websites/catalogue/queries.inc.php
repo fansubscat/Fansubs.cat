@@ -736,10 +736,11 @@ function query_home_continue_watching_by_user_id($user_id) {
 						SELECT (SELECT f.id
 							FROM file f
 							LEFT JOIN episode e2 ON f.episode_id=e2.id
+							LEFT JOIN division d2 ON e2.division_id=d2.id
 							LEFT JOIN episode_title et2 ON et2.episode_id=e2.id AND et2.version_id=f.version_id
 							WHERE f.version_id=v.id
 								AND f.episode_id IS NOT NULL
-								AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (e2.number>e1.number))
+								AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (CONCAT(LPAD(d2.number,3,'0'), ':', e2.number)>CONCAT(LPAD(d1.number,3,'0'), ':', e1.number)))
 							ORDER BY e2.number IS NULL ASC,
 								e2.number ASC,
 								IFNULL(et2.title, e2.description) ASC
@@ -747,6 +748,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 						FROM user_version_followed uvf
 						LEFT JOIN version v ON v.id=uvf.version_id
 						LEFT JOIN episode e1 ON e1.id=uvf.last_seen_episode_id
+						LEFT JOIN division d1 ON d1.id=e1.division_id
 						LEFT JOIN episode_title et1 ON et1.episode_id=uvf.last_seen_episode_id AND et1.version_id=uvf.version_id
 						WHERE uvf.user_id=$user_id
 					)

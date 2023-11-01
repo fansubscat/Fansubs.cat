@@ -396,7 +396,7 @@ foreach($sections as $section){
 							<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> <?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 <?php
 				if ($section['type']=='recommendations') {
-					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param']);
+					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param'], !empty($force_recommended_ids_list));
 				} else if ($section['type']=='chapters-carousel'){
 					print_chapter_item($row);
 				} else if ($section['type']=='chapters-carousel-last-update'){
