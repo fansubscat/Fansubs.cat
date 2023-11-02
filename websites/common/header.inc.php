@@ -272,7 +272,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 		if (PAGE_STYLE_TYPE=='main') {
 ?>
-					<a class="social-link mastodon-link fab fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" title="Mastodon de Fansubs.cat"></a>
+					<a class="social-link mastodon-link fab fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" title="Mastodon de Fansubs.cat" rel="me"></a>
 					<a class="social-link telegram-link fab fa-telegram" href="https://t.me/fansubscat" target="_blank" title="Telegram de Fansubs.cat"></a>
 					<a class="social-link twitter-link fab fa-square-x-twitter" href="https://x.com/fansubscat" target="_blank" title="X de Fansubs.cat"></a>
 <?php
