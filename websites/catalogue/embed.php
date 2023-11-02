@@ -26,7 +26,7 @@ define('PAGE_PREVIEW_IMAGE', SITE_BASE_URL.'/preview/'.$series['slug'].'.jpg');
 
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
-<span class="embed-data" data-file-id="<?php echo $file_id; ?>" data-title="Això és una prova"></span>
+<span class="embed-data" data-file-id="<?php echo $file_id; ?>" data-title="S’està carregant..."></span>
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");
 ?>

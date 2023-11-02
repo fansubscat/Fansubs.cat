@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Linebreaks4imagettftext v1.0.2
+ * Linebreaks4imagettftext v1.0.3
  *
- * Copyright (c) 2018 Andrew G. Johnson <andrew@andrewgjohnson.com>
+ * Copyright (c) 2018-2022 Andrew G. Johnson <andrew@andrewgjohnson.com>
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in the
  * Software without restriction, including without limitation the rights to use,
@@ -24,7 +24,7 @@
  * @category  Andrewgjohnson
  * @package   Linebreaks4imagettftext
  * @author    Andrew G. Johnson <andrew@andrewgjohnson.com>
- * @copyright 2018 Andrew G. Johnson <andrew@andrewgjohnson.com>
+ * @copyright 2018-2022 Andrew G. Johnson <andrew@andrewgjohnson.com>
  * @license   https://opensource.org/licenses/mit/ The MIT License
  * @link      https://github.com/andrewgjohnson/linebreaks4imagettftext
  */
