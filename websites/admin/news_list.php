@@ -10,14 +10,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			crash("No es pot esborrar la notícia: més d’una notícia amb el mateix MD5!");
 		} else if (mysqli_num_rows($todelete_result)==1) {
 			$todelete_row = mysqli_fetch_assoc($todelete_result);
-			log_action("delete-news", "S’ha suprimit la notícia «".escape($todelete_row['title'])."» del fansub «".escape($todelete_row['fansub_name'])."»");
+			log_action("delete-news", "S’ha suprimit la notícia «".$todelete_row['title']."» del fansub «".$todelete_row['fansub_name']."»");
 			query("DELETE FROM news WHERE MD5(CONCAT(title, date))='".escape($_GET['delete_id'])."'");
 		}
 		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 
 	if (!empty($_GET['delete_pending_id'])) {
-		log_action("delete-pending-news", "S’ha suprimit la notícia proposada amb id. ".escape($_GET['delete_pending_id']));
+		log_action("delete-pending-news", "S’ha suprimit la notícia proposada amb id. ".$_GET['delete_pending_id']);
 		query("DELETE FROM pending_news WHERE id=".escape($_GET['delete_pending_id']));
 		$_SESSION['message']="S’ha suprimit correctament.";
 	}

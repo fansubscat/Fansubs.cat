@@ -1407,7 +1407,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<div class="form-check form-check-inline mb-2">
 								<input class="form-check-input" type="checkbox" name="do_not_count_as_update" id="form-do_not_count_as_update" value="1">
-								<label class="form-check-label" for="form-do_not_count_as_update">No moguis a "Darreres actualitzacions"</label>
+								<label class="form-check-label" for="form-do_not_count_as_update">No moguis a «Darreres actualitzacions»</label>
 							</div>
 							<br />
 <?php

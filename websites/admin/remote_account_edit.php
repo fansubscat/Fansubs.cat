@@ -33,11 +33,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-remote-account", "S’ha actualitzat el compte remot «".$data['name']."» (id. de compte remot: ".$data['id'].")");
+			log_action("update-remote-account", "S’ha actualitzat el compte remot «".$_POST['name']."» (id. de compte remot: ".$data['id'].")");
 			query("UPDATE remote_account SET name='".$data['name']."',type='".$data['type']."',token='".$data['token']."',fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
 		else {
-			log_action("create-remote-account", "S’ha creat el compte remot «".$data['name']."»");
+			log_action("create-remote-account", "S’ha creat el compte remot «".$_POST['name']."»");
 			query("INSERT INTO remote_account (name,type,token,fansub_id,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['type']."','".$data['token']."',".$data['fansub_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 

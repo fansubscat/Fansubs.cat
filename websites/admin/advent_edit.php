@@ -31,7 +31,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 
-		log_action("update-advent-calendar", "S’ha actualitzat el calendari d’advent del ".$data['year']);
+		log_action("update-advent-calendar", "S’ha actualitzat el calendari d’advent del ".$_POST['year']);
 		
 		query("REPLACE INTO advent_calendar (year, position) VALUES (".$data['year'].",'".$data['position']."')");
 		if (!empty($_FILES['background'])) {

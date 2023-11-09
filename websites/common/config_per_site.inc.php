@@ -246,6 +246,13 @@ switch ($server_url) {
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
 		break;
+	case ADVENT_URL:
+		define('SITE_TITLE', 'Fansubs.cat');
+		define('SITE_DESCRIPTION', 'Segueix el calendari d’advent dels fansubs en català! Cada dia hi trobaràs una petita sorpresa en forma d’anime o manga editat en català!');
+		define('SITE_INTERNAL_NAME', 'advent');
+		define('SITE_IS_CATALOGUE', FALSE);
+		define('SITE_IS_HENTAI', FALSE);
+		break;
 	default:
 		//Nothing to define for now
 		break;

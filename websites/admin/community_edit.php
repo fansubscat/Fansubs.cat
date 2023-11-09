@@ -33,7 +33,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			log_action("update-community", "S’ha actualitzat la comunitat «".$data['name']."» (id. de comunitat: ".$data['id'].")");
+			log_action("update-community", "S’ha actualitzat la comunitat «".$_POST['name']."» (id. de comunitat: ".$data['id'].")");
 			query("UPDATE community SET name='".$data['name']."',url='".$data['url']."',category='".$data['category']."',description='".$data['description']."',updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['logo'])) {
@@ -41,7 +41,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 		else {
-			log_action("create-community", "S’ha creat la comunitat «".$data['name']."»");
+			log_action("create-community", "S’ha creat la comunitat «".$_POST['name']."»");
 			query("INSERT INTO community (name,url,category,description,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['url']."','".$data['category']."','".$data['description']."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['logo'])) {

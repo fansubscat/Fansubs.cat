@@ -43,7 +43,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				crash("No es pot editar la notícia: més d’una notícia amb el mateix MD5!");
 			} else if (mysqli_num_rows($toupdate_result)==1) {
 				$toupdate_row = mysqli_fetch_assoc($toupdate_result);
-				log_action("update-news", "S’ha actualitzat la notícia «".escape($toupdate_row['title'])."» del fansub '".escape($toupdate_row['fansub_name'])."'");
+				log_action("update-news", "S’ha actualitzat la notícia «".$toupdate_row['title']."» del fansub «".$toupdate_row['fansub_name']."»");
 				if (!empty($_FILES['image'])) {
 					move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/news/'.$toupdate_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
 					$data['image'] = "'".md5($data['title'].$data['date'])."'";
@@ -65,10 +65,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$data['image'] = 'NULL';
 			}
 			if (isset($_POST['import_pending_id'])) {
-				log_action("import-pending-news", "S’ha importat la notícia proposada amb id. ".escape($_POST['import_pending_id']));
+				log_action("import-pending-news", "S’ha importat la notícia proposada amb id. ".$_POST['import_pending_id']);
 				query("DELETE FROM pending_news WHERE id=".escape($_POST['import_pending_id']));
 			}
-			log_action("create-news", "S’ha creat la notícia «".$data['title']."» de «".escape($fansub_row['fansub_name'])."»");
+			log_action("create-news", "S’ha creat la notícia «".$_POST['title']."» de «".$fansub_row['fansub_name']."»");
 			query("INSERT INTO news (fansub_id,news_fetcher_id,title,contents,original_contents,date,url,image) VALUES (".$data['fansub_id'].",NULL,'".$data['title']."','".$data['contents']."','".$data['contents']."','".$data['date']."',".$data['url'].",".$data['image'].")");
 		}
 
