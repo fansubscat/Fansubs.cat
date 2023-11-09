@@ -28,7 +28,6 @@ if (!empty($_GET['year']) && is_numeric($_GET['year'])) {
 		die();
 	}
 }
-
 	
 $days = array();
 $resultd = query("SELECT * FROM advent_day WHERE year=".escape($row['year'])." ORDER BY day ASC");
@@ -52,21 +51,34 @@ if (!empty($_COOKIE['advent_'.$row['year']])) {
 } else {
 	$cookie=array();
 }
+
+define('PAGE_TITLE', 'Calendari d’advent '.$row['year']);
+
 ?>
 <!DOCTYPE html>
 <html lang="ca">
 	<head>
 		<meta charset="UTF-8">
-		<title>Calendari d'advent <?php echo $row['year']; ?> - Fansubs.cat</title>
-		<link href="https://fonts.googleapis.com/css?family=Kalam" rel="stylesheet">
-		<link rel="shortcut icon" href="/favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="theme-color" content="#888888" />
-		<meta property="og:title" content="Calendari d'advent <?php echo $row['year']; ?> - Fansubs.cat" />
-		<meta property="og:url" content="<?php echo ADVENT_URL; ?>/" />
-		<meta property="og:description" content="Segueix el calendari d'advent dels fansubs en català! Cada dia hi trobaràs un petit regalet en forma d'anime o manga editat en català!" />
-		<meta property="og:image" content="<?php echo STATIC_URL; ?>/images/advent/preview_<?php echo $row['year']; ?>.jpg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="theme-color" content="#6aa0f8">
+		<meta name="robots" content="noindex"> <!-- TODO REMOVE THIS BEFORE ENTERING PRODUCTION AND REVIEW ALL robots.txt fansubs.online!!! -->
+		<meta name="referrer" content="origin">
 		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="msapplication-config" content="https://static.fansubs.online/favicons/advent/browserconfig.xml">
+		<meta property="og:title" content="<?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?>" />
+		<meta property="og:url" content="<?php echo ADVENT_URL; ?>/" />
+		<meta property="og:description" content="" />
+		<meta property="og:image" content="<?php echo STATIC_URL; ?>/images/advent/preview_<?php echo $row['year']; ?>.jpg" />
+		<meta property="og:image:type" content="image/jpeg">
+		<title>Calendari d'advent <?php echo $row['year']; ?> | Fansubs.cat</title>
+		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon-16x16.png">
+		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/site.webmanifest">
+		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/safari-pinned-tab.svg" color="#6aa0f8">
+		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon.ico">
+		<link href="https://fonts.googleapis.com/css?family=Kalam" rel="stylesheet">
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 		<script>
@@ -203,13 +215,13 @@ switch ($row['year']) {
 			/* media query */
 			@media only screen and (min-width: 720px) {
 <?php
-	if ($row['year']=='2021') {
+	if ($row['year']==2021) {
 ?>
 				body {
 					background-size: unset;
 				}
 <?php
-	} else if ($row['year']=='2022') {
+	} else if ($row['year']==2022) {
 ?>
 				body {
 					background-position: center center;
@@ -367,7 +379,7 @@ for ($i=1;$i<25;$i++){
 				grid-area: d<?php echo $i; ?>;
 			}
 			.day-<?php echo $i; ?> .back {
-				background-image: url("<?php echo is_day_ready($i) ? STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg' : '/images/empty.png'; ?>");
+				background-image: url("<?php echo is_day_ready($i) ? STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg' : STATIC_URL.'/images/advent/empty.png'; ?>");
 			}
 <?php
 }
@@ -378,7 +390,7 @@ for ($i=1;$i<25;$i++){
 		<div class="container">
 			<div class="grid-1">
 				<div class="title">
-					<img src="/images/logo.png" alt="Calendari d'advent dels fansubs en català">
+					<img src="<?php echo STATIC_URL; ?>/images/advent/logo.png" alt="Calendari d’advent dels fansubs en català">
 				</div>
 <?php
 for ($i=1;$i<25;$i++){
