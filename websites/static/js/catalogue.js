@@ -367,8 +367,14 @@ function setSeekCurrentPageOnScroll(element) {
 	var value = element.scrollTop/(element.scrollHeight-element.offsetHeight)*100; 
 	$('.manga-slider-bar').val(value*1000);
 	$('.manga-fake-slider-bar').width(value+'%');
-	$('.vjs-current-time').text(getReaderCurrentPage());
-	pagesRead[getReaderCurrentPage()-1]=true;
+	var previousPage = $('.vjs-current-time').text();
+	var currentPage = getReaderCurrentPage();
+	if (currentPage!=previousPage) {
+		$('.vjs-current-time').text(currentPage);
+		pagesRead[getReaderCurrentPage()-1]=true;
+		//Send to server
+		sendCurrentFileTracking();
+	}
 }
 
 function getReaderReadPages() {
@@ -909,6 +915,8 @@ function initializeReader(type) {
 					//console.log("slideChange "+(swiper.activeIndex+1));
 					setSeekCurrentPage(swiper.activeIndex+1, currentSourceData.length, false);
 					pagesRead[swiper.activeIndex]=true;
+					//Send to server
+					sendCurrentFileTracking();
 				},
 			},
 		});
@@ -2451,7 +2459,6 @@ $(document).ready(function() {
 
 	$(window).on('visibilitychange', function() {
 		if (document.visibilityState!="visible") {
-			addLog('Page is now hidden from user sight');
 			sendCurrentFileTracking();
 		}
 	});
