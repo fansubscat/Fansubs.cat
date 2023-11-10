@@ -1354,7 +1354,7 @@ function fetch_via_blogspot_uto($fansub_slug, $url, $last_fetched_item_date){
 					$item[2]=parse_description($inner_html->find('div.post-body', 0)->innertext);
 					$date = date_create_from_format('Y-m-d\TH:i:sP', $inner_html->find('abbr.published', 0)->title);
 					$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
-					$item[3]=$date->format('Y-m-d\\TH:i:s');
+					$item[3]=$date->format('Y-m-d H:i:s');
 					$item[4]=$url;
 					$item[5]=fetch_and_parse_image($fansub_slug, $url, $inner_html->find('div.post-body', 0)->innertext);
 					break;
@@ -1508,7 +1508,7 @@ function fetch_via_espurnaescarlata($fansub_slug, $url, $last_fetched_item_date)
 			$item[2]=parse_description($inner_html->find('.cw-c.cf', 0)->innertext);
 			$date = date_create_from_format('d.m.Y H:i:s', $inner_html->find('.s-bdh-d .ld-c', 0)->innertext.' 00:00:00');
 			$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
-			$item[3]=$date->format('Y-m-d\\TH:i:s');
+			$item[3]=$date->format('Y-m-d H:i:s');
 			$item[4]=$url;
 			$item[5]=fetch_and_parse_image($fansub_slug, $url, $inner_html->find('.cw-c.cf', 0)->innertext);
 		}
