@@ -140,6 +140,9 @@ function fetch_fansub_fetcher($fansub_id, $fansub_slug, $fetcher_id, $method, $u
 		case 'catsub':
 			$result = fetch_via_catsub($fansub_slug, $url, $last_fetched_item_date);
 			break;
+		case 'espurnaescarlata':
+			$result = fetch_via_espurnaescarlata($fansub_slug, $url, $last_fetched_item_date);
+			break;
 		case 'mangadex_edcec':
 			$result = fetch_via_mangadex_edcec($fansub_slug, $url, $last_fetched_item_date);
 			break;
@@ -1466,6 +1469,54 @@ function fetch_via_catsub($fansub_slug, $url, $last_fetched_item_date){
 				}
 			}
 		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_espurnaescarlata($fansub_slug, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+
+	$html_text = file_get_contents($url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	$tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+	tidy_clean_repair($tidy);
+	$html = str_get_html(tidy_get_output($tidy));
+
+	//parse through the HTML and build up the elements feed as we go along
+	foreach($html->find('.item-head h2 a') as $article) {
+		//Create an empty item
+		$item = array();
+
+		//Look up and add elements to the item
+		$url = substr($url, 0,strrpos($url, '/')) . $article->href;
+		$title = $article->innertext;
+		$error=FALSE;
+
+		$html_text = file_get_contents($url) or $error=TRUE;
+
+		if (!$error){
+			$inner_tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
+			tidy_clean_repair($inner_tidy);
+			$inner_html = str_get_html(tidy_get_output($inner_tidy));
+			$item[0]=$title;
+			$item[1]=$inner_html->find('.cw-c.cf', 0)->innertext;
+			$item[2]=parse_description($inner_html->find('.cw-c.cf', 0)->innertext);
+			$date = date_create_from_format('d.m.Y H:i:s', $inner_html->find('.s-bdh-d .ld-c', 0)->innertext.' 00:00:00');
+			$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+			$item[3]=$date->format('Y-m-d\\TH:i:s');
+			$item[4]=$url;
+			$item[5]=fetch_and_parse_image($fansub_slug, $url, $inner_html->find('.cw-c.cf', 0)->innertext);
+		}
+		else{
+			return array('error_connect',array());
+		}
+
+		$elements[]=$item;
 	}
 	return array('ok', $elements);
 }

@@ -35,6 +35,8 @@ function get_method($method){
 			return "Blogspot (Un Tortosí Otaku)";
 		case 'catsub':
 			return "CatSub";
+		case 'espurnaescarlata':
+			return "Espurna Escarlata";
 		case 'mangadex_edcec':
 			return "Mangadex (El Detectiu Conan en català)";
 		case 'ouferrat':

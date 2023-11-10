@@ -1,6 +1,6 @@
 # Registre de canvis
 
-## 2023-XX-XX - Versió 5.0.0
+## 2023-11-22 - Versió 5.0.0
 - **General:**
 	- Nou disseny.
 	- Unificació i reorganització del codi.
@@ -11,7 +11,7 @@
 	- S’ha canviat el formulari de contacte.
 	- S’ha afegit la política de privacitat.
 	- S’ha modificat l’apartat «Qui som?».
-	- S’ha afegit l’apartat «Comunitat».
+	- S’ha afegit l’apartat «Enllaços».
 - **Usuaris:**
 	- Versió inicial. S’ha implementat el registre i l’inici de sessió.
 - **Catàleg:**
