@@ -44,6 +44,10 @@ define('TELEGRAM_CONFIG', array(
 	)
 ));
 
+//BlueSky keys
+define('BLUESKY_HANDLE', 'YOUR_HANDLE_HERE');
+define('BLUESKY_APP_PASSWORD', 'YOUR_APP_PASSWORD_HERE');
+
 //Token to bypass admin authentication in twitter_image.php
 define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN');
 

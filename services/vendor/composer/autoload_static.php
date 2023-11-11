@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit7c88a727af669828ab1fa157863a74bc
 {
     public static $prefixLengthsPsr4 = array (
+        'c' => 
+        array (
+            'cjrasmussen\\BlueskyApi\\' => 23,
+        ),
         'L' => 
         array (
             'LanguageDetection\\' => 18,
@@ -22,6 +26,10 @@ class ComposerStaticInit7c88a727af669828ab1fa157863a74bc
     );
 
     public static $prefixDirsPsr4 = array (
+        'cjrasmussen\\BlueskyApi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cjrasmussen/bluesky-api/src',
+        ),
         'LanguageDetection\\' => 
         array (
             0 => __DIR__ . '/..' . '/patrickschur/language-detection/src/LanguageDetection',
@@ -36,11 +44,16 @@ class ComposerStaticInit7c88a727af669828ab1fa157863a74bc
         ),
     );
 
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit7c88a727af669828ab1fa157863a74bc::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit7c88a727af669828ab1fa157863a74bc::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7c88a727af669828ab1fa157863a74bc::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -6,6 +6,7 @@ require_once("vendor/autoload.php");
 define('DRY_RUN', TRUE);
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use cjrasmussen\BlueskyApi\BlueskyApi;
 
 function publish_to_x($message){
 	if (defined('DRY_RUN')) {
@@ -78,6 +79,37 @@ function publish_to_telegram($message){
 	}
 }
 
+function publish_to_bluesky($message, $series_id, $embed_title, $embed_description, $url){
+	if (defined('DRY_RUN')) {
+		echo "-----------------\nPost this to BlueSky:\n$message\n";
+		return;
+	}
+	$bluesky = new BlueskyApi(BLUESKY_HANDLE, BLUESKY_APP_PASSWORD);
+	$image_body = @file_get_contents(STATIC_DIRECTORY.'/social/series_'.$series_id.'.jpg');
+	$response = $bluesky->request('POST', 'com.atproto.repo.uploadBlob', [], $image_body, 'image/jpeg');
+	$image_blob = $response->blob;
+	$args = [
+		'collection' => 'app.bsky.feed.post',
+		'repo' => $bluesky->getAccountDid(),
+		'record' => [
+			'text' => $message,
+			'langs' => ['ca'],
+			'createdAt' => date('c'),
+			'$type' => 'app.bsky.feed.post',
+			'embed' => [
+				'$type' => 'app.bsky.embed.external',
+				'external' => [
+					'uri' => $url,
+					'title' => $embed_title,
+					'description' => $embed_description,
+					'thumb' => $image_blob,
+				],
+			],
+		],
+	];
+	$data = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
+}
+
 //Copied from catalogue's common.inc.php
 function get_episode_title($series_subtype, $show_episode_numbers, $episode_number, $linked_episode_id, $title, $series_name, $extra_name, $is_extra) {
 	if ($is_extra) {
@@ -99,6 +131,15 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 		} else {
 			return 'Capítol desconegut';
 		}
+	}
+}
+
+function get_shortened_bluesky_post($post){
+	//Check that it will not exceed 300 characters... and ellipsize if needed
+	if (mb_strlen($post)>300){
+		return mb_substr($post, 0, 300-3).'...';
+	} else {
+		return $post;
 	}
 }
 
@@ -246,6 +287,7 @@ $message_x = "%%POST_HEADER%%\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAILABLE_
 $message_mastodon = "%%POST_HEADER%%\n\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_discord = "**%%POST_HEADER%%**\n\n%%TYPE_EMOJI%% **%%SERIES_NAME%%**\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_telegram = "**%%POST_HEADER%%**\n\n%%TYPE_EMOJI%% **%%SERIES_NAME%%**\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
+$message_bluesky = "%%POST_HEADER%%\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 
 $has_posted_something = FALSE;
 
@@ -312,6 +354,16 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url);
+		$prepared_message = get_prepared_message(
+			$message_bluesky,
+			$header,
+			'📙',
+			$row['name'],
+			$episode,
+			$row['fansub_names'],
+			$row['status']==1 ? "\n✅ Projecte completat" : ''
+		);
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | Fansubs.cat - Manga en català", $row['synopsis'], $url);
 		file_put_contents('last_posted_manga_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
@@ -389,6 +441,16 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url);
+		$prepared_message = get_prepared_message(
+			$message_bluesky,
+			$header,
+			'🎞',
+			$row['name'],
+			$episode,
+			$row['fansub_names'],
+			$row['status']==1 ? "\n✅ Projecte completat" : ''
+		);
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | Fansubs.cat - Anime en català", $row['synopsis'], $url);
 		file_put_contents('last_posted_anime_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
@@ -466,6 +528,16 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url);
+		$prepared_message = get_prepared_message(
+			$message_bluesky,
+			$header,
+			'🎥',
+			$row['name'],
+			$episode,
+			$row['fansub_names'],
+			$row['status']==1 ? "\n✅ Projecte completat" : ''
+		);
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], $url);
 		file_put_contents('last_posted_liveaction_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");

@@ -34,9 +34,10 @@
 
 | Library                                        | Version   | Current | URL                                                       |
 |------------------------------------------------|-----------|---------|-----------------------------------------------------------|
-| abraham/twitteroauth (via composer)            | 3.1.0     | 6.2.0   | https://github.com/abraham/twitteroauth                   |
+| abraham/twitteroauth (via composer)            | 6.2.0     | 6.2.0   | https://github.com/abraham/twitteroauth                   |
+| cjrasmussen/bluesky-api (via composer)         | 1.0.3     | 1.0.3   | https://github.com/cjrasmussen/BlueskyApi                 |
 | linebreaks4imagettftext                        | 1.0.3     | 1.0.3   | https://github.com/andrewgjohnson/linebreaks4imagettftext |
 | parsecsv                                       | 0.4.3beta | 1.3.2   | https://github.com/parsecsv/parsecsv-for-php              |
-| patrickschur/language-detection (via composer) | ^5.1      | 5.3.0   | https://github.com/patrickschur/language-detection        |
+| patrickschur/language-detection (via composer) | 5.3.0     | 5.3.0   | https://github.com/patrickschur/language-detection        |
 | preview_image_generator                        | (own)     | (own)   |                                                           |
 | simple_html_dowm                               | 1.9.1     | 1.9.1   | http://sourceforge.net/projects/simplehtmldom/            |

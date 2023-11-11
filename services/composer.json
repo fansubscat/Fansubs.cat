@@ -1,6 +1,7 @@
 {
     "require": {
-        "patrickschur/language-detection": "^5.1",
-        "abraham/twitteroauth": "3.1.0"
+        "patrickschur/language-detection": "5.3.0",
+        "abraham/twitteroauth": "6.2.0",
+        "cjrasmussen/bluesky-api": "1.0.3"
     }
 }

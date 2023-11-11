@@ -1683,7 +1683,7 @@ input:checked + .slider:before {
 		text-decoration: underline;
 	}
 
-	.twitter-link:hover, .mastodon-link:hover, .telegram-link:hover, .discord-link:hover, .web-link:hover {
+	.twitter-link:hover, .mastodon-link:hover, .telegram-link:hover, .bluesky-link:hover, .discord-link:hover, .web-link:hover {
 		color: rgb(var(--primary-color));
 	}
 

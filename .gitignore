@@ -1,5 +1,6 @@
 internal/*
 services/config.inc.php
+services/composer.phar
 websites/admin/config.inc.php
 websites/advent/config.inc.php
 websites/api/config.inc.php

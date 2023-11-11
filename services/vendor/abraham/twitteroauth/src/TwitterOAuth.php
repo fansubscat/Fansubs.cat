@@ -10,7 +10,13 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth;
 
-use Abraham\TwitterOAuth\Util\JsonDecoder;
+use Abraham\TwitterOAuth\{
+    Consumer,
+    HmacSha1,
+    Response,
+    Token,
+    Util\JsonDecoder,
+};
 use Composer\CaBundle\CaBundle;
 
 /**
@@ -24,17 +30,17 @@ class TwitterOAuth extends Config
     private const UPLOAD_HOST = 'https://upload.twitter.com';
 
     /** @var Response details about the result of the last request */
-    private $response;
+    private ?Response $response = null;
     /** @var string|null Application bearer token */
-    private $bearer;
+    private ?string $bearer = null;
     /** @var Consumer Twitter application details */
-    private $consumer;
+    private Consumer $consumer;
     /** @var Token|null User access token details */
-    private $token;
+    private ?Token $token = null;
     /** @var HmacSha1 OAuth 1 signature type used by Twitter */
-    private $signatureMethod;
+    private HmacSha1 $signatureMethod;
     /** @var int Number of attempts we made for the request */
-    private $attempts = 0;
+    private int $attempts = 0;
 
     /**
      * Constructor
@@ -48,7 +54,7 @@ class TwitterOAuth extends Config
         string $consumerKey,
         string $consumerSecret,
         ?string $oauthToken = null,
-        ?string $oauthTokenSecret = null
+        ?string $oauthTokenSecret = null,
     ) {
         $this->resetLastResponse();
         $this->signatureMethod = new HmacSha1();
@@ -67,7 +73,7 @@ class TwitterOAuth extends Config
      */
     public function setOauthToken(
         string $oauthToken,
-        string $oauthTokenSecret
+        string $oauthTokenSecret,
     ): void {
         $this->token = new Token($oauthToken, $oauthTokenSecret);
         $this->bearer = null;
@@ -236,15 +242,19 @@ class TwitterOAuth extends Config
      *
      * @param string $path
      * @param array  $parameters
-     * @param bool   $json
+     * @param ?bool  $json
      *
      * @return array|object
      */
     public function post(
         string $path,
         array $parameters = [],
-        bool $json = false
+        ?bool $json = null,
     ) {
+        if (is_null($json)) {
+            $json = $this->useJsonBody();
+        }
+
         return $this->http('POST', self::API_HOST, $path, $parameters, $json);
     }
 
@@ -266,12 +276,20 @@ class TwitterOAuth extends Config
      *
      * @param string $path
      * @param array  $parameters
+     * @param ?bool  $json
      *
      * @return array|object
      */
-    public function put(string $path, array $parameters = [])
-    {
-        return $this->http('PUT', self::API_HOST, $path, $parameters, false);
+    public function put(
+        string $path,
+        array $parameters = [],
+        ?bool $json = null,
+    ) {
+        if (is_null($json)) {
+            $json = $this->useJsonBody();
+        }
+
+        return $this->http('PUT', self::API_HOST, $path, $parameters, $json);
     }
 
     /**
@@ -286,7 +304,7 @@ class TwitterOAuth extends Config
     public function upload(
         string $path,
         array $parameters = [],
-        bool $chunked = false
+        bool $chunked = false,
     ) {
         if ($chunked) {
             return $this->uploadMediaChunked($path, $parameters);
@@ -354,6 +372,7 @@ class TwitterOAuth extends Config
      */
     private function uploadMediaChunked(string $path, array $parameters)
     {
+        /** @var object $init */
         $init = $this->http(
             'POST',
             self::UPLOAD_HOST,
@@ -361,6 +380,9 @@ class TwitterOAuth extends Config
             $this->mediaInitParameters($parameters),
             false,
         );
+        if (!property_exists($init, 'media_id_string')) {
+            throw new TwitterOAuthException('Missing "media_id_string"');
+        }
         // Append
         $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
@@ -454,6 +476,19 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Default content type for sending data.
+     *
+     * @return bool
+     */
+    private function useJsonBody()
+    {
+        return [
+            '1.1' => false,
+            '2' => true,
+        ][$this->apiVersion];
+    }
+
+    /**
      * @param string $method
      * @param string $host
      * @param string $path
@@ -467,7 +502,7 @@ class TwitterOAuth extends Config
         string $host,
         string $path,
         array $parameters,
-        bool $json
+        bool $json,
     ) {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
@@ -520,7 +555,7 @@ class TwitterOAuth extends Config
         string $url,
         string $method,
         array $parameters,
-        bool $json
+        bool $json,
     ) {
         do {
             $this->sleepIfNeeded();
@@ -561,7 +596,7 @@ class TwitterOAuth extends Config
         string $url,
         string $method,
         array $parameters,
-        bool $json = false
+        bool $json = false,
     ) {
         $request = Request::fromConsumerAndToken(
             $this->consumer,
@@ -652,7 +687,7 @@ class TwitterOAuth extends Config
         string $method,
         string $authorization,
         array $postfields,
-        bool $json = false
+        bool $json = false,
     ): string {
         $options = $this->curlOptions();
         $options[CURLOPT_URL] = $url;
@@ -667,21 +702,22 @@ class TwitterOAuth extends Config
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                if ($json) {
-                    $options[CURLOPT_HTTPHEADER][] =
-                        'Content-type: application/json';
-                    $options[CURLOPT_POSTFIELDS] = json_encode($postfields);
-                } else {
-                    $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery(
-                        $postfields,
-                    );
-                }
+                $options = $this->setPostfieldsOptions(
+                    $options,
+                    $postfields,
+                    $json,
+                );
                 break;
             case 'DELETE':
                 $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
                 break;
             case 'PUT':
                 $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
+                $options = $this->setPostfieldsOptions(
+                    $options,
+                    $postfields,
+                    $json,
+                );
                 break;
         }
 
@@ -760,5 +796,32 @@ class TwitterOAuth extends Config
     private function curlCaOpt(string $path): int
     {
         return is_dir($path) ? CURLOPT_CAPATH : CURLOPT_CAINFO;
+    }
+
+    /**
+     * Set options for JSON Requests
+     *
+     * @param array $options
+     * @param array $postfields
+     * @param bool $json
+     *
+     * @return array
+     */
+    private function setPostfieldsOptions(
+        array $options,
+        array $postfields,
+        bool $json,
+    ): array {
+        if ($json) {
+            $options[CURLOPT_HTTPHEADER][] = 'Content-type: application/json';
+            $options[CURLOPT_POSTFIELDS] = json_encode(
+                $postfields,
+                JSON_THROW_ON_ERROR,
+            );
+        } else {
+            $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery($postfields);
+        }
+
+        return $options;
     }
 }
