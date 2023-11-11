@@ -1494,7 +1494,7 @@ function fetch_via_espurnaescarlata($fansub_slug, $url, $last_fetched_item_date)
 
 		//Look up and add elements to the item
 		$url = substr($url, 0,strrpos($url, '/')) . $article->href;
-		$title = $article->innertext;
+		$title = $article->find('strong')[0]->innertext;
 		$error=FALSE;
 
 		$html_text = file_get_contents($url) or $error=TRUE;
@@ -1525,10 +1525,16 @@ function fetch_via_espurnaescarlata($fansub_slug, $url, $last_fetched_item_date)
 function fetch_via_mangadex_edcec($fansub_slug, $url, $last_fetched_item_date){
 	$elements = array();
 
-	$tidy_config = "tidy.conf";
 	$error_connect=FALSE;
 
-	$json_text = file_get_contents($url) or $error_connect=TRUE;
+	$curl = curl_init();
+	$headers = array('User-Agent: Fansubscat-NewsFetcher/5.0');
+	curl_setopt($curl, CURLOPT_URL, $url);
+	curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+	$json_text = curl_exec($curl) or $error_connect=TRUE;
+	curl_close($curl);
+
 	if ($error_connect){
 		return array('error_connect',array());
 	}
