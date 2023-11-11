@@ -1506,6 +1506,7 @@ function fetch_via_espurnaescarlata($fansub_slug, $url, $last_fetched_item_date)
 			$item[0]=$title;
 			$item[1]=$inner_html->find('.cw-c.cf', 0)->innertext;
 			$item[2]=parse_description($inner_html->find('.cw-c.cf', 0)->innertext);
+			//News have no time, so we assume 00:00:00, if there are any other news on the same day, these will show below them...
 			$date = date_create_from_format('d.m.Y H:i:s', $inner_html->find('.s-bdh-d .ld-c', 0)->innertext.' 00:00:00');
 			$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 			$item[3]=$date->format('Y-m-d H:i:s');

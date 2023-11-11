@@ -122,7 +122,6 @@ do
 			fi
 			
 			echo "Processing file id $file_id, folder: $storage_folder, URL: $url"
-			mkdir -p "$orig_dir/$storage_folder"
 			mkdir -p "$dest_dir/$storage_folder"
 			mkdir Temporal
 			rm -rf Temporal/*
@@ -140,6 +139,7 @@ do
 					# Copy to original folder, unless the method is only copy to storage
 					if [ $storage_processing -ne 5 ]
 					then
+						mkdir -p "$orig_dir/$storage_folder"
 						if [ -f "$orig_dir/$storage_folder/$file" ]
 						then
 							notify_error "S'ha sobreescrit el fitxer original $folder_type/$storage_folder/$file i se'n sobreescriurà també la versió recomprimida, si existeix."

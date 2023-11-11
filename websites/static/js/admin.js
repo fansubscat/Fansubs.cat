@@ -1,19 +1,3 @@
-function getDurationFromString(str) {
-	var result = str.match(/(?:(\d*) h)? ?(?:(\d*) min)?(?: per capítol)?/);
-	var duration = 0;
-	if (result[1]!=undefined){
-		duration+=parseInt(result[1])*60;
-	}
-	if (result[2]!=undefined){
-		duration+=parseInt(result[2]);
-	}
-	if (duration>0) {
-		return duration;
-	} else {
-		return "";
-	}
-}
-
 function copyToClipboard(text, el) {
 	var copyTest = document.queryCommandSupported('copy');
 	var elOriginalText = el.attr('data-original-title');
@@ -1022,7 +1006,7 @@ function checkNumberOfLinks() {
 				return false;
 			}
 			if (urls[i].value.startsWith("https://mega.nz/") && !urls[i].value.match(/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_-]+)/)) {
-				alert("La URL de MEGA següent és invàlida:\n"+urls[i].value+"\nAssegura’t que l’has exportada correctament fent botó dret -> Copy link havent iniciat la sessió al compte.");
+				alert("L’URL de MEGA següent és invàlida:\n"+urls[i].value+"\nAssegura’t que l’has exportada correctament fent botó dret -> Copy link havent iniciat la sessió al compte.");
 				return false;
 			}
 		}
@@ -1488,14 +1472,6 @@ function showLiveActionWithNoMdl() {
 	}
 }
 
-function showHideEpisodeWarnings() {
-	var hidesEpisodeNumbers = !$('#form-show_episode_numbers').prop('checked');
-	$("#warning-no-numbers").addClass('d-none');
-	if (hidesEpisodeNumbers) {
-		$("#warning-no-numbers").removeClass('d-none');
-	}
-}
-
 var malData;
 var malDataStaff;
 var malDataDivisionsEpisodes;
@@ -1832,5 +1808,4 @@ $(document).ready(function() {
 			$("#form-archive_url").prop('required', false);
 		}
 	});
-	$("#form-show_episode_numbers").change(showHideEpisodeWarnings);
 });
