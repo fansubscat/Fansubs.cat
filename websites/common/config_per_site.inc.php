@@ -8,7 +8,7 @@ if ($server_url==HENTAI_URL) {
 	$server_url .= count($path)>1 ? '/'.$path[1] : '/';
 	if ($server_url!=HENTAI_ANIME_URL && $server_url!=HENTAI_MANGA_URL) {
 		//Used for the error page when not using a path
-		$server_url=MAIN_URL;
+		$server_url=HENTAI_ANIME_URL;
 	}
 }
 define('SITE_BASE_URL', $server_url);

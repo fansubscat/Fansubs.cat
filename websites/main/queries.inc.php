@@ -24,7 +24,7 @@ function get_internal_blacklisted_fansubs_condition_main($user) {
 
 // SELECT
 
-function query_fansubs($user, $status) {
+function query_fansubs($user, $status, $include_hentai) {
 	$status = intval($status);
 	$final_query = "SELECT *
 			FROM (SELECT f.*,
@@ -44,44 +44,18 @@ function query_fansubs($user, $status) {
 						LEFT JOIN series s ON v.series_id=s.id
 						WHERE vf.fansub_id=f.id
 							AND v.is_hidden=0
-							AND s.type='manga'
-							AND s.rating<>'XXX'
-					) total_manga,
-					(SELECT COUNT(DISTINCT v.series_id)
-						FROM rel_version_fansub vf
-						LEFT JOIN version v ON vf.version_id=v.id
-						LEFT JOIN series s ON v.series_id=s.id
-						WHERE vf.fansub_id=f.id
-							AND v.is_hidden=0
-							AND s.type='liveaction'
-							AND s.rating<>'XXX'
-					) total_liveaction,
-					(SELECT COUNT(*)
-						FROM news n
-						WHERE n.fansub_id=f.id
-					) total_news
-				FROM fansub f
-				WHERE f.status=$status
-			) sq
-			WHERE (total_anime>0 OR total_manga>0 OR total_liveaction>0 OR total_news>0)
-			ORDER BY sq.name ASC";
-	return query($final_query);
-}
-
-function query_hentai_fansubs($user, $status) {
-	$status = intval($status);
-	$final_query = "SELECT *
-			FROM (SELECT f.*,
-					IF(".get_internal_blacklisted_fansubs_condition_main($user).", 1, 0) is_blacklisted,
-					(SELECT COUNT(DISTINCT v.series_id)
-						FROM rel_version_fansub vf
-						LEFT JOIN version v ON vf.version_id=v.id
-						LEFT JOIN series s ON v.series_id=s.id
-						WHERE vf.fansub_id=f.id
-							AND v.is_hidden=0
 							AND s.type='anime'
 							AND s.rating='XXX'
-					) total_anime,
+					) total_hentai_anime,
+					(SELECT COUNT(DISTINCT v.series_id)
+						FROM rel_version_fansub vf
+						LEFT JOIN version v ON vf.version_id=v.id
+						LEFT JOIN series s ON v.series_id=s.id
+						WHERE vf.fansub_id=f.id
+							AND v.is_hidden=0
+							AND s.type='manga'
+							AND s.rating<>'XXX'
+					) total_manga,
 					(SELECT COUNT(DISTINCT v.series_id)
 						FROM rel_version_fansub vf
 						LEFT JOIN version v ON vf.version_id=v.id
@@ -90,7 +64,7 @@ function query_hentai_fansubs($user, $status) {
 							AND v.is_hidden=0
 							AND s.type='manga'
 							AND s.rating='XXX'
-					) total_manga,
+					) total_hentai_manga,
 					(SELECT COUNT(DISTINCT v.series_id)
 						FROM rel_version_fansub vf
 						LEFT JOIN version v ON vf.version_id=v.id
@@ -98,7 +72,7 @@ function query_hentai_fansubs($user, $status) {
 						WHERE vf.fansub_id=f.id
 							AND v.is_hidden=0
 							AND s.type='liveaction'
-							AND s.rating='XXX'
+							AND s.rating<>'XXX'
 					) total_liveaction,
 					(SELECT COUNT(*)
 						FROM news n
@@ -107,7 +81,7 @@ function query_hentai_fansubs($user, $status) {
 				FROM fansub f
 				WHERE f.status=$status
 			) sq
-			WHERE (total_anime>0 OR total_manga>0 OR total_liveaction>0)
+			WHERE (total_anime>0 OR total_manga>0 OR total_liveaction>0 OR total_news>0".($include_hentai ? ' OR total_hentai_anime>0 OR total_hentai_manga>0' : '').")
 			ORDER BY sq.name ASC";
 	return query($final_query);
 }

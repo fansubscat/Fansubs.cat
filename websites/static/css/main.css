@@ -103,6 +103,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: start;
+	justify-content: center;
 	margin-left: 2rem;
 	font-size: 1.6rem;
 }
@@ -142,13 +143,13 @@
 .content-button {
 	flex-basis: 0;
 	flex-grow: 1;
-	padding: 1rem 0.2rem;
+	padding: 0.5rem 0.2rem;
 	border-radius: 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	margin-top: 1.5rem;
+	margin-top: 2rem;
 	border-top: 1px solid rgb(var(--negative-color));
 }
 
@@ -159,23 +160,19 @@
 .disabled-content-button {
 	text-align: center;
 	font-weight: normal;
-	background: rgb(var(--neutral-color));
+	background: rgba(var(--neutral-color), 0.75);
 	color: rgb(var(--always-positive-color));
 	font-size: 1.5rem;
 	opacity: 0.75;
 }
 
 .content-type {
-	text-transform: uppercase;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	width: 100%;
+	font-size: 2rem;
 }
 
 .content-quantity {
 	font-family: "lexend_deca_bold", sans-serif;
-	font-size: 2.2rem;
+	font-size: 1.8rem;
 }
 
 .fansub-text-wrapper {

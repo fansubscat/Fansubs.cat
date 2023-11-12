@@ -33,6 +33,7 @@ if (SITE_IS_HENTAI) {
 <?php
 }
 ?>
+		<meta name="description" content="<?php echo htmlspecialchars(defined('PAGE_DESCRIPTION') ? PAGE_DESCRIPTION : SITE_DESCRIPTION); ?>">
 		<meta name="robots" content="noindex"> <!-- TODO REMOVE THIS BEFORE ENTERING PRODUCTION AND REVIEW ALL robots.txt fansubs.online!!! -->
 		<meta name="referrer" content="origin">
 		<meta name="base_url" content="<?php echo SITE_BASE_URL; ?>">
@@ -272,7 +273,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 		if (PAGE_STYLE_TYPE=='main') {
 ?>
-					<a class="social-link bluesky-link fa fa-square" href="https://bsky.app/profile/fansubscat.bsky.social" target="_blank" title="BlueSky de Fansubs.cat"></a>
+					<a class="social-link bluesky-link fa fa-square" href="https://bsky.app/profile/fansubscat.bsky.social" target="_blank" title="Bluesky de Fansubs.cat"></a>
 					<a class="social-link mastodon-link fab fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" title="Mastodon de Fansubs.cat" rel="me"></a>
 					<a class="social-link telegram-link fab fa-telegram" href="https://t.me/fansubscat" target="_blank" title="Telegram de Fansubs.cat"></a>
 					<a class="social-link twitter-link fab fa-x-twitter" href="https://x.com/fansubscat" target="_blank" title="X de Fansubs.cat"></a>

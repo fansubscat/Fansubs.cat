@@ -1,5 +1,6 @@
 <?php
 define('PAGE_STYLE_TYPE', 'main');
+define('SITE_TITLE', 'Fansubs.cat: Anime, manga i imatge real en català');
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="main-site-logo">

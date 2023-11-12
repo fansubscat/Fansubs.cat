@@ -1,5 +1,5 @@
 <?php
-function print_fansub($row, $is_hentai) {
+function print_fansub($row, $show_hentai) {
 ?>
 								<div class="fansub<?php echo !empty($row['is_blacklisted']) ? ' fansub-blacklisted' : ''; ?><?php echo $is_hentai ? ' subtheme-hentai' : ''; ?>">
 									<div class="fansub-text-wrapper">
@@ -51,39 +51,59 @@ function print_fansub($row, $is_hentai) {
 <?php
 	if ($row['total_anime']>0 && empty($row['is_blacklisted'])) {
 ?>
-												<a class="normal-button content-button" href="<?php echo ($is_hentai ? HENTAI_ANIME_URL : ANIME_URL).'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Animes</span><span class="content-quantity"><?php echo $row['total_anime']; ?></span></a>
+												<a class="normal-button content-button" href="<?php echo ANIME_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type" title="Anime"><span class="fa fa-tv"></span></span><span class="content-quantity"><?php echo $row['total_anime']; ?></span></a>
 <?php
 	} else {
 ?>
-												<span class="content-button disabled-content-button"><span class="content-type">Animes</span><span class="content-quantity"><?php echo $row['total_anime']; ?></span></span>
+												<span class="content-button disabled-content-button"><span class="content-type" title="Anime"><span class="fa fa-tv"></span></span><span class="content-quantity"><?php echo $row['total_anime']; ?></span></span>
 <?php
 	}
 	if ($row['total_manga']>0 && empty($row['is_blacklisted'])) {
 ?>
-												<a class="normal-button content-button" href="<?php echo ($is_hentai ? HENTAI_MANGA_URL : MANGA_URL).'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Mangues</span><span class="content-quantity"><?php echo $row['total_manga']; ?></span></a>
+												<a class="normal-button content-button" href="<?php echo MANGA_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type" title="Manga"><span class="fa fa-book-open"></span></span><span class="content-quantity"><?php echo $row['total_manga']; ?></span></a>
 <?php
 	} else {
 ?>
-												<span class="content-button disabled-content-button"><span class="content-type">Mangues</span><span class="content-quantity"><?php echo $row['total_manga']; ?></span></span>
+												<span class="content-button disabled-content-button"><span class="content-type" title="Manga"><span class="fa fa-book-open"></span></span><span class="content-quantity"><?php echo $row['total_manga']; ?></span></span>
 <?php
 	}
 	if ($row['total_liveaction']>0 && empty($row['is_blacklisted'])) {
 ?>
-												<a class="normal-button content-button" href="<?php echo ($is_hentai ? LIVEACTION_URL : LIVEACTION_URL).'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Imatge real</span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></a>
+												<a class="normal-button content-button" href="<?php echo LIVEACTION_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type" title="Contingut d’imatge real"><span class="fa fa-clapperboard"></span></span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></a>
 <?php
-	} else if (!$is_hentai) {
+	} else {
 ?>
-												<span class="content-button disabled-content-button"><span class="content-type">Imatge real</span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></span>
+												<span class="content-button disabled-content-button"><span class="content-type" title="Contingut d’imatge real"><span class="fa fa-clapperboard"></span></span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></span>
 <?php
 	}
 	if ($row['total_news']>0 && empty($row['is_blacklisted'])) {
 ?>
-												<a class="normal-button content-button" href="<?php echo NEWS_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type">Notícies</span><span class="content-quantity"><?php echo $row['total_news']; ?></span></a>
+												<a class="normal-button content-button" href="<?php echo NEWS_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type fa fa-newspaper" title="Notícies"></span><span class="content-quantity"><?php echo $row['total_news']; ?></span></a>
 <?php
 	} else {
 ?>
-												<span class="content-button disabled-content-button"><span class="content-type">Notícies</span><span class="content-quantity"><?php echo $row['total_news']; ?></span></span>
+												<span class="content-button disabled-content-button" title="Notícies"><span class="content-type fa fa-newspaper"></span><span class="content-quantity"><?php echo $row['total_news']; ?></span></span>
 <?php
+	}
+	if ($show_hentai) {
+		if ($row['total_hentai_anime']>0 && empty($row['is_blacklisted'])) {
+?>
+												<a class="normal-button content-button subtheme-hentai" href="<?php echo HENTAI_ANIME_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type" title="Anime hentai"><span class="fa fa-tv"></span><span class="fa fa-fw fa-pepper-hot"></span></span><span class="content-quantity"><?php echo $row['total_hentai_anime']; ?></span></a>
+<?php
+		} else {
+?>
+												<span class="content-button subtheme-hentai disabled-content-button"><span class="content-type" title="Anime hentai"><span class="fa fa-tv"></span><span class="fa fa-fw fa-pepper-hot"></span></span><span class="content-quantity"><?php echo $row['total_hentai_anime']; ?></span></span>
+<?php
+		}
+		if ($row['total_hentai_manga']>0 && empty($row['is_blacklisted'])) {
+?>
+												<a class="normal-button content-button subtheme-hentai" href="<?php echo HENTAI_MANGA_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type" title="Manga hentai"><span class="fa fa-book-open"></span><span class="fa fa-fw fa-pepper-hot"></span></span><span class="content-quantity"><?php echo $row['total_hentai_manga']; ?></span></a>
+<?php
+		} else {
+?>
+												<span class="content-button subtheme-hentai disabled-content-button"><span class="content-type" title="Manga hentai"><span class="fa fa-book-open"></span><span class="fa fa-fw fa-pepper-hot"></span></span><span class="content-quantity"><?php echo $row['total_hentai_manga']; ?></span></span>
+<?php
+		}
 	}
 ?>
 									</div>
