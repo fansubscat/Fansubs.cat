@@ -163,7 +163,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Visualitzacions',
@@ -171,14 +171,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -241,7 +241,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Visualitzacions',
@@ -249,14 +249,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -337,7 +337,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Lectures',
@@ -345,14 +345,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Pàgines llegides',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
 														data: [<?php echo implode(',',$page_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -415,7 +415,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Lectures',
@@ -423,14 +423,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Pàgines llegides',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
 														data: [<?php echo implode(',',$page_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -511,7 +511,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Visualitzacions',
@@ -519,14 +519,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -589,7 +589,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Visualitzacions',
@@ -597,14 +597,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -1207,7 +1207,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Visualitzacions',
@@ -1215,14 +1215,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -1285,7 +1285,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Visualitzacions',
@@ -1293,14 +1293,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -1381,7 +1381,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Lectures',
@@ -1389,14 +1389,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Pàgines llegides',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
 														data: [<?php echo implode(',',$page_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -1459,7 +1459,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Lectures',
@@ -1467,14 +1467,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Pàgines llegides',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
 														data: [<?php echo implode(',',$page_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -1555,7 +1555,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Visualitzacions',
@@ -1563,14 +1563,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {
@@ -1633,7 +1633,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Visualitzacions',
@@ -1641,14 +1641,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
 														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													},
 													{
 														label: 'Temps de visualització (h)',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
-														tension: 0.2
+														tension: 0.4
 													}]
 												},
 												options: {

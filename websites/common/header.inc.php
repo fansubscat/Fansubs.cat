@@ -275,7 +275,7 @@ if (PAGE_STYLE_TYPE=='login') {
 					<a class="social-link bluesky-link fa fa-square" href="https://bsky.app/profile/fansubscat.bsky.social" target="_blank" title="BlueSky de Fansubs.cat"></a>
 					<a class="social-link mastodon-link fab fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" title="Mastodon de Fansubs.cat" rel="me"></a>
 					<a class="social-link telegram-link fab fa-telegram" href="https://t.me/fansubscat" target="_blank" title="Telegram de Fansubs.cat"></a>
-					<a class="social-link twitter-link fab fa-square-x-twitter" href="https://x.com/fansubscat" target="_blank" title="X de Fansubs.cat"></a>
+					<a class="social-link twitter-link fab fa-x-twitter" href="https://x.com/fansubscat" target="_blank" title="X de Fansubs.cat"></a>
 <?php
 		} else {
 ?>
