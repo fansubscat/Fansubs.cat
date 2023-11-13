@@ -825,12 +825,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="mb-3">
 									<label for="form-storage_processing"><span class="mandatory">Processament de fitxers</span><br /><small class="text-muted">(com s’importen els fitxers a l’emmagatzematge)</small></label>
 									<select name="storage_processing" class="form-select" onchange="if(!confirm('Modificar aquesta opció pot provocar que els vídeos no es puguin reproduir correctament. Canvia-la només si tens el permís d‘un administrador. En cas contrari, deixa-la amb el valor per defecte. Vols mantenir el canvi?')) this.selectedIndex=0;">
-										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Recomprimeix el vídeo i l’àudio</option>
-										<option value="0"<?php echo $row['storage_processing']==0 ? " selected" : ""; ?>>Recomprimeix el vídeo, copia l’àudio</option>
-										<option value="2"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>Recomprimeix l’àudio, copia el vídeo</option>
-										<option value="3"<?php echo $row['storage_processing']==3 ? " selected" : ""; ?>>No recomprimeixis res (regenera l’MP4)</option>
-										<option value="4"<?php echo $row['storage_processing']==4 ? " selected" : ""; ?>>Copia sense cap canvi (còpia 1:1)</option>
-										<option value="5"<?php echo $row['storage_processing']==5 ? " selected" : ""; ?>>Omet l’emmagatzematge local</option>
+										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Desa l’original, converteix el vídeo i l’àudio</option>
+										<option value="0"<?php echo $row['storage_processing']==0 ? " selected" : ""; ?>>Desa l’original, converteix el vídeo, copia l’àudio</option>
+										<option value="2"<?php echo $row['storage_processing']==2 ? " selected" : ""; ?>>Desa l’original, copia el vídeo, converteix l’àudio</option>
+										<option value="3"<?php echo $row['storage_processing']==3 ? " selected" : ""; ?>>Desa l’original, copia el vídeo i l’àudio (regenera l’MP4)</option>
+										<option value="4"<?php echo $row['storage_processing']==4 ? " selected" : ""; ?>>Desa l’original, importa sense cap canvi</option>
+										<option value="5"<?php echo $row['storage_processing']==5 ? " selected" : ""; ?>>No desis l’original, importa sense cap canvi</option>
 									</select>
 								</div>
 							</div>
