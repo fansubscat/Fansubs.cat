@@ -78,11 +78,11 @@ function print_fansub($row, $show_hentai) {
 	}
 	if ($row['total_news']>0 && empty($row['is_blacklisted'])) {
 ?>
-												<a class="normal-button content-button" href="<?php echo NEWS_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type fa fa-newspaper" title="Notícies"></span><span class="content-quantity"><?php echo $row['total_news']; ?></span></a>
+												<a class="normal-button content-button" href="<?php echo NEWS_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type"><span class="fa fa-newspaper" title="Notícies"></span></span><span class="content-quantity"><?php echo $row['total_news']; ?></span></a>
 <?php
 	} else {
 ?>
-												<span class="content-button disabled-content-button" title="Notícies"><span class="content-type fa fa-newspaper"></span><span class="content-quantity"><?php echo $row['total_news']; ?></span></span>
+												<span class="content-button disabled-content-button" title="Notícies"><span class="content-type"><span class="fa fa-newspaper" title="Notícies"></span></span><span class="content-quantity"><?php echo $row['total_news']; ?></span></span>
 <?php
 	}
 	if ($show_hentai) {
