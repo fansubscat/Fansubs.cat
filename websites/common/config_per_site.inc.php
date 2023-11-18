@@ -238,7 +238,10 @@ switch ($server_url) {
 		define('CATALOGUE_SEASONAL_SERIES_ICON', 'fa-fire');
 		break;
 	case MAIN_URL:
-		define('SITE_TITLE', 'Fansubs.cat');
+		if (!defined('SITE_TITLE')) {
+			//It is already defined at the main index page
+			define('SITE_TITLE', 'Fansubs.cat');
+		}
 		define('SITE_DESCRIPTION', 'Fansubs.cat és el portal on podràs gaudir de l’anime, del manga i de tota la resta de contingut dels fansubs en català!');
 		define('SITE_INTERNAL_NAME', 'main');
 		define('SITE_PREVIEW_IMAGE', 'main');
