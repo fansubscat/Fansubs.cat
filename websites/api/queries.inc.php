@@ -187,7 +187,7 @@ function query_fansubs_for_api_response() {
 
 function query_news_for_api_response($offset, $query, $fansub_slugs) {
 	$offset = intval($offset);
-	$query = escape($query);
+	$query = escape_for_like($query);
 	$fansubs_condition = "1";
 	
 	if (count($fansub_slugs)>0) {
@@ -264,7 +264,7 @@ function query_recent_manga($offset, $max_items) {
 function query_search_manga($offset, $max_items, $query, $type, $statuses, $demographies, $genres_include, $genres_exclude, $themes_include, $themes_exclude) {
 	$offset=intval($offset);
 	$max_items=intval($max_items);
-	$query = escape($query);
+	$query = escape_for_like($query);
 	$type_condition = "1";
 	$statuses_condition = "1";
 	$demographies_condition = "1";

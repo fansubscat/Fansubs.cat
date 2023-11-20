@@ -28,6 +28,12 @@ function escape($string){
 	return mysqli_real_escape_string($db_connection, $string);
 }
 
+function escape_for_like($string){
+	global $db_connection;
+	$string = str_replace('\\', '\\\\', $string);
+	return mysqli_real_escape_string($db_connection, $string);
+}
+
 function query($query){
 	global $db_connection;
 	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");

@@ -1199,7 +1199,7 @@ function query_related_series($user, $series_id, $series_author, $num_of_genres_
 
 function query_search_filter($user, $text, $type, $subtype, $min_score, $max_score, $min_year, $max_year, $min_length, $max_length, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $origins, $genres_included_ids, $genres_excluded_ids, $statuses) {
 	$text = str_replace(" ", "%", $text);
-	$text = escape($text);
+	$text = escape_for_like($text);
 	$type = escape($type);
 	$subtype = escape($subtype);
 	$min_score = floatval($min_score);
@@ -1233,7 +1233,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 
 function query_autocomplete($user, $text, $type) {
 	$text = str_replace(" ", "%", $text);
-	$text = escape($text);
+	$text = escape_for_like($text);
 	$type = escape($type);
 	$final_query = get_internal_catalogue_base_query_portion($user)."
 				AND s.type='$type'
