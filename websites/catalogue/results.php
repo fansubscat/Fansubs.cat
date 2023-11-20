@@ -375,7 +375,13 @@ foreach($sections as $section){
 									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark_hd.jpg'; ?>" alt="">
 									<div class="infoholder" data-swiper-parallax="-30%">
 										<div class="dataholder">
+<?php
+					if (file_exists(STATIC_URL.'/images/site/special_day_'.$special_day.'.png')) {
+?>
 											<img class="special-day-image" src="<?php echo STATIC_URL.'/images/site/special_day_'.$special_day.'.png'; ?>" alt="">
+<?php
+					}
+?>
 											<div class="title"><?php echo $special_day_title; ?></div>
 											<div class="divisions"><?php echo $special_day_description; ?></div>
 										</div>
