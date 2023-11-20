@@ -14,8 +14,8 @@ if (MASCOT_ENABLED) {
 }
 ?>
 						<h2 class="section-title"><i class="fa fa-fw fa-users"></i> Qui som?</h2>
-						<div class="section-content">Un «fansub» és un grup d’una o més persones amb l’afició de subtitular productes audiovisuals o traduir i editar còmics en la seva llengua de manera altruista.</div>
-						<div class="section-content new-paragraph">Fansubs.cat és un projecte sorgit dels esforços conjunts dels principals fansubs en català. El nostre únic objectiu és potenciar el consum de contingut de l’Àsia Oriental en català, tot permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.</div>
+						<div class="section-content">Un <strong>fansub</strong> és un grup d’una o més persones amb l’afició de subtitular productes audiovisuals o traduir i editar còmics en la seva llengua de manera altruista.</div>
+						<div class="section-content new-paragraph"><strong>Fansubs.cat</strong> és un projecte sorgit dels esforços conjunts dels principals fansubs en català. El nostre únic objectiu és potenciar el consum de contingut de l’Àsia Oriental en català, tot permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.</div>
 						<div class="section-content new-paragraph">El web és un recull de tot el contingut publicat pels diferents fansubs en català. No en valorem la qualitat ni hi fem cap correcció, per tant, sigues conscient que algunes obres poden tenir una qualitat inferior a l’esperada. Si no et satisfà algun fansub en concret, el pots afegir a la teva llista negra personal per a amagar-ne el contingut.</div>
 						<h2 class="section-title"><i class="fa fa-fw fa-comment-dots"></i> Declaració de principis</h2>
 						<div class="section-content">El funcionament de Fansubs.cat es basa en aquests tres principis:</div>
