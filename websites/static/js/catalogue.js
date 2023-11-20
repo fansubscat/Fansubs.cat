@@ -31,7 +31,6 @@ var lastMoveY;
 var inactivityTimeout;
 var activityCheckInterval;
 var currentPlayRate = 1;
-var mascotEnabled = false;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -1331,7 +1330,7 @@ function parsePlayerError(error){
 	$('.player-error').remove();
 	shutdownFileDisplayer(false);
 	$('#overlay-content > .player_extra_upper').removeClass('hidden');
-	$(start + '<div class="player_error_title">'+(mascotEnabled ? '<img class=\"mascot-player-error\" src=\"'+STATIC_URL+'/images/mascot/'+(isManga ? 'manga_reader_error' : 'video_player_error')+'.png\" alt=\"\">' : '<span class=\"fa fa-exclamation-circle player_error_icon\"></span>')+'<br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details class="player-error-technical-details"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>VID: ' + (currentSourceData!=null ? currentSourceData.view_id : '(null)') + ' / FID: ' + (currentSourceData!=null ? currentSourceData.file_id : '(null)') + ' / TSP: ' + lastErrorTimestamp + '</details>' + end).appendTo('#overlay-content');
+	$(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details class="player-error-technical-details"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>VID: ' + (currentSourceData!=null ? currentSourceData.view_id : '(null)') + ' / FID: ' + (currentSourceData!=null ? currentSourceData.file_id : '(null)') + ' / TSP: ' + lastErrorTimestamp + '</details>' + end).appendTo('#overlay-content');
 }
 
 function loadMegaStream(url){

@@ -6,13 +6,6 @@ define('PAGE_DESCRIPTION', 'Fansubs.cat és un projecte sorgit dels esforços co
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="text-page">
-<?php
-if (MASCOT_ENABLED) {
-?>
-						<img class="mascot-big" src="<?php echo STATIC_URL; ?>/images/mascot/about.png" alt="">
-<?php
-}
-?>
 						<h2 class="section-title"><i class="fa fa-fw fa-users"></i> Qui som?</h2>
 						<div class="section-content">Un <strong>fansub</strong> és un grup d’una o més persones amb l’afició de subtitular productes audiovisuals o traduir i editar còmics en la seva llengua de manera altruista.</div>
 						<div class="section-content new-paragraph"><strong>Fansubs.cat</strong> és un projecte sorgit dels esforços conjunts dels principals fansubs en català. El nostre únic objectiu és potenciar el consum de contingut de l’Àsia Oriental en català, tot permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.</div>

@@ -249,11 +249,6 @@
 	flex-basis: 0;
 }
 
-.mascot-big {
-	float: right;
-	margin-left: 2rem;
-}
-
 @media (hover: hover) and (pointer: fine) {
 	.main-button:hover {
 		border: 0.3rem solid rgb(var(--primary-color));
@@ -304,10 +299,6 @@
 		width: calc(50% - 1rem);
 		flex-grow: unset;
 		flex-basis: unset;
-	}
-
-	.mascot-big {
-		display: none;
 	}
 }
 
