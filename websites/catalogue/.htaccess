@@ -18,12 +18,6 @@ RewriteCond %{REQUEST_URI} !results\.php
 RewriteCond %{REQUEST_URI} !random_results\.php
 RewriteRule \.php$ - [F]
 
-#OLD REDIRECTS: v2->v5 migration for old 2020 press release images
-RewriteCond %{HTTP_HOST} ^anime.fansubs.online$
-RewriteRule ^images/portada.png$ https://static.fansubs.online/various/portada_nota_premsa.png [R=301,L]
-RewriteCond %{HTTP_HOST} ^anime.fansubs.online$
-RewriteRule ^images/serie.png$ https://static.fansubs.online/various/serie_nota_premsa.png [R=301,L]
-
 #OLD REDIRECTS: v3->v5 migration for manga (Piwigo -> Catalogue) - Used by links at Lluna Plena
 RewriteCond %{HTTP_HOST} ^manga.fansubs.online$
 RewriteRule ^index/category/(.*)-(.*)$ migration.php?migration_type=piwigo&id=$1 [L]
