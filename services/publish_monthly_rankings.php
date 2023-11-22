@@ -43,7 +43,7 @@ $types = array(
 
 $message="*Totals del mes passat:*\n\n__Anime:__\n  • Visualitzacions: $views_anime\n  • Temps total: ".get_hours_or_minutes_formatted($time_anime)."\n  • Versions noves: ${totals['total_anime']}\n  • Fitxers nous: ${totals['total_files_anime']}\n\n__Manga:__\n  • Lectures: $views_manga\n  • Pàgines totals: $pages_manga\n  • Versions noves: ${totals['total_manga']}\n  • Fitxers nous: ${totals['total_files_manga']}\n\n__Imatge real:__\n  • Visualitzacions: $views_liveaction\n  • Temps total: ".get_hours_or_minutes_formatted($time_liveaction)."\n  • Versions noves: ${totals['total_liveaction']}\n  • Fitxers nous: ${totals['total_files_liveaction']}\n\n__Altres:__\n  • Notícies noves: ${totals['total_news']}\n  • Fansubs nous: ${totals['total_fansubs']}\n  • Usuaris nous: ${totals['new_users']}\n  • Usuaris actius: ${totals['total_users']}\n  • Usuaris anònims: ${totals['total_anons']}";
 
-file_get_contents("https://api.telegram.org/bot".TELEGRAM_BOT_API_KEY."/sendMessage?chat_id=".TELEGRAM_BOT_CHAT_ID."&parse_mode=markdownv2&text=".urlencode($message));
+file_get_contents("https://api.telegram.org/bot".TELEGRAM_CONFIG[0]['TELEGRAM_BOT_API_KEY']."/sendMessage?chat_id=".TELEGRAM_CONFIG[0]['TELEGRAM_BOT_CHAT_ID']."&parse_mode=markdownv2&text=".urlencode($message));
 
 foreach ($types as $type) {
 	file_put_contents("/tmp/fansubscat_monthly_rankings.png", file_get_contents(ADMIN_URL."/twitter_image.php?type=${type[0]}&mode=month&first_month=$last_month&last_month=$last_month&is_hentai=".($type[3] ? '1' : '0')."&token=".INTERNAL_SERVICES_TOKEN));
