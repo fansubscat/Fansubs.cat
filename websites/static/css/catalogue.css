@@ -1039,7 +1039,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 }
 
 .recommendation.single-feature .coverholder {
-	height: 100%;
+	height: 82.5%;
 }
 
 .recommendation.single-feature .dataholder {
@@ -1126,16 +1126,20 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	height: 100%;
 	position: absolute;
 	color: rgb(var(--positive-color));
-	padding: 2.5rem;
 	width: 60vw;
 	max-width: 100rem;
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 }
 
 .recommendation .dataholder {
 	text-align: left;
 	color: rgb(var(--negative-color));
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: center;
 }
 
 .recommendation .watchbutton {
@@ -1919,6 +1923,9 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 
 .episode-info-seen-cell {
 	padding: 0.75rem 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 
 .episode-info {
@@ -2804,10 +2811,6 @@ input:checked + .viewed-slider:before {
 		margin-top: 1rem;
 	}
 
-	.recommendation .infoholder {
-		padding: 1.5rem;
-	}
-
 	.recommendation .watchbutton {
 		border-radius: 0.4rem;
 		padding: 0.6rem 2rem;
@@ -3263,13 +3266,17 @@ input:checked + .viewed-slider:before {
 }
 
 @media (max-width: 600px){
-	.recommendation .coverholder {
-		height: 75%;
-		align-self: start;
-	}
-
 	.recommendation .infoholder {
 		width: 90vw;
+		height: 85%;
+	}
+
+	.recommendation.single-feature {
+		margin: var(--thumbnail-margin);
+	}
+
+	.recommendation.single-feature .infoholder {
+		height: 100%;
 	}
 
 	.recommendation .title {
