@@ -2803,7 +2803,7 @@ input:checked + .viewed-slider:before {
 		-webkit-mask-image: linear-gradient(to top, transparent, white 40%), linear-gradient(to bottom, transparent, white 50%);
 		mask-image: linear-gradient(to top, transparent, white 40%), linear-gradient(to bottom, transparent, white 50%);
 		-webkit-mask-composite: destination-in;
-		mask-composite: exclude;
+		mask-composite: intersect;
 	}
 
 	.advent {

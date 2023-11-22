@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2023-11-23 - Versió 5.0.1
+- **Catàleg:**
+	- Es corregeixen errors de visualització en Firefox per a mòbils.
+
 ## 2023-11-22 - Versió 5.0.0
 - **General:**
 	- Nou disseny.
