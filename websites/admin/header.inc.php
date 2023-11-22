@@ -38,7 +38,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 ?>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 			<div class="container-fluid">
-				<span class="navbar-brand"><a href="<?php echo ADMIN_URL; ?>/">Tauler d’administració</a> <small><small><a href="https://github.com/fansubscat/Fansubs.cat/blob/v5/CHANGELOG.md#registre-de-canvis" target="_blank" title="Registre de canvis">v<?php echo VERSION; ?></a></small></small></span>
+				<span class="navbar-brand"><a href="<?php echo ADMIN_URL; ?>/">Tauler d’administració</a> <small><small><a href="https://github.com/fansubscat/Fansubs.cat/blob/master/CHANGELOG.md#registre-de-canvis" target="_blank" title="Registre de canvis">v<?php echo VERSION; ?></a></small></small></span>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Commuta la navegació">
 					<span class="navbar-toggler-icon"></span>
 				</button>
