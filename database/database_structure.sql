@@ -152,7 +152,7 @@ CREATE TABLE `news_fetcher` (
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `pending_news` (
   `id` int(11) NOT NULL,
@@ -228,11 +228,6 @@ CREATE TABLE `reported_error` (
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
   `ip` varchar(200) NOT NULL,
   `user_agent` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE `search_history` (
-  `query` varchar(200) NOT NULL,
-  `day` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `series` (
@@ -341,7 +336,7 @@ CREATE TABLE `views` (
   `type` varchar(200) NOT NULL,
   `clicks` int(11) NOT NULL DEFAULT 0,
   `views` int(11) NOT NULL DEFAULT 0,
-  `total_length` int(11) DEFAULT NULL
+  `total_length` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `view_session` (
@@ -495,6 +490,9 @@ ALTER TABLE `view_session`
 ALTER TABLE `admin_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `community`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `division`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -598,9 +596,9 @@ ALTER TABLE `user_fansub_blacklist`
   ADD CONSTRAINT `user_fansub_blacklist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_fansub_blacklist_ibfk_2` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `user_file_progress`
-  ADD CONSTRAINT `user_file_progress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `user_file_progress_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `file` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `user_file_seen_status`
+  ADD CONSTRAINT `user_file_seen_status_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_file_seen_status_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `file` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `user_series_list`
   ADD CONSTRAINT `user_series_list_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
