@@ -184,7 +184,7 @@ else if (substr($method, 0, 4) === "news"){
 	}
 }
 else if ($method === 'manga'){
-	define('SITE_IS_HENTAI', $_GET['hentai']=='true');
+	define('SITE_IS_HENTAI', !empty($_GET['hentai']) && $_GET['hentai']=='true');
 	$submethod = array_shift($request);
 	if ($submethod=='popular') {
 		$page = array_shift($request);
@@ -319,6 +319,12 @@ else if ($method === 'manga'){
 		);
 		echo json_encode($response);
 	} else if ($submethod=='pages') {
+		//This is a temporary fix until the Tachiyomi extension is updated.
+		//Version 3 of the extension sends "slug/file_id", version 4 sends "file_id"
+		//Version 3 user-agent is "Tachiyomi/FansubsCat/xxx", version 4 is "Tachiyomi/xxx"
+		if (strpos($_SERVER['HTTP_USER_AGENT'], 'FansubsCat')!==FALSE) {
+			array_shift($request);
+		}
 		$file_id = intval(array_shift($request));
 
 		//IMPORTANT: We add 10000 because when the unification of catalogues occurred,
