@@ -2,8 +2,7 @@
 require_once('db.inc.php');
 require_once("vendor/autoload.php");
 
-//TODO Comment this out when entering production fansubs.online
-define('DRY_RUN', TRUE);
+//define('DRY_RUN', TRUE);
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use cjrasmussen\BlueskyApi\BlueskyApi;

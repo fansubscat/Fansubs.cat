@@ -184,7 +184,7 @@ else if (substr($method, 0, 4) === "news"){
 	}
 }
 else if ($method === 'manga'){
-	define('SITE_IS_HENTAI', !empty($_GET['hentai']));
+	define('SITE_IS_HENTAI', $_GET['hentai']=='true');
 	$submethod = array_shift($request);
 	if ($submethod=='popular') {
 		$page = array_shift($request);

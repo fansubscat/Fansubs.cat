@@ -1,6 +1,3 @@
 User-agent: *
-Disallow: /
-# Real robots.txt here:
-# User-agent: *
-# Disallow: /*.php
+Disallow: /*.php
 

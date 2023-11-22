@@ -1,13 +1,13 @@
-const MAIN_URL = "https://www.fansubs.online";
-const USERS_URL='https://usuaris.fansubs.online';
-const STATIC_URL='https://static.fansubs.online';
+const MAIN_URL = "https://www.fansubs.cat";
+const USERS_URL='https://usuaris.fansubs.cat';
+const STATIC_URL='https://static.fansubs.cat';
 
 var lastWindowWidth=0;
 
 var cookieOptions = {
 	expires: 3650,
 	path: '/',
-	domain: ".fansubs.online",
+	domain: ".fansubs.cat",
 	sameSite: "None",
 	secure: true
 };

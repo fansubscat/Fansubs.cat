@@ -34,7 +34,6 @@ if (SITE_IS_HENTAI) {
 }
 ?>
 		<meta name="description" content="<?php echo htmlspecialchars(defined('PAGE_DESCRIPTION') ? PAGE_DESCRIPTION : SITE_DESCRIPTION); ?>">
-		<meta name="robots" content="noindex"> <!-- TODO REMOVE THIS BEFORE ENTERING PRODUCTION AND REVIEW ALL robots.txt fansubs.online!!! -->
 		<meta name="referrer" content="origin">
 		<meta name="base_url" content="<?php echo SITE_BASE_URL; ?>">
 		<meta name="twitter:card" content="summary_large_image">

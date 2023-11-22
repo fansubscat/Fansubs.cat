@@ -13,18 +13,18 @@ RewriteRule \.php$ - [F]
 
 #v5: These are old www.fansubs.cat pages, redirect where more appropriate
 # The following no longer exist:
-RewriteRule ^arxiu/?$ https://noticies.fansubs.online [R=301,L]
-RewriteRule ^estadistiques/$ https://noticies.fansubs.online [R=301,L]
-RewriteRule ^fansub/(.+)/pagina/(.+)/?$ https://noticies.fansubs.online/cerca?fansub=$1 [R=301,L]
-RewriteRule ^fansub/(.+)/?$ https://noticies.fansubs.online/cerca?fansub=$1 [R=301,L]
+RewriteRule ^arxiu/?$ https://noticies.fansubs.cat [R=301,L]
+RewriteRule ^estadistiques/$ https://noticies.fansubs.cat [R=301,L]
+RewriteRule ^fansub/(.+)/pagina/(.+)/?$ https://noticies.fansubs.cat/cerca?fansub=$1 [R=301,L]
+RewriteRule ^fansub/(.+)/?$ https://noticies.fansubs.cat/cerca?fansub=$1 [R=301,L]
 # Old advent calendar for 2020 (pre-v4):
-RewriteRule ^nadal/?$ https://advent.fansubs.online/2020 [R=301,L]
+RewriteRule ^nadal/?$ https://advent.fansubs.cat/2020 [R=301,L]
 # These still exist, but on a different location or domain
 RewriteRule ^envia-noticies-contacta/?$ contacta-amb-nosaltres [R=301,L]
-RewriteRule ^pagina/(.+)/?$ https://noticies.fansubs.online/pagina/$1 [R=301,L]
-RewriteRule ^rss/?$ https://noticies.fansubs.online/rss [R=301,L]
-RewriteRule ^cerca/(.+)/pagina/(.+)/?$ https://noticies.fansubs.online/cerca/$1 [R=301,L]
-RewriteRule ^cerca/(.+)/?$ https://noticies.fansubs.online/cerca/$1 [R=301,L]
+RewriteRule ^pagina/(.+)/?$ https://noticies.fansubs.cat/pagina/$1 [R=301,L]
+RewriteRule ^rss/?$ https://noticies.fansubs.cat/rss [R=301,L]
+RewriteRule ^cerca/(.+)/pagina/(.+)/?$ https://noticies.fansubs.cat/cerca/$1 [R=301,L]
+RewriteRule ^cerca/(.+)/?$ https://noticies.fansubs.cat/cerca/$1 [R=301,L]
 
 #Normal pages
 RewriteRule ^qui-som/?$ about.php [L]

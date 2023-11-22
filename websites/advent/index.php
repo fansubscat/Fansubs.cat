@@ -61,11 +61,10 @@ define('PAGE_TITLE', 'Calendari d’advent '.$row['year']);
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="theme-color" content="#6aa0f8">
-		<meta name="robots" content="noindex"> <!-- TODO REMOVE THIS BEFORE ENTERING PRODUCTION AND REVIEW ALL robots.txt fansubs.online!!! -->
 		<meta name="referrer" content="origin">
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="msapplication-TileColor" content="#da532c">
-		<meta name="msapplication-config" content="https://static.fansubs.online/favicons/advent/browserconfig.xml">
+		<meta name="msapplication-config" content="https://static.fansubs.cat/favicons/advent/browserconfig.xml">
 		<meta property="og:title" content="<?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?>" />
 		<meta property="og:url" content="<?php echo ADVENT_URL; ?>/" />
 		<meta property="og:description" content="" />
