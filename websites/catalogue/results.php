@@ -445,7 +445,6 @@ foreach($sections as $section){
 	}
 	$i++;
 }
-mysqli_free_result($featured_single_result);
 
 if (!$has_some_result) {
 ?>
