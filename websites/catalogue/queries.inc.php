@@ -416,7 +416,8 @@ function query_manga_division_data_from_file_with_old_piwigo_id($old_piwigo_id) 
 	$old_piwigo_id = intval($old_piwigo_id);
 	$final_query = "SELECT s.subtype,
 				s.slug,
-				IF(s.subtype='oneshot', NULL, d.number) division_number
+				IF(s.subtype='oneshot', NULL, d.number) division_number,
+				f.version_id
 			FROM file f
 				LEFT JOIN episode e ON f.episode_id=e.id
 				LEFT JOIN division d ON e.division_id=d.id
@@ -431,7 +432,8 @@ function query_manga_division_data_from_division_with_old_piwigo_id($old_piwigo_
 	$old_piwigo_id = intval($old_piwigo_id);
 	$final_query = "SELECT s.subtype,
 				s.slug,
-				IF(s.type='oneshot', NULL, d.number) division_number
+				IF(s.type='oneshot', NULL, d.number) division_number,
+				f.version_id
 			FROM division d
 				LEFT JOIN series s ON d.series_id=s.id
 			WHERE s.type='manga'

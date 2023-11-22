@@ -38,7 +38,7 @@ if ($migration_type=='piwigo') {
 		$result = query_manga_division_data_from_file_with_old_piwigo_id($file_id_for_file);
 		if ($row = mysqli_fetch_assoc($result)) {
 			header("HTTP/1.1 301 Moved Permanently");
-			header("Location: /".$row['slug'].(!empty($row['division_number']) ? '#volum-'.$row['division_number'] : ''));
+			header("Location: /".$row['slug'].(!empty($row['division_number']) ? '#version-'.$row['version_id'].'-division-'.floatval($row['division_number']) : ''));
 			mysqli_free_result($result);
 		} else {
 			mysqli_free_result($result);
@@ -46,7 +46,7 @@ if ($migration_type=='piwigo') {
 			$result = query_manga_division_data_from_division_with_old_piwigo_id($file_id_for_division);
 			if ($row = mysqli_fetch_assoc($result)) {
 				header("HTTP/1.1 301 Moved Permanently");
-				header("Location: /".$row['slug'].(!empty($row['division_number']) ? '#volum-'.$row['division_number'] : ''));
+				header("Location: /".$row['slug'].(!empty($row['division_number']) ? '#version-'.$row['version_id'].'-division-'.floatval($row['division_number']) : ''));
 				mysqli_free_result($result);
 			} else {
 				mysqli_free_result($result);
