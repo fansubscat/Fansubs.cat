@@ -776,7 +776,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-4">
+							<div class="col-sm-<?php echo $type!='manga' ? '4' : '8'; ?>">
 								<div class="mb-3">
 									<label for="form-status" class="mandatory">Estat</label>
 									<select class="form-select" name="status" id="form-status" required>
@@ -789,23 +789,29 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</select>
 								</div>
 							</div>
+<?php
+	if ($type!='manga') {
+?>
 							<div class="col-sm-4">
 								<div class="mb-3">
 									<label for="form-default_resolution">Resolució per defecte <small class="text-muted">(per a l’obtenció automàtica d’enllaços)</small></label>
 									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
 								</div>
 							</div>
+<?php
+	}
+?>
 							<div class="col-sm">
 								<div class="mb-3">
 									<label for="form-featurable_check">Recomanacions</label>
 									<div id="form-featurable_check">
 										<div class="form-check form-check-inline">
 											<input class="form-check-input" type="checkbox" name="is_featurable" id="form-is_featurable" value="1"<?php echo $row['is_featurable']==1? " checked" : ""; ?>>
-											<label class="form-check-label" for="form-is_featurable">Candidata a ser recomanada</label>
+											<label class="form-check-label" for="form-is_featurable">Recomanable</label>
 										</div>
 										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="is_always_featured" id="form-is_always_featured" value="1"<?php echo $row['is_always_featured']==1? " checked" : ""; ?> onchange="if (this.checked) {if (!confirm('Recorda que aquesta opció és només per a sèries de temporada o casos especials. No tindrà efecte fins al pròxim dilluns. Segur que la vols marcar com a “recomanada sempre“?')) this.checked=''; };">
-											<label class="form-check-label" for="form-is_always_featured">Força-la com a recomanada</label>
+											<input class="form-check-input" type="checkbox" name="is_always_featured" id="form-is_always_featured" value="1"<?php echo $row['is_always_featured']==1? " checked" : ""; ?> onchange="if (this.checked) {if (!confirm('Recorda que aquesta opció és només per a sèries de temporada o casos especials. No tindrà efecte fins al pròxim dilluns. Segur que la vols marcar com a «recomanada sempre»?')) this.checked=''; };">
+											<label class="form-check-label" for="form-is_always_featured">Recomana-la sempre</label>
 										</div>
 									</div>
 								</div>
