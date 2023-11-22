@@ -1045,6 +1045,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 .recommendation.single-feature .dataholder {
 	color: rgb(var(--positive-color));
 	text-shadow: 0 0 0.5rem rgba(var(--negative-color),1);
+	margin-top: -0.6rem;
 }
 
 .recommendation.single-feature .synopsis {
@@ -1140,6 +1141,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	flex-direction: column;
 	align-items: start;
 	justify-content: center;
+	margin-top: -1rem;
 }
 
 .recommendation .watchbutton {
@@ -2786,6 +2788,10 @@ input:checked + .viewed-slider:before {
 	.recommendation.single-feature {
 		height: 18rem;
 		max-height: 18rem;
+	}
+
+	.recommendation.single-feature .dataholder {
+		margin-top: -0.3rem;
 	}
 
 	.series-header {
