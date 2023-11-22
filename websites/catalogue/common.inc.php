@@ -517,6 +517,9 @@ function print_chapter_item($row) {
 }
 
 function get_relative_date_last_update($time) {
+	if (time()-$time<60) {
+		return "ara mateix";
+	}
 	if (time()-$time<3600) {
 		$minutes = intval((time()-$time)/60);
 		if ($minutes==1) {
