@@ -12,7 +12,7 @@ if ($server_url==HENTAI_URL) {
 	}
 }
 define('SITE_BASE_URL', $server_url);
-switch ($server_url) {
+switch (strtolower($server_url)) {
 	case NEWS_URL:
 		define('SITE_TITLE', 'Notícies dels fansubs en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Consulta les darreres notícies dels fansubs en català a Fansubs.cat, el portal que en recopila totes les novetats!');

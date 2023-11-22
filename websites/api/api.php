@@ -469,7 +469,7 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 	} else if ($submethod=='change_file_duration') {
 		if (!empty($_POST['file_id']) && is_numeric($_POST['file_id']) && !empty($_POST['duration']) && is_numeric($_POST['duration'])) {
 			query_update_file_length($_POST['file_id'], $_POST['duration']);
-			log_action('api-change-file-duration', "S’ha canviat la durada del fitxer amb id. $file_id a $duration segons");
+			log_action('api-change-file-duration', "S’ha canviat la durada del fitxer amb id. ${_POST['file_id']} a ${_POST['duration']} segons");
 			
 			$response = array(
 				'status' => 'ok'

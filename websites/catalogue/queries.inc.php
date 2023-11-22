@@ -433,7 +433,7 @@ function query_manga_division_data_from_division_with_old_piwigo_id($old_piwigo_
 	$final_query = "SELECT s.subtype,
 				s.slug,
 				IF(s.type='oneshot', NULL, d.number) division_number,
-				f.version_id
+				(SELECT id FROM version v WHERE v.series_id=s.id LIMIT 1) version_id
 			FROM division d
 				LEFT JOIN series s ON d.series_id=s.id
 			WHERE s.type='manga'

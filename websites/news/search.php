@@ -85,7 +85,7 @@ if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user)
 								<option value="-3"<?php echo $param_fansub==-3 ? ' selected' : ''; ?>>Només notícies de Fansubs.cat</option>
 <?php
 }
-$result = query_all_fansubs_with_news($user);
+$result = query_all_fansubs_with_news(!empty($user) ? $user : NULL);
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 								<option value="<?php echo $row['slug']; ?>"<?php echo $param_fansub==$row['slug'] ? ' selected' : ''; ?>><?php echo $row['name']; ?></option>
