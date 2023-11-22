@@ -1138,7 +1138,7 @@ input[type="checkbox"]:checked:before {
 	opacity: 1;
 	transform: rotateY(-180deg);
 	position: absolute;
-	z-index: -1; /* to hide behind the image (z-index unset) */
+	z-index: 1;
 	backface-visibility: hidden;
 	cursor: default;
 }
@@ -1349,7 +1349,7 @@ input[type="checkbox"]:checked:before {
 	transition: opacity var(--fast-animation-duration) ease;
 	transition-delay: 0s;
 	opacity: 1;
-	z-index: 2;
+	z-index: 1;
 	backface-visibility: hidden;
 	filter: drop-shadow(0 0 0.2rem rgb(var(--always-negative-color)));
 	padding: 0.2rem 0.5rem;
@@ -1795,6 +1795,7 @@ input:checked + .slider:before {
 		opacity: 0;
 		transition: height var(--fast-animation-duration) ease-out, max-height var(--fast-animation-duration) ease-out, min-height var(--fast-animation-duration) ease-out, width var(--fast-animation-duration) ease-out, max-width var(--fast-animation-duration) ease-out, min-width var(--fast-animation-duration) ease-out, opacity var(--fast-animation-duration) ease-out, z-index var(--fast-animation-duration) ease-out, transform var(--fast-animation-duration) ease-out;
 		transition-delay: 0s;
+		z-index: -1; /* to hide behind the image (z-index unset) */
 	}
 
 	.thumbnail:hover .floating-info {
