@@ -4,6 +4,7 @@ if (!defined('PAGE_STYLE_TYPE')) {
 	define('PAGE_STYLE_TYPE', 'text');
 }
 define('PAGE_TITLE', 'Error');
+define('ERROR_PAGE', TRUE);
 $code = !empty($_GET['code']) ? $_GET['code'] : 404;
 if (defined('COPYRIGHT_ISSUE')) {
 	$code = 451;

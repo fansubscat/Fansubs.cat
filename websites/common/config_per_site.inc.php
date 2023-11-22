@@ -16,7 +16,6 @@ switch ($server_url) {
 	case NEWS_URL:
 		define('SITE_TITLE', 'Notícies dels fansubs en català | Fansubs.cat');
 		define('SITE_DESCRIPTION', 'Consulta les darreres notícies dels fansubs en català a Fansubs.cat, el portal que en recopila totes les novetats!');
-		define('SITE_DESCRIPTION', 'A Fansubs.cat trobaràs l’anime, el manga i tota la resta de contingut de tots els fansubs en català.');
 		define('SITE_INTERNAL_NAME', 'news');
 		define('SITE_PREVIEW_IMAGE', 'main');
 		define('SITE_INTERNAL_TYPE', 'news');

@@ -311,9 +311,9 @@ if (defined('PAGE_IS_SEARCH')) {
 		'use_version_param' => FALSE,
 		'result' => query_home_random($user, $max_items),
 	));
-}
 
-$featured_single_result = query_home_featured_singles($user, $max_items);
+	$featured_single_result = query_home_featured_singles($user, 5);
+}
 
 $i=0;
 $has_some_result = FALSE;
@@ -329,7 +329,7 @@ foreach($sections as $section){
 		continue;
 	} else if (mysqli_num_rows($result)>0 || ($section['type']=='static')){
 		$has_some_result = TRUE;
-		if (!defined('PAGE_IS_SEARCH') && $section['type']=='carousel') {
+		if ($section['type']=='carousel') {
 			$real_carousels++;
 		}
 ?>
@@ -430,7 +430,7 @@ foreach($sections as $section){
 	}
 	mysqli_free_result($result);
 
-	if ($real_carousels==2 && $i<count($sections)-1 && $row = mysqli_fetch_assoc($featured_single_result)) {
+	if (!defined('PAGE_IS_SEARCH') && $real_carousels==2 && $i<count($sections)-1 && $row = mysqli_fetch_assoc($featured_single_result)) {
 ?>
 				<div class="section">
 					<h2 class="section-title-main"><i class="fa fa-fw fa-torii-gate"></i> <?php echo CATALOGUE_FEATURED_SINGLE_STRING; ?></h2>

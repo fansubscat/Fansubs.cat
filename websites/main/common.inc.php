@@ -1,7 +1,7 @@
 <?php
 function print_fansub($row, $show_hentai) {
 ?>
-								<div class="fansub<?php echo !empty($row['is_blacklisted']) ? ' fansub-blacklisted' : ''; ?><?php echo $is_hentai ? ' subtheme-hentai' : ''; ?>">
+								<div class="fansub<?php echo !empty($row['is_blacklisted']) ? ' fansub-blacklisted' : ''; ?>">
 									<div class="fansub-text-wrapper">
 										<img class="fansub-icon" src="<?php echo STATIC_URL.'/images/icons/'.$row['id'].'.png'; ?>" alt="">
 										<div class="fansub-info">
