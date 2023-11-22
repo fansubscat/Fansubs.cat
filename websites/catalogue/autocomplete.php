@@ -6,7 +6,9 @@ require_once("queries.inc.php");
 function get_series_type_summary_for_autocomplete($series) {
 	$text='';
 	if ($series['type']=='manga') {
-		if ($series['subtype']=='oneshot') {
+		if ($series['comic_type']=='novel') {
+			$text = get_type_depending_on_catalogue($series)."Novel·la lleugera";
+		} else if ($series['subtype']=='oneshot') {
 			$text = get_type_depending_on_catalogue($series)."One-shot";
 		} else if ($series['divisions']>1) {
 			$text = get_type_depending_on_catalogue($series).$series['divisions']." volums";
