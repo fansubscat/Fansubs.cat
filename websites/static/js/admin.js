@@ -930,7 +930,7 @@ function checkNumberOfEpisodes() {
 	}
 
 	if ($('#form-name-with-autocomplete').val()==$('#form-alternate_names').val()) {
-		alert('El nom i el camp "altres noms" no poden ser iguals. Si no se’n tradueix el nom, el camp "altres noms" ha de romandre buit o amb altres noms diferents, si s’escau (en anglès, per exemple).');
+		alert('El nom i el camp «altres noms» no poden ser iguals. Si no se’n tradueix el nom, el camp «altres noms» ha de romandre buit o amb altres noms diferents, si s’escau (en anglès, per exemple).');
 		return false;
 	}
 
