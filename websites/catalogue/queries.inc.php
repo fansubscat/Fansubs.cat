@@ -777,9 +777,8 @@ function query_home_continue_watching_by_user_id($user_id) {
 				ORDER BY t.origin ASC,
 					t.last_viewed DESC
 			) t2
-			GROUP BY t2.version_id
-			ORDER BY t2.origin ASC,
-				t2.last_viewed DESC";
+			WHERE total_versions>0
+			GROUP BY t2.version_id";
 	return query($final_query);
 }
 
