@@ -35,7 +35,7 @@ function report_file_status(){
 			//Now we count it as viewed, if applicable
 			//85% of the file length: minimum of 1 page or 1 second
 			$completed_progress = max(1,intval($row['length']*0.85));
-			if ($progress>=$completed_progress && $row['is_view_counted']==0) {
+			if ($progress>=$completed_progress && $row['view_counted']==0) {
 				query_update_view_session_view_counted($row['id']);
 				//We check the number of affected rows to avoid concurrency issues that would cause a single view_session to be counted twice
 				if (get_previous_query_num_affected_rows()>0) {
