@@ -92,6 +92,11 @@ if ($series['number_of_episodes']>1) {
 		$additional_data.=' • ';
 	}
 	$additional_data.='Film';
+} else if ($series['comic_type']=='novel') {
+	if ($additional_data!='') {
+		$additional_data.=' • ';
+	}
+	$additional_data.='Novel·la lleugera';
 } else if ($series['subtype']=='oneshot') {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
@@ -372,7 +377,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 					} else if (count($divisions)>1){
 						echo CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'];
 					} else if ($series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID){
-						echo CATALOGUE_SEASON_STRING_UNIQUE_SINGLE;
+						echo ($series['comic_type']=='novel' ? 'Novel·la lleugera' : CATALOGUE_SEASON_STRING_UNIQUE_SINGLE);
 					} else {
 						echo CATALOGUE_SEASON_STRING_UNIQUE;
 					}

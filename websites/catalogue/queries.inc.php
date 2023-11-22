@@ -639,7 +639,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 						NULL
 					) episode_number,
 					IF(s.subtype='oneshot',
-						'One-shot',
+						IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot'),
 						IF(s.subtype='movie' AND s.number_of_episodes=1,
 							'Film',
 							IF(et.title IS NOT NULL,
@@ -697,7 +697,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 						NULL
 					) episode_number,
 					IF(s.subtype='oneshot',
-						'One-shot',
+						IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot'),
 						IF(s.subtype='movie' AND s.number_of_episodes=1,
 							'Film',
 							IF(et.title IS NOT NULL,
@@ -821,7 +821,7 @@ function query_home_last_updated($user, $max_items) {
 						NULL
 					) episode_number,
 					IF(s.subtype='oneshot',
-						'One-shot',
+						IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot'),
 						IF(s.subtype='movie' AND s.number_of_episodes=1,
 							'Film',
 							IF(et.title IS NOT NULL,
