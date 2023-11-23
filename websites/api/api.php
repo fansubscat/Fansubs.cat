@@ -391,7 +391,13 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 		);
 		echo json_encode($response);
 	} else if ($submethod=='get_unconverted_links') {
-		$result = query_get_unconverted_links(!empty($_POST['file_id']) ? $_POST['file_id'] : NULL);
+		if (!empty($_POST['file_id']) && is_numeric($_POST['file_id'])) {
+			$file_id=intval($file_id);
+		}
+		else{
+			$file_id = NULL;
+		}
+		$result = query_get_unconverted_links($file_id);
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
@@ -417,7 +423,7 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 		else{
 			$file_id = NULL;
 		}
-		$result = query_get_converted_links(!empty($_POST['file_id']) ? $_POST['file_id'] : NULL);
+		$result = query_get_converted_links($file_id);
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
@@ -439,9 +445,9 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 		if (!empty($_POST['file_id']) && is_numeric($_POST['file_id']) && !empty($_POST['url']) && !empty($_POST['original_url']) && !empty($_POST['resolution'])) {
 			query_insert_link($_POST['file_id'], $_POST['url'], $_POST['original_url'], $_POST['resolution']);
 			if (get_previous_query_num_affected_rows()>0) {
-				log_action('api-insert-converted-link', "S’ha inserit l’enllaç convertit «$url» del fitxer amb id. $file_id");
+				log_action('api-insert-converted-link', "S’ha inserit l’enllaç convertit «${_POST['url']}» del fitxer amb id. ${_POST['file_id']}");
 			} else {
-				log_action('api-discard-converted-link', "S’ha descartat l’enllaç convertit «$url» del fitxer amb id. $file_id, segurament s’ha actualitzat mentre es convertia");
+				log_action('api-discard-converted-link', "S’ha descartat l’enllaç convertit «${_POST['url']}» del fitxer amb id. ${_POST['file_id']}, segurament s’ha actualitzat mentre es convertia");
 			}
 			
 			$response = array(
