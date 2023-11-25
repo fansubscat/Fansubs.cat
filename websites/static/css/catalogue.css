@@ -1898,10 +1898,6 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	background: rgb(var(--neutral-color));
 }
 
-.episode-thumbnail-missing {
-	background: rgb(var(--secondary-color));
-}
-
 .episode-title {
 	line-height: 1.15;
 	margin: 0.75rem 1rem;

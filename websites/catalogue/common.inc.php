@@ -384,18 +384,8 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 ?>
 <div class="file-launcher episode<?php $num_variants>1 ? ' episode-indented' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" data-position="<?php echo $position; ?>" data-is-special="<?php echo ($is_extra || empty($number)) ? 'true' : 'false'; ?>">
 	<div class="episode-thumbnail-cell">
-<?php
-	if (file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg')) {
-?>
 		<div class="episode-thumbnail">
-			<img src="<?php echo STATIC_URL.'/images/files/'.$vrow['id'].'.jpg'; ?>" alt="">
-<?php
-	} else {
-?>
-		<div class="episode-thumbnail episode-thumbnail-missing">
-<?php
-	}
-?>
+			<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" alt="">
 			<div class="length"><?php echo get_length_formatted($vrow['length']); ?></div>
 			<span class="progress" style="width: <?php echo $vrow['progress_percent']*100; ?>%;"></span>
 			<div class="play-button fa fa-fw <?php echo $series['type']=='manga' ? 'fa-book-open' : 'fa-play'; ?>"></div>

@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2023-11-25 - Versió 5.0.2
+- **Catàleg:**
+	- Es corregeix que els títols dels mangues incrustats es mostressin com a «S’està carregant...».
+	- Si un fitxer no té previsualització, s’hi mostra la portada de la sèrie.
+
 ## 2023-11-23 - Versió 5.0.1
 - **Catàleg:**
 	- Es corregeixen errors de visualització en Firefox per a mòbils.

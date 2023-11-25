@@ -884,6 +884,7 @@ function initializeReader(type) {
 	}
 	pagesRead[initialPosition-1]=true;
 	$('.player_extra_upper').removeClass('vjs-user-inactive');
+	$('.player_extra_title').html(currentSourceData.title);
 	$('#overlay-content .manga-reader').remove();
 	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'">'+pagesCode+'<div class="swiper-pagination swiper-pagination-custom swiper-pagination-horizontal'+(type=='strip' ? ' hidden' : '')+'">'+buildMangaReaderBar(initialPosition,currentSourceData.length, type)+'</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
 	$('.main-container').on('fullscreenchange', (e) => handleMangaReaderFullscreen(e));
