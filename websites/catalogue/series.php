@@ -205,6 +205,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 		$last_division_number = -1;
 		$last_division_id = -1;
 		$last_division_name = "";
+		$last_division_number_of_episodes = -1;
 		$current_division_episodes = array();
 		$position = 1;
 		foreach ($episodes as $row) {
@@ -214,12 +215,14 @@ while ($version = mysqli_fetch_assoc($result)) {
 						'division_id' => $last_division_id,
 						'division_number' => $last_division_number,
 						'division_name' => $last_division_name,
+						'division_number_of_episodes' => $last_division_number_of_episodes,
 						'episodes' => $current_division_episodes
 					));
 				}
 				$last_division_number=!empty($row['division_number']) ? floatval($row['division_number']) : 'altres';
 				$last_division_id=$row['division_id'];
 				$last_division_name=!empty($row['division_number']) ? $row['division_name'] : 'Capítols especials';
+				$last_division_number_of_episodes = !empty($row['division_number']) ? $row['division_number_of_episodes'] : -1;
 				$current_division_episodes = array();
 			}
 
@@ -231,6 +234,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			'division_id' => $last_division_id,
 			'division_number' => $last_division_number,
 			'division_name' => $last_division_name,
+			'division_number_of_episodes' => $last_division_number_of_episodes,
 			'episodes' => $current_division_episodes
 		));
 
@@ -263,6 +267,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 				'division_id' => 'extras',
 				'division_number' => 'extras',
 				'division_name' => 'Contingut extra',
+				'division_number_of_episodes' => count($extras),
 				'episodes' => $extras,
 				'available_episodes' => count($extras)
 			));
@@ -348,7 +353,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 						$division_name = CATALOGUE_SEASON_STRING_UNIQUE;
 					}
 ?>
-									<option value="<?php echo $division['division_id']; ?>"<?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?><?php echo $division['division_id']==$selected_division_id ? ' selected' : ''; ?>><?php echo $division_name; ?></option>
+									<option value="<?php echo $division['division_id']; ?>"<?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?><?php echo $division['division_id']==$selected_division_id ? ' selected' : ''; ?>><?php echo $division_name.' ('.$division['available_episodes'].'/'.($division['division_number_of_episodes']>0 ? $division['division_number_of_episodes'] : $division['available_episodes']).')'; ?></option>
 <?php
 				}
 ?>

@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2023-11-26 - Versió 5.0.3
+- **Catàleg:**
+	- S’ha afegit el nombre de capítols al selector de temporades.
+	- S’ha corregit l’error que impedia que els vídeos de MEGA es reproduïssin al Firefox.
+	- En marcar un fitxer com a vist, també es té en compte per al càlcul de recomanacions.
+
 ## 2023-11-25 - Versió 5.0.2
 - **Catàleg:**
 	- Es corregeix que els títols dels mangues incrustats es mostressin com a «S’està carregant...».

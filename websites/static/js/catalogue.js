@@ -1335,6 +1335,9 @@ function parsePlayerError(error){
 }
 
 function loadMegaStream(url){
+	//Workaround for CORS issue on Firefox:
+	window.mega.API.getGlobalApi().userAgent=null;
+
 	currentMegaFile = window.mega.file(url);
 	currentMegaFile.loadAttributes((error, file) => {
 		if (error){

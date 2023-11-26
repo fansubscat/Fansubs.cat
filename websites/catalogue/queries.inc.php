@@ -60,8 +60,7 @@ function get_internal_recommendations_by_user_id($user_id) {
 					    LEFT JOIN file f ON ufss.file_id=f.id
 					    LEFT JOIN version v ON f.version_id=v.id
 						WHERE ufss.is_seen=1
-						AND ufss.user_id=$user_id
-						AND ufss.last_viewed>='".date("Y-m-d",strtotime("-3 months"))."')
+						AND ufss.user_id=$user_id)
 			GROUP BY series_id
 			HAVING COUNT(CASE WHEN genre_id IN (SELECT g.id
 					FROM series s
@@ -210,10 +209,11 @@ function query_insert_or_update_user_seen_for_file_id($user_id, $file_id, $is_se
 	$user_id = intval($user_id);
 	$file_id = intval($file_id);
 	$is_seen = ($is_seen===TRUE ? 1 : 0);
+	$last_viewed = ($is_seen==1 ? 'CURRENT_TIMESTAMP' : 'NULL');
 	$final_query = "INSERT INTO user_file_seen_status
 				(user_id, file_id, is_seen, position, last_viewed)
-			VALUES ($user_id, $file_id, $is_seen, 0, NULL)
-			ON DUPLICATE KEY UPDATE is_seen=$is_seen,position=0";
+			VALUES ($user_id, $file_id, $is_seen, 0, $last_viewed)
+			ON DUPLICATE KEY UPDATE is_seen=$is_seen,position=0,last_viewed=$last_viewed";
 	return query($final_query);
 }
 
@@ -1001,7 +1001,8 @@ function query_episodes_for_series_version($series_id, $version_id) {
 	$final_query = "SELECT e.*,
 				IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title,
 				d.number division_number,
-				d.name division_name
+				d.name division_name,
+				d.number_of_episodes division_number_of_episodes
 			FROM episode e
 				LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=$version_id
 				LEFT JOIN division d ON e.division_id=d.id
