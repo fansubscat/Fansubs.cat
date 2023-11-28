@@ -284,7 +284,7 @@ function query_update_view_session_progress($view_id, $progress, $is_casted, $so
 	$ip = escape($ip);
 	$user_agent = escape($user_agent);
 	$final_query = "UPDATE view_session
-			SET progress=IF($is_casted=1,length,GREATEST(progress,$progress)),
+			SET progress=GREATEST(progress,$progress),
 				updated=CURRENT_TIMESTAMP,
 				is_casted=$is_casted,
 				source='$source',

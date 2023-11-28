@@ -13,7 +13,7 @@ function report_file_status(){
 			$progress = $_POST['progress'];
 			if (!empty($_POST['is_casted'])) {
 				$is_casted = 1;
-				$progress = 0; //We can not determine it reliably
+				$progress = $row['length']; //We can not determine it reliably, assume it's fully seen
 			}
 			query_update_view_session_progress($_POST['view_id'], $progress, $is_casted, get_view_source_type($_SERVER['HTTP_USER_AGENT'], $is_casted), $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 
@@ -35,7 +35,7 @@ function report_file_status(){
 			//Now we count it as viewed, if applicable
 			//85% of the file length: minimum of 1 page or 1 second
 			$completed_progress = max(1,intval($row['length']*0.85));
-			if ($progress>=$completed_progress && $row['view_counted']==0) {
+			if ($progress>=$completed_progress && empty($row['view_counted'])) {
 				query_update_view_session_view_counted($row['id']);
 				//We check the number of affected rows to avoid concurrency issues that would cause a single view_session to be counted twice
 				if (get_previous_query_num_affected_rows()>0) {

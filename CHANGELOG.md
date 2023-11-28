@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2023-11-28 - Versió 5.0.5
+- **Catàleg:**
+	- S’han corregit errors que impedien que, en fer servir Chromecast, es comptessin correctament les visualitzacions.
+	- En emetre a Chromecast, es marca immediatament com a vst el capítol actual.
+- **Administració:**
+	- Es retornen els colors a la normalitat.
+	- Es corregeix la mida de les icones dels fansubs.
+
 ## 2023-11-28 - Versió 5.0.4
 - **Catàleg:**
 	- S’ha corregit que l’apartat «Continua mirant» mostrés menys elements dels que corresponia.

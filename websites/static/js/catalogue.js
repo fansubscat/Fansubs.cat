@@ -391,7 +391,7 @@ function sendCurrentFileTracking(){
 		var position = getDisplayerCurrentPosition();
 		var progress = currentSourceData.initial_progress+getDisplayerCurrentProgress();
 		var markAsSeenPosition = getDisplayerMarkAsSeenPosition();
-		if (position>=markAsSeenPosition && !currentSourceData.is_seen) {
+		if ((position>=markAsSeenPosition || hasBeenCasted) && !currentSourceData.is_seen) {
 			markAsSeen(currentSourceData.file_id, true);
 			currentSourceData.is_seen=true;
 		}
