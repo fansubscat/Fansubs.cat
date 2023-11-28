@@ -617,17 +617,18 @@ function query_home_recommended_items($user, $force_recommended_ids_list, $max_i
 
 function query_home_continue_watching_by_user_id($user_id) {
 	$user_id = intval($user_id);
-	$final_query = "SELECT * FROM (
-				SELECT *,
-					GROUP_CONCAT(DISTINCT CONCAT(t.version_id, '___', t.status, '___', t.fansub_name, '___', t.fansub_type, '___', t.fansub_id)
-						ORDER BY t.fansub_name
-						SEPARATOR '|'
-					) fansub_info,
+	$final_query = "SELECT *,
+				GROUP_CONCAT(DISTINCT CONCAT(t2.version_id, '___', t2.status, '___', t2.fansub_name, '___', t2.fansub_type, '___', t2.fansub_id)
+					ORDER BY t2.fansub_name
+					SEPARATOR '|'
+				) fansub_info,
 				(SELECT COUNT(*)
 					FROM version v
-					WHERE v.series_id=t.series_id
+					WHERE v.series_id=t2.series_id
 						AND v.is_hidden=0
 				) total_versions
+			FROM (
+				SELECT *
 				FROM (SELECT f.id file_id,
 						f.version_id,
 						IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
@@ -777,7 +778,11 @@ function query_home_continue_watching_by_user_id($user_id) {
 				ORDER BY t.origin ASC,
 					t.last_viewed DESC
 			) t2
-			WHERE total_versions>0
+			WHERE (SELECT COUNT(*)
+					FROM version v
+					WHERE v.series_id=t2.series_id
+						AND v.is_hidden=0
+				)>0
 			GROUP BY t2.version_id";
 	return query($final_query);
 }

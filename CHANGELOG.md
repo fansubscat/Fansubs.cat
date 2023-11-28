@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2023-11-28 - Versió 5.0.4
+- **Catàleg:**
+	- S’ha corregit que l’apartat «Continua mirant» mostrés menys elements dels que corresponia.
+
 ## 2023-11-26 - Versió 5.0.3
 - **Catàleg:**
 	- S’ha afegit el nombre de capítols al selector de temporades.
