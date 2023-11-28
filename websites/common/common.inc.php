@@ -3,11 +3,21 @@ require_once("libraries/parsedown.inc.php");
 
 function is_adult(){
 	global $user;
-	return (!empty($user) && date_diff(date_create_from_format('Y-m-d', $user['birthdate']), date_create(date('Y-m-d')))->format('%Y')>=18);
+	return (!empty($user) && date_diff(date_create_from_format('Y-m-d H:i:s', $user['birthdate'].' 00:00:00'), date_create(date('Y-m-d').' 00:00:00'))->format('%Y')>=18);
 }
 
 function is_robot(){
 	return !empty($_SERVER['HTTP_USER_AGENT']) && preg_match('/bot|crawl|slurp|spider|mediapartners/i', $_SERVER['HTTP_USER_AGENT']);
+}
+
+function is_user_birthday(){
+	global $user;
+	return (!empty($user) && date_create_from_format('Y-m-d', $user['birthdate'])->format('m-d')==date('m-d'));
+}
+
+function get_user_age(){
+	global $user;
+	return date_diff(date_create_from_format('Y-m-d H:i:s', $user['birthdate'].' 00:00:00'), date_create(date('Y-m-d').' 00:00:00'))->format('%Y');
 }
 
 function get_nanoid($size=24) {

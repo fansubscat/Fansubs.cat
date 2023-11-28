@@ -389,6 +389,20 @@ foreach($sections as $section){
 								</div>
 							</div>
 <?php
+				} else if (is_user_birthday()) {
+?>
+							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
+								<div class="recommendation special-day-header">
+									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark_hd.jpg'; ?>" alt="">
+									<div class="infoholder" data-swiper-parallax="-30%">
+										<div class="dataholder">
+											<div class="title"><span class="fa fa-cake-candles"></span><br>Per molts anys, <?php echo $user['username']; ?>!</div>
+											<div class="divisions">Segons el teu perfil d’usuari, avui fas <?php echo get_user_age(); ?> anys!<br>Et desitgem un bon aniversari i que gaudeixis de Fansubs.cat!</div>
+										</div>
+									</div>
+								</div>
+							</div>
+<?php
 				}
 			}
 			while ($row = mysqli_fetch_assoc($result)){
