@@ -13,8 +13,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#800000",
-    "background_color": "#800000",
+    "theme_color": "#6aa0f8",
+    "background_color": "#6aa0f8",
     "start_url": "https://admin.fansubs.cat",
     "display": "standalone"
 }

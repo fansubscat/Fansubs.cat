@@ -61,7 +61,7 @@ small {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'P';
-	background-color: #dc3545 !important;
+	background-color: #0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -70,7 +70,7 @@ small {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'A';
-	background-color: #dc3545 !important;
+	background-color: #0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -79,7 +79,7 @@ small {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'M';
-	background-color: #dc3545 !important;
+	background-color: #0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -88,7 +88,7 @@ small {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'I';
-	background-color: #dc3545 !important;
+	background-color: #0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -97,7 +97,7 @@ small {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'N';
-	background-color: #dc3545 !important;
+	background-color: #0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -106,7 +106,7 @@ small {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'H';
-	background-color: #dc3545 !important;
+	background-color: #0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -115,7 +115,7 @@ small {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'R';
-	background-color: #dc3545 !important;
+	background-color: #0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -124,13 +124,9 @@ small {
 	font-family: Arial;
 	font-weight: bold;
 	content: 'C';
-	background-color:#dc3545 !important;
+	background-color:#0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
-}
-
-.navbar {
-	background-color: #dc3545 !important; /* Remove in production */
 }
 
 tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {
