@@ -27,42 +27,42 @@ include("header.inc.php");
 switch ($type) {
 	case 'anime':
 		$viewed_content_divide=3600;
-		$series_a='Visualitzacions reals';
-		$series_b='Clics sense visualitzar';
+		$series_a='Visualitzacions';
+		$series_b='Clics';
 		$series_c='Temps de visualització';
-		$series_a_graph='Visualitzacions reals';
-		$series_b_graph='Clics sense visualitzar';
+		$series_a_graph='Visualitzacions';
+		$series_b_graph='Clics';
 		$series_c_graph='Temps de visualització (h)';
 		$series_a_short='Visualitzacions';
-		$series_b_short='Clics sense v.';
+		$series_b_short='Clics';
 		$series_c_short='Temps total';
 		$series_c_color='rgb(40, 167, 69)';
 		$start_date='2020-06-01';
 	break;
 	case 'liveaction':
 		$viewed_content_divide=3600;
-		$series_a='Visualitzacions reals';
-		$series_b='Clics sense visualitzar';
+		$series_a='Visualitzacions';
+		$series_b='Clics';
 		$series_c='Temps de visualització';
-		$series_a_graph='Visualitzacions reals';
-		$series_b_graph='Clics sense visualitzar';
+		$series_a_graph='Visualitzacions';
+		$series_b_graph='Clics';
 		$series_c_graph='Temps de visualització (h)';
 		$series_a_short='Visualitzacions';
-		$series_b_short='Clics sense v.';
+		$series_b_short='Clics';
 		$series_c_short='Temps total';
 		$series_c_color='rgb(40, 167, 69)';
 		$start_date='2022-06-01';
 	break;
 	case 'manga':
 		$viewed_content_divide=1;
-		$series_a='Lectures reals';
-		$series_b='Clics sense llegir';
+		$series_a='Lectures';
+		$series_b='Clics';
 		$series_c='Pàgines llegides';
-		$series_a_graph='Lectures reals';
-		$series_b_graph='Clics sense llegir';
+		$series_a_graph='Lectures';
+		$series_b_graph='Clics';
 		$series_c_graph='Pàgines llegides';
 		$series_a_short='Lectures';
-		$series_b_short='Clics sense ll.';
+		$series_b_short='Clics';
 		$series_c_short='Pàg. totals';
 		$series_c_color='rgb(167, 167, 69)';
 		$start_date='2021-01-01';
@@ -91,7 +91,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 					<div class="row">
 						<div class="col-sm-4 text-center"><b><?php echo $series_a; ?>:</b> <?php echo $totals['total_views']; ?></div>
-						<div class="col-sm-4 text-center"><b><?php echo $series_b; ?>:</b> <?php echo max(0, $totals['total_clicks']-$totals['total_views']); ?></div>
+						<div class="col-sm-4 text-center"><b><?php echo $series_b; ?>:</b> <?php echo $totals['total_clicks']; ?></div>
 						<div class="col-sm-4 text-center"><b><?php echo $series_c; ?>:</b> <?php echo $type=='manga' ? $totals['total_length'] : get_hours_or_minutes_formatted($totals['total_length']); ?></div>
 					</div>
 				</article>
@@ -125,7 +125,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i++;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/$viewed_content_divide total_length FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE f.version_id=".escape($_GET['id'])." GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m') month, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/$viewed_content_divide total_length FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE f.version_id=".escape($_GET['id'])." GROUP BY DATE_FORMAT(v.day,'%Y-%m') ORDER BY DATE_FORMAT(v.day,'%Y-%m') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		$months[date("Y-m", strtotime($row['month'].'-01'))]=array($row['total_clicks'], $row['total_views'], $row['total_length']);
 	}
@@ -152,19 +152,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: '<?php echo $series_a_graph; ?>',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
 														label: '<?php echo $series_b_graph; ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: '<?php echo $series_a_graph; ?>',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -209,7 +209,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$i++;
 	}
 
-	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, GREATEST(IFNULL(SUM(clicks),0)-IFNULL(SUM(views),0),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/$viewed_content_divide total_length FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE f.version_id=".escape($_GET['id'])." GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
+	$result = query("SELECT DATE_FORMAT(v.day,'%Y-%m-%d') day, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0)/$viewed_content_divide total_length FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE f.version_id=".escape($_GET['id'])." GROUP BY DATE_FORMAT(v.day,'%Y-%m-%d') ORDER BY DATE_FORMAT(v.day,'%Y-%m-%d') ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		if (array_key_exists(date("Y-m-d", strtotime($row['day'])), $days)) {
 			$days[date("Y-m-d", strtotime($row['day']))]=array($row['total_clicks'], $row['total_views'], $row['total_length']);
@@ -238,19 +238,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$days_values); ?>],
 													datasets: [
 													{
-														label: '<?php echo $series_a_graph; ?>',
-														backgroundColor: 'rgb(0, 123, 255)',
-														borderColor: 'rgb(0, 123, 255)',
-														hidden: true,
-														data: [<?php echo implode(',',$view_values); ?>],
-														tension: 0.2
-													},
-													{
 														label: '<?php echo $series_b_graph; ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
 														data: [<?php echo implode(',',$click_values); ?>],
+														tension: 0.2
+													},
+													{
+														label: '<?php echo $series_a_graph; ?>',
+														backgroundColor: 'rgb(0, 123, 255)',
+														borderColor: 'rgb(0, 123, 255)',
+														hidden: true,
+														data: [<?php echo implode(',',$view_values); ?>],
 														tension: 0.2
 													},
 													{
@@ -336,7 +336,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<td scope="col"><?php echo $episode_title; ?></td>
 								<td class="text-center"><?php echo $row['total_views']; ?></td>
-								<td class="text-center"><?php echo max(0, $row['total_clicks']-$row['total_views']); ?></td>
+								<td class="text-center"><?php echo $row['total_clicks']; ?></td>
 								<td class="text-center"><?php echo $type=='manga' ? $row['total_length'] : get_hours_or_minutes_formatted($row['total_length']); ?></td>
 							</tr>
 <?php
