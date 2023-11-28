@@ -252,6 +252,8 @@ function get_comic_type($comic_type){
 			return 'Manhwa';
 		case 'manhua':
 			return 'Manhua';
+		case 'novel':
+			return 'Novel·la lleugera';
 		default:
 			return 'Còmic';
 	}
