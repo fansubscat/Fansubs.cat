@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2023-12-03 - Versió 5.0.6
+- **Advent:**
+	- Petits canvis visuals al disseny del calendari.
+- **Catàleg:**
+	- Es mostra un missatge especial quan l’usuari fa anys.
+	- Es corregeix que algunes sèries no es mostraven a «Continua mirant», especialment després d’haver-ne vist el capítol 9.
+- **Administració:**
+	- Es corregeix l’ordenació de les darreres visualitzacions.
+	- Es comprova que el tipus d’imatge sigui el correcte i que les dimensions siguin dins del rang acceptat en el moment de seleccionar una imatge.
+
 ## 2023-11-28 - Versió 5.0.5
 - **Catàleg:**
 	- S’han corregit errors que impedien que, en fer servir Chromecast, es comptessin correctament les visualitzacions.
