@@ -683,9 +683,9 @@ function print_featured_item_single($series, $specific_version=TRUE, $use_versio
 
 function get_current_advent_day() {
 	if (date('H:i:s')>='12:00:00') {
-		return date('d');
+		return intval(date('d'));
 	} else {
-		return date('d')-1;
+		return intval(date('d'))-1;
 	}
 }
 
