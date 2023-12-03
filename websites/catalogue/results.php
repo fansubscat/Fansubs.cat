@@ -204,28 +204,34 @@ if (defined('PAGE_IS_SEARCH')) {
 	$force_recommended_ids_list = array();
 	if ($special_day!==NULL) {
 		if ($special_day=='fools') {
-			$result = query_version_ids_for_fools_day(10);
+			$result_recos = query_version_ids_for_fools_day(10);
 			$special_day_title = "Els millors d’aquest ".date('Y');
 			$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
 		} else if ($special_day=='sant_jordi') {
-			$result = query_version_ids_for_sant_jordi(10);
+			$result_recos = query_version_ids_for_sant_jordi(10);
 			$special_day_title = "Selecció especial de Sant Jordi";
 			$special_day_description = "Fansubs.cat et desitja un bon Sant Jordi!<br>Mira quina selecció de títols romàntics que hem preparat!";
 		} else if ($special_day=='tots_sants') {
-			$result = query_version_ids_for_tots_sants(10);
+			$result_recos = query_version_ids_for_tots_sants(10);
 			$special_day_title = "Selecció especial de Tots Sants";
 			$special_day_description = "Fansubs.cat et desitja una bona castanyada!<br>Hem preparat una selecció dels millors títols de terror.";
 		} else if ($special_day=='nadal') {
-			$result = query_version_ids_for_nadal(10);
-			$special_day_title = "Els millors d’aquest ".date('Y');
-			$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
+			if (date('m-d')>='12-25' && date('m-d')<='12-31')) {
+				$result_recos = query_version_ids_for_nadal(10);
+				$special_day_title = "Els millors d’aquest ".date('Y');
+				$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
+			} else {
+				//No special selection: just show the lights
+			}
 		} else {
 			die("Unsupported special day $special_day!");
 		}
-		while ($row = mysqli_fetch_assoc($result)) {
-			array_push($force_recommended_ids_list, $row['id']);
+		if (!empty($result_recos)) {
+			while ($row = mysqli_fetch_assoc($result_recos)) {
+				array_push($force_recommended_ids_list, $row['id']);
+			}
+			mysqli_free_result($result_recos);
 		}
-		mysqli_free_result($result);
 	}
 
 	array_push($sections, array(

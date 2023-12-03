@@ -385,7 +385,7 @@ function get_special_day() {
 		return 'sant_jordi';
 	} else if (date('m-d')>='10-31' && date('m-d')<='11-01') {
 		return 'tots_sants';
-	} else if (date('m-d')>='12-25' && date('m-d')<='12-31') {
+	} else if ((date('m-d')>='12-05' && date('m-d')<='12-31') || (date('m-d')>='01-01' && date('m-d')<='01-06')) {
 		return 'nadal';
 	}
 	return NULL;
