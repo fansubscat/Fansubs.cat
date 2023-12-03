@@ -379,7 +379,7 @@ function deleteEpìsodeRow(id) {
 
 function addDivisionRow() {
 	var i = parseInt($('#division-list-table').attr('data-count'))+1;
-	$('#division-list-table').append('<tr id="form-division-list-row-'+i+'"><td><input id="form-division-list-number-'+i+'" name="form-division-list-number-'+i+'" type="number" class="form-control" value="'+(parseInt($('#form-division-list-number-'+(i-1)).val())+1)+'" step="any" required/><input id="form-division-list-id-'+i+'" name="form-division-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-division-list-name-'+i+'" name="form-division-list-name-'+i+'" type="text" class="form-control" value="" placeholder="(Sense nom)"/></td><td><input id="form-division-list-number_of_episodes-'+i+'" name="form-division-list-number_of_episodes-'+i+'" type="number" class="form-control" value="" required/></td><td><input id="form-division-list-external_id-'+i+'" name="form-division-list-external_id-'+i+'"'+($('#type').val()!='liveaction' ? ' type="number"' : '')+' class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-division-list-delete-'+i+'" onclick="deleteDivisionRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#division-list-table').append('<tr id="form-division-list-row-'+i+'"><td><input id="form-division-list-number-'+i+'" name="form-division-list-number-'+i+'" type="number" class="form-control" value="'+(parseInt($('#form-division-list-number-'+(i-1)).val())+1)+'" step="any" required/><input id="form-division-list-id-'+i+'" name="form-division-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-division-list-name-'+i+'" name="form-division-list-name-'+i+'" type="text" class="form-control" value="" placeholder="- Introdueix un nom -" required/></td><td><input id="form-division-list-number_of_episodes-'+i+'" name="form-division-list-number_of_episodes-'+i+'" type="number" class="form-control" value="" required/></td><td><input id="form-division-list-external_id-'+i+'" name="form-division-list-external_id-'+i+'"'+($('#type').val()!='liveaction' ? ' type="number"' : '')+' class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-division-list-delete-'+i+'" onclick="deleteDivisionRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#division-list-table').attr('data-count', i);
 }
 
@@ -946,12 +946,7 @@ function checkNumberOfEpisodes() {
 	}
 
 	if (document.getElementById('form-image-preview').naturalWidth<300 || document.getElementById('form-image-preview').naturalHeight<400) {
-		alert('La imatge de portada té unes dimensions massa petites. El mínim són 300x400 píxels.');
-		return false;
-	}
-
-	if (document.getElementById('form-featured-image-preview').naturalWidth<1920 || document.getElementById('form-featured-image-preview').naturalHeight<400) {
-		alert('La imatge de capçalera té unes dimensions massa petites. El mínim són 1920x400 píxels.');
+		alert('La imatge de portada té unes dimensions massa petites. El mínim són 300x400 píxels. Si l’has importada de MyAnimeList, caldrà que l’obtinguis d’un altre lloc amb una millor resolució.');
 		return false;
 	}
 
@@ -1025,19 +1020,6 @@ function checkNumberOfLinks() {
 				}
 			}
 		}
-	}
-
-	var covers = $('[id$=_preview]');
-	var affectedCovers='';
-	for (var i=0;i<covers.length;i++){
-		if (covers[i].naturalWidth<300 || covers[i].naturalHeight<400) {
-			affectedCovers+=("\n- "+$($(covers[i].parentElement).find('label')[0]).text());
-		}
-	}
-
-	if (affectedCovers!='') {
-		alert('Les imatges de portada següents tenen unes dimensions massa petites (el mínim són 300x400 píxels):'+affectedCovers);
-		return false;
 	}
 
 	var files = $("[type=file]");
@@ -1192,31 +1174,54 @@ function isAutoFetchActive() {
 	return $('[id^=form-remote_folders-list-is_active-]:checked').length>0;
 }
 
-function checkImageUpload(fileInput, maxBytes, previewImageId, previewLinkId, optionalUrlId) {
+function checkImageUpload(fileInput, maxBytes, fileMimeType, minResX, minResY, maxResX, maxResY, previewImageId, previewLinkId, optionalUrlId) {
 	if (fileInput.files && fileInput.files[0]) {
 		if (maxBytes!=-1 && fileInput.files[0].size>maxBytes) {
 			alert('El fitxer que has seleccionat és massa gros. Com a màxim ha de fer '+(maxBytes/1024)+' KiB.');
+		} else if (fileInput.files[0].type!=fileMimeType || (fileMimeType=='image/*' && fileInput.files[0].type.startsWith('image/'))) {
+			alert('El fitxer que has seleccionat no és del tipus indicat.');
 		} else {
 			var reader = new FileReader();
 			reader.onload = function(e) {
-				$('#'+previewImageId).attr('src',e.target.result);
-				if (previewLinkId) {
-					$('#'+previewLinkId).attr('href',e.target.result);
+				//Get image dimensions
+				var img = new Image();
+				img.src = e.target.result;
+				img.onload = function(e2) {
+					var width = img.naturalWidth;
+					var height = img.naturalHeight;
+					if (width<minResX || height<minResY) {
+						alert('La imatge té unes dimensions massa petites. El mínim són '+minResX+'x'+minResY+' píxels.');
+						resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+					} else if (width>maxResX || height>maxResY) {
+						alert('La imatge té unes dimensions massa grosses. El màxim són '+maxResX+'x'+maxResY+' píxels.');
+						resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+					} else {
+						$('#'+previewImageId).attr('src',e.target.result);
+						if (previewLinkId) {
+							$('#'+previewLinkId).attr('href',e.target.result);
+						}
+						if (optionalUrlId) {
+							$('#'+optionalUrlId).val('');
+						}
+						$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
+						$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
+						$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
+						$('label[for="'+fileInput.id+'"]').addClass("btn-success");
+						$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pe-2"></span>Es pujarà');
+					}
 				}
-				if (optionalUrlId) {
-					$('#'+optionalUrlId).val('');
-				}
-				$('label[for="'+fileInput.id+'"]').removeClass("btn-warning");
-				$('label[for="'+fileInput.id+'"]').removeClass("btn-secondary");
-				$('label[for="'+fileInput.id+'"]').removeClass("btn-primary");
-				$('label[for="'+fileInput.id+'"]').addClass("btn-success");
-				$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pe-2"></span>Es pujarà');
 			};
 			reader.readAsDataURL(fileInput.files[0]);
 			return;
 		}
 	}
+	
 	//Non-success cases: reset input
+	resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+	resetFileInput($(fileInput));
+}
+
+function resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId) {
 	if (optionalUrlId && $('#'+optionalUrlId).val()) {
 		$('#'+previewImageId).prop('src',$('#'+previewImageId).attr('data-original'));
 	} else if ($('#'+previewImageId).attr('data-original')) {
@@ -1233,7 +1238,6 @@ function checkImageUpload(fileInput, maxBytes, previewImageId, previewLinkId, op
 			$('#'+previewLinkId).attr('href','');
 		}
 	}
-	resetFileInput($(fileInput));
 }
 
 function resetFileInput(fileInput) {

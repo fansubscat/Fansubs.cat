@@ -173,7 +173,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/news/'.$row['fansub_slug'].'/'.$row['image']);
 ?>
 								<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="image" type="file" accept="image/jpeg,image/png" id="form-image" onchange="checkImageUpload(this, -1, 'form-image-preview', 'form-image-preview-link');">
+								<input class="form-control d-none" name="image" type="file" accept="image/jpeg,image/png" id="form-image" onchange="checkImageUpload(this, -1, 'image/*', 1, 1, 4096, 4096, 'form-image-preview', 'form-image-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-4">

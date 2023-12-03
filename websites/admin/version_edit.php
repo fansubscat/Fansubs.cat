@@ -1007,7 +1007,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 										<img id="form-division_cover_<?php echo $division['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg" data-original="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg"' : ''; ?> alt=""><br />
 										<label for="form-division_cover_<?php echo $division['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-										<input id="form-division_cover_<?php echo $division['id']; ?>" name="division_cover_<?php echo $division['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 153600, 'form-division_cover_<?php echo $division['id']; ?>_preview');"/>
+										<input id="form-division_cover_<?php echo $division['id']; ?>" name="division_cover_<?php echo $division['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 153600, 'image/jpeg', 300, 400, 4096, 4096, 'form-division_cover_<?php echo $division['id']; ?>_preview');"/>
 								</div>
 <?php
 		}

@@ -105,12 +105,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Logo<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted">(PNG, aprox. 160x160px)</small></label><br>
+								<label>Logo<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted">(PNG, 160x160px)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/communities/'.$row['id'].'.png');
 ?>
 								<label for="form-logo" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, -1, 'form-logo-preview', 'form-logo-preview-link');">
+								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, -1, 'image/png', 160, 160, 160, 160, 'form-logo-preview', 'form-logo-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-2" style="align-self: center;">

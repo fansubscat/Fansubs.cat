@@ -563,7 +563,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<label for="form-view-options">Visualització al web públic</label>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
-										<label class="form-check-label" for="form-show_episode_numbers">Mostra la numeració dels capítols</label>
+										<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols</label>
 									</div>
 								</div>
 							</div>
@@ -615,7 +615,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/covers/'.$row['id'].'.jpg');
 ?>
 									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 153600, 'form-image-preview', 'form-image-preview-link','form-image_url');">
+									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 153600, 'image/jpeg', 300, 400, 4096, 4096, 'form-image-preview', 'form-image-preview-link','form-image_url');">
 									<input class="form-control" name="image_url" type="hidden" id="form-image_url" value="">
 								</div>
 							</div>
@@ -633,7 +633,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/featured/'.$row['id'].'.jpg');
 ?>
 									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 307200, 'form-featured-image-preview', 'form-featured-image-preview-link');">
+									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 307200, 'image/jpeg', 1920, 400, 4096, 4096, 'form-featured-image-preview', 'form-featured-image-preview-link');">
 								</div>
 							</div>
 							<div class="col-sm-4">
@@ -737,7 +737,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-id-<?php echo $i+1; ?>" name="form-division-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $divisions[$i]['id']; ?>"/>
 													</td>
 													<td>
-														<input id="form-division-list-name-<?php echo $i+1; ?>" name="form-division-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($divisions[$i]['name']); ?>"<?php echo $division_name_mandatory ? ' required' : ''; ?>/>
+														<input id="form-division-list-name-<?php echo $i+1; ?>" name="form-division-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($divisions[$i]['name']); ?>" placeholder="- Introdueix un nom -"<?php echo $division_name_mandatory ? ' required' : ''; ?>/>
 													</td>
 													<td>
 														<input id="form-division-list-number_of_episodes-<?php echo $i+1; ?>" name="form-division-list-number_of_episodes-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $divisions[$i]['number_of_episodes']; ?>" required/>
@@ -759,7 +759,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-id-1" name="form-division-list-id-1" type="hidden" value="-1"/>
 													</td>
 													<td>
-														<input id="form-division-list-name-1" name="form-division-list-name-1" type="text" class="form-control" value="" placeholder="(Sense nom)"/>
+														<input id="form-division-list-name-1" name="form-division-list-name-1" type="text" class="form-control" value="" placeholder="- Introdueix un nom -"<?php echo $division_name_mandatory ? ' required' : ''; ?>/>
 													</td>
 													<td>
 														<input id="form-division-list-number_of_episodes-1" name="form-division-list-number_of_episodes-1" type="number" class="form-control" value="" required/>

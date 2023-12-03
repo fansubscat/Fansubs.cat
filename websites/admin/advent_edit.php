@@ -91,12 +91,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de fons<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1024x768px, però millor si és superior)</small></label><br>
+								<label>Imatge de fons<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1920x1080px)</small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/background_'.$row['year'].'.jpg');
 ?>
 								<label for="form-background" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="background" type="file" accept="image/jpeg" id="form-background" onchange="checkImageUpload(this, -1, 'form-background-preview', 'form-background-preview-link');">
+								<input class="form-control d-none" name="background" type="file" accept="image/jpeg" id="form-background" onchange="checkImageUpload(this, -1, 'image/jpeg', 1920, 1080, 4096, 4096, 'form-background-preview', 'form-background-preview-link');">
 							<input type="hidden" name="year" value="<?php echo $row['year']; ?>">
 							</div>
 						</div>
@@ -109,12 +109,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de previsualització<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1024x768px, però millor si és superior)</small></label><br>
+								<label>Imatge de previsualització<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1200x600px)</small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/preview_'.$row['year'].'.jpg');
 ?>
 								<label for="form-preview" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="preview" type="file" accept="image/jpeg" id="form-preview" onchange="checkImageUpload(this, -1, 'form-preview-preview', 'form-preview-preview-link');">
+								<input class="form-control d-none" name="preview" type="file" accept="image/jpeg" id="form-preview" onchange="checkImageUpload(this, -1, 'image/jpeg', 1200, 600, 4096, 4096, 'form-preview-preview', 'form-preview-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-3" style="align-self: center;">
@@ -128,12 +128,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de capçalera<span class="mandatory"></span> <small class="text-muted">(JPEG, mida exacta 1200x256px)</small></label><br>
+								<label>Imatge de capçalera<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1920x400px)</small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/header_'.$row['year'].'.jpg');
 ?>
 								<label for="form-header" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="header" type="file" accept="image/jpeg" id="form-header" onchange="checkImageUpload(this, -1, 'form-header-preview', 'form-header-preview-link');">
+								<input class="form-control d-none" name="header" type="file" accept="image/jpeg" id="form-header" onchange="checkImageUpload(this, -1, 'image/jpeg', 1920, 400, 4096, 4096, 'form-header-preview', 'form-header-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-3" style="align-self: center;">
@@ -150,7 +150,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/menu_'.$row['year'].'.png');
 ?>
 								<label for="form-menu" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="menu" type="file" accept="image/png" id="form-menu" onchange="checkImageUpload(this, -1, 'form-menu-preview', 'form-menu-preview-link');">
+								<input class="form-control d-none" name="menu" type="file" accept="image/png" id="form-menu" onchange="checkImageUpload(this, -1, 'image/png', 205, 128, 205, 128, 'form-menu-preview', 'form-menu-preview-link');">
 							</div>
 						</div>
 						<div class="col-sm-3" style="align-self: center;">
@@ -178,8 +178,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<thead>
 											<tr>
 												<th class="text-center" style="width: 5%;">Dia</th>
-												<th class="text-center mandatory" style="width: 20%;">Imatge <small class="text-muted">(512px d’alçada)</small></th>
-												<th class="mandatory">URL de l’enllaç i descripció <small class="text-muted">(la descripció no es mostra públicament)</small></th>
+												<th class="text-center mandatory" style="width: 20%;">Imatge <small class="text-muted">(512x512px)</small></th>
+												<th class="mandatory">URL de l’enllaç i descripció <small class="text-muted">(la descripció es mostra sota la imatge als vídeos promocionals)</small></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -200,7 +200,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</a>
 													<br>
 													<label for="form-image_<?php echo $i; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-													<input class="form-control d-none" name="image_<?php echo $i; ?>" type="file" accept="image/jpeg" id="form-image_<?php echo $i; ?>" onchange="checkImageUpload(this, -1, 'form-image_<?php echo $i; ?>-preview', 'form-image_<?php echo $i; ?>-preview-link');">
+													<input class="form-control d-none" name="image_<?php echo $i; ?>" type="file" accept="image/jpeg" id="form-image_<?php echo $i; ?>" onchange="checkImageUpload(this, -1, 'image/jpeg', 512, 512, 512, 512, 'form-image_<?php echo $i; ?>-preview', 'form-image_<?php echo $i; ?>-preview-link');">
 												</td>
 												<td class="text-center align-middle">
 													<input id="form-days-list-link_url-<?php echo $i+1; ?>" name="link_url_<?php echo $i; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($days[$i]['link_url']); ?>" maxlength="200" placeholder="- Introdueix un enllaç -"/>
