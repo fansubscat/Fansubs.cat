@@ -89,9 +89,34 @@ if ($migration_type=='piwigo') {
 			mysqli_free_result($result);
 		}
 	} else {
-		http_response_code(404);
-		include('error.php');
-		die(); //Avoids error because mysqli is already closed
+		$result_old_slug = query_series_by_old_slug($series_slug);
+		if ($new_slug = mysqli_fetch_assoc($result_old_slug)) {
+			$result = query_series_data_from_slug_and_type($new_slug['slug'], $type);
+			if ($row = mysqli_fetch_assoc($result)) {
+				if ($row['rating']!='XXX') {
+					header("HTTP/1.1 301 Moved Permanently");
+					header("Location: /".$row['slug']);
+					mysqli_free_result($result);
+				} else if ($type=='manga') {
+					header("HTTP/1.1 301 Moved Permanently");
+					header("Location: ".HENTAI_MANGA_URL."/".$row['slug']);
+					mysqli_free_result($result);
+				} else {
+					header("HTTP/1.1 301 Moved Permanently");
+					header("Location: ".HENTAI_ANIME_URL."/".$row['slug']);
+					mysqli_free_result($result);
+				}
+			} else {
+				http_response_code(404);
+				include('error.php');
+				die(); //Avoids error because mysqli is already closed
+			}
+		} else {
+			http_response_code(404);
+			include('error.php');
+			die(); //Avoids error because mysqli is already closed
+		}
+		mysqli_free_result($result_old_slug);
 	}
 }
 
