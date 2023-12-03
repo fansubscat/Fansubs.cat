@@ -67,16 +67,17 @@ define('PAGE_TITLE', 'Calendari d’advent '.$row['year']);
 		<meta name="msapplication-config" content="https://static.fansubs.cat/favicons/advent/browserconfig.xml">
 		<meta property="og:title" content="<?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?>" />
 		<meta property="og:url" content="<?php echo ADVENT_URL; ?>/" />
-		<meta property="og:description" content="" />
+		<meta property="og:description" content="Calendari d’advent dels fansubs en català. Obre’n una casella cada dia i descobreix una petita sorpresa en format anime o manga!" />
 		<meta property="og:image" content="<?php echo STATIC_URL; ?>/images/advent/preview_<?php echo $row['year']; ?>.jpg" />
 		<meta property="og:image:type" content="image/jpeg">
-		<title>Calendari d'advent <?php echo $row['year']; ?> | Fansubs.cat</title>
+		<title>Calendari d’advent <?php echo $row['year']; ?> | Fansubs.cat</title>
 		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon-16x16.png">
 		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/site.webmanifest">
 		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/safari-pinned-tab.svg" color="#6aa0f8">
 		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon.ico">
+		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/common.css?v=<?php echo VERSION; ?>">
 		<link href="https://fonts.googleapis.com/css?family=Kalam" rel="stylesheet">
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
@@ -133,6 +134,21 @@ switch ($row['year']) {
 }
 ?>
 				});
+<?php
+if (!empty($_GET['twitter'])) {
+?>
+				setTimeout(function() {
+					$('.day-<?php echo $_GET['currentday']; ?> .dooravailable').addClass('forcehover');
+					setTimeout(function() {
+						$('.day-<?php echo $_GET['currentday']; ?> input').click();
+						setTimeout(function() {
+							$('.day-<?php echo $_GET['currentday']; ?> .description').addClass('makevisible').css('opacity', '0').animate({opacity: 1}, 1000);
+						}, 2000);
+					}, 1000);
+				}, 1000);
+<?php
+}
+?>
 			});
 		</script>
 		<style>
@@ -198,7 +214,7 @@ switch ($row['year']) {
 
 				grid-template-columns: repeat(3, 1fr);
 				grid-template-rows: auto;
-				grid-gap: 25px;
+				grid-gap: 1em;
 
 				grid-template-areas:    "t        t       t"
 					"d<?php echo $grid_mobile[0]; ?>      d<?php echo $grid_mobile[1]; ?>     d<?php echo $grid_mobile[2]; ?>"
@@ -275,27 +291,29 @@ switch ($row['year']) {
 			}
 
 			.door {
+				display: block;
 				width: 100%;
+				height: 100%;
 				transform-style: preserve-3d;
 				transition: all 300ms;
-				border: 3px solid transparent;
-				border-radius: 8px;
+				border: 0.3rem solid transparent;
+				border-radius: 1rem;
 			}
 
-			.door span {
+			.door > span {
 				position: absolute;
 				height: 100%;
 				width: 100%;
 				backface-visibility: hidden;
-				border-radius: 6px;
+				border-radius: 0.7rem;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				font-family: 'Kalam', cursive;
 				color: white;
-				font-size: 2.5em;
+				font-size: 4rem;
 				font-weight: bold;
-				text-shadow: 0 0 3px rgba(0, 0, 0, 1);
+				text-shadow: 0 0 0.2rem rgba(0, 0, 0, 1);
 			}
 
 			.door .front {
@@ -319,6 +337,7 @@ switch ($row['year']) {
 				background-color: black;
 				transform: rotateY(180deg);
 				display: flex;
+				flex-direction: column;
 				overflow: hidden;
 			}
 
@@ -330,7 +349,7 @@ switch ($row['year']) {
 				border-color: rgba(255,255,255,0.5);
 			}
 
-			label:hover .door.dooravailable {
+			label:hover .door.dooravailable, label .door.dooravailable.forcehover {
 				border-color: rgba(255,255,255,0.7);
 			}
 
@@ -352,18 +371,40 @@ switch ($row['year']) {
 				color: #222266;
 			}
 
+			.description {
+				display: none;
+				background: rgb(var(--primary-color));
+				font-family: lexend_deca;
+				text-shadow: none;
+				font-size: 4rem;
+				width: 100%;
+				padding: 2rem;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				flex-direction: column;
+			}
+
+			.description.makevisible {
+				display: flex;
+			}
+
+			.description .fansub {
+				font-size: 2.5rem;
+			}
+
 			.previous{
 				text-align: center;
 				color: white;
-				font-family: sans-serif;
-				font-size: 1em;
+				font-size: 2rem;
 				font-weight: bold;
-				text-shadow: 0.1em 0.1em black;
-				padding-bottom: 8px;
+				text-shadow: 0 0 0.4rem black;
+				margin: 0.8rem 0;
 			}
 
 			.previous a{
 				color: white;
+				text-decoration: underline;
 			}
 
 			.previous a:hover{
@@ -405,6 +446,11 @@ for ($i=1;$i<25;$i++){
 ?>
 								<a class="link" href="<?php echo empty($_GET['twitter']) ? $days[$i]['link_url'] : '#'; ?>"<?php echo empty($_GET['twitter']) ? ' target="_blank"' : ''; ?>></a>
 <?php
+		if (!empty($_GET['twitter'])) {
+?>
+								<div class="description"><?php echo explode('|',$days[$i]['description'])[1]; ?><br><span class="fansub"><?php echo explode('|',$days[$i]['description'])[0]; ?></span></div>
+<?php
+		}
 	}
 ?>
 							</span>
