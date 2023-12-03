@@ -4,12 +4,23 @@ require_once("common.inc.php");
 
 validate_hentai();
 
+//Get series by slug
 $result = query_series_by_slug(!empty($_GET['slug']) ? $_GET['slug'] : '', !empty($_GET['show_hidden']));
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
-	http_response_code(404);
-	include('error.php');
+	//Retry by getting it from an old slug
+	unset($failed);
+	$result = query_series_by_old_slug(!empty($_GET['slug']) ? $_GET['slug'] : '');
+	$new_slug = mysqli_fetch_assoc($result) or $failed=TRUE;
+	mysqli_free_result($result);
+	if (isset($failed)) {
+		http_response_code(404);
+		include('error.php');
+		die();
+	}
+	header("HTTP/1.1 301 Moved Permanently");
+	header("Location: /".$new_slug['slug']);
 	die();
 }
 

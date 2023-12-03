@@ -154,6 +154,11 @@ CREATE TABLE `news_fetcher` (
   `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `old_slugs` (
+  `old_slug` varchar(200) NOT NULL,
+  `series_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE `pending_news` (
   `id` int(11) NOT NULL,
   `title` text NOT NULL,
@@ -409,6 +414,9 @@ ALTER TABLE `news_fetcher`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_fetcher_fansub` (`fansub_id`);
 
+ALTER TABLE `old_slugs`
+  ADD PRIMARY KEY (`old_slug`, `series_id`);
+
 ALTER TABLE `pending_news`
   ADD PRIMARY KEY (`id`);
 
@@ -566,6 +574,9 @@ ALTER TABLE `news`
 ALTER TABLE `news_fetcher`
   ADD CONSTRAINT `fk_fetcher_fansub` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE `old_slugs`
+  ADD CONSTRAINT `old_slugs_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 ALTER TABLE `recommendation`
   ADD CONSTRAINT `recommendation_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -574,7 +585,7 @@ ALTER TABLE `related_series`
   ADD CONSTRAINT `related_series_ibfk_2` FOREIGN KEY (`related_series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `rel_series_genre`
-  ADD CONSTRAINT `rel_series_genre_ibfk_1` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`),
+  ADD CONSTRAINT `rel_series_genre_ibfk_1` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `rel_series_genre_ibfk_2` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `rel_version_fansub`

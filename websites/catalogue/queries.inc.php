@@ -966,6 +966,16 @@ function query_series_by_slug($slug, $include_hidden) {
 	return query($final_query);
 }
 
+function query_series_by_old_slug($old_slug) {
+	$old_slug = escape($old_slug);
+	$final_query = "SELECT s.slug
+			FROM old_slugs os
+				LEFT JOIN series s ON os.series_id=s.id
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND old_slug='$old_slug'";
+	return query($final_query);
+}
+
 function query_series_by_file_id($file_id) {
 	$file_id = escape($file_id);
 	$final_query = "SELECT s.*
