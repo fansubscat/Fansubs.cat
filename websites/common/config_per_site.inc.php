@@ -243,6 +243,8 @@ switch (strtolower($server_url)) {
 		define('SITE_IS_CATALOGUE', FALSE);
 		define('SITE_IS_HENTAI', FALSE);
 		break;
+	case API_URL:
+		break;
 	case MAIN_URL:
 	default:
 		if (!defined('SITE_TITLE')) {
