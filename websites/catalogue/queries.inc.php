@@ -744,7 +744,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 								LEFT JOIN episode_title et2 ON et2.episode_id=e2.id AND et2.version_id=f.version_id
 								WHERE f.version_id=v.id
 									AND f.episode_id IS NOT NULL
-									AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (CONCAT(LPAD(d2.number,3,'0'), ':', e2.number)>CONCAT(LPAD(d1.number,3,'0'), ':', e1.number)))
+									AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (CONCAT(NATURAL_SORT_KEY(d2.number), ':', NATURAL_SORT_KEY(e2.number))>CONCAT(NATURAL_SORT_KEY(d1.number), ':', NATURAL_SORT_KEY(e1.number))))
 								ORDER BY e2.number IS NULL ASC,
 									e2.number ASC,
 									IFNULL(et2.title, e2.description) ASC
