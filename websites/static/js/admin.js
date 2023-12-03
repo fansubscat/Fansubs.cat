@@ -1178,7 +1178,9 @@ function checkImageUpload(fileInput, maxBytes, fileMimeType, minResX, minResY, m
 	if (fileInput.files && fileInput.files[0]) {
 		if (maxBytes!=-1 && fileInput.files[0].size>maxBytes) {
 			alert('El fitxer que has seleccionat és massa gros. Com a màxim ha de fer '+(maxBytes/1024)+' KiB.');
-		} else if (fileInput.files[0].type!=fileMimeType || (fileMimeType=='image/*' && fileInput.files[0].type.startsWith('image/'))) {
+		} else if (fileMimeType=='image/*' && !fileInput.files[0].type.startsWith('image/')) {
+			alert('El fitxer que has seleccionat no és del tipus indicat.');
+		} else if (fileMimeType!='image/*' && fileInput.files[0].type!=fileMimeType) {
 			alert('El fitxer que has seleccionat no és del tipus indicat.');
 		} else {
 			var reader = new FileReader();
@@ -1192,9 +1194,11 @@ function checkImageUpload(fileInput, maxBytes, fileMimeType, minResX, minResY, m
 					if (width<minResX || height<minResY) {
 						alert('La imatge té unes dimensions massa petites. El mínim són '+minResX+'x'+minResY+' píxels.');
 						resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+						resetFileInput($(fileInput));
 					} else if (width>maxResX || height>maxResY) {
 						alert('La imatge té unes dimensions massa grosses. El màxim són '+maxResX+'x'+maxResY+' píxels.');
 						resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+						resetFileInput($(fileInput));
 					} else {
 						$('#'+previewImageId).attr('src',e.target.result);
 						if (previewLinkId) {
@@ -1241,6 +1245,7 @@ function resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId) {
 }
 
 function resetFileInput(fileInput) {
+	fileInput.val('');
 	$('label[for="'+fileInput.attr('id')+'"]').removeClass("btn-warning");
 	$('label[for="'+fileInput.attr('id')+'"]').removeClass("btn-primary");
 	$('label[for="'+fileInput.attr('id')+'"]').removeClass("btn-success");
