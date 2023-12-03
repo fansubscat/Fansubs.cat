@@ -1304,6 +1304,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	align-content: start;
 	line-height: 1.5;
 	margin-top: 0.6rem;
+	max-width: 50%;
 }
 
 .recommendation .genres i, .series-tags i {
