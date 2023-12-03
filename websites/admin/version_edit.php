@@ -666,6 +666,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resulte);
 	} else if (!empty($_GET['series_id']) && is_numeric($_GET['series_id'])) {
 		$row = array();
+		$row['storage_processing']=$_SESSION['default_storage_processing'];
 
 		$results = query("SELECT s.* FROM series s WHERE id=".escape($_GET['series_id']));
 		$series = mysqli_fetch_assoc($results) or crash('Series not found');

@@ -18,6 +18,7 @@ else if (isset($_POST['username']) && isset($_POST['password'])) {
 		$row = mysqli_fetch_assoc($result);
 		$_SESSION['username']=$row['username'];
 		$_SESSION['admin_level']=$row['admin_level'];
+		$_SESSION['default_storage_processing']=$row['default_storage_processing'];
 		$_SESSION['fansub_id']=$row['fansub_id'];
 		header("Location: index.php");
 		mysqli_free_result($result);
