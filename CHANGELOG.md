@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2023-12-10 - Versió 5.0.7
+- **Catàleg:**
+	- Els llums de Nadal s’encenen el 5 de desembre i s’apaguen el 6 de gener.
+	- Es crea un nou sistema de redireccions d’URLs per a URLs antigues que hagin canviat.
+	- Petit canvi visual a la fitxa d’una sèrie que la fa més natural quan hi ha moltes etiquetes.
+- **Administració:**
+	- Es restableix correctament el funcionament dels camps de pujada de fitxers quan hi ha un error de validació.
+	- Es canvia el selector de «Processament de fitxers per defecte» al camp dels usuaris perquè sigui igual que el de la versió.
+	- S’aplica el valor del camp «Processament de fitxers per defecte» de l’usuari en crear una versió nova.
+
 ## 2023-12-03 - Versió 5.0.6
 - **Advent:**
 	- Petits canvis visuals al disseny del calendari.

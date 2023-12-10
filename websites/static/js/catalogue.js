@@ -1124,27 +1124,7 @@ function initializePlayer(){
 				});
 			}
 			$('#overlay-content > .player_extra_upper').addClass('hidden');
-			//Install the top, movement and ended bar
-			if ($('.video-js .player_extra_upper').length==0) {
-				$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentSourceData.title).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
-				$('<div class="player_extra_movement"><div class="player_extra_backward"><i class="fas fa-backward"></i><span><span class="player_extra_backward_time">0</span> s</span></div><div class="player_extra_forward"><i class="fas fa-forward"></i><span><span class="player_extra_forward_time">0</span> s</span></div></div>').appendTo(".video-js");
-			} else {
-				$('.player_extra_title').html(currentSourceData.title);
-				$('.player_extra_backward_time').html('0');
-				$('.player_extra_forward_time').html('0');
-			}
-			var nextFile = getNextFileElement();
-			if ($('.video-js .player_extra_ended').length==0) {
-				$('<div class="player_extra_ended'+(nextFile==null ? ' hidden' : '')+'"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">Següent capítol:</div><div class="player_extra_ended_title">'+new Option(nextFile==null ? '' : nextFile.attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><a onclick="playNextFile();">Reprodueix-lo ara</a><img src="'+(nextFile==null ? '' : nextFile.attr('data-thumbnail'))+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
-			} else  if (nextFile!=null) {
-				$('.player_extra_ended').removeClass('hidden');
-				$('.player_extra_ended_title')[0].innerHTML=new Option(getNextFileElement().attr('data-title-short')).innerHTML;
-				$('.player_extra_ended_thumbnail img')[0].src=getNextFileElement().attr('data-thumbnail');
-			} else {
-				$('.player_extra_ended').addClass('hidden');
-				$('.player_extra_ended_title')[0].innerHTML=new Option('').innerHTML;
-				$('.player_extra_ended_thumbnail img')[0].src='';
-			}
+			installVideoPlayerTopBarAndNextFile();
 		});
 		player.on('loadstart', function(){
 			console.log('Loadstart');
@@ -1200,6 +1180,7 @@ function initializePlayer(){
 		if (currentSourceData.method!='mega') {
 			player.src(sourceUrl);
 		}
+		installVideoPlayerTopBarAndNextFile();
 	}
 
 	//Sync prev/next buttons
@@ -1219,6 +1200,30 @@ function initializePlayer(){
 		loadMegaStream(sourceUrl);
 	} else {
 		player.play();
+	}
+}
+
+function installVideoPlayerTopBarAndNextFile() {
+	//Install the top, movement and ended bar
+	if ($('.video-js .player_extra_upper').length==0) {
+		$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentSourceData.title).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
+		$('<div class="player_extra_movement"><div class="player_extra_backward"><i class="fas fa-backward"></i><span><span class="player_extra_backward_time">0</span> s</span></div><div class="player_extra_forward"><i class="fas fa-forward"></i><span><span class="player_extra_forward_time">0</span> s</span></div></div>').appendTo(".video-js");
+	} else {
+		$('.player_extra_title').html(currentSourceData.title);
+		$('.player_extra_backward_time').html('0');
+		$('.player_extra_forward_time').html('0');
+	}
+	var nextFile = getNextFileElement();
+	if ($('.video-js .player_extra_ended').length==0) {
+		$('<div class="player_extra_ended'+(nextFile==null ? ' hidden' : '')+'"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">Següent capítol:</div><div class="player_extra_ended_title">'+new Option(nextFile==null ? '' : nextFile.attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><a onclick="playNextFile();">Reprodueix-lo ara</a><img src="'+(nextFile==null ? '' : nextFile.attr('data-thumbnail'))+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
+	} else  if (nextFile!=null) {
+		$('.player_extra_ended').removeClass('hidden');
+		$('.player_extra_ended_title')[0].innerHTML=new Option(getNextFileElement().attr('data-title-short')).innerHTML;
+		$('.player_extra_ended_thumbnail img')[0].src=getNextFileElement().attr('data-thumbnail');
+	} else {
+		$('.player_extra_ended').addClass('hidden');
+		$('.player_extra_ended_title')[0].innerHTML=new Option('').innerHTML;
+		$('.player_extra_ended_thumbnail img')[0].src='';
 	}
 }
 
