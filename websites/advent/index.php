@@ -378,7 +378,7 @@ if (!empty($_GET['twitter'])) {
 				text-shadow: none;
 				font-size: 4rem;
 				width: 100%;
-				padding: 2rem;
+				padding: 2rem 1rem;
 				align-items: center;
 				justify-content: center;
 				text-align: center;
