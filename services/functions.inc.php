@@ -1493,11 +1493,11 @@ function fetch_via_espurnaescarlata($fansub_slug, $url, $last_fetched_item_date)
 		$item = array();
 
 		//Look up and add elements to the item
-		$url = substr($url, 0,strrpos($url, '/')) . $article->href;
+		$real_url = substr($url, 0,strrpos($url, '/')) . $article->href;
 		$title = $article->find('strong')[0]->innertext;
 		$error=FALSE;
 
-		$html_text = file_get_contents($url) or $error=TRUE;
+		$html_text = file_get_contents($real_url) or $error=TRUE;
 
 		if (!$error){
 			$inner_tidy = tidy_parse_string($html_text, $tidy_config, 'UTF8');
@@ -1510,8 +1510,8 @@ function fetch_via_espurnaescarlata($fansub_slug, $url, $last_fetched_item_date)
 			$date = date_create_from_format('d.m.Y H:i:s', $inner_html->find('.s-bdh-d .ld-c', 0)->innertext.' 00:00:00');
 			$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 			$item[3]=$date->format('Y-m-d H:i:s');
-			$item[4]=$url;
-			$item[5]=fetch_and_parse_image($fansub_slug, $url, $inner_html->find('.cw-c.cf', 0)->innertext);
+			$item[4]=$real_url;
+			$item[5]=fetch_and_parse_image($fansub_slug, $real_url, $inner_html->find('.b-img', 0)->innertext);
 		}
 		else{
 			return array('error_connect',array());
