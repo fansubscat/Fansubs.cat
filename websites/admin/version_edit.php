@@ -667,6 +667,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	} else if (!empty($_GET['series_id']) && is_numeric($_GET['series_id'])) {
 		$row = array();
 		$row['storage_processing']=$_SESSION['default_storage_processing'];
+		$row['is_featurable']=1;
 
 		$results = query("SELECT s.* FROM series s WHERE id=".escape($_GET['series_id']));
 		$series = mysqli_fetch_assoc($results) or crash('Series not found');
@@ -759,20 +760,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-downloads_url_1">Enllaç de baixada dels fitxers originals 1<br /><small class="text-muted">(o fitxa del fansub; separa’ls amb un punt i coma, si cal)</small></label>
-									<input id="form-downloads_url_1" name="downloads_url_1" type="url" class="form-control" value="<?php echo (count($fansubs)>0 ? htmlspecialchars($fansubs[0][1]) : ''); ?>" maxlength="200"/>
+									<label for="form-downloads_url_1" class="mandatory">Enllaç de baixada dels fitxers originals 1<br /><small class="text-muted">(o fitxa del fansub; separa’ls amb un punt i coma, si cal)</small></label>
+									<input id="form-downloads_url_1" name="downloads_url_1" type="url" class="form-control" value="<?php echo (count($fansubs)>0 ? htmlspecialchars($fansubs[0][1]) : ''); ?>" maxlength="200" required/>
 								</div>
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
 									<label for="form-downloads_url_2">Enllaç de baixada dels fitxers originals 2<br /><small class="text-muted">(o fitxa del fansub; separa’ls amb un punt i coma, si cal)</small></label>
-									<input id="form-downloads_url_2" name="downloads_url_2" type="url" class="form-control" value="<?php echo (count($fansubs)>1 ? htmlspecialchars($fansubs[1][1]) : ''); ?>" maxlength="200" <?php echo (count($fansubs)>1 ? '' : ' disabled'); ?>/>
+									<input id="form-downloads_url_2" name="downloads_url_2" type="url" class="form-control" value="<?php echo (count($fansubs)>1 ? htmlspecialchars($fansubs[1][1]) : ''); ?>" maxlength="200" required <?php echo (count($fansubs)>1 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
 									<label for="form-downloads_url_3">Enllaç de baixada dels fitxers originals 3<br /><small class="text-muted">(o fitxa del fansub; separa’ls amb un punt i coma, si cal)</small></label>
-									<input id="form-downloads_url_3" name="downloads_url_3" type="url" class="form-control" value="<?php echo (count($fansubs)>2 ? htmlspecialchars($fansubs[2][1]) : ''); ?>" maxlength="200" <?php echo (count($fansubs)>2 ? '' : ' disabled'); ?>/>
+									<input id="form-downloads_url_3" name="downloads_url_3" type="url" class="form-control" value="<?php echo (count($fansubs)>2 ? htmlspecialchars($fansubs[2][1]) : ''); ?>" maxlength="200" required <?php echo (count($fansubs)>2 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
 						</div>
@@ -843,7 +844,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="mb-3">
-							<label for="form-remote_folders-list">Carpetes remotes <small class="text-muted">(per a l’obtenció automàtica d’enllaços)</small></label>
+							<label for="form-remote_folders-list">Carpetes remotes <small class="text-muted">(opcional; per a l’obtenció automàtica d’enllaços)</small></label>
 							<div class="container" id="form-remote_folders-list">
 <?php
 
@@ -1047,7 +1048,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$episode_name.=$linked_episode['description'].' [FILM ENLLAÇAT] <span class="mandatory"></span> <small class="text-muted">(És obligatori introduir-ne el títol!)</small>';
 		} else if (!empty($episodes[$i]['number'])) {
 			if (!empty($episodes[$i]['description'])) {
-				$episode_name.='Capítol '.floatval($episodes[$i]['number']).' <small class="text-muted">(Descripció interna: '.htmlspecialchars($episodes[$i]['description']).')</small>';
+				$episode_name.='Capítol '.floatval($episodes[$i]['number']).' <small class="text-muted">('.htmlspecialchars($episodes[$i]['description']).')</small>';
 			} else {
 				$episode_name.='Capítol '.floatval($episodes[$i]['number']);
 			}
@@ -1073,9 +1074,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$files=array();
 		}
 ?>
-								<div class="mb-3">
+								<div class="mb-3 episode-container">
 									<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title"><span class="fa fa-caret-square-right pe-2 text-primary"></span><?php echo $episode_name; ?></label>
-									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="200" placeholder="(Sense títol)"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
+									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control episode-title-input" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="200" placeholder="<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id']) && $series['show_episode_numbers']==1) ? '(Sense títol de capítol, se’n mostra només el número)' : '- Introdueix un títol -'; ?>"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
 <?php
 		if (empty($episodes[$i]['linked_episode_id'])) {
 ?>
@@ -1085,7 +1086,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="files-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($files),1); ?>">
 													<thead>
 														<tr>
-															<th style="width: 12%;"><span class="mandatory">Variant</span> <span class="fa fa-question-circle small text-secondary" style="cursor: help;" title="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.), però normalment només n’hi ha una («Única»)"></span></th>
+															<th style="width: 12%;">Variant<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#modal-variant" class="text-muted fa fa-question-circle modal-help-button"></small></th>
 <?php
 			if ($type=='manga') {
 ?>
@@ -1308,7 +1309,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="extras-list-table" data-count="<?php echo count($extras); ?>">
 													<thead>
 														<tr>
-															<th style="width: 20%;" class="mandatory">Nom</th>
+															<th style="width: 20%;" class="mandatory">Títol</th>
 <?php
 		if ($type=='manga') {
 ?>
@@ -1335,7 +1336,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 														<tr id="form-extras-list-row-<?php echo $j+1; ?>">
 															<td>
-																<input id="form-extras-list-name-<?php echo $j+1; ?>" name="form-extras-list-name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['extra_name']); ?>" maxlength="200" required placeholder="- Introdueix un nom -"/>
+																<input id="form-extras-list-name-<?php echo $j+1; ?>" name="form-extras-list-name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['extra_name']); ?>" maxlength="200" required placeholder="- Introdueix un títol -"/>
 																<input id="form-extras-list-id-<?php echo $j+1; ?>" name="form-extras-list-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $extras[$j]['id']; ?>"/>
 															</td>
 <?php
@@ -1421,7 +1422,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if ($_SESSION['username']=='Administrador' && $type!='manga') {
 ?>
 							<div class="form-check form-check-inline mb-2">
-								<input class="form-check-input" type="checkbox" name="do_not_recreate_storage_links" id="form-do_not_recreate_storage_links" value="1" onchange="if($(this).prop('checked')){$('#form-do_not_count_as_update').prop('checked',true);}">
+								<input class="form-check-input" type="checkbox" name="do_not_recreate_storage_links" id="form-do_not_recreate_storage_links" value="1" onchange="if($(this).prop('checked')){if (confirm('IMPORTANT, LLEGEIX-ME:\nAquesta opció actualitzarà només els enllaços de MEGA, però els fitxers NO es baixaran al servidor de streaming i els usuaris finals no notaran el canvi. Si no has parlat amb cap administrador o no entens ben bé què vol dir això, si us plau, parla-hi abans d’activar aquesta opció.')) {$('#form-do_not_count_as_update').prop('checked',true);} else {$(this).prop('checked',false);}}">
 								<label class="form-check-label" for="form-do_not_recreate_storage_links">No recreïs els enllaços d’emmagatzematge</label>
 							</div>
 							<br />
@@ -1430,6 +1431,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
+						</div>
+						<!-- Modals -->
+						<div class="modal fade" id="modal-variant" tabindex="-1" role="dialog" aria-labelledby="modal-variant-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="modal-variant-title">Variant</h5>
+										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true" class="fa fa-times"></span>
+										</button>
+									</div>
+									<div class="modal-body">
+										Cada capítol pot tenir diferents variants (per dialectes, estils, etc.). Cada variant es mostra com un capítol diferent a la fitxa pública i amb el nom de variant indicat.<br>En condicions normals, només n’hi sol haver una, titulada «Única».<br>Si només hi ha una sola variant, el nom de la variant no es mostra enlloc.
+									</div>
+								</div>
+							</div>
 						</div>
 					</form>
 				</article>

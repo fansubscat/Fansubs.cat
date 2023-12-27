@@ -129,6 +129,15 @@ small {
 	padding-right: 0.25em;
 }
 
+.form-submitted [type="submit"] {
+	pointer-events: none;
+	opacity: 0.7;
+}
+
+.modal-help-button {
+	cursor: pointer;
+}
+
 tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {
 	padding-left: 24px;
 }

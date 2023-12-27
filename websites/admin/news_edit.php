@@ -104,7 +104,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			<article class="card-body">
 				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la notícia" : (!empty($_GET['import_pending_id']) ? "Importa una notícia proposada" : "Afegeix una notícia a mà"); ?></h4>
 				<hr>
-				<form method="post" action="news_edit.php" enctype="multipart/form-data">
+				<form method="post" action="news_edit.php" enctype="multipart/form-data" onsubmit="return checkNewsPost()">
 <?php
 	if(isset($_GET['import_pending_id'])) {
 ?>

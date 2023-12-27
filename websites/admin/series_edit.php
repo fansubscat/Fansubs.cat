@@ -29,8 +29,9 @@ switch ($type) {
 	case 'anime':
 		$division_name='Temporades';
 		$division_name_mandatory=TRUE;
-		$division_explanation='(es mostra al selector de temporades i s’utilitza per a anunciar capítols a les xarxes)';
-		$division_name_short='Temp.';
+		$division_title='Títol complet';
+		$division_explanation='(es mostra al selector de temporades i s’utilitza per a anunciar novetats a les xarxes)';
+		$division_name_short='Temporada';
 		$division_one="una temporada";
 		$open_series="Encara en emissió";
 		$content_apos="l’anime";
@@ -40,8 +41,9 @@ switch ($type) {
 	case 'manga':
 		$division_name='Volums';
 		$division_name_mandatory=FALSE;
+		$division_title='Títol';
 		$division_explanation='(capçalera del volum a la fitxa; si no s’informa, s’hi mostra «Volum X», «Volum únic» o «One-shot»)';
-		$division_name_short='Vol.';
+		$division_name_short='Volum';
 		$division_one="un volum";
 		$open_series="Encara en publicació";
 		$content_apos="el manga";
@@ -51,8 +53,9 @@ switch ($type) {
 	case 'liveaction':
 		$division_name='Temporades';
 		$division_name_mandatory=TRUE;
-		$division_explanation='(es mostra al selector de temporades i s’utilitza per a anunciar capítols a les xarxes)';
-		$division_name_short='Temp.';
+		$division_title='Títol complet';
+		$division_explanation='(es mostra al selector de temporades i s’utilitza per a anunciar novetats a les xarxes)';
+		$division_name_short='Temporada';
 		$division_one="una temporada";
 		$open_series="Encara en emissió";
 		$content_apos="el contingut d’imatge real";
@@ -433,7 +436,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-name-with-autocomplete" class="mandatory">Nom</label>
+									<label for="form-name-with-autocomplete">Títol<span class="mandatory"></span> <small class="text-muted">(nom de la fitxa al web públic; normalment en català)</small></label>
 									<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['name'])); ?>">
 									<input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>">
 									<input type="hidden" id="type" value="<?php echo $type; ?>">
@@ -441,7 +444,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-slug">Identificador<span class="mandatory"></span> <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>
+									<label for="form-slug">Identificador<span class="mandatory"></span> <small class="text-muted">(autogenerat, normalment no cal editar-lo)</small></label>
 									<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
 									<input type="hidden" id="form-old_slug" value="<?php echo htmlspecialchars($row['slug']); ?>">
 								</div>
@@ -465,21 +468,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-8">
 								<div class="mb-3">
-									<label for="form-alternate_names">Altres noms</label>
+									<label for="form-alternate_names">Altres títols <small class="text-muted">(normalment en anglès i en japonès romanitzat; no admet caràcters japonesos)</small></label>
 									<input class="form-control" name="alternate_names" id="form-alternate_names" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_names'])); ?>">
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-score">Puntuació a <?php echo $external_provider; ?></label>
-									<input class="form-control" name="score" id="form-score" type="number" value="<?php echo $row['score']; ?>" step=".01">
+									<label for="form-score">Puntuació a <?php echo $external_provider; ?> <small class="text-muted">(s’actualitza automàticament)</small></label>
+									<input class="form-control" name="score" id="form-score" type="number" value="<?php echo $row['score']; ?>" step=".01" readonly>
 								</div>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-12">
 								<div class="mb-3">
-									<label for="form-keywords">Paraules clau <small class="text-muted">(separades per espais; que no siguin ja al nom o noms alternatius, s’utilitza per a la cerca)</small></label>
+									<label for="form-keywords">Paraules clau <small class="text-muted">(separades per espais, no per comes; que no siguin ja al títol o altres títols; s’utilitza per a la cerca)</small></label>
 									<input class="form-control" name="keywords" id="form-keywords" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['keywords'])); ?>">
 								</div>
 							</div>
@@ -541,6 +544,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="mb-3">
 									<label for="form-comic_type" class="mandatory">Tipus de còmic</label>
 									<select class="form-select" name="comic_type" id="form-comic_type" required>
+										<option value="">- Selecciona un tipus de còmic -</option>
 										<option value="manga"<?php echo $row['comic_type']=='manga' ? " selected" : ""; ?>>Manga (còmic japonès)</option>
 										<option value="manhua"<?php echo $row['comic_type']=='manhua' ? " selected" : ""; ?>>Manhua (còmic xinès)</option>
 										<option value="manhwa"<?php echo $row['comic_type']=='manhwa' ? " selected" : ""; ?>>Manhwa (còmic coreà)</option>
@@ -552,6 +556,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="mb-3">
 									<label for="form-reader_type" class="mandatory">Tipus de lector</label>
 									<select class="form-select" name="reader_type" id="form-reader_type" required>
+										<option value="">- Selecciona un tipus de lector -</option>
 										<option value="rtl"<?php echo $row['reader_type']=='rtl' ? " selected" : ""; ?>>Paginat (dreta a esquerra)</option>
 										<option value="ltr"<?php echo $row['reader_type']=='ltr' ? " selected" : ""; ?>>Paginat (esquerra a dreta)</option>
 										<option value="strip"<?php echo $row['reader_type']=='strip' ? " selected" : ""; ?>>Tira vertical</option>
@@ -563,7 +568,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<label for="form-view-options">Visualització al web públic</label>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
-										<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols</label>
+										<label class="form-check-label" for="form-show_episode_numbers">Mostra el número de cada capítol</label>
 									</div>
 								</div>
 							</div>
@@ -605,7 +610,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						<div class="mb-3">
 							<label for="form-synopsis">Sinopsi<span class="mandatory"></span> <small class="text-muted">(admet <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">Markdown</a>)</small></label>
-							<textarea class="form-control" name="synopsis" id="form-synopsis" required style="height: 150px;"><?php echo htmlspecialchars(str_replace('&#039;',"'",html_entity_decode($row['synopsis']))); ?></textarea>
+							<textarea class="form-control" name="synopsis" id="form-synopsis" required style="height: 150px;" oninput="synopsisChanged=true;"><?php echo htmlspecialchars(str_replace('&#039;',"'",html_entity_decode($row['synopsis']))); ?></textarea>
 						</div>
 						<div class="row">
 							<div class="col-sm-3">
@@ -720,9 +725,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="division-list-table" data-count="<?php echo max(count($divisions),1); ?>">
 											<thead>
 												<tr>
-													<th style="width: 10%;" class="mandatory">Núm.</th>
-													<th>Nom<?php echo $division_name_mandatory ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted"><?php echo $division_explanation; ?></small></th>
-													<th class="mandatory" style="width: 15%;">Capítols</th>
+													<th style="width: 10%;">Número<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#modal-division-number" class="text-muted fa fa-question-circle modal-help-button"></small></th>
+													<th><?php echo $division_title; ?><?php echo $division_name_mandatory ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted"><?php echo $division_explanation; ?></small></th>
+													<th style="width: 15%;">Capítols<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#modal-division-episodes" class="text-muted fa fa-question-circle modal-help-button"></small></th>
 													<th style="width: 15%;">Id. <?php echo $external_provider; ?></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
@@ -737,7 +742,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-id-<?php echo $i+1; ?>" name="form-division-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $divisions[$i]['id']; ?>"/>
 													</td>
 													<td>
-														<input id="form-division-list-name-<?php echo $i+1; ?>" name="form-division-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($divisions[$i]['name']); ?>" placeholder="- Introdueix un nom -"<?php echo $division_name_mandatory ? ' required' : ''; ?>/>
+														<input id="form-division-list-name-<?php echo $i+1; ?>" name="form-division-list-name-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($divisions[$i]['name']); ?>" placeholder="<?php echo $type!='manga' ? '- Introdueix un títol -' : '(Títol per defecte)'; ?>"<?php echo $division_name_mandatory ? ' required' : ''; ?>/>
 													</td>
 													<td>
 														<input id="form-division-list-number_of_episodes-<?php echo $i+1; ?>" name="form-division-list-number_of_episodes-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $divisions[$i]['number_of_episodes']; ?>" required/>
@@ -759,7 +764,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-id-1" name="form-division-list-id-1" type="hidden" value="-1"/>
 													</td>
 													<td>
-														<input id="form-division-list-name-1" name="form-division-list-name-1" type="text" class="form-control" value="" placeholder="- Introdueix un nom -"<?php echo $division_name_mandatory ? ' required' : ''; ?>/>
+														<input id="form-division-list-name-1" name="form-division-list-name-1" type="text" class="form-control" value="" placeholder="<?php echo $type!='manga' ? '- Introdueix un títol -' : '(Títol per defecte)'; ?>"<?php echo $division_name_mandatory ? ' required' : ''; ?>/>
 													</td>
 													<td>
 														<input id="form-division-list-number_of_episodes-1" name="form-division-list-number_of_episodes-1" type="number" class="form-control" value="" required/>
@@ -810,9 +815,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="episode-list-table" data-count="<?php echo max(count($episodes),1); ?>">
 											<thead>
 												<tr>
-													<th style="width: 10%;"><?php echo $division_name_short; ?></th>
-													<th style="width: 10%;">Núm.</th>
-													<th>Descripció <small class="text-muted">(només informativa, només es mostra públicament en especials si no tenen títol específic a la versió)</small></th>
+													<th style="width: 10%;"><?php echo $division_name_short; ?> <small data-bs-toggle="modal" data-bs-target="#modal-chapter-division" class="text-muted fa fa-question-circle modal-help-button"></small></th>
+													<th style="width: 10%;">Número <small data-bs-toggle="modal" data-bs-target="#modal-chapter-number" class="text-muted fa fa-question-circle modal-help-button"></small></th>
+													<th>Nota informativa interna <small class="text-muted">(no es mostra mai; serveix només com a nota per a identificar capítols o especials)</small></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>
@@ -826,10 +831,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-episode-list-row-<?php echo $i+1; ?>">
 													<td>
-														<input id="form-episode-list-division-<?php echo $i+1; ?>" name="form-episode-list-division-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['division']!=NULL ? floatval($episodes[$i]['division']) : ''; ?>" placeholder="(Altres)" step="any"/>
+														<input id="form-episode-list-division-<?php echo $i+1; ?>" name="form-episode-list-division-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['division']!=NULL ? floatval($episodes[$i]['division']) : ''; ?>" placeholder="Altres" step="any"/>
 													</td>
 													<td>
-														<input id="form-episode-list-num-<?php echo $i+1; ?>" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']!=NULL ? floatval($episodes[$i]['number']) : ''; ?>" placeholder="(Esp.)" step="any"/>
+														<input id="form-episode-list-num-<?php echo $i+1; ?>" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']!=NULL ? floatval($episodes[$i]['number']) : ''; ?>" placeholder="Especial" step="any"/>
 														<input id="form-episode-list-id-<?php echo $i+1; ?>" name="form-episode-list-id-<?php echo $i+1; ?>" type="hidden" value="<?php echo $episodes[$i]['id']; ?>"/>
 														<input id="form-episode-list-has_version-<?php echo $i+1; ?>" type="hidden" value="<?php echo $episodes[$i]['has_version']; ?>"/>
 													</td>
@@ -852,7 +857,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 		} else {
 ?>
-														<input id="form-episode-list-description-<?php echo $i+1; ?>" name="form-episode-list-description-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['description']); ?>" placeholder="(Sense descripció)"/>
+														<input id="form-episode-list-description-<?php echo $i+1; ?>" name="form-episode-list-description-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['description']); ?>" placeholder=""/>
 <?php
 		}
 ?>
@@ -867,15 +872,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-episode-list-row-1">
 													<td>
-														<input id="form-episode-list-division-1" name="form-episode-list-division-1" type="number" class="form-control" value="1" placeholder="(Altres)" step="any"/>
+														<input id="form-episode-list-division-1" name="form-episode-list-division-1" type="number" class="form-control" value="1" placeholder="Altres" step="any"/>
 													</td>
 													<td>
-														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="1" placeholder="(Esp.)" step="any"/>
+														<input id="form-episode-list-num-1" name="form-episode-list-num-1" type="number" class="form-control" value="1" placeholder="Especial" step="any"/>
 														<input id="form-episode-list-id-1" name="form-episode-list-id-1" type="hidden" value="-1"/>
 														<input id="form-episode-list-has_version-1" type="hidden" value="0"/>
 													</td>
 													<td>
-														<input id="form-episode-list-description-1" name="form-episode-list-description-1" type="text" class="form-control" value="" placeholder="(Sense descripció)"/>
+														<input id="form-episode-list-description-1" name="form-episode-list-description-1" type="text" class="form-control" value="" placeholder=""/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-episode-list-delete-1" onclick="deleteEpìsodeRow(1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
@@ -996,6 +1001,67 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="mb-3 text-center pt-2">
 							<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix ".$content_apos; ?></button>
+						</div>
+						<!-- Modals -->
+						<div class="modal fade" id="modal-division-number" tabindex="-1" role="dialog" aria-labelledby="modal-division-number-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="modal-division-number-title">Número de <?php echo $type=='manga' ? 'volum' : 'temporada'; ?></h5>
+										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true" class="fa fa-times"></span>
+										</button>
+									</div>
+									<div class="modal-body">
+										Si cal, es poden fer servir decimals (per exemple: 1,5).<br>També és possible fer servir el número 0.
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="modal-division-episodes" tabindex="-1" role="dialog" aria-labelledby="modal-division-episodes-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="modal-division-episodes-title">Nombre de capítols <?php echo $type=='manga' ? 'd’un volum' : 'd’una temporada'; ?></h5>
+										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true" class="fa fa-times"></span>
+										</button>
+									</div>
+									<div class="modal-body">
+										Cal introduir-hi el nombre total de capítols de<?php echo $type=='manga' ? 'l volum' : ' la temporada'; ?>, sense incloure capítols especials (no numerats) ni extres.<br><br>Si es vol utilitzar <?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?> per a fer mitjana de puntuacions de <?php echo $external_provider; ?>, però no es vol que aparegui a la fitxa (per exemple, perquè <?php echo $type=='manga' ? 'els volums' : 'les temporades'; ?> que es mostren s’agrupen de manera diferent que a les fitxes de <?php echo $external_provider; ?>), es pot introduir el valor 0.<br><br><?php echo $type=='manga' ? 'Els volums' : 'Les temporades'; ?> amb 0 capítols no es mostren al web.<br>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="modal-chapter-number" tabindex="-1" role="dialog" aria-labelledby="modal-modal-chapter-number-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="modal-modal-chapter-number-title">Número de capítol</h5>
+										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true" class="fa fa-times"></span>
+										</button>
+									</div>
+									<div class="modal-body">
+										Si cal, es poden fer servir decimals (per exemple: 1,5).<br>També és possible fer servir el número 0.<br><br>Si es deixa en blanc, el capítol es considera un capítol especial no numerat. En aquest cas, cal introduir-hi una nota informativa perquè sigui possible saber a què fa referència.<br><br>Els capítols especials poden pertànyer o no a <?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?>. Si no hi pertanyen, tindran buits els camps «<?php echo $type=='manga' ? 'Volum' : 'Temporada'; ?>» i «Número».
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="modal-chapter-division" tabindex="-1" role="dialog" aria-labelledby="modal-modal-chapter-division-title" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="modal-modal-chapter-division-title">Número de <?php echo $type=='manga' ? 'volum' : 'temporada'; ?></h5>
+										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true" class="fa fa-times"></span>
+										</button>
+									</div>
+									<div class="modal-body">
+										Si cal, es poden fer servir decimals (per exemple: 1,5).<br>També és possible fer servir el número 0.<br><br>Si es deixa en blanc, el capítol es considera part d’<?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?> addicional amb nom «Altres» i així es mostrarà a la fitxa.<br><br>Els capítols de<?php echo $type=='manga' ? 'l volum' : ' la temporada'; ?> «Altres» han de ser sempre especials i, per tant, tindran buits els camps «<?php echo $type=='manga' ? 'Volum' : 'Temporada'; ?>» i «Número».
+									</div>
+								</div>
+							</div>
 						</div>
 					</form>
 				</article>
