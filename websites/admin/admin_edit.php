@@ -122,12 +122,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<label for="form-default_storage_processing" class="mandatory">Processament de fitxers per defecte</label>
 							<select class="form-select" name="default_storage_processing" id="form-default_storage_processing" required>
 								<option value="">- Selecciona un processament -</option>
-								<option value="1"<?php echo $row['default_storage_processing']==1 ? " selected" : ""; ?>>Desa l’original, converteix el vídeo i l’àudio</option>
-								<option value="0"<?php echo $row['default_storage_processing']==0 ? " selected" : ""; ?>>Desa l’original, converteix el vídeo, copia l’àudio</option>
-								<option value="2"<?php echo $row['default_storage_processing']==2 ? " selected" : ""; ?>>Desa l’original, copia el vídeo, converteix l’àudio</option>
-								<option value="3"<?php echo $row['default_storage_processing']==3 ? " selected" : ""; ?>>Desa l’original, copia el vídeo i l’àudio (regenera l’MP4)</option>
-								<option value="4"<?php echo $row['default_storage_processing']==4 ? " selected" : ""; ?>>Desa l’original, importa sense cap canvi</option>
-								<option value="5"<?php echo $row['default_storage_processing']==5 ? " selected" : ""; ?>>No desis l’original, importa sense cap canvi</option>
+								<option value="1"<?php echo $row['default_storage_processing']==1 ? " selected" : ""; ?>>Desa una còpia dels fitxers originals</option>
+								<option value="5"<?php echo $row['default_storage_processing']==5 ? " selected" : ""; ?>>No desis cap còpia dels fitxers originals</option>
 							</select>
 						</div>
 						<div class="mb-3 text-center pt-2">

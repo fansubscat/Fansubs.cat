@@ -1,5 +1,16 @@
 # Registre de canvis
 
+## 2023-12-27 - Versió 5.0.8
+- **Administració:**
+	- S’afegeixen validacions addicionals i elements d’ajuda a alguns camps dels formularis.
+	- Es canvien els processaments de fitxers a simplement «Desa els originals» i «No desis els originals».
+	- Les novel·les lleugeres s’importen correctament com a tals de MyAnimeList.
+	- S’importa l’estat «En emissió/publicació» de MyAnimeList.
+	- El camp de baixades del fansub ara és obligatori.
+	- Per defecte, les versions són recomanables.
+- **Serveis:**
+	- El processament de fitxers ja no depèn de la versió: si és un fitxer generat per a Fansubs.cat, s’importa tal qual; si no, es recomprimeix del tot.
+
 ## 2023-12-10 - Versió 5.0.7
 - **General:**
 	- Els llums de Nadal s’encenen el 5 de desembre i s’apaguen el 6 de gener.

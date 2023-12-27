@@ -155,20 +155,13 @@ do
 					# Update duration
 					curl --data-urlencode "duration=$duration" --data-urlencode "file_id=$file_id" https://api.fansubs.cat/internal/change_file_duration/?token=$token 2> /dev/null
 
-					if [ $storage_processing -eq 0 ]
+					artist=`../ffprobe -v error -select_streams v:0 -show_entries format_tags=artist -of csv=s=x:p=0 "$file"`
+
+					if [ "$artist" = "Recompressió per a Fansubs.cat" ]
 					then
-						generate_streaming "$file" 0 0 -1 CONVERT COPY "$dest_dir/$storage_folder/$output"
-					elif [ $storage_processing -eq 1 ]
-					then
-						generate_streaming "$file" 0 0 -1 CONVERT CONVERT "$dest_dir/$storage_folder/$output"
-					elif [ $storage_processing -eq 2 ]
-					then
-						generate_streaming "$file" 0 0 -1 COPY CONVERT "$dest_dir/$storage_folder/$output"
-					elif [ $storage_processing -eq 3 ]
-					then
-						generate_streaming "$file" 0 0 -1 COPY COPY "$dest_dir/$storage_folder/$output"
-					else
 						cp "$file" "$dest_dir/$storage_folder/$output"
+					else
+						generate_streaming "$file" 0 0 -1 CONVERT CONVERT "$dest_dir/$storage_folder/$output"
 					fi
 					rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --exclude "Manga" --exclude "ZZZ_INTERNAL" --delete
 
