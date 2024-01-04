@@ -6,6 +6,7 @@
 - **Administració:**
 	- S’impedeix que administradors assignats a un fansub concret creïn notícies en nom de Fansubs.cat o altres fansubs.
 	- S’afegeix una validació de format a les carpetes de MEGA.
+	- Es permet veure els darrers comentaris deixats pels usuaris.
 - **Catàleg:**
 	- Es permet als usuaris deixar comentaris a les fitxes de cada sèrie.
 	- A la selecció de millors de l’any es mostren les sèries creades enguany, no emeses enguany.
