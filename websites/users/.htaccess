@@ -1,5 +1,5 @@
 #Allow access from other domains
-SetEnvIf Origin "https://.*\.fansubs\.online$" AccessControlAllowOrigin=$0
+SetEnvIf Origin "https://.*\.fansubs\.cat$" AccessControlAllowOrigin=$0
 Header add Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
 Header add Access-Control-Allow-Credentials true
 Header merge Vary Origin
