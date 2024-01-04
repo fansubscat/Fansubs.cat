@@ -626,7 +626,7 @@ function addVersionRemoteFolderRow() {
 }
 
 function deleteVersionRow(episode_id, id) {
-	if ($("#form-files-list-"+episode_id+"-id-"+id).val()=='-1' || ($("#form-files-list-"+episode_id+"-id-"+id).val()!='-1' && confirm($('#type').val()=='manga' ? "Segur que vols esborrar aquest fitxer? Se’n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, fes servir el botó 'Canvia el fitxer'." : "Segur que vols esborrar aquest fitxer? Se’n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, simplement canvia’n els enllaços."))) {
+	if ($("#form-files-list-"+episode_id+"-id-"+id).val()=='-1' || ($("#form-files-list-"+episode_id+"-id-"+id).val()!='-1' && confirm($('#type').val()=='manga' ? "Si esborres aquest fitxer, se’n perdran totes les estadístiques, i si el tornes a penjar, es tornarà a publicar com a novetat a les xarxes. Si només vols pujar-ne una versió amb canvis, fes servir el botó 'Canvia el fitxer'. Segur que vols esborrar aquest fitxer?" : "Si esborres aquest fitxer, se’n perdran totes les estadístiques, i si el tornes a penjar, es tornarà a publicar com a novetat a les xarxes. Si només vols pujar-ne una versió amb canvis, simplement canvia’n els enllaços. Segur que vols esborrar aquest fitxer?"))) {
 		var i = parseInt($('#files-list-table-'+episode_id).attr('data-count'));
 		if(i==1) {
 			$("#form-files-list-"+episode_id+"-id-1").val("-1");
@@ -741,7 +741,7 @@ function deleteExtraLinkRow(extra_number, id) {
 }
 
 function deleteVersionExtraRow(id) {
-	if ($("#form-extras-list-id-"+id).val()=='-1' || ($("#form-extras-list-id-"+id).val()!='-1' && confirm("Segur que vols esborrar aquest extra? Se’n perdran totes les estadístiques. Si vols pujar-ne una versió amb canvis, simplement canvia’n l’enllaç."))) {
+	if ($("#form-extras-list-id-"+id).val()=='-1' || ($("#form-extras-list-id-"+id).val()!='-1' && confirm("Si esborres aquest extra, se’n perdran totes les estadístiques. Si només vols pujar-ne una versió amb canvis, simplement canvia’n l’enllaç. Segur que vols esborrar aquest extra?"))) {
 		var i = parseInt($('#extras-list-table').attr('data-count'));
 		$("#form-extras-list-row-"+id).remove();
 		for (var j=id+1;j<i+1;j++) {
@@ -1039,6 +1039,18 @@ function checkNumberOfLinks() {
 		}
 		if ($('#form-default_resolution').val()==''){
 			alert("Si hi ha activada la sincronització automàtica de carpetes, cal que informis una resolució per defecte per als enllaços.");
+			return false;
+		}
+	}
+
+	var folders = $('[id^=form-remote_folders-list-folder-]');
+	for (var i=0;i<folders.length;i++) {
+		if (folders[i].value.match(/.*https?:\/\/.*/)) {
+			alert("La carpeta remota no té un format vàlid: no ha de ser un enllaç, sinó el camí complet a la carpeta dins del compte. Per a més informació, llegeix el manual del tauler d’administració.");
+			return false;
+		}
+		if (folders[i].value.match(/\\/)) {
+			alert("La carpeta remota no té un format vàlid: el separador de carpetes ha de ser /, no \\.");
 			return false;
 		}
 	}
