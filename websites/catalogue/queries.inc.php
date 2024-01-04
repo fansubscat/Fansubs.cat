@@ -577,8 +577,7 @@ function query_version_ids_for_nadal($max_items) {
 			FROM version v
 				LEFT JOIN series s ON v.series_id=s.id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
-				AND s.publish_date IS NOT NULL
-				AND YEAR(s.publish_date)=".date('Y')."
+				AND YEAR(v.created)=".date('Y')."
 				AND ".get_internal_hentai_condition()."
 				AND v.status=1
 				AND v.is_featurable=1
