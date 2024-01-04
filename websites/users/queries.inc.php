@@ -39,7 +39,15 @@ function query_user_seen_data_by_user_id($user_id) {
 				FROM view_session
 				WHERE user_id=$user_id
 					AND type='liveaction'
-				) total_liveaction_seen";
+				) total_liveaction_seen,
+				(SELECT COUNT(*)
+				FROM comment
+				WHERE user_id=$user_id
+				) total_comments_left,
+				(SELECT COUNT(*)
+				FROM user_version_rating
+				WHERE user_id=$user_id
+				) total_ratings_left";
 	return query($final_query);
 }
 

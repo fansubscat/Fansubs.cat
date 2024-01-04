@@ -18,6 +18,8 @@ $seen_data = mysqli_fetch_assoc($result);
 
 $total_manga_seen = $seen_data['total_manga_seen'];
 $total_liveaction_seen = $seen_data['total_liveaction_seen'];
+$total_comments_left = $seen_data['total_comments_left'];
+$total_ratings_left = $seen_data['total_ratings_left'];
 
 if ($seen_data['total_anime_seen']>=3600) {
 	$total_anime_seen = intval($seen_data['total_anime_seen']/3600);
@@ -106,6 +108,14 @@ mysqli_free_result($result);
 					<div class="profile-section-data">
 						<div class="profile-section-data-header">Total d’imatge real vist</div>
 						<div class="profile-section-data-info"><?php echo $total_liveaction_seen; ?></div>
+					</div>
+					<div class="profile-section-data">
+						<div class="profile-section-data-header">Comentaris escrits</div>
+						<div class="profile-section-data-info"><?php echo $total_comments_left; ?></div>
+					</div>
+					<div class="profile-section-data">
+						<div class="profile-section-data-header">Valoracions atorgades</div>
+						<div class="profile-section-data-info"><?php echo $total_ratings_left; ?></div>
 					</div>
 				</div>
 			</div>

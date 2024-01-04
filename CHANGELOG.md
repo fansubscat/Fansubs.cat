@@ -12,6 +12,8 @@
 	- A la selecció de millors de l’any es mostren les sèries creades enguany, no emeses enguany.
 	- Si un usuari fa anys el mateix dia que una selecció especial, també se li mostra el missatge de felicitació.
 	- Se soluciona que una icona del portal no es mostrés correctament el dia dels Sants Innocents.
+- **Usuaris:**
+	- S’afegeixen les valoracions i els comentaris a les estadístiques.
 - **Eines:**
 	- S’importen com a ja comprimits els fitxers antics amb el títol «Recompressió per a anime.fansubs.cat».
 
