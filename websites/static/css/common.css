@@ -259,6 +259,8 @@ a img {
 	text-align: center;
 	font-size: 1.6rem;
 	margin: 0 calc(-1 * var(--page-padding));
+	position: relative;
+	z-index: 1;
 }
 
 .header {
