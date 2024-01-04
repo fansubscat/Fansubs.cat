@@ -219,7 +219,7 @@ if (defined('PAGE_IS_SEARCH')) {
 			if (date('m-d')>='12-25' && date('m-d')<='12-31') {
 				$result_recos = query_version_ids_for_nadal(10);
 				$special_day_title = "Els millors d’aquest ".date('Y');
-				$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
+				$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols estrenats i completats enguany!";
 			} else {
 				//No special selection: just show the lights
 			}
@@ -366,6 +366,21 @@ foreach($sections as $section){
 <?php
 			}
 			if ($section['type']=='recommendations') {
+				if (is_user_birthday()) {
+?>
+							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
+								<div class="recommendation special-day-header">
+									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark_hd.jpg'; ?>" alt="">
+									<div class="infoholder" data-swiper-parallax="-30%">
+										<div class="dataholder">
+											<div class="title"><span class="fa fa-cake-candles"></span><br>Per molts anys, <?php echo $user['username']; ?>!</div>
+											<div class="divisions">Segons el teu perfil d’usuari, avui fas <?php echo get_user_age(); ?> anys!<br>Et desitgem un bon aniversari i que gaudeixis de Fansubs.cat!</div>
+										</div>
+									</div>
+								</div>
+							</div>
+<?php
+				}
 				if (is_advent_days() && mysqli_num_rows(query_current_advent_calendar())>0 && !SITE_IS_HENTAI) {
 ?>
 							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
@@ -390,20 +405,6 @@ foreach($sections as $section){
 ?>
 											<div class="title"><?php echo $special_day_title; ?></div>
 											<div class="divisions"><?php echo $special_day_description; ?></div>
-										</div>
-									</div>
-								</div>
-							</div>
-<?php
-				} else if (is_user_birthday()) {
-?>
-							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
-								<div class="recommendation special-day-header">
-									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark_hd.jpg'; ?>" alt="">
-									<div class="infoholder" data-swiper-parallax="-30%">
-										<div class="dataholder">
-											<div class="title"><span class="fa fa-cake-candles"></span><br>Per molts anys, <?php echo $user['username']; ?>!</div>
-											<div class="divisions">Segons el teu perfil d’usuari, avui fas <?php echo get_user_age(); ?> anys!<br>Et desitgem un bon aniversari i que gaudeixis de Fansubs.cat!</div>
 										</div>
 									</div>
 								</div>
