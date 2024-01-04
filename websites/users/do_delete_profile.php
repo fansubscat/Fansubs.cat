@@ -37,6 +37,7 @@ function delete_profile(){
 	query_delete_user_version_followed($user['id']);
 	query_delete_user_version_rating($user['id']);
 	query_update_view_sessions_for_user_removal($user['id']);
+	query_update_comments_for_user_removal($user['id']);
 	query_delete_user($user['id']);
 
 	sendDeleteProfileEmail($user['email'], $user['username']);

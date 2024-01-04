@@ -1996,14 +1996,14 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	filter: grayscale(1) brightness(0.5);
 }
 
-.tadaima-explanation {
+.comments-cta {
 	font-size: 1.4rem;
 	line-height: 1.2;
 	text-align: center;
 	margin-top: 1.5rem;
 }
 
-.tadaima-explanation span {
+.comments-cta span {
 	font-size: 1.2rem;
 	opacity: 0.5;
 }
@@ -2116,48 +2116,124 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	margin-top: 1rem;
 }
 
-.tadaima-post {
-	margin-top: 2rem;
-	font-size: 1.4rem;
-	line-height: 1.2;
-	width: 100%;
-	overflow: hidden;
-	text-align: left;
-	border-radius: 1rem;
-	overflow: hidden;
-	background: rgba(var(--card-background-color),0.5);
-	padding: 2rem;
-	padding-bottom: 1.5rem;
-	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
+.comments-list {
+	display: flex;
+	flex-direction: column;
 }
 
-.tadaima-post + .tadaima-post {
+.comment {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
+}
+
+.comment-message {
+	margin-left: 2.5rem;
+	font-size: 1.4rem;
+	line-height: 1.2;
+	text-align: left;
+	border-radius: 1rem;
+	background: rgb(var(--card-background-color));
+	padding: 1rem 2rem;
+	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
+	position: relative;
+}
+
+.comment-message::after {
+	display: block;
+	width: 0;
+	content: "";
+	border: 1.5rem solid transparent;
+	border-right-color: rgb(var(--card-background-color));
+	border-left: 0;
+	position: absolute;
+	left: -1.5rem;
+	top: calc(50% - 1.5rem);
+	filter: drop-shadow(0 0rem 0.5rem rgba(var(--always-negative-color),0.1));
+}
+
+.comment + .comment {
 	margin-top: 1rem;
 }
 
-.tadaima-author {
+.comment-author {
 	display: flex;
 	align-items: center;
-	font-size: 1.3rem;
-	margin-top: 0.4rem;
+	margin-top: 1rem;
 }
 
-.tadaima-avatar {
-	width: 3rem;
-	height: 3rem;
+.comment-avatar {
+	width: 5rem;
+	height: 5rem;
 	border-radius: 50%;
 }
 
-.tadaima-user {
+.comment-user {
 	font-family: "lexend_deca_bold", sans-serif;
-	margin-left: 0.6rem;
 }
 
-.tadaima-message {
-	display: -webkit-box;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
+.load-all-comments {
+	align-self: center;
+}
+
+.comment-input {
+	min-width: 33%;
+	max-width: 100%;
+}
+
+.comment-send-form {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.comment-send-form textarea {
+	resize: none;
+	height: auto;
+}
+
+.comment-send-form .comment-send {
+	margin-left: 2rem;
+	margin-top: 0;
+	padding: 1rem;
+	align-self: end;
+}
+
+.grow-wrap {
+	/* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+	display: grid;
+	width: 100%;
+}
+.grow-wrap::after {
+	/* Note the weird space! Needed to preventy jumpy behavior */
+	content: attr(data-replicated-value) " ";
+
+	/* This is how textarea text behaves */
+	white-space: pre-wrap;
+
+	/* Hidden from view, clicks, and screen readers */
+	visibility: hidden;
+}
+.grow-wrap > textarea {
+	/* You could leave this, but after a user resizes, then it ruins the auto sizing */
+	resize: none;
+}
+.grow-wrap > textarea,
+.grow-wrap::after {
+	/* Identical styling required!! */
+	font: inherit;
+
+	/* Place on top of each other */
+	grid-area: 1 / 1 / 2 / 2;
 	overflow: hidden;
+	padding: 0.7rem;
+	margin-top: 0rem;
+	border-radius: 0.6rem;
+	border: none;
+	background: transparent;
+	color: rgb(var(--positive-color));
 }
 
 .division {
@@ -3048,11 +3124,11 @@ input:checked + .viewed-slider:before {
 		height: 6rem;
 	}
 
-	.version-fansub-info, .tadaima-explanation {
+	.version-fansub-info, .comments-cta {
 		font-size: 1.2rem;
 	}
 
-	.tadaima-explanation span {
+	.comments-cta span {
 		font-size: 1.1rem;
 	}
 
@@ -3071,19 +3147,33 @@ input:checked + .viewed-slider:before {
 		margin-right: 1rem;
 	}
 
-	.tadaima-post {
-		margin-top: 1rem;
+	.comment-message {
+		margin-left: 1.5rem;
 		font-size: 1.2rem;
-		padding: 1.5rem;
-		padding-bottom: 1rem;
+		padding: 0.75rem 1rem;
 	}
 
-	.tadaima-post + .tadaima-post {
+	.comment-message::after {
+		border: 1rem solid transparent;
+		border-right-color: rgb(var(--card-background-color));
+		border-left: 0;
+		position: absolute;
+		left: -1rem;
+		top: calc(50% - 1rem);
+		filter: drop-shadow(0 0rem 0.5rem rgba(var(--always-negative-color),0.1));
+	}
+
+	.comment-author {
+		margin-top: 0.5rem;
+	}
+
+	.comment-avatar {
+		width: 3rem;
+		height: 3rem;
+	}
+
+	.comment + .comment {
 		margin-top: 1rem;
-	}
-
-	.tadaima-author {
-		font-size: 1.1rem;
 	}
 
 	.division {

@@ -30,6 +30,15 @@ CREATE TABLE `advent_day` (
   `link_url` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `comment` (
+  `id` varchar(24) NOT NULL,
+  `version_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `text` text NOT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE `community` (
   `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
@@ -375,6 +384,11 @@ ALTER TABLE `advent_calendar`
 ALTER TABLE `advent_day`
   ADD PRIMARY KEY (`year`,`day`);
 
+ALTER TABLE `comment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `comment_ibfk_1` (`user_id`),
+  ADD KEY `comment_ibfk_2` (`version_id`);
+
 ALTER TABLE `community`
   ADD PRIMARY KEY (`id`);
 
@@ -498,6 +512,9 @@ ALTER TABLE `view_session`
 ALTER TABLE `admin_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `comment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `community`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -548,6 +565,10 @@ ALTER TABLE `version`
 
 ALTER TABLE `admin_user`
   ADD CONSTRAINT `admin_user_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `comment`
+  ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `division`
   ADD CONSTRAINT `division_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

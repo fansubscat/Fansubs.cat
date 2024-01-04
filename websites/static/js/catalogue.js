@@ -1617,6 +1617,51 @@ function toggleBookmarkFromSeriesPage(){
 	});
 }
 
+function checkCommentPossible() {
+	if ($('body.user-logged-in').length==0) {
+		showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		return;
+	}
+}
+
+function sendUserComment(button) {
+	button.prop('disabled', true);
+	button.html('<i class="fas fa-fw fa-spinner fa-spin"></i>');
+
+	var values = {
+		text: $(button.parent().find('textarea').get(0)).val(),
+		version_id: $('.version-tab-selected').attr('data-version-id')
+	};
+
+	$.post({
+		url: USERS_URL+"/do_leave_comment.php",
+		data: values,
+		xhrFields: {
+			withCredentials: true
+		},
+	}).done(function(data) {
+		var response = JSON.parse(data);
+		$(button.parent().find('textarea').get(0)).val('');
+		button.parent().find('textarea').get(0).parentNode.dataset.replicatedValue=this.value;
+		button.closest('.comment-fake').after('<div class="comment"><img class="comment-avatar" src="'+$('.comment-fake .comment-avatar').attr('src')+'"><div class="comment-message">'+response.text+'<div class="comment-author"><span class="comment-user">'+response.username+'</span>&nbsp;•&nbsp;<span class="comment-date">ara mateix</span></div></div></div>');
+		button.prop('disabled', false);
+		button.html('<i class="fa fa-fw fa-paper-plane"></i>');
+	}).fail(function(data) {
+		try {
+			var response = JSON.parse(data.responseText);
+			if (response.code==3) {
+				showAlert('S’ha produït un error', 'No pots deixar comentaris tan seguits en el temps. Deixa passar uns segons.');
+			} else {
+				showAlert('S’ha produït un error', 'No s’ha pogut enviar el comentari. Torna-ho a provar.');
+			}
+		} catch(e) {
+			showAlert('S’ha produït un error', 'No s’ha pogut enviar el comentari. Torna-ho a provar.');
+		}
+		button.prop('disabled', false);
+		button.html('<i class="fa fa-fw fa-paper-plane"></i>');
+	});
+}
+
 function removeFromContinueWatching(element, fileId){
 	var slide = $(element).parent().parent().parent().parent();
 	var wrapper = slide.parent();
@@ -2038,7 +2083,7 @@ function applyVersionRating(pressedButton, oppositeButton, ratingClicked) {
 	}
 
 	var values = {
-		version_id: +$('.version-tab-selected').attr('data-version-id'),
+		version_id: $('.version-tab-selected').attr('data-version-id'),
 		rating: value
 	};
 
@@ -2345,6 +2390,20 @@ $(document).ready(function() {
 					$(this).addClass('series-file-lists-reversed');
 				}
 			});
+		});
+
+		$(".load-all-comments").click(function(){
+			$(this).parent().find('.comment.hidden').removeClass('hidden');
+			$(this).addClass('hidden');
+		});
+
+		$(".comment-send").click(function(){
+			if ($('body.user-logged-in').length==0) {
+				showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+			}
+			else if ($($(this).parent().find('textarea').get(0)).val()!='') {
+				sendUserComment($(this));
+			}
 		});
 
 		//Search form

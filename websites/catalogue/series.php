@@ -511,6 +511,52 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 								</div>
 							</div>
+							<div class="section-content extra-content">
+								<h2 class="section-title-main"><i class="fa fa-fw fa-comment"></i> Comentaris</h2>
+<?php
+
+	$resultcom = query_version_comments($version['id']);
+	$total_comments = mysqli_num_rows($resultcom);
+?>
+								<div class="comments-list">
+									<div class="comment comment-fake">
+										<img class="comment-avatar" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+										<div class="comment-message comment-input">
+											<div class="comment-send-form">
+												<div class="grow-wrap">
+													<textarea placeholder="Escriu un comentari!" onfocus="checkCommentPossible();" oninput="this.parentNode.dataset.replicatedValue=this.value;" rows="1"></textarea>
+												</div>
+												<button class="normal-button comment-send"><i class="fa fa-fw fa-paper-plane"></i></button>
+											</div>
+										</div>
+									</div>
+<?php
+	$i=0;
+	while ($comment = mysqli_fetch_assoc($resultcom)) {
+?>
+									<div class="comment<?php echo $i>=3 ? ' hidden' : ''; ?>">
+										<img class="comment-avatar" src="<?php echo !empty($comment['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$comment['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+										<div class="comment-message">
+											<?php echo !empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>'; ?>
+											<div class="comment-author">
+												<span class="comment-user"><?php echo !empty($comment['username']) ? htmlentities($comment['username']) : 'Usuari eliminat'; ?></span> • <span class="comment-date"><?php echo get_relative_date($comment['created_timestamp']); ?></span>
+											</div>
+										</div>
+									</div>
+<?php
+		$i++;
+	}
+	if ($total_comments>3) {
+?>
+									<a class="normal-button load-all-comments"><i class="fa fa-fw fa-angles-down"></i> Mostra <?php echo ($total_comments-3)==1 ? '1 comentari més' : ($total_comments-3).' comentaris més'; ?></a>
+<?php
+	}
+?>
+								</div>
+<?php
+	mysqli_free_result($resultcom);
+?>
+							</div>
 						</div>
 <?php
 	$i++;
@@ -518,51 +564,6 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 					</div>
 <?php
-if (!SITE_IS_HENTAI) {
-?>
-					<div class="section">
-						<h2 class="section-title-main"><i class="fa fa-fw fa-comment"></i> Darrers comentaris a Tadaima.cat</h2>
-						<div class="section-content">
-<?php
-	if (!empty($series['tadaima_id'])) {
-		$tadaima_posts = get_tadaima_info($series['tadaima_id']);
-?>
-<?php
-		$num_posts = count($tadaima_posts);
-		if ($num_posts>3) {
-			$tadaima_posts = array_slice($tadaima_posts, -3);
-		}
-?>
-							<div class="tadaima-posts">
-<?php
-		foreach ($tadaima_posts as $post) {
-?>
-								<div class="tadaima-post">
-									<div class="tadaima-message"><?php echo strip_tags(str_replace('Prem per veure el contingut multimèdia', '[Contingut multimèdia] ', str_replace('<br>',"\n",$post->text))); ?></div>
-									<div class="tadaima-author">
-										<img class="tadaima-avatar" src="<?php echo $post->user->avatar; ?>">
-										<span class="tadaima-user"><?php echo $post->user->name; ?></span> • <span class="tadaima-date"><?php echo get_relative_date($post->time); ?></span>
-									</div>
-								</div>
-<?php
-		}
-?>
-							</div>
-							<div class="tadaima-explanation">En total hi ha <b><?php echo $num_posts==1 ? '1 missatge' : $num_posts.' missatges'; ?></b>. Et vols unir a la conversa?<br><span>(recorda que Tadaima.cat no és qui edita aquest contingut)</span></div>
-							<a class="normal-button tadaima-cta" href="https://tadaima.cat/fil-t<?php echo $series['tadaima_id']; ?>.html" target="_blank"><i class="fa fa-fw fa-comment-dots"></i> Digues-hi la teva a Tadaima.cat</a>
-<?php
-	} else {
-?>
-							<div class="tadaima-explanation">Encara no hi ha cap fil sobre aquest contingut a Tadaima.cat. T’animem a crear-ne un!<br><span>(recorda que Tadaima.cat no és qui edita aquest contingut)</span></div>
-							<a class="normal-button tadaima-cta" href="https://tadaima.cat/<?php echo CATALOGUE_ITEM_TYPE=='anime' ? 'anime-f10' : (CATALOGUE_ITEM_TYPE=='manga' ? 'manga-f9' : 'series-i-pel-licules-f14'); ?>.html" target="_blank"><i class="fa fa-fw fa-comment-dots"></i> Digues-hi la teva a Tadaima.cat</a>
-<?php
-	}
-?>
-						</div>
-					</div>
-<?php
-}
-
 $num_of_genres = count(explode(', ', $series['genres']));
 $num_of_genres_in_common = max(intval(round($num_of_genres/2)),1);
 

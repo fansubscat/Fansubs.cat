@@ -1357,4 +1357,14 @@ function query_version_by_file_id($file_id) {
 			WHERE f.id=$file_id";
 	return query($final_query);
 }
+
+function query_version_comments($version_id) {
+	$version_id = intval($version_id);
+	$final_query = "SELECT c.*, u.username, u.avatar_filename, UNIX_TIMESTAMP(c.created) created_timestamp
+			FROM comment c
+			LEFT JOIN user u ON c.user_id=u.id
+			WHERE c.version_id=$version_id
+			ORDER BY c.created DESC";
+	return query($final_query);
+}
 ?>

@@ -42,7 +42,17 @@ function get_nanoid($size=24) {
 }
 
 function get_relative_date($time) {
-	if (time()-$time<3600*24) {
+	if (time()-$time<60) {
+		return "ara mateix";
+	}
+	if (time()-$time<3600) {
+		$minutes = intval((time()-$time)/60);
+		if ($minutes==1) {
+			return "fa 1 minut";
+		} else {
+			return "fa $minutes minuts";
+		}
+	} else if (time()-$time<3600*24) {
 		$hours = intval((time()-$time)/3600);
 		if ($hours==1) {
 			return "fa 1 hora";

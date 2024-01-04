@@ -80,6 +80,14 @@ function query_all_fansubs() {
 	return query($final_query);
 }
 
+function query_user_comments_in_the_last_minute($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "SELECT *
+			FROM comment
+			WHERE user_id=$user_id AND created>=DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 60 SECOND)";
+	return query($final_query);
+}
+
 // INSERT
 
 function query_insert_registered_user($username, $password_hash, $email, $birthdate) {
@@ -97,6 +105,15 @@ function query_insert_user_blacklist($user_id, $blacklisted_fansub_id) {
 	$blacklisted_fansub_id = escape($blacklisted_fansub_id);
 	$final_query = "INSERT INTO user_fansub_blacklist (user_id, fansub_id)
 			VALUES ($user_id, $blacklisted_fansub_id)";
+	return query($final_query);
+}
+
+function query_insert_comment($user_id, $version_id, $text) {
+	$user_id = escape($user_id);
+	$version_id = escape($version_id);
+	$text = escape($text);
+	$final_query = "INSERT INTO comment (user_id, version_id, text, created, updated)
+			VALUES ($user_id, $version_id, '$text', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 	return query($final_query);
 }
 
@@ -162,6 +179,16 @@ function query_update_view_sessions_for_user_removal($user_id) {
 	$final_query = "UPDATE view_session
 			SET user_id=NULL,
 				anon_id='".escape(session_id())."'
+			WHERE user_id=$user_id";
+	return query($final_query);
+}
+
+function query_update_comments_for_user_removal($user_id) {
+	$user_id = escape($user_id);
+	$final_query = "UPDATE comment
+			SET user_id=NULL,
+				text='',
+				updated=CURRENT_TIMESTAMP
 			WHERE user_id=$user_id";
 	return query($final_query);
 }

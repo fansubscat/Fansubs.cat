@@ -1,5 +1,19 @@
 # Registre de canvis
 
+## 2024-01-04 - Versió 5.0.9
+- **General:**
+	- El missatge d’avís (incloent el del dia dels Sants Innocents) es mostra correctament per sobre de la capçalera de les sèries.
+- **Administració:**
+	- S’impedeix que administradors assignats a un fansub concret creïn notícies en nom de Fansubs.cat o altres fansubs.
+	- S’afegeix una validació de format a les carpetes de MEGA.
+- **Catàleg:**
+	- Es permet als usuaris deixar comentaris a les fitxes de cada sèrie.
+	- A la selecció de millors de l’any es mostren les sèries creades enguany, no emeses enguany.
+	- Si un usuari fa anys el mateix dia que una selecció especial, també se li mostra el missatge de felicitació.
+	- Se soluciona que una icona del portal no es mostrés correctament el dia dels Sants Innocents.
+- **Eines:**
+	- S’importen com a ja comprimits els fitxers antics amb el títol «Recompressió per a anime.fansubs.cat».
+
 ## 2023-12-27 - Versió 5.0.8
 - **Administració:**
 	- S’afegeixen validacions addicionals i elements d’ajuda a alguns camps dels formularis.

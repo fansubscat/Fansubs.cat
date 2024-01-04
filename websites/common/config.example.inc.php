@@ -1,7 +1,7 @@
 <?php
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 
-define('VERSION', '5.0.8');
+define('VERSION', '5.0.9');
 
 //Database access
 define('DB_HOST', 'YOUR_DB_HOST_HERE');
@@ -29,11 +29,6 @@ define('HENTAI_MANGA_URL', 'https://hentai.fansubs.cat/manga');
 //Internal paths (no final slash)
 define('SERVICES_DIRECTORY', '/srv/services/fansubs.cat');
 define('STATIC_DIRECTORY', '/srv/websites/static.fansubs.cat');
-
-//Memcached access (for storing remote requests cache)
-define('MEMCACHED_HOST', 'YOUR_MEMCACHED_HOST_HERE');
-define('MEMCACHED_PORT', 12345);
-define('MEMCACHED_EXPIRY_TIME', 12*3600);
 
 //Cookie params
 define('COOKIE_NAME', 'session_id');
