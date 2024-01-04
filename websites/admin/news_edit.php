@@ -134,9 +134,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="mb-3">
 						<label for="form-fansub_id">Fansub</label>
 						<select name="fansub_id" class="form-select" id="form-fansub_id"<?php echo isset($_GET['id']) ? ' disabled' : ''; ?>>
+<?php
+	if ($_SESSION['admin_level']>=3) {
+?>
 							<option value="">- Notícia en nom de Fansubs.cat (tria un altre fansub, si no és així) -</option>
 <?php
-	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
+	}
+	if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
+		$where = ' WHERE f.id='.$_SESSION['fansub_id'];
+	} else {
+		$where = '';
+	}
+	$result = query("SELECT f.* FROM fansub f$where ORDER BY f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
 ?>
 							<option value="<?php echo $frow['id']; ?>"<?php echo $row['fansub_id']==$frow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($frow['name']); ?></option>
