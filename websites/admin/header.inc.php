@@ -154,6 +154,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 								<a class="dropdown-item" href="views.php?type=manga">Darreres visualitzacions - Manga</a>
 								<a class="dropdown-item" href="views.php?type=liveaction">Darreres visualitzacions - Imatge real</a>
 								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="comments.php">Darrers comentaris</a>
 								<a class="dropdown-item" href="popular.php">Continguts més populars</a>
 								<a class="dropdown-item" href="stats.php">Estadístiques</a>
 								<div class="dropdown-divider"></div>
