@@ -160,6 +160,9 @@ do
 					if [ "$artist" = "Recompressió per a Fansubs.cat" ]
 					then
 						cp "$file" "$dest_dir/$storage_folder/$output"
+					elif [ "$artist" = "Recompressió per a anime.fansubs.cat" ]
+					then
+						cp "$file" "$dest_dir/$storage_folder/$output"
 					else
 						generate_streaming "$file" 0 0 -1 CONVERT CONVERT "$dest_dir/$storage_folder/$output"
 					fi
