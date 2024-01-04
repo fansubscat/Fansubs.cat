@@ -334,7 +334,7 @@ if (!empty($special_day) && file_exists(STATIC_DIRECTORY.'/images/site/logo_laye
 		} else if (SITE_IS_HENTAI) {
 ?>
 						<a class="hentai-button" href="<?php echo CATALOGUE_ITEM_TYPE=='anime' ? ANIME_URL : MANGA_URL; ?>" title="Vés al contingut general">
-							<i class="fa-solid fa-fw fa-house-chimney fa-2x"></i>
+							<i class="fa fa-solid fa-fw fa-house-chimney fa-2x"></i>
 						</a>
 <?php
 		}
