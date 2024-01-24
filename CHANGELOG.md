@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2024-01-24 - Versió 5.0.10
+- **Catàleg:**
+	- S’ha solucionat que l’últim capítol visualitzat no es desés correctament en el cas de sèries que reinicien la numeració a cada temporada.
+	- S’ha corregit que, en alguns casos, tot i tenir correctament desat l’últim capítol visualitzat, no es mostrés el següent a «Continua mirant».
+
 ## 2024-01-04 - Versió 5.0.9
 - **General:**
 	- El missatge d’avís (incloent el del dia dels Sants Innocents) es mostra correctament per sobre de la capçalera de les sèries.

@@ -313,13 +313,15 @@ function query_insert_or_update_user_version_followed_by_file_id($user_id, $file
 									FROM user_file_seen_status ufss
  									LEFT JOIN file f ON ufss.file_id=f.id
 									LEFT JOIN episode e ON f.episode_id=e.id
+									LEFT JOIN division d ON e.division_id=d.id
 									LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=f.version_id
 									WHERE ufss.is_seen=1
 										AND ufss.user_id=$user_id
 										AND f.version_id IN (SELECT f2.version_id
 												FROM file f2
 												WHERE f2.id=$file_id)
-									ORDER BY e.number IS NULL ASC,
+									ORDER BY d.number DESC, 
+										e.number IS NULL ASC,
 										e.number DESC,
 										IFNULL(et.title, e.description) DESC
 									LIMIT 1),-1)
@@ -328,13 +330,15 @@ function query_insert_or_update_user_version_followed_by_file_id($user_id, $file
 									FROM user_file_seen_status ufss
  									LEFT JOIN file f ON ufss.file_id=f.id
 									LEFT JOIN episode e ON f.episode_id=e.id
+									LEFT JOIN division d ON e.division_id=d.id
 									LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=f.version_id
 									WHERE ufss.is_seen=1
 										AND ufss.user_id=$user_id
 										AND f.version_id IN (SELECT f2.version_id
 												FROM file f2
 												WHERE f2.id=$file_id)
-									ORDER BY e.number IS NULL ASC,
+									ORDER BY d.number DESC, 
+										e.number IS NULL ASC,
 										e.number DESC,
 										IFNULL(et.title, e.description) DESC
 									LIMIT 1),-1)";
@@ -744,7 +748,8 @@ function query_home_continue_watching_by_user_id($user_id) {
 								WHERE f.version_id=v.id
 									AND f.episode_id IS NOT NULL
 									AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (CONCAT(NATURAL_SORT_KEY(d2.number), ':', NATURAL_SORT_KEY(e2.number))>CONCAT(NATURAL_SORT_KEY(d1.number), ':', NATURAL_SORT_KEY(e1.number))))
-								ORDER BY e2.number IS NULL ASC,
+								ORDER BY d2.number ASC,
+									e2.number IS NULL ASC,
 									e2.number ASC,
 									IFNULL(et2.title, e2.description) ASC
 								LIMIT 1) newer_episode_file_id
