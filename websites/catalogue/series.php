@@ -460,31 +460,31 @@ while ($version = mysqli_fetch_assoc($result)) {
 <?php
 		if (!empty(!empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url'])) {
 ?>
-													<a class="fa fa-fw fa-earth-europe web-link" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
+													<a class="fa fa-fw fa-earth-europe web-link" title="Lloc web" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['discord_url'])) {
 ?>
-													<a class="fab fa-fw fa-discord discord-link" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-discord discord-link" title="Servidor a Discord" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['mastodon_url'])) {
 ?>
-													<a class="fab fa-fw fa-mastodon mastodon-link" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-mastodon mastodon-link" title="Perfil a Mastodon" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['twitter_url'])) {
 ?>
-													<a class="fab fa-fw fa-x-twitter twitter-link" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-x-twitter twitter-link" title="Perfil a X" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['downloads_url'])) {
 			$url_arr=explode(';', $fansub['downloads_url']);
 			foreach ($url_arr as $url) {
 				if (preg_match(REGEXP_DL_LINK,$url)) {
-					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link fansub-downloads" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
+					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link fansub-downloads" title="Baixa’n els fitxers originals" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
 				} else {
-					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link" href="'.$url.'" target="_blank"></a>';
+					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link" href="'.$url.'" title="Baixa’n els fitxers originals" target="_blank"></a>';
 				}
 			}
 		}
