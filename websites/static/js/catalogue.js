@@ -2067,6 +2067,10 @@ function requestFileData(fileId) {
 }
 
 function applyVersionRating(pressedButton, oppositeButton, ratingClicked) {
+	if ($('body.user-logged-in').length==0) {
+		showAlert('Cal iniciar la sessió', 'Per a poder valorar la qualitat d’una versió, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		return;
+	}
 	var value;
 	if (pressedButton.hasClass("version-fansub-rating-selected")) {
 		//rated this way, mark as unrated

@@ -496,9 +496,6 @@ while ($version = mysqli_fetch_assoc($result)) {
 	}
 ?>
 									</div>
-<?php
-	if (!empty($user)) {
-?>
 									<div class="version-fansub-rating">
 										<div class="version-fansub-rating-title">Valora aquesta versió</div>
 										<div class="version-fansub-rating-buttons">
@@ -506,9 +503,6 @@ while ($version = mysqli_fetch_assoc($result)) {
 											<span class="version-fansub-rating-negative fa fa-fw fa-thumbs-down<?php echo $version['user_rating']==-1 ? ' version-fansub-rating-selected' : ''; ?>"></span>
 										</div>
 									</div>
-<?php
-	}
-?>
 								</div>
 							</div>
 							<div class="section-content extra-content">
