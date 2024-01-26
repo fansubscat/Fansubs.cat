@@ -280,10 +280,18 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw far fa-circle-check"></i> Completats fa poc temps',
+		'title' => '<i class="fa fa-fw far fa-circle-check"></i> '.CATALOGUE_LAST_FINISHED_SERIALIZED_STRING,
 		'specific_version' => TRUE,
 		'use_version_param' => TRUE,
-		'result' => query_home_last_finished($user, $max_items),
+		'result' => query_home_last_finished_by_type($user, $max_items, CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID),
+	));
+
+	array_push($sections, array(
+		'type' => 'carousel',
+		'title' => '<i class="fa fa-fw far fa-circle-check"></i> '.CATALOGUE_LAST_FINISHED_SINGLE_STRING,
+		'specific_version' => TRUE,
+		'use_version_param' => TRUE,
+		'result' => query_home_last_finished_by_type($user, $max_items, CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID),
 	));
 
 	array_push($sections, array(

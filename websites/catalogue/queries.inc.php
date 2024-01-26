@@ -401,16 +401,9 @@ function query_total_number_of_series($round_interval) {
 	return query($final_query);
 }
 
-function query_random_series() {
-	$final_query = "SELECT *
-			FROM series s
-			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
-				AND ".get_internal_hentai_condition()."
-				AND EXISTS(SELECT id
-					FROM version v
-					WHERE v.series_id=s.id
-						AND v.is_hidden=0
-					)
+function query_random_series($user) {
+	$final_query = get_internal_home_base_query($user)."
+			GROUP BY s.id
 			ORDER BY RAND()
 			LIMIT 1";
 	return query($final_query);
@@ -881,10 +874,12 @@ function query_home_last_updated($user, $max_items) {
 	return query($final_query);
 }
 
-function query_home_last_finished($user, $max_items) {
+function query_home_last_finished_by_type($user, $max_items, $type) {
 	$max_items = intval($max_items);
+	$type = escape($type);
 	$final_query = get_internal_home_base_query($user)."
 				AND completed_date IS NOT NULL
+				AND s.subtype='$type'
 			GROUP BY v.id
 			ORDER BY completed_date DESC
 			LIMIT $max_items";

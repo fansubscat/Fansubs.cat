@@ -4,7 +4,7 @@ require_once("common.inc.php");
 
 validate_hentai();
 
-$result = query_random_series();
+$result = query_random_series($user);
 if ($row = mysqli_fetch_assoc($result)) {
 	header("HTTP/1.1 302 Moved Temporarily");
 	header("Location: ".$row['slug']);
