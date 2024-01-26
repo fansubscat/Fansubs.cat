@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2024-01-26 - Versió 5.0.11
+- **Catàleg:**
+	- Se separa l’apartat «Completats fa poc temps» en dos: serialitzats i films/one-shots.
+	- L’opció «Fitxa a l’atzar» ara té en compte les preferències de l’usuari (llista negra, sèries cancel·lades, etc.)
+	- Es mostra l’opció de valorar una versió als usuaris anònims, convidant-los a registrar-se (com ja es fa amb els comentaris).
+- **Administració:**
+	- S’afegeixen a les estadístiques el total d’usuaris (i els que ha visualitzat alguna cosa), comentaris i valoracions positives i negatives.
+
 ## 2024-01-24 - Versió 5.0.10
 - **Catàleg:**
 	- S’ha solucionat que l’últim capítol visualitzat no es desés correctament en el cas de sèries que reinicien la numeració a cada temporada.
