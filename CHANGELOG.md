@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2024-03-12 - Versió 5.0.12
+- **Catàleg:**
+	- Es canvia «Mangues serialitzats completats» per «Mangues completats» als títols de les seccions.
+- **Administració:**
+	- Es permet pujar fitxers CBR (format RAR).
+	- Es corregeix un error en el format d’imatge dels logos dels fansubs.
+- **Serveis:**
+	- Els tweets d’imatge real esmenten «imatge real» i no «acció real».
+
 ## 2024-01-26 - Versió 5.0.11
 - **Catàleg:**
 	- Se separa l’apartat «Completats fa poc temps» en dos: serialitzats i films/one-shots.

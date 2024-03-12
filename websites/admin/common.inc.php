@@ -173,8 +173,8 @@ function decompress_manga_file($file_id, $temporary_filename, $original_filename
 	//log_action("debug-log", "Descomprimint el fitxer $original_filename i movent-lo al directori amb id: $file_id");
 	$temp_path="/tmp/decompress_$file_id/";
 	$extension = pathinfo($original_filename, PATHINFO_EXTENSION);
-	if ($extension=='rar'){
-		//Extract RAR
+	if ($extension=='rar' || $extension=='cbr'){
+		//Extract RAR/CBR
 		$rar = RarArchive::open($temporary_filename);
 		if ($rar!==FALSE) {
 			$entries = $rar->getEntries();
