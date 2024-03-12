@@ -254,26 +254,26 @@ function get_liveaction_header($type, $fansub_type, $number_of_elements) {
 	if ($type=='new') {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nou contingut d’acció real doblat!';
+				return 'Nou contingut d’imatge real doblat!';
 			case 'fansub':
 			default:
-				return 'Nou contingut d’acció real subtitulat!';
+				return 'Nou contingut d’imatge real subtitulat!';
 		}
 	} else if ($number_of_elements==1) {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nou capítol d’acció real doblat:';
+				return 'Nou capítol d’imatge real doblat:';
 			case 'fansub':
 			default:
-				return 'Nou capítol d’acció real subtitulat:';
+				return 'Nou capítol d’imatge real subtitulat:';
 		}
 	} else {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nous capítols d’acció real doblats:';
+				return 'Nous capítols d’imatge real doblats:';
 			case 'fansub':
 			default:
-				return 'Nous capítols d’acció real subtitulats:';
+				return 'Nous capítols d’imatge real subtitulats:';
 		}
 	}
 }
