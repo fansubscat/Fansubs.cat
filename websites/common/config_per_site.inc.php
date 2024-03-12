@@ -101,7 +101,7 @@ switch (strtolower($server_url)) {
 		define('CATALOGUE_ROUND_INTERVAL', 50);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
-		define('CATALOGUE_LAST_FINISHED_SERIALIZED_STRING', 'Mangues serialitzats completats fa poc');
+		define('CATALOGUE_LAST_FINISHED_SERIALIZED_STRING', 'Mangues completats fa poc');
 		define('CATALOGUE_LAST_FINISHED_SINGLE_STRING', 'One-shots completats fa poc');
 		define('CATALOGUE_MOST_RECENT_STRING', 'Mangues de publicació recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Mangues ben valorats');
@@ -230,7 +230,7 @@ switch (strtolower($server_url)) {
 		define('CATALOGUE_ROUND_INTERVAL', 25);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
-		define('CATALOGUE_LAST_FINISHED_SERIALIZED_STRING', 'Mangues serialitzats completats fa poc');
+		define('CATALOGUE_LAST_FINISHED_SERIALIZED_STRING', 'Mangues completats fa poc');
 		define('CATALOGUE_LAST_FINISHED_SINGLE_STRING', 'One-shots completats fa poc');
 		define('CATALOGUE_MOST_RECENT_STRING', 'Mangues de publicació recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Mangues ben valorats');
