@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2024-04-06 - Versió 5.0.13
+- **Catàleg:**
+	- Les visualitzacions dels usuaris es consideren completades a nivell estadístic quan se n’ha vist un 80% i no un 85% com fins ara.
+
 ## 2024-03-12 - Versió 5.0.12
 - **Catàleg:**
 	- Es canvia «Mangues serialitzats completats» per «Mangues completats» als títols de les seccions.
