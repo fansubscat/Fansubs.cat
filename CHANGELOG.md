@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2024-04-09 - Versió 5.0.14
+- **General:**
+	- S’han actualitzat les biblioteques a les darreres versions disponibles.
+- **Principal:**
+	- La icona de Bluesky ara és la correcta.
+
 ## 2024-04-06 - Versió 5.0.13
 - **Catàleg:**
 	- Les visualitzacions dels usuaris es consideren completades a nivell estadístic quan se n’ha vist un 80% i no un 85% com fins ara.

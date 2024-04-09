@@ -51,12 +51,12 @@ if (SITE_IS_HENTAI) {
 		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/site.webmanifest">
 		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/safari-pinned-tab.svg" color="<?php echo SITE_IS_HENTAI ? '#d91883' : '#6aa0f8'; ?>">
 		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon.ico">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.0.4/swiper-bundle.min.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.css">
 <?php
 if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 ?>
-		<link rel="stylesheet" href="https://vjs.zencdn.net/8.6.1/video-js.css">
+		<link rel="stylesheet" href="https://vjs.zencdn.net/8.11.8/video-js.css">
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>
@@ -75,7 +75,7 @@ if ($special_day=='fools'){
 ?>
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/swiper@11.0.4/swiper-bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.js"></script>
 <?php
 if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 ?>
@@ -84,8 +84,8 @@ if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 				preloadWebComponents: true,
 			};
 		</script>
-		<script src="https://unpkg.com/megajs@1.1.4/dist/main.browser-umd.js"></script>
-		<script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+		<script src="https://unpkg.com/megajs@1.1.8/dist/main.browser-umd.js"></script>
+		<script src="https://vjs.zencdn.net/8.11.8/video.min.js"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videostream.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videojs-lang_ca.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videojs-chromecast.js?v=<?php echo VERSION; ?>"></script>
@@ -278,7 +278,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 		if (PAGE_STYLE_TYPE=='main') {
 ?>
-					<a class="social-link bluesky-link fa fa-square" href="https://bsky.app/profile/fansubscat.bsky.social" target="_blank" title="Bluesky de Fansubs.cat"></a>
+					<a class="social-link bluesky-link fab fa-bluesky" href="https://bsky.app/profile/fansubscat.bsky.social" target="_blank" title="Bluesky de Fansubs.cat"></a>
 					<a class="social-link mastodon-link fab fa-mastodon" href="https://mastodont.cat/@fansubscat" target="_blank" title="Mastodon de Fansubs.cat" rel="me"></a>
 					<a class="social-link telegram-link fab fa-telegram" href="https://t.me/fansubscat" target="_blank" title="Telegram de Fansubs.cat"></a>
 					<a class="social-link twitter-link fab fa-x-twitter" href="https://x.com/fansubscat" target="_blank" title="X de Fansubs.cat"></a>
