@@ -9,8 +9,8 @@ define('DB_PASSWORD', 'YOUR_DB_PASS_HERE');
 define('DB_CHARSET', 'utf8mb4');
 
 //Website URLs (no final slash)
-define('STATIC_URL', 'https://staticv2.fansubs.cat');
-define('ADMIN_URL', 'https://adminv2.fansubs.cat');
+define('STATIC_URL', 'https://static.fansubs.cat');
+define('ADMIN_URL', 'https://admin.fansubs.cat');
 
 //Internal path (no final slash)
 define('STATIC_DIRECTORY', '/srv/websites/static.fansubs.cat');
@@ -23,13 +23,22 @@ define('TWITTER_CONSUMER_KEY', 'YOUR_TWITTER_KEY_HERE');
 define('TWITTER_CONSUMER_SECRET', 'YOUR_TWITTER_SECRET_HERE');
 define('TWITTER_ACCESS_TOKEN', 'YOUR_TWITTER_ACCESS_TOKEN_HERE');
 define('TWITTER_ACCESS_TOKEN_SECRET', 'YOUR_TWITTER_ACCESS_SECRET_HERE');
+define('TWITTER_CONSUMER_KEY_HENTAI', 'YOUR_TWITTER_KEY_HERE');
+define('TWITTER_CONSUMER_SECRET_HENTAI', 'YOUR_TWITTER_SECRET_HERE');
+define('TWITTER_ACCESS_TOKEN_HENTAI', 'YOUR_TWITTER_ACCESS_TOKEN_HERE');
+define('TWITTER_ACCESS_TOKEN_SECRET_HENTAI', 'YOUR_TWITTER_ACCESS_SECRET_HERE');
 
 //Mastodon keys
 define('MASTODON_HOST', 'YOUR_MASTODON_HOST_URL');
 define('MASTODON_ACCESS_TOKEN', 'YOUR_MASTODON_ACCESS_TOKEN');
+define('MASTODON_ACCESS_TOKEN_HENTAI', 'YOUR_MASTODON_ACCESS_TOKEN');
 
 //Multiple Discord webhooks are possible
 define('DISCORD_WEBHOOKS', array(
+	'YOUR_DISCORD_WEBHOOK_1_HERE',
+	'YOUR_DISCORD_WEBHOOK_2_HERE'
+));
+define('DISCORD_WEBHOOKS_HENTAI', array(
 	'YOUR_DISCORD_WEBHOOK_1_HERE',
 	'YOUR_DISCORD_WEBHOOK_2_HERE'
 ));
@@ -43,10 +52,19 @@ define('TELEGRAM_CONFIG', array(
 		'TELEGRAM_BOT_CHANNEL_CHAT_ID' => 'YOUR_CHANNEL_CHAT_ID_HERE'
 	)
 ));
+define('TELEGRAM_CONFIG_HENTAI', array(
+	array(
+		'TELEGRAM_BOT_API_KEY' => 'YOUR_API_KEY_HERE',
+		'TELEGRAM_BOT_CHAT_ID' => 'YOUR_CHAT_ID_HERE'
+		'TELEGRAM_BOT_CHANNEL_CHAT_ID' => 'YOUR_CHANNEL_CHAT_ID_HERE'
+	)
+));
 
 //BlueSky keys
 define('BLUESKY_HANDLE', 'YOUR_HANDLE_HERE');
 define('BLUESKY_APP_PASSWORD', 'YOUR_APP_PASSWORD_HERE');
+define('BLUESKY_HANDLE_HENTAI', 'YOUR_HANDLE_HERE');
+define('BLUESKY_APP_PASSWORD_HENTAI', 'YOUR_APP_PASSWORD_HERE');
 
 //Token to bypass admin authentication in twitter_image.php
 define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN');

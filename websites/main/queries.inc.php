@@ -44,27 +44,9 @@ function query_fansubs($user, $status) {
 						LEFT JOIN series s ON v.series_id=s.id
 						WHERE vf.fansub_id=f.id
 							AND v.is_hidden=0
-							AND s.type='anime'
-							AND s.rating='XXX'
-					) total_hentai_anime,
-					(SELECT COUNT(DISTINCT v.series_id)
-						FROM rel_version_fansub vf
-						LEFT JOIN version v ON vf.version_id=v.id
-						LEFT JOIN series s ON v.series_id=s.id
-						WHERE vf.fansub_id=f.id
-							AND v.is_hidden=0
 							AND s.type='manga'
 							AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 					) total_manga,
-					(SELECT COUNT(DISTINCT v.series_id)
-						FROM rel_version_fansub vf
-						LEFT JOIN version v ON vf.version_id=v.id
-						LEFT JOIN series s ON v.series_id=s.id
-						WHERE vf.fansub_id=f.id
-							AND v.is_hidden=0
-							AND s.type='manga'
-							AND s.rating='XXX'
-					) total_hentai_manga,
 					(SELECT COUNT(DISTINCT v.series_id)
 						FROM rel_version_fansub vf
 						LEFT JOIN version v ON vf.version_id=v.id
@@ -77,7 +59,7 @@ function query_fansubs($user, $status) {
 					(SELECT COUNT(*)
 						FROM news n
 						WHERE n.fansub_id=f.id
-							AND ".(SITE_IS_HENTAI ? "(n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%')" : "1")."
+							AND ".(SITE_IS_HENTAI ? "(f.hentai_category=2 OR (f.hentai_category=1 AND (n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%' OR n.title LIKE '%yaoi%' OR n.contents LIKE '%yaoi%' OR n.title LIKE '%yuri%' OR n.contents LIKE '%yuri%')))" : "1")."
 					) total_news
 				FROM fansub f
 				WHERE f.status=$status

@@ -3,6 +3,9 @@
 ## 2024-04-23 - Versió 5.1.0
 - **General:**
 	- Se separen els webs en dos dominis: Fansubs.cat i Hentai.cat (material per a adults).
+	- Es canvia la CDN de FontAwesome perquè darrerament hi ha hagut problemes amb la càrrega d’icones.
+- **Administració:**
+	- S’afegeix un nou camp als fansubs que indica si fan hentai o no. S’utilitza per a excloure’ls de les llistes de fansubs i filtrar-ne les notícies.
 - **Eines:**
 	- Es crea un script per a la generació dels fons de pàgina a partir de les caràtules.
 
