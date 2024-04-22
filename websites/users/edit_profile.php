@@ -1,6 +1,9 @@
 <?php
 require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
 require_once("queries.inc.php");
+
+validate_hentai();
 
 if (empty($user)) {
 	header("Location: ".USERS_URL."/inicia-la-sessio");

@@ -12,25 +12,6 @@ const REGEXP_MEGA='/https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?(
 const REGEXP_DL_LINK='/^https:\/\/(?:drive\.google\.com|mega\.nz|mega\.co\.nz).*/';
 const REGEXP_STORAGE='/^storage:\/\/.*/';
 
-function validate_hentai() {
-	global $user;
-	if (SITE_IS_HENTAI && !empty($user) && !is_adult()) {
-		$_GET['code']=403;
-		http_response_code(403);
-		include('error.php');
-		die();
-	}
-}
-
-function validate_hentai_ajax() {
-	global $user;
-	if (SITE_IS_HENTAI && !empty($user) && !is_adult()) {
-		$_GET['code']=403;
-		http_response_code(403);
-		die();
-	}
-}
-
 function get_fansub_preposition_name($text){
 	$first = mb_strtoupper(substr($text, 0, 1));
 	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...

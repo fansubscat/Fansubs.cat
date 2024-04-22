@@ -170,6 +170,11 @@ b {
 .subtheme-hentai {
 	--primary-color: 217, 24, 131;
 	--primary-color-hover: 187, 0, 101;
+	--background-image: url('../images/site/background_dark_hentai_uhd.jpg');
+}
+
+.theme-light.subtheme-hentai {
+	--background-image: url('../images/site/background_light_hentai_uhd.jpg');
 }
 
 *, *:before, *:after {
@@ -1666,9 +1671,73 @@ input:checked + .slider:before {
 	max-width: 100%;
 }
 
+#warning-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(var(--negative-color),0.5);
+	backdrop-filter: blur(15px);
+	z-index: 9001; /* OVER 9000! */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.obscured-background:has(#warning-overlay) {
+	backdrop-filter: none;
+}
+
+#warning-overlay-content {
+	max-width: 960px;
+	border-radius: 2rem;
+	border: 0.3rem solid rgb(var(--primary-color));
+	margin: 1rem;
+	padding: 2rem;
+	text-align: center;
+	font-size: 1.5rem;
+	background: rgb(var(--negative-color));
+}
+
+#warning-title {
+	font-size: 2.5rem;
+	margin-top: 0;
+	margin-bottom: 2rem;
+}
+
+#warning-buttonbar {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#warning-close-button {
+	margin-top: 0.8rem;
+	background: rgb(var(--always-primary-color));
+}
+
+#warning-post-explanation {
+	font-size: 1.2rem;
+	margin-top: 1rem;
+	margin-bottom: 0.5rem;
+}
+
+.hentai-button {
+	margin-right: 1rem;
+	font-size: 1.4rem;
+	color: rgb(var(--icon-button-color));
+}
+
 @media (hover: hover) and (pointer: fine) {
 	:root {
 		--is-hovering-device: 1;
+	}
+
+	.hentai-button:hover {
+		color: rgb(var(--icon-button-color-hover));
 	}
 
 	.catalogues-navigation a:not(.no-underline-animation):hover {
@@ -1849,6 +1918,10 @@ input:checked + .slider:before {
 	.dialog-close-button:hover {
 		color: rgb(var(--positive-color-button-hover));
 	}
+
+	#warning-close-button:hover {
+		background-color: rgb(var(--always-primary-color-hover));
+	}
 }
 
 @media (max-width: 1920px){
@@ -1858,6 +1931,14 @@ input:checked + .slider:before {
 
 	.theme-light {
 		--background-image: url('../images/site/background_light_hd.jpg');
+	}
+
+	.subtheme-hentai {
+		--background-image: url('../images/site/background_dark_hentai_hd.jpg');
+	}
+
+	.theme-light.subtheme-hentai {
+		--background-image: url('../images/site/background_light_hentai_hd.jpg');
 	}
 }
 
@@ -1888,6 +1969,10 @@ input:checked + .slider:before {
 		--carousel-element-height: 20.1rem;
 		--thumbnail-margin: 0.3rem;
 		--thumbnail-text-height: 2.1rem;
+	}
+
+	.hentai-button, .filter-button {
+		font-size: 1.1rem;
 	}
 
 	.main-logo {
@@ -2128,5 +2213,9 @@ input:checked + .slider:before {
 @media (max-width: 350px){
 	.catalogues-navigation {
 		font-size: 1.6rem;
+	}
+
+	.hentai-button, .filter-button {
+		margin-right: 0.1rem;
 	}
 }

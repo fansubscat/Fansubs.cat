@@ -24,7 +24,7 @@ function get_internal_blacklisted_fansubs_condition_main($user) {
 
 // SELECT
 
-function query_fansubs($user, $status, $include_hentai) {
+function query_fansubs($user, $status) {
 	$status = intval($status);
 	$final_query = "SELECT *
 			FROM (SELECT f.*,
@@ -36,7 +36,7 @@ function query_fansubs($user, $status, $include_hentai) {
 						WHERE vf.fansub_id=f.id
 							AND v.is_hidden=0
 							AND s.type='anime'
-							AND s.rating<>'XXX'
+							AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 					) total_anime,
 					(SELECT COUNT(DISTINCT v.series_id)
 						FROM rel_version_fansub vf
@@ -54,7 +54,7 @@ function query_fansubs($user, $status, $include_hentai) {
 						WHERE vf.fansub_id=f.id
 							AND v.is_hidden=0
 							AND s.type='manga'
-							AND s.rating<>'XXX'
+							AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 					) total_manga,
 					(SELECT COUNT(DISTINCT v.series_id)
 						FROM rel_version_fansub vf
@@ -72,16 +72,17 @@ function query_fansubs($user, $status, $include_hentai) {
 						WHERE vf.fansub_id=f.id
 							AND v.is_hidden=0
 							AND s.type='liveaction'
-							AND s.rating<>'XXX'
+							AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 					) total_liveaction,
 					(SELECT COUNT(*)
 						FROM news n
 						WHERE n.fansub_id=f.id
+							AND ".(SITE_IS_HENTAI ? "(n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%')" : "1")."
 					) total_news
 				FROM fansub f
 				WHERE f.status=$status
 			) sq
-			WHERE (total_anime>0 OR total_manga>0 OR total_liveaction>0 OR total_news>0".($include_hentai ? ' OR total_hentai_anime>0 OR total_hentai_manga>0' : '').")
+			WHERE (total_anime>0 OR total_manga>0 OR total_liveaction>0 OR total_news>0)
 			ORDER BY sq.name ASC";
 	return query($final_query);
 }

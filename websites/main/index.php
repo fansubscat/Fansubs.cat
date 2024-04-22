@@ -1,10 +1,21 @@
 <?php
 define('PAGE_STYLE_TYPE', 'main');
-define('SITE_TITLE', 'Fansubs.cat: Anime, manga i imatge real en català');
+
+if (str_ends_with($_SERVER['HTTP_HOST'], 'hentai.cat')) {
+	define('SITE_TITLE', 'Hentai.cat: Hentai en català');
+} else {
+	define('SITE_TITLE', 'Fansubs.cat: Anime, manga i imatge real en català');
+}
+
+require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
+
+validate_hentai();
+
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="main-site-logo">
-						<?php include(STATIC_DIRECTORY.'/images/site/logo.svg'); ?>
+						<?php include(STATIC_DIRECTORY.'/images/site/'.(SITE_IS_HENTAI ? 'logo_hentai.svg' : 'logo.svg')); ?>
 <?php
 if (!empty($special_day) && file_exists(STATIC_DIRECTORY.'/images/site/logo_layer_'.$special_day.'.png')) {
 ?>
@@ -16,7 +27,13 @@ if (!empty($special_day) && file_exists(STATIC_DIRECTORY.'/images/site/logo_laye
 					<div class="main-buttons">
 						<a class="main-button" href="<?php echo ANIME_URL; ?>">Anime</a>
 						<a class="main-button" href="<?php echo MANGA_URL; ?>">Manga</a>
+<?php
+if (!SITE_IS_HENTAI) {
+?>
 						<a class="main-button" href="<?php echo LIVEACTION_URL; ?>">Imatge real</a>
+<?php
+}
+?>
 					</div>
 					<div class="secondary-buttons">
 						<a class="secondary-button" href="<?php echo NEWS_URL; ?>">Notícies</a>
@@ -32,8 +49,18 @@ if (is_advent_days()) {
 }
 ?>
 					<div class="tertiary-buttons">
+<?php
+if (!SITE_IS_HENTAI) {
+?>
 						<a class="tertiary-button" href="/qui-som">Qui som?</a>
 						<a class="tertiary-button" href="/enllacos">Enllaços</a>
+<?php
+} else {
+?>
+						<a class="tertiary-button" href="<?php echo 'https://www.'.MAIN_DOMAIN; ?>">Fansubs.cat</a>
+<?php
+}
+?>
 					</div>
 <?php
 require_once("../common.fansubs.cat/footer.inc.php");

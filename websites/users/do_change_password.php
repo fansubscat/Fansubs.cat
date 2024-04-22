@@ -3,8 +3,8 @@ require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("queries.inc.php");
 
 function sendChangePasswordEmail($email, $username) {
-	$message = "Bon dia, $username,\n\nAquest correu confirma que s’ha canviat la contrasenya del teu compte a Fansubs.cat.\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\nFansubs.cat.";
-	mail($email,'S’ha canviat la contrasenya de Fansubs.cat', $message,'From: Fansubs.cat <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "Fansubs.cat"');
+	$message = "Bon dia, $username,\n\nAquest correu confirma que s’ha canviat la contrasenya del teu compte a ".CURRENT_SITE_NAME.".\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\n".CURRENT_SITE_NAME.".";
+	mail($email,'S’ha canviat la contrasenya de '.CURRENT_SITE_NAME, $message,'From: '.CURRENT_SITE_NAME.' <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "'.CURRENT_SITE_NAME.'"');
 }
 
 function delete_profile(){

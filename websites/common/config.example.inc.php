@@ -10,21 +10,39 @@ define('DB_USER', 'YOUR_DB_USER_HERE');
 define('DB_PASSWORD', 'YOUR_DB_PASS_HERE');
 define('DB_CHARSET', 'utf8mb4');
 
+//Host treatment (needed for normal/hentai site)
+define('MAIN_DOMAIN', 'fansubs.cat');
+define('HENTAI_DOMAIN', 'hentai.cat');
+if (str_ends_with($_SERVER['HTTP_HOST'], HENTAI_DOMAIN)) {
+	define('CURRENT_DOMAIN', HENTAI_DOMAIN);
+	define('CURRENT_SITE_NAME', 'Hentai.cat');
+	define('SITE_IS_HENTAI', TRUE);
+	define('SOCIAL_LINK_BLUESKY', 'https://bsky.app/profile/hentaipuntcat.bsky.social');
+	define('SOCIAL_LINK_MASTODON', 'https://mastodont.cat/@hentaipuntcat');
+	define('SOCIAL_LINK_TELEGRAM', 'https://t.me/hentaipuntcat');
+	define('SOCIAL_LINK_X', 'https://x.com/hentaipuntcat');
+} else {
+	define('CURRENT_DOMAIN', MAIN_DOMAIN);
+	define('CURRENT_SITE_NAME', 'Fansubs.cat');
+	define('SITE_IS_HENTAI', FALSE);
+	define('SOCIAL_LINK_BLUESKY', 'https://bsky.app/profile/fansubscat.bsky.social');
+	define('SOCIAL_LINK_MASTODON', 'https://mastodont.cat/@fansubscat');
+	define('SOCIAL_LINK_TELEGRAM', 'https://t.me/fansubscat');
+	define('SOCIAL_LINK_X', 'https://x.com/fansubscat');
+}
+
 //Website URLs (no final slash)
-define('MAIN_URL', 'https://www.fansubs.cat');
-define('ADVENT_URL', 'https://advent.fansubs.cat');
-define('ANIME_URL', 'https://anime.fansubs.cat');
-define('MANGA_URL', 'https://manga.fansubs.cat');
-define('LIVEACTION_URL', 'https://imatgereal.fansubs.cat');
-define('NEWS_URL', 'https://noticies.fansubs.cat');
-define('RESOURCES_URL', 'https://recursos.fansubs.cat');
-define('USERS_URL', 'https://usuaris.fansubs.cat');
-define('STATIC_URL', 'https://static.fansubs.cat');
-define('ADMIN_URL', 'https://admin.fansubs.cat');
-define('API_URL', 'https://api.fansubs.cat');
-define('HENTAI_URL', 'https://hentai.fansubs.cat');
-define('HENTAI_ANIME_URL', 'https://hentai.fansubs.cat/anime');
-define('HENTAI_MANGA_URL', 'https://hentai.fansubs.cat/manga');
+define('MAIN_URL', 'https://www.'.CURRENT_DOMAIN);
+define('ADVENT_URL', 'https://advent.'.CURRENT_DOMAIN);
+define('ANIME_URL', 'https://anime.'.CURRENT_DOMAIN);
+define('MANGA_URL', 'https://manga.'.CURRENT_DOMAIN);
+define('LIVEACTION_URL', 'https://imatgereal.'.CURRENT_DOMAIN);
+define('NEWS_URL', 'https://noticies.'.CURRENT_DOMAIN);
+define('RESOURCES_URL', 'https://recursos.'.CURRENT_DOMAIN);
+define('USERS_URL', 'https://usuaris.'.CURRENT_DOMAIN);
+define('STATIC_URL', 'https://static.'.CURRENT_DOMAIN);
+define('ADMIN_URL', 'https://admin.'.CURRENT_DOMAIN);
+define('API_URL', 'https://api.'.CURRENT_DOMAIN);
 
 //Internal paths (no final slash)
 define('SERVICES_DIRECTORY', '/srv/services/fansubs.cat');
@@ -33,10 +51,10 @@ define('STATIC_DIRECTORY', '/srv/websites/static.fansubs.cat');
 //Cookie params
 define('COOKIE_NAME', 'session_id');
 define('COOKIE_DURATION', 60*60*24*365*10);
-define('COOKIE_DOMAIN', '.fansubs.cat');
+define('COOKIE_DOMAIN', '.'.CURRENT_DOMAIN);
 define('ADMIN_COOKIE_NAME', 'admin_session_id');
 define('ADMIN_COOKIE_DURATION', 60*60*24*30);
-define('ADMIN_COOKIE_DOMAIN', '.fansubs.cat');
+define('ADMIN_COOKIE_DOMAIN', '.'.CURRENT_DOMAIN);
 
 //Used to check internal API calls only
 define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN_HERE');

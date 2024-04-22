@@ -3,8 +3,8 @@ require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("queries.inc.php");
 
 function sendDeleteProfileEmail($email, $username) {
-	$message = "Bon dia, $username,\n\nAquest correu confirma que hem eliminat totes les teves dades personals de Fansubs.cat.\n\nSi mai desitges tornar, estarem encantats de rebre’t.\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\nFansubs.cat.";
-	mail($email,'Confirmació d’eliminació del compte de Fansubs.cat', $message,'From: Fansubs.cat <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "Fansubs.cat"');
+	$message = "Bon dia, $username,\n\nAquest correu confirma que hem eliminat totes les teves dades personals de ".CURRENT_SITE_NAME.".\n\nSi mai desitges tornar, estarem encantats de rebre’t.\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\n".CURRENT_SITE_NAME.".";
+	mail($email,'Confirmació d’eliminació del compte de '.CURRENT_SITE_NAME, $message,'From: '.CURRENT_SITE_NAME.' <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "'.CURRENT_SITE_NAME.'"');
 }
 
 function delete_profile(){

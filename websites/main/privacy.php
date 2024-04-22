@@ -2,12 +2,22 @@
 define('PAGE_TITLE', 'Política de privadesa');
 define('PAGE_PATH', '/politica-de-privadesa');
 define('PAGE_STYLE_TYPE', 'text');
-define('PAGE_DESCRIPTION', 'Aquesta política de privadesa defineix la manera en què Fansubs.cat («nosaltres») recopila, emmagatzema, utilitza, manté i comparteix la informació («informació» o «dades») recopilada dels usuaris (cadascun, un «usuari», o «tu») del lloc web de Fansubs.cat («lloc web»). Aquesta política de privadesa s’aplica a tots els productes i serveis oferts per Fansubs.cat en relació amb el lloc web («serveis»). Si tens qualsevol dubte relatiu a aquesta política de privadesa o a l’ús que fem de les teves dades, te’l podem resoldre si ens escrius fent servir l’enllaç de contacte de la part inferior de la pàgina.');
+if (str_ends_with($_SERVER['HTTP_HOST'], 'hentai.cat')) {
+	define('PAGE_DESCRIPTION', 'Aquesta política de privadesa defineix la manera en què Fansubs.cat («nosaltres») recopila, emmagatzema, utilitza, manté i comparteix la informació («informació» o «dades») recopilada dels usuaris (cadascun, un «usuari», o «tu») del lloc web de Fansubs.cat («lloc web»). Aquesta política de privadesa s’aplica a tots els productes i serveis oferts per Fansubs.cat en relació amb el lloc web («serveis»). Si tens qualsevol dubte relatiu a aquesta política de privadesa o a l’ús que fem de les teves dades, te’l podem resoldre si ens escrius fent servir l’enllaç de contacte de la part inferior de la pàgina.');
+} else {
+	define('PAGE_DESCRIPTION', 'Aquesta política de privadesa defineix la manera en què Hentai.cat («nosaltres») recopila, emmagatzema, utilitza, manté i comparteix la informació («informació» o «dades») recopilada dels usuaris (cadascun, un «usuari», o «tu») del lloc web de Hentai.cat («lloc web»). Aquesta política de privadesa s’aplica a tots els productes i serveis oferts per Hentai.cat en relació amb el lloc web («serveis»). Si tens qualsevol dubte relatiu a aquesta política de privadesa o a l’ús que fem de les teves dades, te’l podem resoldre si ens escrius fent servir l’enllaç de contacte de la part inferior de la pàgina.');
+}
+
+require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
+
+validate_hentai();
+
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="text-page">
 						<h2 class="section-title"><i class="fa fa-fw fa-user-lock"></i> Política de privadesa</h2>
-						<div class="section-content">Aquesta política de privadesa defineix la manera en què Fansubs.cat («nosaltres») recopila, emmagatzema, utilitza, manté i comparteix la informació («informació» o «dades») recopilada dels usuaris (cadascun, un «usuari», o «tu») del lloc web de Fansubs.cat («lloc web»). Aquesta política de privadesa s’aplica a tots els productes i serveis oferts per Fansubs.cat en relació amb el lloc web («serveis»). Si tens qualsevol dubte relatiu a aquesta política de privadesa o a l’ús que fem de les teves dades, te’l podem resoldre si ens escrius fent servir l’enllaç de contacte de la part inferior de la pàgina.</div>
+						<div class="section-content">Aquesta política de privadesa defineix la manera en què <?php echo CURRENT_SITE_NAME; ?> («nosaltres») recopila, emmagatzema, utilitza, manté i comparteix la informació («informació» o «dades») recopilada dels usuaris (cadascun, un «usuari», o «tu») del lloc web de <?php echo CURRENT_SITE_NAME; ?> («lloc web»). Aquesta política de privadesa s’aplica a tots els productes i serveis oferts per <?php echo CURRENT_SITE_NAME; ?> en relació amb el lloc web («serveis»). Si tens qualsevol dubte relatiu a aquesta política de privadesa o a l’ús que fem de les teves dades, te’l podem resoldre si ens escrius fent servir l’enllaç de contacte de la part inferior de la pàgina.</div>
 						<h3 class="section-title">Informació que recopilem</h3>
 						<h4 class="section-title">Informació personal que ens proporciones</h4>
 						<div class="section-content">Recopilem adreces electròniques, dates de naixement, noms d’usuari i una versió xifrada de les contrasenyes, amb l’objectiu de proporcionar-te els serveis del lloc web adaptats a l’usuari. Pots elegir no crear un compte d’usuari al lloc web i fer-lo servir anònimament. No recopilem noms, cognoms, adreces físiques ni cap altra informació personal de l’usuari.</div>

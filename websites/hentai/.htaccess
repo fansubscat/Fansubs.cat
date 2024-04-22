@@ -1,11 +1,9 @@
 RewriteEngine on
-ErrorDocument 404 /error.php?code=404
-ErrorDocument 403 /error.php?code=403
 
-#Hide internal files
-RewriteCond %{THE_REQUEST} ^(.+)\.php(\?\S*)?\ HTTP/ [NC]
-RewriteCond %{REQUEST_URI} !error\.php
-RewriteRule \.php$ - [F]
-
-#By default, redirect to the anime subdomain
-RewriteRule ^$ /anime [L]
+#Old redirects from hentai.fansubs.cat to anime/manga.hentai.cat
+RewriteRule ^anime/?$ https://anime.hentai.cat/ [R=301,L]
+RewriteRule ^anime/([^.]+)/?$ https://anime.hentai.cat/$1 [R=301,L]
+RewriteRule ^anime/?$ https://anime.hentai.cat/ [R=301,L]
+RewriteRule ^manga/([^.]+)/?$ https://manga.hentai.cat/$1 [R=301,L]
+RewriteRule ^manga/?$ https://manga.hentai.cat/ [R=301,L]
+RewriteRule ^/?$ https://www.hentai.cat/ [R=301,L]

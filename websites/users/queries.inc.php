@@ -63,7 +63,11 @@ function query_my_list_by_type($user, $type, $hentai) {
 }
 
 function query_my_list_total_items($user) {
-	$final_query = "SELECT COUNT(*) cnt FROM user_series_list usl WHERE usl.user_id=${user['id']}";
+	$final_query = "SELECT COUNT(*) cnt
+			FROM user_series_list usl
+				LEFT JOIN series s ON usl.series_id=s.id
+			WHERE usl.user_id=${user['id']}
+				AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'";
 	return query($final_query);
 }
 

@@ -1,5 +1,10 @@
 <?php
 define('PAGE_STYLE_TYPE', 'news');
+require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
+
+validate_hentai();
+
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="results-layout catalogue-index">
@@ -7,7 +12,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 if (is_robot()){
 ?>
 						<div class="section">
-							<div class="site-message robo-message">Et donem la benvinguda a Fansubs.cat! Aquí trobaràs les darreres notícies de tots els fansubs en català! Les notícies s’obtenen automàticament dels diferents webs dels fansubs. Per a accedir a cada notícia, només cal que hi facis clic!</div>
+							<div class="site-message robo-message">Et donem la benvinguda a <?php echo CURRENT_SITE_NAME; ?>! Aquí trobaràs les darreres notícies de<?php SITE_IS_HENTAI ? 'l hentai de': ''; ?> tots els fansubs en català! Les notícies s’obtenen automàticament dels diferents webs dels fansubs. Per a accedir a cada notícia, només cal que hi facis clic!</div>
 						</div>
 <?php
 }

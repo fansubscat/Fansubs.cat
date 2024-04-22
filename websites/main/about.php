@@ -3,6 +3,7 @@ define('PAGE_TITLE', 'Qui som?');
 define('PAGE_PATH', '/qui-som');
 define('PAGE_STYLE_TYPE', 'text');
 define('PAGE_DESCRIPTION', 'Fansubs.cat és un projecte sorgit dels esforços conjunts dels principals fansubs en català. El nostre únic objectiu és potenciar el consum de contingut de l’Àsia Oriental en català, tot permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.');
+define('PAGE_DISABLED_IF_HENTAI', TRUE);
 require_once("../common.fansubs.cat/header.inc.php");
 ?>
 					<div class="text-page">

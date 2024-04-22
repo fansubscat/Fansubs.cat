@@ -2,7 +2,7 @@
 require_once("../common.fansubs.cat/common.inc.php");
 
 function get_internal_hentai_condition() {
-	if (SITE_IS_HENTAI) {
+	if (SITE_IS_HENTAI_OR_OLD_HENTAI) {
 		return "s.rating='XXX'";
 	} else {
 		return "s.rating<>'XXX'";

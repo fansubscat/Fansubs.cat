@@ -84,6 +84,8 @@ function login() {
 				addValidationOnlyText('login_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
 			} else if (response.code==2) {
 				addValidationOnlyText('login_generic','Usuari o contrasenya incorrectes.');
+			} else if (response.code==3) {
+				addValidationOnlyText('login_generic','Cal tenir 18 anys o més per a iniciar la sessió.');
 			} else {
 				addValidationOnlyText('login_generic','S’ha produït un error. Torna-ho a provar.');
 			}
@@ -190,6 +192,8 @@ function register() {
 				addValidation('register_email','L’adreça electrònica no té un format correcte.');
 			} else if (response.code==9) {
 				addValidation('register_email','No acceptem registres amb adreces electròniques d’aquest domini perquè no ens és possible enviar-hi correus de restabliment de la contrasenya.');
+			} else if (response.code==10) {
+				addValidationOnlyText('register_birthday','No és permès el registre als menors de 18 anys.');
 			} else {
 				addValidationOnlyText('register_generic','S’ha produït un error. Torna-ho a provar.');
 			}

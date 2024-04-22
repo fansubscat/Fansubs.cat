@@ -1,18 +1,27 @@
 <?php
-define('PAGE_TITLE', 'Llista de fansubs en català');
+if (str_ends_with($_SERVER['HTTP_HOST'], 'hentai.cat')) {
+	define('PAGE_TITLE', 'Llista de fansubs de hentai en català');
+	define('PAGE_DESCRIPTION', 'Consulta la llista de tots els fansubs de hentai en català a Hentai.cat, el portal que en recopila tot el material!');
+} else {
+	define('PAGE_TITLE', 'Llista de fansubs en català');
+	define('PAGE_DESCRIPTION', 'Consulta la llista de tots els fansubs en català a Fansubs.cat, el portal que en recopila tot el material!');
+}
 define('PAGE_PATH', '/llista-de-fansubs');
 define('PAGE_STYLE_TYPE', 'fansubs');
-define('PAGE_DESCRIPTION', 'Consulta la llista de tots els fansubs en català a Fansubs.cat, el portal que en recopila tot el material!');
+require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
+
+validate_hentai();
+
 require_once("../common.fansubs.cat/header.inc.php");
 require_once("common.inc.php");
 require_once("queries.inc.php");
-$show_hentai = (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])));
 ?>
 					<div class="fansubs-index">
 						<div class="section">
 							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Fansubs actius</h2>
 <?php
-$result = query_fansubs(!empty($user) ? $user : NULL, 1, $show_hentai);
+$result = query_fansubs(!empty($user) ? $user : NULL, 1);
 
 if (mysqli_num_rows($result)==0){
 ?>
@@ -24,7 +33,7 @@ else{
 							<div class="fansubs-grouping">
 <?php
 	while ($row = mysqli_fetch_assoc($result)){
-		print_fansub($row, $show_hentai);
+		print_fansub($row);
 	}
 }
 ?>
@@ -33,7 +42,7 @@ else{
 						<div class="section">
 							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Fansubs històrics</h2>
 <?php
-$result = query_fansubs(!empty($user) ? $user : NULL, 0, $show_hentai);
+$result = query_fansubs(!empty($user) ? $user : NULL, 0);
 
 if (mysqli_num_rows($result)==0){
 ?>
@@ -45,7 +54,7 @@ else{
 							<div class="fansubs-grouping historical-fansubs">
 <?php
 	while ($row = mysqli_fetch_assoc($result)){
-		print_fansub($row, $show_hentai);
+		print_fansub($row);
 	}
 }
 ?>

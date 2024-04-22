@@ -4,6 +4,8 @@ require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("common.inc.php");
 require_once("queries.inc.php");
 
+validate_hentai();
+
 define('PAGE_TITLE', 'Resultats de la cerca');
 
 if (is_robot()) {
@@ -58,7 +60,7 @@ if (isset($_GET['fansub'])) {
 }
 ?>
 					<div class="search-layout<?php echo !empty($_GET['focus']) ? ' search-layout-visible' : ''; ?>">
-						<input class="search-base-url" type="hidden" value="<?php echo SITE_IS_HENTAI ? '/hentai/cerca' : '/cerca'; ?>">
+						<input class="search-base-url" type="hidden" value="/cerca">
 						<div class="search-filter-title">Filtres de les notícies</div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
 							<label for="news-search-query">Text a cercar</label>

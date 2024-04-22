@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2024-04-23 - Versió 5.1.0
+- **General:**
+	- Se separen els webs en dos dominis: Fansubs.cat i Hentai.cat (material per a adults).
+- **Eines:**
+	- Es crea un script per a la generació dels fons de pàgina a partir de les caràtules.
+
 ## 2024-04-09 - Versió 5.0.14
 - **General:**
 	- S’han actualitzat les biblioteques a les darreres versions disponibles.

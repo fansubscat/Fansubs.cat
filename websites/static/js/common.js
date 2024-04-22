@@ -1,13 +1,14 @@
-const MAIN_URL = "https://www.fansubs.cat";
-const USERS_URL='https://usuaris.fansubs.cat';
-const STATIC_URL='https://static.fansubs.cat';
+const BASE_DOMAIN = document.querySelector("meta[name=current_domain]").content;
+const MAIN_URL = 'https://www.'+BASE_DOMAIN;
+const USERS_URL = 'https://usuaris.'+BASE_DOMAIN;
+const STATIC_URL = 'https://static.'+BASE_DOMAIN;
 
 var lastWindowWidth=0;
 
 var cookieOptions = {
 	expires: 3650,
 	path: '/',
-	domain: ".fansubs.cat",
+	domain: "."+BASE_DOMAIN,
 	sameSite: "None",
 	secure: true
 };
@@ -260,6 +261,12 @@ function menuOptionMouseLeave() {
 	} else {
 		target.style.opacity = `0`;
 	}
+}
+
+function acceptHentaiWarning() {
+	Cookies.set('hentai_warning_accepted', '1', cookieOptions);
+	$('#warning-overlay').remove();
+	$('html').removeClass('page-no-overflow');
 }
 
 $(document).ready(function() {

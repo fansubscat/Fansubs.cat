@@ -2027,12 +2027,6 @@ function initializeSearchAutocomplete() {
 	});
 }
 
-function acceptHentaiWarning() {
-	Cookies.set('hentai_warning_accepted', '1', cookieOptions);
-	$('#warning-overlay').remove();
-	$('html').removeClass('page-no-overflow');
-}
-
 function requestFileData(fileId) {
 	lastRequestedFileId = fileId;
 	hasBeenCasted = false;

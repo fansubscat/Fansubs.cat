@@ -13,9 +13,9 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
 ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Fansubs.cat - Notícies</title>
+		<title><?php echo CURRENT_SITE_NAME; ?> - Notícies</title>
 		<link><?php echo NEWS_URL; ?></link>
-		<description>Totes les notícies dels fansubs en català</description>
+		<description>Totes les notícies<?php echo SITE_IS_HENTAI ? ' del hentai' : ''; ?> dels fansubs en català</description>
 		<atom:link href="<?php echo NEWS_URL; ?>/rss" rel="self" type="application/rss+xml" />
 <?php
 $result = query_latest_news(NULL, NULL, 1, 20, NULL, TRUE, TRUE, FALSE, '2003-05', date('Y-m'));

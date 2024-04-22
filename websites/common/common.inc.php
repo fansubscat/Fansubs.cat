@@ -20,6 +20,31 @@ function get_user_age(){
 	return date_diff(date_create_from_format('Y-m-d H:i:s', $user['birthdate'].' 00:00:00'), date_create(date('Y-m-d').' 00:00:00'))->format('%Y');
 }
 
+function force_hentai_logout() {
+	global $user;
+	$_SESSION = array();
+	$params = session_get_cookie_params();
+	setcookie(session_name(), '', time() - 60*60*24, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+	setcookie('hentai_warning_accepted', '', time() - 60*60*24, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+	$_COOKIE['hentai_warning_accepted']='';
+	session_destroy();
+	unset($GLOBALS['user']);
+}
+
+function validate_hentai() {
+	global $user;
+	if (SITE_IS_HENTAI && !empty($user) && !is_adult()) {
+		force_hentai_logout();
+	}
+}
+
+function validate_hentai_ajax() {
+	global $user;
+	if (SITE_IS_HENTAI && !empty($user) && !is_adult()) {
+		force_hentai_logout();
+	}
+}
+
 function get_nanoid($size=24) {
 	//Adapted from: https://github.com/hidehalo/nanoid-php/blob/master/src/Core.php
 	$alphabet = '_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -373,17 +398,9 @@ function get_base_url_from_type_and_rating($type, $rating) {
 	if ($type=='liveaction'){
 		return LIVEACTION_URL;
 	} else if ($type=='anime'){
-		if ($rating=='XXX') {
-			return HENTAI_ANIME_URL;
-		} else {
-			return ANIME_URL;
-		}
+		return ANIME_URL;
 	} else {
-		if ($rating=='XXX') {
-			return HENTAI_MANGA_URL;
-		} else {
-			return MANGA_URL;
-		}
+		return MANGA_URL;
 	}
 	die("Unknown type passed");
 }

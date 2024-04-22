@@ -1,4 +1,9 @@
 <?php
+require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
+
+validate_hentai();
+
 define('PAGE_TITLE', 'Configuració');
 define('PAGE_PATH', '/configuracio');
 define('PAGE_STYLE_TYPE', 'settings');
@@ -60,8 +65,8 @@ if (!empty($user) && is_adult()) {
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Mostra els accessos al portal de hentai</div>
-								<div class="settings-section-data-header-subtitle">Tria si vols que es mostri la icona que permet l’accés al portal de hentai a la capçalera del web i els fansubs que editen hentai a la llista de fansubs.</div>
+								<div class="settings-section-data-header-title">Mostra el botó d’accés a Hentai.cat</div>
+								<div class="settings-section-data-header-subtitle">Tria si vols que es mostri la icona que permet canviar a Hentai.cat a la capçalera de Fansubs.cat.</div>
 							</div>
 							<label class="switch">
 								<input type="checkbox" id="show-hentai"<?php echo $show_hentai ? ' checked' : ''; ?> onchange="saveSettings();">

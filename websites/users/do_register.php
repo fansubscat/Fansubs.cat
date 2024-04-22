@@ -11,8 +11,8 @@ function string_ends_with($haystack, $needle) {
 }
 
 function sendRegistrationEmail($email, $username) {
-	$message = "Bon dia, $username,\n\nReps aquest correu perquè t’has registrat com a usuari a Fansubs.cat.\n\nSi mai n’oblides la contrasenya, fes servir l’opció «He oblidat la contrasenya» del següent enllaç: ".USERS_URL."/inicia-la-sessio\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\nFansubs.cat.";
-	mail($email,'Registre a Fansubs.cat', $message,'From: Fansubs.cat <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "Fansubs.cat"');
+	$message = "Bon dia, $username,\n\nReps aquest correu perquè t’has registrat com a usuari a ".CURRENT_SITE_NAME.".\n\nSi mai n’oblides la contrasenya, fes servir l’opció «He oblidat la contrasenya» del següent enllaç: ".USERS_URL."/inicia-la-sessio\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\n".CURRENT_SITE_NAME.".";
+	mail($email,'Registre a '.CURRENT_SITE_NAME, $message,'From: '.CURRENT_SITE_NAME.' <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "'.CURRENT_SITE_NAME.'"');
 }
 
 function register_user(){
@@ -50,6 +50,12 @@ function register_user(){
 	if (time() < strtotime('+13 years', date_timestamp_get(date_create_from_format('Y-m-d', $birth_year.'-'.$birth_month.'-'.$birth_day)))) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 7);
+	}
+
+	//Check for younger than 18 (hentai only)
+	if (SITE_IS_HENTAI && time() < strtotime('+18 years', date_timestamp_get(date_create_from_format('Y-m-d', $birth_year.'-'.$birth_month.'-'.$birth_day)))) {
+		http_response_code(400);
+		return array('result' => 'ko', 'code' => 10);
 	}
 
 	//Check correctly formed e-mail address

@@ -378,56 +378,6 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	height: 100%;
 }
 
-#warning-overlay {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(var(--negative-color),0.5);
-	backdrop-filter: blur(15px);
-	z-index: 9001; /* OVER 9000! */
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-#warning-overlay-content {
-	max-width: 960px;
-	border-radius: 2rem;
-	border: 0.3rem solid rgb(var(--primary-color));
-	margin: 1rem;
-	padding: 2rem;
-	text-align: center;
-	font-size: 1.5rem;
-	background: rgb(var(--negative-color));
-}
-
-#warning-title {
-	font-size: 2.5rem;
-	margin-top: 0;
-	margin-bottom: 2rem;
-}
-
-#warning-buttonbar {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-#warning-close-button {
-	margin-top: 0.8rem;
-	background: rgb(var(--always-primary-color));
-}
-
-#warning-post-explanation {
-	font-size: 1.2rem;
-	margin-top: 1rem;
-	margin-bottom: 0.5rem;
-}
-
 .video-js, .manga-reader, .player_extra_upper {
 	-webkit-tap-highlight-color: transparent;
 }
@@ -993,12 +943,6 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 
 .player_error_buttons {
 	margin-top: 1.25em;
-}
-
-.hentai-button {
-	margin-right: 1rem;
-	font-size: 1.4rem;
-	color: rgb(var(--icon-button-color));
 }
 
 /* Main screen */
@@ -2577,10 +2521,6 @@ input:checked + .viewed-slider:before {
 		filter: brightness(0.9);
 	}
 
-	.hentai-button:hover {
-		color: rgb(var(--icon-button-color-hover));
-	}
-
 	.recommendation .watchbutton:hover {
 		background: rgb(var(--negative-color-button-hover));
 	}
@@ -2652,10 +2592,6 @@ input:checked + .viewed-slider:before {
 
 	.video-js .vjs-config-button:hover {
 		cursor:pointer;
-	}
-
-	#warning-close-button:hover {
-		background-color: rgb(var(--always-primary-color-hover));
 	}
 
 	.player_extra_ended_thumbnail:hover a {
@@ -3314,10 +3250,6 @@ input:checked + .viewed-slider:before {
 		margin-top: 1.5rem;
 	}
 
-	.hentai-button, .filter-button {
-		font-size: 1.1rem;
-	}
-
 	.settings-combo {
 		margin-left: 1rem;
 	}
@@ -3412,10 +3344,6 @@ input:checked + .viewed-slider:before {
 
 	.catalogues-explicit-category {
 		margin-left: 0;
-	}
-
-	.hentai-button, .filter-button {
-		margin-right: 0.1rem;
 	}
 
 	.settings-combo {

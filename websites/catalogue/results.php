@@ -206,20 +206,20 @@ if (defined('PAGE_IS_SEARCH')) {
 		if ($special_day=='fools') {
 			$result_recos = query_version_ids_for_fools_day(10);
 			$special_day_title = "Els millors d’aquest ".date('Y');
-			$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
+			$special_day_description = CURRENT_SITE_NAME." et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
 		} else if ($special_day=='sant_jordi') {
 			$result_recos = query_version_ids_for_sant_jordi(10);
 			$special_day_title = "Selecció especial de Sant Jordi";
-			$special_day_description = "Fansubs.cat et desitja un bon Sant Jordi!<br>Mira quina selecció de títols romàntics que hem preparat!";
+			$special_day_description = CURRENT_SITE_NAME." et desitja un bon Sant Jordi!<br>Mira quina selecció de títols romàntics que hem preparat!";
 		} else if ($special_day=='tots_sants') {
 			$result_recos = query_version_ids_for_tots_sants(10);
 			$special_day_title = "Selecció especial de Tots Sants";
-			$special_day_description = "Fansubs.cat et desitja una bona castanyada!<br>Hem preparat una selecció dels millors títols de terror.";
+			$special_day_description = CURRENT_SITE_NAME." et desitja una bona castanyada!<br>Hem preparat una selecció dels millors títols de terror.";
 		} else if ($special_day=='nadal') {
 			if (date('m-d')>='12-25' && date('m-d')<='12-31') {
 				$result_recos = query_version_ids_for_nadal(10);
 				$special_day_title = "Els millors d’aquest ".date('Y');
-				$special_day_description = "Fansubs.cat et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols estrenats i completats enguany!";
+				$special_day_description = CURRENT_SITE_NAME." et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols estrenats i completats enguany!";
 			} else {
 				//No special selection: just show the lights
 			}
@@ -296,7 +296,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-chart-simple"></i> Els més populars a Fansubs.cat',
+		'title' => '<i class="fa fa-fw fa-chart-simple"></i> Els més populars a '.CURRENT_SITE_NAME,
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
 		'result' => query_home_most_popular($user, $max_items),
@@ -382,7 +382,7 @@ foreach($sections as $section){
 									<div class="infoholder" data-swiper-parallax="-30%">
 										<div class="dataholder">
 											<div class="title"><span class="fa fa-cake-candles"></span><br>Per molts anys, <?php echo $user['username']; ?>!</div>
-											<div class="divisions">Segons el teu perfil d’usuari, avui fas <?php echo get_user_age(); ?> anys!<br>Et desitgem un bon aniversari i que gaudeixis de Fansubs.cat!</div>
+											<div class="divisions">Segons el teu perfil d’usuari, avui fas <?php echo get_user_age(); ?> anys!<br>Et desitgem un bon aniversari i que gaudeixis de <?php echo CURRENT_SITE_NAME; ?>!</div>
 										</div>
 									</div>
 								</div>

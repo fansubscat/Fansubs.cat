@@ -6,6 +6,8 @@ require_once("../common.fansubs.cat/user_init.inc.php");
 require_once("common.inc.php");
 require_once("queries.inc.php");
 
+validate_hentai_ajax();
+
 if (isset($_GET['search'])) {
 	define('PAGE_IS_SEARCH', TRUE);
 }
