@@ -987,7 +987,7 @@ function checkNumberOfEpisodes() {
 	}
 
 	if ($('#form-old_slug').val()!='' && $('#form-old_slug').val()!=$('#form-slug').val()) {
-		return confirm('Has canviat (o s’ha canviat automàticament perquè has modificat el nom) l’identificador de la fitxa de "'+$('#form-old_slug').val()+'" a "'+$('#form-slug').val()+'". Això farà que tots els enllaços externs que apuntin a la fitxa deixin de funcionar. Segur que és el que vols? Si no és el que vols, prem «Cancel·la» i torna a posar-hi el valor original.');
+		return confirm('IMPORTANT: ELS ENLLAÇOS ANTICS ES TRENCARAN!\nHas canviat (o s’ha canviat automàticament perquè has modificat el nom) l’identificador de la fitxa de «'+$('#form-old_slug').val()+'» a «'+$('#form-slug').val()+'». Això farà que tots els enllaços externs que apuntin a la fitxa deixin de funcionar. Això pot afectar versions de qualsevol fansub. Si vols fer aquest canvi, cal que avisis un administrador perquè afegeixi una redirecció de l’enllaç antic al nou. Si no pretenies fer aquest canvi, prem «Cancel·la» i torna a posar el valor original al camp «Identificador». Segur que vols continuar?');
 	}
 
 	//Disable form

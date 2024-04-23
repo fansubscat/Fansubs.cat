@@ -138,6 +138,10 @@ small {
 	cursor: pointer;
 }
 
+.table>:not(caption)>*.hentai>* {
+	color: darkred !important;
+}
+
 tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {
 	padding-left: 24px;
 }

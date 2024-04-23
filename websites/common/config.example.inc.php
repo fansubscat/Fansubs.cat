@@ -1,7 +1,7 @@
 <?php
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 
-define('VERSION', '5.1.0');
+define('VERSION', '5.1.1');
 
 //Database access
 define('DB_HOST', 'YOUR_DB_HOST_HERE');
@@ -13,7 +13,7 @@ define('DB_CHARSET', 'utf8mb4');
 //Host treatment (needed for normal/hentai site)
 define('MAIN_DOMAIN', 'fansubs.cat');
 define('HENTAI_DOMAIN', 'hentai.cat');
-if (str_ends_with($_SERVER['HTTP_HOST'], HENTAI_DOMAIN)) {
+if (str_ends_with(strtolower($_SERVER['HTTP_HOST']), HENTAI_DOMAIN)) {
 	define('CURRENT_DOMAIN', HENTAI_DOMAIN);
 	define('CURRENT_SITE_NAME', 'Hentai.cat');
 	define('SITE_IS_HENTAI', TRUE);

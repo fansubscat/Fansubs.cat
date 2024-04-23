@@ -289,7 +289,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$current_positions++;
 		}
 ?>
-							<tr>
+							<tr class="hentai">
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>
@@ -339,7 +339,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$current_positions++;
 		}
 ?>
-							<tr>
+							<tr class="hentai">
 								<th scope="row" class="align-middle"><?php echo $position; ?></th>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars(implode(' / ',array_unique(explode(' / ',$row['fansubs'])))); ?></td>

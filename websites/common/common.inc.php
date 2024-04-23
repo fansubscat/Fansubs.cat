@@ -45,6 +45,18 @@ function validate_hentai_ajax() {
 	}
 }
 
+function get_opposite_url() {
+	$path = strtok($_SERVER["REQUEST_URI"], '?');
+	if ($path=='/llista-de-fansubs' || $path=='/politica-de-privadesa' || $path=='/contacta-amb-nosaltres' || $path=='/la-meva-llista' || $path=='/configuracio'
+			|| $path=='/edita-el-perfil' || $path=='/elimina-el-perfil' || $path=='/canvia-la-contrasenya') {
+		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).$path;
+	} else if (str_starts_with($path,'/cerca')) {
+		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).'/cerca';
+	} else {
+		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']);
+	}
+}
+
 function get_nanoid($size=24) {
 	//Adapted from: https://github.com/hidehalo/nanoid-php/blob/master/src/Core.php
 	$alphabet = '_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

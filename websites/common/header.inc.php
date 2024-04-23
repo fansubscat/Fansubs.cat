@@ -124,7 +124,7 @@ if (SITE_IS_HENTAI && !is_robot() && empty($_COOKIE['hentai_warning_accepted']))
 				<div id="warning-overlay-content">
 					<h2 id="warning-title">Avís important: contingut per a adults</h2>
 					<div id="warning-message">Aquest web permet accedir a contingut que sols és apte per a majors de 18 anys i que pot incloure representacions de comportaments o d’actituds intolerables a la vida real. Confirma que compleixes els requisits per a accedir-hi.</div>
-					<div id="warning-post-explanation">Per a evitar que hi hagi menors que puguin accedir a aquest web amb el teu dispositiu, pots instal·lar-hi un programa de control parental que filtri els webs etiquetats per a adults. Tot aquest apartat del web està etiquetat adequadament i un filtre correctament configurat hi ha d’impedir l’accés.</div>
+					<div id="warning-post-explanation">Per a evitar que hi hagi menors que puguin accedir a aquest web amb el teu dispositiu, pots instal·lar-hi un programa de control parental que filtri els webs etiquetats per a adults. Totes les pàgines de Hentai.cat estan etiquetades adequadament i un filtre correctament configurat hi ha d’impedir l’accés.</div>
 					<div id="warning-buttonbar">
 						<button id="warning-ok-button" class="normal-button" onclick="acceptHentaiWarning();">Sóc major d’edat i hi vull entrar</button>
 						<button id="warning-close-button" class="normal-button" onclick="window.location.href='<?php echo 'https://www.'.MAIN_DOMAIN; ?>';">No hi vull entrar, vés a Fansubs.cat</button>
@@ -331,15 +331,15 @@ if (PAGE_STYLE_TYPE=='login') {
 ?>
 					<div class="separator">
 <?php
-		if (!defined('PAGE_IS_SEARCH') && !defined('PAGE_IS_SERIES') && (!defined('CATALOGUE_ITEM_TYPE') || CATALOGUE_ITEM_TYPE!='liveaction') && !SITE_IS_HENTAI && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
+		if ((!defined('CATALOGUE_ITEM_TYPE') || CATALOGUE_ITEM_TYPE!='liveaction') && !SITE_IS_HENTAI && (is_robot() || (!empty($user) && is_adult() && empty($user['hide_hentai_access'])))) {
 ?>
-						<a class="hentai-button" href="<?php echo 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).(PAGE_STYLE_TYPE=='text' ? '' : htmlspecialchars(strtok($_SERVER["REQUEST_URI"], '?'))); ?>" title="Canvia a Hentai.cat">
+						<a class="hentai-button" href="<?php echo get_opposite_url(); ?>" title="Canvia a Hentai.cat">
 							<i class="fsc fa-fw fsc-hentai fa-2x"></i>
 						</a>
 <?php
 		} else if (SITE_IS_HENTAI) {
 ?>
-						<a class="hentai-button" href="<?php echo 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).(PAGE_STYLE_TYPE=='text' ? '' : htmlspecialchars(strtok($_SERVER["REQUEST_URI"], '?'))); ?>" title="Canvia a Fansubs.cat">
+						<a class="hentai-button" href="<?php echo get_opposite_url(); ?>" title="Canvia a Fansubs.cat">
 							<i class="fa fa-solid fa-fw fa-house-chimney fa-2x"></i>
 						</a>
 <?php

@@ -87,7 +87,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$extra_where = '';
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT fi.id) files FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, s.name");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, s.name");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -97,7 +97,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<tr>
+							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></td>
 								<td class="align-middle text-center"><?php echo get_status_description_short($row['status']); ?></td>

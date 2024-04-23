@@ -96,7 +96,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<tr>
+							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle text-center"><?php echo $row['subtype']=='movie' ? 'Film' : ($row['subtype']=='oneshot' ? 'One-shot' : ($row['subtype']=='serialized' ? 'Serialitzat' : 'Sèrie')); ?></td>
 								<td class="align-middle text-center"><?php echo $row['divisions']; ?></td>

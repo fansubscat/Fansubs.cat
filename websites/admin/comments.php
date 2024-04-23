@@ -54,7 +54,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT c.*, s.name series_name, u.username, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id ORDER BY c.created DESC");
+$result = query("SELECT c.*, s.name series_name, u.username, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs, s.rating FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id ORDER BY c.created DESC");
 if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -64,7 +64,7 @@ if (mysqli_num_rows($result)==0) {
 }
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-											<tr>
+											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 												<td><?php echo $row['created']; ?></td>
 												<td><?php echo $row['series_name'].'<br>('.$row['fansubs'].')'; ?></td>
 												<td><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>
@@ -102,7 +102,7 @@ mysqli_free_result($result);
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT c.*, s.name series_name, u.username, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=${fansub['id']}) ORDER BY c.created DESC");
+$result = query("SELECT c.*, s.name series_name, u.username, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs, s.rating FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=${fansub['id']}) ORDER BY c.created DESC");
 if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -112,7 +112,7 @@ if (mysqli_num_rows($result)==0) {
 }
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-											<tr>
+											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 												<td><?php echo $row['created']; ?></td>
 												<td><?php echo $row['series_name'].'<br>('.$row['fansubs'].')'; ?></td>
 												<td><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>

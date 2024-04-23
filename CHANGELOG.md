@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2024-04-23 - Versió 5.1.1
+- **Administració:**
+	- Es canvia l’avís de canvi d’identificador per a fer-lo més destacable.
+	- S’identifiquen els elements hentai amb un color vermell fosc.
+
 ## 2024-04-23 - Versió 5.1.0
 - **General:**
 	- Se separen els webs en dos dominis: Fansubs.cat i Hentai.cat (material per a adults).
