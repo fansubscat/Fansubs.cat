@@ -214,38 +214,38 @@ function get_manga_header($type, $comic_type, $number_of_elements, $is_hentai) {
 	if ($type=='new') {
 		switch ($comic_type) {
 			case 'manhwa':
-				return 'Nou manhwa editat!';
+				return 'Nou manhwa'.($is_hentai ? ' hentai' : '').' editat!';
 			case 'manhua':
-				return 'Nou manhua editat!';
+				return 'Nou manhua'.($is_hentai ? ' hentai' : '').' editat!';
 			case 'novel':
-				return 'Nova novel·la lleugera editada!';
+				return 'Nova novel·la lleugera'.($is_hentai ? ' hentai' : '').' editada!';
 			case 'manga':
 			default:
-				return 'Nou manga editat!';
+				return 'Nou manga'.($is_hentai ? ' hentai' : '').' editat!';
 		}
 	} else if ($number_of_elements==1) {
 		switch ($comic_type) {
 			case 'manhwa':
-				return 'Nou capítol de manhwa editat:';
+				return 'Nou capítol de manhwa'.($is_hentai ? ' hentai' : '').' editat:';
 			case 'manhua':
-				return 'Nou capítol de manhua editat:';
+				return 'Nou capítol de manhua'.($is_hentai ? ' hentai' : '').' editat:';
 			case 'novel':
-				return 'Nou capítol de novel·la lleugera editat:';
+				return 'Nou capítol de novel·la lleugera'.($is_hentai ? ' hentai' : '').' editat:';
 			case 'manga':
 			default:
-				return 'Nou capítol de manga editat:';
+				return 'Nou capítol de manga'.($is_hentai ? ' hentai' : '').' editat:';
 		}
 	} else {
 		switch ($comic_type) {
 			case 'manhwa':
-				return 'Nous capítols de manhwa editats:';
+				return 'Nous capítols de manhwa'.($is_hentai ? ' hentai' : '').' editats:';
 			case 'manhua':
-				return 'Nous capítols de manhua editats:';
+				return 'Nous capítols de manhua'.($is_hentai ? ' hentai' : '').' editats:';
 			case 'novel':
-				return 'Nous capítols de novel·la lleugera editats:';
+				return 'Nous capítols de novel·la lleugera'.($is_hentai ? ' hentai' : '').' editats:';
 			case 'manga':
 			default:
-				return 'Nous capítols de manga editats:';
+				return 'Nous capítols de manga'.($is_hentai ? ' hentai' : '').' editats:';
 		}
 	}
 }
@@ -254,26 +254,26 @@ function get_anime_header($type, $fansub_type, $number_of_elements, $is_hentai) 
 	if ($type=='new') {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nou anime doblat!';
+				return 'Nou anime'.($is_hentai ? ' hentai' : '').' doblat!';
 			case 'fansub':
 			default:
-				return 'Nou anime subtitulat!';
+				return 'Nou anime'.($is_hentai ? ' hentai' : '').' subtitulat!';
 		}
 	} else if ($number_of_elements==1) {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nou capítol d’anime doblat:';
+				return 'Nou capítol d’anime'.($is_hentai ? ' hentai' : '').' doblat:';
 			case 'fansub':
 			default:
-				return 'Nou capítol d’anime subtitulat:';
+				return 'Nou capítol d’anime'.($is_hentai ? ' hentai' : '').' subtitulat:';
 		}
 	} else {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nous capítols d’anime doblats:';
+				return 'Nous capítols d’anime'.($is_hentai ? ' hentai' : '').' doblats:';
 			case 'fansub':
 			default:
-				return 'Nous capítols d’anime subtitulats:';
+				return 'Nous capítols d’anime'.($is_hentai ? ' hentai' : '').' subtitulats:';
 		}
 	}
 }
