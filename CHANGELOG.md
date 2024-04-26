@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2024-04-26 - Versió 5.1.2
+- **General:**
+	- Es redueixen els llums de Nadal al portal de Hentai.cat per a evitar que es vegin malament sobre el logo en ser diferent a Fansubs.cat.
+- **Catàleg:**
+	- Les visualitzacions de hentai es consideren vàlides quan se n’ha vist un 50% i no un 80% com al contingut general.
+- **Serveis:**
+	- Es permet utilitzar un altre host de Mastodon per a Hentai.cat.
+
 ## 2024-04-23 - Versió 5.1.1
 - **Administració:**
 	- Es canvia l’avís de canvi d’identificador per a fer-lo més destacable.

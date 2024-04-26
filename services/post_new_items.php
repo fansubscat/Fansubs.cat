@@ -39,6 +39,7 @@ function publish_to_mastodon($message, $is_hentai){
 				'content' => json_encode($post_data)
 			)
 		));
+		@file_get_contents(MASTODON_HOST_HENTAI.'/api/v1/statuses', FALSE, $context);
 	} else {
 		$context = stream_context_create(array(
 			'http' => array(
@@ -48,7 +49,7 @@ function publish_to_mastodon($message, $is_hentai){
 			)
 		));
 	}
-	@file_get_contents(MASTODON_HOST.'/api/v1/statuses', FALSE, $context);
+		@file_get_contents(MASTODON_HOST.'/api/v1/statuses', FALSE, $context);
 }
 
 function publish_to_discord($text, $title, $description, $url, $image, $is_hentai){
