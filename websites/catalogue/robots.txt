@@ -2,3 +2,12 @@ User-agent: *
 Disallow: /*.php
 Disallow: /embed
 
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
