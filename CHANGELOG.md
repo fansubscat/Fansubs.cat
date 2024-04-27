@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2024-04-27 - Versió 5.1.3
+- **Catàleg:**
+	- Es comprova que el navegador té els beacons activats abans d’utilitzar-los, i si no els hi té, s’utilitza una petició Ajax.
+
 ## 2024-04-26 - Versió 5.1.2
 - **General:**
 	- Es redueixen els llums de Nadal al portal de Hentai.cat per a evitar que es vegin malament sobre el logo en ser diferent a Fansubs.cat.

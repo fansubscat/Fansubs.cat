@@ -249,7 +249,18 @@ function reportErrorToServer(error_type, error_text){
 		formData.append("text", error_text);
 		var url = getBaseUrl()+'/report_error.php';
 		if (!enableDebug) {
-			navigator.sendBeacon(url, formData);
+			if (navigator.sendBeacon === "function") {
+				navigator.sendBeacon(url, formData);
+			} else {
+				//User has probably disabled sendBeacon, use alternative
+				$.ajax({
+					url: url,
+					data: formData,
+					processData: false,
+					contentType: false,
+					type: 'POST'
+				});
+			}
 		} else {
 			console.debug('Would have requested: '+url);
 		}
@@ -405,7 +416,18 @@ function sendCurrentFileTracking(){
 		formData.append("progress", progress);
 		var url = getBaseUrl()+'/report_file_status.php';
 		if (!enableDebug) {
-			navigator.sendBeacon(url, formData);
+			if (navigator.sendBeacon === "function") {
+				navigator.sendBeacon(url, formData);
+			} else {				
+				//User has probably disabled sendBeacon, use alternative
+				$.ajax({
+					url: url,
+					data: formData,
+					processData: false,
+					contentType: false,
+					type: 'POST'
+				});
+			}
 		} else {
 			console.debug('Would have requested: '+url);
 		}
@@ -1577,7 +1599,18 @@ function executeMarkAsSeen(fileIds, isSeen) {
 	}
 	var url = getBaseUrl()+'/mark_as_seen.php';
 	if (!enableDebug) {
-		navigator.sendBeacon(url, formData);
+		if (navigator.sendBeacon === "function") {
+			navigator.sendBeacon(url, formData);
+		} else {
+			//User has probably disabled sendBeacon, use alternative
+			$.ajax({
+				url: url,
+				data: formData,
+				processData: false,
+				contentType: false,
+				type: 'POST'
+			});
+		}
 	} else {
 		console.debug('Would have requested: '+url);
 	}
