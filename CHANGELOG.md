@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2024-04-27 - Versió 5.1.4
+- **General:**
+	- S’afegeixen robots que es comporten malament a robots.txt per a impedir-ne la indexació.
+- **Catàleg:**
+	- Se soluciona un error pel qual se sumaven les estadístiques de temps de visualització d’usuaris anònims entre ells.
+
 ## 2024-04-27 - Versió 5.1.3
 - **Catàleg:**
 	- Es comprova que el navegador té els beacons activats abans d’utilitzar-los, i si no els hi té, s’utilitza una petició Ajax.
