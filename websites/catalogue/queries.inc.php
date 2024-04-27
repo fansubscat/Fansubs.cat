@@ -1341,11 +1341,11 @@ function query_view_session_for_user_and_file_id($user_id, $file_id) {
 }
 
 function query_view_session_for_anon_id_and_file_id($anon_id, $file_id) {
-	$anon_id = intval($anon_id);
+	$anon_id = escape($anon_id);
 	$file_id = intval($file_id);
 	$final_query = "SELECT *
 			FROM view_session
-			WHERE anon_id=$anon_id
+			WHERE anon_id='$anon_id'
 				AND file_id=$file_id";
 	return query($final_query);
 }
