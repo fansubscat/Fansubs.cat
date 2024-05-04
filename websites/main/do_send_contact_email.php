@@ -1,9 +1,10 @@
 <?php
 require_once("../common.fansubs.cat/db.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
 
 function sendContactEmail($sender_email, $username, $message) {
 	$message = "$username ($sender_email) ha enviat el següent missatge mitjançant el formulari de contacte de ".CURRENT_SITE_NAME.":\n\n$message\n\n".CURRENT_SITE_NAME.".";
-	mail(EMAIL_ACCOUNT,CURRENT_SITE_NAME.' - Nou missatge', $message,'From: '.CURRENT_SITE_NAME.' <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "'.CURRENT_SITE_NAME.'"');
+	send_email(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME, CURRENT_SITE_NAME.' - Nou missatge', $message);
 }
 
 function contactEmail(){

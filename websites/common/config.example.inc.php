@@ -1,7 +1,7 @@
 <?php
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 
-define('VERSION', '5.1.4');
+define('VERSION', '5.1.5');
 
 //Database access
 define('DB_HOST', 'YOUR_DB_HOST_HERE');
@@ -15,14 +15,16 @@ define('MAIN_DOMAIN', 'fansubs.cat');
 define('HENTAI_DOMAIN', 'hentai.cat');
 if (str_ends_with(strtolower($_SERVER['HTTP_HOST']), HENTAI_DOMAIN)) {
 	define('CURRENT_DOMAIN', HENTAI_DOMAIN);
+	define('OTHER_DOMAIN', MAIN_DOMAIN);
 	define('CURRENT_SITE_NAME', 'Hentai.cat');
 	define('SITE_IS_HENTAI', TRUE);
 	define('SOCIAL_LINK_BLUESKY', 'https://bsky.app/profile/hentaipuntcat.bsky.social');
-	define('SOCIAL_LINK_MASTODON', 'https://mastodont.cat/@hentaipuntcat');
+	define('SOCIAL_LINK_MASTODON', 'https://mastodon.social/@hentaipuntcat');
 	define('SOCIAL_LINK_TELEGRAM', 'https://t.me/hentaipuntcat');
 	define('SOCIAL_LINK_X', 'https://x.com/hentaipuntcat');
 } else {
 	define('CURRENT_DOMAIN', MAIN_DOMAIN);
+	define('OTHER_DOMAIN', HENTAI_DOMAIN);
 	define('CURRENT_SITE_NAME', 'Fansubs.cat');
 	define('SITE_IS_HENTAI', FALSE);
 	define('SOCIAL_LINK_BLUESKY', 'https://bsky.app/profile/fansubscat.bsky.social');
@@ -62,8 +64,15 @@ define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN_HERE');
 //Populate this variable if you want to display a message on all listing pages
 define('GLOBAL_MESSAGE', '');
 
-//What to use as sender when sending e-mails
-define('EMAIL_ACCOUNT', 'info@fansubs.cat');
+//What to use to send e-mails
+//The code assumes that you use a SMTP server with user/pass login and SMTPS support.
+//If your e-mail provider differs, you might need to change the code in common.inc.php's send_mail() function accordingly.
+define('SMTP_HOST', 'YOUR_SMTP_HOST_HERE');
+define('SMTP_USERNAME', 'YOUR_SMTP_USERNAME_HERE');
+define('SMTP_PASSWORD', 'YOUR_SMTP_PASSWORD_HERE');
+define('SMTP_PORT', 465);
+define('EMAIL_FROM_ADDRESS', 'contacte@fansubs.cat');
+define('EMAIL_FROM_NAME', 'Fansubs.cat');
 
 //These domains do not allow our e-mails, just block registrations
 define('BLACKLISTED_EMAIL_DOMAINS', array('example.com'));

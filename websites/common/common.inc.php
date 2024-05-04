@@ -1,4 +1,10 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once("libraries/phpmailer/Exception.php");
+require_once("libraries/phpmailer/PHPMailer.php");
+require_once("libraries/phpmailer/SMTP.php");
 require_once("libraries/parsedown.inc.php");
 
 function is_adult(){
@@ -42,6 +48,42 @@ function validate_hentai_ajax() {
 	global $user;
 	if (SITE_IS_HENTAI && !empty($user) && !is_adult()) {
 		force_hentai_logout();
+	}
+}
+
+function send_email($recipient_address, $recipient_name, $subject, $text, $html_text=NULL) {
+	$mail = new PHPMailer(true);
+
+	try {
+		$mail->CharSet = "UTF-8";
+		$mail->isSMTP();
+		$mail->Host = SMTP_HOST;
+		$mail->SMTPAuth = true;
+		$mail->Username = SMTP_USERNAME;
+		$mail->Password = SMTP_PASSWORD;
+		$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+		$mail->Port = SMTP_PORT;
+
+		//Recipients
+		$mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
+		$mail->addAddress($recipient_address, $recipient_name);
+
+		//Content
+		$mail->Subject = $subject;
+
+		if (!empty($html_text)) {
+			$mail->isHTML(true);
+			$mail->Subject = $subject;
+			$mail->Body = $html_text;
+			$mail->AltBody = $text;
+		} else {
+			$mail->isHTML(false);
+			$mail->Body = $text;
+		}
+
+		$mail->send();
+	} catch (Exception $e) {
+		log_action('mail-error', "Message could not be sent. Mailer Error: {$mail->ErrorInfo}\n");
 	}
 }
 

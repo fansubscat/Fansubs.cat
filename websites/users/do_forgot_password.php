@@ -1,10 +1,11 @@
 <?php
 require_once("../common.fansubs.cat/user_init.inc.php");
+require_once("../common.fansubs.cat/common.inc.php");
 require_once("queries.inc.php");
 
 function sendForgotPasswordEmail($email, $username, $code) {
 	$message = "Bon dia, $username,\n\nReps aquest correu perquè has demanat restablir la contrasenya del teu usuari a ".CURRENT_SITE_NAME.".\n\nSi no has estat tu qui ho ha demanat, pots ignorar aquest correu.\n\nPer a restablir la contrasenya, visita el següent enllaç: ".USERS_URL."/restableix-la-contrasenya?usuari=".urlencode($username)."&codi=$code\n\n".CURRENT_SITE_NAME.".";
-	mail($email,'Restabliment de la contrasenya de '.CURRENT_SITE_NAME, $message,'From: '.CURRENT_SITE_NAME.' <'.EMAIL_ACCOUNT.'>','-f '.EMAIL_ACCOUNT.' -F "'.CURRENT_SITE_NAME.'"');
+	send_email($email, $username, 'Restabliment de la contrasenya de '.CURRENT_SITE_NAME, $message);
 }
 
 function forgotPassword(){

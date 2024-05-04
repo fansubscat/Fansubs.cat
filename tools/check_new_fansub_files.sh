@@ -5,7 +5,10 @@ base_dest_dir="YOUR_DESTINATION_DIRECTORY"
 sender_email="your@sender.email"
 
 function notify_error {
-	php -r "mail('YOUR_EMAIL', \"Notificació del procés d'importació de fitxers a Fansubs.cat\", \"$1\", \"From: $sender_email\");"
+	#Replace this with your own method of sending, i.e.
+	#php -r "mail('YOUR_EMAIL', \"Notificació del procés d’importació de fitxers a Fansubs.cat\", \"$1\", \"From: $sender_email\");"
+	#mailer.php is a script that send through SMTP in our case
+	echo "$1" | php mailer.php YOUR_EMAIL "Notificació del procés d’importació de fitxers a Fansubs.cat"
 }
 
 function generate_streaming {
