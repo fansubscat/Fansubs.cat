@@ -75,7 +75,4 @@ define('LOCK_FILE', '/tmp/fansubscat_fetch_lock');
 
 //Lock file for MEGA sync processes
 define('MEGA_LOCK_FILE', '/tmp/mega_fetch.lock');
-
-//What to use as sender when sending e-mails
-define('EMAIL_ACCOUNT', 'info@fansubs.cat');
 ?>
