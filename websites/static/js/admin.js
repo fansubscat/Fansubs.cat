@@ -1108,11 +1108,15 @@ function checkNumberOfLinks() {
 	for (var i=0;i<files.length;i++){
 		if (files[i].files && files[i].files.length>0) {
 			totalBytes+=files[i].files[0].size;
+			if (files[i].files[0].size>524288000) {
+				alert('Estàs pujant un fitxer de més de 500 MiB i això no està permès. Si us plau, mira de comprimir-ne més la qualitat perquè ocupi menys, i si això no és possible, contacta amb un administrador per a trobar una solució alternativa.');
+				return false;
+			}
 		}
 	}
 
-	if (totalBytes>262144000) {
-		alert('La mida total dels fitxers pujats no pot excedir de 250 MiB. Si us plau, puja’ls en diverses tandes.');
+	if (totalBytes>524288000) {
+		alert('La mida total dels fitxers pujats no pot excedir de 500 MiB. Si us plau, puja’ls en diverses tandes.');
 		return false;
 	}
 
@@ -1135,7 +1139,9 @@ function checkNumberOfLinks() {
 		}
 	}
 	if (status!=1 && status!=3 && validFiles>=totalEpisodes) {
-		return confirm('Aquesta versió té contingut per a tots els capítols, però no està marcada com a «Completada» ni «Parcialment completada». Revisa i confirma que sigui correcte. Si és correcte perquè està en emissió o publicació, quan l’hagis desada, aprofita per a afegir-ne els capítols futurs a la fitxa de la sèrie. Segur que vols continuar?');
+		if (!confirm('Aquesta versió té contingut per a tots els capítols, però no està marcada com a «Completada» ni «Parcialment completada». Revisa i confirma que sigui correcte. Si és correcte perquè està en emissió o publicació, quan l’hagis desada, aprofita per a afegir-ne els capítols futurs a la fitxa de la sèrie. Segur que vols continuar?')) {
+			return false;
+		}
 	} else if (status==1 && validFiles<totalEpisodes) {
 		alert('Aquesta versió no té contingut per a tots els capítols, però està marcada com a «Completada». Això no és possible. Si només té part del contingut, caldria marcar-la amb un estat diferent. Si alguna part està completada, es pot marcar com a «Parcialment completada».');
 		return false;

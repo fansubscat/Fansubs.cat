@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2024-05-06 - Versió 5.1.6
+- **Administració:**
+	- Es permet pujar fitxers de fins a 500 MiB.
+
 ## 2024-05-04 - Versió 5.1.5
 - **General:**
 	- Es passa a utilitzar enviament de correus mitjançant SMTP via PHPMailer.
