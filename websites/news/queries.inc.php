@@ -49,7 +49,7 @@ function query_latest_news($user, $text, $page, $page_size, $fansub_slug, $show_
 	$final_query .= "
 				AND ".(!empty($fansub_slug) ? "f.slug='$fansub_slug'" : "1")."
 				AND n.date>='$min_month-01 00:00:00' AND n.date<='$max_month-31 23:59:59'
-				AND ".(SITE_IS_HENTAI ? "(n.fansub_id IS NULL OR f.hentai_category=2 OR (f.hentai_category=1 AND (n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%' OR n.title LIKE '%yaoi%' OR n.contents LIKE '%yaoi%' OR n.title LIKE '%yuri%' OR n.contents LIKE '%yuri%')))" : "(n.fansub_id IS NULL OR f.hentai_category<>2)")."
+				AND ".(SITE_IS_HENTAI ? "(n.fansub_id IS NULL OR f.hentai_category=2 OR (f.hentai_category=1 AND (n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%' OR n.title LIKE '%yaoi%' OR n.contents LIKE '%yaoi%' OR n.title LIKE '%yuri%' OR n.contents LIKE '%yuri%')))" : "(n.fansub_id IS NULL OR (f.hentai_category=0 OR (f.hentai_category=1 AND n.title NOT LIKE '%hentai%' AND n.contents NOT LIKE '%hentai%' AND n.title NOT LIKE '%yaoi%' AND n.contents NOT LIKE '%yaoi%' AND n.title NOT LIKE '%yuri%' AND n.contents NOT LIKE '%yuri%')))")."
 			ORDER BY n.date DESC
 			LIMIT $page_size
 			OFFSET ".($page-1)*20;
@@ -62,7 +62,7 @@ function query_all_fansubs_with_news($user) {
 				LEFT JOIN fansub f ON n.fansub_id=f.id
 			WHERE n.fansub_id IS NOT NULL
 				AND ".get_internal_blacklisted_fansubs_condition_news($user)."
-				AND ".(SITE_IS_HENTAI ? "(f.hentai_category=2 OR (f.hentai_category=1 AND (n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%' OR n.title LIKE '%yaoi%' OR n.contents LIKE '%yaoi%' OR n.title LIKE '%yuri%' OR n.contents LIKE '%yuri%')))" : "(n.fansub_id IS NULL OR f.hentai_category<>2)")."
+				AND ".(SITE_IS_HENTAI ? "(f.hentai_category=2 OR (f.hentai_category=1 AND (n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%' OR n.title LIKE '%yaoi%' OR n.contents LIKE '%yaoi%' OR n.title LIKE '%yuri%' OR n.contents LIKE '%yuri%')))" : "(n.fansub_id IS NULL OR (f.hentai_category=0 OR (f.hentai_category=1 AND n.title NOT LIKE '%hentai%' AND n.contents NOT LIKE '%hentai%' AND n.title NOT LIKE '%yaoi%' AND n.contents NOT LIKE '%yaoi%' AND n.title NOT LIKE '%yuri%' AND n.contents NOT LIKE '%yuri%')))")."
 			ORDER BY f.name ASC";
 	return query($final_query);
 }

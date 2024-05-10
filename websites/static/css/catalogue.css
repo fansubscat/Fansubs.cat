@@ -2072,6 +2072,10 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	align-items: center;
 }
 
+.comment.reply {
+	margin-left: 4rem;
+}
+
 .comment-message {
 	margin-left: 2.5rem;
 	font-size: 1.4rem;
@@ -2082,6 +2086,10 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	padding: 1rem 2rem;
 	box-shadow: 0 0.4rem 0.8rem 0 rgba(var(--always-negative-color),var(--drop-shadow-transparency-card));
 	position: relative;
+}
+
+.comment.reply .comment-message {
+	background: rgb(var(--comment-reply-background-color));
 }
 
 .comment-message::after {
@@ -2095,6 +2103,10 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	left: -1.5rem;
 	top: calc(50% - 1.5rem);
 	filter: drop-shadow(0 0rem 0.5rem rgba(var(--always-negative-color),0.1));
+}
+
+.comment.reply .comment-message::after {
+	border-right-color: rgb(var(--comment-reply-background-color));
 }
 
 .comment + .comment {
@@ -3110,6 +3122,10 @@ input:checked + .viewed-slider:before {
 
 	.comment + .comment {
 		margin-top: 1rem;
+	}
+
+	.comment.reply {
+		margin-left: 1.5rem;
 	}
 
 	.division {

@@ -527,16 +527,13 @@ while ($version = mysqli_fetch_assoc($result)) {
 <?php
 	$i=0;
 	while ($comment = mysqli_fetch_assoc($resultcom)) {
+		print_comment($comment, $i>=3);
+		$resultrep = query_comment_replies($comment['id']);
+		while ($reply = mysqli_fetch_assoc($resultrep)) {
+			print_comment($reply, FALSE);
+		}
+		mysqli_free_result($resultrep);
 ?>
-									<div class="comment<?php echo $i>=3 ? ' hidden' : ''; ?>">
-										<img class="comment-avatar" src="<?php echo !empty($comment['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$comment['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
-										<div class="comment-message">
-											<?php echo !empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>'; ?>
-											<div class="comment-author">
-												<span class="comment-user"><?php echo !empty($comment['username']) ? htmlentities($comment['username']) : 'Usuari eliminat'; ?></span> • <span class="comment-date"><?php echo get_relative_date($comment['created_timestamp']); ?></span>
-											</div>
-										</div>
-									</div>
 <?php
 		$i++;
 	}

@@ -1360,11 +1360,23 @@ function query_version_by_file_id($file_id) {
 
 function query_version_comments($version_id) {
 	$version_id = intval($version_id);
-	$final_query = "SELECT c.*, u.username, u.avatar_filename, UNIX_TIMESTAMP(c.created) created_timestamp
+	$final_query = "SELECT c.*, u.username, u.avatar_filename, f.id fansub_id, f.name fansub_name, UNIX_TIMESTAMP(c.created) created_timestamp
 			FROM comment c
 			LEFT JOIN user u ON c.user_id=u.id
-			WHERE c.version_id=$version_id
-			ORDER BY c.created DESC";
+			LEFT JOIN fansub f ON c.fansub_id=f.id
+			WHERE c.version_id=$version_id AND reply_to_comment_id IS NULL
+			ORDER BY c.last_replied DESC";
+	return query($final_query);
+}
+
+function query_comment_replies($comment_id) {
+	$comment_id = intval($comment_id);
+	$final_query = "SELECT c.*, u.username, u.avatar_filename, f.id fansub_id, f.name fansub_name, UNIX_TIMESTAMP(c.created) created_timestamp
+			FROM comment c
+			LEFT JOIN user u ON c.user_id=u.id
+			LEFT JOIN fansub f ON c.fansub_id=f.id
+			WHERE c.reply_to_comment_id=$comment_id
+			ORDER BY c.created ASC";
 	return query($final_query);
 }
 ?>

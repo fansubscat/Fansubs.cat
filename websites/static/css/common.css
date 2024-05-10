@@ -147,6 +147,8 @@ b {
 	--drop-shadow-transparency-card: 0.4;
 	/* Drop shadow transparency for menus or popups that appear above the content */
 	--drop-shadow-transparency-menu: 0.5;
+	/* Comment reply background color */
+	--comment-reply-background-color: 45, 45, 45;
 }
 
 .theme-light {
@@ -163,6 +165,7 @@ b {
 	--icon-button-color-hover: 80, 80, 80;
 	--drop-shadow-transparency-card: 0.2;
 	--drop-shadow-transparency-menu: 0.5;
+	--comment-reply-background-color: 240, 240, 240;
 	--background-image: url('../images/site/background_light_uhd.jpg');
 	--background-image-opacity: 0.6;
 }

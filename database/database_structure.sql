@@ -34,6 +34,10 @@ CREATE TABLE `comment` (
   `id` varchar(24) NOT NULL,
   `version_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `type` varchar(200) DEFAULT 'user',
+  `fansub_id` int(11) DEFAULT NULL,
+  `reply_to_comment_id` int(11) DEFAULT NULL,
+  `last_replied` timestamp NOT NULL DEFAULT current_timestamp(),
   `text` text NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated` timestamp NOT NULL DEFAULT current_timestamp()
@@ -569,7 +573,8 @@ ALTER TABLE `admin_user`
 
 ALTER TABLE `comment`
   ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `comment_ibfk_3` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `division`
   ADD CONSTRAINT `division_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

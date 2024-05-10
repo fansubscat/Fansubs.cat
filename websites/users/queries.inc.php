@@ -124,8 +124,8 @@ function query_insert_comment($user_id, $version_id, $text) {
 	$user_id = escape($user_id);
 	$version_id = escape($version_id);
 	$text = escape($text);
-	$final_query = "INSERT INTO comment (user_id, version_id, text, created, updated)
-			VALUES ($user_id, $version_id, '$text', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+	$final_query = "INSERT INTO comment (user_id, version_id, type, fansub_id, reply_to_comment_id, last_replied, text, created, updated)
+			VALUES ($user_id, $version_id, 'user', NULL, NULL, CURRENT_TIMESTAMP, '$text', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 	return query($final_query);
 }
 

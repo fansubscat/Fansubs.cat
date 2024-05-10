@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2024-05-10 - Versió 5.1.7
+- **Administració:**
+	- Es permet als fansubs respondre comentaris.
+- **Catàleg:**
+	- Es mostren les respostes a comentaris per part dels fansubs.
+- **Serveis:**
+	- Es corregeix un error en enviar missatges a Telegram amb el caràcter «_».
+
 ## 2024-05-06 - Versió 5.1.6
 - **Administració:**
 	- Es permet pujar fitxers de fins a 500 MiB.

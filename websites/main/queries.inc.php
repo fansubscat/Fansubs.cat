@@ -59,7 +59,7 @@ function query_fansubs($user, $status) {
 					(SELECT COUNT(*)
 						FROM news n
 						WHERE n.fansub_id=f.id
-							AND ".(SITE_IS_HENTAI ? "(f.hentai_category=2 OR (f.hentai_category=1 AND (n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%' OR n.title LIKE '%yaoi%' OR n.contents LIKE '%yaoi%' OR n.title LIKE '%yuri%' OR n.contents LIKE '%yuri%')))" : "1")."
+							AND ".(SITE_IS_HENTAI ? "(f.hentai_category=2 OR (f.hentai_category=1 AND (n.title LIKE '%hentai%' OR n.contents LIKE '%hentai%' OR n.title LIKE '%yaoi%' OR n.contents LIKE '%yaoi%' OR n.title LIKE '%yuri%' OR n.contents LIKE '%yuri%')))" : "(f.hentai_category=0 OR (f.hentai_category=1 AND n.title NOT LIKE '%hentai%' AND n.contents NOT LIKE '%hentai%' AND n.title NOT LIKE '%yaoi%' AND n.contents NOT LIKE '%yaoi%' AND n.title NOT LIKE '%yuri%' AND n.contents NOT LIKE '%yuri%'))")."
 					) total_news
 				FROM fansub f
 				WHERE f.status=$status
