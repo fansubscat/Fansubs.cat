@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2024-05-10 - Versió 5.1.8
+- **Administració:**
+	- Es poden veure les valoracions i comentaris a la llista de versions i la llista de comentaris a les estadístiques de la versió.
+
 ## 2024-05-10 - Versió 5.1.7
 - **Administració:**
 	- Es permet als fansubs respondre comentaris.

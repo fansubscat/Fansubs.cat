@@ -157,3 +157,8 @@ tr[id^="form-links-list-"] input[type="url"][value^="https://mega.nz/"], tr[id^=
 tr[id^="form-links-list-"] input[type="url"][value^="storage://"], tr[id^="form-extras-list-row-"] input[type="url"][value^="storage://"] {
 	background: url("../images/site/link_storage.png") no-repeat scroll 4px center !important;
 }
+
+thead {
+	top: 0;
+	position: sticky;
+}

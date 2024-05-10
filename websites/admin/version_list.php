@@ -74,8 +74,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="col">Fansub</th>
 								<th scope="col"><?php echo $content_uc; ?></th>
 								<th class="text-center" scope="col">Estat</th>
-								<th class="text-center" scope="col"><span title="Recomanable pel sistema de recomanacions">R</span></th>
 								<th class="text-center" scope="col">Fitxers</th>
+								<th class="text-center" scope="col"><span title="Recomanable pel sistema de recomanacions" class="fa fa-star"></span></th>
+								<th class="text-center" scope="col"><span title="Valoracions positives dels usuaris" class="fa fa-thumbs-up"></span></th>
+								<th class="text-center" scope="col"><span title="Valoracions negatives dels usuaris" class="fa fa-thumbs-down"></span></th>
+								<th class="text-center" scope="col"><span title="Comentaris dels usuaris" class="fa fa-comment"></span></th>
 								<th class="text-center" scope="col">Accions</th>
 							</tr>
 						</thead>
@@ -87,11 +90,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$extra_where = '';
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, s.name");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, s.name");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="6" class="text-center">- No hi ha cap versió -</td>
+								<td colspan="9" class="text-center">- No hi ha cap versió -</td>
 							</tr>
 <?php
 	}
@@ -101,9 +104,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name']); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></td>
 								<td class="align-middle text-center"><?php echo get_status_description_short($row['status']); ?></td>
-								<td class="align-middle text-center"><?php echo $row['is_featurable']==1 ? 'R'.($row['is_always_featured']==1 ? 'S' : '') : '-'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['files']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Enllaços" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de «".$row['series_name']."» de ".$row['fansub_name']." i tots els seus fitxers? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center"><?php echo $row['is_featurable']==1 ? 'R'.($row['is_always_featured']==1 ? 'S' : '') : '-'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '-'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '-'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['num_comments']>0 ? $row['num_comments'] : '-'; ?></td>
+								<td class="align-middle text-center text-nowrap"><a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Enllaços" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques i comentaris" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de «".$row['series_name']."» de ".$row['fansub_name']." i tots els seus fitxers? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}
