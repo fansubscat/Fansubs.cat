@@ -99,7 +99,7 @@ function publish_to_telegram($message, $is_hentai){
 			echo "-----------------\nPost this to Telegram:\n$message\n";
 			continue;
 		}
-		@file_get_contents("https://api.telegram.org/bot".$config['TELEGRAM_BOT_API_KEY']."/sendMessage?chat_id=".$config['TELEGRAM_BOT_CHANNEL_CHAT_ID']."&text=".urlencode($message)."&parse_mode=Markdown");
+		@file_get_contents("https://api.telegram.org/bot".$config['TELEGRAM_BOT_API_KEY']."/sendMessage?chat_id=".$config['TELEGRAM_BOT_CHANNEL_CHAT_ID']."&text=".str_replace('_','\\_', urlencode($message))."&parse_mode=Markdown");
 	}
 }
 
