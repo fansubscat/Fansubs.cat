@@ -1023,6 +1023,15 @@ function checkCommunity() {
 }
 
 function checkNumberOfLinks() {
+
+	var downloadsUrls = $('[id^=form-downloads_url_]');
+	for (var i=0;i<downloadsUrls.length;i++) {
+		if (downloadsUrls[i].value.match(/.*https:\/\/mega(?:\.co)?\.nz\/fm\/.*/)) {
+			alert("L’URL de l’enllaç de baixada dels fitxers originals corresponent a MEGA és invàlida. Assegura’t que l’has exportada correctament fent botó dret -> Copy link a un fitxer o carpeta havent iniciat la sessió al compte.");
+			return false;
+		}
+	}
+
 	if (isAutoFetchActive()){
 		var linkTables = $('[id^=files-list-table-]');
 		var multipleLinks = false;

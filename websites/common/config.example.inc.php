@@ -1,7 +1,7 @@
 <?php
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 
-define('VERSION', '5.1.8');
+define('VERSION', '5.1.9');
 
 //Database access
 define('DB_HOST', 'YOUR_DB_HOST_HERE');

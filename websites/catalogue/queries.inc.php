@@ -741,7 +741,8 @@ function query_home_continue_watching_by_user_id($user_id) {
 								WHERE f.version_id=v.id
 									AND f.episode_id IS NOT NULL
 									AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (CONCAT(NATURAL_SORT_KEY(d2.number), ':', NATURAL_SORT_KEY(e2.number))>CONCAT(NATURAL_SORT_KEY(d1.number), ':', NATURAL_SORT_KEY(e1.number))))
-								ORDER BY d2.number ASC,
+								ORDER BY d2.number IS NULL ASC,
+									d2.number ASC,
 									e2.number IS NULL ASC,
 									e2.number ASC,
 									IFNULL(et2.title, e2.description) ASC

@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2024-05-12 - Versió 5.1.9
+- **Administració:**
+	- S’afegeix una validació per a enllaços de MEGA erronis als camps de baixada de fitxers originals.
+- **Catàleg:**
+	- Es corregeix que els OVAs sense temporada apareguin sempre per davant de capítols normals a «Continua mirant».
+- **Serveis:**
+	- Es corregeix un error que feia que alguns registres no escrivissin correctament el nom del fitxer.
+
 ## 2024-05-10 - Versió 5.1.8
 - **Administració:**
 	- Es poden veure les valoracions i comentaris a la llista de versions i la llista de comentaris a les estadístiques de la versió.
