@@ -81,11 +81,11 @@ if ($migration_type=='piwigo') {
 			mysqli_free_result($result);
 		} else if ($type=='manga') {
 			header("HTTP/1.1 301 Moved Permanently");
-			header("Location: https://manga".HENTAI_DOMAIN."/".$row['slug']);
+			header("Location: https://manga.".HENTAI_DOMAIN."/".$row['slug']);
 			mysqli_free_result($result);
 		} else {
 			header("HTTP/1.1 301 Moved Permanently");
-			header("Location: https://anime".HENTAI_DOMAIN."/".$row['slug']);
+			header("Location: https://anime.".HENTAI_DOMAIN."/".$row['slug']);
 			mysqli_free_result($result);
 		}
 	} else {
@@ -99,11 +99,11 @@ if ($migration_type=='piwigo') {
 					mysqli_free_result($result);
 				} else if ($type=='manga') {
 					header("HTTP/1.1 301 Moved Permanently");
-					header("Location: https://manga".HENTAI_DOMAIN."/".$row['slug']);
+					header("Location: https://manga.".HENTAI_DOMAIN."/".$row['slug']);
 					mysqli_free_result($result);
 				} else {
 					header("HTTP/1.1 301 Moved Permanently");
-					header("Location: https://anime".HENTAI_DOMAIN."/".$row['slug']);
+					header("Location: https://anime.".HENTAI_DOMAIN."/".$row['slug']);
 					mysqli_free_result($result);
 				}
 			} else {
