@@ -81,7 +81,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td class="align-middle"><?php echo $row['series_name'].'<br>('.$row['fansubs'].')'; ?></td>
 												<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>
 												<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></td>
-												<td class="align-middle"><?php echo $row['last_replied']!=$row['created'] ? 'Sí' : 'No'; ?></td>
+												<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? 'Sí' : 'No'; ?></td>
 												<td class="align-middle text-center text-nowrap">
 													<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="Respon" class="fa fa-reply p-1"></a>
 <?php

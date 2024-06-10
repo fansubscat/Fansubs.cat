@@ -82,7 +82,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<p class="text-center">Aquests són els enllaços de la versió de "<b><?php echo htmlspecialchars($row['series_name']); ?></b>" feta per <?php echo htmlspecialchars($row['fansub_name']); ?>.</p>
 					<hr>
 					<div class="text-center">
-						<button onclick="copyToClipboard('<?php echo $link_url.'/'.$series['slug']; ?>?v=<?php echo $_GET['id']; ?>', $(this));" class="btn btn-primary"><span class="fa fa-clipboard pe-2"></span>Copia l’enllaç a la fitxa de la versió</button>
+						<button onclick="copyToClipboard('<?php echo $link_url.'/'.$series['slug']; ?>?v=<?php echo $_GET['id']; ?>', $(this));" class="btn btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç a la fitxa de la versió</button>
 					</div>
 				</article>
 			</div>
@@ -109,7 +109,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						<tr>
 							<td style="width: 70%;"><strong><?php echo !empty($division['name']) ? $division['name'] : $divisions_name." ".$division['number']; ?></strong></td>
-							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.$series['slug'].'?v='.$_GET['id'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pe-2"></span>Copia l’enllaç</button></td>
+							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.$series['slug'].'?v='.$_GET['id'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
 						</tr>
 <?php
 		}
@@ -176,7 +176,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						<tr>
 							<td style="width: 85%;"><?php echo $episode_name . ' (Variant "'.$rowf['variant_name'].'")'; ?></td>
-							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowf['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pe-2"></span>Copia l’enllaç</button></td>
+							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowf['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
 						</tr>
 <?php
 			}
@@ -230,7 +230,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 					<tr>
 						<td style="width: 85%;"><strong><?php echo $rowex['extra_name']; ?></strong></td>
-						<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowex['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-clipboard pe-2"></span>Copia l’enllaç</button></td>
+						<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowex['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
 					</tr>
 <?php
 		}
