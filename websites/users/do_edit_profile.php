@@ -13,12 +13,13 @@ function string_ends_with($haystack, $needle) {
 function edit_profile(){
 	global $user;
 	//Check if we have all the data
-	if (empty($user) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || empty($_POST['avatar']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
+	if (empty($user) || empty($_POST['username']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || empty($_POST['avatar']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 1);
 	}
 
 	//Transfer to variables
+	$username = $_POST['username'];
 	$email_address = $_POST['email_address'];
 	$birth_day = $_POST['birthday_day'];
 	$birth_month = $_POST['birthday_month'];
@@ -69,13 +70,24 @@ function edit_profile(){
 		return array('result' => 'ko', 'code' => 3);
 	}
 
+	//Check if username exists
+	$result = query_user_by_username_except_self($username, $user['id']);
+	if (mysqli_num_rows($result)>0){
+		http_response_code(400);
+		mysqli_free_result($result);
+		return array('result' => 'ko', 'code' => 10);
+	}
+
 	if (str_starts_with($avatar, 'http')) {
-		query_update_user_profile($user['id'], $email_address, $birth_year."-".$birth_month."-".$birth_day, NULL);
+		query_update_user_profile($user['id'], $username, $email_address, $birth_year."-".$birth_month."-".$birth_day, NULL);
 	} else {
 		$avatar_filename = get_nanoid().'.png';
 		file_put_contents(STATIC_DIRECTORY.'/images/avatars/'.$avatar_filename, file_get_contents($avatar));
-		query_update_user_profile($user['id'], $email_address, $birth_year."-".$birth_month."-".$birth_day, $avatar_filename);
+		query_update_user_profile($user['id'], $username, $email_address, $birth_year."-".$birth_month."-".$birth_day, $avatar_filename);
 	}
+
+	//Set the session username (in case it was changed), the next request will fill in the $user variable automatically
+	$_SESSION['username']=$_POST['username'];
 
 	return array('result' => 'ok');
 }

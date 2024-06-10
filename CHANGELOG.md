@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2024-06-10 - Versió 5.1.10
+- **Catàleg:**
+	- Es corregeix que les antigues URLs de sèries hentai redirigissin per error a un domini inexistent.
+- **Usuaris:**
+	- Es permet canviar el nom d’usuari (sempre que no el faci servir algú altre).
+- **Administració:**
+	- Es canvien les icones del porta-retalls.
+- **Eines:**
+	- Els darrers capítols penjats es processen abans que els antics.
+
 ## 2024-05-12 - Versió 5.1.9
 - **Administració:**
 	- S’afegeix una validació per a enllaços de MEGA erronis als camps de baixada de fitxers originals.

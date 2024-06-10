@@ -13,6 +13,16 @@ function query_user_by_email($email) {
 	return query($final_query);
 }
 
+function query_user_by_username_except_self($username, $user_id) {
+	$username_escaped = escape($username);
+	$user_id = escape($user_id);
+	$final_query = "SELECT *
+			FROM user
+			WHERE username='$username_escaped'
+				AND id<>$user_id";
+	return query($final_query);
+}
+
 function query_user_by_email_except_self($email, $user_id) {
 	$email_escaped = escape($email);
 	$user_id = escape($user_id);
@@ -205,12 +215,14 @@ function query_update_comments_for_user_removal($user_id) {
 	return query($final_query);
 }
 
-function query_update_user_profile($user_id, $email_address, $birth_date, $avatar_filename) {
+function query_update_user_profile($user_id, $username, $email_address, $birth_date, $avatar_filename) {
 	$user_id = escape($user_id);
+	$username = escape($username);
 	$email_address = escape($email_address);
 	$birth_date = escape($birth_date);
 	$final_query = "UPDATE user
-			SET email='$email_address',
+			SET username='$username',
+				email='$email_address',
 				birthdate='$birth_date',
 				avatar_filename=".(!empty($avatar_filename) ? "'".escape($avatar_filename)."'" : "avatar_filename").",
 				updated=CURRENT_TIMESTAMP,

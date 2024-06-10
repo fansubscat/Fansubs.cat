@@ -495,6 +495,10 @@ function editProfile() {
 	$('#edit_profile_submit').prop('disabled', true);
 	$('#edit_profile_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
+	if ($('#edit_profile_username').val()=='') {
+		addValidation('edit_profile_username','Has d’introduir un nom d’usuari.');
+		failedValidation = true;
+	}
 	if ($('#edit_profile_email').val()=='') {
 		addValidation('edit_profile_email','Has d’introduir una adreça electrònica.');
 		failedValidation = true;
@@ -523,6 +527,7 @@ function editProfile() {
 	}
 
 	var values = {
+		username: $('#edit_profile_username').val(),
 		email_address: $('#edit_profile_email').val(),
 		birthday_day: $('#edit_profile_birthday_day').val(),
 		birthday_month: $('#edit_profile_birthday_month').val(),
@@ -557,6 +562,8 @@ function editProfile() {
 				addValidation('edit_profile_email','L’adreça electrònica no té un format correcte.');
 			} else if (response.code==9) {
 				addValidation('edit_profile_email','No acceptem registres amb adreces electròniques d’aquest domini perquè no ens és possible enviar-hi correus de restabliment de la contrasenya.');
+			} else if (response.code==10) {
+				addValidation('edit_profile_username','Aquest nom d’usuari ja l’utilitza algú altre.');
 			} else {
 				addValidationOnlyText('edit_profile_generic','S’ha produït un error. Torna-ho a provar.');
 			}

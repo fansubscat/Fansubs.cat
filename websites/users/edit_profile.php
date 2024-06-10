@@ -21,6 +21,9 @@ require_once("../common.fansubs.cat/header.inc.php");
 	<div class="content-layout account-profile-page">
 		<div class="profile-section-header">Edita el perfil</div>
 		<form id="edit-profile-form" onsubmit="return editProfile();" autocomplete="off" novalidate="">
+			<label for=edit_profile_username">Nom d’usuari</label>
+			<input id="edit_profile_username" type="text" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['username']); ?>">
+			<div id="edit_profile_username_validation" class="validation-message"></div>
 			<label for=edit_profile_email">Adreça electrònica</label>
 			<input id="edit_profile_email" type="email" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['email']); ?>">
 			<div id="edit_profile_email_validation" class="validation-message"></div>
