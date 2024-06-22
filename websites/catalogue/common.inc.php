@@ -716,7 +716,8 @@ function print_comment($comment, $hidden){
 
 function print_comment_home($comment){
 	global $user;
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="comment'.(!empty($comment['reply_to_comment_id']) ? ' reply' : '').($hidden ? ' hidden' : '').'" data-episode-id="'.$comment['last_seen_episode_id'].'" data-version-id="'.$comment['version_id'].'">';
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="comment" data-episode-id="'.$comment['last_seen_episode_id'].'" data-version-id="'.$comment['version_id'].'">';
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.SITE_BASE_URL.'/'.$comment['series_slug'].($comment['total_versions']>1 ? "?v=".$comment['version_id'] : "").'"><img class="comment-series" src="'.STATIC_URL.'/images/covers/'.$comment['series_id'].'.jpg"></a>';
 	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="comment-avatar" src="'.(!empty($comment['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$comment['avatar_filename'] : ($comment['type']=='fansub' ? STATIC_URL.'/images/icons/'.$comment['fansub_id'].'.png' : ($comment['type']=='admin' ? STATIC_URL.'/images/site/default_fansub.png' : STATIC_URL.'/images/site/default_avatar.jpg'))).'">';
 	if ($comment['has_spoilers']==1 && (empty($user) || $comment['user_id']!=$user['id'])) {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message comment-with-spoiler'.($comment['is_seen_by_user']==1 ? ' comment-with-spoiler-shown' : '').'">';
@@ -724,7 +725,7 @@ function print_comment_home($comment){
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message">';
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-author">';
-	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="comment-user">'.(!empty($comment['username']) ? htmlentities($comment['username']) : ($comment['type']=='fansub' ? htmlentities($comment['fansub_name']) : ($comment['type']=='admin' ? 'Fansubs.cat' : 'Usuari eliminat'))).'</span> a <a href="'.SITE_BASE_URL.'/'.$comment['series_slug'].($comment['total_versions']>1 ? "?v=".$comment['version_id'] : "").'"><strong>'.$comment['series_name'].'</strong> '.get_fansub_preposition_name($comment['fansubs']).'</a> • <span class="comment-date"><a href="'.SITE_BASE_URL.'/'.$comment['series_slug'].($comment['total_versions']>1 ? "?v=".$comment['version_id'] : "").'#comentaris">'.get_relative_date($comment['created_timestamp']).'</a></span>';
+	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="comment-user">'.(!empty($comment['username']) ? htmlentities($comment['username']) : ($comment['type']=='fansub' ? htmlentities($comment['fansub_name']) : ($comment['type']=='admin' ? 'Fansubs.cat' : 'Usuari eliminat'))).'</span>'.(!empty($comment['replied_username']) ? ' en resposta a <strong>'.htmlentities($comment['replied_username']).'</strong>' : '').' a <a href="'.SITE_BASE_URL.'/'.$comment['series_slug'].($comment['total_versions']>1 ? "?v=".$comment['version_id'] : "").'"><strong>'.$comment['series_name'].'</strong> '.get_fansub_preposition_name($comment['fansubs']).'</a> • <span class="comment-date"><a href="'.SITE_BASE_URL.'/'.$comment['series_slug'].($comment['total_versions']>1 ? "?v=".$comment['version_id'] : "").'#comentaris">'.get_relative_date($comment['created_timestamp']).'</a></span>';
 	if (!empty($comment['episode_title'])) {
 		echo ' • <span class="comment-episode">' . htmlentities($comment['episode_title']).'</span>';
 	}

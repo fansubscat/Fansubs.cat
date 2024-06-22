@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2024-06-22 - Versió 5.2.1
+- **Catàleg:**
+	- S’afegeix la portada de la sèrie a la llista de darrers comentaris.
+	- Es mostren les respostes dels fansubs a la llista de darrers comentaris.
+
 ## 2024-06-22 - Versió 5.2.0
 - **Catàleg:**
 	- Els comentaris desen el darrer capítol vist per l’usuari i permeten indicar si hi ha espòilers.

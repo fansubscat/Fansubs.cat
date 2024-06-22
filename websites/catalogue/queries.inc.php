@@ -977,6 +977,7 @@ function query_home_comments($user, $max_items) {
 					1,
 					0
 				) is_seen_by_user,
+				s.id series_id,
 				s.name series_name,
 				s.slug series_slug,
 				(SELECT COUNT(*) FROM version v2 WHERE v2.series_id=s.id AND v2.is_hidden=0) total_versions,
@@ -984,7 +985,8 @@ function query_home_comments($user, $max_items) {
 					FROM rel_version_fansub svf
 					LEFT JOIN fansub sf ON sf.id=svf.fansub_id
 					WHERE svf.version_id=c.version_id
-				) fansubs
+				) fansubs,
+				ur.username replied_username
 			FROM comment c
 			LEFT JOIN user u ON c.user_id=u.id
 			LEFT JOIN fansub f ON c.fansub_id=f.id
@@ -993,8 +995,9 @@ function query_home_comments($user, $max_items) {
 			LEFT JOIN version v ON c.version_id=v.id
 			LEFT JOIN series s ON v.series_id=s.id
 			LEFT JOIN division d ON e.division_id=d.id
-			WHERE c.reply_to_comment_id IS NULL
-				AND s.type='".CATALOGUE_ITEM_TYPE."'
+			LEFT JOIN comment cr ON c.reply_to_comment_id=cr.id
+			LEFT JOIN user ur ON cr.user_id=ur.id
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
 				AND ".get_internal_hentai_condition()."
 				AND ".get_internal_blacklisted_fansubs_condition($user)."
 				AND ".get_internal_cancelled_projects_condition($user)."

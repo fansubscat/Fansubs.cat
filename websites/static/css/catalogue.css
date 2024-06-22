@@ -2199,8 +2199,19 @@ textarea:valid ~ .comment-checkbox {
 	align-self: end;
 }
 
+.comment-series {
+	width: 5rem;
+	min-width: 5rem;
+	aspect-ratio: 0.70710678118;
+	border-radius: 0.5rem;
+}
+
 .home-comments .static-slide + .static-slide {
-	margin-top: 1rem;
+	margin-top: 0.25rem;
+}
+
+.home-comments .comment-avatar {
+	margin-left: 1rem;
 }
 
 .home-comments .comment-author {
@@ -3196,6 +3207,11 @@ input:checked + .viewed-slider:before {
 		height: 3rem;
 		min-width: 3rem;
 		min-height: 3rem;
+	}
+
+	.comment-series {
+		width: 4rem;
+		min-width: 4rem;
 	}
 
 	.comment + .comment {
