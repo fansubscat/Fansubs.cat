@@ -4,6 +4,9 @@
 - **Catàleg:**
 	- S’afegeix la portada de la sèrie a la llista de darrers comentaris.
 	- Es mostren les respostes dels fansubs a la llista de darrers comentaris.
+- **Usuaris:**
+	- Es mostren els totals basant-se en el camp «vist/llegit», no en el total de temps visualitzat.
+	- Se separen les estadístiques del portal normal i del hentai.
 
 ## 2024-06-22 - Versió 5.2.0
 - **Catàleg:**

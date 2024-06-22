@@ -101,23 +101,29 @@ mysqli_free_result($result);
 				<div class="profile-section-header">Estadístiques</div>
 				<div class="profile-section-content">
 					<div class="profile-section-data">
-						<div class="profile-section-data-header">Total d’anime vist</div>
+						<div class="profile-section-data-header">Total d’anime<?php echo SITE_IS_HENTAI ? ' hentai' : ''; ?> vist</div>
 						<div class="profile-section-data-info"><?php echo $total_anime_seen; ?></div>
 					</div>
 					<div class="profile-section-data">
-						<div class="profile-section-data-header">Total de manga llegit</div>
+						<div class="profile-section-data-header">Total de manga<?php echo SITE_IS_HENTAI ? ' hentai' : ''; ?> llegit</div>
 						<div class="profile-section-data-info"><?php echo $total_manga_seen; ?></div>
 					</div>
+<?php
+if (!SITE_IS_HENTAI) {
+?>
 					<div class="profile-section-data">
 						<div class="profile-section-data-header">Total d’imatge real vist</div>
 						<div class="profile-section-data-info"><?php echo $total_liveaction_seen; ?></div>
 					</div>
+<?php
+}
+?>
 					<div class="profile-section-data">
-						<div class="profile-section-data-header">Comentaris escrits</div>
+						<div class="profile-section-data-header">Comentaris escrits<?php echo SITE_IS_HENTAI ? ' a '.CURRENT_SITE_NAME : ''; ?></div>
 						<div class="profile-section-data-info"><?php echo $total_comments_left; ?></div>
 					</div>
 					<div class="profile-section-data">
-						<div class="profile-section-data-header">Valoracions atorgades</div>
+						<div class="profile-section-data-header">Valoracions atorgades<?php echo SITE_IS_HENTAI ? ' a '.CURRENT_SITE_NAME : ''; ?></div>
 						<div class="profile-section-data-info"><?php echo $total_ratings_left; ?></div>
 					</div>
 				</div>

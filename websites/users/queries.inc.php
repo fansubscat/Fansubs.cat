@@ -35,28 +35,49 @@ function query_user_by_email_except_self($email, $user_id) {
 
 function query_user_seen_data_by_user_id($user_id) {
 	$user_id = escape($user_id);
-	$final_query = "SELECT (SELECT IFNULL(SUM(progress),0)
-				FROM view_session
-				WHERE user_id=$user_id
-					AND type='anime'
+	$final_query = "SELECT (SELECT IFNULL(SUM(f.length),0)
+				FROM user_file_seen_status ufss
+					LEFT JOIN file f ON ufss.file_id=f.id
+					LEFT JOIN version v ON f.version_id=v.id
+					LEFT JOIN series s ON v.series_id=s.id
+				WHERE ufss.user_id=$user_id
+					AND ufss.is_seen=1
+					AND s.type='anime'
+					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) total_anime_seen,
-				(SELECT IFNULL(SUM(progress),0)
-				FROM view_session
-				WHERE user_id=$user_id
-					AND type='manga'
+				(SELECT IFNULL(SUM(f.length),0)
+				FROM user_file_seen_status ufss
+					LEFT JOIN file f ON ufss.file_id=f.id
+					LEFT JOIN version v ON f.version_id=v.id
+					LEFT JOIN series s ON v.series_id=s.id
+				WHERE ufss.user_id=$user_id
+					AND ufss.is_seen=1
+					AND s.type='manga'
+					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) total_manga_seen,
-				(SELECT IFNULL(SUM(progress),0)
-				FROM view_session
-				WHERE user_id=$user_id
-					AND type='liveaction'
+				(SELECT IFNULL(SUM(f.length),0)
+				FROM user_file_seen_status ufss
+					LEFT JOIN file f ON ufss.file_id=f.id
+					LEFT JOIN version v ON f.version_id=v.id
+					LEFT JOIN series s ON v.series_id=s.id
+				WHERE ufss.user_id=$user_id
+					AND ufss.is_seen=1
+					AND s.type='liveaction'
+					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) total_liveaction_seen,
 				(SELECT COUNT(*)
-				FROM comment
-				WHERE user_id=$user_id
+				FROM comment c
+					LEFT JOIN version v ON c.version_id=v.id
+					LEFT JOIN series s ON v.series_id=s.id
+				WHERE c.user_id=$user_id
+					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) total_comments_left,
 				(SELECT COUNT(*)
-				FROM user_version_rating
-				WHERE user_id=$user_id
+				FROM user_version_rating vr
+					LEFT JOIN version v ON vr.version_id=v.id
+					LEFT JOIN series s ON v.series_id=s.id
+				WHERE vr.user_id=$user_id
+					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) total_ratings_left";
 	return query($final_query);
 }
