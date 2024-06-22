@@ -11,8 +11,8 @@ function string_ends_with($haystack, $needle) {
 }
 
 function sendRegistrationEmail($email, $username) {
-	$message = "Bon dia, $username,\n\nReps aquest correu perquè t’has registrat com a usuari a ".CURRENT_SITE_NAME.".\n\nSi mai n’oblides la contrasenya, fes servir l’opció «He oblidat la contrasenya» del següent enllaç: ".USERS_URL."/inicia-la-sessio\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\n".CURRENT_SITE_NAME.".";
-	send_email($email, $username,'Registre a '.CURRENT_SITE_NAME, $message);
+	$message = "Bon dia, $username,\n\nReps aquest correu perquè t’has registrat com a usuari a ".CURRENT_SITE_NAME_ACCOUNT.".\n\nSi mai n’oblides la contrasenya, fes servir l’opció «He oblidat la contrasenya» del següent enllaç: ".USERS_URL."/inicia-la-sessio\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\n".CURRENT_SITE_NAME.".";
+	send_email($email, $username,'Registre a '.CURRENT_SITE_NAME_ACCOUNT, $message);
 }
 
 function register_user(){

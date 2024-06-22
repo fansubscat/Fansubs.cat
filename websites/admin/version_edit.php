@@ -14,7 +14,7 @@ switch ($type) {
 		$page="anime";
 	break;
 	case 'manga':
-		$header_title="Edició versions de manga - Manga";
+		$header_title="Edició de versions de manga - Manga";
 		$page="manga";
 	break;
 	case 'liveaction':

@@ -365,7 +365,7 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 					$links = filter_links($links);
 				}
 ?>
-<div class="file-launcher episode<?php $num_variants>1 ? ' episode-indented' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" data-position="<?php echo $position; ?>" data-is-special="<?php echo ($is_extra || empty($number)) ? 'true' : 'false'; ?>">
+<div class="file-launcher episode<?php $num_variants>1 ? ' episode-indented' : ''; ?>" data-episode-id="<?php echo $vrow['episode_id']; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($series['name'], $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" data-position="<?php echo $position; ?>" data-is-special="<?php echo ($is_extra || empty($number)) ? 'true' : 'false'; ?>">
 	<div class="episode-thumbnail-cell">
 		<div class="episode-thumbnail">
 			<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>" alt="">
@@ -690,13 +690,52 @@ function print_featured_advent() {
 }
 
 function print_comment($comment, $hidden){
-	echo "\t\t\t\t\t\t\t\t\t".'<div class="comment'.(!empty($comment['reply_to_comment_id']) ? ' reply' : ($hidden ? ' hidden' : '')).'">';
+	global $user;
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="comment'.(!empty($comment['reply_to_comment_id']) ? ' reply' : '').($hidden ? ' hidden' : '').'" data-episode-id="'.$comment['last_seen_episode_id'].'" data-version-id="'.$comment['version_id'].'">';
 	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="comment-avatar" src="'.(!empty($comment['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$comment['avatar_filename'] : ($comment['type']=='fansub' ? STATIC_URL.'/images/icons/'.$comment['fansub_id'].'.png' : ($comment['type']=='admin' ? STATIC_URL.'/images/site/default_fansub.png' : STATIC_URL.'/images/site/default_avatar.jpg'))).'">';
-	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message">';
-	echo "\t\t\t\t\t\t\t\t\t\t\t".(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>');
+	if ($comment['has_spoilers']==1 && (empty($user) || $comment['user_id']!=$user['id'])) {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message comment-with-spoiler'.($comment['is_seen_by_user']==1 ? ' comment-with-spoiler-shown' : '').'">';
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-spoiler-warning'.($comment['is_seen_by_user']==1 ? ' hidden' : '').'"><span class="fa fa-warning"></span> Conté espòilers<span class="spoiler-show-button"> • <a onclick="toggleCommentSpoiler(this);">Mostra’l igualment</a></span></div>';
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-text">'.(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>')."</div>";
+	} else {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message">';
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-text">'.(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>')."</div>";
+	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-author">';
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="comment-user">'.(!empty($comment['username']) ? htmlentities($comment['username']) : ($comment['type']=='fansub' ? htmlentities($comment['fansub_name']) : ($comment['type']=='admin' ? 'Fansubs.cat' : 'Usuari eliminat'))).'</span> • <span class="comment-date">'.get_relative_date($comment['created_timestamp']).'</span>';
+	if (!empty($comment['episode_title'])) {
+		echo ' • <span class="comment-episode">' . htmlentities($comment['episode_title']).'</span>';
+	}
+	if ($comment['has_spoilers']==1) {
+		echo ' <span class="fa fa-warning" title="Marcat per l’usuari com a «conté possibles espòilers»"></span>';
+	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>';
+	echo "\t\t\t\t\t\t\t\t\t\t".'</div>';
+	echo "\t\t\t\t\t\t\t\t\t".'</div>';
+}
+
+function print_comment_home($comment){
+	global $user;
+	echo "\t\t\t\t\t\t\t\t\t".'<div class="comment'.(!empty($comment['reply_to_comment_id']) ? ' reply' : '').($hidden ? ' hidden' : '').'" data-episode-id="'.$comment['last_seen_episode_id'].'" data-version-id="'.$comment['version_id'].'">';
+	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="comment-avatar" src="'.(!empty($comment['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$comment['avatar_filename'] : ($comment['type']=='fansub' ? STATIC_URL.'/images/icons/'.$comment['fansub_id'].'.png' : ($comment['type']=='admin' ? STATIC_URL.'/images/site/default_fansub.png' : STATIC_URL.'/images/site/default_avatar.jpg'))).'">';
+	if ($comment['has_spoilers']==1 && (empty($user) || $comment['user_id']!=$user['id'])) {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message comment-with-spoiler'.($comment['is_seen_by_user']==1 ? ' comment-with-spoiler-shown' : '').'">';
+	} else {
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message">';
+	}
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-author">';
+	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="comment-user">'.(!empty($comment['username']) ? htmlentities($comment['username']) : ($comment['type']=='fansub' ? htmlentities($comment['fansub_name']) : ($comment['type']=='admin' ? 'Fansubs.cat' : 'Usuari eliminat'))).'</span> a <a href="'.SITE_BASE_URL.'/'.$comment['series_slug'].($comment['total_versions']>1 ? "?v=".$comment['version_id'] : "").'"><strong>'.$comment['series_name'].'</strong> '.get_fansub_preposition_name($comment['fansubs']).'</a> • <span class="comment-date"><a href="'.SITE_BASE_URL.'/'.$comment['series_slug'].($comment['total_versions']>1 ? "?v=".$comment['version_id'] : "").'#comentaris">'.get_relative_date($comment['created_timestamp']).'</a></span>';
+	if (!empty($comment['episode_title'])) {
+		echo ' • <span class="comment-episode">' . htmlentities($comment['episode_title']).'</span>';
+	}
+	if ($comment['has_spoilers']==1) {
+		echo ' <span class="fa fa-warning" title="Marcat per l’usuari com a «conté possibles espòilers»"></span>';
+	}
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>';
+	if ($comment['has_spoilers']==1 && (empty($user) || $comment['user_id']!=$user['id'])) {
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-spoiler-warning'.($comment['is_seen_by_user']==1 ? ' hidden' : '').'"><span class="fa fa-warning"></span> Conté espòilers<span class="spoiler-show-button"> • <a onclick="toggleCommentSpoiler(this);">Mostra’l igualment</a></span></div>';
+	}
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-text">'.(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>')."</div>";
 	echo "\t\t\t\t\t\t\t\t\t\t".'</div>';
 	echo "\t\t\t\t\t\t\t\t\t".'</div>';
 }

@@ -92,7 +92,7 @@ mysqli_free_result($result);
 						<div class="profile-section-data-info"><?php echo date_format(date_create_from_format('Y-m-d', $user['birthdate']), 'd/m/Y'); ?></div>
 					</div>
 					<div class="profile-section-data">
-						<div class="profile-section-data-header">Data de registre a <?php echo CURRENT_SITE_NAME; ?></div>
+						<div class="profile-section-data-header">Data de registre a <?php echo CURRENT_SITE_NAME_ACCOUNT; ?></div>
 						<div class="profile-section-data-info"><?php echo date_format(date_create_from_format('Y-m-d H:i:s', $user['created']), 'd/m/Y'); ?></div>
 					</div>
 				</div>

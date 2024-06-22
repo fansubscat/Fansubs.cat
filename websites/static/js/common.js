@@ -117,7 +117,7 @@ function toggleSiteTheme() {
 
 function toggleBookmark(seriesId){
 	if ($('body.user-logged-in').length==0) {
-		showAlert('Cal iniciar la sessió', 'Per a poder afegir elements a la teva llista, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		showAlert('Cal iniciar la sessió', 'Per a poder afegir elements a la teva llista, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
 		return;
 	}
 	var action;

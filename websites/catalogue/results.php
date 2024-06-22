@@ -326,6 +326,14 @@ if (defined('PAGE_IS_SEARCH')) {
 		'result' => query_home_random($user, $max_items),
 	));
 
+	array_push($sections, array(
+		'type' => 'comments',
+		'title' => '<i class="fa fa-fw fa-comment"></i> Darrers comentaris',
+		'specific_version' => TRUE,
+		'use_version_param' => TRUE,
+		'result' => query_home_comments($user, 5),
+	));
+
 	$featured_single_result = query_home_featured_singles($user, 5);
 }
 
@@ -341,7 +349,7 @@ foreach($sections as $section){
 
 	if ($section['type']=='chapters-carousel' && empty($user)) {
 		continue;
-	} else if (mysqli_num_rows($result)>0 || ($section['type']=='static')){
+	} else if (mysqli_num_rows($result)>0 || $section['type']=='static'){
 		$has_some_result = TRUE;
 		if ($section['type']=='carousel') {
 			$real_carousels++;
@@ -366,7 +374,7 @@ foreach($sections as $section){
 			}
 		} else {
 ?>
-					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update') ? ' carousel' : ($section['type']=='recommendations' ? ' recommendations theme-dark' : ' catalogue'); ?>">
+					<div class="section-content<?php echo $uses_swiper ? ' swiper' : ''; ?><?php echo ($section['type']=='carousel' || $section['type']=='chapters-carousel' || $section['type']=='chapters-carousel-last-update') ? ' carousel' : ($section['type']=='recommendations' ? ' recommendations theme-dark' : ($section['type']=='comments' ? ' home-comments' : ' catalogue')); ?>">
 <?php
 			if ($uses_swiper) {
 ?>
@@ -422,7 +430,7 @@ foreach($sections as $section){
 			}
 			while ($row = mysqli_fetch_assoc($result)){
 ?>
-							<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']) : ''; ?> <?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
+							<div class="<?php echo isset($row['best_status']) ? 'status-'.get_status($row['best_status']).' ' : ''; ?><?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 <?php
 				if ($section['type']=='recommendations') {
 					print_featured_item($row, $section['title'], $section['specific_version'], $section['use_version_param'], !empty($force_recommended_ids_list));
@@ -430,6 +438,8 @@ foreach($sections as $section){
 					print_chapter_item($row);
 				} else if ($section['type']=='chapters-carousel-last-update'){
 					print_chapter_item_last_update($row);
+				} else if ($section['type']=='comments') {
+					print_comment_home($row);
 				} else {
 					print_carousel_item($row, $section['specific_version'], $section['use_version_param']);
 				}

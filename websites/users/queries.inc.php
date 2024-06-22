@@ -130,12 +130,40 @@ function query_insert_user_blacklist($user_id, $blacklisted_fansub_id) {
 	return query($final_query);
 }
 
-function query_insert_comment($user_id, $version_id, $text) {
+function query_insert_comment($user_id, $version_id, $text, $has_spoilers) {
 	$user_id = escape($user_id);
 	$version_id = escape($version_id);
 	$text = escape($text);
-	$final_query = "INSERT INTO comment (user_id, version_id, type, fansub_id, reply_to_comment_id, last_replied, text, created, updated)
-			VALUES ($user_id, $version_id, 'user', NULL, NULL, CURRENT_TIMESTAMP, '$text', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+	$has_spoilers = escape($has_spoilers);
+	$final_query = "INSERT INTO comment (user_id, version_id, type, fansub_id, reply_to_comment_id, last_replied, text, last_seen_episode_id, has_spoilers, created, updated)
+			VALUES ($user_id, $version_id, 'user', NULL, NULL, CURRENT_TIMESTAMP, '$text', (SELECT last_seen_episode_id FROM user_version_followed WHERE user_id=$user_id AND version_id=$version_id AND last_seen_episode_id<>-1), $has_spoilers, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+	return query($final_query);
+}
+
+function query_comment_episode_title($comment_id) {
+	$comment_id = intval($comment_id);
+	$final_query = "SELECT IF(c.last_seen_episode_id IS NULL,
+					NULL,
+					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
+						IF(s.type='manga','Llegit','Vist'),
+						IF(s.show_episode_numbers=1,
+							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
+								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
+							),
+							IF(et.title IS NOT NULL,
+								et.title,
+								e.description
+							)
+						)
+					)
+				) episode_title
+			FROM comment c
+			LEFT JOIN episode e ON c.last_seen_episode_id=e.id
+			LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=c.version_id
+			LEFT JOIN series s ON e.series_id=s.id
+			LEFT JOIN division d ON e.division_id=d.id
+			WHERE c.id=$comment_id";
 	return query($final_query);
 }
 

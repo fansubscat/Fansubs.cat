@@ -31,6 +31,7 @@ var lastMoveY;
 var inactivityTimeout;
 var activityCheckInterval;
 var currentPlayRate = 1;
+var spoilerCheckedAutomatically = false;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -691,7 +692,7 @@ function applyMangaReaderType(type) {
 
 function showMangaReaderConfig() {
 	var disabled = (currentSourceData.default_reader_type=='strip');
-	showCustomDialog('Opcions de lectura', '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">Lector de manga</div><div class="reader-settings-data-header-subtitle">'+(disabled ? 'Aquest manga no permet triar cap lector diferent: es mostra sempre com a tira vertical.' : 'Tria quin lector de manga vols utilitzar: el recomanat per a cada manga, sempre en sentit oriental (de dreta a esquerra), sempre en sentit occidental (d’esquerra a dreta) o sempre en tira vertical.')+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="0"'+(currentSourceData.user_reader_preference==0 ? ' selected' : '')+'>Opció recomanada</option><option value="1"'+(currentSourceData.user_reader_preference==1 ? ' selected' : '')+'>Sentit oriental</option><option value="2"'+(currentSourceData.user_reader_preference==2 ? ' selected' : '')+'>Sentit occidental</option><option value="3"'+(disabled || currentSourceData.user_reader_preference==3 ? ' selected' : '')+'>Tira vertical</option></select></div><br><hr><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de Fansubs.cat per al <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a>.', null, true, true, [
+	showCustomDialog('Opcions de lectura', '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">Lector de manga</div><div class="reader-settings-data-header-subtitle">'+(disabled ? 'Aquest manga no permet triar cap lector diferent: es mostra sempre com a tira vertical.' : 'Tria quin lector de manga vols utilitzar: el recomanat per a cada manga, sempre en sentit oriental (de dreta a esquerra), sempre en sentit occidental (d’esquerra a dreta) o sempre en tira vertical.')+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="0"'+(currentSourceData.user_reader_preference==0 ? ' selected' : '')+'>Opció recomanada</option><option value="1"'+(currentSourceData.user_reader_preference==1 ? ' selected' : '')+'>Sentit oriental</option><option value="2"'+(currentSourceData.user_reader_preference==2 ? ' selected' : '')+'>Sentit occidental</option><option value="3"'+(disabled || currentSourceData.user_reader_preference==3 ? ' selected' : '')+'>Tira vertical</option></select></div><br><hr><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de '+BASE_DOMAIN.charAt(0).toUpperCase()+BASE_DOMAIN.slice(1)+' per al <a class="secondary-link" href="https://mihon.app/" target="_blank">Mihon</a>, <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a> o similars.', null, true, true, [
 		{
 			text: 'D’acord',
 			class: 'normal-button',
@@ -1578,7 +1579,7 @@ function markAsSeen(fileId, dontAsk) {
 	} else if ($('#seen_behavior').val()==-1) {
 		//-1: User logged out, do nothing
 		if (!dontAsk) {
-			showAlert('Cal iniciar la sessió', 'Per a poder fer un seguiment dels capítols, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+			showAlert('Cal iniciar la sessió', 'Per a poder fer un seguiment dels capítols, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
 		}
 		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-info-seen-cell input[type="checkbox"]').prop('checked', false);
 	} else {
@@ -1596,6 +1597,7 @@ function executeMarkAsSeen(fileIds, isSeen) {
 	formData.append("action", isSeen ? 'add' : 'remove');
 	for (var i=0;i<fileIds.length;i++) {
 		formData.append("file_id[]", fileIds[i]);
+		toggleCommentsWithSpoilersForSeenFile(fileIds[i], isSeen);
 	}
 	var url = getBaseUrl()+'/mark_as_seen.php';
 	if (!enableDebug) {
@@ -1616,13 +1618,29 @@ function executeMarkAsSeen(fileIds, isSeen) {
 	}
 }
 
+function toggleCommentsWithSpoilersForSeenFile(fileId, isSeen) {
+	var episodeId = $($('.file-launcher[data-file-id="'+fileId+'"]').get(0)).attr('data-episode-id');
+	
+	for (element of $('.comment[data-episode-id="'+episodeId+'"][data-version-id="'+$('.version-tab-selected').attr('data-version-id')+'"')) {
+		if (isSeen) {
+			$(element).find('.comment-with-spoiler .comment-spoiler-warning').addClass('hidden');
+			$(element).find('.comment-with-spoiler').addClass('comment-with-spoiler-shown');
+		} else {
+			$(element).find('.comment-with-spoiler .comment-spoiler-warning').removeClass('hidden');
+			$(element).find('.comment-with-spoiler').removeClass('comment-with-spoiler-shown');
+			$(element).find('.comment-with-spoiler .spoiler-show-button').removeClass('hidden');
+		}
+	}
+
+}
+
 function bookmarkRemoved(seriesId) {
 	//Just ignore it, this is a callback not used in the catalogue section
 }
 
 function toggleBookmarkFromSeriesPage(){
 	if ($('body.user-logged-in').length==0) {
-		showAlert('Cal iniciar la sessió', 'Per a poder afegir elements a la teva llista, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		showAlert('Cal iniciar la sessió', 'Per a poder afegir elements a la teva llista, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
 		return;
 	}
 	var action;
@@ -1650,10 +1668,26 @@ function toggleBookmarkFromSeriesPage(){
 	});
 }
 
+function toggleCommentSpoiler(element) {
+	$(element).parent().parent().parent().addClass('comment-with-spoiler-shown');
+	$(element).parent().addClass('hidden');
+}
+
 function checkCommentPossible() {
 	if ($('body.user-logged-in').length==0) {
-		showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
 		return;
+	} else if ($('#show_comment_warning').val()==1) {
+		showCustomDialog('Abans d’escriure un comentari', 'Tothom podrà veure el teu nom d’usuari, el teu avatar i l’últim capítol vist en el moment de comentar.<br>Si creus que el comentari pot ser un espòiler per a algú que vagi més endarrerit, marca’n la casella corresponent.<br>No incloguis mai cap mena d’informació personal als comentaris.', null, true, true, [
+			{
+				text: 'D’acord',
+				class: 'normal-button',
+				onclick: function(){
+					$('#show_comment_warning').val(0);
+					closeCustomDialog();
+				}
+			}
+		]);
 	}
 }
 
@@ -1663,7 +1697,8 @@ function sendUserComment(button) {
 
 	var values = {
 		text: $(button.parent().find('textarea').get(0)).val(),
-		version_id: $('.version-tab-selected').attr('data-version-id')
+		version_id: $('.version-tab-selected').attr('data-version-id'),
+		has_spoilers: (button.parent().find('.comment-has-spoiler').length>0 ? $(button.parent().find('.comment-has-spoiler').get(0)).is(':checked') : false)
 	};
 
 	$.post({
@@ -1676,8 +1711,10 @@ function sendUserComment(button) {
 		var response = JSON.parse(data);
 		$(button.parent().find('textarea').get(0)).val('');
 		button.parent().find('textarea').get(0).parentNode.dataset.replicatedValue=this.value;
-		button.closest('.comment-fake').after('<div class="comment"><img class="comment-avatar" src="'+$('.comment-fake .comment-avatar').attr('src')+'"><div class="comment-message">'+response.text+'<div class="comment-author"><span class="comment-user">'+response.username+'</span>&nbsp;•&nbsp;<span class="comment-date">ara mateix</span></div></div></div>');
+		button.closest('.comment-fake').after('<div class="comment"><img class="comment-avatar" src="'+$('.comment-fake .comment-avatar').attr('src')+'"><div class="comment-message">'+response.text+'<div class="comment-author"><span class="comment-user">'+response.username+'</span>&nbsp;•&nbsp;<span class="comment-date">ara mateix</span>'+(response.episode_title!=null ? '&nbsp;•&nbsp;'+response.episode_title : '')+(response.has_spoilers ? '&nbsp;<span class="fa fa-warning" title="Marcat per l’usuari com a «conté possibles espòilers»"></span>' : '')+'</div></div></div>');
 		button.prop('disabled', false);
+		button.parent().find('.comment-has-spoiler').prop('checked', false);
+		spoilerCheckedAutomatically = false;
 		button.html('<i class="fa fa-fw fa-paper-plane"></i>');
 	}).fail(function(data) {
 		try {
@@ -1693,6 +1730,16 @@ function sendUserComment(button) {
 		button.prop('disabled', false);
 		button.html('<i class="fa fa-fw fa-paper-plane"></i>');
 	});
+}
+
+function checkForAutoSpoilers(textarea) {
+	var text = textarea.value.toLocaleLowerCase();
+	if (!spoilerCheckedAutomatically) {
+		if (text.includes('mort') || text.includes('morir') || text.includes('morís') || text.includes('inespera') || text.includes('final')) {
+			spoilerCheckedAutomatically = true;
+			$(textarea).parent().find('.comment-has-spoiler').prop('checked', true);
+		}
+	}
 }
 
 function removeFromContinueWatching(element, fileId){
@@ -2095,7 +2142,7 @@ function requestFileData(fileId) {
 
 function applyVersionRating(pressedButton, oppositeButton, ratingClicked) {
 	if ($('body.user-logged-in').length==0) {
-		showAlert('Cal iniciar la sessió', 'Per a poder valorar la qualitat d’una versió, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+		showAlert('Cal iniciar la sessió', 'Per a poder valorar la qualitat d’una versió, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
 		return;
 	}
 	var value;
@@ -2430,7 +2477,7 @@ $(document).ready(function() {
 
 		$(".comment-send").click(function(){
 			if ($('body.user-logged-in').length==0) {
-				showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat a Fansubs.cat.<br>Pots registrar-t’hi a la part superior dreta del web.');
+				showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
 			}
 			else if ($($(this).parent().find('textarea').get(0)).val()!='') {
 				sendUserComment($(this));

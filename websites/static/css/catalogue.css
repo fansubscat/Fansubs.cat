@@ -2109,19 +2109,61 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	border-right-color: rgb(var(--comment-reply-background-color));
 }
 
+.comment-spoiler-warning {
+	font-weight: bold;
+	padding-bottom: 1rem;
+}
+
+.spoiler-show-button {
+	font-weight: normal;
+}
+
+.comment-with-spoiler:not(.comment-with-spoiler-shown) .comment-text {
+	filter: blur(0.75rem);
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none;
+}
+
+.comment-checkbox {
+	display: none;
+	flex-direction: row;
+	align-items: center;
+	padding-left: 0.7rem;
+	padding-bottom: 1rem;
+	padding-top: 0.2rem;
+}
+
+textarea:valid ~ .comment-checkbox {
+	display: flex;
+}
+
+.comment-checkbox input[type="checkbox"] {
+	height: 1.5rem;
+	width: 1.5rem;
+	font-size: 1.25rem;
+	border-radius: 0.5rem;
+}
+
+.comment-checkbox label {
+	margin-top: 0;
+	margin-left: 0.5rem;
+	font-size: 1.25rem;
+}
+
 .comment + .comment {
 	margin-top: 1rem;
 }
 
 .comment-author {
-	display: flex;
-	align-items: center;
 	margin-top: 1rem;
 }
 
 .comment-avatar {
 	width: 5rem;
 	height: 5rem;
+	min-width: 5rem;
+	min-height: 5rem;
 	border-radius: 50%;
 }
 
@@ -2155,6 +2197,23 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	margin-top: 0;
 	padding: 1rem;
 	align-self: end;
+}
+
+.home-comments .static-slide + .static-slide {
+	margin-top: 1rem;
+}
+
+.home-comments .comment-author {
+	margin-top: 0;
+	margin-bottom: 1rem;
+}
+
+.home-comments .comment-text {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .grow-wrap {
@@ -2656,6 +2715,14 @@ input:checked + .viewed-slider:before {
 		filter: brightness(0.8);
 		transform: scale(1.025);
 	}
+
+	.spoiler-show-button a:hover {
+		opacity: 0.7;
+	}
+
+	.comment-author a:hover {
+		opacity: 0.7;
+	}
 }
 
 @media (max-width: 1920px){
@@ -3115,9 +3182,20 @@ input:checked + .viewed-slider:before {
 		margin-top: 0.5rem;
 	}
 
+	.comment-spoiler-warning {
+		padding-bottom: 0.5rem;
+	}
+
+	.home-comments .comment-author {
+		margin-top: 0;
+		margin-bottom: 0.5rem;
+	}
+
 	.comment-avatar {
 		width: 3rem;
 		height: 3rem;
+		min-width: 3rem;
+		min-height: 3rem;
 	}
 
 	.comment + .comment {

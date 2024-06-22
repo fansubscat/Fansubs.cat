@@ -3,9 +3,9 @@ require_once(dirname(__FILE__)."/db.inc.php");
 
 function query_user_by_username($username) {
 	$username = escape($username);
-	$final_query = "SELECT *
-			FROM user
-			WHERE username='$username'";
+	$final_query = "SELECT u.*, (SELECT COUNT(*) FROM comment c WHERE c.user_id=u.id AND c.created>='2024-06-22 00:00:00') num_comments
+			FROM user u
+			WHERE u.username='$username'";
 	return query($final_query);
 }
 

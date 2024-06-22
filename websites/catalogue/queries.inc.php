@@ -949,6 +949,61 @@ function query_home_best_rated($user, $type, $max_items) {
 	return query($final_query);
 }
 
+function query_home_comments($user, $max_items) {
+	$max_items = intval($max_items);
+	$final_query = "SELECT c.*,
+				u.username,
+				u.avatar_filename,
+				f.id fansub_id,
+				f.name fansub_name,
+				UNIX_TIMESTAMP(c.created) created_timestamp,
+				IF(c.last_seen_episode_id IS NULL,
+					NULL,
+					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
+						IF(s.type='manga','Llegit','Vist'),
+						IF(s.show_episode_numbers=1,
+							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
+								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
+							),
+							IF(et.title IS NOT NULL,
+								et.title,
+								e.description
+							)
+						)
+					)
+				) episode_title,
+				IF(".(!empty($user) ? "EXISTS(SELECT * FROM user_file_seen_status ufss WHERE ufss.user_id=${user['id']} AND ufss.file_id IN (SELECT id FROM file f WHERE f.episode_id=c.last_seen_episode_id AND f.version_id=c.version_id) AND ufss.is_seen=1)" : '0').",
+					1,
+					0
+				) is_seen_by_user,
+				s.name series_name,
+				s.slug series_slug,
+				(SELECT COUNT(*) FROM version v2 WHERE v2.series_id=s.id AND v2.is_hidden=0) total_versions,
+				(SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ')
+					FROM rel_version_fansub svf
+					LEFT JOIN fansub sf ON sf.id=svf.fansub_id
+					WHERE svf.version_id=c.version_id
+				) fansubs
+			FROM comment c
+			LEFT JOIN user u ON c.user_id=u.id
+			LEFT JOIN fansub f ON c.fansub_id=f.id
+			LEFT JOIN episode e ON c.last_seen_episode_id=e.id
+			LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=c.version_id
+			LEFT JOIN version v ON c.version_id=v.id
+			LEFT JOIN series s ON v.series_id=s.id
+			LEFT JOIN division d ON e.division_id=d.id
+			WHERE c.reply_to_comment_id IS NULL
+				AND s.type='".CATALOGUE_ITEM_TYPE."'
+				AND ".get_internal_hentai_condition()."
+				AND ".get_internal_blacklisted_fansubs_condition($user)."
+				AND ".get_internal_cancelled_projects_condition($user)."
+				AND ".get_internal_lost_projects_condition($user)."
+			ORDER BY c.created DESC
+			LIMIT $max_items";
+	return query($final_query);
+}
+
 function query_series_by_slug($slug, $include_hidden) {
 	$slug = escape($slug);
 	$final_query = "SELECT s.*, 
@@ -1359,13 +1414,44 @@ function query_version_by_file_id($file_id) {
 	return query($final_query);
 }
 
-function query_version_comments($version_id) {
+function query_version_comments($version_id, $user) {
 	$version_id = intval($version_id);
-	$final_query = "SELECT c.*, u.username, u.avatar_filename, f.id fansub_id, f.name fansub_name, UNIX_TIMESTAMP(c.created) created_timestamp
+	$final_query = "SELECT c.*,
+				u.username,
+				u.avatar_filename,
+				f.id fansub_id,
+				f.name fansub_name,
+				UNIX_TIMESTAMP(c.created) created_timestamp,
+				IF(c.last_seen_episode_id IS NULL,
+					NULL,
+					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
+						IF(s.type='manga','Llegit','Vist'),
+						IF(s.show_episode_numbers=1,
+							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
+								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
+							),
+							IF(et.title IS NOT NULL,
+								et.title,
+								e.description
+							)
+						)
+					)
+				) episode_title,
+				IF(".(!empty($user) ? "EXISTS(SELECT * FROM user_file_seen_status ufss WHERE ufss.user_id=${user['id']} AND ufss.file_id IN (SELECT id FROM file f WHERE f.episode_id=c.last_seen_episode_id AND f.version_id=c.version_id) AND ufss.is_seen=1)" : '0').",
+					1,
+					0
+				) is_seen_by_user
 			FROM comment c
 			LEFT JOIN user u ON c.user_id=u.id
 			LEFT JOIN fansub f ON c.fansub_id=f.id
-			WHERE c.version_id=$version_id AND reply_to_comment_id IS NULL
+			LEFT JOIN episode e ON c.last_seen_episode_id=e.id
+			LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=c.version_id
+			LEFT JOIN version v ON c.version_id=v.id
+			LEFT JOIN series s ON v.series_id=s.id
+			LEFT JOIN division d ON e.division_id=d.id
+			WHERE c.version_id=$version_id
+				AND c.reply_to_comment_id IS NULL
 			ORDER BY c.last_replied DESC";
 	return query($final_query);
 }

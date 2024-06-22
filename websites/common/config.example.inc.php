@@ -1,7 +1,7 @@
 <?php
 //This is an example file. Edit it accordingly and rename it to "config.inc.php"
 
-define('VERSION', '5.1.10');
+define('VERSION', '5.2.0');
 
 //Database access
 define('DB_HOST', 'YOUR_DB_HOST_HERE');
@@ -17,6 +17,7 @@ if (str_ends_with(strtolower($_SERVER['HTTP_HOST']), HENTAI_DOMAIN)) {
 	define('CURRENT_DOMAIN', HENTAI_DOMAIN);
 	define('OTHER_DOMAIN', MAIN_DOMAIN);
 	define('CURRENT_SITE_NAME', 'Hentai.cat');
+	define('CURRENT_SITE_NAME_ACCOUNT', 'Hentai.cat i Fansubs.cat');
 	define('SITE_IS_HENTAI', TRUE);
 	define('SOCIAL_LINK_BLUESKY', 'https://bsky.app/profile/hentaipuntcat.bsky.social');
 	define('SOCIAL_LINK_MASTODON', 'https://mastodon.social/@hentaipuntcat');
@@ -26,6 +27,7 @@ if (str_ends_with(strtolower($_SERVER['HTTP_HOST']), HENTAI_DOMAIN)) {
 	define('CURRENT_DOMAIN', MAIN_DOMAIN);
 	define('OTHER_DOMAIN', HENTAI_DOMAIN);
 	define('CURRENT_SITE_NAME', 'Fansubs.cat');
+	define('CURRENT_SITE_NAME_ACCOUNT', 'Fansubs.cat');
 	define('SITE_IS_HENTAI', FALSE);
 	define('SOCIAL_LINK_BLUESKY', 'https://bsky.app/profile/fansubscat.bsky.social');
 	define('SOCIAL_LINK_MASTODON', 'https://mastodont.cat/@fansubscat');

@@ -39,6 +39,8 @@ CREATE TABLE `comment` (
   `reply_to_comment_id` int(11) DEFAULT NULL,
   `last_replied` timestamp NOT NULL DEFAULT current_timestamp(),
   `text` text NOT NULL,
+  `last_seen_episode_id` int(11) DEFAULT NULL,
+  `has_spoilers` tinyint(1) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -394,7 +396,8 @@ ALTER TABLE `comment`
   ADD KEY `comment_ibfk_1` (`user_id`),
   ADD KEY `comment_ibfk_2` (`version_id`),
   ADD KEY `comment_ibfk_3` (`fansub_id`),
-  ADD KEY `comment_ibfk_4` (`reply_to_comment_id`);
+  ADD KEY `comment_ibfk_4` (`reply_to_comment_id`),
+  ADD KEY `comment_ibfk_5` (`last_seen_episode_id`);
 
 ALTER TABLE `community`
   ADD PRIMARY KEY (`id`);
@@ -577,7 +580,8 @@ ALTER TABLE `comment`
   ADD CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `comment_ibfk_3` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `comment_ibfk_4` FOREIGN KEY (`reply_to_comment_id`) REFERENCES `comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `comment_ibfk_4` FOREIGN KEY (`reply_to_comment_id`) REFERENCES `comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `comment_ibfk_5` FOREIGN KEY (`last_seen_episode_id`) REFERENCES `episode` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `division`
   ADD CONSTRAINT `division_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

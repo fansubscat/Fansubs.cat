@@ -52,6 +52,7 @@ require_once("../common.fansubs.cat/header.inc.php");
 					<input id="series_id" type="hidden" value="<?php echo htmlspecialchars($series['id']); ?>">
 					<input id="catalogue_type" type="hidden" value="<?php echo SITE_INTERNAL_NAME; ?>">
 					<input id="seen_behavior" type="hidden" value="<?php echo !empty($user) ? $user['previous_chapters_read_behavior'] : -1; ?>">
+					<input id="show_comment_warning" type="hidden" value="<?php echo !empty($user) ? ($user['num_comments']>0 ? 0 : 1) : 1; ?>">
 					<div class="series-header">
 						<img class="background" src="<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
 						<div class="series-data">
@@ -506,10 +507,10 @@ while ($version = mysqli_fetch_assoc($result)) {
 								</div>
 							</div>
 							<div class="section-content extra-content">
-								<h2 class="section-title-main"><i class="fa fa-fw fa-comment"></i> Comentaris</h2>
+								<h2 class="section-title-main"><a name="comentaris"></a><i class="fa fa-fw fa-comment"></i> Comentaris</h2>
 <?php
 
-	$resultcom = query_version_comments($version['id']);
+	$resultcom = query_version_comments($version['id'], $user);
 	$total_comments = mysqli_num_rows($resultcom);
 ?>
 								<div class="comments-list">
@@ -518,9 +519,13 @@ while ($version = mysqli_fetch_assoc($result)) {
 										<div class="comment-message comment-input">
 											<div class="comment-send-form">
 												<div class="grow-wrap">
-													<textarea placeholder="Escriu un comentari!" onfocus="checkCommentPossible();" oninput="this.parentNode.dataset.replicatedValue=this.value;" rows="1"></textarea>
+													<textarea placeholder="Escriu un comentari!" onfocus="checkCommentPossible();" oninput="this.parentNode.dataset.replicatedValue=this.value;checkForAutoSpoilers(this);" rows="1" required></textarea>
+													<div class="comment-checkbox">
+														<input class="comment-has-spoiler" id="comment-has-spoiler-<?php echo $version['id']; ?>" type="checkbox">
+														<label for="comment-has-spoiler-<?php echo $version['id']; ?>" class="for-checkbox">Conté possibles espòilers</label>
+													</div>
 												</div>
-												<button class="normal-button comment-send"><i class="fa fa-fw fa-paper-plane"></i></button>
+												<button class="normal-button comment-send" title="Publica el comentari"><i class="fa fa-fw fa-paper-plane"></i></button>
 											</div>
 										</div>
 									</div>
@@ -530,7 +535,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 		print_comment($comment, $i>=3);
 		$resultrep = query_comment_replies($comment['id']);
 		while ($reply = mysqli_fetch_assoc($resultrep)) {
-			print_comment($reply, FALSE);
+			print_comment($reply, $i>=3);
 		}
 		mysqli_free_result($resultrep);
 ?>

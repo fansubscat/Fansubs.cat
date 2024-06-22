@@ -1,5 +1,18 @@
 # Registre de canvis
 
+## 2024-06-22 - Versió 5.2.0
+- **Catàleg:**
+	- Els comentaris desen el darrer capítol vist per l’usuari i permeten indicar si hi ha espòilers.
+	- Els darrers comentaris són visibles a la pàgina principal del catàleg.
+	- Les respostes dels fansubs també s’oculten correctament quan hi ha comentaris ocults.
+	- Els avatars dels comentaris es mostren de la mida correcta quan encara no s’han carregat.
+	- S’indica que l’extensió de manga està disponible també per al Mihon.
+	- Es canvien alguns missatges a l’usuari perquè siguin genèrics en lloc de contenir el nom del portal.
+- **Usuaris:**
+	- Els correus del portal de hentai indiquen que el compte és compartit amb el web principal.
+- **Administració:**
+	- Es corregeix el text «Edició versions de manga» a «Edició de versions de manga».
+
 ## 2024-06-10 - Versió 5.1.10
 - **Catàleg:**
 	- Es corregeix que les antigues URLs de sèries hentai redirigissin per error a un domini inexistent.
