@@ -1673,7 +1673,7 @@ function toggleCommentSpoiler(element) {
 	$(element).parent().addClass('hidden');
 }
 
-function checkCommentPossible() {
+function checkCommentPossible(element) {
 	if ($('body.user-logged-in').length==0) {
 		showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
 		return;
@@ -1685,6 +1685,7 @@ function checkCommentPossible() {
 				onclick: function(){
 					$('#show_comment_warning').val(0);
 					closeCustomDialog();
+					element.focus();
 				}
 			}
 		]);
