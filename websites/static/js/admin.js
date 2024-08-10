@@ -1102,7 +1102,7 @@ function checkNumberOfLinks() {
 			}
 		}
 	} else { //Manga only
-		var validFiles = $('.episode-container .fa-check');
+		var validFiles = $('.episode-container span .fa-check');
 		for (var i=0;i<validFiles.length;i++) {
 			if ($(validFiles[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')=='- Introdueix un títol -' && $(validFiles[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
 				$(validFiles[i]).closest('.episode-container').find('.episode-title-input').focus();
@@ -1134,7 +1134,7 @@ function checkNumberOfLinks() {
 	var totalEpisodes = $('.episode-container').length;
 	var validFiles = 0;
 	if ($('#type').val()=='manga') {
-		validFiles = $('.episode-container .fa-check').length;
+		validFiles = $('.episode-container span .fa-check').length;
 	} else {
 		var episodes = $('.episode-container');
 		for (var i=0;i<episodes.length;i++){
