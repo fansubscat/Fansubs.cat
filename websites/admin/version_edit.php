@@ -137,11 +137,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['storage_processing']=0;
 		}
-		if (!empty($_POST['default_resolution'])) {
-			$data['default_resolution']="'".escape($_POST['default_resolution'])."'";
-		} else {
-			$data['default_resolution']="NULL";
-		}
 
 		$divisions=array();
 
@@ -337,6 +332,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				crash("Dades invàlides: manca folder de la carpeta remota");
 			}
+			if (!empty($_POST['form-remote_folders-list-default_resolution-'.$i])) {
+				$remote_folder['default_resolution']=escape($_POST['form-remote_folders-list-default_resolution-'.$i]);
+			} else {
+				crash("Dades invàlides: manca default_resolution de la carpeta remota");
+			}
+			if (!empty($_POST['form-remote_folders-list-default_duration-'.$i])) {
+				$remote_folder['default_duration']=escape(convert_from_hh_mm_ss($_POST['form-remote_folders-list-default_duration-'.$i]));
+			} else {
+				crash("Dades invàlides: manca default_duration de la carpeta remota");
+			}
 			if (!empty($_POST['form-remote_folders-list-division_id-'.$i])) {
 				$remote_folder['division_id']=escape($_POST['form-remote_folders-list-division_id-'.$i]);
 			} else {
@@ -365,7 +370,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			log_action("update-version", "S’ha actualitzat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",default_resolution=".$data['default_resolution'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -556,9 +561,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM remote_folder WHERE version_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($remote_folders as $remote_folder) {
 				if ($remote_folder['id']==-1) {
-					query("INSERT INTO remote_folder (version_id,remote_account_id,folder,division_id,is_active,created,created_by,updated,updated_by) VALUES (".$data['id'].",".$remote_folder['remote_account_id'].",'".$remote_folder['folder']."',".$remote_folder['division_id'].",".$remote_folder['is_active'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+					query("INSERT INTO remote_folder (version_id,remote_account_id,folder,default_resolution,default_duration,division_id,is_active,created,created_by,updated,updated_by) VALUES (".$data['id'].",".$remote_folder['remote_account_id'].",'".$remote_folder['folder']."','".$remote_folder['default_resolution']."',".$remote_folder['default_duration'].",".$remote_folder['division_id'].",".$remote_folder['is_active'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 				} else {
-					query("UPDATE remote_folder SET remote_account_id=".$remote_folder['remote_account_id'].",folder='".$remote_folder['folder']."',division_id=".$remote_folder['division_id'].",is_active=".$remote_folder['is_active'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$remote_folder['id']);
+					query("UPDATE remote_folder SET remote_account_id=".$remote_folder['remote_account_id'].",folder='".$remote_folder['folder']."',default_resolution='".$remote_folder['default_resolution']."',default_duration=".$remote_folder['default_duration'].",division_id=".$remote_folder['division_id'].",is_active=".$remote_folder['is_active'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$remote_folder['id']);
 				}
 			}
 
@@ -574,7 +579,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S’ha creat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."»");
-			query("INSERT INTO version (series_id,status,is_missing_episodes,is_featurable,is_always_featured,is_hidden,completed_date,storage_folder,storage_processing,default_resolution,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['is_featurable'].",".$data['is_always_featured'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",".$data['default_resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,is_missing_episodes,is_featurable,is_always_featured,is_hidden,completed_date,storage_folder,storage_processing,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['is_featurable'].",".$data['is_always_featured'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -615,7 +620,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 			foreach ($remote_folders as $remote_folder) {
-				query("INSERT INTO remote_folder (version_id,remote_account_id,folder,division_id,is_active,created,created_by,updated,updated_by) VALUES (".$inserted_id.",".$remote_folder['remote_account_id'].",'".$remote_folder['folder']."',".$remote_folder['division_id'].",".$remote_folder['is_active'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+				query("INSERT INTO remote_folder (version_id,remote_account_id,folder,default_resolution,default_duration,division_id,is_active,created,created_by,updated,updated_by) VALUES (".$inserted_id.",".$remote_folder['remote_account_id'].",'".$remote_folder['folder']."','".$remote_folder['default_resolution']."',".$remote_folder['default_duration'].",".$remote_folder['division_id'].",".$remote_folder['is_active'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			}
 
 			foreach ($divisions as $division) {
@@ -778,7 +783,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-<?php echo $type!='manga' ? '4' : '8'; ?>">
+							<div class="col-sm-8">
 								<div class="mb-3">
 									<label for="form-status" class="mandatory">Estat</label>
 									<select class="form-select" name="status" id="form-status" required>
@@ -791,18 +796,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</select>
 								</div>
 							</div>
-<?php
-	if ($type!='manga') {
-?>
-							<div class="col-sm-4">
-								<div class="mb-3">
-									<label for="form-default_resolution">Resolució per defecte <small class="text-muted">(per a l’obtenció automàtica d’enllaços)</small></label>
-									<input id="form-default_resolution" name="default_resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($row['default_resolution']); ?>" maxlength="200" placeholder="- Selecciona o introdueix una resolució -"/>
-								</div>
-							</div>
-<?php
-	}
-?>
 							<div class="col-sm">
 								<div class="mb-3">
 									<label for="form-featurable_check">Recomanacions</label>
@@ -845,7 +838,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
-			$resultfo = query("SELECT f.*, ra.type FROM remote_folder f LEFT JOIN remote_account ra ON f.remote_account_id=ra.id WHERE f.version_id=".escape($_GET['id'])." ORDER BY f.id ASC");
+			$resultfo = query("SELECT f.* FROM remote_folder f LEFT JOIN remote_account ra ON f.remote_account_id=ra.id WHERE f.version_id=".escape($_GET['id'])." ORDER BY f.id ASC");
 			$remote_folders = array();
 			while ($rowfo = mysqli_fetch_assoc($resultfo)) {
 				array_push($remote_folders, $rowfo);
@@ -861,15 +854,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<option value="">- Selecciona un compte remot -</option>
 <?php
 		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-			$extra_where = ' AND a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
+			$where = 'a.fansub_id='.$_SESSION['fansub_id'];
 		} else {
-			$extra_where = '';
+			$where = '1';
 		}
 
-		$resulta = query("SELECT a.* FROM remote_account a WHERE a.type<>'storage'$extra_where ORDER BY a.type='storage' DESC, a.name ASC");
+		$resulta = query("SELECT a.* FROM remote_account a WHERE $where ORDER BY a.fansub_id IS NULL DESC, a.name ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-											<option value="<?php echo $arow['id']; ?>"<?php echo $arow['type']=='storage' ? ' class="not-syncable"' : ''; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Emmagatzematge').': '.htmlspecialchars($arow['name']); ?></option>
+											<option value="<?php echo $arow['id']; ?>"><?php echo htmlspecialchars($arow['name']); ?></option>
 <?php
 		}
 		mysqli_free_result($resulta);
@@ -890,8 +883,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="remote_folders-list-table" data-count="<?php echo count($remote_folders); ?>">
 											<thead>
 												<tr>
-													<th style="width: 25%;" class="mandatory">Compte</th>
+													<th style="width: 20%;" class="mandatory">Compte</th>
 													<th class="mandatory">Carpeta</th>
+													<th style="width: 10%;" class="mandatory">Resolució</th>
+													<th style="width: 10%;" class="mandatory">Durada</th>
 													<th style="width: 15%;"><?php echo $division_name; ?></th>
 													<th class="text-center" style="width: 10%;">Sincronitza</th>
 													<th class="text-center" style="width: 5%;">Acció</th>
@@ -899,7 +894,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											</thead>
 											<tbody>
 												<tr id="remote_folders-list-table-empty" class="<?php echo count($remote_folders)>0 ? 'd-none' : ''; ?>">
-													<td colspan="5" class="text-center">- No hi ha configurada cap carpeta -</td>
+													<td colspan="7" class="text-center">- No hi ha configurada cap carpeta -</td>
 												</tr>
 <?php
 		for ($j=0;$j<count($remote_folders);$j++) {
@@ -910,15 +905,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															<option value="">- Selecciona un compte remot -</option>
 <?php
 			if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-				$extra_where = ' AND a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
+				$where = 'a.fansub_id='.$_SESSION['fansub_id'];
 			} else {
-				$extra_where = '';
+				$where = '1';
 			}
 
-			$resulta = query("SELECT a.* FROM remote_account a WHERE a.type<>'storage'$extra_where ORDER BY a.type='storage' DESC, a.name ASC");
+			$resulta = query("SELECT a.* FROM remote_account a WHERE $where ORDER BY a.fansub_id IS NULL DESC, a.name ASC");
 			while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
-															<option value="<?php echo $arow['id']; ?>"<?php echo $remote_folders[$j]['remote_account_id']==$arow['id'] ? " selected" : ""; ?><?php echo $arow['type']=='storage' ? ' class="not-syncable"' : ''; ?>><?php echo ($arow['type']=='mega' ? 'MEGA' : 'Emmagatzematge').': '.htmlspecialchars($arow['name']); ?></option>
+															<option value="<?php echo $arow['id']; ?>"<?php echo $remote_folders[$j]['remote_account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($arow['name']); ?></option>
 <?php
 			}
 			mysqli_free_result($resulta);
@@ -928,6 +923,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</td>
 													<td>
 														<input id="form-remote_folders-list-folder-<?php echo $j+1; ?>" name="form-remote_folders-list-folder-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($remote_folders[$j]['folder']); ?>" maxlength="200" required/>
+													</td>
+													<td>
+														<input id="form-remote_folders-list-default_resolution-<?php echo $j+1; ?>" name="form-remote_folders-list-default_resolution-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($remote_folders[$j]['default_resolution']); ?>" maxlength="200" required placeholder="- Tria -" list="resolution-options"/>
+													</td>
+													<td>
+														<input id="form-remote_folders-list-default_duration-<?php echo $j+1; ?>" name="form-remote_folders-list-default_duration-<?php echo $j+1; ?>" type="time" step="1" class="form-control" value="<?php echo convert_to_hh_mm_ss($remote_folders[$j]['default_duration']); ?>" required/>
 													</td>
 													<td>
 														<select id="form-remote_folders-list-division_id-<?php echo $j+1; ?>" name="form-remote_folders-list-division_id-<?php echo $j+1; ?>" class="form-select">
@@ -944,7 +945,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														</select>
 													</td>
 													<td class="text-center align-middle">
-														<input id="form-remote_folders-list-is_active-<?php echo $j+1; ?>" name="form-remote_folders-list-is_active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $remote_folders[$j]['is_active']==1? " checked" : ""; ?><?php echo $remote_folders[$j]['type']=='storage'? " disabled" : ""; ?>/>
+														<input id="form-remote_folders-list-is_active-<?php echo $j+1; ?>" name="form-remote_folders-list-is_active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $remote_folders[$j]['is_active']==1? " checked" : ""; ?>/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-remote_folders-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionRemoteFolderRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>

@@ -1,35 +1,6 @@
 <?php
 require_once("db.inc.php");
 
-function get_custom_server_files($server_base_url, $remote_folder) {
-	try {
-		$opts = array(
-			'http' => array(
-				'method' => "GET",
-				'header' => "Referer: $base_url/\r\n"
-			)
-		);
-		$context = stream_context_create($opts);
-		$results = file_get_contents(generate_storage_url($server_base_url.str_replace("&", "%26", str_replace(" ", "%20", $remote_folder)).'/'), FALSE, $context);
-	} catch (Exception $e) {
-		return array('status' => 'ko', 'code' => 1);
-	}
-
-	$files = array();
-	foreach (explode(PHP_EOL, $results) as $line) {
-		preg_match('/.*href="(.*)".*/', $line, $matches, PREG_OFFSET_CAPTURE);
-		$filename = '';
-		if (count($matches)>1) {
-			$filename = urldecode($matches[1][0]);
-		}
-
-		if (!empty($filename) && $filename!='../') {
-			array_push($files, $filename.':::'.'storage://'.$remote_folder.'/'.$filename);
-		}
-	}
-	return array('status' => 'ok', 'files' => $files);
-}
-
 session_name(ADMIN_COOKIE_NAME);
 session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
@@ -38,23 +9,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$series_id = $_GET['series_id'];
 	$remote_account_ids = $_GET['remote_account_ids'];
 	$remote_folders = $_GET['remote_folders'];
+	$default_resolutions = $_GET['default_resolutions'];
+	$default_durations = $_GET['default_durations'];
 	$division_ids = $_GET['division_ids'];
 
 	$remote_account_folders = array();
-	$count_mega = 0;
 	for($i=0;$i<count($remote_account_ids);$i++){
 		$remote_account_folder = array();
 
 		if (is_numeric($remote_account_ids[$i]) && is_numeric($division_ids[$i])){
-			$result = query("SELECT id,token,type FROM remote_account WHERE id=".escape($remote_account_ids[$i]));
+			$result = query("SELECT id,token FROM remote_account WHERE id=".escape($remote_account_ids[$i]));
 			$row = mysqli_fetch_assoc($result);
 			$remote_account_folder['remote_account_id']=$row['id'];
 			$remote_account_folder['token']=$row['token'];
-			$remote_account_folder['type']=$row['type'];
-			if ($row['type']=='mega') {
-				$count_mega++;
-			}
 			$remote_account_folder['remote_folder']=$remote_folders[$i];
+			$remote_account_folder['default_resolution']=$default_resolutions[$i];
+			$remote_account_folder['default_duration']=$default_durations[$i];
 			$remote_account_folder['division_id']=$division_ids[$i];
 			array_push($remote_account_folders, $remote_account_folder);
 		}
@@ -64,71 +34,56 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$links = array();
 
 	foreach ($remote_account_folders as $remote_account_folder) {
-		if ($remote_account_folder['type']=='mega') {
-			//Awfully ugly logic, will probably break, but for now it works.
-			//Had to do this crap with a helper script because Mega-CMD cannot be run inside the Apache process.
-			$lock_pointer = fopen(MEGA_LOCK_FILE, "w+");
+		//Awfully ugly logic, will probably break, but for now it works.
+		//Had to do this crap with a helper script because Mega-CMD cannot be run inside the Apache process.
+		$lock_pointer = fopen(MEGA_LOCK_FILE, "w+");
 
-			//We acquire a file lock to prevent two invocations at the same time.
-			//This could happen if a cron or another request is running while this one is done.
-			if (flock($lock_pointer, LOCK_EX)) {
-				file_put_contents('/tmp/mega.request',$remote_account_folder['token'].":::".$remote_account_folder['remote_folder']);
-				while (file_exists('/tmp/mega.request')){
-					sleep(1);
-				}
-				$results = file_get_contents('/tmp/mega.response');
-				unlink('/tmp/mega.response');
-				flock($lock_pointer, LOCK_UN);
-			} else {
-				echo json_encode(array(
-					"status" => 'ko',
-					"error" => "Error en la creació del fitxer de blocatge. Torna-ho a provar més tard. (codi: L)"
-				));
-				die();
+		//We acquire a file lock to prevent two invocations at the same time.
+		//This could happen if a cron or another request is running while this one is done.
+		if (flock($lock_pointer, LOCK_EX)) {
+			file_put_contents('/tmp/mega.request',$remote_account_folder['token'].":::".$remote_account_folder['remote_folder']);
+			while (file_exists('/tmp/mega.request')){
+				sleep(1);
 			}
+			$results = file_get_contents('/tmp/mega.response');
+			unlink('/tmp/mega.response');
+			flock($lock_pointer, LOCK_UN);
+		} else {
+			echo json_encode(array(
+				"status" => 'ko',
+				"error" => "Error en la creació del fitxer de blocatge. Torna-ho a provar més tard. (codi: L)"
+			));
+			die();
+		}
 
-			if (substr($results,0,5)=='ERROR'){
-				switch(substr($results,0,7)){
-					case 'ERROR 1':
-						$results = "Error de sessió ja iniciada. Torna-ho a provar. (codi: 1)";
-						break;
-					case 'ERROR 2':
-						$results = "Error d’inici de sessió. El compte encara està actiu? (codi: 2)";
-						break;
-					case 'ERROR 3':
-						$results = "Error d’accés a la carpeta. El nom de la carpeta és correcte? (codi: 3)";
-						break;
-					case 'ERROR 4':
-						$results = "Error d’exportació d’enllaços. (codi: 4)";
-						break;
-					case 'ERROR 5':
-						$results = "Error en tancar la sessió. (codi: 5)";
-						break;
-				}
-				echo json_encode(array(
-					"status" => 'ko',
-					"error" => $results
-				));
-				die();
-			} else {
-				$lines = explode("\n",$results);
-				foreach ($lines as $line) {
-					if ($line!='') {
-						array_push($links,$remote_account_folder['division_id'].':::'.$line);
-					}
-				}
+		if (substr($results,0,5)=='ERROR'){
+			switch(substr($results,0,7)){
+				case 'ERROR 1':
+					$results = "Error de sessió ja iniciada. Torna-ho a provar. (codi: 1)";
+					break;
+				case 'ERROR 2':
+					$results = "Error d’inici de sessió. El compte encara està actiu? (codi: 2)";
+					break;
+				case 'ERROR 3':
+					$results = "Error d’accés a la carpeta. El nom de la carpeta és correcte? (codi: 3)";
+					break;
+				case 'ERROR 4':
+					$results = "Error d’exportació d’enllaços. (codi: 4)";
+					break;
+				case 'ERROR 5':
+					$results = "Error en tancar la sessió. (codi: 5)";
+					break;
 			}
-		} else if ($remote_account_folder['type']=='storage') {
-			$res = get_custom_server_files($remote_account_folder['token'], $remote_account_folder['remote_folder']);
-			if ($res['status']=='ko') {
-				echo json_encode(array(
-					"status" => 'ko',
-					"error" => "Error en accedir a l’emmagatzematge. (codi: ".$res['code'].")"
-				));
-				die();
-			} else {
-				foreach ($res['files'] as $file) {
-					array_push($links,$remote_account_folder['division_id'].':::'.$file);
+			echo json_encode(array(
+				"status" => 'ko',
+				"error" => $results
+			));
+			die();
+		} else {
+			$lines = explode("\n",$results);
+			foreach ($lines as $line) {
+				if ($line!='') {
+					array_push($links,$remote_account_folder['division_id'].':::'.$remote_account_folder['default_resolution'].':::'.$remote_account_folder['default_duration'].':::'.$line);
 				}
 			}
 		}
@@ -140,10 +95,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	foreach ($links as $link){
 		//log_action('get-link', "New link data: '".$link."'");
-		if (count(explode(":::",$link, 3))>1) {
-			$division_id = explode(":::",$link, 3)[0];
-			$filename = explode(":::",$link, 3)[1];
-			$real_link = explode(":::",$link, 3)[2];
+		if (count(explode(":::",$link, 5))>1) {
+			$division_id = explode(":::",$link, 5)[0];
+			$resolution = explode(":::",$link, 5)[1];
+			$duration = explode(":::",$link, 5)[2];
+			$filename = explode(":::",$link, 5)[3];
+			$real_link = explode(":::",$link, 5)[4];
 			$matches = array();
 			if (preg_match('/.* - (\d+).*\.(?:mp4|mkv|avi)/', $filename, $matches)) {
 				$number = $matches[1];
@@ -155,6 +112,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						$element = array();
 						$element['id'] = $row['id'];
 						$element['link'] = $real_link;
+						$element['resolution'] = $resolution;
+						$element['duration'] = $duration;
 						array_push($response, $element);
 						array_push($processed_episode_ids, $row['id'].'-'.$start);
 					} else {
@@ -162,6 +121,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						$element = array();
 						$element['file'] = $filename;
 						$element['link'] = $real_link;
+						$element['resolution'] = $resolution;
+						$element['duration'] = $duration;
 						$element['reason'] = "Múltiples enllaços";
 						$element['reason_description'] = "Hi ha més d’un enllaç del mateix tipus per a aquest capítol, s’ha importat només el primer.";
 						array_push($unmatched_results, $element);
@@ -171,6 +132,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$element = array();
 					$element['file'] = $filename;
 					$element['link'] = $real_link;
+					$element['resolution'] = $resolution;
+					$element['duration'] = $duration;
 					$element['reason'] = "Capítol inexistent";
 					$element['reason_description'] = "No s’ha trobat cap capítol amb aquest número.";
 					array_push($unmatched_results, $element);
@@ -181,6 +144,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$element = array();
 				$element['file'] = $filename;
 				$element['link'] = $real_link;
+				$element['resolution'] = $resolution;
+				$element['duration'] = $duration;
 				$element['reason'] = "Format erroni";
 				$element['reason_description'] = "No coincideix amb el format correcte de nom de fitxer. Potser és un capítol especial?";
 				array_push($unmatched_results, $element);

@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2024-08-11 - Versió 5.2.2
+- **General:**
+	- S’informa de les consultes a base de dades que són lentes.
+- **Administració:**
+	- Es corregeix la validació de versió completada (no comptava correctament el nombre de fitxers penjats).
+	- Es corregeix que la icona de tancament de les finestres modals no es mostrés a la dreta.
+	- Es millora l’ajuda al camp «Nombre de capítols» de les temporades.
+	- Es modifica el sistema de comptes remots perquè informi de l’emmagatzematge disponible (WIP) i s’hi afegeix ajuda als camps.
+	- Es mouen els camps «resolució per defecte» i «durada per defecte» de la versió i sèrie (respectivament) a les carpetes remotes.
+
 ## 2024-06-22 - Versió 5.2.1
 - **Catàleg:**
 	- S’afegeix la portada de la sèrie a la llista de darrers comentaris.

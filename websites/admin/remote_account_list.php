@@ -28,8 +28,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Nom</th>
-								<th scope="col">Tipus</th>
+								<th scope="col">Compte</th>
+								<th scope="col">Ús</th>
 								<th scope="col">Fansub</th>
 								<th class="text-center" scope="col">Accions</th>
 							</tr>
@@ -37,15 +37,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<tbody>
 <?php
 	if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-		$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'].' OR a.fansub_id IS NULL';
+		$where = ' WHERE a.fansub_id='.$_SESSION['fansub_id'];
 	} else {
 		$where = '';
 	}
-	$result = query("SELECT a.*, f.name fansub_name FROM remote_account a LEFT JOIN fansub f ON a.fansub_id=f.id$where ORDER BY a.type='storage' DESC, a.name ASC");
+	$result = query("SELECT a.*, f.name fansub_name FROM remote_account a LEFT JOIN fansub f ON a.fansub_id=f.id$where ORDER BY a.fansub_id IS NULL DESC, a.name ASC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="3" class="text-center">- No hi ha cap compte remot -</td>
+								<td colspan="4" class="text-center">- No hi ha cap compte remot -</td>
 							</tr>
 <?php
 	}
@@ -53,8 +53,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<tr>
 								<th scope="row"><?php echo htmlspecialchars($row['name']); ?></th>
-								<td class="align-middle"><?php echo $row['type']=='mega' ? 'MEGA' : 'Desconegut'; ?></th>
-								<td class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : '(Tots)'; ?></td>
+								<td class="align-middle"><?php echo $row['total_storage']!=0 ? ($row['used_storage']/$row['total_storage']*100).'% ('.round($row['used_storage']/1024/1024/1024, 2).' de '.round($row['total_storage']/1024/1024/1024, 2).' GB)' : 'No disponible'; ?></th>
+								<td class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : '- Intern de Fansubs.cat -'; ?></td>
 								<td class="align-middle text-center text-nowrap"><a href="remote_account_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="remote_account_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el compte remot «".$row['name']."»? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php

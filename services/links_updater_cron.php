@@ -2,34 +2,9 @@
 require_once('db.inc.php');
 require_once('libs/preview_image_generator.php');
 
-function guess_episode_duration($duration, $subtype){
-	//We have the task to deduce the episode duration. However, this is not always an easy task.
-	//The series has a "duration" field but it accepts user input and is optional. We will try to use that.
-	//If we fail, we will just assume a duration based on the content type.
-	//This will normally only last a few minutes until the cron process picks it up and sets the proper time.
-	$result=0;
-	$matches = array();
-	if (preg_match('/(\d+) h (\d+) m/',$duration,$matches)){
-		$result=$matches[1]*3600+$matches[2]*60;
-	} else if (preg_match('/(\d+):(\d\d)/',$duration,$matches)){
-		$result=$matches[1]*3600+$matches[2]*60;
-	} else if (preg_match('/(\d+) m/',$duration,$matches)){
-		$result=$matches[1]*60;
-	} else if (preg_match('/(\d+) h/',$duration,$matches)){
-		$result=$matches[1]*3600;
-	}
-	if (!empty($result)) {
-		return $result;
-	} else if ($subtype=='series'){
-		return 25*60;
-	} else if ($subtype=='movie'){
-		return 60*60;
-	}
-}
-
 log_action('cron-updater-started', "S’ha iniciat l’obtenció automàtica d’enllaços");
 
-$resulta = query("SELECT f.*, a.id remote_account_id, a.name, a.type, a.token, v.series_id FROM remote_folder f LEFT JOIN remote_account a ON f.remote_account_id=a.id LEFT JOIN version v ON f.version_id=v.id WHERE is_active=1");
+$resulta = query("SELECT f.*, a.id remote_account_id, a.name, a.token, v.series_id FROM remote_folder f LEFT JOIN remote_account a ON f.remote_account_id=a.id LEFT JOIN version v ON f.version_id=v.id WHERE is_active=1");
 
 $lock_pointer = fopen(MEGA_LOCK_FILE, "w+");
 
@@ -41,11 +16,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 
 		$output = array();
 		$result = 0;
-		if ($folder['type']=='mega') {
-			exec("./mega_list_links.sh ".$folder['token']." \"".$folder['folder']."\"", $output, $result);
-		} else {
-			$result = 404;
-		}
+		exec("./mega_list_links.sh ".$folder['token']." \"".$folder['folder']."\"", $output, $result);
 
 		if ($result!=0){
 			log_action("cron-error","S’ha produït l’error $result en processar la carpeta remota «".$folder['folder']."» del compte remot «".$folder['name']."» (id. de versió ".$folder['version_id'].")");
@@ -62,15 +33,12 @@ if (flock($lock_pointer, LOCK_EX)) {
 						if ($row = mysqli_fetch_assoc($resulte)) {
 							$resultv = query("SELECT v.*, s.duration, s.subtype FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".$folder['version_id']);
 							if ($version = mysqli_fetch_assoc($resultv)){
-								$resolution = (!empty($version['default_resolution']) ? "'".$version['default_resolution']."'" : "NULL");
+								$resolution = escape($folder['default_resolution']);
 								$files = query("SELECT * FROM file WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
 								//WARNING: We must prevent the version from having multiple links if autofetch is enabled, or bad things will happen!!!
 								if ($file = mysqli_fetch_assoc($files)) {
 									//File exists, let's check the links and replace the first one...
-									if ($folder['type']=='mega') {
-										$pattern="https://mega.nz/%";
-									}
-									$links = query("SELECT * FROM link WHERE file_id=".$file['id']." AND url LIKE '$pattern'");
+									$links = query("SELECT * FROM link WHERE file_id=".$file['id']." AND url LIKE 'https://mega.nz/%'");
 									if ($link = mysqli_fetch_assoc($links)) {
 										if ($link['url']!=$real_link){
 											query("UPDATE link SET url='".escape($real_link)."',updated=CURRENT_TIMESTAMP,updated_by='Cron' WHERE id=".$link['id']);
@@ -80,15 +48,15 @@ if (flock($lock_pointer, LOCK_EX)) {
 											//We do not update the files_updated field because we don't want the series to show in "last updated"
 										}
 									} else {
-										query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES(".$file['id'].",'".escape($real_link)."',$resolution,CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
+										query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES(".$file['id'].",'".escape($real_link)."','$resolution',CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
 										query("UPDATE version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='Cron' WHERE id=".$folder['version_id']);
 										log_action("cron-create-link","S’ha inserit automàticament l’enllaç del fitxer «${filename}» (id. de versió ".$folder['version_id'].") i s’ha actualitzat la data de modificació de la versió");
 										update_series_preview($folder['series_id']);
 									}
 								} else {
-									$duration=guess_episode_duration($version['duration'], $version['subtype']);
+									$duration=$folder['default_duration'];
 									query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,length,comments,created,created_by,updated,updated_by) VALUES(".$folder['version_id'].",".$row['id'].",'Única',NULL,".$duration.",NULL,CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
-									query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES(".mysqli_insert_id($db_connection).",'".escape($real_link)."',$resolution,CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
+									query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES(".mysqli_insert_id($db_connection).",'".escape($real_link)."','$resolution',CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
 									query("UPDATE version SET is_hidden=0,files_updated=CURRENT_TIMESTAMP,files_updated_by='Cron' WHERE id=".$folder['version_id']);
 									log_action("cron-create-link","S’ha inserit automàticament l’enllaç del fitxer «${filename}» (id. de versió ".$folder['version_id'].") i s’ha actualitzat la data de modificació de la versió");
 									update_series_preview($folder['series_id']);

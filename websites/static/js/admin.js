@@ -620,7 +620,7 @@ function addVersionRemoteFolderRow() {
 
 	var htmlSea = $('#form-remote_folders-list-division_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','">');
 
-	$('#remote_folders-list-table').append('<tr id="form-remote_folders-list-row-'+i+'"><td>'+htmlAcc+'<input id="form-remote_folders-list-id-'+i+'" name="form-remote_folders-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-remote_folders-list-folder-'+i+'" name="form-remote_folders-list-folder-'+i+'" class="form-control" value="" maxlength="200" required/></td><td>'+htmlSea+'</td><td class="text-center align-middle"><input id="form-remote_folders-list-is_active-'+i+'" name="form-remote_folders-list-is_active-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-remote_folders-list-delete-'+i+'" onclick="deleteVersionRemoteFolderRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#remote_folders-list-table').append('<tr id="form-remote_folders-list-row-'+i+'"><td>'+htmlAcc+'<input id="form-remote_folders-list-id-'+i+'" name="form-remote_folders-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-remote_folders-list-folder-'+i+'" name="form-remote_folders-list-folder-'+i+'" class="form-control" value="" maxlength="200" required/></td><td><input id="form-remote_folders-list-default_resolution-'+i+'" name="form-remote_folders-list-default_resolution-'+i+'" class="form-control" value="" maxlength="200" required placeholder="- Tria -" list="resolution-options"/></td><td><input id="form-remote_folders-list-default_duration-'+i+'" name="form-remote_folders-list-default_duration-'+i+'" type="time" step="1" class="form-control" value="" required/></td><td>'+htmlSea+'</td><td class="text-center align-middle"><input id="form-remote_folders-list-is_active-'+i+'" name="form-remote_folders-list-is_active-'+i+'" type="checkbox" value="1"/></td><td class="text-center align-middle"><button id="form-remote_folders-list-delete-'+i+'" onclick="deleteVersionRemoteFolderRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#remote_folders-list-table').attr('data-count', i);
 	$('#remote_folders-list-table-empty').addClass('d-none');
 }
@@ -1044,10 +1044,6 @@ function checkNumberOfLinks() {
 
 		if (multipleLinks) {
 			alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d’una variant per capítol. Has de desactivar-la o bé eliminar els enllaços addicionals dels capítols.");
-			return false;
-		}
-		if ($('#form-default_resolution').val()==''){
-			alert("Si hi ha activada la sincronització automàtica de carpetes, cal que informis una resolució per defecte per als enllaços.");
 			return false;
 		}
 	}
@@ -1852,17 +1848,21 @@ $(document).ready(function() {
 
 		var account_ids = [];
 		var folders = [];
+		var default_resolutions = [];
+		var default_durations = [];
 		var division_ids = [];
 		for (var i=1;i<=count;i++){
 			if ($('#import-type').val()!='sync' || $('#form-remote_folders-list-is_active-'+i).prop('checked')) {
 				account_ids.push(encodeURIComponent($('#form-remote_folders-list-remote_account_id-'+i).val()));
 				folders.push(encodeURIComponent($('#form-remote_folders-list-folder-'+i).val()));
+				default_resolutions.push(encodeURIComponent($('#form-remote_folders-list-default_resolution-'+i).val()));
+				default_durations.push(encodeURIComponent($('#form-remote_folders-list-default_duration-'+i).val()));
 				division_ids.push(encodeURIComponent($('#form-remote_folders-list-division_id-'+i).val()!='' ? $('#form-remote_folders-list-division_id-'+i).val() : -1));
 			}
 		}
 
 		var xmlhttp = new XMLHttpRequest();
-		var url = "fetch_storage_links.php?series_id="+$('[name="series_id"]').val()+"&import_type="+$('#import-type').val()+"&remote_account_ids[]="+account_ids.join("&remote_account_ids[]=")+"&remote_folders[]="+folders.join("&remote_folders[]=")+"&division_ids[]="+division_ids.join("&division_ids[]=");
+		var url = "fetch_storage_links.php?series_id="+$('[name="series_id"]').val()+"&import_type="+$('#import-type').val()+"&remote_account_ids[]="+account_ids.join("&remote_account_ids[]=")+"&remote_folders[]="+folders.join("&remote_folders[]=")+"&default_resolutions[]="+default_resolutions.join("&default_resolutions[]=")+"&default_durations[]="+default_durations.join("&default_durations[]=")+"&division_ids[]="+division_ids.join("&division_ids[]=");
 
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
@@ -1881,7 +1881,8 @@ $(document).ready(function() {
 									moreThanOne=true;
 									return;
 								}
-								$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
+								$(e).parent().parent().find("[id$=resolution]").val(data.results[i].resolution);
+								$(e).parent().parent().parent().parent().parent().parent().find("[id$=length-1]").val(data.results[i].duration);
 								$(e).val(data.results[i].link);
 								$(e).attr('value', data.results[i].link);
 								found = true;
@@ -1894,7 +1895,8 @@ $(document).ready(function() {
 									return;
 								}
 								if ($(e).val()=='') {
-									$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
+									$(e).parent().parent().find("[id$=resolution]").val(data.results[i].resolution);
+									$(e).parent().parent().parent().parent().parent().parent().find("[id$=length-1]").val(data.results[i].duration);
 									$(e).val(data.results[i].link);
 									$(e).attr('value', data.results[i].link);
 									found = true;
@@ -1907,7 +1909,8 @@ $(document).ready(function() {
 										return;
 									}
 									if ($(e).val()=='') {
-										$(e).parent().parent().find("[id$=resolution]").val($('#form-default_resolution').val());
+										$(e).parent().parent().find("[id$=resolution]").val(data.results[i].resolution);
+										$(e).parent().parent().parent().parent().parent().parent().find("[id$=length-1]").val(data.results[i].duration);
 										$(e).val(data.results[i].link);
 										$(e).attr('value', data.results[i].link);
 										found = true;

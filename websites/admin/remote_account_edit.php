@@ -21,11 +21,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca name");
 		}
-		if (!empty($_POST['type'])) {
-			$data['type']=escape($_POST['type']);
-		} else {
-			crash("Dades invàlides: manca type");
-		}
 		if (!empty($_POST['token'])) {
 			$data['token']=escape($_POST['token']);
 		} else {
@@ -34,11 +29,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-remote-account", "S’ha actualitzat el compte remot «".$_POST['name']."» (id. de compte remot: ".$data['id'].")");
-			query("UPDATE remote_account SET name='".$data['name']."',type='".$data['type']."',token='".$data['token']."',fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE remote_account SET name='".$data['name']."',token='".$data['token']."',fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
 		else {
 			log_action("create-remote-account", "S’ha creat el compte remot «".$_POST['name']."»");
-			query("INSERT INTO remote_account (name,type,token,fansub_id,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['type']."','".$data['token']."',".$data['fansub_id'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO remote_account (name,token,fansub_id,total_storage, used_storage, created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['token']."',".$data['fansub_id'].",0,0,CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 
 		$_SESSION['message']="S’han desat les dades correctament.";
@@ -62,24 +57,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<hr>
 				<form method="post" action="remote_account_edit.php">
 					<div class="mb-3">
-						<label for="form-name" class="mandatory">Nom</label>
+						<label for="form-name" class="mandatory">Compte <small data-bs-toggle="modal" data-bs-target="#modal-account" class="text-muted fa fa-question-circle modal-help-button"></small></label>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-type" class="mandatory">Tipus</label>
-						<select name="type" class="form-select" id="form-type" required>
-							<option value="mega"<?php echo $row['type']=='mega' ? " selected" : ""; ?>>MEGA</option>
-						</select>
+						<label for="form-storage">Ús de l’emmagatzematge <small data-bs-toggle="modal" data-bs-target="#modal-storage" class="text-muted fa fa-question-circle modal-help-button"></small></label>
+						<input class="form-control" name="storage" id="form-storage" value="<?php echo $row['total_storage']!=0 ? ($row['used_storage']/$row['total_storage']*100).'% ('.round($row['used_storage']/1024/1024/1024, 2).' de '.round($row['total_storage']/1024/1024/1024, 2).' GB)' : 'No disponible'; ?>" readonly>
 					</div>
 					<div class="mb-3">
-						<label for="form-token" class="mandatory">Id. de sessió (MEGA)</label>
+						<label for="form-token" class="mandatory">Identificador de sessió <small data-bs-toggle="modal" data-bs-target="#modal-session-id" class="text-muted fa fa-question-circle modal-help-button"></small></label>
 						<input class="form-control" name="token" id="form-token" required maxlength="200" value="<?php echo htmlspecialchars($row['token']); ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-fansub_id">Fansub</label>
 						<select name="fansub_id" class="form-select" id="form-fansub_id">
-							<option value="">- Qualsevol fansub hi té accés -</option>
+							<option value="">- Intern de Fansubs.cat -</option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
@@ -93,6 +86,52 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					</div>
 					<div class="mb-3 text-center pt-2">
 						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el compte remot"; ?></button>
+					</div>
+					<!-- Modals -->
+					<div class="modal fade" id="modal-account" tabindex="-1" role="dialog" aria-labelledby="modal-account-title" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="modal-account-title">Compte</h5>
+									<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true" class="fa fa-times"></span>
+									</button>
+								</div>
+								<div class="modal-body">
+									Adreça electrònica del compte. Correspon a l’adreça de correu utilitzada per a iniciar la sessió al compte de MEGA.
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="modal-storage" tabindex="-1" role="dialog" aria-labelledby="modal-account-title" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="modal-storage-title">Ús de l’emmagatzematge</h5>
+									<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true" class="fa fa-times"></span>
+									</button>
+								</div>
+								<div class="modal-body">
+									Indica l’emmagatzematge utilitzat al compte. S’actualitza una vegada al dia. Si has afegit el compte fa poc, no està disponible.
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="modal-session-id" tabindex="-1" role="dialog" aria-labelledby="modal-account-title" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="modal-session-id-title">Identificador de sessió</h5>
+									<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true" class="fa fa-times"></span>
+									</button>
+								</div>
+								<div class="modal-body">
+									Identificador de sessió obtingut amb MegaCMD. Això ens permet iniciar la sessió amb aquest compte sense fer servir una contrasenya i obtenir-ne enllaços automàticament i actualitzar-ne l’estat de l’emmagatzematge. Per a més informació de com obtenir-lo, consulteu el manual del tauler d’administració a la icona d’ajuda de la part superior dreta del web (apartat «Com obtenir l’identificador de sessió»).
+								</div>
+							</div>
+						</div>
 					</div>
 				</form>
 			</article>

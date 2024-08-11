@@ -153,11 +153,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['show_episode_numbers']=0;
 		}
-		if (!empty($_POST['duration'])) {
-			$data['duration']="'".escape($_POST['duration'])."'";
-		} else {
-			$data['duration']="NULL";
-		}
 		if (!empty($_POST['comic_type'])) {
 			$data['comic_type']="'".escape($_POST['comic_type'])."'";
 		} else {
@@ -268,7 +263,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-series", "S’ha actualitzat la sèrie «".$_POST['name']."» (id. de sèrie: ".$data['id'].")");
-			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",subtype='".$data['subtype']."',publish_date=".$data['publish_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",number_of_episodes=".$data['number_of_episodes'].",synopsis='".$data['synopsis']."',external_id=".$data['external_id'].",tadaima_id=".$data['tadaima_id'].",score=".$data['score'].",has_licensed_parts=".$data['has_licensed_parts'].",show_episode_numbers=".$data['show_episode_numbers'].",duration=".$data['duration'].",comic_type=".$data['comic_type'].",reader_type=".$data['reader_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",subtype='".$data['subtype']."',publish_date=".$data['publish_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",number_of_episodes=".$data['number_of_episodes'].",synopsis='".$data['synopsis']."',external_id=".$data['external_id'].",tadaima_id=".$data['tadaima_id'].",score=".$data['score'].",has_licensed_parts=".$data['has_licensed_parts'].",show_episode_numbers=".$data['show_episode_numbers'].",comic_type=".$data['comic_type'].",reader_type=".$data['reader_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$data['id'].",".$genre.")");
@@ -325,7 +320,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-series", "S’ha creat la sèrie «".$_POST['name']."»");
-			query("INSERT INTO series (slug,name,alternate_names,keywords,type,subtype,publish_date,author,director,studio,rating,number_of_episodes,synopsis,external_id,tadaima_id,score,has_licensed_parts,show_episode_numbers,duration,comic_type,reader_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."','".$data['subtype']."',".$data['publish_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['number_of_episodes'].",'".$data['synopsis']."',".$data['external_id'].",".$data['tadaima_id'].",".$data['score'].",".$data['has_licensed_parts'].",".$data['show_episode_numbers'].",".$data['duration'].",".$data['comic_type'].",".$data['reader_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO series (slug,name,alternate_names,keywords,type,subtype,publish_date,author,director,studio,rating,number_of_episodes,synopsis,external_id,tadaima_id,score,has_licensed_parts,show_episode_numbers,comic_type,reader_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."','".$data['subtype']."',".$data['publish_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['number_of_episodes'].",'".$data['synopsis']."',".$data['external_id'].",".$data['tadaima_id'].",".$data['score'].",".$data['has_licensed_parts'].",".$data['show_episode_numbers'].",".$data['comic_type'].",".$data['reader_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$inserted_id.",".$genre.")");
@@ -587,12 +582,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="mb-3">
 									<label for="form-studio">Estudi</label>
 									<input class="form-control" name="studio" id="form-studio" maxlength="200" value="<?php echo htmlspecialchars($row['studio']); ?>">
-								</div>
-							</div>
-							<div class="col-sm">
-								<div class="mb-3">
-									<label for="form-duration">Durada</label>
-									<input class="form-control" name="duration" id="form-duration" maxlength="200" value="<?php echo htmlspecialchars($row['duration']); ?>">
 								</div>
 							</div>
 							<div class="col-sm">
