@@ -905,7 +905,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 															<option value="">- Selecciona un compte remot -</option>
 <?php
 			if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-				$where = 'a.fansub_id='.$_SESSION['fansub_id'];
+				$where = 'a.id='.$remote_folders[$j]['remote_account_id'].' OR a.fansub_id='.$_SESSION['fansub_id'];
 			} else {
 				$where = '1';
 			}
