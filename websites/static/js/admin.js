@@ -62,8 +62,6 @@ function populateMalData(response, staffResponse) {
 		$("#form-publish_date").val(response.data.aired.from.substr(0, 10));
 	}
 
-	$("#form-is_open").prop('checked', response.data.airing);
-
 	if (response.data.rating=='G - All Ages') {
 		$("#form-rating").val('TP');
 	} else if (response.data.rating=='PG - Children') {
@@ -210,8 +208,6 @@ function populateMalDataManga(response) {
 	if ($("#form-publish_date").val()=='') {
 		$("#form-publish_date").val(response.data.published.from.substr(0, 10));
 	}
-
-	$("#form-is_open").prop('checked', response.data.publishing);
 
 	if (response.data.type=='Manhwa') {
 		$("#form-comic_type").val('manhwa');

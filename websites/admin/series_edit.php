@@ -431,13 +431,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-air_status">Estat</label>
-									<div id="form-air_status">
-										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="has_licensed_parts" id="form-has_licensed_parts" value="1"<?php echo $row['has_licensed_parts']==1 ? " checked" : ""; ?>>
-											<label class="form-check-label" for="form-has_licensed_parts">Té parts llicenciades</label>
-										</div>
-									</div>
+									<label for="form-licensed_status">Estat de llicència<span class="mandatory"></span></label>
+									<select class="form-select" name="has_licensed_parts" id="form-licensed_status" required>
+										<option value="0"<?php echo $row['has_licensed_parts']==0 ? " checked" : ""; ?>>No té cap part llicenciada</option>
+										<option value="1"<?php echo $row['has_licensed_parts']==1 ? " selected" : ""; ?>>Té parts llicenciades</option>
+									</select>
 								</div>
 							</div>
 						</div>
