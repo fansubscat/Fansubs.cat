@@ -417,7 +417,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="col-sm">
 								<div class="mb-3">
 									<label for="form-name-with-autocomplete">Títol<span class="mandatory"></span> <small class="text-muted">(nom de la fitxa al web públic; normalment en català)</small></label>
-									<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['name'])); ?>">
+									<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['name'])); ?>" data-old-value="<?php echo htmlspecialchars(html_entity_decode($row['name'])); ?>">
 									<input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>">
 									<input type="hidden" id="type" value="<?php echo $type; ?>">
 								</div>

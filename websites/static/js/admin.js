@@ -30,6 +30,7 @@ function copyToClipboard(text, el) {
 function populateMalData(response, staffResponse) {
 	if ($("#form-name-with-autocomplete").val()=='') {
 		$("#form-name-with-autocomplete").val(response.data.title);
+		$("#form-name-with-autocomplete").attr('data-old-value', response.data.title);
 	}
 	if ($("#form-slug").val()=='') {
 		$("#form-slug").val(string_to_slug(response.data.title));
@@ -186,6 +187,7 @@ function populateMalData(response, staffResponse) {
 function populateMalDataManga(response) {
 	if ($("#form-name-with-autocomplete").val()=='') {
 		$("#form-name-with-autocomplete").val(response.data.title);
+		$("#form-name-with-autocomplete").attr('data-old-value', response.data.title);
 	}
 	if ($("#form-slug").val()=='') {
 		$("#form-slug").val(string_to_slug(response.data.title));
@@ -1646,6 +1648,10 @@ $(document).ready(function() {
 
 	$("#form-name-with-autocomplete").on('input', function() {
 		$("#form-slug").val(string_to_slug($("#form-name-with-autocomplete").val()));
+		if ($("#form-name-with-autocomplete").attr('data-old-value')==$("#form-division-list-name-1").val()) {
+			$("#form-division-list-name-1").val($("#form-name-with-autocomplete").val());
+		}
+		$("#form-name-with-autocomplete").attr('data-old-value', $("#form-name-with-autocomplete").val());
 	});
 
 	$('#form-subtype').on('change', function() {
