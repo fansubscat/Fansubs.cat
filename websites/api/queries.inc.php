@@ -214,7 +214,8 @@ function query_popular_manga($offset, $max_items) {
 	$offset = intval($offset);
 	$max_items = intval($max_items);
 	$final_query = "SELECT a.*, 
-				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres
+				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres,
+				(SELECT COUNT(*) FROM version v WHERE v.series_id=a.id AND v.status=2) versions_in_progress
 			FROM (
 					SELECT
 						SUM(vi.views) views,
@@ -245,7 +246,8 @@ function query_recent_manga($offset, $max_items) {
 	$offset=intval($offset);
 	$max_items=intval($max_items);
 	$final_query = "SELECT s.*,
-				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres
+				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres,
+				(SELECT COUNT(*) FROM version v WHERE v.series_id=a.id AND v.status=2) versions_in_progress
 			FROM series s
 				LEFT JOIN version v ON s.id=v.series_id
 				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -291,7 +293,8 @@ function query_search_manga($offset, $max_items, $query, $type, $statuses, $demo
 	}
 
 	$final_query = "SELECT s.*,
-				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres
+				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres,
+				(SELECT COUNT(*) FROM version v WHERE v.series_id=a.id AND v.status=2) versions_in_progress
 			FROM series s
 				LEFT JOIN version v ON s.id=v.series_id
 				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -318,7 +321,8 @@ function query_search_manga($offset, $max_items, $query, $type, $statuses, $demo
 function query_get_manga_details_by_slug($slug) {
 	$slug = escape($slug);
 	$final_query = "SELECT s.*,
-				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres
+				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres,
+				(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.status=2) versions_in_progress
 			FROM series s
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
 				LEFT JOIN genre g ON sg.genre_id = g.id

@@ -1,5 +1,20 @@
 # Registre de canvis
 
+## 2024-08-12 - Versió 5.2.3
+- **Catàleg:**
+	- Les sèries ja no mostren «En emissió» o «En publicació», sinó el nombre de capítols previst.
+- **Administració:**
+	- Les finestres modals amb ajuda en alguns camps s’han estandarditzat i se n’ha corregit el disseny.
+	- Els comptes remots mostren l’espai utilitzat.
+	- S’elimina el camp que enllaçava amb Tadaima.cat.
+	- S’elimina el camp «En emissió/publicació».
+	- Es canvien els camps «Recomanable» i «Recomana sempre» per un únic desplegable.
+- **API:**
+	- Els mangues es consideren en publicació o finalitzats depenent de si tenen alguna versió en procés o no.
+- **Serveis:**
+	- S’implementa un nou servei que comprova l’espai disponible a tots els comptes remots.
+	- Es corregeix un error introduït a l’obtenció d’enllaços en eliminar el camp «durada» de les sèries.
+
 ## 2024-08-11 - Versió 5.2.2
 - **General:**
 	- S’informa de les consultes a base de dades que són lentes.

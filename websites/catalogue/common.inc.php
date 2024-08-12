@@ -589,15 +589,15 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 	if ($series['subtype']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'One-shot').'</div>'."\n";
 	} else if ($series['subtype']=='serialized') {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'Serialitzat').' • '.($series['divisions']==1 ? "1 volum" : $series['divisions'].' volums').' • '.($series['number_of_episodes']==-1 ? 'En publicació' : ($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols')).'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'Serialitzat').' • '.($series['divisions']==1 ? "1 volum" : $series['divisions'].' volums').' • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
 	} else if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Conjunt de '.$series['number_of_episodes'].' films</div>'."\n";
 	} else if ($series['subtype']=='movie') {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Film</div>'."\n";
 	} else if ($series['divisions']>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.$series['divisions'].' temporades • '.($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.$series['divisions'].' temporades • '.$series['number_of_episodes'].' capítols</div>'."\n";
 	} else {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.($series['number_of_episodes']==-1 ? 'En emissió' : ($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols')).'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
 
@@ -618,7 +618,7 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 		} if ($special_day=='tots_sants') {
 			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-ghost"></i><span class="text">Especial Tots Sants</span></div>'."\n";
 		}
-	} else if ($series['best_status']==2) {
+	} else if ($series['featurable_status']==3) {
 		echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw '.CATALOGUE_SEASONAL_SERIES_ICON.'"></i><span class="text">'.CATALOGUE_SEASONAL_SERIES_STRING.'</span></div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t".'<div class="genres">'.get_genres_for_featured($series['genre_names'], $series['type'], $series['rating']).'</div>'."\n";
@@ -640,15 +640,15 @@ function print_featured_item_single($series, $specific_version=TRUE, $use_versio
 	if ($series['subtype']=='oneshot') {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'One-shot').'</div>'."\n";
 	} else if ($series['subtype']=='serialized') {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'Serialitzat').' • '.($series['divisions']==1 ? "1 volum" : $series['divisions'].' volums').' • '.($series['number_of_episodes']==-1 ? 'En publicació' : ($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols')).'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'Serialitzat').' • '.($series['divisions']==1 ? "1 volum" : $series['divisions'].' volums').' • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
 	} else if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Conjunt de '.$series['number_of_episodes'].' films</div>'."\n";
 	} else if ($series['subtype']=='movie') {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Film</div>'."\n";
 	} else if ($series['divisions']>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.$series['divisions'].' temporades • '.($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes'].' capítols').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.$series['divisions'].' temporades • '.$series['number_of_episodes'].' capítols</div>'."\n";
 	} else {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.($series['number_of_episodes']==-1 ? 'En emissió' : ($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols')).'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
 

@@ -2,7 +2,7 @@
 require_once('db.inc.php');
 require_once('libs/preview_image_generator.php');
 
-log_action('cron-updater-started', "S’ha iniciat l’obtenció automàtica d’enllaços");
+log_action('cron-links-updater-started', "S’ha iniciat l’obtenció automàtica d’enllaços");
 
 $resulta = query("SELECT f.*, a.id remote_account_id, a.name, a.token, v.series_id FROM remote_folder f LEFT JOIN remote_account a ON f.remote_account_id=a.id LEFT JOIN version v ON f.version_id=v.id WHERE is_active=1");
 
@@ -31,7 +31,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 					if (!in_array($number, $processed_numbers)) {
 						$resulte = query("SELECT e.id FROM episode e WHERE series_id=".escape($folder['series_id'])." AND linked_episode_id IS NULL AND number=".$number.(!empty($folder['division_id']) ? " AND division_id=".$folder['division_id'] : ''));
 						if ($row = mysqli_fetch_assoc($resulte)) {
-							$resultv = query("SELECT v.*, s.duration, s.subtype FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".$folder['version_id']);
+							$resultv = query("SELECT v.*, s.subtype FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".$folder['version_id']);
 							if ($version = mysqli_fetch_assoc($resultv)){
 								$resolution = escape($folder['default_resolution']);
 								$files = query("SELECT * FROM file WHERE episode_id=".$row['id']." AND version_id=".$folder['version_id']);
@@ -111,5 +111,5 @@ if (flock($lock_pointer, LOCK_EX)) {
 	log_action("cron-error","No s’ha pogut blocar el fitxer de blocatge de MEGA");
 }
 
-log_action('cron-updater-finished', "S’ha completat l’obtenció automàtica d'enllaços");
+log_action('cron-links-updater-finished', "S’ha completat l’obtenció automàtica d'enllaços");
 ?>

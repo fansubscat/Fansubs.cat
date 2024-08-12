@@ -115,15 +115,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['downloads_url_3']="NULL";
 		}
-		if (!empty($_POST['is_featurable'])){
-			$data['is_featurable']=1;
+		if (!empty($_POST['featurable_status'])){
+			$data['featurable_status']=escape($_POST['featurable_status']);
 		} else {
-			$data['is_featurable']=0;
-		}
-		if (!empty($_POST['is_always_featured'])){
-			$data['is_always_featured']=1;
-		} else {
-			$data['is_always_featured']=0;
+			$data['featurable_status']=0;
 		}
 		if (!empty($_POST['storage_folder'])) {
 			$data['storage_folder']="'".escape($_POST['storage_folder'])."'";
@@ -370,7 +365,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			log_action("update-version", "S’ha actualitzat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",is_featurable=".$data['is_featurable'].",is_always_featured=".$data['is_always_featured'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",featurable_status=".$data['featurable_status'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -579,7 +574,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S’ha creat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."»");
-			query("INSERT INTO version (series_id,status,is_missing_episodes,is_featurable,is_always_featured,is_hidden,completed_date,storage_folder,storage_processing,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['is_featurable'].",".$data['is_always_featured'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,is_missing_episodes,featurable_status,is_hidden,completed_date,storage_folder,storage_processing,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['featurable_status'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -672,7 +667,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	} else if (!empty($_GET['series_id']) && is_numeric($_GET['series_id'])) {
 		$row = array();
 		$row['storage_processing']=$_SESSION['default_storage_processing'];
-		$row['is_featurable']=1;
+		$row['featurable_status']=1;
 
 		$results = query("SELECT s.* FROM series s WHERE id=".escape($_GET['series_id']));
 		$series = mysqli_fetch_assoc($results) or crash('Series not found');
@@ -796,19 +791,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</select>
 								</div>
 							</div>
-							<div class="col-sm">
+							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-featurable_check">Recomanacions</label>
-									<div id="form-featurable_check">
-										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="is_featurable" id="form-is_featurable" value="1"<?php echo $row['is_featurable']==1? " checked" : ""; ?>>
-											<label class="form-check-label" for="form-is_featurable">Recomanable</label>
-										</div>
-										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="is_always_featured" id="form-is_always_featured" value="1"<?php echo $row['is_always_featured']==1? " checked" : ""; ?> onchange="if (this.checked) {if (!confirm('Recorda que aquesta opció és només per a sèries de temporada o casos especials. No tindrà efecte fins al pròxim dilluns. Segur que la vols marcar com a «recomanada sempre»?')) this.checked=''; };">
-											<label class="form-check-label" for="form-is_always_featured">Recomana-la sempre</label>
-										</div>
-									</div>
+									<label for="form-storage_processing">Recomanacions</label>
+									<select name="featurable_status" class="form-select">
+										<option value="0"<?php echo $row['featurable_status']==0 ? " selected" : ""; ?>>No la recomanis mai</option>
+										<option value="1"<?php echo $row['featurable_status']==1 ? " selected" : ""; ?>>Recomana-la aleatòriament</option>
+										<option value="2"<?php echo $row['featurable_status']==2 ? " selected" : ""; ?>>Recomana-la sempre (cas especial)</option>
+										<option value="3"<?php echo $row['featurable_status']==3 ? " selected" : ""; ?>>Recomana-la sempre (obra de temporada)</option>
+									</select>
 								</div>
 							</div>
 						</div>
@@ -1083,7 +1074,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="files-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($files),1); ?>">
 													<thead>
 														<tr>
-															<th style="width: 12%;">Variant<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#modal-variant" class="text-muted fa fa-question-circle modal-help-button"></small></th>
+															<th style="width: 12%;">Variant<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Variant" data-bs-contents="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.). Cada variant es mostra com un capítol diferent a la fitxa pública i amb el nom de variant indicat.\nEn condicions normals, només n’hi sol haver una, titulada «Única».\nSi només hi ha una sola variant, el nom de la variant no es mostra enlloc."></small></th>
 <?php
 			if ($type=='manga') {
 ?>
@@ -1428,22 +1419,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
-						</div>
-						<!-- Modals -->
-						<div class="modal fade" id="modal-variant" tabindex="-1" role="dialog" aria-labelledby="modal-variant-title" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-centered" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="modal-variant-title">Variant</h5>
-										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true" class="fa fa-times"></span>
-										</button>
-									</div>
-									<div class="modal-body">
-										Cada capítol pot tenir diferents variants (per dialectes, estils, etc.). Cada variant es mostra com un capítol diferent a la fitxa pública i amb el nom de variant indicat.<br>En condicions normals, només n’hi sol haver una, titulada «Única».<br>Si només hi ha una sola variant, el nom de la variant no es mostra enlloc.
-									</div>
-								</div>
-							</div>
 						</div>
 					</form>
 				</article>

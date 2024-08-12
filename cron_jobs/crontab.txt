@@ -7,8 +7,11 @@
 # Fansubs.cat - Post tweets with newly added items
 */12 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php post_new_items.php
 
+# Fansubs.cat - Update Mega storage status for all accounts
+0 3 * * * cd /srv/services/fansubs.cat/ && /usr/bin/php accounts_updater_cron.php
+
 # Fansubs.cat - Update Mega links from accounts
-*/30 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php links_updater_cron.php
+30 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php links_updater_cron.php
 
 # Fansubs.cat - Update MyAnimeList score for all anime and manga
 0 0 * * * cd /srv/services/fansubs.cat/ && /usr/bin/php score_updater_cron.php

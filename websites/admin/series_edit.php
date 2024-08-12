@@ -133,11 +133,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['external_id']="NULL";
 		}
-		if (!empty($_POST['tadaima_id']) && is_numeric($_POST['tadaima_id'])) {
-			$data['tadaima_id']=escape($_POST['tadaima_id']);
-		} else {
-			$data['tadaima_id']="NULL";
-		}
 		if (!empty($_POST['score']) && is_numeric($_POST['score'])) {
 			$data['score']=escape($_POST['score']);
 		} else {
@@ -211,11 +206,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$i++;
 		}
 
-		if (!empty($_POST['is_open'])){
-			$data['number_of_episodes']=-1;
-		} else {
-			$data['number_of_episodes']=$total_eps;
-		}
+		$data['number_of_episodes']=$total_eps;
 
 		$episodes=array();
 		$i=1;
@@ -263,7 +254,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-series", "S’ha actualitzat la sèrie «".$_POST['name']."» (id. de sèrie: ".$data['id'].")");
-			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",subtype='".$data['subtype']."',publish_date=".$data['publish_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",number_of_episodes=".$data['number_of_episodes'].",synopsis='".$data['synopsis']."',external_id=".$data['external_id'].",tadaima_id=".$data['tadaima_id'].",score=".$data['score'].",has_licensed_parts=".$data['has_licensed_parts'].",show_episode_numbers=".$data['show_episode_numbers'].",comic_type=".$data['comic_type'].",reader_type=".$data['reader_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",subtype='".$data['subtype']."',publish_date=".$data['publish_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",number_of_episodes=".$data['number_of_episodes'].",synopsis='".$data['synopsis']."',external_id=".$data['external_id'].",score=".$data['score'].",has_licensed_parts=".$data['has_licensed_parts'].",show_episode_numbers=".$data['show_episode_numbers'].",comic_type=".$data['comic_type'].",reader_type=".$data['reader_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$data['id'].",".$genre.")");
@@ -320,7 +311,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-series", "S’ha creat la sèrie «".$_POST['name']."»");
-			query("INSERT INTO series (slug,name,alternate_names,keywords,type,subtype,publish_date,author,director,studio,rating,number_of_episodes,synopsis,external_id,tadaima_id,score,has_licensed_parts,show_episode_numbers,comic_type,reader_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."','".$data['subtype']."',".$data['publish_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['number_of_episodes'].",'".$data['synopsis']."',".$data['external_id'].",".$data['tadaima_id'].",".$data['score'].",".$data['has_licensed_parts'].",".$data['show_episode_numbers'].",".$data['comic_type'].",".$data['reader_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO series (slug,name,alternate_names,keywords,type,subtype,publish_date,author,director,studio,rating,number_of_episodes,synopsis,external_id,score,has_licensed_parts,show_episode_numbers,comic_type,reader_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."','".$data['subtype']."',".$data['publish_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['number_of_episodes'].",'".$data['synopsis']."',".$data['external_id'].",".$data['score'].",".$data['has_licensed_parts'].",".$data['show_episode_numbers'].",".$data['comic_type'].",".$data['reader_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$inserted_id.",".$genre.")");
@@ -417,12 +408,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 							</div>
-							<div class="col-sm-4">
-								<div class="mb-3">
-									<label for="form-tadaima_id">Identificador de fil a Tadaima.cat</label>
-									<input class="form-control" name="tadaima_id" id="form-tadaima_id" type="number" value="<?php echo $row['tadaima_id']; ?>">
-								</div>
-							</div>
 						</div>
 						<div id="import-from-mal-done" class="col-sm mb-3 alert alert-warning d-none">
 							<span class="fa fa-exclamation-triangle pe-2"></span>S’ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el nom, si s’escau.
@@ -448,10 +433,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="mb-3">
 									<label for="form-air_status">Estat</label>
 									<div id="form-air_status">
-										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="checkbox" name="is_open" id="form-is_open" value="1"<?php echo $row['number_of_episodes']==-1? " checked" : ""; ?>>
-											<label class="form-check-label" for="form-is_open"><?php echo $open_series; ?></label>
-										</div>
 										<div class="form-check form-check-inline">
 											<input class="form-check-input" type="checkbox" name="has_licensed_parts" id="form-has_licensed_parts" value="1"<?php echo $row['has_licensed_parts']==1 ? " checked" : ""; ?>>
 											<label class="form-check-label" for="form-has_licensed_parts">Té parts llicenciades</label>
@@ -714,9 +695,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="division-list-table" data-count="<?php echo max(count($divisions),1); ?>">
 											<thead>
 												<tr>
-													<th style="width: 10%;">Número<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#modal-division-number" class="text-muted fa fa-question-circle modal-help-button"></small></th>
+													<th style="width: 10%;">Número<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Número de <?php echo $type=='manga' ? 'volum' : 'temporada'; ?>" data-bs-contents="Si cal, es poden fer servir decimals (per exemple: 1,5).\nTambé és possible fer servir el número 0."></small></th>
 													<th><?php echo $division_title; ?><?php echo $division_name_mandatory ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted"><?php echo $division_explanation; ?></small></th>
-													<th style="width: 15%;">Capítols<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#modal-division-episodes" class="text-muted fa fa-question-circle modal-help-button"></small></th>
+													<th style="width: 15%;">Capítols<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Nombre de capítols <?php echo $type=='manga' ? 'd’un volum' : 'd’una temporada'; ?>" data-bs-contents="Cal introduir-hi el nombre total de capítols de<?php echo $type=='manga' ? 'l volum' : ' la temporada'; ?>, sense incloure capítols especials (no numerats) ni extres.\n\nSi es vol utilitzar <?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?> per a fer mitjana de puntuacions de <?php echo $external_provider; ?>, però no es vol que aparegui a la fitxa (per exemple, perquè <?php echo $type=='manga' ? 'els volums' : 'les temporades'; ?> que es mostren s’agrupen de manera diferent que a les fitxes de <?php echo $external_provider; ?>), es pot introduir el valor 0.\n\n<?php echo $type=='manga' ? 'Els volums' : 'Les temporades'; ?> amb 0 capítols no es mostren al web.<?php echo $type!='manga' ? '\\n\\nSi una temporada està en emissió, caldrà que introdueixis el nombre de capítols que està previst que tingui (i els donis d’alta), o bé que tornis aquí a editar-ho a cada nou capítol que hi hagi.' : ''; ?>"></small></th>
 													<th style="width: 15%;">Id. <?php echo $external_provider; ?></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
@@ -804,8 +785,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="episode-list-table" data-count="<?php echo max(count($episodes),1); ?>">
 											<thead>
 												<tr>
-													<th style="width: 10%;"><?php echo $division_name_short; ?> <small data-bs-toggle="modal" data-bs-target="#modal-chapter-division" class="text-muted fa fa-question-circle modal-help-button"></small></th>
-													<th style="width: 10%;">Número <small data-bs-toggle="modal" data-bs-target="#modal-chapter-number" class="text-muted fa fa-question-circle modal-help-button"></small></th>
+													<th style="width: 10%;"><?php echo $division_name_short; ?> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Número de <?php echo $type=='manga' ? 'volum' : 'temporada'; ?>" data-bs-contents="Si cal, es poden fer servir decimals (per exemple: 1,5).\nTambé és possible fer servir el número 0.\n\nSi es deixa en blanc, el capítol es considera part d’<?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?> addicional amb nom «Altres» i així es mostrarà a la fitxa.\n\nEls capítols de<?php echo $type=='manga' ? 'l volum' : ' la temporada'; ?> «Altres» han de ser sempre especials i, per tant, tindran buits els camps «<?php echo $type=='manga' ? 'Volum' : 'Temporada'; ?>» i «Número»."></small></th>
+													<th style="width: 10%;">Número <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Número de capítol" data-bs-contents="Si cal, es poden fer servir decimals (per exemple: 1,5).\nTambé és possible fer servir el número 0.\n\nSi es deixa en blanc, el capítol es considera un capítol especial no numerat. En aquest cas, cal introduir-hi una nota informativa perquè sigui possible saber a què fa referència.\n\nEls capítols especials poden pertànyer o no a <?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?>. Si no hi pertanyen, tindran buits els camps «<?php echo $type=='manga' ? 'Volum' : 'Temporada'; ?>» i «Número»."></small></th>
 													<th>Nota informativa interna <small class="text-muted">(no es mostra mai; serveix només com a nota per a identificar capítols o especials)</small></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
@@ -990,67 +971,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="mb-3 text-center pt-2">
 							<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix ".$content_apos; ?></button>
-						</div>
-						<!-- Modals -->
-						<div class="modal fade" id="modal-division-number" tabindex="-1" role="dialog" aria-labelledby="modal-division-number-title" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-centered" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="modal-division-number-title">Número de <?php echo $type=='manga' ? 'volum' : 'temporada'; ?></h5>
-										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true" class="fa fa-times"></span>
-										</button>
-									</div>
-									<div class="modal-body">
-										Si cal, es poden fer servir decimals (per exemple: 1,5).<br>També és possible fer servir el número 0.
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="modal fade" id="modal-division-episodes" tabindex="-1" role="dialog" aria-labelledby="modal-division-episodes-title" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-centered" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="modal-division-episodes-title">Nombre de capítols <?php echo $type=='manga' ? 'd’un volum' : 'd’una temporada'; ?></h5>
-										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true" class="fa fa-times"></span>
-										</button>
-									</div>
-									<div class="modal-body">
-										Cal introduir-hi el nombre total de capítols de<?php echo $type=='manga' ? 'l volum' : ' la temporada'; ?>, sense incloure capítols especials (no numerats) ni extres.<br><br>Si es vol utilitzar <?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?> per a fer mitjana de puntuacions de <?php echo $external_provider; ?>, però no es vol que aparegui a la fitxa (per exemple, perquè <?php echo $type=='manga' ? 'els volums' : 'les temporades'; ?> que es mostren s’agrupen de manera diferent que a les fitxes de <?php echo $external_provider; ?>), es pot introduir el valor 0.<br><br><?php echo $type=='manga' ? 'Els volums' : 'Les temporades'; ?> amb 0 capítols no es mostren al web.<?php echo $type!='manga' ? '<br><br>Si una temporada està en emissió, caldrà que introdueixis el nombre de capítols que està previst que tingui (i els donis d’alta), o bé que tornis aquí a editar-ho a cada nou capítol que hi hagi.' : ''; ?><br>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="modal fade" id="modal-chapter-number" tabindex="-1" role="dialog" aria-labelledby="modal-modal-chapter-number-title" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-centered" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="modal-modal-chapter-number-title">Número de capítol</h5>
-										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true" class="fa fa-times"></span>
-										</button>
-									</div>
-									<div class="modal-body">
-										Si cal, es poden fer servir decimals (per exemple: 1,5).<br>També és possible fer servir el número 0.<br><br>Si es deixa en blanc, el capítol es considera un capítol especial no numerat. En aquest cas, cal introduir-hi una nota informativa perquè sigui possible saber a què fa referència.<br><br>Els capítols especials poden pertànyer o no a <?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?>. Si no hi pertanyen, tindran buits els camps «<?php echo $type=='manga' ? 'Volum' : 'Temporada'; ?>» i «Número».
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="modal fade" id="modal-chapter-division" tabindex="-1" role="dialog" aria-labelledby="modal-modal-chapter-division-title" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-centered" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="modal-modal-chapter-division-title">Número de <?php echo $type=='manga' ? 'volum' : 'temporada'; ?></h5>
-										<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true" class="fa fa-times"></span>
-										</button>
-									</div>
-									<div class="modal-body">
-										Si cal, es poden fer servir decimals (per exemple: 1,5).<br>També és possible fer servir el número 0.<br><br>Si es deixa en blanc, el capítol es considera part d’<?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?> addicional amb nom «Altres» i així es mostrarà a la fitxa.<br><br>Els capítols de<?php echo $type=='manga' ? 'l volum' : ' la temporada'; ?> «Altres» han de ser sempre especials i, per tant, tindran buits els camps «<?php echo $type=='manga' ? 'Volum' : 'Temporada'; ?>» i «Número».
-									</div>
-								</div>
-							</div>
 						</div>
 					</form>
 				</article>

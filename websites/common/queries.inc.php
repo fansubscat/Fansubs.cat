@@ -124,6 +124,7 @@ function get_internal_catalogue_base_query_portion($user, $apply_hentai_rule=TRU
 			) genre_names,
 			MIN(v.status) best_status,
 			MAX(v.files_updated) last_updated,
+			MAX(v.featurable_status) featurable_status,
 			(SELECT COUNT(d.id)
 				FROM division d
 				WHERE d.series_id=s.id

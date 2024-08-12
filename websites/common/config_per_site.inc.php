@@ -69,7 +69,7 @@ switch (strtolower($server_url)) {
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
 		define('CATALOGUE_LAST_FINISHED_SERIALIZED_STRING', 'Sèries completades fa poc');
 		define('CATALOGUE_LAST_FINISHED_SINGLE_STRING', 'Films completats fa poc');
-		define('CATALOGUE_MOST_RECENT_STRING', 'Animes d’emissió recent');
+		define('CATALOGUE_MOST_RECENT_STRING', 'Animes d’estrena recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Sèries ben valorades');
 		define('CATALOGUE_BEST_SINGLE_STRING', 'Els millors films');
 		define('CATALOGUE_FEATURED_SINGLE_STRING', 'Anime destacat');
@@ -119,7 +119,7 @@ switch (strtolower($server_url)) {
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
 		define('CATALOGUE_LAST_FINISHED_SERIALIZED_STRING', 'Mangues completats fa poc');
 		define('CATALOGUE_LAST_FINISHED_SINGLE_STRING', 'One-shots completats fa poc');
-		define('CATALOGUE_MOST_RECENT_STRING', 'Mangues de publicació recent');
+		define('CATALOGUE_MOST_RECENT_STRING', 'Mangues d’estrena recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Mangues ben valorats');
 		define('CATALOGUE_BEST_SINGLE_STRING', 'Els millors one-shots');
 		define('CATALOGUE_FEATURED_SINGLE_STRING', 'Manga destacat');
@@ -161,7 +161,7 @@ switch (strtolower($server_url)) {
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua mirant');
 		define('CATALOGUE_LAST_FINISHED_SERIALIZED_STRING', 'Sèries completades fa poc');
 		define('CATALOGUE_LAST_FINISHED_SINGLE_STRING', 'Films completats fa poc');
-		define('CATALOGUE_MOST_RECENT_STRING', 'Continguts d’emissió recent');
+		define('CATALOGUE_MOST_RECENT_STRING', 'Continguts d’estrena recent');
 		define('CATALOGUE_BEST_SERIALIZED_STRING', 'Sèries ben valorades');
 		define('CATALOGUE_BEST_SINGLE_STRING', 'Els millors films');
 		define('CATALOGUE_FEATURED_SINGLE_STRING', 'Contingut destacat');

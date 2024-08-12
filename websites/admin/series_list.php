@@ -100,7 +100,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle text-center"><?php echo $row['subtype']=='movie' ? 'Film' : ($row['subtype']=='oneshot' ? 'One-shot' : ($row['subtype']=='serialized' ? 'Serialitzat' : 'Sèrie')); ?></td>
 								<td class="align-middle text-center"><?php echo $row['divisions']; ?></td>
-								<td class="align-middle text-center"><?php echo ($row['number_of_episodes']!=-1 ? $row['number_of_episodes'] : 'Oberta').($row['specials']>0 ? '<small>+'.$row['specials'].'</small>' : ''); ?></td>
+								<td class="align-middle text-center"><?php echo $row['number_of_episodes'].($row['specials']>0 ? '<small>+'.$row['specials'].'</small>' : ''); ?></td>
 								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
 								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea’n una versió" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="series_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir ".$content_prep." «".$row['name']."» i tot el seu material? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>

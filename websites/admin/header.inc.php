@@ -195,6 +195,19 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 				</div>
 			</div>
 		</nav>
+		<div class="modal fade" id="generic-modal" tabindex="-1" role="dialog" aria-labelledby="generic-modal-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="generic-modal-title"></h5>
+						<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="fa fa-times"></span>
+						</button>
+					</div>
+					<div class="modal-body"></div>
+				</div>
+			</div>
+		</div>
 <?php
 }
 ?>

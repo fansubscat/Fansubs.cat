@@ -532,7 +532,7 @@ function query_version_ids_for_sant_jordi($max_items) {
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
 				AND ".get_internal_hentai_condition()."
 				AND v.status=1
-				AND v.is_featurable=1
+				AND v.featurable_status>=1
 				AND s.score IS NOT NULL
 				AND v.is_missing_episodes=0
 				AND s.id IN (
@@ -554,7 +554,7 @@ function query_version_ids_for_tots_sants($max_items) {
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
 				AND ".get_internal_hentai_condition()."
 				AND v.status=1
-				AND v.is_featurable=1
+				AND v.featurable_status>=1
 				AND s.score IS NOT NULL
 				AND v.is_missing_episodes=0
 				AND s.id IN (
@@ -577,7 +577,7 @@ function query_version_ids_for_nadal($max_items) {
 				AND YEAR(v.created)=".date('Y')."
 				AND ".get_internal_hentai_condition()."
 				AND v.status=1
-				AND v.is_featurable=1
+				AND v.featurable_status>=1
 				AND s.score IS NOT NULL
 				AND v.is_missing_episodes=0
 				ORDER BY s.score DESC
@@ -932,7 +932,7 @@ function query_home_more_recent($user, $max_items) {
 	$max_items = intval($max_items);
 	$final_query = get_internal_home_base_query($user)."
 			GROUP BY s.id
-			ORDER BY s.number_of_episodes=-1 DESC, s.publish_date DESC
+			ORDER BY s.publish_date DESC
 			LIMIT $max_items";
 	return query($final_query);
 }

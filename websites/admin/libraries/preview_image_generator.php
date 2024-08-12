@@ -168,9 +168,9 @@ function get_series_type_summary($series) {
 		if ($series['subtype']=='oneshot') {
 			$text = get_comic_type($series['comic_type'])." • One-shot";
 		} else if ($series['divisions']>1) {
-			$text = get_comic_type($series['comic_type'])." • Serialitzat • ".$series['divisions']." volums • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes']." capítols");
+			$text = get_comic_type($series['comic_type'])." • Serialitzat • ".$series['divisions']." volums • ".$series['number_of_episodes']." capítols";
 		} else {
-			$text = get_comic_type($series['comic_type'])." • Serialitzat • 1 volum • ".($series['number_of_episodes']==-1 ? 'En publicació' : $series['number_of_episodes']." capítols");
+			$text = get_comic_type($series['comic_type'])." • Serialitzat • 1 volum • ".$series['number_of_episodes']." capítols";
 		}
 	} else {
 		if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
@@ -178,9 +178,9 @@ function get_series_type_summary($series) {
 		} else if ($series['subtype']=='movie') {
 			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Film";
 		} else if ($series['divisions']>1) {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Sèrie • ".$series['divisions']." temporades • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes']." capítols");
+			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Sèrie • ".$series['divisions']." temporades • ".$series['number_of_episodes']." capítols";
 		} else {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Sèrie • ".($series['number_of_episodes']==-1 ? 'En emissió' : $series['number_of_episodes']." capítols");
+			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Sèrie • ".$series['number_of_episodes']." capítols";
 		}
 	}
 	return $text;

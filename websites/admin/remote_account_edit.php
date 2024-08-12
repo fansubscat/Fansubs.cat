@@ -57,16 +57,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<hr>
 				<form method="post" action="remote_account_edit.php">
 					<div class="mb-3">
-						<label for="form-name" class="mandatory">Compte <small data-bs-toggle="modal" data-bs-target="#modal-account" class="text-muted fa fa-question-circle modal-help-button"></small></label>
-						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
+						<label for="form-name">Compte<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Compte" data-bs-contents="Adreça electrònica del compte. Correspon a l’adreça de correu utilitzada per a iniciar la sessió al compte de MEGA."></small></label>
+						<input class="form-control" name="name" type="email" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-storage">Ús de l’emmagatzematge <small data-bs-toggle="modal" data-bs-target="#modal-storage" class="text-muted fa fa-question-circle modal-help-button"></small></label>
-						<input class="form-control" name="storage" id="form-storage" value="<?php echo $row['total_storage']!=0 ? ($row['used_storage']/$row['total_storage']*100).'% ('.round($row['used_storage']/1024/1024/1024, 2).' de '.round($row['total_storage']/1024/1024/1024, 2).' GB)' : 'No disponible'; ?>" readonly>
+						<label for="form-storage">Ús de l’emmagatzematge <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Ús de l’emmagatzematge" data-bs-contents="Indica l’emmagatzematge utilitzat al compte. S’actualitza una vegada al dia. Si has afegit el compte fa poc, no està disponible."></small></label>
+						<input class="form-control" name="storage" id="form-storage" value="<?php echo $row['total_storage']!=0 ? (number_format($row['used_storage']/$row['total_storage']*100, 2, ',')).'% ('.number_format($row['used_storage']/1024/1024/1024, 2, ',').'/'.number_format($row['total_storage']/1024/1024/1024, 2, ',').' GB)' : 'No disponible'; ?>" readonly>
 					</div>
 					<div class="mb-3">
-						<label for="form-token" class="mandatory">Identificador de sessió <small data-bs-toggle="modal" data-bs-target="#modal-session-id" class="text-muted fa fa-question-circle modal-help-button"></small></label>
+						<label for="form-token">Identificador de sessió<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Identificador de sessió" data-bs-contents="Identificador de sessió obtingut amb MegaCMD. Això ens permet iniciar la sessió amb aquest compte sense fer servir una contrasenya i obtenir-ne enllaços automàticament i actualitzar-ne l’estat de l’emmagatzematge. Per a més informació de com obtenir-lo, consulteu el manual del tauler d’administració a la icona d’ajuda de la part superior dreta del web (apartat «Com obtenir l’identificador de sessió»)."></small></label>
 						<input class="form-control" name="token" id="form-token" required maxlength="200" value="<?php echo htmlspecialchars($row['token']); ?>">
 					</div>
 					<div class="mb-3">
@@ -86,52 +86,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					</div>
 					<div class="mb-3 text-center pt-2">
 						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el compte remot"; ?></button>
-					</div>
-					<!-- Modals -->
-					<div class="modal fade" id="modal-account" tabindex="-1" role="dialog" aria-labelledby="modal-account-title" aria-hidden="true">
-						<div class="modal-dialog modal-dialog-centered" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="modal-account-title">Compte</h5>
-									<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true" class="fa fa-times"></span>
-									</button>
-								</div>
-								<div class="modal-body">
-									Adreça electrònica del compte. Correspon a l’adreça de correu utilitzada per a iniciar la sessió al compte de MEGA.
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal fade" id="modal-storage" tabindex="-1" role="dialog" aria-labelledby="modal-account-title" aria-hidden="true">
-						<div class="modal-dialog modal-dialog-centered" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="modal-storage-title">Ús de l’emmagatzematge</h5>
-									<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true" class="fa fa-times"></span>
-									</button>
-								</div>
-								<div class="modal-body">
-									Indica l’emmagatzematge utilitzat al compte. S’actualitza una vegada al dia. Si has afegit el compte fa poc, no està disponible.
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal fade" id="modal-session-id" tabindex="-1" role="dialog" aria-labelledby="modal-account-title" aria-hidden="true">
-						<div class="modal-dialog modal-dialog-centered" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="modal-session-id-title">Identificador de sessió</h5>
-									<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true" class="fa fa-times"></span>
-									</button>
-								</div>
-								<div class="modal-body">
-									Identificador de sessió obtingut amb MegaCMD. Això ens permet iniciar la sessió amb aquest compte sense fer servir una contrasenya i obtenir-ne enllaços automàticament i actualitzar-ne l’estat de l’emmagatzematge. Per a més informació de com obtenir-lo, consulteu el manual del tauler d’administració a la icona d’ajuda de la part superior dreta del web (apartat «Com obtenir l’identificador de sessió»).
-								</div>
-							</div>
-						</div>
 					</div>
 				</form>
 			</article>

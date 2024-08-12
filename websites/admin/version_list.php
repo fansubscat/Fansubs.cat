@@ -105,7 +105,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></td>
 								<td class="align-middle text-center"><?php echo get_status_description_short($row['status']); ?></td>
 								<td class="align-middle text-center"><?php echo $row['files']; ?></td>
-								<td class="align-middle text-center"><?php echo $row['is_featurable']==1 ? 'R'.($row['is_always_featured']==1 ? 'S' : '') : '-'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['featurable_status']==3 ? 'RT' : ($row['featurable_status']==2 ? 'RE' : ($row['featurable_status']==1 ? 'R' : '-')); ?></td>
 								<td class="align-middle text-center"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '-'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '-'; ?></td>
 								<td class="align-middle text-center"><?php echo $row['num_comments']>0 ? $row['num_comments'] : '-'; ?></td>

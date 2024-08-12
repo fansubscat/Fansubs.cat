@@ -1622,6 +1622,21 @@ $(document).ready(function() {
 		uncompressReady = true;
 	});
 
+	var genericModal = document.getElementById('generic-modal');
+	genericModal.addEventListener('show.bs.modal', function (event) {
+		// Button that triggered the modal
+		var button = event.relatedTarget;
+		// Extract info from data-bs-* attributes
+		var title = button.getAttribute('data-bs-title');
+		var contents = button.getAttribute('data-bs-contents');
+		// Update the modal's content.
+		var modalTitle = genericModal.querySelector('.modal-title');
+		var modalBody = genericModal.querySelector('.modal-body');
+
+		modalTitle.textContent = title;
+		modalBody.innerHTML = contents.replaceAll('\\n','<br>');
+	});
+
 	if ($('#form-fansub-1').length==1) {
 		$('#form-fansub-1').on('change', generateStorageFolder);
 		$('#form-fansub-2').on('change', generateStorageFolder);

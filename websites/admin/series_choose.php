@@ -68,7 +68,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle text-center"><?php echo get_subtype_name($row['subtype']); ?></td>
-								<td class="align-middle text-center"><?php echo $row['number_of_episodes']!=NULL ? ($row['number_of_episodes']==-1 ? 'Obert' : $row['number_of_episodes']) : '-'; ?></td>
+								<td class="align-middle text-center"><?php echo $row['number_of_episodes']; ?></td>
 								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
 								<td class="align-middle text-center"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea’n una versió" class="fa fa-plus-square p-1 text-success"></a></td>
 							</tr>
