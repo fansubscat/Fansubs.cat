@@ -634,7 +634,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 							),
 							NULL
 						) division_name,
-						IF(s.show_episode_numbers=1,
+						IF(v.show_episode_numbers=1,
 							REPLACE(TRIM(e.number)+0, '.', ','),
 							NULL
 						) episode_number,
@@ -692,7 +692,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 							),
 							NULL
 						) division_name,
-						IF(s.show_episode_numbers=1,
+						IF(v.show_episode_numbers=1,
 							REPLACE(TRIM(e.number)+0, '.', ','),
 							NULL
 						) episode_number,
@@ -824,7 +824,7 @@ function query_home_last_updated($user, $max_items) {
 						),
 						NULL
 					) division_name,
-					IF(s.show_episode_numbers=1,
+					IF(v.show_episode_numbers=1,
 						REPLACE(TRIM(e.number)+0, '.', ','),
 						NULL
 					) episode_number,
@@ -961,7 +961,7 @@ function query_home_comments($user, $max_items) {
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
 						IF(s.type='manga','Llegit','Vist'),
-						IF(s.show_episode_numbers=1,
+						IF(v.show_episode_numbers=1,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
 								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
 								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
@@ -1340,7 +1340,7 @@ function query_player_details_by_file_id($file_id) {
 	$final_query = "SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') fansub_name,
 				v.series_id series_id,
 				f.version_id version_id,
-				s.show_episode_numbers,
+				v.show_episode_numbers,
 				s.name series_name,
 				s.type series_type,
 				s.subtype series_subtype,
@@ -1429,7 +1429,7 @@ function query_version_comments($version_id, $user) {
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
 						IF(s.type='manga','Llegit','Vist'),
-						IF(s.show_episode_numbers=1,
+						IF(v.show_episode_numbers=1,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
 								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
 								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))

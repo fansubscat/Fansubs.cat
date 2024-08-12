@@ -319,7 +319,7 @@ $message_bluesky = "%%POST_HEADER%%\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAI
 
 $has_posted_something = FALSE;
 
-$result = query("SELECT s.name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.comic_type, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, c.number, IF(ct.title IS NOT NULL, ct.title, IF(c.number IS NULL,c.description,ct.title)) title, s.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_manga_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
+$result = query("SELECT s.name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.comic_type, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, c.number, IF(ct.title IS NOT NULL, ct.title, IF(c.number IS NULL,c.description,ct.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_manga_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
 FROM file fi
 LEFT JOIN version v ON fi.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -398,7 +398,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	}
 }
 
-$result = query("SELECT IFNULL(se.name,s.name) name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, s.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_anime_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
+$result = query("SELECT IFNULL(se.name,s.name) name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_anime_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
 FROM file fi
 LEFT JOIN version v ON fi.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
@@ -485,7 +485,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	}
 }
 
-$result = query("SELECT IFNULL(se.name,s.name) name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, s.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_liveaction_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
+$result = query("SELECT IFNULL(se.name,s.name) name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_liveaction_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
 FROM file fi
 LEFT JOIN version v ON fi.version_id=v.id
 LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id

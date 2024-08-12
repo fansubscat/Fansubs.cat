@@ -1,5 +1,16 @@
 # Registre de canvis
 
+## 2024-08-12 - Versió 5.2.4
+- **Administració:**
+	- En canviar el nom d’una sèrie, si la primera temporada té el mateix nom, també es canvia automàticament.
+	- Es mou el camp «Mostra els números dels capítols» de la sèrie a la versió.
+	- Es reorganitzen els camps dels formularis.
+	- S’afegeix un advertiment quan es tria que una sèrie té parts llicenciades.
+	- Per defecte, les versions agafen el títol de la descripció informativa de la sèrie, si no en tenen.
+	- S’afegeix una icona d’ajuda per al camp de títol de la temporada/volum.
+- **API:**
+	- Es corregeixen els errors en dues consultes.
+
 ## 2024-08-12 - Versió 5.2.3
 - **Catàleg:**
 	- Les sèries ja no mostren «En emissió» o «En publicació», sinó el nombre de capítols previst.

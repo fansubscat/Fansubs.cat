@@ -53,11 +53,6 @@ function populateMalData(response, staffResponse) {
 	if ($("#form-subtype").val()=='') {
 		$("#form-subtype").val(response.data.episodes==1 ? 'movie' : 'series');
 	}
-	if (response.data.episodes==1) { //Movie
-		$("#form-show_episode_numbers").prop('checked', false);
-	} else {
-		$("#form-show_episode_numbers").prop('checked', true);
-	}
 	if ($("#form-publish_date").val()=='') {
 		$("#form-publish_date").val(response.data.aired.from.substr(0, 10));
 	}
@@ -1402,7 +1397,7 @@ function generateStorageFolder() {
 		$('#form-downloads_url_3').prop("disabled", true);
 	}
 
-	if ($('#form-storage_folder').length==0 || $('#form-storage_folder').is('[readonly]')) {
+	if ($('#form-storage_folder').length==0 || $('#form-storage_folder').attr('data-is-set')) {
 		return;
 	}
 	
@@ -1648,15 +1643,6 @@ $(document).ready(function() {
 			$("#form-division-list-name-1").val($("#form-name-with-autocomplete").val());
 		}
 		$("#form-name-with-autocomplete").attr('data-old-value', $("#form-name-with-autocomplete").val());
-	});
-
-	$('#form-subtype').on('change', function() {
-		var value = $("#form-subtype").val();
-		if (value=='movie' || value=='oneshot') {
-			$("#form-show_episode_numbers").prop('checked', false);
-		} else {
-			$("#form-show_episode_numbers").prop('checked', true);
-		}
 	});
 
 	$("#import-from-mal").click(function() {
@@ -1960,6 +1946,11 @@ $(document).ready(function() {
 		xmlhttp.open("GET", url, true);
 		xmlhttp.send();
 	});
+	$("#form-licensed_status").change(function() {
+		if ($(this).val()==1) {
+			alert("Has marcat que aquesta obra té parts llicenciades. Recorda que no s’admet contingut que disposi de versions oficials en publicació en català. Només s’admetran les parts que no hagin estat editades en català d’obres amb publicacions clarament abandonades.");
+		}
+	});
 	$("#form-historical").change(function() {
 		if ($(this).prop('checked')) {
 			$("#form-archive_url").prop('disabled', false);
@@ -1968,6 +1959,15 @@ $(document).ready(function() {
 			$("#form-archive_url").val('');
 			$("#form-archive_url").prop('disabled', true);
 			$("#form-archive_url").prop('required', false);
+		}
+	});
+	$("#form-show_episode_numbers").change(function() {
+		if ($(this).val()==1) {
+			$("#warning-no-numbers").addClass('d-none');
+			$(".episode-title-input-numbered").attr('placeholder', '(Sense títol de capítol, se’n mostra només el número)');
+		} else {
+			$("#warning-no-numbers").removeClass('d-none');
+			$(".episode-title-input-numbered").attr('placeholder', '- Introdueix un títol -');
 		}
 	});
 });

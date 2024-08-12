@@ -167,7 +167,7 @@ function query_comment_episode_title($comment_id) {
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
 						IF(s.type='manga','Llegit','Vist'),
-						IF(s.show_episode_numbers=1,
+						IF(v.show_episode_numbers=1,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
 								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
 								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
@@ -182,7 +182,8 @@ function query_comment_episode_title($comment_id) {
 			FROM comment c
 			LEFT JOIN episode e ON c.last_seen_episode_id=e.id
 			LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=c.version_id
-			LEFT JOIN series s ON e.series_id=s.id
+			LEFT JOIN version v ON c.version_id=v.id
+			LEFT JOIN series s ON v.series_id=s.id
 			LEFT JOIN division d ON e.division_id=d.id
 			WHERE c.id=$comment_id";
 	return query($final_query);

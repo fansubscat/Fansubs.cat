@@ -132,6 +132,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['storage_processing']=0;
 		}
+		if (!empty($_POST['show_episode_numbers'])){
+			$data['show_episode_numbers']=1;
+		} else {
+			$data['show_episode_numbers']=0;
+		}
 
 		$divisions=array();
 
@@ -365,7 +370,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			log_action("update-version", "S’ha actualitzat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",featurable_status=".$data['featurable_status'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",featurable_status=".$data['featurable_status'].",show_episode_numbers=".$data['show_episode_numbers'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -574,7 +579,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S’ha creat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."»");
-			query("INSERT INTO version (series_id,status,is_missing_episodes,featurable_status,is_hidden,completed_date,storage_folder,storage_processing,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['featurable_status'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,is_missing_episodes,featurable_status,show_episode_numbers,is_hidden,completed_date,storage_folder,storage_processing,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['featurable_status'].",".$data['show_episode_numbers'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -649,6 +654,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resultd);
 
+		if ($series['number_of_episodes']!=1) {
+			$row['show_episode_numbers']=1;
+		} else {
+			$row['show_episode_numbers']=0;
+		}
+
 		$fansubs = array();
 
 		$resultf = query("SELECT fansub_id, downloads_url FROM rel_version_fansub vf WHERE vf.version_id=".$row['id']);
@@ -672,6 +683,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$results = query("SELECT s.* FROM series s WHERE id=".escape($_GET['series_id']));
 		$series = mysqli_fetch_assoc($results) or crash('Series not found');
 		mysqli_free_result($results);
+
+		if ($series['number_of_episodes']!=1) {
+			$row['show_episode_numbers']=1;
+		} else {
+			$row['show_episode_numbers']=0;
+		}
 
 		$fansubs = array();
 
@@ -778,7 +795,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-8">
+							<div class="col-sm-4">
 								<div class="mb-3">
 									<label for="form-status" class="mandatory">Estat</label>
 									<select class="form-select" name="status" id="form-status" required>
@@ -788,6 +805,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<option value="3"<?php echo $row['status']==3 ? " selected" : ""; ?>>Parcialment completada (<?php echo $division_some_completed; ?>)</option>
 										<option value="4"<?php echo $row['status']==4 ? " selected" : ""; ?>>Abandonada</option>
 										<option value="5"<?php echo $row['status']==5 ? " selected" : ""; ?>>Cancel·lada</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="mb-3">
+									<label for="form-status" class="mandatory">Números i títols dels capítols</label>
+									<select class="form-select" name="show_episode_numbers" id="form-show_episode_numbers" required>
+<?php
+	if ($series['number_of_episodes']!=1) {
+?>
+										<option value="1"<?php echo $row['show_episode_numbers']==1 ? " selected" : ""; ?>>Mostra el número i el títol dels capítols</option>
+<?php
+	}
+?>
+										<option value="0"<?php echo $row['show_episode_numbers']==0 ? " selected" : ""; ?>>Mostra només el títol dels capítols</option>
 									</select>
 								</div>
 							</div>
@@ -809,8 +841,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-8">
 								<div class="mb-3">
-									<label for="form-storage_folder"><span class="mandatory">Carpeta d’emmagatzematge</span><br /><small class="text-muted">(modifica-la només si saps què fas; s’hi copiaran els fitxers)</small></label>
-									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo htmlspecialchars($row['storage_folder']); ?>" maxlength="200" required<?php echo (!empty($row['id']) && empty($row['is_hidden'])) ? ' readonly' : '' ; ?>/>
+									<label for="form-storage_folder"><span class="mandatory">Carpeta d’emmagatzematge</span><br /><small class="text-muted">(carpeta del servidor de streaming on es copiaran els fitxers, no modificable)</small></label>
+									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo htmlspecialchars($row['storage_folder']); ?>" maxlength="200" required readonly<?php echo (!empty($row['id']) && empty($row['is_hidden'])) ? ' data-is-set="1"' : '' ; ?>/>
 								</div>
 							</div>
 							<div class="col-sm-4">
@@ -1016,8 +1048,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<option value="480p">
 									<option value="360p">
 								</datalist>
-								<div id="warning-no-numbers" class="alert alert-warning<?php echo $series['show_episode_numbers']==0 ? '' : ' d-none'; ?>">
-									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Assegura’t d’afegir-los allà on sigui necessari.</div>
+								<div id="warning-no-numbers" class="alert alert-warning<?php echo $row['show_episode_numbers']==0 ? '' : ' d-none'; ?>">
+									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Si vols mostrar els números de manera diferent a la per defecte, afegeix-los on calguin.</div>
 								</div>
 <?php
 	for ($i=0;$i<count($episodes);$i++) {
@@ -1033,7 +1065,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$resultle=query("SELECT e.id, CONCAT(s.name, ' - ', IF(e.division_id IS NULL,'Altres',IFNULL(d.name,CONCAT('Temporada ',TRIM(d.number)+0))), ' - ', IF(e.number IS NULL,'Extra',CONCAT('Capítol ',TRIM(e.number)+0)),IF(e.description IS NULL,'',CONCAT(': ', e.description))) description FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE s.type='$type' AND s.subtype='movie' AND e.id=".$episodes[$i]['linked_episode_id']);
 			$linked_episode = mysqli_fetch_assoc($resultle);
 			mysqli_free_result($resultle);
-			$episode_name.=$linked_episode['description'].' [FILM ENLLAÇAT] <span class="mandatory"></span> <small class="text-muted">(És obligatori introduir-ne el títol!)</small>';
+			$episode_name.=$linked_episode['description'].' [FILM ENLLAÇAT] <span class="mandatory"></span> <small class="text-muted">(Film enllaçat: és obligatori introduir-ne el títol!)</small>';
 		} else if (!empty($episodes[$i]['number'])) {
 			if (!empty($episodes[$i]['description'])) {
 				$episode_name.='Capítol '.floatval($episodes[$i]['number']).' <small class="text-muted">('.htmlspecialchars($episodes[$i]['description']).')</small>';
@@ -1041,7 +1073,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$episode_name.='Capítol '.floatval($episodes[$i]['number']);
 			}
 		} else {
-			$episode_name.=$episodes[$i]['description'].' <small class="text-muted">(Aquesta descripció NO és interna: es mostrarà si no introdueixes cap títol!)</small>';
+			$episode_name.=$episodes[$i]['description'].' <small class="text-muted">(Capítol no numerat: és obligatori introduir-ne el títol!)</small>';
 		}
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
@@ -1064,7 +1096,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 								<div class="mb-3 episode-container">
 									<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title"><span class="fa fa-caret-square-right pe-2 text-primary"></span><?php echo $episode_name; ?></label>
-									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control episode-title-input" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="200" placeholder="<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id']) && $series['show_episode_numbers']==1) ? '(Sense títol de capítol, se’n mostra només el número)' : '- Introdueix un títol -'; ?>"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
+									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control episode-title-input<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id'])) ? ' episode-title-input-numbered' : ''; ?>" value="<?php echo htmlspecialchars((!empty($episodes[$i]['title']) || !empty($episodes[$i]['number'])) ? $episodes[$i]['title'] : $episodes[$i]['description']); ?>" maxlength="200" placeholder="<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id']) && $row['show_episode_numbers']==1) ? '(Sense títol de capítol, se’n mostra només el número)' : '- Introdueix un títol -'; ?>"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
 <?php
 		if (empty($episodes[$i]['linked_episode_id'])) {
 ?>

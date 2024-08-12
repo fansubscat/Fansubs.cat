@@ -30,6 +30,7 @@ switch ($type) {
 		$division_name='Temporades';
 		$division_name_mandatory=TRUE;
 		$division_title='Títol complet';
+		$division_help='A la fitxa es veurà aquest text com a nom de la temporada.\\n\\nHa d’incloure sempre el nom de la sèrie: per exemple, «Nom de la sèrie - Temporada 1». No s’hi ha d’introduir mai «Temporada 1» i prou, perquè s’anunciaria a les xarxes que s’ha estrenat l’anime «Temporada 1». Si el nom de la sèrie canvia a cada temporada però és reconeixible quina sèrie és, amb el títol de la temporada n’hi ha prou.';
 		$division_explanation='(es mostra al selector de temporades i s’utilitza per a anunciar novetats a les xarxes)';
 		$division_name_short='Temporada';
 		$division_one="una temporada";
@@ -42,6 +43,7 @@ switch ($type) {
 		$division_name='Volums';
 		$division_name_mandatory=FALSE;
 		$division_title='Títol';
+		$division_help='A la fitxa es veurà aquest text com a nom del volum.\\n\\nSi no s’hi introdueix res, es mostrarà una de les següents opcions: «Volum X» si n’hi ha més d’un, «Volum únic» si només n’hi ha un, o «One-shot» si només n’hi ha un i el tipus d’obra és «One-shot».';
 		$division_explanation='(capçalera del volum a la fitxa; si no s’informa, s’hi mostra «Volum X», «Volum únic» o «One-shot»)';
 		$division_name_short='Volum';
 		$division_one="un volum";
@@ -54,6 +56,7 @@ switch ($type) {
 		$division_name='Temporades';
 		$division_name_mandatory=TRUE;
 		$division_title='Títol complet';
+		$division_help='A la fitxa es veurà aquest text com a nom de la temporada.\\n\\nHa d’incloure sempre el nom de la sèrie: per exemple, «Nom de la sèrie - Temporada 1». No s’hi ha d’introduir mai «Temporada 1» i prou, perquè s’anunciaria a les xarxes que s’ha estrenat l’anime «Temporada 1». Si el nom de la sèrie canvia a cada temporada però és reconeixible quina sèrie és, amb el títol de la temporada n’hi ha prou.';
 		$division_explanation='(es mostra al selector de temporades i s’utilitza per a anunciar novetats a les xarxes)';
 		$division_name_short='Temporada';
 		$division_one="una temporada";
@@ -142,11 +145,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$data['has_licensed_parts']=1;
 		} else {
 			$data['has_licensed_parts']=0;
-		}
-		if (!empty($_POST['show_episode_numbers'])){
-			$data['show_episode_numbers']=1;
-		} else {
-			$data['show_episode_numbers']=0;
 		}
 		if (!empty($_POST['comic_type'])) {
 			$data['comic_type']="'".escape($_POST['comic_type'])."'";
@@ -254,7 +252,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($_POST['action']=='edit') {
 			log_action("update-series", "S’ha actualitzat la sèrie «".$_POST['name']."» (id. de sèrie: ".$data['id'].")");
-			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",subtype='".$data['subtype']."',publish_date=".$data['publish_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",number_of_episodes=".$data['number_of_episodes'].",synopsis='".$data['synopsis']."',external_id=".$data['external_id'].",score=".$data['score'].",has_licensed_parts=".$data['has_licensed_parts'].",show_episode_numbers=".$data['show_episode_numbers'].",comic_type=".$data['comic_type'].",reader_type=".$data['reader_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE series SET slug='".$data['slug']."',name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",subtype='".$data['subtype']."',publish_date=".$data['publish_date'].",author=".$data['author'].",director=".$data['director'].",studio=".$data['studio'].",rating=".$data['rating'].",number_of_episodes=".$data['number_of_episodes'].",synopsis='".$data['synopsis']."',external_id=".$data['external_id'].",score=".$data['score'].",has_licensed_parts=".$data['has_licensed_parts'].",comic_type=".$data['comic_type'].",reader_type=".$data['reader_type'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$data['id'].",".$genre.")");
@@ -311,7 +309,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-series", "S’ha creat la sèrie «".$_POST['name']."»");
-			query("INSERT INTO series (slug,name,alternate_names,keywords,type,subtype,publish_date,author,director,studio,rating,number_of_episodes,synopsis,external_id,score,has_licensed_parts,show_episode_numbers,comic_type,reader_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."','".$data['subtype']."',".$data['publish_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['number_of_episodes'].",'".$data['synopsis']."',".$data['external_id'].",".$data['score'].",".$data['has_licensed_parts'].",".$data['show_episode_numbers'].",".$data['comic_type'].",".$data['reader_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO series (slug,name,alternate_names,keywords,type,subtype,publish_date,author,director,studio,rating,number_of_episodes,synopsis,external_id,score,has_licensed_parts,comic_type,reader_type,created,created_by,updated,updated_by) VALUES ('".$data['slug']."','".$data['name']."',".$data['alternate_names'].",".$data['keywords'].",'".$data['type']."','".$data['subtype']."',".$data['publish_date'].",".$data['author'].",".$data['director'].",".$data['studio'].",".$data['rating'].",".$data['number_of_episodes'].",'".$data['synopsis']."',".$data['external_id'].",".$data['score'].",".$data['has_licensed_parts'].",".$data['comic_type'].",".$data['reader_type'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			foreach ($genres as $genre) {
 				query("INSERT INTO rel_series_genre (series_id,genre_id) VALUES (".$inserted_id.",".$genre.")");
@@ -380,7 +378,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$divisions = array();
 		$episodes = array();
 		$row['has_licensed_parts']=0;
-		$row['show_episode_numbers']=1;
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -408,9 +405,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 							</div>
+							<div class="col-sm-4">
+								<div class="mb-3">
+									<label for="form-score">Puntuació a <?php echo $external_provider; ?> <small class="text-muted">(s’actualitza automàticament)</small></label>
+									<input class="form-control" name="score" id="form-score" type="number" value="<?php echo $row['score']; ?>" step=".01" readonly>
+								</div>
+							</div>
 						</div>
 						<div id="import-from-mal-done" class="col-sm mb-3 alert alert-warning d-none">
-							<span class="fa fa-exclamation-triangle pe-2"></span>S’ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el nom, si s’escau.
+							<span class="fa fa-exclamation-triangle pe-2"></span>S’ha importat la fitxa de MyAnimeList. Revisa que les dades siguin correctes i tradueix-ne la sinopsi i el títol, si s’escau.
 						</div>
 						<hr />
 						<div class="row">
@@ -440,23 +443,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-8">
+							<div class="col-sm-6">
 								<div class="mb-3">
 									<label for="form-alternate_names">Altres títols <small class="text-muted">(normalment en anglès i en japonès romanitzat; no admet caràcters japonesos)</small></label>
 									<input class="form-control" name="alternate_names" id="form-alternate_names" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_names'])); ?>">
 								</div>
 							</div>
-							<div class="col-sm-4">
+							<div class="col-sm-6">
 								<div class="mb-3">
-									<label for="form-score">Puntuació a <?php echo $external_provider; ?> <small class="text-muted">(s’actualitza automàticament)</small></label>
-									<input class="form-control" name="score" id="form-score" type="number" value="<?php echo $row['score']; ?>" step=".01" readonly>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="mb-3">
-									<label for="form-keywords">Paraules clau <small class="text-muted">(separades per espais, no per comes; que no siguin ja al títol o altres títols; s’utilitza per a la cerca)</small></label>
+									<label for="form-keywords">Paraules clau <small class="text-muted">(que no siguin als títols; separades per espais, no per comes; s’utilitza per a la cerca)</small></label>
 									<input class="form-control" name="keywords" id="form-keywords" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['keywords'])); ?>">
 								</div>
 							</div>
@@ -464,7 +459,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-type" class="mandatory">Tipus</label>
+									<label for="form-type" class="mandatory">Tipus d’obra</label>
 									<select class="form-select" name="subtype" id="form-subtype" required>
 										<option value="">- Selecciona un tipus -</option>
 <?php
@@ -483,37 +478,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</select>
 								</div>
 							</div>
-							<div class="col-sm">
-								<div class="mb-3">
-									<label for="form-publish_date">Data d’estrena</label>
-									<input class="form-control" name="publish_date" type="date" id="form-publish_date" maxlength="200" value="<?php echo !empty($row['publish_date']) ? date('Y-m-d', strtotime($row['publish_date'])) : ""; ?>">
-								</div>
-							</div>
-							<div class="col-sm">
-								<div class="mb-3">
-									<label for="form-author">Autor</label>
-									<input class="form-control" name="author" id="form-author" maxlength="200" value="<?php echo htmlspecialchars($row['author']); ?>">
-								</div>
-							</div>
-							<div class="col-sm">
-								<div class="mb-3">
-									<label for="form-rating" class="mandatory">Valoració per edats</label>
-									<select class="form-select" name="rating" id="form-rating" required>
-										<option value="">- Selecciona una valoració -</option>
-										<option value="TP"<?php echo $row['rating']=='TP' ? " selected" : ""; ?>>Tots els públics</option>
-										<option value="+7"<?php echo $row['rating']=='+7' ? " selected" : ""; ?>>Majors de 7 anys</option>
-										<option value="+13"<?php echo $row['rating']=='+13' ? " selected" : ""; ?>>Majors de 13 anys</option>
-										<option value="+16"<?php echo $row['rating']=='+16' ? " selected" : ""; ?>>Majors de 16 anys</option>
-										<option value="+18"<?php echo $row['rating']=='+18' ? " selected" : ""; ?>>Majors de 18 anys</option>
-										<option value="XXX"<?php echo $row['rating']=='XXX' ? " selected" : ""; ?>>Contingut pornogràfic</option>
-									</select>
-								</div>
-							</div>
-						</div>
 <?php
 	if ($type=='manga') {
 ?>
-						<div class="row">
 							<div class="col-sm">
 								<div class="mb-3">
 									<label for="form-comic_type" class="mandatory">Tipus de còmic</label>
@@ -537,20 +504,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</select>
 								</div>
 							</div>
-							<div class="col-sm">
-								<div class="mb-3">
-									<label for="form-view-options">Visualització al web públic</label>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
-										<label class="form-check-label" for="form-show_episode_numbers">Mostra el número de cada capítol</label>
-									</div>
-								</div>
-							</div>
-						</div>
 <?php
 	} else {
 ?>
-						<div class="row">
 							<div class="col-sm">
 								<div class="mb-3">
 									<label for="form-director">Director</label>
@@ -563,27 +519,46 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<input class="form-control" name="studio" id="form-studio" maxlength="200" value="<?php echo htmlspecialchars($row['studio']); ?>">
 								</div>
 							</div>
-							<div class="col-sm">
-								<div class="mb-3">
-									<label for="form-view-options">Visualització al web públic</label>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="checkbox" name="show_episode_numbers" id="form-show_episode_numbers" value="1"<?php echo $row['show_episode_numbers']==1 ? " checked" : ""; ?>>
-										<label class="form-check-label" for="form-show_episode_numbers">Mostra el número dels capítols</label>
-									</div>
-								</div>
-							</div>
-						</div>
 <?php
 	}
 ?>
+						</div>
+						<div class="row">
+							<div class="col-sm">
+								<div class="mb-3">
+									<label for="form-rating" class="mandatory">Valoració per edats</label>
+									<select class="form-select" name="rating" id="form-rating" required>
+										<option value="">- Selecciona una valoració -</option>
+										<option value="TP"<?php echo $row['rating']=='TP' ? " selected" : ""; ?>>Tots els públics</option>
+										<option value="+7"<?php echo $row['rating']=='+7' ? " selected" : ""; ?>>Majors de 7 anys</option>
+										<option value="+13"<?php echo $row['rating']=='+13' ? " selected" : ""; ?>>Majors de 13 anys</option>
+										<option value="+16"<?php echo $row['rating']=='+16' ? " selected" : ""; ?>>Majors de 16 anys</option>
+										<option value="+18"<?php echo $row['rating']=='+18' ? " selected" : ""; ?>>Majors de 18 anys</option>
+										<option value="XXX"<?php echo $row['rating']=='XXX' ? " selected" : ""; ?>>Contingut pornogràfic</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-sm">
+								<div class="mb-3">
+									<label for="form-publish_date">Data d’estrena</label>
+									<input class="form-control" name="publish_date" type="date" id="form-publish_date" maxlength="200" value="<?php echo !empty($row['publish_date']) ? date('Y-m-d', strtotime($row['publish_date'])) : ""; ?>">
+								</div>
+							</div>
+							<div class="col-sm">
+								<div class="mb-3">
+									<label for="form-author">Autor</label>
+									<input class="form-control" name="author" id="form-author" maxlength="200" value="<?php echo htmlspecialchars($row['author']); ?>">
+								</div>
+							</div>
+						</div>
 						<div class="mb-3">
-							<label for="form-synopsis">Sinopsi<span class="mandatory"></span> <small class="text-muted">(admet <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">Markdown</a>)</small></label>
+							<label for="form-synopsis">Sinopsi<span class="mandatory"></span> <small class="text-muted">(admet <a href="https://www.markdownguide.org/cheat-sheet/" target="_blank">Markdown</a> per a negreta i cursiva)</small></label>
 							<textarea class="form-control" name="synopsis" id="form-synopsis" required style="height: 150px;" oninput="synopsisChanged=true;"><?php echo htmlspecialchars(str_replace('&#039;',"'",html_entity_decode($row['synopsis']))); ?></textarea>
 						</div>
 						<div class="row">
 							<div class="col-sm-3">
 								<div class="mb-3">
-									<label>Imatge de portada<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ≥300x400, ≤150 KiB)</small></label><br>
+									<label>Imatge de portada<span class="mandatory"></span><br><small class="text-muted">(JPEG, ≥300x400, ≤150 KiB)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/covers/'.$row['id'].'.jpg');
 ?>
@@ -601,7 +576,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-3">
 								<div class="mb-3">
-									<label>Imatge de capçalera<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?><br><small class="text-muted">(JPEG, ≥1920x400, ≤300 KiB)</small></label><br>
+									<label>Imatge de capçalera<span class="mandatory"></span><br><small class="text-muted">(JPEG, ≥1920x400, ≤300 KiB)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/featured/'.$row['id'].'.jpg');
 ?>
@@ -694,8 +669,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 											<thead>
 												<tr>
 													<th style="width: 10%;">Número<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Número de <?php echo $type=='manga' ? 'volum' : 'temporada'; ?>" data-bs-contents="Si cal, es poden fer servir decimals (per exemple: 1,5).\nTambé és possible fer servir el número 0."></small></th>
-													<th><?php echo $division_title; ?><?php echo $division_name_mandatory ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted"><?php echo $division_explanation; ?></small></th>
-													<th style="width: 15%;">Capítols<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Nombre de capítols <?php echo $type=='manga' ? 'd’un volum' : 'd’una temporada'; ?>" data-bs-contents="Cal introduir-hi el nombre total de capítols de<?php echo $type=='manga' ? 'l volum' : ' la temporada'; ?>, sense incloure capítols especials (no numerats) ni extres.\n\nSi es vol utilitzar <?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?> per a fer mitjana de puntuacions de <?php echo $external_provider; ?>, però no es vol que aparegui a la fitxa (per exemple, perquè <?php echo $type=='manga' ? 'els volums' : 'les temporades'; ?> que es mostren s’agrupen de manera diferent que a les fitxes de <?php echo $external_provider; ?>), es pot introduir el valor 0.\n\n<?php echo $type=='manga' ? 'Els volums' : 'Les temporades'; ?> amb 0 capítols no es mostren al web.<?php echo $type!='manga' ? '\\n\\nSi una temporada està en emissió, caldrà que introdueixis el nombre de capítols que està previst que tingui (i els donis d’alta), o bé que tornis aquí a editar-ho a cada nou capítol que hi hagi.' : ''; ?>"></small></th>
+													<th><?php echo $division_title; ?><?php echo $division_name_mandatory ? '<span class="mandatory"></span>' : ''; ?> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="<?php echo $division_title; ?>" data-bs-contents="<?php echo $division_help; ?>"></small> <small class="text-muted"><?php echo $division_explanation; ?></small></th>
+													<th style="width: 15%;">Capítols<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Nombre de capítols <?php echo $type=='manga' ? 'd’un volum' : 'd’una temporada'; ?>" data-bs-contents="Cal introduir-hi el nombre total de capítols de<?php echo $type=='manga' ? 'l volum' : ' la temporada'; ?>, sense incloure capítols especials (no numerats) ni extres.\n\nSi es vol utilitzar <?php echo $type=='manga' ? 'un volum' : 'una temporada'; ?> per a fer mitjana de puntuacions de <?php echo $external_provider; ?>, però no es vol que aparegui a la fitxa (per exemple, perquè <?php echo $type=='manga' ? 'els volums' : 'les temporades'; ?> que es mostren s’agrupen de manera diferent que a les fitxes de <?php echo $external_provider; ?>), es pot introduir el valor 0.\n\n<?php echo $type=='manga' ? 'Els volums' : 'Les temporades'; ?> amb 0 capítols no es mostren al web.<?php echo $type!='manga' ? '\\n\\nSi una temporada està en emissió, caldrà que introdueixis el nombre de capítols que està previst que tingui (i els donis d’alta), o bé que tornis aquí a editar-ho a cada nou capítol que hi hagi.' : '\\n\\nSi un volum està en publicació, caldrà que introdueixis el nombre de capítols que està previst que tingui (i els donis d’alta), o bé que tornis aquí a editar-ho a cada nou capítol que hi hagi.'; ?>"></small></th>
 													<th style="width: 15%;">Id. <?php echo $external_provider; ?></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
