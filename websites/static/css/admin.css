@@ -147,6 +147,15 @@ small {
 	cursor: pointer;
 }
 
+.storage-progress {
+	height: 0.3rem;
+	background: #CCCCCC;
+}
+
+.storage-details {
+	font-size: 0.8rem;
+}
+
 .table>:not(caption)>*.hentai>* {
 	color: darkred !important;
 }

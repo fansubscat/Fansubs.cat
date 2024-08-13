@@ -52,9 +52,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>
-								<th scope="row"><?php echo htmlspecialchars($row['name']); ?></th>
+								<th class="align-middle" scope="row"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : '- Intern de Fansubs.cat -'; ?></td>
-								<td class="align-middle"><?php echo $row['total_storage']!=0 ? number_format(($row['used_storage']/$row['total_storage']*100), 2, ',').'% ('.number_format($row['used_storage']/1024/1024/1024, 2, ',').'/'.number_format($row['total_storage']/1024/1024/1024, 2, ',').' GB)' : 'No disponible'; ?></th>
+								<td class="align-middle text-center storage-details"><div class="progress storage-progress"><div class="progress-value" style="width: <?php echo ($row['total_storage']>0 ? number_format(($row['used_storage']/$row['total_storage']*100), 2, '.') : '0').'%; background: '.(($row['total_storage']>0 && number_format(($row['used_storage']/$row['total_storage']*100), 2, '.')>100) ? 'red' : 'blue').';'; ?>"></div></div><?php echo $row['total_storage']!=0 ? number_format($row['used_storage']/1024/1024/1024, 2, ',').' / '.number_format($row['total_storage']/1024/1024/1024, 2, ',').' GB' : 'No disponible'; ?></th>
 								<td class="align-middle text-center text-nowrap"><a href="remote_account_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="remote_account_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el compte remot «".$row['name']."»? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
