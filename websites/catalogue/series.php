@@ -263,6 +263,14 @@ while ($version = mysqli_fetch_assoc($result)) {
 			$result_episodes = query_available_files_in_version($version['id'], $ids, $linked_ids);
 			$divisions[$index]['available_episodes'] = mysqli_num_rows($result_episodes);
 			mysqli_free_result($result_episodes);
+
+			if (!empty($user)) {
+				$result_seen_episodes = query_available_seen_files_in_version($user['id'], $version['id'], $ids, $linked_ids);
+				$divisions[$index]['available_seen_episodes'] = mysqli_num_rows($result_seen_episodes);
+				mysqli_free_result($result_seen_episodes);
+			} else {
+				$divisions[$index]['available_seen_episodes'] = 0;
+			}
 		}
 
 		//Add extras
@@ -281,7 +289,8 @@ while ($version = mysqli_fetch_assoc($result)) {
 				'division_name' => 'Contingut extra',
 				'division_number_of_episodes' => count($extras),
 				'episodes' => $extras,
-				'available_episodes' => count($extras)
+				'available_episodes' => count($extras),
+				'available_seen_episodes' => 0 //Irrelevant, extras never get preselected
 			));
 		}
 ?>
@@ -338,20 +347,28 @@ while ($version = mysqli_fetch_assoc($result)) {
 								</div>
 <?php
 		} else { //Multiple divisions (or manga)
-			$selected_division_id = $divisions[0]['division_id'];
-			foreach ($divisions as $index => $division) {
-				if ($division['available_episodes']>0) {
-					$selected_division_id=$division['division_id'];
-					break;
-				}
-				
-			}
 			if (CATALOGUE_ITEM_TYPE=='manga') {
 ?>
 								<div class="division-list">
 <?php
 			}
 			else {
+				$selected_division_id = $divisions[0]['division_id'];
+				$all_seen = FALSE;
+				foreach ($divisions as $index => $division) {
+					if ($division['available_episodes']>0 && $division['division_id']!='extras') {
+						$selected_division_id=$division['division_id'];
+						if ($division['available_seen_episodes']<$division['available_episodes']) {
+							$all_seen = FALSE;
+							break;
+						} else {
+							$all_seen = TRUE;
+						}
+					}
+				}
+				if ($all_seen && $version['status']==1) {
+					$selected_division_id = $divisions[0]['division_id'];
+				}
 				//Print list of seasons
 ?>
 									<select class="season-chooser">

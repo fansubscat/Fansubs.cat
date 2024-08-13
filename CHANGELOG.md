@@ -1,6 +1,8 @@
 # Registre de canvis
 
-## 2024-08-12 - Versió 5.2.4
+## 2024-08-13 - Versió 5.2.4
+- **Catàleg:**
+	- A la fitxa de la sèrie, es mostra preseleccionada la primera temporada amb algun capítol no vist.
 - **Administració:**
 	- En canviar el nom d’una sèrie, si la primera temporada té el mateix nom, també es canvia automàticament.
 	- Es mou el camp «Mostra els números dels capítols» de la sèrie a la versió.

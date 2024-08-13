@@ -1110,6 +1110,34 @@ function query_available_files_in_version($version_id, $episode_ids, $linked_epi
 	return query($final_query);
 }
 
+function query_available_seen_files_in_version($user_id, $version_id, $episode_ids, $linked_episode_ids) {
+	$user_id = escape($user_id);
+	$version_id = escape($version_id);
+	$final_query = "SELECT f.*
+			FROM file f
+			WHERE ((f.episode_id IN (".implode(',',$episode_ids).") AND f.version_id=$version_id)
+				OR (f.episode_id IN (".implode(',',$linked_episode_ids).") AND f.version_id IN (
+					SELECT v2.id
+					FROM episode e2
+						LEFT JOIN series s ON e2.series_id=s.id
+						LEFT JOIN version v2 ON v2.series_id=s.id
+						LEFT JOIN rel_version_fansub vf ON v2.id=vf.version_id
+					WHERE vf.fansub_id IN (
+						SELECT fansub_id
+						FROM rel_version_fansub
+						WHERE version_id=$version_id)
+					)
+				)
+			) AND f.id IN (
+				SELECT ss.file_id
+				FROM user_file_seen_status ss
+				WHERE ss.user_id=$user_id
+					AND ss.is_seen=1
+			)
+			ORDER BY f.id ASC";
+	return query($final_query);
+}
+
 function query_files_by_episode_id_and_version_id($user_id, $episode_id, $version_id) {
 	//This ends up being printed to the episode list: we need to get the user progress and user seen status
 	$user_id = escape($user_id);
