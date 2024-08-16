@@ -62,10 +62,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-storage">Ús de l’emmagatzematge <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Ús de l’emmagatzematge" data-bs-contents="Indica l’emmagatzematge utilitzat al compte. S’actualitza una vegada al dia. Si has afegit el compte fa poc, no està disponible."></small></label>
-						<input class="form-control" name="storage" id="form-storage" value="<?php echo $row['total_storage']!=0 ? (number_format($row['used_storage']/$row['total_storage']*100, 2, ',')).'% ('.number_format($row['used_storage']/1024/1024/1024, 2, ',').'/'.number_format($row['total_storage']/1024/1024/1024, 2, ',').' GB)' : 'No disponible'; ?>" readonly>
-					</div>
-					<div class="mb-3">
 						<label for="form-token">Identificador de sessió<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Identificador de sessió" data-bs-contents="Identificador de sessió obtingut amb MegaCMD. Això ens permet iniciar la sessió amb aquest compte sense fer servir una contrasenya i obtenir-ne enllaços automàticament i actualitzar-ne l’estat de l’emmagatzematge. Per a més informació de com obtenir-lo, consulteu el manual del tauler d’administració a la icona d’ajuda de la part superior dreta del web (apartat «Com obtenir l’identificador de sessió»)."></small></label>
 						<input class="form-control" name="token" id="form-token" required maxlength="200" value="<?php echo htmlspecialchars($row['token']); ?>">
 					</div>

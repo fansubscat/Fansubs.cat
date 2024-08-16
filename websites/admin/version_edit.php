@@ -882,7 +882,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$where = '1';
 		}
 
-		$resulta = query("SELECT a.* FROM remote_account a WHERE $where ORDER BY a.fansub_id IS NULL DESC, a.name ASC");
+		$resulta = query("SELECT a.* FROM remote_account a LEFT JOIN fansub f ON a.fansub_id=f.id WHERE $where ORDER BY a.fansub_id IS NULL DESC, f.name ASC, NATURAL_SORT_KEY(a.name) ASC");
 		while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
 											<option value="<?php echo $arow['id']; ?>"><?php echo htmlspecialchars($arow['name']); ?></option>
@@ -933,7 +933,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$where = '1';
 			}
 
-			$resulta = query("SELECT a.* FROM remote_account a WHERE $where ORDER BY a.fansub_id IS NULL DESC, a.name ASC");
+			$resulta = query("SELECT a.* FROM remote_account a LEFT JOIN fansub f ON a.fansub_id=f.id WHERE $where ORDER BY a.fansub_id IS NULL DESC, f.name ASC, NATURAL_SORT_KEY(a.name) ASC");
 			while ($arow = mysqli_fetch_assoc($resulta)) {
 ?>
 															<option value="<?php echo $arow['id']; ?>"<?php echo $remote_folders[$j]['remote_account_id']==$arow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($arow['name']); ?></option>
