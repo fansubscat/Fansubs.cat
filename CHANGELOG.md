@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2024-08-16 - Versió 5.2.5
+- **Catàleg:**
+	- S’amaguen els comentaris dels usuaris amb un «shadowban» excepte per a ells mateixos.
+- **Administració:**
+	- Es permet consultar el detall de versions i carpetes que fan servir cada compte remot.
+	- L’ordenació del selector de comptes remots a les versions és per ordre numèric natural.
+	- S’afegeix un camp «espòiler» a la llista de comentaris.
+	- Els comentaris d’usuaris amb un «shadowban» es mostren en gris.
+
 ## 2024-08-13 - Versió 5.2.4
 - **Catàleg:**
 	- A la fitxa de la sèrie, es mostra preseleccionada la primera temporada amb algun capítol no vist.
