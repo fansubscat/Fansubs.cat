@@ -160,6 +160,14 @@ small {
 	color: darkred !important;
 }
 
+.table>:not(caption)>*.shadowbanned>* {
+	color: #929292 !important;
+}
+
+.table>:not(caption)>*.hentaishadowbanned>* {
+	color: #FF8BA3 !important;
+}
+
 tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {
 	padding-left: 24px;
 }

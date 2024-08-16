@@ -295,6 +295,7 @@ CREATE TABLE `user` (
   `manga_reader_type` tinyint(1) NOT NULL DEFAULT 0,
   `previous_chapters_read_behavior` int(11) NOT NULL DEFAULT 0,
   `site_theme` tinyint(1) NOT NULL DEFAULT 0,
+  `status` int(11) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),

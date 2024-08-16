@@ -1002,6 +1002,7 @@ function query_home_comments($user, $max_items) {
 				AND ".get_internal_blacklisted_fansubs_condition($user)."
 				AND ".get_internal_cancelled_projects_condition($user)."
 				AND ".get_internal_lost_projects_condition($user)."
+				AND (u.status<>1".(!empty($user) ? " OR u.id=${user['id']}" : '').")
 			ORDER BY c.created DESC
 			LIMIT $max_items";
 	return query($final_query);
@@ -1483,6 +1484,7 @@ function query_version_comments($version_id, $user) {
 			LEFT JOIN division d ON e.division_id=d.id
 			WHERE c.version_id=$version_id
 				AND c.reply_to_comment_id IS NULL
+				AND (u.status<>1".(!empty($user) ? " OR u.id=${user['id']}" : '').")
 			ORDER BY c.last_replied DESC";
 	return query($final_query);
 }

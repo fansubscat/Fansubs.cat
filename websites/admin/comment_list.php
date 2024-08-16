@@ -60,27 +60,29 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<th scope="col" style="width: 20%;">Contingut</th>
 												<th scope="col" style="width: 10%;">Usuari</th>
 												<th scope="col" style="width: 50%;">Comentari</th>
+												<th scope="col" style="width: 5%;" class="text-center">Espòiler</th>
 												<th scope="col" style="width: 5%;" class="text-center">Respost</th>
 												<th class="text-center" scope="col">Accions</th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT c.*, s.name series_name, u.username, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs, s.rating FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE c.type='user' ORDER BY c.created DESC LIMIT $limit");
+$result = query("SELECT c.*, s.name series_name, u.username, u.status, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs, s.rating FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE c.type='user' ORDER BY c.created DESC LIMIT $limit");
 if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="6" class="text-center">- No hi ha cap comentari -</td>
+								<td colspan="7" class="text-center">- No hi ha cap comentari -</td>
 							</tr>
 <?php
 }
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+											<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['status']==1 ? 'shadowbanned' : ''; ?>">
 												<th scope="row" class="align-middle text-center"><?php echo $row['created']; ?></th>
 												<td class="align-middle"><?php echo $row['series_name'].'<br>('.$row['fansubs'].')'; ?></td>
 												<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>
 												<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></td>
+												<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? 'Sí' : 'No'; ?></td>
 												<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? 'Sí' : 'No'; ?></td>
 												<td class="align-middle text-center text-nowrap">
 													<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="Respon" class="fa fa-reply p-1"></a>
@@ -122,27 +124,29 @@ mysqli_free_result($result);
 												<th scope="col" style="width: 20%;">Contingut</th>
 												<th scope="col" style="width: 10%;">Usuari</th>
 												<th scope="col" style="width: 50%;">Comentari</th>
+												<th scope="col" style="width: 5%;" class="text-center">Espòiler</th>
 												<th scope="col" style="width: 5%;" class="text-center">Respost</th>
 												<th class="text-center" scope="col">Accions</th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT c.*, s.name series_name, u.username, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs, s.rating FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE c.type='user' AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=${fansub['id']}) ORDER BY c.created DESC LIMIT $limit");
+$result = query("SELECT c.*, s.name series_name, u.username, u.status, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs, s.rating FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE c.type='user' AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=${fansub['id']}) ORDER BY c.created DESC LIMIT $limit");
 if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="4" class="text-center">- No hi ha cap comentari -</td>
+								<td colspan="7" class="text-center">- No hi ha cap comentari -</td>
 							</tr>
 <?php
 }
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+											<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['status']==1 ? 'shadowbanned' : ''; ?>">
 												<th scope="row" class="align-middle text-center"><?php echo $row['created']; ?></th>
 												<td class="align-middle"><?php echo $row['series_name'].'<br>('.$row['fansubs'].')'; ?></td>
 												<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>
 												<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></td>
+												<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? 'Sí' : 'No'; ?></td>
 												<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? 'Sí' : 'No'; ?></td>
 												<td class="align-middle text-center text-nowrap">
 													<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="Respon" class="fa fa-reply p-1"></a>
