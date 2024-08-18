@@ -888,11 +888,17 @@ function initializeReader(type) {
 	} else {
 		pagesCode+='<div class="swiper-wrapper">';
 	}
+	var initialPosition = 1;
+	if (currentSourceData.initial_position>0 && currentSourceData.initial_position<currentSourceData.length) {
+		initialPosition = currentSourceData.initial_position;
+	}
+	pagesRead[initialPosition-1]=true;
 	for (var i=0; i<currentSourceData.length;i++) {
 		if (type=='strip') {
 			pagesCode+='<div class="manga-page" data-page-number="'+(i+1)+'"><img src="'+currentSourceData.pages[i]+'" draggable="false" onload="stripImageLoaded('+stripImagesLoadedReqNo+');" onerror="stripImageError('+stripImagesLoadedReqNo+');"></div>';
 		} else {
-			pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="lazy" draggable="false" onload="imageLoaded(this);" onerror="imageError(this);"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">No s’ha pogut carregar aquesta imatge.<br><button class="normal-button" onclick="imageReload(this);">Torna-ho a provar</button></div></div>';
+			var isLazy = !(i==initialPosition-1 || i==initialPosition-2 || i==initialPosition);
+			pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="'+(isLazy ? 'lazy' : '')+'" draggable="false" onload="imageLoaded(this);" onerror="imageError(this);"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">No s’ha pogut carregar aquesta imatge.<br><button class="normal-button" onclick="imageReload(this);">Torna-ho a provar</button></div></div>';
 		}
 		pagesRead[i]=false;
 	}
@@ -901,11 +907,6 @@ function initializeReader(type) {
 	} else {
 		pagesCode+='</div>';
 	}
-	var initialPosition = 1;
-	if (currentSourceData.initial_position>0 && currentSourceData.initial_position<currentSourceData.length) {
-		initialPosition = currentSourceData.initial_position;
-	}
-	pagesRead[initialPosition-1]=true;
 	$('.player_extra_upper').removeClass('vjs-user-inactive');
 	$('.player_extra_title').html(currentSourceData.title);
 	$('#overlay-content .manga-reader').remove();
@@ -940,6 +941,11 @@ function initializeReader(type) {
 					pagesRead[swiper.activeIndex]=true;
 					//Send to server
 					sendCurrentFileTracking();
+					setTimeout(function(){
+						$('.manga-page.swiper-slide-active img').attr('loading','');
+						$('.manga-page.swiper-slide-prev img').attr('loading','');
+						$('.manga-page.swiper-slide-next img').attr('loading','');
+					}, 1);
 				},
 			},
 		});

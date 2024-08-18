@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2024-08-18 - Versió 5.2.6
+- **Catàleg:**
+	- Al lector de manga paginat, es força automàticament la càrrega de les imatges de la pàgina anterior i següent (en alguns casos no es carregaven fins que s’arribava a la pàgina corresponent).
+
 ## 2024-08-16 - Versió 5.2.5
 - **Catàleg:**
 	- S’amaguen els comentaris dels usuaris amb un «shadowban» excepte per a ells mateixos.
