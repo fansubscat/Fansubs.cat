@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2024-08-27 - Versió 5.2.7
+- **Principal:**
+	- A l’apartat de fansubs del portal de hentai, s’amaga la categoria d’imatge real (no existeix en hentai).
+- **Catàleg:**
+	- S’ordenen els elements igualats en ordre a la categoria «Més populars» per total consumit en lloc d’alfabèticament.
+- **Administració:**
+	- S’ordenen els elements igualats en ordre a l’apartat «Continguts més populars» per total consumit en lloc d’alfabèticament.
+- **Serveis:**
+	- Es generen 5 recomanacions setmanals per al manga hentai en lloc de 10 (permet un millor funcionament donada la poca quantitat de manga hentai).
+
 ## 2024-08-18 - Versió 5.2.6
 - **Catàleg:**
 	- Al lector de manga paginat, es força automàticament la càrrega de les imatges de la pàgina anterior i següent (en alguns casos no es carregaven fins que s’arribava a la pàgina corresponent).
