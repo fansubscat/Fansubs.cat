@@ -17,12 +17,15 @@ function get_internal_home_base_query($user) {
 function get_internal_most_popular_series_from_date($since_date) {
 	//Input is already escaped
 	$final_query = "SELECT b.series_id,
-				IFNULL(MAX(b.total_views), 0) max_views
+				IFNULL(MAX(b.total_views), 0) max_views,
+				IFNULL(SUM(b.total_length), 0) total_length
 			FROM (
 				SELECT a.series_id,
-					SUM(a.views) total_views
+					SUM(a.views) total_views,
+					SUM(a.length) total_length
 				FROM (
 					SELECT SUM(vi.views) views,
+						SUM(vi.total_length) length,
 						f.version_id,
 						s.id series_id,
 						f.episode_id
@@ -39,12 +42,13 @@ function get_internal_most_popular_series_from_date($since_date) {
 						AND f.episode_id IS NOT NULL
 						AND vi.views>0
 						AND vi.day>='$since_date'
-					GROUP BY f.version_id, f.episode_id
+					GROUP BY f.episode_id
 					) a
 				GROUP BY a.episode_id
 				) b
 			GROUP BY b.series_id
 			ORDER BY max_views DESC,
+				total_length DESC,
 				b.series_id DESC";
 	return query($final_query);
 }
