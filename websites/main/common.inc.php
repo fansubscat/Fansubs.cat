@@ -67,14 +67,16 @@ function print_fansub($row) {
 												<span class="content-button disabled-content-button"><span class="content-type" title="Manga"><span class="fa fa-book-open"></span></span><span class="content-quantity"><?php echo $row['total_manga']; ?></span></span>
 <?php
 	}
-	if ($row['total_liveaction']>0 && empty($row['is_blacklisted'])) {
+	if (!SITE_IS_HENTAI) {
+		if ($row['total_liveaction']>0 && empty($row['is_blacklisted'])) {
 ?>
 												<a class="normal-button content-button" href="<?php echo LIVEACTION_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type" title="Contingut d’imatge real"><span class="fa fa-clapperboard"></span></span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></a>
 <?php
-	} else {
+		} else {
 ?>
 												<span class="content-button disabled-content-button"><span class="content-type" title="Contingut d’imatge real"><span class="fa fa-clapperboard"></span></span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></span>
 <?php
+		}
 	}
 	if ($row['total_news']>0 && empty($row['is_blacklisted'])) {
 ?>
