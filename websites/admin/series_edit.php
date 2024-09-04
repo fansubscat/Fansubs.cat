@@ -800,7 +800,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 		} else {
 ?>
-														<input id="form-episode-list-description-<?php echo $i+1; ?>" name="form-episode-list-description-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['description']); ?>" placeholder=""/>
+														<input id="form-episode-list-description-<?php echo $i+1; ?>" name="form-episode-list-description-<?php echo $i+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($episodes[$i]['description']); ?>" placeholder="" maxlength="500"/>
 <?php
 		}
 ?>
@@ -823,7 +823,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-episode-list-has_version-1" type="hidden" value="0"/>
 													</td>
 													<td>
-														<input id="form-episode-list-description-1" name="form-episode-list-description-1" type="text" class="form-control" value="" placeholder=""/>
+														<input id="form-episode-list-description-1" name="form-episode-list-description-1" type="text" class="form-control" value="" placeholder="" maxlength="500"/>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-episode-list-delete-1" onclick="deleteEpìsodeRow(1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>

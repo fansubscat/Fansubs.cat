@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2024-09-04 - Versió 5.2.8
+- **Administració:**
+	- S’augmenta i verifica la llargada màxima dels títols de capítols de 200 a 500 caràcters.
+	- S‘afegeix el nou apartat «Conversions pendents».
+
 ## 2024-08-27 - Versió 5.2.7
 - **Principal:**
 	- A l’apartat de fansubs del portal de hentai, s’amaga la categoria d’imatge real (no existeix en hentai).

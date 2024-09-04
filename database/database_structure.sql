@@ -71,7 +71,7 @@ CREATE TABLE `episode` (
   `series_id` int(11) NOT NULL,
   `division_id` int(11) DEFAULT NULL,
   `number` decimal(10,2) DEFAULT NULL,
-  `description` varchar(200) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
   `linked_episode_id` int(11) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE `episode` (
 CREATE TABLE `episode_title` (
   `version_id` int(11) NOT NULL,
   `episode_id` int(11) NOT NULL,
-  `title` varchar(200) NOT NULL
+  `title` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `fansub` (
