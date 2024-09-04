@@ -171,6 +171,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 		if ($_SESSION['admin_level']>=3) {
 ?>
 								<a class="dropdown-item" href="admin_log.php">Registre d’accions</a>
+								<a class="dropdown-item" href="pending_conversions.php">Conversions pendents</a>
 								<a class="dropdown-item" href="maintenance.php">Manteniment</a>
 <?php
 		}
