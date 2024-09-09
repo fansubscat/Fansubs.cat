@@ -143,6 +143,11 @@ if (!isset($_GET['full_catalogue']) || (isset($_GET['full_catalogue']) && $_GET[
 } else {
 	$param_show_full_catalogue = FALSE;
 }
+if (isset($_GET['content_types']) && is_array($_GET['content_types']) && count($_GET['content_types'])>0) {
+	$param_content_types_array = $_GET['content_types'];
+} else {
+	$param_content_types_array = array('fansub','fandub');
+}
 if (isset($_GET['demographics']) && is_array($_GET['demographics']) && count($_GET['demographics'])>0) {
 	$param_demographics_array = $_GET['demographics'];
 }
@@ -254,6 +259,18 @@ if (CATALOGUE_HAS_ORIGIN && !SITE_IS_HENTAI) {
 							</div>
 <?php
 	}
+} else if (CATALOGUE_HAS_FANDUBS) {
+?>
+							<label>Tipus de contingut</label>
+							<div class="search-checkboxes search-content_types">
+								<input id="catalogue-search-content_types-dub" data-id="fandub" type="checkbox" oninput="loadSearchResults();"<?php echo (isset($param_content_types_array) && !in_array('fandub', $param_content_types_array)) ? '' : ' checked'; ?>>
+								<label for="catalogue-search-content_types-dub" class="for-checkbox">Contingut doblat</label>
+							</div>
+							<div class="search-checkboxes search-content_types">
+								<input id="catalogue-search-content_types-sub" data-id="fansub" type="checkbox" oninput="loadSearchResults();"<?php echo (isset($param_content_types_array) && !in_array('fansub', $param_content_types_array)) ? '' : ' checked'; ?>>
+								<label for="catalogue-search-content_types-sub" class="for-checkbox">Contingut subtitulat</label>
+							</div>
+<?php
 }
 ?>
 							<label>Inclou-hi també...</label>

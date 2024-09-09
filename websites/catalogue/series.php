@@ -532,7 +532,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 								<div class="comments-list">
 									<div class="comment comment-fake">
-										<img class="comment-avatar" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+										<img class="comment-avatar" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>" alt="">
 										<div class="comment-message comment-input">
 											<div class="comment-send-form">
 												<div class="grow-wrap">

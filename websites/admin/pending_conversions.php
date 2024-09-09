@@ -1,5 +1,5 @@
 <?php
-$header_title="Registre d’accions - Conversions pendents";
+$header_title="Conversions pendents - Eines";
 $page="tools";
 include("header.inc.php");
 

@@ -1867,6 +1867,9 @@ function formatCatalogueSearchQueryString(values) {
 	for(var i=0;i<values['demographics[]'].length;i++) {
 		queryString+='&demographics[]='+values['demographics[]'][i];
 	}
+	for(var i=0;i<values['content_types[]'].length;i++) {
+		queryString+='&content_types[]='+values['content_types[]'][i];
+	}
 	for(var i=0;i<values['origins[]'].length;i++) {
 		queryString+='&origins[]='+values['origins[]'][i];
 	}
@@ -1905,6 +1908,11 @@ function loadSearchResults() {
 		demographics.push($(element).attr('data-id'));
 	}
 
+	var contentTypes = Array();
+	for (element of $('.search-content_types input:checked')) {
+		contentTypes.push($(element).attr('data-id'));
+	}
+
 	var origins = Array();
 	for (element of $('.search-origins input:checked')) {
 		origins.push($(element).attr('data-id'));
@@ -1935,6 +1943,7 @@ function loadSearchResults() {
 		'type': $('#catalogue-search-type .singlechoice-selected').attr('data-value'),
 		'status[]': statuses,
 		'demographics[]': demographics,
+		'content_types[]': contentTypes,
 		'origins[]': origins,
 		'genres_include[]': includedGenres,
 		'genres_exclude[]': excludedGenres

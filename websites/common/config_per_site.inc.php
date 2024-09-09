@@ -38,12 +38,14 @@ switch (strtolower($server_url)) {
 			define('CATALOGUE_ROBOT_MESSAGE', 'Hentai.cat et permet veure en streaming més de %d animes hentai subtitulats en català. Ara pots gaudir de tot l’anime hentai de tots els fansubs en català en un únic lloc.');
 			define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Animes hentai amb temàtiques en comú');
 			define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Mangues hentai amb temàtiques en comú');
+			define('CATALOGUE_HAS_FANDUBS', FALSE);
 		} else {
 			define('SITE_TITLE', 'Anime en català | Fansubs.cat');
 			define('SITE_DESCRIPTION', 'Gaudeix de l’anime en català a Fansubs.cat, el portal que recopila tot l’anime subtitulat pels diferents fansubs en català!');
 			define('CATALOGUE_ROBOT_MESSAGE', 'Fansubs.cat et permet veure en streaming més de %d animes subtitulats en català. Ara pots gaudir de tot l’anime de tots els fansubs en català en un únic lloc.');
 			define('CATALOGUE_RECOMMENDATION_STRING_SAME_TYPE', 'Animes amb temàtiques en comú');
 			define('CATALOGUE_RECOMMENDATION_STRING_DIFFERENT_TYPE', 'Altres continguts amb temàtiques en comú');
+			define('CATALOGUE_HAS_FANDUBS', TRUE);
 		}
 		define('SITE_INTERNAL_NAME', 'anime');
 		define('SITE_PREVIEW_IMAGE', 'anime');
@@ -114,6 +116,7 @@ switch (strtolower($server_url)) {
 		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera publicació');
 		define('CATALOGUE_HAS_DEMOGRAPHIES', TRUE);
 		define('CATALOGUE_HAS_ORIGIN', TRUE);
+		define('CATALOGUE_HAS_FANDUBS', FALSE);
 		define('CATALOGUE_ROUND_INTERVAL', 50);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-book-open');
 		define('CATALOGUE_CONTINUE_WATCHING_STRING', 'Continua llegint');
@@ -155,6 +158,7 @@ switch (strtolower($server_url)) {
 		define('CATALOGUE_SCORE_SOURCE', 'MyDramaList');
 		define('CATALOGUE_FIRST_PUBLISH_STRING', 'Any de primera emissió');
 		define('CATALOGUE_HAS_DEMOGRAPHIES', FALSE);
+		define('CATALOGUE_HAS_FANDUBS', FALSE);
 		define('CATALOGUE_HAS_ORIGIN', FALSE);
 		define('CATALOGUE_ROUND_INTERVAL', 25);
 		define('CATALOGUE_PLAY_BUTTON_ICON', 'fa-play');

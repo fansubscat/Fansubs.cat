@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2024-09-09 - Versió 5.2.9
+- **Catàleg:**
+	- Es permet filtrar l’anime per contingut doblat o subtitulat.
+- **Administració:**
+	- L’apartat «Continguts més populars» ara mostra per defecte els del teu fansub (com a la resta de pàgines d’estadístiques).
+	- Es corregeix el títol de «Conversions pendents».
+
 ## 2024-09-04 - Versió 5.2.8
 - **Administració:**
 	- S’augmenta i verifica la llargada màxima dels títols de capítols de 200 a 500 caràcters.

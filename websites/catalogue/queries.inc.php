@@ -128,6 +128,14 @@ function get_internal_origins_condition($origins) {
 	}
 }
 
+function get_internal_content_types_condition($content_types) {
+	//Input is already escaped
+	if (count($content_types)>0) {
+		return "f.type IN ('".implode("','", $content_types)."')";
+	}
+	return "0";
+}
+
 function get_internal_included_genres_condition($genres_id) {
 	//Input is already escaped
 	$included_genres_condition = "1";
@@ -1309,7 +1317,7 @@ function query_related_series($user, $series_id, $series_author, $num_of_genres_
 	return query($final_query);
 }
 
-function query_search_filter($user, $text, $type, $subtype, $min_score, $max_score, $min_year, $max_year, $min_length, $max_length, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $origins, $genres_included_ids, $genres_excluded_ids, $statuses) {
+function query_search_filter($user, $text, $type, $subtype, $min_score, $max_score, $min_year, $max_year, $min_length, $max_length, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $content_types, $origins, $genres_included_ids, $genres_excluded_ids, $statuses) {
 	$text = str_replace(" ", "%", $text);
 	$text = escape_for_like($text);
 	$type = escape($type);
@@ -1321,7 +1329,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 	$min_length = intval($min_length);
 	$max_length = intval($max_length);
 	$fansub_slug = escape($fansub_slug);
-	//No need to escape $ratings, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $origins, $genres_included_ids, $genres_excluded_ids, $statuses: they come from code
+	//No need to escape $ratings, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $content_types, $origins, $genres_included_ids, $genres_excluded_ids, $statuses: they come from code
 	$final_query = get_internal_catalogue_base_query_portion($user)."
 				AND s.type='$type'
 				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
@@ -1332,6 +1340,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 				AND ".($show_lost_content ? '1' : 'v.is_missing_episodes=0')."
 				AND ".((SITE_IS_HENTAI || CATALOGUE_ITEM_TYPE=='liveaction' || $type=='liveaction') ? '1' : get_internal_demographics_condition($demographic_ids, $show_no_demographics))."
 				AND ".((SITE_IS_HENTAI || CATALOGUE_ITEM_TYPE!='manga' || $type!='manga') ? '1' : get_internal_origins_condition($origins))."
+				AND ".get_internal_content_types_condition($content_types)."
 				AND ".get_internal_included_genres_condition($genres_included_ids)."
 				AND ".get_internal_excluded_genres_condition($genres_excluded_ids)."
 				AND ".get_internal_statuses_condition($statuses)."
