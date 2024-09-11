@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2024-09-11 - Versió 5.2.10
+- **Catàleg:**
+	- S’agrupen els elements de «Darrers capítols publicats» si s’han publicat amb menys de 30 minuts de diferència.
+	- Es corregeix que es mostressin zero resultats de cerca als catàlegs on no es pot filtrar per doblat/subtitulat.
+
 ## 2024-09-09 - Versió 5.2.9
 - **Catàleg:**
 	- Es permet filtrar l’anime per contingut doblat o subtitulat.

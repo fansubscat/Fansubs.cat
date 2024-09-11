@@ -535,13 +535,22 @@ function get_relative_date_last_update($time) {
 	}
 }
 
-function print_chapter_item_last_update($row) {	
+function print_chapter_item_last_update($row) {
+	if ($row['cnt']>1) {
+		$link_url = SITE_BASE_URL.'/'.$row['series_slug'].($row['total_versions']>1 ? "?v=".$row['version_id'] : "");
+		$image_url = STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg';
+		$subtitle = $row['cnt'].' elements nous';
+	} else {
+		$link_url = SITE_BASE_URL.'/'.$row['series_slug']."?f=".$row['file_id'];
+		$image_url = file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg';
+		$subtitle = !empty($row['extra_name']) ? $row['extra_name'] : ($row['division_name'].(($row['division_name']!='' && $row['episode_number']!='') ? ' • ' : '').($row['episode_number']!='' ? 'Cap. '.$row['episode_number'] : '').((($row['division_name']!='' || $row['episode_number']!='') && $row['episode_title']!='') ? ': ' : '').$row['episode_title']);
+	}
 ?>
 	<div class="continue-watching-thumbnail-outer">
 		<div class="continue-watching-thumbnail">
-			<a class="image-link" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug']."?f=".$row['file_id']; ?>">
+			<a class="image-link" href="<?php echo $link_url; ?>">
 				<div class="versions"><?php echo get_fansub_icons($row['fansub_info'], get_prepared_versions($row['fansub_info']), $row['version_id']); ?></div>
-				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'; ?>" alt="">
+				<img src="<?php echo $image_url; ?>" alt="">
 				<div class="date"><?php echo get_relative_date_last_update($row['file_created']); ?></div>
 				<div class="play-button fa fa-fw <?php echo CATALOGUE_PLAY_BUTTON_ICON; ?>"></div>
 			</a>
@@ -551,7 +560,7 @@ function print_chapter_item_last_update($row) {
 				<?php echo htmlspecialchars($row['series_name']); ?>
 			</span>
 			<span class="subtitle">
-				<?php echo htmlspecialchars(!empty($row['extra_name']) ? $row['extra_name'] : ($row['division_name'].(($row['division_name']!='' && $row['episode_number']!='') ? ' • ' : '').($row['episode_number']!='' ? 'Cap. '.$row['episode_number'] : '').((($row['division_name']!='' || $row['episode_number']!='') && $row['episode_title']!='') ? ': ' : '').$row['episode_title'])); ?>
+				<?php echo htmlspecialchars($subtitle); ?>
 			</span>
 		</a>
 	</div>
