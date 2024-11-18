@@ -1120,7 +1120,7 @@ function checkNumberOfLinks() {
 
 	//Check for inconsistent states
 	var status = $('#form-status').val();
-	var totalEpisodes = $('.episode-container').length;
+	var totalEpisodes = $('.episode-container:not(.linked-episode-container)').length;
 	var validFiles = 0;
 	if ($('#type').val()=='manga') {
 		validFiles = $('.episode-container span .fa-check').length;

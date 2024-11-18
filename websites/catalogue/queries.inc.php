@@ -1047,7 +1047,7 @@ function query_series_by_slug($slug, $include_hidden) {
 
 function query_series_by_old_slug($old_slug) {
 	$old_slug = escape($old_slug);
-	$final_query = "SELECT s.slug
+	$final_query = "SELECT s.slug, s.type, s.rating
 			FROM old_slugs os
 				LEFT JOIN series s ON os.series_id=s.id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'

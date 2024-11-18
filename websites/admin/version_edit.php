@@ -356,6 +356,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$i++;
 		}
 		
+		$current_timestamp = date('Y-m-d H:i:s');
 		if ($_POST['action']=='edit') {
 			//Completed version: check if we are completing it now
 			//If it is being completed now, set the date to now,
@@ -364,13 +365,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if ($data['status']==1) {
 				$result_old=query("SELECT completed_date FROM version WHERE id=".$data['id']);
 				if ($rowov = mysqli_fetch_assoc($result_old)) {
-					$completed_date = empty($rowov['completed_date']) ? 'CURRENT_TIMESTAMP' : "'".$rowov['completed_date']."'";
+					$completed_date = empty($rowov['completed_date']) ? "'$current_timestamp'" : "'".$rowov['completed_date']."'";
 				}
 				mysqli_free_result($result_old);
 			}
 
 			log_action("update-version", "S’ha actualitzat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",featurable_status=".$data['featurable_status'].",show_episode_numbers=".$data['show_episode_numbers'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",featurable_status=".$data['featurable_status'].",show_episode_numbers=".$data['show_episode_numbers'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -401,7 +402,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			//We do not count removing files as updating them, only insertions and real updates
 			foreach ($files as $file) {
 				if ($file['id']==-1) {
-					query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,original_filename,length,comments,is_lost,created,created_by,updated,updated_by) VALUES (".$data['id'].",".$file['episode_id'].",".$file['variant_name'].",NULL,".$file['original_filename'].",".$file['length'].",".$file['comments'].",".$file['is_lost'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+					query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,original_filename,length,comments,is_lost,created,created_by,updated,updated_by) VALUES (".$data['id'].",".$file['episode_id'].",".$file['variant_name'].",NULL,".$file['original_filename'].",".$file['length'].",".$file['comments'].",".$file['is_lost'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 					$inserted_file_id=mysqli_insert_id($db_connection);
 					if ($type=='manga') {
 						if ($file['original_filename']!='NULL') {
@@ -409,14 +410,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						}
 					} else {
 						foreach ($file['links'] as $link) {
-							query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES ($inserted_file_id,".$link['url'].",".$link['resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+							query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES ($inserted_file_id,".$link['url'].",".$link['resolution'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 						}
 					}
 					if (empty($_POST['do_not_count_as_update'])) {
-						query("UPDATE version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+						query("UPDATE version SET files_updated='$current_timestamp',files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
 				} else {
-					query("UPDATE file SET ".($file['original_filename']!='NULL' ? "original_filename=".$file['original_filename']."," : "")."variant_name=".$file['variant_name'].",length=".$file['length'].",comments=".$file['comments'].",is_lost=".$file['is_lost'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$file['id']);
+					query("UPDATE file SET ".($file['original_filename']!='NULL' ? "original_filename=".$file['original_filename']."," : "")."variant_name=".$file['variant_name'].",length=".$file['length'].",comments=".$file['comments'].",is_lost=".$file['is_lost'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$file['id']);
 
 					if ($type=='manga') {
 						$resultcr = query("SELECT * FROM file WHERE id=".$file['id']);
@@ -426,7 +427,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						mysqli_free_result($resultcr);
 						if ($file['original_filename']!='NULL') {
 							decompress_manga_file($file['id'], $file['temporary_filename'], $file['original_filename_unescaped']);
-							query("UPDATE file SET updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$file['id']);
+							query("UPDATE file SET updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$file['id']);
 						}
 					} else {
 						$has_updated_files = FALSE;
@@ -435,7 +436,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						$has_updated_storage_link=FALSE;
 						foreach ($file['links'] as $link) {
 							if ($link['id']==-1) {
-								query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES (".$file['id'].",".$link['url'].",".$link['resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+								query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES (".$file['id'].",".$link['url'].",".$link['resolution'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 								array_push($link_ids,mysqli_insert_id($db_connection));
 								$has_updated_files = TRUE;
 								if (strpos($link['url'], 'https://mega.nz/')!==FALSE) {
@@ -448,7 +449,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								$old_link = mysqli_fetch_assoc($resoi);
 								mysqli_free_result($resoi);
 								if ($old_link) {
-									query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$link['id']);
+									query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$link['id']);
 									array_push($link_ids,$link['id']);
 									if ("'".escape($old_link['url'])."'"!=$link['url']) {
 										if (strpos($link['url'], 'https://mega.nz/')!==FALSE) {
@@ -471,7 +472,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					}
 
 					if (empty($_POST['do_not_count_as_update']) && $has_updated_files) {
-						query("UPDATE version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+						query("UPDATE version SET files_updated='$current_timestamp',files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
 				}
 			}
@@ -486,25 +487,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM file WHERE version_id=".$data['id']." AND episode_id IS NULL AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($extras as $extra) {
 				if ($extra['id']==-1) {
-					query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,original_filename,length,comments,created,created_by,updated,updated_by) VALUES (".$data['id'].",NULL,NULL,'".$extra['name']."','".$extra['original_filename']."',".$extra['length'].",".$extra['comments'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+					query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,original_filename,length,comments,created,created_by,updated,updated_by) VALUES (".$data['id'].",NULL,NULL,'".$extra['name']."','".$extra['original_filename']."',".$extra['length'].",".$extra['comments'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 					$inserted_file_id=mysqli_insert_id($db_connection);
 					if ($type=='manga') {
 						decompress_manga_file($inserted_file_id, $extra['temporary_filename'], $extra['original_filename_unescaped']);
 					} else {
 						foreach ($extra['links'] as $link) {
-							query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES ($inserted_file_id,".$link['url'].",".$link['resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+							query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES ($inserted_file_id,".$link['url'].",".$link['resolution'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 						}
 					}
 					if (empty($_POST['do_not_count_as_update'])) {
-						query("UPDATE version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+						query("UPDATE version SET files_updated='$current_timestamp',files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
 				} else {
-					query("UPDATE file SET extra_name='".$extra['name']."',".($extra['original_filename']!=NULL ? "original_filename='".$extra['original_filename']."'," : "")."length=".$extra['length'].",comments=".$extra['comments'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$extra['id']);
+					query("UPDATE file SET extra_name='".$extra['name']."',".($extra['original_filename']!=NULL ? "original_filename='".$extra['original_filename']."'," : "")."length=".$extra['length'].",comments=".$extra['comments'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$extra['id']);
 
 					if ($type=='manga') {
 						$resultcr = query("SELECT * FROM file WHERE id=".$extra['id']);
 						if ($current_extra = mysqli_fetch_assoc($resultcr)) {
-							query("UPDATE file SET extra_name='".$extra['name']."',".($extra['original_filename']!=NULL ? "original_filename='".$extra['original_filename']."'," : "")."length=".$extra['length'].",comments=".$extra['comments'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$extra['id']);
+							query("UPDATE file SET extra_name='".$extra['name']."',".($extra['original_filename']!=NULL ? "original_filename='".$extra['original_filename']."'," : "")."length=".$extra['length'].",comments=".$extra['comments'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$extra['id']);
 						}
 						mysqli_free_result($resultcr);
 						if ($extra['original_filename']!=NULL) {
@@ -516,7 +517,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						$has_updated_storage_link=FALSE;
 						foreach ($extra['links'] as $link) {
 							if ($link['id']==-1) {
-								query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES (".$extra['id'].",".$link['url'].",".$link['resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+								query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES (".$extra['id'].",".$link['url'].",".$link['resolution'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 								array_push($link_ids,mysqli_insert_id($db_connection));
 								if (strpos($link['url'], 'https://mega.nz/')!==FALSE) {
 									$has_updated_mega_link=TRUE;
@@ -528,7 +529,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								$old_link = mysqli_fetch_assoc($resoi);
 								mysqli_free_result($resoi);
 								if ($old_link) {
-									query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$link['id']);
+									query("UPDATE link SET url=".$link['url'].",resolution=".$link['resolution'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$link['id']);
 									array_push($link_ids,$link['id']);
 									if ("'".escape($old_link['url'])."'"!=$link['url']) {
 										if (strpos($link['url'], 'https://mega.nz/')!==FALSE) {
@@ -561,9 +562,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			query("DELETE FROM remote_folder WHERE version_id=".$data['id']." AND id NOT IN (".(count($ids)>0 ? implode(',',$ids) : "-1").")");
 			foreach ($remote_folders as $remote_folder) {
 				if ($remote_folder['id']==-1) {
-					query("INSERT INTO remote_folder (version_id,remote_account_id,folder,default_resolution,default_duration,division_id,is_active,created,created_by,updated,updated_by) VALUES (".$data['id'].",".$remote_folder['remote_account_id'].",'".$remote_folder['folder']."','".$remote_folder['default_resolution']."',".$remote_folder['default_duration'].",".$remote_folder['division_id'].",".$remote_folder['is_active'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+					query("INSERT INTO remote_folder (version_id,remote_account_id,folder,default_resolution,default_duration,division_id,is_active,created,created_by,updated,updated_by) VALUES (".$data['id'].",".$remote_folder['remote_account_id'].",'".$remote_folder['folder']."','".$remote_folder['default_resolution']."',".$remote_folder['default_duration'].",".$remote_folder['division_id'].",".$remote_folder['is_active'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 				} else {
-					query("UPDATE remote_folder SET remote_account_id=".$remote_folder['remote_account_id'].",folder='".$remote_folder['folder']."',default_resolution='".$remote_folder['default_resolution']."',default_duration=".$remote_folder['default_duration'].",division_id=".$remote_folder['division_id'].",is_active=".$remote_folder['is_active'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$remote_folder['id']);
+					query("UPDATE remote_folder SET remote_account_id=".$remote_folder['remote_account_id'].",folder='".$remote_folder['folder']."',default_resolution='".$remote_folder['default_resolution']."',default_duration=".$remote_folder['default_duration'].",division_id=".$remote_folder['division_id'].",is_active=".$remote_folder['is_active'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$remote_folder['id']);
 				}
 			}
 
@@ -579,7 +580,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		else {
 			log_action("create-version", "S’ha creat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."»");
-			query("INSERT INTO version (series_id,status,is_missing_episodes,featurable_status,show_episode_numbers,is_hidden,completed_date,storage_folder,storage_processing,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['featurable_status'].",".$data['show_episode_numbers'].",".$data['is_hidden'].",".($data['status']==1 ? 'CURRENT_TIMESTAMP' : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,is_missing_episodes,featurable_status,show_episode_numbers,is_hidden,completed_date,storage_folder,storage_processing,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['featurable_status'].",".$data['show_episode_numbers'].",".$data['is_hidden'].",".($data['status']==1 ? "'$current_timestamp'" : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			if ($data['fansub_1']!=NULL) {
 				query("INSERT INTO rel_version_fansub (version_id,fansub_id,downloads_url) VALUES (".$inserted_id.",".$data['fansub_1'].",".$data['downloads_url_1'].")");
@@ -596,7 +597,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 			}
 			foreach ($files as $file) {
-				query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,original_filename,length,comments,is_lost,created,created_by,updated,updated_by) VALUES (".$inserted_id.",".$file['episode_id'].",".$file['variant_name'].",NULL,".$file['original_filename'].",".$file['length'].",".$file['comments'].",".$file['is_lost'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+				query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,original_filename,length,comments,is_lost,created,created_by,updated,updated_by) VALUES (".$inserted_id.",".$file['episode_id'].",".$file['variant_name'].",NULL,".$file['original_filename'].",".$file['length'].",".$file['comments'].",".$file['is_lost'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 				$inserted_file_id=mysqli_insert_id($db_connection);
 				if ($type=='manga') {
 					if ($file['original_filename']!='NULL') {
@@ -604,23 +605,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					}
 				} else {
 					foreach ($file['links'] as $link) {
-						query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES (".$inserted_file_id.",".$link['url'].",".$link['resolution'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+						query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES (".$inserted_file_id.",".$link['url'].",".$link['resolution'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 					}
 				}
 			}
 			foreach ($extras as $extra) {
-				query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,original_filename,length,comments,created,created_by,updated,updated_by) VALUES (".$inserted_id.",NULL,NULL,'".$extra['name']."','".$extra['original_filename']."',".$extra['length'].",".$extra['comments'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+				query("INSERT INTO file (version_id,episode_id,variant_name,extra_name,original_filename,length,comments,created,created_by,updated,updated_by) VALUES (".$inserted_id.",NULL,NULL,'".$extra['name']."','".$extra['original_filename']."',".$extra['length'].",".$extra['comments'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 				$inserted_file_id=mysqli_insert_id($db_connection);
 				if ($type=='manga') {
 					decompress_manga_file($inserted_file_id, $extra['temporary_filename'], $extra['original_filename_unescaped']);
 				} else {
 					foreach ($extra['links'] as $link) {
-						query("INSERT INTO link (file_id,url,resolution,created) VALUES (".$inserted_file_id.",".$link['url'].",".$link['resolution'].",CURRENT_TIMESTAMP)");
+						query("INSERT INTO link (file_id,url,resolution,created) VALUES (".$inserted_file_id.",".$link['url'].",".$link['resolution'].",'$current_timestamp')");
 					}
 				}
 			}
 			foreach ($remote_folders as $remote_folder) {
-				query("INSERT INTO remote_folder (version_id,remote_account_id,folder,default_resolution,default_duration,division_id,is_active,created,created_by,updated,updated_by) VALUES (".$inserted_id.",".$remote_folder['remote_account_id'].",'".$remote_folder['folder']."','".$remote_folder['default_resolution']."',".$remote_folder['default_duration'].",".$remote_folder['division_id'].",".$remote_folder['is_active'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+				query("INSERT INTO remote_folder (version_id,remote_account_id,folder,default_resolution,default_duration,division_id,is_active,created,created_by,updated,updated_by) VALUES (".$inserted_id.",".$remote_folder['remote_account_id'].",'".$remote_folder['folder']."','".$remote_folder['default_resolution']."',".$remote_folder['default_duration'].",".$remote_folder['division_id'].",".$remote_folder['is_active'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 			}
 
 			foreach ($divisions as $division) {
@@ -653,12 +654,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($divisions, $rowd);
 		}
 		mysqli_free_result($resultd);
-
-		if ($series['number_of_episodes']!=1) {
-			$row['show_episode_numbers']=1;
-		} else {
-			$row['show_episode_numbers']=0;
-		}
 
 		$fansubs = array();
 
@@ -1094,7 +1089,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$files=array();
 		}
 ?>
-								<div class="mb-3 episode-container">
+								<div class="mb-3 episode-container<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' linked-episode-container' : ''; ?>">
 									<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title"><span class="fa fa-caret-square-right pe-2 text-primary"></span><?php echo $episode_name; ?></label>
 									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control episode-title-input<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id'])) ? ' episode-title-input-numbered' : ''; ?>" value="<?php echo htmlspecialchars((!empty($episodes[$i]['title']) || !empty($episodes[$i]['number'])) ? $episodes[$i]['title'] : $episodes[$i]['description']); ?>" maxlength="500" placeholder="<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id']) && $row['show_episode_numbers']==1) ? '(Sense títol de capítol, se’n mostra només el número)' : '- Introdueix un títol -'; ?>"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
 <?php

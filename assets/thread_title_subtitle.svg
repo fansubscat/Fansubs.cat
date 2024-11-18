@@ -5,7 +5,7 @@
    viewBox="0 0 508 285.75001"
    version="1.1"
    id="svg8"
-   sodipodi:docname="thread_title.svg"
+   sodipodi:docname="thread_title_2.svg"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
@@ -55,8 +55,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.5"
-     inkscape:cx="973"
-     inkscape:cy="542"
+     inkscape:cx="1047"
+     inkscape:cy="714"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -88,13 +88,13 @@
      id="layer1">
     <image
        xlink:href="../websites/static/images/site/background_dark_uhd.jpg"
-       width="508"
-       height="285.75"
-       preserveAspectRatio="none"
-       style="image-rendering:optimizeQuality"
-       id="image843"
+       y="0"
        x="0"
-       y="0" />
+       id="image843"
+       style="image-rendering:optimizeQuality"
+       preserveAspectRatio="none"
+       height="285.75"
+       width="508" />
     <rect
        style="opacity:0.5;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.04772;stroke-opacity:1;paint-order:stroke fill markers"
        id="rect1048"
@@ -112,25 +112,31 @@
        y="0" />
     <image
        xlink:href="logo_uncompressed.svg"
-       preserveAspectRatio="none"
-       inkscape:svg-dpi="96"
-       width="129.5155"
-       height="36.303589"
-       style="image-rendering:optimizeQuality"
-       id="image1332"
+       y="235.11378"
        x="364.15103"
-       y="235.11378" />
+       id="image1332"
+       style="image-rendering:optimizeQuality"
+       height="36.303589"
+       width="129.5155"
+       inkscape:svg-dpi="96"
+       preserveAspectRatio="none" />
     <text
        xml:space="preserve"
        id="text1416"
-       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:55.5625px;line-height:1;font-family:'MADE Tommy Soft';-inkscape-font-specification:'MADE Tommy Soft Medium';text-align:center;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect1418);fill:#ffffff;fill-opacity:1"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:55.5625px;line-height:0;font-family:'MADE Tommy Soft';-inkscape-font-specification:'MADE Tommy Soft Medium';text-align:center;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect1418);fill:#ffffff;fill-opacity:1"
        x="201.74527"
        y="0"
-       transform="translate(-155.28496,65.188031)"><tspan
+       transform="translate(-155.28496,49.664438)"><tspan
          x="276.46292"
          y="97.522781"
-         id="tspan395"><tspan
-           style="shape-inside:url(#rect1418)"
-           id="tspan393">Títol del fil</tspan></tspan></text>
+         id="tspan370"><tspan
+           style="line-height:1;shape-inside:url(#rect1418)"
+           id="tspan368">Títol del fil
+</tspan></tspan><tspan
+         x="362.46042"
+         y="128.94832"
+         id="tspan374"><tspan
+           style="font-size:26.4583px;line-height:0.9"
+           id="tspan372">Subtítol</tspan></tspan></text>
   </g>
 </svg>

@@ -20,7 +20,13 @@ if (isset($failed)) {
 		die();
 	}
 	header("HTTP/1.1 301 Moved Permanently");
-	header("Location: /".$new_slug['slug']);
+	if ($type=='liveaction') {
+		header("Location: https://imatgereal.".MAIN_DOMAIN."/".$new_slug['slug']);
+	} else if ($type=='manga') {
+		header("Location: https://manga.".($new_slug['rating']!='XXX' ? MAIN_DOMAIN : HENTAI_DOMAIN)."/".$new_slug['slug']);
+	} else {
+		header("Location: https://anime.".($new_slug['rating']!='XXX' ? MAIN_DOMAIN : HENTAI_DOMAIN)."/".$new_slug['slug']);
+	}
 	die();
 }
 
@@ -382,7 +388,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 						$division_name = CATALOGUE_SEASON_STRING_UNIQUE;
 					}
 ?>
-									<option value="<?php echo $division['division_id']; ?>"<?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?><?php echo $division['division_id']==$selected_division_id ? ' selected' : ''; ?>><?php echo $division_name.' ('.$division['available_episodes'].'/'.($division['division_number_of_episodes']>0 ? $division['division_number_of_episodes'] : $division['available_episodes']).')'; ?></option>
+									<option value="<?php echo $division['division_id']; ?>"<?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?><?php echo $division['division_id']==$selected_division_id ? ' selected' : ''; ?>><?php echo $division_name.' ('.$division['available_episodes'].'/'.($division['division_number_of_episodes']>0 ? max($division['available_episodes'], $division['division_number_of_episodes']) : $division['available_episodes']).')'; ?></option>
 <?php
 				}
 ?>

@@ -234,7 +234,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					</tr>
 <?php
 		}
-		mysqli_free_result($resultli);
 	}
 	if (!$first) {
 ?>

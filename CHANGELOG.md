@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2024-11-18 - Versió 5.2.11
+- **General:**
+	- S‘afegeixen recursos gràfics utilitzats en publicacions a xarxes socials.
+- **Catàleg:**
+	- A les fitxes, no es mostren mai més capítols completats que el total que n’hi ha.
+	- Les redireccions de «slugs» antics es fan depenent del tipus de sèrie, i es permet redirigir al portal de hentai o al normal.
+- **Administració:**
+	- En pujar capítols a una versió i desar-la, s’aplica el mateix «timestamp» a tot (això fa que s’agrupin sempre els capítols correctament).
+	- El total de capítols en desar es compta excloent els films enllaçats (impedia desar fitxes completades).
+
 ## 2024-09-11 - Versió 5.2.10
 - **Catàleg:**
 	- S’agrupen els elements de «Darrers capítols publicats» si s’han publicat amb menys de 30 minuts de diferència.
