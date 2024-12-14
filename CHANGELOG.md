@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2024-12-14 - Versió 5.2.12
+- **General:**
+	- S’actualitza la generació de les imatges de fons del portal.
+- **Administració:**
+	- Es permet generar imatges de «Continguts més populars» d’un fansub en concret.
+	- Es corregeix la validació dels enllaços a les fitxes de les versions perquè no doni problemes amb els espais a imatge real.
+	- Es corregeix que no es poguessin pujar imatges del calendari d’advent de 1080x1920px.
+
 ## 2024-11-18 - Versió 5.2.11
 - **General:**
 	- S‘afegeixen recursos gràfics utilitzats en publicacions a xarxes socials.

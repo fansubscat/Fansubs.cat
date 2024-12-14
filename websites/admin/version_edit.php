@@ -1,6 +1,7 @@
 <?php
 require_once('libraries/preview_image_generator.php');
 $type='anime';
+$link_url_pattern = "(https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_\-]+)|storage:\/\/.*)";
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
 	$type=$_GET['type'];
@@ -1151,7 +1152,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
 																			<td class="ps-0 pt-0 pb-0 border-0">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['id']); ?>"/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
@@ -1167,7 +1168,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
 																			<td class="ps-0 pt-0 pb-0 border-0">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value=""/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
@@ -1234,7 +1235,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																	<tbody>
 																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
 																			<td class="ps-0 pt-0 pb-0 border-0">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="url" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value="-1"/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
@@ -1376,7 +1377,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																		<tr id="form-links-extras-list-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
 																			<td class="ps-0 pt-0 pb-0 border-0">
-																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="url" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr('value',$(this).val());" required/>
+																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr('value',$(this).val());" required/>
 																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['id']); ?>"/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0" style="width: 22%;">

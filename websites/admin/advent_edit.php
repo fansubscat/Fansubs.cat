@@ -91,12 +91,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de fons<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1920x1080px)</small></label><br>
+								<label>Imatge de fons<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1920x1080px o 1080x1920px)</small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/background_'.$row['year'].'.jpg');
 ?>
 								<label for="form-background" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="background" type="file" accept="image/jpeg" id="form-background" onchange="checkImageUpload(this, -1, 'image/jpeg', 1920, 1080, 4096, 4096, 'form-background-preview', 'form-background-preview-link');">
+								<input class="form-control d-none" name="background" type="file" accept="image/jpeg" id="form-background" onchange="checkImageUpload(this, -1, 'image/jpeg', 1080, 1080, 4096, 4096, 'form-background-preview', 'form-background-preview-link');">
 							<input type="hidden" name="year" value="<?php echo $row['year']; ?>">
 							</div>
 						</div>

@@ -126,31 +126,31 @@ $current_height = 0;
 $current_width = 0;
 
 //FANSUBS
-$path='fansubs';
+$type='fansubs';
 $covers = array(
 	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 105, 129, 483, 614),
-	array(0, 0, 0, 0, 0, 3918, 537, 508, 312, 3895, 527, 496, 530, 411, 240),
-	array(0, 0, 0, 0, 0, 4077, 3878, 6, 106, 3279, 597, 3338, 3880, 269, 2088),
-	array(0, 0, 0, 0, 0, 375, 578, 3930, 3879, 4026, 3383, 489, 207, 482, 3811),
-	array(0, 0, 0, 0, 0, 0, 459, 4101, 71, 89, 3970, 553, 308, 131, 3956)
+	array(0, 0, 0, 0, 0, 3918, 537, 4162, 312, 3895, 527, 496, 530, 411, 240),
+	array(0, 0, 0, 0, 0, 578, 3878, 4077, 106, 4101, 597, 3338, 4152, 269, 2088),
+	array(0, 0, 0, 0, 0, 375, 4241, 3930, 3879, 4139, 3383, 489, 4043, 482, 3811),
+	array(0, 0, 0, 0, 0, 0, 459, 4036, 71, 89, 3970, 553, 308, 131, 3956)
 );
 
 //HENTAI
-$path='hentai';
+$type='hentai';
 $covers = array(
 	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 	array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4081, 3971, 4153, 4163),
-	array(0, 0, 0, 0, 0, 3907, 3969, 4010, 3990, 4159, 485, 3937, 4005, 3910, 4048),
-	array(0, 0, 0, 0, 0, 4021, 3914, 257, 3803, 3992, 4056, 568, 4057, 543, 4092),
-	array(0, 0, 0, 0, 0, 3972, 3801, 412, 529, 532, 521, 4058, 3040, 467, 4007),
+	array(0, 0, 0, 0, 0, 4181, 3969, 4010, 3990, 4159, 485, 3937, 4005, 3910, 4048),
+	array(0, 0, 0, 0, 0, 4021, 3914, 257, 4205, 3992, 4056, 568, 4257, 543, 4092),
+	array(0, 0, 0, 0, 0, 3972, 4206, 412, 529, 532, 521, 4058, 3040, 467, 4235),
 	array(0, 0, 0, 0, 0, 0, 3998, 4094, 4004, 596, 3995, 3938, 4158, 256, 445)
 );
 
 for ($i=0; $i<6; $i++) {
 	for ($j=0; $j<15; $j++) {
-		if (file_exists($path.'/'.$covers[$i][$j].'.jpg')) {
-			$cover = imagecreatefromjpeg($path.'/'.$covers[$i][$j].'.jpg');
+		if (file_exists('../websites/static/images/covers/'.$covers[$i][$j].'.jpg')) {
+			$cover = imagecreatefromjpeg('../websites/static/images/covers/'.$covers[$i][$j].'.jpg');
 		} else {
 			$cover = imagecreatetruecolor(COVER_WIDTH, COVER_HEIGHT);
 			imagefill($cover, 0, 0, imagecolorallocate($cover, MODE=='light' ? 0xA0 : 0x2B, MODE=='light' ? 0xA0 : 0x2B, MODE=='light' ? 0xA0 : 0x2B));
@@ -193,6 +193,6 @@ $im->distortImage(Imagick::DISTORTION_PERSPECTIVE, $controlPoints, true);
 //$im->transformImageColorspace(Imagick::COLORSPACE_SRGB);
 //$im->setImageGamma($gamma);
 $im->cropImage(3840, 2160, 1480, 590);
-$im->writeImage($path.'_'.MODE.'.png');
+$im->writeImage($type.'_'.MODE.'.png');
 unlink('tmp.png');
 ?>
