@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2025-01-03 - Versió 5.2.13
+- **General:**
+	- Es corregeix que el portal de hentai mostrés el fons del portal normal en alguns casos.
+
 ## 2024-12-14 - Versió 5.2.12
 - **General:**
 	- S’actualitza la generació de les imatges de fons del portal.
