@@ -17,9 +17,9 @@ require_once("../common.fansubs.cat/header.inc.php");
 					<div class="main-site-logo">
 						<?php include(STATIC_DIRECTORY.'/images/site/'.(SITE_IS_HENTAI ? 'logo_hentai.svg' : 'logo.svg')); ?>
 <?php
-if (!empty($special_day) && file_exists(STATIC_DIRECTORY.'/images/site/logo_layer_'.$special_day.'.png')) {
+if (!empty($special_day) && file_exists(STATIC_DIRECTORY.'/images/site/logo_'.(SITE_IS_HENTAI ? 'hentai_' : '').'layer_'.$special_day.'.png')) {
 ?>
-						<img class="logo-layer" src="<?php echo STATIC_URL; ?>/images/site/logo_layer_<?php echo $special_day; ?>.png">
+						<img class="logo-layer" src="<?php echo STATIC_URL; ?>/images/site/logo_<?php echo SITE_IS_HENTAI ? 'hentai_' : ''; ?>layer_<?php echo $special_day; ?>.png">
 <?php
 }
 ?>
