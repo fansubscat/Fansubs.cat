@@ -1,7 +1,7 @@
 <?php
 define('PAGE_STYLE_TYPE', 'catalogue');
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
 
 validate_hentai();
 
@@ -9,7 +9,7 @@ if (is_robot()) {
 	define('PAGE_EXTRA_BODY_CLASS', 'has-carousel');
 }
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 					<div class="results-layout catalogue-index<?php echo is_robot() ? '' : ' hidden'; ?>">
 <?php
@@ -22,7 +22,7 @@ if (is_robot()){
 						</div>
 <?php
 	mysqli_free_result($result);
-	include("results.php");
+	include(__DIR__.'/results.php');
 } 
 ?>					</div>
 					<div class="loading-layout<?php echo !is_robot() ? '' : ' hidden'; ?>">
@@ -34,5 +34,5 @@ if (is_robot()){
 						<div class="error-message">S’ha produït un error en contactar amb el servidor. Torna-ho a provar.</div>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

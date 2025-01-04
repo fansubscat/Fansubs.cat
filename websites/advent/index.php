@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require_once('../common.fansubs.cat/db.inc.php');
+require_once(__DIR__.'/../common/db.inc.php');
 
 function seededShuffle(array &$array, $seed) {
 	mt_srand($seed);

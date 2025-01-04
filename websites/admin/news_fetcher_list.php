@@ -1,7 +1,7 @@
 <?php
 $header_title="Llista de recollidors de notícies - Notícies";
 $page="news";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 function get_method($method){
 	switch($method){
@@ -154,5 +154,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

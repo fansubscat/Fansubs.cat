@@ -4,12 +4,12 @@ define('PAGE_PATH', '/contacta-amb-nosaltres');
 define('PAGE_STYLE_TYPE', 'contact');
 define('PAGE_DESCRIPTION', 'Omple el següent formulari per a contactar amb nosaltres. Et respondrem tan aviat com ens sigui possible.');
 
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
 
 validate_hentai();
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 					<div class="text-page" id="contact-form">
 						<h2 class="section-title"><i class="fa fa-fw fa-envelope-open-text"></i> Formulari de contacte</h2>
@@ -39,5 +39,5 @@ require_once("../common.fansubs.cat/header.inc.php");
 						</form>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

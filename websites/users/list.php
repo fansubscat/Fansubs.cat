@@ -1,7 +1,7 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 validate_hentai();
 
@@ -15,7 +15,7 @@ define('PAGE_PATH', '/la-meva-llista');
 define('PAGE_STYLE_TYPE', 'settings');
 define('SETTINGS_ITEM_TYPE', 'list');
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 
 $res = query_my_list_total_items($user);
 $cnt = mysqli_fetch_assoc($res)['cnt'];
@@ -76,6 +76,6 @@ if ($cnt>0) {
 	<div class="section-content section-empty"><div><i class="fa far fa-fw fa-bookmark"></i><br><?php echo SITE_IS_HENTAI ? 'No tens cap anime ni manga hentai desat a la llista.' : 'No tens cap anime, manga ni contingut d’imatge real desat a la llista.'; ?><br>Pots afegir-n’hi fent clic a la icona de punt de llibre a cadascun dels portals.</div></div>
 </div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>
 

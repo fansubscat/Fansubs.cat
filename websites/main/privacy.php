@@ -8,12 +8,12 @@ if (str_ends_with($_SERVER['HTTP_HOST'], 'hentai.cat')) {
 	define('PAGE_DESCRIPTION', 'Aquesta política de privadesa defineix la manera en què Hentai.cat («nosaltres») recopila, emmagatzema, utilitza, manté i comparteix la informació («informació» o «dades») recopilada dels usuaris (cadascun, un «usuari», o «tu») del lloc web de Hentai.cat («lloc web»). Aquesta política de privadesa s’aplica a tots els productes i serveis oferts per Hentai.cat en relació amb el lloc web («serveis»). Si tens qualsevol dubte relatiu a aquesta política de privadesa o a l’ús que fem de les teves dades, te’l podem resoldre si ens escrius fent servir l’enllaç de contacte de la part inferior de la pàgina.');
 }
 
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
 
 validate_hentai();
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 					<div class="text-page">
 						<h2 class="section-title"><i class="fa fa-fw fa-user-lock"></i> Política de privadesa</h2>
@@ -35,5 +35,5 @@ require_once("../common.fansubs.cat/header.inc.php");
 						<div class="section-content">Si resideixes a l’Espai Econòmic Europeu, tens certs drets que pots exercir en qualsevol moment. Tant si vols exercir els teus drets com si tens qüestions sobre aquesta política de privadesa, les nostres pràctiques o les interaccions amb el lloc web, pots contactar amb el delegat de protecció de dades fent servir l’enllaç de contacte de la part inferior de la pàgina.</div>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

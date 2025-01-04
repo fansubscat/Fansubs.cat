@@ -1,6 +1,6 @@
 <?php
-require_once('db.inc.php');
-require_once("vendor/autoload.php");
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/vendor/autoload.php');
 
 //define('DRY_RUN', TRUE);
 

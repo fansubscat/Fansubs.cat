@@ -1,11 +1,11 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 ob_start();
-require_once("db.inc.php");
-require_once("common.inc.php");
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/common.inc.php');
 
 session_name(ADMIN_COOKIE_NAME);
-session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);
+session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 ?>
 <!doctype html>

@@ -1,7 +1,7 @@
 <?php
 $header_title="Llista de comptes remots - Fansubs";
 $page="fansub";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
@@ -74,5 +74,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

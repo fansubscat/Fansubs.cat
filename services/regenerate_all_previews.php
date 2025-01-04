@@ -1,6 +1,6 @@
 <?php
-require_once('db.inc.php');
-require_once('libs/preview_image_generator.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/libs/preview_image_generator.php');
 
 log_action('cron-regenerate-all-previews-started', "S’ha iniciat la regeneració de previsualitzacions de totes les sèries");
 

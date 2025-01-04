@@ -1,7 +1,7 @@
 <?php
 $header_title="Conversions pendents - Eines";
 $page="tools";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 ?>
@@ -63,5 +63,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

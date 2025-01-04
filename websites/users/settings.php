@@ -1,6 +1,6 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
 
 validate_hentai();
 
@@ -9,8 +9,8 @@ define('PAGE_PATH', '/configuracio');
 define('PAGE_STYLE_TYPE', 'settings');
 define('SETTINGS_ITEM_TYPE', 'settings');
 
-require_once("../common.fansubs.cat/header.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 if (!empty($user)) {
 	$show_cancelled = $user['show_cancelled_projects'];
@@ -170,5 +170,5 @@ if (!empty($user)) {
 	</div>
 </div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

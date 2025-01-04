@@ -1,7 +1,7 @@
 <?php
 $header_title="Estat dels recollidors de notícies - Eines";
 $page="tools";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 //Helper functions to show better strings for possible values on the DB
 
@@ -128,5 +128,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

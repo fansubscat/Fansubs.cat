@@ -4,9 +4,9 @@ define('PAGE_PATH', '/enllacos');
 define('PAGE_STYLE_TYPE', 'text');
 define('PAGE_DESCRIPTION', 'Aquí trobaràs un recull d’enllaços als principals mitjans i divulgadors que fan contingut en català relacionat amb el manga i l’anime. Fansubs.cat no hi té cap mena de relació, però creiem convenient fer-ne promoció i et convidem a seguir-los i donar-los suport!');
 define('PAGE_DISABLED_IF_HENTAI', TRUE);
-require_once("../common.fansubs.cat/header.inc.php");
-require_once("common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
+require_once(__DIR__.'/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 ?>
 					<div class="text-page">
 						<h2 class="section-title"><i class="fa fa-fw fa-link"></i> Enllaços</h2>
@@ -46,5 +46,5 @@ require_once("queries.inc.php");
 ?>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

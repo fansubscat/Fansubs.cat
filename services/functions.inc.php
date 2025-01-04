@@ -1,9 +1,9 @@
 <?php
-require_once("libs/simple_html_dom.php");
-require_once('db.inc.php');
-require_once('common.inc.php');
-require_once('config.inc.php');
-require_once("vendor/autoload.php");
+require_once(__DIR__.'/libs/simple_html_dom.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/common.inc.php');
+require_once(__DIR__.'/config.inc.php');
+require_once(__DIR__.'/vendor/autoload.php');
 
 use LanguageDetection\Language;
 

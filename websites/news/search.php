@@ -1,8 +1,8 @@
 <?php
 define('PAGE_STYLE_TYPE', 'news');
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 validate_hentai();
 
@@ -20,7 +20,7 @@ if (!is_robot()) {
 	define('SKIP_FOOTER', TRUE);
 }
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 
 function get_month_from_yyyy_mm($yyyymm){
 	$start_date = strtotime(date('2003-05-01'));
@@ -104,7 +104,7 @@ if (is_robot()){
 	if (!empty($_GET['fansub'])) {
 		$_POST['fansub']=$_GET['fansub'];
 	}
-	include("results.php");
+	include(__DIR__.'/results.php');
 	define('SKIP_FOOTER', TRUE);
 }
 ?>					</div>
@@ -117,5 +117,5 @@ if (is_robot()){
 						<div class="error-message">S’ha produït un error en contactar amb el servidor. Torna-ho a provar.</div>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

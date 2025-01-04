@@ -1,7 +1,7 @@
 <?php
 $header_title="Continguts més populars - Anàlisi";
 $page="analytics";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (!empty($_SESSION['fansub_id'])) {
@@ -20,8 +20,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	$current_month = strtotime(date('Y-m-01'));
 	$i=0;
-	while (strtotime(date('2020-06-01')."+$i months")<=$current_month) {
-		$months[date("Y-m", strtotime(date('2020-06-01')."+$i months"))]=ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date('2020-06-01')."+$i months")))));
+	while (strtotime(date(STARTING_DATE)."+$i months")<=$current_month) {
+		$months[date("Y-m", strtotime(date(STARTING_DATE)."+$i months"))]=ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date(STARTING_DATE)."+$i months")))));
 		$i++;
 	}
 	$months = array_reverse($months, TRUE);
@@ -42,7 +42,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$last_month = $selected_month;
 		} else if ($_GET['month']=='ALL') {
 			$selected_all = TRUE;
-			$first_month = '2020-01';
+			$first_month = date(date_create_from_format('Y-m-d', STARTING_DATE), 'Y-m');
 			$last_month = date('Y-m');
 		}
 	}
@@ -72,7 +72,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="mb-3 p-3 mb-0">
 							<label for="month">Període:</label>
 							<select id="month" onchange="location.href='popular.php?month='+$('#month').val()+'&amp;amount='+$('#amount').val()+'&amp;type='+$('#type').val()<?php echo !empty($fansub) ? "+'&amp;fansub_id=".$fansub['id']."'" : ''; ?>;">
-								<option value="ALL"<?php echo ($selected_all) ? ' selected' : ''; ?> style="font-weight: bold;">TOTAL 2020-<?php echo date('Y'); ?></option>
+								<option value="ALL"<?php echo ($selected_all) ? ' selected' : ''; ?> style="font-weight: bold;">TOTAL <?php echo STARTING_YEAR; ?>-<?php echo date('Y'); ?></option>
 <?php
 	$current_year=0;
 	foreach ($months as $month => $values) {
@@ -128,7 +128,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<hr>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
@@ -180,7 +180,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
 										<tr>
@@ -230,7 +230,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d’imatge real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d’imatge real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<hr>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
@@ -282,7 +282,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes hentai més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes hentai més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<hr>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
@@ -334,7 +334,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues hentai més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues hentai més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
 										<tr>
@@ -403,7 +403,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<hr>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
@@ -455,7 +455,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
 										<tr>
@@ -505,7 +505,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d’imatge real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> continguts d’imatge real més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<hr>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
@@ -557,7 +557,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes hentai més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> animes hentai més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<hr>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
@@ -609,7 +609,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues hentai més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total 2020-'.date('Y')); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1">Els <?php echo $amount; ?> mangues hentai més populars - <?php echo (!$selected_all && empty($selected_year)) ? ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($selected_month.'-01')))))) : (!$selected_all ? "Any complet ".$selected_year : 'Total '.STARTING_YEAR.'-'.date('Y')); ?></h4>
 								<table class="table table-hover table-striped">
 									<thead class="table-dark">
 										<tr>
@@ -680,5 +680,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

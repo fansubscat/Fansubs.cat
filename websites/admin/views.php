@@ -20,7 +20,7 @@ switch ($type) {
 	break;
 }
 
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 switch ($type) {
 	case 'anime':
@@ -260,5 +260,5 @@ mysqli_free_result($result);
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

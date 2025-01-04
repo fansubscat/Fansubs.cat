@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require_once("queries.inc.php");
+require_once(__DIR__.'/queries.inc.php');
 
 $migration_type = (!empty($_GET['migration_type']) ? $_GET['migration_type'] : 'piwigo');
 
@@ -60,7 +60,7 @@ if ($migration_type=='piwigo') {
 					mysqli_free_result($result);
 					log_action('manga-migration-invalid-id', "No s’ha trobat el manga/volum/capítol migrat amb l’identificador $file_id");
 					http_response_code(404);
-					include('error.php');
+					include(__DIR__.'/error.php');
 					die(); //Avoids error because mysqli is already closed
 				}
 			}
@@ -108,12 +108,12 @@ if ($migration_type=='piwigo') {
 				}
 			} else {
 				http_response_code(404);
-				include('error.php');
+				include(__DIR__.'/error.php');
 				die(); //Avoids error because mysqli is already closed
 			}
 		} else {
 			http_response_code(404);
-			include('error.php');
+			include(__DIR__.'/error.php');
 			die(); //Avoids error because mysqli is already closed
 		}
 		mysqli_free_result($result_old_slug);

@@ -1,7 +1,7 @@
 <?php
 $header_title="Errors de reproducció - Anàlisi";
 $page="analytics";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 function get_error_type($type) {
 	switch ($type) {
@@ -114,5 +114,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

@@ -8,14 +8,14 @@ if (str_ends_with($_SERVER['HTTP_HOST'], 'hentai.cat')) {
 }
 define('PAGE_PATH', '/llista-de-fansubs');
 define('PAGE_STYLE_TYPE', 'fansubs');
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
 
 validate_hentai();
 
-require_once("../common.fansubs.cat/header.inc.php");
-require_once("common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
+require_once(__DIR__.'/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 ?>
 					<div class="fansubs-index">
 						<div class="section">
@@ -62,5 +62,5 @@ else{
 						</div>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

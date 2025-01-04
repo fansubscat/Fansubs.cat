@@ -1,7 +1,7 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 validate_hentai_ajax();
 

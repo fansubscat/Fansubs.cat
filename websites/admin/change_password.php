@@ -1,7 +1,7 @@
 <?php
 $header_title="Canvia la contrasenya - Eines";
 $page="tools";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (!empty($_POST['action'])) {
@@ -59,5 +59,5 @@ else{
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

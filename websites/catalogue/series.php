@@ -1,6 +1,6 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
 
 validate_hentai();
 
@@ -16,7 +16,7 @@ if (isset($failed)) {
 	mysqli_free_result($result);
 	if (isset($failed)) {
 		http_response_code(404);
-		include('error.php');
+		include(__DIR__.'/error.php');
 		die();
 	}
 	header("HTTP/1.1 301 Moved Permanently");
@@ -35,7 +35,7 @@ $blocked_series = array();
 if (in_array($_GET['slug'], $blocked_series)) {
 	http_response_code(451);
 	define('COPYRIGHT_ISSUE', TRUE);
-	include('error.php');
+	include(__DIR__.'/error.php');
 	die();
 }
 
@@ -52,7 +52,7 @@ define('PAGE_PREVIEW_IMAGE', STATIC_URL.'/social/series_'.$series['id'].'.jpg');
 define('PAGE_IS_SERIES', TRUE);
 define('PAGE_EXTRA_BODY_CLASS', 'has-carousel is-series-page');
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 					<input id="autoopen_file_id" type="hidden" value="<?php echo htmlspecialchars(isset($_GET['f']) ? (int)$_GET['f'] : ''); ?>">
 					<input id="series_id" type="hidden" value="<?php echo htmlspecialchars($series['id']); ?>">
@@ -644,5 +644,5 @@ if (mysqli_num_rows($resultrm)>0) {
 
 mysqli_free_result($resultrm);
 mysqli_free_result($result);
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

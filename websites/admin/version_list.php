@@ -1,5 +1,5 @@
 <?php
-require_once('libraries/preview_image_generator.php');
+require_once(__DIR__.'/libraries/preview_image_generator.php');
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
@@ -23,7 +23,7 @@ switch ($type) {
 	break;
 }
 
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 switch ($type) {
 	case 'anime':
@@ -128,5 +128,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

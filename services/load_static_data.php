@@ -4,9 +4,9 @@
 //If the database is already full of news, bad things could happen (all fansub news will be removed, but not files, etc.)
 //The images included in the CSV data MUST already be in the server storage (uploaded manually). This script doesn't fetch them.
 
-require_once('db.inc.php');
-require_once('functions.inc.php');
-require_once('libs/parsecsv.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/functions.inc.php');
+require_once(__DIR__.'/libs/parsecsv.php');
 
 if (isset($argv) && isset($argv[1]) && isset($argv[2])){
 	$fansub_id = $argv[1];

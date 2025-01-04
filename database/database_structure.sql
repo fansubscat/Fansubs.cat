@@ -659,5 +659,7 @@ ALTER TABLE `user_version_rating`
 
 ALTER TABLE `version`
   ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  
+INSERT INTO `admin_user` (username, password, admin_level, fansub_id, default_storage_processing, created, created_by, updated, updated_by) VALUES ('admin', '', 3, NULL, 5, CURRENT_TIMESTAMP, 'admin', CURRENT_TIMESTAMP, 'admin');
 
 COMMIT;

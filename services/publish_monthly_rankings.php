@@ -1,6 +1,6 @@
 <?php
-require_once('db.inc.php');
-require_once('common.inc.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/common.inc.php');
 
 $last_month = date('Y-m', strtotime(date('Y-m').'-01 first day of -1 month'));
 $curr_month = date('Y-m');

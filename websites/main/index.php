@@ -1,18 +1,19 @@
 <?php
 define('PAGE_STYLE_TYPE', 'main');
+require_once(__DIR__.'/../../common/config.inc.php');
 
-if (str_ends_with($_SERVER['HTTP_HOST'], 'hentai.cat')) {
+if (str_ends_with($_SERVER['HTTP_HOST'], HENTAI_DOMAIN)) {
 	define('SITE_TITLE', 'Hentai.cat: Hentai en català');
 } else {
 	define('SITE_TITLE', 'Fansubs.cat: Anime, manga i imatge real en català');
 }
 
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
 
 validate_hentai();
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 					<div class="main-site-logo">
 						<?php include(STATIC_DIRECTORY.'/images/site/'.(SITE_IS_HENTAI ? 'logo_hentai.svg' : 'logo.svg')); ?>
@@ -63,5 +64,5 @@ if (!SITE_IS_HENTAI) {
 ?>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

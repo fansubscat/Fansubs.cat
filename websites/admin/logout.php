@@ -1,7 +1,7 @@
 <?php
 $header_title="S’ha tancat la sessió";
 $skip_navbar=TRUE;
-require_once("header.inc.php");
+require_once(__DIR__.'/header.inc.php');
 session_destroy();
 ?>
 		<div class="container d-flex h-100 justify-content-center align-items-center">
@@ -15,5 +15,5 @@ session_destroy();
 			</div>
 		</div>
 <?php
-require_once("footer.inc.php");
+require_once(__DIR__.'/footer.inc.php');
 ?>

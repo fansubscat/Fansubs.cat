@@ -1,7 +1,7 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 validate_hentai();
 
@@ -14,7 +14,7 @@ define('PAGE_TITLE', 'El meu perfil');
 define('PAGE_STYLE_TYPE', 'settings');
 define('SETTINGS_ITEM_TYPE', 'profile');
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 
 $result = query_user_seen_data_by_user_id($user['id']);
 $seen_data = mysqli_fetch_assoc($result);
@@ -133,5 +133,5 @@ if (!SITE_IS_HENTAI) {
 	</div>
 </div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once("../common.fansubs.cat/config.inc.php");
+require_once(__DIR__.'/../common/config.inc.php'););
 
 function get_storage_url($url) {
 	if (count(ADMIN_STORAGES)>0 && strpos($url, "storage://")===0) {

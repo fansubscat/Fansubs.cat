@@ -1,5 +1,5 @@
 <?php
-require_once('db.inc.php');
+require_once(__DIR__.'/db.inc.php');
 
 log_action('cron-accounts-updater-started', "S’ha iniciat la comprovació de comptes");
 

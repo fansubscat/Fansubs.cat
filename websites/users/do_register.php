@@ -1,6 +1,6 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 function string_ends_with($haystack, $needle) {
 	$length = strlen($needle);

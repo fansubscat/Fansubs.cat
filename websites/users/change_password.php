@@ -1,7 +1,7 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 validate_hentai();
 
@@ -15,7 +15,7 @@ define('PAGE_PATH', '/canvia-la-contrasenya');
 define('PAGE_STYLE_TYPE', 'settings');
 define('SETTINGS_ITEM_TYPE', 'profile');
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 <div class="account-profile-layout">
 	<div class="content-layout account-profile-page">
@@ -37,5 +37,5 @@ require_once("../common.fansubs.cat/header.inc.php");
 	</div>
 </div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

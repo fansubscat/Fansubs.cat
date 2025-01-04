@@ -1,6 +1,6 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
 
 validate_hentai();
 
@@ -10,7 +10,7 @@ $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
 	http_response_code(404);
-	include('error.php');
+	include(__DIR__.'/error.php');
 	die();
 }
 
@@ -24,10 +24,10 @@ define('PAGE_PATH', '/'.$series['slug']);
 define('PAGE_DESCRIPTION', str_replace("\n", " ", strip_tags($synopsis)));
 define('PAGE_PREVIEW_IMAGE', SITE_BASE_URL.'/preview/'.$series['slug'].'.jpg');
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 <span class="embed-data" data-file-id="<?php echo $file_id; ?>" data-title="S’està carregant..."></span>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>
 

@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__)."/user_init.inc.php");
-require_once(dirname(__FILE__)."/common.inc.php");
+require_once(__DIR__.'/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
 
 /*if (PAGE_STYLE_TYPE=='main' || PAGE_STYLE_TYPE=='text' || PAGE_STYLE_TYPE=='contact') {
 	define('SITE_THEME', 'dark');

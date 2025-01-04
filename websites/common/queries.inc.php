@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__)."/db.inc.php");
+require_once(__DIR__.'/db.inc.php');
 
 function query_user_by_username($username) {
 	$username = escape($username);

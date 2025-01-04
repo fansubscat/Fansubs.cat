@@ -1,5 +1,5 @@
 <?php
-require_once("queries.inc.php");
+require_once(__DIR__.'/queries.inc.php');
 
 //Versions to avoid site caching
 const JS_VER=57;

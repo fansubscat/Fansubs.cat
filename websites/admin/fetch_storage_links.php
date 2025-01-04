@@ -1,5 +1,5 @@
 <?php
-require_once("db.inc.php");
+require_once(__DIR__.'/db.inc.php');
 
 session_name(ADMIN_COOKIE_NAME);
 session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);

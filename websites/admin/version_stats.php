@@ -22,7 +22,7 @@ switch ($type) {
 	break;
 }
 
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 switch ($type) {
 	case 'anime':
@@ -37,7 +37,7 @@ switch ($type) {
 		$series_b_short='Clics';
 		$series_c_short='Temps total';
 		$series_c_color='rgb(40, 167, 69)';
-		$start_date='2020-06-01';
+		$start_date=STARTING_DATE;
 		$link_url=ANIME_URL;
 	break;
 	case 'liveaction':
@@ -52,7 +52,7 @@ switch ($type) {
 		$series_b_short='Clics';
 		$series_c_short='Temps total';
 		$series_c_color='rgb(40, 167, 69)';
-		$start_date='2022-06-01';
+		$start_date=STARTING_DATE;
 		$link_url=LIVEACTION_URL;
 	break;
 	case 'manga':
@@ -67,7 +67,7 @@ switch ($type) {
 		$series_b_short='Clics';
 		$series_c_short='Pàg. totals';
 		$series_c_color='rgb(167, 167, 69)';
-		$start_date='2021-01-01';
+		$start_date=STARTING_DATE;
 		$link_url=MANGA_URL;
 	break;
 }
@@ -419,5 +419,5 @@ mysqli_free_result($result);
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

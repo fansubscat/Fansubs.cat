@@ -1,6 +1,6 @@
 <?php
-require_once("../common.fansubs.cat/db.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/db.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
 
 // INTERNAL
 

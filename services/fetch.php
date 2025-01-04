@@ -1,6 +1,6 @@
 <?php
-require_once('db.inc.php');
-require_once('functions.inc.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/functions.inc.php');
 
 if (isset($argv) && isset($argv[1])){
 	$fansub_to_fetch = $argv[1];

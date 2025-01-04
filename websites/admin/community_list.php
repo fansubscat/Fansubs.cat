@@ -1,7 +1,7 @@
 <?php
 $header_title="Llista de comunitats - Altres";
 $page="other";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 function get_category_name_by_id($id) {
 	switch ($id) {
@@ -102,5 +102,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

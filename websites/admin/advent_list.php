@@ -1,7 +1,7 @@
 <?php
 $header_title="Llista de calendaris d’advent - Altres";
 $page="other";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_year'])) {
@@ -40,8 +40,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$year = 2020;
-	$years_subquery = "SELECT 2020 year";
+	$year = STARTING_YEAR;
+	$years_subquery = "SELECT ".STARTING_YEAR." year";
 	while ($year < date('Y')) {
 		$year++;
 		$years_subquery .= " UNION SELECT $year year";
@@ -68,5 +68,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

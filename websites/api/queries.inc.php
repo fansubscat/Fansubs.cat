@@ -1,5 +1,5 @@
 <?php
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/common.inc.php');
 
 function get_internal_hentai_condition() {
 	if (SITE_IS_HENTAI_OR_OLD_HENTAI) {

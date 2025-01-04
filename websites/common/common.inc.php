@@ -2,10 +2,11 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once("libraries/phpmailer/Exception.php");
-require_once("libraries/phpmailer/PHPMailer.php");
-require_once("libraries/phpmailer/SMTP.php");
-require_once("libraries/parsedown.inc.php");
+require_once(__DIR__."/initialization.inc.php");
+require_once(__DIR__.'/libraries/phpmailer/Exception.php');
+require_once(__DIR__.'/libraries/phpmailer/PHPMailer.php');
+require_once(__DIR__.'/libraries/phpmailer/SMTP.php');
+require_once(__DIR__.'/libraries/parsedown.inc.php');
 
 function is_adult(){
 	global $user;

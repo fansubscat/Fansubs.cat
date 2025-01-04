@@ -1,7 +1,7 @@
 <?php
 $header_title="Inicia la sessió";
 $skip_navbar=TRUE;
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username'])) {
 	header("Location: index.php");
@@ -11,10 +11,21 @@ else if (isset($_POST['username']) && isset($_POST['password'])) {
 	//No need to escape the password string since it will be hashed anyway, and the hash does not cause SQL injections
 	$username=escape($_POST['username']);
 	$password=hash('sha256', PASSWORD_SALT . $_POST['password']);
+	//We use this for a fallback in the default install
+	$escaped_password=escape($_POST['password']);
+	
+	$successful_login = FALSE;
+	
+	if ($username=='admin' && mysqli_num_rows(query("SELECT * FROM admin_user u WHERE username='admin' AND password=''"))==1) {
+		$_SESSION['message']="IMPORTANT: Canvia la contrasenya a Eines -> Canvia la contrasenya. Fins que no ho facis, tothom podrà iniciar la sessió amb l’usuari «admin» sense contrasenya!";
+		$result=query("SELECT * FROM admin_user u WHERE username='admin' AND password=''");
+		$successful_login = TRUE;
+	} else {
+		$result=query("SELECT * FROM admin_user u WHERE username='".$username."' AND password='".$password."'");
+		$successful_login = (mysqli_num_rows($result)==1);
+	}
 
-	$result=query("SELECT * FROM admin_user u WHERE username='".$username."' AND password='".$password."'");
-
-	if (mysqli_num_rows($result)==1) {
+	if ($successful_login) {
 		$row = mysqli_fetch_assoc($result);
 		$_SESSION['username']=$row['username'];
 		$_SESSION['admin_level']=$row['admin_level'];
@@ -67,5 +78,5 @@ else if (isset($_POST['username']) && isset($_POST['password'])) {
 			</div>
 		</div>
 <?php
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__).'/../db.inc.php');
-require_once(dirname(__FILE__).'/linebreaks4imagettftext.php');
+require_once(__DIR__.'/../db.inc.php');
+require_once(__DIR__.'/linebreaks4imagettftext.php');
 
 define('IMAGE_WIDTH', 1200);
 define('IMAGE_HEIGHT', 628);

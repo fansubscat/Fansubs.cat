@@ -1,5 +1,5 @@
 <?php
-require_once('libraries/preview_image_generator.php');
+require_once(__DIR__.'/libraries/preview_image_generator.php');
 $type='anime';
 $link_url_pattern = "(https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_\-]+)|storage:\/\/.*)";
 
@@ -24,7 +24,7 @@ switch ($type) {
 	break;
 }
 
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 switch ($type) {
 	case 'anime':
@@ -1457,5 +1457,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

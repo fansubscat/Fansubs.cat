@@ -1,7 +1,7 @@
 <?php
-require_once("db.inc.php");
-require_once("common.inc.php");
-require_once('libraries/linebreaks4imagettftext.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/common.inc.php');
+require_once(__DIR__.'/libraries/linebreaks4imagettftext.php');
 
 ob_start();
 
@@ -47,7 +47,7 @@ function get_change_in_position_for_series($current_month, $id, $new_position, $
 			return $series['position']-$new_position;
 		}
 	}
-	$result = query("SELECT IFNULL(MIN(f.created),'2020-06-01 00:00:00') min FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN file f ON v.id=f.version_id WHERE s.id=$id");
+	$result = query("SELECT IFNULL(MIN(f.created),'".STARTING_DATE." 00:00:00') min FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN file f ON v.id=f.version_id WHERE s.id=$id");
 	$row = mysqli_fetch_assoc($result);
 	mysqli_free_result($result);
 	if ($row['min']>=($current_month.'-01 00:00:00')) {
@@ -63,7 +63,7 @@ function get_change_in_views_for_series($current_month, $id, $new_views, $series
 			return $new_views-$series['max_views'];
 		}
 	}
-	$result = query("SELECT IFNULL(MIN(f.created),'2020-06-01 00:00:00') min FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN file f ON v.id=f.version_id WHERE s.id=$id");
+	$result = query("SELECT IFNULL(MIN(f.created),'".STARTING_DATE." 00:00:00') min FROM series s LEFT JOIN version v ON s.id=v.series_id LEFT JOIN file f ON v.id=f.version_id WHERE s.id=$id");
 	$row = mysqli_fetch_assoc($result);
 	mysqli_free_result($result);
 	if ($row['min']>=($current_month.'-01 00:00:00')) {
@@ -138,7 +138,7 @@ function round_corners($source, $radius) {
 }
 
 session_name(ADMIN_COOKIE_NAME);
-session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);
+session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 
 if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) || $_GET['token']==INTERNAL_TOKEN) {
@@ -277,7 +277,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 
 	switch($mode) {
 		case 'all':
-			$subtitle.='Total 2020-'.date('Y');
+			$subtitle.='Total '.STARTING_YEAR.'-'.date('Y');
 			break;
 		case 'year':
 			$subtitle.='Any '.strftime("%Y", strtotime(date($last_month.'-01')));

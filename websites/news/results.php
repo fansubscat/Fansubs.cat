@@ -2,9 +2,9 @@
 if (!defined('PAGE_STYLE_TYPE')) {
 	define('PAGE_STYLE_TYPE', 'news');
 }
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 validate_hentai_ajax();
 
@@ -18,7 +18,7 @@ if (!empty($_GET['page'])) {
 		$page = $_GET['page'];
 	} else {
 		http_response_code(404);
-		include('error.php');
+		include(__DIR__.'/error.php');
 		die();
 	}
 }
@@ -206,6 +206,6 @@ if ($has_printed_navigation) {
 }
 
 if (defined('PAGE_IS_SEARCH')) {
-	require_once("../common.fansubs.cat/footer_text.inc.php");
+	require_once(__DIR__.'/../common/footer_text.inc.php');
 }
 ?>

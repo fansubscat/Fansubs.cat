@@ -1,6 +1,6 @@
 <?php
-require_once("../common.fansubs.cat/db.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/db.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 //Ugly GUID generator, based on URL and date
 //Improves RSS feed compatibility

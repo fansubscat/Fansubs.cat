@@ -1,7 +1,7 @@
 <?php
 $header_title="Detalls del compte remot i carpetes associades - Fansubs";
 $page="fansub";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2 && isset($_GET['id']) && is_numeric($_GET['id'])) {
 	$result = query("SELECT a.* FROM remote_account a WHERE id=".escape($_GET['id']));
@@ -61,5 +61,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

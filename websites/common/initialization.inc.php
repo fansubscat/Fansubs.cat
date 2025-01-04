@@ -1,5 +1,48 @@
 <?php
-//This file sets config depending on the hostname used to display the site
+require_once(__DIR__.'/../../common/config.inc.php');
+
+if (str_ends_with(strtolower($_SERVER['HTTP_HOST']), HENTAI_DOMAIN)) {
+	define('CURRENT_DOMAIN', HENTAI_DOMAIN);
+	define('OTHER_DOMAIN', MAIN_DOMAIN);
+	define('CURRENT_SITE_NAME', HENTAI_SITE_NAME);
+	define('CURRENT_SITE_NAME_ACCOUNT', HENTAI_SITE_NAME.' i '.MAIN_SITE_NAME);
+	define('SITE_IS_HENTAI', TRUE);
+	define('SOCIAL_LINK_BLUESKY', HENTAI_SOCIAL_LINK_BLUESKY);
+	define('SOCIAL_LINK_MASTODON', HENTAI_SOCIAL_LINK_MASTODON);
+	define('SOCIAL_LINK_TELEGRAM', HENTAI_SOCIAL_LINK_TELEGRAM);
+	define('SOCIAL_LINK_X', HENTAI_SOCIAL_LINK_X);
+} else {
+	define('CURRENT_DOMAIN', MAIN_DOMAIN);
+	define('OTHER_DOMAIN', HENTAI_DOMAIN);
+	define('CURRENT_SITE_NAME', MAIN_SITE_NAME);
+	define('CURRENT_SITE_NAME_ACCOUNT', MAIN_SITE_NAME);
+	define('SITE_IS_HENTAI', FALSE);
+	define('SOCIAL_LINK_BLUESKY', MAIN_SOCIAL_LINK_BLUESKY);
+	define('SOCIAL_LINK_MASTODON', MAIN_SOCIAL_LINK_MASTODON);
+	define('SOCIAL_LINK_TELEGRAM', MAIN_SOCIAL_LINK_TELEGRAM);
+	define('SOCIAL_LINK_X', MAIN_SOCIAL_LINK_X);
+}
+
+//Website URLs (no final slash)
+//These URLs do not change depending on the host, they are always on the main domain:
+define('ADVENT_URL', 'https://'.ADVENT_SUBDOMAIN.'.'.MAIN_DOMAIN);
+define('ADMIN_URL', 'https://'.ADMIN_SUBDOMAIN.'.'.MAIN_DOMAIN);
+//These URLS *DO* change depending on the host:
+define('MAIN_URL', 'https://'.MAIN_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+define('ANIME_URL', 'https://'.ANIME_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+define('MANGA_URL', 'https://'.MANGA_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+define('LIVEACTION_URL', 'https://'.LIVEACTION_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+define('NEWS_URL', 'https://'.NEWS_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+define('RESOURCES_URL', 'https://'.RESOURCES_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+define('USERS_URL', 'https://'.USERS_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+define('STATIC_URL', 'https://'.STATIC_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+define('API_URL', 'https://'.API_SUBDOMAIN.'.'.CURRENT_DOMAIN);
+
+//Cookie params
+define('COOKIE_DOMAIN', '.'.CURRENT_DOMAIN);
+
+
+//We set parameters depending on the hostname used to display the site
 //This allows customization but keeping the same codebase
 $server_url = 'https://' . (!empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'unknown');
 

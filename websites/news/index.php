@@ -1,11 +1,11 @@
 <?php
 define('PAGE_STYLE_TYPE', 'news');
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
 
 validate_hentai();
 
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 					<div class="results-layout catalogue-index">
 <?php
@@ -16,7 +16,7 @@ if (is_robot()){
 						</div>
 <?php
 }
-include("results.php"); 
+include(__DIR__.'/results.php'); 
 ?>					</div>
 					<div class="loading-layout hidden">
 						<div class="loading-spinner"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div>
@@ -27,5 +27,5 @@ include("results.php");
 						<div class="error-message">S’ha produït un error en contactar amb el servidor. Torna-ho a provar.</div>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

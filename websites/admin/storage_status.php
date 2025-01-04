@@ -1,7 +1,7 @@
 <?php
 $header_title="Estadístiques - Servidors d’emmagatzematge";
 $page="analytics";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 function get_image_type_url($array, $type) {
 	foreach ($array as $element) {
@@ -59,5 +59,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

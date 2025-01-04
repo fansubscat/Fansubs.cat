@@ -1,7 +1,7 @@
 <?php
 $header_title="Edició de fansubs - Fansubs";
 $page="fansub";
-include("header.inc.php");
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESSION['admin_level']>=3 || ($_SESSION['admin_level']==2 && !empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id']) && ($_SESSION['fansub_id']==$_GET['id'] || $_SESSION['fansub_id']==$_POST['id'])))) {
 	if (!empty($_POST['action'])) {
@@ -245,5 +245,5 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 	header("Location: login.php");
 }
 
-include("footer.inc.php");
+include(__DIR__.'/footer.inc.php');
 ?>

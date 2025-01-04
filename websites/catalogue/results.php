@@ -2,9 +2,9 @@
 if (!defined('PAGE_STYLE_TYPE')) {
 	define('PAGE_STYLE_TYPE', 'catalogue');
 }
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("common.inc.php");
-require_once("queries.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 
 $special_day = get_special_day();
 
@@ -500,7 +500,7 @@ if (!$has_some_result) {
 }
 
 if (defined('PAGE_IS_SEARCH')) {
-	require_once("../common.fansubs.cat/footer_text.inc.php");
+	require_once(__DIR__.'/../common/footer_text.inc.php');
 } else {
 ?>
 				<div id="bottom-navigation">

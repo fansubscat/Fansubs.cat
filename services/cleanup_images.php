@@ -1,8 +1,8 @@
 <?php
 //This script cleans the filesystem of unused images
 
-require_once('db.inc.php');
-require_once('functions.inc.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/functions.inc.php');
 
 //define('DRY_RUN', TRUE);
 

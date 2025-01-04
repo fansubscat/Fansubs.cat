@@ -1,6 +1,6 @@
 <?php
-require_once("../common.fansubs.cat/user_init.inc.php");
-require_once("common.inc.php");
+require_once(__DIR__.'/../common/user_init.inc.php');
+require_once(__DIR__.'/common.inc.php');
 
 validate_hentai();
 
@@ -11,7 +11,7 @@ if ($row = mysqli_fetch_assoc($result)) {
 	mysqli_free_result($result);
 } else {
 	http_response_code(404);
-	include('error.php');
+	include(__DIR__.'/error.php');
 	die();
 }
 mysqli_close($db_connection);

@@ -1,5 +1,5 @@
 <?php
-require_once('../common.fansubs.cat/config.inc.php');
+require_once(__DIR__.'/../common/initialization.inc.php');
 
 function log_action($action, $text=NULL){
 	global $db_connection;

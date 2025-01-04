@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__)."/config.inc.php");
+require_once(__DIR__.'/initialization.inc.php');
 if (!defined('PAGE_STYLE_TYPE')) {
 	define('PAGE_STYLE_TYPE', 'text');
 }
@@ -10,7 +10,7 @@ if (defined('COPYRIGHT_ISSUE')) {
 	$code = 451;
 }
 http_response_code($code);
-require_once(dirname(__FILE__)."/header.inc.php");
+require_once(__DIR__.'/header.inc.php');
 ?>
 				<div class="text-page centered error-page">
 					<h2 class="section-title"><?php echo $code==403 ? "Ostres! Sembla que no tens permís..." : ($code==451 ? "Ostres! No es pot accedir a aquest contingut..." : "Ostres! Sembla que la pàgina no existeix..."); ?></h2>
@@ -36,5 +36,5 @@ if ($code==403){
 					</div>
 				</div>
 <?php
-require_once("footer.inc.php");
+require_once(__DIR__.'/footer.inc.php');
 ?>

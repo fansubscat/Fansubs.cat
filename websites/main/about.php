@@ -4,7 +4,7 @@ define('PAGE_PATH', '/qui-som');
 define('PAGE_STYLE_TYPE', 'text');
 define('PAGE_DESCRIPTION', 'Fansubs.cat és un projecte sorgit dels esforços conjunts dels principals fansubs en català. El nostre únic objectiu és potenciar el consum de contingut de l’Àsia Oriental en català, tot permetent-ne la visualització en línia, i creiem que aquest web és un dels camins per a arribar-hi.');
 define('PAGE_DISABLED_IF_HENTAI', TRUE);
-require_once("../common.fansubs.cat/header.inc.php");
+require_once(__DIR__.'/../common/header.inc.php');
 ?>
 					<div class="text-page">
 						<h2 class="section-title"><i class="fa fa-fw fa-users"></i> Qui som?</h2>
@@ -23,5 +23,5 @@ require_once("../common.fansubs.cat/header.inc.php");
 						<div class="section-content">Pots contactar amb nosaltres fent servir el botó de la part inferior de la pàgina. Si vols contactar amb un fansub en concret, pots fer-ho mitjançant el seu lloc web o les seves xarxes socials, que trobaràs a la fitxa de cada contingut o a l’apartat de fansubs.</div>
 					</div>
 <?php
-require_once("../common.fansubs.cat/footer.inc.php");
+require_once(__DIR__.'/../common/footer.inc.php');
 ?>

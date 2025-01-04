@@ -1,6 +1,6 @@
 <?php
-require_once("../common.fansubs.cat/db.inc.php");
-require_once("../common.fansubs.cat/common.inc.php");
+require_once(__DIR__.'/../common/db.inc.php');
+require_once(__DIR__.'/../common/common.inc.php');
 
 function sendContactEmail($sender_email, $username, $message) {
 	$message = "$username ($sender_email) ha enviat el següent missatge mitjançant el formulari de contacte de ".CURRENT_SITE_NAME.":\n\n$message\n\n".CURRENT_SITE_NAME.".";

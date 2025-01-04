@@ -1,6 +1,6 @@
 <?php
-require_once('db.inc.php');
-require_once('libs/preview_image_generator.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/libs/preview_image_generator.php');
 
 log_action('cron-links-updater-started', "S’ha iniciat l’obtenció automàtica d’enllaços");
 

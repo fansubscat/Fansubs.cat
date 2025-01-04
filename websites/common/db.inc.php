@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/config.inc.php');
+require_once(__DIR__.'/initialization.inc.php');
 
 function log_action($action, $text=NULL){
 	global $db_connection;

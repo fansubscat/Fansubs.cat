@@ -1,7 +1,7 @@
 <?php
-require_once("../common.fansubs.cat/config.inc.php");
-require_once('db.inc.php');
-require_once('queries.inc.php');
+require_once(__DIR__.'/../common/initialization.inc.php');
+require_once(__DIR__.'/db.inc.php');
+require_once(__DIR__.'/queries.inc.php');
 ob_start();
 $request = explode('/', trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/'));
 $max_items = 20;
