@@ -903,7 +903,12 @@ function checkNumberOfEpisodes() {
 	}
 
 	if ($('#form-name-with-autocomplete').val()==$('#form-alternate_names').val()) {
-		alert('El nom i el camp «altres noms» no poden ser iguals. Si no se’n tradueix el nom, el camp «altres noms» ha de romandre buit o amb altres noms diferents, si s’escau (en anglès, per exemple).');
+		alert('El títol i el camp «altres títols» no poden ser iguals. El camp «altres títols» ha de romandre buit o amb altres títols diferents, si s’escau (en anglès o en la llengua original).');
+		return false;
+	}
+
+	if ($('#form-alternate_names').val().startsWith($('#form-name-with-autocomplete').val()+',')) {
+		alert('El camp «altres títols» conté també el títol original. El títol original s‘introdueix només al camp corresponent. El camp «altres títols» ha de romandre buit o amb altres títols diferents, si s’escau (en anglès o en la llengua original).');
 		return false;
 	}
 
@@ -914,7 +919,7 @@ function checkNumberOfEpisodes() {
 		return false;
 	}
 	if ($('#form-alternate_names').val().match(supportedCharsRegex)) {
-		alert('El camp «altres noms» conté caràcters no suportats ('+$('#form-alternate_names').val().match(supportedCharsRegex).join('')+'). Fes servir únicament caràcters occidentals.');
+		alert('El camp «altres títols» conté caràcters no suportats ('+$('#form-alternate_names').val().match(supportedCharsRegex).join('')+'). Fes servir únicament caràcters occidentals.');
 		return false;
 	}
 	if ($('#form-keywords').val().indexOf(',')>=0) {

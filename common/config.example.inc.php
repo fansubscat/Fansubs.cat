@@ -47,10 +47,6 @@ define('API_SUBDOMAIN', 'api');
 //Used to check internal API calls only (bypass admin authentication in twitter_image.php)
 define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN_HERE');
 
-//Lock files for syncinc site and background processes
-define('NEWS_LOCK_FILE', '/srv/fansubscat/temporary/news_fetch.lock');
-define('MEGA_LOCK_FILE', '/srv/fansubscat/temporary/mega_fetch.lock');
-
 //Populate this variable if you want to display a message on all listing pages
 define('GLOBAL_MESSAGE', '');
 

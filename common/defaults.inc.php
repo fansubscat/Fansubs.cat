@@ -18,9 +18,7 @@ define('ADMIN_COOKIE_DURATION', 60*60*24*30);
 define('SERVICES_DIRECTORY', '/srv/fansubscat/services');
 define('STATIC_DIRECTORY', '/srv/fansubscat/websites/static');
 
-//Lock file to avoid parallel invocations of the news fetcher
-define('LOCK_FILE', '/srv/fansubscat/locks/news_fetch_lock');
-
-//Lock file for MEGA sync processes
-define('MEGA_LOCK_FILE', '/srv/fansubscat/locks/mega_fetch_lock');
+//Lock files for syncing site and background processes and avoiding parallel launches
+define('NEWS_LOCK_FILE', '/srv/fansubscat/temporary/news_fetch.lock');
+define('MEGA_LOCK_FILE', '/srv/fansubscat/temporary/mega_fetch.lock');
 ?>

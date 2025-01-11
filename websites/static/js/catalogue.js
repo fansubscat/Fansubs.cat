@@ -1838,24 +1838,6 @@ function initializeCarousels() {
 			return Math.floor(totalWidth / elementWidth);
 		};
 	}
-
-	if ($('.synopsis-content').height()>=154) {
-		$(".show-more").removeClass('hidden');
-		$('.synopsis-content').addClass('expandable-content-hidden');
-		$(".show-more a").on("click", function() {
-			var linkText = $(this).text();    
-
-			if(linkText === "Mostra’n més..."){
-				linkText = "Mostra’n menys";
-				$(".synopsis-content").switchClass("expandable-content-hidden", "expandable-content-shown", 400);
-			} else {
-				linkText = "Mostra’n més...";
-				$(".synopsis-content").switchClass("expandable-content-shown", "expandable-content-hidden", 400);
-			};
-
-			$(this).text(linkText);
-		});
-	}
 }
 
 function launchSearch(query) {
@@ -2209,8 +2191,17 @@ function applyVersionRating(pressedButton, oppositeButton, ratingClicked) {
 	});
 }
 
-function resizeSynopsisHeight() {
+function resizeSynopsisHeight(force) {
 	var maxSynopsisHeight = $('.series-synopsis-real').length>0 ? parseFloat(1.2 * 5 * parseFloat(getComputedStyle($('.series-synopsis-real')[0]).fontSize)) : 0;
+	
+	if (force) {
+		$(".show-more").html('<span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span>');
+		$('.series-synopsis-real').addClass('expandable-content-default');
+		$('.series-synopsis-real').removeClass('expandable-content-hidden');
+		$('.series-synopsis-real').removeClass('expandable-content-shown');
+		$(".show-more").addClass('hidden');
+		$(".show-more").removeClass('has-been-shown');
+	}
 
 	if ($('.series-synopsis-real').hasClass('expandable-content-default')) {
 		$('.series-synopsis-real').removeClass('expandable-content-default');
@@ -2242,7 +2233,7 @@ $(document).ready(function() {
 
 		$(this).html(linkText);
 	});
-	resizeSynopsisHeight();
+	resizeSynopsisHeight(false);
 
 	const Button = videojs.getComponent('Button');
 
@@ -2423,7 +2414,11 @@ $(document).ready(function() {
 			
 			//Change synopsis
 			$('.series-synopsis-real').html($(this).attr('data-version-synopsis'));
+			resizeSynopsisHeight(true);
 			$('.series-title').text($(this).attr('data-version-title'));
+			var oldTitle = document.title.split('|');
+			oldTitle.shift();
+			document.title=$(this).attr('data-version-title')+' | '+oldTitle.join('|');
 			if ($(this).attr('data-version-alternate-titles')!='') {
 				$('.series-alternate-names').text($(this).attr('data-version-alternate-titles'));
 				$('.series-alternate-names').removeClass('hidden');
