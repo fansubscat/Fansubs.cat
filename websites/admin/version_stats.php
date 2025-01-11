@@ -77,7 +77,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($_GET['max_days']) && is_numeric($_GET['max_days'])) {
 		$max_days = intval($_GET['max_days']);
 	}
-	$result = query("SELECT v.*, s.name series_name, s.slug, GROUP_CONCAT(f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN series s ON v.series_id=s.id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id=".escape($_GET['id'])." GROUP BY v.id");
+	$result = query("SELECT v.*, s.name series_name, GROUP_CONCAT(f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN series s ON v.series_id=s.id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id=".escape($_GET['id'])." GROUP BY v.id");
 	$row = mysqli_fetch_assoc($result) or crash('Version not found');
 	$slug = $row['slug'];
 	mysqli_free_result($result);
@@ -87,7 +87,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Estadístiques de la versió</h4>
 					<hr>
-					<p class="text-center">Aquestes són les estadístiques de la versió de «<b><?php echo htmlspecialchars($row['series_name']); ?></b>» feta per <?php echo htmlspecialchars($row['fansub_name']); ?>.</p>
+					<p class="text-center">Aquestes són les estadístiques de la versió de «<b><?php echo htmlspecialchars($row['title']); ?></b>» feta per <?php echo htmlspecialchars($row['fansub_name']); ?>.</p>
 <?php
 	$result = query("SELECT IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0) total_length, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=".escape($_GET['id']).") good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=".escape($_GET['id']).") bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=".escape($_GET['id']).") num_comments FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE f.version_id=".escape($_GET['id']));
 	$totals = mysqli_fetch_assoc($result);
@@ -115,9 +115,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<table class="table table-hover table-striped">
 							<thead class="table-dark">
 								<tr>
-									<th scope="col" style="width: 10%;" class="text-center">Data</th>
 									<th scope="col" style="width: 10%;">Usuari</th>
-									<th scope="col" style="width: 70%;">Comentari</th>
+									<th scope="col" style="width: 65%;">Comentari</th>
+									<th scope="col" style="width: 10%;" class="text-center">Data</th>
+									<th scope="col" style="width: 5%;" class="text-center">Espòiler</th>
 									<th scope="col" style="width: 5%;" class="text-center">Respost</th>
 									<th class="text-center" scope="col">Accions</th>
 								</tr>
@@ -128,16 +129,17 @@ $result = query("SELECT c.*, s.name series_name, u.username, (SELECT GROUP_CONCA
 if (mysqli_num_rows($result)==0) {
 ?>
 								<tr>
-									<td colspan="5" class="text-center">- No hi ha cap comentari -</td>
+									<td colspan="6" class="text-center">- No hi ha cap comentari -</td>
 								</tr>
 <?php
 }
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 								<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-									<th scope="row" class="align-middle text-center"><?php echo $row['created']; ?></th>
 									<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>
 									<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></td>
+									<td class="align-middle text-center"><?php echo $row['created']; ?></td>
+									<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? 'Sí' : 'No'; ?></td>
 									<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? 'Sí' : 'No'; ?></td>
 									<td class="align-middle text-center text-nowrap">
 										<a href="comment_reply.php?id=<?php echo $row['id']; ?>&source_version_id=<?php echo $_GET['id']; ?>&source_type=<?php echo $type; ?>" title="Respon" class="fa fa-reply p-1"></a>
@@ -156,7 +158,7 @@ mysqli_free_result($result);
 ?>
 							</tbody>
 						</table>
-						<p class="text-center text-muted small">En aquesta llista no es mostren els comentaris ni les respostes dels fansubs. Ho pots veure tot a la <a href="<?php echo $link_url.'/'.$slug.'?v='.$_GET['id']; ?>" target="_blank">fitxa pública</a>.</p>
+						<p class="text-center text-muted small">En aquesta llista no es mostren els comentaris ni les respostes dels fansubs. Ho pots veure tot a la <a href="<?php echo $link_url.'/'.$slug; ?>" target="_blank">fitxa pública</a>.</p>
 						<div class="text-center">
 							<a href="comment_reply.php?source_version_id=<?php echo $_GET['id']; ?>&source_type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un comentari del fansub</a>
 						</div>
@@ -368,36 +370,46 @@ mysqli_free_result($result);
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT f.episode_id, e.number, e.description, et.title, f.extra_name, s.number_of_episodes, s.name series_name, IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0) total_length FROM file f LEFT JOIN views v ON f.id=v.file_id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=f.version_id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN series s ON e.series_id=s.id WHERE f.version_id=".escape($_GET['id'])." GROUP BY IFNULL(f.episode_id,f.extra_name) ORDER BY d.number IS NULL ASC, d.number ASC, f.episode_id IS NULL ASC, e.number IS NULL ASC, e.number ASC, et.title ASC, f.extra_name ASC");
+	$result = query("SELECT f.episode_id,
+				e.number,
+				e.description,
+				et.title,
+				f.extra_name,
+				s.number_of_episodes,
+				s.name series_name,
+				IFNULL(SUM(clicks),0) total_clicks,
+				IFNULL(SUM(views),0) total_views,
+				IFNULL(SUM(total_length),0) total_length,
+				IF(s.subtype='movie' OR s.subtype='oneshot',
+					IFNULL(et.title, v.title),
+					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
+					)
+				) episode_title
+			FROM file f
+			LEFT JOIN version v ON f.version_id=v.id
+			LEFT JOIN views vi ON f.id=vi.file_id
+			LEFT JOIN episode e ON f.episode_id=e.id
+			LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=f.version_id
+			LEFT JOIN division d ON e.division_id=d.id
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
+			LEFT JOIN series s ON e.series_id=s.id
+			WHERE f.version_id=".escape($_GET['id'])."
+			GROUP BY IFNULL(f.episode_id,CONCAT('extra-',f.extra_name))
+			ORDER BY d.number ASC, f.episode_id IS NULL ASC, e.number IS NULL ASC, e.number ASC, et.title ASC, f.extra_name ASC");
+	if (mysqli_num_rows($result)==0) {
+?>
+								<tr>
+									<td colspan="4" class="text-center">- No hi ha cap capítol -</td>
+								</tr>
+<?php
+	}
 	while ($row = mysqli_fetch_assoc($result)) {
-		$episode_title='';
-		
 		if (!empty($row['episode_id'])) {
-			if (!empty($row['number'])) {
-				if (!empty($row['title'])){
-					if ($row['number_of_episodes']==1){
-						$episode_title.=htmlspecialchars($row['title']);
-					} else {
-						$episode_title.='Capítol '.floatval($row['number']).': '.htmlspecialchars($row['title']);
-					}
-				}
-				else {
-					if ($row['number_of_episodes']==1){
-						$episode_title.=htmlspecialchars($row['series_name']);
-					} else {
-						$episode_title.='Capítol '.floatval($row['number']);
-					}
-				}
-			} else {
-				if (!empty($row['title'])){
-					$episode_title.=htmlspecialchars($row['title']);
-				}
-				else {
-					$episode_title.=$row['description'];
-				}
-			}
+			$episode_title=$row['episode_title'];
 		} else {
-			$episode_title.=$row['extra_name'];
+			$episode_title=$row['extra_name'];
 		}
 ?>
 							<tr>

@@ -28,6 +28,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
+			$old_result = query("SELECT * FROM remote_account WHERE id=".$data['id']);
+			$old_row = mysqli_fetch_assoc($old_result);
+			if ($old_row['updated']!=$_POST['last_update']) {
+				crash("Algú altre ha actualitzat el compte remot mentre tu l’editaves. Hauràs de tornar a fer els canvis.");
+			}
+			
 			log_action("update-remote-account", "S’ha actualitzat el compte remot «".$_POST['name']."» (id. de compte remot: ".$data['id'].")");
 			query("UPDATE remote_account SET name='".$data['name']."',token='".$data['token']."',fansub_id=".$data['fansub_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
@@ -60,6 +66,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<label for="form-name">Compte<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Compte" data-bs-contents="Adreça electrònica del compte. Correspon a l’adreça de correu utilitzada per a iniciar la sessió al compte de MEGA."></small></label>
 						<input class="form-control" name="name" type="email" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-token">Identificador de sessió<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Identificador de sessió" data-bs-contents="Identificador de sessió obtingut amb MegaCMD. Això ens permet iniciar la sessió amb aquest compte sense fer servir una contrasenya i obtenir-ne enllaços automàticament i actualitzar-ne l’estat de l’emmagatzematge. Per a més informació de com obtenir-lo, consulteu el manual del tauler d’administració a la icona d’ajuda de la part superior dreta del web (apartat «Com obtenir l’identificador de sessió»)."></small></label>

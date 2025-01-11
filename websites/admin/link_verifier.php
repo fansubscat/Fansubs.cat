@@ -24,24 +24,35 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$where .= " AND l.url LIKE 'https://mega.nz/%'";
 	}
 
-	$resultl = query("SELECT l.*,s.name series_name, e.id episode_id, e.number episode_number, e.description episode_name, d.number division_number FROM link l LEFT JOIN file f ON l.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id$where ORDER BY s.name ASC, d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, extra_name ASC");
+	$resultl = query("SELECT l.*,
+				v.title,
+				GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') fansub_name,
+				IF (f.episode_id IS NULL,
+					CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+					IF(s.subtype='movie' OR s.subtype='oneshot',
+						IFNULL(et.title, v.title),
+						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+							CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+							CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
+						)
+					)
+				) episode_title
+			FROM link l
+				LEFT JOIN file f ON l.file_id=f.id
+				LEFT JOIN version v ON f.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
+				LEFT JOIN episode e ON f.episode_id=e.id
+				LEFT JOIN division d ON e.division_id=d.id
+				LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
+				LEFT JOIN episode_title et ON et.episode_id=f.episode_id AND et.version_id=v.id
+				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+				LEFT JOIN fansub fa ON vf.fansub_id=fa.id
+			$where
+			GROUP BY l.id
+			ORDER BY fansub_name, v.title ASC, e.number IS NULL ASC, d.number ASC, e.number ASC, extra_name ASC");
 	while ($row = mysqli_fetch_assoc($resultl)) {
-		if (!empty($row['episode_id'])){
-			if (!empty($row['division_number'])){
-				$chapter_name=$row['series_name'].' - Temporada '.$row['division_number'].' - ';
-			} else {
-				$chapter_name=$row['series_name'].' - Diversos'.' - ';
-			}
-			if (!empty($row['episode_number'])) {
-				$chapter_name.='Capítol '.$row['episode_number'];
-			} else {
-				$chapter_name.=$row['episode_name'];
-			}
-		} else {
-			$chapter_name = 'Extra - '.$row['extra_name'];
-		}
 ?>
-				{link: <?php echo json_encode(htmlspecialchars($row['url'], ENT_COMPAT)); ?>, text: <?php echo json_encode(htmlspecialchars($chapter_name, ENT_COMPAT)); ?>},
+				{link: <?php echo json_encode(htmlspecialchars($row['url'], ENT_COMPAT)); ?>, text: <?php echo json_encode('<b>'.htmlspecialchars($row['fansub_name'].' - '.$row['title'], ENT_COMPAT).'</b><br><small class="fw-normal">'.htmlspecialchars($row['episode_title'], ENT_COMPAT).'</small>'); ?>},
 <?php
 	}
 	mysqli_free_result($resultl);

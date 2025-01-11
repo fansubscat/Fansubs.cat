@@ -68,7 +68,7 @@ function get_player_data(){
 	} else {
 		$row = mysqli_fetch_assoc($result);
 
-		$episode_title = get_episode_title($row['series_subtype'], $row['show_episode_numbers'],$row['episode_number'],$row['linked_episode_id'],$row['title'],$row['series_name'], $row['extra_name'], $row['is_extra']);
+		$episode_title = get_episode_title($row['series_subtype'], $row['show_episode_numbers'],$row['episode_number'],$row['linked_episode_id'],$row['title'],$row['version_title'], $row['extra_name'], $row['is_extra']);
 
 		$links = array();
 		if (CATALOGUE_ITEM_TYPE!='manga') {
@@ -167,17 +167,18 @@ function get_player_data(){
 			$real_reader_used = 'ltr';
 		}
 		
+		$division_title = (!empty($row['division_name']) && $row['series_type']!='manga') ? $row['division_name'] : $row['version_title'];
 
 		$data = array(
 			'file_id' => intval($file_id),
 			'version_id' => intval($row['version_id']),
 			'view_id' => $view_id,
 			'fansub' => $row['fansub_name'],
-			'series' => $row['series_name'],
+			'series' => $row['version_title'],
 			'cover' => STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg',
-			'title' => get_episode_player_title($row['fansub_name'], $row['series_name'], $row['series_subtype'], $episode_title, $row['is_extra']),
-			'title_short' => get_episode_player_title_short($row['series_name'], $row['series_subtype'], $episode_title, $row['is_extra']).' | '.$row['fansub_name'].' | '.CURRENT_SITE_NAME,
-			'thumbnail' => (file_exists(STATIC_DIRECTORY.'/images/files/'.$file_id.'.jpg') ? STATIC_URL.'/images/files/'.$file_id.'.jpg' : STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg'),
+			'title' => get_episode_player_title($row['fansub_name'], $division_title, $row['series_subtype'], $episode_title, $row['is_extra']),
+			'title_short' => get_episode_player_title_short($division_title, $row['series_subtype'], $episode_title, $row['is_extra']).' | '.$row['fansub_name'].' | '.CURRENT_SITE_NAME,
+			'thumbnail' => (file_exists(STATIC_DIRECTORY.'/images/files/'.$file_id.'.jpg') ? STATIC_URL.'/images/files/'.$file_id.'.jpg' : STATIC_URL.'/images/covers/'.$row['version_id'].'.jpg'),
 			'length' => intval($row['length']),
 			'data_sources' => get_data_sources($links),
 			'pages' => array_values($pages),

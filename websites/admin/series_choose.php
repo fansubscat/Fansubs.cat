@@ -48,6 +48,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="col">Nom</th>
 								<th class="text-center" scope="col">Tipus</th>
+								<th class="text-center" scope="col">Divisions</th>
 								<th class="text-center" scope="col">Capítols</th>
 								<th class="text-center" scope="col">Versions</th>
 								<th class="text-center" scope="col">Acció</th>
@@ -55,22 +56,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT s.*,COUNT(DISTINCT v.id) versions FROM series s LEFT JOIN version v ON s.id=v.series_id WHERE type='$type' GROUP BY s.id ORDER BY s.name");
+	$result = query("SELECT s.*,(SELECT GROUP_CONCAT(DISTINCT v.title ORDER BY v.title ASC SEPARATOR ', ') FROM version v WHERE v.series_id=s.id AND v.title<>s.name) version_titles,(SELECT COUNT(DISTINCT v.id) FROM version v WHERE v.series_id=s.id) versions,(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.is_real=1) divisions, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.is_real=0) fake_divisions FROM series s WHERE s.type='$type' GROUP BY s.id ORDER BY versions=0 DESC, s.name");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="5" class="text-center">- No hi ha cap <?php echo $content; ?> -</td>
+								<td colspan="6" class="text-center">- No hi ha cap <?php echo $content; ?> -</td>
 							</tr>
 <?php
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
-								<td class="align-middle text-center"><?php echo get_subtype_name($row['subtype']); ?></td>
-								<td class="align-middle text-center"><?php echo $row['number_of_episodes']; ?></td>
-								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
-								<td class="align-middle text-center"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea’n una versió" class="fa fa-plus-square p-1 text-success"></a></td>
+								<th scope="row" class="align-middle<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo htmlspecialchars($row['name']); ?><?php echo !empty($row['version_titles']) ? '<br><i style="font-weight: normal;" class="text-muted">('.htmlspecialchars($row['version_titles']).')</i>' : ''; ?></th>
+								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo get_subtype_name($row['subtype']); ?></td>
+								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['divisions']; ?><?php echo $row['fake_divisions']>0 ? '<small>+'.$row['fake_divisions'].'</small>' : ''; ?></td>
+								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['number_of_episodes']; ?></td>
+								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['versions']; ?></td>
+								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea’n una versió" class="fa fa-plus-square p-1 text-success"></a></td>
 							</tr>
 <?php
 	}

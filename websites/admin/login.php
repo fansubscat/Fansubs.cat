@@ -10,20 +10,17 @@ if (!empty($_SESSION['username'])) {
 else if (isset($_POST['username']) && isset($_POST['password'])) {
 	//No need to escape the password string since it will be hashed anyway, and the hash does not cause SQL injections
 	$username=escape($_POST['username']);
-	$password=hash('sha256', PASSWORD_SALT . $_POST['password']);
-	//We use this for a fallback in the default install
-	$escaped_password=escape($_POST['password']);
+	$password=escape(hash('sha256', PASSWORD_SALT . $_POST['password']));
 	
 	$successful_login = FALSE;
 	
-	if ($username=='admin' && mysqli_num_rows(query("SELECT * FROM admin_user u WHERE username='admin' AND password=''"))==1) {
-		$_SESSION['message']="IMPORTANT: Canvia la contrasenya a Eines -> Canvia la contrasenya. Fins que no ho facis, tothom podrà iniciar la sessió amb l’usuari «admin» sense contrasenya!";
-		$result=query("SELECT * FROM admin_user u WHERE username='admin' AND password=''");
-		$successful_login = TRUE;
-	} else {
-		$result=query("SELECT * FROM admin_user u WHERE username='".$username."' AND password='".$password."'");
-		$successful_login = (mysqli_num_rows($result)==1);
+	if (mysqli_num_rows(query("SELECT * FROM admin_user u LIMIT 1"))==0) {
+		$result=query("INSERT INTO admin_user (username, password, admin_level, fansub_id, default_storage_processing, created, created_by, updated, updated_by) VALUES
+('$username', '$password', 3, NULL, 5, CURRENT_TIMESTAMP, '$username', CURRENT_TIMESTAMP, '$username')");
 	}
+	
+	$result=query("SELECT * FROM admin_user u WHERE username='".$username."' AND password='".$password."'");
+	$successful_login = (mysqli_num_rows($result)==1);
 
 	if ($successful_login) {
 		$row = mysqli_fetch_assoc($result);
@@ -41,7 +38,16 @@ else if (isset($_POST['username']) && isset($_POST['password'])) {
 	}
 }
 ?>
-		<div class="container d-flex h-100 justify-content-center align-items-center">
+		<div class="container d-flex flex-column h-100 justify-content-center align-items-center">
+<?php
+$result=query("SELECT * FROM admin_user u LIMIT 1");
+
+if (mysqli_num_rows($result)==0) {
+?>
+			<p class="alert alert-danger text-center">Instal·lació nova sense cap administrador donat d’alta.<br>Inicia sessió amb l’usuari i contrasenya que vulguis: esdevindran l’usuari i contrasenya del primer administrador.</p>
+<?php
+}
+?>
 			<div class="card">
 				<article class="card-body text-center">
 					<h4 class="card-title text-center mb-4 mt-1">Inicia la sessió</h4>

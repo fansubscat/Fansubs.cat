@@ -172,9 +172,9 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 			break;
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($is_hentai ? " AND s.rating='XXX'" : " AND s.rating<>'XXX'")." AND f.episode_id IS NOT NULL AND s.type='$type'".(!empty($fansub) ? " AND f.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")" : '')." GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, total_length DESC, b.series_name ASC LIMIT 10");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, b.default_version_id, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.default_version_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, defv.title series_name, s.default_version_id, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id LEFT JOIN version defv ON s.default_version_id=defv.id WHERE vi.day>='$first_month-01' AND vi.day<='$last_month-31' AND vi.views>0".($is_hentai ? " AND s.rating='XXX'" : " AND s.rating<>'XXX'")." AND f.episode_id IS NOT NULL AND s.type='$type'".(!empty($fansub) ? " AND f.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")" : '')." GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, total_length DESC, b.series_name ASC LIMIT 10");
 
-	$result_previous_month = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, s.name series_name, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id WHERE vi.day>='$first_previous_month-01' AND vi.day<='$last_previous_month-31' AND vi.views>0".($is_hentai ? " AND s.rating='XXX'" : " AND s.rating<>'XXX'")." AND f.episode_id IS NOT NULL AND s.type='$type'".(!empty($fansub) ? " AND f.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")" : '')." GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, total_length DESC, b.series_name ASC");
+	$result_previous_month = query("SELECT GROUP_CONCAT(DISTINCT b.fansubs SEPARATOR ' / ') fansubs, b.series_id, b.series_name, b.default_version_id, IFNULL(MAX(b.total_views),0) max_views, SUM(b.total_length) total_length, b.rating FROM (SELECT GROUP_CONCAT(DISTINCT a.fansubs SEPARATOR ' / ') fansubs, a.series_id, a.default_version_id, a.series_name, a.episode_id, SUM(a.views) total_views, SUM(a.total_length) total_length, a.rating FROM (SELECT (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=f.version_id) fansubs, SUM(vi.views) views, SUM(vi.total_length) total_length, f.version_id, f.episode_id, s.id series_id, defv.title series_name, s.default_version_id, s.rating rating FROM file f LEFT JOIN views vi ON vi.file_id=f.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN series s ON e.series_id=s.id LEFT JOIN version defv ON s.default_version_id=defv.id WHERE vi.day>='$first_previous_month-01' AND vi.day<='$last_previous_month-31' AND vi.views>0".($is_hentai ? " AND s.rating='XXX'" : " AND s.rating<>'XXX'")." AND f.episode_id IS NOT NULL AND s.type='$type'".(!empty($fansub) ? " AND f.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")" : '')." GROUP BY f.version_id, f.episode_id) a GROUP BY a.episode_id) b GROUP BY b.series_id ORDER BY max_views DESC, total_length DESC, b.series_name ASC");
 	$prev_views = 0;
 	$position = 0;
 	$current_positions = 0;
@@ -213,6 +213,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 
 		$current_series = array(
 			'id' => $row['series_id'],
+			'default_version_id' => $row['default_version_id'],
 			'name' => $row['series_name'],
 			'position' => $position,
 			'rating' => $row['rating'],
@@ -231,7 +232,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 
 	//Load bg and scale it as needed
 	if (count($series)>0) {
-		$background = imagecreatefromjpeg(STATIC_DIRECTORY."/images/featured/".$series[0]['id'].".jpg");
+		$background = imagecreatefromjpeg(STATIC_DIRECTORY."/images/featured/".$series[0]['default_version_id'].".jpg");
 		$background = scale_smallest_side($background, IMAGE_WIDTH, IMAGE_HEIGHT);
 
 		//Darken and blur bg
@@ -377,7 +378,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		}*/
 
 		//Load cover and scale it as needed
-		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/".$series[$i]['id'].".jpg");
+		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/".$series[$i]['default_version_id'].".jpg");
 		$cover = scale_smallest_side($cover, COVER_WIDTH, COVER_HEIGHT);
 		$cover = round_corners($cover, 4);
 		imagecopy($image, $cover, $i>4 ? 624+72 : 24+72, $current_height, 0, 0, COVER_WIDTH, COVER_HEIGHT);

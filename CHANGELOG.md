@@ -1,5 +1,38 @@
 # Registre de canvis
 
+## 2025-01-XX - Versió 5.3.0
+- **General:**
+	- S’ha canviat l’estructura interna de directoris i ara tot el sistema s’allotja a /srv/fansubscat/
+	- S’han unificat els diferents fitxers de configuració en un de sol.
+	- S‘han actualitzat els gèneres de MyAnimeList.
+	- Es canvia el funcionament de sèries i versions movent diversos camps a les versions.
+- **Catàleg:**
+	- Es corregeix que les pàgines d’incrustació no informessin bé els atributs socials.
+	- Es canvia el format dels «slugs» perquè incloguin el nom del fansub i puguin canviar segons la versió.
+	- En canviar de pestanya de versió en una sèrie, també canvia el títol, portada, imatge de fons i sinopsi, si aquella versió les té diferents.
+	- Als apartats del web que no mostren versions concretes, es mostra el títol, portada i sinopsi de la versió principal.
+	- Es pot enllaçar a divisions concretes.
+- **Administració:**
+	- La majoria dels camps passen a tenir una ajuda integrada que n’explica els detalls i el funcionament.
+	- Si algú ha editat la fitxa mentre un administrador l’estava editant, es mostra un error i no es trepitgen els canvis.
+	- La fitxa de sèrie passa a ser més genèrica i se’n mou el títol, la sinopsi i les imatges a la versió.
+	- S’unifica la manera de mostrar els títols dels capítols entre les diferents seccions del portal.
+	- La pantalla d’error és més bonica.
+	- S’elimina el camp «logo» dels fansubs (no s’utilitzava).
+	- Els fansubs inactius es mostren en gris.
+	- Les sèries sense versions i les versions sense enllaços es mostren en gris.
+	- S’elimina l’apartat «Servidors d’emmagatzematge».
+	- Si s‘elimina un administrador, se’l desconnecta a la següent petició.
+	- Si no hi ha cap administrador donat d’alta, es permet un autoregistre (per a instal·lacions noves).
+	- En afegir una versió i seleccionar una sèrie, es mostren primer les sèries sense cap versió.
+	- S’unifica la nomenclatura «temporada»/«volum» en «divisió».
+	- Els enllaços de la versió no mostren la variant si només n’hi ha una.
+	- Els comentaris de la versió tenen el mateix format que a «Darrers comentaris».
+	- Es pot canviar la versió principal d’una sèrie a la seva fitxa.
+	- Es permet importar puntuació, portada i sinopsi de MyDramaList.
+	- S’incorporen moltes validacions addicionals a l’hora de desar les fitxes.
+	- Si una sèrie té el mateix nom o una versió el mateix «slug», es mostra un error en desar.
+
 ## 2025-01-03 - Versió 5.2.13
 - **General:**
 	- Es corregeix que el portal de hentai mostrés el fons del portal normal en alguns casos.
@@ -14,7 +47,7 @@
 
 ## 2024-11-18 - Versió 5.2.11
 - **General:**
-	- S‘afegeixen recursos gràfics utilitzats en publicacions a xarxes socials.
+	- S’afegeixen recursos gràfics utilitzats en publicacions a xarxes socials.
 - **Catàleg:**
 	- A les fitxes, no es mostren mai més capítols completats que el total que n’hi ha.
 	- Les redireccions de «slugs» antics es fan depenent del tipus de sèrie, i es permet redirigir al portal de hentai o al normal.
@@ -37,7 +70,7 @@
 ## 2024-09-04 - Versió 5.2.8
 - **Administració:**
 	- S’augmenta i verifica la llargada màxima dels títols de capítols de 200 a 500 caràcters.
-	- S‘afegeix el nou apartat «Conversions pendents».
+	- S’afegeix el nou apartat «Conversions pendents».
 
 ## 2024-08-27 - Versió 5.2.7
 - **Principal:**

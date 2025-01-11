@@ -24,21 +24,18 @@ include(__DIR__.'/header.inc.php');
 
 switch ($type) {
 	case 'anime':
-		$content_uc="Anime";
 		$content_prep="d’anime";
 		$view_name="Visualitzacions";
 		$view_name_lc="visualitzacions";
 		$division_name="Temporada";
 	break;
 	case 'manga':
-		$content_uc="Manga";
 		$content_prep="de manga";
 		$view_name="Lectures";
 		$view_name_lc="lectures";
 		$division_name="Volum";
 	break;
 	case 'liveaction':
-		$content_uc="Contingut d’imatge real";
 		$content_prep="de contingut d’imatge real";
 		$view_name="Visualitzacions";
 		$view_name_lc="visualitzacions";
@@ -91,8 +88,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col" style="width: 20%;"><?php echo $content_uc; ?></th>
-												<th scope="col" style="width: 45%;">Capítol</th>
+												<th scope="col">Contingut i capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
 												<th scope="col" class="text-center" style="width: 20%;">Progrés</th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
@@ -101,12 +97,43 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.user_id, ps.anon_id, (ps.progress/ps.length)*100 progress, UNIX_TIMESTAMP(ps.updated) updated, ps.source, ps.ip, ps.user_agent, ps.is_casted, ps.view_counted, s.rating FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)." ORDER BY ps.created DESC");
+$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') series_name,
+			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
+			IF (f.episode_id IS NULL,
+				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				IF(s.subtype='movie' OR s.subtype='oneshot',
+					IFNULL(et.title, v.title),
+					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
+					)
+				)
+			) episode_title,
+			ps.user_id,
+			ps.anon_id,
+			(ps.progress/ps.length)*100 progress,
+			UNIX_TIMESTAMP(ps.updated) updated,
+			ps.source,
+			ps.ip,
+			ps.user_agent,
+			ps.is_casted,
+			ps.view_counted,
+			s.rating
+		FROM view_session ps 
+			LEFT JOIN file f ON ps.file_id=f.id 
+			LEFT JOIN version v ON f.version_id=v.id 
+			LEFT JOIN series s ON v.series_id=s.id 
+			LEFT JOIN episode e ON f.episode_id=e.id 
+			LEFT JOIN division d ON e.division_id=d.id 
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
+			LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id 
+		WHERE s.type='$type' 
+			AND UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)." 
+		ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-												<td scope="col"><?php echo $row['series_name']; ?></td>
-												<td scope="col"><?php echo $row['episode_name']; ?></td>
+												<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['updated']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['source'], $row['is_casted']); ?>></div></td>
@@ -132,8 +159,7 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col"><?php echo $content_uc; ?></th>
-												<th scope="col">Capítol</th>
+												<th scope="col">Contingut i capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" class="text-center" style="width: 20%;">Data</th>
@@ -141,12 +167,43 @@ mysqli_free_result($result);
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.user_id, ps.anon_id, (ps.progress/ps.length)*100 progress, UNIX_TIMESTAMP(ps.updated) updated, ps.source, ps.ip, ps.user_agent, ps.is_casted, UNIX_TIMESTAMP(ps.view_counted) view_counted, s.rating FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND ps.view_counted IS NOT NULL ORDER BY ps.view_counted DESC LIMIT $limit");
+$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
+			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
+			IF (f.episode_id IS NULL,
+				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				IF(s.subtype='movie' OR s.subtype='oneshot',
+					IFNULL(et.title, v.title),
+					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
+					)
+				)
+			) episode_title,
+			ps.user_id,
+			ps.anon_id,
+			(ps.progress/ps.length)*100 progress,
+			UNIX_TIMESTAMP(ps.updated) updated,
+			ps.source,
+			ps.ip,
+			ps.user_agent,
+			ps.is_casted,
+			UNIX_TIMESTAMP(ps.view_counted) view_counted,
+			s.rating
+		FROM view_session ps 
+			LEFT JOIN file f ON ps.file_id=f.id 
+			LEFT JOIN version v ON f.version_id=v.id 
+			LEFT JOIN series s ON v.series_id=s.id 
+			LEFT JOIN episode e ON f.episode_id=e.id 
+			LEFT JOIN division d ON e.division_id=d.id 
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
+			LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id 
+		WHERE s.type='$type' 
+			AND ps.view_counted IS NOT NULL  
+		ORDER BY ps.view_counted DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-												<td scope="col"><?php echo $row['series_name']; ?></td>
-												<td scope="col"><?php echo $row['episode_name']; ?></td>
+												<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['source'], $row['is_casted']); ?>></div></td>
 												<td class="text-center" class="text-center"><?php echo date('Y-m-d H:i:s', $row['view_counted']); ?></td>
@@ -178,8 +235,7 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col" style="width: 20%;"><?php echo $content_uc; ?></th>
-												<th scope="col" style="width: 45%;">Capítol</th>
+												<th scope="col">Contingut i capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
 												<th scope="col" class="text-center" style="width: 20%;">Progrés</th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
@@ -189,12 +245,44 @@ mysqli_free_result($result);
 										<tbody>
 <?php
 
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.user_id, ps.anon_id, (ps.progress/ps.length)*100 progress, UNIX_TIMESTAMP(ps.updated) updated, ps.source, ps.ip, ps.user_agent, ps.is_casted, ps.view_counted, s.rating FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)." ORDER BY ps.created DESC");
+$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') series_name,
+			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
+			IF (f.episode_id IS NULL,
+				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				IF(s.subtype='movie' OR s.subtype='oneshot',
+					IFNULL(et.title, v.title),
+					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
+					)
+				)
+			) episode_title,
+			ps.user_id,
+			ps.anon_id,
+			(ps.progress/ps.length)*100 progress,
+			UNIX_TIMESTAMP(ps.updated) updated,
+			ps.source,
+			ps.ip,
+			ps.user_agent,
+			ps.is_casted,
+			ps.view_counted,
+			s.rating
+		FROM view_session ps 
+			LEFT JOIN file f ON ps.file_id=f.id 
+			LEFT JOIN version v ON f.version_id=v.id 
+			LEFT JOIN series s ON v.series_id=s.id 
+			LEFT JOIN episode e ON f.episode_id=e.id 
+			LEFT JOIN division d ON e.division_id=d.id 
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
+			LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id 
+		WHERE s.type='$type' 
+			AND UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)."
+			AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")
+		ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-												<td scope="col"><?php echo $row['series_name']; ?></td>
-												<td scope="col"><?php echo $row['episode_name']; ?></td>
+												<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['updated']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['source'], $row['is_casted']); ?>></div></td>
@@ -220,8 +308,7 @@ mysqli_free_result($result);
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col"><?php echo $content_uc; ?></th>
-												<th scope="col">Capítol</th>
+												<th scope="col">Contingut i capítol</th>
 												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" class="text-center" style="width: 20%;">Data</th>
@@ -229,12 +316,44 @@ mysqli_free_result($result);
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(s.name, '(enllaç esborrat)') series_name,IF(et.title IS NOT NULL,IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),IF(v.show_episode_numbers=1,CONCAT('Capítol ',TRIM(e.number)+0,': '),''),et.title),e.description),IF(e.number IS NOT NULL,CONCAT(IFNULL(IF(d.name IS NULL,NULL,CONCAT(d.name,' - ')),IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id)>1,CONCAT('$division_name ', TRIM(d.number)+0, ' - '),'')),'Capítol ',TRIM(e.number)+0),IF(f.episode_id IS NULL,CONCAT('Extra: ', f.extra_name), '(Capítol sense nom)'))) episode_name, ps.user_id, ps.anon_id, (ps.progress/ps.length)*100 progress, UNIX_TIMESTAMP(ps.updated) updated, ps.source, ps.ip, ps.user_agent, ps.is_casted, UNIX_TIMESTAMP(ps.view_counted) view_counted, s.rating FROM view_session ps LEFT JOIN file f ON ps.file_id=f.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id LEFT JOIN episode e ON f.episode_id=e.id LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id WHERE s.type='$type' AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND ps.view_counted IS NOT NULL ORDER BY ps.view_counted DESC LIMIT $limit");
+$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
+			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
+			IF (f.episode_id IS NULL,
+				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				IF(s.subtype='movie' OR s.subtype='oneshot',
+					IFNULL(et.title, v.title),
+					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
+					)
+				)
+			) episode_title,
+			ps.user_id,
+			ps.anon_id,
+			(ps.progress/ps.length)*100 progress,
+			UNIX_TIMESTAMP(ps.updated) updated,
+			ps.source,
+			ps.ip,
+			ps.user_agent,
+			ps.is_casted,
+			UNIX_TIMESTAMP(ps.view_counted) view_counted,
+			s.rating
+		FROM view_session ps 
+			LEFT JOIN file f ON ps.file_id=f.id 
+			LEFT JOIN version v ON f.version_id=v.id 
+			LEFT JOIN series s ON v.series_id=s.id 
+			LEFT JOIN episode e ON f.episode_id=e.id 
+			LEFT JOIN division d ON e.division_id=d.id 
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
+			LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id 
+		WHERE s.type='$type' 
+			AND ps.view_counted IS NOT NULL
+			AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")
+		ORDER BY ps.view_counted DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-												<td scope="col"><?php echo $row['series_name']; ?></td>
-												<td scope="col"><?php echo $row['episode_name']; ?></td>
+												<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['source'], $row['is_casted']); ?>></div></td>
 												<td class="text-center" class="text-center"><?php echo date('Y-m-d H:i:s', $row['view_counted']); ?></td>

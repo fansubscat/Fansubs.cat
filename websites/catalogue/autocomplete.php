@@ -94,10 +94,10 @@ foreach($sections as $section){
 	$result = $section['result'];
 	while ($i<$max_elements && $row = mysqli_fetch_assoc($result)){
 ?>
-						<a class="autocomplete-item" href="<?php echo get_base_url_from_type_and_rating($row['type'],$row['rating']).'/'.$row['slug']; ?>">
-							<?php echo '<img class="autocomplete-image" src="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg" alt="'.htmlspecialchars($row['name']).'">'; ?>
+						<a class="autocomplete-item" href="<?php echo get_base_url_from_type_and_rating($row['type'],$row['rating']).'/'.$row['default_version_slug']; ?>">
+							<?php echo '<img class="autocomplete-image" src="'.STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg" alt="'.htmlspecialchars($row['default_version_title']).'">'; ?>
 							<div class="autocomplete-data">
-								<div class="autocomplete-name"><?php echo htmlspecialchars($row['name']); ?></div>
+								<div class="autocomplete-name"><?php echo htmlspecialchars($row['default_version_title']); ?></div>
 								<div class="autocomplete-type"><?php echo htmlspecialchars(get_series_type_summary_for_autocomplete($row, TRUE)); ?></div>
 							</div>
 						</a>

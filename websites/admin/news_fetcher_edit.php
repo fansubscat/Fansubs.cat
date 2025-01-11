@@ -33,6 +33,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
+			$old_result = query("SELECT * FROM news_fetcher WHERE id=".$data['id']);
+			$old_row = mysqli_fetch_assoc($old_result);
+			if ($old_row['updated']!=$_POST['last_update']) {
+				crash("Algú altre ha actualitzat el recollidor de notícies mentre tu l’editaves. Hauràs de tornar a fer els canvis.");
+			}
+			
 			log_action("update-news-fetcher", "S’ha actualitzat el recollidor de notícies amb URL «".$_POST['url']."» (id. de recollidor de notícies: ".$data['id'].")");
 			query("UPDATE news_fetcher SET fansub_id=".$data['fansub_id'].",url='".$data['url']."',method='".$data['method']."',fetch_type='".$data['fetch_type']."',updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
@@ -80,6 +86,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<label for="form-url" class="mandatory">URL</label>
 						<input class="form-control" name="url" id="form-url" required value="<?php echo htmlspecialchars($row['url']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-method" class="mandatory">Mètode de recollida</label>

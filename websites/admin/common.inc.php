@@ -128,7 +128,7 @@ function rrmdir($dir) {
 }
 
 function flatten_directories_and_move_to_storage($file_id, $temp_path){
-	$cleaned_path = "/tmp/cleaned_$file_id/";
+	$cleaned_path = "/srv/fansubscat/temporary/cleaned_$file_id/";
 	log_action("debug-log", "Creating cleaned directory $cleaned_path for file $file_id");
 	mkdir($cleaned_path);
 	log_action("debug-log", "Flattening directories for file $file_id from $temp_path into $cleaned_path");
@@ -165,7 +165,7 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 
 function decompress_manga_file($file_id, $temporary_filename, $original_filename){
 	//log_action("debug-log", "Descomprimint el fitxer $original_filename i movent-lo al directori amb id: $file_id");
-	$temp_path="/tmp/decompress_$file_id/";
+	$temp_path="/srv/fansubscat/temporary/decompress_$file_id/";
 	$extension = pathinfo($original_filename, PATHINFO_EXTENSION);
 	if ($extension=='rar' || $extension=='cbr'){
 		//Extract RAR/CBR
@@ -222,5 +222,9 @@ function get_anonymized_username($user_id, $anon_id) {
 		$randomString .= $characters[rand(0, $charactersLength - 1)];
 	}
 	return '<img src="https://api.multiavatar.com/'.$randomString.'.svg?apikey='.MULTIAVATAR_API_KEY.'" style="width: 2rem; height: 2rem; margin: -1rem;">';
+}
+
+function print_helper_box($title, $description, $white=FALSE) {
+	echo '<small title="Fes clic per a més informació" data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button"'.($white ? ' style="color: white !important;"' : '').' data-bs-title="'.htmlspecialchars($title).'" data-bs-contents="'.htmlspecialchars($description).'"></small>';
 }
 ?>

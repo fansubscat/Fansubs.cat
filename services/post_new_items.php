@@ -154,10 +154,8 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 	} else {
 		if (!empty($title)){
 			return $title;
-		} else if ($series_subtype=='oneshot' || $series_subtype=='movie') {
-			return $series_name;
 		} else {
-			return 'Capítol desconegut';
+			return $series_name;
 		}
 	}
 }
@@ -307,9 +305,9 @@ function get_liveaction_header($type, $fansub_type, $number_of_elements, $is_hen
 	}
 }
 
-$last_posted_manga_id=(int)file_get_contents('last_posted_manga_id.txt');
-$last_posted_anime_id=(int)file_get_contents('last_posted_anime_id.txt');
-$last_posted_liveaction_id=(int)file_get_contents('last_posted_liveaction_id.txt');
+$last_posted_manga_id=(int)file_get_contents('/srv/fansubscat/temporary/last_posted_manga_id.txt');
+$last_posted_anime_id=(int)file_get_contents('/srv/fansubscat/temporary/last_posted_anime_id.txt');
+$last_posted_liveaction_id=(int)file_get_contents('/srv/fansubscat/temporary/last_posted_liveaction_id.txt');
 
 $message_x = "%%POST_HEADER%%\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_mastodon = "%%POST_HEADER%%\n\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
@@ -319,16 +317,40 @@ $message_bluesky = "%%POST_HEADER%%\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAI
 
 $has_posted_something = FALSE;
 
-$result = query("SELECT s.name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.comic_type, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, c.number, IF(ct.title IS NOT NULL, ct.title, IF(c.number IS NULL,c.description,ct.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_manga_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
-FROM file fi
-LEFT JOIN version v ON fi.version_id=v.id
-LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
-LEFT JOIN fansub f ON vf.fansub_id=f.id
-LEFT JOIN series s ON v.series_id=s.id
-LEFT JOIN episode_title ct ON fi.episode_id=ct.episode_id AND ct.version_id=fi.version_id
-LEFT JOIN episode c ON fi.episode_id=c.id
-LEFT JOIN division vo ON vo.id=c.division_id
-WHERE s.type='manga' AND fi.id>$last_posted_manga_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC");
+$result = query("SELECT v.title name, 
+			IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1, IFNULL(vvo.title, vo.name), NULL) division_name,
+			v.synopsis, 
+			s.rating, 
+			v.status, 
+			v.series_id, 
+			s.subtype, 
+			s.comic_type, 
+			v.slug, 
+			MAX(fi.id) id, 
+			fi.version_id, 
+			COUNT(DISTINCT fi.id) cnt,
+			GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,
+			GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, 
+			GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_names, 
+			c.number, 
+			IFNULL(ct.title, c.description) title, 
+			v.show_episode_numbers, 
+			NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_manga_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
+		FROM file fi
+			LEFT JOIN version v ON fi.version_id=v.id
+			LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+			LEFT JOIN fansub f ON vf.fansub_id=f.id
+			LEFT JOIN series s ON v.series_id=s.id
+			LEFT JOIN episode_title ct ON fi.episode_id=ct.episode_id AND ct.version_id=fi.version_id
+			LEFT JOIN episode c ON fi.episode_id=c.id
+			LEFT JOIN division vo ON vo.id=c.division_id
+			LEFT JOIN version_division vvo ON vvo.division_id=vo.id AND vvo.version_id=v.id
+		WHERE s.type='manga' 
+			AND fi.id>$last_posted_manga_id 
+			AND fi.is_lost=0 
+			AND fi.episode_id IS NOT NULL 
+		GROUP BY fi.version_id 
+		ORDER BY MAX(fi.id) ASC");
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
@@ -338,7 +360,10 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 		if ($row['new_series']==1) {
 			$episode = ($row['cnt']>1 ? $row['cnt'].' capítols disponibles' : (($row['subtype']=='oneshot' && $row['status']==1) ? 'One-shot' : '1 capítol disponible'));
 		} else if ($row['cnt']==1) {
-			$episode = get_episode_title($row['subtype'], $row['show_episode_numbers'], $row['number'], NULL, $row['title'], $row['name'], NULL, FALSE);
+			if (!empty($row['division_name'])) {
+				$episode = $row['division_name'].' - ';
+			}
+			$episode .= get_episode_title($row['subtype'], $row['show_episode_numbers'], $row['number'], NULL, $row['title'], $row['name'], NULL, FALSE);
 		} else {
 			$episode = $row['cnt'].' capítols nous';
 		}
@@ -392,22 +417,45 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Manga hentai en català' : 'Fansubs.cat - Manga en català'), $row['synopsis'], $url, $row['rating']=='XXX');
-		file_put_contents('last_posted_manga_id.txt', $row['id']);
+		file_put_contents('/srv/fansubscat/temporary/last_posted_manga_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
 	}
 }
 
-$result = query("SELECT IFNULL(se.name,s.name) name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_anime_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
-FROM file fi
-LEFT JOIN version v ON fi.version_id=v.id
-LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
-LEFT JOIN fansub f ON vf.fansub_id=f.id
-LEFT JOIN series s ON v.series_id=s.id
-LEFT JOIN episode_title et ON fi.episode_id=et.episode_id AND et.version_id=fi.version_id
-LEFT JOIN episode e ON fi.episode_id=e.id
-LEFT JOIN division se ON se.id=e.division_id
-WHERE s.type='anime' AND fi.id>$last_posted_anime_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC");
+$result = query("SELECT IFNULL(vse.title, se.name) name, 
+			v.synopsis, 
+			s.rating, 
+			v.status, 
+			v.series_id, 
+			s.subtype, 
+			v.slug, 
+			MAX(fi.id) id, 
+			fi.version_id, 
+			COUNT(DISTINCT fi.id) cnt,
+			GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,
+			GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, 
+			GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_names, 
+			GROUP_CONCAT(DISTINCT f.type ORDER BY f.name SEPARATOR '|') fansub_type, 
+			e.number, 
+			IFNULL(et.title, e.description) title,
+			v.show_episode_numbers, 
+			NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_anime_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
+		FROM file fi
+			LEFT JOIN version v ON fi.version_id=v.id
+			LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+			LEFT JOIN fansub f ON vf.fansub_id=f.id
+			LEFT JOIN series s ON v.series_id=s.id
+			LEFT JOIN episode_title et ON fi.episode_id=et.episode_id AND et.version_id=fi.version_id
+			LEFT JOIN episode e ON fi.episode_id=e.id
+			LEFT JOIN division se ON se.id=e.division_id
+			LEFT JOIN version_division vse ON vse.division_id=se.id AND vse.version_id=v.id
+		WHERE s.type='anime' 
+			AND fi.id>$last_posted_anime_id 
+			AND fi.is_lost=0 
+			AND fi.episode_id IS NOT NULL 
+		GROUP BY fi.version_id 
+		ORDER BY MAX(fi.id) ASC");
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
@@ -479,22 +527,45 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Anime hentai en català' : 'Fansubs.cat - Anime en català'), $row['synopsis'], $url, $row['rating']=='XXX');
-		file_put_contents('last_posted_anime_id.txt', $row['id']);
+		file_put_contents('/srv/fansubscat/temporary/last_posted_anime_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
 	}
 }
 
-$result = query("SELECT IFNULL(se.name,s.name) name, s.synopsis, s.rating, v.status, v.series_id, s.subtype, s.slug, MAX(fi.id) id, fi.version_id, COUNT(DISTINCT fi.id) cnt,GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, GROUP_CONCAT(DISTINCT f.name SEPARATOR ' + ') fansub_names, GROUP_CONCAT(DISTINCT f.type SEPARATOR '|') fansub_type, e.number, IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title, v.show_episode_numbers, NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_liveaction_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
-FROM file fi
-LEFT JOIN version v ON fi.version_id=v.id
-LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
-LEFT JOIN fansub f ON vf.fansub_id=f.id
-LEFT JOIN series s ON v.series_id=s.id
-LEFT JOIN episode_title et ON fi.episode_id=et.episode_id AND et.version_id=fi.version_id
-LEFT JOIN episode e ON fi.episode_id=e.id
-LEFT JOIN division se ON se.id=e.division_id
-WHERE s.type='liveaction' AND fi.id>$last_posted_liveaction_id AND fi.is_lost=0 AND fi.episode_id IS NOT NULL GROUP BY fi.version_id ORDER BY MAX(fi.id) ASC");
+$result = query("SELECT IFNULL(vse.title,se.name) name, 
+			v.synopsis, 
+			s.rating, 
+			v.status, 
+			v.series_id, 
+			s.subtype, 
+			v.slug, 
+			MAX(fi.id) id, 
+			fi.version_id, 
+			COUNT(DISTINCT fi.id) cnt,
+			GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,
+			GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, 
+			GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_names, 
+			GROUP_CONCAT(DISTINCT f.type ORDER BY f.name SEPARATOR '|') fansub_type, 
+			e.number, 
+			IFNULL(et.title, e.description) title,
+			v.show_episode_numbers, 
+			NOT EXISTS(SELECT fi2.id FROM file fi2 WHERE fi2.id<=$last_posted_liveaction_id AND fi2.version_id=fi.version_id AND fi2.is_lost=0) new_series
+		FROM file fi
+			LEFT JOIN version v ON fi.version_id=v.id
+			LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+			LEFT JOIN fansub f ON vf.fansub_id=f.id
+			LEFT JOIN series s ON v.series_id=s.id
+			LEFT JOIN episode_title et ON fi.episode_id=et.episode_id AND et.version_id=fi.version_id
+			LEFT JOIN episode e ON fi.episode_id=e.id
+			LEFT JOIN division se ON se.id=e.division_id
+			LEFT JOIN version_division vse ON vse.division_id=se.id AND vse.version_id=v.id
+		WHERE s.type='liveaction' 
+			AND fi.id>$last_posted_liveaction_id 
+			AND fi.is_lost=0 
+			AND fi.episode_id IS NOT NULL 
+		GROUP BY fi.version_id 
+		ORDER BY MAX(fi.id) ASC");
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
@@ -566,7 +637,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], $url, FALSE);
-		file_put_contents('last_posted_liveaction_id.txt', $row['id']);
+		file_put_contents('/srv/fansubscat/temporary/last_posted_liveaction_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
 	}

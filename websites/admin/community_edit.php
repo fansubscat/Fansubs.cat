@@ -33,6 +33,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
+			$old_result = query("SELECT * FROM community WHERE id=".$data['id']);
+			$old_row = mysqli_fetch_assoc($old_result);
+			if ($old_row['updated']!=$_POST['last_update']) {
+				crash("Algú altre ha actualitzat la comunitat mentre tu l’editaves. Hauràs de tornar a fer els canvis.");
+			}
+			
 			log_action("update-community", "S’ha actualitzat la comunitat «".$_POST['name']."» (id. de comunitat: ".$data['id'].")");
 			query("UPDATE community SET name='".$data['name']."',url='".$data['url']."',category='".$data['category']."',description='".$data['description']."',updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
@@ -73,6 +79,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<label for="form-name" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" id="form-id" name="id" value="<?php echo $row['id']; ?>">
+						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-url" class="mandatory">URL</label>

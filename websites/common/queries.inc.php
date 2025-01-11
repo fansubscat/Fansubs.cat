@@ -97,7 +97,15 @@ function get_internal_lost_projects_condition($user) {
 }
 
 function get_internal_catalogue_base_query_portion($user, $apply_hentai_rule=TRUE) {
-	return "SELECT s.*,
+	return "SELECT dv.title default_version_title,
+			dv.slug default_version_slug,
+			dv.synopsis default_version_synopsis,
+			dv.id default_version_id,
+			v.title version_title,
+			v.slug version_slug,
+			v.synopsis version_synopsis,
+			v.id version_id,
+			s.*,
 			(SELECT COUNT(*)
 				FROM version v
 				WHERE v.series_id=s.id
@@ -129,6 +137,7 @@ function get_internal_catalogue_base_query_portion($user, $apply_hentai_rule=TRU
 				FROM division d
 				WHERE d.series_id=s.id
 					AND d.number_of_episodes>0
+					AND d.is_real=1
 			) divisions,
 			s.number_of_episodes,
 			(SELECT MAX(ls.created)
@@ -139,6 +148,7 @@ function get_internal_catalogue_base_query_portion($user, $apply_hentai_rule=TRU
 					AND ".get_internal_viewed_files_condition($user)."
 			) last_file_created
 		FROM series s
+			LEFT JOIN version dv ON s.default_version_id=dv.id
 			LEFT JOIN version v ON s.id=v.series_id
 			LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
 			LEFT JOIN fansub f ON vf.fansub_id=f.id

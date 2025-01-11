@@ -5,24 +5,34 @@ require_once(__DIR__.'/common.inc.php');
 validate_hentai();
 
 //Get series by slug
-$result = query_series_by_slug(!empty($_GET['slug']) ? $_GET['slug'] : '', !empty($_GET['show_hidden']));
+$url_slug = !empty($_GET['slug']) ? str_replace(' ','+',$_GET['slug']) : '';
+$result = query_series_by_slug($url_slug, !empty($_GET['show_hidden']));
 $series = mysqli_fetch_assoc($result) or $failed=TRUE;
 mysqli_free_result($result);
 if (isset($failed)) {
 	//Retry by getting it from an old slug
 	unset($failed);
-	$result = query_series_by_old_slug(!empty($_GET['slug']) ? $_GET['slug'] : '');
+	//First try by removing the slash and testing for a series with that
+	$result = query_series_by_series_only_slug(explode('/',$url_slug)[0]);
 	$new_slug = mysqli_fetch_assoc($result) or $failed=TRUE;
 	mysqli_free_result($result);
 	if (isset($failed)) {
-		http_response_code(404);
-		include(__DIR__.'/error.php');
-		die();
+		//Nothing found yet? Try with an old redirected slug (it should not have a slash)
+		unset($failed);
+		$result = query_series_by_old_slug($url_slug);
+		$new_slug = mysqli_fetch_assoc($result) or $failed=TRUE;
+		mysqli_free_result($result);
+		if (isset($failed)) {
+			//Impossible to find
+			http_response_code(404);
+			include(__DIR__.'/error.php');
+			die();
+		}
 	}
 	header("HTTP/1.1 301 Moved Permanently");
-	if ($type=='liveaction') {
+	if ($new_slug['type']=='liveaction') {
 		header("Location: https://imatgereal.".MAIN_DOMAIN."/".$new_slug['slug']);
-	} else if ($type=='manga') {
+	} else if ($new_slug['type']=='manga') {
 		header("Location: https://manga.".($new_slug['rating']!='XXX' ? MAIN_DOMAIN : HENTAI_DOMAIN)."/".$new_slug['slug']);
 	} else {
 		header("Location: https://anime.".($new_slug['rating']!='XXX' ? MAIN_DOMAIN : HENTAI_DOMAIN)."/".$new_slug['slug']);
@@ -32,7 +42,7 @@ if (isset($failed)) {
 
 //Blocked series - currently disabled
 $blocked_series = array();
-if (in_array($_GET['slug'], $blocked_series)) {
+if (in_array($url_slug, $blocked_series)) {
 	http_response_code(451);
 	define('COPYRIGHT_ISSUE', TRUE);
 	include(__DIR__.'/error.php');
@@ -42,12 +52,12 @@ if (in_array($_GET['slug'], $blocked_series)) {
 define('PAGE_STYLE_TYPE', 'catalogue');
 
 $Parsedown = new Parsedown();
-$synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
+$synopsis = $Parsedown->setBreaksEnabled(true)->line($series['version_synopsis']);
 
-define('PAGE_TITLE', $series['name']);
-define('PAGE_PATH', '/'.$series['slug']);
+define('PAGE_TITLE', $series['version_title']);
+define('PAGE_PATH', '/'.$series['version_slug']);
 define('PAGE_DESCRIPTION', str_replace("\n", " ", strip_tags($synopsis)));
-define('PAGE_PREVIEW_IMAGE', STATIC_URL.'/social/series_'.$series['id'].'.jpg');
+define('PAGE_PREVIEW_IMAGE', STATIC_URL.'/social/version_'.$series['version_id'].'.jpg');
 
 define('PAGE_IS_SERIES', TRUE);
 define('PAGE_EXTRA_BODY_CLASS', 'has-carousel is-series-page');
@@ -60,17 +70,24 @@ require_once(__DIR__.'/../common/header.inc.php');
 					<input id="seen_behavior" type="hidden" value="<?php echo !empty($user) ? $user['previous_chapters_read_behavior'] : -1; ?>">
 					<input id="show_comment_warning" type="hidden" value="<?php echo !empty($user) ? ($user['num_comments']>0 ? 0 : 1) : 1; ?>">
 					<div class="series-header">
-						<img class="background" src="<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
+						<img class="background" src="<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['version_id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['version_title']); ?>">
 						<div class="series-data">
 							<div class="series-titles">
-								<h2 class="series-title"><?php echo htmlspecialchars($series['name']); ?></h2>
+								<h2 class="series-title"><?php echo htmlspecialchars($series['version_title']); ?></h2>
 <?php
-if (!empty($series['alternate_names'])) {
-?>
-								<div class="series-alternate-names"><?php echo htmlspecialchars($series['alternate_names']); ?></div>
-<?php
+$alternate_names='';
+if ($series['name']!=$series['version_title']) {
+	$alternate_names=$series['name'];
 }
-
+if (!empty($series['alternate_names'])) {
+	if ($alternate_names!='') {
+		$alternate_names .= ', ';
+	}
+	$alternate_names .= $series['alternate_names'];
+}
+?>
+								<div class="series-alternate-names<?php echo empty($alternate_names) ? ' hidden' : ''; ?>"><?php echo htmlspecialchars($alternate_names); ?></div>
+<?php
 $additional_data = '';
 if (CATALOGUE_ITEM_TYPE=='manga' && !empty($series['author'])) {
 	if ($additional_data!='') {
@@ -141,7 +158,7 @@ if (!empty($series['score'])) {
 					</div>
 					<div class="section series-subheader">
 						<div class="series-thumbnail-holder">
-							<img class="series-thumbnail" src="<?php echo STATIC_URL; ?>/images/covers/<?php echo $series['id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['name']); ?>">
+							<img class="series-thumbnail" src="<?php echo STATIC_URL; ?>/images/covers/<?php echo $series['version_id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['version_title']); ?>">
 <?php
 if (in_array($series['id'], !empty($user) ? $user['series_list_ids'] : array())) {
 ?>
@@ -163,35 +180,32 @@ if (in_array($series['id'], !empty($user) ? $user['series_list_ids'] : array()))
 <?php
 $result = query_series_data_for_series_page($user, $series['id']);
 
-//Check if specified version exists
-$version_found = FALSE;
-$passed_version = NULL;
-if (isset($_GET['version'])) {
-	$passed_version = $_GET['version'];
-} else if (isset($_GET['v'])) {
-	$passed_version = $_GET['v'];
-}
-while ($version = mysqli_fetch_assoc($result)) {
-	if ($version['id']==$passed_version){
-		$version_found = TRUE;
-		break;
-	}
-}
-mysqli_data_seek($result, 0);
-
 if ($series['has_licensed_parts']) {
 ?>
 						<div class="series-licensed-parts"><span class="fa fa-fw fa-circle-info"></span> Aquest contingut té alguna versió oficial en català. Se’n mostren només les parts inexistents de manera oficial.</div>
 <?php
 }
 ?>
+						<h2 class="section-title-main"><i class="fa fa-fw fa-arrows-split-up-and-left fa-rotate-by" style="--fa-rotate-angle: 135deg;"></i> Versions</h2>
 						<div class="version-tab-container">
 <?php
 $i=0;
 while ($version = mysqli_fetch_assoc($result)) {
 	$is_blacklisted = is_any_fansub_blacklisted(get_prepared_versions($version['fansub_info']), $version['id']);
+	$Parsedown = new Parsedown();
+	$version_synopsis = $Parsedown->setBreaksEnabled(true)->line($version['synopsis']);
+	$alternate_names='';
+	if ($series['name']!=$version['title']) {
+		$alternate_names=$series['name'];
+	}
+	if (!empty($series['alternate_names'])) {
+		if ($alternate_names!='') {
+			$alternate_names .= ', ';
+		}
+		$alternate_names .= $series['alternate_names'];
+	}
 ?>
-							<div class="version-tab<?php echo $is_blacklisted ? ' version-blacklisted' : ''; ?><?php echo ($version_found ? $version['id']==$passed_version : $i==0) ? ' version-tab-selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>">
+							<div class="version-tab<?php echo $is_blacklisted ? ' version-blacklisted' : ''; ?><?php echo $version['id']==$series['version_id'] ? ' version-tab-selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>" data-version-slug="<?php echo htmlspecialchars($version['slug']); ?>" data-version-title="<?php echo htmlspecialchars($version['title']); ?>" data-version-alternate-titles="<?php echo htmlspecialchars($alternate_names); ?>" data-version-synopsis="<?php echo htmlspecialchars($version_synopsis); ?>">
 								<div class="version-fansub-icons"><?php echo get_fansub_icons($version['fansub_info'], get_prepared_versions($version['fansub_info']), $version['id']); ?></div>
 								<div class="version-tab-text"><?php echo htmlspecialchars('Versió '.get_fansub_preposition_name($version['fansub_name'])); ?><?php echo get_fansub_type(get_prepared_versions($version['fansub_info']), $version['id'])=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="Versió doblada"></span>' : ''; ?><?php echo $is_blacklisted ? ' <span class="fa fa-fw fa-ban" title="És d’un fansub a la teva llista negra"></span>' : ''; ?></div>
 							</div>
@@ -206,7 +220,7 @@ mysqli_data_seek($result, 0);
 $i=0;
 while ($version = mysqli_fetch_assoc($result)) {
 ?>
-						<div class="version-content<?php echo ($version_found ? $version['id']!=$passed_version : $i>0) ? ' hidden' : ''; ?>" id="version-content-<?php echo $version['id']; ?>">
+						<div class="version-content<?php echo $version['id']!=$series['version_id'] ? ' hidden' : ''; ?>" id="version-content-<?php echo $version['id']; ?>">
 <?php
 	$resulte = query_episodes_for_series_version($series['id'], $version['id']);
 	$episodes = array();
@@ -227,7 +241,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 		$current_division_episodes = array();
 		$position = 1;
 		foreach ($episodes as $row) {
-			if ((!empty($row['division_number']) ? floatval($row['division_number']) : 'altres')!=$last_division_number){
+			if (floatval($row['division_number'])!=$last_division_number){
 				if ($last_division_number!=-1) {
 					array_push($divisions, array(
 						'division_id' => $last_division_id,
@@ -237,10 +251,10 @@ while ($version = mysqli_fetch_assoc($result)) {
 						'episodes' => $current_division_episodes
 					));
 				}
-				$last_division_number=!empty($row['division_number']) ? floatval($row['division_number']) : 'altres';
+				$last_division_number=floatval($row['division_number']);
 				$last_division_id=$row['division_id'];
-				$last_division_name=!empty($row['division_number']) ? $row['division_name'] : 'Capítols especials';
-				$last_division_number_of_episodes = !empty($row['division_number']) ? $row['division_number_of_episodes'] : -1;
+				$last_division_name=$row['division_name'];
+				$last_division_number_of_episodes = $row['division_number_of_episodes'];
 				$current_division_episodes = array();
 			}
 
@@ -292,7 +306,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			array_push($divisions, array(
 				'division_id' => 'extras',
 				'division_number' => 'extras',
-				'division_name' => 'Contingut extra',
+				'division_name' => ($series['type']!='manga' ? $version['title'].' - ' : '').'Contingut extra',
 				'division_number_of_episodes' => count($extras),
 				'episodes' => $extras,
 				'available_episodes' => count($extras),
@@ -300,7 +314,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			));
 		}
 ?>
-								<h2 class="section-title-main section-title-with-table"><i class="fa fa-fw <?php echo $series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON : CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON; ?>"></i> Contingut
+								<h2 class="section-title-main section-title-with-table"><i class="fa fa-fw <?php echo $series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON : CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON; ?>"></i> Contingut d’aquesta versió
 <?php
 		//false: ascending, true: descending
 		$sort_order = (!empty($user) && $user['episode_sort_order']) || (empty($user) && !empty($_COOKIE['episode_sort_order']));
@@ -310,7 +324,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			$new_divisions = array();
 			$special_divisions = array();
 			foreach ($divisions as $index => $division) {
-				if ($division['division_number']!='altres' && $division['division_number']!='extras') {
+				if ($division['division_number']!='extras') {
 					$division['episodes'] = array_reverse($division['episodes']);
 					array_push($new_divisions, $division);
 				} else {
@@ -341,9 +355,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 			}
 			foreach ($divisions[0]['episodes'] as $episode) {
 				if ($divisions[0]['division_id']=='extras') {
-					print_extra($version['fansub_name'], $episode, $version['id'], $series, $episode['position']);
+					print_extra($version['fansub_name'], $episode, $version['id'], $series, $series['type']!='manga' ? $division['division_name'] : $version['title'], $episode['position']);
 				} else {
-					print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $episode['position']);
+					print_episode($version['fansub_name'], $episode, $version['id'], $series, $series['type']!='manga' ? $division['division_name'] : $version['title'], $version, $episode['position']);
 				}
 			}
 			if ($version['status']!=1 && !$sort_order) {
@@ -380,15 +394,8 @@ while ($version = mysqli_fetch_assoc($result)) {
 									<select class="season-chooser">
 <?php
 				foreach ($unsorted_divisions as $index => $division) {
-					if (!empty($division['division_name'])) {
-						$division_name = $division['division_name'];
-					} else if (count($divisions)>1){
-						$division_name = $series['name']. ' - '.CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'];
-					} else {
-						$division_name = CATALOGUE_SEASON_STRING_UNIQUE;
-					}
 ?>
-									<option value="<?php echo $division['division_id']; ?>"<?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?><?php echo $division['division_id']==$selected_division_id ? ' selected' : ''; ?>><?php echo $division_name.' ('.$division['available_episodes'].'/'.($division['division_number_of_episodes']>0 ? max($division['available_episodes'], $division['division_number_of_episodes']) : $division['available_episodes']).')'; ?></option>
+									<option value="<?php echo $division['division_id']; ?>" data-title="<?php echo htmlspecialchars($division['division_name']); ?>" <?php echo $division['available_episodes']==0 ? ' class="season-unavailable"' : ''; ?><?php echo $division['division_id']==$selected_division_id ? ' selected' : ''; ?>><?php echo htmlspecialchars($division['division_name']).' ('.$division['available_episodes'].'/'.$division['division_number_of_episodes'].')'; ?></option>
 <?php
 				}
 ?>
@@ -407,22 +414,10 @@ while ($version = mysqli_fetch_assoc($result)) {
 <?php
 					}
 ?>
-									<div id="version-<?php echo $version['id']; ?>-division-<?php echo $division['division_number']; ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>">
+									<div id="version-<?php echo $version['id']; ?>-division-<?php echo $division['division_number']; ?>" data-title="<?php echo htmlspecialchars($division['division_name']); ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>">
 										<div class="division-header<?php echo $division['available_episodes']>0 ? '' : ' division-unavailable'; ?>">
-											<img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$series['id'].'.jpg'; ?>">
-											<div class="division-title">
-<?php
-					if (!empty($division['division_name'])) {
-						echo $division['division_name'];
-					} else if (count($divisions)>1){
-						echo CATALOGUE_SEASON_STRING_SINGULAR_CAPS.' '.$division['division_number'];
-					} else if ($series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID){
-						echo ($series['comic_type']=='novel' ? 'Novel·la lleugera' : CATALOGUE_SEASON_STRING_UNIQUE_SINGLE);
-					} else {
-						echo CATALOGUE_SEASON_STRING_UNIQUE;
-					}
-?>
-											</div>
+											<img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$version['id'].'.jpg'; ?>">
+											<div class="division-title"><?php echo $division['division_name']; ?></div>
 										</div>
 <?php
 				}
@@ -436,9 +431,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 					}
 					foreach ($division['episodes'] as $episode) {
 						if ($division['division_id']=='extras') {
-							print_extra($version['fansub_name'], $episode, $version['id'], $series, $episode['position']);
+							print_extra($version['fansub_name'], $episode, $version['id'], $series, $series['type']!='manga' ? $division['division_name'] : $version['title'], $episode['position']);
 						} else {
-							print_episode($version['fansub_name'], $episode, $version['id'], $series, $version, $episode['position']);
+							print_episode($version['fansub_name'], $episode, $version['id'], $series, $series['type']!='manga' ? $division['division_name'] : $version['title'], $version, $episode['position']);
 						}
 					}
 					if ($version['status']!=1 && !$sort_order && $division['available_episodes']<count($division['episodes'])) {
@@ -530,7 +525,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 								</div>
 							</div>
 							<div class="section-content extra-content">
-								<h2 class="section-title-main"><a name="comentaris"></a><i class="fa fa-fw fa-comment"></i> Comentaris</h2>
+								<h2 class="section-title-main"><a name="comentaris"></a><i class="fa fa-fw fa-comment"></i> Comentaris d’aquesta versió</h2>
 <?php
 
 	$resultcom = query_version_comments($version['id'], $user);

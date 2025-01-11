@@ -4,29 +4,29 @@ echo "MEGA Worker starting up" >> mega_worker.log
 
 while true
 do
-	if [ -f "/tmp/mega.request" ]
+	if [ -f "/srv/fansubscat/temporary/mega.request" ]
 	then
-		SESSION_ID=`cat /tmp/mega.request | awk -F':::' '{print $1}'`
-		FOLDER=`cat /tmp/mega.request | awk -F':::' '{print $2}'`
+		SESSION_ID=`cat /srv/fansubscat/temporary/mega.request | awk -F':::' '{print $1}'`
+		FOLDER=`cat /srv/fansubscat/temporary/mega.request | awk -F':::' '{print $2}'`
 
-		echo "Got request for session id '$SESSION_ID' and folder '$FOLDER'" >> mega_worker.log
+		echo "Got request for session id '$SESSION_ID' and folder '$FOLDER'" >> /srv/fansubscat/temporary/mega_worker.log
 
 		mega-whoami > /dev/null 2> /dev/null
 		if [ $? -ne 57 ]
 		then
 			mega-logout --keep-session > /dev/null 2> /dev/null
-			echo "ERROR 1" > /tmp/mega.response
-			rm /tmp/mega.request
-			echo "Request served with error 1" >> mega_worker.log
+			echo "ERROR 1" > /srv/fansubscat/temporary/mega.response
+			rm /srv/fansubscat/temporary/mega.request
+			echo "Request served with error 1" >> /srv/fansubscat/temporary/mega_worker.log
 			continue;
 		fi
 
 		mega-login $SESSION_ID > /dev/null 2> /dev/null
 		if [ $? -ne 0 ]
 		then
-			echo "ERROR 2" > /tmp/mega.response
-			rm /tmp/mega.request
-			echo "Request served with error 2" >> mega_worker.log
+			echo "ERROR 2" > /srv/fansubscat/temporary/mega.response
+			rm /srv/fansubscat/temporary/mega.request
+			echo "Request served with error 2" >> /srv/fansubscat/temporary/mega_worker.log
 			continue;
 		fi
 
@@ -34,9 +34,9 @@ do
 		mega-reload > /dev/null 2> /dev/null
 		if [ $? -ne 0 ]
 		then
-			echo "ERROR 6" > /tmp/mega.response
-			rm /tmp/mega.request
-			echo "Request served with error 6" >> mega_worker.log
+			echo "ERROR 6" > /srv/fansubscat/temporary/mega.response
+			rm /srv/fansubscat/temporary/mega.request
+			echo "Request served with error 6" >> /srv/fansubscat/temporary/mega_worker.log
 			continue;
 		fi
 
@@ -44,34 +44,34 @@ do
 		if [ $? -ne 0 ] 
 		then
 			mega-logout --keep-session > /dev/null 2> /dev/null
-			echo "ERROR 3" > /tmp/mega.response
-			rm /tmp/mega.request
-			echo "Request served with error 3" >> mega_worker.log
+			echo "ERROR 3" > /srv/fansubscat/temporary/mega.response
+			rm /srv/fansubscat/temporary/mega.request
+			echo "Request served with error 3" >> /srv/fansubscat/temporary/mega_worker.log
 			continue;
 		fi
 
-		mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | sort > /tmp/mega.temp
+		mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | sort > /srv/fansubscat/temporary/mega.temp
 		if [ $? -ne 0 ] 
 		then
 			mega-logout --keep-session > /dev/null 2> /dev/null
-			echo "ERROR 4" > /tmp/mega.response
-			rm /tmp/mega.request
-			echo "Request served with error 4" >> mega_worker.log
+			echo "ERROR 4" > /srv/fansubscat/temporary/mega.response
+			rm /srv/fansubscat/temporary/mega.request
+			echo "Request served with error 4" >> /srv/fansubscat/temporary/mega_worker.log
 			continue;
 		fi
 
 		mega-logout --keep-session > /dev/null 2> /dev/null
 		if [ $? -ne 0 ] 
 		then
-			echo "ERROR 4" > /tmp/mega.response
-			rm /tmp/mega.request
-			echo "Request served with error 5" >> mega_worker.log
+			echo "ERROR 4" > /srv/fansubscat/temporary/mega.response
+			rm /srv/fansubscat/temporary/mega.request
+			echo "Request served with error 5" >> /srv/fansubscat/temporary/mega_worker.log
 			continue;
 		fi
 
-		mv /tmp/mega.temp /tmp/mega.response
-		rm /tmp/mega.request
-		echo "Request served with success" >> mega_worker.log
+		mv /srv/fansubscat/temporary/mega.temp /srv/fansubscat/temporary/mega.response
+		rm /srv/fansubscat/temporary/mega.request
+		echo "Request served with success" >> /srv/fansubscat/temporary/mega_worker.log
 	fi
 
 	sleep 5

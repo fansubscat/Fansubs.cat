@@ -89,7 +89,7 @@ function query_my_list_by_type($user, $type, $hentai) {
 				AND ".($hentai ? "s.rating='XXX'" : "s.rating<>'XXX'")."
 				AND s.id IN (SELECT usl.series_id FROM user_series_list usl WHERE usl.user_id=${user['id']})
 			GROUP BY s.id
-			ORDER BY s.name ASC";
+			ORDER BY default_version_title ASC";
 	return query($final_query);
 }
 
@@ -167,14 +167,14 @@ function query_comment_episode_title($comment_id) {
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
 						IF(s.type='manga','Llegit','Vist'),
-						IF(v.show_episode_numbers=1,
+						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
-								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
 								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
-							IF(et.title IS NOT NULL,
-								et.title,
-								e.description
+							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
+								CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description)),
+								IFNULL(et.title, e.description)
 							)
 						)
 					)
@@ -185,6 +185,7 @@ function query_comment_episode_title($comment_id) {
 			LEFT JOIN version v ON c.version_id=v.id
 			LEFT JOIN series s ON v.series_id=s.id
 			LEFT JOIN division d ON e.division_id=d.id
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			WHERE c.id=$comment_id";
 	return query($final_query);
 }

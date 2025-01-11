@@ -63,7 +63,8 @@ CREATE TABLE `division` (
   `number` decimal(10,2) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
   `number_of_episodes` int(11) DEFAULT NULL,
-  `external_id` varchar(200) DEFAULT NULL
+  `external_id` varchar(200) DEFAULT NULL,
+  `is_real` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `episode` (
@@ -172,7 +173,7 @@ CREATE TABLE `news_fetcher` (
 
 CREATE TABLE `old_slugs` (
   `old_slug` varchar(200) NOT NULL,
-  `series_id` int(11) NOT NULL
+  `version_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `pending_news` (
@@ -256,7 +257,6 @@ CREATE TABLE `reported_error` (
 
 CREATE TABLE `series` (
   `id` int(11) NOT NULL,
-  `slug` varchar(200) NOT NULL,
   `name` varchar(200) NOT NULL,
   `alternate_names` varchar(200) DEFAULT NULL,
   `keywords` varchar(200) DEFAULT NULL,
@@ -264,16 +264,15 @@ CREATE TABLE `series` (
   `subtype` varchar(200) NOT NULL,
   `publish_date` date DEFAULT NULL,
   `author` varchar(200) DEFAULT NULL,
-  `director` varchar(200) DEFAULT NULL,
   `studio` varchar(200) DEFAULT NULL,
   `rating` varchar(200) DEFAULT NULL,
   `number_of_episodes` int(11) NOT NULL,
-  `synopsis` text NOT NULL,
   `external_id` varchar(200) DEFAULT NULL,
   `score` float DEFAULT NULL,
   `has_licensed_parts` tinyint(1) NOT NULL DEFAULT 0,
   `comic_type` varchar(200) DEFAULT NULL,
   `reader_type` varchar(200) DEFAULT NULL,
+  `default_version_id` int(11) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -335,6 +334,9 @@ CREATE TABLE `user_version_rating` (
 CREATE TABLE `version` (
   `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `slug` varchar(200) NOT NULL,
+  `synopsis` text NOT NULL,
   `status` int(11) NOT NULL,
   `is_missing_episodes` tinyint(1) NOT NULL DEFAULT 0,
   `featurable_status` int(11) NOT NULL DEFAULT 0,
@@ -349,6 +351,12 @@ CREATE TABLE `version` (
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `version_division` (
+  `version_id` int(11) NOT NULL,
+  `division_id` int(11) NOT NULL,
+  `title` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `views` (
@@ -439,7 +447,7 @@ ALTER TABLE `news_fetcher`
   ADD KEY `fk_fetcher_fansub` (`fansub_id`);
 
 ALTER TABLE `old_slugs`
-  ADD PRIMARY KEY (`old_slug`, `series_id`);
+  ADD PRIMARY KEY (`old_slug`, `version_id`);
 
 ALTER TABLE `pending_news`
   ADD PRIMARY KEY (`id`);
@@ -478,7 +486,8 @@ ALTER TABLE `reported_error`
 
 ALTER TABLE `series`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `type` (`type`);
+  ADD KEY `type` (`type`),
+  ADD KEY `series_ibfk_1` (`default_version_id`);
 
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
@@ -506,6 +515,11 @@ ALTER TABLE `user_version_rating`
 ALTER TABLE `version`
   ADD PRIMARY KEY (`id`),
   ADD KEY `version_ibfk_1` (`series_id`);
+
+ALTER TABLE `version_division`
+  ADD PRIMARY KEY (`version_id`, `division_id`),
+  ADD KEY `version_division_ibfk_1` (`version_id`),
+  ADD KEY `version_division_ibfk_2` (`division_id`);
 
 ALTER TABLE `views`
   ADD PRIMARY KEY (`file_id`,`day`),
@@ -609,7 +623,7 @@ ALTER TABLE `news_fetcher`
   ADD CONSTRAINT `fk_fetcher_fansub` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `old_slugs`
-  ADD CONSTRAINT `old_slugs_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `old_slugs_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `recommendation`
   ADD CONSTRAINT `recommendation_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -637,6 +651,9 @@ ALTER TABLE `remote_folder`
 ALTER TABLE `remote_folder_failed_files`
   ADD CONSTRAINT `remote_folder_failed_files_ibfk_1` FOREIGN KEY (`remote_folder_id`) REFERENCES `remote_folder` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE `series`
+  ADD CONSTRAINT `series_ibfk_1` FOREIGN KEY (`default_version_id`) REFERENCES `version` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
 ALTER TABLE `user_fansub_blacklist`
   ADD CONSTRAINT `user_fansub_blacklist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_fansub_blacklist_ibfk_2` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -659,7 +676,9 @@ ALTER TABLE `user_version_rating`
 
 ALTER TABLE `version`
   ADD CONSTRAINT `version_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-  
-INSERT INTO `admin_user` (username, password, admin_level, fansub_id, default_storage_processing, created, created_by, updated, updated_by) VALUES ('admin', '', 3, NULL, 5, CURRENT_TIMESTAMP, 'admin', CURRENT_TIMESTAMP, 'admin');
+
+ALTER TABLE `version_division`
+  ADD CONSTRAINT `version_division_ibfk_1` FOREIGN KEY (`version_id`) REFERENCES `version` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `version_division_ibfk_2` FOREIGN KEY (`division_id`) REFERENCES `division` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 COMMIT;

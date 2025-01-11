@@ -1,4 +1,9 @@
 internal/*
+temporary/*
+!temporary/.gitkeep
+!temporary/last_posted_anime_id.txt
+!temporary/last_posted_manga_id.txt
+!temporary/last_posted_liveaction_id.txt
 assets/*.png
 common/config.inc.php
 services/composer.phar
@@ -22,5 +27,5 @@ websites/static/images/logos/*
 !websites/static/images/logos/.gitkeep
 websites/static/images/news/*
 !websites/static/images/news/.gitkeep
-websites/static/social/series_*
+websites/static/social/version_*
 

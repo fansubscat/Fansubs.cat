@@ -8,7 +8,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		log_action("delete-fansub", "S’ha suprimit el fansub «".query_single("SELECT name FROM fansub WHERE id=".escape($_GET['delete_id']))."» (id. de fansub: ".$_GET['delete_id'].")");
 		query("DELETE FROM fansub WHERE id=".escape($_GET['delete_id']));
 		@unlink(STATIC_DIRECTORY.'/images/icons/'.$_GET['delete_id'].'.jpg');
-		@unlink(STATIC_DIRECTORY.'/images/logos/'.$_GET['delete_id'].'.jpg');
 		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
@@ -52,8 +51,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>
-								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
-								<td class="align-middle">
+								<th scope="row" class="align-middle<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars($row['name']); ?></th>
+								<td class="align-middle<?php echo $row['status']==1 ? '' : ' text-muted'; ?>">
 <?php
 
 		$links = '';
@@ -75,11 +74,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		echo $links;
 ?>
 								</td>
-								<td class="align-middle text-center"><?php echo $row['status']==1 ? 'Actiu' : 'Inactiu'; ?></td>
-								<td class="align-middle text-center"><?php echo $row['news']; ?></td>
-								<td class="align-middle text-center"><?php echo $row['anime_versions']; ?></td>
-								<td class="align-middle text-center"><?php echo $row['manga_versions']; ?></td>
-								<td class="align-middle text-center"><?php echo $row['liveaction_versions']; ?></td>
+								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['status']==1 ? 'Actiu' : 'Inactiu'; ?></td>
+								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['news']; ?></td>
+								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['anime_versions']; ?></td>
+								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['manga_versions']; ?></td>
+								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['liveaction_versions']; ?></td>
 								<td class="align-middle text-center text-nowrap"><a href="fansub_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a>
 <?php
 		if (empty($_SESSION['fansub_id']) || (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id']) && $_SESSION['fansub_id']!=$row['id']))  {

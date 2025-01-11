@@ -9,7 +9,7 @@ if (isset($argv) && isset($argv[2])){
 	$force = $argv[2];
 }
 
-$lock_pointer = fopen(LOCK_FILE, "w+");
+$lock_pointer = fopen(NEWS_LOCK_FILE, "w+");
 
 //We acquire a file lock to prevent two invocations at the same time.
 //This could happen if a fansub requests a refresh via token just when a new periodic refresh is starting

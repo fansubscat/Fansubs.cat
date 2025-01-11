@@ -83,7 +83,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col" style="width: 18%;">Fansub / URL</th>
+								<th scope="col" style="width: 18%;">Fansub i URL</th>
 								<th scope="col" style="width: 12%;" class="text-center">Freqüència</th>
 								<th scope="col" style="width: 12%;" class="text-center">Estat</th>
 								<th scope="col" style="width: 12%;" class="text-center">Darrera connexió</th>
@@ -108,7 +108,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>
-								<th scope="row" class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><strong><?php echo $row['name']; ?></strong><br />&nbsp;&nbsp;&nbsp;<small><?php echo $row['url']; ?></small></th>
+								<th scope="row" class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars($row['name']).'<br><small>'.htmlspecialchars($row['url']).'</small>'; ?></th>
 								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo show_fetch_type($row['fetch_type']); ?></td>
 								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo show_status($row['status']); ?></td>
 								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo ($row['last_fetch_date']!=NULL ? relative_time(strtotime($row['last_fetch_date'])) : 'Mai'); ?></td>

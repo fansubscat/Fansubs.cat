@@ -2,7 +2,7 @@
 require_once(__DIR__.'/db.inc.php');
 
 session_name(ADMIN_COOKIE_NAME);
-session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', ADMIN_COOKIE_DOMAIN, TRUE, FALSE);
+session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
@@ -41,12 +41,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		//We acquire a file lock to prevent two invocations at the same time.
 		//This could happen if a cron or another request is running while this one is done.
 		if (flock($lock_pointer, LOCK_EX)) {
-			file_put_contents('/tmp/mega.request',$remote_account_folder['token'].":::".$remote_account_folder['remote_folder']);
-			while (file_exists('/tmp/mega.request')){
+			file_put_contents('/srv/fansubscat/temporary/mega.request',$remote_account_folder['token'].":::".$remote_account_folder['remote_folder']);
+			while (file_exists('/srv/fansubscat/temporary/mega.request')){
 				sleep(1);
 			}
-			$results = file_get_contents('/tmp/mega.response');
-			unlink('/tmp/mega.response');
+			$results = file_get_contents('/srv/fansubscat/temporary/mega.response');
+			unlink('/srv/fansubscat/temporary/mega.response');
 			flock($lock_pointer, LOCK_UN);
 		} else {
 			echo json_encode(array(

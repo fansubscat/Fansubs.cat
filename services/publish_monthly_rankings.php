@@ -46,14 +46,14 @@ $message="*Totals del mes passat:*\n\n__Anime:__\n  • Visualitzacions: $views_
 file_get_contents("https://api.telegram.org/bot".TELEGRAM_CONFIG[0]['TELEGRAM_BOT_API_KEY']."/sendMessage?chat_id=".TELEGRAM_CONFIG[0]['TELEGRAM_BOT_CHAT_ID']."&parse_mode=markdownv2&text=".urlencode($message));
 
 foreach ($types as $type) {
-	file_put_contents("/tmp/fansubscat_monthly_rankings.png", file_get_contents(ADMIN_URL."/twitter_image.php?type=${type[0]}&mode=month&first_month=$last_month&last_month=$last_month&is_hentai=".($type[3] ? '1' : '0')."&token=".INTERNAL_SERVICES_TOKEN));
+	file_put_contents("/srv/fansubscat/temporary/monthly_rankings.png", file_get_contents(ADMIN_URL."/twitter_image.php?type=${type[0]}&mode=month&first_month=$last_month&last_month=$last_month&is_hentai=".($type[3] ? '1' : '0')."&token=".INTERNAL_SERVICES_TOKEN));
 
 	$post_content = [
 		'chat_id' => TELEGRAM_CONFIG[0]['TELEGRAM_BOT_CHAT_ID'],
 		'media' => json_encode([
 			['type' => 'photo', 'media' => 'attach://file_1', 'caption' => "*${type[2]}*", 'parse_mode' => 'MarkdownV2' ],
 		]),
-		'file_1' => new CURLFile(realpath("/tmp/fansubscat_monthly_rankings.png")),
+		'file_1' => new CURLFile(realpath("/srv/fansubscat/temporary/monthly_rankings.png")),
 	];
 
 	$curl = curl_init();
@@ -64,7 +64,7 @@ foreach ($types as $type) {
 	curl_exec($curl);
 	curl_close($curl);
 
-	unlink("/tmp/fansubscat_monthly_rankings.png");
+	unlink("/srv/fansubscat/temporary/monthly_rankings.png");
 }
 
 mysqli_close($db_connection);

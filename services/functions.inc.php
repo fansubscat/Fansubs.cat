@@ -1597,8 +1597,6 @@ function fetch_via_ouferrat($fansub_slug, $url, $last_fetched_item_date){
 
 		$item[2]=parse_description($description);
 
-		//We have to explode because the format is: 05/07/2015 a les 19:48 / Ereza
-
 		$date = date_create_from_format('Y-m-d H:i', $article->find('time', 0)->innertext);
 
 		$item[3]=$date->format('Y-m-d H:i:s');

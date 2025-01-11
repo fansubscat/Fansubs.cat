@@ -83,14 +83,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		}
 		
 		if ($_POST['action']=='edit') {
+			$old_result = query("SELECT * FROM fansub WHERE id=".$data['id']);
+			$old_row = mysqli_fetch_assoc($old_result);
+			if ($old_row['updated']!=$_POST['last_update']) {
+				crash("Algú altre ha actualitzat el fansub mentre tu l’editaves. Hauràs de tornar a fer els canvis.");
+			}
+			
 			log_action("update-fansub", "S’ha actualitzat el fansub «".$_POST['name']."» (id. de fansub: ".$data['id'].")");
 			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',discord_url=".$data['discord_url'].",status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.$data['id'].'.png');
-			}
-			if (!empty($_FILES['logo'])) {
-				move_uploaded_file($_FILES['logo']["tmp_name"], STATIC_DIRECTORY.'/images/logos/'.$data['id'].'.png');
 			}
 		}
 		else {
@@ -99,9 +102,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.mysqli_insert_id($db_connection).'.png');
-			}
-			if (!empty($_FILES['logo'])) {
-				move_uploaded_file($_FILES['logo']["tmp_name"], STATIC_DIRECTORY.'/images/logos/'.mysqli_insert_id($db_connection).'.png');
 			}
 		}
 
@@ -129,6 +129,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 						<label for="form-name-with-autocomplete" class="mandatory">Nom</label>
 						<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" id="form-id" name="id" value="<?php echo $row['id']; ?>">
+						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-slug">Identificador<span class="mandatory"></span> <small class="text-muted">(autogenerat, no cal editar-lo)</small></label>
@@ -157,25 +158,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 							<div class="mb-3">
 								<a id="form-icon-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/icons/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/icons/'.$row['id'].'.png"' : ''; ?> target="_blank">
 									<img id="form-icon-preview" style="width: 60px; height: 60px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/icons/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/icons/'.$row['id'].'.png"' : ''; ?> alt="">
-								</a>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-3">
-							<div class="mb-3">
-								<label>Logo <small class="text-muted">(PNG, aprox. 140x40px)</small></label><br>
-<?php
-	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/logos/'.$row['id'].'.png');
-?>
-								<label for="form-logo" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, -1, 'image/png', 140, 40, 4096, 4096, 'form-logo-preview', 'form-logo-preview-link');">
-							</div>
-						</div>
-						<div class="col-sm-2" style="align-self: center;">
-							<div class="mb-3">
-								<a id="form-logo-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/logos/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/logos/'.$row['id'].'.png"' : ''; ?> target="_blank">
-									<img id="form-logo-preview" style="width: 140px; height: 60px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/logos/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/logos/'.$row['id'].'.png"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>

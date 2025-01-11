@@ -10,19 +10,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<article class="card-body">
 			<h4 class="card-title text-center mb-4 mt-1">Tauler d’administració</h4>
 			<hr>
-<?php
-	if (!empty($_SESSION['message'])) {
-?>
-			<p class="alert alert-danger text-center"><?php echo $_SESSION['message']; ?></p>
-<?php
-		$_SESSION['message']=NULL;
-	}
-?>
 			<p class="text-center"><strong>Et donem la benvinguda al tauler. Aquí pots administrar el contingut dels diferents webs de Fansubs.cat.</strong></p>
-			<p class="text-center">Cada <strong>anime</strong>, <strong>manga</strong> o <strong>contingut d’imatge real</strong> conté una fitxa genèrica amb les seves temporades (o volums) i capítols.<br />Les <strong>versions</strong> corresponen a l’edició d’un o més fansubs i inclouen els enllaços o fitxers corresponents.<br />Per a afegir un contingut nou, primer cal crear-ne la fitxa genèrica, i després la versió amb els enllaços o fitxers.</p>
+			<p class="text-center">Cada <strong>anime</strong>, <strong>manga</strong> o <strong>contingut d’imatge real</strong> conté una fitxa genèrica amb les seves divisions (temporades o volums) i capítols.<br />Les <strong>versions</strong> corresponen a l’edició d’un o més fansubs i inclouen els enllaços o fitxers corresponents.<br />Per a afegir un contingut nou, primer cal crear-ne la fitxa genèrica, i després la versió amb els enllaços o fitxers.</p>
 			<p class="text-center">L’apartat de <strong>notícies</strong> permet gestionar les notícies dels webs o blogs dels diferents fansubs.<br />Excepte en casos molt concrets, no és necessari afegir, modificar ni suprimir notícies a mà.</p>
 			<p class="text-center">Al menú d’<strong>anàlisi</strong> trobaràs un seguit d’opcions per a veure quin és el consum del material.</p>
-			<p class="text-center">Si tens dubtes, consulta l’<strong>ajuda</strong> que tens a la part superior dreta o contacta amb els administradors.</p>
+			<p class="text-center">Si tens dubtes, consulta l’<strong>ajuda</strong> que tens a la part superior dreta o contacta amb un administrador.</p>
 <?php
 	if ($_SESSION['admin_level']<2) {
 ?>

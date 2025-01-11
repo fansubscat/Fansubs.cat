@@ -19,8 +19,10 @@ function log_action($action, $text=NULL){
 function crash($string){
 	http_response_code(500);
 	ob_end_clean();
+	define('ERROR_DESCRIPTION', $string);
+	include(__DIR__.'/error.inc.php');
 	log_action('crash', $string);
-	die($string);
+	die();
 }
 
 function escape($string){
@@ -30,7 +32,7 @@ function escape($string){
 
 function query($query){
 	global $db_connection;
-	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");
+	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."<br>"."Consulta original: $query");
 	return $result;
 }
 

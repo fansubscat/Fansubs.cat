@@ -90,7 +90,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$extra_where = '';
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, s.name");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, v.title version_title, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, s.name");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -101,14 +101,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name']); ?></th>
-								<td class="align-middle"><?php echo htmlspecialchars($row['series_name']); ?></td>
-								<td class="align-middle text-center"><?php echo get_status_description_short($row['status']); ?></td>
-								<td class="align-middle text-center"><?php echo $row['files']; ?></td>
-								<td class="align-middle text-center"><?php echo $row['featurable_status']==3 ? 'RT' : ($row['featurable_status']==2 ? 'RE' : ($row['featurable_status']==1 ? 'R' : '-')); ?></td>
-								<td class="align-middle text-center"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '-'; ?></td>
-								<td class="align-middle text-center"><?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '-'; ?></td>
-								<td class="align-middle text-center"><?php echo $row['num_comments']>0 ? $row['num_comments'] : '-'; ?></td>
+								<th scope="row" class="align-middle<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo htmlspecialchars($row['fansub_name']); ?></th>
+								<td class="align-middle<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><b><?php echo htmlspecialchars($row['version_title']); ?></b><?php echo $row['version_title']!=$row['series_name'] ? '<br><i style="font-weight: normal;" class="text-muted small">('.htmlspecialchars($row['series_name']).')</i>' : ''; ?></td>
+								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo get_status_description_short($row['status']); ?></td>
+								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['files']; ?></td>
+								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['featurable_status']==3 ? 'RT' : ($row['featurable_status']==2 ? 'RE' : ($row['featurable_status']==1 ? 'R' : '-')); ?></td>
+								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '-'; ?></td>
+								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '-'; ?></td>
+								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['num_comments']>0 ? $row['num_comments'] : '-'; ?></td>
 								<td class="align-middle text-center text-nowrap"><a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Enllaços" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques i comentaris" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de «".$row['series_name']."» de ".$row['fansub_name']." i tots els seus fitxers? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php

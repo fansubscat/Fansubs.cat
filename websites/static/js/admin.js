@@ -30,21 +30,30 @@ function copyToClipboard(text, el) {
 }
 
 function populateMalData(response, staffResponse) {
+	if ($('#form-series').length>0) {
+		//Version page
+		$("#form-synopsis").val(response.data.synopsis);
+		synopsisChanged=false;
+
+		var url = (response.data.images && response.data.images.jpg && response.data.images.jpg.large_image_url) ? response.data.images.jpg.large_image_url : null;
+		if (document.getElementById('form-image').files.length>0) {
+			resetFileInput($("#form-image"));
+		}
+		$("#form-image_url").val(url);
+		$('#form-image-preview').prop('src', url);
+		$('#form-image-preview-link').prop('href', url);
+		syncDivisionImages();
+		
+		return;
+	}
+	
+	//Series page
 	if ($("#form-name-with-autocomplete").val()=='') {
 		$("#form-name-with-autocomplete").val(response.data.title);
 		$("#form-name-with-autocomplete").attr('data-old-value', response.data.title);
 	}
-	if ($("#form-slug").val()=='') {
-		$("#form-slug").val(string_to_slug(response.data.title));
-	}
-	if ($("#form-alternate_names").val()=='') {
-		if (response.data.title && response.data.title_english && response.data.title_english!=response.data.title) {
-			$("#form-alternate_names").val(response.data.title+', '+response.data.title_english);
-		} else if (response.data.title) {
-			$("#form-alternate_names").val(response.data.title);
-		} else if (response.data.title_english) {
-			$("#form-alternate_names").val(response.data.title_english);
-		}
+	if ($("#form-alternate_names").val()=='' && response.data.title_english && response.data.title_english!=response.data.title) {
+		$("#form-alternate_names").val(response.data.title_english);
 	}
 	if ($("#form-division-list-name-1").val()=='') {
 		$("#form-division-list-name-1").val(response.data.title);
@@ -74,27 +83,6 @@ function populateMalData(response, staffResponse) {
 	} else {
 		$("#form-rating").val('');
 	}
-	if ($("#form-synopsis").val()=='') {
-		$("#form-synopsis").val(response.data.synopsis);
-	}
-	if ($("#form-duration").val()=='') {
-		$("#form-duration").val(response.data.duration ? response.data.duration.replace('per ep','per capítol').replace('hr','h').replace('Unknown','') : null);
-	}
-
-	var url = (response.data.images && response.data.images.jpg && response.data.images.jpg.large_image_url) ? response.data.images.jpg.large_image_url : null;
-	if (document.getElementById('form-image').files.length>0) {
-		resetFileInput($("#form-image"));
-	}
-	$("#form-image_url").val(url);
-	$('#form-image-preview').prop('src', url);
-	$('#form-image-preview-link').prop('href', url);
-
-	if (response.data.episodes==1) {
-		//Movie, populate first episode
-		if ($('#form-episode-list-description-1').val()=='') {
-			$('#form-episode-list-description-1').val('Títol a MyAnimeList: '+$("#form-name-with-autocomplete").val());
-		}
-	}
 
 	var authors = staffResponse.data.filter(function(value, index, array) {
 		return value.positions.includes("Original Creator");
@@ -116,27 +104,6 @@ function populateMalData(response, staffResponse) {
 	}
 
 	$("#form-author").val(textAuthors);
-
-	var directors = staffResponse.data.filter(function(value, index, array) {
-		return value.positions.includes("Director");
-	});
-
-	var textDirectors = "";
-	for (var i = 0; i < directors.length; i++) {
-		var directorName;
-		if (directors[i].person.name.includes(', ')) {
-			directorName=directors[i].person.name.split(', ')[1]+" "+directors[i].person.name.split(', ')[0];
-		} else {
-			directorName=directors[i].person.name;
-		}
-
-		if (textDirectors!='') {
-			textDirectors+=', ';
-		}
-		textDirectors+=directorName;
-	}
-
-	$("#form-director").val(textDirectors);
 
 	var textStudios = "";
 	for (var i = 0; i < response.data.studios.length; i++) {
@@ -180,21 +147,29 @@ function populateMalData(response, staffResponse) {
 }
 
 function populateMalDataManga(response) {
+	if ($('#form-series').length>0) {
+		//Version page
+		$("#form-synopsis").val(response.data.synopsis);
+		synopsisChanged=false;
+
+		var url = (response.data.images && response.data.images.jpg && response.data.images.jpg.large_image_url) ? response.data.images.jpg.large_image_url : null;
+		if (document.getElementById('form-image').files.length>0) {
+			resetFileInput($("#form-image"));
+		}
+		$("#form-image_url").val(url);
+		$('#form-image-preview').prop('src', url);
+		$('#form-image-preview-link').prop('href', url);
+		syncDivisionImages();
+		return;
+	}
+	
+	//Series page
 	if ($("#form-name-with-autocomplete").val()=='') {
 		$("#form-name-with-autocomplete").val(response.data.title);
 		$("#form-name-with-autocomplete").attr('data-old-value', response.data.title);
 	}
-	if ($("#form-slug").val()=='') {
-		$("#form-slug").val(string_to_slug(response.data.title));
-	}
-	if ($("#form-alternate_names").val()=='') {
-		if (response.data.title && response.data.title_english && response.data.title_english!=response.data.title) {
-			$("#form-alternate_names").val(response.data.title+', '+response.data.title_english);
-		} else if (response.data.title) {
-			$("#form-alternate_names").val(response.data.title);
-		} else if (response.data.title_english) {
-			$("#form-alternate_names").val(response.data.title_english);
-		}
+	if ($("#form-alternate_names").val()=='' && response.data.title_english && response.data.title_english!=response.data.title) {
+		$("#form-alternate_names").val(response.data.title_english);
 	}
 	if ($("#form-score").val()=='') {
 		$("#form-score").val(response.data.score ? response.data.score : '');
@@ -214,24 +189,6 @@ function populateMalDataManga(response) {
 		$("#form-comic_type").val('novel');
 	} else {
 		$("#form-comic_type").val('manga');
-	}
-	if ($("#form-synopsis").val()=='') {
-		$("#form-synopsis").val(response.data.synopsis);
-	}
-
-	var url = (response.data.images && response.data.images.jpg && response.data.images.jpg.large_image_url) ? response.data.images.jpg.large_image_url : null;
-	if (document.getElementById('form-image').files.length>0) {
-		resetFileInput($("#form-image"));
-	}
-	$("#form-image_url").val(url);
-	$('#form-image-preview').prop('src', url);
-	$('#form-image-preview-link').prop('href', url);
-
-	if (response.data.chapters==1) {
-		//One-shot, populate first chapter
-		if ($('#form-episode-list-description-1').val()=='') {
-			$('#form-episode-list-description-1').val('Títol a MyAnimeList: '+$("#form-name-with-autocomplete").val());
-		}
 	}
 
 	var textAuthors = "";
@@ -300,22 +257,40 @@ function populateMalDataManga(response) {
 	}
 }
 
-function populateMalEpisodes(division_line, episodes) {
-	if (division_line==1) {
-		var i = parseInt($('#episode-list-table').attr('data-count'));
-		for (var id=1;id<i+1;id++) {
-			$("#form-episode-list-row-"+id).remove();
+function populateMdlData(response) {
+	var mdlData = $.parseHTML(response.response);
+	if ($('#form-series').length>0) {
+		//Version page
+		$("#form-synopsis").val($(mdlData).find('.show-synopsis p').text());
+		synopsisChanged=false;
+
+		var url = $(mdlData).find('.film-cover .img-responsive').attr('data-cfsrc');
+		if (document.getElementById('form-image').files.length>0) {
+			resetFileInput($("#form-image"));
 		}
-		$('#episode-list-table').attr('data-count', 0);
+		$("#form-image_url").val(url);
+		$('#form-image-preview').prop('src', url);
+		$('#form-image-preview-link').prop('href', url);
+		syncDivisionImages();
+		return;
 	}
-
-	initialNumber = parseInt($('#episode-list-table').attr('data-count'))+1;
-
-	for (var i=0;i<episodes.length;i++) {
-		addEpisodeRow(false, false);
-		$("#form-episode-list-division-"+(i+initialNumber)).val($('#form-division-list-number-'+division_line).val());
-		$("#form-episode-list-num-"+(i+initialNumber)).val(episodes[i].mal_id);
-		$("#form-episode-list-description-"+(i+initialNumber)).val('Títol a MyAnimeList: '+episodes[i].title);
+	
+	//Series page
+	if ($("#form-name-with-autocomplete").val()=='') {
+		$("#form-name-with-autocomplete").val($(mdlData).find('.film-title a').text());
+		$("#form-name-with-autocomplete").attr('data-old-value', $(mdlData).find('.film-title a').text());
+	}
+	if ($("#form-alternate_names").val()=='') {
+		$("#form-alternate_names").val($(mdlData).find('.film-title a').text());
+	}
+	if ($("#form-division-list-name-1").val()=='') {
+		$("#form-division-list-name-1").val($(mdlData).find('.film-title a').text());
+	}
+	if ($("#form-score").val()=='') {
+		$("#form-score").val($(mdlData).find('.col-film-rating div').text()!='N/A' ? $(mdlData).find('.col-film-rating div').text() : '');
+	}
+	if ($("#form-division-list-external_id-1").val()=='') {
+		$("#form-division-list-external_id-1").val($("#form-external_id").val());
 	}
 }
 
@@ -338,20 +313,31 @@ function string_to_slug(str) {
 	return str;
 }
 
-function addEpisodeRow(extra, linked) {
+function addEpisodeRow(special, linked) {
 	var i = parseInt($('#episode-list-table').attr('data-count'))+1;
 	if (!linked) {
-		$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-division-'+i+'" name="form-episode-list-division-'+i+'" type="number" class="form-control" value="" placeholder="Altres" step="any"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="Especial" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/><input id="form-episode-list-has_version-'+i+'" type="hidden" value="0"/></td><td><input id="form-episode-list-description-'+i+'" name="form-episode-list-description-'+i+'" type="text" class="form-control" value="" placeholder="" maxlength="500"/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteEpìsodeRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+		$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-division-'+i+'" name="form-episode-list-division-'+i+'" type="number" class="form-control" value="" step="any" required/></td><td><input id="form-episode-list-num-'+i+'" oninput="checkEpisodeRow('+i+');" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="Especial" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/><input id="form-episode-list-has_version-'+i+'" type="hidden" value="0"/></td><td><input id="form-episode-list-description-'+i+'" name="form-episode-list-description-'+i+'" type="text" class="form-control" value="" placeholder="- Introdueix un nom -" maxlength="500"/></td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteEpìsodeRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	} else {
 		var htmlAcc = $('#form-episode-list-linked_episode_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
 
-		$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-division-'+i+'" name="form-episode-list-division-'+i+'" type="number" class="form-control" value="" placeholder="Altres" step="any"/></td><td><input id="form-episode-list-num-'+i+'" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="Especial" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/><input id="form-episode-list-has_version-'+i+'" type="hidden" value="0"/></td><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteEpìsodeRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+		$('#episode-list-table').append('<tr id="form-episode-list-row-'+i+'"><td><input id="form-episode-list-division-'+i+'" name="form-episode-list-division-'+i+'" type="number" class="form-control" value="" step="any" required/></td><td><input id="form-episode-list-num-'+i+'" oninput="checkEpisodeRow('+i+');" name="form-episode-list-num-'+i+'" type="number" class="form-control" value="" placeholder="Especial" step="any"/><input id="form-episode-list-id-'+i+'" name="form-episode-list-id-'+i+'" type="hidden" value="-1"/><input id="form-episode-list-has_version-'+i+'" type="hidden" value="0"/></td><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-episode-list-delete-'+i+'" onclick="deleteEpìsodeRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	}
 	$('#episode-list-table').attr('data-count', i);
+	$('#form-episode-list-division-'+i).val($('#form-episode-list-division-'+(i-1)).val()!='' ? $('#form-episode-list-division-'+(i-1)).val() : 1);
 
-	if (!extra) {
-		$('#form-episode-list-division-'+i).val($('#form-episode-list-division-'+(i-1)).val()!='' ? $('#form-episode-list-division-'+(i-1)).val() : 1);
+	if (!special) {
+		$('#form-episode-list-description-'+i).val('');
+		$('#form-episode-list-description-'+i).addClass('d-none');
 		$('#form-episode-list-num-'+i).val($('#form-episode-list-num-'+(i-1)).val()!='' ? parseInt($('#form-episode-list-num-'+(i-1)).val())+1 : 1);
+	}
+}
+
+function checkEpisodeRow(id) {
+	if ($('#form-episode-list-num-'+id).val()=='') {
+		$("#form-episode-list-description-"+id).removeClass('d-none');
+	} else {
+		$("#form-episode-list-description-"+id).addClass('d-none');
+		$("#form-episode-list-description-"+id).val('');
 	}
 }
 
@@ -373,6 +359,8 @@ function deleteEpìsodeRow(id) {
 			$("#form-episode-list-division-"+j).attr('id','form-episode-list-division-'+(j-1));
 			$("#form-episode-list-num-"+j).attr('name','form-episode-list-num-'+(j-1));
 			$("#form-episode-list-num-"+j).attr('id','form-episode-list-num-'+(j-1));
+			$("#form-episode-list-num-"+j).attr('oninput','checkEpìsodeRow('+(j-1)+');');
+			$("#form-episode-list-description-"+j).attr('class',$('form-episode-list-description-'+(j-1)).attr('class'));
 			if ($("#form-episode-list-description-"+j).length>0) {
 				$("#form-episode-list-description-"+j).attr('name','form-episode-list-description-'+(j-1));
 				$("#form-episode-list-description-"+j).attr('id','form-episode-list-description-'+(j-1));
@@ -390,14 +378,14 @@ function deleteEpìsodeRow(id) {
 
 function addDivisionRow() {
 	var i = parseInt($('#division-list-table').attr('data-count'))+1;
-	$('#division-list-table').append('<tr id="form-division-list-row-'+i+'"><td><input id="form-division-list-number-'+i+'" name="form-division-list-number-'+i+'" type="number" class="form-control" value="'+(parseInt($('#form-division-list-number-'+(i-1)).val())+1)+'" step="any" required/><input id="form-division-list-id-'+i+'" name="form-division-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-division-list-name-'+i+'" name="form-division-list-name-'+i+'" type="text" class="form-control" value="" placeholder="'+($('#type').val()=='manga' ? '(Títol per defecte)"' : '- Introdueix un títol -" required')+'/></td><td><input id="form-division-list-number_of_episodes-'+i+'" name="form-division-list-number_of_episodes-'+i+'" type="number" class="form-control" value="" required/></td><td><input id="form-division-list-external_id-'+i+'" name="form-division-list-external_id-'+i+'"'+($('#type').val()!='liveaction' ? ' type="number"' : '')+' class="form-control" value=""/></td><td class="text-center align-middle"><button id="form-division-list-delete-'+i+'" onclick="deleteDivisionRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#division-list-table').append('<tr id="form-division-list-row-'+i+'"><td><input id="form-division-list-number-'+i+'" name="form-division-list-number-'+i+'" type="number" class="form-control" value="'+(parseInt($('#form-division-list-number-'+(i-1)).val())+1)+'" step="any" required/><input id="form-division-list-id-'+i+'" name="form-division-list-id-'+i+'" type="hidden" value="-1"/></td><td><input id="form-division-list-name-'+i+'" name="form-division-list-name-'+i+'" type="text" class="form-control" value="'+($('#type').val()=='manga' ? 'Volum '+i : '')+'" placeholder="- Introdueix un títol -" required/></td><td><input id="form-division-list-number_of_episodes-'+i+'" name="form-division-list-number_of_episodes-'+i+'" type="number" class="form-control" value="" required/></td><td><input id="form-division-list-external_id-'+i+'" name="form-division-list-external_id-'+i+'"'+($('#type').val()!='liveaction' ? ' type="number"' : '')+' class="form-control" value=""/></td><td class="text-center" style="padding-top: .75rem;"><input id="form-division-list-is_real-'+i+'" name="form-division-list-is_real-'+i+'" type="checkbox" value="1" checked/><td class="text-center align-middle"><button id="form-division-list-delete-'+i+'" onclick="deleteDivisionRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#division-list-table').attr('data-count', i);
 }
 
 function deleteDivisionRow(id) {
 	var i = parseInt($('#division-list-table').attr('data-count'));
 	if(i==1) {
-		alert('La fitxa ha de tenir una temporada/volum, com a mínim!');
+		alert('La fitxa ha de tenir una divisió, com a mínim!');
 	}
 	else {
 		$("#form-division-list-row-"+id).remove();
@@ -440,14 +428,14 @@ function addVersionRow(episode_id) {
 
 	var i = parseInt($('#files-list-table-'+episode_id).attr('data-count'))+1;
 
-	var contents = '<tr id="form-files-list-'+episode_id+'-row-'+i+'"><td><input id="form-files-list-'+episode_id+'-variant_name-'+i+'" name="form-files-list-'+episode_id+'-variant_name-'+i+'" type="text" class="form-control" value="" maxlength="200" placeholder="- Variant -" required/><input id="form-files-list-'+episode_id+'-id-'+i+'" name="form-files-list-'+episode_id+'-id-'+i+'" type="hidden" value="-1"/></td>';
+	var contents = '<tr id="form-files-list-'+episode_id+'-row-'+i+'"><td><input id="form-files-list-'+episode_id+'-variant_name-'+i+'" name="form-files-list-'+episode_id+'-variant_name-'+i+'" type="text" class="form-control" value="" maxlength="200" placeholder="- Nom -" required/><input id="form-files-list-'+episode_id+'-id-'+i+'" name="form-files-list-'+episode_id+'-id-'+i+'" type="hidden" value="-1"/></td>';
 	if ($('#type').val()=='manga') {
 		contents += '<td class="align-middle"><div id="form-files-list-'+episode_id+'-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-files-list-'+episode_id+'-file-'+i+'" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un fitxer...</label><input id="form-files-list-'+episode_id+'-file-'+i+'" name="form-files-list-'+episode_id+'-file-'+i+'" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);"/><input id="form-files-list-'+episode_id+'-length-'+i+'" name="form-files-list-'+episode_id+'-length-'+i+'" type="hidden" value="0"/></td>';
 	} else {
-		contents += '<td><table class="w-100" id="links-list-table-'+episode_id+'-'+i+'" data-count="1"><tbody><tr id="form-links-list-'+episode_id+'-row-'+i+'-1" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-url" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-url" type="text" pattern="'+linkUrlPattern+'" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr(\'value\',$(this).val());"/><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-id" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-resolution" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-files-list-'+episode_id+'-file-'+i+'-link-1-delete" onclick="deleteLinkRow('+episode_id+','+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody><tfoot><tr style="background: none;"><td colspan="3" class="text-center p-0 border-0"><button id="form-files-list-'+episode_id+'-add_link-'+i+'" onclick="addLinkRow('+episode_id+','+i+');" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pe-2"></span>Afegeix un altre enllaç</button></td></tr></tfoot></table></td><td><input id="form-files-list-'+episode_id+'-length-'+i+'" name="form-files-list-'+episode_id+'-length-'+i+'" type="time" step="1" class="form-control"/>';
+		contents += '<td><table class="w-100" id="links-list-table-'+episode_id+'-'+i+'" data-count="1"><tbody><tr id="form-links-list-'+episode_id+'-row-'+i+'-1" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-url" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-url" type="text" pattern="'+linkUrlPattern+'" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr(\'value\',$(this).val());"/><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-id" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-files-list-'+episode_id+'-file-'+i+'-link-1-resolution" name="form-files-list-'+episode_id+'-file-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-files-list-'+episode_id+'-file-'+i+'-link-1-delete" onclick="deleteLinkRow('+episode_id+','+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody></table></td><td><input id="form-files-list-'+episode_id+'-length-'+i+'" name="form-files-list-'+episode_id+'-length-'+i+'" type="time" step="1" class="form-control"/>';
 	}
 
-	contents += '<td><input id="form-files-list-'+episode_id+'-comments-'+i+'" name="form-files-list-'+episode_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center" style="padding-top: .75rem;"><input id="form-files-list-'+episode_id+'-is_lost-'+i+'" name="form-files-list-'+episode_id+'-is_lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center pt-2"><button id="form-files-list-'+episode_id+'-delete-'+i+'" onclick="deleteVersionRow('+episode_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>';
+	contents += '<td><input id="form-files-list-'+episode_id+'-comments-'+i+'" name="form-files-list-'+episode_id+'-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center" style="padding-top: .75rem;"><input id="form-files-list-'+episode_id+'-is_lost-'+i+'" name="form-files-list-'+episode_id+'-is_lost-'+i+'" type="checkbox" value="1"/></td><td class="text-center pt-2"><button onclick="addVersionRow('+episode_id+');" type="button" class="btn text-primary btn-sm fa p-1 fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button><button id="form-files-list-'+episode_id+'-add_link-'+i+'" onclick="addLinkRow('+episode_id+','+i+');" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button><button id="form-files-list-'+episode_id+'-delete-'+i+'" onclick="deleteVersionRow('+episode_id+','+i+');" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button></td></tr>';
 
 	$('#files-list-table-'+episode_id).append(contents);
 	$('#files-list-table-'+episode_id).attr('data-count', i);
@@ -461,10 +449,10 @@ function addVersionExtraRow() {
 	if ($('#type').val()=='manga') {
 		contents += '<td class="align-middle"><div id="form-extras-list-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap fitxer pujat.</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-extras-list-file-'+i+'" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un fitxer...</label><input id="form-extras-list-file-'+i+'" name="form-extras-list-file-'+i+'" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);" required/><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="hidden" value="-1"/></td>';
 	} else {
-		contents += '<td><table class="w-100" id="extras-links-list-table-'+i+'" data-count="1"><tbody><tr id="form-links-extras-list-row-'+i+'-1" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+i+'-link-1-url" name="form-extras-list-'+i+'-link-1-url" type="text" pattern="'+linkUrlPattern+'" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr(\'value\',$(this).val());" required/><input id="form-extras-list-'+i+'-link-1-id" name="form-extras-list-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+i+'-link-1-resolution" name="form-extras-list-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+i+'-link-1-delete" onclick="deleteExtraLinkRow('+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody><tfoot><tr style="background: none;"><td colspan="3" class="text-center p-0 border-0"><button id="form-extras-list-add_link-'+i+'" onclick="addExtraLinkRow('+i+');" type="button" class="btn btn-success btn-sm" style="margin-top: 0.25em;"><span class="fa fa-fw fa-plus pe-2"></span>Afegeix un altre enllaç</button></td></tr></tfoot></table></td><td><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="time" step="1" class="form-control" required/></td>';
+		contents += '<td><table class="w-100" id="extras-links-list-table-'+i+'" data-count="1"><tbody><tr id="form-links-extras-list-row-'+i+'-1" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+i+'-link-1-url" name="form-extras-list-'+i+'-link-1-url" type="text" pattern="'+linkUrlPattern+'" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr(\'value\',$(this).val());" required/><input id="form-extras-list-'+i+'-link-1-id" name="form-extras-list-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+i+'-link-1-resolution" name="form-extras-list-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+i+'-link-1-delete" onclick="deleteExtraLinkRow('+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody></table></td><td><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="time" step="1" class="form-control" required/></td>';
 	}
 
-	contents += '<td><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center pt-2"><button id="form-extras-list-delete-'+i+'" onclick="deleteVersionExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>';
+	contents += '<td><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center pt-2"><button id="form-extras-list-add_link-'+i+'" onclick="addExtraLinkRow('+i+');" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button><button id="form-extras-list-delete-'+i+'" onclick="deleteVersionExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button></td></tr>';
 
 	$('#extras-list-table').append(contents);
 	$('#extras-list-table').attr('data-count', i);
@@ -807,125 +795,81 @@ function deleteVersionRemoteFolderRow(id) {
 	}
 }
 
-function fetchMalEpisodes(current_division, total_divisions, page) {
-	if (current_division==1 && page==1) {
-		malDataDivisionsEpisodes = [];
-		malDataDivisionsEpisodesCount = 0;
-		malDataMessages = "";
-	}
-
-	var xmlhttp = new XMLHttpRequest();
-	var url = "https://api.jikan.moe/v4/anime/"+$("#form-division-list-external_id-"+current_division).val()+"/episodes?page="+page;
-
-	xmlhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			var malDataEpisodesPage = JSON.parse(this.responseText);
-			if (page==1) {
-				malDataEpisodes=malDataEpisodesPage.data;
-			} else {
-				malDataEpisodes=malDataEpisodes.concat(malDataEpisodesPage.data);
-			}
-			if (malDataEpisodesPage.pagination.has_next_page) {
-				setTimeout(function() {
-					fetchMalEpisodes(current_division, total_divisions, page+1);
-				}, 4000);
-			} else{
-				if (malDataEpisodes.length>0) {
-					malDataDivisionsEpisodes.push(malDataEpisodes);
-					malDataDivisionsEpisodesCount+=malDataEpisodes.length;
-				}
-				else{
-					malDataMessages+="\nLa temporada "+$("#form-division-list-number-"+current_division).val()+" no té capítols donats d’alta a MyAnimeList. Caldrà que els introdueixis a mà.";
-					malDataDivisionsEpisodes.push({'episodes': []});
-				}
-				if (current_division<total_divisions) {
-					setTimeout(function() {
-						fetchMalEpisodes(current_division+1, total_divisions, 1);
-					}, 4000);
-				} else {
-					if (malDataDivisionsEpisodesCount>0) {
-						for (var i=0;i<malDataDivisionsEpisodes.length;i++) {
-							populateMalEpisodes(i+1,malDataDivisionsEpisodes[i]);
-						}
-						if (malDataMessages!='') {
-							alert("S’han produït els següents errors:\n"+malDataMessages);
-						}
-						$("#import-from-mal-episodes-done").removeClass("d-none");
-					} else {
-						alert("No hi ha capítols donats d’alta a MyAnimeList. Caldrà que els introdueixis a mà.");
-					}
-					$("#import-from-mal-episodes-loading").addClass("d-none");
-					$("#import-from-mal-episodes-not-loading").removeClass("d-none");
-					setTimeout(function() {
-						$("#import-from-mal").prop('disabled', false);
-						$("#import-from-mal-episodes").prop('disabled', false);
-					}, 4000);
-				}
-			}
-		} else if (this.readyState == 4) {
-			alert("S’ha produït un error en obtenir dades de MyAnimeList, torna-ho a provar més tard.");
-			$("#import-from-mal-episodes-loading").addClass("d-none");
-			$("#import-from-mal-episodes-not-loading").removeClass("d-none");
-			setTimeout(function() {
-				$("#import-from-mal").prop('disabled', false);
-				$("#import-from-mal-episodes").prop('disabled', false);
-			}, 4000);
+function recalculateDivisionNames() {
+	if ($('#type').val()=='manga' && ($("#form-division-list-name-1").val()=='Volum 1' || $("#form-division-list-name-1").val()=='One-shot' || $("#form-division-list-name-1").val()=='Novel·la lleugera')) {
+		if ($('#form-subtype').val()=='oneshot' && $('#form-comic_type').val()=='novel') {
+			$("#form-division-list-name-1").val('Novel·la lleugera');
 		}
-	};
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
+		else if ($('#form-subtype').val()=='oneshot' && $('#form-comic_type').val()!='novel') {
+			$("#form-division-list-name-1").val('One-shot');
+		}
+		else {
+			$("#form-division-list-name-1").val('Volum 1');
+		}
+	}
 }
 
 function checkNumberOfEpisodes() {
-	var divisions = $('[id^=form-division-list-number_of_episodes-]');
-	var divisionsEpisodeCount=0;
-	for (var i=0;i<divisions.length;i++){
-		if ($(divisions[i]).val()!='' && $(divisions[i]).val()>0) {
-			divisionsEpisodeCount+=parseInt($(divisions[i]).val());
-		}
-	}
 	var episodeCount = parseInt($('#episode-list-table').attr('data-count'));
-	var normalEpisodeCount = 0;
-
-	//Check for «Other» episodes with numbers
-	for (var i=1;i<=episodeCount;i++){
-		if ($('#form-episode-list-num-'+i).val()!='' && $('#form-episode-list-linked_episode_id-'+i).length==0 && $('#form-episode-list-division-'+i).val()==''){
-			alert('No pot haver-hi capítols de la temporada «Altres» que estiguin numerats. Està pensada per a introduir-hi únicament especials.');
-			return false;
+	var divisionsEpisodes = $('[id^=form-division-list-number_of_episodes-]');
+	var divisionsNumbers = $('[id^=form-division-list-number-]');
+	var divisionsTitles = $('[id^=form-division-list-name-]');
+	for (var i=0;i<divisionsEpisodes.length;i++){
+		if ($(divisionsEpisodes[i]).val()!='') {
+			var divisionEpisodeCount=parseInt($(divisionsEpisodes[i]).val());
+			var divisionNumber=parseInt($(divisionsNumbers[i]).val());
+			var realDivisionEpisodeCount = 0;
+			for (var j=1;j<=episodeCount;j++){
+				if ($('#form-episode-list-division-'+j).val()==divisionNumber){
+					realDivisionEpisodeCount++;
+				}
+			}
+			if (divisionEpisodeCount!=realDivisionEpisodeCount){
+				alert('La divisió '+divisionNumber+' té '+divisionEpisodeCount+' capítols, però a la llista n’hi ha '+realDivisionEpisodeCount+'.');
+				return false;
+			}
 		}
 	}
-	for (var i=1;i<=episodeCount;i++){
-		if ($('#form-episode-list-num-'+i).val()!='' && $('#form-episode-list-linked_episode_id-'+i).length==0){
-			normalEpisodeCount++;
+	if ($('#type').val()!='manga') {
+		for (var i=0;i<divisionsTitles.length;i++){
+			var title = $(divisionsTitles[i]).val();
+			if (title.toLowerCase().startsWith('temporada')) {
+				alert('Les divisions no poden començar per «Temporada». Posa-hi el títol de l’obra al davant o especifica el nom que té l’obra durant aquesta divisió.');
+				return false;
+			}
+			if (title.toLowerCase().startsWith('especial')) {
+				alert('Les divisions no poden començar per «Especial». Posa-hi el títol de l’obra al davant o especifica el nom que té l’obra durant aquesta divisió.');
+				return false;
+			}
+			if (title.toLowerCase().startsWith('ova')) {
+				alert('Les divisions no poden començar per «OVA». Posa-hi el títol de l’obra al davant o especifica el nom que té l’obra durant aquesta divisió.');
+				return false;
+			}
 		}
 	}
-	if (normalEpisodeCount!=divisionsEpisodeCount){
-		if ($('#type').val()=='manga') {
-			alert('El nombre de capítols numerats de la llista ha de coincidir amb el nombre de capítols indicat als volums.');
-		} else {
-			alert('El nombre de capítols numerats de la llista ha de coincidir amb el nombre de capítols indicat a les temporades.');
+	for (var i=0;i<divisionsTitles.length;i++){
+		for (var j=0;j<divisionsTitles.length;j++){
+			if ($(divisionsTitles[j]).val()==$(divisionsTitles[i]).val() && i!=j) {
+				alert('Hi ha divisions amb títols repetits. Cada divisió ha de tenir un títol únic. Revisa-ho i corregeix-ho.');
+				return false;
+			}
 		}
-		return false;
 	}
 	for (var i=1;i<=episodeCount;i++){
 		if ($('#form-episode-list-num-'+i).val()=='' && $('#form-episode-list-description-'+i).val()==''){
-			alert('Hi ha capítols sense número ni nota informativa. Els capítols normals han de tenir com a mínim número, i els capítols especials han de tenir com a mínim nota informativa.');
+			alert('Hi ha capítols sense número ni nom d’especial. Els capítols normals han de tenir com a mínim número, i els capítols especials han de tenir com a mínim el nom de l’especial.');
 			return false;
 		}
 	}
 
 	var divisionNumbers = [];
-	for (var i=0;i<divisions.length;i++){
+	for (var i=0;i<divisionsEpisodes.length;i++){
 		divisionNumbers.push($('#form-division-list-number-'+(i+1)).val());
 	}
 	var higherThanCount=false;
 	for (var i=1;i<=episodeCount;i++){
 		if ($('#form-episode-list-division-'+i).val()!='' && !divisionNumbers.includes($('#form-episode-list-division-'+i).val())){
-			if ($('#type').val()=='manga') {
-				alert('Hi ha capítols de volums inexistents. Corregeix-ho.');
-			} else {
-				alert('Hi ha capítols de temporades inexistents. Corregeix-ho.');
-			}
+			alert('Hi ha capítols de divisions inexistents. Corregeix-ho.');
 			return false;
 		}
 		if ($('#form-episode-list-num-'+i).val()>episodeCount){
@@ -937,27 +881,29 @@ function checkNumberOfEpisodes() {
 		return false;
 	}
 
+	if ($('#type').val()=='manga' && $('[id^=form-division-list-name-]').length==1 && $($('[id^=form-division-list-name-]')[0]).val()=='Volum 1' && !confirm('Aquest manga només té una divisió amb títol «Volum 1», segur que el títol de la divisió no hauria de ser «Volum únic»? Si dubtes, cancel·la i canvia’l per «Volum únic».')){
+		return false;
+	}
+
+	if ($('#type').val()=='manga' && $('#form-subtype').val()=='oneshot' && $('#form-comic_type').val()!='novel' && $($('[id^=form-division-list-name-]')[0]).val()!='One-shot' && !confirm('Aquest manga és un one-shot, però el títol de la divisió no és «One-shot», segur que el títol de la divisió no hauria de ser «One-shot»? Si dubtes, cancel·la i canvia’l per «One-shot».')){
+		return false;
+	}
+
+	if ($('#type').val()=='manga' && $('#form-subtype').val()=='oneshot' && $('#form-comic_type').val()=='novel' && $($('[id^=form-division-list-name-]')[0]).val()!='One-shot' && !confirm('Aquesta novel·la lleugera és una novel·la lleugera one-shot, però el títol de la divisió no és «Novel·la lleugera», segur que el títol de la divisió no hauria de ser «Novel·la lleugera»? Si dubtes, cancel·la i canvia’l per «Novel·la lleugera».')){
+		return false;
+	}
+
+	if ($('#type').val()=='manga' && $('#form-subtype').val()=='oneshot' && episodeCount>1) {
+		alert('Has seleccionat tipus «One-shot», però a la fitxa hi ha més d’un capítol. Les fitxes de one-shots només poden tenir un sol capítol. Canvia el tipus a «Serialitzat».');
+		return false;
+	}
+
 	if (higherThanCount && !confirm('Hi ha números de capítol més alts que el nombre total de capítols. Segur que és correcte? Si dubtes, cancel·la i revisa-ho.')){
-		return false;
-	}
-
-	if (!$('#id').val() && !$('#form-image').val() && !$('#form-image_url').val()) {
-		alert('Cal que pugis una imatge de portada.');
-		return false;
-	}
-
-	if (!$('#id').val() && !$('#form-featured_image').val()) {
-		alert('Cal que pugis una imatge de capçalera.');
 		return false;
 	}
 
 	if ($('#form-name-with-autocomplete').val()==$('#form-alternate_names').val()) {
 		alert('El nom i el camp «altres noms» no poden ser iguals. Si no se’n tradueix el nom, el camp «altres noms» ha de romandre buit o amb altres noms diferents, si s’escau (en anglès, per exemple).');
-		return false;
-	}
-
-	if (!$('#id').val() && !synopsisChanged) {
-		alert('No has canviat la sinopsi que s’ha autoimportat. Revisa-la.');
 		return false;
 	}
 
@@ -974,15 +920,6 @@ function checkNumberOfEpisodes() {
 	if ($('#form-keywords').val().indexOf(',')>=0) {
 		alert('El camp «paraules clau» fa servir espais com a separadors, no comes.');
 		return false;
-	}
-
-	if (document.getElementById('form-image-preview').naturalWidth<300 || document.getElementById('form-image-preview').naturalHeight<400) {
-		alert('La imatge de portada té unes dimensions massa petites. El mínim són 300x400 píxels. Si l’has importada de MyAnimeList, caldrà que l’obtinguis d’un altre lloc amb una millor resolució.\n\nIMPORTANT: NO REDIMENSIONS LA IMATGE A MÀ!\n Si no tens altres alternatives amb més resolució, fes servir https://unlimited.waifu2x.net/ per a generar-la.');
-		return false;
-	}
-
-	if ($('#form-old_slug').val()!='' && $('#form-old_slug').val()!=$('#form-slug').val()) {
-		return confirm('IMPORTANT: ELS ENLLAÇOS ANTICS ES TRENCARAN!\nHas canviat (o s’ha canviat automàticament perquè has modificat el nom) l’identificador de la fitxa de «'+$('#form-old_slug').val()+'» a «'+$('#form-slug').val()+'». Això farà que tots els enllaços externs que apuntin a la fitxa deixin de funcionar. Això pot afectar versions de qualsevol fansub. Si vols fer aquest canvi, cal que avisis un administrador perquè afegeixi una redirecció de l’enllaç antic al nou. Si no pretenies fer aquest canvi, prem «Cancel·la» i torna a posar el valor original al camp «Identificador». Segur que vols continuar?');
 	}
 
 	//Disable form
@@ -1018,6 +955,56 @@ function checkCommunity() {
 }
 
 function checkNumberOfLinks() {
+	if (!$('#id').val() && !$('#form-image').val() && !$('#form-image_url').val()) {
+		alert('Cal que pugis una imatge de portada.');
+		return false;
+	}
+
+	if (!$('#id').val() && !$('#form-featured_image').val()) {
+		alert('Cal que pugis una imatge de capçalera.');
+		return false;
+	}
+
+	if (!synopsisChanged) {
+		alert('No has canviat la sinopsi que s’ha autoimportat. Revisa-la i tradueix-la, si cal.');
+		return false;
+	}
+	
+	if (document.getElementById('form-image-preview').naturalWidth<300 || document.getElementById('form-image-preview').naturalHeight<400) {
+		alert('La imatge de portada té unes dimensions massa petites. El mínim són 300x400 píxels. Si l’has importada automàticament, caldrà que l’obtinguis d’un altre lloc amb una millor resolució.\n\nIMPORTANT: NO REDIMENSIONS LA IMATGE A MÀ!\nSi no tens altres alternatives amb més resolució, fes servir https://unlimited.waifu2x.net/ per a generar-la.');
+		return false;
+	}
+
+	if ($('#form-old_slug').val()!='' && $('#form-old_slug').val()!=$('#form-slug').val()) {
+		return confirm('IMPORTANT: ELS ENLLAÇOS ANTICS ES TRENCARAN!\nHas modificat el títol o els fansubs i això ha fet canviar l’identificador de la fitxa de «'+$('#form-old_slug').val()+'» a «'+$('#form-slug').val()+'». Això farà que tots els enllaços externs que apuntin a la fitxa deixin de funcionar. Si vols fer aquest canvi, cal que avisis un administrador perquè afegeixi una redirecció de l’enllaç antic al nou. Si no pretenies fer aquest canvi, prem «Cancel·la» i torna a posar el valor original al camp «Identificador». Segur que vols continuar?');
+	}
+	
+	var divisionsTitles = $('[id^=form-division-title-]');
+	if ($('#type').val()!='manga') {
+		for (var i=0;i<divisionsTitles.length;i++){
+			var title = $(divisionsTitles[i]).val();
+			if (title.toLowerCase().startsWith('temporada')) {
+				alert('Les divisions no poden començar per «Temporada». Posa-hi el títol de l’obra al davant o especifica el nom que té l’obra durant aquesta divisió.');
+				return false;
+			}
+			if (title.toLowerCase().startsWith('especial')) {
+				alert('Les divisions no poden començar per «Especial». Posa-hi el títol de l’obra al davant o especifica el nom que té l’obra durant aquesta divisió.');
+				return false;
+			}
+			if (title.toLowerCase().startsWith('ova')) {
+				alert('Les divisions no poden començar per «OVA». Posa-hi el títol de l’obra al davant o especifica el nom que té l’obra durant aquesta divisió.');
+				return false;
+			}
+		}
+	}
+	for (var i=0;i<divisionsTitles.length;i++){
+		for (var j=0;j<divisionsTitles.length;j++){
+			if ($(divisionsTitles[j]).val()==$(divisionsTitles[i]).val() && i!=j) {
+				alert('Hi ha divisions amb títols repetits. Cada divisió ha de tenir un títol únic. Revisa-ho i corregeix-ho.');
+				return false;
+			}
+		}
+	}
 
 	var downloadsUrls = $('[id^=form-downloads_url_]');
 	for (var i=0;i<downloadsUrls.length;i++) {
@@ -1038,7 +1025,7 @@ function checkNumberOfLinks() {
 		}
 
 		if (multipleLinks) {
-			alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d’una variant per capítol. Has de desactivar-la o bé eliminar els enllaços addicionals dels capítols.");
+			alert("Si hi ha activada la sincronització automàtica de carpetes, no és possible afegir més d’una variant per capítol. Has de desactivar-la o bé eliminar les variants addicionals dels capítols i deixar-ne només una per capítol.");
 			return false;
 		}
 	}
@@ -1073,7 +1060,7 @@ function checkNumberOfLinks() {
 			}
 			if ($(urls[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')=='- Introdueix un títol -' && $(urls[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
 				$(urls[i]).closest('.episode-container').find('.episode-title-input').focus();
-				alert("Cal que introdueixis un títol per a aquest capítol (s’hi ha col·locat el focus).");
+				alert("Cal que introdueixis un títol per a aquest capítol (s’hi col·locarà el focus).");
 				return false;
 			}
 		}
@@ -1139,9 +1126,8 @@ function checkNumberOfLinks() {
 		}
 	}
 	if (status!=1 && status!=3 && validFiles>=totalEpisodes) {
-		if (!confirm('Aquesta versió té contingut per a tots els capítols, però no està marcada com a «Completada» ni «Parcialment completada». Revisa i confirma que sigui correcte. Si és correcte perquè està en emissió o publicació, quan l’hagis desada, aprofita per a afegir-ne els capítols futurs a la fitxa de la sèrie. Segur que vols continuar?')) {
-			return false;
-		}
+		alert('Aquesta versió té contingut per a tots els capítols, però no està marcada com a «Completada» ni «Parcialment completada». Això no és possible. Si està en emissió o publicació i hi ha capítols que no hi apareixen, fes servir el botó «Afegeix un capítol inexistent» per a afegir-hi els que hi faltin (o, com a mínim, el següient que s’emetrà).');
+		return false;
 	} else if (status==1 && validFiles<totalEpisodes) {
 		alert('Aquesta versió no té contingut per a tots els capítols, però està marcada com a «Completada». Això no és possible. Si només té part del contingut, caldria marcar-la amb un estat diferent. Si alguna part està completada, es pot marcar com a «Parcialment completada».');
 		return false;
@@ -1155,6 +1141,43 @@ function checkNumberOfLinks() {
 	$('form').find('[type=submit]').html('<span class="fa fa-circle-notch fa-spin"></span>&nbsp;&nbsp;S’està processant');
 
 	return true;
+}
+
+function addEpisodeFromVersion() {
+	var seriesId = $("[name='series_id']").val();
+	var divisionId = $('#add-episode-from-version-division-id').val();
+	var number = $('#add-episode-from-version-number').val();
+	var description = $('#add-episode-from-version-description').val();
+	if (number=='' && description=='') {
+		alert('Cal que introdueixis un nom per al capítol especial.');
+		return false;
+	}
+	
+	//Call the server
+	$.post("add_episode_from_version.php", {series_id: seriesId, division_id: divisionId, number: number, description: description}, function(data, status){
+		var json = JSON.parse(data);
+		var insertedId = json.inserted_id;
+		var formattedNumber = json.formatted_number;
+		var episodeTitle = json.episode_title;
+		
+		$($('#add-episode-from-version-template').html()
+			.replaceAll('{template_id}',insertedId)
+			.replaceAll('{formatted_number}',formattedNumber)
+			.replaceAll('{episode_title}',episodeTitle)).insertBefore($('#add-episode-from-version-template'));
+		
+		if (number=='') {
+			$('#form-files-list-'+insertedId+'-title').removeClass('episode-title-input-numbered');
+			$('#form-files-list-'+insertedId+'-title').attr('placeholder', '- Introdueix un títol -');
+		} else if ($("#form-show_episode_numbers").val()==1) {
+			$('#form-files-list-'+insertedId+'-title').attr('placeholder', 'Capítol '+$('#form-files-list-'+insertedId+'-title').attr('data-episode-number'));
+		} else {
+			$('#form-files-list-'+insertedId+'-title').attr('placeholder', '- Introdueix un títol -');
+		}
+		
+		$('#add-episode-from-version-modal').modal('hide');
+	}).fail(function() {
+		alert('S’ha produït un error en afegir el capítol. Torna-ho a provar i si persisteix, avisa un administrador.');
+	});
 }
 
 var validLinks=0;
@@ -1336,6 +1359,8 @@ function checkImageUpload(fileInput, maxBytes, fileMimeType, minResX, minResY, m
 						$('label[for="'+fileInput.id+'"]').addClass("btn-success");
 						$('label[for="'+fileInput.id+'"]').html('<span class="fa fa-check pe-2"></span>Es pujarà');
 					}
+					//This is only done for the version page, but it's harmless anywhere else since the elements don't exist
+					syncDivisionImages();
 				}
 			};
 			reader.readAsDataURL(fileInput.files[0]);
@@ -1346,6 +1371,20 @@ function checkImageUpload(fileInput, maxBytes, fileMimeType, minResX, minResY, m
 	//Non-success cases: reset input
 	resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
 	resetFileInput($(fileInput));
+	
+	//This is only done for the version page, but it's harmless anywhere else since the elements don't exist
+	syncDivisionImages();
+}
+
+function syncDivisionImages() {
+	var divisionCovers = $('[id^=form-division_cover_][id$=_preview]');
+	var divisionCoverFiles = $('[id^=form-division_cover_]:not([id$=_preview])');
+	
+	for (var i=0;i<divisionCovers.length;i++){
+		if ($(divisionCoverFiles[i]).val()=='' && !$(divisionCovers[i]).attr('data-original')) {
+			$(divisionCovers[i]).attr('src', $('#form-image-preview').attr('src'));
+		}
+	}
 }
 
 function resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId) {
@@ -1377,12 +1416,6 @@ function resetFileInput(fileInput) {
 }
 
 function generateStorageFolder() {
-	if ($('#form-fansub-1').val()==28 || $('#form-fansub-2').val()==28 || $('#form-fansub-3').val()==28) {
-		$('#form-version_author').prop("disabled", false);
-	} else {
-		$('#form-version_author').prop("disabled", true);
-	}
-
 	if ($('#form-fansub-1').val()>0) {
 		$('#form-downloads_url_1').prop("disabled", false);
 	} else {
@@ -1422,7 +1455,7 @@ function generateStorageFolder() {
 		string+=fansubs[i].replaceAll('/','-').replaceAll(' +','');
 	}
 	string+='/';
-	string+=$('#form-series').text().replaceAll('/','-').replaceAll(':',' -').replaceAll('?','').replaceAll('*','').replaceAll('♡',' ').replaceAll(';',' ').replaceAll('★',' ').replaceAll('"','');
+	string+=$('#form-title-with-autocomplete').val().replaceAll('/','-').replaceAll(':',' -').replaceAll('?','').replaceAll('*','').replaceAll('♡',' ').replaceAll(';',' ').replaceAll('★',' ').replaceAll('"','');
 	string = string.replaceAll('/.','/');
 	if (string.startsWith('.')) {
 		string = string.substring(1, string.length);
@@ -1604,6 +1637,27 @@ function showLiveActionWithNoMdl() {
 	}
 }
 
+function recalculateVersionSlug() {
+	var fansub1 = $('#form-fansub-1').find(":selected").attr('data-slug');
+	var fansub2 = $('#form-fansub-2').find(":selected").attr('data-slug');
+	var fansub3 = $('#form-fansub-3').find(":selected").attr('data-slug');
+	
+	var fansubs = [];
+	if (fansub1) {
+		fansubs.push(fansub1);
+	}
+	if (fansub2) {
+		fansubs.push(fansub2);
+	}
+	if (fansub3) {
+		fansubs.push(fansub3);
+	}
+	
+	fansubs.sort();
+	
+	$("#form-slug").val(string_to_slug($("#form-title-with-autocomplete").val())+'/'+fansubs.join('+'));
+}
+
 var malData;
 var malDataStaff;
 var malDataDivisionsEpisodes;
@@ -1636,15 +1690,49 @@ $(document).ready(function() {
 		$('#form-fansub-1').on('change', generateStorageFolder);
 		$('#form-fansub-2').on('change', generateStorageFolder);
 		$('#form-fansub-3').on('change', generateStorageFolder);
+		$('#form-fansub-1').on('change', recalculateVersionSlug);
+		$('#form-fansub-2').on('change', recalculateVersionSlug);
+		$('#form-fansub-3').on('change', recalculateVersionSlug);
 		generateStorageFolder();
+		if ($('#form-slug').val()=='') {
+			recalculateVersionSlug();
+		}
+		syncDivisionImages();
+		
+		var addEpisodeFromVersionModal = document.getElementById('add-episode-from-version-modal');
+		addEpisodeFromVersionModal.addEventListener('show.bs.modal', function (event) {
+			var lastDivision = $('[id^=form-division-title-]').last().attr('id');
+			var parts = lastDivision.split("-");
+			var lastDivisionId = parts[parts.length - 1];
+			var lastEpisodeNumber = 0;
+			var episodes = $(".episode-title-input-numbered");
+			for(var i=0;i<episodes.length;i++) {
+				if (parseInt($(episodes[i]).attr('data-episode-number'))>lastEpisodeNumber) {
+					lastEpisodeNumber = parseInt($(episodes[i]).attr('data-episode-number'));
+				}
+			}
+			lastEpisodeNumber++;
+			$('#add-episode-from-version-division-id').val(lastDivisionId);
+			$('#add-episode-from-version-number').val(lastEpisodeNumber);
+		});
 	}
 
 	$("#form-name-with-autocomplete").on('input', function() {
-		$("#form-slug").val(string_to_slug($("#form-name-with-autocomplete").val()));
-		if ($("#form-name-with-autocomplete").attr('data-old-value')==$("#form-division-list-name-1").val()) {
+		if ($('#type').val()!='manga' && $("#form-name-with-autocomplete").attr('data-old-value')==$("#form-division-list-name-1").val()) {
 			$("#form-division-list-name-1").val($("#form-name-with-autocomplete").val());
 		}
 		$("#form-name-with-autocomplete").attr('data-old-value', $("#form-name-with-autocomplete").val());
+	});
+
+	$("#form-title-with-autocomplete").on('input', function() {
+		generateStorageFolder();
+		recalculateVersionSlug();
+		
+		if ($("#form-title-with-autocomplete").attr('data-old-value')==$($('[id^=form-division-title-]')[0]).val()) {
+			$($('[id^=form-division-title-]')[0])
+			$($('[id^=form-division-title-]')[0]).val($("#form-title-with-autocomplete").val());
+		}
+		$("#form-title-with-autocomplete").attr('data-old-value', $("#form-title-with-autocomplete").val());
 	});
 
 	$("#import-from-mal").click(function() {
@@ -1654,7 +1742,17 @@ $(document).ready(function() {
 				if (!result) {
 					return;
 				} else if (result.match(/https?:\/\/.*myanimelist.net\/manga\/(\d+)\//i)) {
-					$("#form-external_id").val(result.match(/https?:\/\/.*myanimelist.net\/manga\/(\d*)\//i)[1]);
+					$("#form-external_id").val(result.match(/https?:\/\/.*myanimelist.net\/manga\/(\d+)\//i)[1]);
+				} else {
+					alert("L’URL no és vàlida.");
+					return;
+				}
+			} else if ($('#type').val()=='liveaction') {
+				var result = prompt("Introdueix l’URL del contingut a MyDramaList per a importar-ne la puntuació.");
+				if (!result) {
+					return;
+				} else if (result.match(/https?:\/\/.*mydramalist.com\/(\d+.*)/i)) {
+					$("#form-external_id").val(result.match(/https?:\/\/.*mydramalist.com\/(\d+.*)/i)[1]);
 				} else {
 					alert("L’URL no és vàlida.");
 					return;
@@ -1664,14 +1762,14 @@ $(document).ready(function() {
 				if (!result) {
 					return;
 				} else if (result.match(/https?:\/\/.*myanimelist.net\/anime\/(\d+)\//i)) {
-					$("#form-external_id").val(result.match(/https?:\/\/.*myanimelist.net\/anime\/(\d*)\//i)[1]);
+					$("#form-external_id").val(result.match(/https?:\/\/.*myanimelist.net\/anime\/(\d+)\//i)[1]);
 				} else {
 					alert("L’URL no és vàlida.");
 					return;
 				}
 			}
 		}
-		if (($("#form-name-with-autocomplete").val()!='' || $("#form-synopsis").val()!='') && !confirm("ATENCIÓ! La fitxa ja conté dades. Si continues, se sobreescriuran les dades d’autor, director, estudi, valoració per edats, gèneres i imatge de portada, i també s’ompliran els camps que siguin buits.\nL’acció no es podrà desfer un cop hagis desat els canvis. Vols continuar?")) {
+		if ((($('#form-series').length>0 && $("#form-synopsis").val()!='') || ($('#form-series').length==0 && $("#form-name-with-autocomplete").val()!='')) && !confirm("ATENCIÓ! La fitxa ja conté dades. Si continues, se sobreescriuran algunes dades i s’ompliran els camps que siguin buits.\nL’acció no es podrà desfer un cop hagis desat els canvis. Vols continuar?")) {
 			return;
 		}
 		$("#import-from-mal").prop('disabled', true);
@@ -1679,14 +1777,29 @@ $(document).ready(function() {
 		$("#import-from-mal-loading").removeClass("d-none");
 		$("#import-from-mal-not-loading").addClass("d-none");
 		var xmlhttp = new XMLHttpRequest();
-		var url = "https://api.jikan.moe/v4/"+($('#type').val()=='manga' ? 'manga' : 'anime')+"/"+$("#form-external_id").val();
+		var url;
+		if ($('#type').val()=='manga') {
+			url = "https://api.jikan.moe/v4/manga/"+$("#form-external_id").val();
+		} else if ($('#type').val()=='liveaction') {
+			url = "/get_mdl_response.php?id="+$("#form-external_id").val();
+		} else {
+			url = "https://api.jikan.moe/v4/anime/"+$("#form-external_id").val();
+		}
 
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				malData = JSON.parse(this.responseText);
-
 				if ($('#type').val()=='manga') {
 					populateMalDataManga(malData);
+					$("#import-from-mal-loading").addClass("d-none");
+					$("#import-from-mal-not-loading").removeClass("d-none");
+					setTimeout(function() {
+						$("#import-from-mal").prop('disabled', false);
+						$("#import-from-mal-episodes").prop('disabled', false);
+					}, 4000);
+					$("#import-from-mal-done").removeClass("d-none");
+				} else if ($('#type').val()=='liveaction') {
+					populateMdlData(malData);
 					$("#import-from-mal-loading").addClass("d-none");
 					$("#import-from-mal-not-loading").removeClass("d-none");
 					setTimeout(function() {
@@ -1737,51 +1850,6 @@ $(document).ready(function() {
 		};
 		xmlhttp.open("GET", url, true);
 		xmlhttp.send();
-	});
-
-	$("#import-from-mal-episodes").click(function() {
-		if ($("#import-from-mal-episodes").hasClass('disabled')) {
-			if ($('#type').val()=='manga') {
-				alert('Aquest manga ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
-			} else if ($('#type').val()=='liveaction') {
-				alert('Aquest contingut d’imatge real ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
-			} else {
-				alert('Aquest anime ja té capítols amb fitxers en alguna versió d’algun fansub. No es poden importar capítols de MyAnimeList perquè això implicaria suprimir els capítols antics, i els fitxers d’aquella versió deixarien de funcionar. Si realment els vols suprimir i tornar a importar, primer caldria que suprimissis els fitxers de la versió. Si tens dubtes, contacta amb un administrador.');
-			}
-			return false;
-		}
-		var divisions = $('[id^=form-division-list-external_id-]');
-		var with_id=0;
-		for (var i=0;i<divisions.length;i++){
-			if ($(divisions[i]).val()!='') {
-				with_id++;
-			}
-		}
-		if (with_id==0) {
-			if ($('#type').val()=='manga') {
-				alert("Cal que introdueixis l’identificador de MyAnimeList d’almenys un dels volums.");
-			} else {
-				alert("Cal que introdueixis l’identificador de MyAnimeList d’almenys una de les temporades.");
-			}
-			return;
-		} else if (with_id<divisions.length) {
-			if ($('#type').val()=='manga') {
-				alert("Hi ha volums sense identificador de MyAnimeList. Cal que especifiquis l’identificador de tots.");
-			} else {
-				alert("Hi ha temporades sense identificador de MyAnimeList. Cal que especifiquis l’identificador de totes.");
-			}
-			return;
-		}
-		if ((parseInt($('#episode-list-table').attr('data-count'))>1 || $('#form-episode-list-description-1').val()!='') && !confirm("ATENCIÓ! Ja hi ha dades de capítols. Si continues, se suprimiran tots els de la llista i es tornaran a crear. Vols continuar?")) {
-			return;
-		}
-
-		$("#import-from-mal").prop('disabled', true);
-		$("#import-from-mal-episodes").prop('disabled', true);
-		$("#import-from-mal-episodes-loading").removeClass("d-none");
-		$("#import-from-mal-episodes-not-loading").addClass("d-none");
-
-		fetchMalEpisodes(1,divisions.length,1);
 	});
 
 	$("#generate-episodes").click(function() {
@@ -1881,13 +1949,18 @@ $(document).ready(function() {
 						start = splitted[0]+"//"+splitted[2]+"/";
 						var found = false;
 						$("[id^=form-files-list-"+data.results[i].id+"-file-][id$=url]").each(function (pos,e) {
+							//If a file exists with this storage method, replace it
 							if ($(e).val().startsWith(start)) {
 								if (found) {
 									moreThanOne=true;
 									return;
 								}
-								$(e).parent().parent().find("[id$=resolution]").val(data.results[i].resolution);
-								$(e).parent().parent().parent().parent().parent().parent().find("[id$=length-1]").val(data.results[i].duration);
+								if ($(e).parent().parent().find("[id$=resolution]").val()=='') {
+									$(e).parent().parent().find("[id$=resolution]").val(data.results[i].resolution);
+								}
+								if ($(e).parent().parent().parent().parent().parent().parent().find("[id$=length-1]").val()=='') {
+									$(e).parent().parent().parent().parent().parent().parent().find("[id$=length-1]").val(data.results[i].duration);
+								}
 								$(e).val(data.results[i].link);
 								$(e).attr('value', data.results[i].link);
 								found = true;
@@ -1899,6 +1972,7 @@ $(document).ready(function() {
 								if (found) {
 									return;
 								}
+								//If a file exists with an empty value, replace it
 								if ($(e).val()=='') {
 									$(e).parent().parent().find("[id$=resolution]").val(data.results[i].resolution);
 									$(e).parent().parent().parent().parent().parent().parent().find("[id$=length-1]").val(data.results[i].duration);
@@ -1908,6 +1982,7 @@ $(document).ready(function() {
 								}
 							});
 							if (!found) {
+								//If NO file exists with this storage method, add a new link and re-scan to find it
 								addLinkRow(data.results[i].id,1);
 								$("[id^=form-files-list-"+data.results[i].id+"-file-][id$=url]").each(function (pos,e) {
 									if (found) {
@@ -1966,10 +2041,17 @@ $(document).ready(function() {
 	$("#form-show_episode_numbers").change(function() {
 		if ($(this).val()==1) {
 			$("#warning-no-numbers").addClass('d-none');
-			$(".episode-title-input-numbered").attr('placeholder', '(Sense títol de capítol, se’n mostra només el número)');
+			var episodes = $(".episode-title-input-numbered");
+			for(var i=0;i<episodes.length;i++) {
+				$(episodes[i]).attr('placeholder', 'Capítol '+$(episodes[i]).attr('data-episode-number'));
+			}
 		} else {
 			$("#warning-no-numbers").removeClass('d-none');
 			$(".episode-title-input-numbered").attr('placeholder', '- Introdueix un títol -');
 		}
 	});
+	
+	if ($('#id').val()) {
+		synopsisChanged=true;
+	}
 });

@@ -26,24 +26,12 @@ include(__DIR__.'/header.inc.php');
 
 switch ($type) {
 	case 'anime':
-		$divisions_name = "Temporada";
-		$divisions_short = "Temp.";
-		$divisions_plural = "temporades";
-		$divisions_anchor = "temporada";
 		$link_url=ANIME_URL;
 		break;
 	case 'liveaction':
-		$divisions_name = "Temporada";
-		$divisions_short = "Temp.";
-		$divisions_plural = "temporades";
-		$divisions_anchor = "temporada";
 		$link_url=LIVEACTION_URL;
 		break;
 	case 'manga':
-		$divisions_name = "Volum";
-		$divisions_short = "Vol.";
-		$divisions_plural = "volums";
-		$divisions_anchor = "volum";
 		$link_url=MANGA_URL;
 		break;
 }
@@ -57,14 +45,29 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	$series = mysqli_fetch_assoc($results) or crash('Series not found');
 	mysqli_free_result($results);
 
-	$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".$row['series_id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
+	$resultd = query("SELECT IFNULL(vd.title,d.name) name, d.number number FROM division d LEFT JOIN version_division vd ON d.id=vd.division_id AND vd.version_id=".escape($_GET['id'])." WHERE d.series_id=".$row['series_id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
 	$divisions = array();
 	while ($drow = mysqli_fetch_assoc($resultd)) {
 		array_push($divisions, $drow);
 	}
 	mysqli_free_result($resultd);
 
-	$resulte = query("SELECT e.*, et.title, d.number division_number, d.name division_name FROM episode e LEFT JOIN division d ON e.division_id=d.id LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=".escape($_GET['id'])." WHERE e.series_id=".$row['series_id']." ORDER BY d.number IS NULL ASC, d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
+	$resulte = query("SELECT e.*,
+				IF(s.subtype='movie' OR s.subtype='oneshot',
+					IFNULL(et.title, v.title),
+					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
+					)
+				) episode_title
+			FROM version v
+			LEFT JOIN episode e ON v.series_id=e.series_id
+			LEFT JOIN division d ON e.division_id=d.id 
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
+			LEFT JOIN series s ON v.series_id=s.id
+			LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=v.id 
+			WHERE v.id=".escape($_GET['id'])." 
+			ORDER BY d.number ASC, e.number IS NULL ASC, e.number ASC, e.description ASC");
 	$episodes = array();
 	while ($rowe = mysqli_fetch_assoc($resulte)) {
 		array_push($episodes, $rowe);
@@ -79,10 +82,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<article class="card-body">
 					<h4 class="card-title text-center mb-4 mt-1">Enllaços de la versió</h4>
 					<hr>
-					<p class="text-center">Aquests són els enllaços de la versió de "<b><?php echo htmlspecialchars($row['series_name']); ?></b>" feta per <?php echo htmlspecialchars($row['fansub_name']); ?>.</p>
+					<p class="text-center">Aquests són els enllaços de la versió de «<b><?php echo htmlspecialchars($row['title']); ?></b>» feta per <?php echo htmlspecialchars($row['fansub_name']); ?>.</p>
 					<hr>
 					<div class="text-center">
-						<button onclick="copyToClipboard('<?php echo $link_url.'/'.$series['slug']; ?>?v=<?php echo $_GET['id']; ?>', $(this));" class="btn btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç a la fitxa de la versió</button>
+						<button onclick="copyToClipboard('<?php echo $link_url.'/'.$row['slug']; ?>', $(this));" class="btn btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç a la fitxa de la versió</button>
 					</div>
 				</article>
 			</div>
@@ -93,7 +96,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Enllaços a <?php echo $divisions_plural; ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1">Enllaços a divisions concretes</h4>
 					<hr>
 					<input type="hidden" id="text_to_copy" value=""/>
 					<table class="table table-bordered table-striped table-hover table-sm">
@@ -108,8 +111,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		foreach ($divisions as $division) {
 ?>
 						<tr>
-							<td style="width: 70%;"><strong><?php echo !empty($division['name']) ? $division['name'] : $divisions_name." ".$division['number']; ?></strong></td>
-							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.$series['slug'].'?v='.$_GET['id'].'#'.$divisions_anchor.'-'.$division['number']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
+							<td style="width: 70%;"><strong><?php echo $division['name']; ?></strong></td>
+							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.$row['slug']."#'+string_to_slug('".htmlspecialchars($division['name']); ?>'), $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
 						</tr>
 <?php
 		}
@@ -138,25 +141,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<tbody>
 <?php
 	for ($i=0;$i<count($episodes);$i++) {
-		$episode_name='';
-		if (!empty($episodes[$i]['division_name'])) {
-			$episode_name.='<strong>'.$episodes[$i]['division_name'].' - ';
-		} else if (!empty($episodes[$i]['division_number'])) {
-			$episode_name.='<strong>'.$divisions_short.' '.$episodes[$i]['division_number'].' - ';
-		} else {
-			$episode_name.='<strong>Altres - ';
-		}
-		if (!empty($episodes[$i]['number'])) {
-			if (!empty($episodes[$i]['title'])) {
-				$episode_name.='Cap. '.floatval($episodes[$i]['number']).':</strong> '.htmlspecialchars($episodes[$i]['title']);
-			} else {
-				$episode_name.='Cap. '.floatval($episodes[$i]['number']).'</strong>';
-			}
-		} else {
-			$episode_name.=$episodes[$i]['description'].'</strong>';
-		}
-
-		$resultf = query("SELECT f.* FROM file f WHERE f.version_id=".escape($_GET['id'])." AND f.episode_id=".$episodes[$i]['id']." ORDER BY f.variant_name ASC, f.id ASC");
+		$resultf = query("SELECT f.*,(SELECT COUNT(*) FROM file f2 WHERE f2.version_id=f.version_id AND f2.episode_id=f.episode_id) variant_count FROM file f WHERE f.version_id=".escape($_GET['id'])." AND f.episode_id=".$episodes[$i]['id']." ORDER BY f.variant_name ASC, f.id ASC");
 		while ($rowf = mysqli_fetch_assoc($resultf)) {
 			$is_valid = FALSE;
 			if ($type=='manga') {
@@ -175,7 +160,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if ($is_valid) {
 ?>
 						<tr>
-							<td style="width: 85%;"><?php echo $episode_name . ' (Variant "'.$rowf['variant_name'].'")'; ?></td>
+							<td style="width: 85%;"><?php echo $episodes[$i]['episode_title'] . ($rowf['variant_count']>1 ? ' (variant «'.$rowf['variant_name'].'»)' : ''); ?></td>
 							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowf['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
 						</tr>
 <?php

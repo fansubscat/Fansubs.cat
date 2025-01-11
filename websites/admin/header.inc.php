@@ -7,6 +7,12 @@ require_once(__DIR__.'/common.inc.php');
 session_name(ADMIN_COOKIE_NAME);
 session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
+
+if(!empty($_SESSION['username']) && mysqli_num_rows(query("SELECT * FROM admin_user u WHERE username='".escape($_SESSION['username'])."'"))==0) {
+	session_destroy();
+	header("Location: login.php");
+	die();
+}
 ?>
 <!doctype html>
 <html lang="ca">
@@ -159,7 +165,6 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 								<a class="dropdown-item" href="stats.php">Estadístiques</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="error_list.php">Errors de reproducció</a>
-								<a class="dropdown-item" href="storage_status.php">Servidors d’emmagatzematge</a>
 							</div>
 						</li>
 						<li class="nav-item dropdown">
@@ -206,6 +211,9 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 						</button>
 					</div>
 					<div class="modal-body"></div>
+					<button type="button" data-bs-dismiss="modal" class="btn btn-secondary align-self-center m-3">
+						Tanca
+					</button>
 				</div>
 			</div>
 		</div>

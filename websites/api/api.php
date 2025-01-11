@@ -73,31 +73,14 @@ function list_remote_image_files($url) {
 
 function get_manga_chapter_title($series_subtype, $series_name, $show_episode_numbers, $episode_number, $title, $is_extra, $extra_name, $number_of_divisions, $division_name, $division_number) {
 	if ($is_extra) {
-		return 'Extra - '.$extra_name;
+		return 'Extra: '.$extra_name;
 	}
 
-	if (!empty($division_number)) {
-		$division_prefix = (!empty($division_name) ? $division_name : 'Volum '.floatval($division_number));
-	} else {
-		$division_prefix = 'Capítol especial';
-	}
+	return (!empty($division_name) ? $division_name.' - ' : '').$title;
+}
 
-	if ($show_episode_numbers && !empty($episode_number)) {
-		if (!empty($title)){
-			return ($number_of_divisions>1 ? $division_prefix.' - ' : '').'Capítol '.str_replace('.',',',floatval($episode_number)).': '.$title;
-		}
-		else {
-			return ($number_of_divisions>1 ? $division_prefix.' - ' : '').'Capítol '.str_replace('.',',',floatval($episode_number));
-		}
-	} else {
-		if ($series_subtype=='oneshot') {
-			return 'One-shot';
-		} else if (!empty($title)){
-			return ($number_of_divisions>1 ? $division_prefix.' - ' : '').'​'.$title; //<- zero-width space to avoid Tachiyomi removing the title name
-		} else {
-			return ($number_of_divisions>1 ? $division_prefix.' - ' : '').'Capítol desconegut';
-		}
-	}
+function convert_version_slug_to_series_slug($version_slug) {
+	return explode('/', $version_slug)[0];
 }
 
 $method = array_shift($request);
@@ -194,13 +177,13 @@ else if ($method === 'manga'){
 			$elements = array();
 			while($row = mysqli_fetch_assoc($result)){
 				$elements[] = array(
-					'slug' => $row['slug'],
-					'name' => $row['name'],
+					'slug' => convert_version_slug_to_series_slug($row['default_version_slug']),
+					'name' => $row['default_version_title'],
 					'author' => $row['author'],
-					'synopsis' => $row['synopsis'],
+					'synopsis' => $row['default_version_synopsis'],
 					'genres' => $row['genres'],
 					'status' => $row['versions_in_progress']>=1 ? 'ongoing' : 'finished',
-					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['id'].'.jpg'
+					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg'
 				);
 			}
 
@@ -220,13 +203,13 @@ else if ($method === 'manga'){
 			$elements = array();
 			while($row = mysqli_fetch_assoc($result)){
 				$elements[] = array(
-					'slug' => $row['slug'],
-					'name' => $row['name'],
+					'slug' => convert_version_slug_to_series_slug($row['default_version_slug']),
+					'name' => $row['default_version_title'],
 					'author' => $row['author'],
-					'synopsis' => $row['synopsis'],
+					'synopsis' => $row['default_version_synopsis'],
 					'genres' => $row['genres'],
 					'status' => $row['versions_in_progress']>=1 ? 'ongoing' : 'finished',
-					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['id'].'.jpg'
+					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg'
 				);
 			}
 
@@ -254,13 +237,13 @@ else if ($method === 'manga'){
 			$elements = array();
 			while($row = mysqli_fetch_assoc($result)){
 				$elements[] = array(
-					'slug' => $row['slug'],
-					'name' => $row['name'],
+					'slug' => convert_version_slug_to_series_slug($row['default_version_slug']),
+					'name' => $row['default_version_title'],
 					'author' => $row['author'],
-					'synopsis' => $row['synopsis'],
+					'synopsis' => $row['default_version_synopsis'],
 					'genres' => $row['genres'],
 					'status' => $row['versions_in_progress']>=1 ? 'ongoing' : 'finished',
-					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['id'].'.jpg'
+					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg'
 				);
 			}
 
@@ -278,13 +261,13 @@ else if ($method === 'manga'){
 		if($row = mysqli_fetch_assoc($result)){
 			if (is_numeric($row['id'])) {
 				$element = array(
-					'slug' => $row['slug'],
-					'name' => $row['name'],
+					'slug' => convert_version_slug_to_series_slug($row['default_version_slug']),
+					'name' => $row['default_version_title'],
 					'author' => $row['author'],
-					'synopsis' => $row['synopsis'],
+					'synopsis' => $row['default_version_synopsis'],
 					'genres' => $row['genres'],
 					'status' => $row['versions_in_progress']>=1 ? 'ongoing' : 'finished',
-					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['id'].'.jpg'
+					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg'
 				);
 
 				$response = array(
@@ -305,8 +288,8 @@ else if ($method === 'manga'){
 		$elements = array();
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
-				'id' => $row['slug'].'/'.$row['id'],
-				'title' => get_manga_chapter_title($row['subtype'], $row['name'], $row['show_episode_numbers'], $row['number'], $row['episode_title'], $row['is_extra'], $row['extra_name'], $row['number_of_divisions'], $row['division_name'], $row['division_number']),
+				'id' => convert_version_slug_to_series_slug($row['default_version_slug']).'/'.$row['id'],
+				'title' => get_manga_chapter_title($row['subtype'], $row['default_version_title'], $row['show_episode_numbers'], $row['number'], $row['episode_title'], $row['is_extra'], $row['extra_name'], $row['number_of_divisions'], $row['division_name'], $row['division_number']),
 				'number' => $row['number']==NULL ? 0 : floatval($row['number']),
 				'fansub' => $row['fansubs'],
 				'created' => strtotime($row['created'])*1000

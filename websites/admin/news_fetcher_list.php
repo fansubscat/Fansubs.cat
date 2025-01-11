@@ -106,8 +106,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Fansub</th>
-								<th scope="col">URL</th>
+								<th scope="col">Fansub i URL</th>
 								<th scope="col">Mètode</th>
 								<th scope="col">Freqüència</th>
 								<th class="text-center" scope="col">Accions</th>
@@ -120,21 +119,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	} else {
 		$where = '';
 	}
-	$result = query("SELECT fe.*, f.name fansub_name FROM news_fetcher fe LEFT JOIN fansub f ON fe.fansub_id=f.id$where ORDER BY f.name ASC, fe.url ASC");
+	$result = query("SELECT fe.*, f.name fansub_name FROM news_fetcher fe LEFT JOIN fansub f ON fe.fansub_id=f.id$where ORDER BY fetch_type DESC, f.name ASC, fe.url ASC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="5" class="text-center">- No hi ha cap recollidor de notícies -</td>
+								<td colspan="4" class="text-center">- No hi ha cap recollidor de notícies -</td>
 							</tr>
 <?php
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>
-								<th scope="row" class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : '(Tots)'; ?></th>
-								<td class="align-middle small"><?php echo htmlspecialchars($row['url']); ?></td>
-								<td class="align-middle"><?php echo htmlspecialchars(get_method($row['method'])); ?></th>
-								<td class="align-middle"><?php echo htmlspecialchars(get_fetch_type($row['fetch_type'])); ?></th>
+								<th scope="row" class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars($row['fansub_name']).'<br><small>'.htmlspecialchars($row['url']).'</small>'; ?></th>
+								<td class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars(get_method($row['method'])); ?></th>
+								<td class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars(get_fetch_type($row['fetch_type'])); ?></th>
 								<td class="align-middle text-center text-nowrap"><a href="news_fetcher_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="news_fetcher_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el recollidor de notícies de «".$row['url']."»? L’acció no es podrà desfer. No se’n suprimiran les notícies.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php

@@ -2,13 +2,13 @@
 require_once(__DIR__.'/db.inc.php');
 require_once(__DIR__.'/libs/preview_image_generator.php');
 
-log_action('cron-regenerate-all-previews-started', "S’ha iniciat la regeneració de previsualitzacions de totes les sèries");
+log_action('cron-regenerate-all-previews-started', "S’ha iniciat la regeneració de previsualitzacions de totes les versions");
 
-$result = query("SELECT * FROM series ORDER BY name ASC");
+$result = query("SELECT * FROM version ORDER BY title ASC");
 
-while ($series = mysqli_fetch_assoc($result)) {
-	echo "Regenerating preview image for series «".$series['name']."»\n";
-	update_series_preview($series['id']);
+while ($version = mysqli_fetch_assoc($result)) {
+	echo "Regenerating preview image for version «".$version['title']."»\n";
+	update_version_preview($version['id']);
 }
 
 log_action('cron-regenerate-all-previews-finished', "S’ha completat la regeneració de previsualitzacions de totes les sèries");

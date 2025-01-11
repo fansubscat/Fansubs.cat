@@ -23,6 +23,15 @@ label {
 	margin-bottom: 0;
 }
 
+#form-external_id {
+	width: auto;
+	flex-grow: 1;
+}
+
+#import-from-mal {
+	width: auto;
+}
+
 label .text-muted, th .text-muted {
 	font-weight: normal !important;
 }
@@ -34,6 +43,14 @@ small {
 
 .hentai, .hentai th, .hentai td {
 	color: darkred !important;
+}
+
+.hentai .text-muted {
+	opacity: 0.6;
+}
+
+.hentai .text-muted .text-muted {
+	opacity: 1;
 }
 
 .mandatory:after {

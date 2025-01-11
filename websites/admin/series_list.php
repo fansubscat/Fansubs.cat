@@ -29,17 +29,14 @@ switch ($type) {
 	case 'anime':
 		$content="anime";
 		$content_prep="d’anime";
-		$divisions = "Temporades";
 	break;
 	case 'manga':
 		$content="manga";
 		$content_prep="de manga";
-		$divisions = "Volums";
 	break;
 	case 'liveaction':
 		$content="contingut d’imatge real";
 		$content_prep="de contingut d’imatge real";
-		$divisions = "Temporades";
 	break;
 }
 
@@ -78,7 +75,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="col">Nom</th>
 								<th class="text-center" scope="col">Tipus</th>
-								<th class="text-center" scope="col"><?php echo $divisions; ?></th>
+								<th class="text-center" scope="col">Divisions</th>
 								<th class="text-center" scope="col">Capítols</th>
 								<th class="text-center" scope="col">Versions</th>
 								<th class="text-center" scope="col">Accions</th>
@@ -86,7 +83,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT s.*,(SELECT COUNT(DISTINCT v.id) FROM version v WHERE v.series_id=s.id) versions,(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id) divisions, SUM(ISNULL(e.number)) specials FROM series s LEFT JOIN episode e ON s.id=e.series_id WHERE s.type='$type' GROUP BY s.id ORDER BY s.name");
+	$result = query("SELECT s.*,(SELECT GROUP_CONCAT(DISTINCT v.title ORDER BY v.title ASC SEPARATOR ', ') FROM version v WHERE v.series_id=s.id AND v.title<>s.name) version_titles,(SELECT COUNT(DISTINCT v.id) FROM version v WHERE v.series_id=s.id) versions,(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.is_real=1) divisions, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.is_real=0) fake_divisions FROM series s WHERE s.type='$type' GROUP BY s.id ORDER BY s.name");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -97,11 +94,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
-								<td class="align-middle text-center"><?php echo $row['subtype']=='movie' ? 'Film' : ($row['subtype']=='oneshot' ? 'One-shot' : ($row['subtype']=='serialized' ? 'Serialitzat' : 'Sèrie')); ?></td>
-								<td class="align-middle text-center"><?php echo $row['divisions']; ?></td>
-								<td class="align-middle text-center"><?php echo $row['number_of_episodes'].($row['specials']>0 ? '<small>+'.$row['specials'].'</small>' : ''); ?></td>
-								<td class="align-middle text-center"><?php echo $row['versions']; ?></td>
+								<th scope="row" class="align-middle<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo htmlspecialchars($row['name']); ?><?php echo !empty($row['version_titles']) ? '<br><i style="font-weight: normal;" class="text-muted">('.htmlspecialchars($row['version_titles']).')</i>' : ''; ?></th>
+								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo get_subtype_name($row['subtype']); ?></td>
+								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['divisions']; ?><?php echo $row['fake_divisions']>0 ? '<small>+'.$row['fake_divisions'].'</small>' : ''; ?></td>
+								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['number_of_episodes']; ?></td>
+								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['versions']; ?></td>
 								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea’n una versió" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="series_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir ".$content_prep." «".$row['name']."» i tot el seu material? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php

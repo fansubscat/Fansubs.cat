@@ -42,6 +42,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
+			$old_result = query("SELECT * FROM admin_user WHERE username='".$data['username_old']."'");
+			$old_row = mysqli_fetch_assoc($old_result);
+			if ($old_row['updated']!=$_POST['last_update']) {
+				crash("Algú altre ha actualitzat l’administrador mentre tu l’editaves. Hauràs de tornar a fer els canvis.");
+			}
+			
 			log_action("update-admin-user", "S’ha actualitzat l’administrador «".$_POST['username']."»");
 			if ($data['password']!=NULL) {
 				query("UPDATE admin_user SET username='".$data['username']."',password='".$data['password']."',admin_level=".$data['admin_level'].",fansub_id=".$data['fansub_id'].",default_storage_processing=".$data['default_storage_processing'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE username='".$data['username_old']."'");
@@ -78,6 +84,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<label for="form-user" class="mandatory">Usuari</label>
 							<input class="form-control" name="username" id="form-user" required maxlength="200" value="<?php echo $row['username']; ?>" autocomplete="new-password">
 							<input type="hidden" name="username_old" value="<?php echo htmlspecialchars($row['username']); ?>">
+							<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 						</div>
 						<div class="mb-3">
 <?php

@@ -17,12 +17,12 @@ if (isset($failed)) {
 define('PAGE_STYLE_TYPE', 'embed');
 
 $Parsedown = new Parsedown();
-$synopsis = $Parsedown->setBreaksEnabled(true)->line($series['synopsis']);
+$synopsis = $Parsedown->setBreaksEnabled(true)->line($series['version_synopsis']);
 
-define('PAGE_TITLE', $series['name']);
-define('PAGE_PATH', '/'.$series['slug']);
+define('PAGE_TITLE', $series['version_title']);
+define('PAGE_PATH', '/'.$series['version_slug']);
 define('PAGE_DESCRIPTION', str_replace("\n", " ", strip_tags($synopsis)));
-define('PAGE_PREVIEW_IMAGE', SITE_BASE_URL.'/preview/'.$series['slug'].'.jpg');
+define('PAGE_PREVIEW_IMAGE', STATIC_URL.'/social/version_'.$series['version_id'].'.jpg');
 
 require_once(__DIR__.'/../common/header.inc.php');
 ?>

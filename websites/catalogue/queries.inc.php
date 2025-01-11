@@ -426,7 +426,7 @@ function query_random_series($user) {
 function query_manga_division_data_from_file_with_old_piwigo_id($old_piwigo_id) {
 	$old_piwigo_id = intval($old_piwigo_id);
 	$final_query = "SELECT s.subtype,
-				s.slug,
+				v.slug,
 				IF(s.subtype='oneshot', NULL, d.number) division_number,
 				f.version_id
 			FROM file f
@@ -442,11 +442,12 @@ function query_manga_division_data_from_file_with_old_piwigo_id($old_piwigo_id) 
 function query_manga_division_data_from_division_with_old_piwigo_id($old_piwigo_id) {
 	$old_piwigo_id = intval($old_piwigo_id);
 	$final_query = "SELECT s.subtype,
-				s.slug,
+				dv.slug,
 				IF(s.type='oneshot', NULL, d.number) division_number,
 				(SELECT id FROM version v WHERE v.series_id=s.id LIMIT 1) version_id
 			FROM division d
 				LEFT JOIN series s ON d.series_id=s.id
+				LEFT JOIN version dv ON dv.id=s.default_version_id
 			WHERE s.type='manga'
 				AND d.id=$old_piwigo_id";
 	return query($final_query);
@@ -455,8 +456,9 @@ function query_manga_division_data_from_division_with_old_piwigo_id($old_piwigo_
 function query_manga_series_data_from_series_with_old_piwigo_id($old_piwigo_id) {
 	$old_piwigo_id = intval($old_piwigo_id);
 	$final_query = "SELECT s.subtype,
-				s.slug
+				dv.slug
 			FROM series s
+				LEFT JOIN version dv ON dv.id=s.default_version_id
 			WHERE s.type='manga'
 				AND s.id=$old_piwigo_id";
 	return query($final_query);
@@ -465,11 +467,12 @@ function query_manga_series_data_from_series_with_old_piwigo_id($old_piwigo_id) 
 function query_series_data_from_slug_and_type($slug, $type) {
 	$slug = escape($slug);
 	$type = escape($type);
-	$final_query = "SELECT s.slug,
+	$final_query = "SELECT dv.slug,
 				s.rating
 			FROM series s
+				LEFT JOIN version dv ON dv.id=s.default_version_id
 			WHERE s.type='$type'
-				AND s.slug='$slug'";
+				AND dv.slug LIKE '$slug/%'";
 	return query($final_query);
 }
 
@@ -642,37 +645,24 @@ function query_home_continue_watching_by_user_id($user_id) {
 				FROM (SELECT f.id file_id,
 						f.version_id,
 						IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
-							IF(d.name IS NULL,
-								CONCAT('Vol. ', REPLACE(TRIM(d.number)+0,'.',',')),
-								d.name
-							),
+							REPLACE(IFNULL(vd.title, d.name), 'Volum ', 'Vol. '),
 							NULL
 						) division_name,
-						IF(v.show_episode_numbers=1,
-							REPLACE(TRIM(e.number)+0, '.', ','),
-							NULL
-						) episode_number,
-						IF(s.subtype='oneshot',
-							IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot'),
-							IF(s.subtype='movie' AND s.number_of_episodes=1,
-								'Film',
-								IF(et.title IS NOT NULL,
-									et.title,
-									IF(e.number IS NULL,
-										e.description,
-										et.title
-									)
-								)
+						IF(s.subtype='movie' OR s.subtype='oneshot',
+							IF(s.subtype='movie', 'Film', IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot')),
+							IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+								CONCAT('Cap. ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+								CONCAT(IFNULL(et.title, e.description))
 							)
 						) episode_title,
 						f.extra_name,
 						v.series_id,
 						v.status,
-						IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
-							d.name,
-							s.name
+						IF(s.type<>'manga',
+							IFNULL(vd.title, IFNULL(d.name,v.title)),
+							v.title
 						) series_name,
-						s.slug series_slug,
+						v.slug series_slug,
 						fa.name fansub_name,
 						fa.type fansub_type,
 						fa.id fansub_id,
@@ -688,6 +678,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 						LEFT JOIN fansub fa ON vf.fansub_id=fa.id
 						LEFT JOIN episode e ON f.episode_id=e.id
 						LEFT JOIN division d ON e.division_id=d.id
+						LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 						LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
 					WHERE ufss.user_id=$user_id
 						AND s.type='".CATALOGUE_ITEM_TYPE."'
@@ -700,37 +691,24 @@ function query_home_continue_watching_by_user_id($user_id) {
 					SELECT f.id file_id,
 						f.version_id,
 						IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
-							IF(d.name IS NULL,
-								CONCAT('Vol. ', REPLACE(TRIM(d.number)+0,'.',',')),
-								d.name
-							),
+							REPLACE(IFNULL(vd.title, d.name), 'Volum ', 'Vol. '),
 							NULL
 						) division_name,
-						IF(v.show_episode_numbers=1,
-							REPLACE(TRIM(e.number)+0, '.', ','),
-							NULL
-						) episode_number,
-						IF(s.subtype='oneshot',
-							IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot'),
-							IF(s.subtype='movie' AND s.number_of_episodes=1,
-								'Film',
-								IF(et.title IS NOT NULL,
-									et.title,
-									IF(e.number IS NULL,
-										e.description,
-										et.title
-									)
-								)
+						IF(s.subtype='movie' OR s.subtype='oneshot',
+							IF(s.subtype='movie', 'Film', IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot')),
+							IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+								CONCAT('Cap. ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+								CONCAT(IFNULL(et.title, e.description))
 							)
 						) episode_title,
 						f.extra_name,
 						v.series_id,
 						v.status,
-						IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL,
-							d.name,
-							s.name
+						IF(s.type<>'manga',
+							IFNULL(vd.title, IFNULL(d.name,v.title)),
+							v.title
 						) series_name,
-						s.slug series_slug,
+						v.slug series_slug,
 						fa.name fansub_name,
 						fa.type fansub_type,
 						fa.id fansub_id,
@@ -745,6 +723,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 						LEFT JOIN fansub fa ON vf.fansub_id=fa.id
 						LEFT JOIN episode e ON f.episode_id=e.id
 						LEFT JOIN division d ON e.division_id=d.id
+						LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 						LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
 					WHERE f.id IN (
 							SELECT (SELECT f.id
@@ -835,38 +814,24 @@ function query_home_last_updated($user, $max_items) {
 						f.created,
 						f.version_id,
 						IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
-							IF(d.name IS NULL,
-								CONCAT('Vol. ', REPLACE(TRIM(d.number)+0,'.',',')),
-								d.name
-							),
+							REPLACE(IFNULL(vd.title, d.name), 'Volum ', 'Vol. '),
 							NULL
 						) division_name,
-						IF(v.show_episode_numbers=1,
-							REPLACE(TRIM(e.number)+0, '.', ','),
-							NULL
-						) episode_number,
-						IF(s.subtype='oneshot',
-							IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot'),
-							IF(s.subtype='movie' AND s.number_of_episodes=1,
-								'Film',
-								IF(et.title IS NOT NULL,
-									et.title,
-									IF(e.number IS NULL,
-										e.description,
-										et.title
-									)
-								)
+						IF(s.subtype='movie' OR s.subtype='oneshot',
+							IF(s.subtype='movie', 'Film', IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot')),
+							IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+								CONCAT('Cap. ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+								CONCAT(IFNULL(et.title, e.description))
 							)
 						) episode_title,
 						f.extra_name,
 						v.series_id,
 						v.status,
-						IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1 AND d.name IS NOT NULL AND s.type<>'manga',
-							d.name,
-							s.name
+						IF(s.type<>'manga',
+							IFNULL(vd.title, IFNULL(d.name,v.title)),
+							v.title
 						) series_name,
-						s.name full_series_name,
-						s.slug series_slug,
+						v.slug series_slug,
 						fa.name fansub_name,
 						fa.type fansub_type,
 						fa.id fansub_id,
@@ -878,6 +843,7 @@ function query_home_last_updated($user, $max_items) {
 						LEFT JOIN fansub fa ON vf.fansub_id=fa.id
 						LEFT JOIN episode e ON f.episode_id=e.id
 						LEFT JOIN division d ON e.division_id=d.id
+						LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 						LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
 					WHERE s.type='".CATALOGUE_ITEM_TYPE."'
 						AND f.is_lost=0
@@ -899,10 +865,10 @@ function query_home_last_finished_by_type($user, $max_items, $type) {
 	$max_items = intval($max_items);
 	$type = escape($type);
 	$final_query = get_internal_home_base_query($user)."
-				AND completed_date IS NOT NULL
+				AND v.completed_date IS NOT NULL
 				AND s.subtype='$type'
 			GROUP BY v.id
-			ORDER BY completed_date DESC
+			ORDER BY v.completed_date DESC
 			LIMIT $max_items";
 	return query($final_query);
 }
@@ -941,7 +907,7 @@ function query_home_user_recommendations_by_user_id($user, $max_items) {
 function query_home_random($user, $max_items) {
 	$max_items = intval($max_items);
 	$final_query = get_internal_home_base_query($user)."
-				AND completed_date IS NOT NULL
+				AND v.completed_date IS NOT NULL
 			GROUP BY s.id
 			ORDER BY RAND()
 			LIMIT $max_items";
@@ -981,14 +947,14 @@ function query_home_comments($user, $max_items) {
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
 						IF(s.type='manga','Llegit','Vist'),
-						IF(v.show_episode_numbers=1,
+						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
-								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
 								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
-							IF(et.title IS NOT NULL,
-								et.title,
-								e.description
+							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
+								CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description)),
+								IFNULL(et.title, e.description)
 							)
 						)
 					)
@@ -998,8 +964,8 @@ function query_home_comments($user, $max_items) {
 					0
 				) is_seen_by_user,
 				s.id series_id,
-				s.name series_name,
-				s.slug series_slug,
+				v.title version_title,
+				v.slug version_slug,
 				(SELECT COUNT(*) FROM version v2 WHERE v2.series_id=s.id AND v2.is_hidden=0) total_versions,
 				(SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ')
 					FROM rel_version_fansub svf
@@ -1015,6 +981,7 @@ function query_home_comments($user, $max_items) {
 			LEFT JOIN version v ON c.version_id=v.id
 			LEFT JOIN series s ON v.series_id=s.id
 			LEFT JOIN division d ON e.division_id=d.id
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			LEFT JOIN comment cr ON c.reply_to_comment_id=cr.id
 			LEFT JOIN user ur ON cr.user_id=ur.id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
@@ -1030,34 +997,54 @@ function query_home_comments($user, $max_items) {
 
 function query_series_by_slug($slug, $include_hidden) {
 	$slug = escape($slug);
-	$final_query = "SELECT s.*, 
+	$final_query = "SELECT s.*,
+				v.id version_id,
+				v.slug version_slug,
+				v.title version_title,
+				v.synopsis version_synopsis,
 				YEAR(s.publish_date) year,
 				GROUP_CONCAT(DISTINCT CONCAT(g.id,'|',g.type,'|',g.name) ORDER BY g.name SEPARATOR ' • ') genres,
-				(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0) divisions
+				(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.number_of_episodes>0 AND d.is_real=1) divisions
 			FROM series s
+				LEFT JOIN version v ON s.id=v.series_id
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
 				LEFT JOIN genre g ON sg.genre_id = g.id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
-				AND slug='$slug'
+				AND v.slug='$slug'
 				AND ".get_internal_hentai_condition()."
 				AND ".($include_hidden ? '1' : '(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id)>0')."
 			GROUP BY s.id";
 	return query($final_query);
 }
 
+function query_series_by_series_only_slug($series_only_slug) {
+	$series_only_slug = escape($series_only_slug);
+	$final_query = "SELECT v.slug, s.type, s.rating
+			FROM series s
+				LEFT JOIN version v ON s.id=v.series_id
+			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+				AND v.slug LIKE '$series_only_slug/%'";
+	return query($final_query);
+}
+
 function query_series_by_old_slug($old_slug) {
 	$old_slug = escape($old_slug);
-	$final_query = "SELECT s.slug, s.type, s.rating
+	$final_query = "SELECT v.slug, s.type, s.rating
 			FROM old_slugs os
-				LEFT JOIN series s ON os.series_id=s.id
+				LEFT JOIN version v ON os.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
-				AND old_slug='$old_slug'";
+				AND os.old_slug='$old_slug'";
 	return query($final_query);
 }
 
 function query_series_by_file_id($file_id) {
 	$file_id = escape($file_id);
-	$final_query = "SELECT s.*
+	$final_query = "SELECT s.*,
+				v.title version_title,
+				v.slug version_slug,
+				v.synopsis version_synopsis,
+				v.id version_id
 			FROM file f
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
@@ -1093,16 +1080,16 @@ function query_episodes_for_series_version($series_id, $version_id) {
 	$series_id = escape($series_id);
 	$version_id = escape($version_id);
 	$final_query = "SELECT e.*,
-				IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title,
+				IFNULL(et.title, e.description) title,
 				d.number division_number,
-				d.name division_name,
+				IFNULL(vd.title, d.name) division_name,
 				d.number_of_episodes division_number_of_episodes
 			FROM episode e
 				LEFT JOIN episode_title et ON e.id=et.episode_id AND et.version_id=$version_id
 				LEFT JOIN division d ON e.division_id=d.id
+				LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=$version_id
 			WHERE e.series_id=$series_id
-			ORDER BY d.number IS NULL ASC,
-				d.number ASC,
+			ORDER BY d.number ASC,
 				e.number IS NULL ASC,
 				e.number ASC,
 				IFNULL(et.title,e.description) ASC";
@@ -1283,9 +1270,10 @@ function query_related_series($user, $series_id, $series_author, $num_of_genres_
 	$max_items = intval($max_items);
 
 	$related_query="SELECT rs.related_series_id id,
-				s.name
+				v.title version_title
 			FROM related_series rs
 				LEFT JOIN series s ON rs.related_series_id=s.id
+				LEFT JOIN version v ON v.id=s.default_version_id
 			WHERE s.type".($own_type==TRUE ? "=" : "<>")."'".CATALOGUE_ITEM_TYPE."'
 				AND rs.series_id=$series_id
 			UNION
@@ -1304,8 +1292,8 @@ function query_related_series($user, $series_id, $series_author, $num_of_genres_
 				AND sg.series_id<>$series_id
 			GROUP BY series_id
 			HAVING COUNT(CASE WHEN genre_id IN (SELECT genre_id FROM rel_series_genre WHERE series_id=$series_id) THEN 1 END)>=$num_of_genres_in_common
-			ORDER BY name IS NULL ASC,
-				name ASC,
+			ORDER BY version_title IS NULL ASC,
+				version_title ASC,
 				RAND() LIMIT $max_items";
 	$resultin = query($related_query);
 	$in = array(-1);
@@ -1340,7 +1328,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 	//No need to escape $ratings, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $content_types, $origins, $genres_included_ids, $genres_excluded_ids, $statuses: they come from code
 	$final_query = get_internal_catalogue_base_query_portion($user)."
 				AND s.type='$type'
-				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
+				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND v.title LIKE '%$text%') OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
 				AND (".($min_score==0 ? "s.score IS NULL OR " : '')."(s.score>=$min_score AND s.score<=$max_score))
 				AND ".(count($ratings)>0 ? "s.rating IN ('".implode("', '",$ratings)."')" : "1")."
 				AND (".($min_year==1950 ? "s.publish_date IS NULL OR " : '')."(YEAR(s.publish_date)>=$min_year AND YEAR(s.publish_date)<=$max_year))
@@ -1356,7 +1344,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 				AND ".get_internal_length_condition($type, $length_type, $min_length, $max_length)."
 				AND ".(!empty($fansub_slug) ? "v.id IN (SELECT DISTINCT sqvf.version_id FROM rel_version_fansub sqvf LEFT JOIN fansub sqf ON sqvf.fansub_id=sqf.id WHERE sqf.slug='$fansub_slug')" : "1")."
 			GROUP BY s.id
-			ORDER BY s.name ASC";
+			ORDER BY default_version_title ASC";
 	return query($final_query);
 }
 
@@ -1366,9 +1354,9 @@ function query_autocomplete($user, $text, $type) {
 	$type = escape($type);
 	$final_query = get_internal_catalogue_base_query_portion($user)."
 				AND s.type='$type'
-				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
+				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND v.title LIKE '%$text%') OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
 			GROUP BY s.id
-			ORDER BY s.name LIKE '$text%' DESC, s.name ASC";
+			ORDER BY default_version_title LIKE '$text%' DESC, default_version_title ASC";
 	return query($final_query);
 }
 
@@ -1391,16 +1379,20 @@ function query_player_details_by_file_id($file_id) {
 				v.series_id series_id,
 				f.version_id version_id,
 				v.show_episode_numbers,
-				s.name series_name,
+				v.title version_title,
 				s.type series_type,
 				s.subtype series_subtype,
 				IF(f.episode_id IS NULL,TRUE,FALSE) is_extra,
 				f.length,
 				e.number episode_number,
 				e.linked_episode_id,
-				IF(et.title IS NOT NULL, et.title, IF(e.number IS NULL,e.description,et.title)) title,
+				IFNULL(et.title,e.description) title,
 				f.extra_name,
-				s.reader_type
+				s.reader_type,
+				IF(f.extra_name IS NOT NULL,
+					CONCAT(v.title, ' - Contingut extra'),
+					IFNULL(vd.title,d.name)
+				) division_name
 			FROM file f
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
@@ -1408,6 +1400,8 @@ function query_player_details_by_file_id($file_id) {
 				LEFT JOIN fansub fa ON vf.fansub_id=fa.id
 				LEFT JOIN episode e ON f.episode_id=e.id
 				LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
+				LEFT JOIN division d ON e.division_id=d.id
+				LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			WHERE f.id=$file_id";
 	return query($final_query);
 }
@@ -1479,14 +1473,14 @@ function query_version_comments($version_id, $user) {
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
 						IF(s.type='manga','Llegit','Vist'),
-						IF(v.show_episode_numbers=1,
+						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
-								CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
 								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
-							IF(et.title IS NOT NULL,
-								et.title,
-								e.description
+							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
+								CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description)),
+								IFNULL(et.title, e.description)
 							)
 						)
 					)
@@ -1503,6 +1497,7 @@ function query_version_comments($version_id, $user) {
 			LEFT JOIN version v ON c.version_id=v.id
 			LEFT JOIN series s ON v.series_id=s.id
 			LEFT JOIN division d ON e.division_id=d.id
+			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			WHERE c.version_id=$version_id
 				AND c.reply_to_comment_id IS NULL
 				AND (u.status<>1".(!empty($user) ? " OR u.id=${user['id']}" : '').")

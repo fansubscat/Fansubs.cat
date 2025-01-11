@@ -72,14 +72,14 @@ function query_save_view_completed($file_id, $type, $date, $length) {
 
 function query_get_all_manga_files() {
 	$final_query = "SELECT f.*,
-				s.slug,
+				v.slug,
 				IF(f.extra_name IS NULL, FALSE, TRUE) is_extra
 			FROM file f
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
 			WHERE s.type='manga'
 				AND f.is_lost=0
-			ORDER BY s.name ASC,
+			ORDER BY v.title ASC,
 				f.original_filename ASC";
 	return query($final_query);
 }
@@ -98,7 +98,7 @@ function query_get_unconverted_links($file_id) {
 			WHERE url NOT LIKE 'storage://%'
 				AND $file_id_condition
 				AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%')
-			ORDER BY s.name ASC,
+			ORDER BY v.title ASC,
 				f.id ASC";
 	return query($final_query);
 }
@@ -117,7 +117,7 @@ function query_get_converted_links($file_id) {
 				LEFT JOIN series s ON v.series_id=s.id
 			WHERE url LIKE 'storage://%'
 				AND $file_id_condition
-			ORDER BY s.name ASC,
+			ORDER BY v.title ASC,
 				f.id ASC";
 	return query($final_query);
 }
@@ -220,8 +220,12 @@ function query_popular_manga($offset, $max_items) {
 					SELECT
 						SUM(vi.views) views,
 						fi.version_id,
-						s.*
+						s.*,
+						dv.slug default_version_slug,
+						dv.title default_version_title,
+						dv.synopsis default_version_synopsis
 					FROM series s
+						LEFT JOIN version dv ON s.default_version_id=dv.id
 						LEFT JOIN episode c ON c.series_id=s.id
 						LEFT JOIN file fi ON fi.episode_id=c.id
 						LEFT JOIN views vi ON vi.file_id=fi.id
@@ -236,7 +240,7 @@ function query_popular_manga($offset, $max_items) {
 				LEFT JOIN genre g ON sg.genre_id = g.id
 			GROUP BY a.id
 			ORDER BY MAX(a.views) DESC,
-				a.name ASC
+				a.default_version_title ASC
 			LIMIT $max_items
 			OFFSET $offset";
 	return query($final_query);
@@ -246,9 +250,13 @@ function query_recent_manga($offset, $max_items) {
 	$offset=intval($offset);
 	$max_items=intval($max_items);
 	$final_query = "SELECT s.*,
+				dv.slug default_version_slug,
+				dv.title default_version_title,
+				dv.synopsis default_version_synopsis,
 				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres,
 				(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.status=2) versions_in_progress
 			FROM series s
+				LEFT JOIN version dv ON s.default_version_id=dv.id
 				LEFT JOIN version v ON s.id=v.series_id
 				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
@@ -293,9 +301,13 @@ function query_search_manga($offset, $max_items, $query, $type, $statuses, $demo
 	}
 
 	$final_query = "SELECT s.*,
+				dv.slug default_version_slug,
+				dv.title default_version_title,
+				dv.synopsis default_version_synopsis,
 				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres,
 				(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.status=2) versions_in_progress
 			FROM series s
+				LEFT JOIN version dv ON s.default_version_id=dv.id
 				LEFT JOIN version v ON s.id=v.series_id
 				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
@@ -303,7 +315,7 @@ function query_search_manga($offset, $max_items, $query, $type, $statuses, $demo
 			WHERE s.type='manga'
 				AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0
 				AND ".get_internal_hentai_condition()."
-				AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%')
+				AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND v.title LIKE '%$query%') OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%')
 				AND $type_condition
 				AND $statuses_condition
 				AND $demographies_condition
@@ -312,7 +324,7 @@ function query_search_manga($offset, $max_items, $query, $type, $statuses, $demo
 				AND ".get_internal_excluded_genres_condition($genres_exclude)."
 				AND ".get_internal_excluded_genres_condition($themes_exclude)."
 			GROUP BY s.id
-			ORDER BY s.name ASC
+			ORDER BY dv.title ASC
 			LIMIT $max_items
 			OFFSET $offset";
 	return query($final_query);
@@ -321,55 +333,64 @@ function query_search_manga($offset, $max_items, $query, $type, $statuses, $demo
 function query_get_manga_details_by_slug($slug) {
 	$slug = escape($slug);
 	$final_query = "SELECT s.*,
+				dv.slug default_version_slug,
+				dv.title default_version_title,
+				dv.synopsis default_version_synopsis,
 				GROUP_CONCAT(DISTINCT g.name SEPARATOR ', ') genres,
 				(SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.status=2) versions_in_progress
 			FROM series s
+				LEFT JOIN version dv ON s.default_version_id=dv.id
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
 				LEFT JOIN genre g ON sg.genre_id = g.id
 			WHERE s.type='manga'
 				AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0
 				AND ".get_internal_hentai_condition()."
-				AND s.slug='$slug'";
+				AND dv.slug LIKE '$slug/%'";
 	return query($final_query);
 }
 
 function query_get_manga_chapters_by_slug($slug) {
 	$slug = escape($slug);
 	$final_query = "SELECT s.subtype,
-			s.slug,
-			s.name,
+			dv.slug default_version_slug,
+			dv.title default_version_title,
+			dv.synopsis default_version_synopsis,
 			v.show_episode_numbers,
 			fi.id,
 			fi.created,
-			c.number,
-			(SELECT COUNT(DISTINCT d.id)
-					FROM division d
-					WHERE d.series_id=s.id
-					AND d.number_of_episodes>0
-				) number_of_divisions,
-			d.name division_name,
-			d.number division_number,
+			e.number,
+			IF((SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
+				IFNULL(vd.title, d.name),
+				NULL
+			) division_name,
+			IF(s.subtype='oneshot',
+				IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot'),
+				IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
+					CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+					CONCAT(IFNULL(et.title, e.description))
+				)
+			) episode_title,
 			IF(fi.episode_id IS NULL, 1, 0) is_extra,
 			fi.extra_name,
-			ct.title episode_title,
 			(SELECT GROUP_CONCAT(f.name SEPARATOR ', ') FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v2 ON vf.version_id=v2.id WHERE vf.version_id=v.id) fansubs
 			FROM series s
+				LEFT JOIN version dv ON s.default_version_id=dv.id
 				LEFT JOIN version v ON v.series_id=s.id
 				LEFT JOIN file fi ON fi.version_id=v.id
-				LEFT JOIN episode_title ct ON ct.version_id=v.id AND ct.episode_id=fi.episode_id
-				LEFT JOIN episode c ON fi.episode_id=c.id
-				LEFT JOIN division d ON c.division_id=d.id
+				LEFT JOIN episode_title et ON et.version_id=v.id AND et.episode_id=fi.episode_id
+				LEFT JOIN episode e ON fi.episode_id=e.id
+				LEFT JOIN division d ON e.division_id=d.id
+				LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			WHERE v.is_hidden=0
 				AND s.type='manga'
-				AND s.slug='$slug'
+				AND dv.slug LIKE '$slug/%'
 				AND fi.is_lost=0
 				AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0
 				AND ".get_internal_hentai_condition()."
 			ORDER BY fi.episode_id IS NULL ASC,
-				d.number IS NULL ASC,
 				d.number DESC,
-				c.number IS NULL DESC,
-				c.number DESC,
+				e.number IS NULL DESC,
+				e.number DESC,
 				episode_title DESC,
 				fi.extra_name DESC,
 				fi.created DESC";

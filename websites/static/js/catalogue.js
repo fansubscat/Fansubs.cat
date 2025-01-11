@@ -156,6 +156,25 @@ function isEmbedPage(){
 	return $('.style-type-embed').length!=0;
 }
 
+//Taken from: https://gist.github.com/codeguy/6684588
+function string_to_slug(str) {
+	str = str.replace(/^\s+|\s+$/g, ''); // trim
+	str = str.toLowerCase();
+
+	// remove accents, swap ñ for n, etc
+	var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;'’";
+	var to   = "aaaaeeeeiiiioooouuuunc--------";
+	for (var i=0, l=from.length ; i<l ; i++) {
+		str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+	}
+
+	str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+		.replace(/\s+/g, '-') // collapse whitespace and replace by -
+		.replace(/-+/g, '-'); // collapse dashes
+
+	return str;
+}
+
 function formatTime(seconds, guide) {
 	guide = currentSourceData.length;
 	seconds = seconds < 0 ? 0 : seconds;
@@ -2392,10 +2411,24 @@ $(document).ready(function() {
 			});
 			$(this).addClass("version-tab-selected");
 			$("#version-content-"+$(this).attr('data-version-id')).removeClass("hidden");
-			if ($(".version-tab").length>1) {
-				var url = new URL(window.location);
-				url.searchParams.set('v', $(this).attr('data-version-id'));
-				history.replaceState(null, null, url);
+			
+			//Change URL
+			var url = new URL(window.location);
+			url.pathname=$(this).attr('data-version-slug');
+			history.replaceState(null, null, url);
+			
+			//Change cover and featured image
+			$('.series-thumbnail').attr('src', $('.series-thumbnail').attr('src').replace(/\d+/, $(this).attr('data-version-id')));
+			$('.background').attr('src', $('.background').attr('src').replace(/\d+/, $(this).attr('data-version-id')));
+			
+			//Change synopsis
+			$('.series-synopsis-real').html($(this).attr('data-version-synopsis'));
+			$('.series-title').text($(this).attr('data-version-title'));
+			if ($(this).attr('data-version-alternate-titles')!='') {
+				$('.series-alternate-names').text($(this).attr('data-version-alternate-titles'));
+				$('.series-alternate-names').removeClass('hidden');
+			} else {
+				$('.series-alternate-names').addClass('hidden');
 			}
 		});
 		$(".version-fansub-rating-positive").click(function(){
@@ -2597,6 +2630,22 @@ $(document).ready(function() {
 
 			var temp = $('#catalogue-search-query').val();
 			$('#catalogue-search-query').focus().val('').val(temp);
+		}
+		
+		if ($('.is-series-page').length>0 && window.location.hash!='') {
+			$('.season-chooser option').each(function(){
+				if ('#'+string_to_slug($(this).attr('data-title'))==window.location.hash) {
+					$('.season-chooser').val($(this).val());
+					$('.season-chooser').trigger('change');
+					$('.season-chooser')[0].scrollIntoView();
+				}
+			});
+			$('.division-list .division').each(function(){
+				if ('#'+string_to_slug($(this).attr('data-title'))==window.location.hash) {
+					$(this)[0].scrollIntoView();
+				}
+			});
+			window.history.replaceState(null, null,  window.location.href.split('#')[0]);
 		}
 	} else {
 		//This is an embed

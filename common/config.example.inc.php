@@ -47,12 +47,21 @@ define('API_SUBDOMAIN', 'api');
 //Used to check internal API calls only (bypass admin authentication in twitter_image.php)
 define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN_HERE');
 
+//Lock files for syncinc site and background processes
+define('NEWS_LOCK_FILE', '/srv/fansubscat/temporary/news_fetch.lock');
+define('MEGA_LOCK_FILE', '/srv/fansubscat/temporary/mega_fetch.lock');
+
 //Populate this variable if you want to display a message on all listing pages
 define('GLOBAL_MESSAGE', '');
 
 //Start year and date of your site
 define('STARTING_YEAR', 2020);
 define('STARTING_DATE', '2020-06-01');
+
+//Features that can be disabled (TODO)
+define('DISABLE_NEWS', TRUE);
+define('DISABLE_LINKS', TRUE);
+define('DISABLE_LIVE_ACTION', FALSE);
 
 //Default language of your site (ISO code, must exist in /srv/fansubscat/websites/static/languages/<code>.json)
 define('SITE_LANGUAGE', 'ca');
