@@ -71,14 +71,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($row['id'])) {
 ?>
 						<div class="mb-3">
-							<label for="form-original_comment">Comentari original</label>
+							<label for="form-original_comment">Comentari original</label> <?php print_helper_box('Comentari original', 'Mostra el comentari original de l’usuari al qual respons.'); ?>
 							<div class="form-control" id="form-original_comment"><?php echo htmlspecialchars($row['text']); ?></div>
 						</div>
 <?php
 	}
 ?>
 						<div class="mb-3">
-							<label for="form-fansub"><?php echo !empty($row['id']) ? 'Respon' : 'Escriu'; ?> en nom de<span class="mandatory"></span></label>
+							<label for="form-fansub"><?php echo !empty($row['id']) ? 'Respon' : 'Escriu'; ?> en nom de<span class="mandatory"></span></label> <?php print_helper_box((!empty($row['id']) ? 'Respon' : 'Escriu').' en nom de', 'Defineix en nom de quin fansub parles.'); ?>
 							<select name="fansub_id" class="form-select" id="form-fansub" required>
 <?php
 	if ($_SESSION['admin_level']>=3) {
@@ -103,7 +103,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</select>
 						</div>
 						<div class="mb-3">
-							<label for="form-text" class="mandatory">Text <?php echo !empty($row['id']) ? 'de la resposta' : 'del comentari'; ?></label>
+							<label for="form-text" class="mandatory">Text <?php echo !empty($row['id']) ? 'de la resposta' : 'del comentari'; ?></label> <?php print_helper_box('Text '.(!empty($row['id']) ? 'de la resposta' : 'del comentari'), 'S’hi introdueix el text que es vol afegir com a comentari.'); ?>
 							<textarea class="form-control" name="text" id="form-text" required style="height: 150px;"></textarea>
 							<input type="hidden" name="reply_to_comment_id" value="<?php echo htmlspecialchars($row['id']); ?>">
 							<input type="hidden" name="version_id" value="<?php echo htmlspecialchars($row['version_id']); ?>">

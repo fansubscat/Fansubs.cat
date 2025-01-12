@@ -63,17 +63,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<hr>
 				<form method="post" action="remote_account_edit.php">
 					<div class="mb-3">
-						<label for="form-name">Compte<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Compte" data-bs-contents="Adreça electrònica del compte. Correspon a l’adreça de correu utilitzada per a iniciar la sessió al compte de MEGA."></small></label>
+						<label for="form-name">Compte<span class="mandatory"></span> <?php print_helper_box('Compte', 'Adreça electrònica del compte.\n\nCorrespon a l’adreça de correu utilitzada per a iniciar la sessió al compte de MEGA.'); ?></label>
 						<input class="form-control" name="name" type="email" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-token">Identificador de sessió<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Identificador de sessió" data-bs-contents="Identificador de sessió obtingut amb MegaCMD. Això ens permet iniciar la sessió amb aquest compte sense fer servir una contrasenya i obtenir-ne enllaços automàticament i actualitzar-ne l’estat de l’emmagatzematge. Per a més informació de com obtenir-lo, consulteu el manual del tauler d’administració a la icona d’ajuda de la part superior dreta del web (apartat «Com obtenir l’identificador de sessió»)."></small></label>
+						<label for="form-token">Identificador de sessió<span class="mandatory"></span> <?php print_helper_box('Identificador de sessió', 'Identificador de sessió obtingut amb MegaCMD.\n\nAixò ens permet iniciar la sessió amb aquest compte sense fer servir una contrasenya i obtenir-ne enllaços automàticament i actualitzar-ne l’estat de l’emmagatzematge.\n\nPer a més informació de com obtenir-lo, consulta el manual del tauler d’administració a la icona d’ajuda de la part superior dreta del web (apartat «Com obtenir l’identificador de sessió»).'); ?></label>
 						<input class="form-control" name="token" id="form-token" required maxlength="200" value="<?php echo htmlspecialchars($row['token']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-fansub_id">Fansub</label>
+						<label for="form-fansub_id">Fansub</label> <?php print_helper_box('Fansub', 'Fansub al qual s’associarà aquest compte.\n\nEls comptes donats d’alta com a interns de Fansubs.cat els veuran tots els administradors.'); ?>
 						<select name="fansub_id" class="form-select" id="form-fansub_id">
 							<option value="">- Intern de Fansubs.cat -</option>
 <?php

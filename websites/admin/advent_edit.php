@@ -43,9 +43,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_FILES['header'])) {
 			move_uploaded_file($_FILES['header']["tmp_name"], STATIC_DIRECTORY.'/images/advent/header_'.$data['year'].'.jpg');
 		}
-		if (!empty($_FILES['menu'])) {
-			move_uploaded_file($_FILES['menu']["tmp_name"], STATIC_DIRECTORY.'/images/advent/menu_'.$data['year'].'.png');
-		}
 
 		for ($i=1; $i<25; $i++) {
 			query("REPLACE INTO advent_day (year, day, description, link_url) VALUES (".$data['year'].",".$i.",".$data['description_'.$i].",".$data['link_url_'.$i].")");
@@ -61,7 +58,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	if (isset($_GET['year']) && is_numeric($_GET['year'])) {
 		$result = query("SELECT * FROM advent_calendar WHERE year=".escape($_GET['year'])."");
-		$row = mysqli_fetch_assoc($result) or $row=array('year' => $_GET['year'], 'position' => 'left');
+		$row = mysqli_fetch_assoc($result) or $row=array('year' => $_GET['year'], 'position' => '');
 		mysqli_free_result($result);
 
 		$days = array();
@@ -91,7 +88,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de fons<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1920x1080px o 1080x1920px)</small></label><br>
+								<label>Imatge de fons<span class="mandatory"></span> <?php print_helper_box('Imatge de fons', 'Imatge que s’utilitza per al fons del calendari.\n\nHa de ser un fitxer JPEG i tenir una mida mínima de 1920x1080 píxels (o la mateixa resolució però en vertical).'); ?><br><small class="text-muted">(JPEG, mida mínima 1920x1080px o 1080x1920px)</small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/background_'.$row['year'].'.jpg');
 ?>
@@ -109,7 +106,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de previsualització<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1200x600px)</small></label><br>
+								<label>Imatge de previsualització<span class="mandatory"></span> <?php print_helper_box('Imatge de previsualització', 'Imatge que s’utilitza per a la visualització en mode targeta de les xarxes socials (atribut og:image).\n\nHa de ser un fitxer JPEG i tenir una mida mínima de 1200x600 píxels.'); ?><br><small class="text-muted">(JPEG, mida mínima 1200x600px)</small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/preview_'.$row['year'].'.jpg');
 ?>
@@ -128,7 +125,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de capçalera<span class="mandatory"></span> <small class="text-muted">(JPEG, mida mínima 1920x400px)</small></label><br>
+								<label>Imatge de capçalera<span class="mandatory"></span> <?php print_helper_box('Imatge de capçalera', 'Imatge que s’utilitza per a la capçalera dels portals d’anime, manga i imatge real (a la secció de recomanacions) durant el període del calendari d’advent.\n\nHa de ser un fitxer JPEG i tenir una mida mínima de 1920x400 píxels.'); ?><br><small class="text-muted">(JPEG, mida mínima 1920x400px)</small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/header_'.$row['year'].'.jpg');
 ?>
@@ -143,32 +140,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								</a>
 							</div>
 						</div>
-						<div class="col-sm-3">
-							<div class="mb-3">
-								<label>Imatge del menú lateral<span class="mandatory"></span> <small class="text-muted">(PNG, mida exacta 205x128px)</small></label><br>
-<?php
-	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/menu_'.$row['year'].'.png');
-?>
-								<label for="form-menu" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
-								<input class="form-control d-none" name="menu" type="file" accept="image/png" id="form-menu" onchange="checkImageUpload(this, -1, 'image/png', 205, 128, 205, 128, 'form-menu-preview', 'form-menu-preview-link');">
-							</div>
+						<div class="col-sm-6">
+							<label for="form-position" class="mandatory">Posició del logo</label> <?php print_helper_box('Posició del logo', 'Indica si, a la pàgina del calendari d’advent, el logo de Fansubs.cat ha d’estar col·locat a l’esquerra o a la dreta.\n\nCal ajustar-ho segons el fons del calendari per a evitar tapar la imatge.'); ?>
+							<select class="form-control" name="position" id="form-position" required>
+								<option value="">- Selecciona una posició -</option>
+								<option value="left"<?php echo $row['position']=='left' ? " selected" : ""; ?>>A l’esquerra</option>
+								<option value="right"<?php echo $row['position']=='right' ? " selected" : ""; ?>>A la dreta</option>
+							</select>
 						</div>
-						<div class="col-sm-3" style="align-self: center;">
-							<div class="mb-3">
-								<a id="form-menu-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/advent/menu_'.$row['year'].'.png" data-original="'.STATIC_URL.'/images/advent/menu_'.$row['year'].'.png"' : ''; ?> target="_blank">
-									<img id="form-menu-preview" style="width: 205px; height: 128px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/advent/menu_'.$row['year'].'.png" data-original="'.STATIC_URL.'/images/advent/menu_'.$row['year'].'.png"' : ''; ?> alt="">
-								</a>
-							</div>
-						</div>
-					</div>
-
-					<div class="mb-3">
-						<label for="form-position" class="mandatory">Posició del logo</label>
-						<select class="form-control" name="position" id="form-position" required>
-							<option value="">- Selecciona una posició -</option>
-							<option value="left"<?php echo $row['position']=='left' ? " selected" : ""; ?>>A l’esquerra</option>
-							<option value="right"<?php echo $row['position']=='right' ? " selected" : ""; ?>>A la dreta</option>
-						</select>
 					</div>
 					<div class="mb-3">
 						<div class="container" id="form-days-list">
@@ -178,8 +157,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<thead>
 											<tr>
 												<th class="text-center" style="width: 5%;">Dia</th>
-												<th class="text-center mandatory" style="width: 20%;">Imatge <small class="text-muted">(512x512px)</small></th>
-												<th class="mandatory">URL de l’enllaç i descripció <small class="text-muted">(la descripció es mostra sota la imatge als vídeos promocionals)</small></th>
+												<th class="text-center" style="width: 20%;">Imatge<span class="mandatory"></span> <?php print_helper_box('Imatge de la casella', 'Imatge que s’utilitza per a la casella del dia indicat una vegada s’ha obert.\n\nHa de ser un fitxer JPEG i tenir una mida exacta de 512x512 píxels.'); ?> <small class="text-muted">(512x512px)</small></th>
+												<th>URL de l’enllaç i descripció<span class="mandatory"></span> <?php print_helper_box('URL de l’enllaç i descripció', 'Enllaç al qual apunta la casella del dia indicat una vegada s’ha obert.\n\nPot ser un URL extern o bé del portal de Fansubs.cat.\n\nLa descripció es mostra sota la imatge als vídeos promocionals que es fan cada dia obrint la casella.\n\nEl format és «Nom del fansub | Títol del contingut».'); ?></th>
 											</tr>
 										</thead>
 										<tbody>

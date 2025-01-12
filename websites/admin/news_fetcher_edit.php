@@ -68,7 +68,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<hr>
 				<form method="post" action="news_fetcher_edit.php">
 					<div class="mb-3">
-						<label for="form-fansub_id" class="mandatory">Fansub</label>
+						<label for="form-fansub_id" class="mandatory">Fansub</label> <?php print_helper_box('Fansub', 'Fansub al qual s’associaran les notícies obtingudes amb aquest recollidor.'); ?>
 						<select name="fansub_id" class="form-select" id="form-fansub_id" required>
 							<option value="">- Selecciona un fansub -</option>
 <?php
@@ -83,13 +83,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</select>
 					</div>
 					<div class="mb-3">
-						<label for="form-url" class="mandatory">URL</label>
+						<label for="form-url" class="mandatory">URL</label> <?php print_helper_box('URL', 'Adreça URL completa del web on es farà la petició per a recollir-ne les notícies.'); ?>
 						<input class="form-control" name="url" id="form-url" required value="<?php echo htmlspecialchars($row['url']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-method" class="mandatory">Mètode de recollida</label>
+						<label for="form-method" class="mandatory">Mètode de recollida</label> <?php print_helper_box('Mètode de recollida', 'Mètode de scraping utilitzat per a recollir les notícies.\n\nAquest sistema depèn profundament de l’estructura HTML dels webs i si s’hi fan canvis, deixarà de funcionar.\n\nSi consideres que cal canviar o afegir algun mètode de recollida, notifica-ho a un administrador perquè en canviï el codi.'); ?>
 						<select name="method" class="form-select" id="form-method" required>
 							<option value="">- Selecciona un mètode -</option>
 							<option value="animugen"<?php echo $row['method']=='animugen' ? " selected" : ""; ?>>AniMugen</option>
@@ -123,7 +123,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</select>
 					</div>
 					<div class="mb-3">
-						<label for="form-fetch_type" class="mandatory">Freqüència de recollida</label>
+						<label for="form-fetch_type" class="mandatory">Freqüència de recollida</label> <?php print_helper_box('Freqüència de recollida', 'Freqüència de recollida de les notícies: periòdica (cas normal), a petició (cal configurar el testimoni de ping del fansub) o obtenció única.'); ?>
 						<select name="fetch_type" class="form-select" id="form-fetch_type" required>
 							<option value="">- Selecciona una freqüència -</option>
 							<option value="periodic"<?php echo $row['fetch_type']=='periodic' ? " selected" : ""; ?>>Periòdica (cada 15 minuts)</option>

@@ -178,17 +178,6 @@ CREATE TABLE `old_slugs` (
   `version_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `pending_news` (
-  `id` int(11) NOT NULL,
-  `title` text NOT NULL,
-  `contents` text NOT NULL,
-  `url` text NOT NULL,
-  `image_url` text DEFAULT NULL,
-  `sender_name` varchar(255) NOT NULL,
-  `sender_email` varchar(255) NOT NULL,
-  `comments` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 CREATE TABLE `recommendation` (
   `version_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -451,9 +440,6 @@ ALTER TABLE `news_fetcher`
 ALTER TABLE `old_slugs`
   ADD PRIMARY KEY (`old_slug`, `version_id`);
 
-ALTER TABLE `pending_news`
-  ADD PRIMARY KEY (`id`);
-
 ALTER TABLE `recommendation`
   ADD PRIMARY KEY (`version_id`);
 
@@ -563,9 +549,6 @@ ALTER TABLE `link`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `news_fetcher`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `pending_news`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `remote_account`

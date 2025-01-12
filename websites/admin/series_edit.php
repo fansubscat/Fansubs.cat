@@ -822,7 +822,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="related-list-table" data-count="<?php echo count($related_series); ?>">
 											<thead>
 												<tr>
-													<th class="mandatory">Element</th>
+													<th>Element<span class="mandatory"></span> <?php print_helper_box('Element', 'Selecciona un element de la llista per a afegir-lo com a contingut relacionat.\n\nEls continguts que afegeixis aquí també es relacionaran amb aquesta obra (és un enllaç bidireccional).'); ?></th>
 													<th class="text-center" style="width: 5%;">Acció</th>
 												</tr>
 											</thead>

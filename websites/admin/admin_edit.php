@@ -81,7 +81,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<form method="post" action="admin_edit.php">
 						<div class="mb-3">
-							<label for="form-user" class="mandatory">Usuari</label>
+							<label for="form-user" class="mandatory">Usuari</label> <?php print_helper_box('Usuari', 'Nom d’usuari que farà servir l‘administrador per a iniciar la sessió.'); ?>
 							<input class="form-control" name="username" id="form-user" required maxlength="200" value="<?php echo $row['username']; ?>" autocomplete="new-password">
 							<input type="hidden" name="username_old" value="<?php echo htmlspecialchars($row['username']); ?>">
 							<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
@@ -90,19 +90,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	if ($row['username']==NULL) {
 ?>
-							<label for="form-password" class="mandatory">Contrasenya</label>
+							<label for="form-password" class="mandatory">Contrasenya</label> <?php print_helper_box('Contrasenya', 'Contrasenya que farà servir l‘administrador per a iniciar la sessió.\n\nÉs aconsellable generar-la amb un generador de contrasenyes i que l’administrador la canviï en iniciar la sessió per primera vegada.'); ?>
 							<input class="form-control" type="password" name="password" required id="form-password" autocomplete="new-password">
 <?php
 	} else {
 ?>
-							<label for="form-password">Contrasenya (introdueix-la només si la vols canviar)</label>
+							<label for="form-password">Contrasenya (només si la vols canviar)</label> <?php print_helper_box('Contrasenya', 'Contrasenya que farà servir l‘administrador per a iniciar la sessió.\n\nÉs aconsellable generar-la amb un generador de contrasenyes i que l’administrador la canviï en iniciar la sessió per primera vegada.'); ?>
 							<input class="form-control" type="password" name="password" id="form-password" autocomplete="new-password">
 <?php
 	}
 ?>
 						</div>
 						<div class="mb-3">
-							<label for="form-admin-level" class="mandatory">Nivell d’administrador</label>
+							<label for="form-admin-level" class="mandatory">Nivell d’administrador</label> <?php print_helper_box('Nivell d’administrador', 'Nivell de permisos que s’associarà a aquest administrador.\n\nEls gestors de versions no poden editar fitxes genèriques.\n\nEl control total implica que és un administrador amb poder per a editar qualsevol contingut del portal, incloent-hi els altres administradors.\n\nLa majoria d’administradors són gestors de fitxes i versions.'); ?>
 							<select class="form-select" name="admin_level" id="form-admin-level" required>
 								<option value="">- Selecciona un nivell -</option>
 								<option value="1"<?php echo $row['admin_level']==1 ? " selected" : ""; ?>>1: Gestor de versions</option>
@@ -111,7 +111,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</select>
 						</div>
 						<div class="mb-3">
-							<label for="form-fansub">Fansub associat</label>
+							<label for="form-fansub">Fansub associat</label> <?php print_helper_box('Fansub associat', 'Si s’associa a un fansub concret, l’administrador només veurà i podrà editar el contingut creat pel seu fansub (i col·laboracions en què participi el seu fansub).'); ?>
 							<select name="fansub_id" class="form-select" id="form-fansub">
 								<option value="">- No associat a cap fansub -</option>
 <?php
@@ -126,7 +126,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</select>
 						</div>
 						<div class="mb-3">
-							<label for="form-default_storage_processing" class="mandatory">Processament de fitxers per defecte</label>
+							<label for="form-default_storage_processing" class="mandatory">Processament de fitxers per defecte</label> <?php print_helper_box('Processament de fitxers per defecte', 'El valor que se seleccioni aquí serà el valor per defecte del processament de fitxers a les versions creades per aquest administrador.\n\nIndica al sistema si els fitxers de la versió s’importen mantenint-ne una còpia al servidor d’emmagatzematge o no es desen i es copien directament al servidor de streaming.'); ?>
 							<select class="form-select" name="default_storage_processing" id="form-default_storage_processing" required>
 								<option value="">- Selecciona un processament -</option>
 								<option value="1"<?php echo $row['default_storage_processing']==1 ? " selected" : ""; ?>>Desa una còpia dels fitxers originals</option>

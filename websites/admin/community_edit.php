@@ -76,21 +76,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				<hr>
 				<form method="post" action="community_edit.php" enctype="multipart/form-data" onsubmit="return checkCommunity()">
 					<div class="mb-3">
-						<label for="form-name" class="mandatory">Nom</label>
+						<label for="form-name" class="mandatory">Nom</label> <?php print_helper_box('Nom', 'Nom de la comunitat a la qual s’enllaça.'); ?>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" id="form-id" name="id" value="<?php echo $row['id']; ?>">
 						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-url" class="mandatory">URL</label>
+						<label for="form-url" class="mandatory">URL</label> <?php print_helper_box('URL', 'URL de la comunitat a la qual s’enllaça.'); ?>
 						<input class="form-control" type="url" name="url" id="form-url" maxlength="200" value="<?php echo htmlspecialchars($row['url']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-description" class="mandatory">Descripció</label>
+						<label for="form-description" class="mandatory">Descripció</label> <?php print_helper_box('Descripció', 'Descripció breu (no més de 2 línies) de la comunitat a la qual s’enllaça.'); ?>
 						<input class="form-control" name="description" id="form-description" maxlength="200" value="<?php echo htmlspecialchars($row['description']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-category" class="mandatory">Categoria</label>
+						<label for="form-category" class="mandatory">Categoria</label> <?php print_helper_box('Categoria', 'Assigna la comunitat a una categoria existent.\n\nSi consideres que se n’ha de crear una de nova, contacta amb un administrador.'); ?>
 						<select class="form-select" name="category" id="form-category" required>
 							<option value="">- Selecciona una categoria -</option>
 							<option value="featured"<?php echo $row['category']=='featured' ? " selected" : ""; ?>>Destacats</option>
@@ -112,7 +112,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Logo<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?> <small class="text-muted">(PNG, 160x160px)</small></label><br>
+								<label>Logo<?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?> <?php print_helper_box('Logo', 'Imatge que es mostrarà a l’enllaç cap a aquesta comunitat.\n\nHa de ser un fitxer JPEG i tenir una mida exacta de 160x160 píxels.'); ?> <small class="text-muted">(PNG, 160x160px)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/communities/'.$row['id'].'.png');
 ?>

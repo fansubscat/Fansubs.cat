@@ -64,10 +64,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				$data['image'] = 'NULL';
 			}
-			if (isset($_POST['import_pending_id'])) {
-				log_action("import-pending-news", "S’ha importat la notícia proposada amb id. ".$_POST['import_pending_id']);
-				query("DELETE FROM pending_news WHERE id=".escape($_POST['import_pending_id']));
-			}
 			log_action("create-news", "S’ha creat la notícia «".$_POST['title']."» de «".$fansub_row['fansub_name']."»");
 			query("INSERT INTO news (fansub_id,news_fetcher_id,title,contents,original_contents,date,url,image) VALUES (".$data['fansub_id'].",NULL,'".$data['title']."','".$data['contents']."','".$data['contents']."','".$data['date']."',".$data['url'].",".$data['image'].")");
 		}
@@ -84,60 +80,28 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($result);
 	} else {
 		$row = array();
-		if (!empty($_GET['import_pending_id'])) {
-			$pending_result = query("SELECT pn.* FROM pending_news pn WHERE pn.id=".escape($_GET['import_pending_id']));
-			$prow = mysqli_fetch_assoc($pending_result) or crash('Pending news not found');
-			$row['fansub_id']="";
-			$row['title']=$prow['title'];
-			$row['contents']=$prow['contents'];
-			$row['url']=$prow['url'];
-			$row['pending_id']=$prow['id'];
-			$row['pending_author']=$prow['sender_name'];
-			$row['pending_email']=$prow['sender_email'];
-			$row['pending_image']=$prow['image_url'];
-			$row['pending_comments']=$prow['comments'];
-		}
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 			<article class="card-body">
-				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la notícia" : (!empty($_GET['import_pending_id']) ? "Importa una notícia proposada" : "Afegeix una notícia a mà"); ?></h4>
+				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la notícia" : "Afegeix una notícia a mà"; ?></h4>
 				<hr>
 				<form method="post" action="news_edit.php" enctype="multipart/form-data" onsubmit="return checkNewsPost()">
 <?php
-	if(isset($_GET['import_pending_id'])) {
-?>
-					<div class="mb-3">
-						<label for="form-pending_author">Autor que ha proposat la notícia</label>
-						<input class="form-control" id="form-pending_author" disabled value="<?php echo htmlspecialchars($row['pending_author']); ?>">
-					</div>
-					<div class="mb-3">
-						<label for="form-pending_email">Correu de l’autor que ha proposat la notícia</label>
-						<input class="form-control" id="form-pending_email" disabled value="<?php echo htmlspecialchars($row['pending_email']); ?>">
-					</div>
-					<div class="mb-3">
-						<label for="form-pending_comments">Comentaris de l’autor que ha proposat la notícia</label>
-						<input class="form-control" id="form-pending_comments" disabled value="<?php echo htmlspecialchars($row['pending_comments']); ?>">
-					</div>
-					<div class="mb-3">
-						<label for="form-pending_image">Imatge proposada per a la notícia</label>
-						<input class="form-control" id="form-pending_image" disabled value="<?php echo htmlspecialchars($row['pending_image']); ?>">
-					</div>
-<?php
-	} else if (empty($row['id'])) {
+	if (empty($row['id'])) {
 ?>
 					<p class="alert alert-warning"><span class="fa fa-exclamation-triangle me-2"></span>Normalment, no és necessari afegir manualment notícies de fansubs, ja que s’obtenen automàticament mitjançant els recollidors. Assegura’t que realment és això el que vols fer, i en cas de dubte, contacta amb un administrador.</p>
 <?php
 	}
 ?>
 					<div class="mb-3">
-						<label for="form-fansub_id">Fansub</label>
+						<label for="form-fansub_id">Fansub</label> <?php print_helper_box('Fansub', 'Fansub al qual està associada la notícia.\n\nNo és possible editar-lo una vegada afegida la notícia.'); ?>
 						<select name="fansub_id" class="form-select" id="form-fansub_id"<?php echo isset($_GET['id']) ? ' disabled' : ''; ?>>
 <?php
 	if ($_SESSION['admin_level']>=3) {
 ?>
-							<option value="">- Notícia en nom de Fansubs.cat (tria un altre fansub, si no és així) -</option>
+							<option value="">- Notícia en nom de Fansubs.cat (si no és el que vols, tria un altre fansub) -</option>
 <?php
 	}
 	if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
@@ -155,29 +119,28 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						</select>
 						<?php echo isset($_GET['id']) ? '<input type="hidden" name="fansub_id" value="'.$row['fansub_id'].'">' : ''; ?>
-						<?php echo isset($_GET['import_pending_id']) ? '<input type="hidden" name="import_pending_id" value="'.$row['pending_id'].'">' : ''; ?>
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-title" class="mandatory">Títol</label>
+						<label for="form-title" class="mandatory">Títol</label> <?php print_helper_box('Títol', 'Títol de la notícia que es mostrarà al web.'); ?>
 						<input class="form-control" name="title" id="form-title" required value="<?php echo htmlspecialchars($row['title']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-contents">Contingut<span class="mandatory"></span> <small class="text-muted">(compte, en format HTML!)</small></label>
+						<label for="form-contents">Contingut<span class="mandatory"></span> <?php print_helper_box('Contingut', 'Text del cos de la notícia que es mostrarà al web.\n\nImportant: aquí s’hi introdueix codi HTML i el web l’imprimeix sense comprovar-ne la validesa: si és codi invàlid, pot trencar el web.\n\nNo recomanem fer servir codi HTML (ni tan sols etiquetes de negreta i cursiva) per aquest risc.\n\nSi tot i això decideixes fer-ne servir, assegura’t de tancar totes les etiquetes correctament.'); ?> <small class="text-muted">(compte, en format HTML!)</small></label>
 						<textarea class="form-control" name="contents" id="form-contents" required style="height: 150px;"><?php echo htmlspecialchars($row['contents']); ?></textarea>
 					</div>
 					<div class="mb-3">
-						<label for="form-url">URL</label>
+						<label for="form-url">URL</label> <?php print_helper_box('URL', 'URL a la qual enllaçarà la notícia.\n\nEs poden crear notícies sense URL, però Fansubs.cat no és un lloc on generar contingut propi, sinó un recull de tots els webs de notícies.'); ?>
 						<input class="form-control" name="url" id="form-url" value="<?php echo htmlspecialchars($row['url']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-date" class="mandatory">Data</label>
+						<label for="form-date" class="mandatory">Data</label> <?php print_helper_box('Data', 'Data de la notícia que es mostrarà al web.'); ?>
 						<input class="form-control" name="date" type="datetime-local" id="form-date" required step="1" value="<?php echo !empty($row['date']) ? date('Y-m-d\TH:i:s', strtotime($row['date'])) : date('Y-m-d\TH:i:s'); ?>">
 					</div>
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge<br><small class="text-muted">(format JPEG o PNG)</small></label><br>
+								<label>Imatge <?php print_helper_box('Imatge', 'Imatge opcional que es mostrarà al costat de la notícia al web.'); ?><br><small class="text-muted">(format JPEG o PNG)</small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/news/'.$row['fansub_slug'].'/'.$row['image']);
 ?>
