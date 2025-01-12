@@ -66,6 +66,38 @@ function convert_from_hh_mm_ss($string) {
 	}
 }
 
+function get_relative_date($time) {
+	if (time()-$time<60) {
+		return "ara mateix";
+	}
+	if (time()-$time<3600) {
+		$minutes = intval((time()-$time)/60);
+		if ($minutes==1) {
+			return "fa 1 minut";
+		} else {
+			return "fa $minutes minuts";
+		}
+	} else if (time()-$time<3600*24) {
+		$hours = intval((time()-$time)/3600);
+		if ($hours==1) {
+			return "fa 1 hora";
+		} else {
+			return "fa $hours hores";
+		}
+	}
+	else if (time()-$time<3600*24*30) {
+		$days = intval((time()-$time)/(3600*24));
+		if ($days==1) {
+			return "fa 1 dia";
+		} else {
+			return "fa $days dies";
+		}
+	}
+	else {
+		return date('d/m/Y', $time);
+	}
+}
+
 //Returns a Catalan approximate representation of the elapsed time since a date
 function relative_time($date){
         $ago = (int)(time() - date('U', $date));

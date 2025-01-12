@@ -1663,6 +1663,13 @@ function recalculateVersionSlug() {
 	$("#form-slug").val(string_to_slug($("#form-title-with-autocomplete").val())+'/'+fansubs.join('+'));
 }
 
+function toggleWelcomeView() {
+	$('#welcome-refresh').toggleClass('d-none');
+	$('#welcome-view').toggleClass('d-none');
+	$('#latest-view').toggleClass('d-none');
+	$.post("save_user_default_view.php", {view: ($('#welcome-view').hasClass('d-none') ? 2 : 1)});
+}
+
 var malData;
 var malDataStaff;
 var malDataDivisionsEpisodes;

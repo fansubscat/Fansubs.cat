@@ -185,6 +185,17 @@ small {
 	color: #FF8BA3 !important;
 }
 
+.single-line {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: block;
+}
+
+.table-welcome tr:first-of-type td, .table-welcome tr:first-of-type th {
+	border-top: 1px solid rgb(222, 226, 230);
+}
+
 tr[id^="form-links-list-"] input[type="url"], tr[id^="form-extras-list-row-"] input[type="url"] {
 	padding-left: 24px;
 }

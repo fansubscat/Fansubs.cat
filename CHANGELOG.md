@@ -20,6 +20,7 @@
 	- Es permet importar puntuació, portada i sinopsi de MyDramaList.
 	- La majoria dels camps passen a tenir una ajuda integrada que n’explica els detalls i el funcionament.
 	- Es pot canviar la versió principal d’una sèrie a la seva fitxa.
+	- S’afegeix una opció per a veure un resum de les darreres visualitzacions i comentaris a la pàgina principal.
 	- S’incorporen moltes validacions addicionals a l’hora de desar les fitxes.
 	- Si algú ha editat la fitxa mentre algú altre l’estava editant, es mostra un error i no es trepitgen els canvis.
 	- S’unifica la manera de mostrar els títols dels capítols entre les diferents seccions del portal.
