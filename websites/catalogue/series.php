@@ -482,6 +482,11 @@ while ($version = mysqli_fetch_assoc($result)) {
 													<a class="fa fa-fw fa-earth-europe web-link" title="Lloc web" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
 <?php
 		}
+		if (!empty($fansub['bluesky_url'])) {
+?>
+													<a class="fab fa-fw fa-discord bluesky-link" title="Perfil a Bluesky" href="<?php echo $fansub['bluesky_url']; ?>" target="_blank"></a>
+<?php
+		}
 		if (!empty($fansub['discord_url'])) {
 ?>
 													<a class="fab fa-fw fa-discord discord-link" title="Servidor a Discord" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>

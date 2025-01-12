@@ -6,6 +6,7 @@
 	- S’han unificat els diferents fitxers de configuració en un de sol.
 	- S‘han actualitzat els gèneres de MyAnimeList.
 	- Es canvia el funcionament de sèries i versions movent diversos camps a les versions.
+	- Els fansubs poden enllaçar al seu Bluesky.
 - **Catàleg:**
 	- Es corregeix que les pàgines d’incrustació no informessin bé els atributs socials.
 	- Es canvia el format dels «slugs» perquè incloguin el nom del fansub i puguin canviar segons la versió.
@@ -32,6 +33,9 @@
 	- Els comentaris de la versió tenen el mateix format que a «Darrers comentaris».
 	- Si no hi ha cap administrador donat d’alta, es permet un autoregistre (per a instal·lacions noves).
 	- La pantalla d’error és més bonica.
+- **Serveis:**
+	- Nou servei (manual) per a sincronitzar els títols amb MyAnimeList.
+	- Es fan mencions als missatges de Bluesky.
 
 ## 2025-01-03 - Versió 5.2.13
 - **General:**

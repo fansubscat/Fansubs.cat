@@ -56,6 +56,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		} else {
 			crash("Dades invàlides: manca twitter_handle");
 		}
+		if (!empty($_POST['bluesky_url'])) {
+			$data['bluesky_url']="'".escape($_POST['bluesky_url'])."'";
+		} else {
+			$data['bluesky_url']="NULL";
+		}
+		if (!empty($_POST['bluesky_handle'])) {
+			$data['bluesky_handle']=escape($_POST['bluesky_handle']);
+		} else {
+			crash("Dades invàlides: manca bluesky_handle");
+		}
 		if (!empty($_POST['ping_token'])) {
 			$data['ping_token']="'".escape($_POST['ping_token'])."'";
 		} else {
@@ -90,7 +100,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			}
 			
 			log_action("update-fansub", "S’ha actualitzat el fansub «".$_POST['name']."» (id. de fansub: ".$data['id'].")");
-			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',discord_url=".$data['discord_url'].",status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',discord_url=".$data['discord_url'].",bluesky_url=".$data['bluesky_url'].",bluesky_handle='".$data['bluesky_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.$data['id'].'.png');
@@ -98,7 +108,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		}
 		else {
 			log_action("create-fansub", "S’ha creat el fansub «".$_POST['name']."»");
-			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,mastodon_url,mastodon_handle,discord_url,status,ping_token,is_historical,archive_url,hentai_category,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."',".$data['discord_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,mastodon_url,mastodon_handle,discord_url,bluesky_handle,bluesky_url,status,ping_token,is_historical,archive_url,hentai_category,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."',".$data['discord_url'].",'".$data['bluesky_handle']."',".$data['bluesky_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.mysqli_insert_id($db_connection).'.png');
@@ -165,6 +175,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 					<div class="mb-3">
 						<label for="form-url">URL</label>
 						<input class="form-control" type="url" name="url" id="form-url" maxlength="200" value="<?php echo htmlspecialchars($row['url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-bluesky_url">URL del perfil a Bluesky</label>
+						<input class="form-control" type="url" name="bluesky_url" id="form-bluesky_url" maxlength="200" value="<?php echo htmlspecialchars($row['bluesky_url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-bluesky_handle">Nom a Bluesky<span class="mandatory"></span> <small class="text-muted">(incloent arrova, si no en té, el nom sencer del fansub)</small></label>
+						<input class="form-control" name="bluesky_handle" id="form-bluesky_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['bluesky_handle']); ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-discord_url">URL del servidor de Discord públic del fansub</label>

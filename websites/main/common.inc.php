@@ -24,6 +24,13 @@ function print_fansub($row) {
 	}
 ?>
 <?php
+	if ($row['bluesky_url']!=NULL){
+?>
+												<a class="fab fa-fw fa-bluesky bluesky-link" href="<?php echo $row['bluesky_url']; ?>" target="_blank"></a>
+<?php
+	}
+?>
+<?php
 	if ($row['discord_url']!=NULL){
 ?>
 												<a class="fab fa-fw fa-discord discord-link" href="<?php echo $row['discord_url']; ?>" target="_blank"></a>

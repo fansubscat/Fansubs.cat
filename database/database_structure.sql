@@ -96,6 +96,8 @@ CREATE TABLE `fansub` (
   `twitter_handle` varchar(200) NOT NULL,
   `mastodon_url` varchar(200) DEFAULT NULL,
   `mastodon_handle` varchar(200) NOT NULL,
+  `bluesky_url` varchar(200) DEFAULT NULL,
+  `bluesky_handle` varchar(200) NOT NULL,
   `discord_url` varchar(200) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `ping_token` varchar(200) DEFAULT NULL,

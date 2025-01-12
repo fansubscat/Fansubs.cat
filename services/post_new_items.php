@@ -103,7 +103,7 @@ function publish_to_telegram($message, $is_hentai){
 	}
 }
 
-function publish_to_bluesky($message, $series_id, $embed_title, $embed_description, $url, $is_hentai){
+function publish_to_bluesky($message, $version_id, $embed_title, $embed_description, $url, $is_hentai){
 	if (defined('DRY_RUN')) {
 		echo "-----------------\nPost this to BlueSky:\n$message\n";
 		return;
@@ -113,7 +113,7 @@ function publish_to_bluesky($message, $series_id, $embed_title, $embed_descripti
 	} else {
 		$bluesky = new BlueskyApi(BLUESKY_HANDLE, BLUESKY_APP_PASSWORD);
 	}
-	$image_body = @file_get_contents(STATIC_DIRECTORY.'/social/series_'.$series_id.'.jpg');
+	$image_body = @file_get_contents(STATIC_DIRECTORY.'/social/version_'.$version_id.'.jpg');
 	$response = $bluesky->request('POST', 'com.atproto.repo.uploadBlob', [], $image_body, 'image/jpeg');
 	$image_blob = $response->blob;
 	$args = [
@@ -121,6 +121,7 @@ function publish_to_bluesky($message, $series_id, $embed_title, $embed_descripti
 		'repo' => $bluesky->getAccountDid(),
 		'record' => [
 			'text' => $message,
+			'facets' => get_bluesky_facets($is_hentai, $message),
 			'langs' => ['ca'],
 			'createdAt' => date('c'),
 			'$type' => 'app.bsky.feed.post',
@@ -160,6 +161,57 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 	}
 }
 
+function parse_mentions($text_bytes) {
+    $spans = [];
+    // regex based on: https://atproto.com/specs/handle#handle-identifier-syntax
+    $mention_regex = '/[$|\W](@([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)/';
+
+    if (preg_match_all($mention_regex, $text_bytes, $matches, PREG_OFFSET_CAPTURE)) {
+        foreach ($matches[1] as $match) {
+            $spans[] = [
+                "start" => $match[1],
+                "end" => $match[1] + strlen($match[0]),
+                "handle" => substr($match[0], 1)
+            ];
+        }
+    }
+
+    return $spans;
+}
+
+function get_bluesky_facets($is_hentai, $post) {
+	if ($is_hentai) {
+		$bluesky = new BlueskyApi(BLUESKY_HANDLE_HENTAI, BLUESKY_APP_PASSWORD_HENTAI);
+	} else {
+		$bluesky = new BlueskyApi(BLUESKY_HANDLE, BLUESKY_APP_PASSWORD);
+	}
+	
+	$mentions = parse_mentions($post);
+	$facets=array();
+	foreach ($mentions as $mention) {
+		$args = [
+			'handle' => $mention['handle'],
+		];
+		$response = $bluesky->request('GET', 'com.atproto.identity.resolveHandle', $args);
+		if ($response!=NULL) {
+			$facet = [
+				'index' => [
+					'byteStart' => $mention['start'],
+					'byteEnd' => $mention['end'],
+				],
+				'features' => [
+					[
+						'$type' => 'app.bsky.richtext.facet#mention',
+						'did' => $response->did,
+					],
+				],
+			];
+			array_push($facets, $facet);
+		}
+	}
+	return $facets;
+}
+
 function get_shortened_bluesky_post($post){
 	//Check that it will not exceed 300 characters... and ellipsize if needed
 	if (mb_strlen($post)>300){
@@ -191,12 +243,6 @@ function get_shortened_toot($toot){
 	} else {
 		return $toot;
 	}
-}
-
-function exists_more_than_one_version($series_id){
-	$result = query("SELECT COUNT(*) cnt FROM version WHERE series_id=$series_id AND is_hidden=0");
-	$row = mysqli_fetch_assoc($result);
-	return ($row['cnt']>1);
 }
 
 function get_prepared_message($message, $post_header, $type_emoji, $series_name, $available_episodes, $fansub_names, $completed_status) {
@@ -322,7 +368,7 @@ $result = query("SELECT v.title name,
 			v.synopsis, 
 			s.rating, 
 			v.status, 
-			v.series_id, 
+			v.id version_id, 
 			s.subtype, 
 			s.comic_type, 
 			v.slug, 
@@ -354,7 +400,7 @@ $result = query("SELECT v.title name,
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
-	$url = "https://manga.".($row['rating']=='XXX' ? 'hentai.cat' : 'fansubs.cat')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
+	$url = "https://manga.".($row['rating']=='XXX' ? 'hentai.cat' : 'fansubs.cat')."/".$row['slug'];
 	try{
 		$header = get_manga_header($row['new_series']==1 ? 'new' : 'existing', $row['comic_type'], $row['cnt'], $row['rating']=='XXX');
 		if ($row['new_series']==1) {
@@ -396,7 +442,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['fansub_names'],
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
-		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Manga hentai en català' : 'Fansubs.cat - Manga en català'), $row['synopsis'], $url, "https://static.fansubs.cat/social/series_".$row['series_id'].'.jpg', $row['rating']=='XXX');
+		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Manga hentai en català' : 'Fansubs.cat - Manga en català'), $row['synopsis'], $url, "https://static.fansubs.cat/social/version_".$row['version_id'].'.jpg', $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
 			$message_telegram,
 			$header,
@@ -416,7 +462,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['fansub_names'],
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
-		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Manga hentai en català' : 'Fansubs.cat - Manga en català'), $row['synopsis'], $url, $row['rating']=='XXX');
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Manga hentai en català' : 'Fansubs.cat - Manga en català'), $row['synopsis'], $url, $row['rating']=='XXX');
 		file_put_contents('/srv/fansubscat/temporary/last_posted_manga_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
@@ -427,7 +473,7 @@ $result = query("SELECT IFNULL(vse.title, se.name) name,
 			v.synopsis, 
 			s.rating, 
 			v.status, 
-			v.series_id, 
+			v.id version_id, 
 			s.subtype, 
 			v.slug, 
 			MAX(fi.id) id, 
@@ -459,7 +505,7 @@ $result = query("SELECT IFNULL(vse.title, se.name) name,
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
-	$url = "https://anime.".($row['rating']=='XXX' ? 'hentai.cat' : 'fansubs.cat')."/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
+	$url = "https://anime.".($row['rating']=='XXX' ? 'hentai.cat' : 'fansubs.cat')."/".$row['slug'];
 	try{
 		$header = get_anime_header($row['new_series']==1 ? 'new' : 'existing', $row['fansub_type'], $row['cnt'], $row['rating']=='XXX');
 		if ($row['new_series']==1) {
@@ -506,7 +552,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['fansub_names'],
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
-		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Anime hentai en català' : 'Fansubs.cat - Anime en català'), $row['synopsis'], $url, "https://static.fansubs.cat/social/series_".$row['series_id'].'.jpg', $row['rating']=='XXX');
+		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Anime hentai en català' : 'Fansubs.cat - Anime en català'), $row['synopsis'], $url, "https://static.fansubs.cat/social/version_".$row['version_id'].'.jpg', $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
 			$message_telegram,
 			$header,
@@ -526,7 +572,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['fansub_names'],
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
-		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Anime hentai en català' : 'Fansubs.cat - Anime en català'), $row['synopsis'], $url, $row['rating']=='XXX');
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Anime hentai en català' : 'Fansubs.cat - Anime en català'), $row['synopsis'], $url, $row['rating']=='XXX');
 		file_put_contents('/srv/fansubscat/temporary/last_posted_anime_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
@@ -537,7 +583,7 @@ $result = query("SELECT IFNULL(vse.title,se.name) name,
 			v.synopsis, 
 			s.rating, 
 			v.status, 
-			v.series_id, 
+			v.id version_id, 
 			s.subtype, 
 			v.slug, 
 			MAX(fi.id) id, 
@@ -569,7 +615,7 @@ $result = query("SELECT IFNULL(vse.title,se.name) name,
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
-	$url = "https://imatgereal.fansubs.cat/".$row['slug'].(exists_more_than_one_version($row['series_id']) ? "?v=".$row['version_id'] : "");
+	$url = "https://imatgereal.fansubs.cat/".$row['slug'];
 	try{
 		$header = get_liveaction_header($row['new_series']==1 ? 'new' : 'existing', $row['fansub_type'], $row['cnt'], FALSE);
 		if ($row['new_series']==1) {
@@ -616,7 +662,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['fansub_names'],
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
-		publish_to_discord($prepared_message, $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], $url, "https://static.fansubs.cat/social/series_".$row['series_id'].'.jpg', FALSE);
+		publish_to_discord($prepared_message, $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], $url, "https://static.fansubs.cat/social/version_".$row['version_id'].'.jpg', FALSE);
 		$prepared_message = get_prepared_message(
 			$message_telegram,
 			$header,
@@ -636,7 +682,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['fansub_names'],
 			$row['status']==1 ? "\n✅ Projecte completat" : ''
 		);
-		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['series_id'], $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], $url, FALSE);
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], $url, FALSE);
 		file_put_contents('/srv/fansubscat/temporary/last_posted_liveaction_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
