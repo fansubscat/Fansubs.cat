@@ -27,7 +27,7 @@ include(__DIR__.'/header.inc.php');
 
 switch ($type) {
 	case 'anime':
-		$division_name_explanation='Les divisions són agrupacions de capítols. Podríem dir que són com les temporades, tot i que no necessàriament ho han de ser: també poden ser arcs, conjunts de capítols especials, OVAs, etc.\n\nCada anime ha de tenir una o més divisions.\n\nSi es tracta d’un únic film, ha de tenir una sola divisió que contindrà un sol capítol.\n\nSi es tracta d’un conjunt de films, normalment tindrà una sola divisió amb diversos capítols. Però si, per exemple, hi ha una agrupació d’especials relacionats amb el film, podrien incloure’s en una segona divisió.\n\nLes sèries de més d’una temporada han de tenir-les totes informades com a divisions, fins i tot si no està previst editar-les, però poden tenir divisions addicionals (per exemple, capítols especials, OVAs o films enllaçats).\n\nSi vols, pots donar d’alta divisions fictícies amb 0 capítols perquè s’utilitzi el seu identificador de MyAnimeList per a fer mitjana amb la resta de divisions (és útil quan les divisions no encaixen amb les fitxes a MyAnimeList).\n\nRevisa l’ajuda de cada camp per a més informació.';
+		$division_name_explanation='Les divisions són agrupacions de capítols. Podríem dir que són com les temporades, tot i que no necessàriament ho han de ser: també poden ser arcs, conjunts de capítols especials, OVAs, etc.\n\nCada anime ha de tenir una o més divisions.\n\nSi es tracta d’un únic film, ha de tenir una sola divisió que contindrà un sol capítol.\n\nSi es tracta d’un conjunt de films, normalment tindrà una divisió que unificarà tots els capítols, i addicionalment, una divisió sense capítols per a cada fitxa a MyAnimeList. Si, per exemple, hi ha una agrupació d’especials relacionats amb el film, poden incloure’s en una altra divisió.\n\nLes sèries de més d’una temporada han de tenir-les totes informades com a divisions, fins i tot si no està previst editar-les, però poden tenir divisions addicionals (per exemple, capítols especials, OVAs o films enllaçats).\n\nSi vols, pots donar d’alta divisions fictícies amb 0 capítols perquè s’utilitzi el seu identificador de MyAnimeList per a fer mitjana amb la resta de divisions (és útil quan les divisions no encaixen amb les fitxes a MyAnimeList).\n\nRevisa l’ajuda de cada camp per a més informació.';
 		$division_help='Si la divisió equival a una temporada, normalment s’hi introdueix el títol de la temporada en la llengua original (no pas en català), sempre fent servir la versió en alfabet occidental (no s’admeten kanji ni hanja).\n\nTambé s’hi pot introduir un títol intern si es tracta d’una divisió per a agrupar OVAs, especials, films enllaçats o similars.\n\nS’utilitza per a identificar la divisió internament.\n\nA la fitxa de la versió se n’introdueix el nom localitzat.';
 		$content_apos="l’anime";
 		$content_one="un anime";
@@ -41,7 +41,7 @@ switch ($type) {
 		$external_provider='MyAnimeList';
 		break;
 	case 'liveaction':
-		$division_name_explanation='Les divisions són agrupacions de capítols. Podríem dir que són com les temporades, tot i que no necessàriament ho han de ser: també poden ser arcs, conjunts de capítols especials, OVAs, etc.\n\nCada contingut d’imatge real ha de tenir una o més divisions.\n\nSi es tracta d’un únic film, ha de tenir una sola divisió que contindrà un sol capítol.\n\nSi es tracta d’un conjunt de films, normalment tindrà una sola divisió amb diversos capítols. Però si, per exemple, hi ha una agrupació d’especials relacionats amb el film, podrien incloure’s en una segona divisió.\n\nLes sèries de més d’una temporada han de tenir-les totes informades com a divisions, fins i tot si no està previst editar-les, però poden tenir divisions addicionals (per exemple, capítols especials, OVAs o films enllaçats).\n\nSi vols, pots donar d’alta divisions fictícies amb 0 capítols perquè s’utilitzi el seu identificador de MyDramaList per a fer mitjana amb la resta de divisions (és útil quan les divisions no encaixen amb les fitxes a MyDramaList).\n\nRevisa l’ajuda de cada camp per a més informació.';
+		$division_name_explanation='Les divisions són agrupacions de capítols. Podríem dir que són com les temporades, tot i que no necessàriament ho han de ser: també poden ser arcs, conjunts de capítols especials, OVAs, etc.\n\nCada contingut d’imatge real ha de tenir una o més divisions.\n\nSi es tracta d’un únic film, ha de tenir una sola divisió que contindrà un sol capítol.\n\nSi es tracta d’un conjunt de films, normalment tindrà una divisió que unificarà tots els capítols, i addicionalment, una divisió sense capítols per a cada fitxa a MyDramaList. Si, per exemple, hi ha una agrupació d’especials relacionats amb el film, poden incloure’s en una altra divisió.\n\nLes sèries de més d’una temporada han de tenir-les totes informades com a divisions, fins i tot si no està previst editar-les, però poden tenir divisions addicionals (per exemple, capítols especials, OVAs o films enllaçats).\n\nSi vols, pots donar d’alta divisions fictícies amb 0 capítols perquè s’utilitzi el seu identificador de MyDramaList per a fer mitjana amb la resta de divisions (és útil quan les divisions no encaixen amb les fitxes a MyDramaList).\n\nRevisa l’ajuda de cada camp per a més informació.';
 		$division_help='NSi la divisió equival a una temporada, normalment s’hi introdueix el títol de la temporada en la llengua original (no pas en català), sempre fent servir la versió en alfabet occidental (no s’admeten kanji ni hanja).\n\nTambé s’hi pot introduir un títol intern si es tracta d’una divisió per a agrupar OVAs, especials, films enllaçats o similars.\n\nS’utilitza per a identificar la divisió internament.\n\nA la fitxa de la versió se n’introdueix el nom localitzat';
 		$content_apos="el contingut d’imatge real";
 		$content_one="un contingut d’imatge real";
@@ -52,6 +52,7 @@ switch ($type) {
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_POST['action'])) {
 		$data=array();
+		$external_ids = array('-1');
 		if (!empty($_POST['id']) && is_numeric($_POST['id'])) {
 			$data['id']=escape($_POST['id']);
 		} else if ($_POST['action']=='edit') {
@@ -100,6 +101,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		if (!empty($_POST['external_id'])) {
 			$data['external_id']="'".escape($_POST['external_id'])."'";
+			array_push($external_ids, escape($_POST['external_id']));
 		} else {
 			$data['external_id']="NULL";
 		}
@@ -169,6 +171,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			if (!empty($_POST['form-division-list-external_id-'.$i])) {
 				$division['external_id']="'".escape($_POST['form-division-list-external_id-'.$i])."'";
+				array_push($external_ids, escape($_POST['form-division-list-external_id-'.$i]));
 			} else {
 				$division['external_id']="NULL";
 			}
@@ -240,6 +243,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				crash("Ja hi ha una sèrie amb aquest títol. Revisa que no l’hagis afegida per duplicat i, en cas contrari, afegeix una diferenciació a totes dues (per exemple, l’any d’emissió o l’autor entre parèntesi).");
 			}
 			
+			$external_ids_result = query("SELECT COUNT(*) cnt FROM series s WHERE s.type='".$type."' AND (s.external_id IN ('".implode("', '", $external_ids)."') OR EXISTS (SELECT * FROM division d WHERE d.series_id=s.id AND d.external_id IN ('".implode("', '", $external_ids)."'))) AND s.id<>".$data['id']);
+			$external_ids_row = mysqli_fetch_assoc($external_ids_result);
+			if ($external_ids_row['cnt']>0) {
+				crash("Ja hi ha una sèrie que conté un dels identificadors de ".($type=='liveaction' ? 'MyDramaList' : 'MyAnimeList')." a la fitxa de la sèrie o en una divisió. Revisa que no estiguis afegint una obra que ja existeix i en cas de dubte contacta amb un administrador.");
+			}
+			
 			log_action("update-series", "S’ha actualitzat la sèrie «".$_POST['name']."» (id. de sèrie: ".$data['id'].")");
 			query("UPDATE series SET name='".$data['name']."',alternate_names=".$data['alternate_names'].",keywords=".$data['keywords'].",subtype='".$data['subtype']."',publish_date=".$data['publish_date'].",author=".$data['author'].",studio=".$data['studio'].",rating=".$data['rating'].",number_of_episodes=".$data['number_of_episodes'].",external_id=".$data['external_id'].",score=".$data['score'].",has_licensed_parts=".$data['has_licensed_parts'].",comic_type=".$data['comic_type'].",reader_type=".$data['reader_type'].",default_version_id=".$data['default_version_id'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_series_genre WHERE series_id=".$data['id']);
@@ -297,6 +306,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$name_row = mysqli_fetch_assoc($name_result);
 			if ($name_row['cnt']>0) {
 				crash("Ja hi ha una sèrie amb aquest títol. Revisa que no l’hagis afegida per duplicat i, en cas contrari, afegeix una diferenciació a totes dues (per exemple, l’any d’emissió o l’autor entre parèntesi).");
+			}
+			
+			$external_ids_result = query("SELECT COUNT(*) cnt FROM series s WHERE s.type='".$type."' AND (s.external_id IN ('".implode("', '", $external_ids)."') OR EXISTS (SELECT * FROM division d WHERE d.series_id=s.id AND d.external_id IN ('".implode("', '", $external_ids)."')))");
+			$external_ids_row = mysqli_fetch_assoc($external_ids_result);
+			if ($external_ids_row['cnt']>0) {
+				crash("Ja hi ha una sèrie que conté un dels identificadors de ".($type=='liveaction' ? 'MyDramaList' : 'MyAnimeList')." a la fitxa de la sèrie o en una divisió. Revisa que no estiguis afegint una obra que ja existeix i en cas de dubte contacta amb un administrador.");
 			}
 			
 			log_action("create-series", "S’ha creat la sèrie «".$_POST['name']."»");

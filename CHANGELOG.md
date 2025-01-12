@@ -13,25 +13,25 @@
 	- Als apartats del web que no mostren versions concretes, es mostra el títol, portada i sinopsi de la versió principal.
 	- Es pot enllaçar a divisions concretes.
 - **Administració:**
-	- La majoria dels camps passen a tenir una ajuda integrada que n’explica els detalls i el funcionament.
-	- Si algú ha editat la fitxa mentre un administrador l’estava editant, es mostra un error i no es trepitgen els canvis.
 	- La fitxa de sèrie passa a ser més genèrica i se’n mou el títol, la sinopsi i les imatges a la versió.
+	- S’unifica la nomenclatura «temporada»/«volum» en «divisió».
+	- Es pot afegir immediatament un capítol a la sèrie sense sortir de la pàgina de la versió.
+	- Es permet importar puntuació, portada i sinopsi de MyDramaList.
+	- La majoria dels camps passen a tenir una ajuda integrada que n’explica els detalls i el funcionament.
+	- Es pot canviar la versió principal d’una sèrie a la seva fitxa.
+	- S’incorporen moltes validacions addicionals a l’hora de desar les fitxes.
+	- Si algú ha editat la fitxa mentre algú altre l’estava editant, es mostra un error i no es trepitgen els canvis.
 	- S’unifica la manera de mostrar els títols dels capítols entre les diferents seccions del portal.
-	- La pantalla d’error és més bonica.
-	- S’elimina el camp «logo» dels fansubs (no s’utilitzava).
-	- Els fansubs inactius es mostren en gris.
 	- Les sèries sense versions i les versions sense enllaços es mostren en gris.
+	- Els fansubs inactius es mostren en gris.
+	- En afegir una versió i seleccionar una sèrie, es mostren primer les sèries sense cap versió.
+	- Els enllaços de la versió no mostren la variant si només n’hi ha una.
+	- S’elimina el camp «logo» dels fansubs (no s’utilitzava).
 	- S’elimina l’apartat «Servidors d’emmagatzematge».
 	- Si s‘elimina un administrador, se’l desconnecta a la següent petició.
-	- Si no hi ha cap administrador donat d’alta, es permet un autoregistre (per a instal·lacions noves).
-	- En afegir una versió i seleccionar una sèrie, es mostren primer les sèries sense cap versió.
-	- S’unifica la nomenclatura «temporada»/«volum» en «divisió».
-	- Els enllaços de la versió no mostren la variant si només n’hi ha una.
 	- Els comentaris de la versió tenen el mateix format que a «Darrers comentaris».
-	- Es pot canviar la versió principal d’una sèrie a la seva fitxa.
-	- Es permet importar puntuació, portada i sinopsi de MyDramaList.
-	- S’incorporen moltes validacions addicionals a l’hora de desar les fitxes.
-	- Si una sèrie té el mateix nom o una versió el mateix «slug», es mostra un error en desar.
+	- Si no hi ha cap administrador donat d’alta, es permet un autoregistre (per a instal·lacions noves).
+	- La pantalla d’error és més bonica.
 
 ## 2025-01-03 - Versió 5.2.13
 - **General:**

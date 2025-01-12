@@ -97,7 +97,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') series_name,
+$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
 			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
 			IF (f.episode_id IS NULL,
 				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
@@ -245,7 +245,7 @@ mysqli_free_result($result);
 										<tbody>
 <?php
 
-$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') series_name,
+$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
 			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
 			IF (f.episode_id IS NULL,
 				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),

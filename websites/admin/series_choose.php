@@ -56,7 +56,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT s.*,(SELECT GROUP_CONCAT(DISTINCT v.title ORDER BY v.title ASC SEPARATOR ', ') FROM version v WHERE v.series_id=s.id AND v.title<>s.name) version_titles,(SELECT COUNT(DISTINCT v.id) FROM version v WHERE v.series_id=s.id) versions,(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.is_real=1) divisions, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.is_real=0) fake_divisions FROM series s WHERE s.type='$type' GROUP BY s.id ORDER BY versions=0 DESC, s.name");
+	$result = query("SELECT s.*,(SELECT GROUP_CONCAT(DISTINCT d.name ORDER BY d.number ASC, d.name ASC SEPARATOR '|||') FROM division d WHERE d.series_id=s.id AND d.external_id IS NOT NULL AND (d.external_id<>s.external_id".($type!='manga' ? ' OR (d.external_id IS NOT NULL AND d.name<>s.name COLLATE utf8mb4_bin)' : '').")) division_titles,(SELECT GROUP_CONCAT(DISTINCT v.title ORDER BY v.title ASC SEPARATOR ', ') FROM version v WHERE v.series_id=s.id AND v.title<>s.name COLLATE utf8mb4_bin) version_titles,(SELECT COUNT(DISTINCT v.id) FROM version v WHERE v.series_id=s.id) versions,(SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.is_real=1) divisions, (SELECT COUNT(DISTINCT d.id) FROM division d WHERE d.series_id=s.id AND d.is_real=0) fake_divisions FROM series s WHERE s.type='$type' GROUP BY s.id ORDER BY versions=0 DESC, s.name");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -65,9 +65,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
+		$divisions = !empty($row['division_titles']) ? explode('|||', $row['division_titles']) : array();
+		$divisions_escaped = array();
+		foreach ($divisions as $division) {
+			array_push($divisions_escaped, htmlspecialchars($division));
+		}
 ?>
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-								<th scope="row" class="align-middle<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo htmlspecialchars($row['name']); ?><?php echo !empty($row['version_titles']) ? '<br><i style="font-weight: normal;" class="text-muted">('.htmlspecialchars($row['version_titles']).')</i>' : ''; ?></th>
+								<th scope="row" class="align-middle<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo htmlspecialchars($row['name']); ?><?php echo !empty($divisions_escaped) ? '<i><br>&nbsp;&nbsp;&nbsp┗ '.implode('<br>&nbsp;&nbsp;&nbsp;┗ ', $divisions_escaped).'</i>' : ''; ?></th>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo get_subtype_name($row['subtype']); ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['divisions']; ?><?php echo $row['fake_divisions']>0 ? '<small>+'.$row['fake_divisions'].'</small>' : ''; ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['number_of_episodes']; ?></td>
