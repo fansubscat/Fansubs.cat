@@ -74,7 +74,7 @@ function print_fansub($row) {
 												<span class="content-button disabled-content-button"><span class="content-type" title="Manga"><span class="fa fa-book-open"></span></span><span class="content-quantity"><?php echo $row['total_manga']; ?></span></span>
 <?php
 	}
-	if (!SITE_IS_HENTAI) {
+	if (!SITE_IS_HENTAI && !DISABLE_LIVE_ACTION) {
 		if ($row['total_liveaction']>0 && empty($row['is_blacklisted'])) {
 ?>
 												<a class="normal-button content-button" href="<?php echo LIVEACTION_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type" title="Contingut d’imatge real"><span class="fa fa-clapperboard"></span></span><span class="content-quantity"><?php echo $row['total_liveaction']; ?></span></a>
@@ -85,14 +85,16 @@ function print_fansub($row) {
 <?php
 		}
 	}
-	if ($row['total_news']>0 && empty($row['is_blacklisted'])) {
+	if (!DISABLE_NEWS) {
+		if ($row['total_news']>0 && empty($row['is_blacklisted'])) {
 ?>
 												<a class="normal-button content-button" href="<?php echo NEWS_URL.'/cerca?fansub='.urlencode($row['slug']); ?>"><span class="content-type"><span class="fa fa-newspaper" title="Notícies"></span></span><span class="content-quantity"><?php echo $row['total_news']; ?></span></a>
 <?php
-	} else {
+		} else {
 ?>
 												<span class="content-button disabled-content-button" title="Notícies"><span class="content-type"><span class="fa fa-newspaper" title="Notícies"></span></span><span class="content-quantity"><?php echo $row['total_news']; ?></span></span>
 <?php
+		}
 	}
 ?>
 									</div>

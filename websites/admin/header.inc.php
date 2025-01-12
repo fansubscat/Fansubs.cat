@@ -82,39 +82,47 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 								<a class="dropdown-item" href="series_choose.php?type=manga">Afegeix una versió nova</a>
 							</div>
 						</li>
+<?php
+	if (!DISABLE_LIVE_ACTION) {
+?>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle<?php echo $page=='liveaction' ? ' active' : ''; ?>" href="#" id="navbarDropdownSeries" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Imatge real</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
 <?php
-	if ($_SESSION['admin_level']>=2) {
+		if ($_SESSION['admin_level']>=2) {
 ?>
 								<a class="dropdown-item" href="series_list.php?type=liveaction">Llista de contingut d’imatge real</a>
 								<a class="dropdown-item" href="series_edit.php?type=liveaction">Afegeix un contingut d’imatge real nou</a>
 								<div class="dropdown-divider"></div>
 <?php
-	}
+		}
 ?>
 								<a class="dropdown-item" href="version_list.php?type=liveaction">Llista de versions d’imatge real</a>
 								<a class="dropdown-item" href="series_choose.php?type=liveaction">Afegeix una versió nova</a>
 							</div>
 						</li>
+<?php
+	}
+	if (!DISABLE_NEWS) {
+?>
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle<?php echo $page=='news' ? ' active' : ''; ?>" href="#" id="navbarDropdownSeries" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Notícies</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownSeries">
 								<a class="dropdown-item" href="news_list.php">Llista de notícies</a>
 								<a class="dropdown-item" href="news_edit.php">Afegeix una notícia a mà</a>
 <?php
-	if ($_SESSION['admin_level']>=3) {
+		if ($_SESSION['admin_level']>=3) {
 ?>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="news_fetcher_list.php">Llista de recollidors de notícies</a>
 								<a class="dropdown-item" href="news_fetcher_edit.php">Afegeix un recollidor de notícies nou</a>
 <?php
-	}
+		}
 ?>
 							</div>
 						</li>
 <?php
+	}
 	if ($_SESSION['admin_level']>=2) {
 ?>
 						<li class="nav-item dropdown">
@@ -142,11 +150,21 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownOthers">
 								<a class="dropdown-item" href="admin_list.php">Llista d’administradors</a>
 								<a class="dropdown-item" href="admin_edit.php">Afegeix un administrador nou</a>
+<?php
+		if (!DISABLE_LINKS) {
+?>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="community_list.php">Llista de comunitats</a>
 								<a class="dropdown-item" href="community_edit.php">Afegeix una comunitat nova</a>
+<?php
+		}
+		if (!DISABLE_ADVENT) {
+?>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="advent_list.php">Llista de calendaris d’advent</a>
+<?php
+		}
+?>
 							</div>
 						</li>
 <?php
@@ -158,7 +176,13 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownAnalytics">
 								<a class="dropdown-item" href="views.php?type=anime">Darreres visualitzacions - Anime</a>
 								<a class="dropdown-item" href="views.php?type=manga">Darreres visualitzacions - Manga</a>
+<?php
+		if (!DISABLE_LIVE_ACTION) {
+?>
 								<a class="dropdown-item" href="views.php?type=liveaction">Darreres visualitzacions - Imatge real</a>
+<?php
+		}
+?>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="comment_list.php">Darrers comentaris</a>
 								<a class="dropdown-item" href="popular.php">Continguts més populars</a>
@@ -171,8 +195,12 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 							<a class="nav-link dropdown-toggle<?php echo $page=='tools' ? ' active' : ''; ?>" href="#" id="navbarDropdownTools" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Eines</a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdownTools">
 								<a class="dropdown-item" href="link_verifier.php">Verificador d’enllaços remots</a>
+<?php
+		if (!DISABLE_NEWS) {
+?>
 								<a class="dropdown-item" href="news_fetcher_status.php">Estat dels recollidors de notícies</a>
 <?php
+		}
 		if ($_SESSION['admin_level']>=3) {
 ?>
 								<a class="dropdown-item" href="admin_log.php">Registre d’accions</a>
@@ -191,11 +219,31 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					<a class="navbar-extra-link pe-3" href="<?php echo MAIN_URL; ?>/" target="_blank" title="Portada - Web públic (www.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-main fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
 					<a class="navbar-extra-link pe-3" href="<?php echo ANIME_URL; ?>/" target="_blank" title="Anime - Web públic (anime.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-anime fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
 					<a class="navbar-extra-link pe-3" href="<?php echo MANGA_URL; ?>/" target="_blank" title="Manga - Web públic (manga.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+<?php
+	if (!DISABLE_LIVE_ACTION) {
+?>
 					<a class="navbar-extra-link pe-3" href="<?php echo LIVEACTION_URL; ?>/" target="_blank" title="Imatge real - Web públic (imatgereal.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-liveaction fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
+<?php
+	}
+	if (!DISABLE_NEWS) {
+?>
 					<a class="navbar-extra-link pe-3" href="<?php echo NEWS_URL; ?>/" target="_blank" title="Notícies - Web públic (noticies.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-news fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+<?php
+	}
+?>
 					<a class="navbar-extra-link pe-3" href="https://www.<?php echo HENTAI_DOMAIN; ?>/" target="_blank" title="Hentai - Web públic (www.hentai.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-hentai fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+<?php
+	if (!DISABLE_RESOURCES) {
+?>
 					<a class="navbar-extra-link pe-3" href="<?php echo RESOURCES_URL; ?>/" target="_blank" title="Recursos - Web públic (recursos.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-resources fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+<?php
+	}
+	if (!DISABLE_ADVENT) {
+?>
 					<a class="navbar-extra-link pe-3" href="<?php echo ADVENT_URL; ?>/" target="_blank" title="Calendari d’advent - Web públic (advent.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-advent fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+<?php
+	}
+?>
 					<a class="navbar-extra-link pe-3" href="<?php echo ADMIN_TUTORIAL_URL; ?>" target="_blank" title="Ajuda"><span class="fa fa-question-circle"></span></a>
 					<a class="navbar-extra-link" href="logout.php" title="Tanca la sessió"><?php echo htmlspecialchars($_SESSION['username']); ?><span class="fa fa-sign-out-alt ms-2"></span></a>
 				</div>

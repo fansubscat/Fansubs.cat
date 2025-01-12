@@ -403,7 +403,7 @@ foreach($sections as $section){
 							</div>
 <?php
 				}
-				if (is_advent_days() && mysqli_num_rows(query_current_advent_calendar())>0 && !SITE_IS_HENTAI) {
+				if (is_advent_days() && mysqli_num_rows(query_current_advent_calendar())>0 && !SITE_IS_HENTAI && !DISABLE_ADVENT) {
 ?>
 							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
 <?php

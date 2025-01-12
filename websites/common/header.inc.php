@@ -14,7 +14,7 @@ else */if (!empty($user)) {
 	define('SITE_THEME', 'dark');
 }
 
-if (defined('PAGE_DISABLED_IF_HENTAI') && PAGE_DISABLED_IF_HENTAI && SITE_IS_HENTAI) {
+if ((defined('PAGE_DISABLED_IF_HENTAI') && PAGE_DISABLED_IF_HENTAI && SITE_IS_HENTAI) || (DISABLE_LINKS && defined('PAGE_PATH') && PAGE_PATH=='/enllacos')) {
 	header("HTTP/1.1 301 Moved Permanently");
 	header("Location: /");
 }
@@ -316,7 +316,7 @@ if (PAGE_STYLE_TYPE=='login') {
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo MANGA_URL; ?>"<?php echo defined('CATALOGUE_ITEM_TYPE') && CATALOGUE_ITEM_TYPE=='manga' ? ' class="catalogue-selected"' : ''; ?>>Manga</a>
 <?php
-					if (!SITE_IS_HENTAI) {
+					if (!SITE_IS_HENTAI && !DISABLE_LIVE_ACTION) {
 ?>
 						<span class="catalogues-separator">|</span>
 						<a href="<?php echo LIVEACTION_URL; ?>"<?php echo defined('CATALOGUE_ITEM_TYPE') && CATALOGUE_ITEM_TYPE=='liveaction' ? ' class="catalogue-selected"' : ''; ?>>Imatge real</a>

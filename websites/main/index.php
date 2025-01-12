@@ -29,7 +29,7 @@ if (!empty($special_day) && file_exists(STATIC_DIRECTORY.'/images/site/logo_'.(S
 						<a class="main-button" href="<?php echo ANIME_URL; ?>">Anime</a>
 						<a class="main-button" href="<?php echo MANGA_URL; ?>">Manga</a>
 <?php
-if (!SITE_IS_HENTAI) {
+if (!SITE_IS_HENTAI && !DISABLE_LIVE_ACTION) {
 ?>
 						<a class="main-button" href="<?php echo LIVEACTION_URL; ?>">Imatge real</a>
 <?php
@@ -37,11 +37,17 @@ if (!SITE_IS_HENTAI) {
 ?>
 					</div>
 					<div class="secondary-buttons">
+<?php
+if (!DISABLE_NEWS) {
+?>
 						<a class="secondary-button" href="<?php echo NEWS_URL; ?>">Notícies</a>
+<?php
+}
+?>
 						<a class="secondary-button" href="/llista-de-fansubs">Fansubs</a>
 					</div>
 <?php
-if (is_advent_days()) {
+if (is_advent_days() && !DISABLE_ADVENT) {
 ?>
 					<div class="main-buttons">
 						<a class="main-button advent-button" href="<?php echo ADVENT_URL; ?>">Calendari d’advent</a>
@@ -54,8 +60,12 @@ if (is_advent_days()) {
 if (!SITE_IS_HENTAI) {
 ?>
 						<a class="tertiary-button" href="/qui-som">Qui som?</a>
+<?php
+	if (!DISABLE_LINKS) {
+?>
 						<a class="tertiary-button" href="/enllacos">Enllaços</a>
 <?php
+	}
 } else {
 ?>
 						<a class="tertiary-button" href="<?php echo 'https://www.'.MAIN_DOMAIN; ?>">Fansubs.cat</a>

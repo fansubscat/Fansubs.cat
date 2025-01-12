@@ -6,30 +6,30 @@
 require_once(__DIR__.'/defaults.inc.php');
 
 //Database access parameters
-define('DB_HOST', 'YOUR_DB_HOST_HERE');
-define('DB_NAME', 'YOUR_DB_NAME_HERE');
-define('DB_USER', 'YOUR_DB_USER_HERE');
-define('DB_PASSWORD', 'YOUR_DB_PASS_HERE');
+define('DB_HOST', 'dbhost');
+define('DB_NAME', 'dbname');
+define('DB_USER', 'dbuser');
+define('DB_PASSWORD', 'dbpassword');
 
 //Domains
 //This software requires a domain for general content and another domain for explicit content
 //If your site does not contain explicit content, just use a non-existant domain name in HENTAI_DOMAIN
-define('MAIN_DOMAIN', 'YOUR_MAIN_DOMAIN_HERE');
-define('HENTAI_DOMAIN', 'YOUR_HENTAI_DOMAIN_HERE');
+define('MAIN_DOMAIN', 'maindomain.xyz');
+define('HENTAI_DOMAIN', 'hentaidomain.xyz');
 
 //Site parameters for the main domain:
-define('MAIN_SITE_NAME', 'THE_NAME_OF_YOUR_SITE_HERE');
-define('MAIN_SOCIAL_LINK_BLUESKY', 'YOUR_FULL_BLUESKY_URL');
-define('MAIN_SOCIAL_LINK_MASTODON', 'YOUR_FULL_MASTODON_URL');
-define('MAIN_SOCIAL_LINK_TELEGRAM', 'YOUR_FULL_TELEGRAM_URL');
-define('MAIN_SOCIAL_LINK_X', 'YOUR_FULL_X_URL');
+define('MAIN_SITE_NAME', 'My custom Fansubs.cat site');
+define('MAIN_SOCIAL_LINK_BLUESKY', 'https://bsky.app/profile/myhandle.bsky.social');
+define('MAIN_SOCIAL_LINK_MASTODON', 'https://mastodon.social/@myhandle');
+define('MAIN_SOCIAL_LINK_TELEGRAM', 'https://t.me/myhandle');
+define('MAIN_SOCIAL_LINK_X', 'https://x.com/myhandle');
 
 //Site parameters for the hentai domain:
-define('HENTAI_SITE_NAME', 'Hentai.cat');
-define('HENTAI_SOCIAL_LINK_BLUESKY', 'YOUR_FULL_BLUESKY_URL');
-define('HENTAI_SOCIAL_LINK_MASTODON', 'YOUR_FULL_MASTODON_URL');
-define('HENTAI_SOCIAL_LINK_TELEGRAM', 'YOUR_FULL_TELEGRAM_URL');
-define('HENTAI_SOCIAL_LINK_X', 'YOUR_FULL_X_URL');
+define('HENTAI_SITE_NAME', 'My custom Fansubs.cat hentai site');
+define('HENTAI_SOCIAL_LINK_BLUESKY', 'https://bsky.app/profile/myhentaihandle.bsky.social');
+define('HENTAI_SOCIAL_LINK_MASTODON', 'https://mastodon.social/@myhentaihandle');
+define('HENTAI_SOCIAL_LINK_TELEGRAM', 'https://t.me/myhentaihandle');
+define('HENTAI_SOCIAL_LINK_X', 'https://x.com/myhentaihandle');
 
 //Subdomains:
 define('MAIN_SUBDOMAIN', 'www');
@@ -54,10 +54,12 @@ define('GLOBAL_MESSAGE', '');
 define('STARTING_YEAR', 2020);
 define('STARTING_DATE', '2020-06-01');
 
-//Features that can be disabled (TODO)
+//Features that can be disabled
 define('DISABLE_NEWS', TRUE);
 define('DISABLE_LINKS', TRUE);
 define('DISABLE_LIVE_ACTION', FALSE);
+define('DISABLE_ADVENT', TRUE);
+define('DISABLE_RESOURCES', TRUE);
 
 //Default language of your site (ISO code, must exist in /srv/fansubscat/websites/static/languages/<code>.json)
 define('SITE_LANGUAGE', 'ca');
@@ -65,12 +67,12 @@ define('SITE_LANGUAGE', 'ca');
 //What to use to send e-mails
 //The code assumes that you use a SMTP server with user/pass login and SMTPS support.
 //If your e-mail provider differs, you might need to change the code in common.inc.php's send_mail() function accordingly.
-define('SMTP_HOST', 'YOUR_SMTP_HOST_HERE');
-define('SMTP_USERNAME', 'YOUR_SMTP_USERNAME_HERE');
-define('SMTP_PASSWORD', 'YOUR_SMTP_PASSWORD_HERE');
-define('SMTP_PORT', YOUR_SMTP_PORT_HERE);
-define('EMAIL_FROM_ADDRESS', 'YOUR_EMAIL_ADDRESS_HERE');
-define('EMAIL_FROM_NAME', 'THE_NAME_OF_YOUR_SITE_HERE');
+define('SMTP_HOST', 'your.smtp.host');
+define('SMTP_USERNAME', 'smtpusername');
+define('SMTP_PASSWORD', 'smtppassword');
+define('SMTP_PORT', 1234);
+define('EMAIL_FROM_ADDRESS', 'your@address.xyz');
+define('EMAIL_FROM_NAME', 'My custom Fansubs.cat site');
 
 //These domains do not allow our e-mails, just block registrations
 define('BLACKLISTED_EMAIL_DOMAINS', array(
@@ -79,14 +81,14 @@ define('BLACKLISTED_EMAIL_DOMAINS', array(
 
 //Storages
 define('STORAGES', array(
-	'https://YOUR_STORAGE_SERVERS/',
+	'https://your.storageserver.xyz/',
 ));
 
 //Link to the admin tutorial
-define('ADMIN_TUTORIAL_URL', 'YOUR_TUTORIAL_URL');
+define('ADMIN_TUTORIAL_URL', 'https://www.yourtutorial.xyz/tutorial');
 
 //Password salt for hashes (used only for the admin site)
-define('PASSWORD_SALT', 'YOUR_PASSWORD_SALT');
+define('PASSWORD_SALT', 'YOUR_PASSWORD_SALT_HERE');
 
 //API key for Multiavatar - used only in the admin section
 define('MULTIAVATAR_API_KEY', 'YOUR_API_KEY');
