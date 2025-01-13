@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__.'/db.inc.php');
 
-define('DRY_RUN', TRUE);
+//define('DRY_RUN', TRUE);
 
 $result = query("SELECT * FROM series WHERE type<>'liveaction' AND external_id IS NOT NULL ORDER BY name ASC");
 
@@ -34,7 +34,7 @@ while ($series = mysqli_fetch_assoc($result)) {
 	$url = 'https://api.jikan.moe/v4/'.$series['type'].'/'.$series['external_id'];
 	$response = json_decode(file_get_contents($url));
 	
-	if (!$response || !$response->data){
+	if (!$response || empty($response->data)){
 		echo "Error updating ".$series['name'];
 	} else {
 		$title = $response->data->title;

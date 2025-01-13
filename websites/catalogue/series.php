@@ -186,7 +186,6 @@ if ($series['has_licensed_parts']) {
 <?php
 }
 ?>
-						<h2 class="section-title-main"><i class="fa fa-fw fa-arrows-split-up-and-left fa-rotate-by" style="--fa-rotate-angle: 135deg;"></i> Versions</h2>
 						<div class="version-tab-container">
 <?php
 $i=0;
@@ -314,7 +313,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			));
 		}
 ?>
-								<h2 class="section-title-main section-title-with-table"><i class="fa fa-fw <?php echo $series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON : CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON; ?>"></i> Contingut d’aquesta versió
+								<h2 class="section-title-main section-title-with-table"><i class="fa fa-fw <?php echo $series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON : CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON; ?>"></i> Contingut<?php echo mysqli_num_rows($result)>1 ? ' d’aquesta versió' : ''; ?>
 <?php
 		//false: ascending, true: descending
 		$sort_order = (!empty($user) && $user['episode_sort_order']) || (empty($user) && !empty($_COOKIE['episode_sort_order']));
