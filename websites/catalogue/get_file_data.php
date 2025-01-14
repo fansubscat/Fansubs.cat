@@ -175,7 +175,7 @@ function get_player_data(){
 			'view_id' => $view_id,
 			'fansub' => $row['fansub_name'],
 			'series' => $row['version_title'],
-			'cover' => STATIC_URL.'/images/covers/'.$row['series_id'].'.jpg',
+			'cover' => STATIC_URL.'/images/covers/'.$row['version_id'].'.jpg',
 			'title' => get_episode_player_title($row['fansub_name'], $division_title, $row['series_subtype'], $episode_title, $row['is_extra']),
 			'title_short' => get_episode_player_title_short($division_title, $row['series_subtype'], $episode_title, $row['is_extra']).' | '.$row['fansub_name'].' | '.CURRENT_SITE_NAME,
 			'thumbnail' => (file_exists(STATIC_DIRECTORY.'/images/files/'.$file_id.'.jpg') ? STATIC_URL.'/images/files/'.$file_id.'.jpg' : STATIC_URL.'/images/covers/'.$row['version_id'].'.jpg'),

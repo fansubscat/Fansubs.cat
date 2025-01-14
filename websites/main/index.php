@@ -2,11 +2,7 @@
 define('PAGE_STYLE_TYPE', 'main');
 require_once(__DIR__.'/../../common/config.inc.php');
 
-if (str_ends_with($_SERVER['HTTP_HOST'], HENTAI_DOMAIN)) {
-	define('SITE_TITLE', 'Hentai.cat: Hentai en català');
-} else {
-	define('SITE_TITLE', 'Fansubs.cat: Anime, manga i imatge real en català');
-}
+define('SITE_TITLE_OVERRIDE', TRUE);
 
 require_once(__DIR__.'/../common/user_init.inc.php');
 require_once(__DIR__.'/../common/common.inc.php');
@@ -26,12 +22,12 @@ if (!empty($special_day) && file_exists(STATIC_DIRECTORY.'/images/site/logo_'.(S
 ?>
 					</div>
 					<div class="main-buttons">
-						<a class="main-button" href="<?php echo ANIME_URL; ?>">Anime</a>
-						<a class="main-button" href="<?php echo MANGA_URL; ?>">Manga</a>
+						<a class="main-button" href="<?php echo ANIME_URL; ?>"><?php echo lang('main.button.anime'); ?></a>
+						<a class="main-button" href="<?php echo MANGA_URL; ?>"><?php echo lang('main.button.manga'); ?></a>
 <?php
 if (!SITE_IS_HENTAI && !DISABLE_LIVE_ACTION) {
 ?>
-						<a class="main-button" href="<?php echo LIVEACTION_URL; ?>">Imatge real</a>
+						<a class="main-button" href="<?php echo LIVEACTION_URL; ?>"><?php echo lang('main.button.liveaction'); ?></a>
 <?php
 }
 ?>
@@ -40,17 +36,17 @@ if (!SITE_IS_HENTAI && !DISABLE_LIVE_ACTION) {
 <?php
 if (!DISABLE_NEWS) {
 ?>
-						<a class="secondary-button" href="<?php echo NEWS_URL; ?>">Notícies</a>
+						<a class="secondary-button" href="<?php echo NEWS_URL; ?>"><?php echo lang('main.button.news'); ?></a>
 <?php
 }
 ?>
-						<a class="secondary-button" href="/llista-de-fansubs">Fansubs</a>
+						<a class="secondary-button" href="<?php echo lang('url.fansubs'); ?>"><?php echo lang('main.button.fansubs'); ?></a>
 					</div>
 <?php
 if (is_advent_days() && !DISABLE_ADVENT) {
 ?>
 					<div class="main-buttons">
-						<a class="main-button advent-button" href="<?php echo ADVENT_URL; ?>">Calendari d’advent</a>
+						<a class="main-button advent-button" href="<?php echo ADVENT_URL; ?>"><?php echo lang('main.button.advent_calendar'); ?></a>
 					</div>
 <?php
 }
@@ -59,16 +55,16 @@ if (is_advent_days() && !DISABLE_ADVENT) {
 <?php
 if (!SITE_IS_HENTAI) {
 ?>
-						<a class="tertiary-button" href="/qui-som">Qui som?</a>
+						<a class="tertiary-button" href="<?php echo lang('url.who'); ?>"><?php echo lang('main.button.who'); ?></a>
 <?php
 	if (!DISABLE_LINKS) {
 ?>
-						<a class="tertiary-button" href="/enllacos">Enllaços</a>
+						<a class="tertiary-button" href="<?php echo lang('url.links'); ?>"><?php echo lang('main.button.links'); ?></a>
 <?php
 	}
 } else {
 ?>
-						<a class="tertiary-button" href="<?php echo 'https://www.'.MAIN_DOMAIN; ?>">Fansubs.cat</a>
+						<a class="tertiary-button" href="<?php echo 'https://www.'.MAIN_DOMAIN; ?>"><?php echo MAIN_SITE_NAME; ?></a>
 <?php
 }
 ?>

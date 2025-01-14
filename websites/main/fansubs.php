@@ -1,12 +1,14 @@
 <?php
-if (str_ends_with($_SERVER['HTTP_HOST'], 'hentai.cat')) {
-	define('PAGE_TITLE', 'Llista de fansubs de hentai en català');
-	define('PAGE_DESCRIPTION', 'Consulta la llista de tots els fansubs de hentai en català a Hentai.cat, el portal que en recopila tot el material!');
+require_once(__DIR__.'/../common/initialization.inc.php');
+
+if (SITE_IS_HENTAI) {
+	define('PAGE_TITLE', lang('main.fansubs.page_title.hentai'));
+	define('PAGE_DESCRIPTION', sprintf(lang('main.fansubs.page_description.hentai'), CURRENT_SITE_NAME));
 } else {
-	define('PAGE_TITLE', 'Llista de fansubs en català');
-	define('PAGE_DESCRIPTION', 'Consulta la llista de tots els fansubs en català a Fansubs.cat, el portal que en recopila tot el material!');
+	define('PAGE_TITLE', lang('main.fansubs.page_title'));
+	define('PAGE_DESCRIPTION', sprintf(lang('main.fansubs.page_description'), CURRENT_SITE_NAME));
 }
-define('PAGE_PATH', '/llista-de-fansubs');
+define('PAGE_PATH', lang('url.fansubs'));
 define('PAGE_STYLE_TYPE', 'fansubs');
 require_once(__DIR__.'/../common/user_init.inc.php');
 require_once(__DIR__.'/../common/common.inc.php');
@@ -19,13 +21,13 @@ require_once(__DIR__.'/queries.inc.php');
 ?>
 					<div class="fansubs-index">
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Fansubs actius</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> <?php echo lang('main.fansubs.active'); ?></h2>
 <?php
 $result = query_fansubs(!empty($user) ? $user : NULL, 1);
 
 if (mysqli_num_rows($result)==0){
 ?>
-							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No hem trobat cap fansub actiu!</div></div>
+							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br><?php echo lang('main.fansubs.no_active_fansubs'); ?></div></div>
 <?php
 }
 else{
@@ -40,13 +42,13 @@ else{
 							</div>
 						</div>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> Fansubs històrics</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-landmark"></i> <?php echo lang('main.fansubs.historical'); ?></h2>
 <?php
 $result = query_fansubs(!empty($user) ? $user : NULL, 0);
 
 if (mysqli_num_rows($result)==0){
 ?>
-							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No hem trobat cap fansub històric!</div></div>
+							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br><?php echo lang('main.fansubs.no_historical_fansubs'); ?></div></div>
 <?php
 }
 else{

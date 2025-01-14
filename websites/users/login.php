@@ -7,8 +7,8 @@ if (!empty($user)) {
 	die();
 }
 
-define('PAGE_TITLE', 'Inicia la sessió');
-define('PAGE_PATH', '/inicia-la-sessio');
+define('PAGE_TITLE', lang('users.login.page_title'));
+define('PAGE_PATH', lang('url.login'));
 define('PAGE_STYLE_TYPE', 'login');
 
 require_once(__DIR__.'/../common/header.inc.php');

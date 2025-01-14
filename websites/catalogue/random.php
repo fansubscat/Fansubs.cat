@@ -7,7 +7,7 @@ validate_hentai();
 $result = query_random_series($user);
 if ($row = mysqli_fetch_assoc($result)) {
 	header("HTTP/1.1 302 Moved Temporarily");
-	header("Location: ".$row['slug']);
+	header("Location: ".$row['default_version_slug']);
 	mysqli_free_result($result);
 } else {
 	http_response_code(404);

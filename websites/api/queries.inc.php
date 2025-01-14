@@ -176,7 +176,7 @@ function query_fansubs_for_api_response() {
 			UNION
 			SELECT NULL id,
 				'fansubs-cat' slug,
-				'Fansubs.cat' name,
+				'".escape(MAIN_SITE_NAME)."' name,
 				NULL,
 				0,
 				0,

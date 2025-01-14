@@ -4,8 +4,8 @@ require_once(__DIR__.'/../common/common.inc.php');
 
 validate_hentai();
 
-define('PAGE_TITLE', 'Configuració');
-define('PAGE_PATH', '/configuracio');
+define('PAGE_TITLE', lang('users.settings.page_title'));
+define('PAGE_PATH', lang('url.settings'));
 define('PAGE_STYLE_TYPE', 'settings');
 define('SETTINGS_ITEM_TYPE', 'settings');
 
@@ -29,17 +29,17 @@ if (!empty($user)) {
 }
 ?>
 <div class="section">
-	<h2 class="section-title-main"><i class="fa fa-fw fa-gear"></i> Configuració</h2>
+	<h2 class="section-title-main"><i class="fa fa-fw fa-gear"></i> <?php echo lang('users.settings.header'); ?></h2>
 	<div class="profile-layout">
 		<div class="content-layout settings-page">
 			<div class="settings-display settings-section">
-				<div class="settings-section-header">Opcions de visualització</div>
+				<div class="settings-section-header"><?php echo lang('users.settings.view_options'); ?></div>
 				<div class="settings-section-content">
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Mostra projectes cancel·lats o abandonats</div>
-								<div class="settings-section-data-header-subtitle">Tria si vols veure a les llistes del web els projectes que els fansubs han cancel·lat o abandonat. A la pàgina de cada contingut s’hi mostraran sempre.</div>
+								<div class="settings-section-data-header-title"><?php echo lang('users.settings.show_cancelled.title'); ?></div>
+								<div class="settings-section-data-header-subtitle"><?php echo lang('users.settings.show_cancelled.subtitle'); ?></div>
 							</div>
 							<label class="switch">
 								<input type="checkbox" id="show-cancelled"<?php echo $show_cancelled ? ' checked' : ''; ?> onchange="saveSettings();">
@@ -50,8 +50,8 @@ if (!empty($user)) {
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Mostra projectes amb capítols perduts</div>
-								<div class="settings-section-data-header-subtitle">Tria si vols veure a les llistes del web els projectes de fansubs històrics amb capítols perduts (editats fa anys però no recuperats). A la pàgina de cada contingut s’hi mostraran sempre.</div>
+								<div class="settings-section-data-header-title"><?php echo lang('users.settings.show_lost.title'); ?></div>
+								<div class="settings-section-data-header-subtitle"><?php echo lang('users.settings.show_lost.subtitle'); ?></div>
 							</div>
 							<label class="switch">
 								<input type="checkbox" id="show-lost"<?php echo $show_lost ? ' checked' : ''; ?> onchange="saveSettings();">
@@ -65,8 +65,8 @@ if (!empty($user) && is_adult()) {
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Mostra el botó d’accés a Hentai.cat</div>
-								<div class="settings-section-data-header-subtitle">Tria si vols que es mostri la icona que permet canviar a Hentai.cat a la capçalera de Fansubs.cat.</div>
+								<div class="settings-section-data-header-title"><?php echo sprintf(lang('users.settings.show_hentai_button.title'), HENTAI_SITE_NAME); ?></div>
+								<div class="settings-section-data-header-subtitle"><?php echo sprintf(lang('users.settings.show_hentai_button.subtitle'), HENTAI_SITE_NAME, MAIN_SITE_NAME); ?></div>
 							</div>
 							<label class="switch">
 								<input type="checkbox" id="show-hentai"<?php echo $show_hentai ? ' checked' : ''; ?> onchange="saveSettings();">
@@ -80,8 +80,8 @@ if (!empty($user) && is_adult()) {
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Mostra els últims capítols primer</div>
-								<div class="settings-section-data-header-subtitle">Si està activat, a les pàgines de contingut es mostraran els últims capítols en primer lloc. Per defecte, s’hi mostren els primers.</div>
+								<div class="settings-section-data-header-title"><?php echo lang('users.settings.reverse_sort.title'); ?></div>
+								<div class="settings-section-data-header-subtitle"><?php echo lang('users.settings.reverse_sort.subtitle'); ?></div>
 							</div>
 							<label class="switch">
 								<input type="checkbox" id="episode-sort-order"<?php echo $episode_sort_order ? ' checked' : ''; ?> onchange="saveSettings();">
@@ -92,11 +92,11 @@ if (!empty($user) && is_adult()) {
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Llista negra de fansubs</div>
-								<div class="settings-section-data-header-subtitle">Els projectes dels fansubs que tinguis a la llista negra no es mostraran mai a les llistes del web. Encara es mostraran, tot i que amb un estil diferent, a la pàgina de cada contingut.</div>
+								<div class="settings-section-data-header-title"><?php echo lang('users.settings.blacklist.title'); ?></div>
+								<div class="settings-section-data-header-subtitle"><?php echo lang('users.settings.blacklist.subtitle'); ?></div>
 							</div>
 							<div class="settings-blacklist-chooser">
-								<button class="normal-button edit-blacklisted-fansubs">Edita la llista</button>
+								<button class="normal-button edit-blacklisted-fansubs"><?php echo lang('users.settings.blacklist.edit'); ?></button>
 <?php
 $fansubs = query_all_fansubs();
 $all_fansubs = array();
@@ -113,11 +113,11 @@ foreach ($fansubs as $fansub) {
 
 if (count($blacklisted_fansubs)==1) {
 ?>
-								<div class="blacklisted-fansubs-list-number">1 fansub blocat</div>
+								<div class="blacklisted-fansubs-list-number"><?php echo lang('users.settings.blacklist.blocked_fansubs_one'); ?></div>
 <?php
 } else {
 ?>
-								<div class="blacklisted-fansubs-list-number"><?php echo count($blacklisted_fansubs); ?> fansubs blocats</div>
+								<div class="blacklisted-fansubs-list-number"><?php echo sprintf(lang('users.settings.blacklist.blocked_fansubs_many'), count($blacklisted_fansubs)); ?></div>
 <?php
 }
 ?>
@@ -129,7 +129,7 @@ if (count($blacklisted_fansubs)==1) {
 				</div>
 			</div>
 			<div class="settings-seen-settings settings-section">
-				<div class="settings-section-header">Funcionalitats</div>
+				<div class="settings-section-header"><?php echo lang('users.settings.functionality'); ?></div>
 				<div class="settings-section-content">
 <?php
 if (!empty($user)) {
@@ -137,13 +137,13 @@ if (!empty($user)) {
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Marca els capítols anteriors com a vistos</div>
-								<div class="settings-section-data-header-subtitle">Tria si vols que, en marcar un capítol com a vist, tots els capítols anteriors es marquin automàticament com a vistos.</div>
+								<div class="settings-section-data-header-title"><?php echo lang('users.settings.mark_previous_as_seen.title'); ?></div>
+								<div class="settings-section-data-header-subtitle"><?php echo lang('users.settings.mark_previous_as_seen.subtitle'); ?></div>
 							</div>
 							<select id="mark-previous-as-seen" class="settings-combo" onchange="saveSettings();">
-								<option value="0"<?php echo $mark_as_seen==0 ? ' selected' : ''; ?>>Demana-ho</option>
-								<option value="1"<?php echo $mark_as_seen==1 ? ' selected' : ''; ?>>Marca’ls sempre</option>
-								<option value="2"<?php echo $mark_as_seen==2 ? ' selected' : ''; ?>>No els marquis mai</option>
+								<option value="0"<?php echo $mark_as_seen==0 ? ' selected' : ''; ?>><?php echo lang('users.settings.mark_previous_as_seen.ask'); ?></option>
+								<option value="1"<?php echo $mark_as_seen==1 ? ' selected' : ''; ?>><?php echo lang('users.settings.mark_previous_as_seen.always'); ?></option>
+								<option value="2"<?php echo $mark_as_seen==2 ? ' selected' : ''; ?>><?php echo lang('users.settings.mark_previous_as_seen.never'); ?></option>
 							</select>
 						</div>
 					</div>
@@ -153,14 +153,14 @@ if (!empty($user)) {
 					<div class="settings-section-data">
 						<div class="settings-section-data-switch">
 							<div class="settings-section-data-header">
-								<div class="settings-section-data-header-title">Lector de manga</div>
-								<div class="settings-section-data-header-subtitle">Tria quin lector de manga vols utilitzar: el recomanat per a cada manga, sempre en sentit oriental (de dreta a esquerra), sempre en sentit occidental (d’esquerra a dreta) o sempre en tira vertical.</div>
+								<div class="settings-section-data-header-title"><?php echo lang('js.catalogue.reader.select'); ?></div>
+								<div class="settings-section-data-header-subtitle"><?php echo lang('js.catalogue.reader.explanation'); ?></div>
 							</div>
 							<select id="reader-type" class="settings-combo" onchange="saveSettings();">
-								<option value="0"<?php echo $reader_type==0 ? ' selected' : ''; ?>>Opció recomanada</option>
-								<option value="1"<?php echo $reader_type==1 ? ' selected' : ''; ?>>Sentit oriental</option>
-								<option value="2"<?php echo $reader_type==2 ? ' selected' : ''; ?>>Sentit occidental</option>
-								<option value="3"<?php echo $reader_type==3 ? ' selected' : ''; ?>>Tira vertical</option>
+								<option value="0"<?php echo $reader_type==0 ? ' selected' : ''; ?>><?php echo lang('js.catalogue.reader.recommended_option'); ?></option>
+								<option value="1"<?php echo $reader_type==1 ? ' selected' : ''; ?>><?php echo lang('js.catalogue.reader.western_style'); ?></option>
+								<option value="2"<?php echo $reader_type==2 ? ' selected' : ''; ?>><?php echo lang('js.catalogue.reader.eastern_style'); ?></option>
+								<option value="3"<?php echo $reader_type==3 ? ' selected' : ''; ?>><?php echo lang('js.catalogue.reader.long_strip'); ?></option>
 							</select>
 						</div>
 					</div>

@@ -73,7 +73,7 @@ function list_remote_image_files($url) {
 
 function get_manga_chapter_title($series_subtype, $series_name, $show_episode_numbers, $episode_number, $title, $is_extra, $extra_name, $number_of_divisions, $division_name, $division_number) {
 	if ($is_extra) {
-		return 'Extra: '.$extra_name;
+		return lang('catalogue.generic.extra_prefix_short').$extra_name;
 	}
 
 	return (!empty($division_name) ? $division_name.' - ' : '').$title;
@@ -428,9 +428,9 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 		if (!empty($_POST['file_id']) && is_numeric($_POST['file_id']) && !empty($_POST['url']) && !empty($_POST['original_url']) && !empty($_POST['resolution'])) {
 			query_insert_link($_POST['file_id'], $_POST['url'], $_POST['original_url'], $_POST['resolution']);
 			if (get_previous_query_num_affected_rows()>0) {
-				log_action('api-insert-converted-link', "S’ha inserit l’enllaç convertit «${_POST['url']}» del fitxer amb id. ${_POST['file_id']}");
+				log_action('api-insert-converted-link', "Inserted converted link «${_POST['url']}» for file id ${_POST['file_id']}");
 			} else {
-				log_action('api-discard-converted-link', "S’ha descartat l’enllaç convertit «${_POST['url']}» del fitxer amb id. ${_POST['file_id']}, segurament s’ha actualitzat mentre es convertia");
+				log_action('api-discard-converted-link', "Discarded converted link «${_POST['url']}» for file id ${_POST['file_id']}, probably updated while converting");
 			}
 			
 			$response = array(
@@ -445,7 +445,7 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 		if (!empty($_POST['file_id']) && is_numeric($_POST['file_id']) && !empty($_FILES['thumbnail']) && is_uploaded_file($_FILES['thumbnail']['tmp_name'])) {
 			$file_id=intval($_POST['file_id']);
 			move_uploaded_file($_FILES['thumbnail']["tmp_name"], STATIC_DIRECTORY.'/images/files/'.$file_id.'.jpg');
-			log_action('api-change-file-thumbnail', "S’ha canviat la miniatura del fitxer amb id. $file_id");
+			log_action('api-change-file-thumbnail', "Changed thumbnail for file id $file_id");
 			
 			$response = array(
 				'status' => 'ok'
@@ -458,7 +458,7 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 	} else if ($submethod=='change_file_duration') {
 		if (!empty($_POST['file_id']) && is_numeric($_POST['file_id']) && !empty($_POST['duration']) && is_numeric($_POST['duration'])) {
 			query_update_file_length($_POST['file_id'], $_POST['duration']);
-			log_action('api-change-file-duration', "S’ha canviat la durada del fitxer amb id. ${_POST['file_id']} a ${_POST['duration']} segons");
+			log_action('api-change-file-duration', "Changed duration for file id ${_POST['file_id']} to ${_POST['duration']} seconds");
 			
 			$response = array(
 				'status' => 'ok'

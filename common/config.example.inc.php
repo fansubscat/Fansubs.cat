@@ -43,6 +43,7 @@ define('USERS_SUBDOMAIN', 'users');
 define('STATIC_SUBDOMAIN', 'static');
 define('ADMIN_SUBDOMAIN', 'admin');
 define('API_SUBDOMAIN', 'api');
+define('STATUS_SUBDOMAIN', 'status');
 
 //Used to check internal API calls only (bypass admin authentication in twitter_image.php)
 define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN_HERE');
@@ -60,6 +61,10 @@ define('DISABLE_LINKS', TRUE);
 define('DISABLE_LIVE_ACTION', FALSE);
 define('DISABLE_ADVENT', TRUE);
 define('DISABLE_RESOURCES', TRUE);
+define('DISABLE_FOOLS_DAY', TRUE);
+define('DISABLE_SANT_JORDI_DAY', TRUE);
+define('DISABLE_HALLOWEEN_DAYS', FALSE);
+define('DISABLE_CHRISTMAS_DAYS', FALSE);
 
 //Default language of your site (ISO code, must exist in /srv/fansubscat/websites/static/languages/<code>.json)
 define('SITE_LANGUAGE', 'ca');

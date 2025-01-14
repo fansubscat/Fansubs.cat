@@ -166,11 +166,11 @@ function query_comment_episode_title($comment_id) {
 	$final_query = "SELECT IF(c.last_seen_episode_id IS NULL,
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
-						IF(s.type='manga','Llegit','Vist'),
+						IF(s.type='manga','".lang('catalogue.query.read')."','".lang('catalogue.query.seen')."'),
 						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
-								CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
-								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(IFNULL(vd.title,d.name), ' - ".lang('catalogue.query.chapter')."', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT('".lang('catalogue.query.chapter')."', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
 								CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description)),

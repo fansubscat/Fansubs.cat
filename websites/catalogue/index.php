@@ -27,11 +27,11 @@ if (is_robot()){
 ?>					</div>
 					<div class="loading-layout<?php echo !is_robot() ? '' : ' hidden'; ?>">
 						<div class="loading-spinner"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div>
-						<div class="loading-message">S’estan carregant les darreres novetats...</div>
+						<div class="loading-message"><?php echo lang('catalogue.loading_results'); ?></div>
 					</div>
 					<div class="error-layout hidden">
 						<div class="error-icon"><i class="fa-3x fas fa-circle-exclamation"></i></div>
-						<div class="error-message">S’ha produït un error en contactar amb el servidor. Torna-ho a provar.</div>
+						<div class="error-message"><?php echo lang('catalogue.error_contacting_server'); ?></div>
 					</div>
 <?php
 require_once(__DIR__.'/../common/footer.inc.php');

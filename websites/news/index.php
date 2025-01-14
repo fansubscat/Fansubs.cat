@@ -12,7 +12,7 @@ require_once(__DIR__.'/../common/header.inc.php');
 if (is_robot()){
 ?>
 						<div class="section">
-							<div class="site-message robo-message">Et donem la benvinguda a <?php echo CURRENT_SITE_NAME; ?>! Aquí trobaràs les darreres notícies de<?php SITE_IS_HENTAI ? 'l hentai de': ''; ?> tots els fansubs en català! Les notícies s’obtenen automàticament dels diferents webs dels fansubs. Per a accedir a cada notícia, només cal que hi facis clic!</div>
+							<div class="site-message robo-message"><?php echo sprintf(SITE_IS_HENTAI ? lang('news.robot_message.hentai') : lang('news.robot_message'), CURRENT_SITE_NAME); ?></div>
 						</div>
 <?php
 }
@@ -20,11 +20,11 @@ include(__DIR__.'/results.php');
 ?>					</div>
 					<div class="loading-layout hidden">
 						<div class="loading-spinner"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div>
-						<div class="loading-message">S’estan carregant els resultats de la cerca...</div>
+						<div class="loading-message"><?php echo lang('news.search.loading_results'); ?></div>
 					</div>
 					<div class="error-layout hidden">
 						<div class="error-icon"><i class="fa-3x fas fa-circle-exclamation"></i></div>
-						<div class="error-message">S’ha produït un error en contactar amb el servidor. Torna-ho a provar.</div>
+						<div class="error-message"><?php echo lang('news.error_contacting_server'); ?></div>
 					</div>
 <?php
 require_once(__DIR__.'/../common/footer.inc.php');

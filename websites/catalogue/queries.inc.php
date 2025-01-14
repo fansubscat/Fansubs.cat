@@ -645,13 +645,13 @@ function query_home_continue_watching_by_user_id($user_id) {
 				FROM (SELECT f.id file_id,
 						f.version_id,
 						IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
-							REPLACE(IFNULL(vd.title, d.name), 'Volum ', 'Vol. '),
+							REPLACE(IFNULL(vd.title, d.name), '".lang('catalogue.query.volume_replace_from')."', '".lang('catalogue.query.volume_replace_to')."'),
 							NULL
 						) division_name,
 						IF(s.subtype='movie' OR s.subtype='oneshot',
-							IF(s.subtype='movie', 'Film', IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot')),
+							IF(s.subtype='movie', '".lang('catalogue.query.movie')."', IF(s.comic_type='novel', '".lang('catalogue.query.light_novel')."', '".lang('catalogue.query.oneshot')."')),
 							IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-								CONCAT('Cap. ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+								CONCAT('".lang('catalogue.query.chapter.short')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 								CONCAT(IFNULL(et.title, e.description))
 							)
 						) episode_title,
@@ -691,13 +691,13 @@ function query_home_continue_watching_by_user_id($user_id) {
 					SELECT f.id file_id,
 						f.version_id,
 						IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
-							REPLACE(IFNULL(vd.title, d.name), 'Volum ', 'Vol. '),
+							REPLACE(IFNULL(vd.title, d.name), '".lang('catalogue.query.volume_replace_from')."', '".lang('catalogue.query.volume_replace_to')."'),
 							NULL
 						) division_name,
 						IF(s.subtype='movie' OR s.subtype='oneshot',
-							IF(s.subtype='movie', 'Film', IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot')),
+							IF(s.subtype='movie', '".lang('catalogue.query.movie')."', IF(s.comic_type='novel', '".lang('catalogue.query.light_novel')."', '".lang('catalogue.query.oneshot')."')),
 							IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-								CONCAT('Cap. ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+								CONCAT('".lang('catalogue.query.chapter.short')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 								CONCAT(IFNULL(et.title, e.description))
 							)
 						) episode_title,
@@ -814,13 +814,13 @@ function query_home_last_updated($user, $max_items) {
 						f.created,
 						f.version_id,
 						IF(s.type='manga' AND (SELECT COUNT(*) FROM division dsq WHERE dsq.series_id=s.id AND dsq.number_of_episodes>0)>1,
-							REPLACE(IFNULL(vd.title, d.name), 'Volum ', 'Vol. '),
+							REPLACE(IFNULL(vd.title, d.name), '".lang('catalogue.query.volume_replace_from')."', '".lang('catalogue.query.volume_replace_to')."'),
 							NULL
 						) division_name,
 						IF(s.subtype='movie' OR s.subtype='oneshot',
-							IF(s.subtype='movie', 'Film', IF(s.comic_type='novel', 'Novel·la lleugera', 'One-shot')),
+							IF(s.subtype='movie', '".lang('catalogue.query.movie')."', IF(s.comic_type='novel', '".lang('catalogue.query.light_novel')."', '".lang('catalogue.query.oneshot')."')),
 							IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-								CONCAT('Cap. ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+								CONCAT('".lang('catalogue.query.chapter.short')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 								CONCAT(IFNULL(et.title, e.description))
 							)
 						) episode_title,
@@ -946,11 +946,11 @@ function query_home_comments($user, $max_items) {
 				IF(c.last_seen_episode_id IS NULL,
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
-						IF(s.type='manga','Llegit','Vist'),
+						IF(s.type='manga','".lang('catalogue.query.read')."','".lang('catalogue.query.seen')."'),
 						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
-								CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
-								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(IFNULL(vd.title,d.name), ' - ".lang('catalogue.query.chapter')."', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT('".lang('catalogue.query.chapter')."', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
 								CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description)),
@@ -1472,11 +1472,11 @@ function query_version_comments($version_id, $user) {
 				IF(c.last_seen_episode_id IS NULL,
 					NULL,
 					IF((s.subtype='movie' OR s.subtype='oneshot') AND s.number_of_episodes=1,
-						IF(s.type='manga','Llegit','Vist'),
+						IF(s.type='manga','".lang('catalogue.query.read')."','".lang('catalogue.query.seen')."'),
 						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
-								CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
-								CONCAT('Capítol ', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(IFNULL(vd.title,d.name), ' - ".lang('catalogue.query.chapter')."', REPLACE(TRIM(e.number)+0, '.', ',')),
+								CONCAT('".lang('catalogue.query.chapter')."', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
 								CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description)),

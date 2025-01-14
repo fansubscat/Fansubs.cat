@@ -6,7 +6,7 @@ require_once(__DIR__.'/queries.inc.php');
 
 validate_hentai();
 
-define('PAGE_TITLE', 'Resultats de la cerca');
+define('PAGE_TITLE', lang('catalogue.search.page_title'));
 
 if (is_robot()) {
 	define('PAGE_EXTRA_BODY_CLASS', 'has-search-results');
@@ -14,7 +14,7 @@ if (is_robot()) {
 
 $_GET['query']=str_replace('%2F', '/', isset($_GET['query']) ? $_GET['query'] : '');
 
-define('PAGE_PATH', '/cerca'.(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
+define('PAGE_PATH', lang('url.search').(isset($_GET['query']) ? '/'.urlencode($_GET['query']) : ''));
 define('PAGE_IS_SEARCH', TRUE);
 if (!is_robot()) {
 	define('SKIP_FOOTER', TRUE);
@@ -32,9 +32,9 @@ function get_time_from_duration($duration){
 
 function get_pages_from_duration($duration){
 	if ($duration==100) {
-		return '100+ pàg.';
+		return lang('catalogue.search.more_than_max_pages');
 	}
-	return $duration.' pàg.';
+	return sprintf(lang('catalogue.search.number_of_pages'), $duration);
 }
 
 function get_rating_from_integer($value){
@@ -162,18 +162,18 @@ if (isset($_GET['genres_exclude']) && is_array($_GET['genres_exclude']) && count
 }
 ?>
 					<div class="search-layout<?php echo !empty($_GET['focus']) ? ' search-layout-visible' : ''; ?>">
-						<input class="search-base-url" type="hidden" value="/cerca">
-						<div class="search-filter-title">Filtres del catàleg</div>
+						<input class="search-base-url" type="hidden" value="<?php echo lang('url.search'); ?>">
+						<div class="search-filter-title"><?php echo lang('catalogue.search.filters'); ?></div>
 						<form class="search-filter-form" onsubmit="return false;" novalidate>
-							<label for="catalogue-search-query">Text a cercar</label>
-							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="Cerca..."<?php echo !empty($_GET['focus']) ? ' autofocus' : ''; ?>>
-							<label>Tipus</label>
+							<label for="catalogue-search-query"><?php echo lang('catalogue.search.query'); ?></label>
+							<input id="catalogue-search-query" type="text" oninput="loadSearchResults();" value="<?php echo isset($_GET['query']) ? htmlspecialchars($_GET['query']) : ''; ?>" placeholder="<?php echo lang('catalogue.search.query.placeholder'); ?>"<?php echo !empty($_GET['focus']) ? ' autofocus' : ''; ?>>
+							<label><?php echo lang('catalogue.search.type'); ?></label>
 							<div id="catalogue-search-type" class="singlechoice-selector singlechoice-type">
-								<div class="singlechoice-button<?php echo $param_type=='all' ? ' singlechoice-selected' : ''; ?>" onclick="singlechoiceChange(this);" data-value="all"><i class="fa fa-fw fa-grip"></i>Tots</div>
+								<div class="singlechoice-button<?php echo $param_type=='all' ? ' singlechoice-selected' : ''; ?>" onclick="singlechoiceChange(this);" data-value="all"><i class="fa fa-fw fa-grip"></i><?php echo lang('catalogue.search.type.all'); ?></div>
 								<div class="singlechoice-button<?php echo $param_type==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? ' singlechoice-selected' : ''; ?>" onclick="singlechoiceChange(this);" data-value="<?php echo CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID; ?>"><i class="fa fa-fw <?php echo CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON; ?>"></i><?php echo CATALOGUE_ITEM_SUBTYPE_SINGLE_NAME; ?></div>
 								<div class="singlechoice-button<?php echo $param_type==CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID ? ' singlechoice-selected' : ''; ?>" onclick="singlechoiceChange(this);" data-value="<?php echo CATALOGUE_ITEM_SUBTYPE_SERIALIZED_DB_ID; ?>"><i class="fa fa-fw <?php echo CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON; ?>"></i><?php echo CATALOGUE_ITEM_SUBTYPE_SERIALIZED_NAME; ?></div>
 							</div>
-							<label>Estat</label>
+							<label><?php echo lang('catalogue.search.status'); ?></label>
 <?php
 $statuses=array(1,3,2,4,5);
 foreach ($statuses as $status_id) {
@@ -185,7 +185,7 @@ foreach ($statuses as $status_id) {
 <?php
 }
 ?>
-							<label>Durada mitjana</label>
+							<label><?php echo lang('catalogue.search.average_duration'); ?></label>
 							<div id="catalogue-search-duration" class="double-slider-container">
 								<input id="duration-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_duration; ?>" min="<?php echo CATALOGUE_MINIMUM_DURATION; ?>" max="<?php echo CATALOGUE_MAXIMUM_DURATION; ?>" onchange="loadSearchResults();">
 								<input id="duration-to-slider" class="double-slider-to" type="range" value="<?php echo $param_max_duration; ?>" min="<?php echo CATALOGUE_MINIMUM_DURATION; ?>" max="<?php echo CATALOGUE_MAXIMUM_DURATION; ?>" onchange="loadSearchResults();">
@@ -195,7 +195,7 @@ foreach ($statuses as $status_id) {
 <?php
 if (!SITE_IS_HENTAI) {
 ?>
-							<label>Valoració per edats</label>
+							<label><?php echo lang('catalogue.search.age_rating'); ?></label>
 							<div id="catalogue-search-rating" class="double-slider-container">
 								<input id="rating-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_rating; ?>" min="0" max="4" onchange="loadSearchResults();">
 								<input id="rating-to-slider" class="double-slider-to" type="range" value="<?php echo $param_max_rating; ?>" min="0" max="4" onchange="loadSearchResults();">
@@ -205,7 +205,7 @@ if (!SITE_IS_HENTAI) {
 <?php
 }
 ?>
-							<label>Puntuació a <?php echo CATALOGUE_SCORE_SOURCE; ?></label>
+							<label><?php echo sprintf(lang('catalogue.search.external_score'), CATALOGUE_SCORE_SOURCE); ?></label>
 							<div id="catalogue-search-score" class="double-slider-container">
 								<input id="score-from-slider" class="double-slider-from" type="range" value="<?php echo $param_min_score; ?>" min="0" max="100" onchange="loadSearchResults();">
 								<input id="score-to-slider" class="double-slider-to" type="range" value="<?php echo $param_max_score; ?>" min="0" max="100" onchange="loadSearchResults();">
@@ -219,17 +219,17 @@ if (!SITE_IS_HENTAI) {
 								<div id="year-from-input" data-value-formatting="year" class="double-slider-input-from"><?php echo get_year_from_integer($param_min_year); ?></div>
 								<div id="year-to-input" data-value-formatting="year" class="double-slider-input-to"><?php echo get_year_from_integer($param_max_year); ?></div>
 							</div>
-							<label for="catalogue-search-fansub">Fansub</label>
+							<label for="catalogue-search-fansub"><?php echo lang('catalogue.search.fansub'); ?></label>
 							<select id="catalogue-search-fansub" onchange="loadSearchResults();">
 <?php
 if ((!empty($user) && count($user['blacklisted_fansub_ids'])>0) || (empty($user) && count(get_cookie_blacklisted_fansub_ids())>0)) {
 ?>
-								<option value="-2"<?php echo $param_fansub==-2 ? ' selected' : ''; ?>>Tots (excepte llista negra)</option>
-								<option value="-1"<?php echo $param_fansub==-1 ? ' selected' : ''; ?>>Tots (fins i tot llista negra)</option>
+								<option value="-2"<?php echo $param_fansub==-2 ? ' selected' : ''; ?>><?php echo lang('catalogue.search.fansub.all_but_blacklist'); ?></option>
+								<option value="-1"<?php echo $param_fansub==-1 ? ' selected' : ''; ?>><?php echo lang('catalogue.search.fansub.all_including_blacklist'); ?></option>
 <?php
 } else {
 ?>
-								<option value="-1"<?php echo $param_fansub==-1 ? ' selected' : ''; ?>>Tots els fansubs</option>
+								<option value="-1"<?php echo $param_fansub==-1 ? ' selected' : ''; ?>><?php echo lang('catalogue.search.fansub.all'); ?></option>
 <?php
 }
 $result = query_all_fansubs_with_versions($user);
@@ -243,13 +243,13 @@ while ($row = mysqli_fetch_assoc($result)) {
 <?php
 if (CATALOGUE_HAS_ORIGIN && !SITE_IS_HENTAI) {
 ?>
-							<label>Categoria</label>
+							<label><?php echo lang('catalogue.search.category'); ?></label>
 <?php
 	$origins=array(
-		'manga' => 'Manga (còmic japonès)',
-		'manhua' => 'Manhua (còmic xinès)',
-		'manhwa' => 'Manhwa (còmic coreà)',
-		'novel' => 'Novel·la lleugera',
+		'manga' => lang('catalogue.search.category.manga'),
+		'manhua' => lang('catalogue.search.category.manhua'),
+		'manhwa' => lang('catalogue.search.category.manhwa'),
+		'novel' => lang('catalogue.search.category.light_novel'),
 	);
 	foreach ($origins as $key => $value) {
 ?>
@@ -261,31 +261,31 @@ if (CATALOGUE_HAS_ORIGIN && !SITE_IS_HENTAI) {
 	}
 } else if (CATALOGUE_HAS_FANDUBS) {
 ?>
-							<label>Tipus de contingut</label>
+							<label><?php echo lang('catalogue.search.content_type'); ?></label>
 							<div class="search-checkboxes search-content_types">
 								<input id="catalogue-search-content_types-dub" data-id="fandub" type="checkbox" oninput="loadSearchResults();"<?php echo (isset($param_content_types_array) && !in_array('fandub', $param_content_types_array)) ? '' : ' checked'; ?>>
-								<label for="catalogue-search-content_types-dub" class="for-checkbox">Contingut doblat</label>
+								<label for="catalogue-search-content_types-dub" class="for-checkbox"><?php echo lang('catalogue.search.content_type.dubbed'); ?></label>
 							</div>
 							<div class="search-checkboxes search-content_types">
 								<input id="catalogue-search-content_types-sub" data-id="fansub" type="checkbox" oninput="loadSearchResults();"<?php echo (isset($param_content_types_array) && !in_array('fansub', $param_content_types_array)) ? '' : ' checked'; ?>>
-								<label for="catalogue-search-content_types-sub" class="for-checkbox">Contingut subtitulat</label>
+								<label for="catalogue-search-content_types-sub" class="for-checkbox"><?php echo lang('catalogue.search.content_type.subbed'); ?></label>
 							</div>
 <?php
 }
 ?>
-							<label>Inclou-hi també...</label>
+							<label><?php echo lang('catalogue.search.include_also'); ?></label>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-lost" type="checkbox" oninput="loadSearchResults();"<?php echo $param_hide_lost_content ? '' : ' checked'; ?>>
-								<label for="catalogue-search-include-lost" class="for-checkbox">Fitxes amb capítols perduts</label>
+								<label for="catalogue-search-include-lost" class="for-checkbox"><?php echo lang('catalogue.search.include_also.lost_chapters'); ?></label>
 							</div>
 							<div class="search-checkboxes">
 								<input id="catalogue-search-include-full-catalogue" type="checkbox" oninput="loadSearchResults();"<?php echo $param_show_full_catalogue ? ' checked' : ''; ?>>
-								<label for="catalogue-search-include-full-catalogue" class="for-checkbox">Altres resultats de la cerca</label>
+								<label for="catalogue-search-include-full-catalogue" class="for-checkbox"><?php echo lang('catalogue.search.include_also.other_results'); ?></label>
 							</div>
 <?php
 if (CATALOGUE_HAS_DEMOGRAPHIES && !SITE_IS_HENTAI) {
 ?>
-							<label>Demografies</label>
+							<label><?php echo lang('catalogue.search.demography'); ?></label>
 <?php
 	$result=query_filter_demographics();
 	while ($row=mysqli_fetch_assoc($result)) {
@@ -305,7 +305,7 @@ if (CATALOGUE_HAS_DEMOGRAPHIES && !SITE_IS_HENTAI) {
 <?php
 }
 ?>
-							<label>Gèneres</label>
+							<label><?php echo lang('catalogue.search.genres'); ?></label>
 <?php
 $result=query_filter_genders();
 while ($row=mysqli_fetch_assoc($result)) {
@@ -320,7 +320,7 @@ while ($row=mysqli_fetch_assoc($result)) {
 }
 mysqli_free_result($result);
 ?>
-							<label>Temàtiques</label>
+							<label><?php echo lang('catalogue.search.themes'); ?></label>
 <?php
 $result=query_filter_themes();
 while ($row=mysqli_fetch_assoc($result)) {
@@ -351,11 +351,11 @@ if (is_robot()){
 ?>					</div>
 					<div class="loading-layout<?php echo !is_robot() ? '' : ' hidden'; ?>">
 						<div class="loading-spinner"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div>
-						<div class="loading-message">S’està carregant el catàleg...</div>
+						<div class="loading-message"><?php echo lang('catalogue.search.loading_results'); ?></div>
 					</div>
 					<div class="error-layout hidden">
 						<div class="error-icon"><i class="fa-3x fas fa-circle-exclamation"></i></div>
-						<div class="error-message">S’ha produït un error en contactar amb el servidor. Torna-ho a provar.</div>
+						<div class="error-message"><?php echo lang('catalogue.error_contacting_server'); ?></div>
 					</div>
 <?php
 require_once(__DIR__.'/../common/footer.inc.php');

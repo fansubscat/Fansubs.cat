@@ -50,17 +50,17 @@ function login() {
 	$('#login_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
 	if ($('#login_username').val().trim()=='') {
-		addValidation('login_username','Has d’introduir el nom d’usuari.');
+		addValidation('login_username',lang('js.users.login.username.error'));
 		failedValidation = true;
 	}
 	if ($('#login_password').val()=='') {
-		addValidation('login_password','Has d’introduir la contrasenya.');
+		addValidation('login_password',lang('js.users.login.password.error'));
 		failedValidation = true;
 	}
 
 	if (failedValidation) {
 		$('#login_submit').prop('disabled', false);
-		$('#login_submit').html('Inicia la sessió');
+		$('#login_submit').html(lang('js.users.login.login_button'));
 		return false;
 	}
 
@@ -81,19 +81,19 @@ function login() {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==1) {
-				addValidationOnlyText('login_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
+				addValidationOnlyText('login_generic',lang('js.users.login.server_error.invalid'));
 			} else if (response.code==2) {
-				addValidationOnlyText('login_generic','Usuari o contrasenya incorrectes.');
+				addValidationOnlyText('login_generic',lang('js.users.login.server_error.invalid_credentials'));
 			} else if (response.code==3) {
-				addValidationOnlyText('login_generic','Cal tenir 18 anys o més per a iniciar la sessió.');
+				addValidationOnlyText('login_generic',lang('js.users.login.server_error.age_not_valid'));
 			} else {
-				addValidationOnlyText('login_generic','S’ha produït un error. Torna-ho a provar.');
+				addValidationOnlyText('login_generic',lang('js.users.login.server_error.generic'));
 			}
 		} catch(e) {
-			addValidationOnlyText('login_generic','S’ha produït un error. Torna-ho a provar.');
+			addValidationOnlyText('login_generic',lang('js.users.login.server_error.generic'));
 		}
 		$('#login_submit').prop('disabled', false);
-		$('#login_submit').html('Inicia la sessió');
+		$('#login_submit').html(lang('js.users.login.login_button'));
 	});
 	return false;
 }
@@ -104,53 +104,53 @@ function register() {
 	$('#register_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
 	if ($('#register_username').val().trim()=='') {
-		addValidation('register_username','Has d’introduir un nom d’usuari.');
+		addValidation('register_username',lang('js.users.register.username.error'));
 		failedValidation = true;
 	}
 	if ($('#register_password').val()=='') {
-		addValidation('register_password','Has d’introduir una contrasenya.');
+		addValidation('register_password',lang('js.users.register.password.error'));
 		failedValidation = true;
 	}
 	if ($('#register_repeat_password').val()=='') {
-		addValidation('register_repeat_password','Has de repetir la contrasenya.');
+		addValidation('register_repeat_password',lang('js.users.register.repeat_password.error'));
 		failedValidation = true;
 	}
 	if ($('#register_email').val()=='') {
-		addValidation('register_email','Has d’introduir una adreça electrònica.');
+		addValidation('register_email',lang('js.users.register.email.error'));
 		failedValidation = true;
 	}
 	if ($('#register_birthday_day').val()=='') {
-		addValidationOnlyText('register_birthday','La data de naixement no és vàlida.');
+		addValidationOnlyText('register_birthday',lang('js.users.register.birthdate.error'));
 		failedValidation = true;
 	}
 	if ($('#register_birthday_month').val()==null) {
-		addValidationOnlyText('register_birthday','La data de naixement no és vàlida.');
+		addValidationOnlyText('register_birthday',lang('js.users.register.birthdate.error'));
 		failedValidation = true;
 	}
 	if ($('#register_birthday_year').val()=='') {
-		addValidationOnlyText('register_birthday','La data de naixement no és vàlida.');
+		addValidationOnlyText('register_birthday',lang('js.users.register.birthdate.error'));
 		failedValidation = true;
 	}
 	if (!$('#register_privacy_policy_accept').prop('checked')) {
-		addValidationOnlyText('register_privacy_policy_accept','Cal que acceptis la política de privadesa.');
+		addValidationOnlyText('register_privacy_policy_accept',lang('js.users.register.privacy_policy.error'));
 		failedValidation = true;
 	}
 	if ($('#register_password').val().length<7 && !failedValidation) {
-		addValidation('register_password','La contrasenya ha de tenir un mínim de 7 caràcters.');
+		addValidation('register_password',lang('js.users.register.password_short.error'));
 		failedValidation = true;
 	}
 	if ($('#register_password').val()!=$('#register_repeat_password').val() && !failedValidation) {
-		addValidation('register_repeat_password','Les dues contrasenyes no coincideixen.');
+		addValidation('register_repeat_password',lang('js.users.register.password_mismatch.error'));
 		failedValidation = true;
 	}
 	if ($('#register_birthday_year').val()<1900 && !failedValidation) {
-		addValidationOnlyText('register_birthday','La data de naixement és massa antiga.');
+		addValidationOnlyText('register_birthday',lang('js.users.register.birthdate_too_old.error'));
 		failedValidation = true;
 	}
 
 	if (failedValidation) {
 		$('#register_submit').prop('disabled', false);
-		$('#register_submit').html('Registra-m’hi');
+		$('#register_submit').html(lang('js.users.register.register_button'));
 		return false;
 	}
 
@@ -175,33 +175,33 @@ function register() {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==1) {
-				addValidationOnlyText('register_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
+				addValidationOnlyText('register_generic',lang('js.users.register.server_error.invalid'));
 			} else if (response.code==2) {
-				addValidation('register_username','Aquest usuari ja existeix.');
+				addValidation('register_username',lang('js.users.register.server_error.user_exists'));
 			} else if (response.code==3) {
-				addValidation('register_email','Aquesta adreça electrònica ja existeix.');
+				addValidation('register_email',lang('js.users.register.server_error.email_exists'));
 			} else if (response.code==4) {
-				addValidationOnlyText('register_birthday','La data de naixement no és vàlida.');
+				addValidationOnlyText('register_birthday',lang('js.users.register.server_error.invalid_birthdate'));
 			} else if (response.code==5) {
-				addValidationOnlyText('register_birthday','La data de naixement és massa antiga.');
+				addValidationOnlyText('register_birthday',lang('js.users.register.server_error.birthdate_too_old'));
 			} else if (response.code==6) {
-				addValidationOnlyText('register_birthday','Véns del futur? Doncs no acceptem viatgers en el temps.');
+				addValidationOnlyText('register_birthday',lang('js.users.register.server_error.birthdate_future'));
 			} else if (response.code==7) {
-				addValidationOnlyText('register_birthday','No és permès el registre als menors de 13 anys.');
+				addValidationOnlyText('register_birthday',lang('js.users.register.server_error.must_be_13'));
 			} else if (response.code==8) {
-				addValidation('register_email','L’adreça electrònica no té un format correcte.');
+				addValidation('register_email',lang('js.users.register.server_error.malformed_email'));
 			} else if (response.code==9) {
-				addValidation('register_email','No acceptem registres amb adreces electròniques d’aquest domini perquè no ens és possible enviar-hi correus de restabliment de la contrasenya.');
+				addValidation('register_email',lang('js.users.register.server_error.email_domain_banned'));
 			} else if (response.code==10) {
-				addValidationOnlyText('register_birthday','No és permès el registre als menors de 18 anys.');
+				addValidationOnlyText('register_birthday',lang('js.users.register.server_error.must_be_18'));
 			} else {
-				addValidationOnlyText('register_generic','S’ha produït un error. Torna-ho a provar.');
+				addValidationOnlyText('register_generic',lang('js.users.register.server_error.generic'));
 			}
 		} catch(e) {
-			addValidationOnlyText('register_generic','S’ha produït un error. Torna-ho a provar.');
+			addValidationOnlyText('register_generic',lang('js.users.register.server_error.generic'));
 		}
 		$('#register_submit').prop('disabled', false);
-		$('#register_submit').html('Registra-m’hi');
+		$('#register_submit').html(lang('js.users.register.register_button'));
 	});
 	return false;
 }
@@ -212,13 +212,13 @@ function forgotPassword() {
 	$('#forgot_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
 	if ($('#forgot_email').val()=='') {
-		addValidation('forgot_email','Has d’introduir la teva adreça electrònica.');
+		addValidation('forgot_email',lang('js.users.forgot_password.email.error'));
 		failedValidation = true;
 	}
 
 	if (failedValidation) {
 		$('#forgot_submit').prop('disabled', false);
-		$('#forgot_submit').html('Envia’m un correu per a restablir-la');
+		$('#forgot_submit').html(lang('js.users.forgot_password.forgot_button'));
 		return false;
 	}
 
@@ -238,16 +238,16 @@ function forgotPassword() {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==1) {
-				addValidationOnlyText('login_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
+				addValidationOnlyText('login_generic',lang('js.users.forgot_password.server_error.invalid'));
 			} else {
-				addValidationOnlyText('login_generic','S’ha produït un error. Torna-ho a provar.');
+				addValidationOnlyText('login_generic',lang('js.users.forgot_password.server_error.generic'));
 			}
 		} catch(e) {
-			addValidationOnlyText('login_generic','S’ha produït un error. Torna-ho a provar.');
+			addValidationOnlyText('login_generic',lang('js.users.forgot_password.server_error.generic'));
 		}
 	}).always(function() {
 		$('#forgot_submit').prop('disabled', false);
-		$('#forgot_submit').html('Envia’m un correu per a restablir-la');
+		$('#forgot_submit').html(lang('js.users.forgot_password.forgot_button'));
 	});
 	return false;
 }
@@ -258,25 +258,25 @@ function resetPassword() {
 	$('#reset_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
 	if ($('#reset_password').val()=='') {
-		addValidation('reset_password','Has d’introduir una contrasenya.');
+		addValidation('reset_password',lang('js.users.reset_password.password.error'));
 		failedValidation = true;
 	}
 	if ($('#reset_repeat_password').val()=='') {
-		addValidation('reset_repeat_password','Has de repetir la contrasenya.');
+		addValidation('reset_repeat_password',lang('js.users.reset_password.repeat_password.error'));
 		failedValidation = true;
 	}
 	if ($('#reset_password').val().length<7 && !failedValidation) {
-		addValidation('reset_password','La contrasenya ha de tenir un mínim de 7 caràcters.');
+		addValidation('reset_password',lang('js.users.reset_password.password_short.error'));
 		failedValidation = true;
 	}
 	if ($('#reset_password').val()!=$('#reset_repeat_password').val() && !failedValidation) {
-		addValidation('reset_repeat_password','Les dues contrasenyes no coincideixen.');
+		addValidation('reset_repeat_password',lang('js.users.reset_password.password_mismatch.error'));
 		failedValidation = true;
 	}
 
 	if (failedValidation) {
 		$('#reset_submit').prop('disabled', false);
-		$('#reset_submit').html('Restableix i inicia la sessió');
+		$('#reset_submit').html(lang('js.users.reset_password.reset_button'));
 		return false;
 	}
 
@@ -298,19 +298,19 @@ function resetPassword() {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==1) {
-				addValidationOnlyText('reset_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
+				addValidationOnlyText('reset_generic',lang('js.users.reset_password.server_error.invalid'));
 			} else if (response.code==2) {
-				addValidationOnlyText('reset_generic','Aquest usuari ja no existeix.');
+				addValidationOnlyText('reset_generic',lang('js.users.reset_password.server_error.user_no_longer_exists'));
 			} else if (response.code==3) {
-				addValidationOnlyText('reset_generic','El codi per a restablir la contrasenya no és vàlid, ja s’ha fet servir o ha caducat. Torna a demanar el restabliment de la contrasenya.');
+				addValidationOnlyText('reset_generic',lang('js.users.reset_password.server_error.code_invalid'));
 			} else {
-				addValidationOnlyText('reset_generic','S’ha produït un error. Torna-ho a provar.');
+				addValidationOnlyText('reset_generic',lang('js.users.reset_password.server_error.generic'));
 			}
 		} catch(e) {
-			addValidationOnlyText('reset_generic','S’ha produït un error. Torna-ho a provar.');
+			addValidationOnlyText('reset_generic',lang('js.users.reset_password.server_error.generic'));
 		}
 		$('#reset_submit').prop('disabled', false);
-		$('#reset_submit').html('Restableix i inicia la sessió');
+		$('#reset_submit').html(lang('js.users.reset_password.reset_button'));
 	});
 	return false;
 }
@@ -343,9 +343,9 @@ function applyBlacklist() {
 	}
 	$('#blacklisted-fansubs-ids').val(output);
 	if (elements.length==1) {
-		$('.blacklisted-fansubs-list-number').text('1 fansub blocat');
+		$('.blacklisted-fansubs-list-number').text(lang('js.users.settings.blacklist.blocked_fansubs_one'));
 	} else {
-		$('.blacklisted-fansubs-list-number').text(elements.length+' fansubs blocats');
+		$('.blacklisted-fansubs-list-number').text(lang('js.users.settings.blacklist.blocked_fansubs_many').replaceAll('%d', elements.length));
 	}
 	saveSettings();
 }
@@ -384,13 +384,13 @@ function deleteProfile() {
 	$('#delete_profile_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
 	if ($('#delete_profile_password').val()=='') {
-		addValidation('delete_profile_password','Has d’introduir la contrasenya.');
+		addValidation('delete_profile_password',lang('js.users.delete_profile.password.error'));
 		failedValidation = true;
 	}
 
 	if (failedValidation) {
 		$('#delete_profile_submit').prop('disabled', false);
-		$('#delete_profile_submit').html('Elimina el meu perfil');
+		$('#delete_profile_submit').html(lang('js.users.delete_profile.delete_button'));
 		return false;
 	}
 
@@ -410,17 +410,17 @@ function deleteProfile() {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==1) {
-				addValidationOnlyText('delete_profile_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
+				addValidationOnlyText('delete_profile_generic',lang('js.users.delete_profile.server_error.invalid'));
 			} else if (response.code==2) {
-				addValidation('delete_profile_password','Contrasenya incorrecta.');
+				addValidation('delete_profile_password',lang('js.users.delete_profile.server_error.invalid_password'));
 			} else {
-				addValidationOnlyText('delete_profile_generic','S’ha produït un error. Torna-ho a provar.');
+				addValidationOnlyText('delete_profile_generic',lang('js.users.delete_profile.server_error.generic'));
 			}
 		} catch(e) {
-			addValidationOnlyText('delete_profile_generic','S’ha produït un error. Torna-ho a provar.');
+			addValidationOnlyText('delete_profile_generic',lang('js.users.delete_profile.server_error.generic'));
 		}
 		$('#delete_profile_submit').prop('disabled', false);
-		$('#delete_profile_submit').html('Elimina el meu perfil');
+		$('#delete_profile_submit').html(lang('js.users.delete_profile.delete_button'));
 	});
 	return false;
 }
@@ -431,29 +431,29 @@ function changePassword() {
 	$('#change_password_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
 	if ($('#change_password_old_password').val()=='') {
-		addValidation('change_password_old_password','Has d’introduir la contrasenya antiga.');
+		addValidation('change_password_old_password',lang('js.users.change_password.old_password.error'));
 		failedValidation = true;
 	}
 	if ($('#change_password_password').val()=='') {
-		addValidation('change_password_password','Has d’introduir una contrasenya nova.');
+		addValidation('change_password_password',lang('js.users.change_password.password.error'));
 		failedValidation = true;
 	}
 	if ($('#change_password_repeat_password').val()=='') {
-		addValidation('change_password_repeat_password','Has de repetir la contrasenya nova.');
+		addValidation('change_password_repeat_password',lang('js.users.change_password.repeat_password.error'));
 		failedValidation = true;
 	}
 	if ($('#change_password_password').val().length<7 && !failedValidation) {
-		addValidation('change_password_password','La contrasenya nova ha de tenir un mínim de 7 caràcters.');
+		addValidation('change_password_password',lang('js.users.change_password.password_short.error'));
 		failedValidation = true;
 	}
 	if ($('#change_password_password').val()!=$('#change_password_repeat_password').val() && !failedValidation) {
-		addValidation('change_password_repeat_password','Les dues contrasenyes noves no coincideixen.');
+		addValidation('change_password_repeat_password',lang('js.users.change_password.password_mismatch.error'));
 		failedValidation = true;
 	}
 
 	if (failedValidation) {
 		$('#change_password_submit').prop('disabled', false);
-		$('#change_password_submit').html('Canvia la contrasenya');
+		$('#change_password_submit').html(lang('js.users.change_password.change_button'));
 		return false;
 	}
 
@@ -469,23 +469,23 @@ function changePassword() {
 			withCredentials: true
 		},
 	}).done(function(data) {
-		$('.profile-section-explanation').text('La contrasenya s’ha canviat correctament.');
+		$('.profile-section-explanation').text(lang('js.users.change_password.success'));
 		$('#change-password-form').addClass('hidden');
 	}).fail(function(data) {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==1) {
-				addValidationOnlyText('change_password_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
+				addValidationOnlyText('change_password_generic',lang('js.users.change_password.server_error.invalid'));
 			} else if (response.code==2) {
-				addValidation('change_password_old_password','Contrasenya incorrecta.');
+				addValidation('change_password_old_password',lang('js.users.change_password.server_error.invalid_password'));
 			} else {
-				addValidationOnlyText('change_password_generic','S’ha produït un error. Torna-ho a provar.');
+				addValidationOnlyText('change_password_generic',lang('js.users.change_password.server_error.generic'));
 			}
 		} catch(e) {
-			addValidationOnlyText('change_password_generic','S’ha produït un error. Torna-ho a provar.');
+			addValidationOnlyText('change_password_generic',lang('js.users.change_password.server_error.generic'));
 		}
 		$('#change_password_submit').prop('disabled', false);
-		$('#change_password_submit').html('Canvia la contrasenya');
+		$('#change_password_submit').html(lang('js.users.change_password.change_button'));
 	});
 	return false;
 }
@@ -496,33 +496,33 @@ function editProfile() {
 	$('#edit_profile_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
 	if ($('#edit_profile_username').val()=='') {
-		addValidation('edit_profile_username','Has d’introduir un nom d’usuari.');
+		addValidation('edit_profile_username',lang('js.users.edit_profile.username.error'));
 		failedValidation = true;
 	}
 	if ($('#edit_profile_email').val()=='') {
-		addValidation('edit_profile_email','Has d’introduir una adreça electrònica.');
+		addValidation('edit_profile_email',lang('js.users.edit_profile.email.error'));
 		failedValidation = true;
 	}
 	if ($('#edit_profile_birthday_day').val()=='') {
-		addValidationOnlyText('edit_profile_birthday','La data de naixement no és vàlida.');
+		addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.birthdate.error'));
 		failedValidation = true;
 	}
 	if ($('#edit_profile_birthday_month').val()==null) {
-		addValidationOnlyText('edit_profile_birthday','La data de naixement no és vàlida.');
+		addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.birthdate.error'));
 		failedValidation = true;
 	}
 	if ($('#edit_profile_birthday_year').val()=='') {
-		addValidationOnlyText('edit_profile_birthday','La data de naixement no és vàlida.');
+		addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.birthdate.error'));
 		failedValidation = true;
 	}
 	if ($('#edit_profile_birthday_year').val()<1900 && !failedValidation) {
-		addValidationOnlyText('edit_profile_birthday','La data de naixement és massa antiga.');
+		addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.birthdate_too_old.error'));
 		failedValidation = true;
 	}
 
 	if (failedValidation) {
 		$('#edit_profile_submit').prop('disabled', false);
-		$('#edit_profile_submit').html('Desa els canvis');
+		$('#edit_profile_submit').html(lang('js.users.edit_profile.save_button'));
 		return false;
 	}
 
@@ -547,31 +547,31 @@ function editProfile() {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==1) {
-				addValidationOnlyText('edit_profile_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
+				addValidationOnlyText('edit_profile_generic',lang('js.users.edit_profile.server_error.invalid'));
 			} else if (response.code==3) {
-				addValidation('edit_profile_email','Aquesta adreça electrònica ja la fa servir un altre usuari.');
+				addValidation('edit_profile_email',lang('js.users.edit_profile.server_error.email_exists'));
 			} else if (response.code==4) {
-				addValidationOnlyText('edit_profile_birthday','La data de naixement no és vàlida.');
+				addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.server_error.invalid_birthdate'));
 			} else if (response.code==5) {
-				addValidationOnlyText('edit_profile_birthday','La data de naixement és massa antiga.');
+				addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.server_error.birthdate_too_old'));
 			} else if (response.code==6) {
-				addValidationOnlyText('edit_profile_birthday','Véns del futur? Doncs no acceptem viatgers en el temps.');
+				addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.server_error.birthdate_future'));
 			} else if (response.code==7) {
-				addValidationOnlyText('edit_profile_birthday','No és permès el registre als menors de 13 anys. Elimina el teu compte.');
+				addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.server_error.must_be_13'));
 			} else if (response.code==8) {
-				addValidation('edit_profile_email','L’adreça electrònica no té un format correcte.');
+				addValidation('edit_profile_email',lang('js.users.edit_profile.server_error.malformed_email'));
 			} else if (response.code==9) {
-				addValidation('edit_profile_email','No acceptem registres amb adreces electròniques d’aquest domini perquè no ens és possible enviar-hi correus de restabliment de la contrasenya.');
+				addValidation('edit_profile_email',lang('js.users.edit_profile.server_error.email_domain_banned'));
 			} else if (response.code==10) {
-				addValidation('edit_profile_username','Aquest nom d’usuari ja l’utilitza algú altre.');
+				addValidation('edit_profile_username',lang('js.users.edit_profile.server_error.user_exists'));
 			} else {
-				addValidationOnlyText('edit_profile_generic','S’ha produït un error. Torna-ho a provar.');
+				addValidationOnlyText('edit_profile_generic',lang('js.users.edit_profile.server_error.generic'));
 			}
 		} catch(e) {
-			addValidationOnlyText('edit_profile_generic','S’ha produït un error. Torna-ho a provar.');
+			addValidationOnlyText('edit_profile_generic',lang('js.users.edit_profile.server_error.generic'));
 		}
 		$('#edit_profile_submit').prop('disabled', false);
-		$('#edit_profile_submit').html('Desa els canvis');
+		$('#edit_profile_submit').html(lang('js.users.edit_profile.save_button'));
 	});
 	return false;
 }
@@ -633,9 +633,9 @@ $(document).ready(function() {
 		}
 		code+='</div>';
 		
-		showCustomDialog('Fansubs a la llista negra', code, null, true, true, [
+		showCustomDialog(lang('users.settings.blacklist.edit.title'), code, null, true, true, [
 			{
-				text: 'Torna a la configuració',
+				text: lang('users.settings.blacklist.edit.go_back'),
 				class: 'normal-button',
 				onclick: function(){
 					closeCustomDialog();

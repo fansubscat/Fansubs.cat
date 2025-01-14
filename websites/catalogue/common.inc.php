@@ -7,27 +7,29 @@ const REGEXP_DL_LINK='/^https:\/\/(?:drive\.google\.com|mega\.nz|mega\.co\.nz).*
 const REGEXP_STORAGE='/^storage:\/\/.*/';
 
 function get_fansub_preposition_name($text){
-	$first = mb_strtoupper(substr($text, 0, 1));
-	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
-		return "d’$text";
+	if (SITE_LANGUAGE=='ca') {
+		$first = mb_strtoupper(substr($text, 0, 1));
+		if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
+			return "d’$text";
+		}
 	}
-	return "de $text";
+	return sprintf(lang('generic.preposition'), $text);
 }
 
 function get_rating($text){
 	switch ($text){
 		case 'TP':
-			return "Tots els públics";
+			return lang('catalogue.generic.rating.all');
 		case '+7':
-			return "Majors de 7 anys";
+			return lang('catalogue.generic.rating.7');
 		case '+13':
-			return "Majors de 13 anys";
+			return lang('catalogue.generic.rating.13');
 		case '+16':
-			return "Majors de 16 anys";
+			return lang('catalogue.generic.rating.16');
 		case '+18':
-			return "Majors de 18 anys";
+			return lang('catalogue.generic.rating.18');
 		case 'XXX':
-			return "Majors de 18 anys (contingut pornogràfic)";
+			return lang('catalogue.generic.rating.explicit');
 		default:
 			return $text;
 	}
@@ -49,13 +51,13 @@ function get_provider($links){
 		if ($output!='') {
 			$output.=", ";
 		}
-		$output.="MEGA";
+		$output.=lang('catalogue.generic.source.mega');
 	}
 	if (in_array('direct-video', $methods) || in_array('storage', $methods)){
 		if ($output!='') {
 			$output.=", ";
 		}
-		$output.="Vídeo incrustat";
+		$output.=lang('catalogue.generic.source.streaming');
 	}
 	return $output;
 }
@@ -209,7 +211,7 @@ function get_episode_player_title_short($series_name, $series_subtype, $episode_
 
 function get_length_formatted($length){
 	if (CATALOGUE_DURATION_SLIDER_FORMATTING=='pages') {
-		return $length.' pàg.';
+		return sprintf(lang('catalogue.manga.length_pages_short'), $length);
 	}
 	//Else, time:
 	$secs = $length % 60;
@@ -222,15 +224,15 @@ function get_length_formatted($length){
 function get_comic_type($comic_type){
 	switch ($comic_type) {
 		case 'manga':
-			return 'Manga';
+			return lang('catalogue.manga.comic_type.manga');
 		case 'manhwa':
-			return 'Manhwa';
+			return lang('catalogue.manga.comic_type.manhwa');
 		case 'manhua':
-			return 'Manhua';
+			return lang('catalogue.manga.comic_type.manhua');
 		case 'novel':
-			return 'Novel·la lleugera';
+			return lang('catalogue.manga.comic_type.light_novel');
 		default:
-			return 'Còmic';
+			return lang('catalogue.manga.comic_type.comic');
 	}
 }
 
@@ -238,9 +240,9 @@ function get_type_depending_on_catalogue($series) {
 	if ($series['type']=='manga') {
 		return (CATALOGUE_ITEM_TYPE!='manga' ? get_comic_type($series['comic_type']).' • ' : '');
 	} else if ($series['type']=='anime') {
-		return (CATALOGUE_ITEM_TYPE!='anime' ? 'Anime • ' : '');
+		return (CATALOGUE_ITEM_TYPE!='anime' ? lang('catalogue.generic.type.anime').' • ' : '');
 	} else {
-		return (CATALOGUE_ITEM_TYPE!='liveaction' ? 'Imatge real • ' : '');
+		return (CATALOGUE_ITEM_TYPE!='liveaction' ? lang('catalogue.generic.type.anime').' • ' : '');
 	}
 }
 
@@ -251,10 +253,10 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 
 	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
 		if (!empty($title)){
-			return 'Capítol '.str_replace('.',',',floatval($episode_number)).': '.$title;
+			return sprintf(lang('catalogue.generic.episode_number'), str_replace('.',',',floatval($episode_number))).': '.$title;
 		}
 		else {
-			return 'Capítol '.str_replace('.',',',floatval($episode_number));
+			return sprintf(lang('catalogue.generic.episode_number'), str_replace('.',',',floatval($episode_number)));
 		}
 	} else {
 		if (!empty($title)){
@@ -272,10 +274,10 @@ function get_episode_title_formatted($series_subtype, $show_episode_numbers, $ep
 
 	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
 		if (!empty($title)){
-			return '<b>Capítol '.str_replace('.',',',floatval($episode_number)).'</b><br>'.htmlspecialchars($title);
+			return '<b>'.sprintf(lang('catalogue.generic.episode_number'), str_replace('.',',',floatval($episode_number))).'</b><br>'.htmlspecialchars($title);
 		}
 		else {
-			return '<b>Capítol '.str_replace('.',',',floatval($episode_number)).'</b>';
+			return '<b>'.sprintf(lang('catalogue.generic.episode_number'), str_replace('.',',',floatval($episode_number))).'</b>';
 		}
 	} else {
 		if (!empty($title)){
@@ -370,7 +372,7 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 <?php
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 ?>
-			<span class="new-episode tooltip<?php echo (!empty($user) && $vrow['is_seen']==1) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>
+			<span class="new-episode tooltip<?php echo (!empty($user) && $vrow['is_seen']==1) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="<?php echo lang('catalogue.generic.published_recently'); ?>"><span class="fa fa-fw fa-certificate"></span></span>
 <?php
 				}
 ?>
@@ -381,7 +383,7 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 <?php
 				if ($series['type']!='manga') {
 ?>
-			<span class="version-resolution <?php echo get_resolution_css($links); ?> tooltip tooltip-right" title="Vídeo: <?php echo get_resolution($links); ?>, servei: <?php echo get_provider($links); ?>"><?php echo htmlspecialchars(get_resolution_short($links)); ?></span>
+			<span class="version-resolution <?php echo get_resolution_css($links); ?> tooltip tooltip-right" title="<?php echo sprintf(lang('catalogue.generic.video_and_service'), get_resolution($links), get_provider($links)); ?>"><?php echo htmlspecialchars(get_resolution_short($links)); ?></span>
 <?php
 				}
 				if (!empty($vrow['comments'])){
@@ -391,7 +393,7 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 				}
 				if ($vrow['created']>=date('Y-m-d', strtotime("-1 week"))) {
 ?>
-			<span class="new-episode tooltip<?php echo (!empty($user) && $vrow['is_seen']==1) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="Publicat fa poc"><span class="fa fa-fw fa-certificate"></span></span>
+			<span class="new-episode tooltip<?php echo (!empty($user) && $vrow['is_seen']==1) ? ' hidden' : ''; ?>" data-file-id="<?php echo $vrow['id']; ?>" title="<?php echo lang('catalogue.generic.published_recently'); ?>"><span class="fa fa-fw fa-certificate"></span></span>
 <?php
 				}
 ?>
@@ -408,7 +410,7 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 <div class="episode episode-unavailable">
 	<div class="episode-thumbnail-cell">
 		<div class="episode-thumbnail">
-			<div class="play-button fa fa-fw fa-ghost version-lost" title="Capítol perdut: es va editar però no se’n conserva cap còpia"></div>
+			<div class="play-button fa fa-fw fa-ghost version-lost" title="<?php echo lang('catalogue.generic.lost_episode'); ?>"></div>
 		</div>
 	</div>
 	<div class="episode-title-cell">
@@ -457,7 +459,7 @@ function get_recommended_fansub_info($fansub_info, $versions, $specific_version_
 function print_chapter_item($row) {
 	$subtitle = '';
 	if (!empty($row['extra_name'])) {
-		$subtitle .= 'Extra: '.$row['extra_name'];
+		$subtitle .= lang('catalogue.generic.extra_prefix_short').$row['extra_name'];
 	} else{
 		if (!empty($row['division_name'])) {
 			$subtitle .= $row['division_name'];
@@ -493,46 +495,46 @@ function print_chapter_item($row) {
 
 function get_relative_date_last_update($time) {
 	if (time()-$time<60) {
-		return "ara mateix";
+		return lang('date.now');
 	}
 	if (time()-$time<3600) {
 		$minutes = intval((time()-$time)/60);
 		if ($minutes==1) {
-			return "fa 1 minut";
+			return lang('date.minute_ago');
 		} else {
-			return "fa $minutes minuts";
+			return sprintf(lang('date.minutes_ago'), $minutes);
 		}
 	}
 	else if (time()-$time<3600*24) {
 		$hours = intval((time()-$time)/3600);
 		if ($hours==1) {
-			return "fa 1 hora";
+			return lang('date.hour_ago');
 		} else {
-			return "fa $hours hores";
+			return sprintf(lang('date.hours_ago'), $hours);
 		}
 	}
 	else if (time()-$time<3600*24*30) {
 		$days = intval((time()-$time)/(3600*24));
 		if ($days==1) {
-			return "fa 1 dia";
+			return lang('date.day_ago');
 		} else {
-			return "fa $days dies";
+			return sprintf(lang('date.days_ago'), $days);
 		}
 	}
 	else if (time()-$time<3600*24*30*12) {
 		$months = intval((time()-$time)/(3600*24*30));
 		if ($months==1) {
-			return "fa 1 mes";
+			return lang('date.month_ago');
 		} else {
-			return "fa $months mesos";
+			return sprintf(lang('date.months_ago'), $months);
 		}
 	}
 	else {
 		$years = intval((time()-$time)/(3600*24*365));
 		if ($years==1) {
-			return "fa 1 any";
+			return lang('date.year_ago');
 		} else {
-			return "fa $years anys";
+			return sprintf(lang('date.years_ago'), $years);
 		}
 	}
 }
@@ -547,7 +549,7 @@ function print_chapter_item_last_update($row) {
 		$image_url = file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['version_id'].'.jpg';
 		$subtitle = '';
 		if (!empty($row['extra_name'])) {
-			$subtitle .= 'Extra: '.$row['extra_name'];
+			$subtitle .= lang('catalogue.generic.extra_prefix_short').$row['extra_name'];
 		} else{
 			if (!empty($row['division_name'])) {
 				$subtitle .= $row['division_name'];
@@ -591,9 +593,9 @@ function get_genres_for_featured($genre_names, $type, $rating) {
 		$genre_id = explode('|', $genre_data)[0];
 		$genre_type = explode('|', $genre_data)[1];
 		$genre = explode('|', $genre_data)[2];
-		$result_code.='<a class="genre" href="'.get_base_url_from_type_and_rating($type,$rating).'/cerca?'.($genre_type=='demographics' ? 'demographics' : 'genres_include').'%5B%5D='.$genre_id.'">'.htmlspecialchars($genre).'</a>';
+		$result_code.='<a class="genre" href="'.get_base_url_from_type_and_rating($type,$rating).lang('url.search').'?'.($genre_type=='demographics' ? 'demographics' : 'genres_include').'%5B%5D='.$genre_id.'">'.htmlspecialchars($genre).'</a>';
 	}
-	return '<i class="fa fa-fw fa-tag fa-flip-horizontal" title="Etiquetes"></i> '.$result_code;
+	return '<i class="fa fa-fw fa-tag fa-flip-horizontal" title="'.lang('catalogue.generic.tags').'"></i> '.$result_code;
 }
 
 function print_featured_item($series, $special_day=NULL, $specific_version=TRUE, $use_version_param=TRUE, $show_special_day=TRUE) {
@@ -608,17 +610,17 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'</div>'."\n";
 	if ($series['subtype']=='oneshot') {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'One-shot').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? lang('catalogue.manga.light_novel') : lang('catalogue.manga.oneshot')).'</div>'."\n";
 	} else if ($series['subtype']=='serialized') {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'Serialitzat').' • '.($series['divisions']==1 ? "1 volum" : $series['divisions'].' volums').' • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? lang('catalogue.manga.light_novel') : lang('catalogue.manga.serialized.single')).' • '.($series['divisions']==1 ? lang('catalogue.manga.number_of_volumes_one') : sprintf(lang('catalogue.manga.number_of_volumes_more'), $series['divisions'])).' • '.($series['number_of_episodes']==1 ? lang('catalogue.manga.number_of_chapters_one') : sprintf(lang('catalogue.manga.number_of_chapters_more'), $series['number_of_episodes'])).'</div>'."\n";
 	} else if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Conjunt de '.$series['number_of_episodes'].' films</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.sprintf(lang('catalogue.generic.number_of_chapters.movie'), $series['number_of_episodes']).'</div>'."\n";
 	} else if ($series['subtype']=='movie') {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Film</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.lang('catalogue.generic.movie').'</div>'."\n";
 	} else if ($series['divisions']>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.$series['divisions'].' temporades • '.$series['number_of_episodes'].' capítols</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.lang('catalogue.generic.series.single').' • '.sprintf(lang('catalogue.generic.number_of_seasons'), $series['divisions']).' • '.sprintf(lang('catalogue.generic.number_of_chapters_more'), $series['number_of_episodes']).'</div>'."\n";
 	} else {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.lang('catalogue.generic.series.single').' • '.($series['number_of_episodes']==1 ? lang('catalogue.generic.number_of_chapters_one') : sprintf(lang('catalogue.generic.number_of_chapters_more'), $series['number_of_episodes'])).'</div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
 
@@ -627,17 +629,17 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 
 	echo "\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'">'.($series['type']=='manga' ? lang('catalogue.manga.read_now') : lang('catalogue.generic.watch_now')).'</a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="fansubs">'.get_recommended_fansub_info($series['fansub_info'], $versions, $versions[0]['id']).'</div>'."\n";
 	if (!empty($special_day) && $show_special_day) {
 		if ($special_day=='fools') {
-			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-trophy"></i><span class="text">Els millors de l’any</span></div>'."\n";
+			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-trophy"></i><span class="text">'.lang('catalogue.featured.fools_day').'</span></div>'."\n";
 		} else if ($special_day=='sant_jordi') {
-			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-heart"></i><span class="text">Especial Sant Jordi</span></div>'."\n";
+			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-heart"></i><span class="text">'.lang('catalogue.featured.sant_jordi').'</span></div>'."\n";
 		} if ($special_day=='tots_sants') {
-			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-ghost"></i><span class="text">Especial Tots Sants</span></div>'."\n";
+			echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw fa-ghost"></i><span class="text">'.lang('catalogue.featured.halloween').'</span></div>'."\n";
 		}
 	} else if ($series['featurable_status']==3) {
 		echo "\t\t\t\t\t\t\t\t".'<div class="special-day"><i class="fa fa-fw '.CATALOGUE_SEASONAL_SERIES_ICON.'"></i><span class="text">'.CATALOGUE_SEASONAL_SERIES_STRING.'</span></div>'."\n";
@@ -658,17 +660,17 @@ function print_featured_item_single($series, $specific_version=TRUE, $use_versio
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'</div>'."\n";
 	if ($series['subtype']=='oneshot') {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'One-shot').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? lang('catalogue.manga.light_novel') : lang('catalogue.manga.oneshot')).'</div>'."\n";
 	} else if ($series['subtype']=='serialized') {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'Serialitzat').' • '.($series['divisions']==1 ? "1 volum" : $series['divisions'].' volums').' • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.($series['comic_type']=='novel' ? lang('catalogue.manga.light_novel') : lang('catalogue.manga.serialized.single')).' • '.($series['divisions']==1 ? lang('catalogue.manga.number_of_volumes_one') : sprintf(lang('catalogue.manga.number_of_volumes_more'), $series['divisions'])).' • '.($series['number_of_episodes']==1 ? lang('catalogue.manga.number_of_chapters_one') : sprintf(lang('catalogue.manga.number_of_chapters_more'), $series['number_of_episodes'])).'</div>'."\n";
 	} else if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Conjunt de '.$series['number_of_episodes'].' films</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.sprintf(lang('catalogue.generic.number_of_chapters.movie'), $series['number_of_episodes']).'</div>'."\n";
 	} else if ($series['subtype']=='movie') {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Film</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.lang('catalogue.generic.movie').'</div>'."\n";
 	} else if ($series['divisions']>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.$series['divisions'].' temporades • '.$series['number_of_episodes'].' capítols</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.lang('catalogue.generic.series.single').' • '.sprintf(lang('catalogue.generic.number_of_seasons'), $series['divisions']).' • '.sprintf(lang('catalogue.generic.number_of_chapters_more'), $series['number_of_episodes']).'</div>'."\n";
 	} else {
-		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Sèrie • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.lang('catalogue.generic.series.single').' • '.($series['number_of_episodes']==1 ? lang('catalogue.generic.number_of_chapters_one') : sprintf(lang('catalogue.generic.number_of_chapters_more'), $series['number_of_episodes'])).'</div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
 
@@ -692,18 +694,18 @@ function get_current_advent_day() {
 
 function print_featured_advent() {
 	echo "\t\t\t\t\t\t\t".'<div class="recommendation advent-recommendation" data-series-id="special-advent">'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/advent/header_'.date('Y').'.jpg" alt="Calendari d’advent '.date('Y').'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/advent/header_'.date('Y').'.jpg" alt="'.sprintf(lang('catalogue.featured.advent.title'), date('Y')).'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder" data-swiper-parallax="-30%">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.ADVENT_URL.'"><img class="cover" src="'.STATIC_URL.'/images/advent/background_'.date('Y').'.jpg" alt="Calendari d’advent '.date('Y').'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.ADVENT_URL.'"><img class="cover" src="'.STATIC_URL.'/images/advent/background_'.date('Y').'.jpg" alt="'.sprintf(lang('catalogue.featured.advent.title'), date('Y')).'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">Calendari d’advent '.date('Y').'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">Dia '.get_current_advent_day().' de 24</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.sprintf(lang('catalogue.featured.advent.title'), date('Y')).'</div>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="divisions">'.sprintf(lang('catalogue.featured.advent.day'), get_current_advent_day()).'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="synopsis">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\tTens ganes que arribi Nadal? Per a fer més amena l’espera, entre els diferents fansubs en català publicarem cada dia un petit present al nostre calendari d’advent. Hi trobaràs tota mena de curts i one-shots de poca durada. Cada matí a les 12.00 podràs obrir-ne una nova casella i gaudir d’un petit premi en forma d’anime o manga!\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".lang('catalogue.featured.advent.description')."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.ADVENT_URL.'">Vés-hi ara</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a class="watchbutton" href="'.ADVENT_URL.'">'.lang('catalogue.featured.advent.go_button').'</a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t".'</div>'."\n";
@@ -715,19 +717,18 @@ function print_comment($comment, $hidden){
 	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="comment-avatar" src="'.(!empty($comment['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$comment['avatar_filename'] : ($comment['type']=='fansub' ? STATIC_URL.'/images/icons/'.$comment['fansub_id'].'.png' : ($comment['type']=='admin' ? STATIC_URL.'/images/site/default_fansub.png' : STATIC_URL.'/images/site/default_avatar.jpg'))).'">';
 	if ($comment['has_spoilers']==1 && (empty($user) || $comment['user_id']!=$user['id'])) {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message comment-with-spoiler'.($comment['is_seen_by_user']==1 ? ' comment-with-spoiler-shown' : '').'">';
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-spoiler-warning'.($comment['is_seen_by_user']==1 ? ' hidden' : '').'"><span class="fa fa-warning"></span> Conté espòilers<span class="spoiler-show-button"> • <a onclick="toggleCommentSpoiler(this);">Mostra’l igualment</a></span></div>';
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-text">'.(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>')."</div>";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-spoiler-warning'.($comment['is_seen_by_user']==1 ? ' hidden' : '').'"><span class="fa fa-warning"></span> '.lang('catalogue.comment.contains_spoilers').'<span class="spoiler-show-button"> • <a onclick="toggleCommentSpoiler(this);">'.lang('catalogue.comment.show_anyway').'</a></span></div>';
 	} else {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message">';
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-text">'.(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>')."</div>";
 	}
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-text">'.(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>'.lang('catalogue.comment.comment_deleted').'</i>')."</div>";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-author">';
-	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="comment-user">'.(!empty($comment['username']) ? htmlentities($comment['username']) : ($comment['type']=='fansub' ? htmlentities($comment['fansub_name']) : ($comment['type']=='admin' ? 'Fansubs.cat' : 'Usuari eliminat'))).'</span> • <span class="comment-date">'.get_relative_date($comment['created_timestamp']).'</span>';
+	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="comment-user">'.(!empty($comment['username']) ? htmlentities($comment['username']) : ($comment['type']=='fansub' ? htmlentities($comment['fansub_name']) : ($comment['type']=='admin' ? CURRENT_SITE_NAME : lang('catalogue.comment.user_deleted')))).'</span> • <span class="comment-date">'.get_relative_date($comment['created_timestamp']).'</span>';
 	if (!empty($comment['episode_title'])) {
 		echo ' • <span class="comment-episode">' . htmlentities($comment['episode_title']).'</span>';
 	}
 	if ($comment['has_spoilers']==1) {
-		echo ' <span class="fa fa-warning" title="Marcat per l’usuari com a «conté possibles espòilers»"></span>';
+		echo ' <span class="fa fa-warning" title="'.lang('catalogue.comment.marked_by_user_as_spoiler').'"></span>';
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>';
 	echo "\t\t\t\t\t\t\t\t\t\t".'</div>';
@@ -745,18 +746,18 @@ function print_comment_home($comment){
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message">';
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-author">';
-	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="comment-user">'.(!empty($comment['username']) ? htmlentities($comment['username']) : ($comment['type']=='fansub' ? htmlentities($comment['fansub_name']) : ($comment['type']=='admin' ? 'Fansubs.cat' : 'Usuari eliminat'))).'</span>'.(!empty($comment['replied_username']) ? ' en resposta a <strong>'.htmlentities($comment['replied_username']).'</strong>' : '').' a <a href="'.SITE_BASE_URL.'/'.$comment['version_slug'].'"><strong>'.$comment['version_title'].'</strong> '.get_fansub_preposition_name($comment['fansubs']).'</a> • <span class="comment-date"><a href="'.SITE_BASE_URL.'/'.$comment['version_slug'].'#comentaris">'.get_relative_date($comment['created_timestamp']).'</a></span>';
+	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<span class="comment-user">'.(!empty($comment['username']) ? htmlentities($comment['username']) : ($comment['type']=='fansub' ? htmlentities($comment['fansub_name']) : ($comment['type']=='admin' ? CURRENT_SITE_NAME : lang('catalogue.comment.user_deleted')))).'</span>'.(!empty($comment['replied_username']) ? sprintf(lang('catalogue.comment.in_reply_to'), htmlentities($comment['replied_username'])) : '').lang('catalogue.comment.in').'<a href="'.SITE_BASE_URL.'/'.$comment['version_slug'].'"><strong>'.$comment['version_title'].'</strong> '.get_fansub_preposition_name($comment['fansubs']).'</a> • <span class="comment-date"><a href="'.SITE_BASE_URL.'/'.$comment['version_slug'].'#'.lang('url.comments_anchor').'">'.get_relative_date($comment['created_timestamp']).'</a></span>';
 	if (!empty($comment['episode_title'])) {
 		echo ' • <span class="comment-episode">' . htmlentities($comment['episode_title']).'</span>';
 	}
 	if ($comment['has_spoilers']==1) {
-		echo ' <span class="fa fa-warning" title="Marcat per l’usuari com a «conté possibles espòilers»"></span>';
+		echo ' <span class="fa fa-warning" title="'.lang('catalogue.comment.marked_by_user_as_spoiler').'"></span>';
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>';
 	if ($comment['has_spoilers']==1 && (empty($user) || $comment['user_id']!=$user['id'])) {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-spoiler-warning'.($comment['is_seen_by_user']==1 ? ' hidden' : '').'"><span class="fa fa-warning"></span> Conté espòilers<span class="spoiler-show-button"> • <a onclick="toggleCommentSpoiler(this);">Mostra’l igualment</a></span></div>';
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-spoiler-warning'.($comment['is_seen_by_user']==1 ? ' hidden' : '').'"><span class="fa fa-warning"></span> '.lang('catalogue.comment.contains_spoilers').'<span class="spoiler-show-button"> • <a onclick="toggleCommentSpoiler(this);">'.lang('catalogue.comment.show_anyway').'</a></span></div>';
 	}
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-text">'.(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>- Comentari eliminat -</i>')."</div>";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="comment-text">'.(!empty($comment['text']) ? str_replace("\n", "<br>", htmlentities($comment['text'])) : '<i>'.lang('catalogue.comment.comment_deleted').'</i>')."</div>";
 	echo "\t\t\t\t\t\t\t\t\t\t".'</div>';
 	echo "\t\t\t\t\t\t\t\t\t".'</div>';
 }

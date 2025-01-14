@@ -1,7 +1,7 @@
 const BASE_DOMAIN = document.querySelector("meta[name=current_domain]").content;
-const MAIN_URL = 'https://www.'+BASE_DOMAIN;
-const USERS_URL = 'https://usuaris.'+BASE_DOMAIN;
-const STATIC_URL = 'https://static.'+BASE_DOMAIN;
+const MAIN_URL = document.querySelector("meta[name=main_url]").content;
+const USERS_URL = document.querySelector("meta[name=users_url]").content;
+const SITE_NAME = document.querySelector("meta[name=site_name]").content;
 
 var lastWindowWidth=0;
 
@@ -13,12 +13,20 @@ var cookieOptions = {
 	secure: true
 };
 
+function lang(string) {
+	if (window.LANGUAGE_STRINGS[string]===undefined) {
+		alert('Missing string: '+string);
+		return string;
+	}
+	return window.LANGUAGE_STRINGS[string];
+}
+
 function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray, scrollable=false, keepNonScrollable=false) {
 	$('html').addClass('page-no-overflow');
 	$('#dialog-overlay').remove();
 	var code = '<div data-nosnippet id="dialog-overlay" class="flex'+(blurred ? ' dialog-overlay-blurred' : '')+(keepNonScrollable ? ' dialog-overlay-keep-non-scroll' : '')+'"><div id="dialog-overlay-content"'+(scrollable ? ' class="scrollable-dialog"' : '')+'>';
 	if (closeable) {
-		code += '<a class="dialog-close-button fa fa-fw fa-times" title="Tanca" onclick="closeCustomDialog();"></a>'
+		code += '<a class="dialog-close-button fa fa-fw fa-times" title="'+lang('js.dialog.close')+'" onclick="closeCustomDialog();"></a>'
 	}
 	code += '<h2 id="dialog-title">'+title+'</h2>';
 	if (text!=null) {
@@ -41,7 +49,7 @@ function showCustomDialog(title, text, subtext, closeable=true, blurred=true, bu
 function showAlert(title, desc) {
 	showCustomDialog(title, desc, null, true, true, [
 		{
-			text: 'D’acord',
+			text: lang('js.dialog.ok'),
 			class: 'normal-button',
 			onclick: function(){
 				closeCustomDialog();
@@ -89,12 +97,12 @@ function toggleSiteTheme() {
 	if ($('html').hasClass('theme-dark')) {
 		$('html').removeClass('theme-dark');
 		$('html').addClass('theme-light');
-		$('.theme-button-text').text('Canvia al tema fosc');
+		$('.theme-button-text').text(lang('js.menu.change_theme.dark'));
 		newTheme='light';
 	} else {
 		$('html').removeClass('theme-light');
 		$('html').addClass('theme-dark');
-		$('.theme-button-text').text('Canvia al tema clar');
+		$('.theme-button-text').text(lang('js.menu.change_theme.light'));
 		newTheme='dark';
 	}
 	$('html')[0].offsetHeight; //Triggers reflow
@@ -117,7 +125,7 @@ function toggleSiteTheme() {
 
 function toggleBookmark(seriesId){
 	if ($('body.user-logged-in').length==0) {
-		showAlert('Cal iniciar la sessió', 'Per a poder afegir elements a la teva llista, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
+		showAlert(lang('js.login_required.header'), lang('js.login_required.explanation.add_list'));
 		return;
 	}
 	var action;

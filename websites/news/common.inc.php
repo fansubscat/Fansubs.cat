@@ -4,40 +4,40 @@ function relative_time($date){
         $ago = (int)(time() - date('U', $date));
 
 	if ($ago==1){
-		$ago = "fa 1 segon";
+		$ago = lang('date.second_ago');
 	}
 	else if ($ago<60){
-		$ago = "fa $ago segons";
+		$ago = sprintf(lang('date.seconds_ago'), $ago);
 	}
 	else if ($ago<3600){
 		$ago = (int)($ago/60);
 		if ($ago==1){
-                        $ago = "fa ". $ago . " minut";
+                        $ago = lang('date.minute_ago');
 		}
 		else{
-			$ago = "fa ". $ago . " minuts";
+			$ago = sprintf(lang('date.minutes_ago'), $ago);
 		}
         }
 	else if ($ago<86400){
 		$ago = (int)($ago/3600);
 		if ($ago==1){
-                        $ago = "fa ". $ago . " hora";
+                        $ago = lang('date.hour_ago');
 		}
 		else{
-			$ago = "fa ". $ago . " hores";
+			$ago = sprintf(lang('date.hours_ago'), $ago);
 		}
         }
 	else if ($ago<2678400){
 		$ago = (int)($ago/86400);
 		if ($ago==1){
-                        $ago = "fa ". $ago . " dia";
+                        $ago = lang('date.day_ago');
 		}
 		else{
-			$ago = "fa ". $ago . " dies";
+			$ago = sprintf(lang('date.days_ago'), $ago);
 		}
         }
 	else{
-		$ago = date('d/m/Y \a \l\e\s H:i:s', $date);
+		$ago = date(lang('date.long_format'), $date);
 	}
 	return $ago;
 }

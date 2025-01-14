@@ -90,11 +90,11 @@ function send_email($recipient_address, $recipient_name, $subject, $text, $html_
 
 function get_opposite_url() {
 	$path = strtok($_SERVER["REQUEST_URI"], '?');
-	if ($path=='/llista-de-fansubs' || $path=='/politica-de-privadesa' || $path=='/contacta-amb-nosaltres' || $path=='/la-meva-llista' || $path=='/configuracio'
-			|| $path=='/edita-el-perfil' || $path=='/elimina-el-perfil' || $path=='/canvia-la-contrasenya') {
+	if ($path==lang('url.fansubs') || $path==lang('url.privacy_policy') || $path==lang('url.contact_us') || $path==lang('url.my_list') || $path==lang('url.settings')
+			|| $path==lang('url.edit_profile') || $path==lang('url.delete_profile') || $path==lang('url.change_password')) {
 		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).$path;
-	} else if (str_starts_with($path,'/cerca')) {
-		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).'/cerca';
+	} else if (str_starts_with($path,lang('url.search'))) {
+		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).lang('url.search');
 	} else {
 		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']);
 	}
@@ -123,83 +123,87 @@ function get_nanoid($size=24) {
 
 function get_relative_date($time) {
 	if (time()-$time<60) {
-		return "ara mateix";
+		return lang('date.now');
 	}
 	if (time()-$time<3600) {
 		$minutes = intval((time()-$time)/60);
 		if ($minutes==1) {
-			return "fa 1 minut";
+			return lang('date.minute_ago');
 		} else {
-			return "fa $minutes minuts";
+			return sprintf(lang('date.minutes_ago'), $minutes);
 		}
 	} else if (time()-$time<3600*24) {
 		$hours = intval((time()-$time)/3600);
 		if ($hours==1) {
-			return "fa 1 hora";
+			return lang('date.hour_ago');
 		} else {
-			return "fa $hours hores";
+			return sprintf(lang('date.hours_ago'), $hours);
 		}
 	}
 	else if (time()-$time<3600*24*30) {
 		$days = intval((time()-$time)/(3600*24));
 		if ($days==1) {
-			return "fa 1 dia";
+			return lang('date.day_ago');
 		} else {
-			return "fa $days dies";
+			return sprintf(lang('date.days_ago'), $days);
 		}
 	}
 	else {
-		return get_catalan_formatted_date($time);
+		return get_custom_formatted_date($time);
 	}
 }
 
-function get_catalan_formatted_date($date) {
-	$day = date('j', $date);
-	if ($day=='1') {
-		$day.='r';
+function get_custom_formatted_date($date) {
+	if (SITE_LANGUAGE=='ca') {
+		$day = date('j', $date);
+		if ($day=='1') {
+			$day.='r';
+		}
+		$month = date('m', $date);
+		switch ($month) {
+			case '01':
+				$month = 'de gener';
+				break;
+			case '02':
+				$month = 'de febrer';
+				break;
+			case '03':
+				$month = 'de març';
+				break;
+			case '04':
+				$month = 'd’abril';
+				break;
+			case '05':
+				$month = 'de maig';
+				break;
+			case '06':
+				$month = 'de juny';
+				break;
+			case '07':
+				$month = 'de juliol';
+				break;
+			case '08':
+				$month = 'd’agost';
+				break;
+			case '09':
+				$month = 'de setembre';
+				break;
+			case '10':
+				$month = 'd’octubre';
+				break;
+			case '11':
+				$month = 'de novembre';
+				break;
+			case '12':
+			default:
+				$month = 'de desembre';
+				break;
+		}
+		$year = date('Y', $date);
+		return "$day $month del $year";
+	} else {
+		return date(lang('date.short_format'));
 	}
-	$month = date('m', $date);
-	switch ($month) {
-		case '01':
-			$month = 'de gener';
-			break;
-		case '02':
-			$month = 'de febrer';
-			break;
-		case '03':
-			$month = 'de març';
-			break;
-		case '04':
-			$month = 'd’abril';
-			break;
-		case '05':
-			$month = 'de maig';
-			break;
-		case '06':
-			$month = 'de juny';
-			break;
-		case '07':
-			$month = 'de juliol';
-			break;
-		case '08':
-			$month = 'd’agost';
-			break;
-		case '09':
-			$month = 'de setembre';
-			break;
-		case '10':
-			$month = 'd’octubre';
-			break;
-		case '11':
-			$month = 'de novembre';
-			break;
-		case '12':
-		default:
-			$month = 'de desembre';
-			break;
-	}
-	$year = date('Y', $date);
-	return "$day $month del $year";
 }
 
 function get_cookie_blacklisted_fansub_ids() {
@@ -235,51 +239,51 @@ function get_status($id){
 function get_status_description_short($id){
 	switch ($id){
 		case 1:
-			return "Completat";
+			return lang('status.complete.public.short');
 		case 2:
-			return "En procés";
+			return lang('status.inprogress.public.short');
 		case 3:
-			return "Parcialment completat";
+			return lang('status.partiallycomplete.public.short');
 		case 4:
-			return "Abandonat";
+			return lang('status.abandoned.public.short');
 		case 5:
-			return "Cancel·lat";
+			return lang('status.cancelled.public.short');
 		default:
-			return "Estat desconegut";
+			return lang('status.unknown.public.short');
 	}
 }
 
 function get_status_description($id){
 	switch ($id){
 		case 1:
-			return "Completat";
+			return lang('status.complete.public.medium');
 		case 2:
-			return "En procés: No hi ha tots els capítols disponibles";
+			return lang('status.inprogress.public.medium');
 		case 3:
-			return "Parcialment completat: Almenys una part de l’obra està completada";
+			return lang('status.partiallycomplete.public.medium');
 		case 4:
-			return "Abandonat: No hi ha tots els capítols disponibles";
+			return lang('status.abandoned.public.medium');
 		case 5:
-			return "Cancel·lat: No hi ha tots els capítols disponibles";
+			return lang('status.cancelled.public.medium');
 		default:
-			return "Estat desconegut";
+			return lang('status.unknown.public.medium');
 	}
 }
 
 function get_status_description_long($id){
 	switch ($id){
 		case 1:
-			return "Aquest projecte està completat.";
+			return lang('status.complete.public.long');
 		case 2:
-			return "Aquest projecte està en procés.<br>En el futur se’n publicaran més capítols.";
+			return lang('status.inprogress.public.long');
 		case 3:
-			return "Aquest projecte està parcialment completat.<br>És possible que no es publiquin més capítols de la resta de parts.";
+			return lang('status.partiallycomplete.public.long');
 		case 4:
-			return "Aquest projecte està abandonat.<br>Segurament no se’n publicaran més capítols.";
+			return lang('status.abandoned.public.long');
 		case 5:
-			return "Aquest projecte està cancel·lat.<br>No se’n publicaran més capítols.";
+			return lang('status.cancelled.public.long');
 		default:
-			return "Estat desconegut";
+			return lang('status.unknown.public.long');
 	}
 }
 
@@ -420,19 +424,19 @@ function print_carousel_item($series, $specific_version, $use_version_param, $sh
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t\t".$synopsis."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'" onclick="event.stopPropagation();">'.($series['type']=='manga' ? 'Llegeix-lo ara' : 'Mira’l ara').'</a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t\t".'<a class="floating-info-watch-now" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'" onclick="event.stopPropagation();">'.($series['type']=='manga' ? lang('catalogue.manga.read_now') : lang('catalogue.generic.watch_now')).'</a>'."\n";
 	if ($series['subtype']=='oneshot') {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'One-shot').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">'.($series['comic_type']=='novel' ? lang('catalogue.manga.light_novel') : lang('catalogue.manga.oneshot')).'</div>'."\n";
 	} else if ($series['subtype']=='serialized') {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">'.($series['comic_type']=='novel' ? 'Novel·la lleugera' : 'Serialitzat').' • '.($series['divisions']==1 ? "1 vol." : $series['divisions'].' vol.').' • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">'.($series['comic_type']=='novel' ? lang('catalogue.manga.light_novel') : lang('catalogue.manga.serialized.single')).' • '.($series['divisions']==1 ? lang('catalogue.manga.number_of_volumes_one.short') : sprintf(lang('catalogue.manga.number_of_volumes_more.short'), $series['divisions'])).' • '.($series['number_of_episodes']==1 ? lang('catalogue.manga.number_of_chapters_one') : sprintf(lang('catalogue.manga.number_of_chapters_more'), $series['number_of_episodes'])).'</div>'."\n";
 	} else if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">Conjunt de '.$series['number_of_episodes'].' films</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">'.sprintf(lang('catalogue.generic.number_of_chapters.movie'), $series['number_of_episodes']).'</div>'."\n";
 	} else if ($series['subtype']=='movie') {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">Film</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">'.lang('catalogue.generic.movie').'</div>'."\n";
 	} else if ($series['divisions']>1) {
-		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">Sèrie • '.$series['divisions'].' temp. • '.$series['number_of_episodes'].' capítols</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">'.lang('catalogue.generic.series.single').' • '.sprintf(lang('catalogue.generic.number_of_seasons.short'), $series['divisions']).' • '.sprintf(lang('catalogue.generic.number_of_chapters_more'), $series['number_of_episodes']).'</div>'."\n";
 	} else {
-		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">Sèrie • '.($series['number_of_episodes']==1 ? "1 capítol" : $series['number_of_episodes'].' capítols').'</div>'."\n";
+		echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-divisions">'.lang('catalogue.generic.series.single').' • '.($series['number_of_episodes']==1 ? lang('catalogue.generic.number_of_chapters_one') : sprintf(lang('catalogue.generic.number_of_chapters_more'), $series['number_of_episodes'])).'</div>'."\n";
 	}
 	echo "\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres-score-wrapper">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-genres-wrapper">'."\n";
@@ -461,19 +465,19 @@ function get_base_url_from_type_and_rating($type, $rating) {
 }
 
 function get_special_day() {
-	if (date('m-d')=='12-28') {
+	if (date('m-d')=='12-28' && !DISABLE_FOOLS_DAY) {
 		return 'fools';
-	} else if (date('m-d')=='04-23') { // Sant Jordi
+	} else if (date('m-d')=='04-23' && !DISABLE_SANT_JORDI_DAY) { // Sant Jordi
 		return 'sant_jordi';
-	} else if (date('m-d')>='10-31' && date('m-d')<='11-01') {
+	} else if (date('m-d')>='10-31' && date('m-d')<='11-01' && !DISABLE_HALLOWEEN_DAYS) {
 		return 'tots_sants';
-	} else if ((date('m-d')>='12-05' && date('m-d')<='12-31') || (date('m-d')>='01-01' && date('m-d')<='01-06')) {
+	} else if (((date('m-d')>='12-05' && date('m-d')<='12-31') || (date('m-d')>='01-01' && date('m-d')<='01-06')) && !DISABLE_CHRISTMAS_DAYS) {
 		return 'nadal';
 	}
 	return NULL;
 }
 
 function is_advent_days() {
-	return strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0;
+	return strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0 && !DISABLE_ADVENT;
 }
 ?>

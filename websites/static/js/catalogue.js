@@ -478,7 +478,7 @@ function getPlayerErrorEvent() {
 				error+=player.error().code+'/UNKNOWN_ERROR'+message;
 		}
 	} else {
-		error+="Error desconegut";
+		error+="Unknown error";
 	}
 	return error;
 }
@@ -711,9 +711,9 @@ function applyMangaReaderType(type) {
 
 function showMangaReaderConfig() {
 	var disabled = (currentSourceData.default_reader_type=='strip');
-	showCustomDialog('Opcions de lectura', '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">Lector de manga</div><div class="reader-settings-data-header-subtitle">'+(disabled ? 'Aquest manga no permet triar cap lector diferent: es mostra sempre com a tira vertical.' : 'Tria quin lector de manga vols utilitzar: el recomanat per a cada manga, sempre en sentit oriental (de dreta a esquerra), sempre en sentit occidental (d’esquerra a dreta) o sempre en tira vertical.')+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="0"'+(currentSourceData.user_reader_preference==0 ? ' selected' : '')+'>Opció recomanada</option><option value="1"'+(currentSourceData.user_reader_preference==1 ? ' selected' : '')+'>Sentit oriental</option><option value="2"'+(currentSourceData.user_reader_preference==2 ? ' selected' : '')+'>Sentit occidental</option><option value="3"'+(disabled || currentSourceData.user_reader_preference==3 ? ' selected' : '')+'>Tira vertical</option></select></div><br><hr><br>Si tens un dispositiu Android i vols una experiència de lectura més còmoda i personalitzada, pots fer servir l’extensió de '+BASE_DOMAIN.charAt(0).toUpperCase()+BASE_DOMAIN.slice(1)+' per al <a class="secondary-link" href="https://mihon.app/" target="_blank">Mihon</a>, <a class="secondary-link" href="https://tachiyomi.org/" target="_blank">Tachiyomi</a> o similars.', null, true, true, [
+	showCustomDialog(lang('js.catalogue.reader.header'), '<div class="reader-settings-data-element"><div class="reader-settings-data-header"><div class="reader-settings-data-header-title">'+lang('js.catalogue.reader.select')+'</div><div class="reader-settings-data-header-subtitle">'+(disabled ? lang('js.catalogue.reader.always_vertical') : lang('js.catalogue.reader.explanation'))+'</div></div><select id="reader-type" class="settings-combo"'+(disabled ? ' disabled' : '')+'><option value="0"'+(currentSourceData.user_reader_preference==0 ? ' selected' : '')+'>'+lang('js.catalogue.reader.recommended_option')+'</option><option value="1"'+(currentSourceData.user_reader_preference==1 ? ' selected' : '')+'>'+lang('js.catalogue.reader.eastern_style')+'</option><option value="2"'+(currentSourceData.user_reader_preference==2 ? ' selected' : '')+'>'+lang('js.catalogue.reader.western_style')+'</option><option value="3"'+(disabled || currentSourceData.user_reader_preference==3 ? ' selected' : '')+'>'+lang('js.catalogue.reader.long_strip')+'</option></select></div><br><hr><br>'+lang('js.catalogue.reader.tachiyomi_help').replaceAll("%s", SITE_NAME), null, true, true, [
 		{
-			text: 'D’acord',
+			text: lang('js.dialog.ok'),
 			class: 'normal-button',
 			onclick: function(){
 				if (!$('#reader-type').prop('disabled')) {
@@ -723,7 +723,7 @@ function showMangaReaderConfig() {
 			}
 		},
 		{
-			text: 'Cancel·la',
+			text: lang('js.dialog.cancel'),
 			class: 'cancel-button',
 			onclick: function(){
 				closeCustomDialog();
@@ -861,25 +861,25 @@ function buildMangaReaderBar(current, total, type) {
 	if (!isEmbedPage()) {
 		if (type=='rtl') {
 			if (hasNextFile()) {
-				c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.next_chapter')+'" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.next_chapter')+'</span></button>';
 			} else {
-				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false" title="No hi ha capítol següent"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">No hi ha capítol següent</span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.no_next_chapter')+'"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.no_next_chapter')+'</span></button>';
 			}
 			if (hasPrevFile()) {
-				c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol anterior" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol anterior</span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.prev_chapter')+'" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.prev_chapter')+'</span></button>';
 			} else {
-				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false" title="No hi ha capítol anterior"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">No hi ha capítol anterior</span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.no_prev_chapter')+'"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.no_prev_chapter')+'</span></button>';
 			}
 		} else {
 			if (hasPrevFile()) {
-				c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="Capítol anterior" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol anterior</span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-prev-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.prev_chapter')+'" onclick="playPrevFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.prev_chapter')+'</span></button>';
 			} else {
-				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false" title="No hi ha capítol anterior"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">No hi ha capítol anterior</span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-prev-button vjs-button-disabled" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.no_prev_chapter')+'"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.no_prev_chapter')+'</span></button>';
 			}
 			if (hasNextFile()) {
-				c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="Capítol següent" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Capítol següent</span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-next-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.next_chapter')+'" onclick="playNextFile();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.next_chapter')+'</span></button>';
 			} else {
-				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false" title="No hi ha capítol següent"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">No hi ha capítol següent</span></button>';
+				c += '		<button class="vjs-control vjs-button vjs-next-button vjs-button-disabled" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.no_next_chapter')+'"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.no_next_chapter')+'</span></button>';
 			}
 		}
 	}
@@ -887,10 +887,10 @@ function buildMangaReaderBar(current, total, type) {
 	c += '			<div class="vjs-time-control vjs-time-divider"><div><span>/</span></div></div>';
 	c += '			<div class="vjs-duration vjs-time-control vjs-control">'+total+'</div>';
 	if (mangaHasMusic()) {
-		c += '		<button class="vjs-mute-control vjs-control vjs-button vjs-vol-0" type="button" title="Commuta la música de fons" aria-disabled="false" onclick="toggleMangaMusic();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Commuta la música de fons</span></button><audio id="manga-music" loop><source src="'+currentSourceData.music+'" type="audio/mpeg"></audio>';
+		c += '		<button class="vjs-mute-control vjs-control vjs-button vjs-vol-0" type="button" title="'+lang('js.catalogue.reader.commute_music')+'" aria-disabled="false" onclick="toggleMangaMusic();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.commute_music')+'</span></button><audio id="manga-music" loop><source src="'+currentSourceData.music+'" type="audio/mpeg"></audio>';
 	}
-	c += '			<button class="vjs-config-button vjs-control vjs-button" type="button" aria-disabled="false" title="Configuració del lector de manga" onclick="showMangaReaderConfig();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Configuració del lector de manga</span></button>';
-	c += '			<button class="vjs-fullscreen-control vjs-control vjs-button" type="button" title="Pantalla completa" aria-disabled="false" onclick="requestMangaReaderFullscreen();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">Pantalla completa</span></button>';
+	c += '			<button class="vjs-config-button vjs-control vjs-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.options')+'" onclick="showMangaReaderConfig();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.options')+'</span></button>';
+	c += '			<button class="vjs-fullscreen-control vjs-control vjs-button" type="button" title="'+lang('js.catalogue.reader.full_screen')+'" aria-disabled="false" onclick="requestMangaReaderFullscreen();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.full_screen')+'</span></button>';
 	c += '		</div>';
 	c += '	</div>';
 
@@ -903,7 +903,7 @@ function initializeReader(type) {
 	if (type=='strip') {
 		stripImagesLoadedReqNo++;
 		stripImagesLoaded = 0;
-		pagesCode+='<div class="swiper-wrapper"><div class="strip-images-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i><span class="strip-images-loading-progress">0 / '+currentSourceData.length+'</span></div><div class="strip-images-error hidden">No s’han pogut carregar totes les imatges.<br><button class="normal-button" onclick="stripImagesReload();">Torna-ho a provar</button></div><div class="strip-images hidden" onscroll="setSeekCurrentPageOnScroll(this);">';
+		pagesCode+='<div class="swiper-wrapper"><div class="strip-images-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i><span class="strip-images-loading-progress">0 / '+currentSourceData.length+'</span></div><div class="strip-images-error hidden">'+lang('js.catalogue.reader.error_loading_all_images')+'<br><button class="normal-button" onclick="stripImagesReload();">'+lang('js.catalogue.reader.retry')+'</button></div><div class="strip-images hidden" onscroll="setSeekCurrentPageOnScroll(this);">';
 	} else {
 		pagesCode+='<div class="swiper-wrapper">';
 	}
@@ -917,7 +917,7 @@ function initializeReader(type) {
 			pagesCode+='<div class="manga-page" data-page-number="'+(i+1)+'"><img src="'+currentSourceData.pages[i]+'" draggable="false" onload="stripImageLoaded('+stripImagesLoadedReqNo+');" onerror="stripImageError('+stripImagesLoadedReqNo+');"></div>';
 		} else {
 			var isLazy = !(i==initialPosition-1 || i==initialPosition-2 || i==initialPosition);
-			pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="'+(isLazy ? 'lazy' : '')+'" draggable="false" onload="imageLoaded(this);" onerror="imageError(this);"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">No s’ha pogut carregar aquesta imatge.<br><button class="normal-button" onclick="imageReload(this);">Torna-ho a provar</button></div></div>';
+			pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="'+(isLazy ? 'lazy' : '')+'" draggable="false" onload="imageLoaded(this);" onerror="imageError(this);"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">'+lang('js.catalogue.reader.error_loading_one_image')+'<br><button class="normal-button" onclick="imageReload(this);">'+lang('js.catalogue.reader.retry')+'</button></div></div>';
 		}
 		pagesRead[i]=false;
 	}
@@ -1254,7 +1254,7 @@ function initializePlayer(){
 function installVideoPlayerTopBarAndNextFile() {
 	//Install the top, movement and ended bar
 	if ($('.video-js .player_extra_upper').length==0) {
-		$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentSourceData.title).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
+		$('<div class="player_extra_upper"><div class="player_extra_title">'+new Option(currentSourceData.title).innerHTML+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="'+lang('js.dialog.close')+'" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo(".video-js");
 		$('<div class="player_extra_movement"><div class="player_extra_backward"><i class="fas fa-backward"></i><span><span class="player_extra_backward_time">0</span> s</span></div><div class="player_extra_forward"><i class="fas fa-forward"></i><span><span class="player_extra_forward_time">0</span> s</span></div></div>').appendTo(".video-js");
 	} else {
 		$('.player_extra_title').html(currentSourceData.title);
@@ -1263,7 +1263,7 @@ function installVideoPlayerTopBarAndNextFile() {
 	}
 	var nextFile = getNextFileElement();
 	if ($('.video-js .player_extra_ended').length==0) {
-		$('<div class="player_extra_ended'+(nextFile==null ? ' hidden' : '')+'"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">Següent capítol:</div><div class="player_extra_ended_title">'+new Option(nextFile==null ? '' : nextFile.attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><a onclick="playNextFile();">Reprodueix-lo ara</a><img src="'+(nextFile==null ? '' : nextFile.attr('data-thumbnail'))+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
+		$('<div class="player_extra_ended'+(nextFile==null ? ' hidden' : '')+'"><div class="player_extra_ended_episode"><div class="player_extra_ended_header">'+lang('js.catalogue.player.next_chapter_loading')+'</div><div class="player_extra_ended_title">'+new Option(nextFile==null ? '' : nextFile.attr('data-title-short')).innerHTML+'</div><div class="player_extra_ended_thumbnail"><a onclick="playNextFile();">'+lang('js.catalogue.player.next_chapter_play_now')+'</a><img src="'+(nextFile==null ? '' : nextFile.attr('data-thumbnail'))+'" alt=""><div class="player_extra_ended_timer"></div></div></div>').appendTo(".video-js");
 	} else  if (nextFile!=null) {
 		$('.player_extra_ended').removeClass('hidden');
 		$('.player_extra_ended_title')[0].innerHTML=new Option(getNextFileElement().attr('data-title-short')).innerHTML;
@@ -1308,83 +1308,83 @@ function parsePlayerError(error){
 		case /EBLOCKED \(\-16\)/.test(error):
 		case /ETEMPUNAVAIL \(\-18\)/.test(error):
 			retryFullProcess = true;
-			title = "S’ha produït un error";
-			message = "S’ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tancar el navegador i tornar-lo a obrir.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+			title = lang('js.catalogue.player.error.generic.title');
+			message = lang('js.catalogue.player.error.generic.description');
 			reportErrorToServer('mega-unknown', error);
 			break;
 		case /ENOENT \(\-9\)/.test(error):
 			retryFullProcess = true;
-			title = "El fitxer no existeix";
-			message = "El fitxer ja no existeix al proveïdor del vídeo en streaming.<br>Mirarem de corregir-ho ben aviat. Disculpa les molèsties.";
+			title = lang('js.catalogue.player.error.mega.unavailable.title');
+			message = lang('js.catalogue.player.error.mega.unavailable.description');
 			reportErrorToServer('mega-unavailable', error);
 			break;
 		case /EOVERQUOTA \(\-17\)/.test(error):
 		case /Bandwidth limit reached/.test(error):
 			retryFullProcess = true;
-			title = "Límit de MEGA superat";
-			message = "Has superat el límit d’ample de banda del proveïdor del vídeo en streaming (MEGA).<br>Segurament has provat de mirar un vídeo que s’ha publicat fa molt poc.<br>L’estem copiant automàticament a un servidor alternatiu i d’aquí a una estona estarà disponible i no hauries de veure aquest error. Torna-ho a provar més tard.";
+			title = lang('js.catalogue.player.error.mega.limit.title');
+			message = lang('js.catalogue.player.error.mega.limit.description');
 			reportErrorToServer('mega-quota-exceeded', error);
 			break;
 		case /E_MEGA_LOAD_ERROR/.test(error):
 			retryFullProcess = true;
 			if (/web browser lacks/.test(error) || /Streamer is not defined/.test(error)) {
-				title = "Navegador no compatible";
-				message = "Sembla que el teu navegador no és compatible amb el sistema de reproducció d’aquest vídeo (MEGA).<br>Alguns dispositius iPhone i iPad no admeten la reproducció de vídeos de MEGA.<br>Segurament has provat de mirar un vídeo que s’ha publicat fa molt poc.<br>L’estem copiant automàticament a un servidor alternatiu i d’aquí a una estona estarà disponible i no hauries de veure aquest error. Torna-ho a provar més tard o fes servir un dispositiu diferemt.";
+				title = lang('js.catalogue.player.error.mega.incompatible.title');
+				message = lang('js.catalogue.player.error.mega.incompatible.description');
 				reportErrorToServer('mega-incompatible-browser', error);
 			} else if (/NetworkError/.test(error)){
-				title = "No hi ha connexió";
-				message = "S’ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura’t que tinguis una connexió estable a Internet i torna-ho a provar.";
+				title = lang('js.catalogue.player.error.connection.title');
+				message = lang('js.catalogue.player.error.connection.description');
 				reportErrorToServer('mega-connection-error', error);
 			} else {
-				title = "No s’ha pogut carregar";
-				message = "S’ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tancar el navegador i tornar-lo a obrir.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+				title = lang('js.catalogue.player.error.mega.load.title');
+				message = lang('js.catalogue.player.error.mega.load.description');
 				reportErrorToServer('mega-load-failed', error);
 			}
 			break;
 		case /PLAYER_ERROR/.test(error):
 			switch (true) {
 				case /NETWORK_ERROR/.test(error):
-					title = "No hi ha connexió";
-					message = "S’ha produït un error de xarxa durant la reproducció del vídeo.<br>Assegura’t que tinguis una connexió estable a Internet i torna-ho a provar.";
+					title = lang('js.catalogue.player.error.connection.title');
+					message = lang('js.catalogue.player.error.connection.description');
 					break;
 				case /DECODER_ERROR/.test(error):
-					title = "S’ha produït un error";
-					message = "S’ha produït un error durant la decodificació del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tancar el navegador i tornar-lo a obrir.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+					title = lang('js.catalogue.player.error.decode.title');
+					message = lang('js.catalogue.player.error.decode.description');
 					break;
 				case /NOT_SUPPORTED/.test(error):
-					title = "No s’ha pogut carregar";
-					message = "S’ha produït un error durant la càrrega del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tancar el navegador i tornar-lo a obrir.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+					title = lang('js.catalogue.player.error.not_supported.title');
+					message = lang('js.catalogue.player.error.not_supported.description');
 					break;
 				case /ABORTED_BY_USER/.test(error):
 				default:
-					title = "S’ha produït un error";
-					message = "S’ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tancar el navegador i tornar-lo a obrir.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+					title = lang('js.catalogue.player.error.generic.title');
+					message = lang('js.catalogue.player.error.generic.description');
 			}
 			retryFullProcess = /E_MEGA_PLAYER_ERROR/.test(error);
 			reportErrorToServer(/E_MEGA_PLAYER_ERROR/.test(error) ? 'mega-player-failed' : 'direct-player-failed', error);
 			break;
 		case /FAILED_TO_LOAD_ERROR/.test(error):
 			retryFullProcess = true;
-			title = "No s’ha pogut carregar";
-			message = "No s’ha pogut carregar el fitxer. Comprova que tinguis connexió i torna-ho a provar.";
+			title = lang('js.catalogue.player.error.load.title');
+			message = lang('js.catalogue.player.error.load.description');
 			//reportErrorToServer('file-load-failed', error);
 			break;
 		default:
 			retryFullProcess = true;
-			title = "S’ha produït un error";
-			message = "S’ha produït un error desconegut durant la reproducció del vídeo.<br>Torna-ho a provar, i si continua sense funcionar, prova de tancar el navegador i tornar-lo a obrir.<br>Si el problema persisteix, contacta amb nosaltres, si us plau.";
+			title = lang('js.catalogue.player.error.generic.title');
+			message = lang('js.catalogue.player.error.generic.description');
 			reportErrorToServer('unknown', error);
 			break;
 	}
 	lastErrorTimestamp = player ? player.currentTime() : 0;
 	var start = '<div class="player-error">';
-	var buttons = (critical ? '<div class="player_error_buttons"><button class="normal-button" onclick="closeOverlay();">Tanca</button></div>' : '<div class="player_error_buttons"><button class="normal-button" onclick="reinitializeFile('+retryFullProcess+');">Torna-ho a provar</button></div>');
+	var buttons = (critical ? '<div class="player_error_buttons"><button class="normal-button" onclick="closeOverlay();">'+lang('js.dialog.close')+'</button></div>' : '<div class="player_error_buttons"><button class="normal-button" onclick="reinitializeFile('+retryFullProcess+');">'+lang('js.catalogue.reader.retry')+'</button></div>');
 	var end='</div>';
 	//Remove previous errors
 	$('.player-error').remove();
 	shutdownFileDisplayer(false);
 	$('#overlay-content > .player_extra_upper').removeClass('hidden');
-	$(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details class="player-error-technical-details"><summary style="cursor: pointer;"><strong><u>Detalls tècnics de l\'error</u></strong></summary>' + new Option(error).innerHTML + '<br>VID: ' + (currentSourceData!=null ? currentSourceData.view_id : '(null)') + ' / FID: ' + (currentSourceData!=null ? currentSourceData.file_id : '(null)') + ' / TSP: ' + lastErrorTimestamp + '</details>' + end).appendTo('#overlay-content');
+	$(start + '<div class="player_error_title"><span class=\"fa fa-exclamation-circle player_error_icon\"></span><br>' + title + '</div><div class="player_error_details">' + message + '</div>' + buttons + '<br><details class="player-error-technical-details"><summary style="cursor: pointer;"><strong><u>'+lang('js.catalogue.player.error.details')+'</u></strong></summary>' + new Option(error).innerHTML + '<br>VID: ' + (currentSourceData!=null ? currentSourceData.view_id : '(null)') + ' / FID: ' + (currentSourceData!=null ? currentSourceData.file_id : '(null)') + ' / TSP: ' + lastErrorTimestamp + '</details>' + end).appendTo('#overlay-content');
 }
 
 function loadMegaStream(url){
@@ -1503,13 +1503,13 @@ function toggleFileSeen(checkbox, fileId) {
 			if (nextReadEpisodes.length>0) {
 				var text;
 				if (nextReadEpisodes.length==1) {
-					text = 'Es marcaran aquest capítol i 1 capítol posterior com a no vistos.';
+					text = lang('js.catalogue.remove_seen.explanation_one');
 				} else {
-					text = 'Es marcaran aquest capítol i '+nextReadEpisodes.length+' capítols posteriors com a no vistos.';
+					text = lang('js.catalogue.remove_seen.explanation_many').replaceAll('%d', nextReadEpisodes.length);
 				}
-				showCustomDialog('Vols marcar també els capítols posteriors com a no vistos?', text, null, false, true, [
+				showCustomDialog(lang('js.catalogue.remove_seen.title'), text, null, false, true, [
 					{
-						text: 'Sí',
+						text: lang('js.dialog.yes'),
 						class: 'normal-button',
 						onclick: function(){
 							//Remove from seen
@@ -1527,7 +1527,7 @@ function toggleFileSeen(checkbox, fileId) {
 						}
 					},
 					{
-						text: 'No',
+						text: lang('js.dialog.no'),
 						class: 'normal-button',
 						onclick: function(){
 							//Remove from seen
@@ -1554,13 +1554,13 @@ function markAsSeen(fileId, dontAsk) {
 	if (!dontAsk && $('#seen_behavior').val()==0 && previouslyUnreadEpisodes.length>0) {
 		var text;
 		if (previouslyUnreadEpisodes.length==1) {
-			text = 'Es marcaran aquest capítol i 1 capítol anterior com a vistos.';
+			text = lang('js.catalogue.add_seen.explanation_one');
 		} else {
-			text = 'Es marcaran aquest capítol i '+previouslyUnreadEpisodes.length+' capítols anteriors com a vistos.';
+			text = lang('js.catalogue.add_seen.explanation_many').replaceAll('%d', previouslyUnreadEpisodes.length);
 		}
-		showCustomDialog('Vols marcar també els capítols anteriors com a vistos?', text, '<div id="dialog-center-checkbox"><input type="checkbox" id="seen-behavior-dont-ask"><label for="seen-behavior-dont-ask">No ho tornis a demanar</label></div>', false, true, [
+		showCustomDialog(lang('js.catalogue.add_seen.title'), text, '<div id="dialog-center-checkbox"><input type="checkbox" id="seen-behavior-dont-ask"><label for="seen-behavior-dont-ask">'+lang('js.catalogue.add_seen.dont_ask')+'</label></div>', false, true, [
 			{
-				text: 'Sí',
+				text: lang('js.dialog.yes'),
 				class: 'normal-button',
 				onclick: function(){
 					$('#seen_behavior').val(1);
@@ -1574,7 +1574,7 @@ function markAsSeen(fileId, dontAsk) {
 				}
 			},
 			{
-				text: 'No',
+				text: lang('js.dialog.no'),
 				class: 'normal-button',
 				onclick: function(){
 					$('#seen_behavior').val(2);
@@ -1604,7 +1604,7 @@ function markAsSeen(fileId, dontAsk) {
 	} else if ($('#seen_behavior').val()==-1) {
 		//-1: User logged out, do nothing
 		if (!dontAsk) {
-			showAlert('Cal iniciar la sessió', 'Per a poder fer un seguiment dels capítols, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
+			showAlert(lang('js.login_required.header'), lang('js.login_required.explanation.mark_seen'));
 		}
 		$('.file-launcher[data-file-id="'+fileId+'"]').find('.episode-info-seen-cell input[type="checkbox"]').prop('checked', false);
 	} else {
@@ -1665,17 +1665,17 @@ function bookmarkRemoved(seriesId) {
 
 function toggleBookmarkFromSeriesPage(){
 	if ($('body.user-logged-in').length==0) {
-		showAlert('Cal iniciar la sessió', 'Per a poder afegir elements a la teva llista, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
+		showAlert(lang('js.login_required.header'), lang('js.login_required.explanation.add_list'));
 		return;
 	}
 	var action;
 	var seriesId = $('#series_id').val();
 	if ($('.remove-from-my-list').length>0)	{
-		$('.remove-from-my-list').addClass('add-to-my-list').removeClass('remove-from-my-list').html('<i class="far fa-fw fa-bookmark"></i> Afegeix a la meva llista');
+		$('.remove-from-my-list').addClass('add-to-my-list').removeClass('remove-from-my-list').html('<i class="far fa-fw fa-bookmark"></i> '+lang('js.catalogue.series.add_to_my_list'));
 		action='remove';
 		bookmarkRemoved(seriesId);
 	} else {
-		$('.add-to-my-list').addClass('remove-from-my-list').removeClass('add-to-my-list').html('<i class="fas fa-fw fa-bookmark"></i> A la meva llista');
+		$('.add-to-my-list').addClass('remove-from-my-list').removeClass('add-to-my-list').html('<i class="fas fa-fw fa-bookmark"></i> '+lang('js.catalogue.series.in_my_list'));
 		action='add';
 	}
 
@@ -1700,12 +1700,12 @@ function toggleCommentSpoiler(element) {
 
 function checkCommentPossible(element) {
 	if ($('body.user-logged-in').length==0) {
-		showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
+		showAlert(lang('js.login_required.header'), lang('js.login_required.explanation.comment'));
 		return;
 	} else if ($('#show_comment_warning').val()==1) {
-		showCustomDialog('Abans d’escriure un comentari', 'Tothom podrà veure el teu nom d’usuari, el teu avatar i l’últim capítol vist en el moment de comentar.<br>Si creus que el comentari pot ser un espòiler per a algú que vagi més endarrerit, marca’n la casella corresponent.<br>No incloguis mai cap mena d’informació personal als comentaris.', null, true, true, [
+		showCustomDialog(lang('js.catalogue.leave_comment.title'), lang('js.catalogue.leave_comment.description'), null, true, true, [
 			{
-				text: 'D’acord',
+				text: lang('js.dialog.ok'),
 				class: 'normal-button',
 				onclick: function(){
 					$('#show_comment_warning').val(0);
@@ -1737,7 +1737,7 @@ function sendUserComment(button) {
 		var response = JSON.parse(data);
 		$(button.parent().find('textarea').get(0)).val('');
 		button.parent().find('textarea').get(0).parentNode.dataset.replicatedValue=this.value;
-		button.closest('.comment-fake').after('<div class="comment"><img class="comment-avatar" src="'+$('.comment-fake .comment-avatar').attr('src')+'"><div class="comment-message">'+response.text+'<div class="comment-author"><span class="comment-user">'+response.username+'</span>&nbsp;•&nbsp;<span class="comment-date">ara mateix</span>'+(response.episode_title!=null ? '&nbsp;•&nbsp;'+response.episode_title : '')+(response.has_spoilers ? '&nbsp;<span class="fa fa-warning" title="Marcat per l’usuari com a «conté possibles espòilers»"></span>' : '')+'</div></div></div>');
+		button.closest('.comment-fake').after('<div class="comment"><img class="comment-avatar" src="'+$('.comment-fake .comment-avatar').attr('src')+'"><div class="comment-message">'+response.text+'<div class="comment-author"><span class="comment-user">'+response.username+'</span>&nbsp;•&nbsp;<span class="comment-date">'+lang('js.date.now')+'</span>'+(response.episode_title!=null ? '&nbsp;•&nbsp;'+response.episode_title : '')+(response.has_spoilers ? '&nbsp;<span class="fa fa-warning" title="'+lang('js.catalogue.leave_comment.marked_by_user_as_spoiler')+'"></span>' : '')+'</div></div></div>');
 		button.prop('disabled', false);
 		button.parent().find('.comment-has-spoiler').prop('checked', false);
 		spoilerCheckedAutomatically = false;
@@ -1746,12 +1746,12 @@ function sendUserComment(button) {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==3) {
-				showAlert('S’ha produït un error', 'No pots deixar comentaris tan seguits en el temps. Deixa passar uns segons.');
+				showAlert(lang('js.catalogue.leave_comment.error.title'), lang('js.catalogue.leave_comment.error.too_soon'));
 			} else {
-				showAlert('S’ha produït un error', 'No s’ha pogut enviar el comentari. Torna-ho a provar.');
+				showAlert(lang('js.catalogue.leave_comment.error.title'), lang('js.catalogue.leave_comment.error.generic'));
 			}
 		} catch(e) {
-			showAlert('S’ha produït un error', 'No s’ha pogut enviar el comentari. Torna-ho a provar.');
+			showAlert(lang('js.catalogue.leave_comment.error.title'), lang('js.catalogue.leave_comment.error.generic'));
 		}
 		button.prop('disabled', false);
 		button.html('<i class="fa fa-fw fa-paper-plane"></i>');
@@ -1761,9 +1761,13 @@ function sendUserComment(button) {
 function checkForAutoSpoilers(textarea) {
 	var text = textarea.value.toLocaleLowerCase();
 	if (!spoilerCheckedAutomatically) {
-		if (text.includes('mort') || text.includes('morir') || text.includes('morís') || text.includes('inespera') || text.includes('final')) {
-			spoilerCheckedAutomatically = true;
-			$(textarea).parent().find('.comment-has-spoiler').prop('checked', true);
+		var words = lang('js.catalogue.leave_comment.spoiler_words').split(', ');
+		for (var i=0; i<words.length; i++) {
+			if (text.includes(words[i])) {
+				spoilerCheckedAutomatically = true;
+				$(textarea).parent().find('.comment-has-spoiler').prop('checked', true);
+				return;
+			}
 		}
 	}
 }
@@ -1886,9 +1890,9 @@ function formatCatalogueSearchQueryString(values) {
 function loadSearchResults() {
 	var query = $('#catalogue-search-query').val().trim();
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
-		$('.loading-message').text('S’està carregant el catàleg...');
+		$('.loading-message').text(lang('js.catalogue.loading_results'));
 	} else {
-		$('.loading-message').text('S’estan carregant els resultats de la cerca...');
+		$('.loading-message').text(lang('js.catalogue.loading_results.search'));
 	}
 
 	$('.style-type-catalogue').removeClass('has-search-results');
@@ -2029,9 +2033,9 @@ function formatDoubleSliderInput(input, value) {
 		}
 	} else if (format=='pages' || format=='pages-max') {
 		if (value==100 && format=='pages-max') {
-			input.innerText='100+ pàg.';
+			input.innerText=lang('js.catalogue.search.more_than_max_pages');
 		} else {
-			input.innerText=value+' pàg.';
+			input.innerText=lang('js.catalogue.search.number_of_pages').replaceAll('%d', value);
 		}
 	} else if (format=='score') {
 		//Divide by 10
@@ -2159,7 +2163,7 @@ function requestFileData(fileId) {
 
 function applyVersionRating(pressedButton, oppositeButton, ratingClicked) {
 	if ($('body.user-logged-in').length==0) {
-		showAlert('Cal iniciar la sessió', 'Per a poder valorar la qualitat d’una versió, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
+		showAlert(lang('js.login_required.header'), lang('js.login_required.explanation.rate'));
 		return;
 	}
 	var value;
@@ -2195,7 +2199,7 @@ function resizeSynopsisHeight(force) {
 	var maxSynopsisHeight = $('.series-synopsis-real').length>0 ? parseFloat(1.2 * 5 * parseFloat(getComputedStyle($('.series-synopsis-real')[0]).fontSize)) : 0;
 	
 	if (force) {
-		$(".show-more").html('<span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span>');
+		$(".show-more").html('<span class="fa fa-fw fa-caret-down"></span> '+lang('js.catalogue.series.show_more')+' <span class="fa fa-fw fa-caret-down"></span>');
 		$('.series-synopsis-real').addClass('expandable-content-default');
 		$('.series-synopsis-real').removeClass('expandable-content-hidden');
 		$('.series-synopsis-real').removeClass('expandable-content-shown');
@@ -2222,11 +2226,11 @@ function resizeSynopsisHeight(force) {
 $(document).ready(function() {
 	$(".show-more").on("click", function() {
 		if($('.series-synopsis-real').hasClass('expandable-content-hidden')){
-			linkText = '<span class="fa fa-fw fa-caret-up"></span> Mostra’n menys <span class="fa fa-fw fa-caret-up"></span>';
+			linkText = '<span class="fa fa-fw fa-caret-up"></span> '+lang('js.catalogue.series.show_less')+' <span class="fa fa-fw fa-caret-up"></span>';
 			$(".series-synopsis-real").removeClass("expandable-content-hidden");
 			$(".series-synopsis-real").addClass("expandable-content-shown");
 		} else {
-			linkText = '<span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span>';
+			linkText = '<span class="fa fa-fw fa-caret-down"></span> '+lang('js.catalogue.series.show_more')+' <span class="fa fa-fw fa-caret-down"></span>';
 			$(".series-synopsis-real").removeClass("expandable-content-shown");
 			$(".series-synopsis-real").addClass("expandable-content-hidden");
 		};
@@ -2240,7 +2244,7 @@ $(document).ready(function() {
 	class NextButton extends Button {
 		constructor(player, options) {
 			super(player, options);
-			this.controlText('Capítol següent');
+			this.controlText(lang('js.catalogue.reader.next_chapter'));
 		}
 		handleClick() {
 			playNextFile();
@@ -2252,7 +2256,7 @@ $(document).ready(function() {
 	class PrevButton extends Button {
 		constructor(player, options) {
 			super(player, options);
-			this.controlText('Capítol anterior');
+			this.controlText(lang('js.catalogue.reader.prev_chapter'));
 		}
 		handleClick() {
 			playPrevFile();
@@ -2264,7 +2268,7 @@ $(document).ready(function() {
 	class NextButtonDisabled extends Button {
 		constructor(player, options) {
 			super(player, options);
-			this.controlText('No hi ha capítol següent');
+			this.controlText(lang('js.catalogue.reader.no_next_chapter'));
 		}
 		buildCSSClass() {
 			return `${super.buildCSSClass()} vjs-next-button vjs-button-disabled`;
@@ -2273,7 +2277,7 @@ $(document).ready(function() {
 	class PrevButtonDisabled extends Button {
 		constructor(player, options) {
 			super(player, options);
-			this.controlText('No hi ha capítol anterior');
+			this.controlText(lang('js.catalogue.reader.no_prev_chapter'));
 		}
 		buildCSSClass() {
 			return `${super.buildCSSClass()} vjs-prev-button vjs-button-disabled`;
@@ -2308,19 +2312,19 @@ $(document).ready(function() {
 			this.removeClass('fsc-play-speed-ultraslow');
 			if (window.currentPlayRate==1) {
 				this.addClass('fsc-play-speed-normal');
-				this.controlText('Velocitat de reproducció: Normal');
+				this.controlText(lang('js.player.speed.normal'));
 			} else if (window.currentPlayRate==1.25) {
 				this.addClass('fsc-play-speed-fast');
-				this.controlText('Velocitat de reproducció: 1,25x');
+				this.controlText(lang('js.player.speed.1.25x'));
 			} else if (window.currentPlayRate==1.5) {
 				this.addClass('fsc-play-speed-ultrafast');
-				this.controlText('Velocitat de reproducció: 1,5x');
+				this.controlText(lang('js.player.speed.1.5x'));
 			} else if (window.currentPlayRate==0.5) {
 				this.addClass('fsc-play-speed-ultraslow');
-				this.controlText('Velocitat de reproducció: 0,5x');
+				this.controlText(lang('js.player.speed.0.5x'));
 			} else {
 				this.addClass('fsc-play-speed-slow');
-				this.controlText('Velocitat de reproducció: 0,75x');
+				this.controlText(lang('js.player.speed.0.75x'));
 			}
 		}
 		buildCSSClass() {
@@ -2365,7 +2369,7 @@ $(document).ready(function() {
 			$('#overlay').removeClass('hidden');
 			
 			if ($('#overlay-content > .player_extra_upper').length==0) {
-				$('<div class="player_extra_upper"><div class="player_extra_title">'+$(this).attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
+				$('<div class="player_extra_upper"><div class="player_extra_title">'+$(this).attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="'+lang('js.dialog.close')+'" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
 			} else {
 				if ($('.video-js .player_extra_upper').length==0) {
 					//Only if player is not loaded already
@@ -2394,36 +2398,38 @@ $(document).ready(function() {
 			window.open(atob($(this).attr('data-url')));
 		});
 		$(".version-tab").click(function(){
-			$(".version-tab").each(function(){
-				$(this).removeClass("version-tab-selected");
-			});
-			$(".version-content").each(function(){
-				$(this).addClass("hidden");
-			});
-			$(this).addClass("version-tab-selected");
-			$("#version-content-"+$(this).attr('data-version-id')).removeClass("hidden");
-			
-			//Change URL
-			var url = new URL(window.location);
-			url.pathname=$(this).attr('data-version-slug');
-			history.replaceState(null, null, url);
-			
-			//Change cover and featured image
-			$('.series-thumbnail').attr('src', $('.series-thumbnail').attr('src').replace(/\d+/, $(this).attr('data-version-id')));
-			$('.background').attr('src', $('.background').attr('src').replace(/\d+/, $(this).attr('data-version-id')));
-			
-			//Change synopsis
-			$('.series-synopsis-real').html($(this).attr('data-version-synopsis'));
-			resizeSynopsisHeight(true);
-			$('.series-title').text($(this).attr('data-version-title'));
-			var oldTitle = document.title.split('|');
-			oldTitle.shift();
-			document.title=$(this).attr('data-version-title')+' | '+oldTitle.join('|');
-			if ($(this).attr('data-version-alternate-titles')!='') {
-				$('.series-alternate-names').text($(this).attr('data-version-alternate-titles'));
-				$('.series-alternate-names').removeClass('hidden');
-			} else {
-				$('.series-alternate-names').addClass('hidden');
+			if (!$(this).hasClass("version-tab-selected")) {
+				$(".version-tab").each(function(){
+					$(this).removeClass("version-tab-selected");
+				});
+				$(".version-content").each(function(){
+					$(this).addClass("hidden");
+				});
+				$(this).addClass("version-tab-selected");
+				$("#version-content-"+$(this).attr('data-version-id')).removeClass("hidden");
+				
+				//Change URL
+				var url = new URL(window.location);
+				url.pathname=$(this).attr('data-version-slug');
+				history.replaceState(null, null, url);
+				
+				//Change cover and featured image
+				$('.series-thumbnail').attr('src', $('.series-thumbnail').attr('src').replace(/\d+/, $(this).attr('data-version-id')));
+				$('.background').attr('src', $('.background').attr('src').replace(/\d+/, $(this).attr('data-version-id')));
+				
+				//Change synopsis
+				$('.series-synopsis-real').html($(this).attr('data-version-synopsis'));
+				resizeSynopsisHeight(true);
+				$('.series-title').text($(this).attr('data-version-title'));
+				var oldTitle = document.title.split('|');
+				oldTitle.shift();
+				document.title=$(this).attr('data-version-title')+' | '+oldTitle.join('|');
+				if ($(this).attr('data-version-alternate-titles')!='') {
+					$('.series-alternate-names').text($(this).attr('data-version-alternate-titles'));
+					$('.series-alternate-names').removeClass('hidden');
+				} else {
+					$('.series-alternate-names').addClass('hidden');
+				}
 			}
 		});
 		$(".version-fansub-rating-positive").click(function(){
@@ -2453,7 +2459,7 @@ $(document).ready(function() {
 					$(this).addClass("sort-descending");
 					$(this).find('.fa-fw').removeClass('fa-arrow-down-short-wide');
 					$(this).find('.fa-fw').addClass('fa-arrow-down-wide-short');
-					$(this).find('.sort-description').text("De l’últim al primer");
+					$(this).find('.sort-description').text(lang('js.catalogue.series.sort_last_to_first'));
 				});
 			} else {
 				//Sort all ascending
@@ -2463,7 +2469,7 @@ $(document).ready(function() {
 					$(this).addClass("sort-ascending");
 					$(this).find('.fa-fw').removeClass('fa-arrow-down-wide-short');
 					$(this).find('.fa-fw').addClass('fa-arrow-down-short-wide');
-					$(this).find('.sort-description').text("Del primer a l’últim");
+					$(this).find('.sort-description').text(lang('js.catalogue.series.sort_first_to_last'));
 				});
 			}
 
@@ -2521,7 +2527,7 @@ $(document).ready(function() {
 
 		$(".comment-send").click(function(){
 			if ($('body.user-logged-in').length==0) {
-				showAlert('Cal iniciar la sessió', 'Per a poder fer comentaris, cal estar registrat.<br>Pots registrar-te a la part superior dreta del web.');
+				showAlert(lang('js.login_required.header'), lang('js.login_required.explanation.comment'));
 			}
 			else if ($($(this).parent().find('textarea').get(0)).val()!='') {
 				sendUserComment($(this));
@@ -2648,7 +2654,7 @@ $(document).ready(function() {
 		$('#overlay').removeClass('hidden');
 		
 		if ($('#overlay-content > .player_extra_upper').length==0) {
-			$('<div class="player_extra_upper"><div class="player_extra_title">'+$('.embed-data').attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="Tanca" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
+			$('<div class="player_extra_upper"><div class="player_extra_title">'+$('.embed-data').attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="'+lang('js.dialog.close')+'" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
 		} else {
 			if ($('.video-js .player_extra_upper').length==0) {
 				//Only if player is not loaded already

@@ -2,7 +2,7 @@ var lastSearchRequest = null;
 var currentPage = 1;
 
 function launchSearch(query) {
-	window.location.href='/cerca'+(query!='' ? '/'+encodeURIComponent(query) : '');
+	window.location.href=lang('js.url.search')+(query!='' ? '/'+encodeURIComponent(query) : '');
 }
 
 function formatNewsSearchQueryString(values) {
@@ -21,9 +21,9 @@ function loadSearchResults(page) {
 	}
 	var query = $('#news-search-query').val().trim();
 	if (lastSearchRequest==null && query=='' && !$('body').hasClass('has-search-results')) {
-		$('.loading-message').text('S’estan carregant les notícies...');
+		$('.loading-message').text(lang('js.news.loading'));
 	} else {
-		$('.loading-message').text('S’estan carregant els resultats de la cerca...');
+		$('.loading-message').text(lang('js.news.search.loading_results'));
 	}
 
 	$('.style-type-news').removeClass('has-search-results');
@@ -34,8 +34,8 @@ function loadSearchResults(page) {
 		lastSearchRequest.abort();
 	}
 
-	var beginDate = new Date('2003-05-01T00:00:00');
-	var endDate = new Date('2003-05-01T00:00:00');
+	var beginDate = new Date($('.search-min-month').val()+'-01T00:00:00');
+	var endDate = new Date($('.search-min-month').val()+'-01T00:00:00');
 	var selectedStartDate = formatDateInternal(addMonths(beginDate, $('#date-from-slider').val()));
 	var selectedEndDate = formatDateInternal(addMonths(endDate, $('#date-to-slider').val()));
 
@@ -45,7 +45,7 @@ function loadSearchResults(page) {
 		'fansub': $('#news-search-fansub').val()
 	};
 
-	history.replaceState(null, null, '/cerca'+(query!='' ? '/'+encodeURIComponent(query) : '')+formatNewsSearchQueryString(values));
+	history.replaceState(null, null, lang('js.url.search')+(query!='' ? '/'+encodeURIComponent(query) : '')+formatNewsSearchQueryString(values));
 
 	lastSearchRequest = $.post({
 		url: "/results.php?search=1&page="+currentPage+"&query="+encodeURIComponent($('#news-search-query').val()),
@@ -104,7 +104,7 @@ function addMonths(date, months) {
 function formatDoubleSliderInput(input, value) {
 	var format = $(input).attr('value-formatting');
 	if (format=='date') {
-		var beginDate = new Date('2003-05-01T00:00:00');
+		var beginDate = new Date($('.search-min-month').val()+'-01T00:00:00');
 		var selectedDate = addMonths(beginDate, value);
 		input.innerText=formatDate(beginDate);
 	} else {

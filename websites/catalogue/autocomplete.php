@@ -7,23 +7,23 @@ function get_series_type_summary_for_autocomplete($series) {
 	$text='';
 	if ($series['type']=='manga') {
 		if ($series['comic_type']=='novel') {
-			$text = "Novel·la lleugera";
+			$text = lang('catalogue.autocomplete.light_novel');
 		} else if ($series['subtype']=='oneshot') {
-			$text = get_type_depending_on_catalogue($series)."One-shot";
+			$text = get_type_depending_on_catalogue($series).lang('catalogue.autocomplete.oneshot');
 		} else if ($series['divisions']>1) {
-			$text = get_type_depending_on_catalogue($series).$series['divisions']." volums";
+			$text = get_type_depending_on_catalogue($series).sprintf(lang('catalogue.autocomplete.several_volumes'), $series['divisions']);
 		} else {
-			$text = get_type_depending_on_catalogue($series)."1 volum";
+			$text = get_type_depending_on_catalogue($series).lang('catalogue.autocomplete.one_volume');
 		}
 	} else {
 		if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-			$text = get_type_depending_on_catalogue($series).$series['number_of_episodes']." films";
+			$text = get_type_depending_on_catalogue($series).sprintf(lang('catalogue.autocomplete.movie_pack'), $series['number_of_episodes']);
 		} else if ($series['subtype']=='movie') {
-			$text = get_type_depending_on_catalogue($series)."Film";
+			$text = get_type_depending_on_catalogue($series).lang('catalogue.autocomplete.movie');
 		} else if ($series['divisions']>1) {
-			$text = get_type_depending_on_catalogue($series)."Sèrie • ".$series['divisions']." temporades";
+			$text = get_type_depending_on_catalogue($series).lang('catalogue.autocomplete.series')." • ".sprintf(lang('catalogue.autocomplete.several_seasons'), $series['divisions']);
 		} else {
-			$text = get_type_depending_on_catalogue($series)."Sèrie";
+			$text = get_type_depending_on_catalogue($series).lang('catalogue.autocomplete.series');
 		}
 	}
 
@@ -39,44 +39,35 @@ $sections=array();
 switch(CATALOGUE_ITEM_TYPE) {
 	case 'liveaction':
 		array_push($sections, array(
-			'name' => 'Imatge real',
 			'result' => query_autocomplete($user, $text, 'liveaction')
 		));
 		array_push($sections, array(
-			'name' => 'Anime',
 			'result' => query_autocomplete($user, $text, 'anime')
 		));
 		array_push($sections, array(
-			'name' => 'Manga',
 			'result' => query_autocomplete($user, $text, 'manga')
 		));
 		break;
 	case 'manga':
 		array_push($sections, array(
-			'name' => 'Manga',
 			'result' => query_autocomplete($user, $text, 'manga')
 		));
 		array_push($sections, array(
-			'name' => 'Anime',
 			'result' => query_autocomplete($user, $text, 'anime')
 		));
 		array_push($sections, array(
-			'name' => 'Imatge real',
 			'result' => query_autocomplete($user, $text, 'liveaction')
 		));
 		break;
 	case 'anime':
 	default:
 		array_push($sections, array(
-			'name' => 'Anime',
 			'result' => query_autocomplete($user, $text, 'anime')
 		));
 		array_push($sections, array(
-			'name' => 'Manga',
 			'result' => query_autocomplete($user, $text, 'manga')
 		));
 		array_push($sections, array(
-			'name' => 'Imatge real',
 			'result' => query_autocomplete($user, $text, 'liveaction')
 		));
 		break;
@@ -108,11 +99,11 @@ foreach($sections as $section){
 }
 if ($max_elements<$total_elements) {
 ?>
-						<a class="autocomplete-item autocomplete-more" href="<?php echo SITE_BASE_URL.'/'.'cerca/'.urlencode($_GET['query']); ?>">Mostra tots els resultats (<?php echo $total_elements; ?>) <i class="fa fa-fw fa-arrow-right"></i></a>
+						<a class="autocomplete-item autocomplete-more" href="<?php echo SITE_BASE_URL.lang('url.search').'/'.urlencode($_GET['query']); ?>"><?php echo sprintf(lang('catalogue.autocomplete.show_all_results'), $total_elements); ?> <i class="fa fa-fw fa-arrow-right"></i></a>
 <?php
 } else if ($total_elements==0) {
 ?>
-						<span class="autocomplete-item autocomplete-empty">No hi ha cap resultat.</span>
+						<span class="autocomplete-item autocomplete-empty"><?php echo lang('catalogue.autocomplete.no_results'); ?></span>
 <?php
 }
 ?>

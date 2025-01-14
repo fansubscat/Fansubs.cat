@@ -52,7 +52,7 @@ if (!empty($_COOKIE['advent_'.$row['year']])) {
 	$cookie=array();
 }
 
-define('PAGE_TITLE', 'Calendari d’advent '.$row['year']);
+define('PAGE_TITLE', sprintf(lang('advent.page_title'), $row['year']));
 
 ?>
 <!DOCTYPE html>
@@ -67,10 +67,10 @@ define('PAGE_TITLE', 'Calendari d’advent '.$row['year']);
 		<meta name="msapplication-config" content="https://static.fansubs.cat/favicons/advent/browserconfig.xml">
 		<meta property="og:title" content="<?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?>" />
 		<meta property="og:url" content="<?php echo ADVENT_URL; ?>/" />
-		<meta property="og:description" content="Calendari d’advent dels fansubs en català. Obre’n una casella cada dia i descobreix una petita sorpresa en format anime o manga!" />
+		<meta property="og:description" content="<?php echo htmlspecialchars(SITE_DESCRIPTION); ?>" />
 		<meta property="og:image" content="<?php echo STATIC_URL; ?>/images/advent/preview_<?php echo $row['year']; ?>.jpg" />
 		<meta property="og:image:type" content="image/jpeg">
-		<title>Calendari d’advent <?php echo $row['year']; ?> | Fansubs.cat</title>
+		<title><?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?></title>
 		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME; ?>/favicon-16x16.png">
@@ -430,7 +430,7 @@ for ($i=1;$i<25;$i++){
 		<div class="container">
 			<div class="grid-1">
 				<div class="title">
-					<img src="<?php echo STATIC_URL; ?>/images/advent/logo.png" alt="Calendari d’advent dels fansubs en català">
+					<img src="<?php echo STATIC_URL; ?>/images/advent/logo.png" alt="<?php echo lang('advent.logo.alt'); ?>">
 				</div>
 <?php
 for ($i=1;$i<25;$i++){
@@ -465,7 +465,7 @@ for ($i=1;$i<25;$i++){
 if (empty($_GET['twitter'])){
 ?>
 			<div class="previous">
-				Altres edicions: 
+				<?php echo lang('advent.other_editions'); ?> 
 <?php
 	$resulto = query("SELECT * FROM advent_calendar WHERE year<>".escape($row['year'])." ORDER BY year DESC");
 	while ($rowo = mysqli_fetch_assoc($resulto)) {

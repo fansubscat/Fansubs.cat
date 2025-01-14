@@ -31,7 +31,7 @@ $show_own_news = TRUE;
 $show_only_own_news = FALSE;
 $text = NULL;
 $fansub_slug = NULL;
-$min_month = '2003-05';
+$min_month = NEWS_STARTING_MONTH;
 $max_month = date('Y-m');
 
 if (defined('PAGE_IS_SEARCH')) {
@@ -99,7 +99,7 @@ else{
 				$first = FALSE;
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Notícies del <?php echo get_catalan_formatted_date(strtotime($row['date'])); ?></h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Notícies del <?php echo get_custom_formatted_date(strtotime($row['date'])); ?></h2>
 <?php
 			}
 		}

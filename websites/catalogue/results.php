@@ -128,7 +128,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		case 'liveaction':
 			array_push($sections, array(
 				'type' => 'static',
-				'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
+				'title' => '<i class="fa fa-fw fa-clapperboard"></i> '.lang('catalogue.search.results.liveaction'),
 				'specific_version' => FALSE,
 				'use_version_param' => TRUE,
 				'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
@@ -136,14 +136,14 @@ if (defined('PAGE_IS_SEARCH')) {
 			if ($is_full_catalogue) {
 				array_push($sections, array(
 					'type' => 'search',
-					'title' => '<i class="fa fa-fw fa-tv"></i> Resultats d’anime',
+					'title' => '<i class="fa fa-fw fa-tv"></i> '.lang('catalogue.search.results.anime'),
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
-					'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
+					'title' => '<i class="fa fa-fw fa-book-open"></i> '.lang('catalogue.search.results.manga'),
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
@@ -153,7 +153,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		case 'manga':
 			array_push($sections, array(
 				'type' => 'static',
-				'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
+				'title' => '<i class="fa fa-fw fa-book-open"></i> '.lang('catalogue.search.results.manga'),
 				'specific_version' => FALSE,
 				'use_version_param' => TRUE,
 				'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
@@ -161,14 +161,14 @@ if (defined('PAGE_IS_SEARCH')) {
 			if ($is_full_catalogue) {
 				array_push($sections, array(
 					'type' => 'search',
-					'title' => '<i class="fa fa-fw fa-tv"></i> Resultats d’anime',
+					'title' => '<i class="fa fa-fw fa-tv"></i> '.lang('catalogue.search.results.anime'),
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
-					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
+					'title' => '<i class="fa fa-fw fa-clapperboard"></i> '.lang('catalogue.search.results.liveaction'),
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
@@ -179,7 +179,7 @@ if (defined('PAGE_IS_SEARCH')) {
 		default:
 			array_push($sections, array(
 				'type' => 'static',
-				'title' => '<i class="fa fa-fw fa-tv"></i> Resultats d’anime',
+				'title' => '<i class="fa fa-fw fa-tv"></i> '.lang('catalogue.search.results.anime'),
 				'specific_version' => FALSE,
 				'use_version_param' => TRUE,
 				'result' => query_search_filter($user, $text, 'anime', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
@@ -187,14 +187,14 @@ if (defined('PAGE_IS_SEARCH')) {
 			if ($is_full_catalogue) {
 				array_push($sections, array(
 					'type' => 'search',
-					'title' => '<i class="fa fa-fw fa-book-open"></i> Resultats de manga',
+					'title' => '<i class="fa fa-fw fa-book-open"></i> '.lang('catalogue.search.results.manga'),
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'manga', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
 				));
 				array_push($sections, array(
 					'type' => 'search',
-					'title' => '<i class="fa fa-fw fa-clapperboard"></i> Resultats d’imatge real',
+					'title' => '<i class="fa fa-fw fa-clapperboard"></i> '.lang('catalogue.search.results.liveaction'),
 					'specific_version' => FALSE,
 					'use_version_param' => TRUE,
 					'result' => query_search_filter($user, $text, 'liveaction', $subtype, $min_score, $max_score, $min_year, $max_year, $min_duration, $max_duration, $length_type, $ratings, $fansub_slug, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographics, $content_types, $origins, $genres_include, $genres_exclude, $statuses),
@@ -211,21 +211,21 @@ if (defined('PAGE_IS_SEARCH')) {
 	if ($special_day!==NULL) {
 		if ($special_day=='fools') {
 			$result_recos = query_version_ids_for_fools_day(10);
-			$special_day_title = "Els millors d’aquest ".date('Y');
-			$special_day_description = CURRENT_SITE_NAME." et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols d’enguany!";
+			$special_day_title = sprintf(lang('catalogue.featured.fools_day.title'), date('Y'));
+			$special_day_description = sprintf(lang('catalogue.featured.fools_day.description'), CURRENT_SITE_NAME);
 		} else if ($special_day=='sant_jordi') {
 			$result_recos = query_version_ids_for_sant_jordi(10);
-			$special_day_title = "Selecció especial de Sant Jordi";
-			$special_day_description = CURRENT_SITE_NAME." et desitja un bon Sant Jordi!<br>Mira quina selecció de títols romàntics que hem preparat!";
+			$special_day_title = lang('catalogue.featured.sant_jordi.title');
+			$special_day_description = sprintf(lang('catalogue.featured.sant_jordi.description'), CURRENT_SITE_NAME);
 		} else if ($special_day=='tots_sants') {
 			$result_recos = query_version_ids_for_tots_sants(10);
-			$special_day_title = "Selecció especial de Tots Sants";
-			$special_day_description = CURRENT_SITE_NAME." et desitja una bona castanyada!<br>Hem preparat una selecció dels millors títols de terror.";
+			$special_day_title = lang('catalogue.featured.halloween.title');
+			$special_day_description = sprintf(lang('catalogue.featured.halloween.description'), CURRENT_SITE_NAME);
 		} else if ($special_day=='nadal') {
 			if (date('m-d')>='12-25' && date('m-d')<='12-31') {
 				$result_recos = query_version_ids_for_nadal(10);
-				$special_day_title = "Els millors d’aquest ".date('Y');
-				$special_day_description = CURRENT_SITE_NAME." et desitja unes bones festes!<br>Aquesta setmana destaquem els millors títols estrenats i completats enguany!";
+				$special_day_title = sprintf(lang('catalogue.featured.christmas.title'), date('Y'));
+				$special_day_description = sprintf(lang('catalogue.featured.christmas.description'), CURRENT_SITE_NAME);
 			} else {
 				//No special selection: just show the lights
 			}
@@ -260,7 +260,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'chapters-carousel-last-update',
-		'title' => '<i class="fa fa-fw fa-clock-rotate-left"></i> Darrers capítols publicats',
+		'title' => '<i class="fa fa-fw fa-clock-rotate-left"></i> '.lang('catalogue.generic.latest_published_chapters'),
 		'specific_version' => TRUE,
 		'use_version_param' => TRUE,
 		'result' => query_home_last_updated($user, $max_items),
@@ -277,7 +277,7 @@ if (defined('PAGE_IS_SEARCH')) {
 	if (!empty($user)) {
 		array_push($sections, array(
 			'type' => 'carousel',
-			'title' => '<i class="fa fa-fw fa-star"></i> Recomanats per a tu',
+			'title' => '<i class="fa fa-fw fa-star"></i> '.lang('catalogue.generic.recommended_for_you'),
 			'specific_version' => FALSE,
 			'use_version_param' => FALSE,
 			'result' => query_home_user_recommendations_by_user_id($user, $max_items),
@@ -302,7 +302,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-chart-simple"></i> Els més populars a '.CURRENT_SITE_NAME,
+		'title' => '<i class="fa fa-fw fa-chart-simple"></i> '.sprintf(lang('catalogue.generic.most_popular'), CURRENT_SITE_NAME),
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
 		'result' => query_home_most_popular($user, $max_items),
@@ -326,7 +326,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'carousel',
-		'title' => '<i class="fa fa-fw fa-dice"></i> Vols provar sort? <span class="sort-order refresh-random-button" onclick="refreshRandomResults();"><span class="fa fa-fw fa-refresh"></span> <span class="sort-description">Torna-hi!</span></span>',
+		'title' => '<i class="fa fa-fw fa-dice"></i> '.lang('catalogue.generic.try_your_luck').' <span class="sort-order refresh-random-button" onclick="refreshRandomResults();"><span class="fa fa-fw fa-refresh"></span> <span class="sort-description">'.lang('catalogue.generic.try_your_luck.retry').'</span></span>',
 		'specific_version' => FALSE,
 		'use_version_param' => FALSE,
 		'result' => query_home_random($user, $max_items),
@@ -334,7 +334,7 @@ if (defined('PAGE_IS_SEARCH')) {
 
 	array_push($sections, array(
 		'type' => 'comments',
-		'title' => '<i class="fa fa-fw fa-comment"></i> Darrers comentaris',
+		'title' => '<i class="fa fa-fw fa-comment"></i> '.lang('catalogue.generic.latest_comments'),
 		'specific_version' => TRUE,
 		'use_version_param' => TRUE,
 		'result' => query_home_comments($user, 5),
@@ -365,17 +365,17 @@ foreach($sections as $section){
 <?php
 		if ($section['type']!='recommendations') {
 ?>
-					<h2 class="section-title-main"><?php echo $section['title']; ?></h2>
+					<h2 class="section-title-main"><?php echo $section['title'].(defined('PAGE_IS_SEARCH') && mysqli_num_rows($result)>0 ? ' ('.mysqli_num_rows($result).')' : ''); ?></h2>
 <?php
 		}
 		if (mysqli_num_rows($result)==0){ //Default search case ('static'), because other types are filtered out
 			if ($is_full_catalogue && (mysqli_num_rows($sections[$i+1]['result'])>0 || mysqli_num_rows($sections[$i+2]['result'])>0)) {
 ?>
-					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap <?php echo CATALOGUE_ITEM_STRING_SINGULAR; ?> per a aquesta cerca.<br>A continuació hi ha altres continguts que hi coincideixen.</div></div>
+					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br><?php echo CATALOGUE_NO_RESULTS_FOUND_STRING; ?></div></div>
 <?php
 			} else {
 ?>
-					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap contingut per a aquesta cerca.<br>Prova de reduir la cerca o fes-ne una altra.</div></div>
+					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br><?php echo lang('catalogue.generic.no_results_found'); ?></div></div>
 <?php
 			}
 		} else {
@@ -395,8 +395,8 @@ foreach($sections as $section){
 									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark'.(SITE_IS_HENTAI ? '_hentai' : '').'_hd.jpg'; ?>" alt="">
 									<div class="infoholder" data-swiper-parallax="-30%">
 										<div class="dataholder">
-											<div class="title"><span class="fa fa-cake-candles"></span><br>Per molts anys, <?php echo $user['username']; ?>!</div>
-											<div class="divisions">Segons el teu perfil d’usuari, avui fas <?php echo get_user_age(); ?> anys!<br>Et desitgem un bon aniversari i que gaudeixis de <?php echo CURRENT_SITE_NAME; ?>!</div>
+											<div class="title"><span class="fa fa-cake-candles"></span><br><?php echo sprintf(lang('catalogue.featured.birthday.title'), $user['username']); ?></div>
+											<div class="divisions"><?php echo sprintf(lang('catalogue.featured.birthday.description'), get_user_age(), CURRENT_SITE_NAME); ?></div>
 										</div>
 									</div>
 								</div>
@@ -494,7 +494,7 @@ foreach($sections as $section){
 if (!$has_some_result) {
 ?>
 				<div class="section">
-					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>Aquí no hi ha absolutament res...</div></div>
+					<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br><?php echo lang('catalogue.generic.nothing_at_all'); ?></div></div>
 				</div>
 <?php
 }
@@ -504,8 +504,8 @@ if (defined('PAGE_IS_SEARCH')) {
 } else {
 ?>
 				<div id="bottom-navigation">
-					<a class="normal-button" href="<?php echo SITE_BASE_URL; ?>/atzar" rel="nofollow">Obre una fitxa a l’atzar <i class="fa fa-fw fa-shuffle"></i></a>
-					<a class="normal-button" href="<?php echo SITE_BASE_URL; ?>/cerca">Explora tot el catàleg <i class="fa fa-fw fa-arrow-right"></i></a>
+					<a class="normal-button" href="<?php echo SITE_BASE_URL.lang('url.random'); ?>" rel="nofollow"><?php echo lang('catalogue.generic.random_button'); ?> <i class="fa fa-fw fa-shuffle"></i></a>
+					<a class="normal-button" href="<?php echo SITE_BASE_URL.lang('url.search'); ?>"><?php echo lang('catalogue.generic.explore_button'); ?> <i class="fa fa-fw fa-arrow-right"></i></a>
 				</div>
 <?php
 }

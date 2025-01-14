@@ -22,25 +22,25 @@ function sendMail() {
 	$('#contact_submit').html('<i class="fas fa-spinner fa-spin"></i>');
 	var failedValidation = false;
 	if ($('#contact_name').val()=='') {
-		addValidation('contact_name','Has d’introduir un nom.');
+		addValidation('contact_name',lang('js.main.contact_us.name.error'));
 		failedValidation = true;
 	}
 	if ($('#contact_email').val()=='') {
-		addValidation('contact_email','Has d’introduir una adreça electrònica.');
+		addValidation('contact_email',lang('js.main.contact_us.email.error'));
 		failedValidation = true;
 	}
 	if ($('#contact_message').val()=='') {
-		addValidation('contact_message','Has d’introduir el missatge que ens vulguis fer arribar.');
+		addValidation('contact_message',lang('js.main.contact_us.message.error'));
 		failedValidation = true;
 	}
 	if ($('#contact_question').val()=='') {
-		addValidation('contact_question','Has d’introduir la qüestió de seguretat.');
+		addValidation('contact_question',lang('js.main.contact_us.security_question.error'));
 		failedValidation = true;
 	}
 
 	if (failedValidation) {
 		$('#contact_submit').prop('disabled', false);
-		$('#contact_submit').html('Envia el missatge');
+		$('#contact_submit').html(lang('js.main.contact_us.send'));
 		return false;
 	}
 
@@ -64,19 +64,19 @@ function sendMail() {
 		try {
 			var response = JSON.parse(data.responseText);
 			if (response.code==1) {
-				addValidationOnlyText('contact_generic','Alguna dada no és vàlida. Revisa-les i torna-ho a provar.');
+				addValidationOnlyText('contact_generic',lang('js.main.contact_us.server_error.invalid'));
 			} else if (response.code==2) {
-				addValidation('contact_question','La resposta no és correcta.');
+				addValidation('contact_question',lang('js.main.contact_us.server_error.invalid_response'));
 			} else if (response.code==3) {
-				addValidation('contact_email','L’adreça electrònica no té un format correcte.');
+				addValidation('contact_email',lang('js.main.contact_us.server_error.invalid_email'));
 			} else {
-				addValidationOnlyText('contact_generic','S’ha produït un error. Torna-ho a provar.');
+				addValidationOnlyText('contact_generic',lang('js.main.contact_us.server_error.generic'));
 			}
 		} catch(e) {
-			addValidationOnlyText('contact_generic','S’ha produït un error. Torna-ho a provar.');
+			addValidationOnlyText('contact_generic',lang('js.main.contact_us.server_error.generic'));
 		}
 		$('#contact_submit').prop('disabled', false);
-		$('#contact_submit').html('Envia el missatge');
+		$('#contact_submit').html(lang('js.main.contact_us.send'));
 	});
 	return false;
 }

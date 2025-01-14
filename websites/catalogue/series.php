@@ -31,11 +31,11 @@ if (isset($failed)) {
 	}
 	header("HTTP/1.1 301 Moved Permanently");
 	if ($new_slug['type']=='liveaction') {
-		header("Location: https://imatgereal.".MAIN_DOMAIN."/".$new_slug['slug']);
+		header("Location: https://".LIVEACTION_SUBDOMAIN.".".MAIN_DOMAIN."/".$new_slug['slug']);
 	} else if ($new_slug['type']=='manga') {
-		header("Location: https://manga.".($new_slug['rating']!='XXX' ? MAIN_DOMAIN : HENTAI_DOMAIN)."/".$new_slug['slug']);
+		header("Location: https://".MANGA_SUBDOMAIN.".".($new_slug['rating']!='XXX' ? MAIN_DOMAIN : HENTAI_DOMAIN)."/".$new_slug['slug']);
 	} else {
-		header("Location: https://anime.".($new_slug['rating']!='XXX' ? MAIN_DOMAIN : HENTAI_DOMAIN)."/".$new_slug['slug']);
+		header("Location: https://".ANIME_SUBDOMAIN.".".($new_slug['rating']!='XXX' ? MAIN_DOMAIN : HENTAI_DOMAIN)."/".$new_slug['slug']);
 	}
 	die();
 }
@@ -111,32 +111,32 @@ if ($series['divisions']>1 && $series['subtype']!='movie') {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
-	$additional_data.=$series['divisions'].' '.CATALOGUE_SEASON_STRING_PLURAL;
+	$additional_data.=sprintf(CATALOGUE_SEASON_STRING_PLURAL, $series['divisions']);
 }
 if ($series['number_of_episodes']>1) {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
 	if ($series['subtype']!='movie') {
-		$additional_data.=$series['number_of_episodes'].' capítols';
+		$additional_data.=sprintf(lang('catalogue.generic.number_of_chapters_more'), $series['number_of_episodes']);
 	} else {
-		$additional_data.=$series['number_of_episodes'].' films';
+		$additional_data.=sprintf(lang('catalogue.generic.number_of_chapters.movie.short'), $series['number_of_episodes']);
 	}
 } else if ($series['subtype']=='movie') {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
-	$additional_data.='Film';
+	$additional_data.=lang('catalogue.generic.movie');
 } else if ($series['comic_type']=='novel') {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
-	$additional_data.='Novel·la lleugera';
+	$additional_data.=lang('catalogue.manga.light_novel');
 } else if ($series['subtype']=='oneshot') {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
-	$additional_data.='One-shot';
+	$additional_data.=lang('catalogue.manga.oneshot');
 }
 if (!SITE_IS_HENTAI) {
 	if ($additional_data!='') {
@@ -148,7 +148,7 @@ if (!empty($series['score'])) {
 	if ($additional_data!='') {
 		$additional_data.=' • ';
 	}
-	$additional_data .= number_format($series['score'],2,","," ").' a '.CATALOGUE_SCORE_SOURCE;
+	$additional_data .= number_format($series['score'],2,","," ").sprintf(lang('catalogue.series.at_external_site'), CATALOGUE_SCORE_SOURCE);
 }
 ?>
 								<div class="series-additional-data"><?php echo htmlspecialchars($additional_data); ?></div>
@@ -162,18 +162,18 @@ if (!empty($series['score'])) {
 <?php
 if (in_array($series['id'], !empty($user) ? $user['series_list_ids'] : array())) {
 ?>
-							<div class="normal-button remove-from-my-list"><i class="fas fa-fw fa-bookmark"></i> A la meva llista</div>
+							<div class="normal-button remove-from-my-list"><i class="fas fa-fw fa-bookmark"></i> <?php echo lang('catalogue.series.in_my_list'); ?></div>
 <?php
 } else {
 ?>
-							<div class="normal-button add-to-my-list"><i class="far fa-fw fa-bookmark"></i> Afegeix a la meva llista</div>
+							<div class="normal-button add-to-my-list"><i class="far fa-fw fa-bookmark"></i> <?php echo lang('catalogue.series.add_to_my_list'); ?></div>
 <?php
 }
 ?>
 						</div>
 						<div class="series-synopsis">
 							<div class="series-synopsis-real expandable-content-default"><?php echo $synopsis; ?></div>
-							<span class="show-more hidden"><span class="fa fa-fw fa-caret-down"></span> Mostra’n més <span class="fa fa-fw fa-caret-down"></span></span>
+							<span class="show-more hidden"><span class="fa fa-fw fa-caret-down"></span> <?php echo lang('js.catalogue.series.show_more'); ?> <span class="fa fa-fw fa-caret-down"></span></span>
 						</div>
 					</div>
 					<div class="section">
@@ -182,7 +182,7 @@ $result = query_series_data_for_series_page($user, $series['id']);
 
 if ($series['has_licensed_parts']) {
 ?>
-						<div class="series-licensed-parts"><span class="fa fa-fw fa-circle-info"></span> Aquest contingut té alguna versió oficial en català. Se’n mostren només les parts inexistents de manera oficial.</div>
+						<div class="series-licensed-parts"><span class="fa fa-fw fa-circle-info"></span> <?php echo lang('catalogue.series.partially_licensed'); ?></div>
 <?php
 }
 ?>
@@ -206,7 +206,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 							<div class="version-tab<?php echo $is_blacklisted ? ' version-blacklisted' : ''; ?><?php echo $version['id']==$series['version_id'] ? ' version-tab-selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>" data-version-slug="<?php echo htmlspecialchars($version['slug']); ?>" data-version-title="<?php echo htmlspecialchars($version['title']); ?>" data-version-alternate-titles="<?php echo htmlspecialchars($alternate_names); ?>" data-version-synopsis="<?php echo htmlspecialchars($version_synopsis); ?>">
 								<div class="version-fansub-icons"><?php echo get_fansub_icons($version['fansub_info'], get_prepared_versions($version['fansub_info']), $version['id']); ?></div>
-								<div class="version-tab-text"><?php echo htmlspecialchars('Versió '.get_fansub_preposition_name($version['fansub_name'])); ?><?php echo get_fansub_type(get_prepared_versions($version['fansub_info']), $version['id'])=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="Versió doblada"></span>' : ''; ?><?php echo $is_blacklisted ? ' <span class="fa fa-fw fa-ban" title="És d’un fansub a la teva llista negra"></span>' : ''; ?></div>
+								<div class="version-tab-text"><?php echo htmlspecialchars(lang('catalogue.series.version').get_fansub_preposition_name($version['fansub_name'])); ?><?php echo get_fansub_type(get_prepared_versions($version['fansub_info']), $version['id'])=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="'.lang('catalogue.series.is_dubbed').'"></span>' : ''; ?><?php echo $is_blacklisted ? ' <span class="fa fa-fw fa-ban" title="'.lang('catalogue.series.in_your_blacklist').'"></span>' : ''; ?></div>
 							</div>
 <?php
 	$i++;
@@ -305,7 +305,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			array_push($divisions, array(
 				'division_id' => 'extras',
 				'division_number' => 'extras',
-				'division_name' => ($series['type']!='manga' ? $version['title'].' - ' : '').'Contingut extra',
+				'division_name' => ($series['type']!='manga' ? $version['title'].' - ' : '').lang('catalogue.generic.extra_division'),
 				'division_number_of_episodes' => count($extras),
 				'episodes' => $extras,
 				'available_episodes' => count($extras),
@@ -313,7 +313,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 			));
 		}
 ?>
-								<h2 class="section-title-main section-title-with-table"><i class="fa fa-fw <?php echo $series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON : CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON; ?>"></i> Contingut<?php echo mysqli_num_rows($result)>1 ? ' d’aquesta versió' : ''; ?>
+								<h2 class="section-title-main section-title-with-table"><i class="fa fa-fw <?php echo $series['subtype']==CATALOGUE_ITEM_SUBTYPE_SINGLE_DB_ID ? CATALOGUE_ITEM_SUBTYPE_SINGLE_ICON : CATALOGUE_ITEM_SUBTYPE_SERIALIZED_ICON; ?>"></i> <?php echo mysqli_num_rows($result)>1 ? lang('catalogue.series.content_header.multiple') : lang('catalogue.series.content_header.single'); ?>
 <?php
 		//false: ascending, true: descending
 		$sort_order = (!empty($user) && $user['episode_sort_order']) || (empty($user) && !empty($_COOKIE['episode_sort_order']));
@@ -333,13 +333,13 @@ while ($version = mysqli_fetch_assoc($result)) {
 			$unsorted_divisions = $divisions;
 			$divisions = array_merge(array_reverse($new_divisions), $special_divisions);
 ?>
-									<span class="sort-order sort-descending"><span class="fa fa-fw fa-arrow-down-wide-short"></span> <span class="sort-description">De l’últim al primer</span></span>
+									<span class="sort-order sort-descending"><span class="fa fa-fw fa-arrow-down-wide-short"></span> <span class="sort-description"><?php echo lang('catalogue.series.sort_last_to_first'); ?></span></span>
 <?php
 		} else {
 			$unsorted_divisions = $divisions;
 			//Already sorted, no need to resort
 ?>
-									<span class="sort-order sort-ascending"><span class="fa fa-fw fa-arrow-down-short-wide"></span> <span class="sort-description">Del primer a l’últim</span></span>
+									<span class="sort-order sort-ascending"><span class="fa fa-fw fa-arrow-down-short-wide"></span> <span class="sort-description"><?php echo lang('catalogue.series.sort_first_to_last'); ?></span></span>
 <?php
 		}
 ?>
@@ -409,7 +409,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 
 					if ($is_first_in_empty_batch) {
 ?>
-									<div class="empty-divisions"><?php echo CATALOGUE_MORE_SEASONS_AVAILABLE; ?></div>
+									<div class="empty-divisions"><?php echo lang('catalogue.series.more_volumes_available'); ?></div>
 <?php
 					}
 ?>
@@ -461,7 +461,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 							</div>
 							<div class="section-content extra-content">
-								<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> Autoria d’aquesta versió</h2>
+								<h2 class="section-title-main"><i class="fa fa-fw fa-user-group"></i> <?php echo lang('catalogue.series.author_header'); ?></h2>
 <?php
 	$fansubs = query_fansubs_by_version_id($version['id']);
 ?>
@@ -473,41 +473,41 @@ while ($version = mysqli_fetch_assoc($result)) {
 										<div class="version-fansub-element">
 											<img class="version-fansub-image" src="<?php echo STATIC_URL.'/images/icons/'.$fansub['id'].'.png'; ?>" alt="">
 											<div class="version-fansub-data">
-												<div class="version-fansub-name"><?php echo $fansub['name'].($fansub['type']=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="És un fandub: fa doblatges."></span>' : ''); ?></div>
+												<div class="version-fansub-name"><?php echo $fansub['name'].($fansub['type']=='fandub' ? '<span class="fa fa-fw fa-microphone-lines" title="'.lang('catalogue.series.is_fandub').'"></span>' : ''); ?></div>
 												<div class="version-fansub-links">
 <?php
 		if (!empty(!empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url'])) {
 ?>
-													<a class="fa fa-fw fa-earth-europe web-link" title="Lloc web" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
+													<a class="fa fa-fw fa-earth-europe web-link" title="<?php echo lang('generic.web_link.alt'); ?>" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['bluesky_url'])) {
 ?>
-													<a class="fab fa-fw fa-discord bluesky-link" title="Perfil a Bluesky" href="<?php echo $fansub['bluesky_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-discord bluesky-link" title="<?php echo lang('generic.bluesky_link.alt'); ?>" href="<?php echo $fansub['bluesky_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['discord_url'])) {
 ?>
-													<a class="fab fa-fw fa-discord discord-link" title="Servidor a Discord" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-discord discord-link" title="<?php echo lang('generic.discord_link.alt'); ?>" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['mastodon_url'])) {
 ?>
-													<a class="fab fa-fw fa-mastodon mastodon-link" title="Perfil a Mastodon" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-mastodon mastodon-link" title="<?php echo lang('generic.mastodon_link.alt'); ?>" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['twitter_url'])) {
 ?>
-													<a class="fab fa-fw fa-x-twitter twitter-link" title="Perfil a X" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-x-twitter twitter-link" title="<?php echo lang('generic.x_link.alt'); ?>" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['downloads_url'])) {
 			$url_arr=explode(';', $fansub['downloads_url']);
 			foreach ($url_arr as $url) {
 				if (preg_match(REGEXP_DL_LINK,$url)) {
-					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link fansub-downloads" title="Baixa’n els fitxers originals" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
+					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link fansub-downloads" title="'.lang('catalogue.series.download.alt').'" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
 				} else {
-					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link" href="'.$url.'" title="Baixa’n els fitxers originals" target="_blank"></a>';
+					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link" href="'.$url.'" title="'.lang('catalogue.series.download.alt').'" target="_blank"></a>';
 				}
 			}
 		}
@@ -520,7 +520,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 									</div>
 									<div class="version-fansub-rating">
-										<div class="version-fansub-rating-title">Valora aquesta versió</div>
+										<div class="version-fansub-rating-title"><?php echo lang('catalogue.series.rate_header'); ?></div>
 										<div class="version-fansub-rating-buttons">
 											<span class="version-fansub-rating-positive fa fa-fw fa-thumbs-up<?php echo $version['user_rating']==1 ? ' version-fansub-rating-selected' : ''; ?>"></span>
 											<span class="version-fansub-rating-negative fa fa-fw fa-thumbs-down<?php echo $version['user_rating']==-1 ? ' version-fansub-rating-selected' : ''; ?>"></span>
@@ -529,7 +529,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 								</div>
 							</div>
 							<div class="section-content extra-content">
-								<h2 class="section-title-main"><a name="comentaris"></a><i class="fa fa-fw fa-comment"></i> Comentaris d’aquesta versió</h2>
+								<h2 class="section-title-main"><a name="<?php echo lang('url.comments_anchor'); ?>"></a><i class="fa fa-fw fa-comment"></i> <?php echo lang('catalogue.series.comments_header'); ?></h2>
 <?php
 
 	$resultcom = query_version_comments($version['id'], $user);
@@ -541,13 +541,13 @@ while ($version = mysqli_fetch_assoc($result)) {
 										<div class="comment-message comment-input">
 											<div class="comment-send-form">
 												<div class="grow-wrap">
-													<textarea placeholder="Escriu un comentari!" onfocus="checkCommentPossible(this);" oninput="this.parentNode.dataset.replicatedValue=this.value;checkForAutoSpoilers(this);" rows="1" required></textarea>
+													<textarea placeholder="<?php echo lang('catalogue.series.comments.placeholder'); ?>" onfocus="checkCommentPossible(this);" oninput="this.parentNode.dataset.replicatedValue=this.value;checkForAutoSpoilers(this);" rows="1" required></textarea>
 													<div class="comment-checkbox">
 														<input class="comment-has-spoiler" id="comment-has-spoiler-<?php echo $version['id']; ?>" type="checkbox">
-														<label for="comment-has-spoiler-<?php echo $version['id']; ?>" class="for-checkbox">Conté possibles espòilers</label>
+														<label for="comment-has-spoiler-<?php echo $version['id']; ?>" class="for-checkbox"><?php echo lang('catalogue.series.comments.contains_spoilers'); ?></label>
 													</div>
 												</div>
-												<button class="normal-button comment-send" title="Publica el comentari"><i class="fa fa-fw fa-paper-plane"></i></button>
+												<button class="normal-button comment-send" title="<?php echo lang('catalogue.series.comments.send'); ?>"><i class="fa fa-fw fa-paper-plane"></i></button>
 											</div>
 										</div>
 									</div>
@@ -566,7 +566,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 	}
 	if ($total_comments>3) {
 ?>
-									<a class="normal-button load-all-comments"><i class="fa fa-fw fa-angles-down"></i> Mostra <?php echo ($total_comments-3)==1 ? '1 comentari més' : ($total_comments-3).' comentaris més'; ?></a>
+									<a class="normal-button load-all-comments"><i class="fa fa-fw fa-angles-down"></i> <?php echo ($total_comments-3)==1 ? lang('catalogue.series.comments.show_more_one') : sprintf(lang('catalogue.series.comments.show_more_many'), ($total_comments-3)); ?></a>
 <?php
 	}
 ?>

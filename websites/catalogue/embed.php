@@ -26,7 +26,7 @@ define('PAGE_PREVIEW_IMAGE', STATIC_URL.'/social/version_'.$series['version_id']
 
 require_once(__DIR__.'/../common/header.inc.php');
 ?>
-<span class="embed-data" data-file-id="<?php echo $file_id; ?>" data-title="S’està carregant..."></span>
+<span class="embed-data" data-file-id="<?php echo $file_id; ?>" data-title="<?php echo lang('catalogue.embed.loading'); ?>"></span>
 <?php
 require_once(__DIR__.'/../common/footer.inc.php');
 ?>

@@ -6,12 +6,12 @@ require_once(__DIR__.'/queries.inc.php');
 validate_hentai();
 
 if (empty($user)) {
-	header("Location: ".USERS_URL."/inicia-la-sessio");
+	header("Location: ".USERS_URL.lang('url.login'));
 	die();
 }
 
-define('PAGE_TITLE', 'La meva llista');
-define('PAGE_PATH', '/la-meva-llista');
+define('PAGE_TITLE', lang('users.my_list.page_title'));
+define('PAGE_PATH', lang('url.my_list'));
 define('PAGE_STYLE_TYPE', 'settings');
 define('SETTINGS_ITEM_TYPE', 'list');
 
@@ -24,24 +24,24 @@ if ($cnt>0) {
 	$sections = array();
 	if (SITE_IS_HENTAI) {
 		array_push($sections, array(
-			'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista d’animes hentai',
+			'title' => '<i class="fa fa-fw fa-bookmark"></i> '.lang('users.my_list.anime.header.hentai'),
 			'result' => query_my_list_by_type($user, 'anime', TRUE)
 		));
 		array_push($sections, array(
-			'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista de mangues hentai',
+			'title' => '<i class="fa fa-fw fa-bookmark"></i> '.lang('users.my_list.manga.header.hentai'),
 			'result' => query_my_list_by_type($user, 'manga', TRUE)
 		));
 	} else {
 		array_push($sections, array(
-			'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista d’animes',
+			'title' => '<i class="fa fa-fw fa-bookmark"></i> '.lang('users.my_list.anime.header'),
 			'result' => query_my_list_by_type($user, 'anime', FALSE)
 		));
 		array_push($sections, array(
-			'title' => '<i class="fa fa-fw fa-bookmark"></i> La meva llista de mangues',
+			'title' => '<i class="fa fa-fw fa-bookmark"></i> '.lang('users.my_list.manga.header'),
 			'result' => query_my_list_by_type($user, 'manga', FALSE)
 		));
 		array_push($sections, array(
-			'title' => '<i class="fa fa-fw fa-bookmark"></i>La meva llista de continguts d’imatge real',
+			'title' => '<i class="fa fa-fw fa-bookmark"></i> '.lang('users.my_list.liveaction.header'),
 			'result' => query_my_list_by_type($user, 'liveaction', FALSE)
 		));
 	}
@@ -72,8 +72,8 @@ if ($cnt>0) {
 }
 ?>
 <div class="section empty-list<?php echo $cnt>0 ? ' hidden' : ''; ?>">
-	<h2 class="section-title-main"><i class="fa fa-fw fa-bookmark"></i> La meva llista</h2>
-	<div class="section-content section-empty"><div><i class="fa far fa-fw fa-bookmark"></i><br><?php echo SITE_IS_HENTAI ? 'No tens cap anime ni manga hentai desat a la llista.' : 'No tens cap anime, manga ni contingut d’imatge real desat a la llista.'; ?><br>Pots afegir-n’hi fent clic a la icona de punt de llibre a cadascun dels portals.</div></div>
+	<h2 class="section-title-main"><i class="fa fa-fw fa-bookmark"></i> <?php echo lang('users.my_list.empty.header'); ?></h2>
+	<div class="section-content section-empty"><div><i class="fa far fa-fw fa-bookmark"></i><br><?php echo SITE_IS_HENTAI ? lang('users.my_list.empty.explanation.hentai') : lang('users.my_list.empty.explanation'); ?></div></div>
 </div>
 <?php
 require_once(__DIR__.'/../common/footer.inc.php');

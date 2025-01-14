@@ -4,8 +4,8 @@ require_once(__DIR__.'/../common/common.inc.php');
 require_once(__DIR__.'/queries.inc.php');
 
 function sendForgotPasswordEmail($email, $username, $code) {
-	$message = "Bon dia, $username,\n\nReps aquest correu perquè has demanat restablir la contrasenya del teu usuari a ".CURRENT_SITE_NAME_ACCOUNT.".\n\nSi no has estat tu qui ho ha demanat, pots ignorar aquest correu.\n\nPer a restablir la contrasenya, visita el següent enllaç: ".USERS_URL."/restableix-la-contrasenya?usuari=".urlencode($username)."&codi=$code\n\n".CURRENT_SITE_NAME.".";
-	send_email($email, $username, 'Restabliment de la contrasenya de '.CURRENT_SITE_NAME_ACCOUNT, $message);
+	$message = sprintf(lang('email.forgot_password.body'), $username, CURRENT_SITE_NAME_ACCOUNT, USERS_URL.lang('url.reset_password').'?user='.urlencode($username).'&code='.$code, CURRENT_SITE_NAME);
+	send_email($email, $username, sprintf(lang('email.forgot_password.subject'), CURRENT_SITE_NAME_ACCOUNT), $message);
 }
 
 function forgotPassword(){

@@ -13,6 +13,8 @@
 	- En canviar de pestanya de versió en una sèrie, també canvia el títol, portada, imatge de fons i sinopsi, si aquella versió les té diferents.
 	- Als apartats del web que no mostren versions concretes, es mostra el títol, portada i sinopsi de la versió principal.
 	- Es pot enllaçar a divisions concretes.
+	- Els resultats de la cerca mostren el nombre d’elements resultant.
+	- S’afegeix un enllaç a la pàgina d’estat dels servidors al peu del web.
 - **Administració:**
 	- La fitxa de sèrie passa a ser més genèrica i se’n mou el títol, la sinopsi i les imatges a la versió.
 	- S’unifica la nomenclatura «temporada»/«volum» en «divisió».

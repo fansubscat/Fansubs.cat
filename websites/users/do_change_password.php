@@ -4,8 +4,8 @@ require_once(__DIR__.'/../common/common.inc.php');
 require_once(__DIR__.'/queries.inc.php');
 
 function sendChangePasswordEmail($email, $username) {
-	$message = "Bon dia, $username,\n\nAquest correu confirma que s’ha canviat la contrasenya del teu compte a ".CURRENT_SITE_NAME_ACCOUNT.".\n\nSi et cal contactar amb nosaltres per qualsevol altre motiu, ens pots escriure un missatge en aquest enllaç: ".MAIN_URL."/contacta-amb-nosaltres\n\n".CURRENT_SITE_NAME.".";
-	send_email($email, $username, 'S’ha canviat la contrasenya de '.CURRENT_SITE_NAME_ACCOUNT, $message);
+	$message = sprintf(lang('email.change_password.body'), $username, CURRENT_SITE_NAME_ACCOUNT, MAIN_URL.lang('url.contact_us'), CURRENT_SITE_NAME);
+	send_email($email, $username, sprintf(lang('email.change_password.subject'), CURRENT_SITE_NAME_ACCOUNT), $message);
 }
 
 function delete_profile(){

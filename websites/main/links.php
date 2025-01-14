@@ -1,32 +1,34 @@
 <?php
-define('PAGE_TITLE', 'Enllaços');
-define('PAGE_PATH', '/enllacos');
+require_once(__DIR__.'/../common/initialization.inc.php');
+
+define('PAGE_TITLE', lang('main.links.page_title'));
+define('PAGE_PATH', lang('url.links'));
 define('PAGE_STYLE_TYPE', 'text');
-define('PAGE_DESCRIPTION', 'Aquí trobaràs un recull d’enllaços als principals mitjans i divulgadors que fan contingut en català relacionat amb el manga i l’anime. Fansubs.cat no hi té cap mena de relació, però creiem convenient fer-ne promoció i et convidem a seguir-los i donar-los suport!');
+define('PAGE_DESCRIPTION', sprintf(lang('main.links.page_description'), CURRENT_SITE_NAME));
 define('PAGE_DISABLED_IF_HENTAI', TRUE);
 require_once(__DIR__.'/../common/header.inc.php');
 require_once(__DIR__.'/common.inc.php');
 require_once(__DIR__.'/queries.inc.php');
 ?>
 					<div class="text-page">
-						<h2 class="section-title"><i class="fa fa-fw fa-link"></i> Enllaços</h2>
-						<div class="section-content">Aquí trobaràs un recull d’enllaços als principals mitjans i divulgadors que fan contingut en català relacionat amb el manga i l’anime. Fansubs.cat no hi té cap mena de relació, però creiem convenient fer-ne promoció i et convidem a seguir-los i donar-los suport!</div>
+						<h2 class="section-title"><i class="fa fa-fw fa-link"></i> <?php echo lang('main.links.header'); ?></h2>
+						<div class="section-content"><?php echo sprintf(lang('main.links.explanation'), CURRENT_SITE_NAME); ?></div>
 <?php
 	$categories = array(
-		'featured' => '<i class="fa fa-fw fa-star"></i> Destacats',
-		'blogs' => '<i class="fa fa-fw fa-newspaper"></i> Blogs i notícies',
-		'catalogs' => '<i class="fa fa-fw fa-signs-post"></i> Catàlegs',
-		'art' => '<i class="fa fa-fw fa-palette"></i> Còmic i arts visuals',
-		'forums' => '<i class="fa fa-fw fa-comments"></i> Comunitats i fòrums',
-		'culture' => '<i class="fa fa-fw fa-torii-gate"></i> Cultura asiàtica',
-		'creators' => '<i class="fa fa-fw fa-user"></i> Divulgadors',
-		'dubbing' => '<i class="fa fa-fw fa-microphone"></i> Doblatge',
-		'music' => '<i class="fa fa-fw fa-music"></i> Música i versions',
-		'nostalgia' => '<i class="fa fa-fw fa-heart"></i> Nostàlgia',
-		'podcasts' => '<i class="fa fa-fw fa-radio"></i> Pòdcasts',
-		'preservation' => '<i class="fa fa-fw fa-landmark"></i> Preservació',
-		'subtitles' => '<i class="fa fa-fw fa-message"></i> Subtítols',
-		'others' => '<i class="fa fa-fw fa-maximize"></i> Altres',
+		'featured' => '<i class="fa fa-fw fa-star"></i> '.lang('main.links.category.featured'),
+		'blogs' => '<i class="fa fa-fw fa-newspaper"></i> '.lang('main.links.category.blogs'),
+		'catalogs' => '<i class="fa fa-fw fa-signs-post"></i> '.lang('main.links.category.catalogues'),
+		'art' => '<i class="fa fa-fw fa-palette"></i> '.lang('main.links.category.comics'),
+		'forums' => '<i class="fa fa-fw fa-comments"></i> '.lang('main.links.category.communities'),
+		'culture' => '<i class="fa fa-fw fa-torii-gate"></i> '.lang('main.links.category.asian_culture'),
+		'creators' => '<i class="fa fa-fw fa-user"></i> '.lang('main.links.category.influencers'),
+		'dubbing' => '<i class="fa fa-fw fa-microphone"></i> '.lang('main.links.category.dubbing'),
+		'music' => '<i class="fa fa-fw fa-music"></i> '.lang('main.links.category.music'),
+		'nostalgia' => '<i class="fa fa-fw fa-heart"></i> '.lang('main.links.category.nostalgia'),
+		'podcasts' => '<i class="fa fa-fw fa-radio"></i> '.lang('main.links.category.podcasts'),
+		'preservation' => '<i class="fa fa-fw fa-landmark"></i> '.lang('main.links.category.preservation'),
+		'subtitles' => '<i class="fa fa-fw fa-message"></i> '.lang('main.links.category.subtitles'),
+		'others' => '<i class="fa fa-fw fa-maximize"></i> '.lang('main.links.category.other'),
 	);
 	foreach ($categories as $id => $title) {
 		$result = query_communities_by_category($id);

@@ -3,8 +3,8 @@ require_once(__DIR__.'/../common/db.inc.php');
 require_once(__DIR__.'/../common/common.inc.php');
 
 function sendContactEmail($sender_email, $username, $message) {
-	$message = "$username ($sender_email) ha enviat el següent missatge mitjançant el formulari de contacte de ".CURRENT_SITE_NAME.":\n\n$message\n\n".CURRENT_SITE_NAME.".";
-	send_email(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME, CURRENT_SITE_NAME.' - Nou missatge', $message);
+	$message = sprintf(lang('email.contact_us.body'), $username, $sender_email, $message, CURRENT_SITE_NAME);
+	send_email(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME, sprintf(lang('email.contact_us.subject'), CURRENT_SITE_NAME), $message);
 }
 
 function contactEmail(){
@@ -21,7 +21,7 @@ function contactEmail(){
 	$question = $_POST['question'];
 
 	//Check if question is valid
-	$security_responses = array("català", "catala", "valencià", "valencia", "valensia", "valensià", "catalá", "valenciá");
+	$security_responses = explode(', 'lang('email.contact_us.allowed_question_responses'));
 	if (!in_array(strtolower($question), $security_responses)) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 2);

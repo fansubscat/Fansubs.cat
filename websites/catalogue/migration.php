@@ -58,7 +58,7 @@ if ($migration_type=='piwigo') {
 					mysqli_free_result($result);
 				} else {
 					mysqli_free_result($result);
-					log_action('manga-migration-invalid-id', "No s’ha trobat el manga/volum/capítol migrat amb l’identificador $file_id");
+					log_action('manga-migration-invalid-id', "Could not find a migrated manga/volume/chapter with file id $file_id");
 					http_response_code(404);
 					include(__DIR__.'/error.php');
 					die(); //Avoids error because mysqli is already closed

@@ -7,8 +7,8 @@ if (!empty($user)) {
 	die();
 }
 
-define('PAGE_TITLE', 'Restableix la contrasenya');
-define('PAGE_PATH', '/restableix-la-contrasenya');
+define('PAGE_TITLE', lang('users.reset_password.page_title'));
+define('PAGE_PATH', lang('url.reset_password'));
 define('PAGE_STYLE_TYPE', 'login');
 define('PAGE_IS_RESET_PASSWORD', TRUE);
 

@@ -5,11 +5,11 @@
 <?php
 		if (PAGE_STYLE_TYPE!='contact') {
 ?>
-					<a class="contact-button" href="<?php echo MAIN_URL; ?>/contacta-amb-nosaltres">Contacta amb nosaltres</a>
+					<a class="contact-button" href="<?php echo MAIN_URL.lang('url.contact_us'); ?>"><?php echo lang('main.button.contact_us'); ?></a>
 <?php
 		}
 ?>
-					<div class="footer-text">Tots els drets dels textos, imatges i obres esmentades pertanyen a llurs propietaris.<br>Codi i disseny 2015-<?php echo date('Y'); ?> <?php echo CURRENT_SITE_NAME; ?> • <a href="https://github.com/fansubscat/Fansubs.cat/blob/master/CHANGELOG.md#registre-de-canvis" target="_blank">Versió <?php echo VERSION; ?></a> • <a href="<?php echo MAIN_URL; ?>/politica-de-privadesa">Política de privadesa</a> • <a href="https://github.com/fansubscat/Fansubs.cat" target="_blank">És codi obert</a></div>
+					<div class="footer-text"><?php echo lang('main.footer.copyright'); ?><br><?php echo sprintf(lang('main.footer.code'), date('Y')); ?> • <a href="https://github.com/fansubscat/Fansubs.cat/blob/master/CHANGELOG.md#registre-de-canvis" target="_blank"><?php echo sprintf(lang('main.footer.version'), VERSION); ?></a> • <a href="<?php echo MAIN_URL.lang('url.privacy_policy'); ?>"><?php echo lang('main.footer.privacy_policy'); ?></a> • <a href="<?php echo STATUS_URL; ?>" target="_blank"><?php echo lang('main.footer.service_status'); ?></a> • <a href="https://github.com/fansubscat/Fansubs.cat" target="_blank"><?php echo lang('main.footer.open_source'); ?></a></div>
 				</div>
 <?php
 	}
