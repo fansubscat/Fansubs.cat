@@ -5,7 +5,7 @@ temporary/*
 !temporary/last_posted_manga_id.txt
 !temporary/last_posted_liveaction_id.txt
 assets/*.png
-common/config.inc.php
+common/config/config.inc.php
 services/composer.phar
 websites/static/images/advent/*
 !websites/static/images/advent/.gitkeep

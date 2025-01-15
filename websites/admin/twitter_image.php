@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__.'/db.inc.php');
 require_once(__DIR__.'/common.inc.php');
-require_once(__DIR__.'/libraries/linebreaks4imagettftext.php');
+require_once(__DIR__.'/../../common/libraries/linebreaks4imagettftext.php');
 
 ob_start();
 

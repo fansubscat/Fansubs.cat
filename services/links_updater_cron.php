@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__.'/db.inc.php');
-require_once(__DIR__.'/libs/preview_image_generator.php');
+require_once(__DIR__.'/../common/libraries/preview_image_generator.php');
 
 log_action('cron-links-updater-started', "S’ha iniciat l’obtenció automàtica d’enllaços");
 
@@ -51,7 +51,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 										query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES(".$file['id'].",'".escape($real_link)."','$resolution',CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
 										query("UPDATE version SET files_updated=CURRENT_TIMESTAMP,files_updated_by='Cron' WHERE id=".$folder['version_id']);
 										log_action("cron-create-link","S’ha inserit automàticament l’enllaç del fitxer «${filename}» (id. de versió ".$folder['version_id'].") i s’ha actualitzat la data de modificació de la versió");
-										update_series_preview($folder['series_id']);
+										update_version_preview($folder['version_id']);
 									}
 								} else {
 									$duration=$folder['default_duration'];
@@ -59,7 +59,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 									query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES(".mysqli_insert_id($db_connection).",'".escape($real_link)."','$resolution',CURRENT_TIMESTAMP,'Cron',CURRENT_TIMESTAMP,'Cron')");
 									query("UPDATE version SET is_hidden=0,files_updated=CURRENT_TIMESTAMP,files_updated_by='Cron' WHERE id=".$folder['version_id']);
 									log_action("cron-create-link","S’ha inserit automàticament l’enllaç del fitxer «${filename}» (id. de versió ".$folder['version_id'].") i s’ha actualitzat la data de modificació de la versió");
-									update_series_preview($folder['series_id']);
+									update_version_preview($folder['version_id']);
 								}
 								//Now check if we need to upgrade in progress -> complete
 								$results = query("SELECT * FROM series WHERE id=".escape($folder['series_id']));
@@ -70,7 +70,7 @@ if (flock($lock_pointer, LOCK_EX)) {
 										log_action("cron-update-version","La versió (id. de versió ".$version['id'].") s’ha marcat com a completada i se n’ha aturat la sincronització automàtica perquè ja té un fitxer per cada capítol");
 										query("UPDATE version SET status=1,updated=CURRENT_TIMESTAMP,updated_by='Cron',completed_date=CURRENT_TIMESTAMP WHERE id=".$version['id']);
 										query("UPDATE remote_folder SET is_active=0 WHERE version_id=".$version['id']);
-										update_series_preview($series['id']);
+										update_version_preview($folder['version_id']);
 									}
 								} else {
 									log_action("cron-match-failed","No s’ha pogut associar l’enllaç del fitxer «${filename}»: la sèrie no existeix");

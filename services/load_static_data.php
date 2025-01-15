@@ -6,7 +6,7 @@
 
 require_once(__DIR__.'/db.inc.php');
 require_once(__DIR__.'/functions.inc.php');
-require_once(__DIR__.'/libs/parsecsv.php');
+require_once(__DIR__.'/../common/libraries/parsecsv.php');
 
 if (isset($argv) && isset($argv[1]) && isset($argv[2])){
 	$fansub_id = $argv[1];

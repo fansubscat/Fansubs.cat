@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__.'/libraries/preview_image_generator.php');
+require_once(__DIR__.'/../../common/libraries/preview_image_generator.php');
 $type='anime';
 $link_url_pattern = "(https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_\-]+)|storage:\/\/.*)";
 

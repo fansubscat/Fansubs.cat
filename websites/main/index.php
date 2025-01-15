@@ -1,7 +1,5 @@
 <?php
 define('PAGE_STYLE_TYPE', 'main');
-require_once(__DIR__.'/../../common/config.inc.php');
-
 define('SITE_TITLE_OVERRIDE', TRUE);
 
 require_once(__DIR__.'/../common/user_init.inc.php');

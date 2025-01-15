@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__.'/../db.inc.php');
+require_once(__DIR__.'/../config/config.inc.php');
 require_once(__DIR__.'/linebreaks4imagettftext.php');
 
 define('IMAGE_WIDTH', 1200);

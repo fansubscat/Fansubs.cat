@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__.'/libraries/preview_image_generator.php');
+require_once(__DIR__.'/../../common/libraries/preview_image_generator.php');
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
