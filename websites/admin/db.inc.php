@@ -32,7 +32,7 @@ function escape($string){
 
 function query($query){
 	global $db_connection;
-	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."<br>"."Consulta original: $query");
+	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."<br><br>"."Consulta original:<br>$query");
 	return $result;
 }
 

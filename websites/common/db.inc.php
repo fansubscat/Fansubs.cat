@@ -19,8 +19,10 @@ function log_action($action, $text=NULL){
 function crash($string){
 	http_response_code(500);
 	ob_end_clean();
+	define('ERROR_DESCRIPTION', $string);
+	include(__DIR__.'/tiny_error.inc.php');
 	log_action('crash', $string);
-	die($string);
+	die();
 }
 
 function escape($string){
@@ -37,7 +39,7 @@ function escape_for_like($string){
 function query($query){
 	global $db_connection;
 	$start = microtime(true);
-	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n".sprintf(lang('generic.db_query'), $query));
+	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."<br><br>".sprintf(lang('generic.db_query'), $query));
 	$end = microtime(true);
 	if (($end - $start)>2) {
 		log_action('slow-query', "Slow query detected (time: " . ($end - $start) . "s): $query");

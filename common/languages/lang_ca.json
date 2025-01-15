@@ -249,7 +249,7 @@
 	"error.page_title": "Error",
 	"generic.bluesky_link.alt": "Perfil a Bluesky",
 	"generic.db_error": "No s’ha pogut connectar a la base de dades.",
-	"generic.db_query": "Consulta original: %s",
+	"generic.db_query": "Consulta original:<br>%s",
 	"generic.discord_link.alt": "Servidor a Discord",
 	"generic.mastodon_link.alt": "Perfil a Mastodon",
 	"generic.preposition": "de %s",
