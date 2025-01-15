@@ -173,13 +173,13 @@ function get_status_icon_code($id){
 function get_comic_type($comic_type){
 	switch ($comic_type) {
 		case 'manga':
-			return 'Manga';
+			return lang('social.manga');
 		case 'manhwa':
-			return 'Manhwa';
+			return lang('social.manhwa');
 		case 'manhua':
-			return 'Manhua';
+			return lang('social.manhua');
 		default:
-			return 'Còmic';
+			return lang('social.comic');
 	}
 }
 
@@ -228,24 +228,24 @@ function get_series_type_summary($series) {
 	if ($series['type']=='manga') {
 		if ($series['subtype']=='oneshot') {
 			if ($series['comic_type']=='novel') {
-				$text = "Novel·la lleugera";
+				$text = lang('social.novel');
 			} else {
-				$text = get_comic_type($series['comic_type'])." • One-shot";
+				$text = get_comic_type($series['comic_type'])." • ".lang('social.oneshot');
 			}
 		} else if ($series['divisions']>1) {
-			$text = get_comic_type($series['comic_type'])." • Serialitzat • ".$series['divisions']." volums • ".$series['number_of_episodes']." capítols";
+			$text = get_comic_type($series['comic_type'])." • ".lang('social.serialized')." • ".sprintf(lang('social.volumes'), $series['number_of_episodes'])." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
 		} else {
-			$text = get_comic_type($series['comic_type'])." • Serialitzat • 1 volum • ".$series['number_of_episodes']." capítols";
+			$text = get_comic_type($series['comic_type'])." • ".lang('social.serialized')." • ".lang('social.volume')." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
 		}
 	} else {
 		if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Conjunt de ".$series['number_of_episodes']." films";
+			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".sprintf(lang('social.movies'), $series['number_of_episodes']);
 		} else if ($series['subtype']=='movie') {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Film";
+			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".lang('social.movie');
 		} else if ($series['divisions']>1) {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Sèrie • ".$series['divisions']." temporades • ".$series['number_of_episodes']." capítols";
+			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".lang('social.series')." • ".sprintf(lang('social.seasons'), $series['divisions'])." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
 		} else {
-			$text = ($series['type']=='anime' ? 'Anime' : 'Imatge real')." • Sèrie • ".$series['number_of_episodes']." capítols";
+			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".lang('social.series')." • ".$series['number_of_episodes']." capítols";
 		}
 	}
 	return $text;

@@ -518,15 +518,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						query("UPDATE version SET files_updated='$current_timestamp',files_updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 					}
 				} else {
-					query("UPDATE file SET extra_name='".$extra['name']."',".($extra['original_filename']!=NULL ? "original_filename='".$extra['original_filename']."'," : "")."length=".$extra['length'].",comments=".$extra['comments'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$extra['id']);
+					query("UPDATE file SET extra_name='".$extra['name']."',".((isset($extra['original_filename']) && $extra['original_filename']!=NULL) ? "original_filename='".$extra['original_filename']."'," : "")."length=".$extra['length'].",comments=".$extra['comments'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$extra['id']);
 
 					if ($type=='manga') {
 						$resultcr = query("SELECT * FROM file WHERE id=".$extra['id']);
 						if ($current_extra = mysqli_fetch_assoc($resultcr)) {
-							query("UPDATE file SET extra_name='".$extra['name']."',".($extra['original_filename']!=NULL ? "original_filename='".$extra['original_filename']."'," : "")."length=".$extra['length'].",comments=".$extra['comments'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$extra['id']);
+							query("UPDATE file SET extra_name='".$extra['name']."',".((isset($extra['original_filename']) && $extra['original_filename']!=NULL) ? "original_filename='".$extra['original_filename']."'," : "")."length=".$extra['length'].",comments=".$extra['comments'].",updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$extra['id']);
 						}
 						mysqli_free_result($resultcr);
-						if ($extra['original_filename']!=NULL) {
+						if (isset($extra['original_filename']) && $extra['original_filename']!=NULL) {
 							decompress_manga_file($extra['id'], $extra['temporary_filename'], $extra['original_filename_unescaped']);
 						}
 					} else {
