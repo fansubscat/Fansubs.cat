@@ -8,7 +8,8 @@ define('COVER_WIDTH', 444);
 define('COVER_HEIGHT', 628);
 define('TEXT_MARGIN_HORIZONTAL', 46);
 define('TEXT_MARGIN_VERTICAL', 80);
-define('FONT_AWESOME', STATIC_DIRECTORY.'/fonts/font_awesome_solid.ttf');
+define('FANSUB_LOGO_WIDTH', 36);
+define('FANSUB_LOGO_HEIGHT', 36);
 define('FONT_REGULAR', STATIC_DIRECTORY.'/fonts/lexend_deca_regular.ttf');
 define('FONT_BOLD', STATIC_DIRECTORY.'/fonts/lexend_deca_bold.ttf');
 define('FONT_LIGHT', STATIC_DIRECTORY.'/fonts/lexend_deca_light.ttf');
@@ -24,6 +25,10 @@ function query_version_data_for_preview_image_by_id($id) {
 					ORDER BY f.name
 					SEPARATOR ' + '
 				) fansub_name,
+				GROUP_CONCAT(DISTINCT f.id
+					ORDER BY f.name
+					SEPARATOR ' + '
+				) fansub_id,
 				s.*,
 				YEAR(s.publish_date) year,
 				GROUP_CONCAT(DISTINCT g.name
@@ -65,6 +70,70 @@ function scale_smallest_side($image, $desired_width, $desired_height) {
 	}
 	
 	return $image;
+}
+
+function round_corners($source, $radius) {
+	$ws = imagesx($source);
+	$hs = imagesy($source);
+
+	$corner = $radius + 2;
+	$s = $corner*2;
+
+	$src = imagecreatetruecolor($s, $s);
+	imagecopy($src, $source, 0, 0, 0, 0, $corner, $corner);
+	imagecopy($src, $source, $corner, 0, $ws - $corner, 0, $corner, $corner);
+	imagecopy($src, $source, $corner, $corner, $ws - $corner, $hs - $corner, $corner, $corner);
+	imagecopy($src, $source, 0, $corner, 0, $hs - $corner, $corner, $corner);
+
+	$q = 8; # change this if you want
+	$radius *= $q;
+
+	# find unique color
+	do {
+		$r = rand(0, 255);
+		$g = rand(0, 255);
+		$b = rand(0, 255);
+	} while (imagecolorexact($src, $r, $g, $b) < 0);
+
+	$ns = $s * $q;
+
+	$img = imagecreatetruecolor($ns, $ns);
+	$alphacolor = imagecolorallocatealpha($img, $r, $g, $b, 127);
+	imagealphablending($img, false);
+	imagefilledrectangle($img, 0, 0, $ns, $ns, $alphacolor);
+
+	imagefill($img, 0, 0, $alphacolor);
+	imagecopyresampled($img, $src, 0, 0, 0, 0, $ns, $ns, $s, $s);
+	imagedestroy($src);
+
+	imagearc($img, $radius - 1, $radius - 1, $radius * 2, $radius * 2, 180, 270, $alphacolor);
+	imagefilltoborder($img, 0, 0, $alphacolor, $alphacolor);
+	imagearc($img, $ns - $radius, $radius - 1, $radius * 2, $radius * 2, 270, 0, $alphacolor);
+	imagefilltoborder($img, $ns - 1, 0, $alphacolor, $alphacolor);
+	imagearc($img, $radius - 1, $ns - $radius, $radius * 2, $radius * 2, 90, 180, $alphacolor);
+	imagefilltoborder($img, 0, $ns - 1, $alphacolor, $alphacolor);
+	imagearc($img, $ns - $radius, $ns - $radius, $radius * 2, $radius * 2, 0, 90, $alphacolor);
+	imagefilltoborder($img, $ns - 1, $ns - 1, $alphacolor, $alphacolor);
+	imagealphablending($img, true);
+	imagecolortransparent($img, $alphacolor);
+
+	# resize image down
+	$dest = imagecreatetruecolor($s, $s);
+	imagealphablending($dest, false);
+	imagefilledrectangle($dest, 0, 0, $s, $s, $alphacolor);
+	imagecopyresampled($dest, $img, 0, 0, 0, 0, $s, $s, $ns, $ns);
+	imagedestroy($img);
+
+	# output image
+	imagealphablending($source, false);
+	imagecopy($source, $dest, 0, 0, 0, 0, $corner, $corner);
+	imagecopy($source, $dest, $ws - $corner, 0, $corner, 0, $corner, $corner);
+	imagecopy($source, $dest, $ws - $corner, $hs - $corner, $corner, $corner, $corner, $corner);
+	imagecopy($source, $dest, 0, $hs - $corner, 0, $corner, $corner, $corner);
+	imagealphablending($source, true);
+	imagedestroy($dest);
+
+	return $source;
 }
 
 function get_status_color($image, $id){
@@ -224,10 +293,7 @@ function update_version_preview($id) {
 		$current_height = $current_height+72;
 
 		//Name
-		$text = \andrewgjohnson\linebreaks4imagettftext(42, 0, FONT_BOLD, get_text_without_missing_glyphs($version['title']), IMAGE_WIDTH-COVER_WIDTH-(TEXT_MARGIN_HORIZONTAL+4)*2);
-		if (substr_count($text, "\n")>2) {
-			$text = implode("\n",array_slice(explode("\n", $text), 0, 3)).'…';
-		}
+		$text = \andrewgjohnson\linebreaks4imagettftext(42, 0, FONT_BOLD, get_text_without_missing_glyphs($version['title']), IMAGE_WIDTH-COVER_WIDTH-(TEXT_MARGIN_HORIZONTAL+4)*2, 3);
 		$white = imagecolorallocate($image, 0xFF, 0xFF, 0xFF);
 		for ($i=0;$i<=substr_count($text, "\n");$i++) {
 			imagefttext($image, 42, 0, TEXT_MARGIN_HORIZONTAL-4, $current_height, $white, FONT_BOLD, explode("\n", get_text_without_missing_glyphs($text))[$i]);
@@ -247,10 +313,7 @@ function update_version_preview($id) {
 			$alternate_names .= $version['alternate_names'];
 		}
 		if (!empty($alternate_names)) {
-			$text = \andrewgjohnson\linebreaks4imagettftext(23.5, 0, FONT_LIGHT, get_text_without_missing_glyphs($alternate_names), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2);
-			if (substr_count($text, "\n")>1) {
-				$text = implode("\n",array_slice(explode("\n", $text), 0, 2)).'…';
-			}
+			$text = \andrewgjohnson\linebreaks4imagettftext(23.5, 0, FONT_LIGHT, get_text_without_missing_glyphs($alternate_names), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2, 2);
 			$yellow = imagecolorallocate($image, 0xA3, 0xA3, 0xA3);
 			for ($i=0;$i<=substr_count($text, "\n");$i++) {
 				imagefttext($image, 23.5, 0, TEXT_MARGIN_HORIZONTAL, $current_height, $yellow, FONT_LIGHT, explode("\n", get_text_without_missing_glyphs($text))[$i]);
@@ -275,22 +338,28 @@ function update_version_preview($id) {
 
 		$tag_bg_color = imagecolorallocatealpha($image, 0xFF, 0xFF, 0xFF, 95);
 		$lines = 1;
+		$usable_genres = array();
 		//First iteration to know the number of lines
 		foreach ($genres as $genre) {
 			$bbox = imagettfbbox(14, 0, FONT_LIGHT, $genre);
-			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2-8*2-10-100);
+			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2-8*2-100);
 			if (!$fits) {
+				if ($lines==3) {
+					//Max 3 lines of genres
+					break;
+				}
 				$current_width = TEXT_MARGIN_HORIZONTAL+10;
 				$lines++;
 			}
+			array_push($usable_genres, $genre);
 			$current_width+=$bbox[2]+6*2+12;
 		}
 
 		$current_height = IMAGE_HEIGHT-TEXT_MARGIN_VERTICAL-9-36*($lines-1);
 		$current_width = TEXT_MARGIN_HORIZONTAL+10;
-		foreach ($genres as $genre) {
+		foreach ($usable_genres as $genre) {
 			$bbox = imagettfbbox(14, 0, FONT_LIGHT, $genre);
-			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2-8*2-10-100);
+			$fits = ($current_width+$bbox[2])<(IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL*2-8*2-100);
 			if (!$fits) {
 				$current_width = TEXT_MARGIN_HORIZONTAL+10;
 				$current_height = $current_height+36;
@@ -301,16 +370,25 @@ function update_version_preview($id) {
 		}
 
 		//Fansubs
-		$current_height = $current_height-36*($lines-1)-20;
-
-		$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, FONT_REGULAR, get_text_without_missing_glyphs($version['fansub_name']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL);
-		$current_height = $current_height - 30;
-		imagefttext($image, 16, 0, TEXT_MARGIN_HORIZONTAL, $current_height, imagecolorallocate($image, 0xFF, 0xFF, 0xFF), FONT_AWESOME, "");
-		imagefttext($image, 14, 0, TEXT_MARGIN_HORIZONTAL+1, $current_height-1, get_status_color($image, $version['status']), FONT_AWESOME, get_status_icon_code($version['status']));
-		if (substr_count($text, "\n")>0) {
-			$text = implode("\n",array_slice(explode("\n", $text), 0, 1)).'…';
+		$current_height = $current_height-36*($lines-1)-50;
+		
+		$fansub_names = explode(' + ', $version['fansub_name']);
+		$fansub_ids = explode(' + ', $version['fansub_id']);
+		
+		$current_width = TEXT_MARGIN_HORIZONTAL;
+		
+		for ($i=0;$i<count($fansub_names);$i++) {
+			//Load fansub logo
+			$fansub_logo = imagecreatefrompng(STATIC_DIRECTORY."/images/icons/".$fansub_ids[$i].".png");
+			$fansub_logo = scale_smallest_side($fansub_logo, FANSUB_LOGO_WIDTH, FANSUB_LOGO_HEIGHT);
+			$fansub_logo = round_corners($fansub_logo, 18);
+			imagecopy($image, $fansub_logo, $current_width, $current_height-28, 0, 0, FANSUB_LOGO_WIDTH, FANSUB_LOGO_HEIGHT);
+			$current_width+=FANSUB_LOGO_WIDTH-5;
 		}
-		imagefttext($image, 17, 0, TEXT_MARGIN_HORIZONTAL+28, $current_height, $white, FONT_REGULAR, get_text_without_missing_glyphs($text));
+			
+		$text = \andrewgjohnson\linebreaks4imagettftext(20, 0, FONT_REGULAR, get_text_without_missing_glyphs($version['fansub_name']), IMAGE_WIDTH-COVER_WIDTH-TEXT_MARGIN_HORIZONTAL-$current_width-10, 1);
+		imagefttext($image, 20, 0, $current_width+10, $current_height, $white, FONT_REGULAR, get_text_without_missing_glyphs($text));
+
 		imagejpeg($image, STATIC_DIRECTORY."/social/version_".$id.".jpg", 80);
 		imagedestroy($image);
 	}

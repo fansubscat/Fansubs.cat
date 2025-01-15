@@ -278,14 +278,14 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 
 	switch($mode) {
 		case 'all':
-			$subtitle.='Total '.STARTING_YEAR.'-'.date('Y');
+			$subtitle='Total '.STARTING_YEAR.'-'.date('Y');
 			break;
 		case 'year':
-			$subtitle.='Any '.strftime("%Y", strtotime(date($last_month.'-01')));
+			$subtitle='Any '.strftime("%Y", strtotime(date($last_month.'-01')));
 			break;
 		case 'month':
 		default:
-			$subtitle.=ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($last_month.'-01'))))));
+			$subtitle=ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($last_month.'-01'))))));
 			break;
 	}
 
@@ -357,15 +357,9 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		if ($mode!='all') {
 			imagefttext($image, 16, 0, $center-2, $current_height+112, $change_in_position_color, FONT_NUMBERS, $change_in_position_text);
 		}
-		$text = \andrewgjohnson\linebreaks4imagettftext(24, 0, FONT_REGULAR, $series[$i]['name'], 380);
-		if (substr_count($text, "\n")>0) {
-			$text = explode("\n", $text)[0].'...';
-		}
+		$text = \andrewgjohnson\linebreaks4imagettftext(24, 0, FONT_REGULAR, $series[$i]['name'], 400, 1);
 		imagefttext($image, 24, 0, $i>4 ? 624+172 : 24+172, $current_height+40, $secondary_color, FONT_REGULAR, $text);
-		$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, FONT_REGULAR, $series[$i]['fansubs'], 380);
-		if (substr_count($text, "\n")>0) {
-			$text = explode("\n", $text)[0].'...';
-		}
+		$text = \andrewgjohnson\linebreaks4imagettftext(17, 0, FONT_REGULAR, $series[$i]['fansubs'], 400, 1);
 		imagefttext($image, 17, 0, $i>4 ? 624+172 : 24+172, $current_height+68, $not_so_darker_gray, FONT_REGULAR, $text);
 		imagefttext($image, 20, 0, $i>4 ? 624+172 : 24+172, $current_height+102, $gray, FONT_REGULAR, $series[$i]['views']/*.($mode!='all' ? ' (' : '')*/);
 		/*if ($mode!='all') {

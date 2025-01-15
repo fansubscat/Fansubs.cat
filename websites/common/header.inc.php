@@ -56,12 +56,12 @@ if (SITE_IS_HENTAI) {
 		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME.(SITE_IS_HENTAI ? '_hentai' : ''); ?>/site.webmanifest">
 		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME.(SITE_IS_HENTAI ? '_hentai' : ''); ?>/safari-pinned-tab.svg" color="<?php echo SITE_IS_HENTAI ? '#d91883' : '#6aa0f8'; ?>">
 		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME.(SITE_IS_HENTAI ? '_hentai' : ''); ?>/favicon.ico">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.1/swiper-bundle.min.css">
 <?php
 if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 ?>
-		<link rel="stylesheet" href="https://vjs.zencdn.net/8.11.8/video-js.css">
+		<link rel="stylesheet" href="https://vjs.zencdn.net/8.21.1/video-js.css">
 <?php
 } else if (PAGE_STYLE_TYPE=='news') {
 ?>
@@ -80,7 +80,7 @@ if ($special_day=='fools'){
 ?>
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/swiper@11.2.1/swiper-bundle.min.js"></script>
 		<script>
 			window.SILVERMINE_VIDEOJS_CHROMECAST_CONFIG = {
 				preloadWebComponents: true,
@@ -89,8 +89,8 @@ if ($special_day=='fools'){
 <?php
 if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {
 ?>
-		<script src="https://unpkg.com/megajs@1.1.8/dist/main.browser-umd.js"></script>
-		<script src="https://vjs.zencdn.net/8.11.8/video.min.js"></script>
+		<script src="https://unpkg.com/megajs@1.3.5/dist/main.browser-umd.js"></script>
+		<script src="https://vjs.zencdn.net/8.21.1/video.min.js"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videostream.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videojs-lang_<?php echo SITE_LANGUAGE; ?>.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/videojs-chromecast.js?v=<?php echo VERSION; ?>"></script>

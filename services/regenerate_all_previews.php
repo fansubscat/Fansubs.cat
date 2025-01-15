@@ -7,7 +7,7 @@ log_action('cron-regenerate-all-previews-started', "S’ha iniciat la regeneraci
 $result = query("SELECT * FROM version ORDER BY title ASC");
 
 while ($version = mysqli_fetch_assoc($result)) {
-	echo "Regenerating preview image for version «".$version['title']."»\n";
+	echo "Regenerating preview image for version «".$version['title']."» (id ".$version['id'].")\n";
 	update_version_preview($version['id']);
 }
 

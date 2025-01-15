@@ -76,6 +76,7 @@ if (!function_exists('andrewgjohnson\\linebreaks4imagettftext')) {
         $fontfile,
         $text,
         $maximumWidth,
+        $maxLines,
         $lineBreakCharacter = PHP_EOL
     ) {
         // create an array with all the words
@@ -84,9 +85,10 @@ if (!function_exists('andrewgjohnson\\linebreaks4imagettftext')) {
         // process all our words to generate $textWithLineBreaks
         $textWithLineBreaks = '';
         $currentLine = '';
+        $lineCount = 0;
+
         foreach ($words as $position => $word) {
-            // place the first word into $currentLine without any processing (we
-            // always want to include the first word on the first line--obviously)
+            // handle the first word
             if ($position === 0) {
                 $currentLine = $word;
             } else {
@@ -101,24 +103,58 @@ if (!function_exists('andrewgjohnson\\linebreaks4imagettftext')) {
                 $textRight = max($textDimensions[2], $textDimensions[4]);
                 $textWidth = $textRight - $textLeft;
                 if ($textWidth > $maximumWidth) {
-                    // the text is too wide with the added word so we add a line
-                    // break then start a new line with only the added word
-                    $textWithLineBreaks .= $currentLine;
-                    $textWithLineBreaks .= $lineBreakCharacter;
+                    // the text is too wide with the added word
+                    if ($lineCount + 1 < $maxLines) {
+                        // add the current line and start a new one
+                        $textWithLineBreaks .= $currentLine . $lineBreakCharacter;
+                        $currentLine = $word;
+                        $lineCount++;
+                    } else {
+                        // if we're at the last allowed line, truncate it
+                        $ellipsis = '…';
+                        $remainingWidth = $maximumWidth;
 
-                    $currentLine = $word;
+                        // calculate the width of the ellipsis
+                        $ellipsisDimensions = imagettfbbox($size, $angle, $fontfile, $ellipsis);
+                        $ellipsisWidth = max($ellipsisDimensions[2], $ellipsisDimensions[4]) - min($ellipsisDimensions[0], $ellipsisDimensions[6]);
+                        $remainingWidth -= $ellipsisWidth;
+
+                        // truncate the word character by character
+                        $truncatedLine = '';
+                        $currentLine .= ' ' . $word;
+                        for ($i = 0; $i < strlen($currentLine); $i++) {
+                            $char = $currentLine[$i];
+                            $textDimensions = imagettfbbox(
+                                $size,
+                                $angle,
+                                $fontfile,
+                                $truncatedLine . $char
+                            );
+                            $textLeft = min($textDimensions[0], $textDimensions[6]);
+                            $textRight = max($textDimensions[2], $textDimensions[4]);
+                            $charWidth = $textRight - $textLeft;
+                            if ($charWidth > $remainingWidth) {
+                                break;
+                            }
+                            $truncatedLine .= $char;
+                        }
+
+                        // add the truncated line with ellipsis and return
+                        $textWithLineBreaks .= trim($truncatedLine) . $ellipsis;
+                        return $textWithLineBreaks;
+                    }
                 } else {
-                    // we have space on the current line for the added word so we
-                    // add a space then the word
-                    $currentLine .= ' ';
-                    $currentLine .= $word;
+                    // we have space on the current line for the added word
+                    $currentLine .= ' ' . $word;
                 }
             }
         }
-        // the current line is still unadded to $textWithLineBreaks so we add it
-        $textWithLineBreaks .= $currentLine;
 
-        // return $text with line breaks added
+        // add the last line if any
+        if ($lineCount < $maxLines) {
+            $textWithLineBreaks .= $currentLine;
+        }
+
         return $textWithLineBreaks;
     }
 }

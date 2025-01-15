@@ -55,6 +55,9 @@ define('GLOBAL_MESSAGE', '');
 define('STARTING_YEAR', 2020);
 define('STARTING_DATE', '2020-06-01');
 
+//Start date of the news in the database
+define('NEWS_STARTING_MONTH', '2020-06');
+
 //Features that can be disabled
 define('DISABLE_NEWS', TRUE);
 define('DISABLE_LINKS', TRUE);
@@ -68,6 +71,7 @@ define('DISABLE_CHRISTMAS_DAYS', FALSE);
 
 //Default language of your site (ISO code, must exist in /srv/fansubscat/websites/static/languages/<code>.json)
 define('SITE_LANGUAGE', 'ca');
+define('SITE_LOCALE', 'ca_AD.utf8');
 
 //What to use to send e-mails
 //The code assumes that you use a SMTP server with user/pass login and SMTPS support.

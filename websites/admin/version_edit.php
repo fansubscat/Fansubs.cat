@@ -141,7 +141,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$divisions=array();
 
-		$resultd = query("SELECT d.* FROM division d WHERE d.series_id=".$data['series_id']);
+		$resultd = query("SELECT d.* FROM division d WHERE d.number_of_episodes>0 AND d.series_id=".$data['series_id']);
 
 		while ($rowd = mysqli_fetch_assoc($resultd)) {
 			if (!empty($_POST['form-division-title-'.$rowd['id']])){
@@ -827,7 +827,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<label for="add-episode-from-version-division-id">Divisió</label>
 							<select id="add-episode-from-version-division-id" class="form-select">
 <?php
-			$resultss = query("SELECT d.* FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
+			$resultss = query("SELECT d.* FROM division d WHERE d.series_id=".$series['id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
 			while ($ssrow = mysqli_fetch_assoc($resultss)) {
 ?>
 								<option value="<?php echo $ssrow['id']; ?>"><?php echo htmlspecialchars($ssrow['name']); ?></option>
@@ -1126,7 +1126,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<select id="form-remote_folders-list-division_id-XXX" name="form-remote_folders-list-division_id-XXX" class="form-select d-none">
 											<option value="">- Qualsevol -</option>
 <?php
-		$resultss = query("SELECT d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
+		$resultss = query("SELECT d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d WHERE d.series_id=".$series['id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
 		while ($ssrow = mysqli_fetch_assoc($resultss)) {
 ?>
 											<option value="<?php echo $ssrow['id']; ?>"><?php echo htmlspecialchars($ssrow['name']); ?></option>
