@@ -23,11 +23,11 @@ function escape($string){
 
 function query($query){
 	global $db_connection;
-	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Consulta original: $query");
+	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."\n"."Original query: $query");
 	return $result;
 }
 
-$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash("No s’ha pogut connectar a la base de dades.");
+$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash("Unable to connect to the database.");
 
 mysqli_set_charset($db_connection, DB_CHARSET) or crash(mysqli_error($db_connection));
 ?>

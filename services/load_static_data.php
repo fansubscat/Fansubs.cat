@@ -28,5 +28,5 @@ foreach ($csv->data as $element){
 	query("INSERT INTO news (fansub_id, news_fetcher_id, title, contents, original_contents, date, url, image) VALUES ($fansub_id, NULL, '".escape($element['title'])."','".escape(str_replace("\n","<br />",$element['contents']))."','".escape($element['contents'])."','".$element['date']."','".escape($element['url'])."',".($element['image']!=NULL ? "'".escape($element['image'])."'" : 'NULL').")");
 }
 
-log_action('load-static-data', 'S’han carregat notícies via CSV');
+log_action('load-static-data', "News have been loaded from a CSV file for fansub id $fansub_id");
 ?>

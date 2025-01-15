@@ -249,7 +249,7 @@ function fetch_fansub_fetcher($fansub_id, $fansub_slug, $fetcher_id, $method, $u
 		//Hello 2020, we are now in the future 2021. We will report the increments to the action log
 		//Hello 2021, we are now in the future 2023. Just doing some refactors in preparation for v5...
 		
-		log_action('fetch-news-changes', "Detectades $increment noves notícies del fansub $fansub_slug");
+		log_action('fetch-news-changes', "Found $increment new posts for fansub $fansub_slug");
 
 		$push_result = query("SELECT n.title, f.slug fansub_slug, n.url, f.name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE n.news_fetcher_id=$fetcher_id ORDER BY n.date DESC LIMIT $increment");
 		while ($push_row = mysqli_fetch_assoc($push_result)){

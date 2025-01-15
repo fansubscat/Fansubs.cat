@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__.'/db.inc.php');
 
-log_action('cron-recommendations-started', "S’ha iniciat l’actualització periòdica de recomanacions");
+log_action('cron-recommendations-started', "Recommendations generator has started");
 
 $previous_ids=array(-1);
 $result = query("SELECT version_id FROM recommendation");
@@ -29,7 +29,7 @@ query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series 
 //SPECIAL CASE: Since we have a shortage on hentai manga, just limit to 5 for now:
 query("INSERT INTO recommendation SELECT vr.id FROM version vr LEFT JOIN series mr ON vr.series_id=mr.id WHERE mr.type='manga' AND vr.is_hidden=0 AND mr.rating='XXX' AND (mr.score>=6 OR mr.score IS NULL OR vr.featurable_status>=2) AND vr.featurable_status>=1 AND ((vr.status IN (1,3) AND vr.id NOT IN (".implode(',', $previous_ids).")) OR vr.featurable_status>=2) AND vr.is_missing_episodes=0 ORDER BY vr.featurable_status DESC, RAND() LIMIT 5");
 
-log_action('cron-recommendations-finished', "S’ha completat l’actualització periòdica de recomanacions");
+log_action('cron-recommendations-finished', "Recommendations generator has finished");
 
 echo "All done!\n";
 ?>

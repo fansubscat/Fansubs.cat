@@ -2,7 +2,7 @@
 require_once(__DIR__.'/db.inc.php');
 require_once(__DIR__.'/../common/libraries/preview_image_generator.php');
 
-log_action('cron-scores-started', "S’ha iniciat l’actualització de la puntuació de les sèries");
+log_action('cron-scores-started', "Series score updater has started");
 
 $result = query("SELECT * FROM series ORDER BY name ASC");
 
@@ -57,13 +57,13 @@ while ($series = mysqli_fetch_assoc($result)) {
 
 	if ($error) {
 		echo "Update failed for series «".$series['name']."»\n";
-		log_action('cron-score-failed', "No s’ha pogut actualitzar la puntuació de la sèrie «".$series['name']."»");
+		log_action('cron-score-failed', "Could not update the score for series «".$series['name']."»");
 	} else {
 		if ($divisioncount>0) { //if it's zero, we ignore it... no myanimelist, probably
 			$new_score=round($divisionscoresum/$divisioncount, 2);
 			if ($series['score']!=$new_score) {
 				echo "Previous score: ".$series['score']." / New score: $new_score\n";
-				log_action('cron-score-updated', "La puntuació de la sèrie «".$series['name']."» ha canviat de ".$series['score'].' a '.$new_score);
+				log_action('cron-score-updated', "Series score for «".$series['name']."» has changed from ".$series['score'].' to '.$new_score);
 				query("UPDATE series SET score=".escape($new_score)." WHERE id=".$series['id']);
 				update_version_preview($series['default_version_id']);
 			}
@@ -71,6 +71,6 @@ while ($series = mysqli_fetch_assoc($result)) {
 	}
 }
 
-log_action('cron-scores-finished', "S’ha completat l’actualització de la puntuació de les sèries");
+log_action('cron-scores-finished', "Series score updater has finished");
 echo "All done!\n";
 ?>

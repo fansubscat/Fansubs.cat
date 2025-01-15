@@ -30,5 +30,5 @@ while ($row_fansubs=mysqli_fetch_assoc($res_fansubs)){
 	}
 }
 
-log_action('cleanup-images', 'S’han netejat les imatges no utilitzades a les notícies');
+log_action('cleanup-images', 'Unused news images have been cleaned up');
 ?>

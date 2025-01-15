@@ -25,23 +25,23 @@ $totals = mysqli_fetch_assoc($result);
 
 $types = array(
 		array(
-			'anime', 'Anime', 'Animes amb més visualitzacions', FALSE
+			'anime', lang('service.rankings.anime.title'), lang('service.rankings.anime.description', FALSE
 		),
 		array(
-			'manga', 'Manga', 'Mangues amb més visualitzacions', FALSE
+			'manga', lang('service.rankings.manga.title'), lang('service.rankings.manga.description'), FALSE
 		),
 		array(
-			'liveaction', 'Imatge real', 'Continguts d’imatge real amb més visualitzacions', FALSE
+			'liveaction', lang('service.rankings.liveaction.title'), lang('service.rankings.liveaction.description'), FALSE
 		),
 		array(
-			'anime', 'Anime hentai', 'Animes hentai amb més visualitzacions', TRUE
+			'anime', lang('service.rankings.anime.title.hentai'), lang('service.rankings.anime.description.hentai'), TRUE
 		),
 		array(
-			'manga', 'Manga hentai', 'Mangues hentai amb més visualitzacions', TRUE
+			'manga', lang('service.rankings.manga.title.hentai'), lang('service.rankings.manga.description.hentai'), TRUE
 		)
 );
 
-$message="*Totals del mes passat:*\n\n__Anime:__\n  • Visualitzacions: $views_anime\n  • Temps total: ".get_hours_or_minutes_formatted($time_anime)."\n  • Versions noves: ${totals['total_anime']}\n  • Fitxers nous: ${totals['total_files_anime']}\n\n__Manga:__\n  • Lectures: $views_manga\n  • Pàgines totals: $pages_manga\n  • Versions noves: ${totals['total_manga']}\n  • Fitxers nous: ${totals['total_files_manga']}\n\n__Imatge real:__\n  • Visualitzacions: $views_liveaction\n  • Temps total: ".get_hours_or_minutes_formatted($time_liveaction)."\n  • Versions noves: ${totals['total_liveaction']}\n  • Fitxers nous: ${totals['total_files_liveaction']}\n\n__Altres:__\n  • Notícies noves: ${totals['total_news']}\n  • Fansubs nous: ${totals['total_fansubs']}\n  • Usuaris nous: ${totals['new_users']}\n  • Usuaris actius: ${totals['total_users']}\n  • Usuaris anònims: ${totals['total_anons']}";
+$message="*".lang('service.rankings.totals_for_last_month')."*\n\n__".lang('service.rankings.anime')."__\n  • ".lang('service.rankings.views')."$views_anime\n  • ".lang('service.rankings.total_time').get_hours_or_minutes_formatted($time_anime)."\n  • ".lang('service.rankings.new_versions')."${totals['total_anime']}\n  • ".lang('service.rankings.new_files')."${totals['total_files_anime']}\n\n__".lang('service.rankings.manga')."__\n  • ".lang('service.rankings.reads')."$views_manga\n  • ".lang('service.rankings.total_pages')."$pages_manga\n  • ".lang('service.rankings.new_versions')."${totals['total_manga']}\n  • ".lang('service.rankings.new_files')."${totals['total_files_manga']}\n\n__".lang('service.rankings.liveaction')."__\n  • ".lang('service.rankings.views')."$views_liveaction\n  • ".lang('service.rankings.total_time').get_hours_or_minutes_formatted($time_liveaction)."\n  • ".lang('service.rankings.new_versions')."${totals['total_liveaction']}\n  • ".lang('service.rankings.new_files')."${totals['total_files_liveaction']}\n\n__".lang('service.rankings.others')."__\n  • ".lang('service.rankings.new_news')."${totals['total_news']}\n  • ".lang('service.rankings.new_fansubs')."${totals['total_fansubs']}\n  • ".lang('service.rankings.new_users')."${totals['new_users']}\n  • ".lang('service.rankings.active_users')."${totals['total_users']}\n  • ".lang('service.rankings.anon_users')."${totals['total_anons']}";
 
 file_get_contents("https://api.telegram.org/bot".TELEGRAM_CONFIG[0]['TELEGRAM_BOT_API_KEY']."/sendMessage?chat_id=".TELEGRAM_CONFIG[0]['TELEGRAM_BOT_CHAT_ID']."&parse_mode=markdownv2&text=".urlencode($message));
 

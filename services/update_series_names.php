@@ -1,14 +1,12 @@
 <?php
 require_once(__DIR__.'/db.inc.php');
 
-//define('DRY_RUN', TRUE);
+define('DRY_RUN', TRUE);
 
 $result = query("SELECT * FROM series WHERE type<>'liveaction' AND external_id IS NOT NULL ORDER BY name ASC");
 
 while ($series = mysqli_fetch_assoc($result)) {
-	//echo "Updating title for series «".$series['name']."»\n";
-
-	sleep(1);
+	sleep(1); //Respect Jikan API limits
 	$url = 'https://api.jikan.moe/v4/'.$series['type'].'/'.$series['external_id'];
 	$response = json_decode(file_get_contents($url));
 	
@@ -28,9 +26,7 @@ while ($series = mysqli_fetch_assoc($result)) {
 $result = query("SELECT d.*, s.type FROM division d LEFT JOIN series s ON d.series_id=s.id WHERE s.type='anime' AND d.external_id IS NOT NULL ORDER BY s.name ASC, d.number ASC");
 
 while ($series = mysqli_fetch_assoc($result)) {
-	//echo "Updating title for series «".$series['name']."»\n";
-
-	sleep(1);
+	sleep(1); //Respect Jikan API limits
 	$url = 'https://api.jikan.moe/v4/'.$series['type'].'/'.$series['external_id'];
 	$response = json_decode(file_get_contents($url));
 	

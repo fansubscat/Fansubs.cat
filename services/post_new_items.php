@@ -29,7 +29,7 @@ function publish_to_mastodon($message, $is_hentai){
 
 	$post_data = array(
 		'status' => $message,
-		'language' => 'ca'
+		'language' => SITE_LANGUAGE
 	);
 	if ($is_hentai) {
 		$context = stream_context_create(array(
@@ -73,7 +73,7 @@ function publish_to_discord($text, $title, $description, $url, $image, $is_henta
 			                'image' => array(
 						'url' => $image
 					),
-			                'color' => (strpos($url, 'https://manga')===0 ? 16027660 : (strpos($url, 'https://imatgereal')===0 ? 11348265 : 3901635))
+			                'color' => (strpos($url, 'https://'.MANGA_SUBDOMAIN)===0 ? 16027660 : (strpos($url, 'https://'.LIVEACTION_SUBDOMAIN)===0 ? 11348265 : 3901635))
 			        )
 			)
 		);
@@ -122,7 +122,7 @@ function publish_to_bluesky($message, $version_id, $embed_title, $embed_descript
 		'record' => [
 			'text' => $message,
 			'facets' => get_bluesky_facets($is_hentai, $message),
-			'langs' => ['ca'],
+			'langs' => [SITE_LANGUAGE],
 			'createdAt' => date('c'),
 			'$type' => 'app.bsky.feed.post',
 			'embed' => [
@@ -147,10 +147,10 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 
 	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
 		if (!empty($title)){
-			return 'Capítol '.str_replace('.',',',floatval($episode_number)).': '.$title;
+			return lang('service.post.episode_prefix').str_replace('.',',',floatval($episode_number)).': '.$title;
 		}
 		else {
-			return 'Capítol '.str_replace('.',',',floatval($episode_number));
+			return lang('service.post.episode_prefix').str_replace('.',',',floatval($episode_number));
 		}
 	} else {
 		if (!empty($title)){
@@ -259,38 +259,38 @@ function get_manga_header($type, $comic_type, $number_of_elements, $is_hentai) {
 	if ($type=='new') {
 		switch ($comic_type) {
 			case 'manhwa':
-				return 'Nou manhwa'.($is_hentai ? ' hentai' : '').' editat!';
+				return $is_hentai ? lang('service.post.new_manhwa.hentai') : lang('service.post.new_manhwa');
 			case 'manhua':
-				return 'Nou manhua'.($is_hentai ? ' hentai' : '').' editat!';
+				return $is_hentai ? lang('service.post.new_manhua.hentai') : lang('service.post.new_manhua');
 			case 'novel':
-				return 'Nova novel·la lleugera'.($is_hentai ? ' hentai' : '').' editada!';
+				return $is_hentai ? lang('service.post.new_novel.hentai') : lang('service.post.new_novel');
 			case 'manga':
 			default:
-				return 'Nou manga'.($is_hentai ? ' hentai' : '').' editat!';
+				return $is_hentai ? lang('service.post.new_manga.hentai') : lang('service.post.new_manga');
 		}
 	} else if ($number_of_elements==1) {
 		switch ($comic_type) {
 			case 'manhwa':
-				return 'Nou capítol de manhwa'.($is_hentai ? ' hentai' : '').' editat:';
+				return $is_hentai ? lang('service.post.new_manhwa_ep.hentai') : lang('service.post.new_manhwa_ep');
 			case 'manhua':
-				return 'Nou capítol de manhua'.($is_hentai ? ' hentai' : '').' editat:';
+				return $is_hentai ? lang('service.post.new_manhua_ep.hentai') : lang('service.post.new_manhua_ep');
 			case 'novel':
-				return 'Nou capítol de novel·la lleugera'.($is_hentai ? ' hentai' : '').' editat:';
+				return $is_hentai ? lang('service.post.new_novel_ep.hentai') : lang('service.post.new_novel_ep');
 			case 'manga':
 			default:
-				return 'Nou capítol de manga'.($is_hentai ? ' hentai' : '').' editat:';
+				return $is_hentai ? lang('service.post.new_manga_ep.hentai') : lang('service.post.new_manga_ep');
 		}
 	} else {
 		switch ($comic_type) {
 			case 'manhwa':
-				return 'Nous capítols de manhwa'.($is_hentai ? ' hentai' : '').' editats:';
+				return $is_hentai ? lang('service.post.new_manhwa_eps.hentai') : lang('service.post.new_manhwa_eps');
 			case 'manhua':
-				return 'Nous capítols de manhua'.($is_hentai ? ' hentai' : '').' editats:';
+				return $is_hentai ? lang('service.post.new_manhua_eps.hentai') : lang('service.post.new_manhua_eps');
 			case 'novel':
-				return 'Nous capítols de novel·la lleugera'.($is_hentai ? ' hentai' : '').' editats:';
+				return $is_hentai ? lang('service.post.new_novel_eps.hentai') : lang('service.post.new_novel_eps');
 			case 'manga':
 			default:
-				return 'Nous capítols de manga'.($is_hentai ? ' hentai' : '').' editats:';
+				return $is_hentai ? lang('service.post.new_manga_eps.hentai') : lang('service.post.new_manga_eps');
 		}
 	}
 }
@@ -299,26 +299,26 @@ function get_anime_header($type, $fansub_type, $number_of_elements, $is_hentai) 
 	if ($type=='new') {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nou anime'.($is_hentai ? ' hentai' : '').' doblat!';
+				return $is_hentai ? lang('service.post.new_anime_dub.hentai') : lang('service.post.new_anime_dub');
 			case 'fansub':
 			default:
-				return 'Nou anime'.($is_hentai ? ' hentai' : '').' subtitulat!';
+				return $is_hentai ? lang('service.post.new_anime_sub.hentai') : lang('service.post.new_anime_sub');
 		}
 	} else if ($number_of_elements==1) {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nou capítol d’anime'.($is_hentai ? ' hentai' : '').' doblat:';
+				return $is_hentai ? lang('service.post.new_anime_dub_ep.hentai') : lang('service.post.new_anime_dub_ep');
 			case 'fansub':
 			default:
-				return 'Nou capítol d’anime'.($is_hentai ? ' hentai' : '').' subtitulat:';
+				return $is_hentai ? lang('service.post.new_anime_sub_ep.hentai') : lang('service.post.new_anime_sub_ep');
 		}
 	} else {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nous capítols d’anime'.($is_hentai ? ' hentai' : '').' doblats:';
+				return $is_hentai ? lang('service.post.new_anime_dub_eps.hentai') : lang('service.post.new_anime_dub_eps');
 			case 'fansub':
 			default:
-				return 'Nous capítols d’anime'.($is_hentai ? ' hentai' : '').' subtitulats:';
+				return $is_hentai ? lang('service.post.new_anime_sub_eps.hentai') : lang('service.post.new_anime_sub_eps');
 		}
 	}
 }
@@ -327,26 +327,26 @@ function get_liveaction_header($type, $fansub_type, $number_of_elements, $is_hen
 	if ($type=='new') {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nou contingut d’imatge real doblat!';
+				return lang('service.post.new_liveaction_dub');
 			case 'fansub':
 			default:
-				return 'Nou contingut d’imatge real subtitulat!';
+				return lang('service.post.new_liveaction_sub');
 		}
 	} else if ($number_of_elements==1) {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nou capítol d’imatge real doblat:';
+				return lang('service.post.new_liveaction_dub_ep');
 			case 'fansub':
 			default:
-				return 'Nou capítol d’imatge real subtitulat:';
+				return lang('service.post.new_liveaction_sub_ep');
 		}
 	} else {
 		switch ($fansub_type) {
 			case 'fandub':
-				return 'Nous capítols d’imatge real doblats:';
+				return lang('service.post.new_liveaction_dub_eps');
 			case 'fansub':
 			default:
-				return 'Nous capítols d’imatge real subtitulats:';
+				return lang('service.post.new_liveaction_sub_eps');
 		}
 	}
 }
@@ -400,18 +400,18 @@ $result = query("SELECT v.title name,
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
-	$url = "https://manga.".($row['rating']=='XXX' ? 'hentai.cat' : 'fansubs.cat')."/".$row['slug'];
+	$url = "https://".MANGA_SUBDOMAIN.".".($row['rating']=='XXX' ? HENTAI_DOMAIN : MAIN_DOMAIN)."/".$row['slug'];
 	try{
 		$header = get_manga_header($row['new_series']==1 ? 'new' : 'existing', $row['comic_type'], $row['cnt'], $row['rating']=='XXX');
 		if ($row['new_series']==1) {
-			$episode = ($row['cnt']>1 ? $row['cnt'].' capítols disponibles' : (($row['subtype']=='oneshot' && $row['status']==1) ? 'One-shot' : '1 capítol disponible'));
+			$episode = ($row['cnt']>1 ? sprintf(lang('service.post.n_episodes_available'), $row['cnt']) : (($row['subtype']=='oneshot' && $row['status']==1) ? lang('service.post.oneshot') : lang('service.post.1_episode_available')));
 		} else if ($row['cnt']==1) {
 			if (!empty($row['division_name'])) {
 				$episode = $row['division_name'].' - ';
 			}
 			$episode .= get_episode_title($row['subtype'], $row['show_episode_numbers'], $row['number'], NULL, $row['title'], $row['name'], NULL, FALSE);
 		} else {
-			$episode = $row['cnt'].' capítols nous';
+			$episode = sprintf(lang('service.post.n_new_episodes'), $row['cnt']);
 		}
 		$prepared_message = get_prepared_message(
 			$message_x,
@@ -420,7 +420,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_handles'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_x(get_shortened_tweet($prepared_message)."\n".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -430,7 +430,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_mastodon_handles'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_mastodon(get_shortened_toot($prepared_message)."\n\n➡️ ".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -440,9 +440,9 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
-		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Manga hentai en català' : 'Fansubs.cat - Manga en català'), $row['synopsis'], $url, "https://static.fansubs.cat/social/version_".$row['version_id'].'.jpg', $row['rating']=='XXX');
+		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.manga.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.manga').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, "https://".STATIC_SUBDOMAIN.".".MAIN_DOMAIN."/social/version_".$row['version_id'].'.jpg', $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
 			$message_telegram,
 			$header,
@@ -450,7 +450,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -460,9 +460,9 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
-		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Manga hentai en català' : 'Fansubs.cat - Manga en català'), $row['synopsis'], $url, $row['rating']=='XXX');
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.manga.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.manga').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
 		file_put_contents('/srv/fansubscat/temporary/last_posted_manga_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
@@ -505,22 +505,22 @@ $result = query("SELECT IFNULL(vse.title, se.name) name,
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
-	$url = "https://anime.".($row['rating']=='XXX' ? 'hentai.cat' : 'fansubs.cat')."/".$row['slug'];
+	$url = "https://".ANIME_SUBDOMAIN.".".($row['rating']=='XXX' ? HENTAI_DOMAIN : MAIN_DOMAIN)."/".$row['slug'];
 	try{
 		$header = get_anime_header($row['new_series']==1 ? 'new' : 'existing', $row['fansub_type'], $row['cnt'], $row['rating']=='XXX');
 		if ($row['new_series']==1) {
 			if ($row['subtype']=='movie') {
-				$episode = ($row['cnt']>1 ? $row['cnt'].' films disponibles' : ($row['status']==1 ? 'Film' : '1 film disponible'));
+				$episode = ($row['cnt']>1 ? sprintf(lang('service.post.n_movies_available'), $row['cnt']) : ($row['status']==1 ? lang('service.post.movie') : lang('service.post.1_movie_available')));
 			} else {
-				$episode = ($row['cnt']>1 ? $row['cnt'].' capítols disponibles' : '1 capítol disponible');
+				$episode = ($row['cnt']>1 ? sprintf(lang('service.post.n_episodes_available'), $row['cnt']) : lang('service.post.1_episode_available'));
 			}
 		} else if ($row['cnt']==1) {
 			$episode = get_episode_title($row['subtype'], $row['show_episode_numbers'], $row['number'], NULL, $row['title'], $row['name'], NULL, FALSE);
 		} else {
 			if ($row['subtype']=='movie') {
-				$episode = $row['cnt'].' films nous';
+				$episode = sprintf(lang('service.post.n_new_movies'), $row['cnt']);
 			} else {
-				$episode = $row['cnt'].' capítols nous';
+				$episode = sprintf(lang('service.post.n_new_episodes'), $row['cnt']);
 			}
 		}
 		$prepared_message = get_prepared_message(
@@ -530,7 +530,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_handles'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_x(get_shortened_tweet($prepared_message)."\n".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -540,7 +540,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_mastodon_handles'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_mastodon(get_shortened_toot($prepared_message)."\n\n➡️ ".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -550,9 +550,9 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
-		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Anime hentai en català' : 'Fansubs.cat - Anime en català'), $row['synopsis'], $url, "https://static.fansubs.cat/social/version_".$row['version_id'].'.jpg', $row['rating']=='XXX');
+		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.anime.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.anime').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, "https://".STATIC_SUBDOMAIN.".".MAIN_DOMAIN."/social/version_".$row['version_id'].'.jpg', $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
 			$message_telegram,
 			$header,
@@ -560,7 +560,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -570,9 +570,9 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
-		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? 'Hentai.cat - Anime hentai en català' : 'Fansubs.cat - Anime en català'), $row['synopsis'], $url, $row['rating']=='XXX');
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.anime.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.anime').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
 		file_put_contents('/srv/fansubscat/temporary/last_posted_anime_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
@@ -615,22 +615,22 @@ $result = query("SELECT IFNULL(vse.title,se.name) name,
 //This is an IF, not a WHILE, because we want to generate one piece of news on each execution. If there are more elements, they will be spaced out between executions (every 12 minutes)
 if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 	$has_posted_something = TRUE;
-	$url = "https://imatgereal.fansubs.cat/".$row['slug'];
+	$url = "https://".LIVEACTION_SUBDOMAIN.".".MAIN_DOMAIN."/".$row['slug'];
 	try{
 		$header = get_liveaction_header($row['new_series']==1 ? 'new' : 'existing', $row['fansub_type'], $row['cnt'], FALSE);
 		if ($row['new_series']==1) {
 			if ($row['subtype']=='movie') {
-				$episode = ($row['cnt']>1 ? $row['cnt'].' films disponibles' : ($row['status']==1 ? 'Film' : '1 film disponible'));
+				$episode = ($row['cnt']>1 ? sprintf(lang('service.post.n_movies_available'), $row['cnt']) : ($row['status']==1 ? lang('service.post.movie') : lang('service.post.1_movie_available')));
 			} else {
-				$episode = ($row['cnt']>1 ? $row['cnt'].' capítols disponibles' : '1 capítol disponible');
+				$episode = ($row['cnt']>1 ? sprintf(lang('service.post.n_episodes_available'), $row['cnt']) : lang('service.post.1_episode_available'));
 			}
 		} else if ($row['cnt']==1) {
 			$episode = get_episode_title($row['subtype'], $row['show_episode_numbers'], $row['number'], NULL, $row['title'], $row['name'], NULL, FALSE);
 		} else {
 			if ($row['subtype']=='movie') {
-				$episode = $row['cnt'].' films nous';
+				$episode = sprintf(lang('service.post.n_new_movies'), $row['cnt']);
 			} else {
-				$episode = $row['cnt'].' capítols nous';
+				$episode = sprintf(lang('service.post.n_new_episodes'), $row['cnt']);
 			}
 		}
 		$prepared_message = get_prepared_message(
@@ -640,7 +640,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_handles'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_x(get_shortened_tweet($prepared_message)."\n".$url, FALSE);
 		$prepared_message = get_prepared_message(
@@ -650,7 +650,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_mastodon_handles'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_mastodon(get_shortened_toot($prepared_message)."\n\n➡️ ".$url, FALSE);
 		$prepared_message = get_prepared_message(
@@ -660,9 +660,9 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
-		publish_to_discord($prepared_message, $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], $url, "https://static.fansubs.cat/social/version_".$row['version_id'].'.jpg', FALSE);
+		publish_to_discord($prepared_message, $row['name']." | ".lang('catalogue.page_title.liveaction').' | '.MAIN_SITE_NAME, $row['synopsis'], $url, "https://".STATIC_SUBDOMAIN.".".MAIN_DOMAIN."/social/version_".$row['version_id'].'.jpg', FALSE);
 		$prepared_message = get_prepared_message(
 			$message_telegram,
 			$header,
@@ -670,7 +670,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url, FALSE);
 		$prepared_message = get_prepared_message(
@@ -680,9 +680,9 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n✅ Projecte completat" : ''
+			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
-		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | Fansubs.cat - Imatge real en català", $row['synopsis'], $url, FALSE);
+		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".lang('catalogue.page_title.liveaction').' | '.MAIN_SITE_NAME, $row['synopsis'], $url, FALSE);
 		file_put_contents('/srv/fansubscat/temporary/last_posted_liveaction_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");

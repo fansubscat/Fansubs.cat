@@ -66,14 +66,14 @@ if (mysqli_num_rows($result)==0){
 	if (defined('PAGE_IS_SEARCH')) {
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Resultats de la cerca</h2>
-							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No s’ha trobat cap contingut per a aquesta cerca. Prova de reduir la cerca o fes-ne una altra.</div></div>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> <?php echo lang('news.search.header'); ?></h2>
+							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br><?php echo lang('news.no_results_found'); ?></div></div>
 						</div>
 <?php
 	} else {
 ?>
 						<div class="section">
-							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br>No hem trobat cap notícia! I que no hi hagi cap notícia és una mala notícia...</div></div>
+							<div class="section-content section-empty"><div><i class="fa fa-fw fa-ban"></i><br><?php echo lang('news.no_news_found'); ?></div></div>
 						</div>
 <?php
 	}
@@ -82,7 +82,7 @@ else{
 	if (defined('PAGE_IS_SEARCH')) {
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Resultats de la cerca</h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> <?php echo lang('news.search.header'); ?></h2>
 <?php
 	}
 	$first = TRUE;
@@ -99,7 +99,7 @@ else{
 				$first = FALSE;
 ?>
 						<div class="section">
-							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> Notícies del <?php echo get_custom_formatted_date(strtotime($row['date'])); ?></h2>
+							<h2 class="section-title-main"><i class="fa fa-fw fa-newspaper"></i> <?php echo sprintf(lang('news.news_for_day'), get_custom_formatted_date(strtotime($row['date']))); ?></h2>
 <?php
 			}
 		}
@@ -131,7 +131,7 @@ else{
 			$url = NULL;
 		}
 ?>
-											<a class="news-fansub"<?php $url!==NULL ? ' href="'.$url.'" target="_blank"' : ''; ?>><img src="<?php echo $row['fansub_id']!==NULL ? STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png' : STATIC_URL.'/images/site/default_fansub.png'; ?>" alt=""> <?php echo $row['fansub_id']!==NULL ? $row['fansub_name'] : 'Fansubs.cat'; ?></a> • <span class="news-date"><?php echo date("d/m/Y \\a \\l\\e\\s H:i", strtotime($row['date'])); ?></span>
+											<a class="news-fansub"<?php echo $url!==NULL ? ' href="'.$url.'" target="_blank"' : ''; ?>><img src="<?php echo $row['fansub_id']!==NULL ? STATIC_URL.'/images/icons/'.$row['fansub_id'].'.png' : STATIC_URL.'/images/site/default_fansub.png'; ?>" alt=""> <?php echo $row['fansub_id']!==NULL ? $row['fansub_name'] : MAIN_SITE_NAME; ?></a> • <span class="news-date"><?php echo date(lang('date.long_format_no_s'), strtotime($row['date'])); ?></span>
 										</div>
 										<div class="news-text">
 											<!-- Begin article content -->
@@ -149,7 +149,7 @@ else{
 		if ($row['url']!=NULL){
 ?>
 										<div class="news-readmore">
-											<a class="normal-button" href="<?php echo $row['url']; ?>" target="_blank"><?php echo "Vés a {$row['fansub_name']}"; ?> ➔</a>
+											<a class="normal-button" href="<?php echo $row['url']; ?>" target="_blank"><?php echo sprintf(lang('news.go_to_fansub'), $row['fansub_name']); ?> ➔</a>
 										</div>
 <?php
 		}
@@ -178,7 +178,7 @@ if ($page>1 && mysqli_num_rows($result)>0){
 <?php
 	$has_printed_navigation = TRUE;
 ?>
-							<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : '/pagina/'.($page-1)).'"'); ?>><i class="fa fa-fw fa-arrow-left"></i> Notícies més noves</a>
+							<a id="nav-newer" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage-1);"' : ' href="'.($page==2 ? '/' : lang('url.news.page').'/'.($page-1)).'"'); ?>><i class="fa fa-fw fa-arrow-left"></i> <?php echo lang('news.newer_news'); ?></a>
 <?php
 }
 mysqli_free_result($result);
@@ -194,7 +194,7 @@ if (mysqli_num_rows($result)>0){
 <?php
 	}
 ?>
-							<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="/pagina/'.($page+1).'"'); ?>>Notícies més antigues <i class="fa fa-fw fa-arrow-right"></i></a>
+							<a id="nav-older" class="normal-button"<?php echo (defined('PAGE_IS_SEARCH') ? ' onclick="loadSearchResults(currentPage+1);"' : ' href="'.lang('url.news.page').'/'.($page+1).'"'); ?>><?php echo lang('news.older_news'); ?> <i class="fa fa-fw fa-arrow-right"></i></a>
 <?php
 }
 mysqli_free_result($result);
