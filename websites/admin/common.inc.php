@@ -256,6 +256,25 @@ function get_anonymized_username($user_id, $anon_id) {
 	return '<img src="https://api.multiavatar.com/'.$randomString.'.svg?apikey='.MULTIAVATAR_API_KEY.'" style="width: 2rem; height: 2rem; margin: -1rem;">';
 }
 
+function get_public_site_url($type, $slug, $is_hentai) {
+	$link_url='';
+	switch ($type) {
+		case 'anime':
+			$link_url=ANIME_URL;
+			break;
+		case 'liveaction':
+			$link_url=LIVEACTION_URL;
+			break;
+		case 'manga':
+			$link_url=MANGA_URL;
+			break;
+	}
+	if ($is_hentai) {
+		$link_url = str_replace(MAIN_DOMAIN, HENTAI_DOMAIN, $link_url);
+	}
+	return $link_url.'/'.$slug;
+}
+
 function print_helper_box($title, $description, $white=FALSE) {
 	echo '<small title="Fes clic per a més informació" data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button"'.($white ? ' style="color: white !important;"' : '').' data-bs-title="'.htmlspecialchars($title).'" data-bs-contents="'.htmlspecialchars($description).'"></small>';
 }

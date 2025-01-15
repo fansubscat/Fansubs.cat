@@ -633,9 +633,9 @@ $(document).ready(function() {
 		}
 		code+='</div>';
 		
-		showCustomDialog(lang('users.settings.blacklist.edit.title'), code, null, true, true, [
+		showCustomDialog(lang('js.users.settings.blacklist.edit.title'), code, null, true, true, [
 			{
-				text: lang('users.settings.blacklist.edit.go_back'),
+				text: lang('js.users.settings.blacklist.edit.go_back'),
 				class: 'normal-button',
 				onclick: function(){
 					closeCustomDialog();

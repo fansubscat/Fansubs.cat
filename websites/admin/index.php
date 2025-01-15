@@ -19,6 +19,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			<p class="text-center">L’apartat de <strong>notícies</strong> permet gestionar les notícies dels webs o blogs dels diferents fansubs.<br />Excepte en casos molt concrets, no és necessari afegir, modificar ni suprimir notícies a mà.</p>
 			<p class="text-center">Al menú d’<strong>anàlisi</strong> trobaràs un seguit d’opcions per a veure quin és el consum del material.</p>
 			<p class="text-center">Si tens dubtes, consulta l’<strong>ajuda</strong> que tens a la part superior dreta o contacta amb un administrador.</p>
+			<p class="text-center">Si prefereixes que la pàgina d’inici del tauler no sigui aquesta sinó un resum del teu fansub, fes clic a la icona de la part superior dreta.</p>
 <?php
 	if ($_SESSION['admin_level']<2) {
 ?>
@@ -170,7 +171,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['status']==1 ? 'shadowbanned' : ''; ?>">
-								<td class="align-middle"><b><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></b> a <?php echo '<b>'.htmlspecialchars($row['title']).'</b>'.(empty($_SESSION['fansub_id']) ? ' de <b>'.htmlspecialchars($row['fansubs']).'</b>' : '').' • '.get_relative_date($row['created_timestamp']); ?><br><small><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></small></td>
+								<td class="align-middle"><b><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></b> a <?php echo '<b>'.htmlspecialchars($row['title']).'</b>'.(empty($_SESSION['fansub_id']) ? ' de <b>'.htmlspecialchars($row['fansubs']).'</b>' : '').' • '.get_relative_date($row['created_timestamp']); ?><?php echo $row['last_replied']!=$row['created'] ? ' • <b>Respost</b>' : ''; ?><br><small><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></small></td>
 								<td class="align-middle text-center">
 									<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="Respon" class="fa fa-reply p-1"></a>
 								</td>
@@ -247,7 +248,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-welcome table-hover table-striped">
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, v.title version_title, s.type, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE 1$extra_where GROUP BY v.id ORDER BY v.updated DESC LIMIT 8");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, v.title version_title, s.rating series_rating, s.type, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE 1$extra_where GROUP BY v.id ORDER BY v.updated DESC LIMIT 8");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -256,11 +257,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
+		$link_url=get_public_site_url($row['type'], $row['slug'], $row['series_rating']=='XXX');
 ?>
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 								<th style="width: 70%;" scope="row" class="align-middle<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['version_title']); ?></th>
 								<td class="align-middle text-center text-nowrap<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '0'; ?> <span title="Valoracions positives dels usuaris" class="fa far fa-thumbs-up"></span>&nbsp;&nbsp;<?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '0'; ?> <span title="Valoracions negatives dels usuaris" class="fa far fa-thumbs-down"></span>&nbsp;&nbsp;<?php echo $row['num_comments']>0 ? $row['num_comments'] : '0'; ?> <span title="Comentaris dels usuaris" class="fa far fa-comment"></span></td>
-								<td class="align-middle text-center text-nowrap"><a href="version_stats.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques i comentaris" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="<?php echo $link_url; ?>" title="Fitxa al web públic" target="_blank" class="fa fa-up-right-from-square p-1 text-warning"></a> <a href="version_stats.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques i comentaris" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a></td>
 							</tr>
 <?php
 	}

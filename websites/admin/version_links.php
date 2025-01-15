@@ -102,7 +102,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-bordered table-striped table-hover table-sm">
 						<thead class="table-dark">
 							<tr>
-								<th><?php echo $divisions_name; ?></th>
+								<th>Divisió</th>
 								<th class="text-center">Enllaç</th>
 							</tr>
 						</thead>

@@ -234,8 +234,10 @@ function get_series_type_summary($series) {
 			}
 		} else if ($series['divisions']>1) {
 			$text = get_comic_type($series['comic_type'])." • ".lang('social.serialized')." • ".sprintf(lang('social.volumes'), $series['number_of_episodes'])." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
-		} else {
+		} else if ($series['number_of_episodes']>1) {
 			$text = get_comic_type($series['comic_type'])." • ".lang('social.serialized')." • ".lang('social.volume')." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
+		} else {
+			$text = get_comic_type($series['comic_type'])." • ".lang('social.serialized')." • ".lang('social.volume');
 		}
 	} else {
 		if ($series['subtype']=='movie' && $series['number_of_episodes']>1) {
@@ -244,8 +246,10 @@ function get_series_type_summary($series) {
 			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".lang('social.movie');
 		} else if ($series['divisions']>1) {
 			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".lang('social.series')." • ".sprintf(lang('social.seasons'), $series['divisions'])." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
+		} else if ($series['number_of_episodes']>1){
+			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".lang('social.series')." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
 		} else {
-			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".lang('social.series')." • ".$series['number_of_episodes']." capítols";
+			$text = ($series['type']=='anime' ? lang('social.anime') : lang('social.liveaction'))." • ".lang('social.series');
 		}
 	}
 	return $text;

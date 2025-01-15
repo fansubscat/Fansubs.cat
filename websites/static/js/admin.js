@@ -898,6 +898,14 @@ function checkNumberOfEpisodes() {
 		return false;
 	}
 
+	if ($('#type').val()!='manga' && $('#form-subtype').val()=='series' && episodeCount<2 && !confirm('Has seleccionat tipus «Sèrie», però a la fitxa tan sols hi ha un capítol. Segur que és correcte? Si hauria de ser de tipus «Film», cancel·la i edita-ho.')) {
+		return false;
+	}
+
+	if ($('#type').val()=='manga' && $('#form-subtype').val()=='serialized' && episodeCount<2 && !confirm('Has seleccionat tipus «Serialitzat», però a la fitxa tan sols hi ha un capítol. Segur que és correcte? Si hauria de ser de tipus «One-shot», cancel·la i edita-ho.')) {
+		return false;
+	}
+
 	if (higherThanCount && !confirm('Hi ha números de capítol més alts que el nombre total de capítols. Segur que és correcte? Si dubtes, cancel·la i revisa-ho.')){
 		return false;
 	}
