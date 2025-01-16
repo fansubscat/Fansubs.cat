@@ -94,6 +94,8 @@ Configureu les tasques programades que executen els serveis executant `crontab -
 
 Al directori `common/config` trobareu un fitxer `config.example.inc.php`. Cal que en canvieu el nom a `config.inc.php` i el configureu com calgui. Hi haureu d’introduir les dades d’accés a la base de dades, els dominis i subdominis, el nom dels webs, usuaris i claus d’API de les xarxes socials (Bluesky, Discord, Mastodon, Telegram i X), un servidor SMTP per a l’enviament de correus, etc. Trobareu una explicació dels diferents camps al mateix fitxer.
 
+Al fitxer `websites/users/.htaccess`, canvieu l’expressió regular de la línia que comença per `SetEnvIf Origin` perquè encaixi amb els vostres dominis.
+
 Per a un funcionament òptim, caldrà que canvieu tots els fitxers `.xml` i `.webmanifest` dels subdirectoris de `websites/static/favicons` perquè reflecteixin els noms de domini i subdominis desitjats, juntament amb els títols dels webs.
 
 Una vegada fet això, el web ja serà accessible. Caldrà accedir al web d’administració i iniciar-hi la sessió amb l’usuari i contrasenya desitjats per a l’usuari administrador, que es crearà en aquell moment.

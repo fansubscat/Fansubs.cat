@@ -94,6 +94,8 @@ Set up the cron jobs that run the services by running `crontab -e` as root and c
 
 Under the `common/config` directory you will find a `config.example.inc.php` file. You must rename it to `config.inc.php` and set it up as needed. You must enter your database access credentials, domains and subdomains, the name for the sites, users and API keys from social networks (Bluesky, Discord, Mastodon, Telegram and X), an SMTP server for posting e-mails, etc. You will find an explanation of each field in the same file.
 
+In the `websites/users/.htaccess` file, change the regular expression at the line starting with `SetEnvIf Origin` so it matches your domains.
+
 In order to ensure an optimal result, you will have to change all `.xml` and `.webmanifest` files in the `websites/static/favicons` subdirectories to reflect your domain names and subdomains and the site titles.
 
 Once all that is done, the site will be accessible. You will have to log into the admin panel with your desired username and password for the administrator account, which will be created at that time.
