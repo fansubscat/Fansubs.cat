@@ -1,44 +1,48 @@
 # Registre de canvis
 
-## 2025-01-XX - Versió 5.3.0
+## 2025-01-16 - Versió 5.3.0
 - **General:**
 	- S’ha canviat l’estructura interna de directoris i ara tot el sistema s’allotja a /srv/fansubscat/
 	- S’han unificat els diferents fitxers de configuració en un de sol.
 	- S‘han actualitzat els gèneres de MyAnimeList.
 	- Es canvia el funcionament de sèries i versions movent diversos camps a les versions.
 	- Els fansubs poden enllaçar al seu Bluesky.
+	- S’han mogut totes les cadenes de text a un fitxer perquè sigui possible utilitzar el codi de Fansubs.cat per a altres portals en altres llengües (resta pendent el tauler d’administració).
+	- S’ha documentat el procés d’instal·lació del codi en un servidor partint de zero.
 - **Catàleg:**
-	- Es corregeix que les pàgines d’incrustació no informessin bé els atributs socials.
-	- Es canvia el format dels «slugs» perquè incloguin el nom del fansub i puguin canviar segons la versió.
+	- Es canvia el format dels URLs perquè incloguin el nom del fansub i puguin canviar segons la versió.
 	- En canviar de pestanya de versió en una sèrie, també canvia el títol, portada, imatge de fons i sinopsi, si aquella versió les té diferents.
-	- Als apartats del web que no mostren versions concretes, es mostra el títol, portada i sinopsi de la versió principal.
-	- Es pot enllaçar a divisions concretes.
+	- Als apartats del web que no mostren versions concretes, es mostra el títol, portada i sinopsi de la versió marcada com a principal.
 	- Els resultats de la cerca mostren el nombre d’elements resultant.
+	- Les imatges de previsualització a les xarxes socials passen a mostrar el logo i nom del fansub en lloc de l’estat de les diferents versions.
 	- S’afegeix un enllaç a la pàgina d’estat dels servidors al peu del web.
+	- Es pot enllaçar a divisions concretes.
+	- Es corregeix que les pàgines d’incrustació no informessin bé els atributs socials.
 - **Administració:**
+	- S’afegeix una opció per a veure un resum de les darreres visualitzacions i comentaris a la pàgina principal.
 	- La fitxa de sèrie passa a ser més genèrica i se’n mou el títol, la sinopsi i les imatges a la versió.
 	- S’unifica la nomenclatura «temporada»/«volum» en «divisió».
 	- Es pot afegir immediatament un capítol a la sèrie sense sortir de la pàgina de la versió.
 	- Es permet importar puntuació, portada i sinopsi de MyDramaList.
 	- La majoria dels camps passen a tenir una ajuda integrada que n’explica els detalls i el funcionament.
-	- Es pot canviar la versió principal d’una sèrie a la seva fitxa.
-	- S’afegeix una opció per a veure un resum de les darreres visualitzacions i comentaris a la pàgina principal.
-	- S’incorporen moltes validacions addicionals a l’hora de desar les fitxes.
 	- Si algú ha editat la fitxa mentre algú altre l’estava editant, es mostra un error i no es trepitgen els canvis.
+	- Es pot canviar la versió principal d’una sèrie a la seva fitxa.
+	- S’incorporen moltes validacions addicionals a l’hora de desar les fitxes.
 	- S’unifica la manera de mostrar els títols dels capítols entre les diferents seccions del portal.
 	- Les sèries sense versions i les versions sense enllaços es mostren en gris.
 	- Els fansubs inactius es mostren en gris.
 	- En afegir una versió i seleccionar una sèrie, es mostren primer les sèries sense cap versió.
 	- Els enllaços de la versió no mostren la variant si només n’hi ha una.
 	- S’elimina el camp «logo» dels fansubs (no s’utilitzava).
-	- S’elimina l’apartat «Servidors d’emmagatzematge».
+	- S’elimina l’apartat «Servidors d’emmagatzematge» que permetia consultar-ne l’estat (l’API externa moltes vegades no funciona).
 	- Si s‘elimina un administrador, se’l desconnecta a la següent petició.
 	- Els comentaris de la versió tenen el mateix format que a «Darrers comentaris».
 	- Si no hi ha cap administrador donat d’alta, es permet un autoregistre (per a instal·lacions noves).
 	- La pantalla d’error és més bonica.
 - **Serveis:**
 	- Nou servei (manual) per a sincronitzar els títols amb MyAnimeList.
-	- Es fan mencions als missatges de Bluesky.
+	- Nou servei per a generar les cadenes de llengua per al JavaScript.
+	- Els missatges de Bluesky ara es fan mencionant els fansubs si tenen perfil a Bluesky.
 
 ## 2025-01-03 - Versió 5.2.13
 - **General:**
@@ -1515,7 +1519,7 @@
 	- Corregida l’obtenció d’imatges de CatSub.
 
 ## 2017-09-13 - Versió 2.2.2
-- **General:**f
+- **General:**
 	- Canvi de directoris per al nou servidor.
 
 ## 2017-08-24 - Versió 2.2.1

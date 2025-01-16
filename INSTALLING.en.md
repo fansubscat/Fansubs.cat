@@ -130,6 +130,7 @@ The current codebase is made specifically for Fansubs.cat, that uses Catalan. If
 	* `DISABLE_SANT_JORDI_DAY`: Disables the special functionality for April 23th.
 	* `DISABLE_HALLOWEEN_DAYS`: Disables the special functionality for October 31st and November 1st.
 	* `DISABLE_CHRISTMAS_DAYS`: Disables the special functionality for December 5th to January 6th.
+	* `DISABLE_STATUS`: Disables the status page link at the site footer.
 
 9) When you already have content in your site, change the social network previews existing in `websites/static/social` with your own.
 

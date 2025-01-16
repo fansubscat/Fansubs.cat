@@ -130,6 +130,7 @@ El codi actual està pensat per a Fansubs.cat, que funciona en català. Si voleu
 	* `DISABLE_SANT_JORDI_DAY`: Desactiva el funcionament especial per al dia 23 d’abril.
 	* `DISABLE_HALLOWEEN_DAYS`: Desactiva el funcionament especial per als dies 31 d’octubre i 1r de novembre.
 	* `DISABLE_CHRISTMAS_DAYS`: Desactiva el funcionament especial per als dies del 5 de desembre al 6 de gener.
+	* `DISABLE_STATUS`: Desactiva l’enllaç a la pàgina d’estat al peu de la pàgina.
 
 9) Quan ja tingueu contingut al vostre web, canvieu les previsualitzacions per a xarxes socials existents a `websites/static/social` per les vostres.
 
