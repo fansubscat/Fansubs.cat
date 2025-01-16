@@ -1,6 +1,6 @@
 # Registre de canvis
 
-## 2025-01-16 - Versió 5.3.0
+## 2025-01-17 - Versió 5.3.0
 - **General:**
 	- S’ha canviat l’estructura interna de directoris i ara tot el sistema s’allotja a /srv/fansubscat/
 	- S’han unificat els diferents fitxers de configuració en un de sol.
