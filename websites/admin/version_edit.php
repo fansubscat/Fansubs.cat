@@ -382,7 +382,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				crash("Algú altre ha actualitzat la versió mentre tu l’editaves. Hauràs de tornar a fer els canvis.");
 			}
 			
-			$slug_result = query("SELECT COUNT(*) cnt FROM version WHERE slug='".$data['slug']."' AND id<>".$data['id']);
+			$slug_result = query("SELECT COUNT(*) cnt FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.slug='".$data['slug']."' AND s.type='$type' AND v.id<>".$data['id']);
 			$slug_row = mysqli_fetch_assoc($slug_result);
 			if ($slug_row['cnt']>0) {
 				crash("Ja hi ha una versió amb aquest identificador. Revisa que no l’hagis afegida per duplicat i, en cas contrari, canvia’n l’identificador.");
@@ -727,7 +727,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title,
-					et.title
+					et.title,
+					d.name division_name
 				FROM episode e
 				LEFT JOIN series s ON e.series_id=s.id
 				LEFT JOIN division d ON e.division_id=d.id
@@ -785,7 +786,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title,
-					NULL title
+					NULL title,
+					d.name division_name
 				FROM episode e
 				LEFT JOIN series s ON e.series_id=s.id
 				LEFT JOIN division d ON e.division_id=d.id
@@ -809,6 +811,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				'formatted_number' => '{formatted_number}',
 				'id' => '{template_id}',
 				'title' => NULL,
+				'division_id' => NULL,
+				'division_name' => NULL,
 			);
 	array_push($episodes, $fake_episode);
 ?>
@@ -1259,8 +1263,30 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div id="warning-no-numbers" class="alert alert-warning<?php echo ($row['show_episode_numbers']==0 && $series['subtype']!='movie' && $series['subtype']!='oneshot') ? '' : ' d-none'; ?>">
 									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Si vols mostrar els números de manera diferent a la per defecte, afegeix-los on calguin.</div>
 								</div>
+								<div class="accordion" id="accordion">
+									<div class="accordion-item">
+										<h2 class="accordion-header">
+											<button class="accordion-button<?php echo count($divisions)>2 ? ' collapsed' : ''; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#division-collapse-<?php echo $episodes[0]['division_id']; ?>" aria-expanded="<?php echo count($divisions)>2 ? 'false' : 'true'; ?>" aria-controls="division-collapse-<?php echo $episodes[0]['division_id']; ?>"><b>Capítols de «<?php echo $episodes[0]['division_name']; ?>»</b></button>
+										</h2>
+										<div class="accordion-collapse collapse<?php echo count($divisions)>2 ? '' : ' show'; ?>" id="division-collapse-<?php echo $episodes[0]['division_id']; ?>">
+											<div class="accordion-body">
 <?php
+	$previous_division_id=$episodes[0]['division_id'];
 	for ($i=0;$i<count($episodes);$i++) {
+		if ($previous_division_id!=$episodes[$i]['division_id'] && $episodes[$i]['id']!='{template_id}') {
+			$previous_division_id = $episodes[$i]['division_id'];
+?>
+											</div>
+										</div>
+									</div>
+									<div class="accordion-item">
+										<h2 class="accordion-header">
+											<button class="accordion-button<?php echo count($divisions)>2 ? ' collapsed' : ''; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#division-collapse-<?php echo $episodes[$i]['division_id']; ?>" aria-expanded="<?php echo count($divisions)>2 ? 'false' : 'true'; ?>" aria-controls="division-collapse-<?php echo $episodes[$i]['division_id']; ?>"><b>Capítols de «<?php echo $episodes[$i]['division_name']; ?>»</b></button>
+										</h2>
+										<div class="accordion-collapse collapse<?php echo count($divisions)>2 ? '' : ' show'; ?>" id="division-collapse-<?php echo $episodes[$i]['division_id']; ?>">
+											<div class="accordion-body">
+<?php
+		}
 		$episode_name=$episodes[$i]['episode_title'];
 		if (!empty($episodes[$i]['linked_episode_id'])){
 			$resultle=query("SELECT e.id,
@@ -1306,203 +1332,207 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		
 		if ($episodes[$i]['id']=='{template_id}') {
 ?>
-								<script id="add-episode-from-version-template" type="text/plain">
+												<script id="add-episode-from-version-template" type="text/plain">
 <?php
 		}
 ?>
-								<div class="mb-3 episode-container<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' linked-episode-container' : ''; ?>">
-									<label><span class="fa <?php echo $type=='manga' ? 'fa-book-open' : (!empty($episodes[$i]['linked_episode_id']) ? 'fa-link' : 'fa-film'); ?> pe-2 text-primary"></span><?php echo $episode_name; ?></label><br>
-									<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title">Títol del capítol</label> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Títol del capítol" data-bs-contents="Títol que es mostrarà al públic al web per a aquest capítol.\n\nSi no es mostren els números dels capítols, cal que hi introdueixis sempre un títol.\n\nSi es mostren els números i és un capítol numerat, no és necessari introduir-hi el títol, però si en té, cal fer-ho.\n\nSi és un capítol no numerat, cap introduir-ne sempre el títol."></small>
-									<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control episode-title-input<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id'])) ? ' episode-title-input-numbered' : ''; ?>" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="500" data-episode-number="<?php echo $episodes[$i]['formatted_number']; ?>" placeholder="<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id']) && $row['show_episode_numbers']==1) ? 'Capítol '.$episodes[$i]['formatted_number'] : '- Introdueix un títol -'; ?>"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
+												<div class="mb-3 episode-container<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' linked-episode-container' : ''; ?>">
+													<label><span class="fa <?php echo $type=='manga' ? 'fa-book-open' : (!empty($episodes[$i]['linked_episode_id']) ? 'fa-link' : 'fa-film'); ?> pe-2 text-primary"></span><?php echo $episode_name; ?></label><br>
+													<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title">Títol del capítol</label> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Títol del capítol" data-bs-contents="Títol que es mostrarà al públic al web per a aquest capítol.\n\nSi no es mostren els números dels capítols, cal que hi introdueixis sempre un títol.\n\nSi es mostren els números i és un capítol numerat, no és necessari introduir-hi el títol, però si en té, cal fer-ho.\n\nSi és un capítol no numerat, cap introduir-ne sempre el títol."></small>
+													<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control episode-title-input<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id'])) ? ' episode-title-input-numbered' : ''; ?>" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="500" data-episode-number="<?php echo $episodes[$i]['formatted_number']; ?>" placeholder="<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id']) && $row['show_episode_numbers']==1) ? 'Capítol '.$episodes[$i]['formatted_number'] : '- Introdueix un títol -'; ?>"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
 <?php
 		if (empty($episodes[$i]['linked_episode_id'])) {
 ?>
-									<div class="container mt-2" id="form-files-list-<?php echo $episodes[$i]['id']; ?>">
-										<div class="row mb-3">
-											<div class="w-100 column ps-0 pe-0">
-												<table class="table table-bordered table-hover table-sm" id="files-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($files),1); ?>">
-													<thead>
-														<tr>
-															<th style="width: 8%;">Variant<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Variant" data-bs-contents="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.). Cada variant es mostra com un capítol diferent a la fitxa pública i amb el nom de variant indicat.\nEn condicions normals, només n’hi sol haver una, titulada «Única».\nSi només hi ha una sola variant, el nom de la variant no es mostra enlloc."></small></th>
+													<div class="container mt-2" id="form-files-list-<?php echo $episodes[$i]['id']; ?>">
+														<div class="row mb-3">
+															<div class="w-100 column ps-0 pe-0">
+																<table class="table table-bordered table-hover table-sm" id="files-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($files),1); ?>">
+																	<thead>
+																		<tr>
+																			<th style="width: 8%;">Variant<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Variant" data-bs-contents="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.). Cada variant es mostra com un capítol diferent a la fitxa pública i amb el nom de variant indicat.\nEn condicions normals, només n’hi sol haver una, titulada «Única».\nSi només hi ha una sola variant, el nom de la variant no es mostra enlloc."></small></th>
 <?php
 			if ($type=='manga') {
 ?>
-															<th>Arxiu<span class="mandatory"></span> <?php print_helper_box('Arxiu', 'Indica l’arxiu que ja hi ha pujat d’aquest capítol, o els detalls de l’arxiu que se seleccioni per a pujar-lo.'); ?></th>
-															<th style="width: 16%;">Pujada <?php print_helper_box('Pujada', 'Permet seleccionar un arxiu local (ZIP, RAR o CBZ) amb les imatges d’aquest capítol per a pujar-lo.\n\nEl contingut de l’arxiu es descomprimirà i penjarà al servidor de fitxers.\n\nL’arxiu ha de contenir fitxers d’imatge JPEG o PNG i, opcionalment, un fitxer d’àudio MP3 o OGG que es reproduirà com a música de fons.'); ?></th>
+																			<th>Arxiu<span class="mandatory"></span> <?php print_helper_box('Arxiu', 'Indica l’arxiu que ja hi ha pujat d’aquest capítol, o els detalls de l’arxiu que se seleccioni per a pujar-lo.'); ?></th>
+																			<th style="width: 16%;">Pujada <?php print_helper_box('Pujada', 'Permet seleccionar un arxiu local (ZIP, RAR o CBZ) amb les imatges d’aquest capítol per a pujar-lo.\n\nEl contingut de l’arxiu es descomprimirà i penjarà al servidor de fitxers.\n\nL’arxiu ha de contenir fitxers d’imatge JPEG o PNG i, opcionalment, un fitxer d’àudio MP3 o OGG que es reproduirà com a música de fons.'); ?></th>
 <?php
 			} else {
 ?>
-															<th>Enllaços de streaming / Resolució<span class="mandatory"></span> <?php print_helper_box('Enllaços de streaming / Resolució', 'Cal especificar un enllaç de MEGA amb el capítol amb el format adequat (MP4, H264, AAC i subtítols cremats al vídeo) i la seva resolució. Una vegada el fitxer s’hagi convertit i copiat al servidor de streaming, el sistema hi crearà automàticament un altre enllaç començat per «storage://», que no s’ha d’editar ni esborrar.\n\nSi es vol canviar el fitxer, sols cal canviar-ne l’enllaç de MEGA i el sistema ja detectarà que ha canviat, esborrarà l’enllaç propi, el tornarà a baixar i convertir, i finalment el tornarà a afegir.'); ?></th>
-															<th style="width: 10%;">Durada<span class="mandatory"></span> <?php print_helper_box('Durada', 'S’hi ha d’especificar la durada del capítol en hores, minuts i segons.\n\nDepenent de la configuració regional, és possible que el teu navegador mostri un selector d’hores en format AM/PM. Les 00 hores corresponen a les 12 AM, les 01 a les 01 AM, i així successivament.'); ?></th>
+																			<th>Enllaços de streaming / Resolució<span class="mandatory"></span> <?php print_helper_box('Enllaços de streaming / Resolució', 'Cal especificar un enllaç de MEGA amb el capítol amb el format adequat (MP4, H264, AAC i subtítols cremats al vídeo) i la seva resolució. Una vegada el fitxer s’hagi convertit i copiat al servidor de streaming, el sistema hi crearà automàticament un altre enllaç començat per «storage://», que no s’ha d’editar ni esborrar.\n\nSi es vol canviar el fitxer, sols cal canviar-ne l’enllaç de MEGA i el sistema ja detectarà que ha canviat, esborrarà l’enllaç propi, el tornarà a baixar i convertir, i finalment el tornarà a afegir.'); ?></th>
+																			<th style="width: 10%;">Durada<span class="mandatory"></span> <?php print_helper_box('Durada', 'S’hi ha d’especificar la durada del capítol en hores, minuts i segons.\n\nDepenent de la configuració regional, és possible que el teu navegador mostri un selector d’hores en format AM/PM. Les 00 hores corresponen a les 12 AM, les 01 a les 01 AM, i així successivament.'); ?></th>
 <?php
 			}
 ?>
-															<th style="width: 15%;">Comentaris <?php print_helper_box('Comentaris', 'Normalment se sol deixar buit, però es pot fer servir en cas que es desitgi per a aportar informació addicional a la fitxa pública (per exemple, per a indicar que hi ha algun problema amb el fitxer).'); ?></th>
-															<th class="text-center" style="width: 8%;">Perduda <?php print_helper_box('Perduda', 'S’utilitza per a indicar que aquesta variant es va editar, però s’ha perdut amb el pas del temps.\n\nS’utilitza únicament en material d’antics fansubs anteriors a la creació de Fansubs.cat.\n\nEn situacions normals, cal deixar-ho sempre desmarcat.'); ?></th>
-															<th class="text-center" style="width: 8%;">Accions</th>
-														</tr>
-													</thead>
-													<tbody>
+																			<th style="width: 15%;">Comentaris <?php print_helper_box('Comentaris', 'Normalment se sol deixar buit, però es pot fer servir en cas que es desitgi per a aportar informació addicional a la fitxa pública (per exemple, per a indicar que hi ha algun problema amb el fitxer).'); ?></th>
+																			<th class="text-center" style="width: 8%;">Perduda <?php print_helper_box('Perduda', 'S’utilitza per a indicar que aquesta variant es va editar, però s’ha perdut amb el pas del temps.\n\nS’utilitza únicament en material d’antics fansubs anteriors a la creació de Fansubs.cat.\n\nEn situacions normals, cal deixar-ho sempre desmarcat.'); ?></th>
+																			<th class="text-center" style="width: 8%;">Accions</th>
+																		</tr>
+																	</thead>
+																	<tbody>
 <?php
 			for ($j=0;$j<count($files);$j++) {
 ?>
-														<tr id="form-files-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>">
-															<td>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($files[$j]['variant_name']); ?>" maxlength="200" placeholder="- Nom -" required/>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['id']; ?>"/>
-															</td>
+																		<tr id="form-files-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>">
+																			<td>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($files[$j]['variant_name']); ?>" maxlength="200" placeholder="- Nom -" required/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['id']; ?>"/>
+																			</td>
 <?php
 				if ($type=='manga') {
 ?>
-															<td class="align-middle">
-																<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat l’arxiu <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap arxiu pujat.</span>'; ?></div>
-															</td>
-															<td class="align-middle">
-																<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($files[$j]['original_filename']) ? 'Canvia l’arxiu...' : 'Puja un arxiu...' ; ?></label>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);"/>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['length']; ?>"/>
-															</td>
+																			<td class="align-middle">
+																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat l’arxiu <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap arxiu pujat.</span>'; ?></div>
+																			</td>
+																			<td class="align-middle">
+																				<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($files[$j]['original_filename']) ? 'Canvia l’arxiu...' : 'Puja un arxiu...' ; ?></label>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);"/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['length']; ?>"/>
+																			</td>
 <?php
 				} else {
 ?>
-															<td>
-																<table class="w-100" id="links-list-table-<?php echo $episodes[$i]['id']; ?>-<?php echo $j+1; ?>" data-count="<?php echo max(count($files[$j]['links']),1); ?>">
-																	<tbody>
+																			<td>
+																				<table class="w-100" id="links-list-table-<?php echo $episodes[$i]['id']; ?>-<?php echo $j+1; ?>" data-count="<?php echo max(count($files[$j]['links']),1); ?>">
+																					<tbody>
 <?php
 					for ($k=0;$k<count($files[$j]['links']);$k++) {
 ?>
-																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
-																			<td class="ps-0 pt-0 pb-0 border-0">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['id']); ?>"/>
-																			</td>
-																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
-																			</td>
-																			<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
-																			</td>
-																		</tr>
+																						<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
+																							<td class="ps-0 pt-0 pb-0 border-0">
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['id']); ?>"/>
+																							</td>
+																							<td class="pt-0 pb-0 border-0" style="width: 22%;">
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
+																							</td>
+																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																							</td>
+																						</tr>
 <?php
 					}
 					if (count($files[$j]['links'])==0) {
 ?>
-																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
-																			<td class="ps-0 pt-0 pb-0 border-0">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value=""/>
-																			</td>
-																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
-																			</td>
-																			<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
-																			</td>
-																		</tr>
+																						<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
+																							<td class="ps-0 pt-0 pb-0 border-0">
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value=""/>
+																							</td>
+																							<td class="pt-0 pb-0 border-0" style="width: 22%;">
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
+																							</td>
+																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																							</td>
+																						</tr>
 <?php
 					}
 ?>
-																	</tbody>
-																</table>
-															</td>
-															<td>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="time" step="1" class="form-control" value="<?php echo convert_to_hh_mm_ss($files[$j]['length']); ?>"/>
-															</td>
+																					</tbody>
+																				</table>
+																			</td>
+																			<td>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="time" step="1" class="form-control" value="<?php echo convert_to_hh_mm_ss($files[$j]['length']); ?>"/>
+																			</td>
 <?php
 				}
 ?>
-															<td>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($files[$j]['comments']); ?>" maxlength="200"/>
-															</td>
-															<td class="text-center" style="padding-top: .75rem;">
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $files[$j]['is_lost'] ? ' checked' : ''; ?>/>
-															</td>
-															<td class="text-center pt-2">
-																<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
-																<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-<?php echo $j+1; ?>" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button>
-																<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
-															</td>
-														</tr>
+																			<td>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($files[$j]['comments']); ?>" maxlength="200"/>
+																			</td>
+																			<td class="text-center" style="padding-top: .75rem;">
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $files[$j]['is_lost'] ? ' checked' : ''; ?>/>
+																			</td>
+																			<td class="text-center pt-2">
+																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-<?php echo $j+1; ?>" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
+																			</td>
+																		</tr>
 <?php
 			}
 			if (count($files)==0) {
 ?>
-														<tr id="form-files-list-<?php echo $episodes[$i]['id']; ?>-row-1">
-															<td>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" type="text" class="form-control" value="Única" maxlength="200" placeholder="- Nom -" required/>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-1" type="hidden" value="-1"/>
-															</td>
+																		<tr id="form-files-list-<?php echo $episodes[$i]['id']; ?>-row-1">
+																			<td>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" type="text" class="form-control" value="Única" maxlength="200" placeholder="- Nom -" required/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-1" type="hidden" value="-1"/>
+																			</td>
 <?php
 				if ($type=='manga') {
 ?>
-															<td class="align-middle">
-																<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap arxiu pujat.</span></div>
-															</td>
-															<td class="align-middle">
-																<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un arxiu...</label>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);"/>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="hidden" value="0"/>
-															</td>
+																			<td class="align-middle">
+																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap arxiu pujat.</span></div>
+																			</td>
+																			<td class="align-middle">
+																				<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un arxiu...</label>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);"/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="hidden" value="0"/>
+																			</td>
 <?php
 				} else {
 ?>
-															<td>
-																<table class="w-100" id="links-list-table-<?php echo $episodes[$i]['id']; ?>-1" data-count="1">
-																	<tbody>
-																		<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
-																			<td class="ps-0 pt-0 pb-0 border-0">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value="-1"/>
+																			<td>
+																				<table class="w-100" id="links-list-table-<?php echo $episodes[$i]['id']; ?>-1" data-count="1">
+																					<tbody>
+																						<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
+																							<td class="ps-0 pt-0 pb-0 border-0">
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value="-1"/>
+																							</td>
+																							<td class="pt-0 pb-0 border-0" style="width: 22%;">
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
+																							</td>
+																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																							</td>
+																						</tr>
+																					</tbody>
+																				</table>
 																			</td>
-																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
+																			<td>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="time" step="1" class="form-control"/>
 																			</td>
-																			<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</td>
-															<td>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="time" step="1" class="form-control"/>
-															</td>
 <?php
 				}
 ?>
-															<td>
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-1" type="text" class="form-control" value="" maxlength="200"/>
-															</td>
-															<td class="text-center" style="padding-top: .75rem;">
-																<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-1" type="checkbox" value="1"/>
-															</td>
-															<td class="text-center pt-2">
-																<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
-																<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-1" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button>
-																<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
-															</td>
-														</tr>
+																			<td>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-comments-1" type="text" class="form-control" value="" maxlength="200"/>
+																			</td>
+																			<td class="text-center" style="padding-top: .75rem;">
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-1" type="checkbox" value="1"/>
+																			</td>
+																			<td class="text-center pt-2">
+																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-1" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
+																			</td>
+																		</tr>
 <?php
 			}
 ?>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
 <?php
 		}
 ?>
-								</div>
+												</div>
 <?php
 		if ($episodes[$i]['id']=='{template_id}') {
 ?>
-								</script>
+												</script>
 <?php
 		}
 	}
 ?>
-								<div class="w-100 text-center">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="w-100 text-center pt-3">
 									<button data-bs-toggle="modal" data-bs-target="#add-episode-from-version-modal" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix un capítol inexistent</button>
 								</div>
 							</div>

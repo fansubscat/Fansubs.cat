@@ -58,7 +58,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		"status" => 'ok',
 		"inserted_id" => $inserted_id,
 		"formatted_number" => $inserted_episode['formatted_number'],
-		"episode_title" => $inserted_episode['episode_title']
+		"episode_title" => $inserted_episode['episode_title'],
+		"division_id" => $inserted_episode['division_id']
 	));
 }
 

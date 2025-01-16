@@ -1072,6 +1072,7 @@ function checkNumberOfLinks() {
 				return false;
 			}
 			if ($(urls[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')=='- Introdueix un títol -' && $(urls[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
+				$(urls[i]).closest('.accordion-collapse').collapse('show');
 				$(urls[i]).closest('.episode-container').find('.episode-title-input').focus();
 				alert("Cal que introdueixis un títol per a aquest capítol (s’hi col·locarà el focus).");
 				return false;
@@ -1096,8 +1097,9 @@ function checkNumberOfLinks() {
 		var validFiles = $('.episode-container span .fa-check');
 		for (var i=0;i<validFiles.length;i++) {
 			if ($(validFiles[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')=='- Introdueix un títol -' && $(validFiles[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
+				$(urls[i]).closest('.accordion-collapse').collapse('show');
 				$(validFiles[i]).closest('.episode-container').find('.episode-title-input').focus();
-				alert("Cal que introdueixis un títol per a aquest capítol (s’hi ha col·locat el focus).");
+				alert("Cal que introdueixis un títol per a aquest capítol (s’hi col·locarà el focus).");
 				return false;
 			}
 		}
@@ -1172,11 +1174,12 @@ function addEpisodeFromVersion() {
 		var insertedId = json.inserted_id;
 		var formattedNumber = json.formatted_number;
 		var episodeTitle = json.episode_title;
+		var divisionId = json.division_id;
 		
 		$($('#add-episode-from-version-template').html()
 			.replaceAll('{template_id}',insertedId)
 			.replaceAll('{formatted_number}',formattedNumber)
-			.replaceAll('{episode_title}',episodeTitle)).insertBefore($('#add-episode-from-version-template'));
+			.replaceAll('{episode_title}',episodeTitle)).appendTo($('#division-collapse-'+divisionId+' .episode-container'));
 		
 		if (number=='') {
 			$('#form-files-list-'+insertedId+'-title').removeClass('episode-title-input-numbered');
