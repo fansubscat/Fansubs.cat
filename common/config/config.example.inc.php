@@ -69,7 +69,12 @@ define('DISABLE_SANT_JORDI_DAY', TRUE);
 define('DISABLE_HALLOWEEN_DAYS', FALSE);
 define('DISABLE_CHRISTMAS_DAYS', FALSE);
 
-//Default language of your site (ISO code, must exist in /srv/fansubscat/websites/static/languages/<code>.json)
+//Default language of your site (ISO code)
+//Files for it MUST exist in the following places:
+// - common/languages/lang_<code>.json
+// - websites/static/js/lang_<code>.js
+// - websites/static/js/videojs-lang_<code>.js
+//The system locale must also be installed on your system.
 define('SITE_LANGUAGE', 'ca');
 define('SITE_LOCALE', 'ca_AD.utf8');
 
