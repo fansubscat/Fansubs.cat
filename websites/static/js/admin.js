@@ -569,14 +569,12 @@ function uncompressFile(fileInput) {
 	});
 }
 
-function addRelatedSeriesRow() {
+function addRelatedSeriesRow(seriesId, seriesName) {
 	var i = parseInt($('#related-list-table').attr('data-count'))+1;
-
-	var htmlAcc = $('#form-related-list-related_series_id-XXX').prop('outerHTML').replace(/XXX/g, i).replace(' d-none">','" required>');
-
-	$('#related-list-table').append('<tr id="form-related-list-row-'+i+'"><td>'+htmlAcc+'</td><td class="text-center align-middle"><button id="form-related-list-delete-'+i+'" onclick="deleteRelatedSeriesRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
+	$('#related-list-table').append('<tr id="form-related-list-row-'+i+'"><td><input type="hidden" id="form-related-list-related_series_id-'+i+'" name="form-related-list-related_series_id-'+i+'" value="'+seriesId+'"/><b>'+seriesName+'</b></td><td class="text-center align-middle"><button id="form-related-list-delete-'+i+'" onclick="deleteRelatedSeriesRow('+i+');" type="button" class="btn fa fa-trash p-1 text-danger"></button></td></tr>');
 	$('#related-list-table').attr('data-count', i);
 	$('#related-list-table-empty').addClass('d-none');
+	$('#add-related-series-modal').modal('hide');
 }
 
 function deleteRelatedSeriesRow(id) {
@@ -1196,6 +1194,28 @@ function addEpisodeFromVersion() {
 	});
 }
 
+function searchSeries() {
+	var query = $('#add-related-series-query').val();
+	
+	//Call the server
+	$.post("search_series.php", {text: query}, function(data, status){
+		var json = JSON.parse(data);
+		var html = '';
+		for(var i=0;i<json.results.length;i++) {
+			var seriesName = $('<div/>').text(json.results[i].name).html();
+			html+='<a class="text-black mt-2 d-block" style="cursor: pointer; font-weight: bold;" onclick="addRelatedSeriesRow('+json.results[i].id+', \''+seriesName+'\')">'+seriesName+'</a>';
+		}
+		
+		if (json.results.length==0) {
+			html='No hi ha resultats';
+		}
+		
+		$('#add-related-series-results').html(html);
+	}).fail(function() {
+		$('#add-related-series-results').html('Error en la petició');
+	});
+}
+
 var validLinks=0;
 var invalidLinks=0;
 var failedLinks=0;
@@ -1708,6 +1728,15 @@ $(document).ready(function() {
 		modalTitle.textContent = title;
 		modalBody.innerHTML = contents.replaceAll('\\n','<br>');
 	});
+	
+	$('#add-related-series-modal').on('show.bs.modal', function () {
+		$('#add-related-series-results').html('');
+		$('#add-related-series-query').val('');
+	})
+	
+	$('#add-related-series-modal').on('shown.bs.modal', function () {
+		$('#add-related-series-query').focus();
+	})
 
 	if ($('#form-fansub-1').length==1) {
 		$('#form-fansub-1').on('change', generateStorageFolder);

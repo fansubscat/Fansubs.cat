@@ -374,6 +374,28 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$row['has_licensed_parts']=0;
 	}
 ?>
+		<div class="modal fade" id="add-related-series-modal" tabindex="-1" role="dialog" aria-labelledby="add-related-series-modal-title" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="add-related-series-modal-title">Afegeix un element relacionat</h5>
+						<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="fa fa-times"></span>
+						</button>
+					</div>
+					<div class="modal-body">
+						Introdueix un text i selecciona un resultat per a relacionar-lo.
+						<input id="add-related-series-query" type="text" placeholder="Cerca..." class="form-control mt-3" oninput="searchSeries();" />
+						<hr>
+						<div id="add-related-series-results"></div>
+					</div>
+					
+					<div class="align-self-center">
+						<button type="button" data-bs-dismiss="modal" class="btn btn-secondary m-2">Cancel·la</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
@@ -795,7 +817,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 
 	if (!empty($row['id'])) {
-		$resultrs = query("SELECT DISTINCT t.series_id, CONCAT(s.type,' - ',s.name) name FROM (SELECT rs.related_series_id series_id FROM related_series rs WHERE rs.series_id=".escape($_GET['id'])." UNION SELECT rs.series_id series_id FROM related_series rs WHERE rs.related_series_id=".escape($_GET['id']).") t LEFT JOIN series s ON s.id=t.series_id ORDER BY s.type ASC, s.name ASC");
+		$resultrs = query("SELECT DISTINCT t.series_id, CONCAT(IF(s.type='manga','Manga',IF(s.type='liveaction','Imatge real','Anime')),' - ',s.name) name FROM (SELECT rs.related_series_id series_id FROM related_series rs WHERE rs.series_id=".escape($_GET['id'])." UNION SELECT rs.series_id series_id FROM related_series rs WHERE rs.related_series_id=".escape($_GET['id']).") t LEFT JOIN series s ON s.id=t.series_id ORDER BY s.type ASC, s.name ASC");
 		$related_series = array();
 		while ($rowrs = mysqli_fetch_assoc($resultrs)) {
 			array_push($related_series, $rowrs);
@@ -807,18 +829,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 								<div class="row mb-3">
 									<div class="w-100 column">
-										<select id="form-related-list-related_series_id-XXX" name="form-related-list-related_series_id-XXX" class="form-select d-none">
-											<option value="">- Selecciona un element -</option>
-<?php
-		$results = query("SELECT s.id, CONCAT(IF(s.type='anime','Anime',IF(s.type='manga','Manga','Imatge real')),' - ',s.name) name FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.type ASC, s.name ASC");
-		while ($srow = mysqli_fetch_assoc($results)) {
-?>
-											<option value="<?php echo $srow['id']; ?>"><?php echo htmlspecialchars($srow['name']); ?></option>
-<?php
-		}
-		mysqli_free_result($results);
-?>
-										</select>
 										<table class="table table-bordered table-hover table-sm" id="related-list-table" data-count="<?php echo count($related_series); ?>">
 											<thead>
 												<tr>
@@ -835,18 +845,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-related-list-row-<?php echo $j+1; ?>">
 													<td>
-														<select id="form-related-list-related_series_id-<?php echo $j+1; ?>" name="form-related-list-related_series_id-<?php echo $j+1; ?>" class="form-select" required>
-															<option value="">- Selecciona un element -</option>
-<?php
-		$results = query("SELECT s.id, CONCAT(IF(s.type='anime','Anime',IF(s.type='manga','Manga','Imatge real')),' - ',s.name) name FROM series s WHERE id<>".(!empty($row['id']) ? $row['id'] : -1)." ORDER BY s.type ASC, s.name ASC");
-		while ($srow = mysqli_fetch_assoc($results)) {
-?>
-															<option value="<?php echo $srow['id']; ?>"<?php echo $related_series[$j]['series_id']==$srow['id'] ? " selected" : ""; ?>><?php echo htmlspecialchars($srow['name']); ?></option>
-<?php
-		}
-		mysqli_free_result($results);
-?>
-														</select>
+														<input type="hidden" id="form-related-list-related_series_id-<?php echo $j+1; ?>" name="form-related-list-related_series_id-<?php echo $j+1; ?>" value="<?php echo $related_series[$j]['series_id']; ?>"/>
+														<b><?php echo $related_series[$j]['name']; ?></b>
 													</td>
 													<td class="text-center align-middle">
 														<button id="form-related-list-delete-<?php echo $j+1; ?>" onclick="deleteRelatedSeriesRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
@@ -860,7 +860,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</div>
 									<div class="mb-3 row w-100 ms-0">
 										<div class="col-sm text-center" style="padding-left: 0; padding-right: 0">
-											<button onclick="addRelatedSeriesRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix un element relacionat</button>
+											<button data-bs-toggle="modal" data-bs-target="#add-related-series-modal" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix un element relacionat</button>
 										</div>
 									</div>
 								</div>
