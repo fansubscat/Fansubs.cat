@@ -64,7 +64,7 @@ define('PAGE_TITLE', sprintf(lang('advent.page_title'), $row['year']));
 		<meta name="referrer" content="origin">
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="msapplication-TileColor" content="#da532c">
-		<meta name="msapplication-config" content="https://static.fansubs.cat/favicons/advent/browserconfig.xml">
+		<meta name="msapplication-config" content="<?php echo STATIC_URL; ?>/favicons/advent/browserconfig.xml">
 		<meta property="og:title" content="<?php echo htmlspecialchars(defined('PAGE_TITLE') ? PAGE_TITLE.' | '.SITE_TITLE : SITE_TITLE); ?>" />
 		<meta property="og:url" content="<?php echo ADVENT_URL; ?>/" />
 		<meta property="og:description" content="<?php echo htmlspecialchars(SITE_DESCRIPTION); ?>" />

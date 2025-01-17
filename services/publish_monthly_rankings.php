@@ -25,7 +25,7 @@ $totals = mysqli_fetch_assoc($result);
 
 $types = array(
 		array(
-			'anime', lang('service.rankings.anime.title'), lang('service.rankings.anime.description', FALSE
+			'anime', lang('service.rankings.anime.title'), lang('service.rankings.anime.description'), FALSE
 		),
 		array(
 			'manga', lang('service.rankings.manga.title'), lang('service.rankings.manga.description'), FALSE

@@ -265,11 +265,11 @@ function update_version_preview($id) {
 		$image = imagecreatetruecolor(IMAGE_WIDTH, IMAGE_HEIGHT);
 
 		//Load cover and scale it as needed
-		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/$id.jpg");
+		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/version_$id.jpg");
 		$cover = scale_smallest_side($cover, COVER_WIDTH, COVER_HEIGHT);
 
 		//Load bg and scale it as needed
-		$background = imagecreatefromjpeg(STATIC_DIRECTORY."/images/featured/$id.jpg");
+		$background = imagecreatefromjpeg(STATIC_DIRECTORY."/images/featured/version_$id.jpg");
 		$background = scale_smallest_side($background, IMAGE_WIDTH, IMAGE_HEIGHT);
 
 		//Darken and blur bg

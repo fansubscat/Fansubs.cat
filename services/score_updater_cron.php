@@ -4,6 +4,10 @@ require_once(__DIR__.'/../common/libraries/preview_image_generator.php');
 
 log_action('cron-scores-started', "Series score updater has started");
 
+//Delete score from series with no MAL id
+query('UPDATE series s SET s.score=NULL WHERE s.external_id IS NULL AND NOT EXISTS (SELECT * FROM division d WHERE d.series_id=s.id AND d.external_id IS NOT NULL) AND score IS NOT NULL');
+
+//Update score for series with some MAL id
 $result = query("SELECT * FROM series ORDER BY name ASC");
 
 while ($series = mysqli_fetch_assoc($result)) {

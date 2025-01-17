@@ -70,7 +70,7 @@ require_once(__DIR__.'/../common/header.inc.php');
 					<input id="seen_behavior" type="hidden" value="<?php echo !empty($user) ? $user['previous_chapters_read_behavior'] : -1; ?>">
 					<input id="show_comment_warning" type="hidden" value="<?php echo !empty($user) ? ($user['num_comments']>0 ? 0 : 1) : 1; ?>">
 					<div class="series-header">
-						<img class="background" src="<?php echo STATIC_URL; ?>/images/featured/<?php echo $series['version_id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['version_title']); ?>">
+						<img class="background" src="<?php echo STATIC_URL; ?>/images/featured/version_<?php echo $series['version_id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['version_title']); ?>">
 						<div class="series-data">
 							<div class="series-titles">
 								<h2 class="series-title"><?php echo htmlspecialchars($series['version_title']); ?></h2>
@@ -158,7 +158,7 @@ if (!empty($series['score'])) {
 					</div>
 					<div class="section series-subheader">
 						<div class="series-thumbnail-holder">
-							<img class="series-thumbnail" src="<?php echo STATIC_URL; ?>/images/covers/<?php echo $series['version_id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['version_title']); ?>">
+							<img class="series-thumbnail" src="<?php echo STATIC_URL; ?>/images/covers/version_<?php echo $series['version_id']; ?>.jpg" alt="<?php echo htmlspecialchars($series['version_title']); ?>">
 <?php
 if (in_array($series['id'], !empty($user) ? $user['series_list_ids'] : array())) {
 ?>
@@ -415,7 +415,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 ?>
 									<div id="version-<?php echo $version['id']; ?>-division-<?php echo $division['division_number']; ?>" data-title="<?php echo htmlspecialchars($division['division_name']); ?>" class="division<?php echo $is_inside_empty_batch ? ' hidden' : ''; ?>">
 										<div class="division-header<?php echo $division['available_episodes']>0 ? '' : ' division-unavailable'; ?>">
-											<img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/'.$version['id'].'.jpg'; ?>">
+											<img class="division-cover" src="<?php echo file_exists(STATIC_DIRECTORY.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg') ? STATIC_URL.'/images/divisions/'.$version['id'].'_'.$division['division_id'].'.jpg' : STATIC_URL.'/images/covers/version_'.$version['id'].'.jpg'; ?>">
 											<div class="division-title"><?php echo $division['division_name']; ?></div>
 										</div>
 <?php

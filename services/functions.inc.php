@@ -2,7 +2,6 @@
 require_once(__DIR__.'/../common/libraries/simple_html_dom.php');
 require_once(__DIR__.'/db.inc.php');
 require_once(__DIR__.'/common.inc.php');
-require_once(__DIR__.'/config.inc.php');
 require_once(__DIR__.'/vendor/autoload.php');
 
 use LanguageDetection\Language;

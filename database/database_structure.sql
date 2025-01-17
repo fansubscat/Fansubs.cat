@@ -70,7 +70,7 @@ CREATE TABLE `division` (
 CREATE TABLE `episode` (
   `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
-  `division_id` int(11) DEFAULT NULL,
+  `division_id` int(11) NOT NULL,
   `number` decimal(10,2) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `linked_episode_id` int(11) DEFAULT NULL,

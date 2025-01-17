@@ -88,7 +88,7 @@ Tots els fitxers .sh del directori `services` han de tenir la marca d’executab
 
 	chmod a+x /srv/fansubscat/services/*.sh
 	
-Configureu les tasques programades que executen els serveis executant `crontab -e` com a root i copiant-hi els continguts del fitxer `cron_jobs/crontab.txt` del codi.
+Configureu les tasques programades que executen els serveis executant `crontab -e -u www-data` i copiant-hi els continguts del fitxer `cron_jobs/crontab.txt` del codi.
 
 ## Configuració del web
 

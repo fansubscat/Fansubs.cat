@@ -408,7 +408,7 @@ function print_carousel_item($series, $specific_version, $use_version_param, $sh
 	echo "\t\t\t\t\t\t\t".'<div class="thumbnail-outer">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="thumbnail thumbnail-'.$series['id'].'" data-series-id="'.$series['id'].'" onmouseenter="prepareFloatingInfo(this);">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="versions">'.get_fansub_icons($series['fansub_info'], $versions, $specific_version ? $versions[0]['id'] : NULL).'</div>'."\n";
-	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'"><img src="'.STATIC_URL.'/images/covers/'.($specific_version ? $series['version_id'] : $series['default_version_id']).'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t".'<a class="image-link" href="'.get_base_url_from_type_and_rating($series['type'], $series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'"><img src="'.STATIC_URL.'/images/covers/version_'.($specific_version ? $series['version_id'] : $series['default_version_id']).'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="clickable-thumbnail" onclick="prepareClickableFloatingInfo(this);"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="floating-info">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="floating-info-main">'."\n";

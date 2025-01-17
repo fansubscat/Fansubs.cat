@@ -357,10 +357,10 @@ function internal_print_episode($fansub_names, $episode_title, $episode_title_fo
 					$links = filter_links($links);
 				}
 ?>
-<div class="file-launcher episode" data-episode-id="<?php echo $vrow['episode_id']; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $division_title, $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($division_title, $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$version_id.'.jpg'; ?>" data-position="<?php echo $position; ?>" data-is-special="<?php echo ($is_extra || empty($number)) ? 'true' : 'false'; ?>">
+<div class="file-launcher episode" data-episode-id="<?php echo $vrow['episode_id']; ?>" data-file-id="<?php echo $vrow['id']; ?>" data-title="<?php echo htmlspecialchars(get_episode_player_title($fansub_names, $division_title, $series['subtype'], $episode_title, $is_extra)); ?>" data-title-short="<?php echo htmlspecialchars(get_episode_player_title_short($division_title, $series['subtype'], $episode_title, $is_extra)); ?>" data-thumbnail="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/version_'.$version_id.'.jpg'; ?>" data-position="<?php echo $position; ?>" data-is-special="<?php echo ($is_extra || empty($number)) ? 'true' : 'false'; ?>">
 	<div class="episode-thumbnail-cell">
 		<div class="episode-thumbnail">
-			<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/'.$version_id.'.jpg'; ?>" alt="">
+			<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$vrow['id'].'.jpg') ? STATIC_URL.'/images/files/'.$vrow['id'].'.jpg' : STATIC_URL.'/images/covers/version_'.$version_id.'.jpg'; ?>" alt="">
 			<div class="length"><?php echo get_length_formatted($vrow['length']); ?></div>
 			<span class="progress" style="width: <?php echo $vrow['progress_percent']*100; ?>%;"></span>
 			<div class="play-button fa fa-fw <?php echo $series['type']=='manga' ? 'fa-book-open' : 'fa-play'; ?>"></div>
@@ -474,7 +474,7 @@ function print_chapter_item($row) {
 		<div class="continue-watching-thumbnail">
 			<a class="image-link" href="<?php echo SITE_BASE_URL.'/'.$row['series_slug']."?f=".$row['file_id']; ?>">
 				<div class="versions"><?php echo get_fansub_icons($row['fansub_info'], get_prepared_versions($row['fansub_info']), $row['version_id']); ?></div>
-				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['version_id'].'.jpg'; ?>" alt="">
+				<img src="<?php echo file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/version_'.$row['version_id'].'.jpg'; ?>" alt="">
 				<div class="length"><?php echo get_length_formatted($row['length']); ?></div>
 				<span class="progress" style="width: <?php echo $row['progress_percent']*100; ?>%;"></span>
 				<div class="play-button fa fa-fw <?php echo CATALOGUE_PLAY_BUTTON_ICON; ?>"></div>
@@ -542,11 +542,11 @@ function get_relative_date_last_update($time) {
 function print_chapter_item_last_update($row) {
 	if ($row['cnt']>1) {
 		$link_url = SITE_BASE_URL.'/'.$row['series_slug'];
-		$image_url = STATIC_URL.'/images/covers/'.$row['version_id'].'.jpg';
+		$image_url = STATIC_URL.'/images/covers/version_'.$row['version_id'].'.jpg';
 		$subtitle = $row['cnt'].' elements nous';
 	} else {
 		$link_url = SITE_BASE_URL.'/'.$row['series_slug']."?f=".$row['file_id'];
-		$image_url = file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/'.$row['version_id'].'.jpg';
+		$image_url = file_exists(STATIC_DIRECTORY.'/images/files/'.$row['file_id'].'.jpg') ? STATIC_URL.'/images/files/'.$row['file_id'].'.jpg' : STATIC_URL.'/images/covers/version_'.$row['version_id'].'.jpg';
 		$subtitle = '';
 		if (!empty($row['extra_name'])) {
 			$subtitle .= lang('catalogue.generic.extra_prefix_short').$row['extra_name'];
@@ -601,11 +601,11 @@ function get_genres_for_featured($genre_names, $type, $rating) {
 function print_featured_item($series, $special_day=NULL, $specific_version=TRUE, $use_version_param=TRUE, $show_special_day=TRUE) {
 	$versions = get_prepared_versions($series['fansub_info']);
 	echo "\t\t\t\t\t\t\t".'<div class="recommendation" data-series-id="'.$series['id'].'">'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/featured/'.$series['version_id'].'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/featured/version_'.$series['version_id'].'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="status" title="'.get_status_description($series['best_status']).'"><div class="status-indicator '.get_status_css_icons($series['best_status']).'"></div><span class="text">'.get_status_description_short($series['best_status']).'</span></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder" data-swiper-parallax="-30%">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'"><img class="cover" src="'.STATIC_URL.'/images/covers/'.($specific_version ? $series['version_id'] : $series['default_version_id']).'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'"></a>'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'"><img class="cover" src="'.STATIC_URL.'/images/covers/version_'.($specific_version ? $series['version_id'] : $series['default_version_id']).'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'"></a>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'</div>'."\n";
@@ -651,11 +651,11 @@ function print_featured_item($series, $special_day=NULL, $specific_version=TRUE,
 function print_featured_item_single($series, $specific_version=TRUE, $use_version_param=TRUE) {
 	$versions = get_prepared_versions($series['fansub_info']);
 	echo "\t\t\t\t\t\t\t".'<a class="recommendation single-feature" data-series-id="'.$series['id'].'" href="'.get_base_url_from_type_and_rating($series['type'],$series['rating']).'/'.($specific_version ? $series['version_slug'] : $series['default_version_slug']).'">'."\n";
-	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/featured/'.($specific_version ? $series['version_id'] : $series['default_version_id']).'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'">'."\n";
+	echo "\t\t\t\t\t\t\t\t".'<img class="background" src="'.STATIC_URL.'/images/featured/version_'.($specific_version ? $series['version_id'] : $series['default_version_id']).'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'">'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="gradient"></div>'."\n";
 	echo "\t\t\t\t\t\t\t\t".'<div class="infoholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="coverholder">'."\n";
-	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="cover" src="'.STATIC_URL.'/images/covers/'.($specific_version ? $series['version_id'] : $series['default_version_id']).'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'">'."\n";
+	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="cover" src="'.STATIC_URL.'/images/covers/version_'.($specific_version ? $series['version_id'] : $series['default_version_id']).'.jpg" alt="'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'</div>'."\n";
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="dataholder">'."\n";
 	echo "\t\t\t\t\t\t\t\t\t\t".'<div class="title">'.htmlspecialchars(($specific_version ? $series['version_title'] : $series['default_version_title'])).'</div>'."\n";
@@ -738,7 +738,7 @@ function print_comment($comment, $hidden){
 function print_comment_home($comment){
 	global $user;
 	echo "\t\t\t\t\t\t\t\t\t".'<div class="comment" data-episode-id="'.$comment['last_seen_episode_id'].'" data-version-id="'.$comment['version_id'].'">';
-	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.SITE_BASE_URL.'/'.$comment['version_slug'].'"><img class="comment-series" src="'.STATIC_URL.'/images/covers/'.$comment['version_id'].'.jpg"></a>';
+	echo "\t\t\t\t\t\t\t\t\t\t".'<a href="'.SITE_BASE_URL.'/'.$comment['version_slug'].'"><img class="comment-series" src="'.STATIC_URL.'/images/covers/version_'.$comment['version_id'].'.jpg"></a>';
 	echo "\t\t\t\t\t\t\t\t\t\t".'<img class="comment-avatar" src="'.(!empty($comment['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$comment['avatar_filename'] : ($comment['type']=='fansub' ? STATIC_URL.'/images/icons/'.$comment['fansub_id'].'.png' : ($comment['type']=='admin' ? STATIC_URL.'/images/site/default_fansub.png' : STATIC_URL.'/images/site/default_avatar.jpg'))).'">';
 	if ($comment['has_spoilers']==1 && (empty($user) || $comment['user_id']!=$user['id'])) {
 		echo "\t\t\t\t\t\t\t\t\t\t".'<div class="comment-message comment-with-spoiler'.($comment['is_seen_by_user']==1 ? ' comment-with-spoiler-shown' : '').'">';

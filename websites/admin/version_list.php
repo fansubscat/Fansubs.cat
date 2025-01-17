@@ -48,6 +48,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		query("DELETE FROM rel_version_fansub WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version_division WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE id=".escape($_GET['delete_id']));
+		@unlink(STATIC_DIRECTORY.'/images/covers/version_'.$_GET['delete_id'].'.jpg');
+		@unlink(STATIC_DIRECTORY.'/images/featured/version_'.$_GET['delete_id'].'.jpg');
+		@unlink(STATIC_DIRECTORY.'/social/version_'.$_GET['delete_id'].'.jpg');
 		//Views will NOT be removed in order to keep consistent stats history
 		$_SESSION['message']="S’ha suprimit correctament.";
 	}

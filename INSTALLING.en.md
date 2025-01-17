@@ -88,7 +88,7 @@ All .sh files in the `services` directory must have the executable flag set. You
 
 	chmod a+x /srv/fansubscat/services/*.sh
 	
-Set up the cron jobs that run the services by running `crontab -e` as root and copying the contents of the `cron_jobs/crontab.txt` file in the code.
+Set up the cron jobs that run the services by running `crontab -e -u www-data` and copying the contents of the `cron_jobs/crontab.txt` file in the code.
 
 ## Configuring the site
 

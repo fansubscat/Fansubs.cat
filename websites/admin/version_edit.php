@@ -587,13 +587,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
-				move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/covers/'.$data['id'].'.jpg');
+				move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/covers/version_'.$data['id'].'.jpg');
 			} else if (!empty($_POST['image_url'])){
-				copy($_POST['image_url'], STATIC_DIRECTORY.'/images/covers/'.$data['id'].'.jpg');
+				copy($_POST['image_url'], STATIC_DIRECTORY.'/images/covers/version_'.$data['id'].'.jpg');
 			}
 
 			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
-				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/'.$data['id'].'.jpg');
+				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/version_'.$data['id'].'.jpg');
 			}
 
 			query("DELETE FROM version_division WHERE version_id=".$data['id']);
@@ -669,13 +669,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			if (is_uploaded_file($_FILES['image']['tmp_name'])) {
-				move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/covers/'.$inserted_id.'.jpg');
+				move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/covers/version_'.$inserted_id.'.jpg');
 			} else if (!empty($_POST['image_url'])){
-				copy($_POST['image_url'],STATIC_DIRECTORY.'/images/covers/'.$inserted_id.'.jpg');
+				copy($_POST['image_url'],STATIC_DIRECTORY.'/images/covers/version_'.$inserted_id.'.jpg');
 			}
 
 			if (is_uploaded_file($_FILES['featured_image']['tmp_name'])) {
-				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/'.$inserted_id.'.jpg');
+				move_uploaded_file($_FILES['featured_image']["tmp_name"], STATIC_DIRECTORY.'/images/featured/version_'.$inserted_id.'.jpg');
 			}
 
 			update_version_preview($inserted_id);
@@ -1009,7 +1009,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="mb-3">
 									<label>Imatge de portada<span class="mandatory"></span> <?php print_helper_box('Imatge de portada', 'Aquesta imatge s’utilitzarà al web per a identificar aquesta versió.\n\nLa imatge ha de ser en format JPEG, fer 300x400 píxels o més i ocupar menys de 150 KiB.\n\nSi ocupa més, redueix-ne la resolució o la qualitat de la compressió JPEG.\n\nSi en fas una versió localitzada en català, el resultat serà força més bonic.'); ?><br><small class="text-muted">(JPEG, ≥300x400, ≤150 KiB)</small></label><br>
 <?php
-	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/covers/'.$row['id'].'.jpg');
+	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/covers/version_'.$row['id'].'.jpg');
 ?>
 									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 153600, 'image/jpeg', 300, 400, 4096, 4096, 'form-image-preview', 'form-image-preview-link','form-image_url');">
@@ -1018,8 +1018,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-1">
 								<div class="mb-3">
-									<a id="form-image-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
-										<img id="form-image-preview" style="width: 71px; height: 100px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/covers/'.$row['id'].'.jpg"' : ''; ?> alt="">
+									<a id="form-image-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/covers/version_'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/covers/version_'.$row['id'].'.jpg"' : ''; ?> target="_blank">
+										<img id="form-image-preview" style="width: 71px; height: 100px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/covers/version_'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/covers/version_'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>
@@ -1027,7 +1027,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="mb-3">
 									<label>Imatge de capçalera<span class="mandatory"></span> <?php print_helper_box('Imatge de capçalera', 'Aquesta imatge s’utilitzarà a la capçalera de la fitxa de la versió i també de fons a l’apartat de recomanacions.\n\nLa imatge ha de ser en format JPEG, fer 1920x400 píxels o més i ocupar menys de 300 KiB.\n\nSi ocupa més, redueix-ne la resolució o la qualitat de la compressió JPEG.'); ?><br><small class="text-muted">(JPEG, ≥1920x400, ≤300 KiB)</small></label><br>
 <?php
-	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/featured/'.$row['id'].'.jpg');
+	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/featured/version_'.$row['id'].'.jpg');
 ?>
 									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
 									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 307200, 'image/jpeg', 1920, 400, 4096, 4096, 'form-featured-image-preview', 'form-featured-image-preview-link');">
@@ -1035,8 +1035,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<a id="form-featured-image-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/featured/'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/featured/'.$row['id'].'.jpg"' : ''; ?> target="_blank">
-										<img id="form-featured-image-preview" style="width: 480px; height: 100px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/featured/'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/featured/'.$row['id'].'.jpg"' : ''; ?> alt="">
+									<a id="form-featured-image-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/featured/version_'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/featured/version_'.$row['id'].'.jpg"' : ''; ?> target="_blank">
+										<img id="form-featured-image-preview" style="width: 480px; height: 100px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/featured/version_'.$row['id'].'.jpg" data-original="'.STATIC_URL.'/images/featured/version_'.$row['id'].'.jpg"' : ''; ?> alt="">
 									</a>
 								</div>
 							</div>

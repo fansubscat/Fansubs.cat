@@ -47,7 +47,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		query("DELETE FROM version WHERE series_id=".escape($_GET['delete_id']));
 		query("DELETE FROM series WHERE id=".escape($_GET['delete_id']));
 		@unlink(STATIC_DIRECTORY.'/images/series/'.$_GET['delete_id'].'.jpg');
-		@unlink(STATIC_DIRECTORY.'/images/featured/'.$_GET['delete_id'].'.jpg');
 		@unlink(STATIC_DIRECTORY.'/social/series_'.$_GET['delete_id'].'.jpg');
 		//Cascaded deletions: file, link, rel_version_fansub
 		//Views will NOT be removed in order to keep consistent stats history

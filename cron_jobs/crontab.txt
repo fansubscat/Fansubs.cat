@@ -1,23 +1,27 @@
 # Change these routes to your services directory if you install it on another server
 # Should be run by the Apache user (www-data)
 
+# Fansubs.cat - Start MEGA worker on reboot
+@reboot cd /srv/fansubscat/services/ && ./mega_worker.sh
+
 # Fansubs.cat - Update feeds every 15 minutes
-*/15 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php fetch.php
+*/15 * * * * cd /srv/fansubscat/services/ && /usr/bin/php fetch.php
 
 # Fansubs.cat - Post tweets with newly added items
-*/12 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php post_new_items.php
+*/12 * * * * cd /srv/fansubscat/services/ && /usr/bin/php post_new_items.php
 
 # Fansubs.cat - Update Mega storage status for all accounts
-0 3 * * * cd /srv/services/fansubs.cat/ && /usr/bin/php accounts_updater_cron.php
+0 3 * * * cd /srv/fansubscat/services/ && /usr/bin/php accounts_updater_cron.php
 
 # Fansubs.cat - Update Mega links from accounts
-30 * * * * cd /srv/services/fansubs.cat/ && /usr/bin/php links_updater_cron.php
+30 * * * * cd /srv/fansubscat/services/ && /usr/bin/php links_updater_cron.php
 
 # Fansubs.cat - Update MyAnimeList score for all anime and manga
-0 0 * * * cd /srv/services/fansubs.cat/ && /usr/bin/php score_updater_cron.php
+0 1 * * * cd /srv/fansubscat/services/ && /usr/bin/php score_updater_cron.php
 
 # Fansubs.cat - Update recommended anime and manga
-0 0 * * 1 cd /srv/services/fansubs.cat/ && /usr/bin/php generate_recommendations_cron.php
+0 0 * * 1 cd /srv/fansubscat/services/ && /usr/bin/php generate_recommendations_cron.php
 
 # Fansubs.cat - Publish monthly content rankings
-0 0 1 * * cd /srv/services/fansubs.cat/ && /usr/bin/php publish_monthly_rankings.php
+0 0 1 * * cd /srv/fansubscat/services/ && /usr/bin/php publish_monthly_rankings.php
+

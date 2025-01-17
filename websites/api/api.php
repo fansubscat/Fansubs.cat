@@ -183,7 +183,7 @@ else if ($method === 'manga'){
 					'synopsis' => $row['default_version_synopsis'],
 					'genres' => $row['genres'],
 					'status' => $row['versions_in_progress']>=1 ? 'ongoing' : 'finished',
-					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg'
+					'thumbnail_url' => STATIC_URL.'/images/covers/version_'.$row['default_version_id'].'.jpg'
 				);
 			}
 
@@ -209,7 +209,7 @@ else if ($method === 'manga'){
 					'synopsis' => $row['default_version_synopsis'],
 					'genres' => $row['genres'],
 					'status' => $row['versions_in_progress']>=1 ? 'ongoing' : 'finished',
-					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg'
+					'thumbnail_url' => STATIC_URL.'/images/covers/version_'.$row['default_version_id'].'.jpg'
 				);
 			}
 
@@ -243,7 +243,7 @@ else if ($method === 'manga'){
 					'synopsis' => $row['default_version_synopsis'],
 					'genres' => $row['genres'],
 					'status' => $row['versions_in_progress']>=1 ? 'ongoing' : 'finished',
-					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg'
+					'thumbnail_url' => STATIC_URL.'/images/covers/version_'.$row['default_version_id'].'.jpg'
 				);
 			}
 
@@ -267,7 +267,7 @@ else if ($method === 'manga'){
 					'synopsis' => $row['default_version_synopsis'],
 					'genres' => $row['genres'],
 					'status' => $row['versions_in_progress']>=1 ? 'ongoing' : 'finished',
-					'thumbnail_url' => STATIC_URL.'/images/covers/'.$row['default_version_id'].'.jpg'
+					'thumbnail_url' => STATIC_URL.'/images/covers/version_'.$row['default_version_id'].'.jpg'
 				);
 
 				$response = array(

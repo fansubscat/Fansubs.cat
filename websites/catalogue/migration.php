@@ -68,8 +68,16 @@ if ($migration_type=='piwigo') {
 	}
 } else if ($migration_type=='tachiyomi_cache') {
 	$series_id = (!empty($_GET['id']) ? intval($_GET['id']) : 0)+1000;
-	header("HTTP/1.1 301 Moved Permanently");
-	header("Location: ".STATIC_URL."/images/covers/".$series_id.".jpg");
+	$result = query_series_by_id($series_id);
+	if ($row = mysqli_fetch_assoc($result)) {
+		header("HTTP/1.1 301 Moved Permanently");
+		header("Location: ".STATIC_URL."/images/covers/version_".$row['default_version_id'].".jpg");
+	}
+	else {
+		http_response_code(404);
+		include(__DIR__.'/error.php');
+		die(); //Avoids error because mysqli is already closed
+	}
 } else if ($migration_type=='v4_slug') {
 	$series_slug = (!empty($_GET['id']) ? $_GET['id'] : '');
 	$type = (!empty($_GET['type']) ? $_GET['type'] : '');

@@ -141,7 +141,7 @@ session_name(ADMIN_COOKIE_NAME);
 session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 
-if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) || $_GET['token']==INTERNAL_TOKEN) {
+if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) || $_GET['token']==INTERNAL_SERVICES_TOKEN) {
 
 	$type = escape($_GET['type']);
 	$first_month = escape($_GET['first_month']);
@@ -232,7 +232,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 
 	//Load bg and scale it as needed
 	if (count($series)>0) {
-		$background = imagecreatefromjpeg(STATIC_DIRECTORY."/images/featured/".$series[0]['default_version_id'].".jpg");
+		$background = imagecreatefromjpeg(STATIC_DIRECTORY."/images/featured/version_".$series[0]['default_version_id'].".jpg");
 		$background = scale_smallest_side($background, IMAGE_WIDTH, IMAGE_HEIGHT);
 
 		//Darken and blur bg
@@ -372,7 +372,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		}*/
 
 		//Load cover and scale it as needed
-		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/".$series[$i]['default_version_id'].".jpg");
+		$cover = imagecreatefromjpeg(STATIC_DIRECTORY."/images/covers/version_".$series[$i]['default_version_id'].".jpg");
 		$cover = scale_smallest_side($cover, COVER_WIDTH, COVER_HEIGHT);
 		$cover = round_corners($cover, 4);
 		imagecopy($image, $cover, $i>4 ? 624+72 : 24+72, $current_height, 0, 0, COVER_WIDTH, COVER_HEIGHT);

@@ -195,10 +195,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			} else {
 				crash("Dades invàlides: id de capítol no numèric");
 			}
-			if (!empty($_POST['form-episode-list-division-'.$i]) && is_numeric($_POST['form-episode-list-division-'.$i])) {
+			if ((!empty($_POST['form-episode-list-division-'.$i]) || $_POST['form-episode-list-division-'.$i]=='0') && is_numeric($_POST['form-episode-list-division-'.$i])) {
 				$episode['division']=escape($_POST['form-episode-list-division-'.$i]);
 			} else {
-				$episode['division']="NULL";
+				crash("Dades invàlides: número de divisió no numèric");
 			}
 			if ((!empty($_POST['form-episode-list-num-'.$i]) || $_POST['form-episode-list-num-'.$i]=='0') && is_numeric($_POST['form-episode-list-num-'.$i])) {
 				$episode['number']=escape($_POST['form-episode-list-num-'.$i]);
@@ -731,7 +731,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<tr id="form-episode-list-row-<?php echo $i+1; ?>">
 													<td>
-														<input id="form-episode-list-division-<?php echo $i+1; ?>" name="form-episode-list-division-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['division']!=NULL ? floatval($episodes[$i]['division']) : ''; ?>" step="any" required/>
+														<input id="form-episode-list-division-<?php echo $i+1; ?>" name="form-episode-list-division-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo floatval($episodes[$i]['division']); ?>" step="any" required/>
 													</td>
 													<td>
 														<input id="form-episode-list-num-<?php echo $i+1; ?>" oninput="checkEpisodeRow(<?php echo $i+1; ?>);" name="form-episode-list-num-<?php echo $i+1; ?>" type="number" class="form-control" value="<?php echo $episodes[$i]['number']!=NULL ? floatval($episodes[$i]['number']) : ''; ?>" placeholder="Especial" step="any"/>

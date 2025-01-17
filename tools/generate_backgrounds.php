@@ -149,8 +149,8 @@ $covers = array(
 
 for ($i=0; $i<6; $i++) {
 	for ($j=0; $j<15; $j++) {
-		if (file_exists('../websites/static/images/covers/'.$covers[$i][$j].'.jpg')) {
-			$cover = imagecreatefromjpeg('../websites/static/images/covers/'.$covers[$i][$j].'.jpg');
+		if (file_exists('../websites/static/images/covers/version_'.$covers[$i][$j].'.jpg')) {
+			$cover = imagecreatefromjpeg('../websites/static/images/covers/version_'.$covers[$i][$j].'.jpg');
 		} else {
 			$cover = imagecreatetruecolor(COVER_WIDTH, COVER_HEIGHT);
 			imagefill($cover, 0, 0, imagecolorallocate($cover, MODE=='light' ? 0xA0 : 0x2B, MODE=='light' ? 0xA0 : 0x2B, MODE=='light' ? 0xA0 : 0x2B));
