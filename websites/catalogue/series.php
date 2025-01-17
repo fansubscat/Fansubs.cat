@@ -483,7 +483,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 		}
 		if (!empty($fansub['bluesky_url'])) {
 ?>
-													<a class="fab fa-fw fa-discord bluesky-link" title="<?php echo lang('generic.bluesky_link.alt'); ?>" href="<?php echo $fansub['bluesky_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-bluesky bluesky-link" title="<?php echo lang('generic.bluesky_link.alt'); ?>" href="<?php echo $fansub['bluesky_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['discord_url'])) {
