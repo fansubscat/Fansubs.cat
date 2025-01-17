@@ -27,6 +27,8 @@
 	- La majoria dels camps passen a tenir una ajuda integrada que n’explica els detalls i el funcionament.
 	- Si algú ha editat la fitxa mentre algú altre l’estava editant, es mostra un error i no es trepitgen els canvis.
 	- Es pot canviar la versió principal d’una sèrie a la seva fitxa.
+	- En afegir un contingut relacionat, apareix una finestra per a cercar-lo en lloc de fer servir un combo.
+	- Les divisions a la pàgina d’edició de la versió es poden plegar i desplegar.
 	- S’incorporen moltes validacions addicionals a l’hora de desar les fitxes.
 	- S’unifica la manera de mostrar els títols dels capítols entre les diferents seccions del portal.
 	- Les sèries sense versions i les versions sense enllaços es mostren en gris.
