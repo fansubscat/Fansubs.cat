@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2025-01-23 - Versió 5.3.1
+- **Catàleg:**
+	- Es corregeix que els continguts d’imatge real es mostressin com a «Anime» a l’autocompletat.
+- **Administració:**
+	- Es corregeix l’error en accedir a la llista de notícies.
+	- S’afegeix l’enllaç de Bluesky a la llista de fansubs.
+- **Serveis:**
+	- Els missatges de Bluesky esmenten correctament els fansubs que tenen perfil a Bluesky.
+
 ## 2025-01-17 - Versió 5.3.0
 - **General:**
 	- S’ha canviat l’estructura interna de directoris i ara tot el sistema s’allotja a /srv/fansubscat/
