@@ -377,6 +377,7 @@ $result = query("SELECT v.title name,
 			COUNT(DISTINCT fi.id) cnt,
 			GROUP_CONCAT(DISTINCT f.twitter_handle ORDER BY f.name SEPARATOR ' + ') fansub_handles,
 			GROUP_CONCAT(DISTINCT f.mastodon_handle ORDER BY f.name SEPARATOR ' + ') fansub_mastodon_handles, 
+			GROUP_CONCAT(DISTINCT f.bluesky_handle ORDER BY f.name SEPARATOR ' + ') fansub_bluesky_handles, 
 			GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_names, 
 			c.number, 
 			IFNULL(ct.title, c.description) title, 
@@ -459,7 +460,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			'📙',
 			$row['name'],
 			$episode,
-			$row['fansub_names'],
+			$row['fansub_bluesky_handles'],
 			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.manga.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.manga').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
