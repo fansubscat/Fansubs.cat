@@ -15,12 +15,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		$_SESSION['message']="S’ha suprimit correctament.";
 	}
-
-	if (!empty($_GET['delete_pending_id'])) {
-		log_action("delete-pending-news", "S’ha suprimit la notícia proposada amb id. ".$_GET['delete_pending_id']);
-		query("DELETE FROM pending_news WHERE id=".escape($_GET['delete_pending_id']));
-		$_SESSION['message']="S’ha suprimit correctament.";
-	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
@@ -35,41 +29,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 		$_SESSION['message']=NULL;
 	}
-
-	$result = query("SELECT pn.* FROM pending_news pn ORDER BY pn.title ASC");
-	if (mysqli_num_rows($result)>0) {
 ?>
-					<h5 class="card-title text-center mb-4 mt-1">Hi ha notícies proposades pendents d’aprovar:</h5>
-					<table class="table table-hover table-striped">
-						<thead class="table-dark">
-							<tr>
-								<th scope="col">Títol</th>
-								<th scope="col">Autor</th>
-								<th scope="col">Contingut</th>
-								<th class="text-center" scope="col">Accions</th>
-							</tr>
-						</thead>
-						<tbody>
-<?php
-		while ($row = mysqli_fetch_assoc($result)) {
-?>
-							<tr>
-								<th scope="row"><?php echo htmlspecialchars($row['title']); ?></th>
-								<td class="small"><?php echo htmlspecialchars($row['sender_name']); ?></td>
-								<td class="small"><?php echo htmlspecialchars(substr($row['contents'], 0, 255).'...'); ?></td>
-								<td class="align-middle text-center"><a href="news_edit.php?import_pending_id=<?php echo $row['id']; ?>" title="Notícia bona, importa-la" class="fa fa-thumbs-up p-1 text-success"></a> <a href="news_list.php?delete_pending_id=<?php echo $row['id']; ?>" title="Notícia dolenta, suprimeix-la" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la notícia proposada «".$row['title']."»? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-thumbs-down p-1 text-danger"></a></td>
-							</tr>
-<?php
-		}
-		mysqli_free_result($result);
-?>
-						</tbody>
-					</table>
-					<h5 class="card-title text-center mb-4 mt-4">Notícies ja aprovades:</h5>
-<?php
-	}
-?>
-
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
