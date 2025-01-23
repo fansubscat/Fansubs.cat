@@ -90,9 +90,13 @@ Tots els fitxers .sh del directori `services` han de tenir la marca d’executab
 	
 Configureu les tasques programades que executen els serveis executant `crontab -e -u www-data` i copiant-hi els continguts del fitxer `cron_jobs/crontab.txt` del codi.
 
+Si voleu permetre pujar arxius RAR, caldrà que instal·leu l’extensió php-rar del PECL.
+
 ## Configuració del web
 
 Al directori `common/config` trobareu un fitxer `config.example.inc.php`. Cal que en canvieu el nom a `config.inc.php` i el configureu com calgui. Hi haureu d’introduir les dades d’accés a la base de dades, els dominis i subdominis, el nom dels webs, usuaris i claus d’API de les xarxes socials (Bluesky, Discord, Mastodon, Telegram i X), un servidor SMTP per a l’enviament de correus, etc. Trobareu una explicació dels diferents camps al mateix fitxer.
+
+Canvieu el fitxer `/etc/php/8.2/apache2/php.ini` definint-hi `session.cookie_lifetime` a `0`. Si heu instal·lat l’extensió php-rar, activeu-la fent servir `extension=rar.so`.
 
 Al fitxer `websites/users/.htaccess`, canvieu l’expressió regular de la línia que comença per `SetEnvIf Origin` perquè encaixi amb els vostres dominis.
 
