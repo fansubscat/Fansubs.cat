@@ -242,7 +242,7 @@ function get_type_depending_on_catalogue($series) {
 	} else if ($series['type']=='anime') {
 		return (CATALOGUE_ITEM_TYPE!='anime' ? lang('catalogue.generic.type.anime').' • ' : '');
 	} else {
-		return (CATALOGUE_ITEM_TYPE!='liveaction' ? lang('catalogue.generic.type.anime').' • ' : '');
+		return (CATALOGUE_ITEM_TYPE!='liveaction' ? lang('catalogue.generic.type.liveaction').' • ' : '');
 	}
 }
 
