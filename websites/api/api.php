@@ -71,7 +71,7 @@ function list_remote_image_files($url) {
 	return $files;
 }
 
-function get_manga_chapter_title($series_subtype, $series_name, $show_episode_numbers, $episode_number, $title, $is_extra, $extra_name, $number_of_divisions, $division_name, $division_number) {
+function get_manga_chapter_title($series_subtype, $series_name, $show_episode_numbers, $episode_number, $title, $is_extra, $extra_name, $division_name) {
 	if ($is_extra) {
 		return lang('catalogue.generic.extra_prefix_short').$extra_name;
 	}
@@ -289,7 +289,7 @@ else if ($method === 'manga'){
 		while($row = mysqli_fetch_assoc($result)){
 			$elements[] = array(
 				'id' => convert_version_slug_to_series_slug($row['default_version_slug']).'/'.$row['id'],
-				'title' => get_manga_chapter_title($row['subtype'], $row['default_version_title'], $row['show_episode_numbers'], $row['number'], $row['episode_title'], $row['is_extra'], $row['extra_name'], $row['number_of_divisions'], $row['division_name'], $row['division_number']),
+				'title' => get_manga_chapter_title($row['subtype'], $row['default_version_title'], $row['show_episode_numbers'], $row['number'], $row['episode_title'], $row['is_extra'], $row['extra_name'], $row['division_name']),
 				'number' => $row['number']==NULL ? 0 : floatval($row['number']),
 				'fansub' => $row['fansubs'],
 				'created' => strtotime($row['created'])*1000
