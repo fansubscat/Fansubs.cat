@@ -96,7 +96,7 @@ define('BLACKLISTED_EMAIL_DOMAINS', array(
 
 //Storages
 define('STORAGES', array(
-	'https://your.storageserver.xyz/',
+	'your.storageserver.xyz',
 ));
 
 //Link to the admin tutorial

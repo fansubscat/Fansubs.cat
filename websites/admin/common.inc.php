@@ -177,13 +177,13 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 	rrmdir($temp_path);
 	//Create remote directory
 	//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
-	log_action("debug-log", "Running: ssh root@".ADMIN_STORAGES[0]['hostname']." mkdir -p /home/storage/Manga/$file_id/");
-	exec("ssh root@".ADMIN_STORAGES[0]['hostname']." mkdir -p /home/storage/Manga/$file_id/", $output, $result_code);
+	log_action("debug-log", "Running: ssh root@".STORAGES[0]." mkdir -p /home/storage/Manga/$file_id/");
+	exec("ssh root@".STORAGES[0]." mkdir -p /home/storage/Manga/$file_id/", $output, $result_code);
 	log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
 	//Copy to remote directory
 	//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
-	log_action("debug-log", "Running: rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".ADMIN_STORAGES[0]['hostname'].":/home/storage/Manga/$file_id/ --delete");
-	exec("rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".ADMIN_STORAGES[0]['hostname'].":/home/storage/Manga/$file_id/ --delete", $output, $result_code);
+	log_action("debug-log", "Running: rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".STORAGES[0].":/home/storage/Manga/$file_id/ --delete");
+	exec("rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".STORAGES[0].":/home/storage/Manga/$file_id/ --delete", $output, $result_code);
 	log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
 	//Copy first file as preview
 	log_action("debug-log", "Copying first image from $cleaned_path as preview for file $file_id");

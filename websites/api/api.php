@@ -47,9 +47,9 @@ function get_storage_url($url, $clean=FALSE) {
 	if (count(STORAGES)>0 && strpos($url, "storage://")===0) {
 		$rand = rand(0, count(STORAGES)-1);
 		if ($clean) {
-			return str_replace("storage://", STORAGES[$rand], $url);
+			return str_replace("storage://", 'https://'.STORAGES[$rand].'/', $url);
 		} else {
-			return generate_storage_url(str_replace("storage://", STORAGES[$rand], $url));
+			return generate_storage_url(str_replace("storage://", 'https://'.STORAGES[$rand].'/', $url));
 		}
 	} else {
 		return $url;
