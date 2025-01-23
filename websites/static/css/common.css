@@ -1743,10 +1743,6 @@ input:checked + .slider:before {
 		color: rgb(var(--icon-button-color-hover));
 	}
 
-	.catalogues-navigation a:not(.no-underline-animation):hover {
-		text-decoration: none;
-	}
-
 	.site-message a:hover {
 		color: rgb(var(--secondary-color));
 		text-decoration: underline;
