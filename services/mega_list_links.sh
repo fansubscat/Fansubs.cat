@@ -28,6 +28,12 @@ then
 	exit 3
 fi
 
+mega-export "*.mp4" 2> /dev/null | grep "shared as exported" | awk -F'.mp4 ' '{n=split($2,a,")"); print $1 ".mp4:::" a[1]}' | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | awk -F' AuthKey' '{print $1}' | awk -F':::' '{print $1 ":::" $3}' | sort
+if [ $? -ne 0 ]
+then
+	exit 4
+fi
+
 mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | sort
 if [ $? -ne 0 ]
 then

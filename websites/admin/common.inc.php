@@ -253,7 +253,7 @@ function get_anonymized_username($user_id, $anon_id) {
 	for ($i = 0; $i < 16; $i++) {
 		$randomString .= $characters[rand(0, $charactersLength - 1)];
 	}
-	return '<img src="https://api.multiavatar.com/'.$randomString.'.svg?apikey='.MULTIAVATAR_API_KEY.'" style="width: 2rem; height: 2rem; margin: -1rem;">';
+	return '<img src="https://api.dicebear.com/9.x/dylan/svg?seed='.$randomString.'" style="width: 2rem; height: 2rem; margin: -1rem;">';
 }
 
 function get_public_site_url($type, $slug, $is_hentai) {

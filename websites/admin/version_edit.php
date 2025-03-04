@@ -802,6 +802,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($episodes, $rowe);
 		}
 		mysqli_free_result($resulte);
+	} else {
+		crash("Dades invàlides: manca series_id<br>POST values: ".print_r($_POST, TRUE));
 	}
 	//This is extremely ugly, but avoids rewriting the HTML code or copying it to the JS file
 	$fake_episode = array(

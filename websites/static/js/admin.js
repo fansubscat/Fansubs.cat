@@ -775,14 +775,18 @@ function deleteVersionRemoteFolderRow(id) {
 		$("#form-remote_folders-list-row-"+j).attr('id','form-remote_folders-list-row-'+(j-1));
 		$("#form-remote_folders-list-id-"+j).attr('name','form-remote_folders-list-id-'+(j-1));
 		$("#form-remote_folders-list-id-"+j).attr('id','form-remote_folders-list-id-'+(j-1));
-		$("#form-remote_folders-list-account_id-"+j).attr('name','form-remote_folders-list-remote_account_id-'+(j-1));
-		$("#form-remote_folders-list-account_id-"+j).attr('id','form-remote_folders-list-remote_account_id-'+(j-1));
+		$("#form-remote_folders-list-remote_account_id-"+j).attr('name','form-remote_folders-list-remote_account_id-'+(j-1));
+		$("#form-remote_folders-list-remote_account_id-"+j).attr('id','form-remote_folders-list-remote_account_id-'+(j-1));
+		$("#form-remote_folders-list-default_resolution-"+j).attr('name','form-remote_folders-list-default_resolution-'+(j-1));
+		$("#form-remote_folders-list-default_resolution-"+j).attr('id','form-remote_folders-list-default_resolution-'+(j-1));
+		$("#form-remote_folders-list-default_duration-"+j).attr('name','form-remote_folders-list-default_duration-'+(j-1));
+		$("#form-remote_folders-list-default_duration-"+j).attr('id','form-remote_folders-list-default_duration-'+(j-1));
 		$("#form-remote_folders-list-folder-"+j).attr('name','form-remote_folders-list-folder-'+(j-1));
 		$("#form-remote_folders-list-folder-"+j).attr('id','form-remote_folders-list-folder-'+(j-1));
 		$("#form-remote_folders-list-division_id-"+j).attr('name','form-remote_folders-list-division_id-'+(j-1));
 		$("#form-remote_folders-list-division_id-"+j).attr('id','form-remote_folders-list-division_id-'+(j-1));
-		$("#form-remote_folders-list-active-"+j).attr('name','form-remote_folders-list-active-'+(j-1));
-		$("#form-remote_folders-list-active-"+j).attr('id','form-remote_folders-list-active-'+(j-1));
+		$("#form-remote_folders-list-is_active-"+j).attr('name','form-remote_folders-list-is_active-'+(j-1));
+		$("#form-remote_folders-list-is_active-"+j).attr('id','form-remote_folders-list-is_active-'+(j-1));
 		$("#form-remote_folders-list-delete-"+j).attr('onclick','deleteVersionRemoteFolderRow('+(j-1)+');');
 		$("#form-remote_folders-list-delete-"+j).attr('id','form-remote_folders-list-delete-'+(j-1));
 	}
@@ -1177,7 +1181,7 @@ function addEpisodeFromVersion() {
 		$($('#add-episode-from-version-template').html()
 			.replaceAll('{template_id}',insertedId)
 			.replaceAll('{formatted_number}',formattedNumber)
-			.replaceAll('{episode_title}',episodeTitle)).appendTo($('#division-collapse-'+divisionId+' .episode-container'));
+			.replaceAll('{episode_title}',episodeTitle)).appendTo($('#division-collapse-'+divisionId+' .accordion-body'));
 		
 		if (number=='') {
 			$('#form-files-list-'+insertedId+'-title').removeClass('episode-title-input-numbered');
@@ -2078,6 +2082,17 @@ $(document).ready(function() {
 	$("#form-licensed_status").change(function() {
 		if ($(this).val()==1) {
 			alert("Has marcat que aquesta obra té parts llicenciades. Recorda que no s’admet contingut que disposi de versions oficials en publicació en català. Només s’admetran les parts que no hagin estat editades en català d’obres amb publicacions clarament abandonades.");
+		}
+	});
+	$('#form-reader_type').change(function() {
+		if ($(this).val()=='strip') {
+			alert("Has marcat que la lectura d’aquesta obra es fa en mode «Tira vertical». Aquest mode està pensat únicament per a obres que són en format tira llarga, no per a còmics normals que es llegeixen pàgina a pàgina ni per a novel·les de text. Assegura’t que la selecció sigui correcta i, si no ho és, canvia-la al mode de lectura que correspongui. En cas de dubte, contacta amb un administrador.");
+		}
+		else if ($(this).val()=='ltr' && $('#form-comic_type').val()=='manga') {
+			alert("Has marcat que la lectura d’aquest manga es fa d’esquerra a dreta: és a dir, que les vinyetes i pàgines es llegeixen d’esquerra a dreta, en sentit occidental. Excepte que el manga sigui així o que n’hagis invertit la imatge verticalment, la majoria de mangues es llegeixen en sentit oriental (de dreta a esquerra). Assegura’t que la selecció sigui correcta i, si no ho és, canvia-la al mode de lectura que correspongui. En cas de dubte, contacta amb un administrador.");
+		}
+		else if ($(this).val()=='rtl' && $('#form-comic_type').val()=='novel') {
+			alert("Has marcat que la lectura d’aquesta novel·la lleugera es fa de dreta a esquerra: és a dir, que les pàgines es passen de dreta a esquerra, en sentit oriental. La majoria de novel·les lleugeres es llegeixen en sentit occidental (d’esquerra a dreta), perquè només contenen text, principalment. Assegura’t que la selecció sigui correcta i, si no ho és, canvia-la al mode de lectura que correspongui. En cas de dubte, contacta amb un administrador.");
 		}
 	});
 	$("#form-historical").change(function() {

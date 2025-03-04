@@ -1,5 +1,18 @@
 # Registre de canvis
 
+## 2025-03-04 - Versió 5.3.2
+- **General:**
+	- Es corregeix que l’enllaç del menú per a iniciar sessió la tanqués.
+- **Administració:**
+	- S’afegeix una confirmació quan es canvia el tipus de lectura d’un manga.
+	- Es canvia el servei d’avatars aleatoris perquè l’anterior donava errors.
+	- Es corregeixen errors en el codi quan s’eliminava un compte remot.
+	- Es corregeix que en una versió, un capítol nou s’afegís a l’element erroni.
+- **Serveis:**
+	- Es canvien els serveis d’obtenció d’enllaços de MEGA per a evitar un nou comportament de MegaCMD que impedia exportar els enllaços ja existents.
+	- Les publicacions a Bluesky esmenten corectament els comptes dels fansubs que en tenen.
+	- Es corregeix el text «Altres» a les notificacions mensuals del Telegram.
+
 ## 2025-01-23 - Versió 5.3.1
 - **Catàleg:**
 	- Es corregeix que els continguts d’imatge real es mostressin com a «Anime» a l’autocompletat.

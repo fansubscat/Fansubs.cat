@@ -10,6 +10,8 @@ do
 		FOLDER=`cat /srv/fansubscat/temporary/mega.request | awk -F':::' '{print $2}'`
 
 		echo "Got request for session id '$SESSION_ID' and folder '$FOLDER'" >> /srv/fansubscat/temporary/mega_worker.log
+		
+		rm /srv/fansubscat/temporary/mega.temp
 
 		mega-whoami > /dev/null 2> /dev/null
 		if [ $? -ne 57 ]
@@ -50,7 +52,17 @@ do
 			continue;
 		fi
 
-		mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | sort > /srv/fansubscat/temporary/mega.temp
+		mega-export "*.mp4" 2> /dev/null | grep "shared as exported" | awk -F'.mp4 ' '{n=split($2,a,")"); print $1 ".mp4:::" a[1]}' | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | awk -F' AuthKey' '{print $1}' | awk -F':::' '{print $1 ":::" $3}' | sort > /srv/fansubscat/temporary/mega.temp
+		if [ $? -ne 0 ] 
+		then
+			mega-logout --keep-session > /dev/null 2> /dev/null
+			echo "ERROR 4" > /srv/fansubscat/temporary/mega.response
+			rm /srv/fansubscat/temporary/mega.request
+			echo "Request served with error 4" >> /srv/fansubscat/temporary/mega_worker.log
+			continue;
+		fi
+
+		mega-export -f -a "*.mp4" 2> /dev/null | grep "Exported " | awk -F': ' '{n=split($1,a,"/"); print a[n] ":::" $2}' | sort >> /srv/fansubscat/temporary/mega.temp
 		if [ $? -ne 0 ] 
 		then
 			mega-logout --keep-session > /dev/null 2> /dev/null
@@ -69,7 +81,8 @@ do
 			continue;
 		fi
 
-		mv /srv/fansubscat/temporary/mega.temp /srv/fansubscat/temporary/mega.response
+		cat /srv/fansubscat/temporary/mega.temp | sort > /srv/fansubscat/temporary/mega.response
+		rm /srv/fansubscat/temporary/mega.temp
 		rm /srv/fansubscat/temporary/mega.request
 		echo "Request served with success" >> /srv/fansubscat/temporary/mega_worker.log
 	fi

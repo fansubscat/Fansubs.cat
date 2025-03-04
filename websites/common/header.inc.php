@@ -426,7 +426,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 		} else {
 ?>
-								<a href="<?php echo USERS_URL.lang('url.logout'); ?>"><i class="fa fa-fw fa-sign-in"></i> <?php echo lang('main.header.menu.login'); ?></a>
+								<a href="<?php echo USERS_URL.lang('url.login'); ?>"><i class="fa fa-fw fa-sign-in"></i> <?php echo lang('main.header.menu.login'); ?></a>
 <?php
 		}
 ?>
