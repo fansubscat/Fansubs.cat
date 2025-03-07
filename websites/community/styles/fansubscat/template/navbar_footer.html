@@ -1,0 +1,58 @@
+<div class="navbar" role="navigation">
+	<div class="inner">
+
+	<ul id="nav-footer" class="nav-footer linklist" role="menubar">
+		<!-- IF U_MARK_FORUMS and not S_IS_BOT -->
+			<li data-last-responsive="true">
+				<a href="{U_MARK_FORUMS}" title="{L_MARK_FORUMS_READ}" data-ajax="mark_forums_read" data-toggle-class="icon fa-check fa-fw">
+					<i class="icon fa-check fa-fw" aria-hidden="true"></i><span>{L_MARK_FORUMS_READ}</span>
+				</a>
+			</li>
+		<!-- ENDIF -->
+		<!-- IF not S_IS_BOT and U_MARK_TOPICS and .topicrow -->
+			<li data-last-responsive="true">
+				<a href="{U_MARK_TOPICS}" title="{L_MARK_TOPICS_READ}" data-ajax="mark_topics_read" data-toggle-class="icon fa-check fa-fw">
+					<i class="icon fa-check fa-fw" aria-hidden="true"></i><span>{L_MARK_TOPICS_READ}</span>
+				</a>
+			</li>
+		<!-- ENDIF -->
+		<!-- IF U_WATCH_FORUM_LINK and not S_IS_BOT -->
+			<li data-last-responsive="true">
+				<a href="{U_WATCH_FORUM_LINK}" title="{S_WATCH_FORUM_TITLE}" data-ajax="toggle_link" data-toggle-class="icon <!-- IF S_WATCHING_FORUM -->fa-check-square-o<!-- ELSE -->fa-square-o<!-- ENDIF --> fa-fw" data-toggle-text="{S_WATCH_FORUM_TOGGLE}" data-toggle-url="{U_WATCH_FORUM_TOGGLE}">
+					<i class="icon <!-- IF S_WATCHING_FORUM -->fa-square-o<!-- ELSE -->fa-check-square-o<!-- ENDIF --> fa-fw" aria-hidden="true"></i><span>{S_WATCH_FORUM_TITLE}</span>
+				</a>
+			</li>
+		<!-- ENDIF -->
+
+		<!-- EVENT overall_footer_timezone_before -->
+		<li class="rightside">{S_TIMEZONE}</li>
+		<!-- EVENT overall_footer_timezone_after -->
+		<!-- IF not S_IS_BOT -->
+			<!-- IF S_DISPLAY_MEMBERLIST -->
+				<li class="rightside" data-last-responsive="true">
+					<a href="{U_MEMBERLIST}" title="{L_MEMBERLIST_EXPLAIN}" role="menuitem">
+						<i class="icon fa-group fa-fw" aria-hidden="true"></i><span>{L_MEMBERLIST}</span>
+					</a>
+				</li>
+			<!-- ENDIF -->
+		<!-- ENDIF -->
+		<!-- EVENT overall_footer_teamlink_before -->
+		<!-- IF U_TEAM -->
+			<li class="rightside" data-last-responsive="true">
+				<a href="{U_TEAM}" role="menuitem">
+					<i class="icon fa-shield fa-fw" aria-hidden="true"></i><span>{L_THE_TEAM}</span>
+				</a>
+			</li>
+		<!-- ENDIF -->
+		<!-- EVENT overall_footer_teamlink_after -->
+		<!-- IF U_CONTACT_US -->
+			<li class="rightside" data-last-responsive="true">
+				<a href="{U_CONTACT_US}" role="menuitem">
+					<i class="icon fa-envelope fa-fw" aria-hidden="true"></i><span>{L_CONTACT_US}</span>
+				</a>
+			</li>
+		<!-- ENDIF -->
+	</ul>
+
+	</div>
+</div>
