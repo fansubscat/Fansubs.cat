@@ -1,0 +1,430 @@
+//
+// Do not edit configuration values in this file.
+//
+// Instead add your own configuration to _custom_config.scss
+// Copy line from this file, paste it to _custom_config.scss and change value.
+//
+
+// Configuration file
+$show-logo:								true !default;	// true or false
+$center-logo:							false !default;	// true or false
+$logo-block-padding:					10px 0 !default;
+$responsive-hide-logo:					false !default;	// Hide logo on mobile devices. true or false
+
+$show-forum-title:						false !default;	// true or false
+
+$profile-width:							150px !default;
+$profile-side:							left !default;	// left or right
+$post-margin:							($profile-width + 10px) !default;
+
+$use-wrapper:							false !default;	// true or false
+$max-width:								none !default;	// Maximum width. Set to "none" to make layout fluid
+
+$split-forums:							false !default;	// Changes layout of forums list. Values are true or false
+
+$tabbed-navigation:						false !default;	// true or false. Toggles tabbed navigation layout
+
+//
+// Fonts
+//
+
+$font-size:								11px !default;	// Base font size
+$font-family:							Verdana, Helvetica, Arial, sans-serif !default;	// Default font
+$line-height:							1.4 !default;	// Line height
+
+$h1-font-size:							$font-size + 10px !default;
+$h1-font-family:						"Trebuchet MS", Arial, Helvetica, sans-serif !default;
+
+$h2-font-size:							$font-size + 8px !default;
+$h2-font-family:						"Droid Sans","Open Sans","Trebuchet MS",Helvetica,Arial,sans-serif !default;
+
+$paragraph-line-height:					1.3 !default;
+
+$nav-primary-font-size:					$font-size + 2px !default;
+$nav-secondary-font-size:				$font-size + 1px !default;
+
+$heading-font-size:						$font-size + 4px !default;
+$panel-heading-font-size:				$font-size + 6px !default;
+
+$list-heading-font-size:				$font-size + 1px !default;
+$list-heading-line-height:				$font-size + 7px !default;
+$list-heading-font-family:				"Droid Sans","Open Sans","Trebuchet MS",Helvetica,Arial,sans-serif !default;
+
+$forum-heading-font-size:				$list-heading-font-size + 2px !default;
+$forum-heading-font-family:				$list-heading-font-family !default;
+$forum-heading-font-weight:				500 !default;
+
+$button-font-size:						$font-size + 3px !default;
+$button-line-height:					floor(($font-size + 8px) / 2) * 2 !default;	// Convert to even number
+$button-glyph-font-size:				floor($font-size / 2) * 2 !default;	// Convert to even number
+
+$dropdown-header-font-size:				$font-size + 2px !default;
+$dropdown-header-font-family:			Arial, "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$dropdown-header-line-height:			30px !default;
+
+$forum-link-font-size:					$font-size + 5px !default;
+$forum-link-line-height:				1.2 !default;
+$forum-link-font-family:				"Droid Sans","Open Sans","Trebuchet MS",Helvetica,Arial,sans-serif !default;
+
+$forum-list-column-font-size:			$font-size + 1px !default;
+$forum-list-last-column-font-size:		$font-size !default;
+$forum-list-description-font-size:		$font-size + 2px !default;
+
+$topic-link-font-size:					$font-size + 4px !default;
+$topic-link-font-family:				$forum-link-font-family !default;
+
+$tab-font-size:							$font-size !default;
+$tab-line-height:						$tab-font-size * 2 + 4px !default;
+
+// Posts
+$post-content-font-size:				$font-size + 2px !default;	// Post content
+$post-content-line-height:				1.4 !default;
+$post-content-font-family:				"Lucida Grande", "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif !default;
+
+$post-title-font-size:					$font-size + 5px !default;
+$post-title-line-height:				1.25 !default;
+$post-title-font-family:				$h2-font-family !default;
+
+$post-signature-font-size:				$font-size + 1px !default;
+$post-quote-font-size:					$post-content-font-size - 1px !default;
+$post-code-font-size:					$post-content-font-size - 1px !default;
+
+$post-block-title-font-size:			$post-quote-font-size !default;	// Quote title, code title
+$post-block-title-line-height:			1.6 !default;
+$post-block-title-font-family:			$post-content-font-family !default;
+
+$post-profile-font-size:				$font-size !default;
+$post-profile-line-height:				$line-height !default;
+
+// Forms
+$input-button-font-size:				$font-size + 2px !default;
+$input-button-font-family:				"Lucida Grande", Verdana, Helvetica, Arial, sans-serif !default;
+$bbcode-button-font-size:				$font-size + 1px !default;
+
+//
+// Color palette
+//
+
+// Absolute black and white colors. Reverse them for dark styles
+$black-color:							#fff !default;		// Main color to mix with. Black for light styles, white for dark styles
+$white-color:							#000 !default;		// Opposite of $black-color
+
+// Page colors
+$page-background:						#1a1f26 !default;	// HTML element
+$content-background:					#1c232e !default;	// Page inside content wrapper
+$content-border-color:					#1c232e !default;	// Border color for content wrapper
+
+// Primary colors
+$primary-color:							#174c97 !default;	// Main color, used for links and stuff
+$primary-darker-color:					#2c415f !default;
+$primary-lighter-color:					#6593d6 !default;
+$primary-lightest-color:				#f1f6fc !default;
+$secondary-color:						#c35824 !default;	// Secondary color, usually in red - yellow range
+$overlay-color:							$white-color !default;	// Text on top of sections that use colorful background.
+$block-background:						#252b33 !default;	// Background of blocks
+$block-background-reported:				#362a25 !default;	// Background for reported posts
+
+// Global color values
+$text-color:							#aaa !default;	// Text color
+$bold-text-color:						$black-color !default;	// Text color with higher contrast to background. #000 or #fff
+$post-text-color:						$text-color !default;	// Text inside posts
+$link-color:							#6593d6 !default;	// Links
+$link-hover-color:						$secondary-color !default;	// Links, hover state
+$muted-color:							mix($black-color, $content-background, 60%) !default;	// Gray color
+$faint-color:							mix($black-color, $content-background, 30%) !default;	// Gray color
+$rules-color:							lighten(saturate($secondary-color, 20%), 10%) !default;	// Forum rules
+
+//
+// Calculated colors
+//
+
+// Misc. DO NOT EDIT!
+$light:									if(lightness($black-color) < 50%, true, false) !default;
+
+// Blocks
+$block-background2:						#272f3e !default;	// Blocks with .bg2 background color
+$block-background3:						#2a3449 !default;	// Blocks with .bg3 background color - mostly UCP/MCP and posting form
+
+$block-border:							#2d3745 !default;	// Border color for blocks
+$border-radius:							0px !default;		// Main border radius
+$block-top-border:						lighten($block-background, 4%) !default;	// Top border of forums in forums list
+$block-bottom-border:					darken($block-background, 6%) !default;		// Bottom border of forums in forums list
+$block-inner-border:					darken($block-background, 3%) !default;	// Border inside blocks where there is only 1 border instead of top/bottom borders
+
+$block-title-color:						desaturate($link-color, 5%) !default;	// Title inside blocks, such as post title
+
+// Tabs
+$tab-color:								#fff !default;
+$tab-background:						darken($primary-darker-color, 5%) !default;
+
+$tab-hover-color:						#fff !default;
+$tab-hover-background:					$secondary-color !default;
+
+$tab-selected-color:					#fff !default;
+$tab-selected-background:				$primary-darker-color !default;
+
+// Header
+$header-bg:								$content-background !default;
+$header-text:							$text-color !default;
+$header-link:							$overlay-color !default;
+$header-link-hover:						mix($header-link, $header-bg, 80%) !default;
+
+// Primary navigation
+$primary-nav-bg:						$block-background !default;
+$primary-nav-color:						$link-color !default;
+$primary-nav-shadow:					0 5px 5px -5px rgba(0, 0, 0, 0.2), 1px 1px 0 $block-top-border inset, -1px -1px 0 $block-bottom-border inset !default;
+
+$primary-nav-selected-bg:				$primary-darker-color !default;
+$primary-nav-selected-color:			$bold-text-color !default;
+
+$primary-nav-hover-bg:					$secondary-color !default;
+$primary-nav-hover-color:				$bold-text-color !default;
+
+$primary-nav-alert-bg:					hsl(0, saturation($secondary-color), lightness($secondary-color)) !default;
+$primary-nav-alert-color:				#fff !default;
+$primary-nav-alert-shadow:				1px 1px 3px rgba(0, 0, 0, .2) !default;
+
+// Secondary navigation
+$secondary-nav-hover-link:				$link-hover-color !default;
+
+// Dropdown
+$dropdown-bg:							$block-background !default;
+$dropdown-border:						$primary-darker-color !default;
+$dropdown-shadow:						1px 3px 5px rgba(0, 0, 0, 0.5) !default;
+$dropdown-shadow-up:					1px 0 5px rgba(0, 0, 0, 0.5) !default;
+$dropdown-inner-border:					if($light, darken($dropdown-bg, 10%), lighten($dropdown-bg, 10%)) !default;
+
+$dropdown-heading-top:					$dropdown-border !default;
+$dropdown-heading-bottom:				$dropdown-heading-top !default;
+$dropdown-heading-color:				$overlay-color !default;
+$dropdown-heading-link-color:			$overlay-color !default;
+$dropdown-heading-link-hover-color:		$overlay-color !default;
+
+$forum-description-color:				#fff !default;
+$forum-description-bg:					darken(desaturate($primary-color, 20%), 5%) !default;
+$forum-description-gradient-start:		rgba(255, 255, 255, .1) !default;
+$forum-description-gradient-end:		rgba(255, 255, 255, 0) !default;
+
+// Notifications
+$notification-unread-bg:				desaturate(hsl(hue($secondary-color), saturation($content-background), lightness($content-background)), 10%) !default;
+$notification-unread-color:				$secondary-color !default;
+$notification-unread-strong-color:		#fff !default;
+
+$dropdown-notification-bg:				$block-background !default;
+$dropdown-notification-hover-bg:		$block-background2 !default;
+$dropdown-notification-color:			$link-color !default;
+$dropdown-notification-strong-color:	#fff !default;
+
+// Panels
+$panel-title-color:						desaturate(if($light, darken($primary-color, 10%), lighten($primary-color, 10%)), 25%) !default;
+$panel-title-border:					$block-inner-border !default;
+
+// Content outside of blocks
+$page-title-color:						$primary-lighter-color !default;
+$stats-title-color:						desaturate(if($light, darken($primary-color, 10%), lighten($primary-color, 10%)), 25%) !default;
+$content-top-border:					lighten($content-background, 10%) !default;
+$content-bottom-border:					darken($content-background, 10%) !default;
+$content-inner-border:					$content-bottom-border !default;
+
+// Heading section
+$heading-bg:							$primary-darker-color !default;
+$heading-border:						$heading-bg !default;
+$heading-color:							$primary-lightest-color !default;
+$heading-link:							$heading-color !default;
+$heading-link-hover:					#fff !default;
+
+// Inputs
+$input-text:							#999 !default;	// Input text color
+$input-bg:								#222427 !default;	// Input background
+$input-border:							#30343a !default;	// Input border color
+$input-hover-text:						#aaa !default;
+$input-hover-bg:						#1c1e20 !default;
+$input-hover-border:					#3c4149 !default;
+$input-focus-text:						#fff !default;
+$input-focus-bg:						#1c1e20 !default;
+$input-focus-border:					#3c4149 !default;
+$input-border-radius:					0px !default;
+
+$search-box-border:						$block-top-border $block-bottom-border $block-bottom-border $block-top-border !default;	// Border for search box block
+$search-box-shadow:						0 0 10px rgba(0, 0, 0, .15), 1px 1px 0 $block-bottom-border !default;	// Box-shadow for search box in header
+
+// Buttons
+$button-bg:								$primary-color !default;
+$button-border-radius:					3px !default;
+$button-border:							$button-bg !default;
+$button-main-bg:						darken(desaturate($secondary-color, 10%), 10%) !default;
+$button-main-border:					$button-main-bg !default;
+$button-icon:							#fff !default;
+$button-icon-hover:						#fff !default;
+$button-text:							#fff !default;
+
+$button-top-padding:					2px !default;
+$button-side-padding:					8px !default;
+$button-border-width:					1px !default;
+$button-height:							$button-line-height + ($button-top-padding + $button-border-width) * 2 !default;
+
+$big-button-border-radius:				2px !default;	// For big buttons and blocks like quick search
+
+// BBCode
+$bbcode-border-radius:					0px !default;
+$bbcode-background:						lighten($block-background, 4%) !default;
+$bbcode-background2:					lighten($block-background, 2%) !default;
+$bbcode-outer-border:					transparent !default;
+$bbcode-inner-border:					$block-background !default;
+$bbcode-heading-text:					$primary-lighter-color !default;
+
+// Code colors
+@function code-color($hue) {
+	@return hsl($hue, saturation($primary-lighter-color), lightness($primary-lighter-color));
+}
+$bbcode-code-color:						code-color(128deg) !default;
+
+// Do not edit few lines below
+$post-side:								if($profile-side == left, right, left) !default;
+
+// Mixins
+@mixin section {
+	background: $block-background;
+	border: 1px solid transparent;
+	border-color: $block-top-border $block-bottom-border $block-bottom-border $block-top-border;
+	border-radius: $border-radius;
+	padding: 4px 9px;
+	box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
+}
+
+@mixin section-forum {
+	@include section;
+	padding: 4px;
+}
+
+// Undo section mixin
+@mixin section-empty {
+	background: transparent;
+	border-width: 0;
+	border-radius: 0;
+	box-shadow: none;
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+	padding: 0;
+}
+
+// Heading block
+@mixin section-heading {
+	margin: -5px -10px 5px;
+	border-radius: max(0, $border-radius - 1px);
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	background: $heading-bg url("./images/heading.png") 100% 0 repeat-y;
+	.rtl & {
+		background-image: url("./images/heading_rtl.png");
+		background-position: 0 0;
+	}
+	border: 0 solid $heading-border;
+	padding: 5px;
+	text-transform: none;
+	font-size: $heading-font-size;
+	line-height: $line-height;
+	font-weight: normal;
+	color: $heading-color;
+
+	@if $border-radius > 1px {
+		@media (max-width: 700px) {
+			border-radius: 0;
+		}
+	}
+
+	a {
+		color: $heading-link;
+		&:hover {
+			color: $heading-link-hover;
+		}
+	}
+}
+
+@mixin section-heading-forum {
+	@include section-heading;
+	@if $split-forums == false {
+		margin: -5px -5px 0;
+	}
+	@else {
+		@include section-heading-separate;
+		margin: 0;
+	}
+}
+
+@mixin section-heading-separate {
+	border-radius: max(0, $border-radius - 1px);
+}
+
+@mixin section-heading-cp {
+	background-color: transparent;
+	color: $stats-title-color;
+	box-shadow: none;
+	background-image: none;
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+	a {
+		color: $link-color;
+		&:hover {
+			color: $link-hover-color;
+		}
+	}
+}
+
+@mixin table-heading {
+	background: $heading-bg;
+	border: 0 solid $heading-border;
+	color: $heading-color;
+
+	@if $border-radius > 1px {
+		&:first-child {
+			border-top-left-radius: max(0, $border-radius - 1px);
+		}
+		&:last-child {
+			border-top-right-radius: max(0, $border-radius - 1px);
+		}
+	}
+}
+
+@mixin table-heading-transparent {
+	background: transparent;
+	color: inherit;
+}
+
+@mixin placeholder {
+	&::-moz-placeholder {
+		@content 
+	}
+	&::-webkit-input-placeholder {
+		@content
+	}
+	&:-ms-input-placeholder {
+		@content
+	}
+}
+
+@mixin tabbed-nav-layout-all {
+	@if ($use-wrapper) {
+		&, #wrap & {
+			@content;
+		}
+	}
+	@else {
+		@content;
+	}
+}
+
+@mixin tabbed-nav-layout-alt {
+	@if ($use-wrapper) {
+		@content;
+	}
+}
+
+@mixin tabbed-nav-layout-default {
+	@if ($use-wrapper) {
+		#wrap & {
+			@content;
+		}
+	}
+	@else {
+		@content;
+	}
+}
