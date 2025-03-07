@@ -6,12 +6,6 @@
 
 {% EVENT dmzx_mchat_header_before %}
 
-{% if MCHAT_PAGE == 'custom' %}
-	<h2>{{ lang('MCHAT_CUSTOM_PAGE') }}</h2>
-{% elseif MCHAT_PAGE == 'archive' %}
-	<h2>{{ lang('MCHAT_ARCHIVE_PAGE') }}</h2>
-{% endif %}
-
 {% EVENT dmzx_mchat_header_after %}
 
 {% INCLUDE '@dmzx_mchat/mchat_script_data.html' %}
@@ -37,71 +31,67 @@
 	<a class="category{% if S_MCHAT_HIDDEN %} hidden-category{% endif %} mchat-category"></a>
 {% endif %}
 
-<div class="forabg mchat-wrapper{% if S_MCHAT_AVATARS %} mchat-avatars{% endif %}">
-	<a id="mChat"></a>
-	<div class="inner">
-		<ul class="topiclist mchat-header">
-			<li class="header">
-				{% INCLUDE '@dmzx_mchat/mchat_header.html' %}
-				{% if MCHAT_IS_COLLAPSIBLE %}
-					<a href="{{ U_MCHAT_COLLAPSE_URL }}"
-						class="collapse-btn collapse-{{ S_MCHAT_HIDDEN ? 'show' : 'hide' }} mchat-collapse"
-						data-hidden="{{ S_MCHAT_HIDDEN }}"
-						data-ajax="phpbb_collapse"
-						data-overlay="true"
-						title="{{ lang('MCHAT_COLLAPSE_TITLE') }}"></a>
+<div class="mchat-external-wrapper">
+{% if MCHAT_PAGE == 'custom' and MCHAT_WHOIS_INDEX %}
+	<div id="mchat-whois">
+		<h3>{{ lang('MCHAT_WHO_IS_CHATTING') }}</h3>
+		{% INCLUDE '@dmzx_mchat/mchat_whois.html' %}
+	</div>
+{% endif %}
+
+	<div class="forabg mchat-wrapper{% if S_MCHAT_AVATARS %} mchat-avatars{% endif %}">
+		<a id="mChat"></a>
+		<div class="inner">
+
+			{% EVENT dmzx_mchat_body_before %}
+
+			<div id="mchat-body"{% if MCHAT_IS_COLLAPSIBLE %} class="collapsible"{% endif %}>
+				{% if MCHAT_SOUND_ENABLED %}
+					<audio id="mchat-sound-add" class="hidden" src="{{ EXT_URL }}sounds/add.mp3" preload="auto"></audio>
+					<audio id="mchat-sound-edit" class="hidden" src="{{ EXT_URL }}sounds/edit.mp3" preload="auto"></audio>
+					<audio id="mchat-sound-del" class="hidden" src="{{ EXT_URL }}sounds/del.mp3" preload="auto"></audio>
+					<audio id="mchat-sound-error" class="hidden" src="{{ EXT_URL }}sounds/error.mp3" preload="auto"></audio>
 				{% endif %}
-			</li>
-		</ul>
 
-		{% EVENT dmzx_mchat_body_before %}
-
-		<div id="mchat-body"{% if MCHAT_IS_COLLAPSIBLE %} class="collapsible"{% endif %}>
-			{% if MCHAT_SOUND_ENABLED %}
-				<audio id="mchat-sound-add" class="hidden" src="{{ EXT_URL }}sounds/add.mp3" preload="auto"></audio>
-				<audio id="mchat-sound-edit" class="hidden" src="{{ EXT_URL }}sounds/edit.mp3" preload="auto"></audio>
-				<audio id="mchat-sound-del" class="hidden" src="{{ EXT_URL }}sounds/del.mp3" preload="auto"></audio>
-				<audio id="mchat-sound-error" class="hidden" src="{{ EXT_URL }}sounds/error.mp3" preload="auto"></audio>
-			{% endif %}
-
-			<div id="mchat-confirm" class="hidden">
-				<h3>{{ lang('CONFIRM') }}</h3>
-				<div class="mchat-confirm-fields">
-					<p></p>
-					<textarea></textarea>
+				<div id="mchat-confirm" class="hidden">
+					<h3>{{ lang('CONFIRM') }}</h3>
+					<div class="mchat-confirm-fields">
+						<p></p>
+						<textarea></textarea>
+					</div>
+					<fieldset class="submit-buttons">
+						<input type="button" name="confirm" value="{{ lang('MCHAT_OK') }}" class="button2">&nbsp;
+						<input type="button" name="cancel" value="{{ lang('CANCEL') }}" class="button2">
+					</fieldset>
 				</div>
-				<fieldset class="submit-buttons">
-					<input type="button" name="confirm" value="{{ lang('MCHAT_OK') }}" class="button2">&nbsp;
-					<input type="button" name="cancel" value="{{ lang('CANCEL') }}" class="button2">
-				</fieldset>
+
+				{% if MCHAT_STATIC_MESS and MCHAT_PAGE != 'archive' %}
+					{% EVENT dmzx_mchat_static_container_before %}
+					<ul class="topiclist forums mchat-static-container">
+						<li class="row mchat-static">{{ MCHAT_STATIC_MESS }}</li>
+					</ul>
+					{% EVENT dmzx_mchat_static_container_after %}
+				{% endif %}
+
+				<div id="mchat-main" class="{{ MCHAT_MESSAGE_TOP ? 'mchat-messages-top' : 'mchat-messages-bottom' }}">
+					{% EVENT dmzx_mchat_messages_container_before %}
+
+					<ul id="mchat-messages" class="topiclist forums">
+						{% if loops.mchatrow|length %}
+							{% INCLUDE '@dmzx_mchat/mchat_messages.html' %}
+						{% elseif not MCHAT_TOTAL_MESSAGES %}
+							<li class="row mchat-static mchat-no-messages">{{ lang('MCHAT_NOMESSAGE') }}</li>
+						{% endif %}
+					</ul>
+
+					{% EVENT dmzx_mchat_messages_container_after %}
+				</div>
+
+				{% INCLUDE '@dmzx_mchat/mchat_panel.html' %}
 			</div>
 
-			{% if MCHAT_STATIC_MESS and MCHAT_PAGE != 'archive' %}
-				{% EVENT dmzx_mchat_static_container_before %}
-				<ul class="topiclist forums mchat-static-container">
-					<li class="row mchat-static">{{ MCHAT_STATIC_MESS }}</li>
-				</ul>
-				{% EVENT dmzx_mchat_static_container_after %}
-			{% endif %}
-
-			<div id="mchat-main" class="{{ MCHAT_MESSAGE_TOP ? 'mchat-messages-top' : 'mchat-messages-bottom' }}">
-				{% EVENT dmzx_mchat_messages_container_before %}
-
-				<ul id="mchat-messages" class="topiclist forums">
-					{% if loops.mchatrow|length %}
-						{% INCLUDE '@dmzx_mchat/mchat_messages.html' %}
-					{% elseif not MCHAT_TOTAL_MESSAGES %}
-						<li class="row mchat-static mchat-no-messages">{{ lang('MCHAT_NOMESSAGE') }}</li>
-					{% endif %}
-				</ul>
-
-				{% EVENT dmzx_mchat_messages_container_after %}
-			</div>
-
-			{% INCLUDE '@dmzx_mchat/mchat_panel.html' %}
+			{% EVENT dmzx_mchat_body_after %}
 		</div>
-
-		{% EVENT dmzx_mchat_body_after %}
 	</div>
 </div>
 
@@ -120,15 +110,6 @@
 	</div>
 	{% EVENT dmzx_mchat_action_bar_top_after %}
 </div>
-{% endif %}
-
-{% if MCHAT_PAGE == 'custom' and MCHAT_WHOIS_INDEX %}
-	<h3>{{ lang('MCHAT_WHO_IS_CHATTING') }}</h3>
-	{% INCLUDE '@dmzx_mchat/mchat_whois.html' %}
-	<div id="mchat-refresh">
-		<span id="mchat-refresh-explain">{{ lang('MCHAT_WHO_IS_REFRESH_EXPLAIN', MCHAT_WHOIS_REFRESH / 1000) }}</span>
-		<span id="mchat-refresh-pending" class="hidden">{{ lang('MCHAT_REFRESHING') }}</span>
-	</div>
 {% endif %}
 
 {% if MCHAT_PAGE in ['custom', 'archive'] and LEGEND %}

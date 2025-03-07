@@ -368,9 +368,7 @@ jQuery(function($) {
 			if (json.del) {
 				mChat.removeMessages(json.del);
 			}
-			if (json.whois) {
-				mChat.whoisDone(json);
-			}
+			mChat.whoisDone(json.users);
 			if (json.log) {
 				mChat.logId = json.log;
 			}
@@ -383,32 +381,9 @@ jQuery(function($) {
 			$('.mchat-nav-link-title').each(phpbb.toggleDropdown);
 			popup(this.href, 450, 275);
 		},
-		whois: function() {
-			if (mChat.page === 'custom') {
-				mChat.cached('refresh-pending').show();
-				mChat.cached('refresh-explain').hide();
-			}
-			mChat.ajaxRequest('whois', false, {}).done(mChat.whoisDone);
-		},
 		whoisDone: function(json) {
-			var $whois = $(json.container);
-			var $userlist = $whois.find('#mchat-userlist');
-			mChat.cached('whois').replaceWith($whois);
-			mChat.cache.whois = $whois;
-			mChat.cache.userlist = $userlist;
-			if (mChat.storage.get('show_userlist')) {
-				$userlist.show();
-			}
-			if (mChat.page === 'custom') {
-				mChat.cached('refresh-pending').hide();
-				mChat.cached('refresh-explain').show();
-			}
-			if (json.navlink) {
-				$('.mchat-nav-link').html(json.navlink);
-			}
-			if (json.navlink_title) {
-				$('.mchat-nav-link-title').prop('title', json.navlink_title);
-			}
+			var $userlist = $('#mchat-userlist');
+			$userlist.html(json);
 		},
 		addMessages: function($messages) {
 			mChat.cached('messages').find('.mchat-no-messages').remove();
@@ -562,10 +537,6 @@ jQuery(function($) {
 		pauseSession: function() {
 			clearInterval(mChat.refreshInterval);
 			mChat.refreshInterval = false;
-			if (mChat.whoisRefresh) {
-				clearInterval(mChat.whoisInterval);
-				mChat.whoisInterval = false;
-			}
 		},
 		resetSession: function() {
 			if (mChat.page === 'archive') {
@@ -574,16 +545,10 @@ jQuery(function($) {
 			mChat.pauseSession();
 			mChat.sessionLength = 0;
 			mChat.refreshInterval = setInterval(mChat.refresh, mChat.refreshTime);
-			if (mChat.whoisRefresh) {
-				mChat.whoisInterval = setInterval(mChat.whois, mChat.whoisRefresh);
-			}
 			mChat.status('ok');
 		},
 		endSession: function(skipUpdateWhois) {
 			mChat.pauseSession();
-			if (mChat.whoisRefresh && !skipUpdateWhois) {
-				mChat.whois();
-			}
 			mChat.status('paused');
 		},
 		updateCharCount: function() {
@@ -778,7 +743,7 @@ jQuery(function($) {
 			'data-mchat-element': 'colour'
 		});
 
-		$.each(['userlist', 'smilies', 'bbcodes', 'colour'], function(i, elem) {
+		$.each(['smilies', 'bbcodes', 'colour'], function(i, elem) {
 			var isVisible = mChat.storage.get('show_' + elem) === 'yes';
 			$('.mchat-button-' + elem).toggleClass('mchat-button-is-down', isVisible);
 			mChat.cached(elem).toggle(isVisible);

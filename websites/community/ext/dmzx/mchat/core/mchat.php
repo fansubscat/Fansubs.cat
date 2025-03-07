@@ -193,7 +193,9 @@ class mchat
 			throw new http_exception(404, 'MCHAT_NO_CUSTOM_PAGE');
 		}
 
-		$this->mchat_functions->mchat_add_user_session();
+		if ($this->mchat_functions->mchat_add_user_session()) {
+			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+		}
 
 		$this->assign_whois();
 
@@ -208,6 +210,17 @@ class mchat
 		]);
 
 		return $this->helper->render('mchat_body.html', $this->lang->lang('MCHAT_TITLE'));
+	}
+	
+	public function add_system_message($message)
+	{
+		$message_data = $this->process_message($message);
+		$message_data = array_merge($message_data, [
+			'user_id'		=> $this->user->data['user_id'],
+			'user_ip'		=> $this->user->ip,
+			'message_time'	=> time(),
+		]);
+		$this->mchat_functions->mchat_action('add', $message_data);
 	}
 
 	/**
@@ -334,6 +347,10 @@ class mchat
 	{
 		$this->init_action('u_mchat_use');
 
+		if ($this->mchat_functions->mchat_add_user_session()) {
+			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+		}
+
 		if ($this->mchat_functions->mchat_is_user_flooding())
 		{
 			throw new http_exception(400, 'MCHAT_FLOOD');
@@ -415,6 +432,10 @@ class mchat
 	{
 		$this->init_action('u_mchat_use');
 
+		if ($this->mchat_functions->mchat_add_user_session()) {
+			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+		}
+
 		$message_id = $this->request->variable('message_id', 0);
 
 		if (!$message_id)
@@ -481,6 +502,10 @@ class mchat
 	{
 		$this->init_action('u_mchat_use');
 
+		if ($this->mchat_functions->mchat_add_user_session()) {
+			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+		}
+
 		$message_id = $this->request->variable('message_id', 0);
 
 		if (!$message_id)
@@ -534,6 +559,13 @@ class mchat
 	public function action_refresh($return_raw = false)
 	{
 		$this->init_action('u_mchat_view', false);
+
+		if ($this->mchat_functions->mchat_add_user_session()) {
+			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+		}
+		
+		$this->assign_whois();
+		$whois = $this->render_template('mchat_whois.html');
 
 		// Keep the session alive forever if there is no session timeout
 		$keep_session_alive = !$this->mchat_settings->cfg('mchat_timeout');
@@ -642,6 +674,8 @@ class mchat
 		{
 			$response['del'] = $log_edit_del_ids['del'];
 		}
+		
+		$response['users'] = $whois;
 
 		/**
 		 * Event to modify the data that is sent to the user after checking for new mChat message
