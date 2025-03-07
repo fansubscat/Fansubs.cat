@@ -1,0 +1,39 @@
+services:
+    auth.provider.fansubscat:
+        class: fansubscat\phpbbbridge\auth_provider
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@language'
+            - '@request'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+        tags:
+            - { name: auth.provider }
+            
+    fansubscat.apicontroller:
+        class: fansubscat\phpbbbridge\api_controller
+        arguments:
+            - '@auth'
+            - '@user'
+            - '@dbal.conn'
+            - '@request'
+            - '@config'
+            - '@content.visibility'
+            - '@avatar.manager'
+            - '@profilefields.manager'
+            - '@dispatcher'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%core.table_prefix%'
+            
+    fansubscat.eventlistener:
+        class: fansubscat\phpbbbridge\event_listener
+        arguments:
+            - '@dbal.conn'
+            - '@user'
+            - '@template'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }

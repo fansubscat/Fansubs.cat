@@ -1,0 +1,621 @@
+<?php
+namespace fansubscat\phpbbbridge;
+
+use voku\helper\HtmlDomParser;
+
+/**
+ * Tadaima.cat API main controller.
+ */
+class api_controller {
+
+	const API_TOKEN_HEADER = "X-Fansubscat-Api-Token";
+	const API_TOKEN_VALUE = "prova";
+
+	const ERROR_API_TOKEN_NOT_SPECIFIED = 1;
+	const ERROR_METHOD_NOT_SUPPORTED = 2;
+	const ERROR_NOT_FOUND = 3;
+	const ERROR_PERMISSION_DENIED = 4;
+	const ERROR_INVALID_REQUEST = 5;
+
+	/* @var \phpbb\user */
+	protected $user;
+
+	/* @var \phpbb\auth\auth */
+	protected $auth;
+
+	/* @var \phpbb\db\driver\factory */
+	protected $db;
+
+	/* @var \phpbb\request\request */
+	protected $http_request;
+
+	/* @var \phpbb\config\config */
+	protected $config;
+
+	/* @var \phpbb\content_visibility */
+	protected $content_visibility;
+
+	/* @var \phpbb\avatar\manager */
+	protected $avatar_manager;
+
+	/* @var \phpbb\profilefields\manager */
+	protected $profile_fields_manager;
+
+	/* @var \phpbb\event\dispatcher_interface */
+	protected $phpbb_dispatcher;
+
+	/* @var string */
+	protected $phpbb_root_path;
+
+	/* @var string */
+	protected $php_ext;
+
+	/* @var string */
+	protected $table_prefix;
+
+	/**
+	 * Constructor
+	 *
+	 * @param \phpbb\auth\auth $auth
+	 * @param \phpbb\user $user
+	 * @param \phpbb\db\driver\factory $db
+	 * @param \phpbb\request\request $request
+	 * @param \phpbb\config\config $config
+	 * @param \phpbb\content_visibility $content_visibility
+	 * @param \phpbb\avatar\manager $avatar_manager
+	 * @param \phpbb\profilefields\manager $profile_fields_manager
+	 * @param \phpbb\event\dispatcher_interface $phpbb_dispatcher
+	 * @param string $phpbb_root_path
+	 * @param string $php_ext
+	 * @param string $table_prefix
+	 */
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\user $user, \phpbb\db\driver\factory $db,
+		\phpbb\request\request $http_request, \phpbb\config\config $config, \phpbb\content_visibility $content_visibility,
+		\phpbb\avatar\manager $avatar_manager, \phpbb\profilefields\manager $profile_fields_manager, 
+		\phpbb\event\dispatcher_interface $phpbb_dispatcher, $phpbb_root_path, $php_ext, $table_prefix){
+		$this->auth = $auth;
+		$this->user = $user;
+		$this->db = $db;
+		$this->http_request = $http_request;
+		$this->config = $config;
+		$this->content_visibility = $content_visibility;
+		$this->avatar_manager = $avatar_manager;
+		$this->profile_fields_manager = $profile_fields_manager;
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
+		$this->phpbb_root_path = $phpbb_root_path;
+		$this->php_ext = $php_ext;
+		$this->table_prefix = $table_prefix;
+	}
+
+	/**
+	 * Controller for route /api/{method}
+	 *
+	 * @param string $method Requested API method
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	public function handle($method, $param=NULL){
+		//We validate that the headers are set properly
+		if ($this->http_request->header(self::API_TOKEN_HEADER)=='' || $this->http_request->header(self::API_TOKEN_HEADER)!=self::API_TOKEN_VALUE){
+			$result = array(
+				"status" => 'ko',
+				"error" => array(
+					"code" => self::ERROR_API_TOKEN_NOT_SPECIFIED,
+					"description" => 'Incorrect API token specified, check your request.',
+				),
+			);
+			
+			return $this->create_json_response($result, 400);
+		}
+
+		switch($method){
+			case 'create_user':
+				$response = $this->create_user();
+				break;
+			case 'add_topic':
+				$response = $this->add_topic();
+				break;
+			case 'add_reply':
+				$response = $this->add_reply();
+				break;
+			case 'edit_post':
+				$response = $this->edit_post();
+				break;
+			case 'update_profile':
+				$response = $this->update_profile();
+				break;
+			default:
+				$result = array(
+					"status" => 'ko',
+					"error" => array(
+						"code" => self::ERROR_METHOD_NOT_SUPPORTED,
+						"description" => 'This method is not supported, check your request.',
+					),
+				);
+				
+				$response = $this->create_json_response($result, 400);
+		}
+		
+		return $response;
+	}
+
+	/**
+	 * Validates if the POST request is valid. The request already has an App id.
+	 *
+	 * @param bool $token_required Whether the request requires a token or not
+	 *
+	 * @return bool true if valid, false otherwise
+	 */
+	protected function validate_post_request(){
+		if ($this->http_request->server('REQUEST_METHOD')==='POST'){
+			$request = json_decode(file_get_contents('php://input'));
+			return (($request!==NULL) ? $request : FALSE);
+		}
+		else{
+			return FALSE;
+		}
+	}
+
+	/**
+	 * Registers the user.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function create_user(){
+		//WE HAVE THESE PARAMETERS:
+		// -username
+		// -email
+		// -birthdate
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		//This is needed for the user_add function
+		require_once($this->phpbb_root_path . "includes/functions_user." . $this->php_ext);
+		
+		
+		// first retrieve default group id
+		$sql = 'SELECT group_id
+			FROM ' . GROUPS_TABLE . "
+			WHERE group_name = '" . $this->db->sql_escape('REGISTERED') . "'
+				AND group_type = " . GROUP_SPECIAL;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		// generate user account data
+		$user_row = array(
+			'username'		=> $request->username,
+			'user_password'	=> '',
+			'user_email'	=> $request->email,
+			'user_birthday'	=> date_format(date_create_from_format('Y-m-d', $request->birthdate), 'd-m-Y'),
+			'group_id'		=> (int) $row['group_id'],
+			'user_type'		=> USER_NORMAL,
+			'user_ip'		=> $this->user->ip,
+			'user_new'		=> ($this->config['new_member_post_limit']) ? 1 : 0,
+			'user_avatar'		=> 'https://static.fansubs.cat/images/site/default_avatar.jpg',
+			'user_avatar_type'	=> 'avatar.driver.remote',
+		);
+			
+		// effectively add the user
+		user_add($user_row);
+		
+		return $this->create_generic_ok_response();
+	}
+
+	/**
+	 * Adds a new topic.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function add_topic(){
+		//WE HAVE THESE PARAMETERS:
+		// -username
+		// -forum_id
+		// -subject
+		// -message
+		// -timestamp
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		$sql = 'SELECT user_id 
+			FROM ' . USERS_TABLE . "
+			WHERE username='" . $this->db->sql_escape($request->username) . "'";
+		$result = $this->db->sql_query($sql);
+		$user_id = $this->db->sql_fetchrow($result)['user_id'];
+		$this->db->sql_freeresult($result);
+		
+		$this->begin_user_session($user_id);
+
+		//This is needed for the submit_post function
+		require_once($this->phpbb_root_path . "includes/functions_posting." . $this->php_ext);
+		
+		//post new topic
+		$mode = 'post';
+		$sql = 'SELECT forum_name, forum_id, forum_status 
+			FROM ' . FORUMS_TABLE . ' 
+			WHERE forum_id=' . (int)$request->forum_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if ($row===FALSE){
+			return $this->create_not_found_response();
+		}
+		else{
+			$forum_name = $row['forum_name'];
+			$forum_id = $row['forum_id'];
+		}
+
+		if (!$this->auth->acl_get('f_post', $forum_id) || $row['forum_status'] == ITEM_LOCKED){
+			return $this->create_permission_denied_response();
+		}
+
+		//Submit the new post
+		$poll = $uid = $bitfield = $flags = '';
+		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, true, true, true, 'dontbugme');
+		$data = array( 
+		    'forum_id' => $forum_id,
+		    'icon_id' => false,
+		    'enable_bbcode' => true,
+		    'enable_smilies' => true,
+		    'enable_urls' => true,
+		    'enable_sig' => true,
+		    'message' => $request->message,
+		    'message_md5' => md5($request->message),
+		    'bbcode_bitfield' => $bitfield,
+		    'bbcode_uid' => $uid,
+		    'post_edit_locked' => 0,
+		    'topic_title' => $request->subject,
+		    'notify_set' => false,
+		    'notify' => false,
+		    'post_time' => $request->timestamp,
+		    'forum_name' => $forum_name,
+		    'enable_indexing' => true,
+		);
+
+		$result = submit_post($mode, $request->subject, $request->username, POST_NORMAL, $poll, $data);
+		
+		$this->end_user_session();
+		
+		$output = array(
+			"status" => 'ok',
+			"topic_id" => $data['topic_id'],
+			"post_id" => $data['post_id'],
+		);
+	
+		return $this->create_json_response($output, 200);
+	}
+
+	/**
+	 * Adds a new reply to a topic.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function add_reply(){
+		//WE HAVE THESE PARAMETERS:
+		// -username
+		// -topic_id
+		// -subject
+		// -message
+		// -timestamp
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		$sql = 'SELECT user_id 
+			FROM ' . USERS_TABLE . "
+			WHERE username='" . $this->db->sql_escape($request->username) . "'";
+		$result = $this->db->sql_query($sql);
+		$user_id = $this->db->sql_fetchrow($result)['user_id'];
+		$this->db->sql_freeresult($result);
+		
+		$this->begin_user_session($user_id);
+
+		//This is needed for the submit_post function
+		require_once($this->phpbb_root_path . "includes/functions_posting." . $this->php_ext);
+		
+		//post new message in existing topic
+		$mode = 'reply';
+		$sql = 'SELECT f.forum_name, f.forum_status, t.* 
+			FROM ' . TOPICS_TABLE . ' t 
+			LEFT JOIN ' . FORUMS_TABLE . ' f ON t.forum_id=f.forum_id 
+			WHERE topic_id=' . (int)$request->topic_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if ($row===FALSE){
+			return $this->create_not_found_response();
+		}
+		else{
+			$forum_name = $row['forum_name'];
+			$forum_id = $row['forum_id'];
+			$topic_id = (int)$request->topic_id;
+		}
+
+		if (!$this->auth->acl_get('f_reply', $forum_id) || $row['topic_status'] == ITEM_LOCKED || $row['topic_status'] == ITEM_MOVED){
+			return $this->create_permission_denied_response();
+		}
+
+		//Submit the new post
+		$poll = $uid = $bitfield = $flags = '';
+		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, true, true, true, 'dontbugme');
+		$data = array( 
+		    'forum_id' => $forum_id,
+		    'topic_id' => $topic_id,
+		    'icon_id' => false,
+		    'enable_bbcode' => true,
+		    'enable_smilies' => true,
+		    'enable_urls' => true,
+		    'enable_sig' => true,
+		    'message' => $request->message,
+		    'message_md5' => md5($request->message),
+		    'bbcode_bitfield' => $bitfield,
+		    'bbcode_uid' => $uid,
+		    'post_edit_locked' => 0,
+		    'topic_title' => $request->subject,
+		    'notify_set' => false,
+		    'notify' => false,
+		    'post_time' => $request->timestamp,
+		    'forum_name' => $forum_name,
+		    'enable_indexing' => true,
+		);
+
+		$result = submit_post($mode, $request->subject, $request->username, POST_NORMAL, $poll, $data);
+		
+		$this->end_user_session();
+		
+		$output = array(
+			"status" => 'ok',
+			"post_id" => $data['post_id'],
+		);
+	
+		return $this->create_json_response($output, 200);
+	}
+
+	/**
+	 * Updates a post with new text.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function edit_post(){
+		//WE HAVE THESE PARAMETERS:
+		// -post_id
+		// -subject
+		// -message
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		
+		$sql = 'SELECT * 
+			FROM ' . POSTS_TABLE . ' 
+			WHERE post_id=' . (int)$request->post_id;
+		$result = $this->db->sql_query($sql);
+		$postrow = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		
+		$this->begin_user_session($postrow['poster_id']);
+
+		//This is needed for the submit_post function
+		require_once($this->phpbb_root_path . "includes/functions_posting." . $this->php_ext);
+		
+		//post new message in existing topic
+		$mode = 'edit';
+		$sql = 'SELECT f.forum_name, f.forum_status, t.* 
+			FROM ' . TOPICS_TABLE . ' t 
+			LEFT JOIN ' . FORUMS_TABLE . ' f ON t.forum_id=f.forum_id 
+			WHERE topic_id=' . $postrow['topic_id'];
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if ($row===FALSE){
+			return $this->create_not_found_response();
+		}
+		else{
+			$forum_name = $row['forum_name'];
+			$forum_id = $row['forum_id'];
+			$topic_id = $postrow['topic_id'];
+		}
+
+		if (!$this->auth->acl_get('f_edit', $forum_id) || $row['topic_status'] == ITEM_LOCKED || $row['topic_status'] == ITEM_MOVED){
+			return $this->create_permission_denied_response();
+		}
+
+		//Submit the new post
+		$poll = $uid = $bitfield = $flags = '';
+		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, true, true, true, 'dontbugme');
+		$data = array( 
+		    'forum_id' => $forum_id,
+		    'topic_id' => $topic_id,
+		    'icon_id' => false,
+		    'enable_bbcode' => true,
+		    'enable_smilies' => true,
+		    'enable_urls' => true,
+		    'enable_sig' => true,
+		    'message' => $request->message,
+		    'message_md5' => md5($request->message),
+		    'bbcode_bitfield' => $bitfield,
+		    'bbcode_uid' => $uid,
+		    'post_edit_locked' => 0,
+		    'topic_title' => $request->subject,
+		    'notify_set' => false,
+		    'notify' => false,
+		    'forum_name' => $forum_name,
+		    'enable_indexing' => true,
+		);
+
+		//Additional for EDIT mode:
+		$data['post_id'] = (int)$request->post_id;
+		$data['topic_posts_approved'] = $row['topic_posts_approved'];
+		$data['topic_posts_unapproved'] = $row['topic_posts_unapproved'];
+		$data['topic_posts_softdeleted'] = $row['topic_posts_softdeleted'];
+		$data['topic_first_post_id'] = $row['topic_first_post_id'];
+		$data['topic_first_poster_name'] = $row['topic_first_poster_name'];
+		$data['topic_last_post_id'] = $row['topic_last_post_id'];
+		$data['poster_id'] = $postrow['poster_id'];
+		$data['post_username'] = $postrow['post_username'];
+		$data['post_edit_reason'] = '';
+		$data['post_edit_user'] = $postrow['poster_id'];
+
+		$result = submit_post($mode, $request->subject, $postrow['post_username'], POST_NORMAL, $poll, $data);
+		
+		$this->end_user_session();
+		
+		$output = array(
+			"status" => 'ok',
+			"post_id" => $data['post_id'],
+		);
+	
+		return $this->create_json_response($output, 200);
+	}
+
+	/**
+	 * Updates user profile attributes that are shared between Fansubs.cat and phpBB.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function update_profile(){
+		//WE HAVE THESE PARAMETERS:
+		// -username_old
+		// -username
+		// -email
+		// -avatar_url
+		// -birth_date
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		$sql = 'UPDATE ' . USERS_TABLE . "
+			SET user_avatar = '" . $this->db->sql_escape($request->avatar_url) . "',
+				user_avatar_type = 'avatar.driver.remote',
+				user_email = '" . $this->db->sql_escape($request->email) . "',
+				user_birthday = '" . date_format(date_create_from_format('Y-m-d', $request->birthdate), 'd-m-Y') . "',
+				username = '" . $this->db->sql_escape($request->username) . "',
+				username_clean = '" . $this->db->sql_escape(utf8_clean_string($request->username)) . "'
+			WHERE username = '" . $this->db->sql_escape($request->username_old) . "'";
+		$this->db->sql_query($sql);
+		
+		//This is needed for the user_update_name function
+		require_once($this->phpbb_root_path . "includes/functions_user." . $this->php_ext);
+		
+		user_update_name($request->username_old, $request->username);
+		
+		return $this->create_generic_ok_response();
+	}
+
+	/************* UTILITY METHODS *************/
+
+	/**
+	 * Creates a generic OK response.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function create_generic_ok_response(){
+		$result = array(
+			"status" => 'ok',
+		);
+	
+		return $this->create_json_response($result, 200);
+	}
+
+	/**
+	 * Creates a generic invalid format response.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function create_invalid_format_response(){
+		$result = array(
+			"status" => 'ko',
+			"error" => array(
+				"code" => self::ERROR_INVALID_REQUEST,
+				"description" => 'The request has an invalid format. Please make sure that you set the appropriate headers and parameters.',
+			),
+		);
+	
+		return $this->create_json_response($result, 400);
+	}
+
+	/**
+	 * Creates a generic not found response.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function create_not_found_response(){
+		$result = array(
+			"status" => 'ko',
+			"error" => array(
+				"code" => self::ERROR_NOT_FOUND,
+				"description" => 'Not found.',
+			),
+		);
+	
+		return $this->create_json_response($result, 404);
+	}
+
+	/**
+	 * Creates a generic permission denied response.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function create_permission_denied_response(){
+		$result = array(
+			"status" => 'ko',
+			"error" => array(
+				"code" => self::ERROR_PERMISSION_DENIED,
+				"description" => 'You are not authorized to perform this action.',
+			),
+		);
+
+		return $this->create_json_response($result, 403);
+	}
+
+	/**
+	 * Tells the phpBB software to start treating the current session as the specified user id.
+	 *
+	 * @param int $user_id
+	 */
+	protected function begin_user_session($user_id, $use_request_vars = FALSE){
+		//Log in as that user
+		$this->user->session_create($user_id);
+		$this->auth->acl($this->user->data);
+		$this->user->setup();
+	}
+
+	/**
+	 * Tells the phpBB software to end the current session
+	 */
+	protected function end_user_session(){
+		$this->user->session_kill(FALSE);
+	}
+
+	/**
+	 * Creates a \Symfony\Component\HttpFoundation\Response with the proper
+	 * parameters for a JSON response.
+	 *
+	 * @param array $result Array ready for JSON generation
+	 * @param int $http_code HTTP code for the response
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function create_json_response($result, $http_code){
+		$headers = array(
+			"Content-Type" => "application/json",
+		);
+		return new \Symfony\Component\HttpFoundation\Response(json_encode($result), $http_code, $headers);
+	}
+}
+

@@ -1,0 +1,27 @@
+{
+	"name": "fansubscat/phpbbbridge",
+	"type": "phpbb-extension",
+	"description": "Fansubs.cat extension that handles communication between Fansubs.cat and its phpBB forum.",
+	"homepage": "https://www.fansubs.cat",
+	"version": "1.0.0",
+	"keywords": ["phpbb", "extension", "fansubscat"],
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Fansubs.cat",
+			"email": "contacte@fansubs.cat",
+			"homepage": "https://www.fansubs.cat"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"phpbb/phpbb": ">=3.2.0",
+		"composer/installers": "~1.0"
+	},
+	"extra": {
+		"display-name": "Fansubs.cat",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0-b1,<4.0.0@dev"
+		}
+	}
+}

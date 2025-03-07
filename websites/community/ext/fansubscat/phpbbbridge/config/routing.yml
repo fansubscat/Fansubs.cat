@@ -1,0 +1,7 @@
+fansubscat_api_controller_main:
+    path: /api/{method}
+    defaults: { _controller: fansubscat.apicontroller:handle }
+
+fansubscat_api_controller_with_one_param:
+    path: /api/{method}/{param}
+    defaults: { _controller: fansubscat.apicontroller:handle }
