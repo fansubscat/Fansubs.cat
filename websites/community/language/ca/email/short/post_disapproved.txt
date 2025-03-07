@@ -1,0 +1,11 @@
+Subject: Entrada rebutjada - "{POST_SUBJECT}"
+
+Hola {USERNAME},
+
+La vostra entrada "{POST_SUBJECT}" a "{SITENAME}" ha estat rebutjada per un moderador o un administrador.
+
+S’ha donat la següent raó per al rebuig:
+
+{REASON}
+
+{EMAIL_SIG}

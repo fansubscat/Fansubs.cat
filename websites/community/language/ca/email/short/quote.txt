@@ -1,0 +1,13 @@
+Subject: Us han citat a "{TOPIC_TITLE}"
+
+Hola {USERNAME},
+
+"{AUTHOR_NAME}" us ha citat al tema "{TOPIC_TITLE}" a "{SITENAME}".
+
+Si voleu visualitzar l’entrada citada, feu clic a l’enllaç següent:
+{U_VIEW_POST}
+
+Si ja no voleu rebre notificacions sobre respostes que us citen, actualitzeu la configuració de notificacions a l’enllaç següent:
+{U_NOTIFICATION_SETTINGS}
+
+{EMAIL_SIG}

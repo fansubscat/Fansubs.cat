@@ -1,0 +1,7 @@
+Subject: El vostre compte ha estat desactivat
+
+Hola {USERNAME},
+
+El vostre compte a "{SITENAME}" ha estat desactivat, probablement degut a canvis en el vostre perfil. Cal que l’administrador del fòrum l’activi abans que pugueu tornar a iniciar la sessió. Rebreu una altra notificació quan això passi.
+
+{EMAIL_SIG}

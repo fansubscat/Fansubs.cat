@@ -1,0 +1,15 @@
+Subject: Tema nou a "{FORUM_NAME}"
+List-Unsubscribe: <{U_STOP_WATCHING_FORUM}>
+
+Hola {USERNAME},
+
+<!-- IF AUTHOR_NAME != '' -->{AUTHOR_NAME} ha<!-- ENDIF --><!-- IF AUTHOR_NAME === '' -->S’ha<!-- ENDIF --> publicat un tema nou "{TOPIC_TITLE}" al fòrum "{FORUM_NAME}" des de la vostra darrera visita a a "{SITENAME}". No rebreu més notificacions fins que visiteu el fòrum.
+{U_FORUM}
+
+Si desitgeu veure el tema nou, feu clic a l’enllaç següent:
+{U_TOPIC}
+
+Si ja no voleu estar subscrit a aquest fòrum, feu clic a l’enllaç següent:
+{U_STOP_WATCHING_FORUM}
+
+{EMAIL_SIG}

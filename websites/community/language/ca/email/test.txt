@@ -1,0 +1,13 @@
+Subject: El phpBB està configurat correctament per enviar correus electrònics
+
+Hola {USERNAME},
+
+Enhorabona. Si heu rebut aquest correu electrònic, el phpBB està configurat correctament per enviar correus electrònics.
+
+<!-- IF MESSAGE -->
+{MESSAGE}
+
+<!-- ENDIF -->
+Si necessiteu ajuda, visiteu els fòrums d’assistència del phpBB (en anglès) - https://www.phpbb.com/community/
+
+{EMAIL_SIG}

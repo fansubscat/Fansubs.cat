@@ -1,0 +1,10 @@
+Subject: Informe de missatge privat - "{SUBJECT}"
+
+Hola {USERNAME},
+
+S’ha informat del missatge privat amb el títol "{SUBJECT}" fet per "{AUTHOR_NAME}" a "{SITENAME}".
+
+Si voleu visualitzar l’informe, feu clic a l’enllaç següent:
+{U_VIEW_REPORT}
+
+{EMAIL_SIG}

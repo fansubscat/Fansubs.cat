@@ -1,0 +1,13 @@
+Subject: Missatge privat nou
+
+Hola {USERNAME},
+
+Ha arribat un missatge privat nou de "{AUTHOR_NAME}" al vostre compte a "{SITENAME}" amb l’assumpte següent:
+{SUBJECT}
+
+Podeu visualitzar el missatge nou fent clic a l’enllaç següent:
+{U_VIEW_MESSAGE}
+
+Heu sol·licitat rebre notificacions quan arribin missatges privats nous, recordeu que podeu triar no rebre aquestes notificacions canviant l’opció adequada del vostre perfil.
+
+{EMAIL_SIG}

@@ -1,0 +1,23 @@
+
+Hola {TO_USERNAME},
+
+Aquest correu electrònic se us ha enviat a través de la pàgina de contacte de l’administrador a "{SITENAME}".
+
+<!-- IF S_IS_REGISTERED -->
+El missatge s’ha enviat des d’un compte del lloc web.
+Nom d’usuari: {FROM_USERNAME}
+Adreça electrònica: {FROM_EMAIL_ADDRESS}
+Adreça IP: {FROM_IP_ADDRESS}
+Perfil: {U_FROM_PROFILE}
+<!-- ELSE -->
+El missatge l’ha enviat un visitant que ha especificat la següent informació de contacte:
+Nom: {FROM_USERNAME}
+Adreça electrònica: {FROM_EMAIL_ADDRESS}
+Adreça IP: {FROM_IP_ADDRESS}
+<!-- ENDIF -->
+
+
+A continuació s’inclou el missatge que us han enviat:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+{MESSAGE}

@@ -1,0 +1,11 @@
+Subject: Se us ha afegit a aquest grup d’usuaris
+
+Enhorabona,
+
+Se us ha afegit al grup "{GROUP_NAME}" de "{SITENAME}".
+Ho ha fet un líder del grup o l’administrador del fòrum, poseu-vos-hi en contacte per obtenir més informació.
+
+Podeu visualitzar la informació dels vostres grups aquí:
+{U_GROUP}
+
+{EMAIL_SIG}

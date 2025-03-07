@@ -1,0 +1,13 @@
+Subject: Informe d´entrada - "{TOPIC_TITLE}"
+
+Hola {USERNAME},
+
+S’ha informat de l’entrada "{POST_SUBJECT}" a "{SITENAME}".
+
+Si voleu visualitzar l’informe, feu clic a l’enllaç següent:
+{U_VIEW_REPORT}
+
+Si voleu visualitzar l’entrada, feu clic a l’enllaç següent:
+{U_VIEW_POST}
+
+{EMAIL_SIG}

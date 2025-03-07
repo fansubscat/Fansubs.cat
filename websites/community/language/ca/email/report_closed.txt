@@ -1,0 +1,13 @@
+Subject: Informe tancat - "{POST_SUBJECT}"
+
+Hola {USERNAME},
+
+L’informe que heu fet de l’entrada "{POST_SUBJECT}" feta per "{AUTHOR_NAME}" al tema "{TOPIC_TITLE}" de "{SITENAME}" ha estat gestionat per un moderador o un administrador. Posteriorment s’ha tancat l’informe. Si teniu més preguntes poseu-vos en contacte amb {CLOSER_NAME} per missate privat.
+
+Podeu veure l’entrada de la qual vau informar fent clic a l’enllaç següent:
+
+{U_VIEW_POST}
+
+Teniu configurat que se us notifiqui aquest esdeveniment. Recordeu que podeu triar no rebre notificacions quan es tanquen informes canviant la configuració corresponent al vostre perfil.
+
+{EMAIL_SIG}

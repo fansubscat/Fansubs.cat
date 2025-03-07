@@ -1,0 +1,18 @@
+Subject: Reactiveu el vostre compte a "{SITENAME}"
+
+Un administrador del fòrum ha demanat la reactivació del vostre compte. Actualment el vostre compte és inactiu.
+Si us plau seguiu els passos llistats per reactivar el vostre compte.
+
+Si us plau, guardeu aquest correu electrònic per a la vostra informació. Les dades del vostre compte són les següents:
+
+----------------------------
+Nom d’usuari: {USERNAME}
+----------------------------
+
+La vostra contrasenya està emmagatzemada de forma segura a la base de dades i no podeu recuperar el text desencriptat. Si l’oblideu, podeu reiniciar-la utilitzant el correu electrònic associat al vostre compte.
+
+Visiteu l’enllaç següent per reactivar el vostre compte:
+
+{U_ACTIVATE}
+
+{EMAIL_SIG}

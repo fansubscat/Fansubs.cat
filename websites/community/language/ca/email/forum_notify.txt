@@ -1,0 +1,18 @@
+Subject: Resposta a "{FORUM_NAME}"
+List-Unsubscribe: <{U_STOP_WATCHING_FORUM}>
+
+Hola {USERNAME},
+
+A "{FORUM_NAME}" s’ha publicat un resposta nova al tema "{TOPIC_TITLE}"<!-- IF AUTHOR_NAME != '' --> creat per {AUTHOR_NAME}<!-- ENDIF --> des de la vostra darrera visita a "{SITENAME}". No rebreu més notificacions fins que visiteu el fòrum.
+{U_NEWEST_POST}
+
+Si voleu veure el tema, feu clic a l’enllaç següent:
+{U_TOPIC}
+
+Si voleu veure el fòrum, feu clic a l’enllaç següent:
+{U_FORUM}
+
+Si ja no voleu estar subscrit a aquest fòrum podeu fer clic a l’enllaç següent:
+{U_STOP_WATCHING_FORUM}
+
+{EMAIL_SIG}

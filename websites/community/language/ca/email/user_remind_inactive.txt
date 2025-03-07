@@ -1,0 +1,11 @@
+Subject: Recordatori de compte inactiu
+
+Hola {USERNAME},
+
+Aquesta notificació és un recordatori que el vostre compte a "{SITENAME}", creat el {REGISTER_DATE}, segueix inactiu. Si desitgeu activar aquest compte, visiteu l’enllaç següent:
+
+{U_ACTIVATE}
+
+Gràcies per registrar-vos a "{SITENAME}", esperem la vostra participació.
+
+{EMAIL_SIG}

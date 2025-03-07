@@ -1,0 +1,13 @@
+Subject: Activació d’un compte d’usuari
+
+Hola,
+
+S’ha desactivat o creat el compte de "{USERNAME}", cal que reviseu (si s’escau) la informació d’aquest usuari i el compte gestioneu adequadament.
+
+Utilitzeu aquest enllaç per visualitzar el perfil de l’usuari:
+{U_USER_DETAILS}
+
+Podeu activar el compte de forma immediata fent clic en aquest enllaç:
+{U_ACTIVATE}
+
+{EMAIL_SIG}

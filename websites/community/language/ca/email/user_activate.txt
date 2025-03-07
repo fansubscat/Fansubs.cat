@@ -1,0 +1,9 @@
+Subject: Reactiveu el vostre compte
+
+Hola {USERNAME},
+
+El vostre compte a "{SITENAME}" ha estat desactivat, probablement degut a canvis en el vostre perfil. Per reactivar el vostre compte heu de fer clic a l’enllaç següent:
+
+{U_ACTIVATE}
+
+{EMAIL_SIG}

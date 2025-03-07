@@ -1,0 +1,13 @@
+Subject: Entrada aprovada - "{POST_SUBJECT}"
+
+Hola {USERNAME},
+
+La vostra entrada "{POST_SUBJECT}" a "{SITENAME}" ha estat aprovada per un moderador o un administrador.
+
+Si voleu visualitzar l’entrada, feu clic a l’enllaç següent:
+{U_VIEW_POST}
+
+Si voleu visualitzar el tema, feu clic a l’enllaç següent:
+{U_VIEW_TOPIC}
+
+{EMAIL_SIG}

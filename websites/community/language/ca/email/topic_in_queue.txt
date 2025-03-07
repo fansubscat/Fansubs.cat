@@ -1,0 +1,13 @@
+Subject: Tema pendent d’aprovació - "{TOPIC_TITLE}"
+
+Hola {USERNAME},
+
+El tema "{TOPIC_TITLE}" a "{SITENAME}" està pendent d’aprovació.
+
+Si voleu visualitzar el tema, feu clic a l’enllaç següent:
+{U_VIEW_TOPIC}
+
+Si voleu visualitzar el fòrum, feu clic a l’enllaç següent:
+{U_FORUM}
+
+{EMAIL_SIG}

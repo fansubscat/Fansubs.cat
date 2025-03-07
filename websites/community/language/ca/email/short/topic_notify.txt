@@ -1,0 +1,13 @@
+Subject: Resposta a "{TOPIC_TITLE}"
+
+Hola {USERNAME},
+
+Al tema "{TOPIC_TITLE}"<!-- IF AUTHOR_NAME != '' --> {AUTHOR_NAME} ha<!-- ENDIF --><!-- IF AUTHOR_NAME === '' --> s’ha<!-- ENDIF --> publicat una resposta des de la vostra darrera visita a "{SITENAME}". No rebreu més correus fins que visiteu el tema.
+
+Si voleu veure les entrades publicades des de la vostra darrera visita, feu clic a l’enllaç següent:
+{U_NEWEST_POST}
+
+Si ja no voleu estar subscrit a aquest tema, feu clic a l’enllaç següent:
+{U_STOP_WATCHING_TOPIC}
+
+{EMAIL_SIG}

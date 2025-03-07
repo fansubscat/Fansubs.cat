@@ -1,0 +1,13 @@
+
+Hola {TO_USERNAME},
+
+{FROM_USERNAME} us ha enviat el missatge següent a través del vostre compte a "{SITENAME}". Si es tracta de correu brossa, conté insults o comentaris ofensius poseu-vos en contacte amb l’administrador del fòrum a l’adreça electrònica següent:
+
+{BOARD_CONTACT}
+
+Incloeu aquest missatge complet. Tingueu en compte que l’adreça d’enviament utilitzada és la del compte del fòrum per a missatgeria instantània.
+
+El missatge enviat es mostra a continuació
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+{MESSAGE}

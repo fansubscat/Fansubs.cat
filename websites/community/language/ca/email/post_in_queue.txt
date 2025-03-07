@@ -1,0 +1,13 @@
+Subject: Entrada pendent d’aprovació - "{TOPIC_TITLE}"
+
+Hola {USERNAME},
+
+L’entrada "{POST_SUBJECT}" a "{SITENAME}" està pendent d’aprovació.
+
+Si voleu visualitzar l’entrada, feu clic a l’enllaç següent:
+{U_VIEW_POST}
+
+Si voleu visualitzar el tema, feu clic a l’enllaç següent:
+{U_TOPIC}
+
+{EMAIL_SIG}

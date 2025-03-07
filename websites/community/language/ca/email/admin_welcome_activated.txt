@@ -1,0 +1,9 @@
+Subject: Compte activat
+
+Hola {USERNAME},
+
+Un administrador ha activat el vostre compte a "{SITENAME}", ara ja podeu iniciar la sessió.
+
+La vostra contrasenya està emmagatzemada de forma segura a la base de dades i no podeu recuperar el text desencriptat. Si l’oblideu, podeu reiniciar-la utilitzant el correu electrònic associat al vostre compte.
+
+{EMAIL_SIG}

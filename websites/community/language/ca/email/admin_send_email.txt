@@ -1,0 +1,13 @@
+
+L’administrador de "{SITENAME}" us ha enviat el correu electrònic següent. Si es tracta de correu brossa, conté insults o comentaris ofensius poseu-vos en contacte amb l’administrador del fòrum a l’adreça electrònica següent:
+
+{CONTACT_EMAIL}
+
+Incloeu aquest correu electrònic complet (especialment les capçaleres).
+
+El missatge enviat es mostra a continuació
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+{MESSAGE}
+
+{EMAIL_SIG}

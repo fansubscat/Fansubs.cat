@@ -1,0 +1,10 @@
+Subject: S’ha fet una sol·licitud per afiliar-se al vostre grup
+
+Benvolgut {USERNAME},
+
+L’usuari "{REQUEST_USERNAME}" ha sol·licitat afiliar-se al grup "{GROUP_NAME}" que modereu a "{SITENAME}".
+Per aprovar o rebutjar aquesta sol·licitud d’afiliació al grup visiteu l’enllaç següent:
+
+{U_PENDING}
+
+{EMAIL_SIG}
