@@ -14,6 +14,7 @@ RewriteCond %{THE_REQUEST} ^.+?\ [^?]+\.php[?\ ]
 RewriteCond %{REQUEST_URI} !do_change_password\.php
 RewriteCond %{REQUEST_URI} !do_delete_profile\.php
 RewriteCond %{REQUEST_URI} !do_edit_profile\.php
+RewriteCond %{REQUEST_URI} !do_get_user_data\.php
 RewriteCond %{REQUEST_URI} !do_leave_comment\.php
 RewriteCond %{REQUEST_URI} !do_login\.php
 RewriteCond %{REQUEST_URI} !do_forgot_password\.php
