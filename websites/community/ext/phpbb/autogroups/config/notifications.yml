@@ -1,0 +1,16 @@
+services:
+# ----- Auto groups notification types -----
+# Services MUST not be shared for all the plugins to work.
+    phpbb.autogroups.notification.type.group_added:
+        class: phpbb\autogroups\notification\type\group_added
+        shared: false
+        parent: notification.type.base
+        tags:
+            - { name: notification.type }
+
+    phpbb.autogroups.notification.type.group_removed:
+        class: phpbb\autogroups\notification\type\group_removed
+        shared: false
+        parent: notification.type.base
+        tags:
+            - { name: notification.type }

@@ -1,0 +1,55 @@
+services:
+    phpbb.autogroups.type_collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: service_collection, tag: phpbb.autogroups.type }
+
+    phpbb.autogroups.type.base:
+        abstract: true
+        arguments:
+            - '@service_container'
+            - '@dbal.conn'
+            - '@language'
+            - '%phpbb.autogroups.tables.autogroups_rules%'
+            - '%phpbb.autogroups.tables.autogroups_types%'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+# ----- Auto groups types -----
+# Services MUST not be shared for all the plugins to work.
+    phpbb.autogroups.type.posts:
+        class: phpbb\autogroups\conditions\type\posts
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    phpbb.autogroups.type.warnings:
+        class: phpbb\autogroups\conditions\type\warnings
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    phpbb.autogroups.type.membership:
+        class: phpbb\autogroups\conditions\type\membership
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    phpbb.autogroups.type.lastvisit:
+        class: phpbb\autogroups\conditions\type\lastvisit
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }
+
+    phpbb.autogroups.type.birthdays:
+        class: phpbb\autogroups\conditions\type\birthdays
+        shared: false
+        parent: phpbb.autogroups.type.base
+        tags:
+            - { name: phpbb.autogroups.type }

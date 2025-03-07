@@ -1,0 +1,47 @@
+imports:
+    - { resource: conditions.yml }
+    - { resource: cron.yml }
+    - { resource: notifications.yml }
+    - { resource: tables.yml }
+
+services:
+    phpbb.autogroups.listener:
+        class: phpbb\autogroups\event\listener
+        arguments:
+            - '@phpbb.autogroups.manager'
+        tags:
+            - { name: event.listener }
+
+    phpbb.autogroups.manager:
+        class: phpbb\autogroups\conditions\manager
+        arguments:
+            - '@phpbb.autogroups.type_collection'
+            - '@service_container'
+            - '@cache.driver'
+            - '@dbal.conn'
+            - '@language'
+            - '%phpbb.autogroups.tables.autogroups_rules%'
+            - '%phpbb.autogroups.tables.autogroups_types%'
+
+    phpbb.autogroups.helper:
+        class: phpbb\autogroups\conditions\type\helper
+        arguments:
+            - '@dbal.conn'
+            - '@notification_manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    phpbb.autogroups.admin_controller:
+        class: phpbb\autogroups\controller\admin_controller
+        arguments:
+            - '@cache.driver'
+            - '@dbal.conn'
+            - '@group_helper'
+            - '@language'
+            - '@log'
+            - '@phpbb.autogroups.manager'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%phpbb.autogroups.tables.autogroups_rules%'
+            - '%phpbb.autogroups.tables.autogroups_types%'

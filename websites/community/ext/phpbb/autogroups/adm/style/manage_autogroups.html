@@ -1,0 +1,132 @@
+{% INCLUDE 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+{% if S_ADD or S_EDIT %}
+	<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+{% endif %}
+
+<h1>{{ lang('ACP_AUTOGROUPS_MANAGE') }}</h1>
+
+<p>{{ lang('ACP_AUTOGROUPS_MANAGE_EXPLAIN') }}</p>
+
+{% if S_ADD or S_EDIT %}
+	<form id="acp_autogroups_group" method="post" action="{{ U_FORM_ACTION }}">
+		<fieldset>
+			<legend>{{ lang(S_ADD ? 'ACP_AUTOGROUPS_ADD' : 'ACP_AUTOGROUPS_EDIT') }}</legend>
+			<dl>
+				<dt><label for="autogroups_group_id">{{ lang('ACP_AUTOGROUPS_GROUP_NAME') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_AUTOGROUPS_GROUP_NAME_EXPLAIN') }}</span></dt>
+				<dd>
+					<select name="autogroups_group_id" id="autogroups_group_id">
+						{% for groups in loops.groups %}
+							<option value="{{ groups.GROUP_ID }}"{% if groups.S_SELECTED %} selected="selected"{% endif %}>{{ groups.GROUP_NAME }}</option>
+						{% else %}
+							<option value="">{{ lang('ACP_AUTOGROUPS_NO_GROUPS') }}</option>
+						{% endfor %}
+					</select>
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="autogroups_type_id">{{ lang('ACP_AUTOGROUPS_CONDITION_NAME') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_AUTOGROUPS_CONDITION_NAME_EXPLAIN') }}</span></dt>
+				<dd><select name="autogroups_type_id" id="autogroups_type_id">
+					{% for conditions in loops.conditions %}
+						<option value="{{ conditions.CONDITION_ID }}"{% if conditions.S_SELECTED %} selected="selected"{% endif %}>{{ conditions.CONDITION_NAME }}</option>
+					{% endfor %}
+				</select></dd>
+			</dl>
+			<dl>
+				<dt><label for="autogroups_min_value">{{ lang('ACP_AUTOGROUPS_MIN_VALUE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_AUTOGROUPS_MIN_VALUE_EXPLAIN') }}</span></dt>
+				<dd><input id="autogroups_min_value" type="number" size="4" name="autogroups_min_value" value="{{ MIN_VALUE }}" /></dd>
+			</dl>
+			<dl>
+				<dt><label for="autogroups_max_value">{{ lang('ACP_AUTOGROUPS_MAX_VALUE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_AUTOGROUPS_MAX_VALUE_EXPLAIN') }}</span></dt>
+				<dd><input id="autogroups_max_value" type="number" size="4" name="autogroups_max_value" value="{{ MAX_VALUE }}" /></dd>
+			</dl>
+			<dl>
+				<dt><label for="autogroups_default">{{ lang('ACP_AUTOGROUPS_DEFAULT') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_AUTOGROUPS_DEFAULT_EXPLAIN') }} {{ EXEMPT_GROUPS ? lang('ACP_AUTOGROUPS_DEFAULT_EXEMPTION', EXEMPT_GROUPS) : '' }}</span></dt>
+				<dd><label><input type="radio" class="radio" id="autogroups_default" name="autogroups_default" value="1"{% if S_DEFAULT %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+					<label><input type="radio" class="radio" name="autogroups_default" value="0"{% if not S_DEFAULT %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			</dl>
+			<dl>
+				<dt><label for="autogroups_notify">{{ lang('ACP_AUTOGROUPS_NOTIFY') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_AUTOGROUPS_NOTIFY_EXPLAIN') }}</span></dt>
+				<dd><label><input type="radio" class="radio" id="autogroups_notify" name="autogroups_notify" value="1"{% if S_NOTIFY %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+					<label><input type="radio" class="radio" name="autogroups_notify" value="0"{% if not S_NOTIFY %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			</dl>
+			<dl>
+				<dt><label for="autogroups_excluded_groups">{{ lang('ACP_AUTOGROUPS_EXCLUDE_GROUP') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_AUTOGROUPS_EXCLUDE_GROUP_EXPLAIN') }}</span></dt>
+				<dd>
+					<select name="autogroups_excluded_groups[]" id="autogroups_excluded_groups" size="10" multiple="multiple">
+						{% for groups in loops.excluded_groups %}
+							<option value="{{ groups.GROUP_ID }}"{% if groups.S_SELECTED %} selected="selected"{% endif %}>{{ groups.GROUP_NAME }}</option>
+						{% endfor %}
+					</select>
+				</dd>
+			</dl>
+		</fieldset>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			{{ S_FORM_TOKEN }}
+		</p>
+	</form>
+{% else %}
+	<table class="table1 zebra-table fixed-width-table">
+		<thead>
+			<tr>
+				<th style="width: 15%;">{{ lang('ACP_AUTOGROUPS_GROUP_NAME') }}</th>
+				<th style="width: 15%;">{{ lang('ACP_AUTOGROUPS_CONDITION_NAME') }}</th>
+				<th style="width: 10%;">{{ lang('ACP_AUTOGROUPS_MIN_VALUE') }}</th>
+				<th style="width: 10%;">{{ lang('ACP_AUTOGROUPS_MAX_VALUE') }}</th>
+				<th style="width: 10%;">{{ lang('ACP_AUTOGROUPS_DEFAULT') }}</th>
+				<th style="width: 10%;">{{ lang('ACP_AUTOGROUPS_NOTIFY') }}</th>
+				<th>{{ lang('ACP_AUTOGROUPS_EXCLUDED_GROUPS') }}</th>
+				<th style="width: 10%;">{{ lang('ACTION') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for autogroups in loops.autogroups %}
+				<tr>
+					<td><strong>{{ autogroups.GROUP_NAME }}</strong></td>
+					<td>{{ autogroups.CONDITION_NAME }}</td>
+					<td>{{ autogroups.MIN_VALUE }}</td>
+					<td>{{ autogroups.MAX_VALUE }}</td>
+					<td>{{ lang(autogroups.S_DEFAULT ? 'YES' : 'NO') }}</td>
+					<td>{{ lang(autogroups.S_NOTIFY ? 'YES' : 'NO') }}</td>
+					<td>{{ autogroups.EXCLUDED_GROUPS ?: '-' }}</td>
+					<td class="actions"><a href="{{ autogroups.U_EDIT }}">{{ ICON_EDIT }}</a> <a href="{{ autogroups.U_SYNC }}">{{ ICON_SYNC }}</a> <a href="{{ autogroups.U_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a></td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="7" style="text-align: center;">{{ lang('ACP_AUTOGROUPS_EMPTY') }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<form id="autogroups_add_rule" method="post" action="{{ U_ACTION }}">
+		<fieldset class="quick">
+			<input class="button2" type="submit" name="addrule" value="{{ lang('ACP_AUTOGROUPS_CREATE_RULE') }}" />
+			<input type="hidden" name="action" value="add" />
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+	<form id="autogroups_general_options" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<legend>{{ lang('GENERAL_OPTIONS') }}</legend>
+			<dl>
+				<dt><label for="group_ids">{{ lang('ACP_AUTOGROUPS_EXEMPT_GROUP') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_AUTOGROUPS_EXEMPT_GROUP_EXPLAIN') }}</span></dt>
+				<dd>
+					<select name="group_ids[]" id="group_ids" size="10" multiple="multiple">
+						{% for groups in loops.groups %}
+							<option value="{{ groups.GROUP_ID }}"{% if groups.S_SELECTED %} selected="selected"{% endif %}>{{ groups.GROUP_NAME }}</option>
+						{% endfor %}
+					</select>
+				</dd>
+			</dl>
+			<p class="quick">
+				<input class="button1" type="submit" id="generalsubmit" name="generalsubmit" value="{{ lang('SUBMIT') }}" />
+			</p>
+		</fieldset>
+	</form>
+{% endif %}
+
+{% INCLUDE 'overall_footer.html' %}
