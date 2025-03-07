@@ -1,0 +1,17 @@
+/**
+ *
+ * mChat CSS for AllanStyle SUBSILVER
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+@media only screen and (min-width: 700px), only screen and (min-device-width: 700px) {
+
+	.mchat-wrapper .list-inner {
+		margin-left: 5px;
+	}
+
+}

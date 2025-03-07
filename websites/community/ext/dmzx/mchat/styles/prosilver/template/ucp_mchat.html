@@ -1,0 +1,166 @@
+{% INCLUDE 'ucp_header.html' %}
+
+<h2>{{ lang('MCHAT_PREFERENCES') }}</h2>
+
+<form id="ucp" class="mchat-ucp" method="post" action="{{ S_UCP_ACTION }}">
+	<div class="panel">
+		<div class="inner">
+
+			{% if ERROR or not MCHAT_AUTH_COUNT %}
+			<fieldset>
+				{% if ERROR %}<p class="error">{{ ERROR }}</p>{% endif %}
+				{% if not MCHAT_AUTH_COUNT %}<p class="error">{{ lang('MCHAT_NO_SETTINGS') }}</p>{% endif %}
+			</fieldset>
+			{% endif %}
+
+			{% if MCHAT_AUTH_COUNT %}
+			<fieldset>
+
+				{% EVENT dmzx_mchat_ucp_index_before %}
+
+				{% if MCHAT_INDEX_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_index">{{ lang('MCHAT_INDEX') ~ lang('COLON') }}</label></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_index" value="1"{% if MCHAT_INDEX %} id="user_mchat_index" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_index" value="0"{% if not MCHAT_INDEX %} id="user_mchat_index" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_WHOIS_INDEX_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_whois_index">{{ lang('MCHAT_WHOIS_INDEX') ~ lang('COLON') }}</label></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_whois_index" value="1"{% if MCHAT_WHOIS_INDEX %} id="user_mchat_whois_index" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_whois_index" value="0"{% if not MCHAT_WHOIS_INDEX %} id="user_mchat_whois_index" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_STATS_INDEX_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_stats_index">{{ lang('MCHAT_STATS_INDEX') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_STATS_INDEX_EXPLAIN') }}</span></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_stats_index" value="1"{% if MCHAT_STATS_INDEX %} id="user_mchat_stats_index" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_stats_index" value="0"{% if not MCHAT_STATS_INDEX %} id="user_mchat_stats_index" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_LOCATION_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_location">{{ lang('MCHAT_LOCATION') ~ lang('COLON') }}</label></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_location" value="1"{% if MCHAT_LOCATION %} id="user_mchat_location" checked="checked"{% endif %}> {{ lang('MCHAT_TOP') }}</label>
+						<label><input type="radio" name="user_mchat_location" value="0"{% if not MCHAT_LOCATION %} id="user_mchat_location" checked="checked"{% endif %}> {{ lang('MCHAT_BOTTOM') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+
+				{% EVENT dmzx_mchat_ucp_location_after %}
+
+				<hr>
+
+				{% EVENT dmzx_mchat_ucp_message_top_before %}
+
+				{% if MCHAT_MESSAGE_TOP_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_message_top">{{ lang('MCHAT_MESSAGE_TOP') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_MESSAGE_TOP_EXPLAIN') }}</span></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_message_top" value="1"{% if MCHAT_MESSAGE_TOP %} id="user_mchat_message_top" checked="checked"{% endif %}> {{ lang('MCHAT_TOP') }}</label>
+						<label><input type="radio" name="user_mchat_message_top" value="0"{% if not MCHAT_MESSAGE_TOP %} id="user_mchat_message_top" checked="checked"{% endif %}> {{ lang('MCHAT_BOTTOM') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_CAPITAL_LETTER_AUTH and MCHAT_ALLOW_USE %}
+				<dl>
+					<dt><label for="user_mchat_capital_letter">{{ lang('MCHAT_CAPITAL_LETTER') ~ lang('COLON') }}</label></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_capital_letter" value="1"{% if MCHAT_CAPITAL_LETTER %} id="user_mchat_capital_letter" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_capital_letter" value="0"{% if not MCHAT_CAPITAL_LETTER %} id="user_mchat_capital_letter" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_SOUND_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_sound">{{ lang('MCHAT_SOUND') ~ lang('COLON') }}</label></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_sound" value="1"{% if MCHAT_SOUND %} id="user_mchat_sound" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_sound" value="0"{% if not MCHAT_SOUND %} id="user_mchat_sound" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_AVATARS_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_avatars">{{ lang('MCHAT_AVATARS') ~ lang('COLON') }}</label></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_avatars" value="1"{% if MCHAT_AVATARS %} id="user_mchat_avatars" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_avatars" value="0"{% if not MCHAT_AVATARS %} id="user_mchat_avatars" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_CHARACTER_COUNT_AUTH and MCHAT_ALLOW_USE %}
+				<dl>
+					<dt><label for="user_mchat_character_count">{{ lang('MCHAT_DISPLAY_CHARACTER_COUNT') ~ lang('COLON') }}</label></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_character_count" value="1"{% if MCHAT_CHARACTER_COUNT %} id="user_mchat_character_count" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_character_count" value="0"{% if not MCHAT_CHARACTER_COUNT %} id="user_mchat_character_count" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_DATE_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_dateoptions">{{ lang('MCHAT_DATE_FORMAT') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_DATE_FORMAT_EXPLAIN') }}</span></dt>
+					<dd>
+						<select name="user_mchat_dateoptions" id="user_mchat_dateoptions" onchange="phpbb.toggleDisplay('user_mchat_custom_date', this.value == 'custom' ? 1 : -1); document.getElementById('user_mchat_date').value = this.value == 'custom' ? '{{ MCHAT_DEFAULT_DATEFORMAT | escape('js') }}' : this.value;">
+							{{ S_MCHAT_DATEFORMAT_OPTIONS }}
+						</select>
+					</dd>
+					<dd>
+						<div id="user_mchat_custom_date"{% if not S_MCHAT_CUSTOM_DATEFORMAT %} style="display:none;"{% endif %}>
+							<input type="text" name="user_mchat_date" id="user_mchat_date" value="{{ MCHAT_DATE }}" maxlength="64">
+						</div>
+					</dd>
+				</dl>
+				{% endif %}
+				{% if MCHAT_RELATIVE_TIME_AUTH %}
+				<dl>
+					<dt><label for="user_mchat_relative_time">{{ lang('MCHAT_RELATIVE_TIME') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_RELATIVE_TIME_EXPLAIN') }}</span></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_relative_time" value="1"{% if MCHAT_RELATIVE_TIME %} id="user_mchat_relative_time" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_relative_time" value="0"{% if not MCHAT_RELATIVE_TIME %} id="user_mchat_relative_time" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+
+				{% EVENT dmzx_mchat_ucp_relative_time_after %}
+
+				<hr>
+
+				{% EVENT dmzx_mchat_ucp_posts_before %}
+
+				{% if MCHAT_POSTS_AUTH and MCHAT_POSTS_ENABLED_LANG %}
+				<dl>
+					<dt><label for="user_mchat_posts">{{ MCHAT_POSTS_ENABLED_LANG ~ lang('COLON') }}</label></dt>
+					<dd>
+						<label><input type="radio" name="user_mchat_posts" value="1"{% if MCHAT_POSTS %} id="user_mchat_posts" checked="checked"{% endif %}> {{ lang('YES') }}</label>
+						<label><input type="radio" name="user_mchat_posts" value="0"{% if not MCHAT_POSTS %} id="user_mchat_posts" checked="checked"{% endif %}> {{ lang('NO') }}</label>
+					</dd>
+				</dl>
+				{% endif %}
+
+				{% EVENT dmzx_mchat_ucp_posts_after %}
+
+			</fieldset>
+			{% endif %}
+		</div>
+	</div>
+	{% if MCHAT_AUTH_COUNT %}
+	<fieldset class="submit-buttons">
+		{{ S_HIDDEN_FIELDS }}
+		<input type="reset" value="{{ lang('RESET') }}" name="reset" class="button2">&nbsp;
+		<input type="submit" name="submit" value="{{ lang('SUBMIT') }}" class="button1">
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+	{% endif %}
+</form>
+
+{% INCLUDE 'ucp_footer.html' %}

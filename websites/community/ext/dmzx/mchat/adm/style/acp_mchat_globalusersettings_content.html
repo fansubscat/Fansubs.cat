@@ -1,0 +1,108 @@
+{% EVENT dmzx_mchat_acp_index_before %}
+
+<dl>
+	<dt><label for="user_mchat_index">{{ lang('MCHAT_INDEX') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_index" value="1"{% if MCHAT_INDEX %} id="user_mchat_index" checked="checked"{% endif %}{% if MCHAT_INDEX_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_index" value="0"{% if not MCHAT_INDEX %} id="user_mchat_index" checked="checked"{% endif %}{% if MCHAT_INDEX_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_whois_index">{{ lang('MCHAT_WHOIS_INDEX') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_whois_index" value="1"{% if MCHAT_WHOIS_INDEX %} id="user_mchat_whois_index" checked="checked"{% endif %}{% if MCHAT_WHOIS_INDEX_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_whois_index" value="0"{% if not MCHAT_WHOIS_INDEX %} id="user_mchat_whois_index" checked="checked"{% endif %}{% if MCHAT_WHOIS_INDEX_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_stats_index">{{ lang('MCHAT_STATS_INDEX') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_STATS_INDEX_EXPLAIN') }}</span></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_stats_index" value="1"{% if MCHAT_STATS_INDEX %} id="user_mchat_stats_index" checked="checked"{% endif %}{% if MCHAT_STATS_INDEX_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_stats_index" value="0"{% if not MCHAT_STATS_INDEX %} id="user_mchat_stats_index" checked="checked"{% endif %}{% if MCHAT_STATS_INDEX_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_location">{{ lang('MCHAT_LOCATION') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_location" value="1"{% if MCHAT_LOCATION %} id="user_mchat_location" checked="checked"{% endif %}{% if MCHAT_LOCATION_NOAUTH %} disabled{% endif %}> {{ lang('MCHAT_TOP') }}</label>
+		<label><input type="radio" name="user_mchat_location" value="0"{% if not MCHAT_LOCATION %} id="user_mchat_location" checked="checked"{% endif %}{% if MCHAT_LOCATION_NOAUTH %} disabled{% endif %}> {{ lang('MCHAT_BOTTOM') }}</label>
+	</dd>
+</dl>
+
+{% EVENT dmzx_mchat_acp_location_after %}
+
+<hr>
+
+{% EVENT dmzx_mchat_acp_message_top_before %}
+
+<dl>
+	<dt><label for="user_mchat_message_top">{{ lang('MCHAT_MESSAGE_TOP') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_MESSAGE_TOP_EXPLAIN') }}</span></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_message_top" value="1"{% if MCHAT_MESSAGE_TOP %} id="user_mchat_message_top" checked="checked"{% endif %}{% if MCHAT_MESSAGE_TOP_NOAUTH %} disabled{% endif %}> {{ lang('MCHAT_TOP') }}</label>
+		<label><input type="radio" name="user_mchat_message_top" value="0"{% if not MCHAT_MESSAGE_TOP %} id="user_mchat_message_top" checked="checked"{% endif %}{% if MCHAT_MESSAGE_TOP_NOAUTH %} disabled{% endif %}> {{ lang('MCHAT_BOTTOM') }}</label>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_capital_letter">{{ lang('MCHAT_CAPITAL_LETTER') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_capital_letter" value="1"{% if MCHAT_CAPITAL_LETTER %} id="user_mchat_capital_letter" checked="checked"{% endif %}{% if MCHAT_CAPITAL_LETTER_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_capital_letter" value="0"{% if not MCHAT_CAPITAL_LETTER %} id="user_mchat_capital_letter" checked="checked"{% endif %}{% if MCHAT_CAPITAL_LETTER_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_sound">{{ lang('MCHAT_SOUND') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_sound" value="1"{% if MCHAT_SOUND %} id="user_mchat_sound" checked="checked"{% endif %}{% if MCHAT_SOUND_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_sound" value="0"{% if not MCHAT_SOUND %} id="user_mchat_sound" checked="checked"{% endif %}{% if MCHAT_SOUND_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_avatars">{{ lang('MCHAT_AVATARS') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_avatars" value="1"{% if MCHAT_AVATARS %} id="user_mchat_avatars" checked="checked"{% endif %}{% if MCHAT_AVATARS_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_avatars" value="0"{% if not MCHAT_AVATARS %} id="user_mchat_avatars" checked="checked"{% endif %}{% if MCHAT_AVATARS_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_character_count">{{ lang('MCHAT_DISPLAY_CHARACTER_COUNT') ~ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_character_count" value="1"{% if MCHAT_CHARACTER_COUNT %} id="user_mchat_character_count" checked="checked"{% endif %}{% if MCHAT_CHARACTER_COUNT_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_character_count" value="0"{% if not MCHAT_CHARACTER_COUNT %} id="user_mchat_character_count" checked="checked"{% endif %}{% if MCHAT_CHARACTER_COUNT_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_dateoptions">{{ lang('MCHAT_DATE_FORMAT') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_DATE_FORMAT_EXPLAIN') }}</span></dt>
+	<dd>
+		<select name="user_mchat_dateoptions" id="user_mchat_dateoptions" onchange="phpbb.toggleDisplay('user_mchat_custom_date', this.value == 'custom' ? 1 : -1); document.getElementById('user_mchat_date').value = this.value == 'custom' ? '{{ MCHAT_DEFAULT_DATEFORMAT | escape('js') }}' : this.value;"{% if MCHAT_DATE_NOAUTH %} disabled{% endif %}>
+			{{ S_MCHAT_DATEFORMAT_OPTIONS }}
+		</select>
+	</dd>
+	<dd>
+		<div id="user_mchat_custom_date"{% if not S_MCHAT_CUSTOM_DATEFORMAT %} style="display:none;"{% endif %}>
+			<input type="text" name="user_mchat_date" id="user_mchat_date" value="{{ MCHAT_DATE }}"{% if MCHAT_DATE_NOAUTH %} disabled{% endif %}>
+		</div>
+	</dd>
+</dl>
+<dl>
+	<dt><label for="user_mchat_relative_time">{{ lang('MCHAT_RELATIVE_TIME') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_RELATIVE_TIME_EXPLAIN') }}</span></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_relative_time" value="1"{% if MCHAT_RELATIVE_TIME %} id="user_mchat_relative_time" checked="checked"{% endif %}{% if MCHAT_RELATIVE_TIME_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_relative_time" value="0"{% if not MCHAT_RELATIVE_TIME %} id="user_mchat_relative_time" checked="checked"{% endif %}{% if MCHAT_RELATIVE_TIME_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+
+{% EVENT dmzx_mchat_acp_relative_time_after %}
+
+<hr>
+
+{% EVENT dmzx_mchat_acp_posts_before %}
+
+<dl>
+	<dt><label for="user_mchat_posts">{% if MCHAT_POSTS_ENABLED_LANG %}{{ MCHAT_POSTS_ENABLED_LANG }}{% else %}{{ lang('MCHAT_POSTS') }}{% endif %}{{ lang('COLON') }}</label></dt>
+	<dd>
+		<label><input type="radio" name="user_mchat_posts" value="1"{% if MCHAT_POSTS %} id="user_mchat_posts" checked="checked"{% endif %}{% if MCHAT_POSTS_NOAUTH %} disabled{% endif %}> {{ lang('YES') }}</label>
+		<label><input type="radio" name="user_mchat_posts" value="0"{% if not MCHAT_POSTS %} id="user_mchat_posts" checked="checked"{% endif %}{% if MCHAT_POSTS_NOAUTH %} disabled{% endif %}> {{ lang('NO') }}</label>
+	</dd>
+</dl>
+
+{% EVENT dmzx_mchat_acp_posts_after %}

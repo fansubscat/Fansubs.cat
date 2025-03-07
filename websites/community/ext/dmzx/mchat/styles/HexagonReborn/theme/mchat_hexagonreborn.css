@@ -1,0 +1,26 @@
+/**
+ *
+ * mChat CSS for Hexagon Reborn
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2017 MannixMD
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+.mchat-button-down {
+	line-height: 1.6;
+}
+
+.mchat-button-down .icon {
+	padding: 2px;
+}
+
+.mchat-button-is-down {
+	border-style: none;
+}
+
+.mchat-input-control button:hover .icon {
+	color: #de7300;
+}

@@ -1,0 +1,18 @@
+/**
+ *
+ * mChat CSS for Absolution
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+.mchat-nav-link-title {
+	color: #082c51;
+    font-weight: bold;
+}
+
+.mchat-nav-link-title i {
+	color: #EE8B0A;
+}

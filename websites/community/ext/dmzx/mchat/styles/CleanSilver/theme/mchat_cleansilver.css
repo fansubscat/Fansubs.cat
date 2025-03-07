@@ -1,0 +1,26 @@
+/**
+ *
+ * mChat CSS for CleanSilver
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2017 MannixMD
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+.mchat-panel-buttons .icon.fa.fa-smile-o {
+	padding: 3px;
+}
+
+.mchat-wrapper li.header dd {
+	width: 95px;
+}
+
+.mchat-wrapper li.header dd.lastpost {
+	width: 250px;
+}
+
+.mchat-button-is-down {
+	border-style: none;
+}

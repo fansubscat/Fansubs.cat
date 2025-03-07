@@ -1,0 +1,48 @@
+{% INCLUDE 'overall_header.html' %}
+
+<h1>{{ lang('MCHAT_TITLE') }}</h1>
+
+{{ lang('MCHAT_VERSION') ~ lang('COLON') }} <em>{{ MCHAT_VERSION }}</em>
+
+<div class="successbox notice">{{ lang('MCHAT_GLOBALUSERSETTINGS_EXPLAIN') }}</div>
+
+{% if MCHAT_ERROR %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ MCHAT_ERROR }}</p>
+	</div>
+{% endif %}
+
+<form id="acp_mchat" method="post" action="{{ U_ACTION }}">
+	<fieldset>
+		<legend>{{ lang('ACP_MCHAT_GLOBALUSERSETTINGS') }}</legend>
+		{% INCLUDE '@dmzx_mchat/acp_mchat_globalusersettings_content.html' %}
+	</fieldset>
+	<fieldset>
+		<legend>{{ lang('MCHAT_GLOBALUSERSETTINGS_OVERWRITE') }}</legend>
+		<dl>
+			<dt><label for="mchat_overwrite">{{ lang('MCHAT_GLOBALUSERSETTINGS_OVERWRITE') ~ lang('COLON') }}</label><br><span>{{ lang('MCHAT_GLOBALUSERSETTINGS_OVERWRITE_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" name="mchat_overwrite" value="1"> {{ lang('YES') }}</label>
+				<label><input type="radio" name="mchat_overwrite" value="0" id="mchat_overwrite" checked="checked"> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="mchat_overwrite_confirm">{{ lang('MCHAT_GLOBALUSERSETTINGS_OVERWRITE_CONFIRM') ~ lang('COLON') }}</label></dt>
+			<dd>
+				<label><input type="radio" name="mchat_overwrite_confirm" value="1"> {{ lang('YES') }}</label>
+				<label><input type="radio" name="mchat_overwrite_confirm" value="0" id="mchat_overwrite_confirm" checked="checked"> {{ lang('NO') }}</label>
+			</dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{{ lang('ACP_SUBMIT_CHANGES') }}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
+		</p>
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% INCLUDE 'overall_footer.html' %}

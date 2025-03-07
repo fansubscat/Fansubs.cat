@@ -1,0 +1,159 @@
+imports:
+    - { resource: 'tables.yml' }
+
+services:
+
+    dmzx.mchat.acp.controller:
+        class: 'dmzx\mchat\controller\acp_controller'
+        arguments:
+            - '@dmzx.mchat.functions'
+            - '@template'
+            - '@log'
+            - '@user'
+            - '@language'
+            - '@dbal.conn'
+            - '@config_text'
+            - '@cache.driver'
+            - '@request'
+            - '@dispatcher'
+            - '@dmzx.mchat.settings'
+
+    dmzx.mchat.ucp.controller:
+        class: 'dmzx\mchat\controller\ucp_controller'
+        arguments:
+            - '@template'
+            - '@user'
+            - '@language'
+            - '@auth'
+            - '@dbal.conn'
+            - '@request'
+            - '@dmzx.mchat.settings'
+            - '@dispatcher'
+
+    dmzx.mchat.notifications:
+        class: 'dmzx\mchat\core\notifications'
+        arguments:
+            - '@dmzx.mchat.settings'
+            - '@user'
+            - '@language'
+            - '@auth'
+            - '@dbal.conn'
+            - '@dispatcher'
+            - '@text_formatter.parser'
+
+    dmzx.mchat.log:
+        class: 'dmzx\mchat\core\log'
+        arguments:
+            - '@dmzx.mchat.settings'
+            - '@user'
+            - '@dbal.conn'
+            - '@cache.driver'
+            - '@dispatcher'
+
+    dmzx.mchat.core:
+        class: 'dmzx\mchat\core\mchat'
+        arguments:
+            - '@dmzx.mchat.functions'
+            - '@dmzx.mchat.notifications'
+            - '@dmzx.mchat.settings'
+            - '@dmzx.mchat.log'
+            - '@controller.helper'
+            - '@template'
+            - '@user'
+            - '@language'
+            - '@auth'
+            - '@pagination'
+            - '@request'
+            - '@dispatcher'
+            - '@ext.manager'
+            - '@text_formatter.parser'
+            - '@?phpbb.collapsiblecategories.operator'
+            - '@?rmcgirr83.authorizedforurls.listener'
+
+    dmzx.mchat.functions:
+        class: 'dmzx\mchat\core\functions'
+        arguments:
+            - '@dmzx.mchat.settings'
+            - '@dmzx.mchat.notifications'
+            - '@dmzx.mchat.log'
+            - '@user'
+            - '@language'
+            - '@auth'
+            - '@log'
+            - '@dbal.conn'
+            - '@cache.driver'
+            - '@dispatcher'
+            - '@group_helper'
+
+    dmzx.mchat.settings:
+        class: 'dmzx\mchat\core\settings'
+        arguments:
+            - '@user'
+            - '@language'
+            - '@config'
+            - '@config_text'
+            - '@auth'
+            - '@dispatcher'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%dmzx.mchat.table.mchat%'
+            - '%dmzx.mchat.table.mchat_log%'
+            - '%dmzx.mchat.table.mchat_sessions%'
+
+    dmzx.mchat.acp.listener:
+        class: 'dmzx\mchat\event\acp_listener'
+        arguments:
+            - '@template'
+            - '@request'
+            - '@language'
+            - '@dmzx.mchat.settings'
+            - '@dmzx.mchat.functions'
+        tags:
+            - { name: 'event.listener' }
+
+    dmzx.mchat.main.listener:
+        class: 'dmzx\mchat\event\main_listener'
+        arguments:
+            - '@dmzx.mchat.core'
+            - '@dmzx.mchat.notifications'
+            - '@controller.helper'
+            - '@user'
+            - '@language'
+            - '@request'
+            - '%core.php_ext%'
+        tags:
+            - { name: 'event.listener' }
+
+    dmzx.mchat.cron.task.mchat_prune:
+        class: 'dmzx\mchat\cron\mchat_prune'
+        arguments:
+            - '@dmzx.mchat.functions'
+            - '@dmzx.mchat.settings'
+        calls:
+            - ['set_name', ['cron.task.mchat_prune']]
+        tags:
+            - { name: 'cron.task' }
+
+    dmzx.mchat.text_reparser.mchat_messages:
+        class: 'dmzx\mchat\textreparser\plugins\mchat_messages'
+        arguments:
+            - '@dbal.conn'
+            - '%dmzx.mchat.table.mchat%'
+        calls:
+            - ['set_name', ['dmzx.mchat.text_reparser.mchat_messages']]
+        tags:
+            - { name: 'text_reparser.plugin' }
+
+    dmzx.mchat.text_reparser.reparser:
+        class: 'phpbb\cron\task\text_reparser\reparser'
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@text_reparser.lock'
+            - '@text_reparser.manager'
+            - '@text_reparser_collection'
+        calls:
+            - ['set_name', ['dmzx.mchat.text_reparser.reparser']]
+            - ['set_reparser', ['dmzx.mchat.text_reparser.mchat_messages']]
+        tags:
+            - { name: 'cron.task' }

@@ -1,0 +1,28 @@
+{%- EVENT dmzx_mchat_messages_before -%}
+
+{%- for mchatrow in loops.mchatrow -%}
+<li id="mchat-message-{{ mchatrow.MCHAT_MESSAGE_ID }}" class="row mchat-message{% if mchatrow.MCHAT_IS_NOTIFICATION %} mchat-notification-message{% endif %}" data-mchat-id="{{ mchatrow.MCHAT_MESSAGE_ID }}" data-mchat-user-id="{{ mchatrow.MCHAT_USER_ID }}" data-mchat-username="{{ mchatrow.MCHAT_USERNAME | striptags }}"{% if mchatrow.MCHAT_USERNAME_COLOR %} data-mchat-usercolor="{{ mchatrow.MCHAT_USERNAME_COLOR }}"{% endif %} data-mchat-message="{{ mchatrow.MCHAT_MESSAGE_EDIT }}" data-mchat-message-time="{{ mchatrow.MCHAT_MESSAGE_TIME }}"{% if MCHAT_EDIT_DELETE_LIMIT and not MCHAT_EDIT_DELETE_IGNORE and (mchatrow.MCHAT_ALLOW_EDIT or mchatrow.MCHAT_ALLOW_DEL) %} data-mchat-edit-delete-limit="1"{% endif %} {% EVENT dmzx_mchat_message_attributes %}>
+	{% if S_MCHAT_AVATARS %}
+	<div class="mchat-avatar">
+		{% if mchatrow.U_VIEWPROFILE %}<a href="{{ mchatrow.U_VIEWPROFILE }}" title="{{ lang('READ_PROFILE') }}">{% endif %}
+		{% if mchatrow.MCHAT_USER_AVATAR %}{{ mchatrow.MCHAT_USER_AVATAR }}{% else %}<img src="{{ STYLE_PATH }}/theme/images/no_avatar.gif" class="mchat-avatar" alt="{{ lang('READ_PROFILE') }}">{% endif %}
+		{% if mchatrow.U_VIEWPROFILE %}</a>{% endif %}
+	</div>
+	{% endif %}
+	<div class="mchat-message-wrapper">
+		{% INCLUDE '@dmzx_mchat/mchat_messages_icons.html' %}
+		<div class="mchat-message-header">
+			{% EVENT dmzx_mchat_messages_header_before %}
+			{{ mchatrow.MCHAT_USERNAME_FULL }} &bull; <span class="mchat-time" title="{{ mchatrow.MCHAT_DATETIME }}"{% if mchatrow.MCHAT_MINUTES_AGO != -1 %} data-mchat-minutes-ago="{{ mchatrow.MCHAT_MINUTES_AGO }}" data-mchat-relative-update="{{ mchatrow.MCHAT_RELATIVE_UPDATE }}"{% endif %}>{{ mchatrow.MCHAT_TIME }}</span>
+			{% EVENT dmzx_mchat_messages_header_after %}
+		</div>
+		<div class="mchat-text">
+			{% EVENT dmzx_mchat_messages_text_before %}
+			{{ mchatrow.MCHAT_MESSAGE }}
+			{% EVENT dmzx_mchat_messages_text_after %}
+		</div>
+	</div>
+</li>
+{%- endfor -%}
+
+{%- EVENT dmzx_mchat_messages_after -%}

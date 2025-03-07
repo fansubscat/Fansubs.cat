@@ -1,0 +1,16 @@
+/**
+ *
+ * mChat CSS for SE Gamer
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+.mchat-nav-link-title,
+.mchat-nav-link-title:hover,
+.mchat-nav-link,
+.mchat-nav-link:hover {
+	color: #FFFFFF;
+}

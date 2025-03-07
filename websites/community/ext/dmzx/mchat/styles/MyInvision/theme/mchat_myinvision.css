@@ -1,0 +1,20 @@
+/**
+ *
+ * mChat CSS for MyInvision
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2017 MannixMD
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+.mchat-status {
+	padding-bottom: 10px;
+}
+
+#mchat-panel {
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}

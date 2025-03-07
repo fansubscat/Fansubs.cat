@@ -1,0 +1,9 @@
+<span class="mchat-title">
+	{% if MCHAT_PAGE == 'archive' %}
+		<a href="{{ U_MCHAT_ARCHIVE }}" title="{{ lang('MCHAT_ARCHIVE_PAGE') }}">{{ lang('MCHAT_ARCHIVE_PAGE') }}</a>
+	{% elseif U_MCHAT_CUSTOM_PAGE %}
+		<a href="{{ U_MCHAT_CUSTOM_PAGE }}" title="{{ lang('MCHAT_TITLE') }}">{{ lang('MCHAT_TITLE') }}</a>
+	{% else %}
+		{{ lang('MCHAT_TITLE') }}
+	{% endif %}
+</span>

@@ -1,0 +1,10 @@
+<div id="mchat-whois">
+	<span title="{{ MCHAT_ONLINE_EXPLAIN }}">
+		{% if MCHAT_USERS_LIST %}
+			<a href="#" data-mchat-action="toggle" data-mchat-element="userlist">{{ MCHAT_USERS_TOTAL }}</a>
+		{% else %}
+			{{ MCHAT_USERS_TOTAL }}
+		{% endif %}
+	</span>
+	<div id="mchat-userlist" class="hidden">{{ MCHAT_USERS_LIST }}</div>
+</div>

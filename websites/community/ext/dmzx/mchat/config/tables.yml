@@ -1,0 +1,4 @@
+parameters:
+    dmzx.mchat.table.mchat: '%core.table_prefix%mchat'
+    dmzx.mchat.table.mchat_log: '%core.table_prefix%mchat_log'
+    dmzx.mchat.table.mchat_sessions: '%core.table_prefix%mchat_sessions'

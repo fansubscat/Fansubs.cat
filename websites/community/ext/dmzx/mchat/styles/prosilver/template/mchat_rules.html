@@ -1,0 +1,11 @@
+{% INCLUDE 'simple_header.html' %}
+
+<h2>{{ lang('MCHAT_RULES') }}</h2>
+<div class="rules">
+	<div class="inner">
+		{{ MCHAT_RULES }}
+	</div>
+</div>
+<a	href="#" onclick="window.close(); return false;">{{ lang('CLOSE_WINDOW') }}</a>
+
+{% INCLUDE 'simple_footer.html' %}

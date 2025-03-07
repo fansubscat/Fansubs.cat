@@ -1,0 +1,28 @@
+{% EVENT dmzx_mchat_messages_icons_before %}
+
+{% if not S_IS_BOT %}
+	{% DEFINE MCHAT_ALLOW_MENTION = MCHAT_ALLOW_USE and not mchatrow.MCHAT_IS_POSTER and MCHAT_PAGE != 'archive' %}
+	{% DEFINE MCHAT_ALLOW_QUOTE = MCHAT_ALLOW_USE and S_BBCODE_ALLOWED and MCHAT_ALLOW_QUOTE and MCHAT_PAGE != 'archive' %}
+	{% DEFINE MCHAT_ALLOW_LIKE = MCHAT_ALLOW_USE and S_BBCODE_ALLOWED and MCHAT_ALLOW_LIKE and MCHAT_PAGE != 'archive' and not mchatrow.MCHAT_IS_POSTER %}
+	{% DEFINE MCHAT_ALLOW_PM = MCHAT_ALLOW_PM and mchatrow.MCHAT_PM and mchatrow.U_VIEWPROFILE %}
+	{% DEFINE MCHAT_ALLOW_IP = MCHAT_ALLOW_IP and TRUE %}
+	{% DEFINE MCHAT_ALLOW_PERMISSIONS = MCHAT_ALLOW_PERMISSIONS and TRUE %}
+	{% DEFINE MCHAT_ALLOW_EDIT = mchatrow.MCHAT_ALLOW_EDIT and not mchatrow.MCHAT_IS_NOTIFICATION %}
+	{% DEFINE MCHAT_ALLOW_DEL = mchatrow.MCHAT_ALLOW_DEL %}
+	{% if definition.MCHAT_ALLOW_MENTION or definition.MCHAT_ALLOW_QUOTE or definition.MCHAT_ALLOW_LIKE or definition.MCHAT_ALLOW_PM or MCHAT_ALLOW_IP or MCHAT_ALLOW_PERMISSIONS or definition.MCHAT_ALLOW_EDIT or definition.MCHAT_ALLOW_DEL or definition.MCHAT_ADD_CUSTOM_BUTTON %}
+		<ul class="mchat-buttons">
+			{% EVENT dmzx_mchat_messages_icons_add_before %}
+			{% if definition.MCHAT_ALLOW_MENTION %}<li><a href="#" title="{{ lang('MCHAT_RESPOND') }}" data-mchat-action="mention"><i class="icon fa-at"><span>{{ lang('MCHAT_RESPOND') }}</span></i></a></li>{% endif %}
+			{% if definition.MCHAT_ALLOW_QUOTE %}<li><a href="#" title="{{ lang('REPLY_WITH_QUOTE') }}" data-mchat-action="quote"><i class="icon fa-quote-left"><span>{{ lang('REPLY_WITH_QUOTE') }}</span></i></a></li>{% endif %}
+			{% if definition.MCHAT_ALLOW_LIKE %}<li><a href="#" title="{{ lang('MCHAT_LIKE') }}" data-mchat-action="like"><i class="icon fa-thumbs-o-up"><span>{{ lang('MCHAT_LIKE') }}</span></i></a></li>{% endif %}
+			{% if definition.MCHAT_ALLOW_PM %}<li><a href="{{ mchatrow.MCHAT_PM }}" title="{{ lang('MCHAT_SEND_PM') }}"><i class="icon fa-envelope-o"><span>{{ lang('MCHAT_SEND_PM') }}</span></i></a></li>{% endif %}
+			{% if definition.MCHAT_ALLOW_IP %}<li><a href="{{ mchatrow.MCHAT_U_IP }}" title="{{ mchatrow.MCHAT_WHOIS_USER }}" data-mchat-action="ip"><i class="icon fa-wifi"><span>{{ mchatrow.MCHAT_WHOIS_USER }}</span></i></a></li>{% endif %}
+			{% if definition.MCHAT_ALLOW_PERMISSIONS %}<li><a href="{{ mchatrow.MCHAT_U_PERMISSIONS }}" title="{{ lang('MCHAT_PERMISSIONS') }}"><i class="icon fa-exclamation-triangle"><span>{{ lang('MCHAT_PERMISSIONS') }}</span></i></a></li>{% endif %}
+			{% if definition.MCHAT_ALLOW_EDIT %}<li><a href="#" title="{{ lang('MCHAT_EDIT') }}" data-mchat-action="edit"><i class="icon fa-pencil"><span>{{ lang('MCHAT_EDIT') }}</span></i></a></li>{% endif %}
+			{% if definition.MCHAT_ALLOW_DEL %}<li><a href="#" title="{{ lang('DELETE') }}" data-mchat-action="del"><i class="icon fa-trash-o"><span>{{ lang('DELETE') }}</span></i></a></li>{% endif %}
+			{% EVENT dmzx_mchat_messages_icons_add_after %}
+		</ul>
+	{% endif %}
+{% endif %}
+
+{% EVENT dmzx_mchat_messages_icons_after %}

@@ -1,0 +1,8 @@
+{% if MCHAT_PAGE != 'archive' %}
+	<span id="mchat-status">
+		<span class="mchat-status mchat-status-ok"><i class="icon fa fa-check" title="{{ lang('MCHAT_OK') }}"></i></span>
+		<span class="mchat-status mchat-status-load hidden"><i class="icon fa fa-refresh fa-spin" title="{{ lang('LOADING') }}"></i></span>
+		<span class="mchat-status mchat-status-paused hidden"><i class="icon fa fa-pause" title="{{ lang('MCHAT_PAUSE') }}"></i></span>
+		<span class="mchat-status mchat-status-error hidden"><i class="icon fa fa-times" title="{{ lang('ERROR') }}"></i></span>
+	</span>
+{% endif %}

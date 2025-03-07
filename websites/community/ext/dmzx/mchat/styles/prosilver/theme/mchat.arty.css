@@ -1,0 +1,23 @@
+/**
+ *
+ * mChat CSS for styles by Arty
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+.mchat-nav-container {
+	padding: 0 8px !important;
+}
+
+.mchat-nav-link-title,
+.mchat-nav-link-title:hover {
+	color: inherit;
+	font-size: inherit;
+}
+
+.mchat-nav-link-title i {
+	font-size: inherit;
+}

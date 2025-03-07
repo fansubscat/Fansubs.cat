@@ -1,0 +1,68 @@
+{% set MCHAT_DISPLAY_INDEX_WHOIS = MCHAT_PAGE == 'index' and MCHAT_WHOIS_REFRESH and MCHAT_WHOIS_INDEX %}
+<div id="mchat-panel" class="panel cp-mini{% if MCHAT_PAGE == 'archive' %} hidden{% endif %}{% if MCHAT_ALLOW_USE or MCHAT_DISPLAY_INDEX_WHOIS %} mchat-panel-content{% endif %}">
+	<form id="mchat-form" name="postform" action="{{ U_MCHAT_CUSTOM_PAGE }}" method="POST">
+		{{ S_FORM_TOKEN_DMZX_MCHAT }}
+		{% if MCHAT_ALLOW_USE and MCHAT_PAGE != 'archive' %}
+			<noscript><div class="error">{{ lang('MCHAT_NOJAVASCRIPT') }}</div></noscript>
+			{% EVENT dmzx_mchat_controls_before %}
+			<div class="mchat-controls">
+				<div class="mchat-input-container inputbox">
+					<textarea id="mchat-input" name="message" class="no-auto-resize {{ MCHAT_MAX_INPUT_HEIGHT ? 'mchat-multi-line' : 'mchat-single-line' }}" rows="1" autocomplete="on" spellcheck="true"></textarea>
+					<div class="mchat-input-control">
+						<button type="button" class="mchat-button-add" id="mchat-add" data-mchat-action="add" title="{{ lang('MCHAT_ADD') }}">
+							<i class="icon icon-lightgray fa fa-chevron-right fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHAT_ADD') }}</span>
+						</button>
+						{% if MCHAT_MAX_MESSAGE_LENGTH %}
+							<span id="mchat-exceed-character-count" class="hidden"></span>
+						{% endif %}
+					</div>
+				</div>
+				{% EVENT dmzx_mchat_buttons_container_before %}
+				{% if MCHAT_ALLOW_SMILES and loops.smiley|length or S_BBCODE_ALLOWED or S_MCHAT_ADD_CUSTOM_BUTTON %}
+					<div class="mchat-panel-buttons">
+						{% EVENT dmzx_mchat_buttons_before %}
+						{% if MCHAT_ALLOW_SMILES and loops.smiley|length %}
+							<button type="button" class="button mchat-button-smilies mchat-button-down" data-mchat-action="toggle" data-mchat-element="smilies" title="{{ lang('MCHAT_SMILES') }}">
+								<i class="icon fa fa-smile-o" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHAT_SMILES') }}</span>
+							</button>
+						{% endif %}
+						{% EVENT dmzx_mchat_buttons_mid %}
+						{% if S_BBCODE_ALLOWED %}
+							<button type="button" class="button mchat-button-bbcodes mchat-button-down" data-mchat-action="toggle" data-mchat-element="bbcodes" title="{{ lang('MCHAT_BBCODES') }}">
+								<i class="icon fa fa-code fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHAT_BBCODES') }}</span>
+							</button>
+						{% endif %}
+						{% EVENT dmzx_mchat_buttons_after %}
+					</div>
+				{% endif %}
+				{% EVENT dmzx_mchat_buttons_container_after %}
+			</div>
+			{% EVENT dmzx_mchat_controls_after %}
+			{% if S_BBCODE_ALLOWED %}
+				<div id="mchat-bbcodes">
+					{% INCLUDE 'posting_buttons.html' %}
+				</div>
+			{% endif %}
+			{% if MCHAT_ALLOW_SMILES and loops.smiley|length %}
+				<div id="mchat-smilies" class="hidden">
+					{% for smiley in loops.smiley %}
+						<a href="#" data-smiley-code="{{ smiley.SMILEY_CODE }}" data-mchat-action="smiley">
+							<img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}">
+						</a>
+					{% endfor %}
+					{% if S_SHOW_SMILEY_LINK %}
+						<a href="{{ U_MORE_SMILIES }}" data-mchat-action="smileyPopup">{{ lang('MORE_SMILIES') }}</a>
+					{% endif %}
+				</div>
+			{% endif %}
+			{% EVENT dmzx_mchat_body_smiley_after %}
+		{% endif %}
+	</form>
+	{% if MCHAT_DISPLAY_INDEX_WHOIS %}
+		{% INCLUDE '@dmzx_mchat/mchat_whois.html' %}
+	{% endif %}
+	{% EVENT dmzx_mchat_panel_whois_after %}
+	{% if MCHAT_ALLOW_USE and MCHAT_CHARACTER_COUNT and MCHAT_PAGE != 'archive' %}
+		<div id="mchat-character-count" class="invisible">{{ MCHAT_CHARACTER_COUNT }}</div>
+	{% endif %}
+</div>

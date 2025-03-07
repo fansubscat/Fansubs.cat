@@ -1,0 +1,37 @@
+dmzx_mchat_page_custom_controller:
+    path: '/mchat'
+    methods: ['GET']
+    defaults: { _controller: 'dmzx.mchat.core:page_custom' }
+dmzx_mchat_page_archive_controller:
+    path: '/mchat/archive'
+    methods: ['GET']
+    defaults: { _controller: 'dmzx.mchat.core:page_archive' }
+dmzx_mchat_page_rules_controller:
+    path: '/mchat/rules'
+    methods: ['GET']
+    defaults: { _controller: 'dmzx.mchat.core:page_rules' }
+dmzx_mchat_page_whois_controller:
+    path: '/mchat/whois/{ip}'
+    methods: ['GET']
+    defaults: { _controller: 'dmzx.mchat.core:page_whois' }
+
+dmzx_mchat_action_add_controller:
+    path: '/mchat/action/add'
+    methods: ['POST']
+    defaults: { _controller: 'dmzx.mchat.core:action_add' }
+dmzx_mchat_action_edit_controller:
+    path: '/mchat/action/edit'
+    methods: ['POST']
+    defaults: { _controller: 'dmzx.mchat.core:action_edit' }
+dmzx_mchat_action_del_controller:
+    path: '/mchat/action/del'
+    methods: ['POST']
+    defaults: { _controller: 'dmzx.mchat.core:action_del' }
+dmzx_mchat_action_refresh_controller:
+    path: '/mchat/action/refresh'
+    methods: ['POST']
+    defaults: { _controller: 'dmzx.mchat.core:action_refresh' }
+dmzx_mchat_action_whois_controller:
+    path: '/mchat/action/whois'
+    methods: ['POST']
+    defaults: { _controller: 'dmzx.mchat.core:action_whois' }

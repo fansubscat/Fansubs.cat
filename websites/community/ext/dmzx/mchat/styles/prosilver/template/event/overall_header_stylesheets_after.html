@@ -1,0 +1,14 @@
+{% if MCHAT_PAGE and MCHAT_PAGE != 'archive' %}
+	<style>
+		{% if MCHAT_PAGE == 'custom' and MCHAT_CUSTOM_HEIGHT or MCHAT_INDEX_HEIGHT %}
+		#mchat-messages {
+			height: {{ MCHAT_PAGE == 'custom' ? MCHAT_CUSTOM_HEIGHT : MCHAT_INDEX_HEIGHT }}px;
+		}
+		{% endif %}
+		{% if MCHAT_MAX_INPUT_HEIGHT %}
+		#mchat-input {
+			max-height: {{ MCHAT_MAX_INPUT_HEIGHT }}px;
+		}
+		{% endif %}
+	</style>
+{% endif %}

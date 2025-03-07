@@ -1,0 +1,78 @@
+/**
+ *
+ * mChat CSS for Project Durango
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2017 MannixMD
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+.mchat-panel-buttons .button {
+	border-color: #3a3a3a;
+	background: #3a3a3a;
+}
+
+.mchat-panel-buttons .button:hover {
+	background: #5dc21e;
+	border-color: #5dc21e;
+}
+
+.mchat-panel-button .button .icon {
+	color: #000;
+}
+
+.mchat-panel-buttons .icon {
+	color: #5dc21e;
+}
+
+.mchat-input-control button:hover .icon {
+	color: #5dc21e;
+}
+
+ul#mchat-messages {
+	background: #c2c2c2;
+}
+
+.mchat-messages-top .row {
+	border-bottom-color: #107c10;
+	border-bottom-width: 4px;
+	border-top-width: 0;
+}
+
+.mchat-text {
+	color: #3a3a3a;
+}
+
+ul.mchat-buttons .icon {
+	color: #107c10;
+}
+
+.mchat-wrapper .mchat-buttons li {
+	opacity: .5;
+}
+
+#mchat-main {
+	border-top: 4px solid #107c10;
+}
+
+#mchat-messages li.row:hover {
+	background: #c2c2c2;
+}
+
+.mchat-message-header {
+	color: #3a3a3a;
+}
+
+.mchat-button-add .icon {
+	color: #107c10;
+}
+
+#mchat-confirm textarea {
+	color: #f1f1f1;
+}
+
+#mchat-panel {
+	background-color: #6b6b6b;
+}

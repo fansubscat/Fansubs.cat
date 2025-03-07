@@ -1,0 +1,21 @@
+/**
+ *
+ * mChat CSS for we_universal
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2018 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
+
+.mchat-nav {
+	float: right !important;
+}
+
+.mchat-nav::before {
+	content: none !important;
+}
+
+#mchat-panel .inputbox {
+	height: unset;
+}

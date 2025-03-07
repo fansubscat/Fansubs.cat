@@ -1,0 +1,61 @@
+{% if MCHAT_PAGE == 'archive' or not (MCHAT_ALLOW_USE and S_BBCODE_ALLOWED) %}
+	{% INCLUDEJS T_ASSETS_PATH ~ '/javascript/editor.js' %}
+{% endif %}
+{% if MCHAT_MAX_INPUT_HEIGHT %}
+	{% INCLUDEJS '@dmzx_mchat/javascript/autosize.min.js' %}
+{% endif %}
+{% INCLUDEJS '@dmzx_mchat/javascript/jquery.titlealert.min.js' %}
+{% INCLUDEJS '@dmzx_mchat/javascript/mchat.js' %}
+
+<script>
+	var form_name = 'postform';
+	var text_name = 'message';
+	var mChat = {
+		// General settings
+		actionUrls		: {
+			{% for mchaturl in loops.mchaturl %}
+				{{ mchaturl.ACTION }}: '{{ mchaturl.URL }}'{{ not loop.last ? ',' }}
+			{% endfor %}
+		},
+		page			: '{{ MCHAT_PAGE | escape('js') }}',
+		currentUrl		: '{{ MCHAT_CURRENT_URL | escape('js') }}',
+		cookie			: '{{ COOKIE_NAME | escape('js') }}',
+		playSound		: {{ MCHAT_SOUND ? 'true' : 'false' }},
+		messageTop		: {{ MCHAT_MESSAGE_TOP ? 'true' : 'false' }},
+		allowBBCodes	: {{ S_BBCODE_ALLOWED ? 'true' : 'false' }},
+		relativeTime	: {{ MCHAT_RELATIVE_TIME ? 'true' : 'false' }},
+		showCharCount	: {{ MCHAT_CHARACTER_COUNT ? 'true' : 'false' }},
+		jumpTo			: {{ MCHAT_JUMP_TO }},
+
+		// Limits & timeouts
+		refreshTime		: {{ MCHAT_REFRESH_JS }},
+		whoisRefresh	: {{ MCHAT_WHOIS_REFRESH }},
+		timeout			: {{ MCHAT_TIMEOUT }},
+		mssgLngth		: {{ MCHAT_MAX_MESSAGE_LENGTH }},
+		maxInputHeight	: {{ MCHAT_MAX_INPUT_HEIGHT }},
+		editDeleteLimit	: {{ MCHAT_EDIT_DELETE_LIMIT }},
+		logId			: {{ MCHAT_LOG_ID }},
+		latestMessageId	: {{ MCHAT_LATEST_MESSAGE_ID | default(0) }},
+		removeBBCodes	: '{{ MCHAT_DISALLOWED_BBCODES | escape('js') }}',
+
+		// Language
+		lang: {
+			minutesAgo		: {
+				{% if MCHAT_RELATIVE_TIME %}
+					{% for minute in 0..MCHAT_MINUTES_AGO_LIMIT-1 %}
+						{{ minute }}: '{{ lang('MCHAT_MINUTES_AGO', minute) | escape('js') }}'{{ not loop.last ? ',' }}
+					{% endfor %}
+				{% endif %}
+			},
+			err				: '{{ lang('ERROR') | escape('js') }}',
+			parserErr		: '{{ lang('AJAX_ERROR_TEXT_PARSERERROR') | escape('js') }}',
+			newMessageAlert	: '{{ lang('MCHAT_NEW_CHAT') | escape('js') }}',
+			editInfo		: '{{ lang('MCHAT_EDITINFO') | escape('js') }}',
+			delConfirm		: '{{ lang('MCHAT_DELCONFIRM') | escape('js') }}',
+			mention			: '{{ lang('MCHAT_MENTION') | escape('js') }}',
+			charCount		: '{{ lang(MCHAT_MAX_MESSAGE_LENGTH ? 'MCHAT_CHARACTER_COUNT_LIMIT' : 'MCHAT_CHARACTER_COUNT') | escape('js') }}',
+			mssgLngthLong	: '{{ lang('MCHAT_MESS_LONG', MCHAT_MAX_MESSAGE_LENGTH) | escape('js') }}',
+			likes			: '{{ lang('MCHAT_LIKES') | escape('js') }}'
+		}
+	};
+</script>

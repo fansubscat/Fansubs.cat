@@ -1,0 +1,68 @@
+{% DEFINE MCHAT_NAVLINK_DISPLAY = U_MCHAT_CUSTOM_PAGE or U_MCHAT_ARCHIVE or U_MCHAT_RULES or MCHAT_SOUND_ENABLED or (MCHAT_ALLOW_USE and MCHAT_MAX_INPUT_HEIGHT) %}
+
+{% EVENT dmzx_mchat_nav_container_before %}
+
+{% if definition.MCHAT_NAVLINK_DISPLAY %}
+<li class="mchat-nav" data-skip-responsive="true" data-select-match="mchat">
+	<div class="mchat-nav-container dropdown-container">
+		<a href="{{ U_MCHAT_CUSTOM_PAGE ?: '#' }}" title="{{ MCHAT_TITLE_HINT }}" class="mchat-nav-link-title dropdown-trigger" role="menuitem">
+			<i class="icon fa fa-weixin fa-fw" aria-hidden="true"></i><span class="mchat-nav-link">{{ MCHAT_TITLE }}</span><i class="icon fa fa-caret-down mchat-nav-caret" aria-hidden="true"></i>
+		</a>
+		<div class="dropdown">
+			<div class="pointer"><div class="pointer-inner"></div></div>
+			<ul class="mchat-nav-menu dropdown-contents" role="menu">
+				{% EVENT dmzx_mchat_nav_items_before %}
+				{% if U_MCHAT_CUSTOM_PAGE %}
+					<li class="mchat-nav-custom-page">
+						<a href="{{ U_MCHAT_CUSTOM_PAGE }}" title="{{ lang('MCHAT_NAVBAR_CUSTOM_PAGE') }}" role="menuitem">
+							<i class="icon fa fa-weixin fa-fw" aria-hidden="true"></i><span>{{ lang('MCHAT_NAVBAR_CUSTOM_PAGE') }}</span>
+						</a>
+					</li>
+				{% endif %}
+				{% EVENT dmzx_mchat_nav_items_custom_page_after %}
+				{% if U_MCHAT_ARCHIVE %}
+					<li class="mchat-nav-archive">
+						<a href="{{ U_MCHAT_ARCHIVE }}" title="{{ lang('MCHAT_NAVBAR_ARCHIVE') }}" role="menuitem">
+							<i class="icon fa fa-history fa-fw" aria-hidden="true"></i><span>{{ lang('MCHAT_NAVBAR_ARCHIVE') }}</span>
+						</a>
+					</li>
+				{% endif %}
+				{% EVENT dmzx_mchat_nav_items_archive_after %}
+				{% if U_MCHAT_RULES %}
+					<li class="mchat-nav-rules">
+						<a href="{{ U_MCHAT_RULES }}" title="{{ lang('MCHAT_NAVBAR_RULES') }}" role="menuitem" data-mchat-action="rules">
+							<i class="icon fa fa-exclamation fa-fw" aria-hidden="true"></i><span>{{ lang('MCHAT_NAVBAR_RULES') }}</span>
+						</a>
+					</li>
+				{% endif %}
+				{% EVENT dmzx_mchat_nav_items_rules_after %}
+				{% if MCHAT_PAGE %}
+					<li class="separator"></li>
+					{% EVENT dmzx_mchat_nav_items_sound_before %}
+					{% if MCHAT_SOUND_ENABLED %}
+						<li id="mchat-sound" class="mchat-nav-item-enabled" data-mchat-action="toggle_sound">
+							<a href="#" title="{{ lang('MCHAT_USESOUND') }}" role="menuitem">
+								<span class="mchat-nav-item-enabled"><i class="icon fa fa-volume-up fa-fw" aria-hidden="true"></i>{{ lang('MCHAT_SOUND_ON') }}</span>
+								<span class="mchat-nav-item-disabled"><i class="icon fa fa-volume-off fa-fw" aria-hidden="true"></i>{{ lang('MCHAT_SOUND_OFF') }}</span>
+							</a>
+						</li>
+					{% endif %}
+					{% EVENT dmzx_mchat_nav_items_sound_after %}
+					{% if MCHAT_ALLOW_USE and MCHAT_MAX_INPUT_HEIGHT %}
+						<li id="mchat-enter" class="mchat-nav-item-enabled" data-mchat-action="toggle_enter">
+							<a href="#" title="{{ lang('MCHAT_ENTER') }}" role="menuitem">
+								<span class="mchat-nav-item-enabled"><i class="icon fa fa-chevron-right fa-fw" aria-hidden="true"></i>{{ lang('MCHAT_ENTER_SUBMIT') }}</span>
+								<span class="mchat-nav-item-disabled"><i class="icon fa fa-chevron-down fa-fw" aria-hidden="true"></i>{{ lang('MCHAT_ENTER_LINEBREAK') }}</span>
+							</a>
+						</li>
+					{% endif %}
+					{% EVENT dmzx_mchat_nav_items_enter_after %}
+				{% endif %}
+				{% EVENT dmzx_mchat_nav_items_after %}
+			</ul>
+		</div>
+	</div>
+</li>
+{% endif %}
+
+{% EVENT dmzx_mchat_nav_container_after %}

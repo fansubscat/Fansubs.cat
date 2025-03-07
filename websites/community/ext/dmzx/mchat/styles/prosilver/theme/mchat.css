@@ -1,0 +1,508 @@
+/**
+ *
+ * @package phpBB Extension - mChat
+ * @copyright (c) 2016 dmzx - http://www.dmzx-web.net
+ * @copyright (c) 2016 kasimi - https://kasimi.net
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
+
+#mChat {
+	position: absolute;
+	visibility: hidden;
+}
+
+.mchat-nav-link {
+	margin-left: 2px;
+}
+
+.mchat-nav-caret {
+	margin-left: 5px;
+}
+
+.mchat-header .list-inner {
+	position: relative;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	   -ms-flex-align: center;
+	      align-items: center;
+	-webkit-box-pack: start;
+	   -ms-flex-pack: start;
+	 justify-content: start;
+}
+
+.mchat-wrapper li.header dd {
+	width: 0;
+}
+
+#mchat-body {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+}
+
+#mchat-body * {
+	-webkit-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+#mchat-main {
+	position: relative;
+}
+
+.mchat-ucp fieldset hr:first-child, .mchat-ucp fieldset hr:last-child, .mchat-ucp fieldset hr + hr {
+	display: none;
+}
+
+#mchat-confirm textarea {
+	width: 100%;
+	height: 100px;
+	background-color: inherit;
+}
+
+#mchat-messages {
+	overflow: auto;
+}
+
+.mchat-message-wrapper {
+	overflow: hidden;
+}
+
+.mchat-message-header {
+	float: left;
+}
+
+.mchat-message {
+	padding: 5px !important;
+}
+
+.mchat-message-flash {
+	-webkit-animation-name: flash-message;
+	        animation-name: flash-message;
+	-webkit-animation-duration: .4s;
+	        animation-duration: .4s;
+	-webkit-animation-timing-function: ease-out;
+	        animation-timing-function: ease-out;
+}
+
+.mchat-message-flash:target {
+	-webkit-animation-duration: 2s;
+	        animation-duration: 2s;
+}
+
+@-webkit-keyframes flash-message {
+
+	0% {
+		background-color: #FFDC95;
+	}
+
+	100% {
+		background-color: transparent;
+	}
+
+}
+
+@keyframes flash-message {
+
+	0% {
+		background-color: #FFDC95;
+	}
+
+	100% {
+		background-color: transparent;
+	}
+
+}
+
+.mchat-avatar {
+	float: left;
+	width: 36px;
+	margin-right: 5px;
+}
+
+.mchat-avatar a, .mchat-avatar img {
+	display: block;
+}
+
+.mchat-wrapper .mchat-buttons li {
+	opacity: .3;
+}
+
+.mchat-wrapper li:hover .mchat-buttons li {
+	opacity: .6;
+}
+
+.mchat-wrapper li:hover .mchat-buttons li:hover {
+	opacity: 1;
+}
+
+.mchat-wrapper .mchat-buttons {
+	float: right;
+	list-style: none;
+	margin-top: 1px;
+}
+
+.mchat-wrapper .mchat-buttons > li {
+	float: left;
+	margin: 0 3px;
+}
+
+.mchat-wrapper .mchat-buttons .icon {
+	font-size: 12pt;
+}
+
+.mchat-wrapper .mchat-buttons span {
+	display: block;
+	height: 0;
+	overflow: hidden;
+	position: absolute;
+	width: 1px;
+}
+
+.mchat-text {
+	clear: both;
+	overflow: hidden;
+	padding: 0 5px 1px;
+	font-size: 1.2em;
+}
+
+.mchat-text .postlink {
+	display: unset;
+}
+
+.mchat-text .text-strong {
+	color: unset;
+}
+
+.mchat-notification-message .mchat-text {
+	font-style: italic;
+}
+
+.mchat-text strong {
+	font-weight: bold !important;
+}
+
+.mchat-text img {
+	max-width: 100%;
+}
+
+.mchat-text li {
+	display: list-item !important;
+	list-style-type: inherit !important;
+	list-style-position: inside;
+}
+
+.mchat-text ul, .mchat-text ol {
+	list-style-position: inside;
+}
+
+.mchat-text ul {
+	list-style-type: disc;
+}
+
+.mchat-text ol {
+	list-style-type: decimal;
+}
+
+.mchat-text ul ul {
+	list-style-type: circle;
+}
+
+.mchat-text blockquote, .mchat-text .codebox, .mchat-text ul, .mchat-text ol {
+	margin-bottom: 5px;
+	margin-left: 1em;
+}
+
+.mchat-mention strong {
+	color: inherit !important;
+}
+
+.mchat-mention {
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+}
+
+#mchat-no-message {
+	font-size: 1.2em;
+}
+
+#mchat-character-count {
+	float: right;
+}
+
+#mchat-character-count.invisible {
+	visibility: hidden;
+}
+
+#mchat-panel {
+	text-align: center;
+	max-height: none;
+	overflow: hidden;
+	padding: 5px;
+	margin: 0;
+	border-radius: 0;
+}
+
+#mchat-panel:not(.mchat-panel-content) {
+	display: none;
+}
+
+#mchat-form {
+	clear: both;
+}
+
+.mchat-controls {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	margin: 5px 0;
+}
+
+.mchat-avatars .mchat-controls {
+	margin: 10px 43px;
+}
+
+.mchat-input-container {
+	-webkit-box-flex: 1;
+	    -ms-flex: 1;
+	        flex: 1;
+	position: relative;
+	max-width: 100%;
+	border-radius: 4px;
+	padding: 0;
+}
+
+#mchat-input {
+	font-size: 1.2em;
+	padding: 6px 6px 5px;
+	min-width: 100%;
+	border-radius: 4px;
+	overflow: hidden;
+	resize: none;
+	border: none;
+	border-right: 35px solid transparent;
+	background-color: inherit;
+}
+
+#mchat-input:focus, .mchat-input-control > *:focus {
+	outline: none;
+}
+
+.mchat-single-line {
+	white-space: nowrap;
+}
+
+.mchat-input-error {
+	border-color: #F00 !important;
+}
+
+.mchat-input-control {
+	position: absolute;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	width: 30px;
+	height: 100%;
+	top: 0;
+	right: 0;
+}
+
+.mchat-input-control button {
+ 	background: transparent;
+	border: 0;
+}
+
+.mchat-input-control button:hover .icon {
+	color: #1198D9;
+}
+
+#mchat-status {
+	display: inline;
+	margin-left: 6px;
+	text-indent: 0;
+}
+
+.mchat-status {
+	position: absolute;
+	top: calc(50% - 1px);
+	-webkit-transform: translateY(-50%);
+	    -ms-transform: translateY(-50%);
+	        transform: translateY(-50%);
+	text-indent: 0;
+}
+
+.fa-spin::before {
+	padding-left: 2px;
+}
+
+.mchat-button-add {
+	margin: 3px 0 0 3px;
+	padding: 5px;
+}
+
+.mchat-input-control button .icon {
+	font-size: 15px;
+}
+
+#mchat-exceed-character-count {
+	color: #F00;
+	font-weight: bold;
+}
+
+.mchat-panel-buttons {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	margin-left: 5px;
+}
+
+.mchat-panel-buttons .button:not(:last-child) {
+	margin-right: 5px;
+}
+
+.mchat-panel-buttons .icon {
+	font-size: 16px;
+}
+
+.mchat-button-is-down {
+	border-style: inset;
+}
+
+.mchat-nav-item-enabled .mchat-nav-item-disabled,
+.mchat-nav-item-disabled .mchat-nav-item-enabled {
+	display: none;
+}
+
+#mchat-bbcodes {
+	display: none;
+}
+
+#mchat-bbcodes #format-buttons,
+#mchat-bbcodes #format-postingbuttons {
+	margin: 0 0 5px;
+}
+
+#mchat-colour {
+	display: none;
+}
+
+#mchat-bbcodes #colour_palette {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+}
+
+#mchat-bbcodes #colour_palette label {
+	display: none;
+}
+
+#mchat-bbcodes #colour_palette table {
+	margin: 0 auto 5px;
+}
+
+#mchat-bbcodes #colour_palette a {
+	cursor: pointer;
+}
+
+#mchat-bbcodes #colour_palette td a.remember-color {
+	position: relative;
+	-webkit-box-shadow: 0 0 2px 2px #F00;
+	        box-shadow: 0 0 2px 2px #F00;
+}
+
+#mchat-smilies {
+	padding: 0;
+}
+
+#mchat-legend {
+	clear: both;
+	margin: 10px 0;
+}
+
+.mchat-static, #mchat-stats, #mchat-whois, #mchat-refresh, #mchat-legend {
+	text-align: left;
+	font-size: 1.1em;
+}
+
+#mchat-panel > #mchat-whois {
+	float: left;
+}
+
+.mchat-copyright.footer-row {
+	font-size: 10px;
+	line-height: 1.8;
+	margin: 0;
+}
+
+.footer-row + br {
+	display: none;
+}
+
+.mchat-static {
+	padding: 5px 5px 7px !important;
+}
+
+@media only screen and (max-width: 700px), only screen and (max-device-width: 700px) {
+
+	#mchat-body {
+		overflow: visible;
+	}
+
+	.mchat-wrapper .list-inner {
+		display: inherit !important;
+	}
+
+	.mchat-wrapper .mchat-buttons > li {
+		padding: 0 5px;
+	}
+
+	.mchat-controls {
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		    -ms-flex-direction: column;
+		        flex-direction: column;
+	}
+
+	.mchat-panel-buttons {
+		min-height: 32px;
+		margin: 3px auto !important;
+	}
+
+}
+
+/* Compatibility with Advanced BBCode Box extension */
+
+#mchat-panel #abbc3_buttons {
+	margin: 0 !important;
+	padding-bottom: 5px;
+}
+
+#mchat-panel #abbc3_buttons .abbc3_buttons_row {
+	margin: 0 auto !important;
+}
+
+/* Compatibility with Collapsible Categories extension */
+
+.mchat-category {
+	display: none;
+	height: 0;
+}
+
+.mchat-collapse {
+	display: none;
+	line-height: 0;
+}
+
+.hidden-category + .forabg #mchat-body .topiclist.forums {
+	display: block;
+}
