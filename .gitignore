@@ -7,6 +7,7 @@ temporary/*
 assets/*.png
 common/config/config.inc.php
 services/composer.phar
+websites/community/config.php
 websites/static/images/advent/*
 !websites/static/images/advent/.gitkeep
 websites/static/images/avatars/*
