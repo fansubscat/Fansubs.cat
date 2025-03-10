@@ -1,0 +1,6 @@
+name: snotr
+host: snotr.com
+example: https://www.snotr.com/video/20629/ACE_-_Sleight_of_Hand_by_Noel_Heath
+extract: "!//www.snotr.com/video/(?'id'\\d+)!"
+iframe:
+    src: https://www.snotr.com/embed/{@id}

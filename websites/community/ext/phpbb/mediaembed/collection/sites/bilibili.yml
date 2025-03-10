@@ -1,0 +1,6 @@
+name: Bilibili
+host: bilibili.com
+example: https://www.bilibili.com/video/BV1VD4y1n7g7
+extract: "!//www.bilibili.com/video/(?'id'\\w+)!"
+iframe:
+    src: //player.bilibili.com/player.html?bvid={@id}

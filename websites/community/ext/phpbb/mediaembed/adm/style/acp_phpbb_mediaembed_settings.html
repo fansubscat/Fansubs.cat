@@ -1,0 +1,60 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_MEDIA_SETTINGS') }}</h1>
+
+<p>{{ lang('ACP_MEDIA_SETTINGS_EXPLAIN') }}</p>
+
+<form id="mediaembed_settings" method="post" action="{{ U_ACTION }}" data-ajax="true">
+	<fieldset>
+		<legend>{{ lang('ACP_MEDIA_BBCODE_LEGEND') }}</legend>
+		<dl>
+			<dt><label for="media_embed_bbcode">{{ lang('ACP_MEDIA_DISPLAY_BBCODE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_MEDIA_DISPLAY_BBCODE_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="media_embed_bbcode" id="media_embed_bbcode" value="1" {% if S_MEDIA_EMBED_BBCODE %}checked="checked"{% endif %}/> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="media_embed_bbcode" value="0"{% if not S_MEDIA_EMBED_BBCODE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{{ lang('ACP_MEDIA_OPTIONS_LEGEND') }}</legend>
+		<dl>
+			<dt><label for="media_embed_allow_sig">{{ lang('ACP_MEDIA_ALLOW_SIG') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_MEDIA_ALLOW_SIG_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="media_embed_allow_sig" id="media_embed_allow_sig" value="1" {% if S_MEDIA_EMBED_ALLOW_SIG %}checked="checked"{% endif %}/> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="media_embed_allow_sig" value="0"{% if not S_MEDIA_EMBED_ALLOW_SIG %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="media_embed_parse_urls">{{ lang('ACP_MEDIA_PARSE_URLS') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_MEDIA_PARSE_URLS_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="media_embed_parse_urls" id="media_embed_parse_urls" value="1" {% if S_MEDIA_EMBED_PARSE_URLS %}checked="checked"{% endif %}/> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="media_embed_parse_urls" value="0"{% if not S_MEDIA_EMBED_PARSE_URLS %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{{ lang('ACP_MEDIA_CACHE_LEGEND') }}</legend>
+		<dl>
+			<dt><label for="media_embed_enable_cache">{{ lang('ACP_MEDIA_ENABLE_CACHE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_MEDIA_ENABLE_CACHE_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="media_embed_enable_cache" id="media_embed_enable_cache" value="1" {% if S_MEDIA_EMBED_ENABLE_CACHE %}checked="checked"{% endif %}/> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="media_embed_enable_cache" value="0"{% if not S_MEDIA_EMBED_ENABLE_CACHE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="action_purge_cache">{{ lang('ACP_MEDIA_PURGE_CACHE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_MEDIA_PURGE_CACHE_EXPLAIN') }}</span></dt>
+			<dd><input class="button2" type="submit" id="action_purge_cache" name="action_purge_cache" value="{{ lang('PURGE_CACHE') }}" /></dd>
+		</dl>
+	</fieldset>
+	<fieldset>
+		<legend>{{ lang('ACP_MEDIA_WIDTH_LEGEND') }}</legend>
+		<dl>
+			<dt><label for="media_embed_full_width">{{ lang('ACP_MEDIA_FULL_WIDTH') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_MEDIA_FULL_WIDTH_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="media_embed_full_width" id="media_embed_full_width" value="1" {% if S_MEDIA_EMBED_FULL_WIDTH %}checked="checked"{% endif %}/> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="media_embed_full_width" value="0"{% if not S_MEDIA_EMBED_FULL_WIDTH %} checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+		<dl>
+			<dt><label for="media_embed_max_width">{{ lang('ACP_MEDIA_MAX_WIDTH') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_MEDIA_MAX_WIDTH_EXPLAIN') }}</span></dt>
+			<dd><textarea id="media_embed_max_width" name="media_embed_max_width" rows="8" cols="40" style="width: 50%;" placeholder="twitter:100%&#10;youtube:80%&#10;funnyordie:480px">{{ S_MEDIA_EMBED_MAX_WIDTHS }}</textarea></dd>
+		</dl>
+	</fieldset>
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		{{ S_FORM_TOKEN }}
+	</fieldset>
+</form>
+
+{% include 'overall_footer.html' %}

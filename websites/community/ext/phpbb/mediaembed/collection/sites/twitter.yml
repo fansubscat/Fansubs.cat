@@ -1,0 +1,19 @@
+name: Twitter
+host:
+    - twitter.com
+    - x.com
+example:
+    - https://twitter.com/IJasonAlexander/statuses/526635414338023424
+    - https://mobile.twitter.com/DerekTVShow/status/463372588690202624
+    - https://twitter.com/#!/IJasonAlexander/status/526635414338023424
+extract: "@(?:twitter|x)\\.com/(?:#!/|i/)?\\w+/(?:status(?:es)?|tweet)/(?'id'\\d+)@"
+oembed:
+    endpoint: https://publish.twitter.com/oembed
+    scheme: https://twitter.com/user/status/{@id}
+iframe:
+    data-s9e-livepreview-ignore-attrs: "style"
+    onload: "let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])"
+    width: "550"
+    height: "273"
+    allow: "autoplay *"
+    src: https://s9e.github.io/iframe/2/twitter.min.html#<xsl:value-of select="@id"/><xsl:if test="$MEDIAEMBED_THEME='dark'">#theme=dark</xsl:if>

@@ -1,0 +1,11 @@
+services:
+# ----- Cron tasks -----
+    phpbb.mediaembed.cron.task.purge_cache:
+        class: phpbb\mediaembed\cron\purge_cache
+        arguments:
+            - '@config'
+            - '@phpbb.mediaembed.cache'
+        calls:
+            - [set_name, [cron.task.mediaembed]]
+        tags:
+            - { name: cron.task }

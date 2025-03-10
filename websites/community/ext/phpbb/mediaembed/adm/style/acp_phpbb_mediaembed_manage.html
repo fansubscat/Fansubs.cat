@@ -1,0 +1,56 @@
+{% include 'overall_header.html' %}
+
+<h1>{{ lang('ACP_MEDIA_MANAGE') }}</h1>
+
+<p>{{ lang('ACP_MEDIA_MANAGE_EXPLAIN') }}</p>
+
+{% if ERRORS %}
+	<div class="errorbox">
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ lang('ACP_MEDIA_SITES_MISSING') }}</p>
+		{% for error in ERRORS %}
+			<p>{{ error }}</p>
+		{% endfor %}
+	</div>
+{% endif %}
+
+<form id="mediaembed_manage" method="post" action="{{ U_ACTION }}" data-ajax="true">
+	<table class="table1 zebra-table">
+		{% for sites in MEDIA_SITES|batch(4, '') %}
+			<tr>
+				{% for site in sites %}
+					<td style="width: 25%;">
+						{% if site %}
+							<label style="font-size: 1em;" title="{{ site.title }}">
+								<input type="checkbox" class="radio" name="mark[]" value="{{ site.id }}"{% if site.disabled %} disabled{% elseif site.enabled %} checked{% endif %} /> {{ site.name }}
+							</label>
+						{% endif %}
+					</td>
+				{% endfor %}
+			</tr>
+		{% else %}
+			<tr>
+				<td><div class="errorbox">{{ lang('ACP_MEDIA_SITES_ERROR') }}</div></td>
+			</tr>
+		{% endfor %}
+	</table>
+	<fieldset class="quick">
+		<p class="small"><a href="#" data-marksites="true">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" data-marksites="false">{{ lang('UNMARK_ALL') }}</a></p>
+	</fieldset>
+	<p id="buttons" class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+	</p>
+	{{ S_FORM_TOKEN }}
+</form>
+
+<script>
+	for (const mark of document.querySelectorAll("[data-marksites]")) {
+		mark.addEventListener("click", (e) => {
+			e.preventDefault();
+			marklist("mediaembed_manage", "mark", e.target.dataset.marksites === "true");
+		})
+	}
+</script>
+
+{% include 'overall_footer.html' %}

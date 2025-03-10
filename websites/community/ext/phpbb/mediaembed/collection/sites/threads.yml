@@ -1,0 +1,10 @@
+name: Threads
+host: threads.net
+example: https://www.threads.net/t/CuY2OYEAbJw
+extract: "!threads\\.net/(?:@[-\\w.]+/pos)?t/(?'id'[-\\w]+)!"
+iframe:
+    data-s9e-livepreview-ignore-attrs: "style"
+    onload: "let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])"
+    width: "550"
+    height: "300"
+    src: https://s9e.github.io/iframe/2/threads.min.html#{@id}

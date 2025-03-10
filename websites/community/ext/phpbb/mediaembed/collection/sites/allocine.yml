@@ -1,0 +1,6 @@
+name: Allocine
+host: allocine.fr
+example: http://www.allocine.fr/video/player_gen_cmedia=19582745&cfilm=248825.html
+extract: "!//www.allocine.fr/video/player_gen_cmedia=(?'id'\\d+)!"
+iframe:
+    src: //player.allocine.fr/{@id}.html

@@ -1,0 +1,8 @@
+name: Mod DB
+host: moddb.com
+example: https://www.moddb.com/games/crimson-spires/videos/crimson-spires-story-trailer
+scrape:
+    - match: "!moddb\\.com/(?:mods|games)/[^/]+/videos!"
+    - extract: "!moddb.com/media/iframe/(?'id'[0-9]+)!"
+iframe:
+    src: https://www.moddb.com/media/iframe/{@id}

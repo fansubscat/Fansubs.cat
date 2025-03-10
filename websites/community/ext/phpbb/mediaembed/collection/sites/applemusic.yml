@@ -1,0 +1,28 @@
+name: "Apple Music"
+host: music.apple.com
+example: https://music.apple.com/us/album/taking-flight/1681148980?i=1681148982
+extract:
+    - "!//music.apple.com/(?'country'[a-z]{2})/playlist/(?'plname'[\\w\\d\\-%A-F]+)/(?'plid'pl\\.[\\w\\d-]+)!"
+    - "!//music.apple.com/(?'country'[a-z]{2})/album/(?'artist'[\\w\\d\\-%A-F]+)/(?'aid'\\d+)!"
+    - "!//music.apple.com/(?'country'[a-z]{2})/album/(?'artist'[\\w\\d\\-%A-F]+)/(?'aid'\\d+)\\?i\\=(?'tid'\\d+)!"
+    - "!//geo.music.apple.com/(?'country'[a-z]{2})/album/(?'artist'[\\w\\d\\-%A-F]+)/(?'aid'\\d+)\\?i\\=(?'tid'\\d+)!"
+choose:
+    when:
+        test: '@plid'
+        iframe:
+            width: "100%"
+            height: "450"
+            src: //embed.music.apple.com/{@country}/playlist/{@plname}/{@plid}
+    otherwise:
+        choose:
+            when:
+                test: '@tid'
+                iframe:
+                    width: "100%"
+                    height: "175"
+                    src: //embed.music.apple.com/{@country}/album/{@artist}/{@aid}?i={@tid}&l={@country}
+            otherwise:
+                iframe:
+                    width: "100%"
+                    height: "450"
+                    src: //embed.music.apple.com/{@country}/album/{@artist}/{@aid}

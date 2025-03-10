@@ -1,0 +1,24 @@
+name: "Yandex Music"
+host: music.yandex.ru
+example: https://music.yandex.ru/album/5307396/track/38633706
+extract: "!music\\.yandex\\.ru(\\/album\\/(?'aid'\\d+)(\\/track\\/(?'tid'\\d+))?|\\/users\\/(?'uid'\\w+)\\/playlists\\/(?'pid'\\d+))!"
+choose:
+    when:
+        test: "@uid"
+        iframe:
+            height: "450"
+            width: "100%"
+            src: //music.yandex.ru/iframe/#playlist/{@uid}/{@pid}
+    otherwise:
+        choose:
+            when:
+                test: "@tid"
+                iframe:
+                    height: "100"
+                    width: "100%"
+                    src: //music.yandex.ru/iframe/#track/{@tid}/{@aid}
+            otherwise:
+                iframe:
+                    height: "450"
+                    width: "100%"
+                    src: //music.yandex.ru/iframe/#album/{@aid}

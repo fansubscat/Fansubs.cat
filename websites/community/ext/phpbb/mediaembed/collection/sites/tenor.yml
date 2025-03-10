@@ -1,0 +1,6 @@
+name: Tenor
+host: tenor.com
+example: https://tenor.com/view/palpatine-smile-creepy-creepy-smile-smirk-gif-24584761
+extract: "!//tenor.com/.*-(?'id'\\d+)!"
+iframe:
+    src: //tenor.com/embed/{@id}

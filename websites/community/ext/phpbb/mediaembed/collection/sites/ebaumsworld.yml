@@ -1,0 +1,6 @@
+name: "eBaum's World"
+host: ebaumsworld.com
+example: https://www.ebaumsworld.com/videos/letterkenny-roasts-the-bachelor/85926802/
+extract: "!//www.ebaumsworld.com/videos/[^/]+/(?'id'\\d+)!"
+iframe:
+    src: //www.ebaumsworld.com/media/embed/{@id}

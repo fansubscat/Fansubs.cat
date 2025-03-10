@@ -1,0 +1,8 @@
+name: Odnoklassniki
+host: ok.ru
+example: https://ok.ru/video/549000643961
+extract:
+    - "!//ok.ru/video/(?'id'\\d+)!"
+    - "!//ok.ru/live/(?'id'\\d+)!"
+iframe:
+    src: https://ok.ru/videoembed/{@id}

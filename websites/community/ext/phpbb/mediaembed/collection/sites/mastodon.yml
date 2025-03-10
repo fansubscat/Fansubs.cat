@@ -1,0 +1,17 @@
+name: "Mastodon"
+host: mastodon.social
+example: https://mastodon.social/@HackerNewsBot/100181134752056592
+extract: "!//(?'host'[-.\\w]+)/@(?'name'\\w+)/(?'id'\\d+)!"
+oembed:
+    endpoint: https://mastodon.social/api/oembed
+    scheme: https://mastodon.social/@{@name}/{@id}
+scrape:
+    - extract: "!\"url\":\"https://(?'host'[-.\\w]+)/@(?'name'\\w+)/(?'id'\\d+)\"!"
+    - match: "!^(?'origin'https://[^/]+)/@\\w+@[-.\\w]+/(?'id'\\d+)!"
+    - url: "{@origin}/api/v1/statuses/{@id}"
+iframe:
+    data-s9e-livepreview-ignore-attrs: "style"
+    onload: "let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])"
+    width: "550"
+    height: "300"
+    src: https://s9e.github.io/iframe/2/mastodon.min.html#<xsl:value-of select="@name"/><xsl:if test="@host and@host!='mastodon.social'">@<xsl:value-of select="@host"/></xsl:if>/<xsl:value-of select="@id"/>

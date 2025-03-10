@@ -1,0 +1,10 @@
+{% if S_MEDIA_EMBED_FULL_WIDTH or S_MEDIA_EMBED_MAX_WIDTHS %}
+<style>
+{% if S_MEDIA_EMBED_FULL_WIDTH %}
+	[data-s9e-mediaembed] { max-width: 100% !important; }
+{% endif %}
+{% for item in S_MEDIA_EMBED_MAX_WIDTHS %}
+	[data-s9e-mediaembed="{{ item.site }}"] { max-width: {{ item.width }} !important; }
+{% endfor %}
+</style>
+{% endif %}

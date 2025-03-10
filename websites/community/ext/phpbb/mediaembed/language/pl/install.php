@@ -1,0 +1,44 @@
+<?php
+/**
+ *
+ * phpBB Media Embed PlugIn extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2016 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @Polska wersja językowa phpBB Media Embed 1.1.2 - 10.09.2020, Mateusz Dutko (vader) www.rnavspotters.pl
+ *
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+if (empty($lang) || !is_array($lang))
+{
+	$lang = [];
+}
+
+// DEVELOPERS PLEASE NOTE
+//
+// All language files should use UTF-8 as their encoding and the files must not contain a BOM.
+//
+// Placeholders can now contain order information, e.g. instead of
+// 'Page %s of %s' you can (and should) write 'Page %1$s of %2$s', this allows
+// translators to re-order the output of data while ensuring it remains correct
+//
+// You do not need this where single placeholders are used, e.g. 'Message %d' is fine
+// equally where a string contains only two placeholders which are used to wrap text
+// in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// ’ » “ ” …
+//
+
+$lang = array_merge($lang, [
+	'PHPBB_VERSION_ERROR'	=> 'Twoja witryna jest nieaktualna. Aby skorzystać z rozszerzenia, należy zaktualizować phpBB do wersji ' . \phpbb\mediaembed\ext::PHPBB_MINIMUM . ' lub nowszej.',
+	'S9E_MEDIAEMBED_ERROR'	=> 'Wykryto rozszerzenie s9e/mediaembed. Aby zaintalować rozszerzenie osadzania multimediów (phpBB Media Embed) należy wyłaczyć starszą wersję rozszerzenia. Następnie usunąć dane i skasować wszystkie pliki powiązane z s9e/mediaembed.',
+]);

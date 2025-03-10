@@ -1,0 +1,6 @@
+name: SchoolTube
+host: schooltube.com
+example: https://www.schooltube.com/video/a99cda8567b741998d2a/the-empty-pot-read-by-rami-malek
+extract: "!//www.schooltube.com/video/(?'id'\\w+)!"
+iframe:
+    src: //www.schooltube.com/embed_force/{@id}/

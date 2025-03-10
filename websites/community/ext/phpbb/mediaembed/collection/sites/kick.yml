@@ -1,0 +1,6 @@
+name: Kick
+host: kick.com
+example: https://kick.com/xQc
+extract: "!//kick.com/(?'id'\\w+)!"
+iframe:
+    src: //player.kick.com/{@id}

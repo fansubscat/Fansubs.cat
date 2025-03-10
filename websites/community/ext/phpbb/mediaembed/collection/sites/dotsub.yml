@@ -1,0 +1,6 @@
+name: Dotsub
+host: dotsub.com
+example: https://dotsub.com/view/665bd0d5-a9f4-4a07-9d9e-b31ba926ca78
+extract: "!//dotsub.com/view/(?'id'[\\w-]+)!"
+iframe:
+    src: //dotsub.com/media/{@id}/embed/
