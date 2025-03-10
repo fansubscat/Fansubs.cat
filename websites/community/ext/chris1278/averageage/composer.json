@@ -1,0 +1,35 @@
+{
+    "name": "chris1278/averageage",
+    "type": "phpbb-extension",
+    "description": "Shows the average age of the members in the statistics.",
+    "homepage": "comming soon",
+    "version": "1.0.0",
+    "time": "2022-11-08",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Chris1278",
+            "email": "smilie-man@gmx.de",
+            "homepage": "https://christian-esch.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4,<8.2.0",
+        "phpbb/phpbb": ">=3.2.11,<3.4.0@dev",
+        "composer/installers": "~1.0.0"
+    },
+    "extra": {
+        "display-name": "Display of the average age of the users",
+        "lang-min-ver": "1.0.0",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.11,<4.0.0@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/display_of_the_average_age_of_the_users",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}

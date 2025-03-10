@@ -1,0 +1,10 @@
+services:
+    chris1278.averageage.listener:
+        class: chris1278\averageage\event\listener
+        arguments:
+            - '@auth'
+            - '@language'
+            - '@dbal.conn'
+            - '@template'    
+        tags:
+            - { name: event.listener }
