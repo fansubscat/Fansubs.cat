@@ -1,0 +1,10 @@
+Subject: Zostałeś wspomniany
+
+Cześć,
+
+Zostałeś wspomniany przez "{AUTHOR_NAME}" w "{TOPIC_TITLE}" na "{SITENAME}".
+
+Aby zobaczyć post, w którym zostałeś wspomniany, użyj tego linku:
+{U_LINK_TO_TOPIC}
+
+{EMAIL_SIG}

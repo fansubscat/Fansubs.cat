@@ -1,0 +1,10 @@
+Subject: Sind on mainitud
+
+Tere!
+
+Sind on foorumis "{SITENAME}" mainitud kasutaja "{AUTHOR_NAME}" poolt teemas "{TOPIC_TITLE}".
+
+Et näha postitust kus Sind mainiti, palun vajuta linki, mis on toodud all:
+{U_LINK_TO_TOPIC}
+
+{EMAIL_SIG}

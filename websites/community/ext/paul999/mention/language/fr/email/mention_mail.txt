@@ -1,0 +1,10 @@
+Subject: Vous avez été mentionné
+
+Bonjour,
+
+Vous recevez cette notification car « {AUTHOR_NAME} » vous a mentionné dans le sujet « {TOPIC_TITLE} » sur « {SITENAME} ».
+
+Pour consulter le message dans lequel vous êtes mentionné, cliquez sur le lien suivant :
+{U_LINK_TO_TOPIC}
+
+{EMAIL_SIG}

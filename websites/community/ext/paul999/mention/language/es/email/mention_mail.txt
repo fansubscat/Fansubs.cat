@@ -1,0 +1,10 @@
+Subject: Usted ha sido mencionado
+
+Hola,
+
+Usted fue mencionado por "{AUTHOR_NAME}" en "{TOPIC_TITLE}" en "{SITENAME}".
+
+Para ver el mensaje donde se le mencionó, use este enlace:
+{U_LINK_TO_TOPIC}
+
+{EMAIL_SIG}

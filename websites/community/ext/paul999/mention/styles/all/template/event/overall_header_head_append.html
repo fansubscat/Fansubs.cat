@@ -1,0 +1,9 @@
+{% if U_AJAX_MENTION_URL %}
+    {% INCLUDECSS '@paul999_mention/tribute.css' %}
+{% endif %}
+{% INCLUDECSS '@paul999_mention/mention.css' %}
+<style type="text/css">
+    .mention {
+        color: #{{ MENTION_COLOR|e('css') }};
+    }
+</style>
