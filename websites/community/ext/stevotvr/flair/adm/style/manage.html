@@ -1,0 +1,400 @@
+{% include 'overall_header.html' %}
+
+{% INCLUDECSS '@stevotvr_flair/flair.css' %}
+
+<a id="maincontent"></a>
+
+{% if S_ADD_CAT or S_EDIT_CAT %}
+
+	<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+	{% if S_ERROR %}
+		<div class="errorbox">
+			<h3>{{ lang('WARNING') }}</h3>
+			<p>{{ ERROR_MSG }}</p>
+		</div>
+	{% endif %}
+
+	{% if S_ADD_CAT %}
+		<h1>{{ lang('ACP_FLAIR_ADD_CAT') }}</h1>
+	{% else %}
+		<h1>{{ lang('ACP_FLAIR_EDIT_CAT') }} :: {{ FLAIR_NAME }}</h1>
+	{% endif %}
+
+	<form id="add_edit_cat" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<legend>{{ lang('ACP_FLAIR_CAT_DETAILS') }}</legend>
+			<dl>
+				<dt><label for="cat_name">{{ lang('ACP_FLAIR_FORM_CAT_NAME') ~ lang('COLON') }}</label></dt>
+				<dd><input class="text medium" type="text" id="cat_name" name="cat_name" value="{{ CAT_NAME }}" maxlength="50" /></dd>
+			</dl>
+		</fieldset>
+		{% include '@stevotvr_flair/display_options.html' %}
+		<fieldset class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+
+{% elseif S_DELETE_CAT %}
+
+	<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+	{% if S_ERROR %}
+		<div class="errorbox">
+			<h3>{{ lang('WARNING') }}</h3>
+			<p>{{ ERROR_MSG }}</p>
+		</div>
+	{% endif %}
+
+	<h1>{{ lang('ACP_FLAIR_DELETE_CAT') }}</h1>
+
+	<form id="delete_cat" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<legend>{{ lang('ACP_FLAIR_DELETE_CAT') }}</legend>
+			<dl>
+				<dt><label>{{ lang('ACP_FLAIR_FORM_CAT_NAME') ~ lang('COLON') }}</label></dt>
+				<dd><strong>{{ CAT_NAME }}</strong></dd>
+			</dl>
+			{% if S_HAS_FLAIR %}
+				<dl>
+					<dt><label for="delete_action">{{ lang('ACTION') ~ lang('COLON') }}</label></dt>
+					<dd><label><input type="radio" class="radio" id="delete_action" name="action_flair" value="delete" checked="checked" /> {{ lang('ACP_FLAIR_FORM_DELETE_ALL_FLAIR') }}</label></dd>
+					<dd>
+						<label><input type="radio" class="radio" name="action_flair" value="move" /> {{ lang('ACP_FLAIR_FORM_MOVE_FLAIR_TO') }}</label>
+						<select name="flair_to_cat">
+							<option value="0">{{ lang('FLAIR_UNCATEGORIZED') }}</option>
+							{% for cat in cats %}
+								<option value="{{ cat.CAT_ID }}">{{ cat.CAT_NAME }}</option>
+							{% endfor %}
+						</select>
+					</dd>
+				</dl>
+			{% endif %}
+			<p class="quick">
+				<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
+			</p>
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+
+{% elseif S_ADD_FLAIR or S_EDIT_FLAIR %}
+
+	{% INCLUDEJS '@stevotvr_flair/edit_flair.js' %}
+
+	<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+	{% if S_ERROR %}
+		<div class="errorbox">
+			<h3>{{ lang('WARNING') }}</h3>
+			<p>{{ ERROR_MSG }}</p>
+		</div>
+	{% endif %}
+
+	{% if S_ADD_FLAIR %}
+		<h1>{{ lang('ACP_FLAIR_ADD') }}</h1>
+	{% else %}
+		<h1>{{ lang('ACP_FLAIR_EDIT') }} :: {{ FLAIR_NAME }}</h1>
+	{% endif %}
+
+	<form id="add_edit_flair" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<legend>{{ lang('ACP_FLAIR_DETAILS') }}</legend>
+			{% if cats %}
+				<dl>
+					<dt><label for="flair_category">{{ lang('ACP_FLAIR_FORM_CAT') ~ lang('COLON') }}</label></dt>
+					<dd>
+						<select name="flair_category">
+							<option value="0">{{ lang('FLAIR_UNCATEGORIZED') }}</option>
+							{% for cat in cats %}
+								<option value="{{ cat.CAT_ID }}"{% if cat.S_SELECTED %} selected="selected"{% endif %}>{{ cat.CAT_NAME }}</option>
+							{% endfor %}
+						</select>
+					</dd>
+				</dl>
+			{% endif %}
+			<dl>
+				<dt><label for="flair_name">{{ lang('ACP_FLAIR_FORM_NAME') ~ lang('COLON') }}</label></dt>
+				<dd><input class="text medium" type="text" id="flair_name" name="flair_name" value="{{ FLAIR_NAME }}" maxlength="255" /></dd>
+			</dl>
+			<dl>
+				<dt><label for="flair_desc">{{ lang('ACP_FLAIR_FORM_DESC') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_DESC_EXPLAIN') }}</span></dt>
+				<dd><textarea id="flair_desc" name="flair_desc" rows="5" cols="45" data-bbcode="true">{{ FLAIR_DESC }}</textarea></dd>
+				<dd>
+					<label><input type="checkbox" class="radio" name="parse_bbcode"{% if S_PARSE_BBCODE_CHECKED %} checked="checked"<{% endif %} /> {{ lang('PARSE_BBCODE') }}</label>
+					<label><input type="checkbox" class="radio" name="parse_smilies"<{% if S_PARSE_SMILIES_CHECKED %} checked="checked"<{% endif %} /> {{ lang('PARSE_SMILIES') }}</label>
+					<label><input type="checkbox" class="radio" name="parse_magic_url"<{% if S_PARSE_MAGIC_URL_CHECKED %} checked="checked"<{% endif %} /> {{ lang('PARSE_URLS') }}</label>
+				</dd>
+			</dl>
+		</fieldset>
+		<fieldset>
+			<legend>{{ lang('ACP_FLAIR_APPEARANCE') }}</legend>
+			<dl>
+				<dt><label for="flair_type">{{ lang('ACP_FLAIR_TYPE') ~ lang('COLON') }}</label></dt>
+				<dd>
+					<select name="flair_type" id="flair_type">
+						<option value="0"{% if FLAIR_TYPE == 0 %} selected="selected"{% endif %}>{{ lang('ACP_FLAIR_TYPE_FA') }}</option>
+						<option value="1"{% if FLAIR_TYPE == 1 %} selected="selected"{% endif %}>{{ lang('ACP_FLAIR_TYPE_IMG') }}</option>
+					</select>
+				</dd>
+			</dl>
+			<dl>
+				<dt><label>{{ lang('ACP_FLAIR_FORM_PREVIEW') ~ lang('COLON') }}</label></dt>
+				<dd id="flair_preview">
+					{% if FLAIR_TYPE == 0 %}
+						<span class="flair-icon fa-stack fa-2x flair-lg">
+							{% if FLAIR_COLOR %}
+								<i class="fa fa-square fa-stack-2x" style="color: #{{ FLAIR_COLOR }}" aria-hidden="true"></i>
+								{% if FLAIR_ICON %}
+									<i class="fa {{ FLAIR_ICON }} fa-stack-1x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+								{% endif %}
+							{% elseif FLAIR_ICON %}
+								<i class="fa {{ FLAIR_ICON }} fa-stack-2x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+							{% endif %}
+						</span>
+						<span class="flair-icon fa-stack">
+							{% if FLAIR_COLOR %}
+								<i class="fa fa-square fa-stack-2x" style="color: #{{ FLAIR_COLOR }}" aria-hidden="true"></i>
+								{% if FLAIR_ICON %}
+									<i class="fa {{ FLAIR_ICON }} fa-stack-1x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+								{% endif %}
+							{% elseif FLAIR_ICON %}
+								<i class="fa {{ FLAIR_ICON }} fa-stack-2x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+							{% endif %}
+						</span>
+						{% if FLAIR_FONT_COLOR %}
+							<span class="flair-icon fa-stack fa-2x flair-lg">
+								{% if FLAIR_COLOR %}
+									<i class="fa fa-square fa-stack-2x" style="color: #{{ FLAIR_COLOR }}" aria-hidden="true"></i>
+									{% if FLAIR_ICON %}
+										<i class="fa {{ FLAIR_ICON }} fa-stack-1x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+									{% endif %}
+								{% elseif FLAIR_ICON %}
+									<i class="fa {{ FLAIR_ICON }} fa-stack-2x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+								{% endif %}
+									<b class="flair-count" style="color: #{{ FLAIR_FONT_COLOR }}" aria-hidden="true">2</b>
+							</span>
+							<span class="flair-icon fa-stack">
+								{% if FLAIR_COLOR %}
+									<i class="fa fa-square fa-stack-2x" style="color: #{{ FLAIR_COLOR }}" aria-hidden="true"></i>
+									{% if FLAIR_ICON %}
+										<i class="fa {{ FLAIR_ICON }} fa-stack-1x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+									{% endif %}
+								{% elseif FLAIR_ICON %}
+									<i class="fa {{ FLAIR_ICON }} fa-stack-2x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+								{% endif %}
+									<b class="flair-count" style="color: #{{ FLAIR_FONT_COLOR }}" aria-hidden="true">2</b>
+							</span>
+						{% endif %}
+					{% else %}
+						<span class="flair-icon flair_lg">
+							<img src="{{ FLAIR_IMG_PATH ~ FLAIR_IMG_X2 }}" height="44" aria-hidden="true" />
+						</span>
+						<span class="flair-icon">
+							<img src="{{ FLAIR_IMG_PATH ~ FLAIR_IMG }}" height="22" aria-hidden="true" />
+						</span>
+						{% if FLAIR_FONT_COLOR %}
+							<span class="flair-icon flair-lg">
+								<b class="flair-count" style="color: #{{ FLAIR_FONT_COLOR }}" aria-hidden="true">2</b>
+								<img src="{{ FLAIR_IMG_PATH ~ FLAIR_IMG_X2 }}" height="44" aria-hidden="true" />
+							</span>
+							<span class="flair-icon">
+								<b class="flair-count" style="color: #{{ FLAIR_FONT_COLOR }}" aria-hidden="true">2</b>
+								<img src="{{ FLAIR_IMG_PATH ~ FLAIR_IMG }}" height="22" aria-hidden="true" />
+							</span>
+						{% endif %}
+					{% endif %}
+				</dd>
+			</dl>
+			<dl class="type_fa">
+				<dt><label for="flair_color">{{ lang('ACP_FLAIR_FORM_COLOR') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_COLOR_EXPLAIN') }}</span></dt>
+				<dd>
+					<input type="text" id="flair_color" name="flair_color" value="{{ FLAIR_COLOR }}" size="6" maxlength="6" />
+					&nbsp;&nbsp;<span>[ <a href="#" id="color_palette_toggle1">{{ lang('COLOUR_SWATCH') }}</a> ]</span>
+					<div id="color_palette_placeholder" class="color_palette_placeholder" data-orientation="h" data-height="12" data-width="15" data-target="#flair_color"></div>
+				</dd>
+			</dl>
+			<dl class="type_fa">
+				<dt><label for="flair_icon">{{ lang('ACP_FLAIR_FORM_ICON') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_ICON_EXPLAIN') }}</span></dt>
+				<dd><input class="text medium" type="text" id="flair_icon" name="flair_icon" value="{{ FLAIR_ICON }}" maxlength="50" /></dd>
+			</dl>
+			<dl class="type_fa">
+				<dt><label for="flair_icon_color">{{ lang('ACP_FLAIR_FORM_ICON_COLOR') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_ICON_COLOR_EXPLAIN') }}</span></dt>
+				<dd>
+					<input type="text" id="flair_icon_color" name="flair_icon_color" value="{{ FLAIR_ICON_COLOR }}" size="6" maxlength="6" />
+					&nbsp;&nbsp;<span>[ <a href="#" id="color_palette_toggle2">{{ lang('COLOUR_SWATCH') }}</a> ]</span>
+					<div id="color_palette_placeholder2" class="color_palette_placeholder" data-orientation="h" data-height="12" data-width="15" data-target="#flair_icon_color"></div>
+				</dd>
+			</dl>
+			<dl class="type_img">
+				<dt>
+					<label for="flair_img">{{ lang('ACP_FLAIR_FORM_IMG') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_IMG_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					{% if imgs %}
+						<select id="flair_img" name="flair_img">
+							<option></option>
+							{% for img in imgs %}
+								<option {% if img.S_SELECTED %} selected="selected"{% endif %}>{{ img.IMG_NAME }}</option>
+							{% endfor %}
+						</select>
+					{% else %}
+						{{ lang('ACP_FLAIR_NO_IMGS') }}
+					{% endif %}
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="flair_font_color">{{ lang('ACP_FLAIR_FORM_FONT_COLOR') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_FONT_COLOR_EXPLAIN') }}</span></dt>
+				<dd>
+					<input type="text" id="flair_font_color" name="flair_font_color" value="{{ FLAIR_FONT_COLOR }}" size="6" maxlength="6" />
+					&nbsp;&nbsp;<span>[ <a href="#" id="color_palette_toggle3">{{ lang('COLOUR_SWATCH') }}</a> ]</span>
+					<div id="color_palette_placeholder3" class="color_palette_placeholder" data-orientation="h" data-height="12" data-width="15" data-target="#flair_font_color"></div>
+				</dd>
+			</dl>
+		</fieldset>
+		<fieldset>
+			<legend>{{ lang('ACP_FLAIR_FORM_GROUPS') }}</legend>
+			<dl>
+				<dt><label for="flair_groups">{{ lang('ACP_FLAIR_FORM_GROUPS') ~ lang('COLON')}}</label><br /><span>{{ lang('ACP_FLAIR_GROUPS_EXPLAIN') }}</span></dt>
+				<dd>
+					<select name="flair_groups[]" id="flair_groups" multiple="multiple" size="10">
+						{% for g in group %}
+							<option value="{{ g.GROUP_ID }}"{% if g.S_SELECTED %} selected="selected"{% endif %}>{{ g.GROUP_NAME }}</option>
+						{% endfor %}
+					</select>
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="flair_groups_auto">{{ lang('ACP_FLAIR_FORM_GROUPS_AUTO') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_GROUPS_AUTO_EXPLAIN') }}</span></dt>
+				<dd><label><input type="radio" id="flair_groups_auto" name="flair_groups_auto" value="1"{% if FLAIR_GROUPS_AUTO %} checked="checked"{% endif %} class="radio" /> {{ lang('YES') }}</label><label><input type="radio" name="flair_groups_auto" value="0"{% if not FLAIR_GROUPS_AUTO %} checked="checked"{% endif %} class="radio" /> {{ lang('NO') }}</label></dd>
+			</dl>
+		</fieldset>
+		<fieldset>
+			<legend>{{ lang('ACP_FLAIR_AUTO_ASSIGN') }}</legend>
+			<p>{{ lang('ACP_FLAIR_AUTO_ASSIGN_EXPLAIN') }}</p>
+			{% for t in trigger %}
+				<dl>
+					<dt><label for="flair_trigger_{{ t.TRIG_KEY }}">{{ t.TRIG_NAME ~ lang('COLON') }}</label>{% if t.TRIG_EXPLAIN %}<br /><span>{{ t.TRIG_EXPLAIN }}</span>{% endif %}</dt>
+					<dd><input type="number" id="flair_trigger_{{ t.TRIG_KEY }}" name="flair_triggers[{{ t.TRIG_KEY }}]" value="{{ t.TRIG_VALUE }}" min="0" max="16777215" /></dd>
+				</dl>
+			{% endfor %}
+		</fieldset>
+		<fieldset class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+			{{ S_FORM_TOKEN }}
+		</fieldset>
+	</form>
+	<script type="text/javascript">
+		var flair = {
+			imgPath:	'{{ FLAIR_IMG_PATH|e("js") }}'
+		};
+	</script>
+
+{% else %}
+
+	{% if not S_IN_CAT %}
+		<h1>{{ lang('ACP_FLAIR_MANAGE_CATS') }}</h1>
+
+		<p>{{ lang('ACP_FLAIR_MANAGE_CATS_EXPLAIN') }}</p>
+
+		<table class="table1 zebra-table responsive">
+			<thead>
+				<tr>
+					<th>{{ lang('ACP_FLAIR_NAME') }}</th>
+					<th style="width: 10%">{{ lang('ACP_FLAIR_DISPLAY_ON') }}</th>
+					<th style="width: 10%">{{ lang('ACTION') }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for c in cats %}
+					<tr>
+						<td><strong>{% if c.U_FLAIR %}<a href="{{ c.U_FLAIR }}">{% endif %}{{ c.CAT_NAME }}{% if c.U_FLAIR %}</a>{% endif %}</strong></td>
+						<td>{{ c.DISPLAY_ON }}</td>
+						<td class="actions">
+							<span class="up-disabled" style="display:none;">{{ ICON_MOVE_UP_DISABLED }}</span>
+							<span class="up"><a href="{{ c.U_MOVE_UP }}" data-ajax="row_up">{{ ICON_MOVE_UP }}</a></span>
+							<span class="down-disabled" style="display:none;">{{ ICON_MOVE_DOWN_DISABLED }}</span>
+							<span class="down"><a href="{{ c.U_MOVE_DOWN }}" data-ajax="row_down">{{ ICON_MOVE_DOWN }}</a></span>
+							<a href="{{ c.U_EDIT }}">{{ ICON_EDIT }}</a>
+							<a href="{{ c.U_DELETE }}">{{ ICON_DELETE }}</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="3" style="text-align: center;">{{ lang('ACP_FLAIR_CATS_EMPTY') }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<form id="flair_add" method="post" action="{{ U_ADD_CAT }}">
+			<fieldset class="quick">
+				<input class="button2" type="submit" name="addcat" value="{{ lang('ACP_FLAIR_ADD_CAT') }}" />
+			</fieldset>
+		</form>
+	{% else %}
+		<a href="{{ U_ACTION }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+	{% endif %}
+
+	<h1>{{ lang('ACP_FLAIR_MANAGE') }} :: {{ CAT_NAME }}</h1>
+
+	<p>{{ lang('ACP_FLAIR_MANAGE_EXPLAIN') }}</p>
+
+	<table class="table1 zebra-table responsive">
+		<thead>
+			<tr>
+				<th style="width: 23px">&nbsp;</th>
+				<th>{{ lang('ACP_FLAIR_NAME') }}</th>
+				<th style="width: 10%">{{ lang('ACTION') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for f in flair %}
+				<tr>
+					<td style="text-align: center">
+						{% if f.FLAIR_TYPE == 0 %}
+							<span class="flair-icon fa-stack">
+								{% if f.FLAIR_COLOR %}
+									<i class="fa fa-square fa-stack-2x" style="color: #{{ f.FLAIR_COLOR }}" aria-hidden="true"></i>
+									{% if f.FLAIR_ICON %}
+										<i class="fa {{ f.FLAIR_ICON }} fa-stack-1x"{% if f.FLAIR_ICON_COLOR %} style="color: #{{ f.FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+									{% endif %}
+								{% elseif f.FLAIR_ICON %}
+									<i class="fa {{ f.FLAIR_ICON }} fa-stack-2x"{% if f.FLAIR_ICON_COLOR %} style="color: #{{ f.FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+								{% endif %}
+							</span>
+						{% else %}
+							<span class="flair-icon">
+								<img src="{{ f.FLAIR_IMG }}" height="22" aria-hidden="true" />
+							</span>
+						{% endif %}
+					</td>
+					<td><strong><a href="{{ f.U_EDIT }}">{{ f.FLAIR_NAME }}</a></strong></td>
+					<td class="actions">
+						<span class="up-disabled" style="display:none;">{{ ICON_MOVE_UP_DISABLED }}</span>
+						<span class="up"><a href="{{ f.U_MOVE_UP }}" data-ajax="row_up">{{ ICON_MOVE_UP }}</a></span>
+						<span class="down-disabled" style="display:none;">{{ ICON_MOVE_DOWN_DISABLED }}</span>
+						<span class="down"><a href="{{ f.U_MOVE_DOWN }}" data-ajax="row_down">{{ ICON_MOVE_DOWN }}</a></span>
+						<a href="{{ f.U_EDIT }}">{{ ICON_EDIT }}</a>
+						<a href="{{ f.U_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="3" style="text-align: center;">{{ lang('ACP_FLAIR_EMPTY') }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<form id="flair_add" method="post" action="{{ U_ADD_FLAIR }}">
+		<fieldset class="quick">
+			<input class="button2" type="submit" name="addflair" value="{{ lang('ACP_FLAIR_ADD') }}" />
+		</fieldset>
+	</form>
+
+{% endif %}
+
+{% include 'overall_footer.html' %}

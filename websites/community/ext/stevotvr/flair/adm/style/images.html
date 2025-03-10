@@ -1,0 +1,115 @@
+{% include 'overall_header.html' %}
+
+<a id="maincontent"></a>
+
+{% if S_ADD %}
+
+	<a href="{{ U_BACK }}" style="float: {{ S_CONTENT_FLOW_END }};">&laquo; {{ lang('BACK') }}</a>
+
+	<h1>{{ lang('ACP_FLAIR_ADD_IMGS') }}</h1>
+
+	<div>
+		<p>{{ lang('ACP_FLAIR_IMG_TABLE_EXPLAIN') }}</p>
+		<table>
+			<tr>
+				<th>{{ lang('ACP_FLAIR_IMG_TABLE_NAME') }}</th>
+				<th>{{ lang('ACP_FLAIR_IMG_TABLE_SIZE') }}</th>
+			</tr>
+			<tr>
+				<td><i>[{{ lang('ACP_FLAIR_IMG_TABLE_PLACEHOLDER') }}]</i>-x1.<i>[gif|png|jpg]</i></td>
+				<td>22{{ lang('ACP_FLAIR_IMG_TABLE_PX') }}</td>
+			</tr>
+			<tr>
+				<td><i>[{{ lang('ACP_FLAIR_IMG_TABLE_PLACEHOLDER') }}]</i>-x2.<i>[gif|png|jpg]</i></td>
+				<td>44{{ lang('ACP_FLAIR_IMG_TABLE_PX') }}</td>
+			</tr>
+			<tr>
+				<td><i>[{{ lang('ACP_FLAIR_IMG_TABLE_PLACEHOLDER') }}]</i>-x3.<i>[gif|png|jpg]</i></td>
+				<td>66{{ lang('ACP_FLAIR_IMG_TABLE_PX') }}</td>
+			</tr>
+		</table>
+	</div>
+
+	<hr />
+
+	<h1>{{ lang('ACP_FLAIR_IMG_UPLOADING') }}</h1>
+
+	{% if S_NOTICE %}
+		<div class="errorbox notice">
+			<h3>{{ lang('NOTICE') }}</h3>
+			<p>{{ NOTICE_MSG }}</p>
+		</div>
+	{% endif %}
+
+	{% if S_ERROR %}
+		<div class="errorbox">
+			<h3>{{ lang('WARNING') }}</h3>
+			<p>{{ ERROR_MSG }}</p>
+		</div>
+	{% endif %}
+
+	{% if S_SHOW_FORM %}
+		<form id="image_add" method="post" action="{{ U_ADD }}" enctype="multipart/form-data">
+			<fieldset>
+				<legend>{{ lang('ACP_FLAIR_UPLOAD_IMG') }}</legend>
+				<dl>
+					<dt><label for="img_file">{{ lang('ACP_FLAIR_FORM_IMG_FILE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_FORM_IMG_FILE_EXPLAIN') }}</span></dt>
+					<dd><input type="file" id="img_file" name="img_file" /></dd>
+				</dl>
+				<dl>
+					<dt><label for="img_overwrite">{{ lang('ACP_FLAIR_FORM_IMG_OVERWRITE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_FORM_IMG_OVERWRITE_EXPLAIN') }}</span></dt>
+					<dd><label><input type="radio" id="img_overwrite" name="img_overwrite" value="1"{% if IMG_OVERWRITE %} checked="checked"{% endif %} class="radio" /> {{ lang('YES') }}</label><label><input type="radio" name="img_overwrite" value="0"{% if not IMG_OVERWRITE %} checked="checked"{% endif %} class="radio" /> {{ lang('NO') }}</label></dd>
+				</dl>
+			</fieldset>
+			<fieldset class="submit-buttons">
+				<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
+				<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+				{{ S_FORM_TOKEN }}
+			</fieldset>
+		</form>
+	{% endif %}
+
+{% else %}
+
+	<h1>{{ lang('ACP_FLAIR_IMAGES') }}</h1>
+
+	<p>{{ lang('ACP_FLAIR_IMAGES_EXPLAIN') }}</p>
+
+	<table class="table1 zebra-table responsive">
+		<thead>
+			<tr>
+				<th>{{ lang('ACP_FLAIR_NAME') }}</th>
+				<th style="width: 10%">X1</th>
+				<th style="width: 10%">X2</th>
+				<th style="width: 10%">X3</th>
+				<th style="width: 10%">{{ lang('ACTION') }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for i in imgs %}
+				<tr>
+					<td>{{ i.IMG_NAME }}</td>
+					<td style="text-align: center"><img src="{{ i.U_IMG_X1 }}" height="18" alt="{{ i.IMG_NAME }}"></td>
+					<td style="text-align: center"><img src="{{ i.U_IMG_X2 }}" height="38" alt="{{ i.IMG_NAME }}"></td>
+					<td style="text-align: center"><img src="{{ i.U_IMG_X3 }}" height="64" alt="{{ i.IMG_NAME }}"></td>
+					<td class="actions">
+						{% if i.U_DELETE %}<a href="{{ i.U_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a>{% else %}{{ ICON_DELETE_DISABLED }}{% endif %}
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5" style="text-align: center;">{{ lang('ACP_FLAIR_IMGS_EMPTY') }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<form id="image_add" method="post" action="{{ U_ADD }}">
+		<fieldset class="quick">
+			<input class="button2" type="submit" name="addflair" value="{{ lang('ACP_FLAIR_ADD_IMG') }}" />
+		</fieldset>
+	</form>
+
+{% endif %}
+
+{% include 'overall_footer.html' %}

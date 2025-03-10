@@ -1,0 +1,22 @@
+{% if FLAIR_TYPE == 0 %}
+<span class="flair-icon fa-stack{% if FLAIR_SIZE %} fa-{{ FLAIR_SIZE }}x{% endif %}{% if FLAIR_SIZE > 1 %} flair-lg{% endif %}" title="{{ FLAIR_NAME }}{% if FLAIR_COUNT > 1 %} ({{ FLAIR_COUNT }}x){% endif %}"{% if FLAIR_ICON_WIDTH and not FLAIR_COLOR %} style="width: {{ FLAIR_ICON_WIDTH }}em"{% endif %}>
+	{% if FLAIR_COLOR %}
+		<i class="fa fa-square fa-stack-2x" style="color: #{{ FLAIR_COLOR }}" aria-hidden="true"></i>
+		{% if FLAIR_ICON %}
+			<i class="fa {{ FLAIR_ICON }} fa-stack-1x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+		{% endif %}
+	{% elseif FLAIR_ICON %}
+		<i class="fa {{ FLAIR_ICON }} fa-stack-2x"{% if FLAIR_ICON_COLOR %} style="color: #{{ FLAIR_ICON_COLOR }}"{% endif %} aria-hidden="true"></i>
+	{% endif %}
+	{% if FLAIR_COUNT > 1 and FLAIR_FONT_COLOR %}
+		<b class="flair-count" style="color: #{{ FLAIR_FONT_COLOR }}" aria-hidden="true">{{ FLAIR_COUNT }}</b>
+	{% endif %}
+</span>
+{% else %}
+<span class="flair-icon{% if FLAIR_SIZE > 1 %} flair-lg{% endif %}" title="{{ FLAIR_NAME }}{% if FLAIR_COUNT > 1 %} ({{ FLAIR_COUNT }}x){% endif %}">
+	{% if FLAIR_COUNT > 1 and FLAIR_FONT_COLOR %}
+		<b class="flair-count" style="color: #{{ FLAIR_FONT_COLOR }}" aria-hidden="true">{{ FLAIR_COUNT }}</b>
+	{% endif %}
+	<img src="{{ FLAIR_IMG }}" height="{% if not FLAIR_SIZE or FLAIR_SIZE == 1 %}22{% elseif FLAIR_SIZE == 2 %}44{% elseif FLAIR_SIZE > 2 %}66{% endif %}" aria-hidden="true" alt="{{ FLAIR_NAME }}{% if FLAIR_COUNT > 1 %} ({{ FLAIR_COUNT }}x){% endif %}" />
+</span>
+{% endif %}

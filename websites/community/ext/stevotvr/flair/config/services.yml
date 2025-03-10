@@ -1,0 +1,190 @@
+imports:
+    - { resource: tables.yml }
+    - { resource: triggers.yml }
+    - { resource: icons.yml }
+
+parameters:
+    stevotvr.flair.img_path: '%core.root_path%images/flair/'
+
+services:
+    stevotvr.flair.listener:
+        class: stevotvr\flair\event\main_listener
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@stevotvr.flair.operator.flair'
+            - '@stevotvr.flair.operator.trigger'
+            - '@stevotvr.flair.operator.user'
+            - '%stevotvr.flair.img_path%'
+        tags:
+            - { name: event.listener }
+    stevotvr.flair.controller.acp:
+        class: stevotvr\flair\controller\acp_base_controller
+        abstract: true
+        arguments:
+            - '@service_container'
+            - '@language'
+            - '@request'
+            - '@template'
+        calls:
+            - method: set_path_info
+              arguments:
+                - '%core.root_path%'
+                - '%core.php_ext%'
+                - '%stevotvr.flair.img_path%'
+    stevotvr.flair.controller.acp.main:
+        class: stevotvr\flair\controller\acp_main_controller
+        parent: stevotvr.flair.controller.acp
+        calls:
+            - method: setup
+              arguments:
+                - '@stevotvr.flair.operator.category'
+                - '@stevotvr.flair.operator.flair'
+    stevotvr.flair.controller.acp.cats:
+        class: stevotvr\flair\controller\acp_cats_controller
+        parent: stevotvr.flair.controller.acp
+        calls:
+            - method: setup
+              arguments:
+                - '@config'
+                - '@stevotvr.flair.operator.category'
+    stevotvr.flair.controller.acp.flair:
+        class: stevotvr\flair\controller\acp_flair_controller
+        parent: stevotvr.flair.controller.acp
+        calls:
+            - method: setup
+              arguments:
+                - '@dbal.conn'
+                - '@group_helper'
+                - '@stevotvr.flair.operator.category'
+                - '@stevotvr.flair.operator.flair'
+                - '@stevotvr.flair.operator.image'
+                - '@stevotvr.flair.operator.trigger'
+            - method: set_trigger_names
+              arguments:
+                - '@dispatcher'
+                - '%stevotvr.flair.trigger_names%'
+    stevotvr.flair.controller.acp.images:
+        class: stevotvr\flair\controller\acp_images_controller
+        parent: stevotvr.flair.controller.acp
+        calls:
+            - method: setup
+              arguments:
+                - '@files.factory'
+                - '@stevotvr.flair.operator.image'
+    stevotvr.flair.controller.mcp.user:
+        class: stevotvr\flair\controller\mcp_user_controller
+        parent: stevotvr.flair.controller.acp
+        calls:
+            - method: setup
+              arguments:
+                - '@dbal.conn'
+                - '@stevotvr.flair.operator.category'
+                - '@stevotvr.flair.operator.flair'
+                - '@stevotvr.flair.operator.user'
+    stevotvr.flair.controller.ucp.flair:
+        class: stevotvr\flair\controller\ucp_flair_controller
+        parent: stevotvr.flair.controller.acp
+        calls:
+            - method: setup
+              arguments:
+                - '@user'
+                - '@stevotvr.flair.operator.flair'
+                - '@stevotvr.flair.operator.user'
+    stevotvr.flair.controller.legend:
+        class: stevotvr\flair\controller\legend_controller
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@path_helper'
+            - '@template'
+            - '@stevotvr.flair.operator.category'
+            - '@stevotvr.flair.operator.flair'
+    stevotvr.flair.entity.flair:
+        class: stevotvr\flair\entity\flair
+        shared: false
+        arguments:
+            - '@dbal.conn'
+            - '%stevotvr.flair.tables.flair%'
+        calls:
+            - method: setup
+              arguments:
+                - '@config'
+                - '%stevotvr.flair.icons%'
+    stevotvr.flair.entity.category:
+        class: stevotvr\flair\entity\category
+        shared: false
+        arguments:
+            - '@dbal.conn'
+            - '%stevotvr.flair.tables.flair_categories%'
+    stevotvr.flair.operator:
+        class: stevotvr\flair\operator\flair
+        abstract: true
+        arguments:
+            - '@service_container'
+            - '@dbal.conn'
+            - '%stevotvr.flair.tables.flair%'
+            - '%stevotvr.flair.tables.flair_categories%'
+            - '%stevotvr.flair.tables.flair_favorites%'
+            - '%stevotvr.flair.tables.flair_groups%'
+            - '%stevotvr.flair.tables.flair_notifications%'
+            - '%stevotvr.flair.tables.flair_triggers%'
+            - '%stevotvr.flair.tables.flair_users%'
+    stevotvr.flair.operator.flair:
+        class: stevotvr\flair\operator\flair
+        parent: stevotvr.flair.operator
+    stevotvr.flair.operator.category:
+        class: stevotvr\flair\operator\category
+        parent: stevotvr.flair.operator
+    stevotvr.flair.operator.user:
+        class: stevotvr\flair\operator\user
+        parent: stevotvr.flair.operator
+        calls:
+            - method: setup
+              arguments:
+                - '@config'
+    stevotvr.flair.operator.trigger:
+        class: stevotvr\flair\operator\trigger
+        parent: stevotvr.flair.operator
+        calls:
+            - method: setup
+              arguments:
+                - '@stevotvr.flair.operator.user'
+    stevotvr.flair.operator.image:
+        class: stevotvr\flair\operator\image
+        parent: stevotvr.flair.operator
+        calls:
+            - method: setup
+              arguments:
+                - '@filesystem'
+                - '%stevotvr.flair.img_path%'
+    stevotvr.flair.notification.type.flair:
+        class: stevotvr\flair\notification\type\flair
+        shared: false
+        parent: notification.type.base
+        calls:
+            - method: setup
+              arguments:
+                - '@config'
+                - '@controller.helper'
+                - '@user_loader'
+        tags:
+            - { name: notification.type }
+    stevotvr.flair.cron.task.main:
+        class: stevotvr\flair\cron\task\main
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@notification_manager'
+            - '%stevotvr.flair.tables.flair_notifications%'
+        calls:
+            - method: set_name
+              arguments:
+                - cron.task.stevotvr.flair
+        tags:
+            - { name: cron.task }

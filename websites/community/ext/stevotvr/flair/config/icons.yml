@@ -1,0 +1,1352 @@
+parameters:
+    stevotvr.flair.icons:
+        fa-500px:
+            w: 1.7143
+        fa-address-book:
+            w: 1.8568
+        fa-address-book-o:
+            w: 1.8568
+        fa-address-card:
+            w: 2.2864
+        fa-address-card-o:
+            w: 2.2864
+        fa-adjust:
+            w: 1.7143
+        fa-adn:
+            w: 1.7143
+        fa-align-center:
+            w: 1.9994
+        fa-align-justify:
+            w: 1.9994
+        fa-align-left:
+            w: 1.9994
+        fa-align-right:
+            w: 1.9994
+        fa-amazon:
+            w: 1.9994
+        fa-ambulance:
+            w: 2.1438
+        fa-american-sign-language-interpreting:
+            w: 2.5714
+        fa-anchor:
+            w: 1.9994
+        fa-android:
+            w: 1.5718
+        fa-angellist:
+            w: 1.4292
+        fa-angle-double-down:
+            w: 1.2867
+        fa-angle-double-left:
+            w: 1.1442
+        fa-angle-double-right:
+            w: 1.1442
+        fa-angle-double-up:
+            w: 1.2867
+        fa-angle-down:
+            w: 1.2867
+        fa-angle-left:
+            w: 0.7146
+        fa-angle-right:
+            w: 0.7146
+        fa-angle-up:
+            w: 1.2867
+        fa-apple:
+            w: 1.5718
+        fa-archive:
+            w: 1.9994
+        fa-area-chart:
+            w: 2.2864
+        fa-arrow-circle-down:
+            w: 1.7143
+        fa-arrow-circle-left:
+            w: 1.7143
+        fa-arrow-circle-o-down:
+            w: 1.7143
+        fa-arrow-circle-o-left:
+            w: 1.7143
+        fa-arrow-circle-o-right:
+            w: 1.7143
+        fa-arrow-circle-o-up:
+            w: 1.7143
+        fa-arrow-circle-right:
+            w: 1.7143
+        fa-arrow-circle-up:
+            w: 1.7143
+        fa-arrow-down:
+            w: 1.8568
+        fa-arrow-left:
+            w: 1.7143
+        fa-arrow-right:
+            w: 1.7143
+        fa-arrow-up:
+            w: 1.8568
+        fa-arrows:
+            w: 1.9994
+        fa-arrows-alt:
+            w: 1.7143
+        fa-arrows-h:
+            w: 1.9994
+        fa-arrows-v:
+            w: 0.8571
+        fa-assistive-listening-systems:
+            w: 1.9994
+        fa-asterisk:
+            w: 1.8568
+        fa-at:
+            w: 1.7143
+        fa-audio-description:
+            w: 2.5714
+        fa-backward:
+            w: 1.8568
+        fa-balance-scale:
+            w: 2.5714
+        fa-ban:
+            w: 1.7143
+        fa-bandcamp:
+            w: 1.9994
+        fa-bar-chart:
+            w: 2.2864
+        fa-barcode:
+            w: 1.9994
+        fa-bars:
+            w: 1.7143
+        fa-bath:
+            w: 1.9994
+        fa-battery-empty:
+            w: 2.5714
+        fa-battery-full:
+            w: 2.5714
+        fa-battery-half:
+            w: 2.5714
+        fa-battery-quarter:
+            w: 2.5714
+        fa-battery-three-quarters:
+            w: 2.5714
+        fa-bed:
+            w: 2.2864
+        fa-beer:
+            w: 1.8568
+        fa-behance:
+            w: 2.2864
+        fa-behance-square:
+            w: 1.7143
+        fa-bell:
+            w: 1.9994
+        fa-bell-o:
+            w: 1.9994
+        fa-bell-slash:
+            w: 2.2864
+        fa-bell-slash-o:
+            w: 2.2864
+        fa-bicycle:
+            w: 2.5714
+        fa-binoculars:
+            w: 1.9994
+        fa-birthday-cake:
+            w: 1.9994
+        fa-bitbucket:
+            w: 1.5718
+        fa-bitbucket-square:
+            w: 1.7143
+        fa-black-tie:
+            w: 1.7143
+        fa-blind:
+            w: 1.5718
+        fa-bluetooth:
+            w: 1.7143
+        fa-bluetooth-b:
+            w: 1.1442
+        fa-bold:
+            w: 1.5718
+        fa-bolt:
+            w: 0.9997
+        fa-bomb:
+            w: 1.9994
+        fa-book:
+            w: 1.8568
+        fa-bookmark:
+            w: 1.4292
+        fa-bookmark-o:
+            w: 1.4292
+        fa-braille:
+            w: 2.4289
+        fa-briefcase:
+            w: 1.9994
+        fa-btc:
+            w: 1.4292
+        fa-bug:
+            w: 1.8568
+        fa-building:
+            w: 1.7143
+        fa-building-o:
+            w: 1.5718
+        fa-bullhorn:
+            w: 1.9994
+        fa-bullseye:
+            w: 1.7143
+        fa-bus:
+            w: 1.7143
+        fa-buysellads:
+            w: 1.7143
+        fa-calculator:
+            w: 1.9994
+        fa-calendar:
+            w: 1.8568
+        fa-calendar-check-o:
+            w: 1.9994
+        fa-calendar-minus-o:
+            w: 1.9994
+        fa-calendar-o:
+            w: 1.8568
+        fa-calendar-plus-o:
+            w: 1.9994
+        fa-calendar-times-o:
+            w: 1.9994
+        fa-camera:
+            w: 2.1438
+        fa-camera-retro:
+            w: 1.9994
+        fa-car:
+            w: 2.2864
+        fa-caret-down:
+            w: 1.1442
+        fa-caret-left:
+            w: 0.7146
+        fa-caret-right:
+            w: 0.7146
+        fa-caret-square-o-down:
+            w: 1.7143
+        fa-caret-square-o-left:
+            w: 1.7143
+        fa-caret-square-o-right:
+            w: 1.7143
+        fa-caret-square-o-up:
+            w: 1.7143
+        fa-caret-up:
+            w: 1.1442
+        fa-cart-arrow-down:
+            w: 1.8568
+        fa-cart-plus:
+            w: 1.8568
+        fa-cc:
+            w: 2.2864
+        fa-cc-amex:
+            w: 2.5714
+        fa-cc-diners-club:
+            w: 2.5714
+        fa-cc-discover:
+            w: 2.5714
+        fa-cc-jcb:
+            w: 2.5714
+        fa-cc-mastercard:
+            w: 2.5714
+        fa-cc-paypal:
+            w: 2.5714
+        fa-cc-stripe:
+            w: 2.5714
+        fa-cc-visa:
+            w: 2.5714
+        fa-certificate:
+            w: 1.7143
+        fa-chain-broken:
+            w: 1.8568
+        fa-check:
+            w: 1.9994
+        fa-check-circle:
+            w: 1.7143
+        fa-check-circle-o:
+            w: 1.7143
+        fa-check-square:
+            w: 1.7143
+        fa-check-square-o:
+            w: 1.8568
+        fa-chevron-circle-down:
+            w: 1.7143
+        fa-chevron-circle-left:
+            w: 1.7143
+        fa-chevron-circle-right:
+            w: 1.7143
+        fa-chevron-circle-up:
+            w: 1.7143
+        fa-chevron-down:
+            w: 1.9994
+        fa-chevron-left:
+            w: 1.4292
+        fa-chevron-right:
+            w: 1.4292
+        fa-chevron-up:
+            w: 1.9994
+        fa-child:
+            w: 1.4292
+        fa-chrome:
+            w: 1.9994
+        fa-circle:
+            w: 1.7143
+        fa-circle-o:
+            w: 1.7143
+        fa-circle-o-notch:
+            w: 1.9994
+        fa-circle-thin:
+            w: 1.7143
+        fa-clipboard:
+            w: 1.9994
+        fa-clock-o:
+            w: 1.7143
+        fa-clone:
+            w: 1.9994
+        fa-cloud:
+            w: 2.1438
+        fa-cloud-download:
+            w: 2.1438
+        fa-cloud-upload:
+            w: 2.1438
+        fa-code:
+            w: 2.1438
+        fa-code-fork:
+            w: 1.1442
+        fa-codepen:
+            w: 1.9994
+        fa-codiepie:
+            w: 1.9994
+        fa-coffee:
+            w: 2.1438
+        fa-cog:
+            w: 1.7143
+        fa-cogs:
+            w: 2.1438
+        fa-columns:
+            w: 1.8568
+        fa-comment:
+            w: 1.9994
+        fa-comment-o:
+            w: 1.9994
+        fa-commenting:
+            w: 1.9994
+        fa-commenting-o:
+            w: 1.9994
+        fa-comments:
+            w: 1.9994
+        fa-comments-o:
+            w: 1.9994
+        fa-compass:
+            w: 1.7143
+        fa-compress:
+            w: 1.7143
+        fa-connectdevelop:
+            w: 2.2864
+        fa-contao:
+            w: 1.9994
+        fa-copyright:
+            w: 1.7143
+        fa-creative-commons:
+            w: 1.9994
+        fa-credit-card:
+            w: 2.1438
+        fa-credit-card-alt:
+            w: 2.5714
+        fa-crop:
+            w: 1.8568
+        fa-crosshairs:
+            w: 1.7143
+        fa-css3:
+            w: 1.9994
+        fa-cube:
+            w: 1.9994
+        fa-cubes:
+            w: 2.5714
+        fa-cutlery:
+            w: 1.5718
+        fa-dashcube:
+            w: 1.7143
+        fa-database:
+            w: 1.7143
+        fa-deaf:
+            w: 1.9994
+        fa-delicious:
+            w: 1.7143
+        fa-desktop:
+            w: 2.1438
+        fa-deviantart:
+            w: 1.1442
+        fa-diamond:
+            w: 2.2864
+        fa-digg:
+            w: 2.2864
+        fa-dot-circle-o:
+            w: 1.7143
+        fa-download:
+            w: 1.8568
+        fa-dribbble:
+            w: 1.7143
+        fa-dropbox:
+            w: 1.9994
+        fa-drupal:
+            w: 1.7143
+        fa-edge:
+            w: 1.9994
+        fa-eercast:
+            w: 1.9994
+        fa-eject:
+            w: 1.7162
+        fa-ellipsis-h:
+            w: 1.5718
+        fa-ellipsis-v:
+            w: 0.4295
+        fa-empire:
+            w: 1.9994
+        fa-envelope:
+            w: 1.9994
+        fa-envelope-o:
+            w: 1.9994
+        fa-envelope-open:
+            w: 1.9994
+        fa-envelope-open-o:
+            w: 1.9994
+        fa-envelope-square:
+            w: 1.7143
+        fa-envira:
+            w: 1.9994
+        fa-eraser:
+            w: 2.1438
+        fa-etsy:
+            w: 1.7143
+        fa-eur:
+            w: 1.1442
+        fa-exchange:
+            w: 1.9994
+        fa-exclamation:
+            w: 0.7146
+        fa-exclamation-circle:
+            w: 1.7143
+        fa-exclamation-triangle:
+            w: 1.9994
+        fa-expand:
+            w: 1.7143
+        fa-expeditedssl:
+            w: 1.9994
+        fa-external-link:
+            w: 1.9994
+        fa-external-link-square:
+            w: 1.7143
+        fa-eye:
+            w: 1.9994
+        fa-eye-slash:
+            w: 1.9994
+        fa-eyedropper:
+            w: 1.9994
+        fa-facebook:
+            w: 1.1442
+        fa-facebook-official:
+            w: 1.7143
+        fa-facebook-square:
+            w: 1.7143
+        fa-fast-backward:
+            w: 1.9994
+        fa-fast-forward:
+            w: 1.9994
+        fa-fax:
+            w: 1.9994
+        fa-female:
+            w: 1.4292
+        fa-fighter-jet:
+            w: 2.1438
+        fa-file:
+            w: 1.7143
+        fa-file-archive-o:
+            w: 1.7143
+        fa-file-audio-o:
+            w: 1.7143
+        fa-file-code-o:
+            w: 1.7143
+        fa-file-excel-o:
+            w: 1.7143
+        fa-file-image-o:
+            w: 1.7143
+        fa-file-o:
+            w: 1.7143
+        fa-file-pdf-o:
+            w: 1.7143
+        fa-file-powerpoint-o:
+            w: 1.7143
+        fa-file-text:
+            w: 1.7143
+        fa-file-text-o:
+            w: 1.7143
+        fa-file-video-o:
+            w: 1.7143
+        fa-file-word-o:
+            w: 1.7143
+        fa-files-o:
+            w: 1.9994
+        fa-film:
+            w: 2.1438
+        fa-filter:
+            w: 1.5718
+        fa-fire:
+            w: 1.5718
+        fa-fire-extinguisher:
+            w: 1.5718
+        fa-firefox:
+            w: 1.9994
+        fa-first-order:
+            w: 1.7143
+        fa-flag:
+            w: 1.9994
+        fa-flag-checkered:
+            w: 1.9994
+        fa-flag-o:
+            w: 1.9994
+        fa-flask:
+            w: 1.8568
+        fa-flickr:
+            w: 1.7143
+        fa-floppy-o:
+            w: 1.7143
+        fa-folder:
+            w: 1.8568
+        fa-folder-o:
+            w: 1.8568
+        fa-folder-open:
+            w: 2.1438
+        fa-folder-open-o:
+            w: 2.1438
+        fa-font:
+            w: 1.8568
+        fa-font-awesome:
+            w: 1.7143
+        fa-fonticons:
+            w: 1.7143
+        fa-fort-awesome:
+            w: 1.9994
+        fa-forumbee:
+            w: 1.7143
+        fa-forward:
+            w: 1.8568
+        fa-foursquare:
+            w: 1.4292
+        fa-free-code-camp:
+            w: 2.5714
+        fa-frown-o:
+            w: 1.7143
+        fa-futbol-o:
+            w: 1.9994
+        fa-gamepad:
+            w: 2.1438
+        fa-gavel:
+            w: 1.9994
+        fa-gbp:
+            w: 1.1442
+        fa-genderless:
+            w: 1.4292
+        fa-get-pocket:
+            w: 1.9193
+        fa-gg:
+            w: 2.2864
+        fa-gg-circle:
+            w: 1.9994
+        fa-gift:
+            w: 1.7143
+        fa-git:
+            w: 1.9994
+        fa-git-square:
+            w: 1.7143
+        fa-github:
+            w: 1.7143
+        fa-github-alt:
+            w: 1.8568
+        fa-github-square:
+            w: 1.7143
+        fa-gitlab:
+            w: 1.9994
+        fa-glass:
+            w: 1.9994
+        fa-glide:
+            w: 1.7143
+        fa-glide-g:
+            w: 1.7143
+        fa-globe:
+            w: 1.7143
+        fa-google:
+            w: 1.7143
+        fa-google-plus:
+            w: 2.5714
+        fa-google-plus-official:
+            w: 1.7143
+        fa-google-plus-square:
+            w: 1.7143
+        fa-google-wallet:
+            w: 1.9994
+        fa-graduation-cap:
+            w: 2.5714
+        fa-gratipay:
+            w: 1.7143
+        fa-grav:
+            w: 2.0033
+        fa-h-square:
+            w: 1.7143
+        fa-hacker-news:
+            w: 1.7143
+        fa-hand-lizard-o:
+            w: 2.2864
+        fa-hand-o-down:
+            w: 1.7143
+        fa-hand-o-left:
+            w: 1.9994
+        fa-hand-o-right:
+            w: 1.9994
+        fa-hand-o-up:
+            w: 1.7143
+        fa-hand-paper-o:
+            w: 1.9994
+        fa-hand-peace-o:
+            w: 1.7143
+        fa-hand-pointer-o:
+            w: 1.9994
+        fa-hand-rock-o:
+            w: 1.7143
+        fa-hand-scissors-o:
+            w: 1.9994
+        fa-hand-spock-o:
+            w: 2.2864
+        fa-handshake-o:
+            w: 2.5714
+        fa-hashtag:
+            w: 1.9994
+        fa-hdd-o:
+            w: 1.7143
+        fa-header:
+            w: 1.9994
+        fa-headphones:
+            w: 1.8568
+        fa-heart:
+            w: 1.9994
+        fa-heart-o:
+            w: 1.9994
+        fa-heartbeat:
+            w: 1.9994
+        fa-history:
+            w: 1.7143
+        fa-home:
+            w: 1.8568
+        fa-hospital-o:
+            w: 1.5718
+        fa-hourglass:
+            w: 1.7143
+        fa-hourglass-end:
+            w: 1.7143
+        fa-hourglass-half:
+            w: 1.7143
+        fa-hourglass-o:
+            w: 1.7143
+        fa-hourglass-start:
+            w: 1.7143
+        fa-houzz:
+            w: 1.1442
+        fa-html5:
+            w: 1.5718
+        fa-i-cursor:
+            w: 1.1442
+        fa-id-badge:
+            w: 1.4292
+        fa-id-card:
+            w: 2.2864
+        fa-id-card-o:
+            w: 2.2864
+        fa-ils:
+            w: 1.7143
+        fa-imdb:
+            w: 1.7143
+        fa-inbox:
+            w: 1.7143
+        fa-indent:
+            w: 1.9994
+        fa-industry:
+            w: 1.9994
+        fa-info:
+            w: 0.7146
+        fa-info-circle:
+            w: 1.7143
+        fa-inr:
+            w: 1.0036
+        fa-instagram:
+            w: 1.7143
+        fa-internet-explorer:
+            w: 1.9994
+        fa-ioxhost:
+            w: 2.2864
+        fa-italic:
+            w: 1.1442
+        fa-joomla:
+            w: 1.7143
+        fa-jpy:
+            w: 1.1461
+        fa-jsfiddle:
+            w: 2.2864
+        fa-key:
+            w: 1.9994
+        fa-keyboard-o:
+            w: 2.1438
+        fa-krw:
+            w: 1.9994
+        fa-language:
+            w: 1.7143
+        fa-laptop:
+            w: 2.1438
+        fa-lastfm:
+            w: 1.9994
+        fa-lastfm-square:
+            w: 1.7143
+        fa-leaf:
+            w: 1.9994
+        fa-leanpub:
+            w: 2.2864
+        fa-lemon-o:
+            w: 1.7143
+        fa-level-down:
+            w: 1.1442
+        fa-level-up:
+            w: 1.1442
+        fa-life-ring:
+            w: 1.9994
+        fa-lightbulb-o:
+            w: 1.1442
+        fa-line-chart:
+            w: 2.2864
+        fa-link:
+            w: 1.8568
+        fa-linkedin:
+            w: 1.7143
+        fa-linkedin-square:
+            w: 1.7143
+        fa-linode:
+            w: 1.7143
+        fa-linux:
+            w: 1.7143
+        fa-list:
+            w: 1.9994
+        fa-list-alt:
+            w: 1.9994
+        fa-list-ol:
+            w: 1.9994
+        fa-list-ul:
+            w: 1.9994
+        fa-location-arrow:
+            w: 1.5718
+        fa-lock:
+            w: 1.2867
+        fa-long-arrow-down:
+            w: 0.8571
+        fa-long-arrow-left:
+            w: 1.9994
+        fa-long-arrow-right:
+            w: 1.9994
+        fa-long-arrow-up:
+            w: 0.8571
+        fa-low-vision:
+            w: 1.9994
+        fa-magic:
+            w: 1.8568
+        fa-magnet:
+            w: 1.7143
+        fa-male:
+            w: 1.1442
+        fa-map:
+            w: 1.9994
+        fa-map-marker:
+            w: 1.1442
+        fa-map-o:
+            w: 2.2864
+        fa-map-pin:
+            w: 1.1442
+        fa-map-signs:
+            w: 1.9994
+        fa-mars:
+            w: 1.7143
+        fa-mars-double:
+            w: 2.1438
+        fa-mars-stroke:
+            w: 1.7143
+        fa-mars-stroke-h:
+            w: 2.2864
+        fa-mars-stroke-v:
+            w: 1.4292
+        fa-maxcdn:
+            w: 1.9994
+        fa-meanpath:
+            w: 1.7143
+        fa-medium:
+            w: 1.9994
+        fa-medkit:
+            w: 1.9994
+        fa-meetup:
+            w: 2.1438
+        fa-meh-o:
+            w: 1.7143
+        fa-mercury:
+            w: 1.4292
+        fa-microchip:
+            w: 1.7143
+        fa-microphone:
+            w: 1.2867
+        fa-microphone-slash:
+            w: 1.5718
+        fa-minus:
+            w: 1.5718
+        fa-minus-circle:
+            w: 1.7143
+        fa-minus-square:
+            w: 1.7143
+        fa-minus-square-o:
+            w: 1.5718
+        fa-mixcloud:
+            w: 2.5714
+        fa-mobile:
+            w: 0.8571
+        fa-modx:
+            w: 1.9994
+        fa-money:
+            w: 2.1438
+        fa-moon-o:
+            w: 1.7143
+        fa-motorcycle:
+            w: 2.5714
+        fa-mouse-pointer:
+            w: 1.4292
+        fa-music:
+            w: 1.7143
+        fa-neuter:
+            w: 1.4292
+        fa-newspaper-o:
+            w: 2.2864
+        fa-object-group:
+            w: 2.2864
+        fa-object-ungroup:
+            w: 2.5714
+        fa-odnoklassniki:
+            w: 1.4292
+        fa-odnoklassniki-square:
+            w: 1.7143
+        fa-opencart:
+            w: 2.5714
+        fa-openid:
+            w: 1.9994
+        fa-opera:
+            w: 1.9994
+        fa-optin-monster:
+            w: 2.5617
+        fa-outdent:
+            w: 1.9994
+        fa-pagelines:
+            w: 1.5718
+        fa-paint-brush:
+            w: 1.9994
+        fa-paper-plane:
+            w: 1.9994
+        fa-paper-plane-o:
+            w: 1.9994
+        fa-paperclip:
+            w: 1.5718
+        fa-paragraph:
+            w: 1.4292
+        fa-pause:
+            w: 1.7143
+        fa-pause-circle:
+            w: 1.7143
+        fa-pause-circle-o:
+            w: 1.7143
+        fa-paw:
+            w: 1.8568
+        fa-paypal:
+            w: 1.7143
+        fa-pencil:
+            w: 1.7143
+        fa-pencil-square:
+            w: 1.7143
+        fa-pencil-square-o:
+            w: 1.9994
+        fa-percent:
+            w: 1.7143
+        fa-phone:
+            w: 1.5718
+        fa-phone-square:
+            w: 1.7143
+        fa-picture-o:
+            w: 2.1438
+        fa-pie-chart:
+            w: 1.9994
+        fa-pied-piper:
+            w: 2.5714
+        fa-pied-piper-alt:
+            w: 2.2746
+        fa-pied-piper-pp:
+            w: 1.7143
+        fa-pinterest:
+            w: 1.7143
+        fa-pinterest-p:
+            w: 1.4292
+        fa-pinterest-square:
+            w: 1.7143
+        fa-plane:
+            w: 1.5718
+        fa-play:
+            w: 1.5718
+        fa-play-circle:
+            w: 1.7143
+        fa-play-circle-o:
+            w: 1.7143
+        fa-plug:
+            w: 1.9994
+        fa-plus:
+            w: 1.5718
+        fa-plus-circle:
+            w: 1.7143
+        fa-plus-square:
+            w: 1.7143
+        fa-plus-square-o:
+            w: 1.5718
+        fa-podcast:
+            w: 1.7143
+        fa-power-off:
+            w: 1.7143
+        fa-print:
+            w: 1.8568
+        fa-product-hunt:
+            w: 1.9994
+        fa-puzzle-piece:
+            w: 1.8568
+        fa-qq:
+            w: 1.9994
+        fa-qrcode:
+            w: 1.5718
+        fa-question:
+            w: 1.1442
+        fa-question-circle:
+            w: 1.7143
+        fa-question-circle-o:
+            w: 1.7143
+        fa-quora:
+            w: 1.9994
+        fa-quote-left:
+            w: 1.8568
+        fa-quote-right:
+            w: 1.8568
+        fa-random:
+            w: 1.9994
+        fa-ravelry:
+            w: 2.4289
+        fa-rebel:
+            w: 1.9994
+        fa-recycle:
+            w: 1.9994
+        fa-reddit:
+            w: 1.9994
+        fa-reddit-alien:
+            w: 1.9994
+        fa-reddit-square:
+            w: 1.7143
+        fa-refresh:
+            w: 1.7143
+        fa-registered:
+            w: 1.9994
+        fa-renren:
+            w: 1.7143
+        fa-repeat:
+            w: 1.7143
+        fa-reply:
+            w: 1.9994
+        fa-reply-all:
+            w: 1.9994
+        fa-retweet:
+            w: 2.1438
+        fa-road:
+            w: 2.1438
+        fa-rocket:
+            w: 1.8568
+        fa-rss:
+            w: 1.5718
+        fa-rss-square:
+            w: 1.7143
+        fa-rub:
+            w: 1.4292
+        fa-safari:
+            w: 1.9994
+        fa-scissors:
+            w: 1.9994
+        fa-scribd:
+            w: 1.7143
+        fa-search:
+            w: 1.8568
+        fa-search-minus:
+            w: 1.8568
+        fa-search-plus:
+            w: 1.8568
+        fa-sellsy:
+            w: 2.2864
+        fa-server:
+            w: 1.9994
+        fa-share:
+            w: 1.9994
+        fa-share-alt:
+            w: 1.7143
+        fa-share-alt-square:
+            w: 1.7143
+        fa-share-square:
+            w: 1.7143
+        fa-share-square-o:
+            w: 1.8568
+        fa-shield:
+            w: 1.4292
+        fa-ship:
+            w: 2.2864
+        fa-shirtsinbulk:
+            w: 1.7143
+        fa-shopping-bag:
+            w: 1.9994
+        fa-shopping-basket:
+            w: 2.2864
+        fa-shopping-cart:
+            w: 1.8568
+        fa-shower:
+            w: 2.1438
+        fa-sign-in:
+            w: 1.7143
+        fa-sign-language:
+            w: 1.8568
+        fa-sign-out:
+            w: 1.8568
+        fa-signal:
+            w: 1.9994
+        fa-simplybuilt:
+            w: 2.2864
+        fa-sitemap:
+            w: 1.9994
+        fa-skyatlas:
+            w: 2.2864
+        fa-skype:
+            w: 1.7143
+        fa-slack:
+            w: 1.8568
+        fa-sliders:
+            w: 1.7143
+        fa-slideshare:
+            w: 1.9994
+        fa-smile-o:
+            w: 1.7143
+        fa-snapchat:
+            w: 1.7143
+        fa-snapchat-ghost:
+            w: 1.8568
+        fa-snapchat-square:
+            w: 1.7143
+        fa-snowflake-o:
+            w: 1.8568
+        fa-sort:
+            w: 1.1442
+        fa-sort-alpha-asc:
+            w: 1.8568
+        fa-sort-alpha-desc:
+            w: 1.8568
+        fa-sort-amount-asc:
+            w: 1.9994
+        fa-sort-amount-desc:
+            w: 1.9994
+        fa-sort-asc:
+            w: 1.1442
+        fa-sort-desc:
+            w: 1.1442
+        fa-sort-numeric-asc:
+            w: 1.7143
+        fa-sort-numeric-desc:
+            w: 1.7143
+        fa-soundcloud:
+            w: 2.5714
+        fa-space-shuttle:
+            w: 2.4289
+        fa-spinner:
+            w: 1.9994
+        fa-spoon:
+            w: 0.8571
+        fa-spotify:
+            w: 1.7143
+        fa-square:
+            w: 1.7143
+        fa-square-o:
+            w: 1.5718
+        fa-stack-exchange:
+            w: 1.4292
+        fa-stack-overflow:
+            w: 1.7143
+        fa-star:
+            w: 1.8568
+        fa-star-half:
+            w: 0.9997
+        fa-star-half-o:
+            w: 1.8568
+        fa-star-o:
+            w: 1.8568
+        fa-steam:
+            w: 1.9994
+        fa-steam-square:
+            w: 1.7143
+        fa-step-backward:
+            w: 1.1442
+        fa-step-forward:
+            w: 1.1442
+        fa-stethoscope:
+            w: 1.5718
+        fa-sticky-note:
+            w: 1.7143
+        fa-sticky-note-o:
+            w: 1.7143
+        fa-stop:
+            w: 1.7143
+        fa-stop-circle:
+            w: 1.7143
+        fa-stop-circle-o:
+            w: 1.7143
+        fa-street-view:
+            w: 1.7143
+        fa-strikethrough:
+            w: 1.9994
+        fa-stumbleupon:
+            w: 2.1438
+        fa-stumbleupon-circle:
+            w: 1.7143
+        fa-subscript:
+            w: 1.7143
+        fa-subway:
+            w: 1.7143
+        fa-suitcase:
+            w: 1.9994
+        fa-sun-o:
+            w: 1.9994
+        fa-superpowers:
+            w: 1.9994
+        fa-superscript:
+            w: 1.7143
+        fa-table:
+            w: 1.8568
+        fa-tablet:
+            w: 1.2867
+        fa-tachometer:
+            w: 1.9994
+        fa-tag:
+            w: 1.7143
+        fa-tags:
+            w: 2.1438
+        fa-tasks:
+            w: 1.9994
+        fa-taxi:
+            w: 2.2864
+        fa-telegram:
+            w: 1.9994
+        fa-television:
+            w: 2.2864
+        fa-tencent-weibo:
+            w: 1.4292
+        fa-terminal:
+            w: 1.8568
+        fa-text-height:
+            w: 1.9994
+        fa-text-width:
+            w: 1.7143
+        fa-th:
+            w: 1.9994
+        fa-th-large:
+            w: 1.8568
+        fa-th-list:
+            w: 1.9994
+        fa-themeisle:
+            w: 1.9994
+        fa-thermometer-empty:
+            w: 1.1442
+        fa-thermometer-full:
+            w: 1.1442
+        fa-thermometer-half:
+            w: 1.1442
+        fa-thermometer-quarter:
+            w: 1.1442
+        fa-thermometer-three-quarters:
+            w: 1.1442
+        fa-thumb-tack:
+            w: 1.2867
+        fa-thumbs-down:
+            w: 1.8568
+        fa-thumbs-o-down:
+            w: 1.7143
+        fa-thumbs-o-up:
+            w: 1.7143
+        fa-thumbs-up:
+            w: 1.8568
+        fa-ticket:
+            w: 1.9994
+        fa-times:
+            w: 1.5718
+        fa-times-circle:
+            w: 1.7143
+        fa-times-circle-o:
+            w: 1.7143
+        fa-tint:
+            w: 1.1442
+        fa-toggle-off:
+            w: 2.2864
+        fa-toggle-on:
+            w: 2.2864
+        fa-trademark:
+            w: 2.2024
+        fa-train:
+            w: 1.7143
+        fa-transgender:
+            w: 1.7143
+        fa-transgender-alt:
+            w: 1.9994
+        fa-trash:
+            w: 1.5718
+        fa-trash-o:
+            w: 1.5718
+        fa-tree:
+            w: 1.7143
+        fa-trello:
+            w: 1.7143
+        fa-tripadvisor:
+            w: 2.5714
+        fa-trophy:
+            w: 1.8568
+        fa-truck:
+            w: 1.9994
+        fa-try:
+            w: 1.2867
+        fa-tty:
+            w: 1.9994
+        fa-tumblr:
+            w: 1.1442
+        fa-tumblr-square:
+            w: 1.7143
+        fa-twitch:
+            w: 1.9994
+        fa-twitter:
+            w: 1.8568
+        fa-twitter-square:
+            w: 1.7143
+        fa-umbrella:
+            w: 1.8568
+        fa-underline:
+            w: 1.7143
+        fa-undo:
+            w: 1.7143
+        fa-universal-access:
+            w: 1.9994
+        fa-university:
+            w: 2.2864
+        fa-unlock:
+            w: 1.8568
+        fa-unlock-alt:
+            w: 1.2867
+        fa-upload:
+            w: 1.8568
+        fa-usb:
+            w: 2.5714
+        fa-usd:
+            w: 1.1442
+        fa-user:
+            w: 1.4292
+        fa-user-circle:
+            w: 1.9994
+        fa-user-circle-o:
+            w: 1.9994
+        fa-user-md:
+            w: 1.5718
+        fa-user-o:
+            w: 1.7143
+        fa-user-plus:
+            w: 2.2864
+        fa-user-secret:
+            w: 1.7143
+        fa-user-times:
+            w: 2.2864
+        fa-users:
+            w: 2.1438
+        fa-venus:
+            w: 1.4292
+        fa-venus-double:
+            w: 1.9994
+        fa-venus-mars:
+            w: 2.2864
+        fa-viacoin:
+            w: 1.7143
+        fa-viadeo:
+            w: 1.4292
+        fa-viadeo-square:
+            w: 1.7143
+        fa-video-camera:
+            w: 1.9994
+        fa-vimeo:
+            w: 1.9994
+        fa-vimeo-square:
+            w: 1.7143
+        fa-vine:
+            w: 1.7143
+        fa-vk:
+            w: 2.1438
+        fa-volume-control-phone:
+            w: 1.5718
+        fa-volume-down:
+            w: 1.2867
+        fa-volume-off:
+            w: 0.8571
+        fa-volume-up:
+            w: 1.8568
+        fa-weibo:
+            w: 1.9994
+        fa-weixin:
+            w: 2.2864
+        fa-whatsapp:
+            w: 1.7143
+        fa-wheelchair:
+            w: 1.8568
+        fa-wheelchair-alt:
+            w: 1.7143
+        fa-wifi:
+            w: 2.2864
+        fa-wikipedia-w:
+            w: 2.5714
+        fa-window-close:
+            w: 1.9994
+        fa-window-close-o:
+            w: 1.9994
+        fa-window-maximize:
+            w: 1.9994
+        fa-window-minimize:
+            w: 1.9994
+        fa-window-restore:
+            w: 2.2864
+        fa-windows:
+            w: 1.8568
+        fa-wordpress:
+            w: 1.9994
+        fa-wpbeginner:
+            w: 1.9994
+        fa-wpexplorer:
+            w: 1.9994
+        fa-wpforms:
+            w: 1.7143
+        fa-wrench:
+            w: 1.8568
+        fa-xing:
+            w: 1.5718
+        fa-xing-square:
+            w: 1.7143
+        fa-y-combinator:
+            w: 1.7143
+        fa-yahoo:
+            w: 1.7143
+        fa-yelp:
+            w: 1.7143
+        fa-yoast:
+            w: 1.8568
+        fa-youtube:
+            w: 1.7143
+        fa-youtube-play:
+            w: 1.9994
+        fa-youtube-square:
+            w: 1.7143

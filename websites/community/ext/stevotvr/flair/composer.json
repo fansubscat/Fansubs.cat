@@ -1,0 +1,29 @@
+{
+	"name": "stevotvr/flair",
+	"type": "phpbb-extension",
+	"description": "An extension to add flair to user profiles",
+	"homepage": "https://github.com/TheVilleOrg/phpbb-flair",
+	"version": "1.2.5",
+	"license": "GPL-2.0-only",
+	"authors": [
+		{
+			"name": "Steve Guidetti",
+			"email": "code@theville.org",
+			"homepage": "https://github.com/stevotvr",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "~1.0"
+	},
+	"require-dev": {
+		"phing/phing": "2.*"
+	},
+	"extra": {
+		"display-name": "Profile Flair",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.2.0"
+		}
+	}
+}

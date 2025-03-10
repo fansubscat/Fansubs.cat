@@ -1,0 +1,36 @@
+{% include 'overall_header.html' %}
+
+<h2>{{ lang('FLAIR_LEGEND_TITLE') }}</h2>
+
+{% for cat in cat %}
+	<div class="panel bg{% if loop.index is odd %}1{% else %}2{% endif %} flair-legend">
+
+	<div class="inner">
+
+		<div id="flair-cat{{ cat.CAT_ID }}">
+			{% if cat.CAT_NAME %}<h3><a href="#flair-cat{{ cat.CAT_ID }}"></a>{{ cat.CAT_NAME }}</h3>{% endif %}
+			<dl class="details">
+				{% for item in cat.item %}
+					<dt id="flair{{ item.FLAIR_ID }}">{% include '@stevotvr_flair/flair_item.html' with item %}</dt>
+					<dd><h4><a href="#flair{{ item.FLAIR_ID }}">{{ item.FLAIR_NAME }}</a></h4></dd>
+					<dd>{{ item.FLAIR_DESC }}</dd>
+				{% endfor %}
+			</dl>
+		</div>
+
+	</div>
+
+	</div>
+{% else %}
+	<div class="panel bg1">
+
+	<div class="inner">
+
+		<p>{{ lang('FLAIR_NO_FLAIR') }}</p>
+
+	</div>
+
+	</div>
+{% endfor %}
+
+{% include 'overall_footer.html' %}

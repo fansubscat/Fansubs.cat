@@ -1,0 +1,8 @@
+parameters:
+    stevotvr.flair.tables.flair: '%core.table_prefix%flair'
+    stevotvr.flair.tables.flair_categories: '%core.table_prefix%flair_cats'
+    stevotvr.flair.tables.flair_favorites: '%core.table_prefix%flair_favs'
+    stevotvr.flair.tables.flair_groups: '%core.table_prefix%flair_groups'
+    stevotvr.flair.tables.flair_notifications: '%core.table_prefix%flair_notif'
+    stevotvr.flair.tables.flair_triggers: '%core.table_prefix%flair_triggers'
+    stevotvr.flair.tables.flair_users: '%core.table_prefix%flair_users'

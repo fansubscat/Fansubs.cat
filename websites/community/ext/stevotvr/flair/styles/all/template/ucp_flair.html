@@ -1,0 +1,95 @@
+{% include 'ucp_header.html' %}
+
+<h2>{{ lang('UCP_FLAIR') }}</h2>
+
+{% INCLUDECSS '@stevotvr_flair/flair.css' %}
+
+<form id="user_flair" method="post" action="{{ U_ACTION }}" data-ajax="true" data-refresh="true">
+
+	<div class="panel">
+		<div class="inner">
+
+			<div class="postbody">
+
+			<div class="content">
+				{{ lang('UCP_FLAIR_EXPLAIN') }}
+			</div>
+
+			</div>
+
+		</div>
+	</div>
+	<div class="panel">
+		<div class="inner">
+			<fieldset>
+				<h3>{{ lang('UCP_USER_FLAIR') }}</h3>
+				<div class="flair">
+				{% for c in user_flair %}
+					{% if c.CAT_NAME %}<h4>{{ c.CAT_NAME }}</h4>{% endif %}
+
+					{% for item in c.items %}
+					<table class="flair-tile">
+						<tr>
+							<th rowspan="2">
+								{% include '@stevotvr_flair/flair_item.html' with item %}
+							</th>
+							<td>
+								<h5 title="{{ item.FLAIR_NAME }}">{{ item.FLAIR_NAME_SHORT }}</h5>
+							</td>
+						</tr>
+						<tr>
+							<td class="flair-buttons">
+							{% if item.FLAIR_FAV %}
+								<input type="submit" name="unfav_flair[{{ item.FLAIR_ID }}]" value="&#xf005;" class="button1 flair-fav" title="{{ lang('UCP_FLAIR_UNFAV', item.FLAIR_NAME) }}" />
+							{% else %}
+								<input type="submit" name="fav_flair[{{ item.FLAIR_ID }}]" value="&#xf006;" class="button1 flair-fav" title="{{ lang('UCP_FLAIR_FAV', item.FLAIR_NAME) }}" />
+							{% endif %}
+								{% if item.S_IS_FREE %}<input type="submit" name="remove_flair[{{ item.FLAIR_ID }}]" value="&times;" class="button1 flair-remove" title="{{ lang('UCP_FLAIR_REMOVE', item.FLAIR_NAME) }}" />{% endif %}
+							</td>
+						</tr>
+					</table>
+					{% endfor %}{% if not loop.last %}<hr>{% endif %}
+				{% else %}
+					<p>{{ lang('UCP_FLAIR_NO_FLAIR') }}</p>
+				{% endfor %}
+				</div>
+			</fieldset>
+		</div>
+	</div>
+	<div class="panel">
+		<div class="inner">
+			<fieldset>
+				<h3>{{ lang('UCP_FLAIR_AVAILABLE') }}</h3>
+				<div class="flair">
+				{% for c in available_flair %}
+					<h4>{{ c.CAT_NAME }}</h4>
+
+					{% for item in c.items %}
+					<table class="flair-tile">
+						<tr>
+							<th rowspan="2">
+								{% include '@stevotvr_flair/flair_item.html' with item %}
+							</th>
+							<td>
+								<h5 title="{{ item.FLAIR_NAME }}">{{ item.FLAIR_NAME_SHORT }}</h5>
+							</td>
+						</tr>
+						<tr>
+							<td class="flair-buttons">
+								<input type="submit" name="add_flair[{{ item.FLAIR_ID }}]" value="{{ lang('UCP_FLAIR_ADD_BUTTON') }}" class="button2" title="{{ lang('UCP_FLAIR_ADD', item.FLAIR_NAME) }}" />
+							</td>
+						</tr>
+					</table>
+					{% endfor %}{% if not loop.last %}<hr>{% endif %}
+				{% else %}
+					<p>{{ lang('UCP_FLAIR_NO_AVAILABLE') }}</p>
+				{% endfor %}
+				</div>
+			</fieldset>
+		</div>
+	</div>
+
+	{{ S_FORM_TOKEN }}
+</form>
+
+{% include 'ucp_footer.html' %}

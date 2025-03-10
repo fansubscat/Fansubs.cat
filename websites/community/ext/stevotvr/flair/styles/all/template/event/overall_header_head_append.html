@@ -1,0 +1,5 @@
+{% if not INCLUDED_FONTAWESOMECSS %}
+	{% INCLUDECSS T_FONT_AWESOME_LINK %}
+	{% DEFINE INCLUDED_FONTAWESOMECSS = true %}
+{% endif %}
+{% INCLUDECSS '@stevotvr_flair/flair.css' %}

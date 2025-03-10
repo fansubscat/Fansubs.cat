@@ -1,0 +1,35 @@
+.flair-count {
+	font-family: sans-serif;
+	font-size: 13px;
+	left: 0;
+	line-height: inherit;
+	position: absolute;
+	text-align: center;
+	width: 100%;
+}
+
+.flair-lg .flair-count {
+	font-size: 16px;
+	line-height: 1em;
+	text-align: right;
+}
+
+.flair-icon {
+	display: inline-block;
+	position: relative;
+	width: 2.5714285714285716em;
+}
+
+.flair-icon .flair-count:before {
+	content: '';
+	display: inline-block;
+}
+
+.color_palette_placeholder {
+	display: none;
+	padding-top: 0;
+}
+
+.color_palette_placeholder td {
+	padding: 0;
+}

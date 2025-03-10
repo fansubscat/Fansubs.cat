@@ -1,0 +1,88 @@
+.profile-flair {
+	margin: 0;
+	padding: 8px;
+}
+
+.profile-flair h4 {
+	font-size: 12px;
+	margin-top: 4px;
+}
+
+.profile-flair a {
+	border: none;
+	margin: 0;
+	padding: 0;
+	vertical-align: top;
+}
+
+.flair-count {
+	font-family: sans-serif;
+	font-size: 13px;
+	left: 0;
+	line-height: inherit;
+	position: absolute;
+	text-align: center;
+	width: 100%;
+}
+
+.flair-lg .flair-count {
+	font-size: 16px;
+	line-height: 1em;
+	text-align: right;
+}
+
+.flair-icon {
+	display: inline-block;
+	position: relative;
+	text-align: center;
+}
+
+.flair-icon img {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+.flair-icon .flair-count:before {
+	content: '';
+	display: inline-block;
+}
+
+.flair-legend dt {
+	margin-bottom: 12px;
+	padding-right: 20px;
+}
+
+.flair-tile {
+	border: 1px solid #aaa;
+	display: block;
+	float: left;
+	margin: 4px;
+	overflow: hidden;
+	padding: 1px 4px 0;
+	width: 150px;
+}
+
+.flair-tile th {
+	height: 50px;
+	vertical-align: top;
+}
+
+.flair-tile h5 {
+	margin: 2px 0 0 4px;
+}
+
+.flair-tile .flair-buttons {
+	padding-bottom: 4px;
+	text-align: right;
+	vertical-align: bottom;
+	width: 100%;
+}
+
+.flair-tile .flair-fav {
+	font-family: FontAwesome;
+}
+
+.flair-tile .inputbox {
+	width: 3em;
+}

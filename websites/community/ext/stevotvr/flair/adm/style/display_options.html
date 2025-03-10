@@ -1,0 +1,18 @@
+<fieldset>
+	<legend>{{ lang('ACP_FLAIR_DISPLAY_OPTIONS') }}</legend>
+{% if S_SETTINGS_MODE %}
+	<p>{{ lang('ACP_FLAIR_DISPLAY_OPTIONS_EXPLAIN') }}</p>
+{% endif %}
+	<dl>
+		<dt><label for="flair_show_on_profile">{{ lang('ACP_FLAIR_SHOW_ON_PROFILE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_SHOW_ON_PROFILE_EXPLAIN') }}</span></dt>
+		<dd><label><input type="radio" id="flair_show_on_profile" name="flair_show_on_profile" value="1"{% if FLAIR_SHOW_ON_PROFILE %} checked="checked"{% endif %} class="radio" /> {{ lang('YES') }}</label><label><input type="radio" name="flair_show_on_profile" value="0"{% if not FLAIR_SHOW_ON_PROFILE %} checked="checked"{% endif %} class="radio" /> {{ lang('NO') }}</label></dd>
+	</dl>
+	<dl>
+		<dt><label for="flair_show_on_posts">{{ lang('ACP_FLAIR_SHOW_ON_POSTS') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_SHOW_ON_POSTS_EXPLAIN') }}</span></dt>
+		<dd><label><input type="radio" id="flair_show_on_posts" name="flair_show_on_posts" value="1"{% if FLAIR_SHOW_ON_POSTS %} checked="checked"{% endif %} class="radio" /> {{ lang('YES') }}</label><label><input type="radio" name="flair_show_on_posts" value="0"{% if not FLAIR_SHOW_ON_POSTS %} checked="checked"{% endif %} class="radio" /> {{ lang('NO') }}</label></dd>
+	</dl>
+	<dl>
+		<dt><label for="flair_display_limit">{{ lang('ACP_FLAIR_DISPLAY_LIMIT') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_FLAIR_DISPLAY_LIMIT_EXPLAIN') }}</span></dt>
+		<dd><input type="number" id="flair_display_limit" name="flair_display_limit" value="{{ FLAIR_DISPLAY_LIMIT }}" min="0" max="16777215" /></dd>
+	</dl>
+</fieldset>

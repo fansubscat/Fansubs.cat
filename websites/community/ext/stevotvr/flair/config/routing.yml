@@ -1,0 +1,3 @@
+stevotvr_flair_legend:
+    path: /flair
+    defaults: { _controller: stevotvr.flair.controller.legend:handle }
