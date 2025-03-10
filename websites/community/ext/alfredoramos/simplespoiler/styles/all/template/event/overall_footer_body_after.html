@@ -1,0 +1,12 @@
+{% if not INCLUDED_DETAILS_POLYFILL_JS %}
+{%- if S_ALLOW_CDN -%}
+{% INCLUDEJS 'https://unpkg.com/details-element-polyfill@2.4.0/dist/details-element-polyfill.js' %}
+{%- else -%}
+{% INCLUDEJS '@alfredoramos_simplespoiler/js/details-element-polyfill.min.js' %}
+{%- endif -%}
+{%- set INCLUDED_DETAILS_POLYFILL_JS = true -%}
+{% endif %}
+{% if not INCLUDED_SPOILER_JS %}
+{% INCLUDEJS '@alfredoramos_simplespoiler/js/spoiler.min.js' %}
+{%- set INCLUDED_SPOILER_JS = true -%}
+{% endif %}

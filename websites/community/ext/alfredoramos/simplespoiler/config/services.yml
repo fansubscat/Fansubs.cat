@@ -1,0 +1,21 @@
+services:
+    alfredoramos.simplespoiler.listener:
+        class: alfredoramos\simplespoiler\event\listener
+        arguments:
+            - '@alfredoramos.simplespoiler.helper'
+        tags:
+            - { name: event.listener }
+
+    alfredoramos.simplespoiler.helper:
+        class: alfredoramos\simplespoiler\includes\helper
+        arguments:
+            - '@dbal.conn'
+            - '@filesystem'
+            - '@language'
+            - '@template'
+            - '@config'
+            - '@text_formatter.utils'
+            - '@ext.manager'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.bbcodes%'
