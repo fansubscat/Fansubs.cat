@@ -1,0 +1,32 @@
+{
+    "name": "postimage/imageupload",
+    "type": "phpbb-extension",
+    "description": "The easiest way to attach images to posts",
+    "homepage": "http://postimage.org",
+    "version": "1.0.2",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Postimage Team",
+            "username": "postimage",
+            "email": "support@postimage.org",
+            "homepage": "http://postimage.org",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "phpbb/phpbb": ">=3.1.2"
+    },
+    "extra": {
+        "display-name": "Image Upload",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.1.2"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/postimage",
+            "filename": "version_check"
+        }
+    }
+}
