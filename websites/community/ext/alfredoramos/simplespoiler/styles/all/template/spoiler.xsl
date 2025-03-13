@@ -4,8 +4,8 @@
 			<xsl:choose>
 				<xsl:when test="@title and string-length(normalize-space(@title)) > 0">
 					<xsl:choose>
-						<xsl:when test="string-length(normalize-space(@title)) > 140">
-							<xsl:value-of select="concat(normalize-space(substring(normalize-space(@title), 0, 140)), '…')"/>
+						<xsl:when test="string-length(normalize-space(@title)) > 100">
+							<xsl:value-of select="concat(normalize-space(substring(normalize-space(@title), 0, 100)), '…')"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="normalize-space(@title)"/>
@@ -14,6 +14,7 @@
 				</xsl:when>
 				<xsl:otherwise>{L_SPOILER}</xsl:otherwise>
 			</xsl:choose>
+			<small><em> (prem per a mostrar-lo o amagar-lo)</em></small>
 		</span>
 		<span class="spoiler-status">
 			<i class="icon fa-fw fa-eye" aria-hidden="true"></i>
