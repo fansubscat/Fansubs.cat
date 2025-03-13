@@ -121,8 +121,8 @@ class main_listener implements EventSubscriberInterface
 	{
 		$configurator = $event['configurator'];
 		$configurator->BBCodes->addCustom(
-			'[smention u={NUMBER?} g={NUMBER?}]{TEXT}[/smention]',
-			'<em class="mention">@{TEXT}</em>'
+			'[mention]{TEXT}[/mention]',
+			'<span class="mention">@{TEXT}</span>'
 		);
 	}
 
@@ -165,7 +165,7 @@ class main_listener implements EventSubscriberInterface
 		if ($s_quick_reply)
 		{
 			$this->template->assign_vars([
-				'UA_AJAX_MENTION_URL'    => $this->helper->route('paul999_mention_controller'),
+				'U_AJAX_MENTION_URL'    => $this->helper->route('paul999_mention_controller'),
 			]);
 		}
 	}
@@ -357,7 +357,6 @@ class main_listener implements EventSubscriberInterface
 		if ($disable)
 		{
 			$event['parser']->disable_bbcode('mention');
-			$event['parser']->disable_bbcode('smention');
 		}
 	}
 
@@ -373,8 +372,6 @@ class main_listener implements EventSubscriberInterface
 		}
 		$page_data = $event['page_data'];
 		$page_data['MESSAGE'] = preg_replace('#\[mention\](.*?)\[\/mention\]#uis', '@\\1', $page_data['MESSAGE']);
-		$page_data['MESSAGE'] = preg_replace('#\[smention u=([0-9]+)\](.*?)\[\/smention\]#uis', '@\\2', $page_data['MESSAGE']);
-		$page_data['MESSAGE'] = preg_replace('#\[smention g=([0-9]+)\](.*?)\[\/smention\]#uis', '@\\2', $page_data['MESSAGE']);
 		$event['page_data'] = $page_data;
 	}
 
@@ -505,72 +502,6 @@ class main_listener implements EventSubscriberInterface
 			$data = $this->getUserData($result, $mentions);
 			$this->db->sql_freeresult($result);
 			$this->handle_matches($data, $forum_id, $current);
-		}
-
-		$matches = [];
-		if (preg_match_all('#\[smention u=([0-9]+)\]<\/s>(.*?)<e>\[\/smention\]#', $message, $matches, PREG_OFFSET_CAPTURE) !== 0)
-		{
-			$data = [];
-
-			for ($i = 0; $i < count($matches[1]); $i++)
-			{
-				$data[] = $matches[1][$i][0];
-			}
-
-			$sql = 'SELECT user_id, username, user_permissions, user_type
-				FROM ' . USERS_TABLE . '
-				WHERE ' . $this->db->sql_in_set('user_id', $data);
-			$result = $this->db->sql_query($sql);
-			$data = $this->getUserData($result, $mentions);
-			$this->db->sql_freeresult($result);
-			$this->handle_matches($data, $forum_id, $current);
-		}
-
-		if ($local_auth->acl_get('u_can_mention_groups') && preg_match_all('#\[smention g=([0-9]+)\]<\/s>(.*?)<e>\[\/smention\]#', $message, $matches, PREG_OFFSET_CAPTURE) !== 0)
-		{
-			// We are going to mention an group.
-			$data = [];
-
-			for ($i = 0; $i < count($matches[1]); $i++)
-			{
-				$data[] = $matches[1][$i][0];
-			}
-
-			if (!$local_auth->acl_get('u_can_mention_large_groups'))
-			{
-				// User can only mention small groups. We need to check if the specified group is small.
-				$sql = 'SELECT COUNT(user_id) as cnt, group_id  
-				FROM ' . USER_GROUP_TABLE . ' g
-				WHERE ' . $this->db->sql_in_set('g.group_id', $data) . ' GROUP BY group_id';
-
-				$result = $this->db->sql_query($sql);
-				$data = [];
-				while ($row = $this->db->sql_fetchrow($result))
-				{
-					if ($row['cnt'] <= $this->config['simple_mention_large_groups'])
-					{
-						$data[] = $row['group_id'];
-					}
-				}
-				$this->db->sql_freeresult($result);
-			}
-
-			if (count($data) > 0)
-			{
-				$sql = 'SELECT u.user_id, u.username, u.user_permissions, u.user_type
-				FROM ' . USERS_TABLE . ' u, ' . USER_GROUP_TABLE . ' ug, ' . GROUPS_TABLE . ' g 
-				WHERE 
-						g.group_id = ug.group_id
-						AND g.group_type <> ' . GROUP_HIDDEN . '
-						AND ' . $this->db->sql_in_set('g.group_name', ['GUESTS', 'BOTS'], true) . '
-						AND u.user_id = ug.user_id 
-						AND ' . $this->db->sql_in_set('ug.group_id', $data);
-				$result = $this->db->sql_query($sql);
-				$data = $this->getUserData($result, $mentions);
-
-				$this->db->sql_freeresult($result);
-				$this->handle_matches($data, $forum_id, $current);
-			}
 		}
 	}
 

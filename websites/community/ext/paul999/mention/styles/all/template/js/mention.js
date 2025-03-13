@@ -21,10 +21,7 @@ $(document).ready(function () {
 
             selectTemplate: function (item) {
                 if (item.original.type === 'user') {
-                    return '[smention u=' + item.original.user_id + ']' + item.original.value + '[/smention]';
-                }
-                else if (item.original.type === 'group') {
-                    return '[smention g=' + item.original.group_id + ']' + item.original.value + '[/smention]';
+                    return '[mention]' + item.original.value + '[/mention]';
                 }
             },
             values: remoteSearch,

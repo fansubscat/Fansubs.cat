@@ -1393,7 +1393,7 @@
                         }
 
                         return noMatchTemplate || function () {
-                            return "<li>No Match Found!</li>";
+                            return "<li>No s’ha trobat cap usuari</li>";
                         }.bind(_this);
                     }(noMatchTemplate),
                     // column to search against in the object
@@ -1432,7 +1432,7 @@
                             }
 
                             return noMatchTemplate || function () {
-                                return "<li>No Match Found!</li>";
+                                return "<li>No s’ha trobat cap usuari</li>";
                             }.bind(_this);
                         }(noMatchTemplate),
                         lookup: item.lookup || lookup,
