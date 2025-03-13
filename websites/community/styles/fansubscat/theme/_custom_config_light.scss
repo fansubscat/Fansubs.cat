@@ -1,0 +1,62 @@
+//
+//	Add your custom configuration variables to this file.
+//	See _style_config.scss for list of variables
+//
+//	This file requires SASS compiler.
+//	You can find instructions here: http://www.artodia.com/phpbb-31-tutorials/compile-theme/
+//
+
+
+// Examples: (commented to prevent it from working)
+// 
+// $show-logo: true;
+// $use-wrapper: false;
+$use-wrapper: true;
+$max-width: 1920px;
+
+$font-family: "lexend_deca", Verdana, Helvetica, Arial, sans-serif;	// Default font
+$h1-font-family: "lexend_deca", "Trebuchet MS", Arial, Helvetica, sans-serif;
+$h2-font-family: "lexend_deca", "Droid Sans","Open Sans","Trebuchet MS",Helvetica,Arial,sans-serif;
+$list-heading-font-family: "lexend_deca", "Droid Sans","Open Sans","Trebuchet MS",Helvetica,Arial,sans-serif;
+$dropdown-header-font-family: "lexend_deca", Arial, "Helvetica Neue", Helvetica, Arial, sans-serif;
+$forum-link-font-family: "lexend_deca_bold", "Droid Sans","Open Sans","Trebuchet MS",Helvetica,Arial,sans-serif;
+$post-content-font-family: "lexend_deca", "Lucida Grande", "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;
+$input-button-font-family: "lexend_deca", "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
+
+$font-size: 13px;	// Base font size
+
+$black-color: rgb(255, 255, 255); // Main color to mix with. Black for light styles, white for dark styles
+$white-color: rgb(0, 0, 0); // Opposite of $black-color
+
+// Page colors
+$page-background: rgb(235, 235, 235);	// HTML element
+$content-background: rgb(235, 235, 235);	// Page inside content wrapper
+$content-border-color: rgb(235, 235, 235);	// Border color for content wrapper
+
+// Primary colors
+$primary-color:	rgb(106, 160, 248);	// Main color, used for links and stuff
+$primary-darker-color: rgb(76, 130, 218);
+$primary-lighter-color: rgb(76, 130, 218);
+$primary-lightest-color: rgb(76, 130, 218);
+$secondary-color: rgb(76, 130, 218);	// Secondary color, usually in red - yellow range
+$overlay-color:	$white-color;	// Text on top of sections that use colorful background.
+$block-background: rgb(225, 225, 225);	// Background of blocks
+$block-background-reported: #ffdddd;	// Background for reported posts
+
+// Global color values
+$text-color:							$white-color;	// Text color
+$bold-text-color:						$white-color;	// Text color with higher contrast to background. #000 or #fff
+$post-text-color:						$text-color;	// Text inside posts
+$link-color:							$white-color;	// Links
+$link-hover-color:						mix($white-color, $content-background, 80%);	// Links, hover state
+$heading-bg:							$page-background;
+$heading-color:							$white-color;
+$heading-link-hover:						mix($white-color, $content-background, 80%);
+$muted-color:							mix($white-color, $content-background, 60%);	// Gray color
+$faint-color:							mix($white-color, $content-background, 30%);	// Gray color
+$header-link:							$white-color;
+$header-link-hover:						mix($white-color, $content-background, 80%);
+$stats-title-color:						$white-color;
+$button-main-bg:						$primary-color;
+$profile-width:							180px;
+

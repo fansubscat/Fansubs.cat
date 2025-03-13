@@ -29,9 +29,12 @@
 	<!-- EVENT posting_editor_subject_before -->
 
 	<!-- IF S_POST_ACTION or S_PRIVMSGS or S_EDIT_DRAFT -->
-		<label for="subject">{L_SUBJECT}{L_COLON}</label>
+		<!-- IF S_NEW_MESSAGE or S_PRIVMSGS -->
 			<!-- EVENT posting_editor_subject_prepend -->
-		<input type="text" name="subject" id="subject" size="120" maxlength="<!-- IF S_NEW_MESSAGE -->120<!-- ELSE -->124<!-- ENDIF -->" tabindex="2" value="{SUBJECT}{DRAFT_SUBJECT}" class="inputbox autowidth" />
+		<input type="text" name="subject" placeholder="Introdueix el títol del tema" id="subject" size="120" maxlength="<!-- IF S_NEW_MESSAGE -->120<!-- ELSE -->124<!-- ENDIF -->" tabindex="2" value="{SUBJECT}{DRAFT_SUBJECT}" class="inputbox autowidth" />
+		<!-- ELSE -->
+		<input type="hidden" name="subject" id="subject" value="{SUBJECT}{DRAFT_SUBJECT}" />
+		<!-- ENDIF -->
 			<!-- EVENT posting_editor_subject_append -->
 	<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
 		<!-- DEFINE $CAPTCHA_TAB_INDEX = 3 -->
@@ -43,7 +46,7 @@
 
 	<!-- INCLUDE posting_buttons.html -->
 
-	<div id="smiley-box" class="smiley-box">
+	<div id="smiley-box" class="smiley-box" style="display: none;">
 		<!-- EVENT posting_editor_smilies_before -->
 		<!-- IF S_SMILIES_ALLOWED and .smiley -->
 			<strong>{L_SMILIES}</strong><br />
@@ -65,7 +68,7 @@
 	<!-- EVENT posting_editor_message_before -->
 
 	<div id="message-box" class="message-box">
-		<textarea <!-- IF S_UCP_ACTION and not S_PRIVMSGS and not S_EDIT_DRAFT -->name="signature" id="signature" style="height: 9em;"<!-- ELSE -->name="message" id="message"<!-- ENDIF --> rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox">{MESSAGE}{DRAFT_MESSAGE}{SIGNATURE}</textarea>
+		<textarea placeholder="Introdueix el text del missatge" <!-- IF S_UCP_ACTION and not S_PRIVMSGS and not S_EDIT_DRAFT -->name="signature" id="signature" style="height: 9em;"<!-- ELSE -->name="message" id="message"<!-- ENDIF --> rows="15" cols="76" tabindex="4" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" class="inputbox">{MESSAGE}{DRAFT_MESSAGE}{SIGNATURE}</textarea>
 	</div>
 
 	<!-- EVENT posting_editor_message_after -->

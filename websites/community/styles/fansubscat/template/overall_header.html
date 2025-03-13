@@ -9,13 +9,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="msapplication-config" content="https://static.fansubs.cat/favicons/community/browserconfig.xml">
-<meta name="base_url" content="https://forum.fansubs.cat">
+<meta name="base_url" content="https://comunitat.fansubs.cat">
 <meta name="current_domain" content="fansubs.cat">
 <meta name="users_url" content="https://usuaris.fansubs.cat">
 <meta name="main_url" content="https://www.fansubs.cat">
 <meta name="site_name" content="Fansubs.cat">
 <meta property="og:title" content="Comunitat | Fansubs.cat">
-<meta property="og:url" content="https://forum.fansubs.cat">
+<meta property="og:url" content="https://comunitat.fansubs.cat">
 <meta property="og:description" content="Gaudeix de l’anime en català a Fansubs.cat, el portal que recopila tot l’anime subtitulat pels diferents fansubs en català!">
 <meta property="og:image" content="https://static.fansubs.cat/social/community.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -65,13 +65,24 @@
 		wf.async = true;
 		s.parentNode.insertBefore(wf, s);
 	})(document);
+	
+	function postimage_customize() {
+		Object.defineProperty(postimage, "render", {
+			value: function(i) {
+				$(".bbcode-url").before('<button type="button" class="button button-icon-only" onclick="postimage.upload(' + i + ');" title="Penja una imatge i enllaça-hi"><i class="icon fa fa-upload fa-fw" aria-hidden="true"></i></button>');
+				var container = document.createElement("span");
+				container.style="display: none;";
+				return container;
+			},
+			writable:false,
+			configurable:false
+			});
+	}
 </script>
 <!-- ENDIF -->
 
 <link href="{T_FONT_AWESOME_LINK}" rel="stylesheet">
 <link href="{T_STYLESHEET_LINK}" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
-<link href="{T_THEME_PATH}/fansubscat_forum.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet">
 
 <!-- IF S_CONTENT_DIRECTION eq 'rtl' -->
 	<link href="{T_THEME_PATH}/bidi.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet">
@@ -94,6 +105,8 @@
 {$STYLESHEETS}
 
 <!-- EVENT overall_header_stylesheets_after -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+<link href="{T_THEME_PATH}/fansubscat_forum.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet">
 
 </head>
 <body id="phpbb" class="nojs notouch section-{SCRIPT_NAME} {S_CONTENT_DIRECTION} {BODY_CLASS}<!-- IF S_REGISTERED_USER --> user-logged-in<!-- ENDIF -->" data-online-text="{L_ONLINE}">

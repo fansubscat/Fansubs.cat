@@ -75,9 +75,8 @@
  	}
 
 	.action-bar > .pagination {
-		float: none;
 		clear: both;
-		padding-bottom: 1px;
+		padding-top: 0.2rem;
 		text-align: center;
 	}
 
@@ -126,9 +125,6 @@
 
 	/* Content wrappers
 	----------------------------------------*/
-	html {
-		height: auto;
-	}
 
 	body {
 		padding: 0;
@@ -154,17 +150,8 @@
 
 	// Common block wrappers
 	// ----------------------------------------
-	.forabg, .forumbg, .post, .panel {
-		border-radius: 0;
-		margin-left: -5px;
-		margin-right: -5px;
-	}
 	.headerbar, .navbar {
 		border-radius: 0;
-	}
-	#wrap .headerbar, #wrap .navbar {
-		margin-left: -5px;
-		margin-right: -5px;
 	}
 
 	.cp-main .forabg, .cp-main .forumbg, .cp-main .post, .cp-main .panel {

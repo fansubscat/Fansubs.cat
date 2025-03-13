@@ -211,8 +211,6 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 
 #wrap {
 	@if $use-wrapper {
-		border: 1px solid transparent;
-		border-radius: min($border-radius * 2, 8px);
 		@include wrapper-padding;
 	}
 }

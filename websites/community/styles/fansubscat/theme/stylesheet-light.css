@@ -194,8 +194,6 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 }
 
 #wrap {
-  border: 1px solid transparent;
-  border-radius: 0px;
   padding: 10px;
 }
 
@@ -265,9 +263,9 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 }
 
 .navbar {
-  background: rgb(30, 30, 30);
+  background: rgb(225, 225, 225);
   border: 1px solid transparent;
-  border-color: rgb(40.2, 40.2, 40.2) rgb(14.7, 14.7, 14.7) rgb(14.7, 14.7, 14.7) rgb(40.2, 40.2, 40.2);
+  border-color: rgb(235.2, 235.2, 235.2) rgb(209.7, 209.7, 209.7) rgb(209.7, 209.7, 209.7) rgb(235.2, 235.2, 235.2);
   border-radius: 0px;
   padding: 4px 9px;
   box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
@@ -698,9 +696,9 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 }
 
 .forabg {
-  background: rgb(30, 30, 30);
+  background: rgb(225, 225, 225);
   border: 1px solid transparent;
-  border-color: rgb(40.2, 40.2, 40.2) rgb(14.7, 14.7, 14.7) rgb(14.7, 14.7, 14.7) rgb(40.2, 40.2, 40.2);
+  border-color: rgb(235.2, 235.2, 235.2) rgb(209.7, 209.7, 209.7) rgb(209.7, 209.7, 209.7) rgb(235.2, 235.2, 235.2);
   border-radius: 0px;
   padding: 4px 9px;
   box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
@@ -713,9 +711,9 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 }
 
 .forumbg {
-  background: rgb(30, 30, 30);
+  background: rgb(225, 225, 225);
   border: 1px solid transparent;
-  border-color: rgb(40.2, 40.2, 40.2) rgb(14.7, 14.7, 14.7) rgb(14.7, 14.7, 14.7) rgb(40.2, 40.2, 40.2);
+  border-color: rgb(235.2, 235.2, 235.2) rgb(209.7, 209.7, 209.7) rgb(209.7, 209.7, 209.7) rgb(235.2, 235.2, 235.2);
   border-radius: 0px;
   padding: 4px 9px;
   box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
@@ -734,9 +732,9 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 }
 
 .panel {
-  background: rgb(30, 30, 30);
+  background: rgb(225, 225, 225);
   border: 1px solid transparent;
-  border-color: rgb(40.2, 40.2, 40.2) rgb(14.7, 14.7, 14.7) rgb(14.7, 14.7, 14.7) rgb(40.2, 40.2, 40.2);
+  border-color: rgb(235.2, 235.2, 235.2) rgb(209.7, 209.7, 209.7) rgb(209.7, 209.7, 209.7) rgb(235.2, 235.2, 235.2);
   border-radius: 0px;
   padding: 4px 9px;
   box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
@@ -773,14 +771,14 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
   border-radius: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  background: rgb(20, 20, 20);
-  border: 0 solid rgb(20, 20, 20);
+  background: rgb(235, 235, 235);
+  border: 0 solid rgb(235, 235, 235);
   padding: 5px;
   text-transform: none;
   font-size: 17px;
   line-height: 1.4;
   font-weight: normal;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -790,11 +788,11 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 }
 .panel > .inner > h3:first-child a,
 .panel > h3:first-child a {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .panel > .inner > h3:first-child a:hover,
 .panel > h3:first-child a:hover {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 .panel-container .panel > .inner > h3:first-child,
 .panel-container .panel > h3:first-child {
@@ -803,9 +801,9 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 }
 
 .post {
-  background: rgb(30, 30, 30);
+  background: rgb(225, 225, 225);
   border: 1px solid transparent;
-  border-color: rgb(40.2, 40.2, 40.2) rgb(14.7, 14.7, 14.7) rgb(14.7, 14.7, 14.7) rgb(40.2, 40.2, 40.2);
+  border-color: rgb(235.2, 235.2, 235.2) rgb(209.7, 209.7, 209.7) rgb(209.7, 209.7, 209.7) rgb(235.2, 235.2, 235.2);
   border-radius: 0px;
   padding: 4px 9px;
   box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
@@ -1250,9 +1248,9 @@ table.table1 {
 }
 
 table.table1 thead th {
-  background: rgb(20, 20, 20);
-  border: 0 solid rgb(20, 20, 20);
-  color: rgb(255, 255, 255);
+  background: rgb(235, 235, 235);
+  border: 0 solid rgb(235, 235, 235);
+  color: rgb(0, 0, 0);
   text-transform: none;
   line-height: 1.4;
   font-weight: normal;
@@ -2319,14 +2317,14 @@ ul.topiclist li {
   border-radius: 0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  background: rgb(20, 20, 20);
-  border: 0 solid rgb(20, 20, 20);
+  background: rgb(235, 235, 235);
+  border: 0 solid rgb(235, 235, 235);
   padding: 5px;
   text-transform: none;
   font-size: 17px;
   line-height: 1.4;
   font-weight: normal;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   margin: -5px -5px 0;
   position: relative;
 }
@@ -2334,10 +2332,10 @@ ul.topiclist li {
   background-position: 0 0;
 }
 .forabg ul.topiclist li.header a, .forumbg ul.topiclist li.header a {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .forabg ul.topiclist li.header a:hover, .forumbg ul.topiclist li.header a:hover {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 .forabg ul.topiclist li.header .forum-toggle, .forumbg ul.topiclist li.header .forum-toggle {
   position: absolute;
@@ -4861,9 +4859,8 @@ ul.linklist.bulletin > li.small-icon.icon-team:before {
     margin-bottom: 5px;
   }
   .action-bar > .pagination {
-    float: none;
     clear: both;
-    padding-bottom: 1px;
+    padding-top: 0.2rem;
     text-align: center;
   }
   .action-bar > .pagination li.page-jump {
@@ -4910,9 +4907,6 @@ ul.linklist.bulletin > li.small-icon.icon-team:before {
   }
   /* Content wrappers
   ----------------------------------------*/
-  html {
-    height: auto;
-  }
   body {
     padding: 0;
   }
@@ -4930,17 +4924,8 @@ ul.linklist.bulletin > li.small-icon.icon-team:before {
   #wrap .navbar .inner.static > .static-inner {
     padding: 0;
   }
-  .forabg, .forumbg, .post, .panel {
-    border-radius: 0;
-    margin-left: -5px;
-    margin-right: -5px;
-  }
   .headerbar, .navbar {
     border-radius: 0;
-  }
-  #wrap .headerbar, #wrap .navbar {
-    margin-left: -5px;
-    margin-right: -5px;
   }
   .cp-main .forabg, .cp-main .forumbg, .cp-main .post, .cp-main .panel {
     border-radius: 0;
@@ -5320,17 +5305,17 @@ ul.linklist.bulletin > li.small-icon.icon-team:before {
   }
 }
 html, body {
-  color: rgb(255, 255, 255);
-  background: rgb(20, 20, 20);
-  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 500px), -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 100%), rgb(20, 20, 20);
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 500px), linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 100%), rgb(20, 20, 20);
+  color: rgb(0, 0, 0);
+  background: rgb(235, 235, 235);
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 500px), -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 100%), rgb(235, 235, 235);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 500px), linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 100%), rgb(235, 235, 235);
 }
 html.simple, body.simple {
-  background-color: rgb(20, 20, 20);
+  background-color: rgb(235, 235, 235);
 }
 
 h1, p.sitename {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 h2 {
@@ -5338,38 +5323,38 @@ h2 {
 }
 
 h3 {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .post h3 {
-  color: white;
+  color: black;
 }
 h3 a {
   color: inherit;
 }
 h3 a:hover {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 hr {
-  border-color: rgb(45.5, 45.5, 45.5);
-  border-top-color: black;
+  border-color: white;
+  border-top-color: rgb(209.5, 209.5, 209.5);
   border-top-color: rgba(0, 0, 0, 0.2);
 }
 
 /* Post body links */
 .postlink {
-  border-bottom-color: rgb(255, 255, 255);
-  color: rgb(255, 255, 255);
+  border-bottom-color: rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
 }
 
 .postlink:visited {
-  border-bottom-color: #a1a1a1;
-  color: #a1a1a1;
+  border-bottom-color: #5e5e5e;
+  color: #5e5e5e;
 }
 
 .postlink:hover {
-  background-color: rgb(4.5, 4.5, 4.5);
-  color: #d0d0d0;
+  background-color: rgb(199.5, 199.5, 199.5);
+  color: #2f2f2f;
 }
 
 .signature a, .signature a:hover {
@@ -5380,37 +5365,37 @@ hr {
 .search-box .inputbox:hover,
 .search-box .inputbox:focus,
 .search-box .button:hover {
-  border-color: rgb(40.2, 40.2, 40.2) rgb(14.7, 14.7, 14.7) rgb(14.7, 14.7, 14.7) rgb(40.2, 40.2, 40.2);
+  border-color: rgb(235.2, 235.2, 235.2) rgb(209.7, 209.7, 209.7) rgb(209.7, 209.7, 209.7) rgb(235.2, 235.2, 235.2);
 }
 
 .search-header {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15), 1px 1px 0 rgb(14.7, 14.7, 14.7);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15), 1px 1px 0 rgb(209.7, 209.7, 209.7);
 }
 .navbar.with-search .search-header {
   box-shadow: none;
 }
 .search-header .inputbox, .search-header .button {
-  background: rgb(30, 30, 30) !important;
-  border-color: rgb(30, 30, 30) !important;
+  background: rgb(225, 225, 225) !important;
+  border-color: rgb(225, 225, 225) !important;
 }
 .navbar.with-search .search-header .button, .navbar.with-search .search-header .button:before, .navbar.with-search .search-header .button:after {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .search-header .inputbox:hover, .search-header .inputbox:focus {
-  color: rgb(255, 255, 255) !important;
+  color: rgb(0, 0, 0) !important;
 }
 .search-header .inputbox:hover, .navbar.not-static + .navbar.with-search .search-header .inputbox:hover, .search-header .inputbox:focus, .navbar.not-static + .navbar.with-search .search-header .inputbox:focus {
   background-color: #2a3449 !important;
-  border-color: rgb(30, 30, 30) !important;
+  border-color: rgb(225, 225, 225) !important;
 }
 .search-header .inputbox:hover::-moz-placeholder {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.8);
 }
 .search-header .inputbox:hover::-webkit-input-placeholder {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.8);
 }
 .search-header .inputbox:hover:-ms-input-placeholder {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.8);
 }
 .search-header .inputbox:focus::-moz-placeholder {
   color: transparent;
@@ -5430,51 +5415,51 @@ hr {
 }
 
 #wrap {
-  background: rgb(20, 20, 20);
-  border-color: rgb(20, 20, 20);
+  background: rgb(235, 235, 235);
+  border-color: rgb(235, 235, 235);
 }
 
 .headerbar {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .breadcrumbs .crumb:before {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 .navbar {
   box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
-  border-color: rgb(40.2, 40.2, 40.2) rgb(14.7, 14.7, 14.7) rgb(14.7, 14.7, 14.7) rgb(40.2, 40.2, 40.2);
+  border-color: rgb(235.2, 235.2, 235.2) rgb(209.7, 209.7, 209.7) rgb(209.7, 209.7, 209.7) rgb(235.2, 235.2, 235.2);
 }
 .navbar.secondary {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .navbar.secondary > ul > li:hover, .navbar.secondary > ul > li:hover:after, .navbar.secondary > ul > li:hover:before,
 .navbar.secondary > ul > li.dropdown-visible,
 .navbar.secondary > ul > li.dropdown-visible:after,
 .navbar.secondary > ul > li.dropdown-visible:before {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 .navbar.secondary .dropdown {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .navbar .nav-tabs {
-  background-color: rgb(30, 30, 30);
-  box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2), 1px 1px 0 rgb(40.2, 40.2, 40.2) inset, -1px -1px 0 rgb(14.7, 14.7, 14.7) inset;
+  background-color: rgb(225, 225, 225);
+  box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2), 1px 1px 0 rgb(235.2, 235.2, 235.2) inset, -1px -1px 0 rgb(209.7, 209.7, 209.7) inset;
 }
 .navbar .nav-tabs .tab {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .navbar .nav-tabs .tab.selected {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   background-color: rgb(76, 130, 218);
 }
 .navbar .nav-tabs .tab:hover {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   background-color: rgb(76, 130, 218);
 }
 .navbar .nav-tabs .tab.dropdown-visible {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   background-color: rgb(76, 130, 218);
 }
 .navbar .nav-tabs .tab > strong {
@@ -5486,29 +5471,29 @@ hr {
   border-top-color: hsl(0, 65.7407407407%, 57.6470588235%);
 }
 .navbar .nav-tabs .tab .dropdown {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .panel {
-  background-color: rgb(30, 30, 30);
-  color: rgb(255, 255, 255);
+  background-color: rgb(225, 225, 225);
+  color: rgb(0, 0, 0);
 }
 
 .post:target .content {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .post h3 a.first-unread,
 .post:target h3 a {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .bg1 {
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 
 table.zebra-list tr:nth-child(odd) td, ul.zebra-list li:nth-child(odd) {
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 
 .bg2 {
@@ -5524,7 +5509,7 @@ table.zebra-list tr:nth-child(even) td, ul.zebra-list li:nth-child(even) {
 }
 .bg3.panel {
   background: transparent none;
-  background-color: rgba(20, 20, 20, 0.3);
+  background-color: rgba(235, 235, 235, 0.3);
   border-top-color: rgb(76, 130, 218);
 }
 .bg3.panel:before, .bg3.panel:after {
@@ -5532,22 +5517,22 @@ table.zebra-list tr:nth-child(even) td, ul.zebra-list li:nth-child(even) {
   background: linear-gradient(to bottom, rgb(76, 130, 218) 0%, rgba(76, 130, 218, 0) 100%);
 }
 .section-posting .bg3.panel {
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 .section-posting .bg3.panel:before, .section-posting .bg3.panel:after {
   background: transparent;
 }
 
 ul.navlinks {
-  border-top-color: rgb(22.35, 22.35, 22.35);
+  border-top-color: rgb(217.35, 217.35, 217.35);
 }
 
 .forum-statistics {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 .forum-lastpost {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 .forum-lastpost span:before {
   opacity: 0.5;
@@ -5572,42 +5557,42 @@ ul.navlinks {
 }
 
 .forum-statistics .value {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 table.table1 thead th {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 table.table1 tbody tr {
-  border-color: rgb(22.35, 22.35, 22.35);
+  border-color: rgb(217.35, 217.35, 217.35);
 }
 
 table.table1 tbody tr:hover, table.table1 tbody tr.hover {
   background-color: #2a3449;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 table.table1 td {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 table.table1 tbody td {
-  border-top-color: rgb(22.35, 22.35, 22.35);
+  border-top-color: rgb(217.35, 217.35, 217.35);
 }
 
 table.table1 tbody th {
-  border-bottom-color: rgb(14.7, 14.7, 14.7);
-  color: rgb(255, 255, 255);
-  background-color: rgb(20, 20, 20);
+  border-bottom-color: rgb(209.7, 209.7, 209.7);
+  color: rgb(0, 0, 0);
+  background-color: rgb(235, 235, 235);
 }
 
 table.info tbody th {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 dl.details dt {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 dl.details dd {
@@ -5663,33 +5648,33 @@ dl.details dd {
 
 .jumpbox-cat-link {
   background-color: rgb(76, 130, 218);
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .jumpbox-cat-link:hover {
   background-color: rgb(76, 130, 218);
   border-top-color: rgb(76, 130, 218);
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .jumpbox-forum-link {
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 
 .jumpbox-forum-link:hover {
-  background-color: rgb(20, 20, 20);
+  background-color: rgb(235, 235, 235);
 }
 
 .jumpbox .dropdown .pointer-inner {
-  border-color: rgb(30, 30, 30) transparent;
+  border-color: rgb(225, 225, 225) transparent;
 }
 
 .jumpbox-sub-link {
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 
 .jumpbox-sub-link:hover {
-  background-color: rgb(20, 20, 20);
+  background-color: rgb(235, 235, 235);
 }
 
 .pagination li a {
@@ -5700,7 +5685,7 @@ dl.details dd {
 
 .pagination li.ellipsis span {
   background-color: transparent;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .pagination li.active span {
@@ -5710,21 +5695,21 @@ dl.details dd {
 }
 
 .pagination li a:hover, .pagination .dropdown-visible a.dropdown-trigger, .nojs .pagination .dropdown-container:hover a.dropdown-trigger {
-  border-color: #d0d0d0;
-  background-color: #d0d0d0;
+  border-color: #2f2f2f;
+  background-color: #2f2f2f;
   color: #fff;
 }
 
 .pagination li.page-jump a:after {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .pagination li.page-jump a:hover:after {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 .copyright {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 .error {
@@ -5732,28 +5717,28 @@ dl.details dd {
 }
 
 .reported {
-  background-color: #362a25;
+  background-color: #ffdddd;
 }
 .reported.post {
-  border-color: rgb(44.9208791209, 34.9384615385, 30.7791208791);
-  border-left-color: rgb(63.0791208791, 49.0615384615, 43.2208791209);
-  border-top-color: rgb(63.0791208791, 49.0615384615, 43.2208791209);
+  border-color: rgb(255, 205.7, 205.7);
+  border-left-color: rgb(255, 236.3, 236.3);
+  border-top-color: rgb(255, 236.3, 236.3);
 }
 .reported .postprofile, .reported .signature {
-  border-color: rgb(44.9208791209, 34.9384615385, 30.7791208791);
+  border-color: rgb(255, 205.7, 205.7);
 }
 
 li.reported:hover {
-  background-color: #362a25;
+  background-color: #ffdddd;
 }
 
 div.rules {
-  background-color: rgb(28.1763888889, 33.5563184664, 42.3236111111);
+  background-color: rgb(221.6763888889, 227.0563184664, 235.8236111111);
   color: rgb(101.7638888889, 155.5631846635, 243.2361111111);
 }
 
 p.post-notice {
-  background-color: rgb(37.1763888889, 42.5563184664, 51.3236111111);
+  background-color: rgb(212.6763888889, 218.0563184664, 226.8236111111);
   color: rgb(101.7638888889, 155.5631846635, 243.2361111111);
   background-image: none;
 }
@@ -5778,53 +5763,53 @@ p.post-notice.reported:before, p.post-notice.error:before {
 }
 
 .topic-status.sticky {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 a {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 a:hover {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 a.time {
-  color: rgb(90.5, 90.5, 90.5);
+  color: rgb(164.5, 164.5, 164.5);
 }
 a.time:hover {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 .forumbg .header a, .forabg .header a, th a {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .forumbg .header a:hover, .forabg .header a:hover, th a:hover {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 .dropdown-extended a.mark_read {
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 
 a.top, a.top2 {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 a.top:hover, a.top2:hover {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 a.feed-icon-forum:after {
-  color: rgb(95.5, 95.5, 95.5);
+  color: rgb(159.5, 159.5, 159.5);
 }
 
 a.feed-icon-forum:hover:after {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 ul.topiclist li {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .forabg ul.topiclist li, .forumbg ul.topiclist li {
   background: transparent;
@@ -5843,16 +5828,16 @@ ul.topiclist li {
 }
 
 li.row {
-  border-top-color: rgb(40.2, 40.2, 40.2);
-  border-bottom-color: rgb(14.7, 14.7, 14.7);
+  border-top-color: rgb(235.2, 235.2, 235.2);
+  border-bottom-color: rgb(209.7, 209.7, 209.7);
 }
 li.row .forum-lastpost strong,
 li.row .subforums-list strong {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 li.row strong {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .icon-link + .list-inner > a.forumtitle,
@@ -5862,37 +5847,37 @@ a.subforum.unread {
 }
 
 .postbody {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .content {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .content h2, .panel h2 {
-  color: rgb(83.1634615385, 135.1377302275, 219.8365384615);
-  border-bottom-color: rgb(22.35, 22.35, 22.35);
+  color: rgb(167.8365384615, 194.2002979415, 237.1634615385);
+  border-bottom-color: rgb(217.35, 217.35, 217.35);
 }
 
 dl.faq dt {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .posthilit {
-  background-color: #362a25;
-  color: rgb(41.625, 102.375, 201.375);
+  background-color: #ffdddd;
+  color: rgb(118.2638888889, 159.5138888889, 226.7361111111);
 }
 
 .signature {
-  border-top-color: rgb(22.35, 22.35, 22.35);
+  border-top-color: rgb(217.35, 217.35, 217.35);
 }
 
 .notice {
-  border-top-color: rgb(22.35, 22.35, 22.35);
+  border-top-color: rgb(217.35, 217.35, 217.35);
 }
 
 blockquote {
-  background-color: rgb(40.2, 40.2, 40.2);
+  background-color: rgb(235.2, 235.2, 235.2);
   background-color: rgba(76, 130, 218, 0.3);
   border-color: transparent;
   border-left-color: rgb(134.7638888889, 163.4645931142, 210.2361111111);
@@ -5905,7 +5890,7 @@ blockquote {
 blockquote blockquote,
 blockquote .codebox,
 blockquote .attachbox {
-  background-color: rgb(35.1, 35.1, 35.1);
+  background-color: rgb(230.1, 230.1, 230.1);
   background-color: rgba(0, 0, 0, 0.1);
   border-left-color: rgb(208.8230769231, 223.4083423619, 247.1769230769);
 }
@@ -5919,7 +5904,7 @@ blockquote .attachbox {
 blockquote blockquote blockquote,
 blockquote blockquote .codebox,
 blockquote blockquote .attachbox {
-  background-color: rgb(37.65, 37.65, 37.65);
+  background-color: rgb(232.65, 232.65, 232.65);
   background-color: rgba(76, 130, 218, 0.3);
   border-left-color: rgb(134.7638888889, 163.4645931142, 210.2361111111);
 }
@@ -5931,11 +5916,11 @@ blockquote blockquote .attachbox {
 }
 
 blockquote:before {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 .codebox {
-  background-color: rgb(40.2, 40.2, 40.2);
+  background-color: rgb(235.2, 235.2, 235.2);
   background-color: rgba(76, 130, 218, 0.3);
   border-color: transparent;
   border-left-color: rgb(208.8230769231, 223.4083423619, 247.1769230769);
@@ -5946,7 +5931,7 @@ blockquote:before {
 }
 
 .codebox p {
-  border-bottom-color: rgb(30, 30, 30);
+  border-bottom-color: rgb(225, 225, 225);
   border-bottom-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -5955,7 +5940,7 @@ blockquote:before {
 }
 
 .attachbox {
-  background-color: rgb(40.2, 40.2, 40.2);
+  background-color: rgb(235.2, 235.2, 235.2);
   background-color: rgba(76, 130, 218, 0.3);
   border-color: transparent;
   border-left-color: rgb(208.8230769231, 223.4083423619, 247.1769230769);
@@ -5966,7 +5951,7 @@ blockquote:before {
 }
 
 .attachbox dd {
-  border-top-color: rgb(30, 30, 30);
+  border-top-color: rgb(225, 225, 225);
   border-top-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -5983,9 +5968,9 @@ dl.file dd {
 }
 
 dl.thumbnail img {
-  border-color: rgb(30, 30, 30);
+  border-color: rgb(225, 225, 225);
   border-color: rgba(0, 0, 0, 0.2);
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 
 dl.thumbnail dd {
@@ -5993,13 +5978,13 @@ dl.thumbnail dd {
 }
 
 fieldset.polls dl {
-  border-top-color: rgb(40.2, 40.2, 40.2);
-  border-bottom-color: rgb(14.7, 14.7, 14.7);
-  color: rgb(255, 255, 255);
+  border-top-color: rgb(235.2, 235.2, 235.2);
+  border-bottom-color: rgb(209.7, 209.7, 209.7);
+  color: rgb(0, 0, 0);
 }
 
 fieldset.polls dl.voted {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 fieldset.polls dd div {
@@ -6031,12 +6016,12 @@ fieldset.polls dd div {
 }
 
 .postprofile {
-  color: rgb(255, 255, 255);
-  border-color: rgb(22.35, 22.35, 22.35);
+  color: rgb(0, 0, 0);
+  border-color: rgb(217.35, 217.35, 217.35);
 }
 
 .postprofile strong {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .online-ribbon span {
@@ -6102,7 +6087,7 @@ dd.profile-warnings {
 }
 
 .buttons > .dropdown-select {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 .dropdown-select:after {
@@ -6134,7 +6119,7 @@ dd.profile-warnings {
 }
 
 .contact-icons a {
-  border-color: rgb(22.35, 22.35, 22.35);
+  border-color: rgb(217.35, 217.35, 217.35);
 }
 
 .jabber-icon:after {
@@ -6156,10 +6141,10 @@ dd.profile-warnings {
 }
 
 .icon-acp:after, .icon-bookmark:after, .icon-bump:after, .icon-contact:after, .icon-delete-cookies:after, .icon-download:after, .icon-faq:after, .icon-home:after, .icon-logout:after, .icon-login:after, .icon-mark:after, .icon-mcp:after, .icon-members:after, .icon-notification:after, .icon-pages:after, .icon-pm:after, .icon-print:after, .icon-profile:after, .icon-register:after, .icon-search:after, .icon-search-active:after, .icon-search-advanced:after, .icon-search-new:after, .icon-search-self:after, .icon-search-unanswered:after, .icon-search-unread:after, .icon-sendemail:after, .icon-subscribe:after, .icon-team:after, .icon-ucp:after, .icon-unsubscribe:after, .icon-new-posts:after, .icon-forums:after, .icon-chat:after, .icon-time:after, .icon-thanks:after, .icon-thanks_toplist:after {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .icon-acp:hover:after, .icon-bookmark:hover:after, .icon-bump:hover:after, .icon-contact:hover:after, .icon-delete-cookies:hover:after, .icon-download:hover:after, .icon-faq:hover:after, .icon-home:hover:after, .icon-logout:hover:after, .icon-login:hover:after, .icon-mark:hover:after, .icon-mcp:hover:after, .icon-members:hover:after, .icon-notification:hover:after, .icon-pages:hover:after, .icon-pm:hover:after, .icon-print:hover:after, .icon-profile:hover:after, .icon-register:hover:after, .icon-search:hover:after, .icon-search-active:hover:after, .icon-search-advanced:hover:after, .icon-search-new:hover:after, .icon-search-self:hover:after, .icon-search-unanswered:hover:after, .icon-search-unread:hover:after, .icon-sendemail:hover:after, .icon-subscribe:hover:after, .icon-team:hover:after, .icon-ucp:hover:after, .icon-unsubscribe:hover:after, .icon-new-posts:hover:after, .icon-forums:hover:after, .icon-chat:hover:after, .icon-time:hover:after, .icon-thanks:hover:after, .icon-thanks_toplist:hover:after {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 .icon-search-new:after, .icon-search-unanswered:after, .icon-search-unread:after {
@@ -6167,11 +6152,11 @@ dd.profile-warnings {
 }
 
 .icon-search-self:after {
-  color: rgb(90.5, 90.5, 90.5);
+  color: rgb(164.5, 164.5, 164.5);
 }
 
 .icon-home.breadcrumbs:after {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .icon-notification.non-zero:after, .icon-pm.non-zero:after {
@@ -6179,7 +6164,7 @@ dd.profile-warnings {
 }
 
 .icon-time:after {
-  color: rgb(90.5, 90.5, 90.5);
+  color: rgb(164.5, 164.5, 164.5);
 }
 
 /* Profile & navigation icons */
@@ -6410,17 +6395,17 @@ dd.profile-warnings {
   }
 }
 .panel-container .panel li.header dd, .panel-container .panel li.header dt {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .panel-container table.table1 thead th {
-  color: rgb(255, 255, 255);
-  border-bottom-color: rgb(22.35, 22.35, 22.35);
+  color: rgb(0, 0, 0);
+  border-bottom-color: rgb(217.35, 217.35, 217.35);
 }
 
 #cp-main .pm-message {
   border-color: #2d3745;
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 
 #tabs .tab > a {
@@ -6479,34 +6464,34 @@ dd.profile-warnings {
 }
 
 .panel-container h2 {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .panel-container .panel {
-  background: rgb(28.8, 32.8, 41.2);
+  background: rgb(157.8, 161.8, 170.2);
   box-shadow: none;
   border-width: 0;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 }
 .panel-container .panel > .inner > h3:first-child {
   background-color: transparent;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   box-shadow: none;
   background-image: none;
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 }
 .panel-container .panel > .inner > h3:first-child a {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .panel-container .panel > .inner > h3:first-child a:hover {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 .panel-container .panel:before, .panel-container .panel:after {
   background: transparent;
 }
 
 #cp-main .pm {
-  background-color: rgb(30, 30, 30);
+  background-color: rgb(225, 225, 225);
 }
 
 .cp-mini {
@@ -6514,7 +6499,7 @@ dd.profile-warnings {
 }
 
 .current {
-  color: rgb(255, 255, 255) !important;
+  color: rgb(0, 0, 0) !important;
 }
 
 .pmlist li.pm_message_reported_colour, .pm_message_reported_colour {
@@ -6540,7 +6525,7 @@ dd.profile-warnings {
 
 #gallery label {
   background: #272f3e;
-  border-color: rgb(22.35, 22.35, 22.35);
+  border-color: rgb(217.35, 217.35, 217.35);
 }
 
 #gallery label:hover {
@@ -6554,15 +6539,15 @@ select {
 }
 
 label {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 option.disabled-option {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 dd label {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 fieldset.fields1 {
@@ -6570,7 +6555,7 @@ fieldset.fields1 {
 }
 
 fieldset dl:hover dt label {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 fieldset.fields2 dl:hover dt label {
@@ -6578,11 +6563,11 @@ fieldset.fields2 dl:hover dt label {
 }
 
 #message-box textarea.drag-n-drop {
-  outline-color: rgba(90.5, 90.5, 90.5, 0.5);
+  outline-color: rgba(164.5, 164.5, 164.5, 0.5);
 }
 
 #message-box textarea.drag-n-drop-highlight {
-  outline-color: rgba(161, 161, 161, 0.5);
+  outline-color: rgba(94, 94, 94, 0.5);
 }
 
 a.button1, input.button1, input.button3, a.button2, input.button2 {
@@ -6614,24 +6599,24 @@ input.button1:focus, input.button2:focus, input.button3:focus {
 }
 
 input.disabled {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 .phpbb_alert {
-  background-color: rgb(20, 20, 20);
-  border-color: rgb(22.35, 22.35, 22.35);
+  background-color: rgb(235, 235, 235);
+  border-color: rgb(217.35, 217.35, 217.35);
 }
 
 .phpbb_alert .alert_close:before {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .phpbb_alert .alert_close:hover:before {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 .phpbb_alert .alert_close:after {
-  color: rgb(20, 20, 20);
+  color: rgb(235, 235, 235);
 }
 
 .darken {
@@ -6644,17 +6629,17 @@ input.disabled {
 }
 
 .dropdown-extended ul li {
-  border-top-color: rgb(22.35, 22.35, 22.35);
+  border-top-color: rgb(217.35, 217.35, 217.35);
 }
 
 .dropdown-extended ul li:hover {
   background-color: #272f3e;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .dropdown-extended .header, .dropdown-extended .footer {
-  border-color: rgb(22.35, 22.35, 22.35);
-  color: rgb(255, 255, 255);
+  border-color: rgb(217.35, 217.35, 217.35);
+  color: rgb(0, 0, 0);
 }
 
 .dropdown-extended .footer {
@@ -6674,15 +6659,15 @@ input.disabled {
 }
 
 ul.linklist li.responsive-menu a.responsive-menu-link:before {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist li.responsive-menu.visible a.responsive-menu-link:before {
-  color: #d0d0d0;
+  color: #2f2f2f;
 }
 
 .dropdown .dropdown-contents {
-  background: rgb(30, 30, 30);
+  background: rgb(225, 225, 225);
   border-color: rgb(76, 130, 218);
   box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.5);
 }
@@ -6692,23 +6677,23 @@ ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist 
 }
 
 .dropdown li, .dropdown li li {
-  border-color: rgb(4.5, 4.5, 4.5);
+  border-color: rgb(250.5, 250.5, 250.5);
 }
 
 .dropdown li.separator {
-  border-color: rgb(4.5, 4.5, 4.5);
+  border-color: rgb(250.5, 250.5, 250.5);
 }
 
 .notification_list li.notification-reported strong, .notification_list li.notification-disapproved strong {
   color: rgb(76, 130, 218);
 }
 .notification_list li.dropdown-notification {
-  background-color: rgb(30, 30, 30);
-  color: rgb(255, 255, 255);
+  background-color: rgb(225, 225, 225);
+  color: rgb(0, 0, 0);
 }
 .notification_list li.dropdown-notification, .panel-container .notification_list li.dropdown-notification {
-  border-top-color: rgb(42.75, 42.75, 42.75);
-  border-bottom-color: rgb(17.25, 17.25, 17.25);
+  border-top-color: rgb(237.75, 237.75, 237.75);
+  border-bottom-color: rgb(212.25, 212.25, 212.25);
 }
 .notification_list li.dropdown-notification strong {
   color: #fff;
@@ -6717,7 +6702,7 @@ ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist 
   color: inherit;
 }
 .notification_list li.dropdown-notification p.notification-time, .notification_list li.dropdown-notification p.notifications_time {
-  color: rgb(187.5, 187.5, 187.5);
+  color: rgb(67.5, 67.5, 67.5);
 }
 .notification_list li.dropdown-notification a.mark_read {
   background-color: #fff !important;
@@ -6726,12 +6711,12 @@ ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist 
   color: rgb(76, 130, 218) !important;
 }
 .notification_list li.bg3 {
-  background-color: hsl(217.1830985915, 0%, 7.8431372549%);
+  background-color: hsl(217.1830985915, 0%, 92.1568627451%);
   color: rgb(76, 130, 218);
 }
 .notification_list li.bg3, .panel-container .notification_list li.bg3 {
-  border-top-color: hsl(217.1830985915, 0%, 12.8431372549%);
-  border-bottom-color: hsl(217.1830985915, 0%, 2.8431372549%);
+  border-top-color: hsl(217.1830985915, 0%, 97.1568627451%);
+  border-bottom-color: hsl(217.1830985915, 0%, 87.1568627451%);
 }
 .notification_list li.bg3 strong {
   color: #fff;
@@ -6740,7 +6725,7 @@ ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist 
   color: inherit;
 }
 .notification_list li.bg3 p.notification-time, .notification_list li.bg3 p.notifications_time {
-  color: rgb(86.425, 103.5186619718, 131.375);
+  color: rgb(144.1, 166.3845070423, 202.7);
 }
 .notification_list li.bg3 a.mark_read {
   background-color: #fff !important;
@@ -6750,7 +6735,7 @@ ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist 
 }
 .notification_list li.dropdown-notification:hover {
   background-color: #272f3e;
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 .notification_list li.dropdown-notification:hover, .panel-container .notification_list li.dropdown-notification:hover {
   border-top-color: rgb(58.6930693069, 70.7326732673, 93.3069306931);
@@ -6763,7 +6748,7 @@ ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist 
   color: inherit;
 }
 .notification_list li.dropdown-notification:hover p.notification-time, .notification_list li.dropdown-notification:hover p.notifications_time {
-  color: rgb(193.65, 193.65, 193.65);
+  color: rgb(15.15, 15.15, 15.15);
 }
 .notification_list li.dropdown-notification:hover a.mark_read {
   background-color: black;
@@ -6772,7 +6757,7 @@ ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist 
   color: #fff;
 }
 .notification_list li.dropdown-notification:hover a.mark_read:hover, .notification_list li.dropdown-notification:hover a.mark_read:after:hover {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .imageset.icon_post_target {
@@ -6794,11 +6779,11 @@ ul.linklist li.responsive-menu a.responsive-menu-link:hover:before, ul.linklist 
 }
 
 .imageset.icon_topic_attach:after {
-  color: #a1a1a1;
+  color: #5e5e5e;
 }
 
 .imageset.icon_topic_poll:after {
-  color: rgb(123.02, 141.7146478873, 172.18);
+  color: rgb(150.32, 177.9132394366, 222.88);
 }
 
 /* --------------------------------------------------------------
@@ -7351,4 +7336,4 @@ th {
   position: fixed;
 }
 
-/*# sourceMappingURL=stylesheet.css.map */
+/*# sourceMappingURL=stylesheet-light.css.map */
