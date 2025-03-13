@@ -45,9 +45,9 @@ $lang = array_merge($lang, [
 	'MCHAT_NAVBAR_RULES'			=> 'Normes',
 
 	// Who is chatting
-	'MCHAT_WHO_IS_CHATTING'			=> 'Qui és al xat',
+	'MCHAT_WHO_IS_CHATTING'			=> 'Usuaris al xat',
 	'MCHAT_ONLINE_USERS_TOTAL'		=> [
-		0 => 'No hi ha ningú',
+		0 => 'No hi ha ningú al xat',
 		1 => 'Hi ha <strong>%1$d</strong> usuari',
 		2 => 'Hi ha <strong>%1$d</strong> usuaris',
 	],

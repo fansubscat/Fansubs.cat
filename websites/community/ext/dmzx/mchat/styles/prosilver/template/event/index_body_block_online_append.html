@@ -3,5 +3,5 @@
 	</div>
 	<div class="stat-block online-list mchat-stats-index">
 		<h3><a href="{% if U_MCHAT_CUSTOM_PAGE and not MCHAT_INDEX %}{{ U_MCHAT_CUSTOM_PAGE }}{% endif %}#mChat">{{ lang('MCHAT_WHO_IS_CHATTING') }}</a></h3>
-		<p>{{ MCHAT_USERS_TOTAL }} {{ MCHAT_ONLINE_EXPLAIN }}<br>{{ MCHAT_USERS_LIST }}
+		<p><!-- IF MCHAT_USERS_TOTAL != 'No hi ha ningú al xat' -->{{ MCHAT_USERS_LIST }}<!-- ENDIF --><!-- IF MCHAT_USERS_TOTAL == 'No hi ha ningú al xat' -->{{ MCHAT_USERS_TOTAL }}<!-- ENDIF -->
 {% endif %}
