@@ -6,8 +6,12 @@ include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (!empty($_GET['delete_id']) && $_SESSION['admin_level']>=3) {
+		if (!DISABLE_COMMUNITY) {
+			delete_comment_from_community($_GET['delete_id']);
+		}
 		log_action("delete-comment", "S’ha suprimit el comentari amb identificador ".$_GET['delete_id']." i les seves respostes (si n’hi havia)");
-		query("DELETE FROM comment WHERE id=".escape($_GET['delete_id'])." OR reply_to_comment_id=".escape($_GET['delete_id']));
+		query("DELETE FROM comment WHERE reply_to_comment_id=".escape($_GET['delete_id']));
+		query("DELETE FROM comment WHERE id=".escape($_GET['delete_id']));
 		$_SESSION['message']="S’ha suprimit correctament.";
 		if (!empty($_GET['source_version_id']) && !empty($_GET['source_type'])) {
 			header('Location: version_stats.php?type='.$_GET['source_type'].'&id='.$_GET['source_version_id']);

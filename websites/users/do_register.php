@@ -16,6 +16,8 @@ function sendRegistrationEmail($email, $username) {
 }
 
 function register_user(){
+	global $db_connection;
+	
 	//Check if we have all the data
 	if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
 		http_response_code(400);
@@ -64,6 +66,18 @@ function register_user(){
 		return array('result' => 'ko', 'code' => 8);
 	}
 
+	//Check that username is not an e-mail address
+	if (preg_match("/.*@.*\\..*/",$username)) {
+		http_response_code(400);
+		return array('result' => 'ko', 'code' => 11);
+	}
+
+	//Check that username has no unsupported emojis
+	if (preg_match("/[\x{10000}-\x{10FFFF}]/u",$username)) {
+		http_response_code(400);
+		return array('result' => 'ko', 'code' => 12);
+	}
+
 	//Check not from a blocked domain
 	foreach (BLACKLISTED_EMAIL_DOMAINS as $domain) {
 		if (string_ends_with($email_address, $domain)) {
@@ -90,6 +104,33 @@ function register_user(){
 
 	//Insert user
 	query_insert_registered_user($username, $password, $email_address, $birth_year."-".$birth_month."-".$birth_day);
+	$user_id=mysqli_insert_id($db_connection);
+	
+	//Register in community too
+	if (!DISABLE_COMMUNITY) {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/create_user');
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, 
+			  json_encode(array(
+			  	'username' => $username,
+			  	'email' => $email_address,
+			  	'birthdate' => $birth_year."-".$birth_month."-".$birth_day,
+			  	)));
+		$output = curl_exec($curl);
+		
+		curl_close($curl);
+
+		$result = json_decode($output);
+
+		if (!empty($result) && $result->status=='ok') {
+			query("UPDATE user SET forum_user_id=".$result->user_id." WHERE id=".$user_id);
+		}
+	}
+	
 	sendRegistrationEmail($email_address, $username);
 
 	//Set the session username, the next request will fill in the $user variable automatically

@@ -29,6 +29,39 @@ function leave_comment(){
 	//Update DB
 	query_insert_comment($user['id'], $version_id, $text, $has_spoilers);
 	$comment_id=mysqli_insert_id($db_connection);
+	
+	//Get version data to post
+	//Post to the community
+	if (!DISABLE_COMMUNITY) {
+		$query = query_comment_for_forum_posting($comment_id);
+		if ($comment = mysqli_fetch_assoc($query)) {
+			if (!empty($comment['forum_topic_id']) && $comment['user_status']!=1) {
+				$curl = curl_init();
+				curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/add_reply');
+				curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+				curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($curl, CURLOPT_POST, true);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, 
+					  json_encode(array(
+					  	'username' => $comment['username'],
+					  	'topic_id' => $comment['forum_topic_id'],
+					  	'subject' => 'Re: '. $comment['version_title'].' ('.$comment['version_fansub_names'].')',
+					  	'message' => ($comment['has_spoilers'] ? '[spoiler]' : '').$comment['text'].($comment['has_spoilers'] ? '[/spoiler]' : ''),
+					  	'timestamp' => date('U'),
+					  	)));
+					$output = curl_exec($curl);
+					curl_close($curl);
+
+					$result = json_decode($output);
+
+					if (!empty($result) && $result->status=='ok') {
+						query("UPDATE comment SET forum_post_id=".$result->post_id." WHERE id=".$comment_id);
+					}
+			}
+		}
+	}
+	
 	$result = query_comment_episode_title($comment_id);
 	$row = mysqli_fetch_assoc($result);
 

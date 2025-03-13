@@ -38,7 +38,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			log_action("reply-comment", "S’ha respost al comentari amb identificador ".$_POST['reply_to_comment_id']);
 			query("INSERT INTO comment (user_id, version_id, type, fansub_id, reply_to_comment_id, last_replied, text, created, updated)
 			VALUES (NULL, ".$data['version_id'].", '".$data['type']."', ".$data['fansub_id'].", ".$data['reply_to_comment_id'].", CURRENT_TIMESTAMP, '".$data['text']."', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+			$inserted_id=mysqli_insert_id($db_connection);
 			query("UPDATE comment SET last_replied=CURRENT_TIMESTAMP WHERE id=".$data['reply_to_comment_id']);
+			if (!DISABLE_COMMUNITY) {
+				add_comment_to_community($inserted_id);
+			}
 		}
 
 		$_SESSION['message']="S’han desat les dades correctament.";

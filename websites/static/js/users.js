@@ -194,6 +194,10 @@ function register() {
 				addValidation('register_email',lang('js.users.register.server_error.email_domain_banned'));
 			} else if (response.code==10) {
 				addValidationOnlyText('register_birthday',lang('js.users.register.server_error.must_be_18'));
+			} else if (response.code==11) {
+				addValidationOnlyText('register_username',lang('js.users.register.server_error.username_is_email'));
+			} else if (response.code==12) {
+				addValidationOnlyText('register_username',lang('js.users.register.server_error.username_has_emoji'));
 			} else {
 				addValidationOnlyText('register_generic',lang('js.users.register.server_error.generic'));
 			}
@@ -564,6 +568,10 @@ function editProfile() {
 				addValidation('edit_profile_email',lang('js.users.edit_profile.server_error.email_domain_banned'));
 			} else if (response.code==10) {
 				addValidation('edit_profile_username',lang('js.users.edit_profile.server_error.user_exists'));
+			} else if (response.code==11) {
+				addValidationOnlyText('register_username',lang('js.users.edit_profile.server_error.username_is_email'));
+			} else if (response.code==12) {
+				addValidationOnlyText('register_username',lang('js.users.edit_profile.server_error.username_has_emoji'));
 			} else {
 				addValidationOnlyText('edit_profile_generic',lang('js.users.edit_profile.server_error.generic'));
 			}

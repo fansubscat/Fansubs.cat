@@ -105,6 +105,17 @@ function toggleSiteTheme() {
 		$('.theme-button-text').text(lang('js.menu.change_theme.light'));
 		newTheme='dark';
 	}
+	if ($('#phpbb').length>0) {
+		$('link[rel="stylesheet"]').each(function () {
+			if (this.href.indexOf('stylesheet-')>=0) {
+				if (newTheme=='light') {
+					this.href = this.href.replace('stylesheet-dark', 'stylesheet-light');
+				} else {
+					this.href = this.href.replace('stylesheet-light', 'stylesheet-dark');
+				}
+			}
+		});
+	}
 	$('html')[0].offsetHeight; //Triggers reflow
 	$('html').removeClass('notransition');
 

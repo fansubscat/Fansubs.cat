@@ -41,6 +41,7 @@ CREATE TABLE `comment` (
   `text` text NOT NULL,
   `last_seen_episode_id` int(11) DEFAULT NULL,
   `has_spoilers` tinyint(1) NOT NULL DEFAULT 0,
+  `forum_post_id` int(11) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -286,6 +287,7 @@ CREATE TABLE `user` (
   `previous_chapters_read_behavior` int(11) NOT NULL DEFAULT 0,
   `site_theme` tinyint(1) NOT NULL DEFAULT 0,
   `status` int(11) NOT NULL DEFAULT 0,
+  `forum_user_id` int(11) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -336,6 +338,8 @@ CREATE TABLE `version` (
   `completed_date` timestamp NULL DEFAULT NULL,
   `storage_folder` varchar(2048) DEFAULT NULL,
   `storage_processing` int(11) DEFAULT NULL,
+  `forum_topic_id` int(11) DEFAULT NULL,
+  `forum_post_id` int(11) DEFAULT NULL,
   `files_updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `files_updated_by` varchar(200) NOT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),

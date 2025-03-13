@@ -39,6 +39,14 @@ function get_fansub_preposition_name($text){
 	return "de $text";
 }
 
+function get_fansub_preposition_alone($text){
+	$first = substr($text, 0, 1);
+	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
+		return "d’";
+	}
+	return "de ";
+}
+
 function get_hours_or_minutes_formatted($time){
 	if ($time>=3600) {
 		$hours = floor($time/3600);
@@ -273,6 +281,207 @@ function get_public_site_url($type, $slug, $is_hentai) {
 		$link_url = str_replace(MAIN_DOMAIN, HENTAI_DOMAIN, $link_url);
 	}
 	return $link_url.'/'.$slug;
+}
+
+function add_or_update_topic_to_community($version_id){
+	$result = query("SELECT v.*,
+			UNIX_TIMESTAMP(v.created) version_created_timestamp,
+			s.type series_type,
+			s.rating series_rating,
+			GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_names
+		FROM version v
+			LEFT JOIN series s ON v.series_id=s.id
+			LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+			LEFT JOIN fansub f ON vf.fansub_id=f.id
+		WHERE v.id=".escape($version_id)."
+		GROUP BY v.id");
+	$version = mysqli_fetch_assoc($result) or crash('Version not found');
+	mysqli_free_result($result);
+	
+	if ($version['is_hidden']==1) {
+		return;
+	}
+	
+	if ($version['series_rating']=='XXX' && $version['series_type']=='anime') {
+		$forum_id = 16;
+		$url = str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,ANIME_URL);
+		$static_url = str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,STATIC_URL);
+		$site = HENTAI_SITE_NAME;
+		$type = "Mira aquest anime";
+	} else if ($version['series_rating']=='XXX' && $version['series_type']=='manga') {
+		$forum_id = 17;
+		$url = str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,MANGA_URL);
+		$static_url = str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,STATIC_URL);
+		$site = HENTAI_SITE_NAME;
+		$type = "Llegeix aquest manga";
+	} else if ($version['series_type']=='manga') {
+		$forum_id = 5;
+		$url = MANGA_URL;
+		$static_url = STATIC_URL;
+		$site = MAIN_SITE_NAME;
+		$type = "Llegeix aquest manga";
+	} else if ($version['series_type']=='liveaction') {
+		$forum_id = 6;
+		$url = LIVEACTION_URL;
+		$static_url = STATIC_URL;
+		$site = MAIN_SITE_NAME;
+		$type = "Mira aquest contingut d’acció real";
+	} else { //Anime
+		$forum_id = 4;
+		$url = ANIME_URL;
+		$static_url = STATIC_URL;
+		$site = MAIN_SITE_NAME;
+		$type = "Mira aquest anime";
+	}
+	
+	$message = "[center][size=150][b]".$version['title']."[/b][/size]\nVersió ".get_fansub_preposition_name($version['fansub_names'])."\n\n[img]".$static_url."/images/covers/version_".$version['id'].".jpg[/img]\n\n\n[size=125][b]Sinopsi:[/b][/size]\n".$version['synopsis']."\n\n[color=#6AA0F8][size=125][b][u][url=".$url."/".$version['slug']."]".$type." a ".$site."[/url][/u][/b][/size][/color][/center]";
+	
+	if (empty($version['forum_topic_id'])) {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/add_topic');
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, 
+			  json_encode(array(
+			  	'username' => 'Fansubs.cat',
+			  	'forum_id' => $forum_id,
+			  	'subject' => $version['title'].' ('.$version['fansub_names'].')',
+			  	'message' => $message,
+			  	'timestamp' => $version['version_created_timestamp'],
+			  	)));
+		$output = curl_exec($curl);
+		
+		curl_close($curl);
+
+		$result = json_decode($output);
+
+		if (empty($result) || $result->status!='ok') {
+			crash("La versió s’ha desat, però no s’ha pogut crear el tema a la comunitat.");
+		} else {
+			query("UPDATE version SET forum_topic_id=".$result->topic_id.",forum_post_id=".$result->post_id." WHERE id=".$version['id']);
+		}
+	} else {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/edit_post');
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, 
+			  json_encode(array(
+			  	'post_id' => $version['forum_post_id'],
+			  	'subject' => $version['title'].' ('.$version['fansub_names'].')',
+			  	'message' => $message,
+			  	)));
+		$output = curl_exec($curl);
+		
+		curl_close($curl);
+
+		$result = json_decode($output);
+
+		if (empty($result) || $result->status!='ok') {
+			crash("La versió s’ha desat, però no s’ha pogut actualitzar el tema a la comunitat.");
+		}
+	}
+}
+
+function add_comment_to_community($comment_id){
+	$result = query("SELECT c.*, v.forum_topic_id,
+			u.username,
+			UNIX_TIMESTAMP(c.created) comment_created_timestamp,
+			v.title version_title,
+			f.name comment_fansub_name,
+			GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') version_fansub_names,
+			c2.forum_post_id reply_to_forum_post_id,
+			u2.username reply_to_username,
+			c2.text reply_to_text
+		FROM comment c
+			LEFT JOIN version v ON c.version_id=v.id
+			LEFT JOIN series s ON v.series_id=s.id
+			LEFT JOIN user u ON c.user_id=u.id
+			LEFT JOIN fansub f ON c.fansub_id=f.id
+			LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+			LEFT JOIN fansub fa ON vf.fansub_id=fa.id
+			LEFT JOIN comment c2 ON c.reply_to_comment_id=c2.id
+			LEFT JOIN user u2 ON c2.user_id=u2.id
+		WHERE c.id=".escape($comment_id)."
+		GROUP BY c.id");
+	$comment = mysqli_fetch_assoc($result) or crash('Comment not found');
+	mysqli_free_result($result);
+	
+	if (empty($comment['forum_topic_id'])) {
+		return;
+	}
+	
+	if ($comment['type']=='fansub') {
+		$prepend_text .= '[size=115]Missatge en nom '.get_fansub_preposition_alone($comment['comment_fansub_name']).'[color=#6AA0F8][b]'.$comment['comment_fansub_name'].'[/b][/color]:[/size]'."\n\n";
+	} else if ($comment['type']=='admin') {
+		$prepend_text .= '[size=115]Missatge en nom de [color=#6AA0F8][b]Fansubs.cat[/b][/color]:[/size]'."\n\n";
+	}
+	
+	if (!empty($comment['reply_to_comment_id'])) {
+		$prepend_text .= "\n".'[quote='.$comment['reply_to_username'].' post_id='.$comment['reply_to_forum_post_id'].']'.$comment['reply_to_text'].'[/quote]';
+	}
+
+	$curl = curl_init();
+	curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/add_reply');
+	curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_POST, true);
+	curl_setopt($curl, CURLOPT_POSTFIELDS, 
+		  json_encode(array(
+		  	'username' => $comment['type']=='user' ? $comment['username'] : 'Fansubs.cat',
+		  	'topic_id' => $comment['forum_topic_id'],
+		  	'subject' => 'Re: '. $comment['version_title'].' ('.$comment['version_fansub_names'].')',
+		  	'message' => $prepend_text.($comment['has_spoilers'] ? '[spoiler]' : '').$comment['text'].($comment['has_spoilers'] ? '[/spoiler]' : ''),
+		  	'timestamp' => $comment['comment_created_timestamp'],
+		  	)));
+	$output = curl_exec($curl);
+	
+	curl_close($curl);
+
+	$result = json_decode($output);
+
+	if (empty($result) || $result->status!='ok') {
+		crash("El comentari s’ha desat, però no s’ha pogut publicar a la comunitat.");
+	} else {
+		query("UPDATE comment SET forum_post_id=".$result->post_id." WHERE id=".$comment['id']);
+	}
+}
+
+function delete_comment_from_community($comment_id){
+	$result = query("SELECT c.*
+		FROM comment c
+		WHERE c.id=".escape($comment_id)."
+		GROUP BY c.id");
+	$comment = mysqli_fetch_assoc($result) or crash('Comment not found');
+	mysqli_free_result($result);
+	
+	if (empty($comment['forum_post_id'])) {
+		return;
+	}
+
+	$curl = curl_init();
+	curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/delete_post');
+	curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_POST, true);
+	curl_setopt($curl, CURLOPT_POSTFIELDS, 
+		  json_encode(array(
+		  	'post_id' => $comment['forum_post_id'],
+		  	)));
+	$output = curl_exec($curl);
+	curl_close($curl);
+
+	$result = json_decode($output);
+
+	if (empty($result) || $result->status!='ok') {
+		crash("No s’ha pogut eliminar el comentari de la comunitat.");
+	}
 }
 
 function print_helper_box($title, $description, $white=FALSE) {

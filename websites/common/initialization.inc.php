@@ -45,6 +45,7 @@ if (str_ends_with(strtolower($_SERVER['HTTP_HOST']), HENTAI_DOMAIN)) {
 //Website URLs (no final slash)
 //These URLs do not change depending on the host, they are always on the main domain:
 define('ADVENT_URL', 'https://'.ADVENT_SUBDOMAIN.'.'.MAIN_DOMAIN);
+define('COMMUNITY_URL', 'https://'.COMMUNITY_SUBDOMAIN.'.'.MAIN_DOMAIN);
 define('ADMIN_URL', 'https://'.ADMIN_SUBDOMAIN.'.'.MAIN_DOMAIN);
 define('RESOURCES_URL', 'https://'.RESOURCES_SUBDOMAIN.'.'.MAIN_DOMAIN);
 define('STATUS_URL', 'https://'.STATUS_SUBDOMAIN.'.'.MAIN_DOMAIN);

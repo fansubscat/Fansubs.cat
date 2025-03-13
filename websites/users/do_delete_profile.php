@@ -40,6 +40,22 @@ function delete_profile(){
 	query_update_view_sessions_for_user_removal($user['id']);
 	query_update_comments_for_user_removal($user['id']);
 	query_delete_user($user['id']);
+	
+	//Delete from community
+	if (!DISABLE_COMMUNITY) {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/delete_user');
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, 
+			  json_encode(array(
+			  	'user_id' => $user['forum_user_id'],
+			  	)));
+		curl_exec($curl);
+		curl_close($curl);
+	}
 
 	sendDeleteProfileEmail($user['email'], $user['username']);
 

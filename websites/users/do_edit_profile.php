@@ -54,6 +54,18 @@ function edit_profile(){
 		return array('result' => 'ko', 'code' => 8);
 	}
 
+	//Check that username is not an e-mail address
+	if (preg_match("/.*@.*\\..*/",$username)) {
+		http_response_code(400);
+		return array('result' => 'ko', 'code' => 11);
+	}
+
+	//Check that username has no unsupported emojis
+	if (preg_match("/[\x{10000}-\x{10FFFF}]/u",$username)) {
+		http_response_code(400);
+		return array('result' => 'ko', 'code' => 12);
+	}
+
 	//Check not from a blocked domain
 	foreach (BLACKLISTED_EMAIL_DOMAINS as $domain) {
 		if (string_ends_with($email_address, $domain)) {
@@ -82,8 +94,29 @@ function edit_profile(){
 		query_update_user_profile($user['id'], $username, $email_address, $birth_year."-".$birth_month."-".$birth_day, NULL);
 	} else {
 		$avatar_filename = get_nanoid().'.png';
+		$user['avatar_filename'] = $avatar_filename;
 		file_put_contents(STATIC_DIRECTORY.'/images/avatars/'.$avatar_filename, file_get_contents($avatar));
 		query_update_user_profile($user['id'], $username, $email_address, $birth_year."-".$birth_month."-".$birth_day, $avatar_filename);
+	}
+	
+	//Update profile in community too
+	if (!DISABLE_COMMUNITY) {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/update_profile');
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, 
+			  json_encode(array(
+			  	'username_old' => $user['username'],
+			  	'username' => $username,
+			  	'email' => $email_address,
+			  	'avatar_url' => !empty($user['avatar_filename']) ? 'https://static.fansubs.cat/images/avatars/'.$user['avatar_filename'] : 'https://static.fansubs.cat/images/site/default_avatar.jpg',
+			  	'birthdate' => $birth_year."-".$birth_month."-".$birth_day,
+			  	)));
+		curl_exec($curl);
+		curl_close($curl);
 	}
 
 	//Set the session username (in case it was changed), the next request will fill in the $user variable automatically

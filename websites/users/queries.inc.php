@@ -190,6 +190,26 @@ function query_comment_episode_title($comment_id) {
 	return query($final_query);
 }
 
+function query_comment_for_forum_posting($comment_id) {
+	$comment_id = intval($comment_id);
+	$final_query = "SELECT c.*,
+				v.forum_topic_id,
+				u.status user_status,
+				u.username,
+				UNIX_TIMESTAMP(c.created) comment_created_timestamp,
+				v.title version_title,
+				GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') version_fansub_names
+			FROM comment c
+				LEFT JOIN version v ON c.version_id=v.id
+				LEFT JOIN series s ON v.series_id=s.id
+				LEFT JOIN user u ON c.user_id=u.id
+				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
+				LEFT JOIN fansub fa ON vf.fansub_id=fa.id
+			WHERE c.id=$comment_id
+			GROUP BY c.id";
+	return query($final_query);
+}
+
 // UPDATE
 
 function query_update_user_reset_password_code_by_user_id($code, $user_id) {

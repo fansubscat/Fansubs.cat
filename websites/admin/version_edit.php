@@ -605,6 +605,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			update_version_preview($data['id']);
+			if (!DISABLE_COMMUNITY) {
+				add_or_update_topic_to_community($data['id']);
+			}
 
 			$_SESSION['message']="S’han desat les dades correctament.";
 		}
@@ -679,6 +682,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			update_version_preview($inserted_id);
+			if (!DISABLE_COMMUNITY) {
+				add_or_update_topic_to_community($inserted_id);
+			}
 
 			$_SESSION['message']="S’han desat les dades correctament.";
 		}
