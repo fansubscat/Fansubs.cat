@@ -113,15 +113,7 @@ class flair extends base
 	 */
 	public function get_title()
 	{
-		return $this->language->lang('FLAIR_NOTIFICATION_TITLE');
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function get_reference()
-	{
-		return $this->get_data('flair_name');
+		return $this->language->lang('FLAIR_NOTIFICATION_TITLE', $this->get_data('flair_name'));
 	}
 
 	/**
@@ -147,8 +139,6 @@ class flair extends base
 	{
 		return array(
 			'FLAIR_NAME'	=> $this->get_data('flair_name'),
-
-			'U_FLAIR'	=> generate_board_url(true) . $this->helper->route('stevotvr_flair_legend') . '#flair' . $this->get_data('flair_id'),
 			'U_PROFILE'	=> generate_board_url() . '/memberlist.' . $this->php_ext . '?mode=viewprofile&u=' . $this->get_data('user_id'),
 		);
 	}

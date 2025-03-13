@@ -2,8 +2,6 @@
 		{% if cat.CAT_NAME %}<h4>{{ cat.CAT_NAME }}</h4>{% endif %}
 
 		{% for item in cat.item %}
-			{% if U_FLAIR_LEGEND %}<a href="{{ U_FLAIR_LEGEND }}#flair{{ item.FLAIR_ID }}">{% endif %}
 				{% include '@stevotvr_flair/flair_item.html' with item %}
-			{% if U_FLAIR_LEGEND %}</a>{% endif %}
 		{% endfor %}
 	{% endfor %}

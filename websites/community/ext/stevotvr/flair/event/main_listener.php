@@ -181,7 +181,6 @@ class main_listener implements EventSubscriberInterface
 
 		$this->template->assign_vars(array(
 			'FLAIR_TITLE'		=> $this->language->lang('FLAIR_PROFILE_TITLE', $username),
-			'U_FLAIR_LEGEND'	=> $this->helper->route('stevotvr_flair_legend'),
 		));
 
 		foreach ($user_flair[$user_id] as $category)
@@ -198,11 +197,13 @@ class main_listener implements EventSubscriberInterface
 					'FLAIR_SIZE'		=> 2,
 					'FLAIR_ID'			=> $entity->get_id(),
 					'FLAIR_NAME'		=> $entity->get_name(),
+					'FLAIR_DESC'		=> $entity->get_desc_for_display(),
 					'FLAIR_COLOR'		=> $entity->get_color(),
 					'FLAIR_ICON'		=> $entity->get_icon(),
 					'FLAIR_ICON_COLOR'	=> $entity->get_icon_color(),
 					'FLAIR_ICON_WIDTH'	=> $entity->get_icon_width(),
 					'FLAIR_IMG'			=> $this->img_path . $entity->get_img(2),
+					'FLAIR_IMG_BIG'			=> $this->img_path . $entity->get_img(3),
 					'FLAIR_FONT_COLOR'	=> $entity->get_font_color(),
 					'FLAIR_COUNT'		=> $item['count'],
 				));
@@ -258,8 +259,6 @@ class main_listener implements EventSubscriberInterface
 			return;
 		}
 
-		$this->template->assign_var('U_FLAIR_LEGEND', $this->helper->route('stevotvr_flair_legend'));
-
 		foreach ($user_flair as $user_id => $user)
 		{
 			foreach ($user as $category_id => $category)
@@ -272,11 +271,13 @@ class main_listener implements EventSubscriberInterface
 					$user_cache[$user_id]['flair'][$category_id]['items'][$entity->get_id()] = array(
 						'type'			=> $entity->get_type(),
 						'name'			=> $entity->get_name(),
+						'desc'		=> $entity->get_desc_for_display(),
 						'color'			=> $entity->get_color(),
 						'icon'			=> $entity->get_icon(),
 						'icon_color'	=> $entity->get_icon_color(),
 						'icon_width'	=> $entity->get_icon_width(),
 						'img'			=> $entity->get_img(1),
+						'img_big'			=> $entity->get_img(3),
 						'font_color'	=> $entity->get_font_color(),
 						'count'			=> $item['count'],
 					);
@@ -316,11 +317,13 @@ class main_listener implements EventSubscriberInterface
 					'FLAIR_TYPE'		=> $item['type'],
 					'FLAIR_ID'			=> $item_id,
 					'FLAIR_NAME'		=> $item['name'],
+					'FLAIR_DESC'		=> $item['desc'],
 					'FLAIR_COLOR'		=> $item['color'],
 					'FLAIR_ICON'		=> $item['icon'],
 					'FLAIR_ICON_COLOR'	=> $item['icon_color'],
 					'FLAIR_ICON_WIDTH'	=> $item['icon_width'],
 					'FLAIR_IMG'			=> $this->img_path . $item['img'],
+					'FLAIR_IMG_BIG'			=> $this->img_path . $item['img_big'],
 					'FLAIR_FONT_COLOR'	=> $item['font_color'],
 					'FLAIR_COUNT'		=> $item['count'],
 				));

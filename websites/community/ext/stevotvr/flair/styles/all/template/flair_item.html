@@ -13,7 +13,7 @@
 	{% endif %}
 </span>
 {% else %}
-<span class="flair-icon{% if FLAIR_SIZE > 1 %} flair-lg{% endif %}" title="{{ FLAIR_NAME }}{% if FLAIR_COUNT > 1 %} ({{ FLAIR_COUNT }}x){% endif %}">
+<span class="flair-icon{% if FLAIR_SIZE > 1 %} flair-lg{% endif %}" data-title="{{ FLAIR_NAME }}{% if FLAIR_COUNT > 1 %} ({{ FLAIR_COUNT }}x){% endif %}" data-description="{{ FLAIR_DESC }}" data-image="{{ FLAIR_IMG_BIG }}">
 	{% if FLAIR_COUNT > 1 and FLAIR_FONT_COLOR %}
 		<b class="flair-count" style="color: #{{ FLAIR_FONT_COLOR }}" aria-hidden="true">{{ FLAIR_COUNT }}</b>
 	{% endif %}
