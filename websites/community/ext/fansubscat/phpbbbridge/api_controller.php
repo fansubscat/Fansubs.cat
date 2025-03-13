@@ -1,6 +1,8 @@
 <?php
 namespace fansubscat\phpbbbridge;
 
+require_once(__DIR__.'/../../../../../common/config/config.inc.php');
+
 use voku\helper\HtmlDomParser;
 
 /**
@@ -9,13 +11,13 @@ use voku\helper\HtmlDomParser;
 class api_controller {
 
 	const API_TOKEN_HEADER = "X-Fansubscat-Api-Token";
-	const API_TOKEN_VALUE = "prova";
 
 	const ERROR_API_TOKEN_NOT_SPECIFIED = 1;
 	const ERROR_METHOD_NOT_SUPPORTED = 2;
 	const ERROR_NOT_FOUND = 3;
 	const ERROR_PERMISSION_DENIED = 4;
 	const ERROR_INVALID_REQUEST = 5;
+	const ERROR_GENERIC_ERROR = 6;
 
 	/* @var \phpbb\user */
 	protected $user;
@@ -96,7 +98,7 @@ class api_controller {
 	 */
 	public function handle($method, $param=NULL){
 		//We validate that the headers are set properly
-		if ($this->http_request->header(self::API_TOKEN_HEADER)=='' || $this->http_request->header(self::API_TOKEN_HEADER)!=self::API_TOKEN_VALUE){
+		if ($this->http_request->header(self::API_TOKEN_HEADER)=='' || $this->http_request->header(self::API_TOKEN_HEADER)!=INTERNAL_SERVICES_TOKEN){
 			$result = array(
 				"status" => 'ko',
 				"error" => array(
@@ -112,6 +114,9 @@ class api_controller {
 			case 'create_user':
 				$response = $this->create_user();
 				break;
+			case 'update_profile':
+				$response = $this->update_profile();
+				break;
 			case 'add_topic':
 				$response = $this->add_topic();
 				break;
@@ -121,8 +126,11 @@ class api_controller {
 			case 'edit_post':
 				$response = $this->edit_post();
 				break;
-			case 'update_profile':
-				$response = $this->update_profile();
+			case 'delete_post':
+				$response = $this->delete_post();
+				break;
+			case 'delete_user':
+				$response = $this->delete_user();
 				break;
 			default:
 				$result = array(
@@ -184,13 +192,18 @@ class api_controller {
 		$result = $this->db->sql_query($sql);
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
+		
+		$birth_date = '';
+		$birth_date .= str_pad(date_format(date_create_from_format('Y-m-d', $request->birthdate), 'j'), 2, " ", STR_PAD_LEFT);
+		$birth_date .= '-'.str_pad(date_format(date_create_from_format('Y-m-d', $request->birthdate), 'n'), 2, " ", STR_PAD_LEFT);
+		$birth_date .= '-'.str_pad(date_format(date_create_from_format('Y-m-d', $request->birthdate), 'Y'), 4, " ", STR_PAD_LEFT);
 
 		// generate user account data
 		$user_row = array(
-			'username'		=> $request->username,
+			'username'		=> $this->get_clean_username($request->username),
 			'user_password'	=> '',
 			'user_email'	=> $request->email,
-			'user_birthday'	=> date_format(date_create_from_format('Y-m-d', $request->birthdate), 'd-m-Y'),
+			'user_birthday'	=> $birth_date,
 			'group_id'		=> (int) $row['group_id'],
 			'user_type'		=> USER_NORMAL,
 			'user_ip'		=> $this->user->ip,
@@ -200,9 +213,18 @@ class api_controller {
 		);
 			
 		// effectively add the user
-		user_add($user_row);
+		$user_id = user_add($user_row);
 		
-		return $this->create_generic_ok_response();
+		if (!empty($user_id)) {
+			$output = array(
+				"status" => 'ok',
+				"user_id" => $user_id,
+			);
+		
+			return $this->create_json_response($output, 200);
+		}
+		
+		return $this->create_error_response("User could not be added");
 	}
 
 	/**
@@ -225,7 +247,7 @@ class api_controller {
 		
 		$sql = 'SELECT user_id 
 			FROM ' . USERS_TABLE . "
-			WHERE username='" . $this->db->sql_escape($request->username) . "'";
+			WHERE username='" . $this->db->sql_escape($this->get_clean_username($request->username)) . "'";
 		$result = $this->db->sql_query($sql);
 		$user_id = $this->db->sql_fetchrow($result)['user_id'];
 		$this->db->sql_freeresult($result);
@@ -258,10 +280,11 @@ class api_controller {
 
 		//Submit the new post
 		$poll = $uid = $bitfield = $flags = '';
-		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, true, true, true, 'dontbugme');
+		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, false, true, true, 'post');
 		$data = array( 
 		    'forum_id' => $forum_id,
 		    'icon_id' => false,
+		    'poster_id' => $user_id,
 		    'enable_bbcode' => true,
 		    'enable_smilies' => true,
 		    'enable_urls' => true,
@@ -269,7 +292,7 @@ class api_controller {
 		    'message' => $request->message,
 		    'message_md5' => md5($request->message),
 		    'bbcode_bitfield' => $bitfield,
-		    'bbcode_uid' => $uid,
+		    'bbcode_uid' => !empty($uid) ? $uid : 'fansubs',
 		    'post_edit_locked' => 0,
 		    'topic_title' => $request->subject,
 		    'notify_set' => false,
@@ -279,17 +302,21 @@ class api_controller {
 		    'enable_indexing' => true,
 		);
 
-		$result = submit_post($mode, $request->subject, $request->username, POST_NORMAL, $poll, $data);
+		$result = submit_post($mode, $request->subject, $this->get_clean_username($request->username), POST_NORMAL, $poll, $data);
 		
 		$this->end_user_session();
 		
-		$output = array(
-			"status" => 'ok',
-			"topic_id" => $data['topic_id'],
-			"post_id" => $data['post_id'],
-		);
-	
-		return $this->create_json_response($output, 200);
+		if (!empty($result)) {
+			$output = array(
+				"status" => 'ok',
+				"topic_id" => $data['topic_id'],
+				"post_id" => $data['post_id'],
+			);
+		
+			return $this->create_json_response($output, 200);
+		} else {
+			return $this->create_error_response("Topic could not be added");
+		}
 	}
 
 	/**
@@ -312,7 +339,7 @@ class api_controller {
 		
 		$sql = 'SELECT user_id 
 			FROM ' . USERS_TABLE . "
-			WHERE username='" . $this->db->sql_escape($request->username) . "'";
+			WHERE username='" . $this->db->sql_escape($this->get_clean_username($request->username)) . "'";
 		$result = $this->db->sql_query($sql);
 		$user_id = $this->db->sql_fetchrow($result)['user_id'];
 		$this->db->sql_freeresult($result);
@@ -341,17 +368,18 @@ class api_controller {
 			$topic_id = (int)$request->topic_id;
 		}
 
-		if (!$this->auth->acl_get('f_reply', $forum_id) || $row['topic_status'] == ITEM_LOCKED || $row['topic_status'] == ITEM_MOVED){
-			return $this->create_permission_denied_response();
-		}
+		//if (!$this->auth->acl_get('f_reply', $forum_id) || $row['topic_status'] == ITEM_LOCKED || $row['topic_status'] == ITEM_MOVED){
+		//	return $this->create_permission_denied_response();
+		//}
 
 		//Submit the new post
 		$poll = $uid = $bitfield = $flags = '';
-		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, true, true, true, 'dontbugme');
+		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, false, true, true, 'post');
 		$data = array( 
 		    'forum_id' => $forum_id,
 		    'topic_id' => $topic_id,
 		    'icon_id' => false,
+		    'poster_id' => $user_id,
 		    'enable_bbcode' => true,
 		    'enable_smilies' => true,
 		    'enable_urls' => true,
@@ -359,7 +387,7 @@ class api_controller {
 		    'message' => $request->message,
 		    'message_md5' => md5($request->message),
 		    'bbcode_bitfield' => $bitfield,
-		    'bbcode_uid' => $uid,
+		    'bbcode_uid' => !empty($uid) ? $uid : 'fansubs',
 		    'post_edit_locked' => 0,
 		    'topic_title' => $request->subject,
 		    'notify_set' => false,
@@ -369,16 +397,20 @@ class api_controller {
 		    'enable_indexing' => true,
 		);
 
-		$result = submit_post($mode, $request->subject, $request->username, POST_NORMAL, $poll, $data);
+		$result = submit_post($mode, $request->subject, $this->get_clean_username($request->username), POST_NORMAL, $poll, $data);
 		
 		$this->end_user_session();
 		
-		$output = array(
-			"status" => 'ok',
-			"post_id" => $data['post_id'],
-		);
-	
-		return $this->create_json_response($output, 200);
+		if (!empty($result)) {
+			$output = array(
+				"status" => 'ok',
+				"post_id" => $data['post_id'],
+			);
+		
+			return $this->create_json_response($output, 200);
+		} else {
+			return $this->create_error_response("Reply could not be added");
+		}
 	}
 
 	/**
@@ -405,6 +437,10 @@ class api_controller {
 		$postrow = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 		
+		if ($postrow===FALSE){
+			return $this->create_not_found_response();
+		}
+		
 		$this->begin_user_session($postrow['poster_id']);
 
 		//This is needed for the submit_post function
@@ -423,11 +459,10 @@ class api_controller {
 		if ($row===FALSE){
 			return $this->create_not_found_response();
 		}
-		else{
-			$forum_name = $row['forum_name'];
-			$forum_id = $row['forum_id'];
-			$topic_id = $postrow['topic_id'];
-		}
+		
+		$forum_name = $row['forum_name'];
+		$forum_id = $row['forum_id'];
+		$topic_id = $postrow['topic_id'];
 
 		if (!$this->auth->acl_get('f_edit', $forum_id) || $row['topic_status'] == ITEM_LOCKED || $row['topic_status'] == ITEM_MOVED){
 			return $this->create_permission_denied_response();
@@ -435,11 +470,12 @@ class api_controller {
 
 		//Submit the new post
 		$poll = $uid = $bitfield = $flags = '';
-		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, true, true, true, 'dontbugme');
+		generate_text_for_storage($request->message, $uid, $bitfield, $flags, true, true, true, true, false, true, true, 'post');
 		$data = array( 
 		    'forum_id' => $forum_id,
 		    'topic_id' => $topic_id,
 		    'icon_id' => false,
+		    'poster_id' => $postrow['poster_id'],
 		    'enable_bbcode' => true,
 		    'enable_smilies' => true,
 		    'enable_urls' => true,
@@ -447,7 +483,7 @@ class api_controller {
 		    'message' => $request->message,
 		    'message_md5' => md5($request->message),
 		    'bbcode_bitfield' => $bitfield,
-		    'bbcode_uid' => $uid,
+		    'bbcode_uid' => !empty($uid) ? $uid : 'fansubs',
 		    'post_edit_locked' => 0,
 		    'topic_title' => $request->subject,
 		    'notify_set' => false,
@@ -464,7 +500,6 @@ class api_controller {
 		$data['topic_first_post_id'] = $row['topic_first_post_id'];
 		$data['topic_first_poster_name'] = $row['topic_first_poster_name'];
 		$data['topic_last_post_id'] = $row['topic_last_post_id'];
-		$data['poster_id'] = $postrow['poster_id'];
 		$data['post_username'] = $postrow['post_username'];
 		$data['post_edit_reason'] = '';
 		$data['post_edit_user'] = $postrow['poster_id'];
@@ -473,12 +508,120 @@ class api_controller {
 		
 		$this->end_user_session();
 		
-		$output = array(
-			"status" => 'ok',
-			"post_id" => $data['post_id'],
-		);
-	
-		return $this->create_json_response($output, 200);
+		if (!empty($result)) {
+			$output = array(
+				"status" => 'ok',
+				"post_id" => $data['post_id'],
+			);
+		
+			return $this->create_json_response($output, 200);
+		} else {
+			return $this->create_error_response("Post could not be edited");
+		}
+	}
+
+	/**
+	 * Deletes a post permanently.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function delete_post(){
+		//WE HAVE THESE PARAMETERS:
+		// -post_id
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		
+		$sql = "SELECT f.*, t.*, p.*, u.username, u.username_clean, u.user_sig, u.user_sig_bbcode_uid, u.user_sig_bbcode_bitfield
+			FROM " . POSTS_TABLE . " p, " . TOPICS_TABLE . " t, " . FORUMS_TABLE . " f, " . USERS_TABLE . " u
+			WHERE p.post_id = ".(int)$request->post_id."
+				AND t.topic_id = p.topic_id
+				AND u.user_id = p.poster_id
+				AND f.forum_id = t.forum_id";
+				
+		$result = $this->db->sql_query($sql);
+		$postrow = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		
+		if ($postrow===FALSE) {
+			return $this->create_not_found_response();
+		}
+		
+		$this->begin_user_session(2); //TODO Extract to variable
+
+		//This is needed for the delete_post function
+		require_once($this->phpbb_root_path . "includes/functions_posting." . $this->php_ext);
+		
+		//post new message in existing topic
+		$sql = 'SELECT f.forum_name, f.forum_status, t.* 
+			FROM ' . TOPICS_TABLE . ' t 
+			LEFT JOIN ' . FORUMS_TABLE . ' f ON t.forum_id=f.forum_id 
+			WHERE topic_id=' . $postrow['topic_id'];
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if ($row===FALSE){
+			return $this->create_not_found_response();
+		}
+		
+		$forum_name = $row['forum_name'];
+		$forum_id = $row['forum_id'];
+		$topic_id = $postrow['topic_id'];
+
+		if (!$this->auth->acl_get('f_delete', $forum_id)){
+			return $this->create_permission_denied_response();
+		}
+
+		//Delete the post
+
+		delete_post($forum_id, $topic_id, (int)$request->post_id, $postrow);
+		
+		$this->end_user_session();
+		
+		return $this->create_generic_ok_response();
+	}
+
+	/**
+	 * Deletes a user permanently and all their posts.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function delete_user(){
+		//WE HAVE THESE PARAMETERS:
+		// -user_id
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		
+		$sql = 'SELECT * 
+			FROM ' . USERS_TABLE . ' 
+			WHERE user_id=' . (int)$request->user_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		
+		if ($row===FALSE) {
+			return $this->create_not_found_response();
+		}
+		
+		$this->begin_user_session(2); //TODO Extract to variable
+
+		//This is needed for the user_delete function
+		require_once($this->phpbb_root_path . "includes/functions_user." . $this->php_ext);
+
+		//Delete the user
+		user_delete('remove', array($row['user_id']));
+		
+		$this->end_user_session();
+		
+		return $this->create_generic_ok_response();
 	}
 
 	/**
@@ -499,13 +642,18 @@ class api_controller {
 			return $this->create_invalid_format_response();
 		}
 		
+		$birth_date = '';
+		$birth_date .= str_pad(date_format(date_create_from_format('Y-m-d', $request->birthdate), 'j'), 2, " ", STR_PAD_LEFT);
+		$birth_date .= '-'.str_pad(date_format(date_create_from_format('Y-m-d', $request->birthdate), 'n'), 2, " ", STR_PAD_LEFT);
+		$birth_date .= '-'.str_pad(date_format(date_create_from_format('Y-m-d', $request->birthdate), 'Y'), 4, " ", STR_PAD_LEFT);
+		
 		$sql = 'UPDATE ' . USERS_TABLE . "
 			SET user_avatar = '" . $this->db->sql_escape($request->avatar_url) . "',
 				user_avatar_type = 'avatar.driver.remote',
 				user_email = '" . $this->db->sql_escape($request->email) . "',
-				user_birthday = '" . date_format(date_create_from_format('Y-m-d', $request->birthdate), 'd-m-Y') . "',
-				username = '" . $this->db->sql_escape($request->username) . "',
-				username_clean = '" . $this->db->sql_escape(utf8_clean_string($request->username)) . "'
+				user_birthday = '" . $birth_date . "',
+				username = '" . $this->db->sql_escape($this->get_clean_username($request->username)) . "',
+				username_clean = '" . $this->db->sql_escape(utf8_clean_string($this->get_clean_username($request->username))) . "'
 			WHERE username = '" . $this->db->sql_escape($request->username_old) . "'";
 		$this->db->sql_query($sql);
 		
@@ -530,6 +678,23 @@ class api_controller {
 		);
 	
 		return $this->create_json_response($result, 200);
+	}
+
+	/**
+	 * Creates a generic invalid format response.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function create_error_response($error){
+		$result = array(
+			"status" => 'ko',
+			"error" => array(
+				"code" => self::ERROR_GENERIC_ERROR,
+				"description" => $error,
+			),
+		);
+	
+		return $this->create_json_response($result, 500);
 	}
 
 	/**
@@ -590,7 +755,7 @@ class api_controller {
 	 */
 	protected function begin_user_session($user_id, $use_request_vars = FALSE){
 		//Log in as that user
-		$this->user->session_create($user_id);
+		$this->user->session_create($user_id, false, false, false);
 		$this->auth->acl($this->user->data);
 		$this->user->setup();
 	}
@@ -600,6 +765,13 @@ class api_controller {
 	 */
 	protected function end_user_session(){
 		$this->user->session_kill(FALSE);
+	}
+
+	/**
+	 * Replaces emojis in usernames
+	 */
+	protected function get_clean_username($username){
+		return preg_replace("/[\x{10000}-\x{10FFFF}]/u", '_', $username);
 	}
 
 	/**

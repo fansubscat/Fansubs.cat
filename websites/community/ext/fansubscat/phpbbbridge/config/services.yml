@@ -29,7 +29,7 @@ services:
             - '%core.table_prefix%'
             
     fansubscat.eventlistener:
-        class: fansubscat\phpbbbridge\event_listener
+        class: fansubscat\phpbbbridge\event\event_listener
         arguments:
             - '@dbal.conn'
             - '@user'
