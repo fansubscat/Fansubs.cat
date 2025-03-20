@@ -13,8 +13,9 @@
 		</div>
 		<div class="separator">
 <!-- IF S_REGISTERED_USER and not MCHAT_PAGE -->
-			<a class="hentai-button" href="/xat" title="Xat">
+			<a class="hentai-button" href="/xat" title="Xat<!-- IF MCHAT_ACTIVE_USERS_CNT == 1 --> ({MCHAT_ACTIVE_USERS_CNT} usuari connectat)<!-- ENDIF --><!-- IF MCHAT_ACTIVE_USERS_CNT > 1 --> ({MCHAT_ACTIVE_USERS_CNT} usuaris connectats)<!-- ENDIF -->">
 				<i class="fa-fw fa fa-comments fa-2x"></i>
+				<!-- IF MCHAT_ACTIVE_USERS_CNT > 0 --><div class="notification-ball"><strong><span class="counter"><!-- IF MCHAT_ACTIVE_USERS_CNT > 99 -->+<!-- ELSE -->{MCHAT_ACTIVE_USERS_CNT}<!-- ENDIF --></span></strong></div><!-- ENDIF -->
 			</a>
 <!-- ENDIF -->
 <!-- IF MCHAT_PAGE -->
@@ -23,7 +24,7 @@
 			</a>
 <!-- ENDIF -->
 			<div class="dropdown-menu">
-				<div class="filter-button dropdown-button" onclick="showForumDropdown();" title="Menú de la comunitat"><i class="fa-fw fa fa-navicon fa-2x"></i><!-- IF PRIVATE_MESSAGE_COUNT > 0 or NOTIFICATIONS_COUNT > 0 --><div class="notification-ball"></div><!-- ENDIF --></div>
+				<div class="filter-button dropdown-button" onclick="showForumDropdown();" title="Menú de la comunitat"><i class="fa-fw fa fa-navicon fa-2x"></i><!-- IF PRIVATE_MESSAGE_COUNT > 0 or NOTIFICATIONS_COUNT > 0 --><div class="notification-ball"><strong><span class="counter"><!-- IF PRIVATE_MESSAGE_COUNT+NOTIFICATIONS_COUNT > 99 -->+<!-- ELSE -->{{PRIVATE_MESSAGE_COUNT+NOTIFICATIONS_COUNT}}<!-- ENDIF --></span></strong></div><!-- ENDIF --></div>
 				<div id="forum-dropdown" class="dropdown-content">
 					<div class="dropdown-title">Menú</div>
 <!-- IF S_REGISTERED_USER -->
@@ -40,8 +41,7 @@
 					<a class="notification-icon-option nav-link<!-- IF PRIVATE_MESSAGE_COUNT > 0 --> non-zero<!-- ENDIF -->" href="{U_PRIVATEMSGS}">
 						<i class="fa fa-inbox fa-fw" aria-hidden="true"></i> <span>{L_PRIVATE_MESSAGES}</span>
 						<strong>
-							<span class="counter">{PRIVATE_MESSAGE_COUNT}</span>
-							<span class="arrow"></span>
+							<span class="counter"><!-- IF PRIVATE_MESSAGE_COUNT > 99 -->+<!-- ELSE -->{PRIVATE_MESSAGE_COUNT}<!-- ENDIF --></span>
 						</strong>
 					</a>
 				<!-- ENDIF -->
@@ -49,8 +49,7 @@
 					<a class="notification-icon-option nav-link<!-- IF NOTIFICATIONS_COUNT > 0 --> non-zero<!-- ENDIF -->" href="{U_VIEW_ALL_NOTIFICATIONS}" id="notification_list_button">
 						<i class="fa fa-bell fa-fw" aria-hidden="true"></i> <span>{L_NOTIFICATIONS}</span>
 						<strong>
-							<span class="counter">{NOTIFICATIONS_COUNT}</span>
-							<span class="arrow"></span>
+							<span class="counter"><!-- IF NOTIFICATIONS_COUNT > 99 -->+<!-- ELSE -->{NOTIFICATIONS_COUNT}<!-- ENDIF --></span>
 						</strong>
 					</a>
 				<!-- ENDIF -->

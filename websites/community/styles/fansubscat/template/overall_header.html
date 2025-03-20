@@ -77,6 +77,29 @@
 			writable:false,
 			configurable:false
 			});
+		Object.defineProperty(postimage, "output", {
+			value: function(i, res, co) {
+				var w;
+				if (co && opener != null) {
+					w = opener;
+				} else {
+					w = window;
+				}
+				var area = w.document.querySelector('[data-postimg="' + i + '"]');
+				var parsedValue = res.replaceAll("\n","");
+				
+				area.value = (area.value=='') ? parsedValue : (area.value + "\n" + parsedValue);
+				if (autosize) {
+					autosize(area);
+				}
+				if (co && opener != null) {
+					opener.focus();
+					window.close();
+				}
+			},
+			writable:false,
+			configurable:false
+			});
 	}
 </script>
 <!-- ENDIF -->
@@ -147,9 +170,10 @@
 <div id="wrap" class="page-width">
 <div>
 <!-- ENDIF -->
-
+		<!-- IF not MCHAT_PAGE -->
 		<!-- EVENT overall_header_navbar_before -->
 		<!-- INCLUDE navbar_header.html -->
+		<!-- ENDIF -->
 	</div>
 
 <!-- IF $WRAP_HEADER == 0 -->

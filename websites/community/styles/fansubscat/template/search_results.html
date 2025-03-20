@@ -48,7 +48,6 @@
 				<dl class="row-item">
 					<dt><div class="list-inner">{L_TOPICS}</div></dt>
 					<dd class="posts">{L_REPLIES}</dd>
-					<dd class="views">{L_VIEWS}</dd>
 					<dd class="lastpost"><span>{L_LAST_POST}</span></dd>
 				</dl>
 			</li>
@@ -64,11 +63,6 @@
 						<div class="list-inner">
 							<div class="list-inner-container">
 								<!-- EVENT topiclist_row_prepend -->
-								<!-- IF searchresults.S_UNREAD_TOPIC and not S_IS_BOT -->
-									<a class="unread" href="{searchresults.U_NEWEST_POST}">
-										<i class="icon fa-certificate fa-fw icon-red icon-md" aria-hidden="true"></i><span class="sr-only">{L_NEW_POST}</span>
-									</a>
-								<!-- ENDIF -->
 								<a href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a>
 								<!-- IF searchresults.S_TOPIC_UNAPPROVED or searchresults.S_POSTS_UNAPPROVED -->
 									<a href="{searchresults.U_MCP_QUEUE}" title="{L_TOPIC_UNAPPROVED}">
@@ -126,7 +120,6 @@
 						</div>
 					</dt>
 					<dd class="posts">{searchresults.TOPIC_REPLIES} <dfn>{L_REPLIES}</dfn></dd>
-					<dd class="views">{searchresults.TOPIC_VIEWS} <dfn>{L_VIEWS}</dfn></dd>
 					<dd class="lastpost">
 						<span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} <!-- EVENT search_results_last_post_author_username_prepend -->{searchresults.LAST_POST_AUTHOR_FULL}<!-- EVENT search_results_last_post_author_username_append -->
 							<!-- IF not S_IS_BOT -->
@@ -173,7 +166,6 @@
 			<dd>{L_TOPIC}{L_COLON} <a href="{searchresults.U_VIEW_TOPIC}">{searchresults.TOPIC_TITLE}</a></dd>
 			<!-- EVENT search_results_topic_title_after -->
 			<dd>{L_REPLIES}{L_COLON} <strong>{searchresults.TOPIC_REPLIES}</strong></dd>
-			<dd>{L_VIEWS}{L_COLON} <strong>{searchresults.TOPIC_VIEWS}</strong></dd>
 			<!-- EVENT search_results_postprofile_after -->
 		</dl>
 
