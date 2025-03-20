@@ -418,4 +418,57 @@ function query_get_view_session_from_anon_id($file_id, $anon_id) {
 				AND anon_id='$anon_id'";
 	return query($final_query);
 }
+
+function query_get_version_by_forum_topic_id($forum_topic_id) {
+	$forum_topic_id = intval($forum_topic_id);
+	$final_query = "SELECT *
+			FROM version
+			WHERE forum_topic_id=$forum_topic_id";
+	return query($final_query);
+}
+
+function query_get_user_by_forum_user_id($forum_user_id) {
+	$forum_user_id = intval($forum_user_id);
+	$final_query = "SELECT *
+			FROM user
+			WHERE forum_user_id=$forum_user_id";
+	return query($final_query);
+}
+
+function query_get_comment_by_forum_post_id($forum_post_id) {
+	$forum_post_id = intval($forum_post_id);
+	$final_query = "SELECT *
+			FROM comment
+			WHERE forum_post_id=$forum_post_id";
+	return query($final_query);
+}
+
+function query_insert_comment_with_forum_post_id($user_id, $version_id, $forum_post_id, $text, $has_spoilers) {
+	$user_id = intval($user_id);
+	$version_id = intval($version_id);
+	$forum_post_id = intval($forum_post_id);
+	$text = escape($text);
+	$has_spoilers = intval($has_spoilers);
+	$final_query = "INSERT INTO comment
+				(version_id, user_id, type, fansub_id, reply_to_comment_id, last_replied, text, last_seen_episode_id, has_spoilers, forum_post_id, created, updated)
+			VALUES ($version_id, $user_id, 'user', NULL, NULL, NULL, '$text', (SELECT last_seen_episode_id FROM user_version_followed WHERE user_id=$user_id AND version_id=$version_id AND last_seen_episode_id<>-1), $has_spoilers, $forum_post_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+	return query($final_query);
+}
+
+function query_update_comment_by_forum_post_id($forum_post_id, $text, $has_spoilers) {
+	$forum_post_id = intval($forum_post_id);
+	$has_spoilers = intval($has_spoilers);
+	$text = escape($text);
+	$final_query = "UPDATE comment
+			SET text='$text', has_spoilers=$has_spoilers, updated=CURRENT_TIMESTAMP
+			WHERE forum_post_id=$forum_post_id";
+	return query($final_query);
+}
+
+function query_delete_comment_by_forum_post_id($forum_post_id) {
+	$forum_post_id = intval($forum_post_id);
+	$final_query = "DELETE FROM comment
+			WHERE forum_post_id=$forum_post_id";
+	return query($final_query);
+}
 ?>

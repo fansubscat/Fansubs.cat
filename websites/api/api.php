@@ -468,6 +468,52 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 		else {
 			show_invalid('No valid input provided.');
 		}
+	} else if ($submethod=='add_or_edit_comment') {
+		if (!empty($_POST['forum_user_id']) && is_numeric($_POST['forum_user_id']) && !empty($_POST['forum_post_id']) && is_numeric($_POST['forum_post_id']) && !empty($_POST['text'])) {
+			$result = query_get_comment_by_forum_post_id($_POST['forum_post_id']);
+			
+			if($row = mysqli_fetch_assoc($result)){
+				query_update_comment_by_forum_post_id($_POST['forum_post_id'], $_POST['text'], !empty($_POST['has_spoilers']));
+			} else {
+				//Must get the user and version first
+				$version_id = NULL;
+				$user_id = NULL;
+				$resultv = query_get_version_by_forum_topic_id($_POST['forum_topic_id']);
+				if ($rowv = mysqli_fetch_assoc($resultv)) {
+					$version_id = $rowv['id'];
+				} else {
+					show_invalid('No valid input provided.');
+				}
+				$resultu = query_get_user_by_forum_user_id($_POST['forum_user_id']);
+				if ($rowu = mysqli_fetch_assoc($resultu)) {
+					$user_id = $rowu['id'];
+				} else {
+					show_invalid('No valid input provided.');
+				}
+				
+				query_insert_comment_with_forum_post_id($user_id, $version_id, $_POST['forum_post_id'], $_POST['text'], !empty($_POST['has_spoilers']) ? 1 : 0);
+			}
+			
+			$response = array(
+				'status' => 'ok'
+			);
+			echo json_encode($response);
+		}
+		else {
+			show_invalid('No valid input provided.');
+		}
+	} else if ($submethod=='delete_comment') {
+		if (!empty($_POST['forum_post_id']) && is_numeric($_POST['forum_post_id'])) {
+			query_delete_comment_by_forum_post_id($_POST['forum_post_id']);
+			
+			$response = array(
+				'status' => 'ok'
+			);
+			echo json_encode($response);
+		}
+		else {
+			show_invalid('No valid input provided.');
+		}
 	} else {
 		show_invalid('No valid submethod specified.');
 	}

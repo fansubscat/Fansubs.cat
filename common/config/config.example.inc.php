@@ -71,6 +71,7 @@ define('DISABLE_SANT_JORDI_DAY', TRUE);
 define('DISABLE_HALLOWEEN_DAYS', FALSE);
 define('DISABLE_CHRISTMAS_DAYS', FALSE);
 define('DISABLE_STATUS', FALSE);
+define('DISABLE_STORAGE_STREAMING', FALSE);
 
 //Default language of your site (ISO code)
 //Files for it MUST exist in the following places:

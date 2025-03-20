@@ -127,7 +127,7 @@ function filter_links($links){
 	//This establishes the preferences order:
 	//Storage > Direct video > MEGA
 
-	if (count($links_storage)>0 && count(STORAGES)>0) {
+	if (count($links_storage)>0 && count(STORAGES)>0 && !DISABLE_STORAGE_STREAMING) {
 		return $links_storage;
 	}
 

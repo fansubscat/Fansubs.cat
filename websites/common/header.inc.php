@@ -155,10 +155,23 @@ if (PAGE_STYLE_TYPE=='login') {
 								<div class="login-point-text"><?php echo lang('users.register.point.recommendations'); ?></div>
 								<div class="login-point-icon fas fa-fw fa-star"></div>
 							</div>
+<?php
+	if (FALSE && !DISABLE_COMMUNITY) {
+?>
+							<div class="login-point">
+								<div class="login-point-icon fas fa-fw fa-comment"></div>
+								<div class="login-point-text"><?php echo lang('users.register.point.community'); ?></div>
+							</div>
+<?php
+	} else {
+?>
 							<div class="login-point">
 								<div class="login-point-icon fas fa-fw fa-thumbs-up"></div>
 								<div class="login-point-text"><?php echo lang('users.register.point.rate_translations'); ?></div>
 							</div>
+<?php
+	}
+?>
 							<div class="login-point">
 								<div class="login-point-text"><?php echo lang('users.register.point.sync_progress'); ?></div>
 								<div class="login-point-icon fas fa-fw fa-house-laptop"></div>

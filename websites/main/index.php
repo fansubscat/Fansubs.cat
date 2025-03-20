@@ -39,6 +39,13 @@ if (!DISABLE_NEWS) {
 }
 ?>
 						<a class="secondary-button" href="<?php echo lang('url.fansubs'); ?>"><?php echo lang('main.button.fansubs'); ?></a>
+<?php
+if (FALSE && !DISABLE_COMMUNITY) {
+?>
+						<a class="secondary-button" href="<?php echo COMMUNITY_URL; ?>"><?php echo lang('main.button.community'); ?></a>
+<?php
+}
+?>
 					</div>
 <?php
 if (is_advent_days() && !DISABLE_ADVENT) {
