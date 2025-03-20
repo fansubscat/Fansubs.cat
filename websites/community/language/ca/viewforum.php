@@ -45,25 +45,25 @@ $lang = array_merge($lang, array(
 	'ICON_ANNOUNCEMENT'		=> 'Avís',
 	'ICON_STICKY'			=> 'Tema recurrent',
 
-	'LOGIN_NOTIFY_FORUM'	=> 'Se us ha informat d’aquest fòrum, si us plau inicieu la sessio per visualitzar-lo.',
+	'LOGIN_NOTIFY_FORUM'	=> 'T’han informat d’aquest fòrum. Inicia la sessió per a veure’l.',
 
 	'MARK_TOPICS_READ'		=> 'Marca els temes com a llegits',
 
-	'NEW_POSTS_HOT'			=> 'Hi ha entrades noves [ Popular ]',	// Not used anymore
-	'NEW_POSTS_LOCKED'		=> 'Hi ha entrades noves [ Bloquejat ]',	// Not used anymore
-	'NO_NEW_POSTS_HOT'		=> 'No hi ha entrades noves [ Popular ]',	// Not used anymore
-	'NO_NEW_POSTS_LOCKED'	=> 'No hi ha entrades noves [ Bloquejat ]',	// Not used anymore
-	'NO_READ_ACCESS'		=> 'No teniu els permisos necessaris per veure o llegir els temes d’aquest fòrum.',
+	'NEW_POSTS_HOT'			=> 'Hi ha missatges nous [Popular]',	// Not used anymore
+	'NEW_POSTS_LOCKED'		=> 'Hi ha missatges nous [Blocat]',	// Not used anymore
+	'NO_NEW_POSTS_HOT'		=> 'No hi ha missatges nous [Popular]',	// Not used anymore
+	'NO_NEW_POSTS_LOCKED'	=> 'No hi ha missatges nous [Blocat]',	// Not used anymore
+	'NO_READ_ACCESS'		=> 'No tens els permisos necessaris per a veure o llegir els temes d’aquest fòrum.',
 	'NO_FORUMS_IN_CATEGORY'	=> 'Aquesta categoria no té cap fòrum.',
-	'NO_UNREAD_POSTS_HOT'		=> 'No hi ha entrades no llegides [ Popular ]',
-	'NO_UNREAD_POSTS_LOCKED'	=> 'No hi ha entrades no llegides [ Bloquejat ]',
+	'NO_UNREAD_POSTS_HOT'		=> 'No hi ha missatges no llegits [Popular]',
+	'NO_UNREAD_POSTS_LOCKED'	=> 'No hi ha missatges no llegits [Blocat]',
 
-	'POST_FORUM_LOCKED'		=> 'El fòrum està bloquejat',
+	'POST_FORUM_LOCKED'		=> 'El fòrum està blocat',
 
 	'TOPICS_MARKED'			=> 'Els temes d’aquest fòrum s’han marcat com a llegits.',
 
-	'UNREAD_POSTS_HOT'		=> 'Entrades no llegides [ Popular ]',
-	'UNREAD_POSTS_LOCKED'	=> 'Entrades no llegides [ Bloquejat ]',
+	'UNREAD_POSTS_HOT'		=> 'Missatges no llegits [Popular]',
+	'UNREAD_POSTS_LOCKED'	=> 'Missatges no llegits [Bloquejat]',
 
 	'VIEW_FORUM'			=> 'Mostra el fòrum',
 	'VIEW_FORUM_TOPICS'		=> array(
