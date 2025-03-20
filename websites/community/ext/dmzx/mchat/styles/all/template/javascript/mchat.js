@@ -421,7 +421,7 @@ jQuery(function($) {
 					}
 				},
 				show: function() {
-					var scrollLeeway = 20;
+					var scrollLeeway = 50;
 					var scrollTop = this.container.scrollTop();
 					var scrollHeight = this.container[0].scrollHeight;
 					this.message.show();
@@ -844,15 +844,5 @@ jQuery(function($) {
 		if ($this.hasClass('mchat-button-down')) {
 			$this.toggleClass('mchat-button-is-down');
 		}
-	}).on('keydown.phpbb.alert', mChat.cached('confirm'), function(e) {
-		mChat.onKeyPress(e, {
-			'newline': function(e) {
-				e.stopImmediatePropagation();
-				var $target = $(e.target);
-				$target.val(function(i, text) {
-					return text + '\n';
-				});
-			}
-		});
 	});
 });

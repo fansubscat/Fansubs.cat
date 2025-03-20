@@ -227,6 +227,7 @@ class functions
 			'online_userlist'	=> implode($this->lang->lang('COMMA_SEPARATOR'), $mchat_users),
 			'users_count_title'	=> $this->lang->lang('MCHAT_TITLE_COUNT', count($mchat_users)),
 			'users_total'		=> $this->lang->lang('MCHAT_ONLINE_USERS_TOTAL', count($mchat_users)),
+			'users_count_total'	=> count($mchat_users),
 			'refresh_message'	=> $this->mchat_format_seconds($this->mchat_session_time()),
 		];
 

@@ -21,12 +21,6 @@
 				{% if MCHAT_ALLOW_SMILES and loops.smiley|length or S_BBCODE_ALLOWED or S_MCHAT_ADD_CUSTOM_BUTTON %}
 					<div class="mchat-panel-buttons">
 						{% EVENT dmzx_mchat_buttons_before %}
-						{% if MCHAT_ALLOW_SMILES and loops.smiley|length %}
-							<button type="button" class="button mchat-button-smilies mchat-button-down" data-mchat-action="toggle" data-mchat-element="smilies" title="{{ lang('MCHAT_SMILES') }}">
-								<i class="icon fa fa-smile-o" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHAT_SMILES') }}</span>
-							</button>
-						{% endif %}
-						{% EVENT dmzx_mchat_buttons_mid %}
 						{% if S_BBCODE_ALLOWED %}
 							<button type="button" class="button mchat-button-bbcodes mchat-button-down" data-mchat-action="toggle" data-mchat-element="bbcodes" title="{{ lang('MCHAT_BBCODES') }}">
 								<i class="icon fa fa-code fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHAT_BBCODES') }}</span>
@@ -36,26 +30,32 @@
 					</div>
 				{% endif %}
 				{% EVENT dmzx_mchat_buttons_container_after %}
+				<span id="mchat-status" class="rightside dropdown-container icon-only">
+					<span class="mchat-status mchat-status-ok"><i class="icon fa fa-check" title="{{ lang('MCHAT_OK') }}"></i></span>
+					<span class="mchat-status mchat-status-load hidden"><i class="icon fa fa-refresh fa-spin" title="{{ lang('LOADING') }}"></i></span>
+					<span class="mchat-status mchat-status-paused hidden"><i class="icon fa fa-pause" title="{{ lang('MCHAT_PAUSE') }}"></i></span>
+					<span class="mchat-status mchat-status-error hidden"><i class="icon fa fa-times" title="{{ lang('ERROR') }}"></i></span>
+				</span>
 			</div>
 			{% EVENT dmzx_mchat_controls_after %}
 			{% if S_BBCODE_ALLOWED %}
 				<div id="mchat-bbcodes">
 					{% INCLUDE 'posting_buttons.html' %}
+				{% if MCHAT_ALLOW_SMILES and loops.smiley|length %}
+					<div id="smiley-box" class="smiley-box hidden">
+						{% for smiley in loops.smiley %}
+							<a href="#" data-smiley-code="{{ smiley.SMILEY_CODE }}" data-mchat-action="smiley">
+								<img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}">
+							</a>
+						{% endfor %}
+						{% if S_SHOW_SMILEY_LINK %}
+							<a href="{{ U_MORE_SMILIES }}" data-mchat-action="smileyPopup">{{ lang('MORE_SMILIES') }}</a>
+						{% endif %}
+					</div>
+				{% endif %}
+				{% EVENT dmzx_mchat_body_smiley_after %}
 				</div>
 			{% endif %}
-			{% if MCHAT_ALLOW_SMILES and loops.smiley|length %}
-				<div id="mchat-smilies" class="hidden">
-					{% for smiley in loops.smiley %}
-						<a href="#" data-smiley-code="{{ smiley.SMILEY_CODE }}" data-mchat-action="smiley">
-							<img src="{{ smiley.SMILEY_IMG }}" width="{{ smiley.SMILEY_WIDTH }}" height="{{ smiley.SMILEY_HEIGHT }}" alt="{{ smiley.SMILEY_CODE }}" title="{{ smiley.SMILEY_DESC }}">
-						</a>
-					{% endfor %}
-					{% if S_SHOW_SMILEY_LINK %}
-						<a href="{{ U_MORE_SMILIES }}" data-mchat-action="smileyPopup">{{ lang('MORE_SMILIES') }}</a>
-					{% endif %}
-				</div>
-			{% endif %}
-			{% EVENT dmzx_mchat_body_smiley_after %}
 		{% endif %}
 	</form>
 	{% if MCHAT_DISPLAY_INDEX_WHOIS %}

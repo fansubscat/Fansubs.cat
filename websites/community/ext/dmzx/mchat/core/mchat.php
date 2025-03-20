@@ -766,6 +766,7 @@ class mchat
 			$active_users = $this->mchat_functions->mchat_active_users();
 			$template_data['MCHAT_TITLE'] = $active_users['users_count_title'];
 			$template_data['MCHAT_TITLE_HINT'] = strip_tags($active_users['users_total']);
+			$template_data['MCHAT_ACTIVE_USERS_CNT'] = $active_users['users_count_total'];
 		}
 		else
 		{
@@ -1132,8 +1133,8 @@ class mchat
 				$user_avatars[$row['user_id']] = !$display_avatar || !$row['user_avatar'] ? '' : phpbb_get_user_avatar([
 					'avatar'		=> $row['user_avatar'],
 					'avatar_type'	=> $row['user_avatar_type'],
-					'avatar_width'	=> $row['user_avatar_width'] >= $row['user_avatar_height'] ? 36 : 0,
-					'avatar_height'	=> $row['user_avatar_width'] >= $row['user_avatar_height'] ? 0 : 36,
+					'avatar_width'	=> $row['user_avatar_width'] >= $row['user_avatar_height'] ? 42 : 0,
+					'avatar_height'	=> $row['user_avatar_width'] >= $row['user_avatar_height'] ? 0 : 42,
 				]);
 			}
 		}
@@ -1142,7 +1143,7 @@ class mchat
 
 		foreach ($rows as $row)
 		{
-			$username_full = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], $this->lang->lang('GUEST'));
+			$username_full = str_replace('">', '" target="_blank">', get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], $this->lang->lang('GUEST')));
 
 			if (in_array($row['user_id'], $this->foes))
 			{
@@ -1151,7 +1152,7 @@ class mchat
 
 			$message_age = time() - $row['message_time'];
 			$minutes_ago = $this->get_minutes_ago($message_age);
-			$absolute_datetime = $this->user->format_date($row['message_time'], $this->mchat_settings->cfg('mchat_date'), true);
+			$absolute_datetime = $this->user->format_date($row['message_time'], 'd/m/Y \a \l\e\s H:i:s', true);
 			// If relative time is selected, also display "today" / "yesterday", else display absolute time.
 			$datetime = $this->user->format_date($row['message_time'], $this->mchat_settings->cfg('mchat_date'), !$this->mchat_settings->cfg('mchat_relative_time'));
 
