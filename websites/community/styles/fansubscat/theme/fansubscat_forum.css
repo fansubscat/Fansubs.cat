@@ -350,12 +350,53 @@ blockquote {
 	box-shadow: none;
 }
 
+.panel {
+	padding: 0;
+}
+
+.panel-container .panel, #options-panel, #poll-panel {
+	padding: 4px 9px
+}
+
 dl.row-item dt .list-inner {
 	padding-left: 60px;
 }
 
 .navbar ul.linklist {
 	padding: 0;
+}
+
+.notification-icon-option.non-zero strong, .notification-ball strong {
+	background: rgb(var(--secondary-color));
+	border-radius: 50%;
+	width: 1.8rem;
+	height: 1.8rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.notification-ball {
+	width: 1.8rem;
+	height: 1.8rem;
+	position: absolute;
+	bottom: -0.5rem;
+	right: -0.3rem;
+	pointer-events: none;
+}
+
+.notification-icon-option strong .counter, .notification-ball strong .counter {
+	display: none;
+	color: rgb(var(--always-negative-color));
+	font-weight: bold;
+	line-height: 1;
+	font-size: 1.2rem;
+	align-items: center;
+	justify-content: center;
+}
+
+.notification-icon-option.non-zero strong .counter, .notification-ball strong .counter {
+	display: inline-flex;
 }
 
 .page-body .navbar {
@@ -384,6 +425,10 @@ h2.solo, h2.memberlist-title, h2.ucp-title {
 	display: none;
 }
 
+.simple h2.solo {
+	display: block;
+}
+
 .breadcrumbs .crumb {
 	padding-left: 20px;
 }
@@ -403,7 +448,7 @@ h2.solo, h2.memberlist-title, h2.ucp-title {
 }
 
 a.forumtitle, a.topictitle {
-	font-size: 1.6rem;
+	font-size: 1.8rem;
 }
 
 .forum-description {
@@ -451,17 +496,6 @@ li.row {
 	border-width: 2px;
 }
 
-.notification-ball {
-	width: 1rem;
-	height: 1rem;
-	background: rgb(var(--secondary-color));
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	pointer-events: none;
-	border-radius: 50%;
-}
-
 .icon.icon-red, a:hover .icon.icon-red {
 	color: rgb(var(--secondary-color));
 }
@@ -490,10 +524,94 @@ span.username-coloured {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	flex-wrap: wrap;
+	margin: 0;
 }
 
 .format-buttons > button, .format-buttons select {
 	margin: 0.2rem;
+}
+
+.panel-container .panel p, .panel p {
+	font-size: 1.4rem;
+}
+
+div#message p {
+	font-size: 1.6rem;
+}
+
+.simple .panel {
+	padding: 0;
+}
+
+.simple fieldset.fields1 dt {
+	width: 10em;
+}
+
+.simple fieldset.fields1 dd {
+	margin-left: 10em;
+}
+
+div#message {
+	text-align: center;
+}
+
+.tribute-container li {
+	padding: 0.2rem 1rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.tribute-container li .smiley {
+	width: 32px;
+	height: 32px;
+	margin-right: 0.5rem;
+	object-fit: contain;
+}
+
+.tribute-container li .avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	margin-right: 0.5rem;
+}
+
+.smiley-box {
+	max-height: 200px;
+	overflow-y: scroll;
+}
+
+.mchat-message-header {
+	font-size: 1.4rem;
+}
+
+.mchat-avatar {
+	width: 42px;
+	margin-right: 0.5rem;
+}
+
+#mchat-body blockquote, #mchat-body blockquote cite {
+	font-size: 1.4rem;
+}
+
+.mchat-text {
+	padding: 0.5rem 0 0;
+	font-size: 1.4rem;
+}
+
+#mchat-smilies {
+	max-height: 120px;
+	overflow-y: scroll;
+}
+
+#mchat-whois {
+	width: 192px;
+	min-width: 192px;
+}
+
+.tribute-container li .empty {
+	padding: 0.5rem 0;
 }
 
 .spoiler-header {
@@ -765,7 +883,6 @@ html.chat-page #mchat-whois h3 {
 
 .dropdown-button {
 	cursor: pointer;
-	overflow: hidden;
 }
 
 .dropdown-button .avatar {
@@ -941,8 +1058,30 @@ fieldset.fields1 div {
 	box-sizing: border-box;
 }
 
-.section-ucp #postform > .panel:first-of-type {
-	padding: 4px 9px;
+.cp-menu {
+	margin: 0;
+}
+
+fieldset.submit-buttons {
+	margin: 0;
+}
+
+.cp-mini {
+	background: rgb(var(--negative-color));
+}
+
+.top {
+	top: 0;
+}
+
+.topicreview {
+	padding-right: 0;
+	height: auto;
+	max-height: 300px;
+}
+
+.review .right-box {
+	font-size: 1.6rem;
 }
 
 .smiley-box {
@@ -985,9 +1124,10 @@ fieldset.fields1 div {
 }
 
 #subject {
-	font-size: 1.4rem;
+	font-size: 1.6rem;
 	box-sizing: border-box;
 	width: 100% !important;
+	margin-bottom: 1.5rem;
 }
 
 .error {
@@ -995,9 +1135,11 @@ fieldset.fields1 div {
 }
 
 .mark {
-	display: flex !important;
-	align-items: center;
-	justify-content: center;
+	text-align: center;
+}
+
+.mark input[type="checkbox"]{
+	margin: auto;
 }
 
 .posthilit {
@@ -1007,6 +1149,10 @@ fieldset.fields1 div {
 
 #add_keywords {
 	font-size: 1.4rem;
+}
+
+textarea.inputbox {
+	box-sizing: border-box;
 }
 
 .action-bar .button-search {
@@ -1021,18 +1167,7 @@ fieldset.fields1 div {
 	background-color: rgb(var(--menu-background-color-hover));
 }
 
-.notification-icon-option .counter {
-	display: none;
-	color: rgb(var(--secondary-color));
-	font-weight: bold;
-	margin-left: 0.3rem;
-}
-
-.notification-icon-option.non-zero .counter {
-	display: inline;
-}
-
-.normal-button, .button, input[type='submit'], input[type='reset'] {
+.normal-button, .button, input[type='submit'], input[type='reset'], div#message a:first-of-type {
 	font-family: inherit;
 	border: none;
 	cursor: pointer;
@@ -1046,7 +1181,11 @@ fieldset.fields1 div {
 	border-radius: 0.7rem;
 }
 
-.cancel-button {
+div#message a:first-of-type {
+	
+}
+
+.cancel-button, div#message a {
 	font-family: inherit;
 	border: none;
 	cursor: pointer;
@@ -1379,6 +1518,7 @@ input[type="checkbox"]:checked:before {
 	margin-right: 1rem;
 	font-size: 1.4rem;
 	color: rgb(var(--icon-button-color));
+	position: relative;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1428,11 +1568,12 @@ input[type="checkbox"]:checked:before {
 		d: path("M133 178.763v-1h348v1z");
 	}
 
-	.normal-button:hover {
+	.normal-button:hover, div#message a:first-of-type:hover {
 		background-color: rgb(var(--primary-color-hover));
+		filter: none;
 	}
 
-	.cancel-button:hover {
+	.cancel-button:hover, div#message a:hover {
 		filter: brightness(0.8);
 	}
 
@@ -1459,6 +1600,11 @@ input[type="checkbox"]:checked:before {
 
 	#warning-close-button:hover {
 		background-color: rgb(var(--always-primary-color-hover));
+	}
+	
+	.arrow-left:hover .icon, .arrow-right:hover .icon {
+		margin-left: auto;
+		margin-right: auto;
 	}
 }
 
@@ -1645,6 +1791,10 @@ input[type="checkbox"]:checked:before {
 
 	fieldset.submit-buttons input {
 		margin-top: 0.5rem;
+	}
+	
+	p {
+		font-size: 1.3rem;
 	}
 }
 

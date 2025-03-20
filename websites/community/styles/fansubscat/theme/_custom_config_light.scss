@@ -13,6 +13,7 @@
 // $use-wrapper: false;
 $use-wrapper: true;
 $max-width: 1920px;
+$theme-name: 'light';
 
 $font-family: "lexend_deca", Verdana, Helvetica, Arial, sans-serif;	// Default font
 $h1-font-family: "lexend_deca", "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -23,7 +24,7 @@ $forum-link-font-family: "lexend_deca_bold", "Droid Sans","Open Sans","Trebuchet
 $post-content-font-family: "lexend_deca", "Lucida Grande", "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;
 $input-button-font-family: "lexend_deca", "Lucida Grande", Verdana, Helvetica, Arial, sans-serif;
 
-$font-size: 13px;	// Base font size
+$font-size: 14px;	// Base font size
 
 $black-color: rgb(255, 255, 255); // Main color to mix with. Black for light styles, white for dark styles
 $white-color: rgb(0, 0, 0); // Opposite of $black-color
