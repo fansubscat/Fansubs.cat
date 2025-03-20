@@ -25,6 +25,6 @@ if (empty($lang) || !is_array($lang))
  */
 $lang = array_merge($lang, array(
 	'MENTION_MENTION_NOTIFICATION'	=> 'Menció de %1$s a «%2$s»',
-	'NOTIFICATION_TYPE_MENTION'     => 'Algú m’esmenta',
+	'NOTIFICATION_TYPE_MENTION'     => 'Algú t’esmenta en un missatge',
 	'MENTION_GROUP_NAME'			=> '(Grup: es notificarà a {CNT} usuaris en total)', // Do not translate/change {CNT}
 ));

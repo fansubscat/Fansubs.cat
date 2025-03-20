@@ -114,7 +114,15 @@ class main_listener implements EventSubscriberInterface
 			'core.validate_config_variable'         	=> 'validate_config',
 			'core.page_header'                      	=> 'page_header',
 			'core.text_formatter_s9e_configure_after'	=> 'configure_bbcode',
+			'dmzx.mchat.global_modify_template_data' 	=> 'enable_mentions_in_chat',
 		];
+	}
+
+	public function enable_mentions_in_chat($event)
+	{
+		$template_vars = $event['template_data'];
+		$template_vars['U_AJAX_MENTION_URL'] = $this->helper->route('paul999_mention_controller');
+		$event['template_data'] = $template_vars;
 	}
 
 	public function configure_bbcode($event)
@@ -348,7 +356,7 @@ class main_listener implements EventSubscriberInterface
 			$disable = true;
 		}
 
-		if ($this->user->page['page_name'] != 'posting.' . $this->php_ext)
+		if (FALSE/*$this->user->page['page_name'] != 'posting.' . $this->php_ext*/)
 		{
 			// Only enable mention BBCode on posting page.
 			$disable = true;

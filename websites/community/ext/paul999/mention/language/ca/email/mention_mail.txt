@@ -2,7 +2,7 @@ Subject: T’han esmentat a {SITENAME}
 
 Bon dia,
 
-"{AUTHOR_NAME}" t’ha esmentat al tema «{TOPIC_TITLE}» de {SITENAME}.
+{AUTHOR_NAME} t’ha esmentat al tema «{TOPIC_TITLE}» a {SITENAME}.
 
 Per a veure la publicació en què t’han esmentat, fes servir aquest enllaç:
 {U_LINK_TO_TOPIC}

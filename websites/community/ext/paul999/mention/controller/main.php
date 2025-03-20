@@ -79,31 +79,52 @@ class main
 			throw new http_exception(401);
 		}
 		$name = utf8_clean_string($this->request->variable('q', '', true));
+		$type = utf8_clean_string($this->request->variable('t', '', true));
 
 		if (strlen($name) < $this->config['simple_mention_minlength'])
 		{
 			return new JsonResponse([]);
 		}
+		
+		if ($type=='s') {
+			$sql = 'SELECT code, smiley_url 
+						FROM ' . SMILIES_TABLE . ' 
+						WHERE code ' . $this->db->sql_like_expression($this->db->get_any_char() . $name . $this->db->get_any_char()) . '
+						ORDER BY code ASC';
+			$result = $this->db->sql_query_limit($sql, max(5, (int) $this->config['simple_mention_maxresults']), 0);
+			$return = [];
 
-		$sql = 'SELECT user_id, username 
-					FROM ' . USERS_TABLE . ' 
-					WHERE user_id <> ' . ANONYMOUS . ' 
-					AND ' . $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) .  '
-					AND username_clean ' . $this->db->sql_like_expression($this->db->get_any_char() . $name . $this->db->get_any_char()) . '
-					ORDER BY user_posts DESC, username ASC';
-		$result = $this->db->sql_query_limit($sql, max(5, (int) $this->config['simple_mention_maxresults']), 0);
-		$return = [];
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$return[] = [
+					'key'       => $row['code'],
+					'value'     => $row['smiley_url'],
+					'type'		=> 'smiley',
+				];
+			}
+			$this->db->sql_freeresult($result);
+		} else {
+			$sql = 'SELECT user_id, username, user_avatar 
+						FROM ' . USERS_TABLE . ' 
+						WHERE user_id <> ' . ANONYMOUS . ' 
+						AND ' . $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) .  '
+						AND username_clean ' . $this->db->sql_like_expression($this->db->get_any_char() . $name . $this->db->get_any_char()) . '
+						ORDER BY user_posts DESC, username ASC';
+			$result = $this->db->sql_query_limit($sql, max(5, (int) $this->config['simple_mention_maxresults']), 0);
+			$return = [];
 
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$return[] = [
-				'key'       => $row['username'],
-				'value'     => $row['username'],
-				'user_id'	=> $row['user_id'],
-				'type'		=> 'user',
-			];
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$return[] = [
+					'key'       => $row['username'],
+					'value'     => $row['username'],
+					'avatar'     => $row['user_avatar'],
+					'user_id'	=> $row['user_id'],
+					'type'		=> 'user',
+				];
+			}
+			$this->db->sql_freeresult($result);
 		}
-		$this->db->sql_freeresult($result);
 
 		return new JsonResponse($return);
 	}

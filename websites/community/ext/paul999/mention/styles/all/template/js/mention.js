@@ -4,7 +4,16 @@ $(document).ready(function () {
             callback([]);
             return;
         }
-        $.getJSON(U_AJAX_MENTION_URL, {q: query}, function (data) {
+        $.getJSON(U_AJAX_MENTION_URL, {q: query, t: 'u'}, function (data) {
+            callback(data)
+        });
+    }
+    function remoteSearchSmileys(query, callback) {
+        if (query.length < MIN_MENTION_LENGTH) {
+            callback([]);
+            return;
+        }
+        $.getJSON(U_AJAX_MENTION_URL, {q: query, t: 's'}, function (data) {
             callback(data)
         });
     }
@@ -16,7 +25,7 @@ $(document).ready(function () {
                 if (item.original.type === 'group') {
                     return item.original.value +  SIMPLE_MENTION_GROUP_NAME.replace('{CNT}', item.original.cnt) ;
                 }
-                return item.original.value;
+                return '<img class="avatar" src="'+item.original.avatar+'" alt=""> '+item.original.value;
             },
 
             selectTemplate: function (item) {
@@ -25,6 +34,20 @@ $(document).ready(function () {
                 }
             },
             values: remoteSearch,
+            spaceSelectsMatch: true,
+            lookup: 'value',
+        }, {
+            trigger: ':',
+            menuItemTemplate: function (item) {
+                return '<img class="smiley" src="/images/smilies/'+item.original.value+'" alt=""> '+item.original.key;
+            },
+
+            selectTemplate: function (item) {
+                if (item.original.type === 'smiley') {
+                    return item.original.key;
+                }
+            },
+            values: remoteSearchSmileys,
             spaceSelectsMatch: true,
             lookup: 'value',
         }]
