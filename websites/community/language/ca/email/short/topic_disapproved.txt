@@ -1,10 +1,10 @@
-Subject: Tema rebutjat - "{TOPIC_TITLE}"
+Subject: Tema rebutjat - «{TOPIC_TITLE}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-El vostre tema "{TOPIC_TITLE}" a "{SITENAME}" ha estat rebutjat per un moderador o un administrador.
+El teu tema titulat «{TOPIC_TITLE}» a {SITENAME} ha estat rebutjat per un moderador o un administrador.
 
-S’ha donat la següent raó per al rebuig:
+S’ha donat el següent motiu per a rebutjar-lo:
 
 {REASON}
 

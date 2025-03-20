@@ -1,7 +1,7 @@
-Subject: Informe eliminat - "{POST_SUBJECT}"
+Subject: Informe eliminat - «{POST_SUBJECT}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-L’informe que heu fet de l’entrada "{POST_SUBJECT}" al tema "{TOPIC_TITLE}" de "{SITENAME}" ha estat eliminat per un moderador o un administrador.
+L’informe que has fet del missatge «{POST_SUBJECT}» al tema «{TOPIC_TITLE}» de {SITENAME} ha estat eliminat per un moderador o un administrador.
 
 {EMAIL_SIG}

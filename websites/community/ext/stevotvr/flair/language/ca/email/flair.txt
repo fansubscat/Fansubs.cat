@@ -2,7 +2,7 @@ Subject: Has obtingut una medalla nova
 
 Bon dia, {USERNAME},
 
-Has obtingut una medalla nova titulada «{FLAIR_NAME}» a «{SITENAME}».
+Has obtingut una medalla nova titulada «{FLAIR_NAME}» a {SITENAME}.
 
 Per a veure-la, visita el teu perfil fent clic al següent enllaç:
 {U_PROFILE}

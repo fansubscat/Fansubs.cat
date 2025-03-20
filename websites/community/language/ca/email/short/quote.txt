@@ -1,13 +1,13 @@
-Subject: Us han citat a "{TOPIC_TITLE}"
+Subject: T’han citat a «{TOPIC_TITLE}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-"{AUTHOR_NAME}" us ha citat al tema "{TOPIC_TITLE}" a "{SITENAME}".
+{AUTHOR_NAME} t’ha citat al tema «{TOPIC_TITLE}» a {SITENAME}.
 
-Si voleu visualitzar l’entrada citada, feu clic a l’enllaç següent:
+Si vols veure el missatge citat, visita l’enllaç següent:
 {U_VIEW_POST}
 
-Si ja no voleu rebre notificacions sobre respostes que us citen, actualitzeu la configuració de notificacions a l’enllaç següent:
+Si vols deixar de rebre notificacions de respostes que et citen, actualitza la configuració de notificacions a l’enllaç següent:
 {U_NOTIFICATION_SETTINGS}
 
 {EMAIL_SIG}

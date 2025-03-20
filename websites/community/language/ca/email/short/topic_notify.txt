@@ -1,13 +1,13 @@
-Subject: Resposta a "{TOPIC_TITLE}"
+Subject: Resposta a «{TOPIC_TITLE}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-Al tema "{TOPIC_TITLE}"<!-- IF AUTHOR_NAME != '' --> {AUTHOR_NAME} ha<!-- ENDIF --><!-- IF AUTHOR_NAME === '' --> s’ha<!-- ENDIF --> publicat una resposta des de la vostra darrera visita a "{SITENAME}". No rebreu més correus fins que visiteu el tema.
+<!-- IF AUTHOR_NAME != '' -->{AUTHOR_NAME} ha<!-- ENDIF --><!-- IF AUTHOR_NAME === '' -->S’ha<!-- ENDIF --> publicat una resposta al tema titulat «{TOPIC_TITLE}» d’ençà de la teva darrera visita a {SITENAME}. No en rebràs més notificacions fins que visitis el tema.
 
-Si voleu veure les entrades publicades des de la vostra darrera visita, feu clic a l’enllaç següent:
+Si vols veure el missatge més recent, visita l’enllaç següent:
 {U_NEWEST_POST}
 
-Si ja no voleu estar subscrit a aquest tema, feu clic a l’enllaç següent:
+Si vols eliminar la subscripció a aquest tema, visita l’enllaç següent:
 {U_STOP_WATCHING_TOPIC}
 
 {EMAIL_SIG}

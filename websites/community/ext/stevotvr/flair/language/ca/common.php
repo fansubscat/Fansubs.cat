@@ -46,5 +46,5 @@ $lang = array_merge($lang, array(
 	'FLAIR_UNCATEGORIZED'	=> 'Sense categoria',
 
 	'FLAIR_NOTIFICATION_TITLE'	=> 'Has obtingut una medalla nova: «%s»',
-	'FLAIR_NOTIFICATION_TYPE'	=> 'Rebo una medalla nova',
+	'FLAIR_NOTIFICATION_TYPE'	=> 'Reps una medalla nova',
 ));

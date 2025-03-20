@@ -1,13 +1,13 @@
-Subject: Resposta a "{TOPIC_TITLE}"
+Subject: Resposta a «{TOPIC_TITLE}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-El tema "{TOPIC_TITLE}" que heu afegit a les adreces d’interès ha rebut una resposta des de la vostra darrera visita a "{SITENAME}". No rebreu més notificacions fins que visiteu el tema.
+El tema «{TOPIC_TITLE}» que has afegit a les adreces d’interès ha rebut una resposta d’ençà de la teva darrera visita a {SITENAME}. No en rebràs més notificacions fins que visitis el tema.
 
-Si voleu visualitzar l’entrada més recent des de la vostra darrera visita, feu clic a l’enllaç següent:
+Si vols veure el missatge més recent, visita l’enllaç següent:
 {U_NEWEST_POST}
 
-Si ja no voleu rebre notificacions sobre respostes a adreces d’interès, actualitzeu la configuració de notificacions a l’enllaç següent:
+Si no vols rebre més notificacions de respostes a les adreces d’interès, actualitza la configuració de notificacions a l’enllaç següent:
 {U_NOTIFICATION_SETTINGS}
 
 {EMAIL_SIG}

@@ -1,9 +1,9 @@
-Subject: Informe tancat - "{PM_SUBJECT}"
+Subject: Informe tancat - «{PM_SUBJECT}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-L’informe que heu fet del missatge privat "{PM_SUBJECT}" a "{SITENAME}" ha estat gestionat per un moderador o un administrador. L’informe ja està tancat.
+L’informe que has fet del missatge privat «{PM_SUBJECT}» a {SITENAME} ha estat gestionat per un moderador o un administrador. L’informe ja està tancat.
 
-Si teniu més preguntes poseu-vos en contacte amb {CLOSER_NAME} per missate privat.
+Si tens més dubtes, posa’t en contacte amb {CLOSER_NAME} per missatge privat.
 
 {EMAIL_SIG}

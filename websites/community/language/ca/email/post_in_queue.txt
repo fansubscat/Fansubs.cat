@@ -1,13 +1,13 @@
-Subject: Entrada pendent d’aprovació - "{TOPIC_TITLE}"
+Subject: Missatge pendent d’aprovació - «{TOPIC_TITLE}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-L’entrada "{POST_SUBJECT}" a "{SITENAME}" està pendent d’aprovació.
+El missatge titulat «{POST_SUBJECT}» a {SITENAME} està pendent d’aprovació.
 
-Si voleu visualitzar l’entrada, feu clic a l’enllaç següent:
+Si vols veure el missatge, visita l’enllaç següent:
 {U_VIEW_POST}
 
-Si voleu visualitzar el tema, feu clic a l’enllaç següent:
+Si vols veure el tema, visita l’enllaç següent:
 {U_TOPIC}
 
 {EMAIL_SIG}

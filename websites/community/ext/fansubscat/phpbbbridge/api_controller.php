@@ -240,6 +240,8 @@ class api_controller {
 		// -message
 		// -timestamp
 		
+		define('FANSUBSCAT_API_POSTING', TRUE);
+		
 		$request = $this->validate_post_request();
 		if ($request===FALSE){
 			return $this->create_invalid_format_response();
@@ -332,6 +334,8 @@ class api_controller {
 		// -message
 		// -timestamp
 		
+		define('FANSUBSCAT_API_POSTING', TRUE);
+		
 		$request = $this->validate_post_request();
 		if ($request===FALSE){
 			return $this->create_invalid_format_response();
@@ -423,6 +427,8 @@ class api_controller {
 		// -post_id
 		// -subject
 		// -message
+		
+		define('FANSUBSCAT_API_POSTING', TRUE);
 		
 		$request = $this->validate_post_request();
 		if ($request===FALSE){
@@ -529,6 +535,8 @@ class api_controller {
 		//WE HAVE THESE PARAMETERS:
 		// -post_id
 		
+		define('FANSUBSCAT_API_POSTING', TRUE);
+		
 		$request = $this->validate_post_request();
 		if ($request===FALSE){
 			return $this->create_invalid_format_response();
@@ -593,6 +601,8 @@ class api_controller {
 	protected function delete_user(){
 		//WE HAVE THESE PARAMETERS:
 		// -user_id
+		
+		define('FANSUBSCAT_API_POSTING', TRUE);
 		
 		$request = $this->validate_post_request();
 		if ($request===FALSE){

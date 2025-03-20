@@ -1,14 +1,13 @@
 Subject: Missatge privat nou
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-Ha arribat un missatge privat nou de "{AUTHOR_NAME}" al vostre compte a "{SITENAME}" amb l’assumpte següent:
+Has rebut un missatge privat nou de {AUTHOR_NAME} al teu compte a {SITENAME} amb el títol següent:
 {SUBJECT}
 
-Podeu visualitzar el missatge nou fent clic a l’enllaç següent:
-
+Pots veure el missatge nou si visites l’enllaç següent:
 {U_VIEW_MESSAGE}
 
-Heu sol·licitat rebre notificacions quan arribin missatges privats nous, recordeu que podeu triar no rebre aquestes notificacions canviant l’opció adequada del vostre perfil.
+Has sol·licitat rebre notificacions quan arribin missatges privats nous. Pots triar deixar de rebre aquestes notificacions canviant l’opció adequada al teu perfil.
 
 {EMAIL_SIG}

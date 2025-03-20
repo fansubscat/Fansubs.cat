@@ -1,10 +1,10 @@
-Subject: Tema aprovat - "{TOPIC_TITLE}"
+Subject: Tema aprovat - «{TOPIC_TITLE}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-El vostre tema "{TOPIC_TITLE}" a "{SITENAME}" ha estat aprovat per un moderador o un administrador.
+El teu tema titulat «{TOPIC_TITLE}» a {SITENAME} ha estat aprovat per un moderador o un administrador.
 
-Si voleu visualitzar el tema, feu clic a l’enllaç següent:
+Si vols veure el tema, visita l’enllaç següent:
 {U_VIEW_TOPIC}
 
 {EMAIL_SIG}

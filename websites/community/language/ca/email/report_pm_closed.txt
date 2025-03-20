@@ -1,13 +1,13 @@
-Subject: Informe de missatge privat tancat - "{SUBJECT}"
+Subject: Informe de missatge privat tancat - «{SUBJECT}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-L’informe que heu fet del missatge privat amb el títol "{SUBJECT}" fet per "{AUTHOR_NAME}" a "{SITENAME} ha estat gestionat per un moderador o un administrador. Posteriorment s’ha tancat l’informe. Si teniu més preguntes poseu-vos en contacte amb {CLOSER_NAME} per missate privat.
+L’informe que has fet del missatge privat amb el títol «{SUBJECT}» fet per {AUTHOR_NAME} a {SITENAME} ha estat gestionat per un moderador o un administrador. Posteriorment, se n’ha tancat l’informe. Si tens més dubtes, posa’t en contacte amb {CLOSER_NAME} per missatge privat.
 
-Podeu veure el missatge privat del qual vau informar fent clic a l’enllaç següent:
+Pots veure el missatge privat del qual vas informar si visites l’enllaç següent:
 
 {U_VIEW_MESSAGE}
 
-Teniu configurat que se us notifiqui aquest esdeveniment. Recordeu que podeu triar no rebre notificacions quan es tanquen informes de missatges privats canviant la configuració corresponent al vostre perfil.
+Tens configurat que se’t notifiqui aquest esdeveniment. Recorda que pots triar no rebre notificacions quan es tanquen informes de missatges privats canviant la configuració corresponent al teu perfil.
 
 {EMAIL_SIG}

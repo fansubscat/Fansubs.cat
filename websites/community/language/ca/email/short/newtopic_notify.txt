@@ -1,11 +1,11 @@
-Subject: Tema nou a "{FORUM_NAME}"
+Subject: Tema nou a «{FORUM_NAME}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-<!-- IF AUTHOR_NAME != '' -->{AUTHOR_NAME} ha<!-- ENDIF --><!-- IF AUTHOR_NAME === '' -->S’ha<!-- ENDIF --> publicat un tema nou "{TOPIC_TITLE}" al fòrum "{FORUM_NAME}" des de la vostra darrera visita a a "{SITENAME}". No rebreu més notificacions fins que visiteu el fòrum.
+<!-- IF AUTHOR_NAME != '' -->{AUTHOR_NAME} ha<!-- ENDIF --><!-- IF AUTHOR_NAME === '' -->S’ha<!-- ENDIF --> publicat un tema nou titulat «{TOPIC_TITLE}» al fòrum «{FORUM_NAME}» d’ençà de la teva darrera visita a {SITENAME}. No en rebràs més notificacions fins que visitis el fòrum.
 {U_FORUM}
 
-Si ja no voleu estar subscrit a aquest fòrum, feu clic a l’enllaç següent:
+Si vols eliminar la subscripció a aquest fòrum, visita l’enllaç següent:
 {U_STOP_WATCHING_FORUM}
 
 {EMAIL_SIG}

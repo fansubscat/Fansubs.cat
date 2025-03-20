@@ -1,13 +1,13 @@
-Subject: Informe d´entrada - "{TOPIC_TITLE}"
+Subject: Informe de missatge - «{TOPIC_TITLE}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-S’ha informat de l’entrada "{POST_SUBJECT}" a "{SITENAME}".
+S’ha informat del missatge «{POST_SUBJECT}» a {SITENAME}.
 
-Si voleu visualitzar l’informe, feu clic a l’enllaç següent:
+Si vols veure l’informe, visita l’enllaç següent:
 {U_VIEW_REPORT}
 
-Si voleu visualitzar l’entrada, feu clic a l’enllaç següent:
+Si vols veure el missatge, visita l’enllaç següent:
 {U_VIEW_POST}
 
 {EMAIL_SIG}

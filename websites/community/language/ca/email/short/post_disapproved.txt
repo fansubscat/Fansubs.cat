@@ -1,10 +1,10 @@
-Subject: Entrada rebutjada - "{POST_SUBJECT}"
+Subject: Missatge rebutjat - «{POST_SUBJECT}»
 
-Hola {USERNAME},
+Bon dia, {USERNAME},
 
-La vostra entrada "{POST_SUBJECT}" a "{SITENAME}" ha estat rebutjada per un moderador o un administrador.
+El teu missatge titulat «{POST_SUBJECT}» a {SITENAME} ha estat rebutjat per un moderador o un administrador.
 
-S’ha donat la següent raó per al rebuig:
+S’ha donat el següent motiu per a rebutjar-lo:
 
 {REASON}
 

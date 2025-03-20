@@ -44,7 +44,7 @@ $lang = array_merge($lang, array(
 	'TRANSLATION_INFO'	=> 'Traducció del phpBB: Isaac Garcia Abrodos (revisió de Fansubs.cat)',
 	'DIRECTION'			=> 'ltr',
 	'DATE_FORMAT'		=> '|d/m/Y|',	// 01 Jan 2007 (with Relative days enabled)
-	'DATETIME_FORMAT'	=> '|d/m/Y| \a \l\e\s H.i',	// 01 Jan 2007, 13:37 (with Relative days enabled)
+	'DATETIME_FORMAT'	=> '|d/m/Y| \a \l\e\s H:i',	// 01 Jan 2007, 13:37 (with Relative days enabled)
 	'USER_LANG'			=> 'ca',
 
 	// You can define different rules for the determination of plural forms here.
@@ -424,7 +424,7 @@ $lang = array_merge($lang, array(
 	'MARK_ALL'				=> 'Marca’ls tots',
 	'MARK_ALL_READ'			=> 'Marca’ls tots com a llegits',
 	'MARK_FORUMS_READ'		=> 'Marca els fòrums com a llegits',
-	'MARK_READ'				=> 'Marca’ls com a llegits',
+	'MARK_READ'				=> 'Marca com a llegit',
 	'MARK_SUBFORUMS_READ'	=> 'Marca els subfòrums com a llegits',
 	'MB'					=> 'MB',
 	'MIB'					=> 'MiB',
@@ -1461,7 +1461,8 @@ $lang = array_merge($lang, array(
 		//'M jS, \'y, H:i'		=> 'gen 1er, \'07, 13:37',
 		'D d M Y, g:i a'		=> 'dl 01 gen 2007, 1:37 pm', //'D M d, Y g:i a'		=> 'dl gen 01, 2007 1:37 pm',
 		//'F jS, Y, g:i a'		=> 'gener 1er, 2007, 1:37 pm',
-		'|d/m/Y| \a \l\e\s H.i'			=> 'Avui a les 13.37 / 01 gen 2007 a les 13.37',
+		'd/m/Y \a \l\e\s H:i'			=> '01/01/2007 a les 13:37',
+		'|d/m/Y| \a \l\e\s H:i'			=> 'Avui a les 13.37 / 01/01/2007 a les 13:37',
 		//'|F jS, Y|, g:i a'		=> 'Avui, 1:37 pm / gener 1er, 2007, 1:37 pm',
 	),
 

@@ -1,10 +1,14 @@
 <?php
 namespace fansubscat\phpbbbridge\event;
 
+require_once(__DIR__.'/../../../../../../common/config/config.inc.php');
+
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class event_listener implements EventSubscriberInterface
 {
+	const FANSUBSCAT_RELAY_USER_ID = 2;
+
 	static public function getSubscribedEvents()
 	{
 		return [
@@ -13,6 +17,8 @@ class event_listener implements EventSubscriberInterface
 			'core.append_sid' => 'disable_append_sid',
 			'core.page_header_after' => 'replace_stylesheet',
 			'core.text_formatter_s9e_configure_after'	=> 'configure_bbcode',
+			'core.submit_post_end'	=> 'relay_submitted_post',
+			'core.delete_post_after'	=> 'relay_deleted_post',
 		];
 	}
 
@@ -22,6 +28,8 @@ class event_listener implements EventSubscriberInterface
 
 	protected $template;
 
+	protected $phpbb_root_path;
+
 	protected $php_ext;
 
 	/**
@@ -29,11 +37,12 @@ class event_listener implements EventSubscriberInterface
 	*
 	* @param \phpbb\db\driver\factory $db Database object
 	*/
-	public function __construct(\phpbb\db\driver\factory $db, \phpbb\user $user, \phpbb\template\twig\twig $template, $php_ext)
+	public function __construct(\phpbb\db\driver\factory $db, \phpbb\user $user, \phpbb\template\twig\twig $template, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->user = $user;
 		$this->template = $template;
+		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 	}
 
@@ -166,6 +175,77 @@ class event_listener implements EventSubscriberInterface
 			'[center]{TEXT}[/center]',
 			'<div style="text-align: center;">{TEXT}</span>'
 		);
+	}
+
+	public function relay_submitted_post($event)
+	{
+		$relayed_forum_ids = array(4, 5, 6, 16, 17);
+		$mode = $event['mode'];
+		$data = $event['data'];
+		
+		//We relay all posts by other users, but not the ones from Fansubs.cat (they must be posted via the admin site)
+		//Also, not the ones being posted by the API: this would create a loop and comments would be duplicated
+		if (($mode=='post' || $mode=='reply' || $mode=='edit') && in_array($data['forum_id'], $relayed_forum_ids) && !defined('FANSUBSCAT_API_POSTING') && $data['poster_id'] != self::FANSUBSCAT_RELAY_USER_ID) {
+			$post_text = $data['message'];
+
+			//This is needed for the generate_text_for_edit function
+			require_once($this->phpbb_root_path . "includes/functions_content." . $this->php_ext);
+			
+			//Get $post_text as BBCode source
+			$post_text = generate_text_for_edit($post_text, $data['bbcode_uid'], OPTION_FLAG_BBCODE+OPTION_FLAG_SMILIES+OPTION_FLAG_LINKS)['text'];
+			
+			$has_spoilers = str_contains($post_text, '[spoiler');
+			
+			//Adapt quotes
+			$post_text = preg_replace('/\[quote=&quot;(.*?)&quot;\](.*?)\[\/quote\]/is', "$1 ha escrit:\n> $2\n", $post_text);
+			$post_text = preg_replace('/\[quote\](.*?)\[\/quote\]/is', "\n> $1\n", $post_text);
+			
+			//Adapt list elements:
+			$post_text = str_replace('[*]', '- ', $post_text);
+			
+			//All other BBCode: keep the inside text
+			$post_text = preg_replace('/\[[^\]]+\]/', '', $post_text);
+
+	 
+			//Invoke API: add_or_edit_comment
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://api.fansubs.cat/internal/add_or_edit_comment?token='.INTERNAL_SERVICES_TOKEN);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, 
+				  http_build_query(array(
+				  	'forum_user_id' => $data['poster_id'],
+				  	'forum_post_id' => $data['post_id'],
+				  	'forum_topic_id' => $data['topic_id'],
+				  	'text' => $post_text,
+				  	'has_spoilers' => $has_spoilers,
+				  	)));
+			curl_exec($curl);
+			curl_close($curl);
+		}
+	}
+
+	public function relay_deleted_post($event)
+	{
+		$mode = $event['mode'];
+		$post_id = $event['post_id'];
+		$data = $event['data'];
+		
+		if (!defined('FANSUBSCAT_API_POSTING') && $data['poster_id'] != self::FANSUBSCAT_RELAY_USER_ID) {
+			//Invoke API: delete_comment
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://api.fansubs.cat/internal/delete_comment?token='.INTERNAL_SERVICES_TOKEN);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, 
+				  http_build_query(array(
+				  	'forum_post_id' => $post_id,
+				  	)));
+			curl_exec($curl);
+			curl_close($curl);
+		}
 	}
 }
 ?>
