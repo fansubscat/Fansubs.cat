@@ -134,6 +134,16 @@ services:
         tags:
             - { name: 'cron.task' }
 
+    dmzx.mchat.cron.task.mchat_process_disconnects:
+        class: 'dmzx\mchat\cron\mchat_process_disconnects'
+        arguments:
+            - '@dmzx.mchat.functions'
+            - '@dmzx.mchat.settings'
+        calls:
+            - ['set_name', ['cron.task.mchat_process_disconnects']]
+        tags:
+            - { name: 'cron.task' }
+
     dmzx.mchat.text_reparser.mchat_messages:
         class: 'dmzx\mchat\textreparser\plugins\mchat_messages'
         arguments:

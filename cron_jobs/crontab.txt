@@ -25,3 +25,6 @@
 # Fansubs.cat - Publish monthly content rankings
 0 0 1 * * cd /srv/fansubscat/services/ && /usr/bin/php publish_monthly_rankings.php
 
+# Fansubs.cat - Run community cron
+*/5 * * * * cd /srv/fansubscat/websites/community/bin && /usr/bin/php phpbbcli.php cron:run
+

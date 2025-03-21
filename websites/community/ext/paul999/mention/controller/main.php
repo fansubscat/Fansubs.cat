@@ -89,7 +89,7 @@ class main
 		if ($type=='s') {
 			$sql = 'SELECT code, smiley_url 
 						FROM ' . SMILIES_TABLE . ' 
-						WHERE code ' . $this->db->sql_like_expression($this->db->get_any_char() . $name . $this->db->get_any_char()) . '
+						WHERE code ' . $this->db->sql_like_expression(':' . $name . $this->db->get_any_char()) . '
 						ORDER BY code ASC';
 			$result = $this->db->sql_query_limit($sql, max(5, (int) $this->config['simple_mention_maxresults']), 0);
 			$return = [];
@@ -108,7 +108,7 @@ class main
 						FROM ' . USERS_TABLE . ' 
 						WHERE user_id <> ' . ANONYMOUS . ' 
 						AND ' . $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) .  '
-						AND username_clean ' . $this->db->sql_like_expression($this->db->get_any_char() . $name . $this->db->get_any_char()) . '
+						AND username_clean ' . $this->db->sql_like_expression($name . $this->db->get_any_char()) . '
 						ORDER BY user_posts DESC, username ASC';
 			$result = $this->db->sql_query_limit($sql, max(5, (int) $this->config['simple_mention_maxresults']), 0);
 			$return = [];

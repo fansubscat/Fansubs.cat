@@ -90,7 +90,6 @@ class main_listener implements EventSubscriberInterface
 			'core.user_add_modify_data'					=> 'user_registration_set_default_values',
 			'core.mcp_change_poster_after'				=> 'mcp_change_poster_after',
 			'core.login_box_redirect'					=> 'user_login_success',
-			'core.session_gc_after'						=> 'session_gc',
 		];
 	}
 
@@ -208,13 +207,5 @@ class main_listener implements EventSubscriberInterface
 		{
 			$this->mchat->quote_message_text($mchat_message_id);
 		}
-	}
-
-	/**
-	 *
-	 */
-	public function session_gc()
-	{
-		$this->mchat->session_gc();
 	}
 }
