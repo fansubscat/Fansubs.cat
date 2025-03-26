@@ -132,6 +132,9 @@ class api_controller {
 			case 'delete_user':
 				$response = $this->delete_user();
 				break;
+			case 'add_chat_message':
+				$response = $this->add_chat_message();
+				break;
 			default:
 				$result = array(
 					"status" => 'ko',
@@ -671,6 +674,49 @@ class api_controller {
 		require_once($this->phpbb_root_path . "includes/functions_user." . $this->php_ext);
 		
 		user_update_name($request->username_old, $request->username);
+		
+		return $this->create_generic_ok_response();
+	}
+
+	/**
+	 * Adds a new chat message.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function add_chat_message(){
+		global $table_prefix;
+		//WE HAVE THESE PARAMETERS:
+		// -message
+		
+		define('FANSUBSCAT_API_POSTING', TRUE);
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		$this->begin_user_session(2); //TODO Extract
+
+		//This is needed for the submit_post function
+		require_once($this->phpbb_root_path . "includes/functions_posting." . $this->php_ext);
+		
+		$uid = $bitfield = $flags = '';
+		$message = $request->message;
+		generate_text_for_storage($message, $uid, $bitfield, $flags, true, true, true, true, false, true, true, 'mchat');
+		
+		$sql_ary = [
+			'message'			=> str_replace("'", '&#39;', $message),
+			'bbcode_bitfield'	=> $bitfield,
+			'bbcode_uid'		=> $uid,
+			'bbcode_options'	=> $flags,
+			'user_id'		=> $this->user->data['user_id'],
+			'user_ip'		=> $this->user->ip,
+			'message_time'		=> time(),
+		];
+		
+		$this->db->sql_query('INSERT INTO ' . $table_prefix . 'mchat' . $this->db->sql_build_array('INSERT', $sql_ary));
+		
+		$this->end_user_session();
 		
 		return $this->create_generic_ok_response();
 	}

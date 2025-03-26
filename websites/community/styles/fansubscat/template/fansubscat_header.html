@@ -24,7 +24,7 @@
 			</a>
 <!-- ENDIF -->
 			<div class="dropdown-menu">
-				<div class="filter-button dropdown-button" onclick="showForumDropdown();" title="Menú de la comunitat"><i class="fa-fw fa fa-navicon fa-2x"></i><!-- IF PRIVATE_MESSAGE_COUNT > 0 or NOTIFICATIONS_COUNT > 0 --><div class="notification-ball"><strong><span class="counter"><!-- IF PRIVATE_MESSAGE_COUNT+NOTIFICATIONS_COUNT > 99 -->+<!-- ELSE -->{{PRIVATE_MESSAGE_COUNT+NOTIFICATIONS_COUNT}}<!-- ENDIF --></span></strong></div><!-- ENDIF --></div>
+				<div class="filter-button dropdown-button" onclick="showForumDropdown();" title="Menú de la comunitat"><i class="fa-fw fa fa-navicon fa-2x"></i><!-- IF NOTIFICATIONS_COUNT > 0 --><div class="notification-ball"><strong><span class="counter"><!-- IF NOTIFICATIONS_COUNT > 99 -->+<!-- ELSE -->{{NOTIFICATIONS_COUNT}}<!-- ENDIF --></span></strong></div><!-- ENDIF --></div>
 				<div id="forum-dropdown" class="dropdown-content">
 					<div class="dropdown-title">Menú</div>
 <!-- IF S_REGISTERED_USER -->

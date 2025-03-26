@@ -72,6 +72,7 @@ class log
 			$log_types = [
 				1 => 'edit',
 				2 => 'del',
+				3 => 'clear',
 			];
 
 			/**
@@ -189,7 +190,7 @@ class log
 
 			if (isset($log_types[$log_type]))
 			{
-				if ($log_row['user_id'] != $this->user->data['user_id'] && $log_row['log_time'] > $time_limit)
+				if ($log_type==3 || ($log_row['user_id'] != $this->user->data['user_id'] && $log_row['log_time'] > $time_limit))
 				{
 					$log_type_name = $log_types[$log_type];
 					$log_rows[$log_type_name][] = (int) $log_row['message_id'];

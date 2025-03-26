@@ -783,13 +783,6 @@ html.chat-page #mchat-whois h3 {
 	transition: none !important; /* Disable all animations */
 }
 
-.main-container {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
 .footer {
 	flex-grow: 0;
 	margin-top: 2.5rem;
@@ -1795,6 +1788,26 @@ input[type="checkbox"]:checked:before {
 	
 	p {
 		font-size: 1.3rem;
+	}
+
+	html.chat-page .mchat-external-wrapper {
+		flex-direction: column;
+	}
+	
+	#mchat-whois h3 {
+		display: none;
+	}
+	
+	#mchat-whois #mchat-userlist {
+		display: none;
+	}
+	
+	#mchat-whois.show-users h3 {
+		display: block;
+	}
+	
+	#mchat-whois.show-users #mchat-userlist {
+		display: block;
 	}
 }
 

@@ -139,6 +139,25 @@ function publish_to_bluesky($message, $version_id, $embed_title, $embed_descript
 	$data = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
 }
 
+function publish_to_community($message, $is_hentai) {
+	if (!DISABLE_COMMUNITY) {
+		if (!$is_hentai) { //Hide hentai for now
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://' . COMMUNITY_SUBDOMAIN . '.' . MAIN_DOMAIN . '/api/add_chat_message');
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: " . INTERNAL_SERVICES_TOKEN));
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, 
+				  json_encode(array(
+				  	'message' => $message,
+				  	)));
+			curl_exec($curl);
+			curl_close($curl);
+		}
+	}
+}
+
 //Copied from catalogue's common.inc.php
 function get_episode_title($series_subtype, $show_episode_numbers, $episode_number, $linked_episode_id, $title, $series_name, $extra_name, $is_extra) {
 	if ($is_extra) {
@@ -360,6 +379,7 @@ $message_mastodon = "%%POST_HEADER%%\n\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%A
 $message_discord = "**%%POST_HEADER%%**\n\n%%TYPE_EMOJI%% **%%SERIES_NAME%%**\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_telegram = "*%%POST_HEADER%%*\n\n%%TYPE_EMOJI%% *%%SERIES_NAME%%*\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_bluesky = "%%POST_HEADER%%\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
+$message_community = "%%POST_HEADER%%: [url=%%URL%%][b]%%SERIES_NAME%% (%%FANSUB_NAMES%%)[/b][/url] - %%AVAILABLE_EPISODES%%%%COMPLETED_STATUS%%";
 
 $has_posted_something = FALSE;
 
@@ -464,6 +484,16 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.manga.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.manga').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
+		$community_message = str_replace('%%URL%%', $url, get_community_message(
+				$message_community,
+				$header,
+				'',
+				$row['name'],
+				$episode,
+				$row['fansub_names'],
+				$row['status']==1 ? " - [b]".lang('service.post.project_completed').'[/b]' : ''
+			));
+		publish_to_community($community_message, $row['rating']=='XXX');
 		file_put_contents('/srv/fansubscat/temporary/last_posted_manga_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
@@ -575,6 +605,16 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.anime.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.anime').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
+		$community_message = str_replace('%%URL%%', $url, get_community_message(
+				$message_community,
+				$header,
+				'',
+				$row['name'],
+				$episode,
+				$row['fansub_names'],
+				$row['status']==1 ? " - [b]".lang('service.post.project_completed').'[/b]' : ''
+			));
+		publish_to_community($community_message, $row['rating']=='XXX');
 		file_put_contents('/srv/fansubscat/temporary/last_posted_anime_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");
@@ -686,6 +726,16 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".lang('catalogue.page_title.liveaction').' | '.MAIN_SITE_NAME, $row['synopsis'], $url, FALSE);
+		$community_message = str_replace('%%URL%%', $url, get_community_message(
+				$message_community,
+				$header,
+				'',
+				$row['name'],
+				$episode,
+				$row['fansub_names'],
+				$row['status']==1 ? " - [b]".lang('service.post.project_completed').'[/b]' : ''
+			));
+		publish_to_community($community_message, FALSE);
 		file_put_contents('/srv/fansubscat/temporary/last_posted_liveaction_id.txt', $row['id']);
 	} catch(Exception $e) {
 		die('Error occurred: '.$e->getMessage()."\n");

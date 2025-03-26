@@ -194,7 +194,7 @@ class mchat
 		}
 
 		if ($this->mchat_functions->mchat_add_user_session()) {
-			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha connectat');
 		}
 
 		$this->assign_whois();
@@ -210,17 +210,6 @@ class mchat
 		]);
 
 		return $this->helper->render('mchat_body.html', $this->lang->lang('MCHAT_TITLE'));
-	}
-	
-	public function add_system_message($message)
-	{
-		$message_data = $this->process_message($message);
-		$message_data = array_merge($message_data, [
-			'user_id'		=> $this->user->data['user_id'],
-			'user_ip'		=> $this->user->ip,
-			'message_time'	=> time(),
-		]);
-		$this->mchat_functions->mchat_action('add', $message_data);
 	}
 
 	/**
@@ -346,9 +335,13 @@ class mchat
 	public function action_add($return_raw = false)
 	{
 		$this->init_action('u_mchat_use');
+		
+		if (!$this->mchat_functions->mchat_user_session_exists()) {
+			throw new http_exception(403, 'La teva sessió al xat ha finalitzat.');
+		}
 
 		if ($this->mchat_functions->mchat_add_user_session()) {
-			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha connectat');
 		}
 
 		if ($this->mchat_functions->mchat_is_user_flooding())
@@ -367,36 +360,46 @@ class mchat
 		{
 			$message = utf8_ucfirst($message);
 		}
+		
+		$user_facing_messages = array();
+		$is_quit_command = FALSE;
+		
+		$is_command = $this->process_command($message, $user_facing_messages, $is_quit_command);
+		
+		if (!$is_command) {
+			$message_data = $this->process_message($message);
 
-		$message_data = $this->process_message($message);
+			$message_data = array_merge($message_data, [
+				'user_id'		=> $this->user->data['user_id'],
+				'user_ip'		=> $this->user->ip,
+				'message_time'	=> time(),
+			]);
 
-		$message_data = array_merge($message_data, [
-			'user_id'		=> $this->user->data['user_id'],
-			'user_ip'		=> $this->user->ip,
-			'message_time'	=> time(),
-		]);
+			/**
+			 * Event to modify a new message before it is inserted in the database
+			 *
+			 * @event dmzx.mchat.action_add_before
+			 * @var	string	message			The message that is about to be processed and added to the database
+			 * @var array	message_data	Array containing additional information that is added to the database
+			 * @since 2.0.0-RC6
+			 */
+			$vars = [
+				'message',
+				'message_data',
+			];
+			extract($this->dispatcher->trigger_event('dmzx.mchat.action_add_before', compact($vars)));
 
-		/**
-		 * Event to modify a new message before it is inserted in the database
-		 *
-		 * @event dmzx.mchat.action_add_before
-		 * @var	string	message			The message that is about to be processed and added to the database
-		 * @var array	message_data	Array containing additional information that is added to the database
-		 * @since 2.0.0-RC6
-		 */
-		$vars = [
-			'message',
-			'message_data',
-		];
-		extract($this->dispatcher->trigger_event('dmzx.mchat.action_add_before', compact($vars)));
+			$this->mchat_functions->mchat_action('add', $message_data);
+		} else {
+			$message_data = array();
+		}
 
-		$is_new_session = $this->mchat_functions->mchat_action('add', $message_data);
-
-		$response = $this->action_refresh(true);
-
-		if ($is_new_session)
-		{
-			$response = array_merge($response, $this->action_whois(true));
+		$response = $this->action_refresh(true, $is_quit_command);
+		
+		if ($is_command) {
+			$this->assign_global_template_data();
+			$this->assign_messages($user_facing_messages);
+			$response['add'] = $this->render_template('mchat_messages.html');
 		}
 
 		/**
@@ -405,7 +408,6 @@ class mchat
 		 * @event dmzx.mchat.action_add_after
 		 * @var	string	message			The message that was added to the database
 		 * @var array	message_data	Array containing additional information that was added to the database
-		 * @var bool	is_new_session	Indicating whether the message triggered a new mChat session to be created for the user
 		 * @var array	response		The data that is sent back to the user
 		 * @var boolean	return_raw		Whether to return a raw array or a JsonResponse object
 		 * @since 2.0.0-RC6
@@ -413,7 +415,6 @@ class mchat
 		$vars = [
 			'message',
 			'message_data',
-			'is_new_session',
 			'response',
 			'return_raw',
 		];
@@ -431,9 +432,13 @@ class mchat
 	public function action_edit($return_raw = false)
 	{
 		$this->init_action('u_mchat_use');
+		
+		if (!$this->mchat_functions->mchat_user_session_exists()) {
+			throw new http_exception(403, 'La teva sessió al xat ha finalitzat.');
+		}
 
 		if ($this->mchat_functions->mchat_add_user_session()) {
-			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha connectat');
 		}
 
 		$message_id = $this->request->variable('message_id', 0);
@@ -501,9 +506,13 @@ class mchat
 	public function action_del($return_raw = false)
 	{
 		$this->init_action('u_mchat_use');
+		
+		if (!$this->mchat_functions->mchat_user_session_exists()) {
+			throw new http_exception(403, 'La teva sessió al xat ha finalitzat.');
+		}
 
 		if ($this->mchat_functions->mchat_add_user_session()) {
-			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha connectat');
 		}
 
 		$message_id = $this->request->variable('message_id', 0);
@@ -556,12 +565,16 @@ class mchat
 	 * @param bool $return_raw
 	 * @return array|JsonResponse sent to client as JSON
 	 */
-	public function action_refresh($return_raw = false)
+	public function action_refresh($return_raw = false, $from_disconnect = false)
 	{
 		$this->init_action('u_mchat_view', false);
+		
+		if (!$from_disconnect && !$this->mchat_functions->mchat_user_session_exists()) {
+			throw new http_exception(403, 'La teva sessió al xat ha finalitzat.');
+		}
 
-		if ($this->mchat_functions->mchat_add_user_session()) {
-			$this->add_system_message($this->user->data['username'].' s’ha connectat');
+		if (!$from_disconnect && $this->mchat_functions->mchat_add_user_session()) {
+			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha connectat');
 		}
 		
 		$this->assign_whois();
@@ -673,6 +686,12 @@ class mchat
 		if ($log_edit_del_ids['del'])
 		{
 			$response['del'] = $log_edit_del_ids['del'];
+		}
+
+		// Assign deleted messages
+		if ($log_edit_del_ids['clear'])
+		{
+			$response['clear'] = $log_edit_del_ids['clear'];
 		}
 		
 		$response['users'] = $whois;
@@ -935,7 +954,9 @@ class mchat
 
 		if ($limit)
 		{
-			$this->assign_messages($rows, $page);
+			$rows_with_additional_message = $rows;
+			array_unshift($rows_with_additional_message, $this->build_user_facing_message($this->lang->lang('MCHAT_RULES_MESSAGE') ?: htmlspecialchars_decode($this->mchat_settings->cfg('mchat_rules'))));
+			$this->assign_messages($rows_with_additional_message, $page);
 		}
 
 		// Pass the latest_message_id to the template so that we know later where to start looking for new messages
@@ -1163,11 +1184,13 @@ class mchat
 			$template_data = [
 				'MCHAT_USER_ID'				=> $row['user_id'],
 				'MCHAT_ALLOW_EDIT'			=> $this->auth_message('edit', $row['user_id'], $row['message_time']),
-				'MCHAT_ALLOW_DEL'			=> $this->auth_message('delete', $row['user_id'], $row['message_time']),
+				'MCHAT_ALLOW_DEL'			=> $row['system_message'] ? $this->auth->acl_get('u_mchat_moderator_delete') : $this->auth_message('delete', $row['user_id'], $row['message_time']),
 				'MCHAT_USER_AVATAR'			=> $user_avatars[$row['user_id']],
 				'U_VIEWPROFILE'				=> $row['user_id'] != ANONYMOUS ? append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $row['user_id']]) : '',
 				'MCHAT_IS_POSTER'			=> $is_poster,
 				'MCHAT_IS_NOTIFICATION'		=> $this->mchat_notifications->is_notification($row),
+				'MCHAT_IS_SYSTEM_MESSAGE'		=> $row['system_message'],
+				'MCHAT_IS_USER_FACING_MESSAGE'		=> !empty($row['user_facing_message']),
 				'MCHAT_PM'					=> !$is_poster && $this->mchat_settings->cfg('allow_privmsg') && $this->auth->acl_get('u_sendpm') && ($row['user_allow_pm'] || $this->auth->acl_gets('a_', 'm_') || $this->auth->acl_getf_global('m_')) ? append_sid($this->mchat_settings->url('ucp', true), ['i' => 'pm', 'mode' => 'compose', 'mchat_pm_quote_message' => $row['message_id'], 'u' => $row['user_id']]) : '',
 				'MCHAT_MESSAGE_EDIT'		=> $message_for_edit['text'],
 				'MCHAT_MESSAGE_ID'			=> $row['message_id'],
@@ -1446,14 +1469,6 @@ class mchat
 	}
 
 	/**
-	 * Remove expired sessions from the database
-	 */
-	public function session_gc()
-	{
-		$this->mchat_functions->mchat_session_gc();
-	}
-
-	/**
 	 * Assigns whois and stats at the bottom of the index page
 	 */
 	protected function assign_whois()
@@ -1597,6 +1612,98 @@ class mchat
 			'bbcode_bitfield'	=> $bitfield,
 			'bbcode_uid'		=> $uid,
 			'bbcode_options'	=> $options,
+		];
+	}
+	
+	protected function process_command($message, &$user_facing_messages, &$is_quit_command)
+	{
+		$message_without_bbcode = trim(preg_replace('#\[\/?[^\[\]]+\]#m', '', $message));
+		if (strpos($message_without_bbcode, '/')!==0) {
+			return FALSE;
+		}
+		
+		$args = explode(' ', substr($message_without_bbcode, 1), 2);
+		
+		if ($args[0]=='surt' || $args[0]=='quit') {
+			if (count($args)==1) {
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha desconnectat');
+			} else {
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha desconnectat: '.$args[1]);
+			}
+			$this->mchat_functions->delete_user_session($this->user->data['user_id']);
+			$is_quit_command = TRUE;
+		} else if ($this->auth->acl_get('u_mchat_moderator_delete') && ($args[0]=='tema' || $args[0]=='topic')) {
+			if (count($args)==1) {
+				// /topic -> empty topic -> remove topic
+			} else {
+				// /topic description -> set as topic
+			}
+		} else if ($args[0]=='jo' || $args[0]=='me') {
+			if (count($args)==1) {
+				$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': cal que especifiquis un missatge');
+			} else {
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] '.$args[1]);
+			}
+		} else if ($args[0]=='dau' || $args[0]=='dice') {
+			if (count($args)==1 || !is_numeric($args[1]) || $args[1]<2) {
+				$faces=6;
+				$faces_desc='';
+			} else {
+				$faces=(int)$args[1];
+				$faces_desc=" de $faces cares";
+			}
+			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha tirat un dau'.$faces_desc.'. El resultat és: [b]'.rand(1, $faces).'[/b]');
+		} else if ($this->auth->acl_get('u_mchat_moderator_delete') && ($args[0]=='neteja' || $args[0]=='clear')) {
+			$this->mchat_functions->clear_chat();
+		} else if ($args[0]=='ajuda' || $args[0]=='help') {
+			$help = '<b>Ordres disponibles al xat:</b><br><ul>' . 
+				'<li><b>/ajuda:</b> Mostra aquesta ajuda.</li>' . 
+				'<li><b>/dau (nombre de cares):</b> Tira un dau i en mostra el resultat. Si no s’especifiquen les cares, són 6.</li>' .
+				'<li><b>/jo (missatge en tercera persona):</b> Mostra un missatge en tercera persona.</li>' .
+				'<li><b>/surt (missatge de comiat):</b> Surt del xat amb un missatge opcional.</li>' .
+				'</ul>';
+				
+			if ($this->auth->acl_get('u_mchat_moderator_delete')) {
+				$help .= '<br><b>Ordres per a moderadors:</b><br><ul>' .
+					'<li><b>/tema (tema actual)</i>:</b> Defineix el tema actual del xat. Si no s’especifica, l’esborra.</li>' .
+					'<li><b>/neteja</i>:</b> Esborra tots els missatges anteriors i deixa la sessió de xat buida.</li>' .
+					'</ul>';
+			}
+		
+			$user_facing_messages[] = $this->build_user_facing_message($help);
+		} else {
+			return FALSE;
+		}
+
+		return TRUE;
+	}
+	
+	protected function build_user_facing_message($message)
+	{
+		$system_user = $this->mchat_functions->mchat_get_system_user();
+		
+		return [
+			'user_id' => $system_user['user_id'],
+			'username' => $system_user['username'],
+			'user_colour' => $system_user['user_colour'],
+			'user_avatar' => $system_user['user_avatar'],
+			'user_avatar_type' => $system_user['user_avatar_type'],
+			'user_avatar_width' => $system_user['user_avatar_width'],
+			'user_avatar_height' => $system_user['user_avatar_height'],
+			'user_allow_pm' => $system_user['user_allow_pm'],
+			'post_visibility' => $system_user['post_visibility'],
+			'message_id' => -time(),
+			'message' => str_replace("'", '&#39;', $message),
+			'user_ip' => '',
+			'bbcode_bitfield' => NULL,
+			'bbcode_uid' => NULL,
+			'bbcode_options' => NULL,
+			'message_time' => time(),
+			'forum_id' => 0,
+			'post_id' => 0,
+			'system_message' => 1,
+			'deleted' => 0,
+			'user_facing_message' => 1,
 		];
 	}
 

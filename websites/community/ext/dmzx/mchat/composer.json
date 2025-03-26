@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "mChat",
     "homepage": "https://www.phpbb.com/customise/db/extension/mchat_extension/",
-    "version": "2.1.4",
+    "version": "2.1.4-FSC1",
     "time": "2020-08-08",
     "keywords": [
         "phpbb",

@@ -44,7 +44,6 @@ class mchat_process_disconnects extends base
 	public function run()
 	{
 		$this->mchat_functions->mchat_session_gc();
-		$this->mchat_settings->set_cfg('mchat_process_disconnects_last_run', time());
 	}
 
 	/**
@@ -67,6 +66,6 @@ class mchat_process_disconnects extends base
 	 */
 	public function should_run()
 	{
-		return $this->mchat_settings->cfg('mchat_process_disconnects_last_run') < strtotime('5 minutes ago');
+		return TRUE;
 	}
 }

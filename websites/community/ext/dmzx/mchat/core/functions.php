@@ -184,7 +184,7 @@ class functions
 					'ON'	=> 'ms.user_id = u.user_id',
 				],
 			],
-			'WHERE'		=> 'u.user_id <> ' . ANONYMOUS . ' AND s.session_viewonline IS NOT NULL AND ms.user_lastupdate > ' . (int) $check_time,
+			'WHERE'		=> 'u.user_id <> ' . ANONYMOUS . ' AND s.session_viewonline IS NOT NULL',
 			'ORDER_BY'	=> 'u.username ASC',
 		];
 
@@ -282,15 +282,87 @@ class functions
 		return $is_new_session;
 	}
 
+	public function mchat_user_session_exists()
+	{
+		if (!$this->user->data['is_registered'] || $this->user->data['user_id'] == ANONYMOUS || $this->user->data['is_bot'])
+		{
+			return false;
+		}
+
+		$sql = 'SELECT COUNT(*) AS numrows FROM ' . $this->mchat_settings->get_table_mchat_sessions() . '
+			WHERE user_id = ' . (int) $this->user->data['user_id'];
+		$this->db->sql_query($sql);
+		
+		return $this->db->sql_fetchfield('numrows')>0;
+	}
+
 	/**
 	 * Remove expired sessions from the database
 	 */
 	public function mchat_session_gc()
 	{
-		$check_time = time() - $this->mchat_session_time();
+		//Kill sessions with last message > 60 minutes ago
+		$check_time = time() - 3600;
 
+		$sql_array = [
+			'SELECT'	=> 'ms.*, (SELECT m.message_time FROM ' . $this->mchat_settings->get_table_mchat() . ' m WHERE user_id=u.user_id ORDER BY m.message_id DESC LIMIT 1) last_message_time, u.username, u.user_colour',
+			'FROM'		=> [$this->mchat_settings->get_table_mchat_sessions() => 'ms'],
+			'LEFT_JOIN'	=> [
+				[
+					'FROM'	=> [USERS_TABLE => 'u'],
+					'ON'	=> 'ms.user_id = u.user_id',
+				],
+			],
+			'ORDER_BY'	=> 'ms.user_lastupdate ASC',
+		];
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+		
+		foreach ($rows as $row)
+		{
+			if ($row['last_message_time']< $check_time) {
+				$this->add_system_message($row['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $row['user_id']]).'][color=#'.$row['user_colour'].'][b]'.$row['username'].'[/b][/color][/url] s’ha desconnectat (inactivitat)');
+				$this->delete_user_session($row['user_id']);
+			}
+		}
+		
+		//Now kill sessions with last refresh > 5 minutes ago
+		$check_time = time() - 300;
+
+		$sql_array = [
+			'SELECT'	=> 'ms.*, u.username, u.user_colour',
+			'FROM'		=> [$this->mchat_settings->get_table_mchat_sessions() => 'ms'],
+			'LEFT_JOIN'	=> [
+				[
+					'FROM'	=> [USERS_TABLE => 'u'],
+					'ON'	=> 'ms.user_id = u.user_id',
+				],
+			],
+			'WHERE'		=> 'ms.user_lastupdate <= ' . (int) $check_time,
+			'ORDER_BY'	=> 'ms.user_lastupdate ASC',
+		];
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+		
+		foreach ($rows as $row)
+		{
+			$this->add_system_message($row['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $row['user_id']]).'][color=#'.$row['user_colour'].'][b]'.$row['username'].'[/b][/color][/url] s’ha desconnectat (xat tancat)');
+			$sql = 'DELETE FROM ' . $this->mchat_settings->get_table_mchat_sessions() . '
+				WHERE user_id = ' . (int) $row['user_id'];
+			$this->db->sql_query($sql);
+		}
+	}
+	
+	public function delete_user_session($user_id)
+	{
 		$sql = 'DELETE FROM ' . $this->mchat_settings->get_table_mchat_sessions() . '
-			WHERE user_lastupdate <= ' . (int) $check_time;
+			WHERE user_id = ' . (int) $user_id;
 		$this->db->sql_query($sql);
 	}
 
@@ -472,6 +544,8 @@ class functions
 			implode(' OR ', $sql_where_message_id),
 			$this->mchat_notifications->get_sql_where(),
 		]);
+		
+		$sql_where_ary[] = 'm.deleted = 0';
 
 		$sql_array = [
 			'SELECT'	=> 'm.*, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, u.user_allow_pm, p.post_visibility',
@@ -546,6 +620,22 @@ class functions
 		extract($this->dispatcher->trigger_event('dmzx.mchat.get_messages_modify_rowset', compact($vars)));
 
 		return $rows;
+	}
+	
+	public function mchat_get_system_user()
+	{
+		$sql_array = [
+			'SELECT'	=> 'u.user_id, u.username, u.user_colour, u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, u.user_allow_pm, 1 post_visibility',
+			'FROM'		=> [USERS_TABLE => 'u'],
+			'WHERE'		=> 'u.user_id=2',
+		];
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		return $rows[0];
 	}
 
 	/**
@@ -839,5 +929,40 @@ class functions
 		}
 
 		return $is_new_session;
+	}
+	
+	protected function prepare_system_message($message)
+	{
+		$mchat_img = $mchat_flash = $mchat_quote = $mchat_url = $mchat_bbcode = $mchat_magic_urls = $mchat_smilies = TRUE;
+		$uid = $bitfield = $options = '';
+		generate_text_for_storage($message, $uid, $bitfield, $options, $mchat_bbcode, $mchat_magic_urls, $mchat_smilies, $mchat_img, $mchat_flash, $mchat_quote, $mchat_url, 'mchat');
+		
+		return [
+			'message'			=> str_replace("'", '&#39;', $message),
+			'bbcode_bitfield'	=> $bitfield,
+			'bbcode_uid'		=> $uid,
+			'bbcode_options'	=> $options,
+			'system_message'	=> 1,
+		];
+	}
+	
+	public function add_system_message($user_id, $message)
+	{
+		$message_data = $this->prepare_system_message($message);
+		$message_data = array_merge($message_data, [
+			'user_id'		=> $user_id,
+			'message_time'	=> time(),
+		]);
+		$this->db->sql_query('INSERT INTO ' . $this->mchat_settings->get_table_mchat() . ' ' . $this->db->sql_build_array('INSERT', $message_data));
+	}
+	
+	public function clear_chat()
+	{
+		$result = $this->db->sql_query('SELECT MAX(message_id) max_id FROM ' . $this->mchat_settings->get_table_mchat());
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		
+		$this->mchat_log->add_log('clear', $row['max_id']);
+		$this->db->sql_query('UPDATE ' . $this->mchat_settings->get_table_mchat() . ' SET deleted = 1 WHERE message_id <= ' . $row['max_id']);
 	}
 }

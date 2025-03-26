@@ -134,7 +134,7 @@ jQuery(function($) {
 			};
 			$(mChat).trigger('mchat_ajax_done_before', [data]);
 			if (data.handle) {
-				if (json[data.mode]) {
+				if (json[data.mode]!==undefined) {
 					this.deferred.resolve(data.json, data.status, data.xhr);
 				} else {
 					this.deferred.reject(data.xhr, data.status, mChat.lang.parserErr);
@@ -368,6 +368,9 @@ jQuery(function($) {
 			if (json.del) {
 				mChat.removeMessages(json.del);
 			}
+			if (json.clear) {
+				mChat.clearMessages(json.clear);
+			}
 			mChat.whoisDone(json.users);
 			if (json.log) {
 				mChat.logId = json.log;
@@ -477,6 +480,30 @@ jQuery(function($) {
 			var playSound = true;
 			$.each(ids, function(i, id) {
 				if (mChat.messageIds.removeValue(id)) {
+					var data = {
+						id: id,
+						message: $('#mchat-message-' + id),
+						playSound: playSound
+					};
+					$(mChat).trigger('mchat_delete_message_before', [data]);
+					mChat.stopRelativeTimeUpdate(data.message);
+					(function($message) {
+						$message.fadeOut(function() {
+							$message.remove();
+						});
+					})(data.message);
+					if (data.playSound) {
+						mChat.sound('del');
+						playSound = false;
+					}
+				}
+			});
+		},
+		clearMessages: function(lastIdToBeCleared) {
+			var playSound = true;
+			var allMessageIds = mChat.messageIds.slice();
+			$.each(allMessageIds, function(i, id) {
+				if (id <= lastIdToBeCleared && mChat.messageIds.removeValue(id)) {
 					var data = {
 						id: id,
 						message: $('#mchat-message-' + id),

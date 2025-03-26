@@ -256,6 +256,11 @@ class notifications
 					'p' => $row['post_id'],
 					'#' => 'p' . $row['post_id'],
 				]);
+				
+				$viewprofile_url = append_sid($this->mchat_settings->url('memberlist', true), [
+					'mode' => 'viewprofile',
+					'u' => $row['user_id'],
+				]);
 
 				// We prefer $post_data because it was fetched from the forums table just now.
 				// $row might contain outdated data if a post was moved to a new forum.
@@ -265,6 +270,7 @@ class notifications
 					'f' => $forum_id,
 				]);
 
+				$lang_args[] = '[url=' . $viewprofile_url . '][color=#' .$row['user_colour']. '][b]' . $row['username'] . '[/b][/color][/url]';
 				$lang_args[] = '[url=' . $viewtopic_url . ']' . $post_subject_placeholder . '[/url]';
 				$lang_args[] = '[url=' . $viewforum_url . ']' . $forum_name_placeholder . '[/url]';
 
