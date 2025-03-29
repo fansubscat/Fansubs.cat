@@ -81,7 +81,7 @@ ul.topiclist.two-long-columns dt {
 }
 
 ul.topiclist.two-columns dt {
-	margin-right: -80px;
+	margin-right: -160px;
 }
 
 ul.topiclist dt .list-inner {
@@ -101,7 +101,7 @@ ul.topiclist.two-long-columns dt .list-inner {
 }
 
 ul.topiclist.two-columns dt .list-inner {
-	margin-right: 80px;
+	margin-right: 160px;
 }
 
 ul.topiclist dd {
@@ -291,8 +291,13 @@ dl a.row-item-link {						// topic row icon links
 	z-index: 2;
 }
 
-dd.posts, dd.topics, dd.views, dd.extra, dd.mark {
+dd.posts, dd.topics, dd.views, dd.extra {
 	width: 80px;
+	text-align: center;
+}
+
+dd.mark {
+	width: 160px;
 	text-align: center;
 }
 
@@ -1196,10 +1201,11 @@ dd.profile-contact {
 
 .no-avatar .avatar-container {
 	display: block;
-	width: 92px;
-	height: 92px;
+	width: 131px;
+	height: 131px;
 	background: transparent none 50% 50% no-repeat;
 	background-size: cover;
+	margin-bottom: 3px;
 }
 
 // Profile used on view-profile

@@ -19,11 +19,12 @@
 			</a>
 <!-- ENDIF -->
 <!-- IF MCHAT_PAGE -->
-			<a class="hentai-button" href="/xat" title="Configuració del xat">
-				<i class="fa-fw fa fa-gears fa-2x"></i>
+			<a class="hentai-button" href="/" title="Surt del xat i torna a la comunitat" onclick="exitChat(); return false;">
+				<i class="fa-fw fa fa-right-from-bracket fa-2x"></i>
 			</a>
 <!-- ENDIF -->
 			<div class="dropdown-menu">
+<!-- IF not MCHAT_PAGE -->
 				<div class="filter-button dropdown-button" onclick="showForumDropdown();" title="Menú de la comunitat"><i class="fa-fw fa fa-navicon fa-2x"></i><!-- IF NOTIFICATIONS_COUNT > 0 --><div class="notification-ball"><strong><span class="counter"><!-- IF NOTIFICATIONS_COUNT > 99 -->+<!-- ELSE -->{{NOTIFICATIONS_COUNT}}<!-- ENDIF --></span></strong></div><!-- ENDIF --></div>
 				<div id="forum-dropdown" class="dropdown-content">
 					<div class="dropdown-title">Menú</div>
@@ -88,6 +89,10 @@
 					<!-- ENDIF -->
 				<!-- ENDIF -->
 				</div>
+<!-- ENDIF -->
+<!-- IF MCHAT_PAGE -->
+				<div class="filter-button dropdown-button" onclick="showChatSettings();" title="Configuració del xat"><i class="fa-fw fa fa-gears fa-2x"></i></div>
+<!-- ENDIF -->
 			</div>
 			<a class="filter-button mobile-search-button" href="{U_SEARCH}" title="Cerca">
 				<i class="fa fa-fw fa-search fa-2x"></i>

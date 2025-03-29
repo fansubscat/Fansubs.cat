@@ -38,7 +38,12 @@
 <!-- EVENT overall_header_navbar_before -->
 <!-- INCLUDE navbar_header.html -->
 		<h3>{{ lang('MCHAT_WHO_IS_CHATTING') }}</h3>
-		{% INCLUDE '@dmzx_mchat/mchat_whois.html' %}
+		<button type="button" class="button mchat-button-userlist show-users" title="Usuaris al xat" onclick="showChatUsersDropdown();">
+			<i class="icon fa fa-users fa-fw" aria-hidden="true"></i><span class="sr-only">Usuaris al xat</span>
+		</button>
+		<div id="mchat-userlist">
+			{% INCLUDE '@dmzx_mchat/mchat_whois.html' %}
+		</div>
 	</div>
 {% endif %}
 
@@ -50,29 +55,19 @@
 
 			<div id="mchat-body"{% if MCHAT_IS_COLLAPSIBLE %} class="collapsible"{% endif %}>
 				{% if MCHAT_SOUND_ENABLED %}
-					<audio id="mchat-sound-add" class="hidden" src="{{ EXT_URL }}sounds/add.mp3" preload="auto"></audio>
+					<audio id="mchat-sound-add-default" class="hidden" src="{{ EXT_URL }}sounds/add.mp3" preload="auto"></audio>
+					<audio id="mchat-sound-add-adara" class="hidden" src="{{ EXT_URL }}sounds/add_adara.mp3" preload="auto"></audio>
+					<audio id="mchat-sound-add-msn" class="hidden" src="{{ EXT_URL }}sounds/add_msn.mp3" preload="auto"></audio>
+					<audio id="mchat-sound-add-tutturu" class="hidden" src="{{ EXT_URL }}sounds/add_tutturu.mp3" preload="auto"></audio>
 					<audio id="mchat-sound-edit" class="hidden" src="{{ EXT_URL }}sounds/edit.mp3" preload="auto"></audio>
 					<audio id="mchat-sound-del" class="hidden" src="{{ EXT_URL }}sounds/del.mp3" preload="auto"></audio>
 					<audio id="mchat-sound-error" class="hidden" src="{{ EXT_URL }}sounds/error.mp3" preload="auto"></audio>
 				{% endif %}
+				<input type="hidden" id="my-user-id" value="{{ MCHAT_USER_ID }}" />
 
-				<div id="mchat-confirm" class="hidden">
-					<h3>{{ lang('CONFIRM') }}</h3>
-					<div class="mchat-confirm-fields">
-						<p></p>
-						<textarea></textarea>
-					</div>
-					<fieldset class="submit-buttons">
-						<input type="button" name="confirm" value="{{ lang('MCHAT_OK') }}" class="button2">&nbsp;
-						<input type="button" name="cancel" value="{{ lang('CANCEL') }}" class="button2">
-					</fieldset>
-				</div>
-
-				{% if MCHAT_STATIC_MESS and MCHAT_PAGE != 'archive' %}
+				{% if MCHAT_PAGE != 'archive' %}
 					{% EVENT dmzx_mchat_static_container_before %}
-					<ul class="topiclist forums mchat-static-container">
-						<li class="row mchat-static">{{ MCHAT_STATIC_MESS }}</li>
-					</ul>
+					<div class="mchat-topic{% if not MCHAT_STATIC_MESS %} hidden{% endif %}">{{ MCHAT_STATIC_MESS }}</div>
 					{% EVENT dmzx_mchat_static_container_after %}
 				{% endif %}
 

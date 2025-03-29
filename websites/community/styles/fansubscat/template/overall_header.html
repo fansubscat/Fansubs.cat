@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#6aa0f8">
-<meta name="description" content="Gaudeix de l’anime en català a Fansubs.cat, el portal que recopila tot l’anime subtitulat pels diferents fansubs en català!">
+<meta name="description" content="Uneix-te a la comunitat de Fansubs.cat, comenta-hi tot el que t’agrada amb altra gent com tu i participa en activitats diverses!">
 <meta name="referrer" content="origin">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="msapplication-TileColor" content="#da532c">
@@ -16,7 +16,7 @@
 <meta name="site_name" content="Fansubs.cat">
 <meta property="og:title" content="Comunitat | Fansubs.cat">
 <meta property="og:url" content="https://comunitat.fansubs.cat">
-<meta property="og:description" content="Gaudeix de l’anime en català a Fansubs.cat, el portal que recopila tot l’anime subtitulat pels diferents fansubs en català!">
+<meta property="og:description" content="Uneix-te a la comunitat de Fansubs.cat, comenta-hi tot el que t’agrada amb altra gent com tu i participa en activitats diverses!">
 <meta property="og:image" content="https://static.fansubs.cat/social/community.jpg">
 <meta property="og:image:type" content="image/jpeg">
 {META}
@@ -89,9 +89,9 @@
 				var parsedValue = res.replaceAll("\n","");
 				
 				area.value = (area.value=='') ? parsedValue : (area.value + "\n" + parsedValue);
-				if (autosize) {
+				/*if (autosize) {
 					autosize(area);
-				}
+				}*/
 				if (co && opener != null) {
 					opener.focus();
 					window.close();
@@ -100,6 +100,8 @@
 			writable:false,
 			configurable:false
 			});
+		postimage.opt.lang="catalan";
+		postimage.opt.code="hotlink";
 	}
 </script>
 <!-- ENDIF -->

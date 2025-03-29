@@ -11,12 +11,6 @@ var styleConfig = {
 	collapseForums: false
 };
 
-//Fansubs.cat
-function showForumDropdown() {
-	$('#user-dropdown').removeClass('dropdown-show');
-	$('#forum-dropdown').toggleClass('dropdown-show');
-}
-
 /**
 * Find a member
 */

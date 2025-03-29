@@ -179,7 +179,7 @@ class event_listener implements EventSubscriberInterface
 
 	public function relay_submitted_post($event)
 	{
-		$relayed_forum_ids = array(4, 5, 6, 16, 17);
+		$relayed_forum_ids = array(4, 5, 6);
 		$mode = $event['mode'];
 		$data = $event['data'];
 		

@@ -298,23 +298,11 @@ function add_or_update_topic_to_community($version_id){
 	$version = mysqli_fetch_assoc($result) or crash('Version not found');
 	mysqli_free_result($result);
 	
-	if ($version['is_hidden']==1) {
+	if ($version['is_hidden']==1 || $version['series_rating']=='XXX') {
 		return;
 	}
 	
-	if ($version['series_rating']=='XXX' && $version['series_type']=='anime') {
-		$forum_id = 16;
-		$url = str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,ANIME_URL);
-		$static_url = str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,STATIC_URL);
-		$site = HENTAI_SITE_NAME;
-		$type = "Mira aquest anime";
-	} else if ($version['series_rating']=='XXX' && $version['series_type']=='manga') {
-		$forum_id = 17;
-		$url = str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,MANGA_URL);
-		$static_url = str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,STATIC_URL);
-		$site = HENTAI_SITE_NAME;
-		$type = "Llegeix aquest manga";
-	} else if ($version['series_type']=='manga') {
+	if ($version['series_type']=='manga') {
 		$forum_id = 5;
 		$url = MANGA_URL;
 		$static_url = STATIC_URL;
@@ -334,7 +322,7 @@ function add_or_update_topic_to_community($version_id){
 		$type = "Mira aquest anime";
 	}
 	
-	$message = "[center][size=150][b]".$version['title']."[/b][/size]\nVersió ".get_fansub_preposition_name($version['fansub_names'])."\n\n[img]".$static_url."/images/covers/version_".$version['id'].".jpg[/img]\n\n\n[size=125][b]Sinopsi:[/b][/size]\n".$version['synopsis']."\n\n[color=#6AA0F8][size=125][b][u][url=".$url."/".$version['slug']."]".$type." a ".$site."[/url][/u][/b][/size][/color][/center]";
+	$message = "[center][size=150][b]".$version['title']."[/b][/size]\nVersió ".get_fansub_preposition_name($version['fansub_names'])."\n\n[cover]".$static_url."/images/covers/version_".$version['id'].".jpg[/cover]\n\n\n[size=125][b]Sinopsi:[/b][/size]\n".$version['synopsis']."\n\n[size=125][b][u][url=".$url."/".$version['slug']."][color=#6AA0F8]".$type." a ".$site."[/color][/url][/u][/b][/size][/center]";
 	
 	if (empty($version['forum_topic_id'])) {
 		$curl = curl_init();

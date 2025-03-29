@@ -206,6 +206,7 @@ function query_comment_for_forum_posting($comment_id) {
 				LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id
 				LEFT JOIN fansub fa ON vf.fansub_id=fa.id
 			WHERE c.id=$comment_id
+				AND s.rating<>'XXX'
 			GROUP BY c.id";
 	return query($final_query);
 }

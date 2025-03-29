@@ -19,16 +19,24 @@ $(document).ready(function () {
     }
 
     tribute = new Tribute({
+        noMatchTemplate: function () {
+            return false;
+        },
         collection: [{
             trigger: '@',
             menuItemTemplate: function (item) {
+            	if (item===undefined) {
+            		return '';
+    		}
                 if (item.original.type === 'group') {
                     return item.original.value +  SIMPLE_MENTION_GROUP_NAME.replace('{CNT}', item.original.cnt) ;
                 }
                 return '<img class="avatar" src="'+item.original.avatar+'" alt=""> '+item.original.value;
             },
-
             selectTemplate: function (item) {
+            	if (item===undefined) {
+            		return '';
+    		}
                 if (item.original.type === 'user') {
                     return '[mention]' + item.original.value + '[/mention]';
                 }
@@ -39,10 +47,16 @@ $(document).ready(function () {
         }, {
             trigger: ':',
             menuItemTemplate: function (item) {
+            	if (item===undefined) {
+            		return '';
+    		}
                 return '<img class="smiley" src="/images/smilies/'+item.original.value+'" alt=""> '+item.original.key;
             },
 
             selectTemplate: function (item) {
+            	if (item===undefined) {
+            		return '';
+    		}
                 if (item.original.type === 'smiley') {
                     return item.original.key;
                 }

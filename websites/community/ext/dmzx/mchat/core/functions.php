@@ -172,7 +172,7 @@ class functions
 		$check_time = time() - $this->mchat_session_time();
 
 		$sql_array = [
-			'SELECT'	=> 'u.user_id, u.username, u.user_colour, s.session_viewonline',
+			'SELECT'	=> 'u.user_id, u.username, u.user_colour',
 			'FROM'		=> [$this->mchat_settings->get_table_mchat_sessions() => 'ms'],
 			'LEFT_JOIN'	=> [
 				[
@@ -184,7 +184,7 @@ class functions
 					'ON'	=> 'ms.user_id = u.user_id',
 				],
 			],
-			'WHERE'		=> 'u.user_id <> ' . ANONYMOUS . ' AND s.session_viewonline IS NOT NULL',
+			'WHERE'		=> 'u.user_id <> ' . ANONYMOUS,
 			'ORDER_BY'	=> 'u.username ASC',
 		];
 
@@ -206,20 +206,9 @@ class functions
 		$this->db->sql_freeresult($result);
 
 		$mchat_users = [];
-		$can_view_hidden = $this->auth->acl_get('u_viewonline');
 
 		foreach ($rows as $row)
 		{
-			if (!$row['session_viewonline'])
-			{
-				if (!$can_view_hidden && $row['user_id'] != $this->user->data['user_id'])
-				{
-					continue;
-				}
-
-				$row['username'] = '<em>' . $row['username'] . '</em>';
-			}
-
 			$mchat_users[$row['user_id']] = get_username_string('full', $row['user_id'], $row['username'], $row['user_colour'], $this->lang->lang('GUEST'));
 		}
 
@@ -248,6 +237,48 @@ class functions
 		$this->active_users = $active_users;
 
 		return $active_users;
+	}
+	
+	
+	public function mchat_active_users_html()
+	{
+		$sql_array = [
+			'SELECT'	=> 'u.user_id, u.username, u.user_colour, (SELECT m.message_time FROM ' . $this->mchat_settings->get_table_mchat() . ' m WHERE user_id=u.user_id ORDER BY m.message_id DESC LIMIT 1) last_message_time',
+			'FROM'		=> [$this->mchat_settings->get_table_mchat_sessions() => 'ms'],
+			'LEFT_JOIN'	=> [
+				[
+					'FROM'	=> [USERS_TABLE => 'u'],
+					'ON'	=> 'ms.user_id = u.user_id',
+				],
+			],
+			'WHERE'		=> 'u.user_id <> ' . ANONYMOUS,
+			'ORDER_BY'	=> 'u.username ASC',
+		];
+
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $this->db->sql_query($sql);
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		$html = '';
+
+		foreach ($rows as $row)
+		{
+			$last_message_time = $row['last_message_time'];
+			if ($last_message_time>=time()-600) {
+				$color = 'green';
+				$desc = 'Darrer missatge: fa menys de 10 minuts';
+			} else if ($last_message_time>=time()-1800) {
+				$color = 'yellow';
+				$desc = 'Darrer missatge: fa entre 10 i 30 minuts';
+			} else {
+				$color = 'red';
+				$desc = 'Darrer missatge: fa més de 30 minuts';
+			}
+			$html .= '<li><span class="chat-inactive chat-inactive-'.$color.'" title="'.$desc.'"></span><span class="user-row" onclick="addChatMention(\''.htmlspecialchars($row['username']).'\');">' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $this->lang->lang('GUEST')) . '</span></li>';
+		}
+
+		return $html;
 	}
 
 	/**

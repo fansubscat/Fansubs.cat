@@ -70,13 +70,13 @@ $lang = array_merge($lang, [
 	'MCHAT_STATIC_MESSAGE'			=> '',
 
 	// Post notification messages (%1$s is replaced with a link to the new/edited post, %2$s is replaced with a link to the forum)
-	'MCHAT_NEW_POST'				=> '%1$s ha començat un nou tema a %3$s: «%2$s»',
+	'MCHAT_NEW_POST'				=> '%1$s ha començat un nou tema a %3$s: %2$s',
 	'MCHAT_NEW_POST_DELETED'		=> '%1$s ha començat un nou tema que s’ha eliminat',
-	'MCHAT_NEW_REPLY'				=> '%1$s ha publicat un missatge al tema «%2$s»',
-	'MCHAT_NEW_REPLY_DELETED'		=> '%1$s ha publicat un missatge que s’ha eliminat al tema «%2$s»',
-	'MCHAT_NEW_QUOTE'				=> '%1$s ha publicat un missatge al tema «%2$s»',
-	'MCHAT_NEW_QUOTE_DELETED'		=> '%1$s ha publicat un missatge que s’ha eliminat al tema «%2$s»',
-	'MCHAT_NEW_EDIT'				=> '%1$s ha editat un missatge a «%2$s»',
+	'MCHAT_NEW_REPLY'				=> '%1$s ha publicat un missatge al tema %2$s',
+	'MCHAT_NEW_REPLY_DELETED'		=> '%1$s ha publicat un missatge que s’ha eliminat al tema %2$s',
+	'MCHAT_NEW_QUOTE'				=> '%1$s ha publicat un missatge al tema %2$s',
+	'MCHAT_NEW_QUOTE_DELETED'		=> '%1$s ha publicat un missatge que s’ha eliminat al tema %2$s',
+	'MCHAT_NEW_EDIT'				=> '%1$s ha editat un missatge a %2$s',
 	'MCHAT_NEW_EDIT_DELETED'		=> '%1$s ha editat un missatge que s’ha eliminat',
 	'MCHAT_NEW_LOGIN'				=> '%1$s ha iniciat la sessió',
 ]);

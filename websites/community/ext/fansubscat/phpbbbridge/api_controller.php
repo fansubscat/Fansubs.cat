@@ -513,7 +513,7 @@ class api_controller {
 		$data['post_edit_reason'] = '';
 		$data['post_edit_user'] = $postrow['poster_id'];
 
-		$result = submit_post($mode, $request->subject, $postrow['post_username'], POST_NORMAL, $poll, $data);
+		$result = submit_post($mode, $request->subject, $this->user->data['username'], POST_NORMAL, $poll, $data);
 		
 		$this->end_user_session();
 		

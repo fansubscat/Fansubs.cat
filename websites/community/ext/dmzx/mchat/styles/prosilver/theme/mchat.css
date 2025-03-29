@@ -95,7 +95,7 @@
 @-webkit-keyframes flash-message {
 
 	0% {
-		background-color: #FFDC95;
+		background-color: #466C8F;
 	}
 
 	100% {
@@ -107,7 +107,7 @@
 @keyframes flash-message {
 
 	0% {
-		background-color: #FFDC95;
+		background-color: #466C8F;
 	}
 
 	100% {
@@ -458,18 +458,6 @@
 
 	.mchat-wrapper .mchat-buttons > li {
 		padding: 0 5px;
-	}
-
-	.mchat-controls {
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		    -ms-flex-direction: column;
-		        flex-direction: column;
-	}
-
-	.mchat-panel-buttons {
-		min-height: 32px;
-		margin: 3px auto !important;
 	}
 
 }

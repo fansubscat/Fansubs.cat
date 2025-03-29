@@ -102,9 +102,6 @@ jQuery(function($) {
 	$.extend(mChat, {
 		storage: new StorageWrapper('localStorage', mChat.cookie + 'mchat_'),
 		ajaxRequest: function(mode, sendHiddenFields, data) {
-			if (mChat.pageIsUnloading) {
-				return;
-			}
 			var deferred = $.Deferred();
 			$.extend(data,
 				{_referer: mChat.currentUrl},
@@ -142,9 +139,6 @@ jQuery(function($) {
 			}
 		},
 		ajaxFail: function(xhr, textStatus, errorThrown) {
-			if (mChat.pageIsUnloading) {
-				return;
-			}
 			mChat.skipNextRefresh = true;
 			if (typeof console !== 'undefined' && console.log) {
 				console.log('AJAX error. status: ' + textStatus + ', message: ' + errorThrown + ' (' + xhr.responseText + ')');
@@ -163,7 +157,7 @@ jQuery(function($) {
 				}
 			};
 			$(mChat).trigger('mchat_ajax_fail_before', [data]);
-			mChat.sound('error');
+			//mChat.sound('error');
 			mChat.status('error');
 			var title = mChat.lang.err;
 			var responseText;
@@ -180,36 +174,44 @@ jQuery(function($) {
 				responseText = data.errorThrown;
 			}
 			if (responseText && responseText !== 'timeout') {
-				phpbb.alert(title, responseText);
+				if (data.xhr.status == 403) {
+					showCustomDialog(lang('js.community.chat_session_ended.title'), lang('js.community.chat_session_ended.description'), null, false, true, [
+						{
+							text: lang('js.community.chat_session_ended.button_return'),
+							class: 'normal-button',
+							onclick: function(){
+								window.location.href="/";
+							}
+						},
+						{
+							text: lang('js.community.chat_session_ended.button_reconnect'),
+							class: 'cancel-button',
+							onclick: function(){
+								window.location.reload();
+							}
+						}
+					]);
+				} else if (data.xhr.status == 400) {
+					showAlert(title, responseText);
+				}
 			}
 			data.updateSession();
 		},
-		registerNavItem: function(id, canEnable, onToggle) {
-			var isEnabled = canEnable && !mChat.storage.get('no_' + id);
-			var classEnabled = 'mchat-nav-item-enabled';
-			var classDisabled = 'mchat-nav-item-disabled';
-			mChat.cached(id).toggleClass(classEnabled, isEnabled).toggleClass(classDisabled, !isEnabled);
-			if (typeof onToggle === 'function') {
-				onToggle(isEnabled);
+		sound: function(file, forceSoundType=null) {
+			var soundType = mChat.storage.get('sound');
+			if (!soundType) {
+				soundType = 'default';
 			}
-			mChat['toggle_' + id] = function(e) {
-				e.preventDefault();
-				var hasClass = mChat.cached(id).toggleClass(classEnabled + ' ' + classDisabled).hasClass(classEnabled);
-				if (hasClass) {
-					mChat.storage.remove('no_' + id);
-				} else {
-					mChat.storage.set('no_' + id, 'yes');
-				}
-				if (typeof onToggle === 'function') {
-					onToggle(hasClass);
-				}
-			};
-		},
-		sound: function(file) {
+			if (forceSoundType) {
+				soundType = forceSoundType;
+			}
+			if (soundType=='silence') {
+				return;
+			}
 			var data = {
-				audio: mChat.cached('sound-' + file)[0],
+				audio: mChat.cached('sound-' + file + (file=='add' ? ('-' + soundType) : ''))[0],
 				file: file,
-				play: !mChat.pageIsUnloading && mChat.cached('sound').hasClass('mchat-nav-item-enabled')
+				play: true
 			};
 			$(mChat).trigger('mchat_sound_before', [data]);
 			if (data.play && data.audio && data.audio.duration) {
@@ -231,13 +233,7 @@ jQuery(function($) {
 		toggle: function() {
 			var name = $(this).data('mchat-element');
 			var $elem = mChat.cached(name);
-			$elem.stop().slideToggle(200, function() {
-				if ($elem.is(':visible')) {
-					mChat.storage.set('show_' + name, 'yes');
-				} else {
-					mChat.storage.remove('show_' + name);
-				}
-			});
+			$elem.stop().toggle();
 		},
 		confirm: function(data) {
 			var $confirmFields = data.container.find('.mchat-confirm-fields');
@@ -271,7 +267,7 @@ jQuery(function($) {
 				return;
 			}
 			if (mChat.mssgLngth && messageLength > mChat.mssgLngth) {
-				phpbb.alert(mChat.lang.err, mChat.lang.mssgLngthLong);
+				showAlert(lang('js.community.chat_error.title'), lang('js.community.chat_error.error_too_long'));
 				return;
 			}
 			$add.prop('disabled', true);
@@ -293,22 +289,28 @@ jQuery(function($) {
 		},
 		edit: function() {
 			var $message = $(this).closest('.mchat-message');
-			mChat.confirm({
-				container: mChat.cached('confirm'),
-				fields: function($container) {
-					return [
-						$container.find('p').text(mChat.lang.editInfo),
-						$container.find('textarea').val($message.data('mchat-message'))
-					];
+			var code = '<textarea style="width: 50vw; height: 8rem;" id="edit-chat-message">'+$("<div>").text($message.data('mchat-message')).html()+'</textarea>';
+			showCustomDialog(lang('js.community.chat_edit_message.title'), code, null, true, true, [
+				{
+					text: lang('js.community.chat_edit_message.save'),
+					class: 'normal-button',
+					onclick: function(){
+						mChat.ajaxRequest('edit', true, {
+							message_id: $message.data('mchat-id'),
+							message: $('#edit-chat-message').val(),
+							page: mChat.page
+						}).done(mChat.editDone);
+						closeCustomDialog();
+					}
 				},
-				confirm: function($p, $textarea) {
-					mChat.ajaxRequest('edit', true, {
-						message_id: $message.data('mchat-id'),
-						message: $textarea.val(),
-						page: mChat.page
-					}).done(mChat.editDone);
+				{
+					text: lang('js.dialog.cancel'),
+					class: 'cancel-button',
+					onclick: function(){
+						closeCustomDialog();
+					}
 				}
-			});
+			]);
 		},
 		editDone: function(json) {
 			mChat.updateMessages($(json.edit));
@@ -316,28 +318,31 @@ jQuery(function($) {
 		},
 		del: function() {
 			var delId = $(this).closest('.mchat-message').data('mchat-id');
-			mChat.confirm({
-				container: mChat.cached('confirm'),
-				fields: function($container) {
-					return [
-						$container.find('p').text(mChat.lang.delConfirm)
-					];
+			showCustomDialog(lang('js.dialog.confirm'), mChat.lang.delConfirm, null, true, true, [
+				{
+					text: lang('js.dialog.yes'),
+					class: 'normal-button',
+					onclick: function(){
+						mChat.ajaxRequest('del', true, {
+							message_id: delId
+						}).done(mChat.delDone);
+						closeCustomDialog();
+					}
 				},
-				confirm: function() {
-					mChat.ajaxRequest('del', true, {
-						message_id: delId
-					}).done(mChat.delDone);
+				{
+					text: lang('js.dialog.no'),
+					class: 'cancel-button',
+					onclick: function(){
+						closeCustomDialog();
+					}
 				}
-			});
+			]);
 		},
 		delDone: function(json) {
 			mChat.removeMessages([json.del]);
 			mChat.resetSession();
 		},
 		refresh: function(message) {
-			if (mChat.pageIsUnloading) {
-				return $.when();
-			}
 			var isAdd = typeof message !== 'undefined';
 			if (!isAdd) {
 				mChat.sessionLength += mChat.refreshTime;
@@ -359,6 +364,12 @@ jQuery(function($) {
 		},
 		refreshDone: function(json) {
 			$(mChat).trigger('mchat_response_handle_data_before', [json]);
+			$('.mchat-topic').html(json.topic);
+			if (json.topic) {
+				$('.mchat-topic').removeClass('hidden');
+			} else {
+				$('.mchat-topic').addClass('hidden');
+			}
 			if (json.add) {
 				mChat.addMessages($(json.add));
 			}
@@ -391,20 +402,24 @@ jQuery(function($) {
 		addMessages: function($messages) {
 			mChat.cached('messages').find('.mchat-no-messages').remove();
 			$messages.reverse(mChat.messageTop).hide().each(this.addMessage);
+			addTargetToExternalLinks();
 		},
 		addMessage: function(index) {
 			var $message = $(this);
+			var myUserId = $('#my-user-id').val();
 			var dataAddMessageBefore = {
 				message: $message,
 				delay: mChat.refreshInterval ? 400 : 0,
 				abort: $.inArray($message.data('mchat-id'), mChat.messageIds) !== -1,
-				playSound: index === 0,
-				titleAlert: index === 0
+				playSound: $message.data('mchat-user-id')!=myUserId,
+				titleAlert: $message.data('mchat-user-id')!=myUserId
 			};
 			$(mChat).trigger('mchat_add_message_before', [dataAddMessageBefore]);
 			if (dataAddMessageBefore.abort) {
 				return;
 			}
+			
+			mChat.clearOldMessages();
 			if (dataAddMessageBefore.playSound) {
 				mChat.sound('add');
 			}
@@ -424,7 +439,7 @@ jQuery(function($) {
 					}
 				},
 				show: function() {
-					var scrollLeeway = 50;
+					var scrollLeeway = 150;
 					var scrollTop = this.container.scrollTop();
 					var scrollHeight = this.container[0].scrollHeight;
 					this.message.show();
@@ -454,6 +469,18 @@ jQuery(function($) {
 			}
 			mChat.startRelativeTimeUpdate.call($message);
 		},
+		clearOldMessages: function() {
+			while (mChat.messageIds.length>50) {
+				var messageIdToRemove = mChat.messageIds.shift();
+				var data = {
+					id: messageIdToRemove,
+					message: $('#mchat-message-' + messageIdToRemove)
+				};
+				$(mChat).trigger('mchat_delete_message_before', [data]);
+				mChat.stopRelativeTimeUpdate(data.message);
+				data.message.remove();
+			}
+		},
 		updateMessages: function($messages) {
 			var playSound = true;
 			$messages.each(function() {
@@ -475,6 +502,7 @@ jQuery(function($) {
 					playSound = false;
 				}
 			});
+			addTargetToExternalLinks();
 		},
 		removeMessages: function(ids) {
 			var playSound = true;
@@ -715,10 +743,10 @@ jQuery(function($) {
 			if (isEnter && $(e.target).is('textarea')) {
 				var callback;
 				var isCtrl = e.ctrlKey || e.metaKey;
-				if (!mChat.maxInputHeight || !isCtrl === !mChat.storage.get('no_enter')) {
-					callback = 'submit';
-				} else if (mChat.maxInputHeight && isCtrl) {
+				if (mChat.maxInputHeight && isCtrl) {
 					callback = 'newline';
+				} else {
+					callback = 'submit';
 				}
 				if (typeof callbacks[callback] === 'function') {
 					callbacks[callback].call(this, e);
@@ -763,62 +791,6 @@ jQuery(function($) {
 			mChat.cached('body').find(bbCodeClass).remove();
 		});
 
-		var $colourPalette = $('#mchat-bbcodes').find('#colour_palette');
-		$colourPalette.appendTo($colourPalette.parent()).wrap('<div id="mchat-colour"></div>').show();
-		$('#bbpalette,#abbc3_bbpalette,#color_wheel').prop('onclick', null).attr({
-			'data-mchat-action': 'toggle',
-			'data-mchat-element': 'colour'
-		});
-
-		$.each(['smilies', 'bbcodes', 'colour'], function(i, elem) {
-			var isVisible = mChat.storage.get('show_' + elem) === 'yes';
-			$('.mchat-button-' + elem).toggleClass('mchat-button-is-down', isVisible);
-			mChat.cached(elem).toggle(isVisible);
-		});
-
-		var toggleRememberColor = function() {
-			var $this = $(this);
-			var newColor = $this.data('color');
-			if (mChat.storage.get('color') === newColor) {
-				mChat.storage.remove('color');
-			} else {
-				mChat.storage.set('color', newColor);
-				mChat.cached('colour').find('.colour-palette a').removeClass('remember-color');
-			}
-			$this.toggleClass('remember-color');
-		};
-
-		var toggleRememberColorTimer = 0;
-		var isToggledRememberColor = false;
-		mChat.cached('colour').find('.colour-palette').on('click', 'a', function(e) {
-			if (isToggledRememberColor) {
-				e.preventDefault();
-				e.stopImmediatePropagation();
-				isToggledRememberColor = false;
-			} else if (e.ctrlKey || e.metaKey) {
-				e.preventDefault();
-				e.stopImmediatePropagation();
-				toggleRememberColor.call(this);
-			}
-		}).on('mousedown touchstart', 'a', function() {
-			var that = this;
-			toggleRememberColorTimer = setTimeout(function() {
-				toggleRememberColor.call(that);
-				isToggledRememberColor = true;
-			}, 500);
-		}).on('mouseup touchend', 'a', function() {
-			clearTimeout(toggleRememberColorTimer);
-		});
-
-		var color = mChat.storage.get('color');
-		if (color) {
-			mChat.cached('colour').find('.colour-palette a[data-color="' + color + '"]').addClass('remember-color');
-		}
-
-		mChat.cached('colour').find('.colour-palette a').each(function() {
-			$(this).removeAttr('href');
-		});
-
 		if (mChat.maxInputHeight) {
 			mChat.cached('input').one('focus', function() {
 				autosize(this);
@@ -847,18 +819,6 @@ jQuery(function($) {
 		}
 	}
 
-	mChat.registerNavItem('sound', mChat.playSound);
-	if (mChat.maxInputHeight) {
-		mChat.registerNavItem('enter', true);
-	}
-
-	$(window).on('beforeunload', function() {
-		mChat.pageIsUnloading = true;
-		if (mChat.page !== 'archive') {
-			mChat.pauseSession();
-		}
-	});
-
 	$('#phpbb').on('click', '[data-mchat-action]', function(e) {
 		e.preventDefault();
 		var action = $(this).data('mchat-action');
@@ -866,10 +826,5 @@ jQuery(function($) {
 	}).on('click', '#mchat-messages blockquote [data-post-id]', function(e) {
 		e.preventDefault();
 		mChat.jumpToMessage.call(this);
-	}).on('click', '.mchat-panel-buttons button', function() {
-		var $this = $(this).trigger('blur');
-		if ($this.hasClass('mchat-button-down')) {
-			$this.toggleClass('mchat-button-is-down');
-		}
 	});
 });

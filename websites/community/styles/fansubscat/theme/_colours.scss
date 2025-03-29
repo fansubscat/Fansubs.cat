@@ -51,20 +51,6 @@ hr {
 	color: $link-color;
 }
 
-.postlink:visited {
-	border-bottom-color: $muted-color;
-	color: $muted-color;
-}
-
-.postlink:hover {
-	background-color: darken($block-background, 10%);
-	color: $link-hover-color;
-}
-
-.signature a, .signature a:hover {
-	background-color: transparent;
-}
-
 // Search box
 // ---------------------------------------------
 

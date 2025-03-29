@@ -2,6 +2,6 @@
 		</p>
 	</div>
 	<div class="stat-block online-list mchat-stats-index">
-		<h3><a href="{% if U_MCHAT_CUSTOM_PAGE and not MCHAT_INDEX %}{{ U_MCHAT_CUSTOM_PAGE }}{% endif %}#mChat">{{ lang('MCHAT_WHO_IS_CHATTING') }}</a></h3>
+		<h3><a href="{% if U_MCHAT_CUSTOM_PAGE and not MCHAT_INDEX %}{{ U_MCHAT_CUSTOM_PAGE }}{% endif %}">{{ lang('MCHAT_WHO_IS_CHATTING') }}</a></h3>
 		<p><!-- IF MCHAT_USERS_TOTAL != 'No hi ha ningú al xat' -->{{ MCHAT_USERS_LIST }}<!-- ENDIF --><!-- IF MCHAT_USERS_TOTAL == 'No hi ha ningú al xat' -->{{ MCHAT_USERS_TOTAL }}<!-- ENDIF -->
 {% endif %}

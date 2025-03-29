@@ -22,8 +22,8 @@
 					<div class="mchat-panel-buttons">
 						{% EVENT dmzx_mchat_buttons_before %}
 						{% if S_BBCODE_ALLOWED %}
-							<button type="button" class="button mchat-button-bbcodes mchat-button-down" data-mchat-action="toggle" data-mchat-element="bbcodes" title="{{ lang('MCHAT_BBCODES') }}">
-								<i class="icon fa fa-code fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('MCHAT_BBCODES') }}</span>
+							<button type="button" class="button mchat-button-bbcodes" data-mchat-action="toggle" data-mchat-element="bbcodes" title="Opcions de format">
+								<i class="icon fa fa-code fa-fw" aria-hidden="true"></i><span class="sr-only">Opcions de format</span>
 							</button>
 						{% endif %}
 						{% EVENT dmzx_mchat_buttons_after %}
@@ -31,10 +31,10 @@
 				{% endif %}
 				{% EVENT dmzx_mchat_buttons_container_after %}
 				<span id="mchat-status" class="rightside dropdown-container icon-only">
-					<span class="mchat-status mchat-status-ok"><i class="icon fa fa-check" title="{{ lang('MCHAT_OK') }}"></i></span>
-					<span class="mchat-status mchat-status-load hidden"><i class="icon fa fa-refresh fa-spin" title="{{ lang('LOADING') }}"></i></span>
-					<span class="mchat-status mchat-status-paused hidden"><i class="icon fa fa-pause" title="{{ lang('MCHAT_PAUSE') }}"></i></span>
-					<span class="mchat-status mchat-status-error hidden"><i class="icon fa fa-times" title="{{ lang('ERROR') }}"></i></span>
+					<span class="mchat-status mchat-status-ok"><i class="icon fa fa-fw fa-check" title="Estat de la connexió: Correcta"></i></span>
+					<span class="mchat-status mchat-status-load hidden"><i class="icon fa fa-fw fa-refresh fa-spin" title="Estat de la connexió: Actualitzant"></i></span>
+					<span class="mchat-status mchat-status-paused hidden"><i class="icon fa fa-fw fa-pause" title="Estat de la connexió: Pausada"></i></span>
+					<span class="mchat-status mchat-status-error hidden"><i class="icon fa fa-fw fa-times" title="Estat de la connexió: Error"></i></span>
 				</span>
 			</div>
 			{% EVENT dmzx_mchat_controls_after %}

@@ -197,7 +197,7 @@ class mchat
 			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha connectat');
 		}
 
-		$this->assign_whois();
+		$this->assign_whois_custom();
 
 		$this->assign_bbcodes_smilies();
 
@@ -577,7 +577,7 @@ class mchat
 			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha connectat');
 		}
 		
-		$this->assign_whois();
+		$this->assign_whois_custom();
 		$whois = $this->render_template('mchat_whois.html');
 
 		// Keep the session alive forever if there is no session timeout
@@ -695,6 +695,8 @@ class mchat
 		}
 		
 		$response['users'] = $whois;
+		
+		$response['topic'] = html_entity_decode($this->mchat_settings->cfg('mchat_static_message'));
 
 		/**
 		 * Event to modify the data that is sent to the user after checking for new mChat message
@@ -867,6 +869,7 @@ class mchat
 			'MCHAT_TOTAL_MESSAGES'			=> $total_messages,
 			'MCHAT_JUMP_TO'					=> $jump_to_id,
 			'COOKIE_NAME'					=> $this->mchat_settings->cfg('cookie_name', true) . '_',
+			'MCHAT_USER_ID'					=> $this->user->data['user_id'],
 		];
 
 		// The template needs some language variables if we display relative time for messages
@@ -1485,6 +1488,14 @@ class mchat
 			]);
 		}
 	}
+	protected function assign_whois_custom()
+	{
+		$active_users_html = $this->mchat_functions->mchat_active_users_html();
+		
+		$this->template->assign_vars([
+			'MCHAT_USERS_LIST'		=> $active_users_html,
+		]);
+	}
 
 	/**
 	 * Checks whether the current user has edit or delete permissions for a message written by $author_id
@@ -1635,8 +1646,12 @@ class mchat
 		} else if ($this->auth->acl_get('u_mchat_moderator_delete') && ($args[0]=='tema' || $args[0]=='topic')) {
 			if (count($args)==1) {
 				// /topic -> empty topic -> remove topic
+				$this->mchat_settings->set_cfg('mchat_static_message', '');
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha eliminat el tema del xat');
 			} else {
 				// /topic description -> set as topic
+				$this->mchat_settings->set_cfg('mchat_static_message', 'Tema actual: '.$args[1]);
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha canviat el tema del xat a [b]'.$args[1].'[/b]');
 			}
 		} else if ($args[0]=='jo' || $args[0]=='me') {
 			if (count($args)==1) {

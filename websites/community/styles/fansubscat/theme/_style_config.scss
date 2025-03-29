@@ -55,7 +55,7 @@ $forum-heading-font-family:				$list-heading-font-family !default;
 $forum-heading-font-weight:				500 !default;
 
 $button-font-size:						$font-size + 3px !default;
-$button-line-height:					floor(($font-size + 8px) / 2) * 2 !default;	// Convert to even number
+$button-line-height:					18px;	// Convert to even number
 $button-glyph-font-size:				floor($font-size / 2) * 2 !default;	// Convert to even number
 
 $dropdown-header-font-size:				$font-size + 2px !default;

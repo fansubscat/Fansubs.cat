@@ -1027,12 +1027,12 @@ ul.linklist.bulletin > li.no-bulletin:before {
 }
 
 .dropdown-button-control .dropdown {
-  top: 28px;
+  top: 24px;
 }
 
 .dropdown-button-control.dropdown-up .dropdown {
   top: auto;
-  bottom: 28px;
+  bottom: 24px;
 }
 
 .dropdown .pointer, .dropdown .pointer-inner {
@@ -2401,7 +2401,7 @@ ul.topiclist.two-long-columns dt {
 }
 
 ul.topiclist.two-columns dt {
-  margin-right: -80px;
+  margin-right: -160px;
 }
 
 ul.topiclist dt .list-inner {
@@ -2421,7 +2421,7 @@ ul.topiclist.two-long-columns dt .list-inner {
 }
 
 ul.topiclist.two-columns dt .list-inner {
-  margin-right: 80px;
+  margin-right: 160px;
 }
 
 ul.topiclist dd {
@@ -2589,8 +2589,13 @@ dl a.row-item-link {
   z-index: 2;
 }
 
-dd.posts, dd.topics, dd.views, dd.extra, dd.mark {
+dd.posts, dd.topics, dd.views, dd.extra {
   width: 80px;
+  text-align: center;
+}
+
+dd.mark {
+  width: 160px;
   text-align: center;
 }
 
@@ -3420,10 +3425,11 @@ dd.profile-contact {
 
 .no-avatar .avatar-container {
   display: block;
-  width: 92px;
-  height: 92px;
+  width: 131px;
+  height: 131px;
   background: transparent none 50% 50% no-repeat;
   background-size: cover;
+  margin-bottom: 3px;
 }
 
 .profile-avatar img {
@@ -3509,7 +3515,7 @@ a.post {
   font-size: 17px;
   font-weight: 600;
   font-family: "Open Sans", "Droid Sans", Verdana, Arial, Helvetica;
-  line-height: 22px;
+  line-height: 18px;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -5341,20 +5347,6 @@ hr {
 .postlink {
   border-bottom-color: rgb(255, 255, 255);
   color: rgb(255, 255, 255);
-}
-
-.postlink:visited {
-  border-bottom-color: #a1a1a1;
-  color: #a1a1a1;
-}
-
-.postlink:hover {
-  background-color: rgb(4.5, 4.5, 4.5);
-  color: #d0d0d0;
-}
-
-.signature a, .signature a:hover {
-  background-color: transparent;
 }
 
 .search-box .inputbox,

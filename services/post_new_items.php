@@ -379,7 +379,7 @@ $message_mastodon = "%%POST_HEADER%%\n\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%A
 $message_discord = "**%%POST_HEADER%%**\n\n%%TYPE_EMOJI%% **%%SERIES_NAME%%**\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_telegram = "*%%POST_HEADER%%*\n\n%%TYPE_EMOJI%% *%%SERIES_NAME%%*\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_bluesky = "%%POST_HEADER%%\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
-$message_community = "%%POST_HEADER%%: [url=%%URL%%][b]%%SERIES_NAME%% (%%FANSUB_NAMES%%)[/b][/url] - %%AVAILABLE_EPISODES%%%%COMPLETED_STATUS%%";
+$message_community = "%%POST_HEADER%% [url=%%URL%%][b]%%SERIES_NAME%% (%%FANSUB_NAMES%%)[/b][/url] - %%AVAILABLE_EPISODES%%%%COMPLETED_STATUS%%";
 
 $has_posted_something = FALSE;
 
@@ -484,7 +484,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.manga.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.manga').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
-		$community_message = str_replace('%%URL%%', $url, get_community_message(
+		$community_message = str_replace('%%URL%%', $url, get_prepared_message(
 				$message_community,
 				$header,
 				'',
@@ -605,7 +605,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.anime.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.anime').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
-		$community_message = str_replace('%%URL%%', $url, get_community_message(
+		$community_message = str_replace('%%URL%%', $url, get_prepared_message(
 				$message_community,
 				$header,
 				'',
@@ -726,7 +726,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".lang('catalogue.page_title.liveaction').' | '.MAIN_SITE_NAME, $row['synopsis'], $url, FALSE);
-		$community_message = str_replace('%%URL%%', $url, get_community_message(
+		$community_message = str_replace('%%URL%%', $url, get_prepared_message(
 				$message_community,
 				$header,
 				'',
