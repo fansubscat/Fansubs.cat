@@ -274,7 +274,7 @@ jQuery(function($) {
 			mChat.pauseSession();
 			var inputValue = originalInputValue;
 			var color = mChat.storage.get('color');
-			if (color && inputValue.indexOf('[color=') === -1) {
+			if (color) {
 				inputValue = '[color=#' + color + '] ' + inputValue + ' [/color]';
 			}
 			mChat.setText('');

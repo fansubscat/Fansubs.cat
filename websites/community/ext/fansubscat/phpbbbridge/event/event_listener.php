@@ -49,7 +49,7 @@ class event_listener implements EventSubscriberInterface
 	public function intercept_login($event)
 	{
 		if (!$event['admin']) {
-			header('Location: https://usuaris.fansubs.cat/inicia-la-sessio?return_to=forum');
+			header('Location: https://usuaris.fansubs.cat/inicia-la-sessio');
 		}
 	}
 

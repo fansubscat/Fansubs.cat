@@ -88,6 +88,7 @@ function removeValidationOnlyText(elementId){
 }
 
 function showUserDropdown(){
+	$('#forum-dropdown').removeClass('dropdown-show');
 	$('#user-dropdown').toggleClass('dropdown-show');
 }
 

@@ -316,7 +316,7 @@ body {
 }
 
 .forum-image {
-	display: flex;
+	display: flex !important;
 	padding-top: 0;
 	margin-right: 1.5rem;
 }
@@ -460,11 +460,12 @@ a.forumtitle, a.topictitle {
 
 .forum-description {
 	font-size: 1.4rem;
-	opacity: 0.7;
+	color: rgba(var(--positive-color), 0.8);
 }
 
 .topic-poster {
 	font-size: 1.4rem;
+	color: rgba(var(--positive-color), 0.8);
 	float: none;
 }
 
@@ -805,6 +806,15 @@ html.chat-page .mchat-external-wrapper {
 	flex-grow: 1;
 	display: flex;
 	flex-direction: row;
+}
+
+.profile-personal_message {
+	background: rgba(var(--primary-color), 0.2);
+	border: 1px solid rgb(var(--primary-color));
+	border-radius: 0.5rem;
+	color: rgb(var(--positive-color)) !important;
+	margin-top: -10px;
+	margin-bottom: 10px;
 }
 	
 #mchat-whois .show-users {
@@ -1946,6 +1956,11 @@ input[type="checkbox"]:checked:before {
 		padding: 1rem;
 		border-radius: 1rem;
 		z-index: 1;
+	}
+
+	.profile-rank br, .profile-rank img {
+		display: none;
+	}
 }
 
 @media (max-width: 600px){

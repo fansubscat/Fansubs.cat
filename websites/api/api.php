@@ -474,6 +474,11 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 			
 			if($row = mysqli_fetch_assoc($result)){
 				query_update_comment_by_forum_post_id($_POST['forum_post_id'], $_POST['text'], !empty($_POST['has_spoilers']));
+				
+				$response = array(
+					'status' => 'ok'
+				);
+				echo json_encode($response);
 			} else {
 				//Must get the user and version first
 				$version_id = NULL;
@@ -481,23 +486,22 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 				$resultv = query_get_version_by_forum_topic_id($_POST['forum_topic_id']);
 				if ($rowv = mysqli_fetch_assoc($resultv)) {
 					$version_id = $rowv['id'];
-				} else {
-					show_invalid('No valid input provided.');
-				}
-				$resultu = query_get_user_by_forum_user_id($_POST['forum_user_id']);
-				if ($rowu = mysqli_fetch_assoc($resultu)) {
-					$user_id = $rowu['id'];
-				} else {
-					show_invalid('No valid input provided.');
-				}
-				
-				query_insert_comment_with_forum_post_id($user_id, $version_id, $_POST['forum_post_id'], $_POST['text'], !empty($_POST['has_spoilers']) ? 1 : 0);
-			}
+					$resultu = query_get_user_by_forum_user_id($_POST['forum_user_id']);
+					if ($rowu = mysqli_fetch_assoc($resultu)) {
+						$user_id = $rowu['id'];
+						query_insert_comment_with_forum_post_id($user_id, $version_id, $_POST['forum_post_id'], $_POST['text'], !empty($_POST['has_spoilers']) ? 1 : 0);
 			
-			$response = array(
-				'status' => 'ok'
-			);
-			echo json_encode($response);
+						$response = array(
+							'status' => 'ok'
+						);
+						echo json_encode($response);
+					} else {
+						show_invalid('No valid input provided.');
+					}
+				} else {
+					show_invalid('No valid input provided.');
+				}
+			}
 		}
 		else {
 			show_invalid('No valid input provided.');

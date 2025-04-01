@@ -63,7 +63,7 @@
 						<div class="list-inner">
 							<div class="list-inner-container">
 								<!-- EVENT topiclist_row_prepend -->
-								<a href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}</a>
+								<a href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}<!-- IF (searchresults.FORUM_ID == 4 or searchresults.FORUM_ID == 5 or searchresults.FORUM_ID == 6) and searchresults.TOPIC_AUTHOR == 'Fansubs.cat' --> <span class="fa fa-fw fa-star" title="Aquest tema segueix el ritme de publicació a Fansubs.cat i els missatges es mostren també al web"></span><!-- ENDIF --></a>
 								<!-- IF searchresults.S_TOPIC_UNAPPROVED or searchresults.S_POSTS_UNAPPROVED -->
 									<a href="{searchresults.U_MCP_QUEUE}" title="{L_TOPIC_UNAPPROVED}">
 										<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_UNAPPROVED}</span>

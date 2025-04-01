@@ -2171,6 +2171,10 @@ textarea:valid ~ .comment-checkbox {
 	font-family: "lexend_deca_bold", sans-serif;
 }
 
+.comments-buttons {
+	align-self: center;
+}
+
 .load-all-comments {
 	align-self: center;
 }

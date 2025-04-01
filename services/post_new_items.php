@@ -379,7 +379,7 @@ $message_mastodon = "%%POST_HEADER%%\n\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%A
 $message_discord = "**%%POST_HEADER%%**\n\n%%TYPE_EMOJI%% **%%SERIES_NAME%%**\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_telegram = "*%%POST_HEADER%%*\n\n%%TYPE_EMOJI%% *%%SERIES_NAME%%*\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
 $message_bluesky = "%%POST_HEADER%%\n%%TYPE_EMOJI%% %%SERIES_NAME%%\n🔖 %%AVAILABLE_EPISODES%%\n👥 %%FANSUB_NAMES%%%%COMPLETED_STATUS%%";
-$message_community = "%%POST_HEADER%% [url=%%URL%%][b]%%SERIES_NAME%% (%%FANSUB_NAMES%%)[/b][/url] - %%AVAILABLE_EPISODES%%%%COMPLETED_STATUS%%";
+$message_community = "%%POST_HEADER%% [url=%%URL%%][b]%%SERIES_NAME%% (%%FANSUB_NAMES%%)[/b][/url] • %%AVAILABLE_EPISODES%%%%COMPLETED_STATUS%%";
 
 $has_posted_something = FALSE;
 
@@ -441,7 +441,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_x(get_shortened_tweet($prepared_message)."\n".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -451,7 +451,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_mastodon_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_mastodon(get_shortened_toot($prepared_message)."\n\n➡️ ".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -461,7 +461,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.manga.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.manga').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, "https://".STATIC_SUBDOMAIN.".".MAIN_DOMAIN."/social/version_".$row['version_id'].'.jpg', $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -471,7 +471,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -481,7 +481,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_bluesky_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.manga.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.manga').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
 		$community_message = str_replace('%%URL%%', $url, get_prepared_message(
@@ -491,7 +491,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 				$row['name'],
 				$episode,
 				$row['fansub_names'],
-				$row['status']==1 ? " - [b]".lang('service.post.project_completed').'[/b]' : ''
+				$row['status']==1 ? " • [b]".lang('service.post.project_completed').'[/b]' : ''
 			));
 		publish_to_community($community_message, $row['rating']=='XXX');
 		file_put_contents('/srv/fansubscat/temporary/last_posted_manga_id.txt', $row['id']);
@@ -562,7 +562,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_x(get_shortened_tweet($prepared_message)."\n".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -572,7 +572,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_mastodon_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_mastodon(get_shortened_toot($prepared_message)."\n\n➡️ ".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -582,7 +582,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_discord($prepared_message, $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.anime.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.anime').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, "https://".STATIC_SUBDOMAIN.".".MAIN_DOMAIN."/social/version_".$row['version_id'].'.jpg', $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -592,7 +592,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url, $row['rating']=='XXX');
 		$prepared_message = get_prepared_message(
@@ -602,7 +602,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_bluesky_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".($row['rating']=='XXX' ? lang('catalogue.page_title.anime.hentai').' | '.HENTAI_SITE_NAME : lang('catalogue.page_title.anime').' | '.MAIN_SITE_NAME), $row['synopsis'], $url, $row['rating']=='XXX');
 		$community_message = str_replace('%%URL%%', $url, get_prepared_message(
@@ -612,7 +612,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 				$row['name'],
 				$episode,
 				$row['fansub_names'],
-				$row['status']==1 ? " - [b]".lang('service.post.project_completed').'[/b]' : ''
+				$row['status']==1 ? " • [b]".lang('service.post.project_completed').'[/b]' : ''
 			));
 		publish_to_community($community_message, $row['rating']=='XXX');
 		file_put_contents('/srv/fansubscat/temporary/last_posted_anime_id.txt', $row['id']);
@@ -683,7 +683,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_x(get_shortened_tweet($prepared_message)."\n".$url, FALSE);
 		$prepared_message = get_prepared_message(
@@ -693,7 +693,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_mastodon_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_mastodon(get_shortened_toot($prepared_message)."\n\n➡️ ".$url, FALSE);
 		$prepared_message = get_prepared_message(
@@ -703,7 +703,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_discord($prepared_message, $row['name']." | ".lang('catalogue.page_title.liveaction').' | '.MAIN_SITE_NAME, $row['synopsis'], $url, "https://".STATIC_SUBDOMAIN.".".MAIN_DOMAIN."/social/version_".$row['version_id'].'.jpg', FALSE);
 		$prepared_message = get_prepared_message(
@@ -713,7 +713,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_names'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_telegram($prepared_message."\n\n➡️ ".$url, FALSE);
 		$prepared_message = get_prepared_message(
@@ -723,7 +723,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 			$row['name'],
 			$episode,
 			$row['fansub_bluesky_handles'],
-			$row['status']==1 ? "\n".lang('service.post.project_completed') : ''
+			$row['status']==1 ? "\n✅ ".lang('service.post.project_completed') : ''
 		);
 		publish_to_bluesky(get_shortened_bluesky_post($prepared_message), $row['version_id'], $row['name']." | ".lang('catalogue.page_title.liveaction').' | '.MAIN_SITE_NAME, $row['synopsis'], $url, FALSE);
 		$community_message = str_replace('%%URL%%', $url, get_prepared_message(
@@ -733,7 +733,7 @@ if (!$has_posted_something && $row = mysqli_fetch_assoc($result)){
 				$row['name'],
 				$episode,
 				$row['fansub_names'],
-				$row['status']==1 ? " - [b]".lang('service.post.project_completed').'[/b]' : ''
+				$row['status']==1 ? " • [b]".lang('service.post.project_completed').'[/b]' : ''
 			));
 		publish_to_community($community_message, FALSE);
 		file_put_contents('/srv/fansubscat/temporary/last_posted_liveaction_id.txt', $row['id']);

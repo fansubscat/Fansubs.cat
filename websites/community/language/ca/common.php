@@ -466,7 +466,7 @@ $lang = array_merge($lang, array(
 	'NO_NOTIFICATIONS'			=> 'No hi ha notificacions',
 	'NOT_ALLOWED_MANAGE_GROUP'	=> 'No se’t permet gestionar aquest grup.',
 	'NOT_AUTHORISED'			=> 'No tens autorització per a accedir a aquesta àrea.',
-	'NOT_WATCHING_FORUM'		=> 'Ja no estàs subscrit a les actualitzacións d’aquest fòrum.',
+	'NOT_WATCHING_FORUM'		=> 'Ja no estàs subscrit a les actualitzacions d’aquest fòrum.',
 	'NOT_WATCHING_TOPIC'		=> 'Ja no estàs subscrit a aquest tema.',
 	'NOTIFICATIONS'				=> 'Notificacions',
 	// This applies for NOTIFICATION_BOOKMARK and NOTIFICATION_POST.

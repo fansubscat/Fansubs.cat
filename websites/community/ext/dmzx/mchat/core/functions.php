@@ -953,7 +953,7 @@ class functions
 					$this->user->update_session_infos();
 				}
 				$is_new_session = $this->mchat_add_user_session();
-				$this->db->sql_query('DELETE FROM ' . $this->mchat_settings->get_table_mchat() . ' WHERE message_id = ' . (int) $message_id);
+				$this->db->sql_query('UPDATE ' . $this->mchat_settings->get_table_mchat() . ' SET deleted = 1 WHERE message_id = ' . (int) $message_id);
 				$this->mchat_log->add_log('del', $message_id);
 				$this->phpbb_log('LOG_DELETED_MCHAT');
 				break;
