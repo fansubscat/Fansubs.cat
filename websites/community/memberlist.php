@@ -90,9 +90,9 @@ $group_helper = $phpbb_container->get('group_helper');
 $start	= $request->variable('start', 0);
 $submit = (isset($_POST['submit'])) ? true : false;
 
-$default_key = 'c';
+$default_key = 'd'; //FANSUBS.CAT CHANGED FROM c TO d
 $sort_key = $request->variable('sk', $default_key);
-$sort_dir = $request->variable('sd', 'a');
+$sort_dir = $request->variable('sd', 'd'); //FANSUBS.CAT CHANGED FROM a TO d
 
 $user_types = array(USER_NORMAL, USER_FOUNDER);
 if ($auth->acl_get('a_user'))

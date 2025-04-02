@@ -447,7 +447,7 @@ $lang = array_merge($lang, array(
 	'POST_REPLY_PM'				=> 'Respon el missatge',
 	'PRINT_PM'					=> 'Visualització d’impressió',
 	'PREFERENCES_UPDATED'		=> 'S’han actualitzat les teves preferències.',
-	'PROFILE_INFO_NOTICE'		=> 'Aquí pots editar els camps del perfil que són exclusius de la comunitat de Fansubs.cat. Si vols editar el teu nom d’usuari, data de naixement o avatar, pots fer-ho al <strong><a href="https://usuaris.fansubs.cat/">perfil de Fansubs.cat</a></strong>. Tingues en compte que aquesta informació pot ser vista per altres membres, i per tant, recomanem que no hi afegeixis informació personal.',
+	'PROFILE_INFO_NOTICE'		=> 'Aquí pots editar els camps del perfil que són exclusius de la comunitat de Fansubs.cat. Si vols editar el teu nom d’usuari, data de naixement o imatge de perfil, pots fer-ho al <strong><a href="https://usuaris.fansubs.cat/">perfil de Fansubs.cat</a></strong>. Tingues en compte que aquesta informació pot ser vista per altres membres, i per tant, recomanem que no hi afegeixis informació personal.',
 	'PROFILE_UPDATED'			=> 'S’ha actualitzat el perfil.',
 	'PROFILE_AUTOLOGIN_KEYS'	=> 'Les claus d’inici de sessió tipus "Recorda’m" inicien la vostra sessió automàticament quan visiteu el fòrum. Si finalitzeu la sessió, la clau s’elimina només a l’ordinador que esteu utilitzant per finalitzar la sessió. Aquí podeu veure claus d’inici de sessió que heu creat en altres ordinadors que heu utilitzat per accedir a aquest lloc web.',
 	'PROFILE_NO_AUTOLOGIN_KEYS'	=> 'No hi ha cap clau d’inici de sessió tipus "Recorda’m".',
@@ -589,7 +589,7 @@ $lang = array_merge($lang, array(
 	'USERNAME_DISALLOWED_USERNAME'	=> 'El nom d’usuari que heu introduït no està permès o conté una paraula no permesa. Si us plau, trieu nom d’usuari diferent.',
 	'USER_NOT_FOUND_OR_INACTIVE'	=> 'Els noms d’usuari que heu especificat no s’han pogut trobar o bé són d’usuaris no activats.',
 
-	'VIEW_AVATARS'				=> 'Mostra els avatars',
+	'VIEW_AVATARS'				=> 'Mostra les imatges de perfil',
 	'VIEW_EDIT'					=> 'Mostra/Edita',
 	'VIEW_FLASH'				=> 'Mostra les animacions Flash',
 	'VIEW_IMAGES'				=> 'Mostra les imatges a dintre dels missatges',
@@ -655,7 +655,7 @@ $lang = array_merge($lang, array(
 		'TO_ME'			=> 'a mi',
 	),
 
-	'GROUPS_EXPLAIN'	=> 'Els grups d’usuaris permeten als administradors gestionar millor els usuaris. Per defecte se t’assignarà a un grup específic (el teu grup per defecte). Aquest grup determina com apareixes als altres usuaris: per exemple, el color del teu nom d’usuari, avatar, rang, etc. Si l’administrador ho permet, és possible canviar el teu grup per defecte. També se’t pot assignar a altres grups o permetre que t’hi afiliïs. Alguns grups poden donar-te permisos addicionals per a veure determinats continguts o augmentar les funcionalitats en altres àrees.',
+	'GROUPS_EXPLAIN'	=> 'Els grups d’usuaris permeten als administradors gestionar millor els usuaris. Per defecte se t’assignarà a un grup específic (el teu grup per defecte). Aquest grup determina com apareixes als altres usuaris: per exemple, el color del teu nom d’usuari, imatge de perfil, rang, etc. Si l’administrador ho permet, és possible canviar el teu grup per defecte. També se’t pot assignar a altres grups o permetre que t’hi afiliïs. Alguns grups poden donar-te permisos addicionals per a veure determinats continguts o augmentar les funcionalitats en altres àrees.',
 	'GROUP_LEADER'		=> 'Grups dels quals ets líder',
 	'GROUP_MEMBER'		=> 'Grups als quals estàs afiliat',
 	'GROUP_PENDING'		=> 'Afiliacions pendents',

@@ -342,7 +342,7 @@ $lang = array_merge($lang, array(
 	'G_GUESTS'					=> 'Visitants',
 	'G_REGISTERED'				=> 'Usuaris registrats',
 	'G_REGISTERED_COPPA'		=> 'Usuaris COPPA registrats',
-	'G_GLOBAL_MODERATORS'		=> 'Moderadors globals',
+	'G_GLOBAL_MODERATORS'		=> 'Moderadors',
 	'G_NEWLY_REGISTERED'		=> 'Nous usuaris registrats',
 
 	'HIDDEN_USERS_ONLINE'		=> array(
@@ -863,7 +863,7 @@ $lang = array_merge($lang, array(
 	'USERGROUPS'			=> 'Grups',
 	'USERNAME'				=> 'Nom d’usuari',
 	'USERNAMES'				=> 'Noms d’usuari',
-	'USER_AVATAR'			=> 'Avatar de l’usuari',
+	'USER_AVATAR'			=> 'Imatge de perfil de l’usuari',
 	'USER_CANNOT_READ'		=> 'No pots llegir missatges en aquest fòrum.',
 	'USER_POSTS'			=> array(
 		1	=> '%d missatge',

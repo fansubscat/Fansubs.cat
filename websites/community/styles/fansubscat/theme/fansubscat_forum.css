@@ -502,6 +502,10 @@ li.row {
 	padding: 0 2rem;
 }
 
+.postprofile dd.profile-rank {
+	font-size: 1.4rem;
+}
+
 .postprofile > dt > a {
 	font-size: 1.6rem;
 }
@@ -809,11 +813,11 @@ html.chat-page .mchat-external-wrapper {
 }
 
 .profile-personal_message {
+	font-size: 1.2rem !important;
 	background: rgba(var(--primary-color), 0.2);
 	border: 1px solid rgb(var(--primary-color));
 	border-radius: 0.5rem;
 	color: rgb(var(--positive-color)) !important;
-	margin-top: -10px;
 	margin-bottom: 10px;
 }
 	
@@ -1264,6 +1268,14 @@ fieldset.submit-buttons {
 .posthilit {
 	background-color: rgba(var(--secondary-color), 0.3);
 	color: rgb(var(--secondary-color));
+}
+
+.content a:not(.button) {
+	text-decoration: underline;
+}
+
+.notice {
+	font-size: 1.4rem;
 }
 
 #add_keywords {
