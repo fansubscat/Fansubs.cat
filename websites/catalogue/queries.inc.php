@@ -1023,7 +1023,8 @@ function query_series_by_series_only_slug($series_only_slug) {
 			FROM series s
 				LEFT JOIN version v ON s.id=v.series_id
 			WHERE s.type='".CATALOGUE_ITEM_TYPE."'
-				AND v.slug LIKE '$series_only_slug/%'";
+				AND v.slug LIKE '$series_only_slug/%'
+				ORDER BY v.id=s.default_version_id DESC";
 	return query($final_query);
 }
 
