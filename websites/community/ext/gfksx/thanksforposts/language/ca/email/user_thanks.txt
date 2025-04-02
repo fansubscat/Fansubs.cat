@@ -1,0 +1,10 @@
+Subject: {THANKS_SUBG}: «{POST_SUBJECT}»
+
+Bon dia, {POSTER_NAME},
+
+Reps aquesta notificació perquè {USERNAME} {POST_THANKS} «{POST_SUBJECT}» a {SITENAME}.
+
+Si vols veure el missatge, prem el següent enllaç:
+{U_POST_THANKS}
+
+{EMAIL_SIG}
