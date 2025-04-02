@@ -1,0 +1,25 @@
+<div id='list_thanks{{ POST_ID }}'>
+{% if THANKS and THANKS_POSTLIST_VIEW and not S_POST_ANONYMOUS and not S_IS_BOT %}
+	<div class="notice">
+		<dl>
+			{% if S_MOD_THANKS %}
+			<ul class="post-buttons" style="float: left; position: static;">
+				<li>
+					<a id='clear_list_thanks{{ POST_ID }}' href="{{ U_CLEAR_LIST_THANKS_POST }}" title="{{ lang('CLEAR_LIST_THANKS') }}"  class="button button-icon-only" style="float:left">
+						<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('CLEAR_LIST_THANKS') }}</span>
+					</a>
+				</li>
+			</ul>
+			{% endif %}
+
+			<dt>{{ THANK_TEXT }}{{ POST_AUTHOR_FULL }}{{ THANK_TEXT_2 }}</dt>
+			<dd>
+				{% for userdata in THANKS.DATA %}
+					<span title="{{ userdata.THANKS_TIME_INFO }}">{{ userdata.USERNAME_STRING}}</span>{% if not loop.last %}{{ lang('COMMA_SEPARATOR') }}{% endif %}
+				{% endfor %}
+				{% if THANKS.FURTHER_THANKS %}{{ lang('FURTHER_THANKS', THANKS.FURTHER_THANKS)}}{% endif %}
+			</dd>
+		</dl>
+	</div>
+{% endif %}
+</div>

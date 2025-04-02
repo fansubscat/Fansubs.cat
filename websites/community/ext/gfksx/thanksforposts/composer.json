@@ -1,0 +1,37 @@
+{
+    "name": "gfksx/thanksforposts",
+    "type": "phpbb-extension",
+    "description": "Adds the ability to thank the author and to use per posts/topics/forum rating system based on the count of thanks.",
+    "homepage": "http://www.phpbbguru.net",
+    "version": "2.1.1",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Палыч",
+            "homepage": "http://www.phpbbguru.net",
+            "role": "Developer"
+        },
+        {
+            "name": "rxu",
+            "homepage": "http://www.phpbbguru.net",
+            "role": "Converting to extension"
+        }
+    ],
+    "require": {
+        "php": "^7.2 || ^8.0.0",
+        "phpbb/phpbb": ">=3.3.11",
+        "composer/installers": "~1.0.0"
+    },
+    "extra": {
+        "display-name": "Thanks for posts",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.11"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/thanks_for_posts_2",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}
