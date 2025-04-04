@@ -32,7 +32,7 @@ function get_subtype_name($subtype){
 }
 
 function get_fansub_preposition_name($text){
-	$first = substr($text, 0, 1);
+	$first = mb_strtoupper(substr($text, 0, 1));
 	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
 		return "d’$text";
 	}
@@ -40,7 +40,7 @@ function get_fansub_preposition_name($text){
 }
 
 function get_fansub_preposition_alone($text){
-	$first = substr($text, 0, 1);
+	$first = mb_strtoupper(substr($text, 0, 1));
 	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
 		return "d’";
 	}
@@ -283,6 +283,85 @@ function get_public_site_url($type, $slug, $is_hentai) {
 	return $link_url.'/'.$slug;
 }
 
+function add_fansub_user($fansub_id, $user_password) {
+	$res = query("SELECT f.*, (SELECT COUNT(*) FROM user u WHERE u.username=f.name) users FROM fansub f WHERE f.id=".$fansub_id);
+	$fansub = mysqli_fetch_assoc($res);
+	
+	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].' (fansub)');
+	$password_hash_escaped = escape(password_hash($user_password, PASSWORD_BCRYPT));
+	$email_escaped = escape($fansub['email']);
+	query("INSERT INTO user (username, password, email, birthdate, fansub_id, created, created_by, updated, updated_by)
+			VALUES ('$username_escaped', '$password_hash_escaped', '$email_escaped', '2000-01-01', $fansub_id, CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."', CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."')");
+	$user_id=mysqli_insert_id($db_connection);
+	
+	if (!DISABLE_COMMUNITY) {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/create_fansub');
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, 
+			  json_encode(array(
+			  	'fansub_id' => $fansub_id,
+			  	'username' => $fansub['users']==0 ? $fansub['name'] : $fansub['name'].' (fansub)',
+			  	'email' => $fansub['email'],
+			  	'url' => $fansub['url'],
+			  	'bluesky_url' => $fansub['bluesky_url'],
+			  	'mastodon_url' => $fansub['mastodon_url'],
+			  	'twitter_url' => $fansub['twitter_url'],
+			  	)));
+		$output = curl_exec($curl);		
+		curl_close($curl);
+		$result = json_decode($output);
+
+		if (!empty($result) && $result->status=='ok') {
+			query("UPDATE user SET forum_user_id=".$result->user_id." WHERE id=".$user_id);
+		}
+	}
+}
+
+function edit_fansub_user($fansub_id, $old_username, $user_password) {
+	$username_old_escaped = escape($old_username);
+	
+	$res = query("SELECT f.*, (SELECT COUNT(*) FROM user u WHERE u.username=f.name AND u.username<>'".$username_old_escaped."') users FROM fansub f WHERE f.id=".$fansub_id);
+	$fansub = mysqli_fetch_assoc($res);
+	
+	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].' (fansub)');
+	$password_hash_escaped = escape(password_hash($user_password, PASSWORD_BCRYPT));
+	$email_escaped = escape($fansub['email']);
+	query("UPDATE user
+			SET username='$username_escaped',
+				email='$email_escaped',".(!empty($user_password) ? "password='$password_hash_escaped'," : '')."
+				birthdate='2000-01-01',
+				updated=CURRENT_TIMESTAMP,
+				updated_by='".escape($_SESSION['username'])."'
+			WHERE username='$username_old_escaped'");
+	
+	if (!DISABLE_COMMUNITY) {
+		$curl = curl_init();
+		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/update_fansub');
+		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
+		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_POST, true);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, 
+			  json_encode(array(
+			  	'fansub_id' => $fansub_id,
+			  	'username_old' => $old_username,
+			  	'username' => $fansub['users']==0 ? $fansub['name'] : $fansub['name'].' (fansub)',
+			  	'email' => $fansub['email'],
+			  	'url' => $fansub['url'],
+			  	'bluesky_url' => $fansub['bluesky_url'],
+			  	'discord_url' => $fansub['discord_url'],
+			  	'mastodon_url' => $fansub['mastodon_url'],
+			  	'twitter_url' => $fansub['twitter_url'],
+			  	)));
+		curl_exec($curl);
+		curl_close($curl);
+	}
+}
+
 function add_or_update_topic_to_community($version_id){
 	$result = query("SELECT v.*,
 			UNIX_TIMESTAMP(v.created) version_created_timestamp,
@@ -322,7 +401,7 @@ function add_or_update_topic_to_community($version_id){
 		$type = "Mira aquest anime";
 	}
 	
-	$message = "[center][size=150][b]".$version['title']."[/b][/size]\nVersió ".get_fansub_preposition_name($version['fansub_names'])."\n\n[cover]".$static_url."/images/covers/version_".$version['id'].".jpg[/cover]\n\n\n[size=125][b]Sinopsi:[/b][/size]\n".$version['synopsis']."\n\n[size=125][b][u][url=".$url."/".$version['slug']."][color=#6AA0F8]".$type." a ".$site."[/color][/url][/u][/b][/size][/center]";
+	$message = "[center][size=150][b]".$version['title']."[/b][/size]\nVersió ".get_fansub_preposition_name($version['fansub_names'])."\n\n[cover]".$static_url."/images/covers/version_".$version['id'].".jpg[/cover]\n\n\n[size=125][b]Sinopsi:[/b][/size]\n".$version['synopsis']."\n\n[button=".$url."/".$version['slug']."]".$type." a ".$site."[/button][/center]";
 	
 	if (empty($version['forum_topic_id'])) {
 		$curl = curl_init();
@@ -335,7 +414,7 @@ function add_or_update_topic_to_community($version_id){
 			  json_encode(array(
 			  	'username' => 'Fansubs.cat',
 			  	'forum_id' => $forum_id,
-			  	'subject' => $version['title'].' ('.$version['fansub_names'].')',
+			  	'subject' => $version['title'].' (versió '.get_fansub_preposition_name($version['fansub_names']).')',
 			  	'message' => $message,
 			  	'timestamp' => $version['version_created_timestamp'],
 			  	)));
@@ -360,7 +439,7 @@ function add_or_update_topic_to_community($version_id){
 		curl_setopt($curl, CURLOPT_POSTFIELDS, 
 			  json_encode(array(
 			  	'post_id' => $version['forum_post_id'],
-			  	'subject' => $version['title'].' ('.$version['fansub_names'].')',
+			  	'subject' => $version['title'].' (versió '.get_fansub_preposition_name($version['fansub_names']).')',
 			  	'message' => $message,
 			  	)));
 		$output = curl_exec($curl);
@@ -380,7 +459,7 @@ function add_comment_to_community($comment_id){
 			u.username,
 			UNIX_TIMESTAMP(c.created) comment_created_timestamp,
 			v.title version_title,
-			f.name comment_fansub_name,
+			(SELECT fu.username FROM user fu WHERE fu.fansub_id=f.id LIMIT 1) comment_fansub_username,
 			GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') version_fansub_names,
 			c2.forum_post_id reply_to_forum_post_id,
 			u2.username reply_to_username,
@@ -403,14 +482,10 @@ function add_comment_to_community($comment_id){
 		return;
 	}
 	
-	if ($comment['type']=='fansub') {
-		$prepend_text .= '[size=115]Missatge en nom '.get_fansub_preposition_alone($comment['comment_fansub_name']).'[color=#6AA0F8][b]'.$comment['comment_fansub_name'].'[/b][/color]:[/size]'."\n\n";
-	} else if ($comment['type']=='admin') {
-		$prepend_text .= '[size=115]Missatge en nom de [color=#6AA0F8][b]Fansubs.cat[/b][/color]:[/size]'."\n\n";
-	}
+	$prepend_text = '';
 	
 	if (!empty($comment['reply_to_comment_id'])) {
-		$prepend_text .= "\n".'[quote='.$comment['reply_to_username'].' post_id='.$comment['reply_to_forum_post_id'].']'.$comment['reply_to_text'].'[/quote]';
+		$prepend_text = '[quote='.$comment['reply_to_username'].' post_id='.$comment['reply_to_forum_post_id'].']'.$comment['reply_to_text'].'[/quote]';
 	}
 
 	$curl = curl_init();
@@ -421,7 +496,7 @@ function add_comment_to_community($comment_id){
 	curl_setopt($curl, CURLOPT_POST, true);
 	curl_setopt($curl, CURLOPT_POSTFIELDS, 
 		  json_encode(array(
-		  	'username' => $comment['type']=='user' ? $comment['username'] : 'Fansubs.cat',
+		  	'username' => $comment['type']=='user' ? $comment['username'] : ($comment['type']=='fansub' ? $comment['comment_fansub_username'] : 'Fansubs.cat'),
 		  	'topic_id' => $comment['forum_topic_id'],
 		  	'subject' => 'Re: '. $comment['version_title'].' ('.$comment['version_fansub_names'].')',
 		  	'message' => $prepend_text.($comment['has_spoilers'] ? '[spoiler]' : '').$comment['text'].($comment['has_spoilers'] ? '[/spoiler]' : ''),

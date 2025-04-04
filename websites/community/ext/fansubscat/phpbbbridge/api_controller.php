@@ -19,6 +19,8 @@ class api_controller {
 	const ERROR_INVALID_REQUEST = 5;
 	const ERROR_GENERIC_ERROR = 6;
 
+	const SYSTEM_USER_ID = 2;
+
 	/* @var \phpbb\user */
 	protected $user;
 
@@ -117,6 +119,12 @@ class api_controller {
 			case 'update_profile':
 				$response = $this->update_profile();
 				break;
+			case 'create_fansub':
+				$response = $this->create_fansub();
+				break;
+			case 'update_fansub':
+				$response = $this->update_fansub();
+				break;
 			case 'add_topic':
 				$response = $this->add_topic();
 				break;
@@ -210,13 +218,79 @@ class api_controller {
 			'group_id'		=> (int) $row['group_id'],
 			'user_type'		=> USER_NORMAL,
 			'user_ip'		=> $this->user->ip,
-			'user_new'		=> ($this->config['new_member_post_limit']) ? 1 : 0,
+			'user_new'		=> 0,
 			'user_avatar'		=> 'https://static.fansubs.cat/images/site/default_avatar.jpg',
 			'user_avatar_type'	=> 'avatar.driver.remote',
 		);
 			
 		// effectively add the user
 		$user_id = user_add($user_row);
+		
+		if (!empty($user_id)) {
+			$output = array(
+				"status" => 'ok',
+				"user_id" => $user_id,
+			);
+		
+			return $this->create_json_response($output, 200);
+		}
+		
+		return $this->create_error_response("User could not be added");
+	}
+
+	/**
+	 * Registers the fansub.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function create_fansub(){
+		//WE HAVE THESE PARAMETERS:
+		// -fansub_id
+		// -username
+		// -email
+		// -url
+		// -bluesky_url
+		// -mastodon_url
+		// -twitter_url
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		//This is needed for the user_add function
+		require_once($this->phpbb_root_path . "includes/functions_user." . $this->php_ext);
+		
+		
+		// first retrieve default group id
+		$sql = 'SELECT group_id
+			FROM ' . GROUPS_TABLE . "
+			WHERE group_name = '" . $this->db->sql_escape('Fansubs') . "'";
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		// generate user account data
+		$user_row = array(
+			'username'		=> $this->get_clean_username($request->username),
+			'user_password'	=> '',
+			'user_email'	=> $request->email,
+			'group_id'		=> (int) $row['group_id'],
+			'user_type'		=> USER_NORMAL,
+			'user_ip'		=> $this->user->ip,
+			'user_new'		=> 0,
+			'user_avatar'		=> 'https://static.fansubs.cat/images/icons/'.$request->fansub_id.'.png',
+			'user_avatar_type'	=> 'avatar.driver.remote',
+		);
+		$cp_data = array(
+			'pf_bluesky'	=> !empty($request->bluesky_url) ? $request->bluesky_url : '',
+			'pf_mastodon'	=> !empty($request->mastodon_url) ? $request->mastodon_url : '',
+			'pf_twitter'	=> !empty($request->twitter_url) ? $request->twitter_url : '',
+			'pf_phpbb_website'	=> !empty($request->url) ? $request->url : '',
+		);
+			
+		// effectively add the user
+		$user_id = user_add($user_row, $cp_data);
 		
 		if (!empty($user_id)) {
 			$output = array(
@@ -561,7 +635,7 @@ class api_controller {
 			return $this->create_not_found_response();
 		}
 		
-		$this->begin_user_session(2); //TODO Extract to variable
+		$this->begin_user_session(self::SYSTEM_USER_ID);
 
 		//This is needed for the delete_post function
 		require_once($this->phpbb_root_path . "includes/functions_posting." . $this->php_ext);
@@ -624,7 +698,7 @@ class api_controller {
 			return $this->create_not_found_response();
 		}
 		
-		$this->begin_user_session(2); //TODO Extract to variable
+		$this->begin_user_session(self::SYSTEM_USER_ID);
 
 		//This is needed for the user_delete function
 		require_once($this->phpbb_root_path . "includes/functions_user." . $this->php_ext);
@@ -679,6 +753,51 @@ class api_controller {
 	}
 
 	/**
+	 * Updates fansub profile attributes that are shared between Fansubs.cat and phpBB.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function update_fansub(){
+		//WE HAVE THESE PARAMETERS:
+		// -fansub_id
+		// -username_old
+		// -username
+		// -email
+		// -url
+		// -bluesky_url
+		// -mastodon_url
+		// -twitter_url
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		$sql = 'UPDATE ' . USERS_TABLE . "
+			SET user_avatar = '" . $this->db->sql_escape('https://static.fansubs.cat/images/icons/'.$request->fansub_id.'.png') . "',
+				user_avatar_type = 'avatar.driver.remote',
+				user_email = '" . $this->db->sql_escape($request->email) . "',
+				username = '" . $this->db->sql_escape($this->get_clean_username($request->username)) . "',
+				username_clean = '" . $this->db->sql_escape(utf8_clean_string($this->get_clean_username($request->username))) . "'
+			WHERE username = '" . $this->db->sql_escape($request->username_old) . "'";
+		$this->db->sql_query($sql);
+		$sql = 'UPDATE ' . PROFILE_FIELDS_DATA_TABLE . "
+			SET pf_bluesky = '" . $this->db->sql_escape($request->bluesky_url) . "',
+				pf_twitter = '" . $this->db->sql_escape($request->twitter_url) . "',
+				pf_phpbb_website = '" . $this->db->sql_escape($request->url) . "',
+				pf_mastodon = '" . $this->db->sql_escape($request->mastodon_url) . "'
+			WHERE user_id = (SELECT u.user_id FROM " . USERS_TABLE . " u WHERE username = '" . $this->db->sql_escape($request->username) . "')";
+		$this->db->sql_query($sql);
+		
+		//This is needed for the user_update_name function
+		require_once($this->phpbb_root_path . "includes/functions_user." . $this->php_ext);
+		
+		user_update_name($request->username_old, $request->username);
+		
+		return $this->create_generic_ok_response();
+	}
+
+	/**
 	 * Adds a new chat message.
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
@@ -695,7 +814,7 @@ class api_controller {
 			return $this->create_invalid_format_response();
 		}
 		
-		$this->begin_user_session(2); //TODO Extract
+		$this->begin_user_session(self::SYSTEM_USER_ID);
 
 		//This is needed for the submit_post function
 		require_once($this->phpbb_root_path . "includes/functions_posting." . $this->php_ext);

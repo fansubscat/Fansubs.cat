@@ -1270,7 +1270,7 @@ fieldset.submit-buttons {
 	color: rgb(var(--secondary-color));
 }
 
-.content a:not(.button) {
+.content a:not(.button):not(.mention) {
 	text-decoration: underline;
 }
 

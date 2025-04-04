@@ -161,6 +161,16 @@ function query_insert_comment($user_id, $version_id, $text, $has_spoilers) {
 	return query($final_query);
 }
 
+function query_insert_comment_fansub($fansub_id, $version_id, $text, $has_spoilers) {
+	$fansub_id = escape($fansub_id);
+	$version_id = escape($version_id);
+	$text = escape($text);
+	$has_spoilers = escape($has_spoilers);
+	$final_query = "INSERT INTO comment (user_id, version_id, type, fansub_id, reply_to_comment_id, last_replied, text, last_seen_episode_id, has_spoilers, created, updated)
+			VALUES (NULL, $version_id, 'fansub', $fansub_id, NULL, CURRENT_TIMESTAMP, '$text', NULL, $has_spoilers, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+	return query($final_query);
+}
+
 function query_comment_episode_title($comment_id) {
 	$comment_id = intval($comment_id);
 	$final_query = "SELECT IF(c.last_seen_episode_id IS NULL,

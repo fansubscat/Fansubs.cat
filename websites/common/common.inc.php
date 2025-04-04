@@ -100,6 +100,18 @@ function get_opposite_url() {
 	}
 }
 
+function get_user_avatar_url($user) {
+	if (!empty($user['avatar_filename'])) {
+		return STATIC_URL.'/images/avatars/'.$user['avatar_filename'];
+	}
+	else if (!empty($user['fansub_id'])) {
+		return STATIC_URL.'/images/icons/'.$user['fansub_id'].'.png';
+	}
+	else {
+		return STATIC_URL.'/images/site/default_avatar.jpg';
+	}
+}
+
 function get_nanoid($size=24) {
 	//Adapted from: https://github.com/hidehalo/nanoid-php/blob/master/src/Core.php
 	$alphabet = '_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

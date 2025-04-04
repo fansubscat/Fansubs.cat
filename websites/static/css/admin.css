@@ -110,6 +110,15 @@ small {
 	padding-right: 0.25em;
 }
 
+.fa-custom-community:before {
+	font-family: Arial;
+	font-weight: bold;
+	content: 'C';
+	background-color:#0d6efd !important;
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
+
 .fa-custom-news:before {
 	font-family: Arial;
 	font-weight: bold;
@@ -140,7 +149,7 @@ small {
 .fa-custom-advent:before {
 	font-family: Arial;
 	font-weight: bold;
-	content: 'C';
+	content: 'CA';
 	background-color:#0d6efd !important;
 	padding-left: 0.25em;
 	padding-right: 0.25em;

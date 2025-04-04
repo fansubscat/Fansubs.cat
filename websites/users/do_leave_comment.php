@@ -27,7 +27,11 @@ function leave_comment(){
 	$has_spoilers = $_POST['has_spoilers']=='true' ? 1 : 0;
 
 	//Update DB
-	query_insert_comment($user['id'], $version_id, $text, $has_spoilers);
+	if (!empty($user['fansub_id'])) {
+		query_insert_comment_fansub($user['fansub_id'], $version_id, $text, $has_spoilers);
+	} else {
+		query_insert_comment($user['id'], $version_id, $text, $has_spoilers);
+	}
 	$comment_id=mysqli_insert_id($db_connection);
 	
 	//Get version data to post

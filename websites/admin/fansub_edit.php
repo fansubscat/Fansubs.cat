@@ -91,6 +91,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		} else {
 			$data['hentai_category']=0;
 		}
+		if (!empty($_POST['old_username'])) {
+			$data['old_username']=escape($_POST['old_username']);
+		} else if ($_POST['action']=='edit') {
+			crash("Dades invàlides: manca old_username");
+		}
+		if (!empty($_POST['user_password'])) {
+			$data['user_password']=escape($_POST['user_password']);
+		} else if ($_POST['action']=='edit') {
+			$data['user_password']='';
+		} else {
+			crash("Dades invàlides: manca user_password");
+		}
+		if (!empty($_POST['email'])) {
+			$data['email']=escape($_POST['email']);
+		} else {
+			crash("Dades invàlides: manca email");
+		}
 		
 		if ($_POST['action']=='edit') {
 			$old_result = query("SELECT * FROM fansub WHERE id=".$data['id']);
@@ -100,19 +117,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			}
 			
 			log_action("update-fansub", "S’ha actualitzat el fansub «".$_POST['name']."» (id. de fansub: ".$data['id'].")");
-			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',discord_url=".$data['discord_url'].",bluesky_url=".$data['bluesky_url'].",bluesky_handle='".$data['bluesky_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",email='".$data['email']."',twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',discord_url=".$data['discord_url'].",bluesky_url=".$data['bluesky_url'].",bluesky_handle='".$data['bluesky_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.$data['id'].'.png');
 			}
+			
+			edit_fansub_user($data['id'], $data['old_username'], $data['user_password']);
 		}
 		else {
 			log_action("create-fansub", "S’ha creat el fansub «".$_POST['name']."»");
-			query("INSERT INTO fansub (name,slug,type,url,twitter_url,twitter_handle,mastodon_url,mastodon_handle,discord_url,bluesky_handle,bluesky_url,status,ping_token,is_historical,archive_url,hentai_category,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."',".$data['discord_url'].",'".$data['bluesky_handle']."',".$data['bluesky_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO fansub (name,slug,type,url,email,twitter_url,twitter_handle,mastodon_url,mastodon_handle,discord_url,bluesky_handle,bluesky_url,status,ping_token,is_historical,archive_url,hentai_category,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",'".$data['email']."',".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."',".$data['discord_url'].",'".$data['bluesky_handle']."',".$data['bluesky_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			
+			$fansub_id=mysqli_insert_id($db_connection);
 
 			if (!empty($_FILES['icon'])) {
-				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.mysqli_insert_id($db_connection).'.png');
+				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.$fansub_id.'.png');
 			}
+			
+			add_fansub_user($fansub_id, $data['user_password']);
 		}
 
 		$_SESSION['message']="S’han desat les dades correctament.";
@@ -122,7 +145,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 	}
 
 	if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-		$result = query("SELECT f.* FROM fansub f WHERE id=".escape($_GET['id']));
+		$result = query("SELECT f.*, (SELECT u.username FROM user u WHERE u.fansub_id=f.id) old_username FROM fansub f WHERE id=".escape($_GET['id']));
 		$row = mysqli_fetch_assoc($result) or crash('Fansub not found');
 		mysqli_free_result($result);
 	} else {
@@ -140,6 +163,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 						<input class="form-control" name="name" id="form-name-with-autocomplete" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
 						<input type="hidden" id="form-id" name="id" value="<?php echo $row['id']; ?>">
 						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
+						<input type="hidden" name="old_username" value="<?php echo $row['old_username']; ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-slug">Identificador<span class="mandatory"></span> <?php print_helper_box('Identificador', 'Text curt que es farà servir a l’URL per a enllaçar a continguts d’aquest fansub.\n\nNormalment s’autogenera i no cal editar-lo.'); ?></label>
@@ -175,6 +199,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 					<div class="mb-3">
 						<label for="form-url">URL</label> <?php print_helper_box('URL', 'Adreça URL completa del lloc web del fansub.\n\nSi no en té, es deixa en blanc.'); ?>
 						<input class="form-control" type="url" name="url" id="form-url" maxlength="200" value="<?php echo htmlspecialchars($row['url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-email">Adreça electrònica<span class="mandatory"></label> <?php print_helper_box('Adreça electrònica', 'Adreça electrònica del fansub.\n\nÉs necessària per a crear el seu perfil d’usuari i de comunitat.'); ?>
+						<input class="form-control" type="email" name="email" id="form-email" maxlength="200" value="<?php echo htmlspecialchars($row['email']); ?>" required>
+					</div>
+					<div class="mb-3">
+						<label for="form-user_password">Contrasenya de l’usuari públic<?php echo !empty($row['id']) ? ' (introdueix-la només si la vols canviar)' : '<span class="mandatory">'; ?></label> <?php print_helper_box('Contrasenya de l’usuari públic', 'Contrasenya de l’usuari al web públic.\n\nÉs necessària per a crear el seu perfil d’usuari i de comunitat.\n\nCada fansub disposa d’un usuari públic al web (amb nom d’usuari igual al seu nom de fansub) i hi pot iniciar la sessió amb aquesta contrasenya. Es pot fer servir per a respondre a la comunitat en nom del fansub.'); ?>
+						<input class="form-control" type="password" name="user_password" id="form-user_password" maxlength="200" minlength="6"autocomplete="new-password" value=""<?php echo !empty($row['id']) ? '' : ' required'; ?>>
 					</div>
 					<div class="mb-3">
 						<label for="form-bluesky_url">URL del perfil a Bluesky</label> <?php print_helper_box('URL del perfil a Bluesky', 'Adreça URL completa del perfil del fansub a Bluesky.\n\nSi no en té, es deixa en blanc.'); ?>

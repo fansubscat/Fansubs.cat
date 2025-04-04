@@ -93,6 +93,7 @@ CREATE TABLE `fansub` (
   `type` varchar(200) NOT NULL DEFAULT 'fansub',
   `slug` varchar(200) NOT NULL,
   `url` varchar(200) DEFAULT NULL,
+  `email` varchar(200) NOT NULL,
   `twitter_url` varchar(200) DEFAULT NULL,
   `twitter_handle` varchar(200) NOT NULL,
   `mastodon_url` varchar(200) DEFAULT NULL,
@@ -288,6 +289,7 @@ CREATE TABLE `user` (
   `site_theme` tinyint(1) NOT NULL DEFAULT 0,
   `status` int(11) NOT NULL DEFAULT 0,
   `forum_user_id` int(11) DEFAULT NULL,
+  `fansub_id` int(11) DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -482,7 +484,8 @@ ALTER TABLE `series`
   ADD KEY `series_ibfk_1` (`default_version_id`);
 
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_ibfk_1` (`fansub_id`);
 
 ALTER TABLE `user_fansub_blacklist`
   ADD PRIMARY KEY (`user_id`,`fansub_id`),
@@ -642,6 +645,9 @@ ALTER TABLE `remote_folder_failed_files`
 
 ALTER TABLE `series`
   ADD CONSTRAINT `series_ibfk_1` FOREIGN KEY (`default_version_id`) REFERENCES `version` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE `user_fansub_blacklist`
   ADD CONSTRAINT `user_fansub_blacklist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

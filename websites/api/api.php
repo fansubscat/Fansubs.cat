@@ -489,7 +489,8 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 					$resultu = query_get_user_by_forum_user_id($_POST['forum_user_id']);
 					if ($rowu = mysqli_fetch_assoc($resultu)) {
 						$user_id = $rowu['id'];
-						query_insert_comment_with_forum_post_id($user_id, $version_id, $_POST['forum_post_id'], $_POST['text'], !empty($_POST['has_spoilers']) ? 1 : 0);
+						$fansub_id = $rowu['fansub_id'];
+						query_insert_comment_with_forum_post_id($user_id, $fansub_id, $version_id, $_POST['forum_post_id'], $_POST['text'], !empty($_POST['has_spoilers']) ? 1 : 0);
 			
 						$response = array(
 							'status' => 'ok'

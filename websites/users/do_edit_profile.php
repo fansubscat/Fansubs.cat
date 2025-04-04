@@ -112,7 +112,7 @@ function edit_profile(){
 			  	'username_old' => $user['username'],
 			  	'username' => $username,
 			  	'email' => $email_address,
-			  	'avatar_url' => !empty($user['avatar_filename']) ? 'https://static.fansubs.cat/images/avatars/'.$user['avatar_filename'] : 'https://static.fansubs.cat/images/site/default_avatar.jpg',
+			  	'avatar_url' => get_user_avatar_url($user),
 			  	'birthdate' => $birth_year."-".$birth_month."-".$birth_day,
 			  	)));
 		curl_exec($curl);

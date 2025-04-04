@@ -225,6 +225,11 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					<a class="navbar-extra-link pe-3" href="<?php echo LIVEACTION_URL; ?>/" target="_blank" title="Imatge real - Web públic (imatgereal.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-liveaction fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
 <?php
 	}
+	if (!DISABLE_COMMUNITY) {
+?>
+					<a class="navbar-extra-link pe-3" href="<?php echo COMMUNITY_URL; ?>/" target="_blank" title="Comunitat - Web públic (comunitat.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-community fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>
+<?php
+	}
 	if (!DISABLE_NEWS) {
 ?>
 					<a class="navbar-extra-link pe-3" href="<?php echo NEWS_URL; ?>/" target="_blank" title="Notícies - Web públic (noticies.fansubs.cat)"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-news fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></span></a>

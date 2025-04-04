@@ -3,12 +3,21 @@ require_once(__DIR__.'/../common/user_init.inc.php');
 require_once(__DIR__.'/common.inc.php');
 require_once(__DIR__.'/queries.inc.php');
 
+define('REPORT_LOG_ENABLED', FALSE);
+
 function report_file_status(){
 	global $user;
 
 	if (!empty($_POST['view_id'])) {
 		$result = query_view_session_by_id($_POST['view_id']);
 		if ($row = mysqli_fetch_assoc($result)) {
+			if (defined('REPORT_LOG_ENABLED')) {
+				if ($row['type']=='manga') {
+					file_put_contents('/srv/fansubscat/temporary/report.log', date('Y-m-d H:i:s').' -> '.$_POST['view_id'].': vist: '.$_POST['progress'].'/'.$row['length'].' ('.number_format(($_POST['progress']/$row['length'])*100, 2).'%), ara a la pàgina: '.$_POST['position']."\n", FILE_APPEND);
+				} else {
+					file_put_contents('/srv/fansubscat/temporary/report.log', date('Y-m-d H:i:s').' -> '.$_POST['view_id'].': vist: '.gmdate("H:i:s", $_POST['progress']).'/'.gmdate("H:i:s", $row['length']).' ('.number_format(($_POST['progress']/$row['length'])*100, 2).'%), ara al minut: '.gmdate("H:i:s", $_POST['position']).', emès: '.(max($row['is_casted'], $_POST['is_casted'])==1 ? 'sí' : 'no')."\n", FILE_APPEND);
+				}
+			}
 			$is_casted = $row['is_casted'];
 			$progress = $_POST['progress'];
 			if (!empty($_POST['is_casted'])) {

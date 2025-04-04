@@ -20,6 +20,13 @@ require_once(__DIR__.'/../common/header.inc.php');
 <div class="account-profile-layout">
 	<div class="content-layout account-profile-page">
 		<div class="profile-section-header"><?php echo lang('users.edit_profile.header'); ?></div>
+<?php
+if (!empty($user['fansub_id'])) {
+?>
+		<div class="profile-section-explanation"><?php echo lang('users.edit_profile.disabled_fansub'); ?></div>
+<?php
+} else {
+?>
 		<form id="edit-profile-form" onsubmit="return editProfile();" autocomplete="off" novalidate="">
 			<label for=edit_profile_username"><?php echo lang('users.edit_profile.username'); ?></label>
 			<input id="edit_profile_username" type="text" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['username']); ?>">
@@ -49,13 +56,16 @@ require_once(__DIR__.'/../common/header.inc.php');
 			<div id="edit_profile_birthday_validation" class="validation-message"></div>
 			<label for="edit_profile_avatar_file"><?php echo lang('users.edit_profile.profile_image'); ?></label>
 			<div class="profile-avatar">
-				<img alt="<?php echo lang('users.edit_profile.profile_image.alt'); ?>" onclick="" class="profile-avatar-image" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+				<img alt="<?php echo lang('users.edit_profile.profile_image.alt'); ?>" onclick="" class="profile-avatar-image" src="<?php echo get_user_avatar_url($user); ?>">
 				<input id="edit_profile_avatar_file" class="hidden" name="file" type="file" onchange="checkAvatarUpload();" accept="image/png, image/gif, image/jpeg" />
 				<div class="profile-avatar-change" onclick="chooseAvatar();"><i class="fa fa-fw fa-upload"></i><?php echo lang('users.edit_profile.change_image'); ?></div>
 			</div>
 			<div id="edit_profile_generic_validation" class="validation-message-generic"></div>
 			<button id="edit_profile_submit" type="submit" class="login-button account-button"><?php echo lang('users.edit_profile.save_button'); ?></button>
 		</form>
+<?php
+}
+?>
 	</div>
 </div>
 <?php

@@ -70,7 +70,7 @@ mysqli_free_result($result);
 		<div class="profile-section">
 			<div class="profile-avatar-name">
 				<div class="profile-avatar">
-					<img alt="Avatar de l’usuari" class="profile-avatar-image" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+					<img alt="<?php echo lang('users.edit_profile.profile_image.alt'); ?>" class="profile-avatar-image" src="<?php echo get_user_avatar_url($user); ?>">
 				</div>
 				<div class="profile-name"><?php echo htmlspecialchars($user['username']); ?></div>
 			</div>

@@ -443,15 +443,27 @@ function query_get_comment_by_forum_post_id($forum_post_id) {
 	return query($final_query);
 }
 
-function query_insert_comment_with_forum_post_id($user_id, $version_id, $forum_post_id, $text, $has_spoilers) {
-	$user_id = intval($user_id);
+function query_insert_comment_with_forum_post_id($user_id, $fansub_id, $version_id, $forum_post_id, $text, $has_spoilers) {
 	$version_id = intval($version_id);
 	$forum_post_id = intval($forum_post_id);
 	$text = escape($text);
 	$has_spoilers = intval($has_spoilers);
+	
+	if (!empty($fansub_id)) {
+		$user_id = 'NULL';
+		$type = 'fansub';
+		$fansub_id = intval($fansub_id);
+		$subquery = "NULL";
+	} else {
+		$user_id = intval($user_id);
+		$type = 'user';
+		$fansub_id = 'NULL';
+		$subquery = "(SELECT last_seen_episode_id FROM user_version_followed WHERE user_id=$user_id AND version_id=$version_id AND last_seen_episode_id<>-1)";
+	}
+	
 	$final_query = "INSERT INTO comment
 				(version_id, user_id, type, fansub_id, reply_to_comment_id, last_replied, text, last_seen_episode_id, has_spoilers, forum_post_id, created, updated)
-			VALUES ($version_id, $user_id, 'user', NULL, NULL, NULL, '$text', (SELECT last_seen_episode_id FROM user_version_followed WHERE user_id=$user_id AND version_id=$version_id AND last_seen_episode_id<>-1), $has_spoilers, $forum_post_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+			VALUES ($version_id, $user_id, '$type', $fansub_id, NULL, NULL, '$text', $subquery, $has_spoilers, $forum_post_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 	return query($final_query);
 }
 

@@ -403,7 +403,7 @@ if (PAGE_STYLE_TYPE=='login') {
 <?php
 		if (!empty($user)) {
 ?>
-							<img alt="<?php echo lang('main.header.menu.alt'); ?>" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo !empty($user['avatar_filename']) ? STATIC_URL.'/images/avatars/'.$user['avatar_filename'] : STATIC_URL.'/images/site/default_avatar.jpg'; ?>">
+							<img alt="<?php echo lang('main.header.menu.alt'); ?>" onclick="showUserDropdown();" class="user-avatar dropdown-button" src="<?php echo get_user_avatar_url($user); ?>">
 <?php
 		} else {
 ?>
