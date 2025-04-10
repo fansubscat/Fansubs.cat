@@ -64,23 +64,22 @@ span.username-coloured {
 // Links for forum/topic lists
 a.forumtitle {
 	display: inline-block;
-	font-family: $forum-link-font-family;
+	font-family: $h2-font-family;
 	font-size: $forum-link-font-size;
 	line-height: $forum-link-line-height;
-	font-weight: 500;
+	font-weight: bold;
 	padding-bottom: 2px;
 	text-decoration: none;
 }
 
 a.topictitle {
 	display: inline-block;
-	font-family: $forum-link-font-family;
+	font-family: $h2-font-family;
 	font-size: $forum-link-font-size;
 	line-height: $forum-link-line-height;
-	font-weight: 500;
+	font-weight: bold;
 	padding-bottom: 2px;
 	text-decoration: none;
-	font-family: $topic-link-font-family;
 	font-size: $topic-link-font-size;
 }
 

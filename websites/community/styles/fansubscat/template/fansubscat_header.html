@@ -28,6 +28,23 @@
 				<div class="filter-button dropdown-button" onclick="showForumDropdown();" title="Menú de la comunitat"><i class="fa-fw fa fa-navicon fa-2x"></i><!-- IF NOTIFICATIONS_COUNT > 0 --><div class="notification-ball"><strong><span class="counter"><!-- IF NOTIFICATIONS_COUNT > 99 -->+<!-- ELSE -->{NOTIFICATIONS_COUNT}<!-- ENDIF --></span></strong></div><!-- ENDIF --></div>
 				<div id="forum-dropdown" class="dropdown-content">
 					<div class="dropdown-title">Menú</div>
+					<hr class="dropdown-separator">
+<!-- IF S_USER_LOGGED_IN -->
+					<a href="{U_SEARCH_NEW}">
+						<i class="fa-newspaper fa fa-fw icon-red" aria-hidden="true"></i> <span>{L_SEARCH_NEW}</span>
+					</a>
+<!-- ENDIF -->
+<!-- IF S_LOAD_UNREADS -->
+					<a href="{U_SEARCH_UNREAD}">
+						<i class="fa-certificate fa fa-fw icon-red" aria-hidden="true"></i> <span>{L_SEARCH_UNREAD}</span>
+					</a>
+<!-- ENDIF -->
+					<a href="{U_SEARCH_ACTIVE_TOPICS}">
+						<i class="fa-fire fa fa-fw icon-blue" aria-hidden="true"></i> <span>{L_SEARCH_ACTIVE_TOPICS}</span>
+					</a>
+					<a href="{U_SEARCH_UNANSWERED}">
+						<i class="fa-comment-dots fa fa-fw icon-gray" aria-hidden="true"></i> <span>{L_SEARCH_UNANSWERED}</span>
+					</a>
 <!-- IF S_REGISTERED_USER -->
 					<hr class="dropdown-separator">
 					<a href="{U_PROFILE}" title="{L_PROFILE}">
@@ -58,24 +75,7 @@
 						<i class="fa-comment fa fa-fw icon-gray" aria-hidden="true"></i> <span>{L_SEARCH_SELF}</span>
 					</a>
 <!-- ENDIF -->
-					<hr class="dropdown-separator">
-<!-- IF S_USER_LOGGED_IN -->
-					<a href="{U_SEARCH_NEW}">
-						<i class="fa-newspaper fa fa-fw icon-red" aria-hidden="true"></i> <span>{L_SEARCH_NEW}</span>
-					</a>
-<!-- ENDIF -->
-<!-- IF S_LOAD_UNREADS -->
-					<a href="{U_SEARCH_UNREAD}">
-						<i class="fa-certificate fa fa-fw icon-red" aria-hidden="true"></i> <span>{L_SEARCH_UNREAD}</span>
-					</a>
-<!-- ENDIF -->
-					<a href="{U_SEARCH_UNANSWERED}">
-						<i class="fa-comment-dots fa fa-fw icon-gray" aria-hidden="true"></i> <span>{L_SEARCH_UNANSWERED}</span>
-					</a>
-					<a href="{U_SEARCH_ACTIVE_TOPICS}">
-						<i class="fa-fire fa fa-fw icon-blue" aria-hidden="true"></i> <span>{L_SEARCH_ACTIVE_TOPICS}</span>
-					</a>
-				<!-- IF U_ACP or U_ACP -->
+				<!-- IF U_ACP or U_MCP -->
 					<hr class="dropdown-separator-secondary">
 					<!-- IF U_ACP -->
 					<a class="nav-link" href="{U_ACP}" title="{L_ACP}">
@@ -94,15 +94,17 @@
 				<div class="filter-button dropdown-button" onclick="showChatSettings();" title="Configuració del xat"><i class="fa-fw fa fa-gears fa-2x"></i></div>
 <!-- ENDIF -->
 			</div>
-			<a class="filter-button mobile-search-button" href="{U_SEARCH}" title="Cerca">
+<!-- IF not MCHAT_PAGE -->
+			<a class="filter-button mobile-search-button" href="{U_SEARCH}" title="Cerca missatges">
 				<i class="fa fa-fw fa-search fa-2x"></i>
 			</a>
 			<div class="search-form">
 				<form action="{U_SEARCH}" method="get" id="search_form">
-					<input id="search_query" name="keywords" type="text" value="" placeholder="Cerca..." autocomplete="off">
-					<i id="search_button" class="fa fa-search" title="Cerca a tots els fòrums" onclick="$('#search_form').submit();"></i>
+					<input id="search_query" name="keywords" type="text" value="" placeholder="Cerca missatges..." autocomplete="off">
+					<i id="search_button" class="fa fa-search" title="Cerca a tota la comunitat" onclick="$('#search_form').submit();"></i>
 				</form>
 			</div>
+<!-- ENDIF -->
 		</div>
 <!-- IF not S_USER_LOGGED_IN -->
 		<a class="user-login" href="https://usuaris.fansubs.cat/inicia-la-sessio"><span class="user-login-text">Inicia la sessió</span><span class="user-login-icon"><i class="fa fa-fw fa-sign-in"></i></span></a>

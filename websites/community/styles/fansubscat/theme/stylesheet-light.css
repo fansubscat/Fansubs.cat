@@ -2141,23 +2141,22 @@ span.username-coloured {
 
 a.forumtitle {
   display: inline-block;
-  font-family: "lexend_deca_bold", "Droid Sans", "Open Sans", "Trebuchet MS", Helvetica, Arial, sans-serif;
+  font-family: "lexend_deca", "Droid Sans", "Open Sans", "Trebuchet MS", Helvetica, Arial, sans-serif;
   font-size: 19px;
   line-height: 1.2;
-  font-weight: 500;
+  font-weight: bold;
   padding-bottom: 2px;
   text-decoration: none;
 }
 
 a.topictitle {
   display: inline-block;
-  font-family: "lexend_deca_bold", "Droid Sans", "Open Sans", "Trebuchet MS", Helvetica, Arial, sans-serif;
+  font-family: "lexend_deca", "Droid Sans", "Open Sans", "Trebuchet MS", Helvetica, Arial, sans-serif;
   font-size: 19px;
   line-height: 1.2;
-  font-weight: 500;
+  font-weight: bold;
   padding-bottom: 2px;
   text-decoration: none;
-  font-family: "lexend_deca_bold", "Droid Sans", "Open Sans", "Trebuchet MS", Helvetica, Arial, sans-serif;
   font-size: 18px;
 }
 
