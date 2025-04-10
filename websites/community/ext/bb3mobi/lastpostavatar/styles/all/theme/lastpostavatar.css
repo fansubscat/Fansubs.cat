@@ -1,0 +1,16 @@
+.lastpostavatar img {
+	border: 1px solid #fff;
+	display: inline-block;
+	margin-right: 4px;
+	float: left;
+}
+
+.rtl .lastpostavatar img { 
+	margin-right: 0px;
+	margin-left: 4px;
+	float: right;
+}
+
+.lastpostavatar img:hover {
+	border-color: #73BCD1;
+}

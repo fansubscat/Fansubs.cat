@@ -1,0 +1,32 @@
+{
+    "name": "bb3mobi/lastpostavatar",
+    "type": "phpbb-extension",
+    "description": "Last post user avatar",
+    "homepage": "http://bb3.mobi",
+    "version": "1.0.3",
+    "time": "2015-01-01",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Anvar",
+            "email": "anvar.all@mail.ru",
+            "homepage": "http://apwa.ru",
+            "role": "Developer phpBB"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "phpbb/phpbb": "3.1.*@dev"
+    },
+    "extra": {
+        "display-name": "Last Post Avatar",
+        "soft-require": {
+            "phpbb/phpbb": "3.1.*@dev"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/avatar_in_last_post",
+            "filename": "version_check"
+        }
+    }
+}

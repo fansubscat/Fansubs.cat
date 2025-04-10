@@ -1,0 +1,8 @@
+services:
+    bb3mobi.lastpostavatar.listener:
+        class: bb3mobi\lastpostavatar\event\listener
+        arguments:
+            - @user
+            - @path_helper
+        tags:
+            - { name: event.listener }
