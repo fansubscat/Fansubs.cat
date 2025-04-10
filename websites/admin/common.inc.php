@@ -498,7 +498,7 @@ function add_comment_to_community($comment_id){
 		  json_encode(array(
 		  	'username' => $comment['type']=='user' ? $comment['username'] : ($comment['type']=='fansub' ? $comment['comment_fansub_username'] : 'Fansubs.cat'),
 		  	'topic_id' => $comment['forum_topic_id'],
-		  	'subject' => 'Re: '. $comment['version_title'].' ('.$comment['version_fansub_names'].')',
+		  	'subject' => 'Re: '. $comment['version_title'].' (versió '.get_fansub_preposition_name($comment['version_fansub_names']).')',
 		  	'message' => $prepend_text.($comment['has_spoilers'] ? '[spoiler]' : '').$comment['text'].($comment['has_spoilers'] ? '[/spoiler]' : ''),
 		  	'timestamp' => $comment['comment_created_timestamp'],
 		  	)));

@@ -32,6 +32,13 @@ if (!SITE_IS_HENTAI && !DISABLE_LIVE_ACTION) {
 					</div>
 					<div class="secondary-buttons">
 <?php
+if (FALSE && !DISABLE_COMMUNITY) {
+?>
+						<a class="secondary-button" href="<?php echo COMMUNITY_URL; ?>"><?php echo lang('main.button.community'); ?></a>
+<?php
+}
+?>
+<?php
 if (!DISABLE_NEWS) {
 ?>
 						<a class="secondary-button" href="<?php echo NEWS_URL; ?>"><?php echo lang('main.button.news'); ?></a>
@@ -39,13 +46,6 @@ if (!DISABLE_NEWS) {
 }
 ?>
 						<a class="secondary-button" href="<?php echo lang('url.fansubs'); ?>"><?php echo lang('main.button.fansubs'); ?></a>
-<?php
-if (FALSE && !DISABLE_COMMUNITY) {
-?>
-						<a class="secondary-button" href="<?php echo COMMUNITY_URL; ?>"><?php echo lang('main.button.community'); ?></a>
-<?php
-}
-?>
 					</div>
 <?php
 if (is_advent_days() && !DISABLE_ADVENT) {

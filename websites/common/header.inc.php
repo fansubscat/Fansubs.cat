@@ -367,7 +367,7 @@ if (PAGE_STYLE_TYPE=='login') {
 						</a>
 						<div class="search-form">
 							<form id="search_form">
-								<input id="search_query" type="text" value="" placeholder="<?php echo lang('main.header.search.placeholder'); ?>" autocomplete="off">
+								<input id="search_query" type="text" value="" placeholder="<?php echo lang('main.header.search.placeholder_catalogue'); ?>" autocomplete="off">
 								<i id="search_button" class="fa fa-search" title="<?php echo lang('main.header.search.alt_catalogue'); ?>"></i>
 								<div id="search_query_autocomplete" class="hidden"></div>
 							</form>
@@ -383,7 +383,7 @@ if (PAGE_STYLE_TYPE=='login') {
 						</a>
 						<div class="search-form">
 							<form id="search_form">
-								<input id="search_query" type="text" value="" placeholder="<?php echo lang('main.header.search.placeholder'); ?>" autocomplete="off">
+								<input id="search_query" type="text" value="" placeholder="<?php echo lang('main.header.search.placeholder_news'); ?>" autocomplete="off">
 								<i id="search_button" class="fa fa-search" title="<?php echo lang('main.header.search.alt_news'); ?>"></i>
 							</form>
 						</div>

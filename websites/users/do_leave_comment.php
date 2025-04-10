@@ -2,6 +2,14 @@
 require_once(__DIR__.'/../common/user_init.inc.php');
 require_once(__DIR__.'/queries.inc.php');
 
+function get_fansub_preposition_name($text){
+	$first = mb_strtoupper(substr($text, 0, 1));
+	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
+		return "d’$text";
+	}
+	return "de $text";
+}
+
 function leave_comment(){
 	global $user,$db_connection;
 	//Check if we have all the data
@@ -50,7 +58,7 @@ function leave_comment(){
 					  json_encode(array(
 					  	'username' => $comment['username'],
 					  	'topic_id' => $comment['forum_topic_id'],
-					  	'subject' => 'Re: '. $comment['version_title'].' ('.$comment['version_fansub_names'].')',
+					  	'subject' => 'Re: '. $comment['version_title'].' (versió '.get_fansub_preposition_name($comment['version_fansub_names']).')',
 					  	'message' => ($comment['has_spoilers'] ? '[spoiler]' : '').$comment['text'].($comment['has_spoilers'] ? '[/spoiler]' : ''),
 					  	'timestamp' => date('U'),
 					  	)));
