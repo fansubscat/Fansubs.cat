@@ -100,7 +100,11 @@ class listener implements EventSubscriberInterface
 			'FROM' => array(USERS_TABLE => 'u'),
 			'ON' => "u.user_id = t.topic_last_poster_id"
 		);
-		$sql_array['SELECT'] .= ', u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height';
+		$sql_array['LEFT_JOIN'][] = array(
+			'FROM' => array(USERS_TABLE => 'u2'),
+			'ON' => "u2.user_id = t.topic_poster"
+		);
+		$sql_array['SELECT'] .= ', u.user_avatar, u.user_avatar_type, u.user_avatar_width, u.user_avatar_height, u2.user_avatar first_poster_user_avatar, u2.user_avatar_type first_poster_user_avatar_type, u2.user_avatar_width first_poster_user_avatar_width, u2.user_avatar_height first_poster_user_avatar_height';
 		$event['sql_array'] = $sql_array;
 	}
 
@@ -109,15 +113,22 @@ class listener implements EventSubscriberInterface
 	{
 		$row = $event['row'];
 		$topic_row = $event['topic_row'];
-		$topic_row['LAST_POST_AUTHOR_FULL'] .= '<span class="lastpostavatar">' . $this->avatar_img_resize($row) . '</span>';
+		$topic_row['LAST_POST_AUTHOR_FULL'] .= '<span class="lastpostavatar responsive-hide">' . $this->avatar_img_resize($row) . '</span>';
+		
+		$row['user_avatar'] = $row['first_poster_user_avatar'];
+		$row['user_avatar_type'] = $row['first_poster_user_avatar_type'];
+		$row['user_avatar_width'] = $row['first_poster_user_avatar_width'];
+		$row['user_avatar_height'] = $row['first_poster_user_avatar_height'];
+		
+		$topic_row['POST_AUTHOR_AVATAR'] = '<span class="firstpostavatar responsive-hide">' . $this->avatar_img_resize($row) . '</span>';
 		$event['topic_row'] = $topic_row;
 	}
 
 	/** Data request reccent topics */
 	public function add_user_search_sql($event)
 	{
-		$event['sql_from'] .= ' LEFT JOIN ' . USERS_TABLE . ' us ON (us.user_id = t.topic_last_poster_id)';
-		$event['sql_select'] .= ', us.user_avatar, us.user_avatar_type, us.user_avatar_width, us.user_avatar_height';
+		$event['sql_from'] .= ' LEFT JOIN ' . USERS_TABLE . ' us ON (us.user_id = t.topic_last_poster_id) LEFT JOIN ' . USERS_TABLE . ' u2 ON u2.user_id=t.topic_poster';
+		$event['sql_select'] .= ', us.user_avatar, us.user_avatar_type, us.user_avatar_width, us.user_avatar_height, u2.user_avatar first_poster_user_avatar, u2.user_avatar_type first_poster_user_avatar_type, u2.user_avatar_width first_poster_user_avatar_width, u2.user_avatar_height first_poster_user_avatar_height';
 	}
 
 	/* User avatar Last post in recent topics */
@@ -127,9 +138,17 @@ class listener implements EventSubscriberInterface
 		$tpl_ary = $event['tpl_ary'];
 		if (isset($tpl_ary['LAST_POST_AUTHOR_FULL']))
 		{
-			$tpl_ary['LAST_POST_AUTHOR_FULL'] .= '<span class="lastpostavatar">' . $this->avatar_img_resize($row) . '</span>';
-			$event['tpl_ary'] = $tpl_ary;
+			$tpl_ary['LAST_POST_AUTHOR_FULL'] .= '<span class="lastpostavatar responsive-hide">' . $this->avatar_img_resize($row) . '</span>';
 		}
+		
+		$row['user_avatar'] = $row['first_poster_user_avatar'];
+		$row['user_avatar_type'] = $row['first_poster_user_avatar_type'];
+		$row['user_avatar_width'] = $row['first_poster_user_avatar_width'];
+		$row['user_avatar_height'] = $row['first_poster_user_avatar_height'];
+		
+		$tpl_ary['POST_AUTHOR_AVATAR'] = '<span class="firstpostavatar responsive-hide">' . $this->avatar_img_resize($row) . '</span>';
+		
+		$event['tpl_ary'] = $tpl_ary;
 	}
 
 	/** Data request reccent topics */
@@ -149,41 +168,13 @@ class listener implements EventSubscriberInterface
 	{
 		$row = $event['row'];
 		$tpl_ary = $event['tpl_ary'];
-		$tpl_ary['LAST_POST_AUTHOR_FULL'] .= '<span class="lastpostavatar">' . $this->avatar_img_resize($row) . '</span>';
+		$tpl_ary['LAST_POST_AUTHOR_FULL'] .= '<span class="lastpostavatar responsive-hide">' . $this->avatar_img_resize($row) . '</span>';
 		$event['tpl_ary'] = $tpl_ary;
 	}
 
 	/* Generate and resize avatar */
 	private function avatar_img_resize($avatar)
 	{
-		if (!empty($avatar['user_avatar']))
-		{
-			if ($avatar['user_avatar_width'] >= $avatar['user_avatar_height'])
-			{
-				$avatar_width = ($avatar['user_avatar_width'] > self::MAX_SIZE) ? self::MAX_SIZE : $avatar['user_avatar_width'];
-				if ($avatar_width == self::MAX_SIZE)
-				{
-					$avatar['user_avatar_height'] = round(self::MAX_SIZE/$avatar['user_avatar_width']*$avatar['user_avatar_height']);
-				}
-				$avatar['user_avatar_width'] = $avatar_width;
-			}
-			else
-			{
-				$avatar_height = ($avatar['user_avatar_height'] > self::MAX_SIZE) ? self::MAX_SIZE : $avatar['user_avatar_height'];
-				if ($avatar_height == self::MAX_SIZE)
-				{
-					$avatar['user_avatar_width'] = round(self::MAX_SIZE/$avatar['user_avatar_height']*$avatar['user_avatar_width']);
-				}
-				$avatar['user_avatar_height'] = $avatar_height;
-			}
-			return phpbb_get_user_avatar($avatar);
-		}
-
-		// Determine board url - we may need it later
-		$board_url = generate_board_url() . '/';
-		$corrected_path = $this->path_helper->get_web_root_path();
-		$web_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? $board_url : $corrected_path;
-		$theme = "{$web_path}styles/" . rawurlencode($this->user->style['style_path']) . '/theme';
-		return '<img class="avatar" src="' . $theme . '/images/no_avatar.gif" width="' . self::MAX_SIZE . '" height="' . self::MAX_SIZE . '" alt="" />';
+		return phpbb_get_user_avatar($avatar);
 	}
 }

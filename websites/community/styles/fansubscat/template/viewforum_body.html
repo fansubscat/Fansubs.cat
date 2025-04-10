@@ -145,6 +145,7 @@
 					<div class="list-inner">
 						<div class="list-inner-container">
 							<!-- EVENT topiclist_row_prepend -->
+							<a href="{topicrow.U_VIEW_TOPIC}" class="topicavatar responsive-hide">{topicrow.POST_AUTHOR_AVATAR}</a>
 							<!-- IF topicrow.U_VIEW_TOPIC --><a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}<!-- IF (FORUM_ID == 4 or FORUM_ID == 5 or FORUM_ID == 6) and topicrow.TOPIC_AUTHOR == 'Fansubs.cat' --> <span class="fa fa-fw fa-star" title="Aquest tema segueix el ritme de publicació a Fansubs.cat i els missatges es mostren també al web"></span><!-- ENDIF --></a><!-- ELSE --><!-- IF (FORUM_ID == 4 or FORUM_ID == 5 or FORUM_ID == 6) and topicrow.TOPIC_AUTHOR == 'Fansubs.cat' --> <span class="fa fa-fw fa-star" title="Aquest tema segueix el ritme de publicació a Fansubs.cat i els missatges es mostren també al web"></span><!-- ENDIF -->{topicrow.TOPIC_TITLE}<!-- ENDIF -->
 							<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED -->
 								<a href="{topicrow.U_MCP_QUEUE}" title="<!-- IF topicrow.S_TOPIC_UNAPPROVED -->{L_TOPIC_UNAPPROVED}<!-- ELSE -->{L_POSTS_UNAPPROVED}<!-- ENDIF -->">
@@ -167,7 +168,7 @@
 
 							<!-- IF not S_IS_BOT -->
 							<div class="responsive-show" style="display: none;">
-								<span class="responsive-show left-box" style="display: none;">{L_REPLIES}{L_COLON} <strong>{topicrow.REPLIES}</strong></span>
+								<span class="responsive-show left-box" style="display: none;">{L_POST_BY_AUTHOR} <!-- EVENT search_results_topic_author_username_prepend -->{topicrow.TOPIC_AUTHOR_FULL}<!-- EVENT search_results_topic_author_username_append --> &bull; {L_REPLIES}{L_COLON} <strong>{topicrow.REPLIES}</strong></span>
 								<br>
 								Darrer missatge: <!-- EVENT viewforum_body_last_post_author_username_prepend -->{topicrow.LAST_POST_AUTHOR_FULL}<!-- EVENT viewforum_body_last_post_author_username_append --> • <a href="{topicrow.U_LAST_POST}" title="{L_GOTO_LAST_POST}"><time datetime="{topicrow.LAST_POST_TIME_RFC3339}">{topicrow.LAST_POST_TIME}</time></a>
 								<!-- IF topicrow.S_POST_GLOBAL and FORUM_ID != topicrow.FORUM_ID --><br />{L_POSTED} {L_IN} <a href="{topicrow.U_VIEW_FORUM}">{topicrow.FORUM_NAME}</a><!-- ENDIF -->
@@ -178,7 +179,7 @@
 								<!-- IF topicrow.S_HAS_POLL --><i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i><!-- ENDIF -->
 								<!-- IF topicrow.ATTACH_ICON_IMG --><i class="icon fa-paperclip fa-fw" aria-hidden="true"></i><!-- ENDIF -->
 								{% EVENT topiclist_row_topic_by_author_before %}
-								{L_POST_BY_AUTHOR} <!-- EVENT viewforum_body_topic_author_username_prepend -->{topicrow.TOPIC_AUTHOR_FULL}<!-- EVENT viewforum_body_topic_author_username_append --> • <time datetime="{topicrow.FIRST_POST_TIME_RFC3339}">{topicrow.FIRST_POST_TIME}</time>
+								<!-- EVENT viewforum_body_topic_author_username_prepend -->{topicrow.TOPIC_AUTHOR_FULL}<!-- EVENT viewforum_body_topic_author_username_append --> • <time datetime="{topicrow.FIRST_POST_TIME_RFC3339}">{topicrow.FIRST_POST_TIME}</time>
 								{% EVENT topiclist_row_topic_by_author_after %}
 								<!-- IF topicrow.S_POST_GLOBAL and FORUM_ID != topicrow.FORUM_ID --> &raquo; {L_IN} <a href="{topicrow.U_VIEW_FORUM}">{topicrow.FORUM_NAME}</a><!-- ENDIF -->
 							</div>
@@ -204,10 +205,10 @@
 				</dt>
 				<dd class="posts">{topicrow.REPLIES} <dfn>{L_REPLIES}</dfn></dd>
 				<dd class="lastpost">
-					<span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} <!-- EVENT viewforum_body_last_post_author_username_prepend -->{topicrow.LAST_POST_AUTHOR_FULL}<!-- EVENT viewforum_body_last_post_author_username_append -->
+					<span><dfn>{L_LAST_POST} </dfn><!-- EVENT viewforum_body_last_post_author_username_prepend -->{topicrow.LAST_POST_AUTHOR_FULL}<!-- EVENT viewforum_body_last_post_author_username_append -->
 						<!-- IF not S_IS_BOT and topicrow.U_LAST_POST -->
 							<a href="{topicrow.U_LAST_POST}" title="{L_GOTO_LAST_POST}">
-								<i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{VIEW_LATEST_POST}</span>
+								<i class="icon fa-arrow-circle-right fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{VIEW_LATEST_POST}</span>
 							</a>
 						<!-- ENDIF -->
 						<br /><time datetime="{topicrow.LAST_POST_TIME_RFC3339}">{topicrow.LAST_POST_TIME}</time>

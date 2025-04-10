@@ -1,11 +1,25 @@
 .lastpostavatar img {
-	border: 1px solid #fff;
+	width: 32px;
+	height: 32px;
 	display: inline-block;
-	margin-right: 4px;
+	margin-right: 0.5rem;
 	float: left;
 }
 
-.rtl .lastpostavatar img { 
+.firstpostavatar img {
+	width: 36px;
+	height: 36px;
+	display: inline-block;
+	margin-right: 0.8rem;
+	margin-top: 0.2rem;
+	float: left;
+}
+
+.topicavatar {
+	float: left;
+}
+
+.rtl .lastpostavatar img {
 	margin-right: 0px;
 	margin-left: 4px;
 	float: right;

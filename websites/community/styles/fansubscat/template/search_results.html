@@ -63,6 +63,7 @@
 						<div class="list-inner">
 							<div class="list-inner-container">
 								<!-- EVENT topiclist_row_prepend -->
+								<a href="{searchresults.U_VIEW_TOPIC}" class="topicavatar responsive-hide">{searchresults.POST_AUTHOR_AVATAR}</a>
 								<a href="{searchresults.U_VIEW_TOPIC}" class="topictitle">{searchresults.TOPIC_TITLE}<!-- IF (searchresults.FORUM_ID == 4 or searchresults.FORUM_ID == 5 or searchresults.FORUM_ID == 6) and searchresults.TOPIC_AUTHOR == 'Fansubs.cat' --> <span class="fa fa-fw fa-star" title="Aquest tema segueix el ritme de publicació a Fansubs.cat i els missatges es mostren també al web"></span><!-- ENDIF --></a>
 								<!-- IF searchresults.S_TOPIC_UNAPPROVED or searchresults.S_POSTS_UNAPPROVED -->
 									<a href="{searchresults.U_MCP_QUEUE}" title="{L_TOPIC_UNAPPROVED}">
@@ -84,10 +85,10 @@
 
 								<!-- IF not S_IS_BOT -->
 									<div class="responsive-show" style="display: none;">
-								<!-- IF searchresults.TOPIC_REPLIES --><span class="responsive-show left-box" style="display: none;">{L_REPLIES}{L_COLON} <strong>{searchresults.TOPIC_REPLIES}</strong></span><!-- ENDIF -->
+								<!-- IF searchresults.TOPIC_REPLIES --><span class="responsive-show left-box" style="display: none;">{L_POST_BY_AUTHOR} <!-- EVENT search_results_topic_author_username_prepend -->{searchresults.TOPIC_AUTHOR_FULL}<!-- EVENT search_results_topic_author_username_append --> &bull; {L_REPLIES}{L_COLON} <strong>{searchresults.TOPIC_REPLIES}</strong></span><!-- ENDIF -->
 										<br>
-										Darrer missatge: {L_POST_BY_AUTHOR} <!-- EVENT search_results_last_post_author_username_prepend -->{searchresults.LAST_POST_AUTHOR_FULL}<!-- EVENT search_results_last_post_author_username_append --> • <a href="{searchresults.U_LAST_POST}" title="{L_GOTO_LAST_POST}"><time datetime="{searchresults.LAST_POST_TIME_RFC3339}">{searchresults.LAST_POST_TIME}</time></a>
-										<br />{L_POSTED} {L_IN} <a href="{searchresults.U_VIEW_FORUM}">{searchresults.FORUM_TITLE}</a>
+										Darrer missatge: <!-- EVENT search_results_last_post_author_username_prepend -->{searchresults.LAST_POST_AUTHOR_FULL}<!-- EVENT search_results_last_post_author_username_append --> • <a href="{searchresults.U_LAST_POST}" title="{L_GOTO_LAST_POST}"><time datetime="{searchresults.LAST_POST_TIME_RFC3339}">{searchresults.LAST_POST_TIME}</time></a>
+										<br />{L_POSTED} {L_IN}{L_COLON} <a href="{searchresults.U_VIEW_FORUM}">{searchresults.FORUM_TITLE}</a>
 									</div>
 								<!-- ENDIF -->
 
@@ -95,7 +96,7 @@
 									<!-- IF searchresults.S_HAS_POLL --><i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i><!-- ENDIF -->
 									<!-- IF searchresults.ATTACH_ICON_IMG --><i class="icon fa-paperclip fa-fw" aria-hidden="true"></i><!-- ENDIF -->
 									{% EVENT topiclist_row_topic_by_author_before %}
-									{L_POST_BY_AUTHOR} <!-- EVENT search_results_topic_author_username_prepend -->{searchresults.TOPIC_AUTHOR_FULL}<!-- EVENT search_results_topic_author_username_append --> • <time datetime="{searchresults.FIRST_POST_TIME_RFC3339}">{searchresults.FIRST_POST_TIME}</time> • <a href="{searchresults.U_VIEW_FORUM}">{searchresults.FORUM_TITLE}</a>
+									<!-- EVENT search_results_topic_author_username_prepend -->{searchresults.TOPIC_AUTHOR_FULL}<!-- EVENT search_results_topic_author_username_append --> • <time datetime="{searchresults.FIRST_POST_TIME_RFC3339}">{searchresults.FIRST_POST_TIME}</time> • <a href="{searchresults.U_VIEW_FORUM}">{searchresults.FORUM_TITLE}</a>
 									{% EVENT topiclist_row_topic_by_author_after %}
 								</div>
 
@@ -121,10 +122,10 @@
 					</dt>
 					<dd class="posts">{searchresults.TOPIC_REPLIES} <dfn>{L_REPLIES}</dfn></dd>
 					<dd class="lastpost">
-						<span><dfn>{L_LAST_POST} </dfn>{L_POST_BY_AUTHOR} <!-- EVENT search_results_last_post_author_username_prepend -->{searchresults.LAST_POST_AUTHOR_FULL}<!-- EVENT search_results_last_post_author_username_append -->
+						<span><dfn>{L_LAST_POST} </dfn><!-- EVENT search_results_last_post_author_username_prepend -->{searchresults.LAST_POST_AUTHOR_FULL}<!-- EVENT search_results_last_post_author_username_append -->
 							<!-- IF not S_IS_BOT -->
 								<a href="{searchresults.U_LAST_POST}" title="{L_GOTO_LAST_POST}">
-									<i class="icon fa-external-link-square fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{VIEW_LATEST_POST}</span>
+									<i class="icon fa-arrow-circle-right fa-fw icon-lightgray icon-md" aria-hidden="true"></i><span class="sr-only">{VIEW_LATEST_POST}</span>
 								</a>
 							<!-- ENDIF -->
 							<br /><time datetime="{searchresults.LAST_POST_TIME_RFC3339}">{searchresults.LAST_POST_TIME}</time>
