@@ -274,9 +274,10 @@ jQuery(function($) {
 			mChat.pauseSession();
 			var inputValue = originalInputValue;
 			var color = mChat.storage.get('color');
-			if (color) {
-				inputValue = '[color=#' + color + '] ' + inputValue + ' [/color]';
+			if (!color) {
+				color = '808080';
 			}
+			inputValue = '[color=#' + color + '] ' + inputValue + ' [/color]';
 			mChat.setText('');
 			mChat.refresh(inputValue).done(function() {
 				mChat.resetSession();

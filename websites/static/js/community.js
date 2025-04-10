@@ -21,6 +21,10 @@ function addTargetToExternalLinks() {
 	});
 }
 
+function previewChatColor(color) {
+	$('.chat-choose-color-wrapper span').css('color', color);
+}
+
 function showChatSettings() {
 	var currentSound = mChat.storage.get('sound');
 	if (!currentSound) {
@@ -28,10 +32,10 @@ function showChatSettings() {
 	}
 	var currentColor = mChat.storage.get('color');
 	if (!currentColor) {
-		currentColor = '000000';
+		currentColor = '808080';
 	}
 	var code = '<div class="settings-section-data"><div class="settings-section-data-switch"><div class="settings-section-data-header"><div class="settings-section-data-header-title">So de les notificacions</div><div class="settings-section-data-header-subtitle">Tria el so de notificacions que vols fer servir per als missatges rebuts o silencia’l.</div></div><select id="chat-sound" class="settings-combo" onchange="mChat.sound(\'add\', this.value);"><option value="default"'+ (currentSound=='default' ? ' selected' : '') +'>Per defecte</option><option value="adara"'+ (currentSound=='adara' ? ' selected' : '') +'>Adara</option><option value="msn"'+ (currentSound=='msn' ? ' selected' : '') +'>Messenger</option><option value="tutturu"'+ (currentSound=='tutturu' ? ' selected' : '') +'>Tutturu</option><option value="silence"'+ (currentSound=='silence' ? ' selected' : '') +'>Silenci</option></select></div></div>';
-	code += '<div class="settings-section-data"><div class="settings-section-data-switch"><div class="settings-section-data-header"><div class="settings-section-data-header-title">Color dels missatges</div><div class="settings-section-data-header-subtitle">Tria el color per defecte per als missatges que enviïs al xat.</div></div><input id="chat-color" type="color" value="#'+currentColor+'" /></div></div>';
+	code += '<div class="settings-section-data"><div class="settings-section-data-switch"><div class="settings-section-data-header"><div class="settings-section-data-header-title">Color dels missatges</div><div class="settings-section-data-header-subtitle">Tria el color per defecte per als missatges que enviïs al xat.</div></div><div class="chat-choose-color-wrapper"><div title="Previsualització: s’hauria de veure bé amb fons blanc i negre"><span class="dark" style="color: #'+currentColor+'">Aa</span><span class="light" style="color: #'+currentColor+'">Aa</span></div><input id="chat-color" type="color" value="#'+currentColor+'" oninput="previewChatColor(this.value)" /></div></div></div>';
 	
 	showCustomDialog(lang('js.community.chat_options.title'), code, null, true, true, [
 		{
@@ -118,4 +122,10 @@ $(document).ready(function() {
 		}
 	});
 	addTargetToExternalLinks();
+	
+	if ($('.chat-page').length>0) {
+		window.onkeydown = function() {
+			$('#mchat-input').focus();
+		};
+	}
 });
