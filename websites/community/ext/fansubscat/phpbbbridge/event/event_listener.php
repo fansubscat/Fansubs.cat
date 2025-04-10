@@ -175,6 +175,14 @@ class event_listener implements EventSubscriberInterface
 			'[center]{TEXT}[/center]',
 			'<div style="text-align: center;">{TEXT}</span>'
 		);
+		$configurator->BBCodes->addCustom(
+			'[header]{TEXT}[/header]',
+			'<span class="post-header">{TEXT}</span>'
+		);
+		$configurator->BBCodes->addCustom(
+			'[subheader]{TEXT}[/subheader]',
+			'<span class="post-subheader">{TEXT}</span>'
+		);
 	}
 
 	public function relay_submitted_post($event)
