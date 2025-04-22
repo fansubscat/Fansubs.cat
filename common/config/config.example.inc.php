@@ -52,6 +52,11 @@ define('INTERNAL_SERVICES_TOKEN', 'YOUR_TOKEN_HERE');
 //Populate this variable if you want to display a message on all listing pages
 define('GLOBAL_MESSAGE', '');
 
+//Populate this variable if you want to display a special message on the catalogue recommendation carousel
+define('CATALOGUE_SPECIAL_TITLE', '');
+define('CATALOGUE_SPECIAL_DESCRIPTION', '');
+define('CATALOGUE_SPECIAL_ICON', '');
+
 //Start year and date of your site
 define('STARTING_YEAR', 2020);
 define('STARTING_DATE', '2020-06-01');

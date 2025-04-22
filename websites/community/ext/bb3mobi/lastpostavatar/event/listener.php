@@ -141,12 +141,14 @@ class listener implements EventSubscriberInterface
 			$tpl_ary['LAST_POST_AUTHOR_FULL'] .= '<span class="lastpostavatar responsive-hide">' . $this->avatar_img_resize($row) . '</span>';
 		}
 		
-		$row['user_avatar'] = $row['first_poster_user_avatar'];
-		$row['user_avatar_type'] = $row['first_poster_user_avatar_type'];
-		$row['user_avatar_width'] = $row['first_poster_user_avatar_width'];
-		$row['user_avatar_height'] = $row['first_poster_user_avatar_height'];
-		
-		$tpl_ary['POST_AUTHOR_AVATAR'] = '<span class="firstpostavatar responsive-hide">' . $this->avatar_img_resize($row) . '</span>';
+		if (isset($row['first_poster_user_avatar'])) {
+			$row['user_avatar'] = $row['first_poster_user_avatar'];
+			$row['user_avatar_type'] = $row['first_poster_user_avatar_type'];
+			$row['user_avatar_width'] = $row['first_poster_user_avatar_width'];
+			$row['user_avatar_height'] = $row['first_poster_user_avatar_height'];
+			
+			$tpl_ary['POST_AUTHOR_AVATAR'] = '<span class="firstpostavatar responsive-hide">' . $this->avatar_img_resize($row) . '</span>';
+		}
 		
 		$event['tpl_ary'] = $tpl_ary;
 	}

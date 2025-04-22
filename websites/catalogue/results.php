@@ -388,6 +388,21 @@ foreach($sections as $section){
 <?php
 			}
 			if ($section['type']=='recommendations') {
+				if (CATALOGUE_SPECIAL_TITLE!='') {
+?>
+							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
+								<div class="recommendation special-day-header">
+									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark'.(SITE_IS_HENTAI ? '_hentai' : '').'_hd.jpg'; ?>" alt="">
+									<div class="infoholder" data-swiper-parallax="-30%">
+										<div class="dataholder">
+											<div class="title"><span class="fa <?php echo CATALOGUE_SPECIAL_ICON; ?>"></span><br><?php echo CATALOGUE_SPECIAL_TITLE; ?></div>
+											<div class="divisions"><?php echo CATALOGUE_SPECIAL_DESCRIPTION; ?></div>
+										</div>
+									</div>
+								</div>
+							</div>
+<?php
+				}
 				if (is_user_birthday()) {
 ?>
 							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
