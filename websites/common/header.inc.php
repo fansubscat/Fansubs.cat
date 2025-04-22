@@ -156,7 +156,7 @@ if (PAGE_STYLE_TYPE=='login') {
 								<div class="login-point-icon fas fa-fw fa-star"></div>
 							</div>
 <?php
-	if (FALSE && !DISABLE_COMMUNITY) {
+	if (!DISABLE_COMMUNITY) {
 ?>
 							<div class="login-point">
 								<div class="login-point-icon fas fa-fw fa-comment"></div>

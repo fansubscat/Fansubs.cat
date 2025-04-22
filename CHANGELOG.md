@@ -14,6 +14,7 @@
 - **Principal:**
 	- S’afegeix un enllaç a la comunitat.
 - **Catàleg:**
+	- Es corregeix que no es veiessin els comentaris dels fansubs que no eren respostes.
 	- En afegir un comentari, es crea el missatge corresponent a la comunitat.
 	- S’afegeix un enllaç a la comunitat per a veure-hi la discussió completa.
 - **Usuaris:**

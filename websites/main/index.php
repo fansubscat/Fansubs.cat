@@ -32,7 +32,7 @@ if (!SITE_IS_HENTAI && !DISABLE_LIVE_ACTION) {
 					</div>
 					<div class="secondary-buttons">
 <?php
-if (FALSE && !DISABLE_COMMUNITY) {
+if (!SITE_IS_HENTAI && !DISABLE_COMMUNITY) {
 ?>
 						<a class="secondary-button" href="<?php echo COMMUNITY_URL; ?>"><?php echo lang('main.button.community'); ?></a>
 <?php

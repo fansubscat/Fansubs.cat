@@ -2521,7 +2521,7 @@ $(document).ready(function() {
 		});
 
 		$(".load-all-comments").click(function(){
-			$(this).parent().find('.comment.hidden').removeClass('hidden');
+			$(this).parent().parent().find('.comment.hidden').removeClass('hidden');
 			$(this).addClass('hidden');
 		});
 

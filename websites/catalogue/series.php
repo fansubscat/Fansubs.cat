@@ -572,7 +572,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 										<a class="normal-button load-all-comments"><i class="fa fa-fw fa-angles-down"></i> <?php echo ($total_comments-3)==1 ? lang('catalogue.series.comments.show_more_one') : sprintf(lang('catalogue.series.comments.show_more_many'), ($total_comments-3)); ?></a>
 <?php
 	}
-	if (FALSE && !DISABLE_COMMUNITY && !empty($version['forum_topic_id']) && $total_comments>0) {
+	if (!DISABLE_COMMUNITY && !empty($version['forum_topic_id']) && $total_comments>0) {
 ?>
 										<a class="normal-button" href="<?php echo COMMUNITY_URL.'/viewtopic.php?t='.$version['forum_topic_id']; ?>"><i class="fa fa-fw fa-comment"></i> <?php echo lang('catalogue.series.comments.join_community'); ?></a>
 <?php

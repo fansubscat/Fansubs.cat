@@ -1501,7 +1501,7 @@ function query_version_comments($version_id, $user) {
 			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			WHERE c.version_id=$version_id
 				AND c.reply_to_comment_id IS NULL
-				AND (u.status<>1".(!empty($user) ? " OR u.id=${user['id']}" : '').")
+				AND (c.user_id IS NULL OR u.status<>1".(!empty($user) ? " OR u.id=${user['id']}" : '').")
 			ORDER BY c.last_replied DESC";
 	return query($final_query);
 }
