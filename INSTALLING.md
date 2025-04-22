@@ -53,26 +53,27 @@ Ja podeu sortir del MariaDB.
 
 Creeu un host de l’Apache per a cada subdomini i redirigiu-lo als següents directoris. Es pot fer servir qualsevol nom de domini i canviar els noms dels subdominis:
 
-* `www.maindomain.xyz` **i** `maindomain.xyz` -> `/srv/fansubscat/websites/main/`
-* `admin.maindomain.xyz` -> `/srv/fansubscat/websites/admin/`
-* `anime.maindomain.xyz` -> `/srv/fansubscat/websites/catalogue/`
-* `imatgereal.maindomain.xyz` -> `/srv/fansubscat/websites/catalogue/`
-* `manga.maindomain.xyz` -> `/srv/fansubscat/websites/catalogue/`
-* `noticies.maindomain.xyz` -> `/srv/fansubscat/websites/news/`
-* `static.maindomain.xyz` -> `/srv/fansubscat/websites/static/`
-* `usuaris.maindomain.xyz` -> `/srv/fansubscat/websites/users/`
-* `advent.maindomain.xyz` -> `/srv/fansubscat/websites/advent/`
-* `api.maindomain.xyz` -> `/srv/fansubscat/websites/api/`
+* `www.dominiprincipal.xyz` **i** `dominiprincipal.xyz` -> `/srv/fansubscat/websites/main/`
+* `admin.dominiprincipal.xyz` -> `/srv/fansubscat/websites/admin/`
+* `anime.dominiprincipal.xyz` -> `/srv/fansubscat/websites/catalogue/`
+* `imatgereal.dominiprincipal.xyz` -> `/srv/fansubscat/websites/catalogue/`
+* `manga.dominiprincipal.xyz` -> `/srv/fansubscat/websites/catalogue/`
+* `noticies.dominiprincipal.xyz` -> `/srv/fansubscat/websites/news/`
+* `static.dominiprincipal.xyz` -> `/srv/fansubscat/websites/static/`
+* `usuaris.dominiprincipal.xyz` -> `/srv/fansubscat/websites/users/`
+* `advent.dominiprincipal.xyz` -> `/srv/fansubscat/websites/advent/`
+* `api.dominiprincipal.xyz` -> `/srv/fansubscat/websites/api/`
+* `comunitat.dominiprincipal.xyz` -> `/srv/fansubscat/websites/community/`
 
 També caldrà crear els següents hosts del domini del hentai:
 
-* `www.hentaidomain.xyz` **i** `hentaidomain.xyz` -> `/srv/fansubscat/websites/main/`
-* `anime.hentaidomain.xyz` -> `/srv/fansubscat/websites/catalogue/`
-* `manga.hentaidomain.xyz` -> `/srv/fansubscat/websites/catalogue/`
-* `noticies.hentaidomain.xyz` -> `/srv/fansubscat/websites/news/`
-* `static.hentaidomain.xyz` -> `/srv/fansubscat/websites/static/`
-* `usuaris.hentaidomain.xyz` -> `/srv/fansubscat/websites/users/`
-* `api.hentaidomain.xyz` -> `/srv/fansubscat/websites/api/`
+* `www.dominihentai.xyz` **i** `dominihentai.xyz` -> `/srv/fansubscat/websites/main/`
+* `anime.dominihentai.xyz` -> `/srv/fansubscat/websites/catalogue/`
+* `manga.dominihentai.xyz` -> `/srv/fansubscat/websites/catalogue/`
+* `noticies.dominihentai.xyz` -> `/srv/fansubscat/websites/news/`
+* `static.dominihentai.xyz` -> `/srv/fansubscat/websites/static/`
+* `usuaris.dominihentai.xyz` -> `/srv/fansubscat/websites/users/`
+* `api.dominihentai.xyz` -> `/srv/fansubscat/websites/api/`
 
 Caldrà activar els mòduls `proxy` i `headers` de l’Apache. Podeu fer-ho executant:
 
@@ -106,6 +107,8 @@ Una vegada fet això, el web ja serà accessible. Caldrà accedir al web d’adm
 
 Ara el web ja funcionarà, però mostrarà l’aspecte de Fansubs.cat. Al següent apartat explicarem com podeu modificar-lo.
 
+Aquesta guia no inclou la instal·lació i configuració del fòrum de la comunitat: aquest punt resta fora de l’àmbit d’aquest document i caldrà que el feu sota la vostra responsabilitat.
+
 ## Canvi de llengua i personalització
 
 El codi actual està pensat per a Fansubs.cat, que funciona en català. Si voleu que el sistema funcioni en una altra llengua, caldrà que modifiqueu diversos elements:
@@ -130,6 +133,7 @@ El codi actual està pensat per a Fansubs.cat, que funciona en català. Si voleu
 	* `DISABLE_LIVE_ACTION`: Desactiva la funcionalitat relacionada amb el contingut d’imatge real (caldrà que feu que el subdomini sigui inaccessible o que no el creeu directament).
 	* `DISABLE_ADVENT`: Desactiva la funcionalitat relacionada amb els calendaris d’advent (caldrà que feu que el subdomini sigui inaccessible o que no el creeu directament).
 	* `DISABLE_RESOURCES`: Amaga l’enllaç al portal de recursos del tauler d’administració.
+	* `DISABLE_COMMUNITY`: Amaga l’enllaç i la sincronització amb el fòrum de la comunitat.
 	* `DISABLE_FOOLS_DAY`: Desactiva el funcionament especial per al dia 28 de desembre.
 	* `DISABLE_SANT_JORDI_DAY`: Desactiva el funcionament especial per al dia 23 d’abril.
 	* `DISABLE_HALLOWEEN_DAYS`: Desactiva el funcionament especial per als dies 31 d’octubre i 1r de novembre.

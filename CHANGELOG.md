@@ -1,5 +1,28 @@
 # Registre de canvis
 
+## 2025-04-23 - Versió 5.4.0
+- **General:**
+	- Es crea un nou paràmetre de configuració per a permetre desactivar el servidor de streaming puntualment.
+	- Es crea un nou paràmetre de configuració que permet definir un missatge perquè es mostri a la capçalera de recomanacions.
+- **Comunitat:**
+	- Versió inicial. Espai de debat entre usuaris partint del codi del phpBB 3.3.15.
+- **Administració:**
+	- En afegir, respondre o eliminar un comentari, es crea, respon o elimina el missatge corresponent a la comunitat.
+	- En afegir o editar una versió, es crea o edita el tema corresponent a la comunitat.
+	- En afegir, editar o eliminar un fansub, es crea, edita o elimina l’usuari corresponent a la comunitat.
+	- S’afegeix un enllaç a la comunitat.
+- **Principal:**
+	- S’afegeix un enllaç a la comunitat.
+- **Catàleg:**
+	- En afegir un comentari, es crea el missatge corresponent a la comunitat.
+	- S’afegeix un enllaç a la comunitat per a veure-hi la discussió completa.
+- **Usuaris:**
+	- No es permet la creació de nous usuaris amb una adreça electrònica al nom d’usuari.
+	- No es permet la creació de nous usuaris amb emojis al nom d’usuari.
+	- En crear, canviar o eliminar el perfil d’un usuari, es crea, canvia o elimina l’usuari corresponent a la comunitat.
+- **Serveis:**
+	- Es publiquen les novetats al xat de la comunitat.
+
 ## 2025-03-04 - Versió 5.3.2
 - **General:**
 	- Es corregeix que l’enllaç del menú per a iniciar sessió la tanqués.

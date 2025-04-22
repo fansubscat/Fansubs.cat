@@ -12,6 +12,7 @@ Aquest projecte inclou el codi font dels següents webs:
 - Advent: Un web que mostra calendaris d’advent configurats pels fansubs.
 - API: Una API que proveeix dades a serveis tant interns com externs, incloent-hi l’extensió del Tachiyomi/Mihon.
 - Catàleg: Un web que mostra contingut d’anime, manga i imatge real generat pels fansubs.
+- Comunitat: Un fòrum phpBB incloent-hi extensions per a integrar-lo al web de Fansubs.cat.
 - Notícies: Un web que agrega les notícies de diferents URLs en una sola pàgina.
 - Estàtic: Estructura de directoris per a l’emmagatzematge de contingut estàtic.
 - Usuaris: Un web que permet gestionar el perfil de l’usuari.

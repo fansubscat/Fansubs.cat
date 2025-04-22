@@ -63,6 +63,7 @@ Create an Apache host for each subdomain and redirect it to the following direct
 * `users.maindomain.xyz` -> `/srv/fansubscat/websites/users/`
 * `advent.maindomain.xyz` -> `/srv/fansubscat/websites/advent/`
 * `api.maindomain.xyz` -> `/srv/fansubscat/websites/api/`
+* `community.maindomain.xyz` -> `/srv/fansubscat/websites/community/`
 
 You must also create the following hosts for the hentai domain:
 
@@ -106,6 +107,8 @@ Once all that is done, the site will be accessible. You will have to log into th
 
 Now the site will be up, but looking just like Fansubs.cat. In the next section we find how you can modify that.
 
+This guide does not include the installation and setup of the community forum: this step is outside of the scope of this document and you will have to set it up on your own.
+
 ## Changing the language and customizing the site
 
 The current codebase is made specifically for Fansubs.cat, that uses Catalan. If you want your setup to use another language, you will have to modify certain elements:
@@ -130,6 +133,7 @@ The current codebase is made specifically for Fansubs.cat, that uses Catalan. If
 	* `DISABLE_LIVE_ACTION`: Disables functionality related to live action content (you will have to make the subdomain not accessible or just not create it).
 	* `DISABLE_ADVENT`: Disables functionality related to advent calendars (you will have to make the subdomain not accessible or just not create it).
 	* `DISABLE_RESOURCES`: Hides the link to the resources site in the admin panel.
+	* `DISABLE_COMMUNITY`: Hides the link and the sync with the community forum.
 	* `DISABLE_FOOLS_DAY`: Disables the special functionality for December 28th.
 	* `DISABLE_SANT_JORDI_DAY`: Disables the special functionality for April 23th.
 	* `DISABLE_HALLOWEEN_DAYS`: Disables the special functionality for October 31st and November 1st.
