@@ -416,7 +416,7 @@ function add_or_update_topic_to_community($version_id){
 			  	'forum_id' => $forum_id,
 			  	'subject' => $version['title'].' (versió '.get_fansub_preposition_name($version['fansub_names']).')',
 			  	'message' => $message,
-			  	'timestamp' => $version['version_created_timestamp'],
+			  	'timestamp' => time(),
 			  	)));
 		$output = curl_exec($curl);
 		
