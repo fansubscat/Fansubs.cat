@@ -233,7 +233,7 @@ function get_series_type_summary($series) {
 				$text = get_comic_type($series['comic_type'])." • ".lang('social.oneshot');
 			}
 		} else if ($series['divisions']>1) {
-			$text = get_comic_type($series['comic_type'])." • ".lang('social.serialized')." • ".sprintf(lang('social.volumes'), $series['number_of_episodes'])." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
+			$text = get_comic_type($series['comic_type'])." • ".lang('social.serialized')." • ".sprintf(lang('social.volumes'), $series['divisions'])." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
 		} else if ($series['number_of_episodes']>1) {
 			$text = get_comic_type($series['comic_type'])." • ".lang('social.serialized')." • ".lang('social.volume')." • ".sprintf(lang('social.episodes'), $series['number_of_episodes']);
 		} else {
