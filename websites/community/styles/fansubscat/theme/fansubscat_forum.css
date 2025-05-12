@@ -459,9 +459,15 @@ h2.solo, h2.memberlist-title, h2.ucp-title {
 }
 
 #mchat-status {
-	margin-left: 1rem !important;
-	margin-right: 2rem !important;
-	font-size: 1.8rem;
+	font-size: 1.4rem;
+}
+
+.mchat-status-error {
+	background: #aa0000;
+	font-size: 1.4rem;
+	border-radius: 0.5rem;
+	padding: 0 1rem;
+	color: var(--always-positive-color);
 }
 
 .forabg + .forabg {
@@ -498,8 +504,12 @@ li.row {
 	border-bottom: none;
 }
 
-.post-buttons .button, .format-buttons .button, .mchat-button-bbcodes, .mchat-button-userlist {
+.post-buttons .button, .format-buttons .button, .mchat-button-bbcodes, .mchat-button-add, .mchat-panel-buttons #smiley-toggle, .mchat-button-userlist {
 	padding: 0.6rem 0.75rem !important;
+}
+
+#mchat-bbcodes .format-buttons {
+	justify-content: center;
 }
 
 .postimage.coverimage {

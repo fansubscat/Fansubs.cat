@@ -1,5 +1,20 @@
 # Registre de canvis
 
+## 2025-05-12 - Versió 5.4.1
+- **Principal:**
+	- Es corregeix un error al codi que impedia rebre correus a la pàgina «Contacta amb nosaltres».
+- **Catàleg:**
+	- Es corregeix que, a la previsualització per a xarxes, es mostri el nombre de capítols en lloc del de volums.
+	- Es mostra sempre l’enllaç al tema de la comunitat, fins i tot quan no hi ha comentaris.
+- **Comunitat:**
+	- Es canvia el disseny de les opcions del xat (emoticones, format i estat de connexió).
+	- Els usuaris es desconnecten després de 4 hores en lloc d’1.
+	- En emoticones, no se suggereix res fins que hi ha un caràcter escrit (soluciona el problema del menú que apareix en escriure només dos punts).
+	- S’afegeixen dreceres de teclat per a opcions de format.
+	- Noves medalles de Sant Jordi i llançament.
+- **Administració:**
+	- En crear una nova versió, el tema de la comunitat es crea amb la data de publicació en lloc de la de creació.
+
 ## 2025-04-23 - Versió 5.4.0
 - **General:**
 	- Es crea un nou paràmetre de configuració per a permetre desactivar el servidor de streaming puntualment.

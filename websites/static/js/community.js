@@ -123,9 +123,62 @@ $(document).ready(function() {
 	});
 	addTargetToExternalLinks();
 	
-	if ($('.chat-page').length>0) {
-		window.onkeydown = function() {
-			$('#mchat-input').focus();
-		};
-	}
+	window.onkeydown = function(e) {
+		if (e.ctrlKey) {
+			switch (e.code) {
+				case 'KeyB':
+					bbstyle(0);
+					return false;
+				case 'KeyI':
+					bbstyle(2);
+					return false;
+				case 'KeyU':
+					bbstyle(4);
+					return false;
+				case 'KeyL':
+					bbstyle(16);
+					return false;
+				case 'KeyS':
+					bbfontstyle('[spoiler]', '[/spoiler]');
+					return false;
+				case 'KeyP':
+					bbstyle(14);
+					return false;
+				case 'KeyM':
+					bbfontstyle('[media]', '[/media]');
+					return false;
+				case 'KeyH':
+					insert_text(' :hohoho:');
+					return false;
+				default:
+					return true;
+			}
+		}
+		else if ($('.chat-page').length>0) {
+			if (e.metaKey || e.altKey) {
+				return true;
+			}
+			var k = e.keyCode;
+			// Verify that the key entered is not a special key
+			if (k == 20 /* Caps lock */
+				|| k == 16 /* Shift */
+				|| k == 9 /* Tab */
+				|| k == 27 /* Escape Key */
+				|| k == 17 /* Control Key */
+				|| k == 91 /* Windows Command Key */
+				|| k == 19 /* Pause Break */
+				|| k == 18 /* Alt Key */
+				|| k == 93 /* Right Click Point Key */
+				|| (k >= 35 && k <= 40) /* Home, End, Arrow Keys */
+				|| k == 45 /* Insert Key */
+				|| (k >= 33 && k <= 34 ) /*Page Down, Page Up */
+				|| (k >= 112 && k <= 123) /* F1 - F12 */
+				|| (k >= 144 && k <= 145 )) { /* Num Lock, Scroll Lock */
+				return true;
+			}
+			if ($('#dialog-overlay').length==0) {
+				$('#mchat-input').focus();
+			}
+		}
+	};
 });

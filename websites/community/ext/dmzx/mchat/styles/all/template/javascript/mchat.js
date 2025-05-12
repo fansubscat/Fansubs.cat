@@ -151,7 +151,7 @@ jQuery(function($) {
 				updateSession: function() {
 					if (this.xhr.status === 403) {
 						mChat.endSession(true);
-					} else if (this.xhr.status === 400) {
+					} else {
 						mChat.resetSession();
 					}
 				}
@@ -360,7 +360,7 @@ jQuery(function($) {
 				log: mChat.logId,
 				message: isAdd ? message : undefined
 			};
-			mChat.status('load');
+			//mChat.status('load');
 			return mChat.ajaxRequest(isAdd ? 'add' : 'refresh', isAdd, data).done(mChat.refreshDone);
 		},
 		refreshDone: function(json) {

@@ -320,26 +320,15 @@
 
 #mchat-status {
 	display: inline;
-	margin-left: 6px;
 	text-indent: 0;
 }
 
 .mchat-status {
-	position: absolute;
-	top: calc(50% - 1px);
-	-webkit-transform: translateY(-50%);
-	    -ms-transform: translateY(-50%);
-	        transform: translateY(-50%);
 	text-indent: 0;
 }
 
 .fa-spin::before {
 	padding-left: 2px;
-}
-
-.mchat-button-add {
-	margin: 3px 0 0 3px;
-	padding: 5px;
 }
 
 .mchat-input-control button .icon {

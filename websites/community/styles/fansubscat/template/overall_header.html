@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#6aa0f8">
-<meta name="description" content="<!-- IF S_VIEWTOPIC --><!-- BEGIN postrow --><!-- IF postrow.S_FIRST_ROW -->{postrow.MESSAGE|striptags|escape('html')}<!-- ENDIF --><!-- END postrow --><!-- ELSEIF S_VIEWFORUM -->{FORUM_DESC|escape('html')}<!-- ELSE -->Uneix-te a la comunitat de Fansubs.cat, comenta-hi tot el que t’agrada amb altra gent com tu i participa en activitats diverses!<!-- ENDIF -->">
+<meta name="description" content="<!-- IF S_VIEWTOPIC --><!-- BEGIN postrow --><!-- IF postrow.S_FIRST_ROW -->{postrow.MESSAGE|striptags|slice(0, 300)|escape('html')}<!-- ENDIF --><!-- END postrow --><!-- ELSEIF S_VIEWFORUM -->{FORUM_DESC|escape('html')}<!-- ELSE -->Uneix-te a la comunitat de Fansubs.cat, comenta-hi tot el que t’agrada amb altra gent com tu i participa en activitats diverses!<!-- ENDIF -->">
 <meta name="referrer" content="origin">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="msapplication-TileColor" content="#da532c">
@@ -15,8 +15,8 @@
 <meta name="main_url" content="https://www.fansubs.cat">
 <meta name="site_name" content="Fansubs.cat">
 <meta property="og:title" content="<!-- IF PAGE_TITLE != 'Comunitat' -->{PAGE_TITLE} | Comunitat | Fansubs.cat<!-- ENDIF --><!-- IF PAGE_TITLE == 'Comunitat' -->Comunitat | Fansubs.cat<!-- ENDIF -->">
-<meta property="og:url" content="{U_CANONICAL}">
-<meta property="og:description" content="<!-- IF S_VIEWTOPIC --><!-- BEGIN postrow --><!-- IF postrow.S_FIRST_ROW -->{postrow.MESSAGE|striptags|escape('html')}<!-- ENDIF --><!-- END postrow --><!-- ELSEIF S_VIEWFORUM -->{FORUM_DESC|escape('html')}<!-- ELSE -->Uneix-te a la comunitat de Fansubs.cat, comenta-hi tot el que t’agrada amb altra gent com tu i participa en activitats diverses!<!-- ENDIF -->">
+<meta property="og:url" content="<!-- IF U_CANONICAL -->{U_CANONICAL}<!-- ELSE -->https://comunitat.fansubs.cat/<!-- ENDIF -->">
+<meta property="og:description" content="<!-- IF S_VIEWTOPIC --><!-- BEGIN postrow --><!-- IF postrow.S_FIRST_ROW -->{postrow.MESSAGE|striptags|slice(0, 300)|escape('html')}<!-- ENDIF --><!-- END postrow --><!-- ELSEIF S_VIEWFORUM -->{FORUM_DESC|escape('html')}<!-- ELSE -->Uneix-te a la comunitat de Fansubs.cat, comenta-hi tot el que t’agrada amb altra gent com tu i participa en activitats diverses!<!-- ENDIF -->">
 <meta property="og:image" content="https://static.fansubs.cat/social/community.jpg">
 <meta property="og:image:type" content="image/jpeg">
 {META}

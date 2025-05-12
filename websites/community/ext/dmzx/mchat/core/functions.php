@@ -332,8 +332,8 @@ class functions
 	 */
 	public function mchat_session_gc()
 	{
-		//Kill sessions with last message > 60 minutes ago
-		$check_time = time() - 3600;
+		//Kill sessions with last message > 4 hours ago
+		$check_time = time() - 3600*4;
 
 		$sql_array = [
 			'SELECT'	=> 'ms.*, (SELECT m.message_time FROM ' . $this->mchat_settings->get_table_mchat() . ' m WHERE user_id=u.user_id ORDER BY m.message_id DESC LIMIT 1) last_message_time, u.username, u.user_colour',

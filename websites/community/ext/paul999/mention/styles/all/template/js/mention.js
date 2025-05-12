@@ -9,7 +9,7 @@ $(document).ready(function () {
         });
     }
     function remoteSearchSmileys(query, callback) {
-        if (query.length < MIN_MENTION_LENGTH) {
+        if (query.length < 1) {
             callback([]);
             return;
         }

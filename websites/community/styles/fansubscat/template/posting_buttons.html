@@ -75,9 +75,11 @@
 	<button type="button" class="button button-icon-only bbcode-color" name="bbpalette" id="bbpalette" value="{L_FONT_COLOR}" onclick="change_palette();" title="{L_BBCODE_S_HELP}">
 		<i class="icon fa-tint fa-fw" aria-hidden="true"></i>
 	</button>
+	<!-- IF not MCHAT_PAGE -->
 	<button type="button" class="button button-icon-only" name="smiley-toggle" id="smiley-toggle" value="Smileys" onclick="$('#smiley-box').toggle();" title="Mostra o amaga les emoticones">
 		<i class="icon fa fa-face-smile fa-fw" aria-hidden="true"></i>
 	</button>
+	<!-- ENDIF -->
 	<select name="addbbcode20" class="bbcode-size" onchange="bbfontstyle('[size=' + this.form.addbbcode20.options[this.form.addbbcode20.selectedIndex].value + ']', '[/size]');this.form.addbbcode20.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
 		<option value="50">{L_FONT_TINY}</option>
 		<option value="85">{L_FONT_SMALL}</option>
