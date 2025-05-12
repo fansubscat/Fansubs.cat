@@ -21,7 +21,7 @@ function contactEmail(){
 	$question = $_POST['question'];
 
 	//Check if question is valid
-	$security_responses = explode(', 'lang('email.contact_us.allowed_question_responses'));
+	$security_responses = explode(', ', lang('email.contact_us.allowed_question_responses'));
 	if (!in_array(strtolower($question), $security_responses)) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 2);
