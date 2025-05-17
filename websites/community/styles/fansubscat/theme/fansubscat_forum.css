@@ -662,6 +662,10 @@ div#message {
 	margin-right: 0.5rem;
 }
 
+.chat-disconnect {
+	opacity: 0.5;
+}
+
 .chat-inactive-green {
 	background: #66CC66;
 }

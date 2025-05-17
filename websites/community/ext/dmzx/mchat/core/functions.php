@@ -243,7 +243,7 @@ class functions
 	public function mchat_active_users_html()
 	{
 		$sql_array = [
-			'SELECT'	=> 'u.user_id, u.username, u.user_colour, (SELECT m.message_time FROM ' . $this->mchat_settings->get_table_mchat() . ' m WHERE user_id=u.user_id ORDER BY m.message_id DESC LIMIT 1) last_message_time',
+			'SELECT'	=> 'u.user_id, u.username, u.user_colour, (SELECT m.message_time FROM ' . $this->mchat_settings->get_table_mchat() . ' m WHERE user_id=u.user_id ORDER BY m.message_id DESC LIMIT 1) last_message_time, ms.user_lastupdate',
 			'FROM'		=> [$this->mchat_settings->get_table_mchat_sessions() => 'ms'],
 			'LEFT_JOIN'	=> [
 				[
@@ -275,7 +275,7 @@ class functions
 				$color = 'red';
 				$desc = 'Darrer missatge: fa més de 30 minuts';
 			}
-			$html .= '<li><span class="chat-inactive chat-inactive-'.$color.'" title="'.$desc.'"></span><span class="user-row" onclick="addChatMention(\''.htmlspecialchars($row['username']).'\');">' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $this->lang->lang('GUEST')) . '</span></li>';
+			$html .= '<li'.($row['user_lastupdate']<(time()-15) ? ' class="chat-disconnect" title="Pot ser que no rebi els missatges (té problemes de connexió, ha tancat el xat o fa servir un dispositiu mòbil)"' : '').'><span class="chat-inactive chat-inactive-'.$color.'" title="'.$desc.'"></span><span class="user-row" onclick="addChatMention(\''.htmlspecialchars($row['username']).'\');">' . get_username_string('no_profile', $row['user_id'], $row['username'], $row['user_colour'], $this->lang->lang('GUEST')) . '</span></li>';
 		}
 
 		return $html;
