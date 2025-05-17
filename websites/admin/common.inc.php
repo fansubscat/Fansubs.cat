@@ -284,6 +284,7 @@ function get_public_site_url($type, $slug, $is_hentai) {
 }
 
 function add_fansub_user($fansub_id, $user_password) {
+	global $db_connection;
 	$res = query("SELECT f.*, (SELECT COUNT(*) FROM user u WHERE u.username=f.name) users FROM fansub f WHERE f.id=".$fansub_id);
 	$fansub = mysqli_fetch_assoc($res);
 	
