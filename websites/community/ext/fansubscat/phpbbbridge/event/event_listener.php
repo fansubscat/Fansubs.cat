@@ -213,6 +213,9 @@ class event_listener implements EventSubscriberInterface
 			
 			//All other BBCode: keep the inside text
 			$post_text = preg_replace('/\[[^\]]+\]/', '', $post_text);
+			
+			//Replace &quot; with quotes
+			$post_text = str_replace('&quot;', '"', $post_text);
 
 	 
 			//Invoke API: add_or_edit_comment
