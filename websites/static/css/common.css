@@ -660,6 +660,7 @@ select:not(.date-month) {
 	align-items: center;
 	order: 10;
 	position: relative;
+	min-width: 18rem;
 }
 
 .logo-small svg {
@@ -1941,7 +1942,7 @@ input:checked + .slider:before {
 	}
 }
 
-@media (max-width: 1200px){
+@media (max-width: 1500px){
 	.user-login {
 		min-width: 4rem;
 		padding: 0.75rem 0.75rem;
@@ -1957,6 +1958,27 @@ input:checked + .slider:before {
 
 	.user-login-icon {
 		display: inline;
+	}
+}
+
+@media (max-width: 1400px){
+	.catalogues-navigation {
+		flex-wrap: wrap;
+	}
+	
+	.catalogues-newline {
+		width: 100%;
+	}
+
+	.catalogues-newline-separator {
+		display: none;
+	}
+}
+
+@media (max-width: 1000px){
+	.catalogues-separator {
+		margin-left: 0.6rem;
+		margin-right: 0.6rem;
 	}
 }
 
@@ -2012,6 +2034,10 @@ input:checked + .slider:before {
 	.social-link {
 		font-size: 2.6rem;
 		margin-right: 1rem;
+	}
+
+	.logo-small {
+		min-width: 12rem;
 	}
 
 	.logo-small svg {

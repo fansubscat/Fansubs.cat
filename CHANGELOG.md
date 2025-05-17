@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2025-05-17 - Versió 5.4.2
+- **General:**
+	- S’afegeixen la comunitat, les notícies i els fansubs a la capçalera per a un accés més fàcil.
+- **Comunitat:**
+	- Els usuaris del xat possiblement desconnectats s’enfosqueixen.
+	- Es processen correctament les cometes dobles en crear comentaris a sèries.
+- **Administració:**
+	- Es corregeix un error que impedia crear fansubs nous.
+
 ## 2025-05-12 - Versió 5.4.1
 - **Principal:**
 	- Es corregeix un error al codi que impedia rebre correus a la pàgina «Contacta amb nosaltres».

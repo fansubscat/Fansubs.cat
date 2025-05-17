@@ -335,6 +335,23 @@ if (PAGE_STYLE_TYPE=='login') {
 						<a href="<?php echo LIVEACTION_URL; ?>"<?php echo defined('CATALOGUE_ITEM_TYPE') && CATALOGUE_ITEM_TYPE=='liveaction' ? ' class="catalogue-selected"' : ''; ?>><?php echo lang('main.header.liveaction'); ?></a>
 <?php
 					}
+					if (!DISABLE_COMMUNITY && !DISABLE_NEWS) {
+?>
+						<span class="catalogues-newline"></span>
+						<span class="catalogues-separator catalogues-newline-separator">|</span>
+<?php
+						if (!SITE_IS_HENTAI) {
+?>
+						<a href="<?php echo COMMUNITY_URL; ?>"><?php echo lang('main.header.community'); ?></a>
+						<span class="catalogues-separator">|</span>
+<?php
+						}
+?>
+						<a href="<?php echo NEWS_URL; ?>"<?php echo PAGE_STYLE_TYPE=='news' ? ' class="catalogue-selected"' : ''; ?>><?php echo lang('main.header.news'); ?></a>
+						<span class="catalogues-separator">|</span>
+						<a href="<?php echo MAIN_URL.lang('url.fansubs'); ?>"<?php echo PAGE_STYLE_TYPE=='fansubs' ? ' class="catalogue-selected"' : ''; ?>><?php echo lang('main.header.fansubs'); ?></a>
+<?php
+					}
 ?>
 						<span class="catalogues-underline"></span>
 					</div>
