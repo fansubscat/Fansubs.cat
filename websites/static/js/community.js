@@ -141,7 +141,7 @@ $(document).ready(function() {
 				case 'KeyS':
 					bbfontstyle('[spoiler]', '[/spoiler]');
 					return false;
-				case 'KeyP':
+				case 'KeyG':
 					bbstyle(14);
 					return false;
 				case 'KeyM':
