@@ -656,7 +656,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					decompress_manga_file($inserted_file_id, $extra['temporary_filename'], $extra['original_filename_unescaped']);
 				} else {
 					foreach ($extra['links'] as $link) {
-						query("INSERT INTO link (file_id,url,resolution,created) VALUES (".$inserted_file_id.",".$link['url'].",".$link['resolution'].",'$current_timestamp')");
+						query("INSERT INTO link (file_id,url,resolution,created,created_by,updated,updated_by) VALUES (".$inserted_file_id.",".$link['url'].",".$link['resolution'].",'$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 					}
 				}
 			}
