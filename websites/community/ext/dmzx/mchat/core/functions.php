@@ -360,8 +360,8 @@ class functions
 			}
 		}
 		
-		//Now kill sessions with last refresh > 5 minutes ago
-		$check_time = time() - 300;
+		//Now kill sessions with last refresh > 15 minutes ago
+		$check_time = time() - 900;
 
 		$sql_array = [
 			'SELECT'	=> 'ms.*, u.username, u.user_colour',
