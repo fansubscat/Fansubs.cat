@@ -1,6 +1,12 @@
 <IfModule mod_rewrite.c>
 RewriteEngine on
 
+# Forbid stupid and aggressive bots
+RewriteCond %{HTTP_USER_AGENT} AspiegelBot [NC]
+RewriteRule .* - [F,L]
+RewriteCond %{HTTP_USER_AGENT} Applebot [NC]
+RewriteRule .* - [F,L]
+
 #
 # Uncomment the statement below if URL rewriting doesn't
 # work properly. If you installed phpBB in a subdirectory
