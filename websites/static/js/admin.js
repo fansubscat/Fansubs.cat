@@ -981,7 +981,7 @@ function checkNumberOfLinks() {
 	}
 
 	if (!synopsisChanged) {
-		alert('No has canviat la sinopsi que s’ha autoimportat. Revisa-la i tradueix-la, si cal.');
+		alert('No has canviat la sinopsi que s’ha autoimportat. Revisa-la i tradueix-la. No es pot deixar en anglès.');
 		return false;
 	}
 	
@@ -1143,7 +1143,7 @@ function checkNumberOfLinks() {
 		}
 	}
 	if (status!=1 && status!=3 && validFiles>=totalEpisodes) {
-		alert('Aquesta versió té contingut per a tots els capítols, però no està marcada com a «Completada» ni «Parcialment completada». Això no és possible. Si està en emissió o publicació i hi ha capítols que no hi apareixen, fes servir el botó «Afegeix un capítol inexistent» per a afegir-hi els que hi faltin (o, com a mínim, el següient que s’emetrà).');
+		alert('Aquesta versió té contingut per a tots els capítols, però no està marcada com a «Completada» ni «Parcialment completada». Això no és possible. Si està en emissió o publicació i hi ha capítols que no hi apareixen, fes servir el botó «Afegeix un capítol inexistent» per a afegir-hi els que hi faltin (o, com a mínim, el següent que s’emetrà).');
 		return false;
 	} else if (status==1 && validFiles<totalEpisodes) {
 		alert('Aquesta versió no té contingut per a tots els capítols, però està marcada com a «Completada». Això no és possible. Si només té part del contingut, caldria marcar-la amb un estat diferent. Si alguna part està completada, es pot marcar com a «Parcialment completada».');
