@@ -193,7 +193,7 @@ class event_listener implements EventSubscriberInterface
 		
 		//We relay all posts by other users, but not the ones from Fansubs.cat (they must be posted via the admin site)
 		//Also, not the ones being posted by the API: this would create a loop and comments would be duplicated
-		if (($mode=='post' || $mode=='reply' || $mode=='edit') && in_array($data['forum_id'], $relayed_forum_ids) && !defined('FANSUBSCAT_API_POSTING') && $data['poster_id'] != self::FANSUBSCAT_RELAY_USER_ID) {
+		if (($mode=='post' || $mode=='reply' || $mode=='edit' || $mode=='quote') && in_array($data['forum_id'], $relayed_forum_ids) && !defined('FANSUBSCAT_API_POSTING') && $data['poster_id'] != self::FANSUBSCAT_RELAY_USER_ID) {
 			$post_text = $data['message'];
 
 			//This is needed for the generate_text_for_edit function
