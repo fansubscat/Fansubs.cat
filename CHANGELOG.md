@@ -1,5 +1,15 @@
 # Registre de canvis
 
+## 2025-06-07 - Versió 5.4.3
+- **Comunitat:**
+	- S’augmenta el temps de desconnexió per inactivitat al xat de 5 a 15 minuts.
+	- Es corregeix que els missatges fets citant un altre missatge no se sincronitzessin com a comentaris a les fitxes.
+	- S’afegeix un missatge descriptiu per als bots.
+- **Administració:**
+	- Es permet desactivar administradors per a impedir-los fer accions.
+	- Es corregeix un error en crear una versió nova amb contingut extra.
+	- Es clarifica que la sinopsi no pot estar mai en anglès.
+
 ## 2025-05-17 - Versió 5.4.2
 - **General:**
 	- S’afegeixen la comunitat, les notícies i els fansubs a la capçalera per a un accés més fàcil.
