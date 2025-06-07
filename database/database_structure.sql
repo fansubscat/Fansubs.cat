@@ -12,6 +12,7 @@ CREATE TABLE `admin_user` (
   `admin_level` int(11) NOT NULL,
   `fansub_id` int(11) DEFAULT NULL,
   `default_storage_processing` int(11) NOT NULL DEFAULT 1,
+  `disabled` int(11) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),

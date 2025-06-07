@@ -8,7 +8,7 @@ session_name(ADMIN_COOKIE_NAME);
 session_set_cookie_params(ADMIN_COOKIE_DURATION, '/', COOKIE_DOMAIN, TRUE, FALSE);
 session_start();
 
-if(!empty($_SESSION['username']) && mysqli_num_rows(query("SELECT * FROM admin_user u WHERE username='".escape($_SESSION['username'])."'"))==0) {
+if(!empty($_SESSION['username']) && mysqli_num_rows(query("SELECT * FROM admin_user u WHERE username='".escape($_SESSION['username'])."' AND disabled=0"))==0) {
 	session_destroy();
 	header("Location: login.php");
 	die();
