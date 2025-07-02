@@ -396,6 +396,53 @@ class functions
 			WHERE user_id = ' . (int) $user_id;
 		$this->db->sql_query($sql);
 	}
+	
+	public function get_user_from_logged_user_session($username)
+	{
+		$sql = 'SELECT u.* FROM ' . $this->mchat_settings->get_table_mchat_sessions() . ' ms LEFT JOIN ' . USERS_TABLE . ' u ON ms.user_id=u.user_id
+			WHERE u.username = \'' . $this->db->sql_escape($username) . '\'';
+		$result = $this->db->sql_query($sql);
+		
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+		
+		if (empty($rows)) {
+			return NULL;
+		}
+		
+		return $rows[0];
+	}
+	
+	public function get_random_users_from_logged_users($number)
+	{
+		$sql = 'SELECT u.* FROM ' . $this->mchat_settings->get_table_mchat_sessions() . ' ms LEFT JOIN ' . USERS_TABLE . ' u ON ms.user_id=u.user_id
+			ORDER BY RAND() LIMIT '.$number;
+		$result = $this->db->sql_query($sql);
+		
+		$rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+		
+		return $rows;
+	}
+	
+	public function get_random_gossip_question()
+	{
+		$gossip_type = rand(0, 1); //0 = General / 1 = User
+		$gossiped_users = $this->get_random_users_from_logged_users(2);
+		
+		$user_1 = '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $gossiped_users[0]['user_id']]).'][color=#'.$gossiped_users[0]['user_colour'].'][b]'.$gossiped_users[0]['username'].'[/b][/color][/url]';
+		if (count($gossiped_users)>1) {
+			$user_2 = '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $gossiped_users[1]['user_id']]).'][color=#'.$gossiped_users[1]['user_colour'].'][b]'.$gossiped_users[1]['username'].'[/b][/color][/url]';
+		} else {
+			$user_2 = '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $gossiped_users[0]['user_id']]).'][color=#'.$gossiped_users[0]['user_colour'].'][b]'.$gossiped_users[0]['username'].'[/b][/color][/url]';
+		}
+		
+		$json = file_get_contents(__DIR__."/gossips.json");
+		$questions = json_decode($json);
+		$pos = array_rand($questions);
+		
+		return sprintf($questions[$pos], $user_1, $user_2);
+	}
 
 	/**
 	 * Prune messages
