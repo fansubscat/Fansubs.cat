@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2025-07-02 - Versió 5.4.4
+- **Catàleg:**
+	- Es canvia el missatge d’error que es mostra quan no es pot carregar un vídeo per a indicar que és possible que es tracti d’un blocatge de la xarxa.
+- **Comunitat:**
+	- S’implementen les opcions d’expulsar algú del xat i de fer qüestions a l’atzar als usuaris.
+- **Administració:**
+	- Es corregeix que la comprovació de «slugs» duplicats inclogui només els del mateix tipus de contingut.
+
 ## 2025-06-07 - Versió 5.4.3
 - **Comunitat:**
 	- S’augmenta el temps de desconnexió per inactivitat al xat de 5 a 15 minuts.
