@@ -612,7 +612,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$_SESSION['message']="S’han desat les dades correctament.";
 		}
 		else {
-			$slug_result = query("SELECT COUNT(*) cnt FROM version WHERE slug='".$data['slug']."'");
+			$slug_result = query("SELECT COUNT(*) cnt FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.slug='".$data['slug']."' AND s.type='$type'");
 			$slug_row = mysqli_fetch_assoc($slug_result);
 			if ($slug_row['cnt']>0) {
 				crash("Ja hi ha una versió amb aquest identificador. Revisa que no l’hagis afegida per duplicat i, en cas contrari, canvia’n l’identificador.");
