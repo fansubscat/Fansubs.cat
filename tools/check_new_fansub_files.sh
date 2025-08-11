@@ -7,7 +7,7 @@ sender_email="your@sender.email"
 function notify_error {
 	#Replace this with your own method of sending, i.e.
 	#php -r "mail('YOUR_EMAIL', \"Notificació del procés d’importació de fitxers a Fansubs.cat\", \"$1\", \"From: $sender_email\");"
-	#mailer.php is a script that send through SMTP in our case
+	#mailer.php is a script that sends through SMTP in our case
 	echo "$1" | php mailer.php YOUR_EMAIL "Notificació del procés d’importació de fitxers a Fansubs.cat"
 }
 
@@ -105,6 +105,7 @@ do
 					treated_file_ids+=($file_id)
 					notify_error "Hi ha un enllaç que no és de MEGA pendent de conversió: id. $file_id, URL $url"
 				fi
+				IFS=$'\n'
 				continue
 			fi
 
@@ -129,65 +130,71 @@ do
 			mkdir Temporal
 			rm -rf Temporal/*
 			cd Temporal
-			ready=0
+			
+			error=1
 
-			while [ $ready -eq 0 ]
-			do
-				mega-get $url
-				if [ $? -eq 0 ]
+			mega-get $url
+			if [ $? -eq 0 ]
+			then
+				file=`ls *.mp4`
+				output=`echo "$file" | sed -E "s/ \[.*\]//"`
+
+				# Copy to original folder, unless the method is only copy to storage
+				if [ $storage_processing -ne 5 ]
 				then
-					file=`ls *.mp4`
-					output=`echo "$file" | sed -E "s/ \[.*\]//"`
-
-					# Copy to original folder, unless the method is only copy to storage
-					if [ $storage_processing -ne 5 ]
+					mkdir -p "$orig_dir/$storage_folder"
+					if [ -f "$orig_dir/$storage_folder/$file" ]
 					then
-						mkdir -p "$orig_dir/$storage_folder"
-						if [ -f "$orig_dir/$storage_folder/$file" ]
-						then
-							notify_error "S'ha sobreescrit el fitxer original $folder_type/$storage_folder/$file i se'n sobreescriurà també la versió recomprimida, si existeix."
-						fi
-						cp "$file" "$orig_dir/$storage_folder/"
+						notify_error "S’ha sobreescrit el fitxer original $folder_type/$storage_folder/$file i se’n sobreescriurà també la versió recomprimida, si existeix."
 					fi
-
-					# Extract thumbnail
-					duration=`../ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$file" | awk -F'.' '{print $1}'`
-					../ffmpeg -i "$file" -ss $(((duration)/6)) -vframes 1 -filter:v scale="-1:240" thumbnail_$file_id.jpg
-					curl -F "thumbnail=@thumbnail_$file_id.jpg" -F "file_id=$file_id" https://api.fansubs.cat/internal/change_file_thumbnail/?token=$token 2> /dev/null
-
-					# Update duration
-					curl --data-urlencode "duration=$duration" --data-urlencode "file_id=$file_id" https://api.fansubs.cat/internal/change_file_duration/?token=$token 2> /dev/null
-
-					artist=`../ffprobe -v error -select_streams v:0 -show_entries format_tags=artist -of csv=s=x:p=0 "$file"`
-
-					if [ "$artist" = "Recompressió per a Fansubs.cat" ]
-					then
-						cp "$file" "$dest_dir/$storage_folder/$output"
-					elif [ "$artist" = "Recompressió per a anime.fansubs.cat" ]
-					then
-						cp "$file" "$dest_dir/$storage_folder/$output"
-					else
-						generate_streaming "$file" 0 0 -1 CONVERT CONVERT "$dest_dir/$storage_folder/$output"
-					fi
-					rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --exclude "Manga" --exclude "ZZZ_INTERNAL" --delete
-
-					# Insert converted file
-					curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$folder_type/$storage_folder/$output" --data-urlencode "file_id=$file_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null
-					ready=1
-				else
-					echo "Error downloading: $?, waiting 30 minutes... Now at `date -Iseconds`."
-					sleep 1800
+					cp "$file" "$orig_dir/$storage_folder/"
 				fi
-				mega-quit
-				rm -rf ~/.megaCmd
-			done
+
+				# Extract thumbnail
+				duration=`../ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$file" | awk -F'.' '{print $1}'`
+				../ffmpeg -i "$file" -ss $(((duration)/6)) -vframes 1 -filter:v scale="-1:240" thumbnail_$file_id.jpg
+				curl -F "thumbnail=@thumbnail_$file_id.jpg" -F "file_id=$file_id" https://api.fansubs.cat/internal/change_file_thumbnail/?token=$token 2> /dev/null
+
+				# Update duration
+				curl --data-urlencode "duration=$duration" --data-urlencode "file_id=$file_id" https://api.fansubs.cat/internal/change_file_duration/?token=$token 2> /dev/null
+
+				artist=`../ffprobe -v error -select_streams v:0 -show_entries format_tags=artist -of csv=s=x:p=0 "$file"`
+
+				if [ "$artist" = "Recompressió per a Fansubs.cat" ]
+				then
+					cp "$file" "$dest_dir/$storage_folder/$output"
+				elif [ "$artist" = "Recompressió per a anime.fansubs.cat" ]
+				then
+					cp "$file" "$dest_dir/$storage_folder/$output"
+				else
+					generate_streaming "$file" 0 0 -1 CONVERT CONVERT "$dest_dir/$storage_folder/$output"
+				fi
+				rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --exclude "Manga" --exclude "ZZZ_INTERNAL" --delete
+
+				# Insert converted file
+				curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$folder_type/$storage_folder/$output" --data-urlencode "file_id=$file_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null
+				error=0
+			else
+				echo "Error downloading file: error $?, id: $file_id, URL: $url"
+			fi
+			mega-quit
+			rm -rf ~/.megaCmd
 			cd ..
 			rm -rf Temporal
 			IFS=$'\n'
+
+			if [ $error -eq 1 ]
+			then
+				#Process the next file, so one bad link does not block other files from processing
+				continue
+			fi
+			
+			#This was originally a full array loop, but we currently break on the first iteration so the newest files are always converted first
+			break
 		done
 		unset IFS
 	else
-		echo "Error fetching"
+		echo "Error fetching from API!"
 	fi
 	sleep 60
 done
