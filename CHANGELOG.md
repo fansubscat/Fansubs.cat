@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2025-08-11 - Versió 5.4.5
+- **Catàleg:**
+	- Es corregeix la consulta de «Continua mirant» perquè excloia alguns continguts amb fitxers no vistos.
+- **Eines:**
+	- Es canvia el processament de la importació de fitxers perquè s’importin d’un en un (de més recent a més antic).
+
 ## 2025-07-02 - Versió 5.4.4
 - **Catàleg:**
 	- Es canvia el missatge d’error que es mostra quan no es pot carregar un vídeo per a indicar que és possible que es tracti d’un blocatge de la xarxa.
