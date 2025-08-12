@@ -2139,7 +2139,7 @@ function requestFileData(fileId) {
 	};
 
 	$.post({
-		url: getBaseUrl()+"/get_file_data.php",
+		url: getBaseUrl()+"/get_file_data.php"+(typeof debugMega !== 'undefined' ? '?force_mega=1' : ''),
 		data: values,
 		xhrFields: {
 			withCredentials: true
