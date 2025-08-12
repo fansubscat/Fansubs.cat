@@ -1052,8 +1052,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row m-0 mb-3">
 							<label class="col-sm p-0" for="form-synopsis">Sinopsi<span class="mandatory"></span> <?php print_helper_box('Sinopsi', 'Resum de l’argument de l’obra en un màxim de 5 o 6 línies.\n\nSi t’és útil, pots copiar-la d’altres webs o importar-la de '.$external_source.', però cal que la tradueixis al català.\n\nS’hi admet **negreta** i __cursiva__.'); ?></label>
 							<button type="button" id="import-from-mal" class="btn btn-primary btn-sm col-sm-3 mb-1">
-								<span id="import-from-mal-loading" class="d-none spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-								<span id="import-from-mal-not-loading" class="fa fa-cloud-arrow-down pe-2"></span>Importa la portada i la sinopsi de <?php echo $external_source; ?>
+								<span id="import-from-mal-loading" class="d-none spinner-border spinner-border-sm me-1 fa-width-auto" role="status" aria-hidden="true"></span>
+								<span id="import-from-mal-not-loading" class="fa fa-cloud-arrow-down pe-2 fa-width-auto"></span>Importa la portada i la sinopsi de <?php echo $external_source; ?>
 							</button>
 							<textarea class="form-control" name="synopsis" id="form-synopsis" required style="height: 150px;" oninput="synopsisChanged=true;"><?php echo htmlspecialchars(str_replace('&#039;',"'",html_entity_decode($row['synopsis']))); ?></textarea>
 						</div>
@@ -1215,7 +1215,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-remote_folders-list-is_active-<?php echo $j+1; ?>" name="form-remote_folders-list-is_active-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $remote_folders[$j]['is_active']==1? " checked" : ""; ?>/>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-remote_folders-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionRemoteFolderRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+														<button id="form-remote_folders-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionRemoteFolderRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger"></button>
 													</td>
 												</tr>
 <?php
@@ -1234,8 +1234,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<option value="sync">Només els sincronitzats</option>
 											</select> →
 											<button type="button" id="import-from-mega" class="btn btn-primary btn-sm">
-												<span id="import-from-mega-loading" class="d-none spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-												<span id="import-from-mega-not-loading" class="fa fa-redo pe-2"></span>Actualitza els enllaços ara
+												<span id="import-from-mega-loading" class="d-none spinner-border spinner-border-sm me-1 fa-width-auto" role="status" aria-hidden="true"></span>
+												<span id="import-from-mega-not-loading" class="fa fa-redo pe-2 fa-width-auto"></span>Actualitza els enllaços ara
 											</button>
 										</div>
 									</div>
@@ -1389,7 +1389,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				if ($type=='manga') {
 ?>
 																			<td class="align-middle">
-																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat l’arxiu <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap arxiu pujat.</span>'; ?></div>
+																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check"></span> Ja hi ha pujat l’arxiu <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times"></span> No hi ha cap arxiu pujat.</span>'; ?></div>
 																			</td>
 																			<td class="align-middle">
 																				<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($files[$j]['original_filename']) ? 'Canvia l’arxiu...' : 'Puja un arxiu...' ; ?></label>
@@ -1414,7 +1414,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
 																							</td>
 																						</tr>
 <?php
@@ -1430,7 +1430,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
 																							</td>
 																						</tr>
 <?php
@@ -1452,9 +1452,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $files[$j]['is_lost'] ? ' checked' : ''; ?>/>
 																			</td>
 																			<td class="text-center pt-2">
-																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-<?php echo $j+1; ?>" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button>
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
+																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-width-auto fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-<?php echo $j+1; ?>" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="Afegeix un enllaç addicional"></button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
 																			</td>
 																		</tr>
 <?php
@@ -1470,7 +1470,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				if ($type=='manga') {
 ?>
 																			<td class="align-middle">
-																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap arxiu pujat.</span></div>
+																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times"></span> No hi ha cap arxiu pujat.</span></div>
 																			</td>
 																			<td class="align-middle">
 																				<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un arxiu...</label>
@@ -1492,7 +1492,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
 																							</td>
 																						</tr>
 																					</tbody>
@@ -1511,9 +1511,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-1" type="checkbox" value="1"/>
 																			</td>
 																			<td class="text-center pt-2">
-																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-1" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button>
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
+																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-width-auto fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-1" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="Afegeix un enllaç addicional"></button>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
 																			</td>
 																		</tr>
 <?php
@@ -1609,7 +1609,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if ($type=='manga') {
 ?>
 															<td class="align-middle">
-																<div id="form-extras-list-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($extras[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check fa-fw"></span> Ja hi ha pujat l’arxiu <strong>'.htmlspecialchars($extras[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times fa-fw"></span> No hi ha cap arxiu pujat.</span>'; ?></div>
+																<div id="form-extras-list-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($extras[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check"></span> Ja hi ha pujat l’arxiu <strong>'.htmlspecialchars($extras[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times"></span> No hi ha cap arxiu pujat.</span>'; ?></div>
 															</td>
 															<td class="align-middle">
 																<label style="margin-bottom: 0;" for="form-extras-list-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($extras[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($extras[$j]['original_filename']) ? 'Canvia l’arxiu...' : 'Puja un arxiu...' ; ?></label>
@@ -1634,7 +1634,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['resolution']); ?>" maxlength="200" placeholder="- Tria -" required/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																				<button id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteExtraLinkRow(<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-fw fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																				<button id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteExtraLinkRow(<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
 																			</td>
 																		</tr>
 <?php
@@ -1653,8 +1653,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-extras-list-comments-<?php echo $j+1; ?>" name="form-extras-list-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['comments']); ?>" maxlength="200"/>
 															</td>
 															<td class="text-center pt-2">
-																<button id="form-extras-list-add_link-<?php echo $j+1; ?>" onclick="addExtraLinkRow(<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button>
-																<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionExtraRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
+																<button id="form-extras-list-add_link-<?php echo $j+1; ?>" onclick="addExtraLinkRow(<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="Afegeix un enllaç addicional"></button>
+																<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionExtraRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
 															</td>
 														</tr>
 <?php

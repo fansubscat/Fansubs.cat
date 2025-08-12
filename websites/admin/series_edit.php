@@ -409,8 +409,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<div style="display: flex;">
 										<input class="form-control" name="external_id" id="form-external_id"<?php echo ($type!='liveaction' ? ' type="number"' : ''); ?> value="<?php echo $row['external_id']; ?>">
 									<button type="button" id="import-from-mal" class="btn btn-primary ms-2">
-										<span id="import-from-mal-loading" class="d-none spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-										<span id="import-from-mal-not-loading" class="fa fa-cloud-arrow-down pe-2"></span>Importa
+										<span id="import-from-mal-loading" class="d-none spinner-border spinner-border-sm me-1 fa-width-auto" role="status" aria-hidden="true"></span>
+										<span id="import-from-mal-not-loading" class="fa fa-cloud-arrow-down pe-2 fa-width-auto"></span>Importa
 									</button>
 									</div>
 								</div>
@@ -763,7 +763,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-episode-list-delete-<?php echo $i+1; ?>" onclick="deleteEpìsodeRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger<?php echo $episodes[$i]['has_version'] ? ' disabled' : ''; ?>"></button>
+														<button id="form-episode-list-delete-<?php echo $i+1; ?>" onclick="deleteEpìsodeRow(<?php echo $i+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger<?php echo $episodes[$i]['has_version'] ? ' disabled' : ''; ?>"></button>
 													</td>
 												</tr>
 <?php
@@ -783,7 +783,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-episode-list-description-1" name="form-episode-list-description-1" type="text" class="form-control d-none" value="" placeholder="- Introdueix un nom -" maxlength="500"/>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-episode-list-delete-1" onclick="deleteEpìsodeRow(1);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+														<button id="form-episode-list-delete-1" onclick="deleteEpìsodeRow(1);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger"></button>
 													</td>
 												</tr>
 <?php
@@ -849,7 +849,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<b><?php echo $related_series[$j]['name']; ?></b>
 													</td>
 													<td class="text-center align-middle">
-														<button id="form-related-list-delete-<?php echo $j+1; ?>" onclick="deleteRelatedSeriesRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 text-danger"></button>
+														<button id="form-related-list-delete-<?php echo $j+1; ?>" onclick="deleteRelatedSeriesRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger"></button>
 													</td>
 												</tr>
 <?php

@@ -11,7 +11,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<h4 class="card-title text-center mb-4 mt-1">Conversions pendents</h4>
 					<hr>
 					<div class="text-center pb-3">
-						<a href="pending_conversions.php" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
+						<a href="pending_conversions.php" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span>Refresca</a>
 					</div>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">

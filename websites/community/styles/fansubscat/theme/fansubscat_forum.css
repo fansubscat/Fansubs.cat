@@ -1545,14 +1545,14 @@ input[type="checkbox"] {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	content: '\f00c' !important;
 	color: rgb(var(--always-positive-color));
 }
 
 input[type="checkbox"]:before {
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	content: '\f00c' !important;
 	color: rgb(var(--always-positive-color));

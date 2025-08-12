@@ -8,8 +8,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <div class="container d-flex justify-content-center p-4">
 	<div class="card w-100">
 		<div class="position-absolute align-self-end">
-			<a id="welcome-refresh" href="/" class="btn btn-tertiary fa fa-redo p-2<?php echo empty($_SESSION['default_view']) || $_SESSION['default_view']==1 ? ' d-none' : ''; ?>" title="Refresca"></a>
-			<button class="btn btn-tertiary fa fa-right-left p-2" title="Canvia la visualització inicial" onclick="toggleWelcomeView();"></button>
+			<a id="welcome-refresh" href="/" class="btn btn-tertiary fa fa-redo p-2 fa-width-auto<?php echo empty($_SESSION['default_view']) || $_SESSION['default_view']==1 ? ' d-none' : ''; ?>" title="Refresca"></a>
+			<button class="btn btn-tertiary fa fa-right-left p-2 fa-width-auto" title="Canvia la visualització inicial" onclick="toggleWelcomeView();"></button>
 		</div>
 		<article id="welcome-view" class="card-body<?php echo !empty($_SESSION['default_view']) && $_SESSION['default_view']==2 ? ' d-none' : ''; ?>">
 			<h4 class="card-title text-center mb-4 mt-1">Introducció</h4>

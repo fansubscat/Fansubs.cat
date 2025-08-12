@@ -78,7 +78,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<hr>
 					<p class="text-center">Aquí es mostra l’estat dels recollidors de notícies i quan se n’han obtingut dades per darrer cop.<br />Les notícies s’obtenen automàticament dels diferents recollidors cada 15 minuts.</p>
 					<div class="text-center pb-3">
-						<a href="news_fetcher_status.php" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
+						<a href="news_fetcher_status.php" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span>Refresca</a>
 					</div>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">

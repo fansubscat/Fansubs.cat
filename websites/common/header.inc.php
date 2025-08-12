@@ -56,7 +56,7 @@ if (SITE_IS_HENTAI) {
 		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME.(SITE_IS_HENTAI ? '_hentai' : ''); ?>/site.webmanifest">
 		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME.(SITE_IS_HENTAI ? '_hentai' : ''); ?>/safari-pinned-tab.svg" color="<?php echo SITE_IS_HENTAI ? '#d91883' : '#6aa0f8'; ?>">
 		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/<?php echo SITE_INTERNAL_NAME.(SITE_IS_HENTAI ? '_hentai' : ''); ?>/favicon.ico">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css">
 <?php
 if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='embed') {

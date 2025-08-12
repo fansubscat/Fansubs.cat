@@ -32,7 +32,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</select>
 					</div>
 					<div class="text-center pb-3">
-						<a href="admin_log.php<?php echo (!empty($filter) ? "?filter=$filter" : '') ?>" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
+						<a href="admin_log.php<?php echo (!empty($filter) ? "?filter=$filter" : '') ?>" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span>Refresca</a>
 					</div>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">

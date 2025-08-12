@@ -8,7 +8,7 @@
 | cast_sender                  | 1            | https://developers.google.com/cast/docs/web_sender/integrate   | no              | no                            |
 | chartjs                      | 4.5.0        | https://github.com/chartjs/Chart.js                            | no              | no                            |
 | double-slider                | (own)        |                                                                | yes             | n/a                           |
-| fontawesome                  | 6.7.2        | https://github.com/FortAwesome/Font-Awesome                    | no              | no                            |
+| fontawesome                  | 7.0.0        | https://github.com/FortAwesome/Font-Awesome                    | no              | no                            |
 | jquery                       | 3.7.1        | https://github.com/jquery/jquery                               | no              | no                            |
 | js-cookie                    | 3.0.5        | https://github.com/js-cookie/js-cookie                         | no              | no                            |
 | magnific-popup               | 1.2.0        | https://github.com/dimsemenov/Magnific-Popup                   | yes             | no                            |

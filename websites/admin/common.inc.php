@@ -549,6 +549,6 @@ function delete_comment_from_community($comment_id){
 }
 
 function print_helper_box($title, $description, $white=FALSE) {
-	echo '<small title="Fes clic per a més informació" data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button"'.($white ? ' style="color: white !important;"' : '').' data-bs-title="'.htmlspecialchars($title).'" data-bs-contents="'.htmlspecialchars($description).'"></small>';
+	echo '<small title="Fes clic per a més informació" data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button fa-width-auto"'.($white ? ' style="color: white !important;"' : '').' data-bs-title="'.htmlspecialchars($title).'" data-bs-contents="'.htmlspecialchars($description).'"></small>';
 }
 ?>

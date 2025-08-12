@@ -137,7 +137,7 @@
 }
 
 .manga-reader .swiper-button-prev:after, .manga-reader .swiper-button-next:after {
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	color: rgb(var(--neutral-color));
 	font-size: 3rem;
@@ -672,7 +672,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 .video-js .vjs-big-play-button {
 	display: none;
 	font-weight: 900;
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-style: normal;
 	font-variant: normal;
 	text-rendering: auto;
@@ -714,7 +714,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 
 .vjs-loading-spinner:before {
 	font-size: 3em;
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	content: "\f1ce";
 	margin: 0;
@@ -757,7 +757,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 }
 
 .vjs-button .vjs-icon-placeholder:before{
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	font-size: 1.8em;
 	line-height: 1.6em;
@@ -1293,7 +1293,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 }
 
 .carousel .swiper-button-prev::after, .carousel .swiper-button-next::after {
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	color: rgb(var(--positive-color));
 	font-size: 4.5rem;
@@ -1302,7 +1302,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 }
 
 .recommendations .swiper-button-prev::after, .recommendations .swiper-button-next::after {
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	color: rgb(var(--negative-color));
 	font-size: 4.5rem;
@@ -2444,7 +2444,7 @@ details[open]:not(.closing) .division-arrow {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-family: "Font Awesome 6 Free";
+	font-family: "Font Awesome 7 Free";
 	font-weight: 900;
 	filter: drop-shadow(0 0 0.1em rgba(var(--always-negative-color),0.5));
 }

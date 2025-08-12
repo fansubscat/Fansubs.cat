@@ -140,6 +140,10 @@
 	font-size: 2.5rem;
 }
 
+.fansub-links .bluesky-link {
+	font-size: 2.2rem;
+}
+
 .content-button {
 	flex-basis: 0;
 	flex-grow: 1;

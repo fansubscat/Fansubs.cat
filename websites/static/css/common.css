@@ -385,9 +385,12 @@ a img {
 
 .social-link {
 	font-size: 3.6rem;
-	text-align: left;
 	transition: color var(--fast-animation-duration);
-	margin-right: 2.2rem;
+	margin-right: 1.1rem;
+}
+	
+.bluesky-link {
+	font-size: 3.2rem;
 }
 
 .separator {
@@ -976,14 +979,14 @@ input[type="checkbox"] {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	content: '\f00c' !important;
 	color: rgb(var(--always-positive-color));
 }
 
 input[type="checkbox"]:before {
-	font-family: "Font Awesome 6 Free" !important;
+	font-family: "Font Awesome 7 Free" !important;
 	font-weight: 900;
 	content: '\f00c' !important;
 	color: rgb(var(--always-positive-color));
@@ -2033,7 +2036,11 @@ input:checked + .slider:before {
 
 	.social-link {
 		font-size: 2.6rem;
-		margin-right: 1rem;
+		margin-right: 0.5rem;
+	}
+	
+	.bluesky-link {
+		font-size: 2.3rem;
 	}
 
 	.logo-small {
