@@ -108,10 +108,11 @@ function publish_to_bluesky($message, $version_id, $embed_title, $embed_descript
 		echo "-----------------\nPost this to BlueSky:\n$message\n";
 		return;
 	}
+	$bluesky = new BlueskyApi();
 	if ($is_hentai) {
-		$bluesky = new BlueskyApi(BLUESKY_HANDLE_HENTAI, BLUESKY_APP_PASSWORD_HENTAI);
+		$bluesky->auth(BLUESKY_HANDLE_HENTAI, BLUESKY_APP_PASSWORD_HENTAI);
 	} else {
-		$bluesky = new BlueskyApi(BLUESKY_HANDLE, BLUESKY_APP_PASSWORD);
+		$bluesky->auth(BLUESKY_HANDLE, BLUESKY_APP_PASSWORD);
 	}
 	$image_body = @file_get_contents(STATIC_DIRECTORY.'/social/version_'.$version_id.'.jpg');
 	$response = $bluesky->request('POST', 'com.atproto.repo.uploadBlob', [], $image_body, 'image/jpeg');
