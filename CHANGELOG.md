@@ -1,5 +1,10 @@
 # Registre de canvis
 
+## 2025-08-12 - Versió 5.5.0
+- **General:**
+	- S’han actualitzat les biblioteques a les darreres versions disponibles.
+	- S’ha actualitzat a FontAwesome 7, per la qual cosa algunes icones són lleugerament diferents.
+
 ## 2025-08-11 - Versió 5.4.5
 - **Catàleg:**
 	- Es corregeix la consulta de «Continua mirant» perquè excloia alguns continguts amb fitxers no vistos.

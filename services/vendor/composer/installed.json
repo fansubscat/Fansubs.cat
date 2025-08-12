@@ -2,17 +2,17 @@
         "packages": [
                 {
                         "name": "abraham/twitteroauth",
-                        "version": "6.2.0",
-                        "version_normalized": "6.2.0.0",
+                        "version": "7.0.0",
+                        "version_normalized": "7.0.0.0",
                         "source": {
                                 "type": "git",
                                 "url": "https://github.com/abraham/twitteroauth.git",
-                                "reference": "e6fc2e0c30371ce68427d547bdeb19725868db30"
+                                "reference": "a8622680f954d0c4f54fd80bedebe00c756ed7aa"
                         },
                         "dist": {
                                 "type": "zip",
-                                "url": "https://api.github.com/repos/abraham/twitteroauth/zipball/e6fc2e0c30371ce68427d547bdeb19725868db30",
-                                "reference": "e6fc2e0c30371ce68427d547bdeb19725868db30",
+                                "url": "https://api.github.com/repos/abraham/twitteroauth/zipball/a8622680f954d0c4f54fd80bedebe00c756ed7aa",
+                                "reference": "a8622680f954d0c4f54fd80bedebe00c756ed7aa",
                                 "shasum": ""
                         },
                         "require": {
@@ -28,7 +28,7 @@
                                 "rector/rector": "^0.15.7",
                                 "squizlabs/php_codesniffer": "^3"
                         },
-                        "time": "2023-10-28T20:17:00+00:00",
+                        "time": "2024-02-11T18:58:08+00:00",
                         "type": "library",
                         "installation-source": "dist",
                         "autoload": {
@@ -67,17 +67,17 @@
                 },
                 {
                         "name": "cjrasmussen/bluesky-api",
-                        "version": "1.0.3",
-                        "version_normalized": "1.0.3.0",
+                        "version": "2.3.4",
+                        "version_normalized": "2.3.4.0",
                         "source": {
                                 "type": "git",
                                 "url": "https://github.com/cjrasmussen/BlueskyApi.git",
-                                "reference": "dd73faf434614280dd24668bc884d842c9f15419"
+                                "reference": "d55fdf60e9ee3b9c46a37079d64a4c76b99b5106"
                         },
                         "dist": {
                                 "type": "zip",
-                                "url": "https://api.github.com/repos/cjrasmussen/BlueskyApi/zipball/dd73faf434614280dd24668bc884d842c9f15419",
-                                "reference": "dd73faf434614280dd24668bc884d842c9f15419",
+                                "url": "https://api.github.com/repos/cjrasmussen/BlueskyApi/zipball/d55fdf60e9ee3b9c46a37079d64a4c76b99b5106",
+                                "reference": "d55fdf60e9ee3b9c46a37079d64a4c76b99b5106",
                                 "shasum": ""
                         },
                         "require": {
@@ -85,7 +85,7 @@
                                 "ext-json": "*",
                                 "php": ">=7.4"
                         },
-                        "time": "2023-07-26T21:06:45+00:00",
+                        "time": "2025-05-13T13:49:11+00:00",
                         "type": "library",
                         "installation-source": "dist",
                         "autoload": {
@@ -107,6 +107,7 @@
                         "description": "Simple helper for interacting with the Bluesky API/AT protocol",
                         "homepage": "https://cjr.dev",
                         "keywords": [
+                                "at protocol",
                                 "bluesky"
                         ],
                         "support": {
@@ -117,31 +118,31 @@
                 },
                 {
                         "name": "composer/ca-bundle",
-                        "version": "1.3.7",
-                        "version_normalized": "1.3.7.0",
+                        "version": "1.5.7",
+                        "version_normalized": "1.5.7.0",
                         "source": {
                                 "type": "git",
                                 "url": "https://github.com/composer/ca-bundle.git",
-                                "reference": "76e46335014860eec1aa5a724799a00a2e47cc85"
+                                "reference": "d665d22c417056996c59019579f1967dfe5c1e82"
                         },
                         "dist": {
                                 "type": "zip",
-                                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/76e46335014860eec1aa5a724799a00a2e47cc85",
-                                "reference": "76e46335014860eec1aa5a724799a00a2e47cc85",
+                                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/d665d22c417056996c59019579f1967dfe5c1e82",
+                                "reference": "d665d22c417056996c59019579f1967dfe5c1e82",
                                 "shasum": ""
                         },
                         "require": {
                                 "ext-openssl": "*",
                                 "ext-pcre": "*",
-                                "php": "^5.3.2 || ^7.0 || ^8.0"
+                                "php": "^7.2 || ^8.0"
                         },
                         "require-dev": {
-                                "phpstan/phpstan": "^0.12.55",
-                                "psr/log": "^1.0",
-                                "symfony/phpunit-bridge": "^4.2 || ^5",
-                                "symfony/process": "^2.5 || ^3.0 || ^4.0 || ^5.0 || ^6.0"
+                                "phpstan/phpstan": "^1.10",
+                                "phpunit/phpunit": "^8 || ^9",
+                                "psr/log": "^1.0 || ^2.0 || ^3.0",
+                                "symfony/process": "^4.0 || ^5.0 || ^6.0 || ^7.0"
                         },
-                        "time": "2023-08-30T09:31:38+00:00",
+                        "time": "2025-05-26T15:08:54+00:00",
                         "type": "library",
                         "extra": {
                                 "branch-alias": {
@@ -173,21 +174,40 @@
                                 "ssl",
                                 "tls"
                         ],
+                        "support": {
+                                "irc": "irc://irc.freenode.org/composer",
+                                "issues": "https://github.com/composer/ca-bundle/issues",
+                                "source": "https://github.com/composer/ca-bundle/tree/1.5.7"
+                        },
+                        "funding": [
+                                {
+                                        "url": "https://packagist.com",
+                                        "type": "custom"
+                                },
+                                {
+                                        "url": "https://github.com/composer",
+                                        "type": "github"
+                                },
+                                {
+                                        "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                                        "type": "tidelift"
+                                }
+                        ],
                         "install-path": "./ca-bundle"
                 },
                 {
                         "name": "patrickschur/language-detection",
-                        "version": "v5.3.0",
-                        "version_normalized": "5.3.0.0",
+                        "version": "v5.3.1",
+                        "version_normalized": "5.3.1.0",
                         "source": {
                                 "type": "git",
                                 "url": "https://github.com/patrickschur/language-detection.git",
-                                "reference": "b8da335336c09fa6814fe0ca0d6d506c357cd7b9"
+                                "reference": "df8d32021b2ef9fde52e6fcccb83e3806822c9c6"
                         },
                         "dist": {
                                 "type": "zip",
-                                "url": "https://api.github.com/repos/patrickschur/language-detection/zipball/b8da335336c09fa6814fe0ca0d6d506c357cd7b9",
-                                "reference": "b8da335336c09fa6814fe0ca0d6d506c357cd7b9",
+                                "url": "https://api.github.com/repos/patrickschur/language-detection/zipball/df8d32021b2ef9fde52e6fcccb83e3806822c9c6",
+                                "reference": "df8d32021b2ef9fde52e6fcccb83e3806822c9c6",
                                 "shasum": ""
                         },
                         "require": {
@@ -198,7 +218,7 @@
                         "require-dev": {
                                 "phpunit/phpunit": "^9.5.0"
                         },
-                        "time": "2023-08-18T22:46:39+00:00",
+                        "time": "2025-03-25T22:47:08+00:00",
                         "type": "library",
                         "installation-source": "dist",
                         "autoload": {
@@ -225,7 +245,7 @@
                         ],
                         "support": {
                                 "issues": "https://github.com/patrickschur/language-detection/issues",
-                                "source": "https://github.com/patrickschur/language-detection/tree/v5.3.0"
+                                "source": "https://github.com/patrickschur/language-detection/tree/v5.3.1"
                         },
                         "install-path": "../patrickschur/language-detection"
                 }

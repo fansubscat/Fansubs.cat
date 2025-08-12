@@ -2004,6 +2004,10 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	font-size: 2.5rem;
 }
 
+.version-fansub-links .bluesky-link {
+	font-size: 2.2rem;
+}
+
 .version-fansub-rating {
 	border-radius: 1rem;
 	overflow: hidden;
@@ -3299,6 +3303,10 @@ input:checked + .viewed-slider:before {
 
 	.version-fansub-links {
 		font-size: 2rem;
+	}
+
+	.version-fansub-links .bluesky-link {
+		font-size: 1.8rem;
 	}
 
 	.version-fansub-info {

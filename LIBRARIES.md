@@ -26,11 +26,11 @@
 
 | Library                                        | Version   | URL                                                       | Locked at a specific version? |
 |------------------------------------------------|-----------|-----------------------------------------------------------|-------------------------------|
-| abraham/twitteroauth (via composer)            | 6.2.0     | https://github.com/abraham/twitteroauth                   | no                            |
-| cjrasmussen/bluesky-api (via composer)         | 1.0.3     | https://github.com/cjrasmussen/BlueskyApi                 | no                            |
+| abraham/twitteroauth (via composer)            | 7.0.0     | https://github.com/abraham/twitteroauth                   | no                            |
+| cjrasmussen/bluesky-api (via composer)         | 2.3.4     | https://github.com/cjrasmussen/BlueskyApi                 | no                            |
 | linebreaks4imagettftext                        | 1.0.3     | https://github.com/andrewgjohnson/linebreaks4imagettftext | yes, major changes            |
 | parsecsv                                       | 0.4.3beta | https://github.com/parsecsv/parsecsv-for-php              | tbd                           |
 | parsedown                                      | 1.7.4     | https://github.com/erusev/parsedown                       | no                            |
-| patrickschur/language-detection (via composer) | 5.3.0     | https://github.com/patrickschur/language-detection        | no                            |
+| patrickschur/language-detection (via composer) | 5.3.1     | https://github.com/patrickschur/language-detection        | no                            |
 | preview_image_generator                        | (own)     |                                                           | n/a                           |
 | simple_html_dom                                | 1.9.1     | http://sourceforge.net/projects/simplehtmldom/            | no                            |
