@@ -18,7 +18,7 @@ function publish_to_x($message, $is_hentai){
 		$connection = new TwitterOAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET);
 	}
 	$connection->setApiVersion('2');
-	$content = $connection->post("tweets", ["text" => $message], TRUE);
+	$content = $connection->post("tweets", ["text" => $message], ['jsonPayload' => true]);
 }
 
 function publish_to_mastodon($message, $is_hentai){
