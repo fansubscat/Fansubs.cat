@@ -1735,6 +1735,7 @@ function sendUserComment(button) {
 	}).done(function(data) {
 		var response = JSON.parse(data);
 		$(button.parent().find('textarea').get(0)).val('');
+		button.parent().find('textarea').get(0).parentNode.dataset.replicatedValue=this.value;
 		button.closest('.comment-fake').after('<div class="comment"><img class="comment-avatar" src="'+$('.comment-fake .comment-avatar').attr('src')+'"><div class="comment-message">'+response.text+'<div class="comment-author"><span class="comment-user">'+response.username+'</span>&nbsp;•&nbsp;<span class="comment-date">'+lang('js.date.now')+'</span>'+(response.episode_title!=null ? '&nbsp;•&nbsp;'+response.episode_title : '')+(response.has_spoilers ? '&nbsp;<span class="fa fa-warning" title="'+lang('js.catalogue.leave_comment.marked_by_user_as_spoiler')+'"></span>' : '')+'</div></div></div>');
 		button.prop('disabled', false);
 		button.parent().find('.comment-has-spoiler').prop('checked', false);
