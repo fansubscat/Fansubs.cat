@@ -191,9 +191,14 @@ class event_listener implements EventSubscriberInterface
 		$mode = $event['mode'];
 		$data = $event['data'];
 		
+		$poster_id = $data['poster_id'];
+		if ($mode=='quote') {
+			$poster_id = $this->user->data['user_id'];
+		}
+		
 		//We relay all posts by other users, but not the ones from Fansubs.cat (they must be posted via the admin site)
 		//Also, not the ones being posted by the API: this would create a loop and comments would be duplicated
-		if (($mode=='post' || $mode=='reply' || $mode=='edit' || $mode=='quote') && in_array($data['forum_id'], $relayed_forum_ids) && !defined('FANSUBSCAT_API_POSTING') && $data['poster_id'] != self::FANSUBSCAT_RELAY_USER_ID) {
+		if (($mode=='post' || $mode=='reply' || $mode=='edit' || $mode=='quote') && in_array($data['forum_id'], $relayed_forum_ids) && !defined('FANSUBSCAT_API_POSTING') && $poster_id != self::FANSUBSCAT_RELAY_USER_ID) {
 			$post_text = $data['message'];
 
 			//This is needed for the generate_text_for_edit function
@@ -205,8 +210,25 @@ class event_listener implements EventSubscriberInterface
 			$has_spoilers = str_contains($post_text, '[spoiler');
 			
 			//Adapt quotes
-			$post_text = preg_replace('/\[quote=&quot;(.*?)&quot;\](.*?)\[\/quote\]/is', "$1 ha escrit:\n> $2\n", $post_text);
-			$post_text = preg_replace('/\[quote\](.*?)\[\/quote\]/is', "\n> $1\n", $post_text);
+			$post_text = preg_replace_callback(
+				'/\[quote=&quot;(.*?)&quot;[^\]]*\](.*?)\[\/quote\]/is',
+				function ($matches) {
+					$author = $matches[1];
+					$quoted_text = $matches[2];
+					$quoted_text = preg_replace('/\s+/', ' ', $quoted_text);
+					return $author . " ha escrit:\n> " . $quoted_text . "\n";
+				},
+				$post_text
+			);
+			$post_text = preg_replace_callback(
+				'/\[quote[^\]]*\](.*?)\[\/quote\]/is',
+				function ($matches) {
+					$quoted_text = $matches[1];
+					$quoted_text = preg_replace('/\s+/', ' ', $quoted_text);
+					return "> " . $quoted_text . "\n";
+				},
+				$post_text
+			);
 			
 			//Adapt list elements:
 			$post_text = str_replace('[*]', '- ', $post_text);
@@ -226,7 +248,7 @@ class event_listener implements EventSubscriberInterface
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, 
 				  http_build_query(array(
-				  	'forum_user_id' => $data['poster_id'],
+				  	'forum_user_id' => $poster_id,
 				  	'forum_post_id' => $data['post_id'],
 				  	'forum_topic_id' => $data['topic_id'],
 				  	'text' => $post_text,

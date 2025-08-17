@@ -3,6 +3,8 @@
 ## 2025-08-17 - Versió 5.5.1
 - **Catàleg:**
 	- Es desactiva el marcatge automàtic com a espòiler en introduir certes paraules als comentaris.
+- **Comunitat:**
+	- Es corregeix que en citar un missatge, l’autor del comentari fos el del missatge citat, i que la cita no es mostrés correctament.
 
 ## 2025-08-12 - Versió 5.5.0
 - **General:**
