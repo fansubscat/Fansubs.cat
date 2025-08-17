@@ -541,7 +541,7 @@ while ($version = mysqli_fetch_assoc($result)) {
 										<div class="comment-message comment-input">
 											<div class="comment-send-form">
 												<div class="grow-wrap">
-													<textarea placeholder="<?php echo lang('catalogue.series.comments.placeholder'); ?>" onfocus="checkCommentPossible(this);" oninput="this.parentNode.dataset.replicatedValue=this.value;checkForAutoSpoilers(this);" rows="1" required></textarea>
+													<textarea placeholder="<?php echo lang('catalogue.series.comments.placeholder'); ?>" onfocus="checkCommentPossible(this);" rows="1" required></textarea>
 													<div class="comment-checkbox">
 														<input class="comment-has-spoiler" id="comment-has-spoiler-<?php echo $version['id']; ?>" type="checkbox">
 														<label for="comment-has-spoiler-<?php echo $version['id']; ?>" class="for-checkbox"><?php echo lang('catalogue.series.comments.contains_spoilers'); ?></label>

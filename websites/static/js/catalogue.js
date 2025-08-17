@@ -31,7 +31,6 @@ var lastMoveY;
 var inactivityTimeout;
 var activityCheckInterval;
 var currentPlayRate = 1;
-var spoilerCheckedAutomatically = false;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -1736,11 +1735,9 @@ function sendUserComment(button) {
 	}).done(function(data) {
 		var response = JSON.parse(data);
 		$(button.parent().find('textarea').get(0)).val('');
-		button.parent().find('textarea').get(0).parentNode.dataset.replicatedValue=this.value;
 		button.closest('.comment-fake').after('<div class="comment"><img class="comment-avatar" src="'+$('.comment-fake .comment-avatar').attr('src')+'"><div class="comment-message">'+response.text+'<div class="comment-author"><span class="comment-user">'+response.username+'</span>&nbsp;•&nbsp;<span class="comment-date">'+lang('js.date.now')+'</span>'+(response.episode_title!=null ? '&nbsp;•&nbsp;'+response.episode_title : '')+(response.has_spoilers ? '&nbsp;<span class="fa fa-warning" title="'+lang('js.catalogue.leave_comment.marked_by_user_as_spoiler')+'"></span>' : '')+'</div></div></div>');
 		button.prop('disabled', false);
 		button.parent().find('.comment-has-spoiler').prop('checked', false);
-		spoilerCheckedAutomatically = false;
 		button.html('<i class="fa fa-fw fa-paper-plane"></i>');
 	}).fail(function(data) {
 		try {
@@ -1756,20 +1753,6 @@ function sendUserComment(button) {
 		button.prop('disabled', false);
 		button.html('<i class="fa fa-fw fa-paper-plane"></i>');
 	});
-}
-
-function checkForAutoSpoilers(textarea) {
-	var text = textarea.value.toLocaleLowerCase();
-	if (!spoilerCheckedAutomatically) {
-		var words = lang('js.catalogue.leave_comment.spoiler_words').split(', ');
-		for (var i=0; i<words.length; i++) {
-			if (text.includes(words[i])) {
-				spoilerCheckedAutomatically = true;
-				$(textarea).parent().find('.comment-has-spoiler').prop('checked', true);
-				return;
-			}
-		}
-	}
 }
 
 function removeFromContinueWatching(element, fileId){

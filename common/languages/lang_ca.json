@@ -271,7 +271,6 @@
 	"js.catalogue.leave_comment.error.title": "S’ha produït un error",
 	"js.catalogue.leave_comment.error.too_soon": "No pots deixar comentaris tan seguits en el temps. Deixa passar uns segons.",
 	"js.catalogue.leave_comment.marked_by_user_as_spoiler": "Marcat per l’usuari com a «conté possibles espòilers»",
-	"js.catalogue.leave_comment.spoiler_words": "mort, morís, morir, inespera, final",
 	"js.catalogue.leave_comment.title": "Abans d’escriure un comentari",
 	"js.catalogue.loading_results": "S’està carregant el catàleg...",
 	"js.catalogue.loading_results.search": "S’estan carregant els resultats de la cerca...",

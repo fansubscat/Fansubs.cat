@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2025-08-17 - Versió 5.5.1
+- **Catàleg:**
+	- Es desactiva el marcatge automàtic com a espòiler en introduir certes paraules als comentaris.
+
 ## 2025-08-12 - Versió 5.5.0
 - **General:**
 	- S’han actualitzat les biblioteques a les darreres versions disponibles.
