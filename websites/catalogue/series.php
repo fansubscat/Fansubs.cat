@@ -85,6 +85,12 @@ if (!empty($series['alternate_names'])) {
 	}
 	$alternate_names .= $series['alternate_names'];
 }
+if (!empty($series['version_alternate_titles'])) {
+	if ($alternate_names!='') {
+		$alternate_names .= ', ';
+	}
+	$alternate_names .= $series['version_alternate_titles'];
+}
 ?>
 								<div class="series-alternate-names<?php echo empty($alternate_names) ? ' hidden' : ''; ?>"><?php echo htmlspecialchars($alternate_names); ?></div>
 <?php
@@ -202,6 +208,12 @@ while ($version = mysqli_fetch_assoc($result)) {
 			$alternate_names .= ', ';
 		}
 		$alternate_names .= $series['alternate_names'];
+	}
+	if (!empty($version['alternate_titles'])) {
+		if ($alternate_names!='') {
+			$alternate_names .= ', ';
+		}
+		$alternate_names .= $version['alternate_titles'];
 	}
 ?>
 							<div class="version-tab<?php echo $is_blacklisted ? ' version-blacklisted' : ''; ?><?php echo $version['id']==$series['version_id'] ? ' version-tab-selected' : ''; ?>" data-version-id="<?php echo $version['id']; ?>" data-version-slug="<?php echo htmlspecialchars($version['slug']); ?>" data-version-title="<?php echo htmlspecialchars($version['title']); ?>" data-version-alternate-titles="<?php echo htmlspecialchars($alternate_names); ?>" data-version-synopsis="<?php echo htmlspecialchars($version_synopsis); ?>">

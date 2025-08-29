@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2025-08-29 - Versió 5.5.2
+- **General:**
+	- Es permet especificar títols alternatius en català a les fitxes de les versions. En cercar, aquest camp també es té en compte.
+- **Administració:**
+	- S’afegeix el camp «Títols alternatius» i les comprovacions corresponents a la fitxa de la versió.
+	- Es corregeix la mida de la icona d’enllaços a la llista d’extres.
+
 ## 2025-08-17 - Versió 5.5.1
 - **Catàleg:**
 	- Es desactiva el marcatge automàtic com a espòiler en introduir certes paraules als comentaris.

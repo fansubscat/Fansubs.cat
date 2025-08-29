@@ -331,6 +331,7 @@ CREATE TABLE `version` (
   `id` int(11) NOT NULL,
   `series_id` int(11) NOT NULL,
   `title` varchar(200) NOT NULL,
+  `alternate_titles` varchar(200) DEFAULT NULL,
   `slug` varchar(200) NOT NULL,
   `synopsis` text NOT NULL,
   `status` int(11) NOT NULL,

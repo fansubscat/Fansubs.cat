@@ -128,6 +128,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			crash("Dades invàlides: manca title");
 		}
+		if (!empty($_POST['alternate_titles'])) {
+			$data['alternate_titles']="'".escape($_POST['alternate_titles'])."'";
+		} else {
+			$data['alternate_titles']="NULL";
+		}
 		if (!empty($_POST['slug'])) {
 			$data['slug']=escape($_POST['slug']);
 		} else {
@@ -389,7 +394,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 
 			log_action("update-version", "S’ha actualitzat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (id. de versió: ".$data['id'].")");
-			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",featurable_status=".$data['featurable_status'].",show_episode_numbers=".$data['show_episode_numbers'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",slug='".$data['slug']."',title='".$data['title']."',synopsis='".$data['synopsis']."',updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",featurable_status=".$data['featurable_status'].",show_episode_numbers=".$data['show_episode_numbers'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",slug='".$data['slug']."',title='".$data['title']."',alternate_titles=".$data['alternate_titles'].",synopsis='".$data['synopsis']."',updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
 			if ($data['fansub_1']!=NULL) {
@@ -618,7 +623,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				crash("Ja hi ha una versió amb aquest identificador. Revisa que no l’hagis afegida per duplicat i, en cas contrari, canvia’n l’identificador.");
 			}
 			log_action("create-version", "S’ha creat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."»");
-			query("INSERT INTO version (series_id,status,is_missing_episodes,featurable_status,show_episode_numbers,is_hidden,completed_date,storage_folder,storage_processing,slug,title,synopsis,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['featurable_status'].",".$data['show_episode_numbers'].",".$data['is_hidden'].",".($data['status']==1 ? "'$current_timestamp'" : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",'".$data['slug']."','".$data['title']."','".$data['synopsis']."','$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
+			query("INSERT INTO version (series_id,status,is_missing_episodes,featurable_status,show_episode_numbers,is_hidden,completed_date,storage_folder,storage_processing,slug,title,alternate_titles,synopsis,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['featurable_status'].",".$data['show_episode_numbers'].",".$data['is_hidden'].",".($data['status']==1 ? "'$current_timestamp'" : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",'".$data['slug']."','".$data['title']."',".$data['alternate_titles'].",'".$data['synopsis']."','$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			//Set as default version if none is set
 			query("UPDATE series SET default_version_id=$inserted_id WHERE id=".$data['series_id']." AND default_version_id IS NULL");
@@ -895,6 +900,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<label for="form-slug">Identificador<span class="mandatory"></span></label> <?php print_helper_box('Identificador', 'Aquest identificador autogenerat formarà part de l’URL del contingut al portal.\n\nEs modifica automàticament en canviar el títol o els fansubs de la versió.\n\nÉs un URL amigable amb el format «nom-de-la-serie/fansubs-que-la-fan».\n\nSi es modifica una vegada la versió ja està creada, notifica-ho a un administrador o els enllaços antics deixaran de funcionar.'); ?>
 									<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
 									<input type="hidden" id="form-old_slug" value="<?php echo htmlspecialchars($row['slug']); ?>">
+								</div>
+							</div>
+						</div>
+						<div class="row align-items-end">
+							<div class="col-sm">
+								<div class="mb-3">
+									<label for="form-alternate_titles">Títols alternatius</label> <?php print_helper_box('Títols alternatius', 'S’hi poden introduir títols alternatius de la versió. Per exemple, si es manté preferentment el títol en japonès o anglès, se’n pot afegir la traducció aquí. D’aquesta manera, si algú cerca algun d’aquests títols alternatius, també trobarà la versió corresponent.\n\nNomés es permet introduir-hi títols en català.\n\nSi n’hi ha més d’un, se separen per comes.'); ?>
+									<input class="form-control" name="alternate_titles" id="form-alternate_titles" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_titles'])); ?>">
 								</div>
 							</div>
 						</div>

@@ -452,7 +452,7 @@ function addVersionExtraRow() {
 		contents += '<td><table class="w-100" id="extras-links-list-table-'+i+'" data-count="1"><tbody><tr id="form-links-extras-list-row-'+i+'-1" style="background: none;"><td class="ps-0 pt-0 pb-0 border-0"><input id="form-extras-list-'+i+'-link-1-url" name="form-extras-list-'+i+'-link-1-url" type="text" pattern="'+linkUrlPattern+'" class="form-control" value="" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr(\'value\',$(this).val());" required/><input id="form-extras-list-'+i+'-link-1-id" name="form-extras-list-'+i+'-link-1-id" type="hidden" value="-1"/></td><td class="pt-0 pb-0 border-0" style="width: 22%;"><input id="form-extras-list-'+i+'-link-1-resolution" name="form-extras-list-'+i+'-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -" required/></td><td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;"><button id="form-extras-list-'+i+'-link-1-delete" onclick="deleteExtraLinkRow('+i+',1);" type="button" class="btn fa fa-fw fa-times p-1 fa-width-auto text-danger" title="Suprimeix aquest enllaç"></button></td></tr></tbody></table></td><td><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="time" step="1" class="form-control" required/></td>';
 	}
 
-	contents += '<td><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center pt-2"><button id="form-extras-list-add_link-'+i+'" onclick="addExtraLinkRow('+i+');" type="button" class="btn text-success btn-sm fa p-1 fa-link" title="Afegeix un enllaç addicional"></button><button id="form-extras-list-delete-'+i+'" onclick="deleteVersionExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="Suprimeix les dades d’aquest fitxer"></button></td></tr>';
+	contents += '<td><input id="form-extras-list-comments-'+i+'" name="form-extras-list-comments-'+i+'" type="text" class="form-control" value="" maxlength="200"/></td><td class="text-center pt-2"><button id="form-extras-list-add_link-'+i+'" onclick="addExtraLinkRow('+i+');" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="Afegeix un enllaç addicional"></button><button id="form-extras-list-delete-'+i+'" onclick="deleteVersionExtraRow('+i+');" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="Suprimeix les dades d’aquest fitxer"></button></td></tr>';
 
 	$('#extras-list-table').append(contents);
 	$('#extras-list-table').attr('data-count', i);
@@ -982,6 +982,16 @@ function checkNumberOfLinks() {
 
 	if (!synopsisChanged) {
 		alert('No has canviat la sinopsi que s’ha autoimportat. Revisa-la i tradueix-la. No es pot deixar en anglès.');
+		return false;
+	}
+
+	if ($('#form-title-with-autocomplete').val()==$('#form-alternate_titles').val()) {
+		alert('El títol localitzat i el camp «títols alternatius» no poden ser iguals. El camp «títols alternatius» ha de romandre buit o amb altres títols diferents del principal (sempre en català).');
+		return false;
+	}
+
+	if ($('#form-series').val()==$('#form-alternate_titles').val()) {
+		alert('El títol original i el camp «títols alternatius» no poden ser iguals. El camp «títols alternatius» ha de romandre buit o amb altres títols diferents del principal (sempre en català).');
 		return false;
 	}
 	

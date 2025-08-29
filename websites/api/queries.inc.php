@@ -315,7 +315,7 @@ function query_search_manga($offset, $max_items, $query, $type, $statuses, $demo
 			WHERE s.type='manga'
 				AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0
 				AND ".get_internal_hentai_condition()."
-				AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND v.title LIKE '%$query%') OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%')
+				AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND (v.title LIKE '%$query%' OR v.alternate_titles LIKE '%$query%')) OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%')
 				AND $type_condition
 				AND $statuses_condition
 				AND $demographies_condition

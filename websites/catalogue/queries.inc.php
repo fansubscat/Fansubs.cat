@@ -1001,6 +1001,7 @@ function query_series_by_slug($slug, $include_hidden) {
 				v.id version_id,
 				v.slug version_slug,
 				v.title version_title,
+				v.alternate_titles version_alternate_titles,
 				v.synopsis version_synopsis,
 				YEAR(s.publish_date) year,
 				GROUP_CONCAT(DISTINCT CONCAT(g.id,'|',g.type,'|',g.name) ORDER BY g.name SEPARATOR ' • ') genres,
@@ -1329,7 +1330,7 @@ function query_search_filter($user, $text, $type, $subtype, $min_score, $max_sco
 	//No need to escape $ratings, $show_blacklisted_fansubs, $show_lost_content, $show_no_demographics, $demographic_ids, $content_types, $origins, $genres_included_ids, $genres_excluded_ids, $statuses: they come from code
 	$final_query = get_internal_catalogue_base_query_portion($user)."
 				AND s.type='$type'
-				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND v.title LIKE '%$text%') OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
+				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND (v.title LIKE '%$text%' OR v.alternate_titles LIKE '%$text%')) OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
 				AND (".($min_score==0 ? "s.score IS NULL OR " : '')."(s.score>=$min_score AND s.score<=$max_score))
 				AND ".(count($ratings)>0 ? "s.rating IN ('".implode("', '",$ratings)."')" : "1")."
 				AND (".($min_year==1950 ? "s.publish_date IS NULL OR " : '')."(YEAR(s.publish_date)>=$min_year AND YEAR(s.publish_date)<=$max_year))
@@ -1355,7 +1356,7 @@ function query_autocomplete($user, $text, $type) {
 	$type = escape($type);
 	$final_query = get_internal_catalogue_base_query_portion($user)."
 				AND s.type='$type'
-				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND v.title LIKE '%$text%') OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
+				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND (v.title LIKE '%$text%' OR v.alternate_titles LIKE '%$text%')) OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
 			GROUP BY s.id
 			ORDER BY default_version_title LIKE '$text%' DESC, default_version_title ASC";
 	return query($final_query);
