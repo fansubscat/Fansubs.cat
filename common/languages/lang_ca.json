@@ -266,7 +266,7 @@
 	"js.catalogue.add_seen.explanation_many": "Es marcaran aquest capítol i %d capítols anteriors com a no vistos.",
 	"js.catalogue.add_seen.explanation_one": "Es marcaran aquest capítol i 1 capítol anterior com a no vistos.",
 	"js.catalogue.add_seen.title": "Vols marcar també els capítols anteriors com a vistos?",
-	"js.catalogue.leave_comment.description": "Tothom podrà veure el teu nom d’usuari, el teu avatar i el darrer capítol vist en el moment de comentar.<br>Si creus que el comentari pot ser un espòiler per a algú que vagi més endarrerit, marca’n la casella corresponent.<br>No incloguis mai cap mena d’informació personal als comentaris.",
+	"js.catalogue.leave_comment.description": "Tothom podrà veure el teu nom d’usuari, el teu avatar i el darrer capítol vist en el moment de comentar.<br>Si creus que el comentari pot ser un espòiler per a algú que vagi més endarrerit, marca’n la casella corresponent.<br>No incloguis mai cap mena d’informació personal als comentaris.<br>Als comentaris se’ls apliquen les <a href=\"https://comunitat.fansubs.cat/viewtopic.php?t=1024\" target=\"_blank\" style=\"text-decoration: underline;\">normes de la comunitat</a>: en cas d’incompliment, el comentari serà eliminat.",
 	"js.catalogue.leave_comment.error.generic": "No s’ha pogut enviar el comentari. Torna-ho a provar.",
 	"js.catalogue.leave_comment.error.title": "S’ha produït un error",
 	"js.catalogue.leave_comment.error.too_soon": "No pots deixar comentaris tan seguits en el temps. Deixa passar uns segons.",

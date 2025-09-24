@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2025-09-24 - Versió 5.5.3
+- **Catàleg:**
+	- En deixar un comentari, s’indica que s’hi apliquen les normes de la comunitat.
+- **Comunitat:**
+	- S’afegeixen imatges als rangs d’usuari.
+
 ## 2025-08-29 - Versió 5.5.2
 - **General:**
 	- Es permet especificar títols alternatius en català a les fitxes de les versions. En cercar, aquest camp també es té en compte.
