@@ -906,7 +906,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row align-items-end">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-alternate_titles">Títols alternatius</label> <?php print_helper_box('Títols alternatius', 'S’hi poden introduir títols alternatius de la versió. Per exemple, si es manté preferentment el títol en japonès o anglès, se’n pot afegir la traducció aquí. D’aquesta manera, si algú cerca algun d’aquests títols alternatius, també trobarà la versió corresponent.\n\nNomés es permet introduir-hi títols en català.\n\nSi n’hi ha més d’un, se separen per comes.'); ?>
+									<label for="form-alternate_titles">Títols localitzats alternatius</label> <?php print_helper_box('Títols localitzats alternatius', 'S’hi poden introduir títols localitzats alternatius de la versió. Per exemple, si es manté preferentment el títol en japonès o anglès, se’n pot afegir la traducció aquí. D’aquesta manera, si algú cerca algun d’aquests títols alternatius, també trobarà la versió corresponent.\n\nNomés es permet introduir-hi títols en català.\n\nSi n’hi ha més d’un, se separen per comes.'); ?>
 									<input class="form-control" name="alternate_titles" id="form-alternate_titles" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_titles'])); ?>">
 								</div>
 							</div>
