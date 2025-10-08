@@ -42,7 +42,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
 		log_action("delete-community", "S’ha suprimit la comunitat «".query_single("SELECT name FROM community WHERE id=".escape($_GET['delete_id']))."» (id. de comunitat: ".$_GET['delete_id'].")");
 		query("DELETE FROM community WHERE id=".escape($_GET['delete_id']));
-		@unlink(STATIC_DIRECTORY.'/images/communities/'.$_GET['delete_id'].'.jpg');
+		@unlink(STATIC_DIRECTORY.'/images/communities/'.$_GET['delete_id'].'.png');
 		$_SESSION['message']="S’ha suprimit correctament.";
 	}
 ?>
