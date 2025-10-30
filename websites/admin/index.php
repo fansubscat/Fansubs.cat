@@ -1,5 +1,6 @@
 <?php
-$header_title="Pàgina principal";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.index.header');
 $page="main";
 include(__DIR__.'/header.inc.php');
 
@@ -8,83 +9,95 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <div class="container d-flex justify-content-center p-4">
 	<div class="card w-100">
 		<div class="position-absolute align-self-end">
-			<a id="welcome-refresh" href="/" class="btn btn-tertiary fa fa-redo p-2 fa-width-auto<?php echo empty($_SESSION['default_view']) || $_SESSION['default_view']==1 ? ' d-none' : ''; ?>" title="Refresca"></a>
-			<button class="btn btn-tertiary fa fa-right-left p-2 fa-width-auto" title="Canvia la visualització inicial" onclick="toggleWelcomeView();"></button>
+			<a id="welcome-refresh" href="/" class="btn btn-tertiary fa fa-redo p-2 fa-width-auto<?php echo empty($_SESSION['default_view']) || $_SESSION['default_view']==1 ? ' d-none' : ''; ?>" title="<?php echo lang('admin.generic.refresh'); ?>"></a>
+			<button class="btn btn-tertiary fa fa-right-left p-2 fa-width-auto" title="<?php echo lang('admin.index.change_view'); ?>" onclick="toggleWelcomeView();"></button>
 		</div>
 		<article id="welcome-view" class="card-body<?php echo !empty($_SESSION['default_view']) && $_SESSION['default_view']==2 ? ' d-none' : ''; ?>">
-			<h4 class="card-title text-center mb-4 mt-1">Introducció</h4>
+			<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.index.intro'); ?></h4>
 			<hr>
-			<p class="text-center"><strong>Et donem la benvinguda al tauler d’administració. Aquí pots gestionar el contingut dels diferents webs de Fansubs.cat.</strong></p>
-			<p class="text-center">Cada <strong>anime</strong>, <strong>manga</strong> o <strong>contingut d’imatge real</strong> conté una fitxa genèrica amb les seves divisions (temporades o volums) i capítols.<br />Les <strong>versions</strong> corresponen a l’edició d’un o més fansubs i inclouen els enllaços o fitxers corresponents.<br />Per a afegir un contingut nou, primer cal crear-ne la fitxa genèrica, i després la versió amb els enllaços o fitxers.</p>
-			<p class="text-center">L’apartat de <strong>notícies</strong> permet gestionar les notícies dels webs o blogs dels diferents fansubs.<br />Excepte en casos molt concrets, no és necessari afegir, modificar ni suprimir notícies a mà.</p>
-			<p class="text-center">Al menú d’<strong>anàlisi</strong> trobaràs un seguit d’opcions per a veure quin és el consum del material.</p>
-			<p class="text-center">Si tens dubtes, consulta l’<strong>ajuda</strong> que tens a la part superior dreta o contacta amb un administrador.</p>
-			<p class="text-center">Si prefereixes que la pàgina d’inici del tauler no sigui aquesta sinó un resum del teu fansub, fes clic a la icona de la part superior dreta.</p>
+			<p class="text-center"><?php echo sprintf(lang('admin.index.welcome'), MAIN_SITE_NAME); ?></p>
+			<p class="text-center"><?php echo lang('admin.index.explanation_content'); ?></p>
 <?php
-	if ($_SESSION['admin_level']<2) {
+	if (!DISABLE_NEWS) {
 ?>
-			<p class="text-center alert alert-warning">No tens permisos per a crear fitxes d’anime, manga o imatge real. Si et cal, demana a algú altre que ho faci.</p>
+			<p class="text-center"><?php echo lang('admin.index.explanation_news'); ?></p>
 <?php
 	}
 ?>
-			<h4 class="card-title text-center mb-4 mt-4">Accions habituals</h4>
+			<p class="text-center"><?php echo lang('admin.index.explanation_analysis'); ?></p>
+			<p class="text-center"><?php echo lang('admin.index.explanation_doubts'); ?></p>
+			<p class="text-center"><?php echo lang('admin.index.explanation_toggle'); ?></p>
+<?php
+	if ($_SESSION['admin_level']<2) {
+?>
+			<p class="text-center alert alert-warning"><?php echo lang('admin.index.limited_permissions'); ?></p>
+<?php
+	}
+?>
+			<h4 class="card-title text-center mb-4 mt-4"><?php echo lang('admin.index.common_actions'); ?></h4>
 			<hr>
 			<div class="container">
 				<div class="row">
 					<div class="col-sm">
-						<h5 class="card-title text-center mb-3 mt-2">Anime</h5>
+						<h5 class="card-title text-center mb-3 mt-2"><?php echo lang('admin.index.anime'); ?></h5>
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
 						<div class="text-center p-2">
-							<a href="series_edit.php?type=anime" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un anime nou</a> 
+							<a href="series_edit.php?type=anime" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.index.anime.add'); ?></a> 
 						</div>
 <?php
 	}
 ?>
 						<div class="text-center p-2">
-							<a href="series_choose.php?type=anime" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una versió nova</a>
+							<a href="series_choose.php?type=anime" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.index.generic.add_version'); ?></a>
 						</div>
 						<div class="text-center p-2">
-							<a href="version_list.php?type=anime" class="btn btn-primary"><span class="fa fa-edit pe-2"></span>Edita una versió existent</a>
+							<a href="version_list.php?type=anime" class="btn btn-primary"><span class="fa fa-edit pe-2"></span><?php echo lang('admin.index.generic.edit_version'); ?></a>
 						</div>
 					</div>
 					<div class="col-sm">
-						<h5 class="card-title text-center mb-3 mt-2">Manga</h5>
+						<h5 class="card-title text-center mb-3 mt-2"><?php echo lang('admin.index.manga'); ?></h5>
 <?php
 	if ($_SESSION['admin_level']>=2) {
 ?>
 						<div class="text-center p-2">
-							<a href="series_edit.php?type=manga" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un manga nou</a> 
+							<a href="series_edit.php?type=manga" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.index.manga.add'); ?></a> 
 						</div>
 <?php
 	}
 ?>
 						<div class="text-center p-2">
-							<a href="series_choose.php?type=manga" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una versió nova</a>
+							<a href="series_choose.php?type=manga" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.index.generic.add_version'); ?></a>
 						</div>
 						<div class="text-center p-2">
-							<a href="version_list.php?type=manga" class="btn btn-primary"><span class="fa fa-edit pe-2"></span>Edita una versió existent</a>
+							<a href="version_list.php?type=manga" class="btn btn-primary"><span class="fa fa-edit pe-2"></span><?php echo lang('admin.index.generic.edit_version'); ?></a>
 						</div>
 					</div>
+<?php
+	if (!DISABLE_LIVE_ACTION) {
+?>
 					<div class="col-sm">
-						<h5 class="card-title text-center mb-3 mt-2">Imatge real</h5>
+						<h5 class="card-title text-center mb-3 mt-2"><?php echo lang('admin.index.liveaction'); ?></h5>
 <?php
-	if ($_SESSION['admin_level']>=2 && !DISABLE_LIVE_ACTION) {
+		if ($_SESSION['admin_level']>=2) {
 ?>
 						<div class="text-center p-2">
-							<a href="series_edit.php?type=liveaction" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un contingut nou</a> 
+							<a href="series_edit.php?type=liveaction" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.index.liveaction.add'); ?></a> 
 						</div>
+<?php
+		}
+?>
+						<div class="text-center p-2">
+							<a href="series_choose.php?type=liveaction" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.index.generic.add_version'); ?></a>
+						</div>
+						<div class="text-center p-2">
+							<a href="version_list.php?type=liveaction" class="btn btn-primary"><span class="fa fa-edit pe-2"></span><?php echo lang('admin.index.generic.edit_version'); ?></a>
+						</div>
+					</div>
 <?php
 	}
 ?>
-						<div class="text-center p-2">
-							<a href="series_choose.php?type=liveaction" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una versió nova</a>
-						</div>
-						<div class="text-center p-2">
-							<a href="version_list.php?type=liveaction" class="btn btn-primary"><span class="fa fa-edit pe-2"></span>Edita una versió existent</a>
-						</div>
-					</div>
 				</div>
 			</div>
 		</article>
@@ -98,19 +111,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<article id="latest-view" class="card-body<?php echo empty($_SESSION['default_view']) || $_SESSION['default_view']==1 ? ' d-none' : ''; ?>">
 			<div class="row">
 				<div class="col-sm">
-					<h4 class="card-title text-center mb-4 mt-1">Visualitzacions i lectures en curs</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.index.views_in_progress'); ?></h4>
 					<hr>
 					<table class="table table-welcome table-hover table-striped">
 						<tbody>
 <?php
-	$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
+	$result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') title,
 			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
 			IF (f.episode_id IS NULL,
-				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				CONCAT(v.title, ' - ".lang('admin.query.extra_division')." - ', f.extra_name),
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -138,14 +151,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="1" class="text-center">- No hi ha ningú mirant res -</td>
+								<td colspan="1" class="text-center"><?php echo lang('admin.index.views_in_progress.empty'); ?></td>
 							</tr>
 <?php
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-								<td scope="row" class="align-middle"><b><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['title']); ?></b> • <?php echo str_replace('.',',',min(100,round($row['progress'],1))); ?>% completat<br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></td>
+								<td scope="row" class="align-middle"><b><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['title']); ?></b> • <?php echo sprintf(lang('admin.index.views_in_progress.percent_completed'), str_replace('.',',',min(100,round($row['progress'],1)))); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></td>
 							</tr>
 <?php
 	}
@@ -155,7 +168,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					</table>
 				</div>
 				<div class="col-sm">
-					<h4 class="card-title text-center mb-4 mt-1">Darrers comentaris</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.index.latest_comments'); ?></h4>
 					<hr>
 					<table class="table table-welcome table-hover table-striped">
 						<tbody>
@@ -164,16 +177,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="2" class="text-center">- No hi ha cap comentari -</td>
+								<td colspan="2" class="text-center"><?php echo lang('admin.index.latest_comments.empty'); ?></td>
 							</tr>
 <?php
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['status']==1 ? 'shadowbanned' : ''; ?>">
-								<td class="align-middle"><b><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></b> a <?php echo '<b>'.htmlspecialchars($row['title']).'</b>'.(empty($_SESSION['fansub_id']) ? ' de <b>'.htmlspecialchars($row['fansubs']).'</b>' : '').' • '.get_relative_date($row['created_timestamp']); ?><?php echo $row['last_replied']!=$row['created'] ? ' • <b>Respost</b>' : ''; ?><br><small><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></small></td>
+								<td class="align-middle"><b><?php echo !empty($row['username']) ? htmlentities($row['username']) : lang('admin.generic.deleted_user'); ?></b> a <?php echo '<b>'.htmlspecialchars($row['title']).'</b>'.(empty($_SESSION['fansub_id']) ? sprintf(lang('admin.index.latest_comments.by_fansub'), htmlspecialchars($row['fansubs'])) : '').' • '.get_relative_date($row['created_timestamp']); ?><?php echo $row['last_replied']!=$row['created'] ? ' • <b>'.lang('admin.comment_list.replied').'</b>' : ''; ?><br><small><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>'.lang('admin.generic.deleted_comment').'</i>'; ?></small></td>
 								<td class="align-middle text-center">
-									<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="Respon" class="fa fa-reply p-1"></a>
+									<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.reply.title'); ?>" class="fa fa-reply p-1"></a>
 								</td>
 							</tr>
 <?php
@@ -186,19 +199,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			</div>
 			<div class="row">
 				<div class="col-sm">
-					<h4 class="card-title text-center mb-4 mt-1">Darreres visualitzacions i lectures</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.index.latest_views'); ?></h4>
 					<hr>
 					<table class="table table-welcome table-hover table-striped">
 						<tbody>
 <?php
-	$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
+	$result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') title,
 			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
 			IF (f.episode_id IS NULL,
-				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				CONCAT(v.title, ' - ".lang('admin.query.extra_division')." - ', f.extra_name),
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -226,7 +239,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="1" class="text-center">- No hi ha cap visualització -</td>
+								<td colspan="1" class="text-center"><?php echo lang('admin.index.latest_views.empty'); ?></td>
 							</tr>
 <?php
 	}
@@ -243,7 +256,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					</table>
 				</div>
 				<div class="col-sm">
-					<h4 class="card-title text-center mb-4 mt-1">Darreres versions modificades</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.index.latest_edits'); ?></h4>
 					<hr>
 					<table class="table table-welcome table-hover table-striped">
 						<tbody>
@@ -252,7 +265,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="3" class="text-center">- No hi ha cap versió -</td>
+								<td colspan="3" class="text-center"><?php echo lang('admin.index.latest_edits.empty'); ?></td>
 							</tr>
 <?php
 	}
@@ -261,8 +274,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
 								<th style="width: 70%;" scope="row" class="align-middle<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['version_title']); ?></th>
-								<td class="align-middle text-center text-nowrap<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '0'; ?> <span title="Valoracions positives dels usuaris" class="fa far fa-thumbs-up"></span>&nbsp;&nbsp;<?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '0'; ?> <span title="Valoracions negatives dels usuaris" class="fa far fa-thumbs-down"></span>&nbsp;&nbsp;<?php echo $row['num_comments']>0 ? $row['num_comments'] : '0'; ?> <span title="Comentaris dels usuaris" class="fa far fa-comment"></span></td>
-								<td class="align-middle text-center text-nowrap"><a href="<?php echo $link_url; ?>" title="Fitxa al web públic" target="_blank" class="fa fa-up-right-from-square p-1 text-warning"></a> <a href="version_stats.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques i comentaris" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a></td>
+								<td class="align-middle text-center text-nowrap<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '0'; ?> <span title="<?php echo lang('admin.index.latest_edits.good_ratings'); ?>" class="fa far fa-thumbs-up"></span>&nbsp;&nbsp;<?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '0'; ?> <span title="<?php echo lang('admin.index.latest_edits.bad_ratings'); ?>" class="fa far fa-thumbs-down"></span>&nbsp;&nbsp;<?php echo $row['num_comments']>0 ? $row['num_comments'] : '0'; ?> <span title="<?php echo lang('admin.index.latest_edits.comments'); ?>" class="fa far fa-comment"></span></td>
+								<td class="align-middle text-center text-nowrap"><a href="<?php echo $link_url; ?>" title="<?php echo lang('admin.index.latest_edits.public_view'); ?>" target="_blank" class="fa fa-up-right-from-square p-1 text-warning"></a> <a href="version_stats.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.index.latest_edits.stats_and_comments'); ?>" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a></td>
 							</tr>
 <?php
 	}

@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/../common/initialization.inc.php');
+
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
@@ -9,39 +11,30 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Llista de versions d’anime - Anime";
 		$page="anime";
+		$header_title=lang('admin.version_list.header.anime');
+		$title_string=lang('admin.version_list.title.anime');
+		$name_column_string=lang('admin.version_list.name_column.anime');
 	break;
 	case 'manga':
-		$header_title="Llista de versions de manga - Manga";
 		$page="manga";
+		$header_title=lang('admin.version_list.header.manga');
+		$title_string=lang('admin.version_list.title.manga');
+		$name_column_string=lang('admin.version_list.name_column.manga');
 	break;
 	case 'liveaction':
-		$header_title="Llista de versions d’imatge real - Imatge real";
 		$page="liveaction";
+		$header_title=lang('admin.version_list.header.liveaction');
+		$title_string=lang('admin.version_list.title.liveaction');
+		$name_column_string=lang('admin.version_list.name_column.liveaction');
 	break;
 }
 
 include(__DIR__.'/header.inc.php');
 
-switch ($type) {
-	case 'anime':
-		$content_uc="Anime";
-		$content_prep="d’anime";
-	break;
-	case 'manga':
-		$content_uc="Manga";
-		$content_prep="de manga";
-	break;
-	case 'liveaction':
-		$content_uc="Contingut d’imatge real";
-		$content_prep="de contingut d’imatge real";
-	break;
-}
-
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-version", "S’ha suprimit una versió de «".query_single("SELECT s.name FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".escape($_GET['delete_id']))."» (id. de versió: ".$_GET['delete_id'].")");
+		log_action("delete-version", "Version of «".query_single("SELECT s.name FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".escape($_GET['delete_id']))."» (version id: ".$_GET['delete_id'].") deleted");
 		query("DELETE FROM file WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM remote_folder WHERE version_id=".escape($_GET['delete_id']));
 		query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));
@@ -52,13 +45,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		@unlink(STATIC_DIRECTORY.'/images/featured/version_'.$_GET['delete_id'].'.jpg');
 		@unlink(STATIC_DIRECTORY.'/social/version_'.$_GET['delete_id'].'.jpg');
 		//Views will NOT be removed in order to keep consistent stats history
-		$_SESSION['message']="S’ha suprimit correctament.";
+		$_SESSION['message']=lang('admin.generic.delete_successful');
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Llista de versions <?php echo $content_prep; ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo $title_string; ?></h4>
 					<hr>
 
 <?php
@@ -73,15 +66,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Fansub</th>
-								<th scope="col"><?php echo $content_uc; ?></th>
-								<th class="text-center" scope="col">Estat</th>
-								<th class="text-center" scope="col">Fitxers</th>
-								<th class="text-center" scope="col"><span title="Recomanable pel sistema de recomanacions" class="fa fa-star"></span></th>
-								<th class="text-center" scope="col"><span title="Valoracions positives dels usuaris" class="fa fa-thumbs-up"></span></th>
-								<th class="text-center" scope="col"><span title="Valoracions negatives dels usuaris" class="fa fa-thumbs-down"></span></th>
-								<th class="text-center" scope="col"><span title="Comentaris dels usuaris" class="fa fa-comment"></span></th>
-								<th class="text-center" scope="col">Accions</th>
+								<th scope="col"><?php echo lang('admin.version_list.fansub'); ?></th>
+								<th scope="col"><?php echo $name_column_string; ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.version_list.status'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.version_list.files'); ?></th>
+								<th class="text-center" scope="col"><span title="<?php echo lang('admin.version_list.recommendable'); ?>" class="fa fa-star"></span></th>
+								<th class="text-center" scope="col"><span title="<?php echo lang('admin.version_list.positive_ratings'); ?>" class="fa fa-thumbs-up"></span></th>
+								<th class="text-center" scope="col"><span title="<?php echo lang('admin.version_list.negative_ratings'); ?>" class="fa fa-thumbs-down"></span></th>
+								<th class="text-center" scope="col"><span title="<?php echo lang('admin.version_list.user_comments'); ?>" class="fa fa-comment"></span></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -96,7 +89,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="9" class="text-center">- No hi ha cap versió -</td>
+								<td colspan="9" class="text-center"><?php echo lang('admin.version_list.empty'); ?></td>
 							</tr>
 <?php
 	}
@@ -108,11 +101,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><b><?php echo htmlspecialchars($row['version_title']); ?></b><?php echo $row['version_title']!=$row['series_name'] ? '<br><i style="font-weight: normal;" class="text-muted small">('.htmlspecialchars($row['series_name']).')</i>' : ''; ?></td>
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo get_status_description_short($row['status']); ?></td>
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['files']; ?></td>
-								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['featurable_status']==3 ? 'RT' : ($row['featurable_status']==2 ? 'RE' : ($row['featurable_status']==1 ? 'R' : '-')); ?></td>
+								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['featurable_status']==3 ? lang('admin.version_list.recommendable.always_season') : ($row['featurable_status']==2 ? lang('admin.version_list.recommendable.always_special') : ($row['featurable_status']==1 ? lang('admin.version_list.recommendable.randomly') : lang('admin.version_list.recommendable.never'))); ?></td>
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '-'; ?></td>
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '-'; ?></td>
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['num_comments']>0 ? $row['num_comments'] : '-'; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="<?php echo $link_url; ?>" title="Fitxa al web públic" target="_blank" class="fa fa-up-right-from-square p-1 text-warning"></a> <a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Enllaços" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Estadístiques i comentaris" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la versió de «".$row['series_name']."» de ".$row['fansub_name']." i tots els seus fitxers? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="<?php echo $link_url; ?>" title="<?php echo lang('admin.version_list.public_page.title'); ?>" target="_blank" class="fa fa-up-right-from-square p-1 text-warning"></a> <a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.version_list.links.title'); ?>" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.version_list.stats.title'); ?>" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf(lang('admin.version_list.delete_confirm'), $row['series_name'], $row['fansub_name']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}
@@ -121,7 +114,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</tbody>
 					</table>
 					<div class="text-center">
-						<a href="series_choose.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una versió</a>
+						<a href="series_choose.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.version_list.create_button'); ?></a>
 					</div>
 				</article>
 			</div>

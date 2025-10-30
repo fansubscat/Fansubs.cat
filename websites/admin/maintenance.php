@@ -1,5 +1,6 @@
 <?php
-$header_title="Manteniment - Eines";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.maintenance.header');
 $page="tools";
 include(__DIR__.'/header.inc.php');
 
@@ -8,22 +9,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Manteniment</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.maintenance.title'); ?></h4>
 					<hr>
 					<div class="text-center p-2">
-						<button type="button" class="btn btn-primary" onclick="return checkAnimeGenres(0,0,[]);" onauxclick="return false;">Analitza els gèneres dels animes</a>
+						<button type="button" class="btn btn-primary" onclick="return checkAnimeGenres(0,0,[]);" onauxclick="return false;"><?php echo lang('admin.maintenance.check_anime'); ?></a>
 					</div>
 					<div class="text-center p-2">
-						<button type="button" class="btn btn-primary" onclick="return checkMangaGenres(0,0,[]);" onauxclick="return false;">Analitza els gèneres dels mangues</a>
+						<button type="button" class="btn btn-primary" onclick="return checkMangaGenres(0,0,[]);" onauxclick="return false;"><?php echo lang('admin.maintenance.check_manga'); ?></a>
 					</div>
 					<div class="text-center p-2">
-						<button type="button" class="btn btn-primary" onclick="return showAnimeWithNoMal();" onauxclick="return false;">Mostra els animes no enllaçats a MAL</a>
+						<button type="button" class="btn btn-primary" onclick="return showAnimeWithNoMal();" onauxclick="return false;"><?php echo lang('admin.maintenance.show_non_mal_anime'); ?></a>
 					</div>
 					<div class="text-center p-2">
-						<button type="button" class="btn btn-primary" onclick="return showMangaWithNoMal();" onauxclick="return false;">Mostra els mangues no enllaçats a MAL</a>
+						<button type="button" class="btn btn-primary" onclick="return showMangaWithNoMal();" onauxclick="return false;"><?php echo lang('admin.maintenance.show_non_mal_manga'); ?></a>
 					</div>
 					<div class="text-center p-2">
-						<button type="button" class="btn btn-primary" onclick="return showLiveActionWithNoMdl();" onauxclick="return false;">Mostra els continguts d’imatge real no enllaçats a MDL</a>
+						<button type="button" class="btn btn-primary" onclick="return showLiveActionWithNoMdl();" onauxclick="return false;"><?php echo lang('admin.maintenance.show_non_mdl_liveaction'); ?></a>
 					</div>
 				</article>
 			</div>
@@ -31,11 +32,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4" id="output_card">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Sortida</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.maintenance.output'); ?></h4>
 					<hr>
-					<div class="text-center p-2" id="output">
-						Aquí es mostrarà la sortida de les ordres executades.
-					</div>
+					<div class="text-center p-2" id="output"><?php echo lang('admin.maintenance.output_placeholder'); ?></div>
 				</article>
 			</div>
 		</div>

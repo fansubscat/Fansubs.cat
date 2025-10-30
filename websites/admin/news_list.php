@@ -1,5 +1,6 @@
 <?php
-$header_title="Llista de notícies - Notícies";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.news_list.header');
 $page="news";
 include(__DIR__.'/header.inc.php');
 
@@ -7,19 +8,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($_GET['delete_id'])) {
 		$todelete_result = query("SELECT n.*, f.name fansub_name FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE MD5(CONCAT(n.title, n.date))='".escape($_GET['delete_id'])."'");
 		if (mysqli_num_rows($todelete_result)>1) {
-			crash("No es pot esborrar la notícia: més d’una notícia amb el mateix MD5!");
+			crash(lang('admin.error.news_list_delete_same_hash_error'));
 		} else if (mysqli_num_rows($todelete_result)==1) {
 			$todelete_row = mysqli_fetch_assoc($todelete_result);
-			log_action("delete-news", "S’ha suprimit la notícia «".$todelete_row['title']."» del fansub «".$todelete_row['fansub_name']."»");
+			log_action("delete-news", "News «".$todelete_row['title']."» for fansub «".$todelete_row['fansub_name']."» deleted");
 			query("DELETE FROM news WHERE MD5(CONCAT(title, date))='".escape($_GET['delete_id'])."'");
 		}
-		$_SESSION['message']="S’ha suprimit correctament.";
+		$_SESSION['message']=lang('admin.generic.delete_successful');
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Llista de notícies</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.news_list.title'); ?></h4>
 					<hr>
 
 <?php
@@ -33,10 +34,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Fansub</th>
-								<th scope="col">Títol</th>
-								<th class="text-center" scope="col">Data</th>
-								<th class="text-center" scope="col">Accions</th>
+								<th scope="col"><?php echo lang('admin.news_list.fansub'); ?></th>
+								<th scope="col"><?php echo lang('admin.news_list.title_column'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.news_list.date'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -50,17 +51,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="4" class="text-center">- No hi ha cap notícia -</td>
+								<td colspan="4" class="text-center"><?php echo lang('admin.news_list.empty'); ?></td>
 							</tr>
 <?php
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr>
-								<th scope="row" class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : '(Notícia interna de Fansubs.cat)'; ?></th>
+								<th scope="row" class="align-middle"><?php echo !empty($row['fansub_name']) ? htmlspecialchars($row['fansub_name']) : sprintf(lang('admin.news_list.internal_news'), MAIN_SITE_NAME); ?></th>
 								<td class="align-middle"><?php echo htmlspecialchars($row['title']); ?></td>
 								<td class="align-middle text-center"><?php echo date('Y-m-d H:i:s', strtotime($row['date'])); ?></th>
-								<td class="align-middle text-center text-nowrap"><a href="news_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="news_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la notícia «".$row['title']."»? Només s’hauria de fer en casos molt especials. L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="news_edit.php?id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a> <a href="news_list.php?delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf(lang('admin.news_list.delete_confirm'), $row['title']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}
@@ -69,7 +70,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</tbody>
 					</table>
 					<div class="text-center">
-						<a href="news_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una notícia a mà</a>
+						<a href="news_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.news_list.create_button'); ?></a>
 					</div>
 				</article>
 			</div>

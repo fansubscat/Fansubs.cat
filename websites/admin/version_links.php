@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/../common/initialization.inc.php');
+
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
@@ -9,41 +11,35 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Enllaços de la versió d’anime - Anime";
 		$page="anime";
+		$link_url=ANIME_URL;
+		$header_title=lang('admin.version_links.header.anime');
 	break;
 	case 'manga':
-		$header_title="Enllaços de la versió de manga - Manga";
 		$page="manga";
+		$link_url=MANGA_URL;
+		$header_title=lang('admin.version_links.header.manga');
 	break;
 	case 'liveaction':
-		$header_title="Enllaços de la versió d’imatge real - Imatge real";
 		$page="liveaction";
+		$link_url=LIVEACTION_URL;
+		$header_title=lang('admin.version_links.header.liveaction');
 	break;
 }
 
 include(__DIR__.'/header.inc.php');
 
-switch ($type) {
-	case 'anime':
-		$link_url=ANIME_URL;
-		break;
-	case 'liveaction':
-		$link_url=LIVEACTION_URL;
-		break;
-	case 'manga':
-		$link_url=MANGA_URL;
-		break;
-}
-
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1 && !empty($_GET['id']) && is_numeric($_GET['id'])) {
 	$result = query("SELECT v.*, s.name series_name, GROUP_CONCAT(f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN series s ON v.series_id=s.id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id=".escape($_GET['id'])." GROUP BY v.id");
-	$row = mysqli_fetch_assoc($result) or crash('Version not found');
+	$row = mysqli_fetch_assoc($result) or crash(lang('admin.error.version_not_found'));
 	mysqli_free_result($result);
 
 	$results = query("SELECT s.* FROM series s WHERE id=".$row['series_id']);
-	$series = mysqli_fetch_assoc($results) or crash('Series not found');
+	$series = mysqli_fetch_assoc($results) or crash(lang('admin.error.series_not_found'));
 	mysqli_free_result($results);
+	if ($series['type']!=$type) {
+		crash(lang('admin.error.wrong_type_specified'));
+	}
 
 	$resultd = query("SELECT IFNULL(vd.title,d.name) name, d.number number FROM division d LEFT JOIN version_division vd ON d.id=vd.division_id AND vd.version_id=".escape($_GET['id'])." WHERE d.series_id=".$row['series_id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
 	$divisions = array();
@@ -56,7 +52,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				) episode_title
@@ -80,12 +76,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Enllaços de la versió</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.version_links.title'); ?></h4>
 					<hr>
-					<p class="text-center">Aquests són els enllaços de la versió de «<b><?php echo htmlspecialchars($row['title']); ?></b>» feta per <?php echo htmlspecialchars($row['fansub_name']); ?>.</p>
+					<p class="text-center"><?php echo sprintf(lang('admin.version_links.explanation'), htmlspecialchars($row['title']), htmlspecialchars($row['fansub_name'])); ?></p>
 					<hr>
 					<div class="text-center">
-						<button onclick="copyToClipboard('<?php echo $link_url.'/'.$row['slug']; ?>', $(this));" class="btn btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç a la fitxa de la versió</button>
+						<button onclick="copyToClipboard('<?php echo $link_url.'/'.$row['slug']; ?>', $(this));" class="btn btn-primary"><span class="fa fa-copy pe-2"></span><?php echo lang('admin.version_links.copy_link_to_version'); ?></button>
 					</div>
 				</article>
 			</div>
@@ -96,14 +92,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Enllaços a divisions concretes</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.version_links.links_to_divisions'); ?></h4>
 					<hr>
 					<input type="hidden" id="text_to_copy" value=""/>
 					<table class="table table-bordered table-striped table-hover table-sm">
 						<thead class="table-dark">
 							<tr>
-								<th>Divisió</th>
-								<th class="text-center">Enllaç</th>
+								<th><?php echo lang('admin.version_links.division'); ?></th>
+								<th class="text-center"><?php echo lang('admin.version_links.link'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -112,7 +108,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 						<tr>
 							<td style="width: 70%;"><strong><?php echo $division['name']; ?></strong></td>
-							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.$row['slug']."#'+string_to_slug('".htmlspecialchars($division['name']); ?>'), $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
+							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/'.$row['slug']."#'+string_to_slug('".htmlspecialchars($division['name']); ?>'), $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span><?php echo lang('admin.version_links.copy_link'); ?></button></td>
 						</tr>
 <?php
 		}
@@ -128,14 +124,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Enllaços per a incrustar de capítols concrets</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.version_links.embed_links'); ?></h4>
 					<hr>
 					<input type="hidden" id="text_to_copy" value=""/>
 					<table class="table table-bordered table-striped table-hover table-sm">
 						<thead class="table-dark">
 							<tr>
-								<th>Capítol</th>
-								<th class="text-center">Enllaç</th>
+								<th><?php echo lang('admin.version_links.episode'); ?></th>
+								<th class="text-center"><?php echo lang('admin.version_links.link'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -160,8 +156,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if ($is_valid) {
 ?>
 						<tr>
-							<td style="width: 85%;"><?php echo $episodes[$i]['episode_title'] . ($rowf['variant_count']>1 ? ' (variant «'.$rowf['variant_name'].'»)' : ''); ?></td>
-							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowf['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
+							<td style="width: 85%;"><?php echo $episodes[$i]['episode_title'] . ($rowf['variant_count']>1 ? sprintf(lang('admin.version_links.variant_name'), $rowf['variant_name']) : ''); ?></td>
+							<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowf['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span><?php echo lang('admin.version_links.copy_link'); ?></button></td>
 						</tr>
 <?php
 			}
@@ -184,14 +180,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Enllaços per a incrustar de material extra</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.version_links.embed_links.extras'); ?></h4>
 					<hr>
 					<input type="hidden" id="text_to_copy" value=""/>
 					<table class="table table-bordered table-hover table-sm">
 						<thead class="table-dark">
 							<tr>
-								<th>Material extra</th>
-								<th class="text-center">Enllaç</th>
+								<th><?php echo lang('admin.version_links.extra'); ?></th>
+								<th class="text-center"><?php echo lang('admin.version_links.embed_links'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -215,7 +211,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 					<tr>
 						<td style="width: 85%;"><strong><?php echo $rowex['extra_name']; ?></strong></td>
-						<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowex['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span>Copia l’enllaç</button></td>
+						<td class="text-center"><button onclick="copyToClipboard('<?php echo $link_url.'/embed/'.$rowex['id']; ?>', $(this));" class="btn btn-sm btn-primary"><span class="fa fa-copy pe-2"></span><?php echo lang('admin.version_links.copy_link'); ?></button></td>
 					</tr>
 <?php
 		}

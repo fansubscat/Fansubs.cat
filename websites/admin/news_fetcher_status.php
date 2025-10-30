@@ -1,5 +1,6 @@
 <?php
-$header_title="Estat dels recollidors de notícies - Eines";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.news_fetcher_status.header');
 $page="tools";
 include(__DIR__.'/header.inc.php');
 
@@ -8,13 +9,13 @@ include(__DIR__.'/header.inc.php');
 function show_fetch_type($fetch_type){
 	switch ($fetch_type){
 		case 'periodic':
-			return 'Periòdic<br />(cada 15&nbsp;min.)';
+			return lang('admin.generic.fetch_type.periodic.nowrap');
 		case 'onrequest':
-			return 'A&nbsp;petició';
+			return lang('admin.generic.fetch_type.by_request.nowrap');
 		case 'onetime_retired':
-			return 'Una&nbsp;vegada<br />(retirat)';
+			return lang('admin.generic.fetch_type.single_retired.nowrap');
 		case 'onetime_inactive':
-			return 'Una&nbsp;vegada<br />(inactiu)';
+			return lang('admin.generic.fetch_type.single_inactive.nowrap');
 		default:
 			return $fetch_type;
 	}
@@ -23,9 +24,9 @@ function show_fetch_type($fetch_type){
 function show_status($status){
 	switch ($status){
 		case 'idle':
-			return 'En&nbsp;repòs';
+			return lang('admin.generic.fetch_status.resting.nowrap');
 		case 'fetching':
-			return 'Obtenint&nbsp;dades';
+			return lang('admin.generic.fetch_status.obtaining.nowrap');
 		default:
 			return $status;
 	}
@@ -43,25 +44,25 @@ function show_last_result($last_result, $last_increment, $fetch_type){
 	switch ($last_result){
 		case 'ok':
 			if ($last_increment===NULL){
-				return '<span style="color: '.$ok_color.'"><span class="fa fa-check"></span>&nbsp;Correcte</span>';
+				return '<span style="color: '.$ok_color.'"><span class="fa fa-check"></span>&nbsp;'.lang('admin.generic.fetch_result.ok.nowrap').'</span>';
 			}
 			else if ($last_increment==0){
-				return '<span style="color: '.$ok_color.'"><span class="fa fa-check"></span>&nbsp;Correcte&nbsp;(±0)</span>';
+				return '<span style="color: '.$ok_color.'"><span class="fa fa-check"></span>&nbsp;'.lang('admin.generic.fetch_result.ok.nowrap').'&nbsp;(±0)</span>';
 			}
 			else if ($last_increment>0){
-				return '<span style="color: '.$ok_color.'"><span class="fa fa-check"></span>&nbsp;Correcte&nbsp;(+'.$last_increment.')</span>';
+				return '<span style="color: '.$ok_color.'"><span class="fa fa-check"></span>&nbsp;'.lang('admin.generic.fetch_result.ok.nowrap').'&nbsp;(+'.$last_increment.')</span>';
 			}
 			else{
-				return '<span style="color: '.$ok_color.'"><span class="fa fa-check"></span>&nbsp;Correcte&nbsp;('.$last_increment.')</span>';
+				return '<span style="color: '.$ok_color.'"><span class="fa fa-check"></span>&nbsp;'.lang('admin.generic.fetch_result.ok.nowrap').'&nbsp;('.$last_increment.')</span>';
 			}
 		case 'error_mysql':
-			return '<span style="color: '.$ko_color.'"><span class="fa fa-times"></span>&nbsp;Error&nbsp;(BD)</span>';
+			return '<span style="color: '.$ko_color.'"><span class="fa fa-times"></span>&nbsp;'.lang('admin.generic.fetch_result.error_db.nowrap').'</span>';
 		case 'error_empty':
-			return '<span style="color: '.$ko_color.'"><span class="fa fa-times"></span>&nbsp;Error&nbsp;(buit)</span>';
+			return '<span style="color: '.$ko_color.'"><span class="fa fa-times"></span>&nbsp;'.lang('admin.generic.fetch_result.error_empty.nowrap').'</span>';
 		case 'error_connect':
-			return '<span style="color: '.$ko_color.'"><span class="fa fa-times"></span>&nbsp;Error&nbsp;(connexió)</span>';
+			return '<span style="color: '.$ko_color.'"><span class="fa fa-times"></span>&nbsp;'.lang('admin.generic.fetch_result.error_connect.nowrap').'</span>';
 		case 'error_invalid_method':
-			return '<span style="color: '.$ko_color.'"><span class="fa fa-times"></span>&nbsp;Error&nbsp;(desconegut)</span>';
+			return '<span style="color: '.$ko_color.'"><span class="fa fa-times"></span>&nbsp;'.lang('admin.generic.fetch_result.error_unknown.nowrap').'</span>';
 		case '':
 			return "-";
 		default:
@@ -74,20 +75,20 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Estat dels recollidors de notícies</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.news_fetcher_status.title'); ?></h4>
 					<hr>
-					<p class="text-center">Aquí es mostra l’estat dels recollidors de notícies i quan se n’han obtingut dades per darrer cop.<br />Les notícies s’obtenen automàticament dels diferents recollidors cada 15 minuts.</p>
+					<p class="text-center"><?php echo lang('admin.news_fetcher_status.explanation'); ?></p>
 					<div class="text-center pb-3">
-						<a href="news_fetcher_status.php" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span>Refresca</a>
+						<a href="news_fetcher_status.php" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span><?php echo lang('admin.generic.refresh'); ?></a>
 					</div>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col" style="width: 18%;">Fansub i URL</th>
-								<th scope="col" style="width: 12%;" class="text-center">Freqüència</th>
-								<th scope="col" style="width: 12%;" class="text-center">Estat</th>
-								<th scope="col" style="width: 12%;" class="text-center">Darrera connexió</th>
-								<th scope="col" style="width: 12%;" class="text-center">Darrer resultat</th>
+								<th scope="col" style="width: 18%;"><?php echo lang('admin.news_fetcher_status.fansub_and_url'); ?></th>
+								<th scope="col" style="width: 12%;" class="text-center"><?php echo lang('admin.news_fetcher_status.frequency'); ?></th>
+								<th scope="col" style="width: 12%;" class="text-center"><?php echo lang('admin.news_fetcher_status.status'); ?></th>
+								<th scope="col" style="width: 12%;" class="text-center"><?php echo lang('admin.news_fetcher_status.last_connection'); ?></th>
+								<th scope="col" style="width: 12%;" class="text-center"><?php echo lang('admin.news_fetcher_status.last_result'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -101,7 +102,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="5" class="text-center">- No hi ha cap recollidor -</td>
+								<td colspan="5" class="text-center"><?php echo lang('admin.news_fetcher_status.empty'); ?></td>
 							</tr>
 <?php
 	}
@@ -111,7 +112,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars($row['name']).'<br><small>'.htmlspecialchars($row['url']).'</small>'; ?></th>
 								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo show_fetch_type($row['fetch_type']); ?></td>
 								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo show_status($row['status']); ?></td>
-								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo ($row['last_fetch_date']!=NULL ? relative_time(strtotime($row['last_fetch_date'])) : 'Mai'); ?></td>
+								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo ($row['last_fetch_date']!=NULL ? relative_time(strtotime($row['last_fetch_date'])) : lang('admin.generic.date_never')); ?></td>
 								<td class="align-middle text-center<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><strong><?php echo show_last_result($row['last_fetch_result'], $row['last_fetch_increment'], $row['fetch_type']); ?></strong></td>
 							</tr>
 <?php

@@ -1,20 +1,21 @@
 <?php
-$header_title="Llista de fansubs - Fansubs";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.fansub_list.header');
 $page="fansub";
 include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id']) && $_SESSION['admin_level']>=3) {
-		log_action("delete-fansub", "S’ha suprimit el fansub «".query_single("SELECT name FROM fansub WHERE id=".escape($_GET['delete_id']))."» (id. de fansub: ".$_GET['delete_id'].")");
+		log_action("delete-fansub", "Fansub «".query_single("SELECT name FROM fansub WHERE id=".escape($_GET['delete_id']))."» (fansub id: ".$_GET['delete_id'].") deleted");
 		query("DELETE FROM fansub WHERE id=".escape($_GET['delete_id']));
 		@unlink(STATIC_DIRECTORY.'/images/icons/'.$_GET['delete_id'].'.jpg');
-		$_SESSION['message']="S’ha suprimit correctament.";
+		$_SESSION['message']=lang('admin.generic.delete_successful');
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Llista de fansubs</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.fansub_list.title'); ?></h4>
 					<hr>
 
 <?php
@@ -28,14 +29,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Nom</th>
-								<th scope="col">Enllaços</th>
-								<th class="text-center" scope="col">Estat</th>
-								<th class="text-center" scope="col">Notícies</th>
-								<th class="text-center" scope="col">Versions<br />d’anime</th>
-								<th class="text-center" scope="col">Versions<br />de&nbsp;manga</th>
-								<th class="text-center" scope="col">Versions<br />d’imatge&nbsp;real</th>
-								<th class="text-center" scope="col">Accions</th>
+								<th scope="col"><?php echo lang('admin.fansub_list.name'); ?></th>
+								<th scope="col"><?php echo lang('admin.fansub_list.links'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.fansub_list.status'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.fansub_list.news'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.fansub_list.anime_versions'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.fansub_list.manga_versions'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.fansub_list.liveaction_versions'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -44,7 +45,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="8" class="text-center">- No hi ha cap fansub -</td>
+								<td colspan="8" class="text-center"><?php echo lang('admin.fansub_list.empty'); ?></td>
 							</tr>
 <?php
 	}
@@ -57,51 +58,51 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$links = '';
 		if (!empty($row['url'])) {
-			$links.='<a href="'.htmlspecialchars($row['url']) . '" target="_blank">Web'.($row['is_historical']==1 ? ' (morta)' : '') . '</a>';
+			$links.='<a href="'.htmlspecialchars($row['url']) . '" target="_blank">'.($row['is_historical']==1 ? lang('admin.fansub_list.web_dead') : lang('admin.fansub_list.web')) . '</a>';
 		}
 		if (!empty($row['bluesky_url'])) {
 			if (!empty($links)){
 				$links.=' | ';
 			}
-			$links.='<a href="'.htmlspecialchars($row['bluesky_url']).'" target="_blank">Bluesky</a>';
+			$links.='<a href="'.htmlspecialchars($row['bluesky_url']).'" target="_blank">'.lang('admin.fansub_list.bluesky').'</a>';
 		}
 		if (!empty($row['discord_url'])) {
 			if (!empty($links)){
 				$links.=' | ';
 			}
-			$links.='<a href="'.htmlspecialchars($row['discord_url']).'" target="_blank">Discord</a>';
+			$links.='<a href="'.htmlspecialchars($row['discord_url']).'" target="_blank">'.lang('admin.fansub_list.discord').'</a>';
 		}
 		if (!empty($row['mastodon_url'])) {
 			if (!empty($links)){
 				$links.=' | ';
 			}
-			$links.='<a href="'.htmlspecialchars($row['mastodon_url']).'" target="_blank">Mastodon</a>';
+			$links.='<a href="'.htmlspecialchars($row['mastodon_url']).'" target="_blank">'.lang('admin.fansub_list.mastodon').'</a>';
 		}
 		if (!empty($row['twitter_url'])) {
 			if (!empty($links)){
 				$links.=' | ';
 			}
-			$links.='<a href="'.htmlspecialchars($row['twitter_url']).'" target="_blank">X</a>';
+			$links.='<a href="'.htmlspecialchars($row['twitter_url']).'" target="_blank">'.lang('admin.fansub_list.twitter').'</a>';
 		}
 		if (!empty($row['archive_url'])) {
 			if (!empty($links)){
 				$links.=' | ';
 			}
-			$links.='<a href="'.htmlspecialchars($row['archive_url']).'" target="_blank">Web a Archive.org</a>';
+			$links.='<a href="'.htmlspecialchars($row['archive_url']).'" target="_blank">'.lang('admin.fansub_list.archive_site').'</a>';
 		}
 		echo $links;
 ?>
 								</td>
-								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['status']==1 ? 'Actiu' : 'Inactiu'; ?></td>
+								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['status']==1 ? lang('admin.fansub_list.status.active') : lang('admin.fansub_list.status.inactive'); ?></td>
 								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['news']; ?></td>
 								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['anime_versions']; ?></td>
 								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['manga_versions']; ?></td>
 								<td class="align-middle text-center<?php echo $row['status']==1 ? '' : ' text-muted'; ?>"><?php echo $row['liveaction_versions']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="fansub_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a>
+								<td class="align-middle text-center text-nowrap"><a href="fansub_edit.php?id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a>
 <?php
 		if (empty($_SESSION['fansub_id']) || (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id']) && $_SESSION['fansub_id']!=$row['id']))  {
 ?>
-<a href="fansub_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el fansub «".$row['name']."» i tot el seu material? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
+<a href="fansub_list.php?delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf(lang('admin.fansub_list.delete_confirm'), $row['name']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
 <?php
 		}
 ?>
@@ -117,7 +118,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($_SESSION['admin_level']>=3) {
 ?>
 					<div class="text-center">
-						<a href="fansub_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un fansub</a>
+						<a href="fansub_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.fansub_list.create_button'); ?></a>
 					</div>
 <?php
 	}

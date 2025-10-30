@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/../common/initialization.inc.php');
+
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
@@ -9,68 +11,59 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Estadístiques de la versió d’anime - Anime";
 		$page="anime";
-	break;
-	case 'manga':
-		$header_title="Estadístiques de la versió de manga - Manga";
-		$page="manga";
-	break;
-	case 'liveaction':
-		$header_title="Estadístiques de la versió d’imatge real - Imatge real";
-		$page="liveaction";
-	break;
-}
-
-include(__DIR__.'/header.inc.php');
-
-switch ($type) {
-	case 'anime':
+		$header_title=lang('admin.version_stats.header.anime');
 		$viewed_content_divide=3600;
-		$series_a='Visualitzacions';
-		$series_b='Clics';
-		$series_c='Temps de visualització';
-		$series_a_graph='Visualitzacions';
-		$series_b_graph='Clics';
-		$series_c_graph='Temps de visualització (h)';
-		$series_a_short='Visualitzacions';
-		$series_b_short='Clics';
-		$series_c_short='Temps total';
+		$series_a=lang('admin.version_stats.views');
+		$series_b=lang('admin.version_stats.clicks');
+		$series_c=lang('admin.version_stats.time');
+		$series_a_graph=lang('admin.version_stats.views.graph');
+		$series_b_graph=lang('admin.version_stats.clicks.graph');
+		$series_c_graph=lang('admin.version_stats.time.graph');
+		$series_a_short=lang('admin.version_stats.views.column');
+		$series_b_short=lang('admin.version_stats.clicks.column');
+		$series_c_short=lang('admin.version_stats.time.column');
 		$series_c_color='rgb(40, 167, 69)';
 		$start_date=STARTING_DATE;
 		$link_url=ANIME_URL;
 	break;
-	case 'liveaction':
-		$viewed_content_divide=3600;
-		$series_a='Visualitzacions';
-		$series_b='Clics';
-		$series_c='Temps de visualització';
-		$series_a_graph='Visualitzacions';
-		$series_b_graph='Clics';
-		$series_c_graph='Temps de visualització (h)';
-		$series_a_short='Visualitzacions';
-		$series_b_short='Clics';
-		$series_c_short='Temps total';
-		$series_c_color='rgb(40, 167, 69)';
-		$start_date=STARTING_DATE;
-		$link_url=LIVEACTION_URL;
-	break;
 	case 'manga':
+		$page="manga";
+		$header_title=lang('admin.version_stats.header.manga');
 		$viewed_content_divide=1;
-		$series_a='Lectures';
-		$series_b='Clics';
-		$series_c='Pàgines llegides';
-		$series_a_graph='Lectures';
-		$series_b_graph='Clics';
-		$series_c_graph='Pàgines llegides';
-		$series_a_short='Lectures';
-		$series_b_short='Clics';
-		$series_c_short='Pàg. totals';
+		$series_a=lang('admin.version_stats.reads');
+		$series_b=lang('admin.version_stats.clicks');
+		$series_c=lang('admin.version_stats.pages_read');
+		$series_a_graph=lang('admin.version_stats.reads.graph');
+		$series_b_graph=lang('admin.version_stats.clicks.graph');
+		$series_c_graph=lang('admin.version_stats.pages_read.graph');
+		$series_a_short=lang('admin.version_stats.reads.column');
+		$series_b_short=lang('admin.version_stats.clicks.column');
+		$series_c_short=lang('admin.version_stats.pages_read.column');
 		$series_c_color='rgb(167, 167, 69)';
 		$start_date=STARTING_DATE;
 		$link_url=MANGA_URL;
 	break;
+	case 'liveaction':
+		$page="liveaction";
+		$header_title=lang('admin.version_stats.header.liveaction');
+		$viewed_content_divide=3600;
+		$series_a=lang('admin.version_stats.views');
+		$series_b=lang('admin.version_stats.clicks');
+		$series_c=lang('admin.version_stats.time');
+		$series_a_graph=lang('admin.version_stats.views.graph');
+		$series_b_graph=lang('admin.version_stats.clicks.graph');
+		$series_c_graph=lang('admin.version_stats.time.graph');
+		$series_a_short=lang('admin.version_stats.views.column');
+		$series_b_short=lang('admin.version_stats.clicks.column');
+		$series_c_short=lang('admin.version_stats.time.column');
+		$series_c_color='rgb(40, 167, 69)';
+		$start_date=STARTING_DATE;
+		$link_url=LIVEACTION_URL;
+	break;
 }
+
+include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1 && !empty($_GET['id']) && is_numeric($_GET['id'])) {
 	$max_days=60;
@@ -78,30 +71,30 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$max_days = intval($_GET['max_days']);
 	}
 	$result = query("SELECT v.*, s.name series_name, GROUP_CONCAT(f.name ORDER BY f.name SEPARATOR ' + ') fansub_name FROM version v LEFT JOIN series s ON v.series_id=s.id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE v.id=".escape($_GET['id'])." GROUP BY v.id");
-	$row = mysqli_fetch_assoc($result) or crash('Version not found');
+	$row = mysqli_fetch_assoc($result) or crash(lang('admin.error.version_not_found'));
 	$slug = $row['slug'];
 	mysqli_free_result($result);
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Estadístiques de la versió</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.version_stats.title'); ?></h4>
 					<hr>
-					<p class="text-center">Aquestes són les estadístiques de la versió de «<b><?php echo htmlspecialchars($row['title']); ?></b>» feta per <?php echo htmlspecialchars($row['fansub_name']); ?>.</p>
+					<p class="text-center"><?php echo sprintf(lang('admin.version_stats.explanation'), htmlspecialchars($row['title']), htmlspecialchars($row['fansub_name'])); ?></p>
 <?php
 	$result = query("SELECT IFNULL(SUM(clicks),0) total_clicks, IFNULL(SUM(views),0) total_views, IFNULL(SUM(total_length),0) total_length, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=".escape($_GET['id']).") good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=".escape($_GET['id']).") bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=".escape($_GET['id']).") num_comments FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE f.version_id=".escape($_GET['id']));
 	$totals = mysqli_fetch_assoc($result);
 	mysqli_free_result($result);
 ?>
 					<div class="row">
-						<div class="col-sm-4 text-center"><b><?php echo $series_a; ?>:</b> <?php echo $totals['total_views']; ?></div>
-						<div class="col-sm-4 text-center"><b><?php echo $series_b; ?>:</b> <?php echo $totals['total_clicks']; ?></div>
-						<div class="col-sm-4 text-center"><b><?php echo $series_c; ?>:</b> <?php echo $type=='manga' ? $totals['total_length'] : get_hours_or_minutes_formatted($totals['total_length']); ?></div>
+						<div class="col-sm-4 text-center"><b><?php echo $series_a; ?></b> <?php echo $totals['total_views']; ?></div>
+						<div class="col-sm-4 text-center"><b><?php echo $series_b; ?></b> <?php echo $totals['total_clicks']; ?></div>
+						<div class="col-sm-4 text-center"><b><?php echo $series_c; ?></b> <?php echo $type=='manga' ? $totals['total_length'] : get_hours_or_minutes_formatted($totals['total_length']); ?></div>
 					</div>
 					<div class="row">
-						<div class="col-sm-4 text-center"><b>Valoracions positives:</b> <?php echo $totals['good_ratings']; ?></div>
-						<div class="col-sm-4 text-center"><b>Valoracions negatives:</b> <?php echo $totals['bad_ratings']; ?></div>
-						<div class="col-sm-4 text-center"><b>Comentaris d’usuaris:</b> <?php echo $totals['num_comments']; ?></div>
+						<div class="col-sm-4 text-center"><b><?php echo lang('admin.version_stats.positive_ratings'); ?></b> <?php echo $totals['good_ratings']; ?></div>
+						<div class="col-sm-4 text-center"><b><?php echo lang('admin.version_stats.negative_ratings'); ?></b> <?php echo $totals['bad_ratings']; ?></div>
+						<div class="col-sm-4 text-center"><b><?php echo lang('admin.version_stats.user_comments'); ?></b> <?php echo $totals['num_comments']; ?></div>
 					</div>
 				</article>
 			</div>
@@ -109,18 +102,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Comentaris dels usuaris</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.version_stats.user_comments.title'); ?></h4>
 					<hr>
 					<div class="row">
 						<table class="table table-hover table-striped">
 							<thead class="table-dark">
 								<tr>
-									<th scope="col" style="width: 10%;">Usuari</th>
-									<th scope="col" style="width: 65%;">Comentari</th>
-									<th scope="col" style="width: 10%;" class="text-center">Data</th>
-									<th scope="col" style="width: 5%;" class="text-center">Espòiler</th>
-									<th scope="col" style="width: 5%;" class="text-center">Respost</th>
-									<th class="text-center" scope="col">Accions</th>
+									<th scope="col" style="width: 10%;"><?php echo lang('admin.version_stats.user_comments.user'); ?></th>
+									<th scope="col" style="width: 65%;"><?php echo lang('admin.version_stats.user_comments.comment'); ?></th>
+									<th scope="col" style="width: 10%;" class="text-center"><?php echo lang('admin.version_stats.user_comments.date'); ?></th>
+									<th scope="col" style="width: 5%;" class="text-center"><?php echo lang('admin.version_stats.user_comments.spoiler'); ?></th>
+									<th scope="col" style="width: 5%;" class="text-center"><?php echo lang('admin.version_stats.user_comments.replied'); ?></th>
+									<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -129,24 +122,24 @@ $result = query("SELECT c.*, s.name series_name, u.username, (SELECT GROUP_CONCA
 if (mysqli_num_rows($result)==0) {
 ?>
 								<tr>
-									<td colspan="6" class="text-center">- No hi ha cap comentari -</td>
+									<td colspan="6" class="text-center"><?php echo lang('admin.version_stats.user_comments.empty'); ?></td>
 								</tr>
 <?php
 }
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
 								<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-									<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>
-									<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></td>
+									<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : lang('admin.generic.deleted_user'); ?></td>
+									<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>'.lang('admin.generic.deleted_comment').'</i>'; ?></td>
 									<td class="align-middle text-center"><?php echo $row['created']; ?></td>
-									<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? 'Sí' : 'No'; ?></td>
-									<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? 'Sí' : 'No'; ?></td>
+									<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? lang('admin.generic.yes') : lang('admin.generic.no'); ?></td>
+									<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? lang('admin.generic.yes') : lang('admin.generic.no'); ?></td>
 									<td class="align-middle text-center text-nowrap">
-										<a href="comment_reply.php?id=<?php echo $row['id']; ?>&source_version_id=<?php echo $_GET['id']; ?>&source_type=<?php echo $type; ?>" title="Respon" class="fa fa-reply p-1"></a>
+										<a href="comment_reply.php?id=<?php echo $row['id']; ?>&source_version_id=<?php echo $_GET['id']; ?>&source_type=<?php echo $type; ?>" title="<?php echo lang('admin.generic.reply.title'); ?>" class="fa fa-reply p-1"></a>
 <?php
 if ($_SESSION['admin_level']>=3) {
 ?>
-										<a href="comment_list.php?delete_id=<?php echo $row['id']; ?>&source_version_id=<?php echo $_GET['id']; ?>&source_type=<?php echo $type; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el comentari seleccionat? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
+										<a href="comment_list.php?delete_id=<?php echo $row['id']; ?>&source_version_id=<?php echo $_GET['id']; ?>&source_type=<?php echo $type; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(lang('admin.comment_list.delete_confirm'))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
 <?php
 }
 ?>
@@ -158,9 +151,9 @@ mysqli_free_result($result);
 ?>
 							</tbody>
 						</table>
-						<p class="text-center text-muted small">En aquesta llista no es mostren els comentaris ni les respostes dels fansubs. Ho pots veure tot a la <a href="<?php echo $link_url.'/'.$slug; ?>" target="_blank">fitxa pública</a>.</p>
+						<p class="text-center text-muted small"><?php echo sprintf(lang('admin.version_stats.user_comments.explanation'), $link_url.'/'.$slug); ?></p>
 						<div class="text-center">
-							<a href="comment_reply.php?source_version_id=<?php echo $_GET['id']; ?>&source_type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un comentari del fansub</a>
+							<a href="comment_reply.php?source_version_id=<?php echo $_GET['id']; ?>&source_type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.version_stats.user_comments.add_fansub_comment_button'); ?></a>
 						</div>
 					</div>
 				</article>
@@ -169,14 +162,14 @@ mysqli_free_result($result);
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Evolució</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.version_stats.evolution'); ?></h4>
 					<hr>
 					<ul class="nav nav-tabs" id="stats_tabs" role="tablist">
 						<li class="nav-item">
-							<a class="nav-link active" id="monthly-tab" data-bs-toggle="tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="true">Mensualment (total)</a>
+							<a class="nav-link active" id="monthly-tab" data-bs-toggle="tab" href="#monthly" role="tab" aria-controls="monthly" aria-selected="true"><?php echo lang('admin.version_stats.evolution.monthly'); ?></a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" id="daily-tab" data-bs-toggle="tab" href="#daily" role="tab" aria-controls="daily" aria-selected="false">Diàriament (darrers <?php echo $max_days; ?> dies)</a>
+							<a class="nav-link" id="daily-tab" data-bs-toggle="tab" href="#daily" role="tab" aria-controls="daily" aria-selected="false"><?php echo sprintf(lang('admin.version_stats.evolution.daily'), $max_days); ?></a>
 						</li>
 					</ul>
 					<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
@@ -357,12 +350,12 @@ mysqli_free_result($result);
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Dades totals per capítol</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.version_stats.total_data_per_episode'); ?></h4>
 					<hr>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Capítol</th>
+								<th scope="col"><?php echo lang('admin.version_stats.total_data_per_episode.episode'); ?></th>
 								<th class="text-center" scope="col" style="width: 12%;"><?php echo $series_a_short; ?></th>
 								<th class="text-center" scope="col" style="width: 12%;"><?php echo $series_b_short; ?></th>
 								<th class="text-center" scope="col" style="width: 12%;"><?php echo $series_c_short; ?></th>
@@ -383,7 +376,7 @@ mysqli_free_result($result);
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				) episode_title
@@ -401,7 +394,7 @@ mysqli_free_result($result);
 	if (mysqli_num_rows($result)==0) {
 ?>
 								<tr>
-									<td colspan="4" class="text-center">- No hi ha cap capítol -</td>
+									<td colspan="4" class="text-center"><?php echo lang('admin.version_stats.total_data_per_episode.empty'); ?></td>
 								</tr>
 <?php
 	}

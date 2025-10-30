@@ -1,5 +1,6 @@
 <?php
-$header_title="Registre d’accions - Eines";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.admin_log.header');
 $page="tools";
 include(__DIR__.'/header.inc.php');
 
@@ -13,18 +14,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Registre d’accions</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.admin_log.title'); ?></h4>
 					<hr>
-					<p class="text-center">Es mostren les darreres 200 accions (les més noves primer).</p>
+					<p class="text-center"><?php echo sprintf(lang('admin.admin_log.description'), 200); ?></p>
 					<div class="d-flex justify-content-center pb-3">
 						<select class="form-select" style="width: unset;" onchange="location.href='admin_log.php?filter='+this.value;">
-							<option value="">Mostra els esdeveniments més rellevants</option>
-							<option value="ALL"<?php echo (!empty($_GET['filter']) && $_GET['filter']=='ALL') ? ' selected' : ''; ?>>Mostra tots els esdeveniments</option>
+							<option value=""><?php echo lang('admin.admin_log.show_only_relevant'); ?></option>
+							<option value="ALL"<?php echo (!empty($_GET['filter']) && $_GET['filter']=='ALL') ? ' selected' : ''; ?>><?php echo lang('admin.admin_log.show_all'); ?></option>
 <?php
 	$result = query("SELECT action, COUNT(*) count FROM admin_log GROUP BY action ORDER BY action ASC");
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<option value="<?php echo $row['action']; ?>"<?php echo (!empty($_GET['filter']) && $_GET['filter']==$row['action']) ? ' selected' : ''; ?>>Mostra només: <?php echo $row['action'].' ('.$row['count'].')'; ?></option>
+							<option value="<?php echo $row['action']; ?>"<?php echo (!empty($_GET['filter']) && $_GET['filter']==$row['action']) ? ' selected' : ''; ?>><?php echo sprintf(lang('admin.admin_log.show_only'), $row['action'], $row['count']); ?></option>
 <?php
 	}
 	mysqli_free_result($result);
@@ -32,15 +33,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</select>
 					</div>
 					<div class="text-center pb-3">
-						<a href="admin_log.php<?php echo (!empty($filter) ? "?filter=$filter" : '') ?>" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span>Refresca</a>
+						<a href="admin_log.php<?php echo (!empty($filter) ? "?filter=$filter" : '') ?>" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span><?php echo lang('admin.generic.refresh'); ?></a>
 					</div>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col" style="width: 18%;">Data i hora</th>
-								<th scope="col" style="width: 12%;">Usuari</th>
-								<th scope="col" style="width: 18%;">Acció</th>
-								<th scope="col">Text</th>
+								<th scope="col" style="width: 18%;"><?php echo lang('admin.admin_log.datetime'); ?></th>
+								<th scope="col" style="width: 12%;"><?php echo lang('admin.admin_log.user'); ?></th>
+								<th scope="col" style="width: 18%;"><?php echo lang('admin.admin_log.action'); ?></th>
+								<th scope="col"><?php echo lang('admin.admin_log.text'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -49,7 +50,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="5" class="text-center">- No hi ha cap acció -</td>
+								<td colspan="5" class="text-center"><?php echo lang('admin.admin_log.empty'); ?></td>
 							</tr>
 <?php
 	}

@@ -218,7 +218,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 			'position' => $position,
 			'rating' => $row['rating'],
 			'fansubs' => implode(' / ',array_unique(explode(' / ',$row['fansubs']))),
-			'views' => $row['max_views'].($row['max_views']==1 ? ' seguidor' : ' seguidors'),
+			'views' => $row['max_views'].($row['max_views']==1 ? lang('admin.twitter_image.follower') : lang('admin.twitter_image.followers')),
 			'change_in_position' => get_change_in_position_for_series($first_month, $row['series_id'], $position, $series_previous_month),
 			'change_in_views' => get_change_in_views_for_series($first_month, $row['series_id'], $row['max_views'], $series_previous_month),
 		);
@@ -245,7 +245,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		//Paste into canvas
 		imagecopy($image, $background, 0, 0, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 	} else {
-		imagefttext($image, 26, 0, 300, 350, imagecolorallocate($image, 0xCC, 0xCC, 0xCC), FONT_REGULAR, "No hi ha res vist en aquest període.");
+		imagefttext($image, 26, 0, 300, 350, imagecolorallocate($image, 0xCC, 0xCC, 0xCC), FONT_REGULAR, lang('admin.twitter_image.nothing_seen'));
 	}
 
 
@@ -264,28 +264,27 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 
 	switch ($type){
 		case 'manga':
-			$title="Mangues".($is_hentai ? ' hentai' : '')." més populars".(!empty($fansub) ? ' '.get_fansub_preposition_name($fansub['name']) : '');
+			$title=($is_hentai ? lang('admin.twitter_image.most_popular_manga.hentai') : lang('admin.twitter_image.most_popular_manga')).(!empty($fansub) ? ' '.get_fansub_preposition_name($fansub['name']) : '');
 			break;
 		case 'liveaction':
-			$title="Continguts d’imatge real més populars".(!empty($fansub) ? ' '.get_fansub_preposition_name($fansub['name']) : '');
+			$title=lang('admin.twitter_image.most_popular_liveaction').(!empty($fansub) ? ' '.get_fansub_preposition_name($fansub['name']) : '');
 			break;
 		case 'anime':
 		default:
-			$title="Animes".($is_hentai ? ' hentai' : '')." més populars".(!empty($fansub) ? ' '.get_fansub_preposition_name($fansub['name']) : '');
+			$title=($is_hentai ? lang('admin.twitter_image.most_popular_anime.hentai') : lang('admin.twitter_image.most_popular_anime')).(!empty($fansub) ? ' '.get_fansub_preposition_name($fansub['name']) : '');
 			break;
 	}
-	setlocale(LC_ALL, 'ca_AD.utf8');
 
 	switch($mode) {
 		case 'all':
-			$subtitle='Total '.STARTING_YEAR.'-'.date('Y');
+			$subtitle=sprintf(lang('admin.popular.total_years_lowercase'), STARTING_YEAR, date('Y'));
 			break;
 		case 'year':
-			$subtitle='Any '.strftime("%Y", strtotime(date($last_month.'-01')));
+			$subtitle=sprintf(lang('admin.popular.full_year_short'), strftime("%Y", strtotime(date($last_month.'-01'))));
 			break;
 		case 'month':
 		default:
-			$subtitle=ucfirst(str_replace('d’','', str_replace('de ','', strftime("%B %Y", strtotime(date($last_month.'-01'))))));
+			$subtitle=get_clean_month_name(strftime("%B %Y", strtotime(date($last_month.'-01'))));
 			break;
 	}
 
@@ -327,7 +326,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		}
 		if($series[$i]['change_in_position']==='N/A') {
 			$change_in_position_color=$yellow;
-			$change_in_position_text="NOU";
+			$change_in_position_text=lang('admin.twitter_image.new_uppercase');
 		} else if ($series[$i]['change_in_position']>0) {
 			$change_in_position_color=$green;
 			$change_in_position_text="▲".$series[$i]['change_in_position'];
@@ -340,7 +339,7 @@ if ((!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESS
 		}
 		if($series[$i]['change_in_views']==='N/A') {
 			$change_in_views_color=$yellow;
-			$change_in_views_text="nou";
+			$change_in_views_text=lang('admin.twitter_image.new_lowercase');
 		} else if ($series[$i]['change_in_views']>0) {
 			$change_in_views_color=$green;
 			$change_in_views_text="▲".$series[$i]['change_in_views'];

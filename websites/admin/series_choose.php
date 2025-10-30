@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/../common/initialization.inc.php');
+
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
@@ -9,49 +11,46 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Edició de versions - Anime";
 		$page="anime";
+		$header_title=lang('admin.series_choose.header.anime');
+		$type_title=lang('admin.series_choose.title.anime');
+		$empty_string=lang('admin.series_choose.empty.anime');
+		$create_string=lang('admin.series_choose.create_button.anime');
 	break;
 	case 'manga':
-		$header_title="Edició de versions - Manga";
 		$page="manga";
+		$header_title=lang('admin.series_choose.header.manga');
+		$type_title=lang('admin.series_choose.title.manga');
+		$empty_string=lang('admin.series_choose.empty.manga');
+		$create_string=lang('admin.series_choose.create_button.manga');
 	break;
 	case 'liveaction':
-		$header_title="Edició de versions - Imatge real";
 		$page="liveaction";
+		$header_title=lang('admin.series_choose.header.liveaction');
+		$type_title=lang('admin.series_choose.title.liveaction');
+		$empty_string=lang('admin.series_choose.empty.liveaction');
+		$create_string=lang('admin.series_choose.create_button.liveaction');
 	break;
 }
 
 include(__DIR__.'/header.inc.php');
-
-switch ($type) {
-	case 'anime':
-		$content="anime";
-	break;
-	case 'manga':
-		$content="manga";
-	break;
-	case 'liveaction':
-		$content="contingut d’imatge real";
-	break;
-}
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">De quin <?php echo $content; ?> vols crear una versió?</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo $type_title; ?></h4>
 					<hr>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Nom</th>
-								<th class="text-center" scope="col">Tipus</th>
-								<th class="text-center" scope="col">Divisions</th>
-								<th class="text-center" scope="col">Capítols</th>
-								<th class="text-center" scope="col">Versions</th>
-								<th class="text-center" scope="col">Acció</th>
+								<th scope="col"><?php echo lang('admin.series_choose.title'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.series_choose.type'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.series_choose.divisions'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.series_choose.episodes'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.series_choose.versions'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.generic.action'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -60,7 +59,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="6" class="text-center">- No hi ha cap <?php echo $content; ?> -</td>
+								<td colspan="6" class="text-center"><?php echo $empty_string; ?></td>
 							</tr>
 <?php
 	}
@@ -77,7 +76,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['divisions']; ?><?php echo $row['fake_divisions']>0 ? '<small>+'.$row['fake_divisions'].'</small>' : ''; ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['number_of_episodes']; ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['versions']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea’n una versió" class="fa fa-plus-square p-1 text-success"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.series_choose.create_version.title'); ?>" class="fa fa-plus-square p-1 text-success"></a></td>
 							</tr>
 <?php
 	}
@@ -89,7 +88,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if ($_SESSION['admin_level']>=2) {
 ?>
 					<div class="text-center">
-						<a href="series_edit.php?type=<?php echo $type; ?>" class="btn btn-primary">No hi és? Afegeix un <?php echo $content; ?> nou</a>
+						<a href="series_edit.php?type=<?php echo $type; ?>" class="btn btn-primary"><?php echo $create_string; ?></a>
 					</div>
 <?php
 	}

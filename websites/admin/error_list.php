@@ -1,32 +1,33 @@
 <?php
-$header_title="Errors de reproducció - Anàlisi";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.error_list.header');
 $page="analytics";
 include(__DIR__.'/header.inc.php');
 
 function get_error_type($type) {
 	switch ($type) {
 		case 'mega-unknown':
-			return 'MEGA: Error desconegut';
+			return lang('admin.error_list.error_type.mega_unknown');
 		case 'mega-unavailable':
-			return '<span class="text-danger">MEGA: Contingut eliminat</span>';
+			return '<span class="text-danger">'.lang('admin.error_list.error_type.mega_unavailable').'</span>';
 		case 'mega-quota-exceeded':
-			return '<span class="text-primary">MEGA: Límit superat</span>';
+			return '<span class="text-primary">'.lang('admin.error_list.error_type.mega_quota_exceeded').'</span>';
 		case 'mega-player-failed':
-			return 'MEGA: Error de reproducció';
+			return lang('admin.error_list.error_type.mega_player_failed');
 		case 'mega-incompatible-browser':
-			return 'MEGA: Navegador no compatible';
+			return lang('admin.error_list.error_type.mega_incompatible_browser');
 		case 'mega-connection-error':
-			return 'MEGA: Error de connexió';
+			return lang('admin.error_list.error_type.mega_connection_error');
 		case 'mega-load-failed':
-			return 'MEGA: Error de càrrega';
+			return lang('admin.error_list.error_type.mega_load_failed');
 		case 'direct-load-failed': //No longer exists, kept for old logs
-			return 'Vídeo: Error de càrrega';
+			return lang('admin.error_list.error_type.direct_load_failed');
 		case 'direct-player-failed':
-			return 'Vídeo: Error de reproducció';
+			return lang('admin.error_list.error_type.direct_player_failed');
 		case 'page-too-old':
-			return 'Vídeo: Pàgina massa antiga';
+			return lang('admin.error_list.error_type.page_too_old');
 		case 'unknown':
-			return 'Error desconegut';
+			return lang('admin.error_list.error_type.unknown');
 		default:
 			return $type;
 	}
@@ -41,21 +42,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Errors de reproducció</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.error_list.title'); ?></h4>
 					<hr>
-					<p class="text-center">Aquests són els darrers 100 errors de reproducció que han tingut els usuaris.</p>
+					<p class="text-center"><?php echo sprintf(lang('admin.error_list.last_n_errors'), 100); ?></p>
 					<div class="text-center pb-3">
-						<a href="error_list.php" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
+						<a href="error_list.php" class="btn btn-primary"><span class="fa fa-redo pe-2"></span><?php echo lang('admin.generic.refresh'); ?></a>
 					</div>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col" style="width: 35%;">Contingut i capítol</th>
-								<th scope="col" style="width: 25%;" class="text-center">Error</th>
-								<th scope="col" style="width: 5%;" class="text-center">Posició</th>
-								<th scope="col" style="width: 10%;" class="text-center">Usuari</th>
-								<th scope="col" style="width: 20%;" class="text-center">Data</th>
-								<th scope="col" style="width: 5%;" class="text-center">Accions</th>
+								<th scope="col" style="width: 35%;"><?php echo lang('admin.error_list.content_and_episode'); ?></th>
+								<th scope="col" style="width: 25%;" class="text-center"><?php echo lang('admin.error_list.error'); ?></th>
+								<th scope="col" style="width: 5%;" class="text-center"><?php echo lang('admin.error_list.position'); ?></th>
+								<th scope="col" style="width: 10%;" class="text-center"><?php echo lang('admin.error_list.user'); ?></th>
+								<th scope="col" style="width: 20%;" class="text-center"><?php echo lang('admin.error_list.date'); ?></th>
+								<th scope="col" style="width: 5%;" class="text-center"><?php echo lang('admin.generic.actions'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -69,11 +70,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				v.title,
 				GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') fansub_name,
 				IF (f.episode_id IS NULL,
-					CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+					CONCAT(v.title, ' - ".lang('admin.query.extra_division')." - ', f.extra_name),
 					IF(s.subtype='movie' OR s.subtype='oneshot',
 						IFNULL(et.title, v.title),
 						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-							CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+							CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 							CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 						)
 					)
@@ -104,7 +105,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="6" class="text-center">- No hi ha cap error -</td>
+								<td colspan="6" class="text-center"><?php echo lang('admin.error_list.empty'); ?></td>
 							</tr>
 <?php
 	}
@@ -120,7 +121,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 		if (!empty($row['file_id'])) {
 ?>
-<a href="version_edit.php?type=<?php echo $row['series_type']; ?>&id=<?php echo $row['version_id']; ?>" title="Edita la versió" class="fa fa-edit p-1"></a> 
+<a href="version_edit.php?type=<?php echo $row['series_type']; ?>&id=<?php echo $row['version_id']; ?>" title="<?php echo lang('admin.error_list.edit_version.title'); ?>" class="fa fa-edit p-1"></a> 
 <?php
 			$resultli = query("SELECT * FROM link WHERE file_id=${row['file_id']}");
 			$count=0;
@@ -128,7 +129,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				if ($count==0) {
 					echo "<br>";
 				}
-				echo '	<a href="'.$link['url'].'" target="_blank" title="Obre l\'enllaç" class="fa fa-external-link-alt p-1 text-success"></a>';
+				echo '	<a href="'.$link['url'].'" target="_blank" title="'.lang('admin.generic.link.title').'" class="fa fa-external-link-alt p-1 text-success"></a>';
 				$count++;
 			}
 			mysqli_free_result($resultli);

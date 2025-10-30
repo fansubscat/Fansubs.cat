@@ -1,5 +1,6 @@
 <?php
-$header_title="Estadístiques - Anàlisi";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.stats.header');
 $page="analytics";
 include(__DIR__.'/header.inc.php');
 
@@ -25,13 +26,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($fansub)) {
 ?>
 				<li class="nav-item">
-					<a class="nav-link active" id="fansub-tab" data-bs-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
+					<a class="nav-link active" id="fansub-tab" data-bs-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true"><?php echo sprintf(lang('admin.stats.title.fansub'), get_fansub_preposition_name($fansub['name'])); ?></a>
 				</li>
 <?php
 	}
 ?>
 				<li class="nav-item">
-					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-bs-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Estadístiques totals</a>
+					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-bs-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false"><?php echo lang('admin.stats.title.total'); ?></a>
 				</li>
 			</ul>
 			<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
@@ -39,7 +40,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estadístiques totals</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.title.total'); ?></h4>
 								<hr>
 		<?php
 			$result = query("SELECT (SELECT COUNT(*) FROM fansub) total_fansubs, (SELECT COUNT(*) FROM news) total_news, (SELECT COUNT(*) FROM comment) total_comments, (SELECT COUNT(DISTINCT user_id) FROM view_session WHERE view_counted IS NOT NULL) total_consuming_users, (SELECT COUNT(*) FROM user) total_users, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1) total_positive_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1) total_negative_ratings, (SELECT COUNT(*) FROM series WHERE type='anime') total_anime, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime') total_anime_versions, (SELECT COUNT(*) FROM series WHERE type='manga') total_manga, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga') total_manga_versions, (SELECT COUNT(*) FROM series WHERE type='liveaction') total_liveaction, (SELECT COUNT(*) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction') total_liveaction_versions, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='anime') total_anime_files, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='manga') total_manga_files, (SELECT COUNT(*) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE f.is_lost=0 AND s.type='liveaction') total_liveaction_files, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_anime_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_manga_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_liveaction_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='anime') total_anime_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='anime') total_anime_views, (SELECT IFNULL(SUM(total_length),0) FROM views WHERE type='anime') total_anime_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='manga') total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='manga') total_manga_views, (SELECT IFNULL(SUM(total_length),0) FROM views WHERE type='manga') total_manga_pages_read, (SELECT IFNULL(SUM(clicks),0) FROM views WHERE type='liveaction') total_liveaction_clicks, (SELECT IFNULL(SUM(views),0) FROM views WHERE type='liveaction') total_liveaction_views, (SELECT IFNULL(SUM(total_length),0) FROM views WHERE type='liveaction') total_liveaction_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_anime_episodes, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_manga_chapters, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.episode_id IS NOT NULL AND f.is_lost=0) total_linked_liveaction_episodes, (SELECT IFNULL(SUM(f.length),0) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0) total_anime_duration, (SELECT IFNULL(SUM(f.length),0) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0) total_manga_pages, (SELECT IFNULL(SUM(f.length),0) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0) total_liveaction_duration");
@@ -47,69 +48,69 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			mysqli_free_result($result);
 		?>
 								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Nombre d’elements:</h5></div>
+									<div class="col-sm text-center pb-1"><h5><?php echo lang('admin.stats.number_of_items'); ?></h5></div>
 
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Animes:</b><br><?php echo $totals['total_anime']; ?> <small>(duplicats: <?php echo $totals['total_anime_duplicity']; ?>)</small></div>
-										<div class="col-sm-4 text-center"><b>Mangues:</b><br><?php echo $totals['total_manga']; ?> <small>(duplicats: <?php echo $totals['total_manga_duplicity']; ?>)</small></div>
-										<div class="col-sm-4 text-center"><b>Contingut d’imatge real:</b><br><?php echo $totals['total_liveaction']; ?> <small>(duplicats: <?php echo $totals['total_liveaction_duplicity']; ?>)</small></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.animes'); ?></b><br><?php echo $totals['total_anime']; ?> <small><?php echo sprintf(lang('admin.stats.duplicity'), $totals['total_anime_duplicity']); ?></small></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.mangas'); ?></b><br><?php echo $totals['total_manga']; ?> <small><?php echo sprintf(lang('admin.stats.duplicity'), $totals['total_manga_duplicity']); ?></small></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.liveactions'); ?></b><br><?php echo $totals['total_liveaction']; ?> <small><?php echo sprintf(lang('admin.stats.duplicity'), $totals['total_liveaction_duplicity']); ?></small></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Versions d’anime:</b><br><?php echo $totals['total_anime_versions']; ?></div>
-										<div class="col-sm-4 text-center"><b>Versions de manga:</b><br><?php echo $totals['total_manga_versions']; ?></div>
-										<div class="col-sm-4 text-center"><b>Versions d’imatge real:</b><br><?php echo $totals['total_liveaction_versions']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.anime_versions'); ?></b><br><?php echo $totals['total_anime_versions']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.manga_versions'); ?></b><br><?php echo $totals['total_manga_versions']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.liveaction_versions'); ?></b><br><?php echo $totals['total_liveaction_versions']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Fansubs:</b><br><?php echo $totals['total_fansubs']; ?></div>
-										<div class="col-sm-4 text-center"><b>Notícies:</b><br><?php echo $totals['total_news']; ?></div>
-										<div class="col-sm-4 text-center"><b>Comentaris:</b><br><?php echo $totals['total_comments']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.fansubs'); ?></b><br><?php echo $totals['total_fansubs']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.news'); ?></b><br><?php echo $totals['total_news']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.comments'); ?></b><br><?php echo $totals['total_comments']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Usuaris visualitzadors:</b><br><?php echo $totals['total_consuming_users']; ?> de <?php echo $totals['total_users']; ?></div>
-										<div class="col-sm-4 text-center"><b>Valoracions positives:</b><br><?php echo $totals['total_positive_ratings']; ?></div>
-										<div class="col-sm-4 text-center"><b>Valoracions negatives:</b><br><?php echo $totals['total_negative_ratings']; ?></div>
-									</div>
-								</div>
-								<hr>
-								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Anime:</h5></div>
-									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Capítols editats:</b><br><?php echo $totals['total_linked_anime_episodes']; ?></div>
-										<div class="col-sm-4 text-center"><b>Fitxers totals:</b><br><?php echo $totals['total_anime_files']; ?></div>
-										<div class="col-sm-4 text-center"><b>Durada total:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_duration']); ?></div>
-									</div>
-									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo max(0, $totals['total_anime_clicks']); ?></div>
-										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_anime_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_time_spent']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.users_with_views'); ?></b><br><?php echo sprintf(lang('admin.stats.users_with_views.details'), $totals['total_consuming_users'], $totals['total_users']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.positive_ratings'); ?></b><br><?php echo $totals['total_positive_ratings']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.negative_ratings'); ?></b><br><?php echo $totals['total_negative_ratings']; ?></div>
 									</div>
 								</div>
 								<hr>
 								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Manga:</h5></div>
+									<div class="col-sm text-center pb-1"><h5><?php echo lang('admin.stats.category_anime'); ?></h5></div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Capítols editats:</b><br><?php echo $totals['total_linked_manga_chapters']; ?></div>
-										<div class="col-sm-4 text-center"><b>Fitxers totals:</b><br><?php echo $totals['total_manga_files']; ?></div>
-										<div class="col-sm-4 text-center"><b>Pàgines totals:</b><br><?php echo $totals['total_manga_pages']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.edited_episodes'); ?></b><br><?php echo $totals['total_linked_anime_episodes']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_files'); ?></b><br><?php echo $totals['total_anime_files']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_duration'); ?></b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_duration']); ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo max(0, $totals['total_manga_clicks']); ?></div>
-										<div class="col-sm-4 text-center"><b>Lectures:</b><br><?php echo $totals['total_manga_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Pàgines totals llegides:</b><br><?php echo $totals['total_manga_pages_read']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_clicks'); ?></b><br><?php echo max(0, $totals['total_anime_clicks']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_views'); ?></b><br><?php echo $totals['total_anime_views']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_time_viewed'); ?></b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_time_spent']); ?></div>
 									</div>
 								</div>
 								<hr>
 								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Imatge real:</h5></div>
+									<div class="col-sm text-center pb-1"><h5><?php echo lang('admin.stats.category_manga'); ?></h5></div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Capítols editats:</b><br><?php echo $totals['total_linked_liveaction_episodes']; ?></div>
-										<div class="col-sm-4 text-center"><b>Fitxers totals:</b><br><?php echo $totals['total_liveaction_files']; ?></div>
-										<div class="col-sm-4 text-center"><b>Durada total:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_duration']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.edited_episodes'); ?></b><br><?php echo $totals['total_linked_manga_chapters']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_files'); ?></b><br><?php echo $totals['total_manga_files']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_pages'); ?></b><br><?php echo $totals['total_manga_pages']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo max(0, $totals['total_liveaction_clicks']); ?></div>
-										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_liveaction_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_time_spent']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_clicks'); ?></b><br><?php echo max(0, $totals['total_manga_clicks']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_reads'); ?></b><br><?php echo $totals['total_manga_views']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_pages_read'); ?></b><br><?php echo $totals['total_manga_pages_read']; ?></div>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-sm text-center pb-1"><h5><?php echo lang('admin.stats.category_liveaction'); ?></h5></div>
+									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.edited_episodes'); ?></b><br><?php echo $totals['total_linked_liveaction_episodes']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_files'); ?></b><br><?php echo $totals['total_liveaction_files']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_duration'); ?></b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_duration']); ?></div>
+									</div>
+									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_clicks'); ?></b><br><?php echo max(0, $totals['total_liveaction_clicks']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_views'); ?></b><br><?php echo $totals['total_liveaction_views']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_time_viewed'); ?></b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_time_spent']); ?></div>
 									</div>
 								</div>
 							</article>
@@ -118,15 +119,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució de l’anime</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.anime_evolution'); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs_anime" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="anime-daily-tab" data-bs-toggle="tab" href="#anime-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="anime-daily-tab" data-bs-toggle="tab" href="#anime-daily" role="tab" aria-controls="daily" aria-selected="true"><?php echo sprintf(lang('admin.stats.daily_evolution'), $max_days); ?></a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="anime-monthly-tab" data-bs-toggle="tab" href="#anime-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
+										<a class="nav-link" id="anime-monthly-tab" data-bs-toggle="tab" href="#anime-monthly" role="tab" aria-controls="monthly" aria-selected="true"><?php echo lang('admin.stats.monthly_evolution'); ?></a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -167,7 +168,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -175,7 +176,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Visualitzacions',
+														label: '<?php echo lang('admin.stats.label_views'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -183,7 +184,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Temps de visualització (h)',
+														label: '<?php echo lang('admin.stats.label_view_time'); ?>',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
@@ -245,7 +246,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -253,7 +254,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Visualitzacions',
+														label: '<?php echo lang('admin.stats.label_views'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -261,7 +262,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Temps de visualització (h)',
+														label: '<?php echo lang('admin.stats.label_view_time'); ?>',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
@@ -292,15 +293,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució del manga</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.manga_evolution'); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs_manga" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="manga-daily-tab" data-bs-toggle="tab" href="#manga-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="manga-daily-tab" data-bs-toggle="tab" href="#manga-daily" role="tab" aria-controls="daily" aria-selected="true"><?php echo sprintf(lang('admin.stats.daily_evolution'), $max_days); ?></a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="manga-monthly-tab" data-bs-toggle="tab" href="#manga-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
+										<a class="nav-link" id="manga-monthly-tab" data-bs-toggle="tab" href="#manga-monthly" role="tab" aria-controls="monthly" aria-selected="true"><?php echo lang('admin.stats.monthly_evolution'); ?></a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -341,7 +342,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -349,7 +350,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Lectures',
+														label: '<?php echo lang('admin.stats.label_reads'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -357,7 +358,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Pàgines llegides',
+														label: '<?php echo lang('admin.stats.label_pages_read'); ?>',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
 														data: [<?php echo implode(',',$page_values); ?>],
@@ -419,7 +420,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -427,7 +428,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Lectures',
+														label: '<?php echo lang('admin.stats.label_reads'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -435,7 +436,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Pàgines llegides',
+														label: '<?php echo lang('admin.stats.label_pages_read'); ?>',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
 														data: [<?php echo implode(',',$page_values); ?>],
@@ -466,15 +467,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució del contingut d’imatge real</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.liveaction_evolution'); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs_liveaction" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="liveaction-daily-tab" data-bs-toggle="tab" href="#liveaction-daily" role="tab" aria-controls="daily" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="liveaction-daily-tab" data-bs-toggle="tab" href="#liveaction-daily" role="tab" aria-controls="daily" aria-selected="true"><?php echo sprintf(lang('admin.stats.daily_evolution'), $max_days); ?></a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="liveaction-monthly-tab" data-bs-toggle="tab" href="#liveaction-monthly" role="tab" aria-controls="monthly" aria-selected="true">Evolució mensual (total)</a>
+										<a class="nav-link" id="liveaction-monthly-tab" data-bs-toggle="tab" href="#liveaction-monthly" role="tab" aria-controls="monthly" aria-selected="true"><?php echo lang('admin.stats.monthly_evolution'); ?></a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -515,7 +516,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -523,7 +524,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Visualitzacions',
+														label: '<?php echo lang('admin.stats.label_views'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -531,7 +532,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Temps de visualització (h)',
+														label: '<?php echo lang('admin.stats.label_view_time'); ?>',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
@@ -593,7 +594,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -601,7 +602,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Visualitzacions',
+														label: '<?php echo lang('admin.stats.label_views'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -609,7 +610,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Temps de visualització (h)',
+														label: '<?php echo lang('admin.stats.label_view_time'); ?>',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
@@ -640,7 +641,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d’anime</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.anime_version_statuses'); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -650,23 +651,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['status']) {
 			case 5:
-				array_push($status_values, "'Cancel·lada'");
+				array_push($status_values, "'".lang('status.cancelled.private.short')."'");
 				array_push($status_colors, "'red'");
 				break;
 			case 4:
-				array_push($status_values, "'Abandonada'");
+				array_push($status_values, "'".lang('status.abandoned.private.short')."'");
 				array_push($status_colors, "'coral'");
 				break;
 			case 3:
-				array_push($status_values, "'Parcialment completada'");
+				array_push($status_values, "'".lang('status.partiallycomplete.private.short')."'");
 				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
-				array_push($status_values, "'En procés'");
+				array_push($status_values, "'".lang('status.inprogress.private.short')."'");
 				array_push($status_colors, "'yellow'");
 				break;
 			default:
-				array_push($status_values, "'Completada'");
+				array_push($status_values, "'".lang('status.complete.private.short')."'");
 				array_push($status_colors, "'green'");
 				break;
 		}
@@ -704,7 +705,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions de manga</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.manga_version_statuses'); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -714,23 +715,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['status']) {
 			case 5:
-				array_push($status_values, "'Cancel·lada'");
+				array_push($status_values, "'".lang('status.cancelled.private.short')."'");
 				array_push($status_colors, "'red'");
 				break;
 			case 4:
-				array_push($status_values, "'Abandonada'");
+				array_push($status_values, "'".lang('status.abandoned.private.short')."'");
 				array_push($status_colors, "'coral'");
 				break;
 			case 3:
-				array_push($status_values, "'Parcialment completada'");
+				array_push($status_values, "'".lang('status.partiallycomplete.private.short')."'");
 				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
-				array_push($status_values, "'En procés'");
+				array_push($status_values, "'".lang('status.inprogress.private.short')."'");
 				array_push($status_colors, "'yellow'");
 				break;
 			default:
-				array_push($status_values, "'Completada'");
+				array_push($status_values, "'".lang('status.complete.private.short')."'");
 				array_push($status_colors, "'green'");
 				break;
 		}
@@ -768,7 +769,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d’imatge real</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.liveaction_version_statuses'); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -778,23 +779,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['status']) {
 			case 5:
-				array_push($status_values, "'Cancel·lada'");
+				array_push($status_values, "'".lang('status.cancelled.private.short')."'");
 				array_push($status_colors, "'red'");
 				break;
 			case 4:
-				array_push($status_values, "'Abandonada'");
+				array_push($status_values, "'".lang('status.abandoned.private.short')."'");
 				array_push($status_colors, "'coral'");
 				break;
 			case 3:
-				array_push($status_values, "'Parcialment completada'");
+				array_push($status_values, "'".lang('status.partiallycomplete.private.short')."'");
 				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
-				array_push($status_values, "'En procés'");
+				array_push($status_values, "'".lang('status.inprogress.private.short')."'");
 				array_push($status_colors, "'yellow'");
 				break;
 			default:
-				array_push($status_values, "'Completada'");
+				array_push($status_values, "'".lang('status.complete.private.short')."'");
 				array_push($status_colors, "'green'");
 				break;
 		}
@@ -832,13 +833,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers d’anime per fansub</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.anime_files_by_fansub'); ?></h4>
 								<hr>
 <?php
 	$fansub_values=array();
 	$fansub_colors=array();
 	$file_count_values=array();
-	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>=25,a.fansub_name,'Altres') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
+	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>=25,a.fansub_name,'".lang('admin.query.stats_others')."') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'".lang('admin.query.stats_several_fansubs')."',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='".lang('admin.query.stats_several_fansubs')."' ASC, fansub_name='".lang('admin.query.stats_others')."' ASC, file_count DESC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
 		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
@@ -877,13 +878,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers de manga per fansub</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.manga_files_by_fansub'); ?></h4>
 								<hr>
 <?php
 	$fansub_values=array();
 	$fansub_colors=array();
 	$file_count_values=array();
-	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>=25,a.fansub_name,'Altres') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
+	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>=25,a.fansub_name,'".lang('admin.query.stats_others')."') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'".lang('admin.query.stats_several_fansubs')."',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='".lang('admin.query.stats_several_fansubs')."' ASC, fansub_name='".lang('admin.query.stats_others')."' ASC, file_count DESC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
 		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
@@ -922,13 +923,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers d’imatge real per fansub</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.stats.liveaction_files_by_fansub'); ?></h4>
 								<hr>
 <?php
 	$fansub_values=array();
 	$fansub_colors=array();
 	$file_count_values=array();
-	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>=2,a.fansub_name,'Altres') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
+	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT IF(COUNT(a.id)>=2,a.fansub_name,'".lang('admin.query.stats_others')."') fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'".lang('admin.query.stats_several_fansubs')."',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='".lang('admin.query.stats_several_fansubs')."' ASC, fansub_name='".lang('admin.query.stats_others')."' ASC, file_count DESC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
 		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
@@ -967,10 +968,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d’anime (darrers <?php echo $max_days; ?> dies)</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.anime_views_origin'), $max_days); ?></h4>
 								<hr>
 <?php
-	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
+	$origin_labels=array("'".lang('admin.stats.origin_computer')."'","'".lang('admin.stats.origin_mobile')."'","'".lang('admin.stats.origin_cast')."'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
 	$result = query("SELECT (SELECT COUNT(*) FROM view_session WHERE type='anime' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session WHERE type='anime' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session WHERE type='anime' AND source='cast' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
@@ -1007,10 +1008,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les lectures de manga (darrers <?php echo $max_days; ?> dies)</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.manga_views_origin'), $max_days); ?></h4>
 								<hr>
 <?php
-	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Tachiyomi'");
+	$origin_labels=array("'".lang('admin.stats.origin_computer')."'","'".lang('admin.stats.origin_mobile')."'","'".lang('admin.stats.origin_api')."'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
 	$result = query("SELECT (SELECT COUNT(*) FROM view_session WHERE type='manga' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session WHERE type='manga' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session WHERE type='manga' AND source='api' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') api");
 	$row = mysqli_fetch_assoc($result);
@@ -1047,10 +1048,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d’imatge real (darrers <?php echo $max_days; ?> dies)</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.liveaction_views_origin'), $max_days); ?></h4>
 								<hr>
 <?php
-	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
+	$origin_labels=array("'".lang('admin.stats.origin_computer')."'","'".lang('admin.stats.origin_mobile')."'","'".lang('admin.stats.origin_cast')."'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
 	$result = query("SELECT (SELECT COUNT(*) FROM view_session WHERE type='liveaction' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session WHERE type='liveaction' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session WHERE type='liveaction' AND source='cast' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
@@ -1092,7 +1093,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estadístiques <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.title.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 		<?php
 			$result = query("SELECT (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf WHERE fansub_id=".$fansub['id']." AND EXISTS (SELECT * FROM rel_version_fansub vf2 WHERE vf.version_id=vf2.version_id AND vf2.fansub_id<>".$fansub['id'].")) total_collabs, (SELECT COUNT(*) FROM news WHERE fansub_id=".$fansub['id'].") total_news, (SELECT COUNT(*) FROM comment c LEFT JOIN rel_version_fansub vf ON c.version_id=vf.version_id WHERE vf.fansub_id=".$fansub['id'].") total_comments, (SELECT COUNT(DISTINCT user_id) FROM view_session vs LEFT JOIN file f ON vs.file_id=f.id LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id WHERE view_counted IS NOT NULL AND vf.fansub_id=".$fansub['id'].") total_consuming_users, (SELECT COUNT(*) FROM user) total_users, (SELECT COUNT(*) FROM user_version_rating vr LEFT JOIN rel_version_fansub vf ON vr.version_id=vf.version_id WHERE rating=1 AND vf.fansub_id=".$fansub['id'].") total_positive_ratings, (SELECT COUNT(*) FROM user_version_rating vr LEFT JOIN rel_version_fansub vf ON vr.version_id=vf.version_id WHERE rating=-1 AND vf.fansub_id=".$fansub['id'].") total_negative_ratings, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND vf.fansub_id=".$fansub['id'].") total_anime, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND fansub_id=".$fansub['id'].") total_anime_versions, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND vf.fansub_id=".$fansub['id'].") total_manga, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND fansub_id=".$fansub['id'].") total_manga_versions, (SELECT COUNT(DISTINCT v.series_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND vf.fansub_id=".$fansub['id'].") total_liveaction, (SELECT COUNT(DISTINCT vf.version_id) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fansub_id=".$fansub['id'].") total_liveaction_versions, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_anime_files, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_manga_files, (SELECT COUNT(DISTINCT f.id) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_liveaction_files, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_anime_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_manga_duplicity, (SELECT COUNT(DISTINCT series_id) FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND v.id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND EXISTS (SELECT * FROM version v2 WHERE v2.id<>v.id AND v2.series_id=v.series_id)) total_liveaction_duplicity, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_views, (SELECT IFNULL(SUM(total_length),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='anime' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_anime_time_spent, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_views, (SELECT IFNULL(SUM(total_length),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='manga' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_manga_pages_read, (SELECT IFNULL(SUM(clicks),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_clicks, (SELECT IFNULL(SUM(views),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_views, (SELECT IFNULL(SUM(total_length),0) FROM views v LEFT JOIN file f ON v.file_id=f.id WHERE v.type='liveaction' AND f.version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_liveaction_time_spent, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_anime_episodes, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_manga_chapters, (SELECT COUNT(DISTINCT episode_id) FROM file f LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.episode_id IS NOT NULL AND f.is_lost=0 AND version_id IN (SELECT DISTINCT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")) total_linked_liveaction_episodes, (SELECT IFNULL(SUM(f.length),0) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_anime_duration, (SELECT IFNULL(SUM(f.length),0) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_manga_pages, (SELECT IFNULL(SUM(f.length),0) FROM file f LEFT JOIN rel_version_fansub vf ON f.version_id=vf.version_id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND f.is_lost=0 AND vf.fansub_id=".$fansub['id'].") total_liveaction_duration");
@@ -1100,68 +1101,69 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			mysqli_free_result($result);
 		?>
 								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Nombre d’elements:</h5></div>
+									<div class="col-sm text-center pb-1"><h5><?php echo lang('admin.stats.number_of_items'); ?></h5></div>
+
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Animes:</b><br><?php echo $totals['total_anime']; ?> <small>(duplicats: <?php echo $totals['total_anime_duplicity']; ?>)</small></div>
-										<div class="col-sm-4 text-center"><b>Mangues:</b><br><?php echo $totals['total_manga']; ?> <small>(duplicats: <?php echo $totals['total_manga_duplicity']; ?>)</small></div>
-										<div class="col-sm-4 text-center"><b>Contingut d’imatge real:</b><br><?php echo $totals['total_liveaction']; ?> <small>(duplicats: <?php echo $totals['total_liveaction_duplicity']; ?>)</small></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.animes'); ?></b><br><?php echo $totals['total_anime']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.mangas'); ?></b><br><?php echo $totals['total_manga']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.liveactions'); ?></b><br><?php echo $totals['total_liveaction']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Versions d’anime:</b><br><?php echo $totals['total_anime_versions']; ?></div>
-										<div class="col-sm-4 text-center"><b>Versions de manga:</b><br><?php echo $totals['total_manga_versions']; ?></div>
-										<div class="col-sm-4 text-center"><b>Versions d’imatge real:</b><br><?php echo $totals['total_liveaction_versions']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.anime_versions'); ?></b><br><?php echo $totals['total_anime_versions']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.manga_versions'); ?></b><br><?php echo $totals['total_manga_versions']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.liveaction_versions'); ?></b><br><?php echo $totals['total_liveaction_versions']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Col·laboracions:</b><br><?php echo $totals['total_collabs']; ?></div>
-										<div class="col-sm-4 text-center"><b>Notícies:</b><br><?php echo $totals['total_news']; ?></div>
-										<div class="col-sm-4 text-center"><b>Comentaris:</b><br><?php echo $totals['total_comments']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.collabs'); ?></b><br><?php echo $totals['total_collabs']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.news'); ?></b><br><?php echo $totals['total_news']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.comments'); ?></b><br><?php echo $totals['total_comments']; ?><
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Usuaris visualitzadors:</b><br><?php echo $totals['total_consuming_users']; ?> de <?php echo $totals['total_users']; ?></div>
-										<div class="col-sm-4 text-center"><b>Valoracions positives:</b><br><?php echo $totals['total_positive_ratings']; ?></div>
-										<div class="col-sm-4 text-center"><b>Valoracions negatives:</b><br><?php echo $totals['total_negative_ratings']; ?></div>
-									</div>
-								</div>
-								<hr>
-								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Anime:</h5></div>
-									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Capítols editats:</b><br><?php echo $totals['total_linked_anime_episodes']; ?></div>
-										<div class="col-sm-4 text-center"><b>Fitxers totals:</b><br><?php echo $totals['total_anime_files']; ?></div>
-										<div class="col-sm-4 text-center"><b>Durada total:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_duration']); ?></div>
-									</div>
-									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo $totals['total_anime_clicks']; ?></div>
-										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_anime_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_time_spent']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.users_with_views'); ?></b><br><?php echo sprintf(lang('admin.stats.users_with_views.details'), $totals['total_consuming_users'], $totals['total_users']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.positive_ratings'); ?></b><br><?php echo $totals['total_positive_ratings']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.negative_ratings'); ?></b><br><?php echo $totals['total_negative_ratings']; ?></div>
 									</div>
 								</div>
 								<hr>
 								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Manga:</h5></div>
+									<div class="col-sm text-center pb-1"><h5><?php echo lang('admin.stats.category_anime'); ?></h5></div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Capítols editats:</b><br><?php echo $totals['total_linked_manga_chapters']; ?></div>
-										<div class="col-sm-4 text-center"><b>Fitxers totals:</b><br><?php echo $totals['total_manga_files']; ?></div>
-										<div class="col-sm-4 text-center"><b>Pàgines totals:</b><br><?php echo $totals['total_manga_pages']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.edited_episodes'); ?></b><br><?php echo $totals['total_linked_anime_episodes']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_files'); ?></b><br><?php echo $totals['total_anime_files']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_duration'); ?></b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_duration']); ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo $totals['total_manga_clicks']; ?></div>
-										<div class="col-sm-4 text-center"><b>Lectures:</b><br><?php echo $totals['total_manga_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Pàgines totals llegides:</b><br><?php echo $totals['total_manga_pages_read']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_clicks'); ?></b><br><?php echo max(0, $totals['total_anime_clicks']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_views'); ?></b><br><?php echo $totals['total_anime_views']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_time_viewed'); ?></b><br><?php echo get_hours_or_minutes_formatted($totals['total_anime_time_spent']); ?></div>
 									</div>
 								</div>
 								<hr>
 								<div class="row">
-									<div class="col-sm text-center pb-1"><h5>Imatge real:</h5></div>
+									<div class="col-sm text-center pb-1"><h5><?php echo lang('admin.stats.category_manga'); ?></h5></div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Capítols editats:</b><br><?php echo $totals['total_linked_liveaction_episodes']; ?></div>
-										<div class="col-sm-4 text-center"><b>Fitxers totals:</b><br><?php echo $totals['total_liveaction_files']; ?></div>
-										<div class="col-sm-4 text-center"><b>Durada total:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_duration']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.edited_episodes'); ?></b><br><?php echo $totals['total_linked_manga_chapters']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_files'); ?></b><br><?php echo $totals['total_manga_files']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_pages'); ?></b><br><?php echo $totals['total_manga_pages']; ?></div>
 									</div>
 									<div class="w-100 d-flex">
-										<div class="col-sm-4 text-center"><b>Clics:</b><br><?php echo $totals['total_liveaction_clicks']; ?></div>
-										<div class="col-sm-4 text-center"><b>Visualitzacions:</b><br><?php echo $totals['total_liveaction_views']; ?></div>
-										<div class="col-sm-4 text-center"><b>Temps total visualitzat:</b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_time_spent']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_clicks'); ?></b><br><?php echo max(0, $totals['total_manga_clicks']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_reads'); ?></b><br><?php echo $totals['total_manga_views']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_pages_read'); ?></b><br><?php echo $totals['total_manga_pages_read']; ?></div>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-sm text-center pb-1"><h5><?php echo lang('admin.stats.category_liveaction'); ?></h5></div>
+									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.edited_episodes'); ?></b><br><?php echo $totals['total_linked_liveaction_episodes']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_files'); ?></b><br><?php echo $totals['total_liveaction_files']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_duration'); ?></b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_duration']); ?></div>
+									</div>
+									<div class="w-100 d-flex">
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_clicks'); ?></b><br><?php echo max(0, $totals['total_liveaction_clicks']); ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_views'); ?></b><br><?php echo $totals['total_liveaction_views']; ?></div>
+										<div class="col-sm-4 text-center"><b><?php echo lang('admin.stats.total_time_viewed'); ?></b><br><?php echo get_hours_or_minutes_formatted($totals['total_liveaction_time_spent']); ?></div>
 									</div>
 								</div>
 							</article>
@@ -1170,15 +1172,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució de l’anime <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.anime_evolution.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="anime_chart_tabs_fansub" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="anime-daily_fansub-tab" data-bs-toggle="tab" href="#anime-daily_fansub" role="tab" aria-controls="anime-daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="anime-daily_fansub-tab" data-bs-toggle="tab" href="#anime-daily_fansub" role="tab" aria-controls="anime-daily_fansub" aria-selected="true"><?php echo sprintf(lang('admin.stats.daily_evolution'), $max_days); ?></a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="anime-monthly_fansub-tab" data-bs-toggle="tab" href="#anime-monthly_fansub" role="tab" aria-controls="anime-monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
+										<a class="nav-link" id="anime-monthly_fansub-tab" data-bs-toggle="tab" href="#anime-monthly_fansub" role="tab" aria-controls="anime-monthly_fansub" aria-selected="false"><?php echo lang('admin.stats.monthly_evolution'); ?></a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -1219,7 +1221,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -1227,7 +1229,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Visualitzacions',
+														label: '<?php echo lang('admin.stats.label_views'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -1235,7 +1237,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Temps de visualització (h)',
+														label: '<?php echo lang('admin.stats.label_view_time'); ?>',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
@@ -1297,7 +1299,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -1305,7 +1307,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Visualitzacions',
+														label: '<?php echo lang('admin.stats.label_views'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -1313,7 +1315,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Temps de visualització (h)',
+														label: '<?php echo lang('admin.stats.label_view_time'); ?>',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
@@ -1344,15 +1346,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució del manga <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.manga_evolution.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="chart_tabs_fansub_manga" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="manga_daily_fansub-tab" data-bs-toggle="tab" href="#manga_daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="manga_daily_fansub-tab" data-bs-toggle="tab" href="#manga_daily_fansub" role="tab" aria-controls="daily_fansub" aria-selected="true"><?php echo sprintf(lang('admin.stats.daily_evolution'), $max_days); ?></a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="manga_monthly_fansub-tab" data-bs-toggle="tab" href="#manga_monthly_fansub" role="tab" aria-controls="manga_monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
+										<a class="nav-link" id="manga_monthly_fansub-tab" data-bs-toggle="tab" href="#manga_monthly_fansub" role="tab" aria-controls="manga_monthly_fansub" aria-selected="false"><?php echo lang('admin.stats.monthly_evolution'); ?></a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -1393,7 +1395,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -1401,7 +1403,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Lectures',
+														label: '<?php echo lang('admin.stats.label_reads'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -1409,7 +1411,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Pàgines llegides',
+														label: '<?php echo lang('admin.stats.label_pages_read'); ?>',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
 														data: [<?php echo implode(',',$page_values); ?>],
@@ -1471,7 +1473,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -1479,7 +1481,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Lectures',
+														label: '<?php echo lang('admin.stats.label_reads'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -1487,7 +1489,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Pàgines llegides',
+														label: '<?php echo lang('admin.stats.label_pages_read'); ?>',
 														backgroundColor: 'rgb(167, 167, 69)',
 														borderColor: 'rgb(167, 167, 69)',
 														data: [<?php echo implode(',',$page_values); ?>],
@@ -1518,15 +1520,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Evolució del contingut d’imatge real <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.liveaction_evolution.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 
 								<ul class="nav nav-tabs" id="liveaction_chart_tabs_fansub" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="liveaction-daily_fansub-tab" data-bs-toggle="tab" href="#liveaction-daily_fansub" role="tab" aria-controls="liveaction-daily_fansub" aria-selected="true">Evolució diària (darrers <?php echo $max_days; ?> dies)</a>
+										<a class="nav-link active" id="liveaction-daily_fansub-tab" data-bs-toggle="tab" href="#liveaction-daily_fansub" role="tab" aria-controls="liveaction-daily_fansub" aria-selected="true"><?php echo sprintf(lang('admin.stats.daily_evolution'), $max_days); ?></a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="liveaction-monthly_fansub-tab" data-bs-toggle="tab" href="#liveaction-monthly_fansub" role="tab" aria-controls="liveaction-monthly_fansub" aria-selected="false">Evolució mensual (total)</a>
+										<a class="nav-link" id="liveaction-monthly_fansub-tab" data-bs-toggle="tab" href="#liveaction-monthly_fansub" role="tab" aria-controls="liveaction-monthly_fansub" aria-selected="false"><?php echo lang('admin.stats.monthly_evolution'); ?></a>
 									</li>
 								</ul>
 								<div class="tab-content">
@@ -1567,7 +1569,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$day_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -1575,7 +1577,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Visualitzacions',
+														label: '<?php echo lang('admin.stats.label_views'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -1583,7 +1585,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Temps de visualització (h)',
+														label: '<?php echo lang('admin.stats.label_view_time'); ?>',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
@@ -1645,7 +1647,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													labels: [<?php echo implode(',',$month_values); ?>],
 													datasets: [
 													{
-														label: 'Clics',
+														label: '<?php echo lang('admin.stats.label_clicks'); ?>',
 														backgroundColor: 'rgb(220, 53, 69)',
 														borderColor: 'rgb(220, 53, 69)',
 														hidden: true,
@@ -1653,7 +1655,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Visualitzacions',
+														label: '<?php echo lang('admin.stats.label_views'); ?>',
 														backgroundColor: 'rgb(0, 123, 255)',
 														borderColor: 'rgb(0, 123, 255)',
 														hidden: true,
@@ -1661,7 +1663,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														tension: 0.4
 													},
 													{
-														label: 'Temps de visualització (h)',
+														label: '<?php echo lang('admin.stats.label_view_time'); ?>',
 														backgroundColor: 'rgb(40, 167, 69)',
 														borderColor: 'rgb(40, 167, 69)',
 														data: [<?php echo implode(',',$time_values); ?>],
@@ -1692,7 +1694,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d’anime <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.anime_version_statuses.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -1702,23 +1704,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['status']) {
 			case 5:
-				array_push($status_values, "'Cancel·lada'");
+				array_push($status_values, "'".lang('status.cancelled.private.short')."'");
 				array_push($status_colors, "'red'");
 				break;
 			case 4:
-				array_push($status_values, "'Abandonada'");
+				array_push($status_values, "'".lang('status.abandoned.private.short')."'");
 				array_push($status_colors, "'coral'");
 				break;
 			case 3:
-				array_push($status_values, "'Parcialment completada'");
+				array_push($status_values, "'".lang('status.partiallycomplete.private.short')."'");
 				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
-				array_push($status_values, "'En procés'");
+				array_push($status_values, "'".lang('status.inprogress.private.short')."'");
 				array_push($status_colors, "'yellow'");
 				break;
 			default:
-				array_push($status_values, "'Completada'");
+				array_push($status_values, "'".lang('status.complete.private.short')."'");
 				array_push($status_colors, "'green'");
 				break;
 		}
@@ -1756,7 +1758,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions de manga <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.manga_version_statuses.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -1766,23 +1768,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['status']) {
 			case 5:
-				array_push($status_values, "'Cancel·lada'");
+				array_push($status_values, "'".lang('status.cancelled.private.short')."'");
 				array_push($status_colors, "'red'");
 				break;
 			case 4:
-				array_push($status_values, "'Abandonada'");
+				array_push($status_values, "'".lang('status.abandoned.private.short')."'");
 				array_push($status_colors, "'coral'");
 				break;
 			case 3:
-				array_push($status_values, "'Parcialment completada'");
+				array_push($status_values, "'".lang('status.partiallycomplete.private.short')."'");
 				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
-				array_push($status_values, "'En procés'");
+				array_push($status_values, "'".lang('status.inprogress.private.short')."'");
 				array_push($status_colors, "'yellow'");
 				break;
 			default:
-				array_push($status_values, "'Completada'");
+				array_push($status_values, "'".lang('status.complete.private.short')."'");
 				array_push($status_colors, "'green'");
 				break;
 		}
@@ -1820,7 +1822,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Estat de les versions d’imatge real <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.liveaction_version_statuses.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 <?php
 	$status_values=array();
@@ -1830,23 +1832,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 		switch ($row['status']) {
 			case 5:
-				array_push($status_values, "'Cancel·lada'");
+				array_push($status_values, "'".lang('status.cancelled.private.short')."'");
 				array_push($status_colors, "'red'");
 				break;
 			case 4:
-				array_push($status_values, "'Abandonada'");
+				array_push($status_values, "'".lang('status.abandoned.private.short')."'");
 				array_push($status_colors, "'coral'");
 				break;
 			case 3:
-				array_push($status_values, "'Parcialment completada'");
+				array_push($status_values, "'".lang('status.partiallycomplete.private.short')."'");
 				array_push($status_colors, "'greenyellow'");
 				break;
 			case 2:
-				array_push($status_values, "'En procés'");
+				array_push($status_values, "'".lang('status.inprogress.private.short')."'");
 				array_push($status_colors, "'yellow'");
 				break;
 			default:
-				array_push($status_values, "'Completada'");
+				array_push($status_values, "'".lang('status.complete.private.short')."'");
 				array_push($status_colors, "'green'");
 				break;
 		}
@@ -1884,13 +1886,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers d’anime amb participació <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.anime_files_by_fansub.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 <?php
 	$fansub_values=array();
 	$fansub_colors=array();
 	$file_count_values=array();
-	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT a.fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND fi.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
+	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT a.fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'".lang('admin.query.stats_several_fansubs')."',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND fi.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='".lang('admin.query.stats_several_fansubs')."' ASC, fansub_name='".lang('admin.query.stats_others')."' ASC, file_count DESC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
 		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
@@ -1929,13 +1931,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers de manga amb participació <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.manga_files_by_fansub.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 <?php
 	$fansub_values=array();
 	$fansub_colors=array();
 	$file_count_values=array();
-	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT a.fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND fi.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
+	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT a.fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'".lang('admin.query.stats_several_fansubs')."',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND fi.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='".lang('admin.query.stats_several_fansubs')."' ASC, fansub_name='".lang('admin.query.stats_others')."' ASC, file_count DESC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
 		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
@@ -1974,13 +1976,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Nombre de fitxers d’imatge real amb participació <?php echo get_fansub_preposition_name($fansub['name']); ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.liveaction_files_by_fansub.fansub'), get_fansub_preposition_name($fansub['name'])); ?></h4>
 								<hr>
 <?php
 	$fansub_values=array();
 	$fansub_colors=array();
 	$file_count_values=array();
-	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT a.fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'Diversos fansubs',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fi.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='Diversos fansubs' ASC, fansub_name='Altres' ASC, file_count DESC");
+	$result = query("SELECT b.fansub_name,SUM(b.file_count) file_count FROM (SELECT a.fansub_name, COUNT(a.id) file_count FROM (SELECT fi.id, fi.version_id, IF(COUNT(DISTINCT vf.fansub_id)>1,'".lang('admin.query.stats_several_fansubs')."',f.name) fansub_name FROM file fi LEFT JOIN rel_version_fansub vf ON fi.version_id = vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN version v ON fi.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND fi.version_id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND fi.is_lost=0 GROUP BY fi.id) a GROUP BY fansub_name) b GROUP BY b.fansub_name ORDER BY fansub_name='".lang('admin.query.stats_several_fansubs')."' ASC, fansub_name='".lang('admin.query.stats_others')."' ASC, file_count DESC");
 	while ($row = mysqli_fetch_assoc($result)) {
 		mt_srand(crc32($row['fansub_name'])*1714); //To always get the same values for colors
 		array_push($fansub_values, "'".str_replace("&#039;", "\\'", htmlspecialchars($row['fansub_name'], ENT_QUOTES))."'");
@@ -2019,10 +2021,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d’anime <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers <?php echo $max_days; ?> dies)</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.anime_views_origin.fansub'), $fansub['name'], $max_days); ?></h4>
 								<hr>
 <?php
-	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
+	$origin_labels=array("'".lang('admin.stats.origin_computer')."'","'".lang('admin.stats.origin_mobile')."'","'".lang('admin.stats.origin_cast')."'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
 	$result = query("SELECT (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='anime' AND source='cast' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);
@@ -2059,10 +2061,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les lectures de manga <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers <?php echo $max_days; ?> dies)</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.manga_views_origin.fansub'), $fansub['name'], $max_days); ?></h4>
 								<hr>
 <?php
-	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Tachiyomi'");
+	$origin_labels=array("'".lang('admin.stats.origin_computer')."'","'".lang('admin.stats.origin_mobile')."'","'".lang('admin.stats.origin_api')."'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
 	$result = query("SELECT (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='manga' AND source='api' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') api");
 	$row = mysqli_fetch_assoc($result);
@@ -2099,10 +2101,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Origen de les visualitzacions d’imatge real <?php echo get_fansub_preposition_name($fansub['name']); ?> (darrers <?php echo $max_days; ?> dies)</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.stats.liveaction_views_origin.fansub'), $fansub['name'], $max_days); ?></h4>
 								<hr>
 <?php
-	$origin_labels=array("'Ordinador'","'Mòbil o tauleta'","'Google Cast'");
+	$origin_labels=array("'".lang('admin.stats.origin_computer')."'","'".lang('admin.stats.origin_mobile')."'","'".lang('admin.stats.origin_cast')."'");
 	$origin_colors=array("'#28a745'","'#17a2b8'","'#007bff'");
 	$result = query("SELECT (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND source='desktop' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') desktop, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND source='mobile' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') mobile, (SELECT COUNT(*) FROM view_session vl LEFT JOIN file f ON vl.file_id=f.id LEFT JOIN version v ON f.version_id=v.id WHERE v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].") AND type='liveaction' AND source='cast' AND DATE_FORMAT(view_counted,'%Y-%m-%d')>='".date("Y-m-d", strtotime(date('Y-m-d')."-$max_days days"))."') cast");
 	$row = mysqli_fetch_assoc($result);

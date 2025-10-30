@@ -1,5 +1,6 @@
 <?php
-$header_title="Darrers comentaris";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.comment_list.header');
 $page="analytics";
 
 include(__DIR__.'/header.inc.php');
@@ -9,10 +10,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!DISABLE_COMMUNITY) {
 			delete_comment_from_community($_GET['delete_id']);
 		}
-		log_action("delete-comment", "S’ha suprimit el comentari amb identificador ".$_GET['delete_id']." i les seves respostes (si n’hi havia)");
+		log_action("delete-comment", "Comment with id ".$_GET['delete_id']." and its replies (if any) was deleted");
 		query("DELETE FROM comment WHERE reply_to_comment_id=".escape($_GET['delete_id']));
 		query("DELETE FROM comment WHERE id=".escape($_GET['delete_id']));
-		$_SESSION['message']="S’ha suprimit correctament.";
+		$_SESSION['message']=lang('admin.generic.delete_successful');
 		if (!empty($_GET['source_version_id']) && !empty($_GET['source_type'])) {
 			header('Location: version_stats.php?type='.$_GET['source_type'].'&id='.$_GET['source_version_id']);
 			die();
@@ -40,13 +41,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($fansub)) {
 ?>
 				<li class="nav-item">
-					<a class="nav-link active" id="fansub-tab" data-bs-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Comentaris per a <?php echo $fansub['name']; ?></a>
+					<a class="nav-link active" id="fansub-tab" data-bs-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true"><?php echo sprintf(lang('admin.comment_list.comments_for_fansub'), $fansub['name']); ?></a>
 				</li>
 <?php
 	}
 ?>
 				<li class="nav-item">
-					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-bs-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Tots els comentaris</a>
+					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-bs-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false"><?php echo lang('admin.comment_list.all_comments'); ?></a>
 				</li>
 			</ul>
 			<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
@@ -54,19 +55,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Darrers <?php echo $limit; ?> comentaris</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.comment_list.last_n_comments'), $limit); ?></h4>
 								<hr>
 								<div class="row">
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col" style="width: 20%;">Contingut</th>
-												<th scope="col" style="width: 10%;">Usuari</th>
-												<th scope="col" style="width: 50%;">Comentari</th>
-												<th scope="col" style="width: 10%;" class="text-center">Data</th>
-												<th scope="col" style="width: 5%;" class="text-center">Espòiler</th>
-												<th scope="col" style="width: 5%;" class="text-center">Respost</th>
-												<th class="text-center" scope="col">Accions</th>
+												<th scope="col" style="width: 20%;"><?php echo lang('admin.comment_list.content'); ?></th>
+												<th scope="col" style="width: 10%;"><?php echo lang('admin.comment_list.user'); ?></th>
+												<th scope="col" style="width: 50%;"><?php echo lang('admin.comment_list.comment'); ?></th>
+												<th scope="col" style="width: 10%;" class="text-center"><?php echo lang('admin.comment_list.date'); ?></th>
+												<th scope="col" style="width: 5%;" class="text-center"><?php echo lang('admin.comment_list.spoiler'); ?></th>
+												<th scope="col" style="width: 5%;" class="text-center"><?php echo lang('admin.comment_list.replied'); ?></th>
+												<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -75,7 +76,7 @@ $result = query("SELECT c.*, v.title, u.username, u.status, (SELECT GROUP_CONCAT
 if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="7" class="text-center">- No hi ha cap comentari -</td>
+								<td colspan="7" class="text-center"><?php echo lang('admin.comment_list.empty'); ?></td>
 							</tr>
 <?php
 }
@@ -83,17 +84,17 @@ while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['status']==1 ? 'shadowbanned' : ''; ?>">
 												<td class="align-middle"><?php echo '<b>'.htmlspecialchars($row['fansubs']).' - '.htmlspecialchars($row['title']).'</b>'; ?></td>
-												<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>
-												<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></td>
+												<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : lang('admin.generic.deleted_user'); ?></td>
+												<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>'.lang('admin.generic.deleted_comment').'</i>'; ?></td>
 												<td class="align-middle text-center"><?php echo $row['created']; ?></td>
-												<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? 'Sí' : 'No'; ?></td>
-												<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? 'Sí' : 'No'; ?></td>
+												<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? lang('admin.generic.yes') : lang('admin.generic.no'); ?></td>
+												<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? lang('admin.generic.yes') : lang('admin.generic.no'); ?></td>
 												<td class="align-middle text-center text-nowrap">
-													<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="Respon" class="fa fa-reply p-1"></a>
+													<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.reply.title'); ?>" class="fa fa-reply p-1"></a>
 <?php
 	if ($_SESSION['admin_level']>=3) {
 ?>
-													<a href="comment_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el comentari seleccionat? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
+													<a href="comment_list.php?delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(lang('admin.comment_list.delete_confirm'))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
 <?php
 	}
 ?>
@@ -105,7 +106,7 @@ mysqli_free_result($result);
 ?>
 										</tbody>
 									</table>
-									<p class="text-center text-muted small">En aquesta llista no es mostren els comentaris ni les respostes dels fansubs. Ho pots veure tot a la fitxa pública de cada contingut.</p>
+									<p class="text-center text-muted small"><?php echo lang('admin.comment_list.explanation'); ?></p>
 								</div>
 							</article>
 						</div>
@@ -118,19 +119,19 @@ mysqli_free_result($result);
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Darrers <?php echo $limit; ?> comentaris</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.comment_list.last_n_comments'), $limit); ?></h4>
 								<hr>
 								<div class="row">
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col" style="width: 20%;">Contingut</th>
-												<th scope="col" style="width: 10%;">Usuari</th>
-												<th scope="col" style="width: 50%;">Comentari</th>
-												<th scope="col" style="width: 10%;" class="text-center">Data</th>
-												<th scope="col" style="width: 5%;" class="text-center">Espòiler</th>
-												<th scope="col" style="width: 5%;" class="text-center">Respost</th>
-												<th class="text-center" scope="col">Accions</th>
+												<th scope="col" style="width: 20%;"><?php echo lang('admin.comment_list.content'); ?></th>
+												<th scope="col" style="width: 10%;"><?php echo lang('admin.comment_list.user'); ?></th>
+												<th scope="col" style="width: 50%;"><?php echo lang('admin.comment_list.comment'); ?></th>
+												<th scope="col" style="width: 10%;" class="text-center"><?php echo lang('admin.comment_list.date'); ?></th>
+												<th scope="col" style="width: 5%;" class="text-center"><?php echo lang('admin.comment_list.spoiler'); ?></th>
+												<th scope="col" style="width: 5%;" class="text-center"><?php echo lang('admin.comment_list.replied'); ?></th>
+												<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -147,17 +148,17 @@ while ($row = mysqli_fetch_assoc($result)) {
 ?>
 											<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['status']==1 ? 'shadowbanned' : ''; ?>">
 												<td class="align-middle"><?php echo '<b>'.htmlspecialchars($row['fansubs']).' - '.htmlspecialchars($row['title']).'</b>'; ?></td>
-												<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : 'Usuari eliminat'; ?></td>
-												<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>- Comentari eliminat -</i>'; ?></td>
+												<td class="align-middle"><?php echo !empty($row['username']) ? htmlentities($row['username']) : lang('admin.generic.deleted_user'); ?></td>
+												<td class="align-middle"><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>'.lang('admin.generic.deleted_comment').'</i>'; ?></td>
 												<td class="align-middle text-center"><?php echo $row['created']; ?></td>
-												<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? 'Sí' : 'No'; ?></td>
-												<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? 'Sí' : 'No'; ?></td>
+												<td class="align-middle text-center"><?php echo $row['has_spoilers']==1 ? lang('admin.generic.yes') : lang('admin.generic.no'); ?></td>
+												<td class="align-middle text-center"><?php echo $row['last_replied']!=$row['created'] ? lang('admin.generic.yes') : lang('admin.generic.no'); ?></td>
 												<td class="align-middle text-center text-nowrap">
-													<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="Respon" class="fa fa-reply p-1"></a>
+													<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.reply.title'); ?>" class="fa fa-reply p-1"></a>
 <?php
 	if ($_SESSION['admin_level']>=3) {
 ?>
-													<a href="comment_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el comentari seleccionat? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
+													<a href="comment_list.php?delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(lang('admin.comment_list.delete_confirm'))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a>
 <?php
 	}
 ?>
@@ -169,7 +170,7 @@ mysqli_free_result($result);
 ?>
 										</tbody>
 									</table>
-									<p class="text-center text-muted small">En aquesta llista no es mostren els comentaris ni les respostes dels fansubs. Ho pots veure tot a la fitxa pública de cada contingut.</p>
+									<p class="text-center text-muted small"><?php echo lang('admin.comment_list.explanation'); ?></p>
 								</div>
 							</article>
 						</div>

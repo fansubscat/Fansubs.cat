@@ -5,6 +5,9 @@ function lang($string) {
 	if (!array_key_exists($string, LANGUAGE_STRINGS)) {
 		die('Missing string: '.$string);
 	}
+	/*if ($_SERVER['HTTP_HOST']=='admin.fansubs.cat') {
+		return 'L_'.LANGUAGE_STRINGS[$string].'_L';
+	}*/
 	return LANGUAGE_STRINGS[$string];
 }
 

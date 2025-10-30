@@ -1,5 +1,6 @@
 <?php
-$header_title="Darrers comentaris";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.comment_list.header');
 $page="analytics";
 
 include(__DIR__.'/header.inc.php');
@@ -10,7 +11,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['text'])) {
 			$data['text']=escape($_POST['text']);
 		} else {
-			crash("Dades invàlides: manca text");
+			crash(lang('admin.error.text_missing'));
 		}
 		if (!empty($_POST['reply_to_comment_id']) && is_numeric($_POST['reply_to_comment_id'])) {
 			$data['reply_to_comment_id']=escape($_POST['reply_to_comment_id']);
@@ -20,7 +21,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['version_id']) && is_numeric($_POST['version_id'])) {
 			$data['version_id']=escape($_POST['version_id']);
 		} else {
-			crash("Dades invàlides: manca version_id");
+			crash(lang('admin.error.version_id_missing'));
 		}
 		if (!empty($_POST['fansub_id']) && is_numeric($_POST['fansub_id'])) {
 			if ($_POST['fansub_id']==-1) {
@@ -31,11 +32,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$data['type']='fansub';
 			}
 		} else {
-			crash("Dades invàlides: manca fansub_id");
+			crash(lang('admin.error.fansub_id_missing'));
 		}
 		
 		if ($_POST['action']=='reply') {
-			log_action("reply-comment", "S’ha respost al comentari amb identificador ".$_POST['reply_to_comment_id']);
+			log_action("reply-comment", "Comment with id ".$_POST['reply_to_comment_id']." replied");
 			query("INSERT INTO comment (user_id, version_id, type, fansub_id, reply_to_comment_id, last_replied, text, created, updated)
 			VALUES (NULL, ".$data['version_id'].", '".$data['type']."', ".$data['fansub_id'].", ".$data['reply_to_comment_id'].", CURRENT_TIMESTAMP, '".$data['text']."', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
 			$inserted_id=mysqli_insert_id($db_connection);
@@ -45,7 +46,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 
-		$_SESSION['message']="S’han desat les dades correctament.";
+		$_SESSION['message']=lang('admin.generic.data_saved');
 
 		if (!empty($_POST['source_version_id'])) {
 			header('Location: version_stats.php?type='.$_POST['source_type'].'&id='.$_POST['source_version_id']);
@@ -57,7 +58,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	if (!empty($_GET['id'])) {
 		$result = query("SELECT * FROM comment WHERE id='".escape($_GET['id'])."'");
-		$row = mysqli_fetch_assoc($result) or crash('Comment not found');
+		$row = mysqli_fetch_assoc($result) or crash(lang('admin.error.comment_not_found'));
 		mysqli_free_result($result);
 	} else {
 		$row = array();
@@ -68,21 +69,21 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? 'Respon a' : 'Escriu'; ?> un comentari</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? lang('admin.comment_reply.title_reply') : lang('admin.comment_reply.title_post'); ?></h4>
 					<hr>
 					<form method="post" action="comment_reply.php">
 <?php
 	if (!empty($row['id'])) {
 ?>
 						<div class="mb-3">
-							<label for="form-original_comment">Comentari original</label> <?php print_helper_box('Comentari original', 'Mostra el comentari original de l’usuari al qual respons.'); ?>
+							<label for="form-original_comment"><?php echo lang('admin.comment_reply.original_comment'); ?></label> <?php print_helper_box(lang('admin.comment_reply.original_comment'), lang('admin.comment_reply.original_comment.help')); ?>
 							<div class="form-control" id="form-original_comment"><?php echo htmlspecialchars($row['text']); ?></div>
 						</div>
 <?php
 	}
 ?>
 						<div class="mb-3">
-							<label for="form-fansub"><?php echo !empty($row['id']) ? 'Respon' : 'Escriu'; ?> en nom de<span class="mandatory"></span></label> <?php print_helper_box((!empty($row['id']) ? 'Respon' : 'Escriu').' en nom de', 'Defineix en nom de quin fansub parles.'); ?>
+							<label for="form-fansub"><?php echo !empty($row['id']) ? lang('admin.comment_reply.reply_in_name_of') : lang('admin.comment_reply.post_in_name_of'); ?><span class="mandatory"></span></label> <?php print_helper_box((!empty($row['id']) ? lang('admin.comment_reply.reply_in_name_of') : lang('admin.comment_reply.post_in_name_of')), lang('admin.comment_reply.reply_in_name_of.help')); ?>
 							<select name="fansub_id" class="form-select" id="form-fansub" required>
 <?php
 	if ($_SESSION['admin_level']>=3) {
@@ -92,7 +93,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$result = query("SELECT f.* FROM rel_version_fansub vf LEFT JOIN fansub f ON vf.fansub_id=f.id WHERE vf.version_id=".escape($row['version_id']));
 		}
 ?>
-								<option value="-1" selected>Fansubs.cat</option>
+								<option value="-1" selected><?php echo MAIN_SITE_NAME; ?></option>
 <?php
 	} else if (!empty($_SESSION['fansub_id'])) {
 		$result = query("SELECT f.* FROM fansub f WHERE f.id=".escape($_SESSION['fansub_id']));
@@ -107,7 +108,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</select>
 						</div>
 						<div class="mb-3">
-							<label for="form-text" class="mandatory">Text <?php echo !empty($row['id']) ? 'de la resposta' : 'del comentari'; ?></label> <?php print_helper_box('Text '.(!empty($row['id']) ? 'de la resposta' : 'del comentari'), 'S’hi introdueix el text que es vol afegir com a comentari.'); ?>
+							<label for="form-text" class="mandatory"><?php echo !empty($row['id']) ? lang('admin.comment_reply.reply_text') : lang('admin.comment_reply.post_text'); ?></label> <?php print_helper_box((!empty($row['id']) ? lang('admin.comment_reply.reply_text') : lang('admin.comment_reply.post_text')), lang('admin.comment_reply.reply_text.help')); ?>
 							<textarea class="form-control" name="text" id="form-text" required style="height: 150px;"></textarea>
 							<input type="hidden" name="reply_to_comment_id" value="<?php echo htmlspecialchars($row['id']); ?>">
 							<input type="hidden" name="version_id" value="<?php echo htmlspecialchars($row['version_id']); ?>">
@@ -115,7 +116,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<input type="hidden" name="source_type" value="<?php echo !empty($_GET['source_type']) ? htmlspecialchars($_GET['source_type']) : ''; ?>">
 						</div>
 						<div class="mb-3 text-center pt-2">
-							<button type="submit" name="action" value="reply" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span>Publica <?php echo !empty($row['id']) ? 'la resposta' : 'el comentari'; ?></button>
+							<button type="submit" name="action" value="reply" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? lang('admin.comment_reply.reply_button') : lang('admin.comment_reply.post_button'); ?></button>
 						</div>
 					</form>
 					

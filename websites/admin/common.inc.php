@@ -2,58 +2,69 @@
 function get_status_description_short($id){
 	switch ($id){
 		case 1:
-			return "Completada";
+			return lang('status.complete.private.short');
 		case 2:
-			return "En procés";
+			return lang('status.inprogress.private.short');
 		case 3:
-			return "Parcialment completada";
+			return lang('status.partiallycomplete.private.short');
 		case 4:
-			return "Abandonada";
+			return lang('status.abandoned.private.short');
 		case 5:
-			return "Cancel·lada";
+			return lang('status.cancelled.private.short');
 		default:
-			return "Estat desconegut";
+			return lang('status.unknown.private.short');
 	}
 }
 
 function get_subtype_name($subtype){
 	switch ($subtype){
 		case 'movie':
-			return "Film";
+			return lang('admin.generic.subtype.movie');
 		case 'series':
-			return "Sèrie";
+			return lang('admin.generic.subtype.series');
 		case 'oneshot':
-			return "One-shot";
+			return lang('admin.generic.subtype.oneshot');
 		case 'serialized':
-			return "Serialitzat";
+			return lang('admin.generic.subtype.serialized');
 		default:
-			return "Desconegut";
+			return lang('admin.generic.subtype.unknown');
 	}
 }
 
 function get_fansub_preposition_name($text){
-	$first = mb_strtoupper(substr($text, 0, 1));
-	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
-		return "d’$text";
+	if (SITE_LANGUAGE=='ca') {
+		$first = mb_strtoupper(substr($text, 0, 1));
+		if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
+			return "d’$text";
+		}
 	}
-	return "de $text";
+	return sprintf(lang('generic.preposition'), $text);
 }
 
 function get_fansub_preposition_alone($text){
-	$first = mb_strtoupper(substr($text, 0, 1));
-	if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
-		return "d’";
+	if (SITE_LANGUAGE=='ca') {
+		$first = mb_strtoupper(substr($text, 0, 1));
+		if (($first == 'A' || $first == 'E' || $first == 'I' || $first == 'O' || $first == 'U') && substr($text, 0, 4)!='One '){ //Ugly...
+			return "d’";
+		}
 	}
-	return "de ";
+	return lang('generic.preposition.alone');
+}
+
+function get_clean_month_name($month){
+	if (SITE_LANGUAGE=='ca') {
+		return ucfirst(str_replace('d’','', str_replace('de ','', $month)));
+	}
+	return ucfirst($month);
 }
 
 function get_hours_or_minutes_formatted($time){
 	if ($time>=3600) {
 		$hours = floor($time/3600);
 		$time = $time-$hours*3600;
-		echo $hours." h ".min(59,round($time/60))." min";
+		return sprintf(lang('generic.time.hours_and_minutes'), $hours, min(59,round($time/60)));
 	} else {
-		echo min(59,round($time/60))." min";
+		return sprintf(lang('generic.time.minutes'), min(59,round($time/60)));
 	}
 }
 
@@ -76,33 +87,34 @@ function convert_from_hh_mm_ss($string) {
 
 function get_relative_date($time) {
 	if (time()-$time<60) {
-		return "ara mateix";
+		return lang('date.now');
 	}
 	if (time()-$time<3600) {
 		$minutes = intval((time()-$time)/60);
 		if ($minutes==1) {
-			return "fa 1 minut";
+			return lang('date.minute_ago');
 		} else {
-			return "fa $minutes minuts";
+			return sprintf(lang('date.minutes_ago'), $minutes);
 		}
-	} else if (time()-$time<3600*24) {
+	}
+	else if (time()-$time<3600*24) {
 		$hours = intval((time()-$time)/3600);
 		if ($hours==1) {
-			return "fa 1 hora";
+			return lang('date.hour_ago');
 		} else {
-			return "fa $hours hores";
+			return sprintf(lang('date.hours_ago'), $hours);
 		}
 	}
 	else if (time()-$time<3600*24*30) {
 		$days = intval((time()-$time)/(3600*24));
 		if ($days==1) {
-			return "fa 1 dia";
+			return lang('date.day_ago');
 		} else {
-			return "fa $days dies";
+			return sprintf(lang('date.days_ago'), $days);
 		}
 	}
 	else {
-		return date('d/m/Y', $time);
+		return date(lang('date.short_format_d_m_y'), $time);
 	}
 }
 
@@ -111,40 +123,40 @@ function relative_time($date){
         $ago = (int)(time() - date('U', $date));
 
 	if ($ago==1){
-		$ago = "fa 1 segon";
+		$ago = lang('date.second_ago');
 	}
 	else if ($ago<60){
-		$ago = "fa $ago segons";
+		$ago = sprintf(lang('date.seconds_ago'), $ago);
 	}
 	else if ($ago<3600){
 		$ago = (int)($ago/60);
 		if ($ago==1){
-                        $ago = "fa ". $ago . " minut";
+                        $ago = lang('date.minute_ago');
 		}
 		else{
-			$ago = "fa ". $ago . " minuts";
+			$ago = sprintf(lang('date.minutes_ago'), $ago);
 		}
         }
 	else if ($ago<86400){
 		$ago = (int)($ago/3600);
 		if ($ago==1){
-                        $ago = "fa ". $ago . " hora";
+                        $ago = lang('date.hour_ago');
 		}
 		else{
-			$ago = "fa ". $ago . " hores";
+			$ago = sprintf(lang('date.hours_ago'), $ago);
 		}
         }
 	else if ($ago<2678400){
 		$ago = (int)($ago/86400);
 		if ($ago==1){
-                        $ago = "fa ". $ago . " dia";
+                        $ago = lang('date.day_ago');
 		}
 		else{
-			$ago = "fa ". $ago . " dies";
+			$ago = sprintf(lang('date.days_ago'), $ago);
 		}
         }
 	else{
-		$ago = date('d/m/Y \a \l\e\s H:i:s', $date);
+		$ago = date(lang('date.long_format'), $date);
 	}
 	return $ago;
 }
@@ -204,7 +216,7 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 }
 
 function decompress_manga_file($file_id, $temporary_filename, $original_filename){
-	//log_action("debug-log", "Descomprimint el fitxer $original_filename i movent-lo al directori amb id: $file_id");
+	//log_action("debug-log", "Decompressing archive $original_filename and moving it to directory with id: $file_id");
 	$temp_path="/srv/fansubscat/temporary/decompress_$file_id/";
 	$extension = pathinfo($original_filename, PATHINFO_EXTENSION);
 	if ($extension=='rar' || $extension=='cbr'){
@@ -219,10 +231,10 @@ function decompress_manga_file($file_id, $temporary_filename, $original_filename
 				$rar->close();
 				flatten_directories_and_move_to_storage($file_id, $temp_path);
 			} else {
-				crash("RAR extract error when extracting: $original_filename");
+				crash(sprintf(lang('admin.error.rar_extract'), $original_filename));
 			}
 		} else {
-			crash("RAR extract error when extracting: $original_filename");
+			crash(sprintf(lang('admin.error.rar_extract'), $original_filename));
 		}
 	} else if ($extension=='zip' || $extension=='cbz') {
 		//Extract ZIP/CBZ
@@ -232,24 +244,24 @@ function decompress_manga_file($file_id, $temporary_filename, $original_filename
 			$zip->close();
 			flatten_directories_and_move_to_storage($file_id, $temp_path);
 		} else {
-			crash("ZIP extract error when extracting: $original_filename");
+			crash(sprintf(lang('admin.error.zip_extract'), $original_filename));
 		}
 	} else {
-		crash("Unknown file type uploaded to manga version: $original_filename");
+		crash(sprintf(lang('admin.error.unknown_file_type_for_manga'), $original_filename));
 	}
 }
 
 function get_browser_icon_by_source_type($source, $is_casted) {
 	if ($is_casted) {
-		return 'class="fab fa-chromecast" style="color: #007bff;" title="Google Cast o dispositiu similar"';
+		return 'class="fab fa-chromecast" style="color: #007bff;" title="'.lang('admin.generic.source_type.cast').'"';
 	}
 	if ($source=='api') {
-		return 'class="fa fa-book" style="color: #007bff;" title="Tachiyomi (via API)"';
+		return 'class="fa fa-book" style="color: #007bff;" title="'.lang('admin.generic.source_type.api').'"';
 	}
 	if($source=='mobile'){
-		return 'class="fa fa-mobile-alt" style="color: #17a2b8;" title="Mòbil o tauleta"';
+		return 'class="fa fa-mobile-alt" style="color: #17a2b8;" title="'.lang('admin.generic.source_type.mobile').'"';
 	}
-	return 'class="fa fa-laptop" style="color: #28a745;" title="Ordinador"';
+	return 'class="fa fa-laptop" style="color: #28a745;" title="'.lang('admin.generic.source_type.pc').'"';
 }
 
 function get_anonymized_username($user_id, $anon_id) {
@@ -288,7 +300,7 @@ function add_fansub_user($fansub_id, $user_password) {
 	$res = query("SELECT f.*, (SELECT COUNT(*) FROM user u WHERE u.username=f.name) users FROM fansub f WHERE f.id=".$fansub_id);
 	$fansub = mysqli_fetch_assoc($res);
 	
-	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].' (fansub)');
+	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].lang('generic.user.fansub_username_suffix'));
 	$password_hash_escaped = escape(password_hash($user_password, PASSWORD_BCRYPT));
 	$email_escaped = escape($fansub['email']);
 	query("INSERT INTO user (username, password, email, birthdate, fansub_id, created, created_by, updated, updated_by)
@@ -305,7 +317,7 @@ function add_fansub_user($fansub_id, $user_password) {
 		curl_setopt($curl, CURLOPT_POSTFIELDS, 
 			  json_encode(array(
 			  	'fansub_id' => $fansub_id,
-			  	'username' => $fansub['users']==0 ? $fansub['name'] : $fansub['name'].' (fansub)',
+			  	'username' => $fansub['users']==0 ? $fansub['name'] : $fansub['name'].lang('generic.user.fansub_username_suffix'),
 			  	'email' => $fansub['email'],
 			  	'url' => $fansub['url'],
 			  	'bluesky_url' => $fansub['bluesky_url'],
@@ -328,7 +340,7 @@ function edit_fansub_user($fansub_id, $old_username, $user_password) {
 	$res = query("SELECT f.*, (SELECT COUNT(*) FROM user u WHERE u.username=f.name AND u.username<>'".$username_old_escaped."') users FROM fansub f WHERE f.id=".$fansub_id);
 	$fansub = mysqli_fetch_assoc($res);
 	
-	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].' (fansub)');
+	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].lang('generic.user.fansub_username_suffix'));
 	$password_hash_escaped = escape(password_hash($user_password, PASSWORD_BCRYPT));
 	$email_escaped = escape($fansub['email']);
 	query("UPDATE user
@@ -350,7 +362,7 @@ function edit_fansub_user($fansub_id, $old_username, $user_password) {
 			  json_encode(array(
 			  	'fansub_id' => $fansub_id,
 			  	'username_old' => $old_username,
-			  	'username' => $fansub['users']==0 ? $fansub['name'] : $fansub['name'].' (fansub)',
+			  	'username' => $fansub['users']==0 ? $fansub['name'] : $fansub['name'].lang('generic.user.fansub_username_suffix'),
 			  	'email' => $fansub['email'],
 			  	'url' => $fansub['url'],
 			  	'bluesky_url' => $fansub['bluesky_url'],
@@ -375,7 +387,7 @@ function add_or_update_topic_to_community($version_id){
 			LEFT JOIN fansub f ON vf.fansub_id=f.id
 		WHERE v.id=".escape($version_id)."
 		GROUP BY v.id");
-	$version = mysqli_fetch_assoc($result) or crash('Version not found');
+	$version = mysqli_fetch_assoc($result) or crash(lang('admin.error.version_not_found'));
 	mysqli_free_result($result);
 	
 	if ($version['is_hidden']==1 || $version['series_rating']=='XXX') {
@@ -387,22 +399,22 @@ function add_or_update_topic_to_community($version_id){
 		$url = MANGA_URL;
 		$static_url = STATIC_URL;
 		$site = MAIN_SITE_NAME;
-		$type = "Llegeix aquest manga";
+		$call_to_action = sprintf(lang('community.call_to_action.manga'), MAIN_SITE_NAME);
 	} else if ($version['series_type']=='liveaction') {
 		$forum_id = 6;
 		$url = LIVEACTION_URL;
 		$static_url = STATIC_URL;
 		$site = MAIN_SITE_NAME;
-		$type = "Mira aquest contingut d’acció real";
+		$call_to_action = sprintf(lang('community.call_to_action.liveaction'), MAIN_SITE_NAME);
 	} else { //Anime
 		$forum_id = 4;
 		$url = ANIME_URL;
 		$static_url = STATIC_URL;
 		$site = MAIN_SITE_NAME;
-		$type = "Mira aquest anime";
+		$call_to_action = sprintf(lang('community.call_to_action.anime'), MAIN_SITE_NAME);
 	}
 	
-	$message = "[center][size=150][b]".$version['title']."[/b][/size]\nVersió ".get_fansub_preposition_name($version['fansub_names'])."\n\n[cover]".$static_url."/images/covers/version_".$version['id'].".jpg[/cover]\n\n\n[size=125][b]Sinopsi:[/b][/size]\n".$version['synopsis']."\n\n[button=".$url."/".$version['slug']."]".$type." a ".$site."[/button][/center]";
+	$message = "[center][size=150][b]".$version['title']."[/b][/size]\n".lang('catalogue.series.version').get_fansub_preposition_name($version['fansub_names'])."\n\n[cover]".$static_url."/images/covers/version_".$version['id'].".jpg[/cover]\n\n\n[size=125][b]".lang('community.post.synopsis')."[/b][/size]\n".$version['synopsis']."\n\n[button=".$url."/".$version['slug']."]".$call_to_action."[/button][/center]";
 	
 	if (empty($version['forum_topic_id'])) {
 		$curl = curl_init();
@@ -413,9 +425,9 @@ function add_or_update_topic_to_community($version_id){
 		curl_setopt($curl, CURLOPT_POST, true);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, 
 			  json_encode(array(
-			  	'username' => 'Fansubs.cat',
+			  	'username' => MAIN_SITE_NAME,
 			  	'forum_id' => $forum_id,
-			  	'subject' => $version['title'].' (versió '.get_fansub_preposition_name($version['fansub_names']).')',
+			  	'subject' => $version['title'].sprintf(lang('community.post.title_version'), get_fansub_preposition_name($version['fansub_names'])),
 			  	'message' => $message,
 			  	'timestamp' => time(),
 			  	)));
@@ -426,7 +438,7 @@ function add_or_update_topic_to_community($version_id){
 		$result = json_decode($output);
 
 		if (empty($result) || $result->status!='ok') {
-			crash("La versió s’ha desat, però no s’ha pogut crear el tema a la comunitat.");
+			crash(lang('admin.error.saved_but_no_community_post'));
 		} else {
 			query("UPDATE version SET forum_topic_id=".$result->topic_id.",forum_post_id=".$result->post_id." WHERE id=".$version['id']);
 		}
@@ -440,7 +452,7 @@ function add_or_update_topic_to_community($version_id){
 		curl_setopt($curl, CURLOPT_POSTFIELDS, 
 			  json_encode(array(
 			  	'post_id' => $version['forum_post_id'],
-			  	'subject' => $version['title'].' (versió '.get_fansub_preposition_name($version['fansub_names']).')',
+			  	'subject' => $version['title'].sprintf(lang('community.post.title_version'), get_fansub_preposition_name($version['fansub_names'])),
 			  	'message' => $message,
 			  	)));
 		$output = curl_exec($curl);
@@ -450,7 +462,7 @@ function add_or_update_topic_to_community($version_id){
 		$result = json_decode($output);
 
 		if (empty($result) || $result->status!='ok') {
-			crash("La versió s’ha desat, però no s’ha pogut actualitzar el tema a la comunitat.");
+			crash(lang('admin.error.saved_but_no_community_edit'));
 		}
 	}
 }
@@ -476,7 +488,7 @@ function add_comment_to_community($comment_id){
 			LEFT JOIN user u2 ON c2.user_id=u2.id
 		WHERE c.id=".escape($comment_id)."
 		GROUP BY c.id");
-	$comment = mysqli_fetch_assoc($result) or crash('Comment not found');
+	$comment = mysqli_fetch_assoc($result) or crash(lang('admin.error.comment_not_found'));
 	mysqli_free_result($result);
 	
 	if (empty($comment['forum_topic_id'])) {
@@ -497,9 +509,9 @@ function add_comment_to_community($comment_id){
 	curl_setopt($curl, CURLOPT_POST, true);
 	curl_setopt($curl, CURLOPT_POSTFIELDS, 
 		  json_encode(array(
-		  	'username' => $comment['type']=='user' ? $comment['username'] : ($comment['type']=='fansub' ? $comment['comment_fansub_username'] : 'Fansubs.cat'),
+		  	'username' => $comment['type']=='user' ? $comment['username'] : ($comment['type']=='fansub' ? $comment['comment_fansub_username'] : MAIN_SITE_NAME),
 		  	'topic_id' => $comment['forum_topic_id'],
-		  	'subject' => 'Re: '. $comment['version_title'].' (versió '.get_fansub_preposition_name($comment['version_fansub_names']).')',
+		  	'subject' => 'Re: '. $comment['version_title'].sprintf(lang('community.post.title_version'), get_fansub_preposition_name($comment['version_fansub_names'])),
 		  	'message' => $prepend_text.($comment['has_spoilers'] ? '[spoiler]' : '').$comment['text'].($comment['has_spoilers'] ? '[/spoiler]' : ''),
 		  	'timestamp' => $comment['comment_created_timestamp'],
 		  	)));
@@ -510,7 +522,7 @@ function add_comment_to_community($comment_id){
 	$result = json_decode($output);
 
 	if (empty($result) || $result->status!='ok') {
-		crash("El comentari s’ha desat, però no s’ha pogut publicar a la comunitat.");
+		crash(lang('admin.error.comment_saved_but_no_community_post'));
 	} else {
 		query("UPDATE comment SET forum_post_id=".$result->post_id." WHERE id=".$comment['id']);
 	}
@@ -521,7 +533,7 @@ function delete_comment_from_community($comment_id){
 		FROM comment c
 		WHERE c.id=".escape($comment_id)."
 		GROUP BY c.id");
-	$comment = mysqli_fetch_assoc($result) or crash('Comment not found');
+	$comment = mysqli_fetch_assoc($result) or crash(lang('admin.error.comment_not_found'));
 	mysqli_free_result($result);
 	
 	if (empty($comment['forum_post_id'])) {
@@ -544,11 +556,11 @@ function delete_comment_from_community($comment_id){
 	$result = json_decode($output);
 
 	if (empty($result) || $result->status!='ok') {
-		crash("No s’ha pogut eliminar el comentari de la comunitat.");
+		crash(lang('admin.error.comment_community_delete_failed'));
 	}
 }
 
 function print_helper_box($title, $description, $white=FALSE) {
-	echo '<small title="Fes clic per a més informació" data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button fa-width-auto"'.($white ? ' style="color: white !important;"' : '').' data-bs-title="'.htmlspecialchars($title).'" data-bs-contents="'.htmlspecialchars($description).'"></small>';
+	echo '<small title="'.lang('admin.generic.modal.title').'" data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button fa-width-auto"'.($white ? ' style="color: white !important;"' : '').' data-bs-title="'.htmlspecialchars($title).'" data-bs-contents="'.htmlspecialchars($description).'"></small>';
 }
 ?>

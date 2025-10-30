@@ -1,5 +1,6 @@
 <?php
-$header_title="Edició de calendaris d’advent - Altres";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.advent_edit.header');
 $page="other";
 include(__DIR__.'/header.inc.php');
 
@@ -9,12 +10,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['year']) && is_numeric($_POST['year'])) {
 			$data['year']=escape($_POST['year']);
 		} else {
-			crash("Dades invàlides: manca year");
+			crash(lang('admin.error.year_missing'));
 		}
 		if (!empty($_POST['position'])) {
 			$data['position']=escape($_POST['position']);
 		} else {
-			crash("Dades invàlides: manca position");
+			crash(lang('admin.error.position_missing'));
 		}
 
 		$days = array();
@@ -31,7 +32,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 
-		log_action("update-advent-calendar", "S’ha actualitzat el calendari d’advent del ".$_POST['year']);
+		log_action("update-advent-calendar", "Advent calendar for ".$_POST['year']." updated");
 		
 		query("REPLACE INTO advent_calendar (year, position) VALUES (".$data['year'].",'".$data['position']."')");
 		if (!empty($_FILES['background'])) {
@@ -51,7 +52,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 
-		$_SESSION['message']="S’han desat les dades correctament.";
+		$_SESSION['message']=lang('admin.generic.data_saved');
 
 		header("Location: advent_list.php");
 		die();
@@ -76,23 +77,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 	} else {
-		crash('Year not found');
+		crash(lang('admin.error.year_not_found'));
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 			<article class="card-body">
-				<h4 class="card-title text-center mb-4 mt-1">Edita el calendari d’advent del <?php echo $row['year']; ?></h4>
+				<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf(lang('admin.advent_edit.edit_title'), $row['year']); ?></h4>
 				<hr>
 				<form method="post" action="advent_edit.php" enctype="multipart/form-data">
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de fons<span class="mandatory"></span> <?php print_helper_box('Imatge de fons', 'Imatge que s’utilitza per al fons del calendari.\n\nHa de ser un fitxer JPEG i tenir una mida mínima de 1920x1080 píxels (o la mateixa resolució però en vertical).'); ?><br><small class="text-muted">(JPEG, mida mínima 1920x1080px o 1080x1920px)</small></label><br>
+								<label><?php echo lang('admin.advent_edit.background_image'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.advent_edit.background_image'), lang('admin.advent_edit.background_image.help')); ?><br><small class="text-muted"><?php echo lang('admin.advent_edit.background_image.requirements'); ?></small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/background_'.$row['year'].'.jpg');
 ?>
-								<label for="form-background" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<label for="form-background" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? lang('admin.common.change_image') : lang('admin.common.upload_image') ; ?></label>
 								<input class="form-control d-none" name="background" type="file" accept="image/jpeg" id="form-background" onchange="checkImageUpload(this, -1, 'image/jpeg', 1080, 1080, 4096, 4096, 'form-background-preview', 'form-background-preview-link');">
 							<input type="hidden" name="year" value="<?php echo $row['year']; ?>">
 							</div>
@@ -106,11 +107,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de previsualització<span class="mandatory"></span> <?php print_helper_box('Imatge de previsualització', 'Imatge que s’utilitza per a la visualització en mode targeta de les xarxes socials (atribut og:image).\n\nHa de ser un fitxer JPEG i tenir una mida mínima de 1200x600 píxels.'); ?><br><small class="text-muted">(JPEG, mida mínima 1200x600px)</small></label><br>
+								<label><?php echo lang('admin.advent_edit.preview_image'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.advent_edit.preview_image'), lang('admin.advent_edit.preview_image.help')); ?><br><small class="text-muted"><?php echo lang('admin.advent_edit.preview_image.requirements'); ?></small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/preview_'.$row['year'].'.jpg');
 ?>
-								<label for="form-preview" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<label for="form-preview" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? lang('admin.common.change_image') : lang('admin.common.upload_image') ; ?></label>
 								<input class="form-control d-none" name="preview" type="file" accept="image/jpeg" id="form-preview" onchange="checkImageUpload(this, -1, 'image/jpeg', 1200, 600, 4096, 4096, 'form-preview-preview', 'form-preview-preview-link');">
 							</div>
 						</div>
@@ -125,11 +126,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="row">
 						<div class="col-sm-3">
 							<div class="mb-3">
-								<label>Imatge de capçalera<span class="mandatory"></span> <?php print_helper_box('Imatge de capçalera', 'Imatge que s’utilitza per a la capçalera dels portals d’anime, manga i imatge real (a la secció de recomanacions) durant el període del calendari d’advent.\n\nHa de ser un fitxer JPEG i tenir una mida mínima de 1920x400 píxels.'); ?><br><small class="text-muted">(JPEG, mida mínima 1920x400px)</small></label><br>
+								<label><?php echo lang('admin.advent_edit.header_image'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.advent_edit.header_image'), lang('admin.advent_edit.header_image.help')); ?><br><small class="text-muted"><?php echo lang('admin.advent_edit.header_image.requirements'); ?></small></label><br>
 <?php
 	$file_exists = file_exists(STATIC_DIRECTORY.'/images/advent/header_'.$row['year'].'.jpg');
 ?>
-								<label for="form-header" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+								<label for="form-header" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? lang('admin.common.change_image') : lang('admin.common.upload_image') ; ?></label>
 								<input class="form-control d-none" name="header" type="file" accept="image/jpeg" id="form-header" onchange="checkImageUpload(this, -1, 'image/jpeg', 1920, 400, 4096, 4096, 'form-header-preview', 'form-header-preview-link');">
 							</div>
 						</div>
@@ -141,11 +142,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="col-sm-6">
-							<label for="form-position" class="mandatory">Posició del logo</label> <?php print_helper_box('Posició del logo', 'Indica si, a la pàgina del calendari d’advent, el logo de Fansubs.cat ha d’estar col·locat a l’esquerra o a la dreta.\n\nCal ajustar-ho segons el fons del calendari per a evitar tapar la imatge.'); ?>
+							<label for="form-position" class="mandatory"><?php echo lang('admin.advent_edit.position'); ?></label> <?php print_helper_box(lang('admin.advent_edit.position'), sprintf(lang('admin.advent_edit.position.help'), MAIN_SITE_NAME)); ?>
 							<select class="form-control" name="position" id="form-position" required>
-								<option value="">- Selecciona una posició -</option>
-								<option value="left"<?php echo $row['position']=='left' ? " selected" : ""; ?>>A l’esquerra</option>
-								<option value="right"<?php echo $row['position']=='right' ? " selected" : ""; ?>>A la dreta</option>
+								<option value=""><?php echo lang('admin.advent_edit.position.select'); ?></option>
+								<option value="left"<?php echo $row['position']=='left' ? " selected" : ""; ?>><?php echo lang('admin.advent_edit.position.left'); ?></option>
+								<option value="right"<?php echo $row['position']=='right' ? " selected" : ""; ?>><?php echo lang('admin.advent_edit.position.right'); ?></option>
 							</select>
 						</div>
 					</div>
@@ -156,9 +157,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<table class="table table-bordered table-hover table-sm" id="days-list-table" data-count="24">
 										<thead>
 											<tr>
-												<th class="text-center" style="width: 5%;">Dia</th>
-												<th class="text-center" style="width: 20%;">Imatge<span class="mandatory"></span> <?php print_helper_box('Imatge de la casella', 'Imatge que s’utilitza per a la casella del dia indicat una vegada s’ha obert.\n\nHa de ser un fitxer JPEG i tenir una mida exacta de 512x512 píxels.'); ?> <small class="text-muted">(512x512px)</small></th>
-												<th>URL de l’enllaç i descripció<span class="mandatory"></span> <?php print_helper_box('URL de l’enllaç i descripció', 'Enllaç al qual apunta la casella del dia indicat una vegada s’ha obert.\n\nPot ser un URL extern o bé del portal de Fansubs.cat.\n\nLa descripció es mostra sota la imatge als vídeos promocionals que es fan cada dia obrint la casella.\n\nEl format és «Nom del fansub | Títol del contingut».'); ?></th>
+												<th class="text-center" style="width: 5%;"><?php echo lang('admin.advent_edit.day'); ?></th>
+												<th class="text-center" style="width: 20%;"><?php echo lang('admin.advent_edit.image'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.advent_edit.image.long'), lang('admin.advent_edit.image.help')); ?> <small class="text-muted"><?php echo lang('admin.advent_edit.image.requirements'); ?></small></th>
+												<th><?php echo lang('admin.advent_edit.url_and_description'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.advent_edit.url_and_description'), sprintf(lang('admin.advent_edit.url_and_description.help'), MAIN_SITE_NAME)); ?></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -178,12 +179,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<img id="form-image_<?php echo $i; ?>-preview" style="width: 64px; height: 64px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg" data-original="'.STATIC_URL.'/images/advent/image_'.$row['year'].'_'.$i.'.jpg"' : ''; ?> alt="">
 													</a>
 													<br>
-													<label for="form-image_<?php echo $i; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+													<label for="form-image_<?php echo $i; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? lang('admin.common.change_image') : lang('admin.common.upload_image') ; ?></label>
 													<input class="form-control d-none" name="image_<?php echo $i; ?>" type="file" accept="image/jpeg" id="form-image_<?php echo $i; ?>" onchange="checkImageUpload(this, -1, 'image/jpeg', 512, 512, 512, 512, 'form-image_<?php echo $i; ?>-preview', 'form-image_<?php echo $i; ?>-preview-link');">
 												</td>
 												<td class="text-center align-middle">
-													<input id="form-days-list-link_url-<?php echo $i+1; ?>" name="link_url_<?php echo $i; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($days[$i]['link_url']); ?>" maxlength="200" placeholder="- Introdueix un enllaç -"/>
-													<input id="form-days-list-description-<?php echo $i+1; ?>" name="description_<?php echo $i; ?>" type="text" class="form-control mt-2" value="<?php echo htmlspecialchars($days[$i]['description']); ?>" maxlength="200" placeholder="- Introdueix una descripció -"/>
+													<input id="form-days-list-link_url-<?php echo $i+1; ?>" name="link_url_<?php echo $i; ?>" type="url" class="form-control" value="<?php echo htmlspecialchars($days[$i]['link_url']); ?>" maxlength="200" placeholder="<?php echo lang('admin.advent_edit.url_and_description.url_placeholder'); ?>"/>
+													<input id="form-days-list-description-<?php echo $i+1; ?>" name="description_<?php echo $i; ?>" type="text" class="form-control mt-2" value="<?php echo htmlspecialchars($days[$i]['description']); ?>" maxlength="200" placeholder="<?php echo lang('admin.advent_edit.url_and_description.description_placeholder'); ?>"/>
 												</td>
 											</tr>
 <?php
@@ -196,7 +197,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 					</div>
 					<div class="mb-3 text-center pt-2">
-						<button type="submit" name="action" value="edit" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span>Desa els canvis</button>
+						<button type="submit" name="action" value="edit" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo lang('admin.generic.save_changes'); ?></button>
 					</div>
 				</form>
 			</article>

@@ -1,55 +1,56 @@
 <?php
-$header_title="Llista de comunitats - Altres";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.link_list.header');
 $page="other";
 include(__DIR__.'/header.inc.php');
 
 function get_category_name_by_id($id) {
 	switch ($id) {
 		case 'featured':
-			return "Destacats";
+			return lang('admin.generic.link_category.featured');
 		case 'blogs':
-			return "Blogs i notícies";
+			return lang('admin.generic.link_category.blogs');
 		case 'catalogs':
-			return "Catàlegs";
+			return lang('admin.generic.link_category.catalogs');
 		case 'art':
-			return "Còmic i arts visuals";
+			return lang('admin.generic.link_category.art');
 		case 'forums':
-			return "Comunitats i fòrums";
+			return lang('admin.generic.link_category.forums');
 		case 'culture':
-			return "Cultura asiàtica";
+			return lang('admin.generic.link_category.culture');
 		case 'creators':
-			return "Divulgadors";
+			return lang('admin.generic.link_category.creators');
 		case 'dubbing':
-			return "Doblatge";
+			return lang('admin.generic.link_category.dubbing');
 		case 'music':
-			return "Música i versions";
+			return lang('admin.generic.link_category.music');
 		case 'nostalgia':
-			return "Nostàlgia";
+			return lang('admin.generic.link_category.nostalgia');
 		case 'podcasts':
-			return "Pòdcasts";
+			return lang('admin.generic.link_category.podcasts');
 		case 'preservation':
-			return "Preservació";
+			return lang('admin.generic.link_category.preservation');
 		case 'subtitles':
-			return "Subtítols";
+			return lang('admin.generic.link_category.subtitles');
 		case 'others':
-			return "Altres";
+			return lang('admin.generic.link_category.others');
 		default:
-			return "Desconeguda";
+			return lang('admin.generic.link_category.unknown');
 	}
 }
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-community", "S’ha suprimit la comunitat «".query_single("SELECT name FROM community WHERE id=".escape($_GET['delete_id']))."» (id. de comunitat: ".$_GET['delete_id'].")");
+		log_action("delete-link", "Link «".query_single("SELECT name FROM community WHERE id=".escape($_GET['delete_id']))."» (link id: ".$_GET['delete_id'].") deleted");
 		query("DELETE FROM community WHERE id=".escape($_GET['delete_id']));
 		@unlink(STATIC_DIRECTORY.'/images/communities/'.$_GET['delete_id'].'.png');
-		$_SESSION['message']="S’ha suprimit correctament.";
+		$_SESSION['message']=lang('admin.generic.delete_successful');
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Llista de comunitats</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.link_list.title'); ?></h4>
 					<hr>
 
 <?php
@@ -63,9 +64,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Nom</th>
-								<th class="text-center" scope="col">Categoria</th>
-								<th class="text-center" scope="col">Accions</th>
+								<th scope="col"><?php echo lang('admin.link_list.name'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.link_list.category'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -74,7 +75,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="8" class="text-center">- No hi ha cap comunitat -</td>
+								<td colspan="8" class="text-center"><?php echo lang('admin.link_list.empty'); ?></td>
 							</tr>
 <?php
 	}
@@ -83,7 +84,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<tr>
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['name']); ?></th>
 								<td class="align-middle text-center"><?php echo get_category_name_by_id($row['category']); ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="community_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="community_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir la comunitat «".$row['name']."»? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="community_edit.php?id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a> <a href="community_list.php?delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf(lang('admin.link_list.delete_confirm'), $row['name']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}
@@ -92,7 +93,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</tbody>
 					</table>
 					<div class="text-center">
-						<a href="community_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix una comunitat</a>
+						<a href="community_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.link_list.create_button'); ?></a>
 					</div>
 				</article>
 			</div>

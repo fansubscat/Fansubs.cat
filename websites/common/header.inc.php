@@ -18,7 +18,7 @@ if ((defined('PAGE_DISABLED_IF_HENTAI') && PAGE_DISABLED_IF_HENTAI && SITE_IS_HE
 $special_day = get_special_day();
 ?>
 <!DOCTYPE html>
-<html lang="ca" class="theme-<?php echo SITE_THEME; ?><?php echo SITE_IS_HENTAI ? ' subtheme-hentai' : ''; ?><?php echo SITE_IS_HENTAI && empty($_COOKIE['hentai_warning_accepted']) ? ' page-no-overflow' : ''; ?>">
+<html lang="<?php echo SITE_LANGUAGE; ?>" class="theme-<?php echo SITE_THEME; ?><?php echo SITE_IS_HENTAI ? ' subtheme-hentai' : ''; ?><?php echo SITE_IS_HENTAI && empty($_COOKIE['hentai_warning_accepted']) ? ' page-no-overflow' : ''; ?>">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -51,7 +51,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			echo json_encode(array(
 				"status" => 'ko',
-				"error" => "Error en la creació del fitxer de blocatge. Torna-ho a provar més tard. (codi: L)"
+				"error" => lang('admin.fetch_storage_links.error_lock')
 			));
 			die();
 		}
@@ -59,19 +59,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (substr($results,0,5)=='ERROR'){
 			switch(substr($results,0,7)){
 				case 'ERROR 1':
-					$results = "Error de sessió ja iniciada. Torna-ho a provar. (codi: 1)";
+					$results = lang('admin.fetch_storage_links.error_logged_in');
 					break;
 				case 'ERROR 2':
-					$results = "Error d’inici de sessió. El compte encara està actiu? (codi: 2)";
+					$results = lang('admin.fetch_storage_links.error_login');
 					break;
 				case 'ERROR 3':
-					$results = "Error d’accés a la carpeta. El nom de la carpeta és correcte? (codi: 3)";
+					$results = lang('admin.fetch_storage_links.error_folder');
 					break;
 				case 'ERROR 4':
-					$results = "Error d’exportació d’enllaços. (codi: 4)";
+					$results = lang('admin.fetch_storage_links.error_export');
 					break;
 				case 'ERROR 5':
-					$results = "Error en tancar la sessió. (codi: 5)";
+					$results = lang('admin.fetch_storage_links.error_logout');
 					break;
 			}
 			echo json_encode(array(
@@ -123,8 +123,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						$element['link'] = $real_link;
 						$element['resolution'] = $resolution;
 						$element['duration'] = $duration;
-						$element['reason'] = "Múltiples enllaços";
-						$element['reason_description'] = "Hi ha més d’un enllaç del mateix tipus per a aquest capítol, s’ha importat només el primer.";
+						$element['reason'] = lang('admin.fetch_storage_links.reason.multiple');
+						$element['reason_description'] = lang('admin.fetch_storage_links.reason.multiple.description');
 						array_push($unmatched_results, $element);
 					}
 				} else {
@@ -134,8 +134,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					$element['link'] = $real_link;
 					$element['resolution'] = $resolution;
 					$element['duration'] = $duration;
-					$element['reason'] = "Capítol inexistent";
-					$element['reason_description'] = "No s’ha trobat cap capítol amb aquest número.";
+					$element['reason'] = lang('admin.fetch_storage_links.reason.inexistant');
+					$element['reason_description'] = lang('admin.fetch_storage_links.reason.inexistant.description');
 					array_push($unmatched_results, $element);
 				}
 			}
@@ -146,12 +146,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				$element['link'] = $real_link;
 				$element['resolution'] = $resolution;
 				$element['duration'] = $duration;
-				$element['reason'] = "Format erroni";
-				$element['reason_description'] = "No coincideix amb el format correcte de nom de fitxer. Potser és un capítol especial?";
+				$element['reason'] = lang('admin.fetch_storage_links.reason.wrong_format');
+				$element['reason_description'] = lang('admin.fetch_storage_links.reason.wrong_format.description');
 				array_push($unmatched_results, $element);
 			}
 		} else {
-			log_action('get-link-failed', "No s’ha pogut obtenir l’enllaç, text de sortida sense el format correcte: «".$link."»");
+			log_action('get-link-failed', "Unable to get link, output text was incorrectly formatted: «".$link."»");
 		}
 	}
 

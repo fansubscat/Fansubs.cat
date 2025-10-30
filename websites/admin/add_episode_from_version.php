@@ -9,12 +9,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (is_numeric($_POST['series_id'])) {
 		$series_id=escape($_POST['series_id']);
 	} else {
-		crash("Dades invàlides: id de sèrie no numèric");
+		crash(lang('admin.error.series_id_not_numeric'));
 	}
 	if (is_numeric($_POST['division_id'])) {
 		$division_id=escape($_POST['division_id']);
 	} else {
-		crash("Dades invàlides: id de divisió no numèric");
+		crash(lang('admin.error.series_id_not_numeric'));
 	}
 	if ((!empty($_POST['number']) || $_POST['number']=='0') && is_numeric($_POST['number'])) {
 		$number=escape($_POST['number']);
@@ -38,12 +38,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					IF(e.number IS NOT NULL,
 						IF(s.number_of_episodes=1,
 							s.name,
-							CONCAT(d.name, ' - Film ', REPLACE(TRIM(e.number)+0, '.', ','))
+							CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
 						),
 						e.description
 					),
 					IF(e.number IS NOT NULL,
-						CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+						CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
 						CONCAT(d.name, ' - ', e.description)
 					)
 				) episode_title,

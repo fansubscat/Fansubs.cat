@@ -1,5 +1,6 @@
 <?php
-$header_title="Inicia la sessió";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.login.header');
 $skip_navbar=TRUE;
 include(__DIR__.'/header.inc.php');
 
@@ -44,22 +45,22 @@ $result=query("SELECT * FROM admin_user u LIMIT 1");
 
 if (mysqli_num_rows($result)==0) {
 ?>
-			<p class="alert alert-danger text-center">Instal·lació nova sense cap administrador donat d’alta.<br>Inicia sessió amb l’usuari i contrasenya que vulguis: esdevindran l’usuari i contrasenya del primer administrador.</p>
+			<p class="alert alert-danger text-center"><?php echo lang('admin.login.first_login_explanation'); ?></p>
 <?php
 }
 ?>
 			<div class="card">
 				<article class="card-body text-center">
-					<h4 class="card-title text-center mb-4 mt-1">Inicia la sessió</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.login.title'); ?></h4>
 					<hr>
 <?php
 	if (!empty($invalid)) {
 ?>
-					<p class="text-center text-danger">Usuari o contrasenya invàlids.</p>
+					<p class="text-center text-danger"><?php echo lang('admin.login.invalid_credentials'); ?></p>
 <?php
 	} else {
 ?>
-					<p class="text-center">Inicia la sessió per a continuar.</p>
+					<p class="text-center"><?php echo lang('admin.login.please_login'); ?></p>
 <?php
 	}
 ?>
@@ -67,17 +68,17 @@ if (mysqli_num_rows($result)==0) {
 						<div class="mb-3">
 							<div class="input-group">
 								<div class="input-group-text"><i class="fa fa-user"></i></div>
-								<input name="username" class="form-control" placeholder="Nom d’usuari" required autofocus>
+								<input name="username" class="form-control" placeholder="<?php echo lang('admin.login.username'); ?>" required autofocus>
 							</div>
 						</div>
 						<div class="mb-3">
 							<div class="input-group">
 								<div class="input-group-text"><i class="fa fa-lock"></i></div>
-								<input name="password" class="form-control" placeholder="Contrasenya" type="password" required>
+								<input name="password" class="form-control" placeholder="<?php echo lang('admin.login.password'); ?>" type="password" required>
 							</div>
 						</div>
 						<div class="mb-3">
-							<button type="submit" class="btn btn-primary btn-block">Inicia la sessió</button>
+							<button type="submit" class="btn btn-primary btn-block"><?php echo lang('admin.login.login_button'); ?></button>
 						</div>
 					</form>
 				</article>

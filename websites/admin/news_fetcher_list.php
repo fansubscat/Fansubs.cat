@@ -1,5 +1,6 @@
 <?php
-$header_title="Llista de recollidors de notícies - Notícies";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.news_fetcher_list.header');
 $page="news";
 include(__DIR__.'/header.inc.php');
 
@@ -8,7 +9,7 @@ function get_method($method){
 		case 'animugen':
 			return "AniMugen";
 		case 'blogspot':
-			return "Blogspot (genèric)";
+			return lang('admin.generic.fetch_method.blogspot_generic');
 		case 'blogspot_2nf':
 			return "Blogspot (2nB no Fansub)";
 		case 'blogspot_as':
@@ -69,13 +70,13 @@ function get_method($method){
 function get_fetch_type($fetch_type){
 	switch ($fetch_type){
 		case 'periodic':
-			return 'Periòdic';
+			return lang('admin.generic.fetch_type.periodic.short');
 		case 'onrequest':
-			return 'A petició';
+			return lang('admin.generic.fetch_type.by_request.short');
 		case 'onetime_retired':
-			return 'Una vegada (retirat)';
+			return lang('admin.generic.fetch_type.single_retired.short');
 		case 'onetime_inactive':
-			return 'Una vegada (inactiu)';
+			return lang('admin.generic.fetch_type.single_inactive.short');
 		default:
 			return $fetch_type;
 	}
@@ -83,16 +84,16 @@ function get_fetch_type($fetch_type){
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-news-fetcher", "S’ha suprimit el recollidor de notícies amb URL «".query_single("SELECT url FROM news_fetcher WHERE id=".escape($_GET['delete_id']))."» (id. de recollidor de notícies: ".$_GET['delete_id'].")");
+		log_action("delete-news-fetcher", "News fetcher with URL «".query_single("SELECT url FROM news_fetcher WHERE id=".escape($_GET['delete_id']))."» (news fetcher id: ".$_GET['delete_id'].") deleted");
 		query("UPDATE news SET news_fetcher_id=NULL WHERE news_fetcher_id=".escape($_GET['delete_id']));
 		query("DELETE FROM news_fetcher WHERE id=".escape($_GET['delete_id']));
-		$_SESSION['message']="S’ha suprimit correctament.";
+		$_SESSION['message']=lang('admin.generic.delete_successful');
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Llista de recollidors de notícies</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.news_fetcher_list.title'); ?></h4>
 					<hr>
 
 <?php
@@ -106,10 +107,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Fansub i URL</th>
-								<th scope="col">Mètode</th>
-								<th scope="col">Freqüència</th>
-								<th class="text-center" scope="col">Accions</th>
+								<th scope="col"><?php echo lang('admin.news_fetcher_list.fansub_and_url'); ?></th>
+								<th scope="col"><?php echo lang('admin.news_fetcher_list.method'); ?></th>
+								<th scope="col"><?php echo lang('admin.news_fetcher_list.fetch_type'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -123,7 +124,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="4" class="text-center">- No hi ha cap recollidor de notícies -</td>
+								<td colspan="4" class="text-center"><?php echo lang('admin.news_fetcher_list.empty'); ?></td>
 							</tr>
 <?php
 	}
@@ -133,7 +134,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<th scope="row" class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars($row['fansub_name']).'<br><small>'.htmlspecialchars($row['url']).'</small>'; ?></th>
 								<td class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars(get_method($row['method'])); ?></th>
 								<td class="align-middle<?php echo ($row['fetch_type']=='periodic' || $row['fetch_type']=='onrequest') ? '' : ' text-muted'; ?>"><?php echo htmlspecialchars(get_fetch_type($row['fetch_type'])); ?></th>
-								<td class="align-middle text-center text-nowrap"><a href="news_fetcher_edit.php?id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="news_fetcher_list.php?delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir el recollidor de notícies de «".$row['url']."»? L’acció no es podrà desfer. No se’n suprimiran les notícies.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="news_fetcher_edit.php?id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a> <a href="news_fetcher_list.php?delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf(lang('admin.news_fetcher_list.delete_confirm'), $row['url']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}
@@ -142,7 +143,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</tbody>
 					</table>
 					<div class="text-center">
-						<a href="news_fetcher_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un recollidor de notícies</a>
+						<a href="news_fetcher_edit.php" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.news_fetcher_list.create_button'); ?></a>
 					</div>
 				</article>
 			</div>

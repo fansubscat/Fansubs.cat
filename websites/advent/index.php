@@ -56,7 +56,7 @@ define('PAGE_TITLE', sprintf(lang('advent.page_title'), $row['year']));
 
 ?>
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="<?php echo SITE_LANGUAGE; ?>">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">

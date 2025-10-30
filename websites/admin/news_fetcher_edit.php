@@ -1,5 +1,6 @@
 <?php
-$header_title="Edició de recollidors de notícies - Notícies";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.news_fetcher_edit.header');
 $page="news";
 include(__DIR__.'/header.inc.php');
 
@@ -9,45 +10,45 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['id']) && is_numeric($_POST['id'])) {
 			$data['id']=escape($_POST['id']);
 		} else if ($_POST['action']=='edit') {
-			crash("Dades invàlides: manca id");
+			crash(lang('admin.error.id_missing'));
 		}
 		if (!empty($_POST['fansub_id']) && is_numeric($_POST['fansub_id'])) {
 			$data['fansub_id']=escape($_POST['fansub_id']);
 		} else {
-			crash("Dades invàlides: manca fansub_id");
+			crash(lang('admin.error.fansub_id_missing'));
 		}
 		if (!empty($_POST['url'])) {
 			$data['url']=escape($_POST['url']);
 		} else {
-			crash("Dades invàlides: manca url");
+			crash(lang('admin.error.url_missing'));
 		}
 		if (!empty($_POST['method'])) {
 			$data['method']=escape($_POST['method']);
 		} else {
-			crash("Dades invàlides: manca method");
+			crash(lang('admin.error.method_missing'));
 		}
 		if (!empty($_POST['fetch_type'])) {
 			$data['fetch_type']=escape($_POST['fetch_type']);
 		} else {
-			crash("Dades invàlides: manca fetch_type");
+			crash(lang('admin.error.fetch_type_missing'));
 		}
 		
 		if ($_POST['action']=='edit') {
 			$old_result = query("SELECT * FROM news_fetcher WHERE id=".$data['id']);
 			$old_row = mysqli_fetch_assoc($old_result);
 			if ($old_row['updated']!=$_POST['last_update']) {
-				crash("Algú altre ha actualitzat el recollidor de notícies mentre tu l’editaves. Hauràs de tornar a fer els canvis.");
+				crash(lang('admin.error.news_fetcher_edit_concurrency_error'));
 			}
 			
-			log_action("update-news-fetcher", "S’ha actualitzat el recollidor de notícies amb URL «".$_POST['url']."» (id. de recollidor de notícies: ".$data['id'].")");
+			log_action("update-news-fetcher", "News fetcher with URL «".$_POST['url']."» (news fetcher id: ".$data['id'].") updated");
 			query("UPDATE news_fetcher SET fansub_id=".$data['fansub_id'].",url='".$data['url']."',method='".$data['method']."',fetch_type='".$data['fetch_type']."',updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 		}
 		else {
-			log_action("create-news-fetcher", "S’ha creat un recollidor de notícies amb URL «".$_POST['url']."»");
+			log_action("create-news-fetcher", "News fetcher with URL «".$_POST['url']."» created");
 			query("INSERT INTO news_fetcher (fansub_id,url,method,fetch_type,status,last_fetch_result,last_fetch_date,last_fetch_increment,created,created_by,updated,updated_by) VALUES (".$data['fansub_id'].",'".$data['url']."','".$data['method']."','".$data['fetch_type']."','idle',NULL,NULL,NULL,CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 		}
 
-		$_SESSION['message']="S’han desat les dades correctament.";
+		$_SESSION['message']=lang('admin.generic.data_saved');
 
 		header("Location: news_fetcher_list.php");
 		die();
@@ -55,22 +56,28 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 		$result = query("SELECT f.* FROM news_fetcher f WHERE id=".escape($_GET['id']));
-		$row = mysqli_fetch_assoc($result) or crash('News fetcher not found');
+		$row = mysqli_fetch_assoc($result) or crash(lang('admin.error.news_fetcher_not_found'));
 		mysqli_free_result($result);
 	} else {
 		$row = array();
+		$row['id']='';
+		$row['fansub_id']='';
+		$row['url']='';
+		$row['updated']='';
+		$row['method']='';
+		$row['fetch_type']='';
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 			<article class="card-body">
-				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita el recollidor de notícies" : "Afegeix un recollidor de notícies"; ?></h4>
+				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? lang('admin.news_fetcher_edit.edit_title') : lang('admin.news_fetcher_edit.create_title'); ?></h4>
 				<hr>
 				<form method="post" action="news_fetcher_edit.php">
 					<div class="mb-3">
-						<label for="form-fansub_id" class="mandatory">Fansub</label> <?php print_helper_box('Fansub', 'Fansub al qual s’associaran les notícies obtingudes amb aquest recollidor.'); ?>
+						<label for="form-fansub_id" class="mandatory"><?php echo lang('admin.news_fetcher_edit.fansub'); ?></label> <?php print_helper_box(lang('admin.news_fetcher_edit.fansub'), lang('admin.news_fetcher_edit.fansub.help')); ?>
 						<select name="fansub_id" class="form-select" id="form-fansub_id" required>
-							<option value="">- Selecciona un fansub -</option>
+							<option value=""><?php echo lang('admin.news_fetcher_edit.fansub.select'); ?></option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
@@ -83,17 +90,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</select>
 					</div>
 					<div class="mb-3">
-						<label for="form-url" class="mandatory">URL</label> <?php print_helper_box('URL', 'Adreça URL completa del web on es farà la petició per a recollir-ne les notícies.'); ?>
+						<label for="form-url" class="mandatory"><?php echo lang('admin.news_fetcher_edit.url'); ?></label> <?php print_helper_box(lang('admin.news_fetcher_edit.url'), lang('admin.news_fetcher_edit.url.help')); ?>
 						<input class="form-control" name="url" id="form-url" required value="<?php echo htmlspecialchars($row['url']); ?>">
 						<input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 						<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-method" class="mandatory">Mètode de recollida</label> <?php print_helper_box('Mètode de recollida', 'Mètode de scraping utilitzat per a recollir les notícies.\n\nAquest sistema depèn profundament de l’estructura HTML dels webs i si s’hi fan canvis, deixarà de funcionar.\n\nSi consideres que cal canviar o afegir algun mètode de recollida, notifica-ho a un administrador perquè en canviï el codi.'); ?>
+						<label for="form-method" class="mandatory"><?php echo lang('admin.news_fetcher_edit.method'); ?></label> <?php print_helper_box(lang('admin.news_fetcher_edit.method'), lang('admin.news_fetcher_edit.method.help')); ?>
 						<select name="method" class="form-select" id="form-method" required>
-							<option value="">- Selecciona un mètode -</option>
+							<option value=""><?php echo lang('admin.news_fetcher_edit.method.select'); ?></option>
 							<option value="animugen"<?php echo $row['method']=='animugen' ? " selected" : ""; ?>>AniMugen</option>
-							<option value="blogspot"<?php echo $row['method']=='blogspot' ? " selected" : ""; ?>>Blogspot (genèric)</option>
+							<option value="blogspot"<?php echo $row['method']=='blogspot' ? " selected" : ""; ?>><?php echo lang('admin.generic.fetch_method.blogspot_generic'); ?></option>
 							<option value="blogspot_2nf"<?php echo $row['method']=='blogspot_2nf' ? " selected" : ""; ?>>Blogspot (2nB no Fansub)</option>
 							<option value="blogspot_as"<?php echo $row['method']=='blogspot_as' ? " selected" : ""; ?>>Blogspot (AnliumSubs)</option>
 							<option value="blogspot_bsc"<?php echo $row['method']=='blogspot_bsc' ? " selected" : ""; ?>>Blogspot (Bleach - Sub Català)</option>
@@ -123,17 +130,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</select>
 					</div>
 					<div class="mb-3">
-						<label for="form-fetch_type" class="mandatory">Freqüència de recollida</label> <?php print_helper_box('Freqüència de recollida', 'Freqüència de recollida de les notícies: periòdica (cas normal), a petició (cal configurar el testimoni de ping del fansub) o obtenció única.'); ?>
+						<label for="form-fetch_type" class="mandatory"><?php echo lang('admin.news_fetcher_edit.fetch_type'); ?></label> <?php print_helper_box(lang('admin.news_fetcher_edit.fetch_type'), lang('admin.news_fetcher_edit.fetch_type.help')); ?>
 						<select name="fetch_type" class="form-select" id="form-fetch_type" required>
-							<option value="">- Selecciona una freqüència -</option>
-							<option value="periodic"<?php echo $row['fetch_type']=='periodic' ? " selected" : ""; ?>>Periòdica (cada 15 minuts)</option>
-							<option value="onrequest"<?php echo $row['fetch_type']=='onrequest' ? " selected" : ""; ?>>Només a petició (amb testimoni de ping)</option>
-							<option value="onetime_retired"<?php echo $row['fetch_type']=='onetime_retired' ? " selected" : ""; ?>>Només obtenció inicial (URL retirada)</option>
-							<option value="onetime_inactive"<?php echo $row['fetch_type']=='onetime_inactive' ? " selected" : ""; ?>>Només obtenció inicial (URL inactiva)</option>
+							<option value=""><?php echo lang('admin.news_fetcher_edit.fetch_type.select'); ?></option>
+							<option value="periodic"<?php echo $row['fetch_type']=='periodic' ? " selected" : ""; ?>><?php echo lang('admin.generic.fetch_type.periodic'); ?></option>
+							<option value="onrequest"<?php echo $row['fetch_type']=='onrequest' ? " selected" : ""; ?>><?php echo lang('admin.generic.fetch_type.by_request'); ?></option>
+							<option value="onetime_retired"<?php echo $row['fetch_type']=='onetime_retired' ? " selected" : ""; ?>><?php echo lang('admin.generic.fetch_type.single_retired'); ?></option>
+							<option value="onetime_inactive"<?php echo $row['fetch_type']=='onetime_inactive' ? " selected" : ""; ?>><?php echo lang('admin.generic.fetch_type.single_inactive'); ?></option>
 						</select>
 					</div>
 					<div class="mb-3 text-center pt-2">
-						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix el recollidor de notícies"; ?></button>
+						<button type="submit" name="action" value="<?php echo !empty($row['id']) ? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? lang('admin.generic.save_changes') : lang('admin.news_fetcher_edit.create_button'); ?></button>
 					</div>
 				</form>
 			</article>

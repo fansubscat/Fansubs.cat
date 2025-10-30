@@ -1,5 +1,7 @@
 <?php
+require_once(__DIR__.'/../common/initialization.inc.php');
 require_once(__DIR__.'/../../common/libraries/preview_image_generator.php');
+
 $type='anime';
 $link_url_pattern = "(https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_\-]+)|storage:\/\/.*)";
 
@@ -11,47 +13,44 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Edició de versions d’anime - Anime";
 		$page="anime";
+		$header_title=lang('admin.version_edit.header.anime');
+		$original_title_string=lang('admin.version_edit.original_title.anime');
+		$not_imported_string=lang('admin.version_edit.not_imported.anime');
+		$episode_list_string=lang('admin.version_edit.episode_list');
+		$episode_list_help_string=lang('admin.version_edit.episode_list.help');
+		$division_titles_and_covers_help_string=lang('admin.version_edit.division_titles_and_covers.help');
+		$status_help_string=lang('admin.version_edit.status.help');
+		$not_showing_numbers_string=lang('admin.version_edit.not_showing_numbers.anime');
 		$external_source="MyAnimeList";
 	break;
 	case 'manga':
-		$header_title="Edició de versions de manga - Manga";
 		$page="manga";
+		$header_title=lang('admin.version_edit.header.manga');
+		$original_title_string=lang('admin.version_edit.original_title.manga');
+		$not_imported_string=lang('admin.version_edit.not_imported.manga');
+		$episode_list_string=lang('admin.version_edit.episode_list.manga');
+		$episode_list_help_string=lang('admin.version_edit.episode_list.help.manga');
+		$division_titles_and_covers_help_string=lang('admin.version_edit.division_titles_and_covers.help.manga');
+		$status_help_string=lang('admin.version_edit.status.help.manga');
+		$not_showing_numbers_string=lang('admin.version_edit.not_showing_numbers.manga');
 		$external_source="MyAnimeList";
 	break;
 	case 'liveaction':
-		$header_title="Edició de versions d’imatge real - Imatge real";
 		$page="liveaction";
+		$header_title=lang('admin.version_edit.header.liveaction');
+		$original_title_string=lang('admin.version_edit.original_title.liveaction');
+		$not_imported_string=lang('admin.version_edit.not_imported.liveaction');
+		$episode_list_string=lang('admin.version_edit.episode_list');
+		$episode_list_help_string=lang('admin.version_edit.episode_list.help');
+		$division_titles_and_covers_help_string=lang('admin.version_edit.division_titles_and_covers.help');
+		$status_help_string=lang('admin.version_edit.status.help');
+		$not_showing_numbers_string=lang('admin.version_edit.not_showing_numbers.liveaction');
 		$external_source="MyDramaList";
 	break;
 }
 
 include(__DIR__.'/header.inc.php');
-
-switch ($type) {
-	case 'anime':
-		$content="anime";
-		$content_uc="Títol original de l’anime";
-		$content_prep="de l’anime";
-		$division_titles="Títols i portades de cada temporada";
-		$division_some_completed="alguna temporada completada";
-		break;
-	case 'manga':
-		$content="manga";
-		$content_uc="Títol original del manga";
-		$content_prep="del manga";
-		$division_titles="Títols i portades de cada volum";
-		$division_some_completed="algun volum completat";
-		break;
-	case 'liveaction':
-		$content="contingut d’imatge real";
-		$content_uc="Títol original del contingut d’imatge real";
-		$content_prep="del contingut d’imatge real";
-		$division_titles="Títols i portades de cada temporada";
-		$division_some_completed="alguna temporada completada";
-		break;
-}
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (!empty($_POST['action'])) {
@@ -59,22 +58,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['id']) && is_numeric($_POST['id'])) {
 			$data['id']=escape($_POST['id']);
 		} else if ($_POST['action']=='edit') {
-			crash("Dades invàlides: manca id");
+			crash(lang('admin.error.id_missing'));
 		}
 		if (!empty($_POST['series_id']) && is_numeric($_POST['series_id'])) {
 			$data['series_id']=escape($_POST['series_id']);
 		} else {
-			crash("Dades invàlides: manca series_id");
+			crash(lang('admin.error.series_id_missing'));
 		}
 		if (!empty($_POST['status']) && is_numeric($_POST['status'])) {
 			$data['status']=escape($_POST['status']);
 		} else {
-			crash("Dades invàlides: manca status");
+			crash(lang('admin.error.status_missing'));
 		}
 		if (!empty($_POST['fansub_1']) && is_numeric($_POST['fansub_1'])) {
 			$data['fansub_1']=escape($_POST['fansub_1']);
 		} else {
-			crash("Dades invàlides: manca fansub_1");
+			crash(lang('admin.error.fansub_1_missing'));
 		}
 		if (!empty($_POST['fansub_2']) && is_numeric($_POST['fansub_2'])) {
 			$data['fansub_2']=escape($_POST['fansub_2']);
@@ -109,7 +108,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['storage_folder'])) {
 			$data['storage_folder']="'".escape($_POST['storage_folder'])."'";
 		} else if ($type!='manga') {
-			crash("Dades invàlides: manca storage_folder");
+			crash(lang('admin.error.storage_folder_missing'));
 		} else {
 			$data['storage_folder']="NULL";
 		}
@@ -126,7 +125,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['title'])) {
 			$data['title']=escape($_POST['title']);
 		} else {
-			crash("Dades invàlides: manca title");
+			crash(lang('admin.error.title_missing'));
 		}
 		if (!empty($_POST['alternate_titles'])) {
 			$data['alternate_titles']="'".escape($_POST['alternate_titles'])."'";
@@ -136,12 +135,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		if (!empty($_POST['slug'])) {
 			$data['slug']=escape($_POST['slug']);
 		} else {
-			crash("Dades invàlides: manca slug");
+			crash(lang('admin.error.slug_missing'));
 		}
 		if (!empty($_POST['synopsis'])) {
 			$data['synopsis']=escape($_POST['synopsis']);
 		} else {
-			crash("Dades invàlides: manca synopsis");
+			crash(lang('admin.error.synopsis_missing'));
 		}
 
 		$divisions=array();
@@ -152,7 +151,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (!empty($_POST['form-division-title-'.$rowd['id']])){
 				$rowd['version_division_title']=escape($_POST['form-division-title-'.$rowd['id']]);
 			} else {
-				crash("Dades invàlides: manca títol de la divisió");
+				crash(lang('admin.error.version_division_title_missing'));
 			}
 			array_push($divisions, $rowd);
 		}
@@ -185,7 +184,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				if (is_numeric($_POST['form-files-list-'.$episode_id.'-id-'.$i])) {
 					$file['id']=escape($_POST['form-files-list-'.$episode_id.'-id-'.$i]);
 				} else {
-					crash("Dades invàlides: manca id del fitxer");
+					crash(lang('admin.error.file_id_missing'));
 				}
 				if (!empty($_FILES['form-files-list-'.$episode_id.'-file-'.$i]) && is_uploaded_file($_FILES['form-files-list-'.$episode_id.'-file-'.$i]['tmp_name'])) {
 					$file['original_filename']="'".escape($_FILES['form-files-list-'.$episode_id.'-file-'.$i]["name"])."'";
@@ -245,7 +244,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				}
 
 				if (($has_url || $file['original_filename']!='NULL') && $file['length']=="NULL"){
-					crash("Dades invàlides: manca length del fitxer");
+					crash(lang('admin.error.file_length_missing'));
 				}
 
 				if ($has_url || ($type=='manga' && ($file['original_filename']!='NULL' || $file['id']!=-1)) || $file['is_lost']==1) {
@@ -268,25 +267,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (is_numeric($_POST['form-extras-list-id-'.$i])) {
 				$extra['id']=escape($_POST['form-extras-list-id-'.$i]);
 			} else {
-				crash("Dades invàlides: manca id de l’extra");
+				crash(lang('admin.error.extra_id_missing'));
 			}
 			if (!empty($_POST['form-extras-list-name-'.$i])) {
 				$extra['name']=escape($_POST['form-extras-list-name-'.$i]);
 			} else {
-				crash("Dades invàlides: manca name de l’extra");
+				crash(lang('admin.error.extra_name_missing'));
 			}
 			if (!empty($_FILES['form-extras-list-file-'.$i]) && is_uploaded_file($_FILES['form-extras-list-file-'.$i]['tmp_name'])) {
 				$extra['original_filename']=escape($_FILES['form-extras-list-file-'.$i]["name"]);
 				$extra['original_filename_unescaped']=$_FILES['form-extras-list-file-'.$i]['name'];
 				$extra['temporary_filename']=$_FILES['form-extras-list-file-'.$i]['tmp_name'];
 			} else if ($type=='manga' && $extra['id']==-1) {
-				crash("Dades invàlides: manca fitxer de l’extra");
+				crash(lang('admin.error.extra_file_missing'));
 			}
 			if (!empty($_POST['form-extras-list-length-'.$i])) {
 				//This works for manga too because if the format is not in HH:MM:SS, the value is returned directly
 				$extra['length']=escape(convert_from_hh_mm_ss($_POST['form-extras-list-length-'.$i]));
 			} else {
-				crash("Dades invàlides: manca length de l’extra");
+				crash(lang('admin.error.extra_length_missing'));
 			}
 			if (!empty($_POST['form-extras-list-comments-'.$i])) {
 				$extra['comments']="'".escape($_POST['form-extras-list-comments-'.$i])."'";
@@ -331,27 +330,27 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			if (is_numeric($_POST['form-remote_folders-list-id-'.$i])) {
 				$remote_folder['id']=escape($_POST['form-remote_folders-list-id-'.$i]);
 			} else {
-				crash("Dades invàlides: manca id de la carpeta remota");
+				crash(lang('admin.error.remote_folder_id_missing'));
 			}
 			if (!empty($_POST['form-remote_folders-list-remote_account_id-'.$i])) {
 				$remote_folder['remote_account_id']=escape($_POST['form-remote_folders-list-remote_account_id-'.$i]);
 			} else {
-				crash("Dades invàlides: manca remote_account_id de la carpeta");
+				crash(lang('admin.error.remote_folder_remote_account_id_missing'));
 			}
 			if (!empty($_POST['form-remote_folders-list-folder-'.$i])) {
 				$remote_folder['folder']=escape($_POST['form-remote_folders-list-folder-'.$i]);
 			} else {
-				crash("Dades invàlides: manca folder de la carpeta remota");
+				crash(lang('admin.error.remote_folder_folder_missing'));
 			}
 			if (!empty($_POST['form-remote_folders-list-default_resolution-'.$i])) {
 				$remote_folder['default_resolution']=escape($_POST['form-remote_folders-list-default_resolution-'.$i]);
 			} else {
-				crash("Dades invàlides: manca default_resolution de la carpeta remota");
+				crash(lang('admin.error.remote_folder_default_resolution_missing'));
 			}
 			if (!empty($_POST['form-remote_folders-list-default_duration-'.$i])) {
 				$remote_folder['default_duration']=escape(convert_from_hh_mm_ss($_POST['form-remote_folders-list-default_duration-'.$i]));
 			} else {
-				crash("Dades invàlides: manca default_duration de la carpeta remota");
+				crash(lang('admin.error.remote_folder_default_duration_missing'));
 			}
 			if (!empty($_POST['form-remote_folders-list-division_id-'.$i])) {
 				$remote_folder['division_id']=escape($_POST['form-remote_folders-list-division_id-'.$i]);
@@ -384,16 +383,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			$old_result = query("SELECT * FROM version WHERE id=".$data['id']);
 			$old_row = mysqli_fetch_assoc($old_result);
 			if ($old_row['updated']!=$_POST['last_update']) {
-				crash("Algú altre ha actualitzat la versió mentre tu l’editaves. Hauràs de tornar a fer els canvis.");
+				crash(lang('admin.error.version_edit_concurrency_error'));
 			}
 			
 			$slug_result = query("SELECT COUNT(*) cnt FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.slug='".$data['slug']."' AND s.type='$type' AND v.id<>".$data['id']);
 			$slug_row = mysqli_fetch_assoc($slug_result);
 			if ($slug_row['cnt']>0) {
-				crash("Ja hi ha una versió amb aquest identificador. Revisa que no l’hagis afegida per duplicat i, en cas contrari, canvia’n l’identificador.");
+				crash(lang('admin.error.version_edit_slug_already_exists_error'));
 			}
 
-			log_action("update-version", "S’ha actualitzat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (id. de versió: ".$data['id'].")");
+			log_action("update-version", "Version of «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» (version id: ".$data['id'].") updated");
 			query("UPDATE version SET status=".$data['status'].",is_missing_episodes=".$data['is_missing_episodes'].",featurable_status=".$data['featurable_status'].",show_episode_numbers=".$data['show_episode_numbers'].",is_hidden=".$data['is_hidden'].",completed_date=$completed_date,storage_folder=".$data['storage_folder'].",storage_processing=".$data['storage_processing'].",slug='".$data['slug']."',title='".$data['title']."',alternate_titles=".$data['alternate_titles'].",synopsis='".$data['synopsis']."',updated='$current_timestamp',updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 			query("DELETE FROM rel_version_fansub WHERE version_id=".$data['id']);
 			query("DELETE FROM episode_title WHERE version_id=".$data['id']);
@@ -614,15 +613,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				add_or_update_topic_to_community($data['id']);
 			}
 
-			$_SESSION['message']="S’han desat les dades correctament.";
+			$_SESSION['message']=lang('admin.generic.data_saved');
 		}
 		else {
 			$slug_result = query("SELECT COUNT(*) cnt FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.slug='".$data['slug']."' AND s.type='$type'");
 			$slug_row = mysqli_fetch_assoc($slug_result);
 			if ($slug_row['cnt']>0) {
-				crash("Ja hi ha una versió amb aquest identificador. Revisa que no l’hagis afegida per duplicat i, en cas contrari, canvia’n l’identificador.");
+				crash(lang('admin.error.version_edit_slug_already_exists_error'));
 			}
-			log_action("create-version", "S’ha creat una versió de «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."»");
+			log_action("create-version", "Version of «".query_single("SELECT name FROM series WHERE id=".$data['series_id'])."» created");
 			query("INSERT INTO version (series_id,status,is_missing_episodes,featurable_status,show_episode_numbers,is_hidden,completed_date,storage_folder,storage_processing,slug,title,alternate_titles,synopsis,files_updated,files_updated_by,created,created_by,updated,updated_by) VALUES (".$data['series_id'].",".$data['status'].",".$data['is_missing_episodes'].",".$data['featurable_status'].",".$data['show_episode_numbers'].",".$data['is_hidden'].",".($data['status']==1 ? "'$current_timestamp'" : 'NULL').",".$data['storage_folder'].",".$data['storage_processing'].",'".$data['slug']."','".$data['title']."',".$data['alternate_titles'].",'".$data['synopsis']."','$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."','$current_timestamp','".escape($_SESSION['username'])."')");
 			$inserted_id=mysqli_insert_id($db_connection);
 			//Set as default version if none is set
@@ -691,7 +690,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				add_or_update_topic_to_community($inserted_id);
 			}
 
-			$_SESSION['message']="S’han desat les dades correctament.";
+			$_SESSION['message']=lang('admin.generic.data_saved');
 		}
 
 		header("Location: version_list.php?type=$type");
@@ -700,12 +699,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 	if (!empty($_GET['id']) && is_numeric($_GET['id'])) {
 		$result = query("SELECT v.* FROM version v WHERE id=".escape($_GET['id']));
-		$row = mysqli_fetch_assoc($result) or crash('Version not found');
+		$row = mysqli_fetch_assoc($result) or crash(lang('admin.error.version_not_found'));
 		mysqli_free_result($result);
 
 		$results = query("SELECT s.* FROM series s WHERE id=".$row['series_id']);
-		$series = mysqli_fetch_assoc($results) or crash('Series not found');
+		$series = mysqli_fetch_assoc($results) or crash(lang('admin.error.series_not_found'));
 		mysqli_free_result($results);
+		if ($series['type']!=$type) {
+			crash(lang('admin.error.wrong_type_specified'));
+		}
 
 		$resultd = query("SELECT vd.title, d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d LEFT JOIN version_division vd ON d.id=vd.division_id AND vd.version_id=".escape($_GET['id'])." WHERE d.series_id=".$row['series_id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
 		$divisions = array();
@@ -729,12 +731,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						IF(e.number IS NOT NULL,
 							IF(s.number_of_episodes=1,
 								s.name,
-								CONCAT(d.name, ' - Film ', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
 							e.description
 						),
 						IF(e.number IS NOT NULL,
-							CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+							CONCAT(d.name, ' -".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title,
@@ -757,11 +759,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resulte);
 	} else if (!empty($_GET['series_id']) && is_numeric($_GET['series_id'])) {
 		$row = array();
+		$row['id']='';
+		$row['title']='';
+		$row['updated']='';
+		$row['slug']='';
+		$row['alternate_titles']='';
+		$row['status']='';
+		$row['synopsis']='';
+		$row['storage_folder']='';
 		$row['storage_processing']=$_SESSION['default_storage_processing'];
 		$row['featurable_status']=1;
 
 		$results = query("SELECT s.* FROM series s WHERE id=".escape($_GET['series_id']));
-		$series = mysqli_fetch_assoc($results) or crash('Series not found');
+		$series = mysqli_fetch_assoc($results) or crash(lang('admin.error.series_not_found'));
 		mysqli_free_result($results);
 
 		if ($series['subtype']!='movie' && $series['subtype']!='oneshot') {
@@ -777,6 +787,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		while ($rowd = mysqli_fetch_assoc($resultd)) {
 			if ($type=='manga') {
 				$rowd['title']=$rowd['name'];
+			} else {
+				$rowd['title']='';
 			}
 			array_push($divisions, $rowd);
 		}
@@ -788,12 +800,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						IF(e.number IS NOT NULL,
 							IF(s.number_of_episodes=1,
 								s.name,
-								CONCAT(d.name, ' - Film ', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
 							e.description
 						),
 						IF(e.number IS NOT NULL,
-							CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title,
@@ -814,7 +826,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		mysqli_free_result($resulte);
 	} else {
-		crash("Dades invàlides: manca series_id<br>POST values: ".print_r($_POST, TRUE));
+		crash(lang('admin.error.series_id_missing')."<br>POST values: ".print_r($_POST, TRUE));
 	}
 	//This is extremely ugly, but avoids rewriting the HTML code or copying it to the JS file
 	$fake_episode = array(
@@ -833,15 +845,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="add-episode-from-version-modal-title">Afegeix un capítol inexistent</h5>
-						<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<h5 class="modal-title" id="add-episode-from-version-modal-title"><?php echo lang('admin.version_edit.add_episode_modal.title'); ?></h5>
+						<button type="button" class="close" data-bs-dismiss="modal" aria-label="<?php echo lang('admin.generic.close'); ?>">
 							<span aria-hidden="true" class="fa fa-times"></span>
 						</button>
 					</div>
 					<div class="modal-body">
-						Afegiràs immediatament un capítol a la sèrie corresponent. Si has de donar d’alta una divisió nova o diversos capítols, surt d’aquesta versió, edita la sèrie, i després torna a editar aquesta versió.
+						<?php echo lang('admin.version_edit.add_episode_modal.explanation'); ?>
 						<div class="mt-3">
-							<label for="add-episode-from-version-division-id">Divisió</label>
+							<label for="add-episode-from-version-division-id"><?php echo lang('admin.version_edit.add_episode_modal.division'); ?></label>
 							<select id="add-episode-from-version-division-id" class="form-select">
 <?php
 			$resultss = query("SELECT d.* FROM division d WHERE d.series_id=".$series['id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
@@ -855,17 +867,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</select>
 						</div>
 						<div class="mt-3">
-							<label for="add-episode-from-version-number">Número <small class="text-muted">(deixa-ho en blanc per a capítols especials)</small></label>
-							<input class="form-control" id="add-episode-from-version-number" type="number" step="any" placeholder="Especial" oninput="if($(this).val()==''){$('#add-episode-from-version-special-name').removeClass('d-none');} else {$('#add-episode-from-version-special-name').addClass('d-none');$('#add-episode-from-version-description').val('');}">
+							<label for="add-episode-from-version-number"><?php echo lang('admin.version_edit.add_episode_modal.number'); ?> <small class="text-muted"><?php echo lang('admin.version_edit.add_episode_modal.number.explanation'); ?></small></label>
+							<input class="form-control" id="add-episode-from-version-number" type="number" step="any" placeholder="<?php echo lang('js.admin.series_edit.episode.number_placeholder'); ?>" oninput="if($(this).val()==''){$('#add-episode-from-version-special-name').removeClass('d-none');} else {$('#add-episode-from-version-special-name').addClass('d-none');$('#add-episode-from-version-description').val('');}">
 						</div>
 						<div class="mt-3 d-none" id="add-episode-from-version-special-name">
-							<label for="add-episode-from-version-description">Nom de l’especial</label>
-							<input class="form-control" id="add-episode-from-version-description" placeholder="- Introdueix un nom -">
+							<label for="add-episode-from-version-description"><?php echo lang('admin.version_edit.add_episode_modal.special_name'); ?></label>
+							<input class="form-control" id="add-episode-from-version-description" placeholder="<?php echo lang('js.admin.series_edit.episode.description_placeholder'); ?>">
 						</div>
 					</div>
 					
 					<div class="align-self-center">
-						<button type="button" class="btn btn-primary m-2" onclick="addEpisodeFromVersion();">Afegeix a la sèrie</button> <button type="button" data-bs-dismiss="modal" class="btn btn-secondary m-2">Cancel·la</button>
+						<button type="button" class="btn btn-primary m-2" onclick="addEpisodeFromVersion();"><?php echo lang('admin.version_edit.add_episode_modal.add_to_series_button'); ?></button> <button type="button" data-bs-dismiss="modal" class="btn btn-secondary m-2"><?php echo lang('admin.generic.cancel'); ?></button>
 					</div>
 				</div>
 			</div>
@@ -873,14 +885,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? "Edita la versió" : "Afegeix una versió"; ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? lang('admin.version_edit.edit_title') : lang('admin.version_edit.create_title'); ?></h4>
 					<hr>
 					<form method="post" action="version_edit.php?type=<?php echo $type; ?>" enctype="multipart/form-data" onsubmit="return checkNumberOfLinks()">
 						<div class="row align-items-end">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-title-with-autocomplete">Títol localitzat<span class="mandatory"></span></label> <?php print_helper_box('Títol localitzat', 'Aquest títol és el que es mostrarà públicament a la fitxa i correspon al títol que el teu fansub dóna a aquesta obra.\n\nRecomanem que sigui el títol en català, però evitant fer traduccions innecessàries.'); ?>
-									<input class="form-control" name="title" id="form-title-with-autocomplete" placeholder="- Introdueix un títol -" required maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['title'])); ?>" data-old-value="<?php echo htmlspecialchars(html_entity_decode($row['title'])); ?>">
+									<label for="form-title-with-autocomplete"><?php echo lang('admin.version_edit.localized_title'); ?><span class="mandatory"></span></label> <?php print_helper_box(lang('admin.version_edit.localized_title'), lang('admin.version_edit.localized_title.help')); ?>
+									<input class="form-control" name="title" id="form-title-with-autocomplete" placeholder="<?php echo lang('admin.version_edit.localized_title.placeholder'); ?>" required maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['title'])); ?>" data-old-value="<?php echo htmlspecialchars(html_entity_decode($row['title'])); ?>">
 									<input type="hidden" name="id" id="id" value="<?php echo $row['id']; ?>">
 									<input type="hidden" id="type" value="<?php echo $type; ?>">
 									<input type="hidden" name="last_update" value="<?php echo $row['updated']; ?>">
@@ -888,7 +900,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-series" class="mandatory"><?php echo $content_uc; ?></label> <?php print_helper_box($content_uc, 'Indica l’obra a què està associada aquesta versió.\n\nNo es pot canviar perquè se selecciona únicament abans de crear la versió.'); ?>
+									<label for="form-series" class="mandatory"><?php echo $original_title_string; ?></label> <?php print_helper_box($original_title_string, lang('admin.version_edit.original_title.help')); ?>
 									<input id="form-series" class="form-control" readonly value="<?php echo htmlspecialchars($series['name']); ?>"></input>
 									<input name="series_id" type="hidden" value="<?php echo $series['id']; ?>"/>
 									<input id="form-external_id" type="hidden" value="<?php echo $series['external_id']; ?>"/>
@@ -897,7 +909,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-slug">Identificador<span class="mandatory"></span></label> <?php print_helper_box('Identificador', 'Aquest identificador autogenerat formarà part de l’URL del contingut al portal.\n\nEs modifica automàticament en canviar el títol o els fansubs de la versió.\n\nÉs un URL amigable amb el format «nom-de-la-serie/fansubs-que-la-fan».\n\nSi es modifica una vegada la versió ja està creada, notifica-ho a un administrador o els enllaços antics deixaran de funcionar.'); ?>
+									<label for="form-slug"><?php echo lang('admin.version_edit.slug'); ?><span class="mandatory"></span></label> <?php print_helper_box(lang('admin.version_edit.slug'), lang('admin.version_edit.slug.help')); ?>
 									<input class="form-control" name="slug" id="form-slug" required maxlength="200" value="<?php echo htmlspecialchars($row['slug']); ?>">
 									<input type="hidden" id="form-old_slug" value="<?php echo htmlspecialchars($row['slug']); ?>">
 								</div>
@@ -906,7 +918,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row align-items-end">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-alternate_titles">Títols localitzats alternatius</label> <?php print_helper_box('Títols localitzats alternatius', 'S’hi poden introduir títols localitzats alternatius de la versió. Per exemple, si es manté preferentment el títol en japonès o anglès, se’n pot afegir la traducció aquí. D’aquesta manera, si algú cerca algun d’aquests títols alternatius, també trobarà la versió corresponent.\n\nNomés es permet introduir-hi títols en català.\n\nSi n’hi ha més d’un, se separen per comes.'); ?>
+									<label for="form-alternate_titles"><?php echo lang('admin.version_edit.alternate_localized_titles'); ?></label> <?php print_helper_box(lang('admin.version_edit.alternate_localized_titles'), lang('admin.version_edit.alternate_localized_titles.help')); ?>
 									<input class="form-control" name="alternate_titles" id="form-alternate_titles" maxlength="200" value="<?php echo htmlspecialchars(html_entity_decode($row['alternate_titles'])); ?>">
 								</div>
 							</div>
@@ -914,9 +926,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row align-items-end">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-fansub-1" class="mandatory">Fansub</label> <?php print_helper_box('Fansub', 'Fansub que edita aquesta versió.\n\nSi no hi ha el fansub que vols, demana a un administrador que l’afegeixi.\n\nNo afegeixis versions de fansubs aliens al teu amb un usuari associat al teu fansub, o no les podràs veure un cop desades.'); ?>
+									<label for="form-fansub-1" class="mandatory"><?php echo lang('admin.version_edit.fansub_1'); ?></label> <?php print_helper_box(lang('admin.version_edit.fansub_1'), lang('admin.version_edit.fansub_1.help')); ?>
 									<select name="fansub_1" class="form-select" id="form-fansub-1" required>
-										<option value="">- Selecciona un fansub -</option>
+										<option value=""><?php echo lang('admin.version_edit.fansub.select'); ?></option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
@@ -931,9 +943,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-fansub-2">Fansub 2</label> <?php print_helper_box('Fansub 2', 'Segon fansub que edita aquesta versió.\n\nS’utilitza únicament en cas de col·laboracions entre diversos fansubs.\n\nSi no hi ha el fansub que vols, demana a un administrador que l’afegeixi.'); ?>
+									<label for="form-fansub-2"><?php echo lang('admin.version_edit.fansub_2'); ?></label> <?php print_helper_box(lang('admin.version_edit.fansub_2'), lang('admin.version_edit.fansub_2.help')); ?>
 									<select name="fansub_2" class="form-select" id="form-fansub-2">
-										<option value="">- Cap més fansub -</option>
+										<option value=""><?php echo lang('admin.version_edit.fansub.select_additional'); ?></option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
@@ -948,9 +960,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-fansub-3">Fansub 3</label> <?php print_helper_box('Fansub 3', 'Tercer fansub que edita aquesta versió.\n\nS’utilitza únicament en cas de col·laboracions entre diversos fansubs.\n\nSi no hi ha el fansub que vols, demana a un administrador que l’afegeixi.'); ?>
+									<label for="form-fansub-3"><?php echo lang('admin.version_edit.fansub_3'); ?></label> <?php print_helper_box(lang('admin.version_edit.fansub_3'), lang('admin.version_edit.fansub_3.help')); ?>
 									<select name="fansub_3" class="form-select" id="form-fansub-3">
-										<option value="">- Cap més fansub -</option>
+										<option value=""><?php echo lang('admin.version_edit.fansub.select_additional'); ?></option>
 <?php
 	$result = query("SELECT f.* FROM fansub f ORDER BY f.status DESC, f.name ASC");
 	while ($frow = mysqli_fetch_assoc($result)) {
@@ -967,19 +979,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-downloads_url_1" class="mandatory">Enllaç de baixada dels fitxers originals</label> <?php print_helper_box('Enllaç de baixada dels fitxers originals', 'Enllaç (URL) a la fitxa del web del fansub o bé a una carpeta de MEGA on es puguin baixar els fitxers originals del fansub.\n\nEs mostra a la fitxa i és útil per a evitar que el públic es baixi les versions recomprimides per a streaming.\n\nSe’n pot afegir més d’un separant-los per un punt i coma (sense espai al darrere).'); ?>
+									<label for="form-downloads_url_1" class="mandatory"><?php echo lang('admin.version_edit.download_url_fansub_1'); ?></label> <?php print_helper_box(lang('admin.version_edit.download_url_fansub_1'), lang('admin.version_edit.download_url_fansub_1.help')); ?>
 									<input id="form-downloads_url_1" name="downloads_url_1" type="url" class="form-control" value="<?php echo (count($fansubs)>0 ? htmlspecialchars($fansubs[0][1]) : ''); ?>" maxlength="200" required/>
 								</div>
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-downloads_url_2">Enllaç de baixada dels fitxers originals 2</label> <?php print_helper_box('Enllaç de baixada dels fitxers originals 2', 'Enllaç (URL) a la fitxa del web del segon fansub o bé a una carpeta de MEGA on es puguin baixar els fitxers originals del segon fansub.\n\nEs mostra a la fitxa i és útil per a evitar que el públic es baixi les versions recomprimides per a streaming.\n\nSe’n pot afegir més d’un separant-los per un punt i coma (sense espai al darrere).'); ?>
+									<label for="form-downloads_url_2"><?php echo lang('admin.version_edit.download_url_fansub_2'); ?></label> <?php print_helper_box(lang('admin.version_edit.download_url_fansub_2'), lang('admin.version_edit.download_url_fansub_2.help')); ?>
 									<input id="form-downloads_url_2" name="downloads_url_2" type="url" class="form-control" value="<?php echo (count($fansubs)>1 ? htmlspecialchars($fansubs[1][1]) : ''); ?>" maxlength="200" required <?php echo (count($fansubs)>1 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
 							<div class="col-sm">
 								<div class="mb-3">
-									<label for="form-downloads_url_3">Enllaç de baixada dels fitxers originals 3</label> <?php print_helper_box('Enllaç de baixada dels fitxers originals 3', 'Enllaç (URL) a la fitxa del web del tercer fansub o bé a una carpeta de MEGA on es puguin baixar els fitxers originals del tercer fansub.\n\nEs mostra a la fitxa i és útil per a evitar que el públic es baixi les versions recomprimides per a streaming.\n\nSe’n pot afegir més d’un separant-los per un punt i coma (sense espai al darrere).'); ?>
+									<label for="form-downloads_url_3"><?php echo lang('admin.version_edit.download_url_fansub_3'); ?></label> <?php print_helper_box(lang('admin.version_edit.download_url_fansub_3'), lang('admin.version_edit.download_url_fansub_3.help')); ?>
 									<input id="form-downloads_url_3" name="downloads_url_3" type="url" class="form-control" value="<?php echo (count($fansubs)>2 ? htmlspecialchars($fansubs[2][1]) : ''); ?>" maxlength="200" required <?php echo (count($fansubs)>2 ? '' : ' disabled'); ?>/>
 								</div>
 							</div>
@@ -987,40 +999,40 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-status" class="mandatory">Estat</label> <?php print_helper_box('Estat', 'Estat de publicació de la versió per part del fansub.\n\n• Completada: Obra finalitzada amb tot el contingut penjat.\n• En procés: Obra en publicació per part del fansub.\n• Parcialment completada: N’hi ha '.$division_some_completed.', però no està previst continuar l’obra.\n• Abandonada: Obra inacabada durant molt de temps sense que hi hagi confirmació de cancel·lació per part del fansub.\n• Cancel·lada: Obra inacabada i cancel·lada formalment pel fansub.\n\nEl sistema impedirà desar una versió si es marca com a completada sense penjar-ne tots els capítols, o viceversa: marcar-la com a «En procés» havent-ne penjat tots els capítols.'); ?>
+									<label for="form-status" class="mandatory"><?php echo lang('admin.version_edit.status'); ?></label> <?php print_helper_box(lang('admin.version_edit.status'), $status_help_string); ?>
 									<select class="form-select" name="status" id="form-status" required>
-										<option value="">- Selecciona un estat -</option>
-										<option value="1"<?php echo $row['status']==1 ? " selected" : ""; ?>>Completada</option>
-										<option value="2"<?php echo $row['status']==2 ? " selected" : ""; ?>>En procés</option>
-										<option value="3"<?php echo $row['status']==3 ? " selected" : ""; ?>>Parcialment completada</option>
-										<option value="4"<?php echo $row['status']==4 ? " selected" : ""; ?>>Abandonada</option>
-										<option value="5"<?php echo $row['status']==5 ? " selected" : ""; ?>>Cancel·lada</option>
+										<option value=""><?php echo lang('admin.version_edit.status.select'); ?></option>
+										<option value="1"<?php echo $row['status']==1 ? " selected" : ""; ?>><?php echo lang('status.complete.private.short'); ?></option>
+										<option value="2"<?php echo $row['status']==2 ? " selected" : ""; ?>><?php echo lang('status.inprogress.private.short'); ?></option>
+										<option value="3"<?php echo $row['status']==3 ? " selected" : ""; ?>><?php echo lang('status.partiallycomplete.private.short'); ?></option>
+										<option value="4"<?php echo $row['status']==4 ? " selected" : ""; ?>><?php echo lang('status.abandoned.private.short'); ?></option>
+										<option value="5"<?php echo $row['status']==5 ? " selected" : ""; ?>><?php echo lang('status.cancelled.private.short'); ?></option>
 									</select>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-status" class="mandatory">Números i títols dels capítols</label> <?php print_helper_box('Números i títols dels capítols', 'Indica com es mostraran els capítols al web públic.\n\nSi es mostren els números, tots els capítols numerats mostraran «Capítol X:» abans del títol del capítol (si n’hi ha).\n\nSi només es mostren els títols, serà obligatori introduir un títol per a cada capítol penjat, i aquest títol serà l’únic que es mostrarà.\n\nLes versions de continguts de tipus «Film» o «One-shot» no permeten mai mostrar els números.\n\nSi l’obra que edites utilitza una altra paraula en lloc de «Capítol» (per exemple, «Cançó» o «Història»), cal que seleccionis l’opció de mostrar únicament el títol i incloguis «Cançó X:» abans de cada títol de capítol.'); ?>
+									<label for="form-show_episode_numbers" class="mandatory"><?php echo lang('admin.version_edit.show_episode_numbers'); ?></label> <?php print_helper_box(lang('admin.version_edit.show_episode_numbers'), lang('admin.version_edit.show_episode_numbers.help')); ?>
 									<select class="form-select" name="show_episode_numbers" id="form-show_episode_numbers" required>
 <?php
 	if ($series['subtype']!='movie' && $series['subtype']!='oneshot') {
 ?>
-										<option value="1"<?php echo $row['show_episode_numbers']==1 ? " selected" : ""; ?>>Mostra el número i el títol dels capítols</option>
+										<option value="1"<?php echo $row['show_episode_numbers']==1 ? " selected" : ""; ?>><?php echo lang('admin.version_edit.show_episode_numbers.number_and_title'); ?></option>
 <?php
 	}
 ?>
-										<option value="0"<?php echo $row['show_episode_numbers']==0 ? " selected" : ""; ?>>Mostra només el títol dels capítols</option>
+										<option value="0"<?php echo $row['show_episode_numbers']==0 ? " selected" : ""; ?>><?php echo lang('admin.version_edit.show_episode_numbers.only_title'); ?></option>
 									</select>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-storage_processing">Recomanacions</label> <?php print_helper_box('Recomanacions', 'Indica al sistema de recomanacions si pot recomanar aquesta versió.\n\n• No la recomanis mai: No es mostrarà mai a les recomanacions destacades.\n• Recomana-la aleatòriament: Pot aparèixer a les recomanacions destacades.\n• Recomana-la sempre (cas especial): Apareixerà sempre a les recomanacions destacades. Està pensat per a quan s’acabi una obra molt destacable i no hauria de romandre en aquest estat més de 4 setmanes.\n• Recomana-la sempre (obra de temporada): Apareixerà sempre a les recomanacions destacades. Està pensat per a obres en procés de publicació que estiguin en emissió. Quan deixin d’estar en emissió, cal tornar a marcar «Recomana-la aleatòriament».\n\nEn cas de dubte, selecciona «Recomana-la aleatòriament».'); ?>
-									<select name="featurable_status" class="form-select">
-										<option value="0"<?php echo $row['featurable_status']==0 ? " selected" : ""; ?>>No la recomanis mai</option>
-										<option value="1"<?php echo $row['featurable_status']==1 ? " selected" : ""; ?>>Recomana-la aleatòriament</option>
-										<option value="2"<?php echo $row['featurable_status']==2 ? " selected" : ""; ?>>Recomana-la sempre (cas especial)</option>
-										<option value="3"<?php echo $row['featurable_status']==3 ? " selected" : ""; ?>>Recomana-la sempre (obra de temporada)</option>
+									<label for="form-featurable_status"><?php echo lang('admin.version_edit.recommendations'); ?></label> <?php print_helper_box(lang('admin.version_edit.recommendations'), lang('admin.version_edit.recommendations.help')); ?>
+									<select name="featurable_status" class="form-select" id="form-featurable_status">
+										<option value="0"<?php echo $row['featurable_status']==0 ? " selected" : ""; ?>><?php echo lang('admin.version_edit.recommendations.never'); ?></option>
+										<option value="1"<?php echo $row['featurable_status']==1 ? " selected" : ""; ?>><?php echo lang('admin.version_edit.recommendations.randomly'); ?></option>
+										<option value="2"<?php echo $row['featurable_status']==2 ? " selected" : ""; ?>><?php echo lang('admin.version_edit.recommendations.always_special'); ?></option>
+										<option value="3"<?php echo $row['featurable_status']==3 ? " selected" : ""; ?>><?php echo lang('admin.version_edit.recommendations.always_season'); ?></option>
 									</select>
 								</div>
 							</div>
@@ -1028,11 +1040,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-3">
 								<div class="mb-3">
-									<label>Imatge de portada<span class="mandatory"></span> <?php print_helper_box('Imatge de portada', 'Aquesta imatge s’utilitzarà al web per a identificar aquesta versió.\n\nLa imatge ha de ser en format JPEG, fer 300x400 píxels o més i ocupar menys de 150 KiB.\n\nSi ocupa més, redueix-ne la resolució o la qualitat de la compressió JPEG.\n\nSi en fas una versió localitzada en català, el resultat serà força més bonic.'); ?><br><small class="text-muted">(JPEG, ≥300x400, ≤150 KiB)</small></label><br>
+									<label><?php echo lang('admin.version_edit.cover_image'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.cover_image'), lang('admin.version_edit.cover_image.help')); ?><br><small class="text-muted"><?php echo lang('admin.version_edit.cover_image.requirements'); ?></small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/covers/version_'.$row['id'].'.jpg');
 ?>
-									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+									<label for="form-image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? lang('admin.common.change_image') : lang('admin.common.upload_image') ; ?></label>
 									<input class="form-control d-none" name="image" type="file" id="form-image" accept="image/jpeg" value="" onchange="checkImageUpload(this, 153600, 'image/jpeg', 300, 400, 4096, 4096, 'form-image-preview', 'form-image-preview-link','form-image_url');">
 									<input class="form-control" name="image_url" type="hidden" id="form-image_url" value="">
 								</div>
@@ -1046,11 +1058,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-3">
 								<div class="mb-3">
-									<label>Imatge de capçalera<span class="mandatory"></span> <?php print_helper_box('Imatge de capçalera', 'Aquesta imatge s’utilitzarà a la capçalera de la fitxa de la versió i també de fons a l’apartat de recomanacions.\n\nLa imatge ha de ser en format JPEG, fer 1920x400 píxels o més i ocupar menys de 300 KiB.\n\nSi ocupa més, redueix-ne la resolució o la qualitat de la compressió JPEG.'); ?><br><small class="text-muted">(JPEG, ≥1920x400, ≤300 KiB)</small></label><br>
+									<label><?php echo lang('admin.version_edit.header_image'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.header_image'), lang('admin.version_edit.header_image.help')); ?><br><small class="text-muted"><?php echo lang('admin.version_edit.header_image.help'); ?></small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/featured/version_'.$row['id'].'.jpg');
 ?>
-									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+									<label for="form-featured_image" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? lang('admin.common.change_image') : lang('admin.common.upload_image') ; ?></label>
 									<input class="d-none" name="featured_image" type="file" accept="image/jpeg" id="form-featured_image" onchange="checkImageUpload(this, 307200, 'image/jpeg', 1920, 400, 4096, 4096, 'form-featured-image-preview', 'form-featured-image-preview-link');">
 								</div>
 							</div>
@@ -1063,28 +1075,28 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="row m-0 mb-3">
-							<label class="col-sm p-0" for="form-synopsis">Sinopsi<span class="mandatory"></span> <?php print_helper_box('Sinopsi', 'Resum de l’argument de l’obra en un màxim de 5 o 6 línies.\n\nSi t’és útil, pots copiar-la d’altres webs o importar-la de '.$external_source.', però cal que la tradueixis al català.\n\nS’hi admet **negreta** i __cursiva__.'); ?></label>
+							<label class="col-sm p-0" for="form-synopsis"><?php echo lang('admin.version_edit.synopsis'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.synopsis'), sprintf(lang('admin.version_edit.synopsis.help'), $external_source)); ?></label>
 							<button type="button" id="import-from-mal" class="btn btn-primary btn-sm col-sm-3 mb-1">
 								<span id="import-from-mal-loading" class="d-none spinner-border spinner-border-sm me-1 fa-width-auto" role="status" aria-hidden="true"></span>
-								<span id="import-from-mal-not-loading" class="fa fa-cloud-arrow-down pe-2 fa-width-auto"></span>Importa la portada i la sinopsi de <?php echo $external_source; ?>
+								<span id="import-from-mal-not-loading" class="fa fa-cloud-arrow-down pe-2 fa-width-auto"></span><?php echo sprintf(lang('admin.version_edit.synopsis.import_button'), $external_source); ?>
 							</button>
 							<textarea class="form-control" name="synopsis" id="form-synopsis" required style="height: 150px;" oninput="synopsisChanged=true;"><?php echo htmlspecialchars(str_replace('&#039;',"'",html_entity_decode($row['synopsis']))); ?></textarea>
 						</div>
 						<div class="mb-3">
-							<label for="form-division-list">Títols i portades de cada divisió<span class="mandatory"></span> <?php print_helper_box($division_titles, 'Introdueix el títol de cada divisió i, opcionalment, una imatge de portada.'.($type!='manga' ? '\n\nAquest títol es farà servir per a identificar la divisió, però també per a anunciar les novetats en les publicacions a les xarxes.\n\nEl títol no ha de ser mai un nom genèric com «Temporada X», «Capítols especials» ni «OVAs», perquè en alguns llocs del web i a les xarxes socials es fa servir el títol de la divisió sense esmentar-ne la sèrie. Per tant, en tot cas, caldria posar-hi «Nom de la sèrie - Temporada X», «Nom de la sèrie - Especials» o «Nom de la sèrie - OVAs».' : '\n\nAquest títol es farà servir per a identificar la divisió.').'\n\nSi no es penja una imatge de portada específica de la divisió, s’hi mostrarà la imatge de portada de la versió.\n\nLes imatges han de ser en format JPEG, fer 300x400 píxels o més i ocupar menys de 150 KiB.\n\nSi ocupen més, redueix-ne la resolució o la qualitat de la compressió JPEG.\n\nSi en fas una versió localitzada en català, el resultat serà força més bonic.'); ?> <small class="text-muted">(JPEG, ≥300x400, ≤150 KiB)</small></label>
+							<label for="form-division-list"><?php echo lang('admin.version_edit.division_titles_and_covers'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.division_titles_and_covers'), $division_titles_and_covers_help_string); ?> <small class="text-muted"><?php echo lang('admin.version_edit.cover_image.requirements'); ?></small></label>
 							<div class="row flex" id="form-division-list">
 <?php
 		foreach ($divisions as $division) {
 ?>
 								<div class="col-sm-2 text-center pe-1 ps-1 align-self-end">
 										<label for="form-division-title-<?php echo $division['id']; ?>" style="font-style: italic;"><?php echo htmlspecialchars($division['name']); ?></label>
-										<input id="form-division-title-<?php echo $division['id']; ?>" name="form-division-title-<?php echo $division['id']; ?>" class="form-control text-center" value="<?php echo htmlspecialchars($division['title']); ?>" maxlength="200" placeholder="- Introdueix un títol -" required/>
+										<input id="form-division-title-<?php echo $division['id']; ?>" name="form-division-title-<?php echo $division['id']; ?>" class="form-control text-center" value="<?php echo htmlspecialchars($division['title']); ?>" maxlength="200" placeholder="<?php echo lang('admin.version_edit.division_title.placeholder'); ?>" required/>
 									<br>
 <?php
 		$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg');
 ?>
 										<img id="form-division_cover_<?php echo $division['id']; ?>_preview" style="width: 128px; height: 180px; object-fit: cover; background-color: black; display:inline-block; text-indent: -10000px; margin-bottom: 0.5em;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg" data-original="'.STATIC_URL.'/images/divisions/'.$row['id'].'_'.$division['id'].'.jpg"' : ''; ?> alt=""><br />
-										<label for="form-division_cover_<?php echo $division['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? 'Canvia la imatge...' : 'Puja una imatge...' ; ?></label>
+										<label for="form-division_cover_<?php echo $division['id']; ?>" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? lang('admin.common.change_image') : lang('admin.common.upload_image') ; ?></label>
 										<input id="form-division_cover_<?php echo $division['id']; ?>" name="division_cover_<?php echo $division['id']; ?>" type="file" class="d-none" accept="image/jpeg" onchange="checkImageUpload(this, 153600, 'image/jpeg', 300, 400, 4096, 4096, 'form-division_cover_<?php echo $division['id']; ?>_preview');"/>
 								</div>
 <?php
@@ -1098,22 +1110,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						<div class="row">
 							<div class="col-sm-8">
 								<div class="mb-3">
-									<label for="form-storage_folder"><span class="mandatory">Directori d’emmagatzematge</span></label> <?php print_helper_box('Directori d’emmagatzematge', 'Camp informatiu i no modificable que indica el directori dels servidors d’emmagatzematge i de streaming on es copiaran els fitxers.'); ?>
+									<label for="form-storage_folder"><span class="mandatory"><?php echo lang('admin.version_edit.storage_folder'); ?></span></label> <?php print_helper_box(lang('admin.version_edit.storage_folder'), lang('admin.version_edit.storage_folder.help')); ?>
 									<input id="form-storage_folder" name="storage_folder" type="text" class="form-control" value="<?php echo htmlspecialchars($row['storage_folder']); ?>" maxlength="200" required readonly<?php echo (!empty($row['id']) && empty($row['is_hidden'])) ? ' data-is-set="1"' : '' ; ?>/>
 								</div>
 							</div>
 							<div class="col-sm-4">
 								<div class="mb-3">
-									<label for="form-storage_processing"><span class="mandatory">Processament de fitxers</span></label> <?php print_helper_box('Processament de fitxers', 'Camp que defineix què es fa amb els fitxers: si s’importen mantenint-ne una còpia al servidor d’emmagatzematge o no es desen i es copien directament al servidor de streaming.\n\nEn cas de dubte, i si un administrador no t’indica el contrari, deixa marcada l’opció per defecte.'); ?>
-									<select name="storage_processing" class="form-select" onchange="if(!confirm('Llevat que un administrador t’ho indiqui, no hauries de modificar aquesta opció, ja que afectarà la importació de fitxers. Segur que vols fer aquest canvi?')) this.selectedIndex=0;">
-										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>>Desa una còpia dels fitxers originals</option>
-										<option value="5"<?php echo $row['storage_processing']==5 ? " selected" : ""; ?>>No desis cap còpia dels fitxers originals</option>
+									<label for="form-storage_processing"><span class="mandatory"><?php echo lang('admin.version_edit.storage_processing'); ?></span></label> <?php print_helper_box(lang('admin.version_edit.storage_processing'), lang('admin.version_edit.storage_processing.help')); ?>
+									<select name="storage_processing" class="form-select" onchange="if(!confirm('<?php echo lang('admin.version_edit.storage_processing.confirm'); ?>')) this.selectedIndex=0;">
+										<option value="1"<?php echo $row['storage_processing']==1 ? " selected" : ""; ?>><?php echo lang('admin.version_edit.storage_processing.save_copy'); ?></option>
+										<option value="5"<?php echo $row['storage_processing']==5 ? " selected" : ""; ?>><?php echo lang('admin.version_edit.storage_processing.no_copy'); ?></option>
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="mb-3">
-							<label for="form-remote_folders-list">Carpetes remotes</label> <?php print_helper_box('Carpetes remotes', 'Aquest apartat és opcional i permet definir comptes i carpetes de MEGA per a obtenir-ne automàticament els capítols una vegada s’hi copiïn i no haver d’editar-ne la versió a Fansubs.cat.\n\nL’obtenció es fa cada hora recorrent aquestes carpetes i comprovant si hi ha nous fitxers amb noms de fitxer que encaixin amb un patró concret i associant-los al capítol corresponent.\n\nNo és recomanable fer servir aquest sistema si no coneixes en detall com funciona.\n\nConsulta’n més informació al manual del tauler d’administració i demana ajuda a un administrador si tens dubtes.'); ?>
+							<label for="form-remote_folders-list"><?php echo lang('admin.version_edit.remote_folders'); ?></label> <?php print_helper_box(lang('admin.version_edit.remote_folders'), sprintf(lang('admin.version_edit.remote_folders.help'), MAIN_SITE_NAME)); ?>
 							<div class="container" id="form-remote_folders-list">
 <?php
 
@@ -1131,7 +1143,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<div class="row mb-3">
 									<div class="w-100 column ps-0 pe-0">
 										<select id="form-remote_folders-list-remote_account_id-XXX" name="form-remote_folders-list-remote_account_id-XXX" onchange="if ($(this).find('option:selected').eq(0).hasClass('not-syncable')){$('#form-remote_folders-list-is_active-XXX').prop('disabled',true);} else { $('#form-remote_folders-list-is_active-XXX').prop('disabled',false); }" class="form-select d-none">
-											<option value="">- Selecciona un compte remot -</option>
+											<option value=""><?php echo lang('admin.version_edit.remote_folders.select'); ?></option>
 <?php
 		if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
 			$where = 'a.fansub_id='.$_SESSION['fansub_id'];
@@ -1149,7 +1161,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 										</select>
 										<select id="form-remote_folders-list-division_id-XXX" name="form-remote_folders-list-division_id-XXX" class="form-select d-none">
-											<option value="">- Qualsevol -</option>
+											<option value=""><?php echo lang('admin.version_edit.remote_folders.any_division'); ?></option>
 <?php
 		$resultss = query("SELECT d.id, d.series_id, TRIM(d.number)+0 number, d.name, d.number_of_episodes, d.external_id FROM division d WHERE d.series_id=".$series['id']." AND d.number_of_episodes>0 ORDER BY d.number ASC");
 		while ($ssrow = mysqli_fetch_assoc($resultss)) {
@@ -1163,18 +1175,18 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 										<table class="table table-bordered table-hover table-sm" id="remote_folders-list-table" data-count="<?php echo count($remote_folders); ?>">
 											<thead>
 												<tr>
-													<th style="width: 20%;">Compte<span class="mandatory"></span> <?php print_helper_box('Compte', 'Selecciona el compte de MEGA (prèviament donat d’alta amb el seu identificador de sessió) on es consultaran els capítols penjats.'); ?></th>
-													<th>Carpeta<span class="mandatory"></span> <?php print_helper_box('Carpeta', 'Introdueix el camí complet a la carpeta del compte (per exemple, «Sèries/Nom de la sèrie/Temporada 1/1080p».'); ?></th>
-													<th style="width: 10%;">Resolució<span class="mandatory"></span> <?php print_helper_box('Resolució', 'Resolució per defecte que s’associarà als nous capítols que es trobin en aquesta carpeta.\n\nUna vegada convertits per a streaming, es corregirà al valor exacte.'); ?></th>
-													<th style="width: 10%;">Durada<span class="mandatory"></span> <?php print_helper_box('Durada', 'Durada per defecte que s’associarà als nous capítols que es trobin en aquesta carpeta.\n\nUna vegada convertits per a streaming, es corregirà al valor exacte.'); ?></th>
-													<th style="width: 15%;">Divisió <?php print_helper_box('Divisió', 'Divisió a què s’associaran els capítols que es trobin en aquesta carpeta.\n\nÉs necessari informar-la si la numeració es reinicia a cada divisió, perquè si no, seria impossible saber a quina divisió pertany el capítol.'); ?></th>
-													<th class="text-center" style="width: 10%;">Sincronitza <?php print_helper_box('Sincronitza', 'Indica que la sincronització d’aquesta carpeta està activada i que, per tant, es comprovarà cada hora si hi ha nous fitxers.\n\nSi es desactiva, no es faran les comprovacions.\n\nPot deixar-se desactivada si únicament se’n vol fer una importació manual amb el botó «Actualitza els enllaços ara».'); ?></th>
-													<th class="text-center" style="width: 5%;">Acció</th>
+													<th style="width: 20%;"><?php echo lang('admin.version_edit.remote_folders.account'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.remote_folders.account'), lang('admin.version_edit.remote_folders.account.help')); ?></th>
+													<th><?php echo lang('admin.version_edit.remote_folders.folder'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.remote_folders.folder'), lang('admin.version_edit.remote_folders.folder.help')); ?></th>
+													<th style="width: 10%;"><?php echo lang('admin.version_edit.remote_folders.resolution'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.remote_folders.resolution'), lang('admin.version_edit.remote_folders.resolution.help')); ?></th>
+													<th style="width: 10%;"><?php echo lang('admin.version_edit.remote_folders.duration'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.remote_folders.duration'), lang('admin.version_edit.remote_folders.duration.help')); ?></th>
+													<th style="width: 15%;"><?php echo lang('admin.version_edit.remote_folders.division'); ?> <?php print_helper_box(lang('admin.version_edit.remote_folders.division'), lang('admin.version_edit.remote_folders.division.help')); ?></th>
+													<th class="text-center" style="width: 10%;"><?php echo lang('admin.version_edit.remote_folders.sync'); ?> <?php print_helper_box(lang('admin.version_edit.remote_folders.sync'), lang('admin.version_edit.remote_folders.sync.help')); ?></th>
+													<th class="text-center" style="width: 5%;"><?php echo lang('admin.generic.action'); ?></th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr id="remote_folders-list-table-empty" class="<?php echo count($remote_folders)>0 ? 'd-none' : ''; ?>">
-													<td colspan="7" class="text-center">- No hi ha configurada cap carpeta -</td>
+													<td colspan="7" class="text-center"><?php echo lang('admin.version_edit.remote_folders.empty'); ?></td>
 												</tr>
 <?php
 		for ($j=0;$j<count($remote_folders);$j++) {
@@ -1182,7 +1194,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<tr id="form-remote_folders-list-row-<?php echo $j+1; ?>">
 													<td>
 														<select id="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" name="form-remote_folders-list-remote_account_id-<?php echo $j+1; ?>" onchange="if ($(this).find('option:selected').eq(0).hasClass('not-syncable')){$('#form-remote_folders-list-is_active-<?php echo $j+1; ?>').prop('disabled',true);} else { $('#form-remote_folders-list-is_active-<?php echo $j+1; ?>').prop('disabled',false); }" class="form-select" required>
-															<option value="">- Selecciona un compte remot -</option>
+															<option value=""><?php echo lang('admin.version_edit.remote_folders.select'); ?></option>
 <?php
 			if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
 				$where = 'a.id='.$remote_folders[$j]['remote_account_id'].' OR a.fansub_id='.$_SESSION['fansub_id'];
@@ -1205,14 +1217,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-remote_folders-list-folder-<?php echo $j+1; ?>" name="form-remote_folders-list-folder-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($remote_folders[$j]['folder']); ?>" maxlength="200" required/>
 													</td>
 													<td>
-														<input id="form-remote_folders-list-default_resolution-<?php echo $j+1; ?>" name="form-remote_folders-list-default_resolution-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($remote_folders[$j]['default_resolution']); ?>" maxlength="200" required placeholder="- Tria -" list="resolution-options"/>
+														<input id="form-remote_folders-list-default_resolution-<?php echo $j+1; ?>" name="form-remote_folders-list-default_resolution-<?php echo $j+1; ?>" class="form-control" value="<?php echo htmlspecialchars($remote_folders[$j]['default_resolution']); ?>" maxlength="200" required placeholder="<?php echo lang('js.admin.version_edit.episode.resolution_placeholder'); ?>" list="resolution-options"/>
 													</td>
 													<td>
 														<input id="form-remote_folders-list-default_duration-<?php echo $j+1; ?>" name="form-remote_folders-list-default_duration-<?php echo $j+1; ?>" type="time" step="1" class="form-control" value="<?php echo convert_to_hh_mm_ss($remote_folders[$j]['default_duration']); ?>" required/>
 													</td>
 													<td>
 														<select id="form-remote_folders-list-division_id-<?php echo $j+1; ?>" name="form-remote_folders-list-division_id-<?php echo $j+1; ?>" class="form-select">
-															<option value="">- Qualsevol -</option>
+															<option value=""><?php echo lang('admin.version_edit.remote_folders.any_division'); ?></option>
 <?php
 			$resultss = query("SELECT d.* FROM division d WHERE d.series_id=".$series['id']." ORDER BY d.number ASC");
 			while ($ssrow = mysqli_fetch_assoc($resultss)) {
@@ -1239,16 +1251,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</div>
 									<div class="mb-3 row w-100 ms-0">
 										<div class="col-sm text-start" style="padding-left: 0; padding-right: 0">
-											<button onclick="addVersionRemoteFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix una carpeta</button>
+											<button onclick="addVersionRemoteFolderRow();" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.version_edit.remote_folders.add_button'); ?></button>
 										</div>
 										<div class="col-sm text-end" style="padding-left: 0; padding-right: 0">
-											<select id="import-type" class="form-select form-control-sm form-inline" title="Indica el tipus de sincronització desitjada en aquesta actualització d’enllaços: tots els comptes o només els marcats." style="width: auto; display: inline; font-size: 78%;">
-												<option value="all" selected>Utilitza tots els comptes</option>
-												<option value="sync">Només els sincronitzats</option>
+											<select id="import-type" class="form-select form-control-sm form-inline" title="<?php echo lang('admin.version_edit.remote_folders.sync_now_type.title'); ?>" style="width: auto; display: inline; font-size: 78%;">
+												<option value="all" selected><?php echo lang('admin.version_edit.remote_folders.sync_now_type.all'); ?></option>
+												<option value="sync"><?php echo lang('admin.version_edit.remote_folders.sync_now_type.only_marked'); ?></option>
 											</select> →
 											<button type="button" id="import-from-mega" class="btn btn-primary btn-sm">
 												<span id="import-from-mega-loading" class="d-none spinner-border spinner-border-sm me-1 fa-width-auto" role="status" aria-hidden="true"></span>
-												<span id="import-from-mega-not-loading" class="fa fa-redo pe-2 fa-width-auto"></span>Actualitza els enllaços ara
+												<span id="import-from-mega-not-loading" class="fa fa-redo pe-2 fa-width-auto"></span><?php echo lang('admin.version_edit.remote_folders.sync_now_button'); ?>
 											</button>
 										</div>
 									</div>
@@ -1256,13 +1268,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 						</div>
 						<div class="d-none alert alert-warning" id="import-failed-results">
-							<div><span class="fa fa-exclamation-triangle me-2"></span> Els següents elements no s’han importat perquè no tenen el format correcte o perquè els capítols no existeixen a la fitxa <?php echo $content_prep; ?>. Afegeix-los a mà on correspongui. Recorda que els fitxers només s’importen automàticament si tenen el format «<i>text</i><u><b> - 123</b></u><i>text</i>.mp4».</div>
+							<div><span class="fa fa-exclamation-triangle me-2"></span> <?php echo $not_imported_string; ?></div>
 							<table class="table-hover table-sm mt-2 small w-100" id="import-failed-results-table">
 								<thead>
 									<tr>
-										<th>Fitxer</th>
-										<th>Enllaç</th>
-										<th>Motiu</th>
+										<th><?php echo lang('admin.version_edit.remote_folders.sync_failed.file'); ?></th>
+										<th><?php echo lang('admin.version_edit.remote_folders.sync_failed.link'); ?></th>
+										<th><?php echo lang('admin.version_edit.remote_folders.sync_failed.reason'); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -1273,7 +1285,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 ?>
 						<div class="mb-3">
-							<label for="form-episode-list">Capítols, variants i <?php echo $type=='manga' ? 'fitxers' : 'enllaços'; ?></label> <?php print_helper_box('Capítols, variants i '.($type=='manga' ? 'fitxers' : 'enllaços'), 'En aquest apartat s’especifiquen els títols de cada capítol, les variants que té i els enllaços a MEGA de cadascuna de les variants, juntament amb la seva resolució i durada.\n\nNormalment, els capítols sols tenen una única variant, anomenada «Única», però se’n poden afegir més i canviar-ne el nom (per exemple, si s’edita el mateix capítol en dialectes diferents, una versió censurada i una sense, etcètera).\n\nCal especificar un enllaç de MEGA en cada variant i assignar-li una resolució, una durada i, opcionalment, un comentari.'); ?>
+							<label for="form-episode-list"><?php echo $episode_list_string; ?></label> <?php print_helper_box($episode_list_string, $episode_list_help_string); ?>
 							<div class="container" id="form-episode-list">
 								<datalist id="resolution-options">
 									<option value="1080p">
@@ -1282,12 +1294,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<option value="360p">
 								</datalist>
 								<div id="warning-no-numbers" class="alert alert-warning<?php echo ($row['show_episode_numbers']==0 && $series['subtype']!='movie' && $series['subtype']!='oneshot') ? '' : ' d-none'; ?>">
-									<div><span class="fa fa-exclamation-triangle me-2"></span>Aquest <?php echo $content; ?> <b>NO</b> mostra els números de capítols a la fitxa pública. Si vols mostrar els números de manera diferent a la per defecte, afegeix-los on calguin.</div>
+									<div><span class="fa fa-exclamation-triangle me-2"></span><?php echo $not_showing_numbers_string; ?></div>
 								</div>
 								<div class="accordion" id="accordion">
 									<div class="accordion-item">
 										<h2 class="accordion-header">
-											<button class="accordion-button<?php echo count($divisions)>2 ? ' collapsed' : ''; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#division-collapse-<?php echo $episodes[0]['division_id']; ?>" aria-expanded="<?php echo count($divisions)>2 ? 'false' : 'true'; ?>" aria-controls="division-collapse-<?php echo $episodes[0]['division_id']; ?>"><b>Capítols de «<?php echo $episodes[0]['division_name']; ?>»</b></button>
+											<button class="accordion-button<?php echo count($divisions)>2 ? ' collapsed' : ''; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#division-collapse-<?php echo $episodes[0]['division_id']; ?>" aria-expanded="<?php echo count($divisions)>2 ? 'false' : 'true'; ?>" aria-controls="division-collapse-<?php echo $episodes[0]['division_id']; ?>"><b><?php echo sprintf(lang('admin.version_edit.episode_list.episodes_for_division'), $episodes[0]['division_name']); ?></b></button>
 										</h2>
 										<div class="accordion-collapse collapse<?php echo count($divisions)>2 ? '' : ' show'; ?>" id="division-collapse-<?php echo $episodes[0]['division_id']; ?>">
 											<div class="accordion-body">
@@ -1302,7 +1314,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</div>
 									<div class="accordion-item">
 										<h2 class="accordion-header">
-											<button class="accordion-button<?php echo count($divisions)>2 ? ' collapsed' : ''; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#division-collapse-<?php echo $episodes[$i]['division_id']; ?>" aria-expanded="<?php echo count($divisions)>2 ? 'false' : 'true'; ?>" aria-controls="division-collapse-<?php echo $episodes[$i]['division_id']; ?>"><b>Capítols de «<?php echo $episodes[$i]['division_name']; ?>»</b></button>
+											<button class="accordion-button<?php echo count($divisions)>2 ? ' collapsed' : ''; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#division-collapse-<?php echo $episodes[$i]['division_id']; ?>" aria-expanded="<?php echo count($divisions)>2 ? 'false' : 'true'; ?>" aria-controls="division-collapse-<?php echo $episodes[$i]['division_id']; ?>"><b><?php echo sprintf(lang('admin.version_edit.episode_list.episodes_for_division'), $episodes[$i]['division_name']); ?></b></button>
 										</h2>
 										<div class="accordion-collapse collapse<?php echo count($divisions)>2 ? '' : ' show'; ?>" id="division-collapse-<?php echo $episodes[$i]['division_id']; ?>">
 											<div class="accordion-body">
@@ -1315,12 +1327,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						IF(e.number IS NOT NULL,
 							IF(s.number_of_episodes=1,
 								s.name,
-								CONCAT(d.name, ' - Film ', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
 							),
 							e.description
 						),
 						IF(e.number IS NOT NULL,
-							CONCAT(d.name, ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ',')),
+							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title
@@ -1330,7 +1342,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					WHERE s.type='$type' AND s.subtype='movie' AND e.id=".$episodes[$i]['linked_episode_id']);
 			$linked_episode = mysqli_fetch_assoc($resultle);
 			mysqli_free_result($resultle);
-			$episode_name=$linked_episode['episode_title'].' <i>[FILM ENLLAÇAT]</i>';
+			$episode_name=$linked_episode['episode_title'].' <i>'.lang('admin.version_edit.episode_list.linked_movie').'</i>';
 		}
 
 		if (!empty($_GET['id']) && is_numeric($_GET['id']) && $episodes[$i]['id']!='{template_id}') {
@@ -1359,8 +1371,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 												<div class="mb-3 episode-container<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' linked-episode-container' : ''; ?>">
 													<label><span class="fa <?php echo $type=='manga' ? 'fa-book-open' : (!empty($episodes[$i]['linked_episode_id']) ? 'fa-link' : 'fa-film'); ?> pe-2 text-primary"></span><?php echo $episode_name; ?></label><br>
-													<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title">Títol del capítol</label> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Títol del capítol" data-bs-contents="Títol que es mostrarà al públic al web per a aquest capítol.\n\nSi no es mostren els números dels capítols, cal que hi introdueixis sempre un títol.\n\nSi es mostren els números i és un capítol numerat, no és necessari introduir-hi el títol, però si en té, cal fer-ho.\n\nSi és un capítol no numerat, cap introduir-ne sempre el títol."></small>
-													<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control episode-title-input<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id'])) ? ' episode-title-input-numbered' : ''; ?>" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="500" data-episode-number="<?php echo $episodes[$i]['formatted_number']; ?>" placeholder="<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id']) && $row['show_episode_numbers']==1) ? 'Capítol '.$episodes[$i]['formatted_number'] : '- Introdueix un títol -'; ?>"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
+													<label for="form-files-list-<?php echo $episodes[$i]['id']; ?>-title"><?php echo lang('admin.version_edit.episode_list.episode_title'); ?></label> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="<?php echo lang('admin.version_edit.episode_list.episode_title'); ?>" data-bs-contents="<?php echo lang('admin.version_edit.episode_list.episode_title.help'); ?>"></small>
+													<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-title" type="text" class="form-control episode-title-input<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id'])) ? ' episode-title-input-numbered' : ''; ?>" value="<?php echo htmlspecialchars($episodes[$i]['title']); ?>" maxlength="500" data-episode-number="<?php echo $episodes[$i]['formatted_number']; ?>" placeholder="<?php echo (!empty($episodes[$i]['number']) && empty($episodes[$i]['linked_episode_id']) && $row['show_episode_numbers']==1) ? lang('js.admin.generic.episode_prefix').$episodes[$i]['formatted_number'] : lang('js.admin.version_edit.episode.title_placeholder'); ?>"<?php echo !empty($episodes[$i]['linked_episode_id']) ? ' required' : ''; ?>/>
 <?php
 		if (empty($episodes[$i]['linked_episode_id'])) {
 ?>
@@ -1370,23 +1382,23 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<table class="table table-bordered table-hover table-sm" id="files-list-table-<?php echo $episodes[$i]['id']; ?>" data-count="<?php echo max(count($files),1); ?>">
 																	<thead>
 																		<tr>
-																			<th style="width: 8%;">Variant<span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="Variant" data-bs-contents="Cada capítol pot tenir diferents variants (per dialectes, estils, etc.). Cada variant es mostra com un capítol diferent a la fitxa pública i amb el nom de variant indicat.\nEn condicions normals, només n’hi sol haver una, titulada «Única».\nSi només hi ha una sola variant, el nom de la variant no es mostra enlloc."></small></th>
+																			<th style="width: 8%;"><?php echo lang('admin.version_edit.episode_list.variant'); ?><span class="mandatory"></span> <small data-bs-toggle="modal" data-bs-target="#generic-modal" class="text-muted fa fa-question-circle modal-help-button" data-bs-title="<?php echo lang('admin.version_edit.episode_list.variant'); ?>" data-bs-contents="<?php echo lang('admin.version_edit.episode_list.variant.help'); ?>"></small></th>
 <?php
 			if ($type=='manga') {
 ?>
-																			<th>Arxiu<span class="mandatory"></span> <?php print_helper_box('Arxiu', 'Indica l’arxiu que ja hi ha pujat d’aquest capítol, o els detalls de l’arxiu que se seleccioni per a pujar-lo.'); ?></th>
-																			<th style="width: 16%;">Pujada <?php print_helper_box('Pujada', 'Permet seleccionar un arxiu local (ZIP, RAR o CBZ) amb les imatges d’aquest capítol per a pujar-lo.\n\nEl contingut de l’arxiu es descomprimirà i penjarà al servidor de fitxers.\n\nL’arxiu ha de contenir fitxers d’imatge JPEG o PNG i, opcionalment, un fitxer d’àudio MP3 o OGG que es reproduirà com a música de fons.'); ?></th>
+																			<th><?php echo lang('admin.version_edit.episode_list.archive'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.episode_list.archive'), lang('admin.version_edit.episode_list.archive.help')); ?></th>
+																			<th style="width: 16%;"><?php echo lang('admin.version_edit.episode_list.upload'); ?> <?php print_helper_box(lang('admin.version_edit.episode_list.upload'), lang('admin.version_edit.episode_list.upload.help')); ?></th>
 <?php
 			} else {
 ?>
-																			<th>Enllaços de streaming / Resolució<span class="mandatory"></span> <?php print_helper_box('Enllaços de streaming / Resolució', 'Cal especificar un enllaç de MEGA amb el capítol amb el format adequat (MP4, H264, AAC i subtítols cremats al vídeo) i la seva resolució. Una vegada el fitxer s’hagi convertit i copiat al servidor de streaming, el sistema hi crearà automàticament un altre enllaç començat per «storage://», que no s’ha d’editar ni esborrar.\n\nSi es vol canviar el fitxer, sols cal canviar-ne l’enllaç de MEGA i el sistema ja detectarà que ha canviat, esborrarà l’enllaç propi, el tornarà a baixar i convertir, i finalment el tornarà a afegir.'); ?></th>
-																			<th style="width: 10%;">Durada<span class="mandatory"></span> <?php print_helper_box('Durada', 'S’hi ha d’especificar la durada del capítol en hores, minuts i segons.\n\nDepenent de la configuració regional, és possible que el teu navegador mostri un selector d’hores en format AM/PM. Les 00 hores corresponen a les 12 AM, les 01 a les 01 AM, i així successivament.'); ?></th>
+																			<th><?php echo lang('admin.version_edit.episode_list.link_and_resolution'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.episode_list.link_and_resolution'), lang('admin.version_edit.episode_list.link_and_resolution.help')); ?></th>
+																			<th style="width: 10%;"><?php echo lang('admin.version_edit.episode_list.duration'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.episode_list.duration'), lang('admin.version_edit.episode_list.duration.help')); ?></th>
 <?php
 			}
 ?>
-																			<th style="width: 15%;">Comentaris <?php print_helper_box('Comentaris', 'Normalment se sol deixar buit, però es pot fer servir en cas que es desitgi per a aportar informació addicional a la fitxa pública (per exemple, per a indicar que hi ha algun problema amb el fitxer).'); ?></th>
-																			<th class="text-center" style="width: 8%;">Perduda <?php print_helper_box('Perduda', 'S’utilitza per a indicar que aquesta variant es va editar, però s’ha perdut amb el pas del temps.\n\nS’utilitza únicament en material d’antics fansubs anteriors a la creació de Fansubs.cat.\n\nEn situacions normals, cal deixar-ho sempre desmarcat.'); ?></th>
-																			<th class="text-center" style="width: 8%;">Accions</th>
+																			<th style="width: 15%;"><?php echo lang('admin.version_edit.episode_list.comments'); ?> <?php print_helper_box(lang('admin.version_edit.episode_list.comments'), lang('admin.version_edit.episode_list.comments.help')); ?></th>
+																			<th class="text-center" style="width: 8%;"><?php echo lang('admin.version_edit.episode_list.lost'); ?> <?php print_helper_box(lang('admin.version_edit.episode_list.lost'), lang('admin.version_edit.episode_list.lost.help')); ?></th>
+																			<th class="text-center" style="width: 8%;"><?php echo lang('admin.generic.actions'); ?></th>
 																		</tr>
 																	</thead>
 																	<tbody>
@@ -1395,17 +1407,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																		<tr id="form-files-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>">
 																			<td>
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($files[$j]['variant_name']); ?>" maxlength="200" placeholder="- Nom -" required/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($files[$j]['variant_name']); ?>" maxlength="200" placeholder="<?php echo lang('js.admin.version_edit.episode.variant_placeholder'); ?>" required/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['id']; ?>"/>
 																			</td>
 <?php
 				if ($type=='manga') {
 ?>
 																			<td class="align-middle">
-																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check"></span> Ja hi ha pujat l’arxiu <strong>'.htmlspecialchars($files[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times"></span> No hi ha cap arxiu pujat.</span>'; ?></div>
+																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($files[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check"></span> '.sprintf(lang('admin.version_edit.episode_list.archive_already_uploaded'), htmlspecialchars($files[$j]['original_filename'])).'</span>' : '<span style="color: gray;"><span class="fa fa-times"></span> '.lang('admin.version_edit.episode_list.no_archive_uploaded').'</span>'; ?></div>
 																			</td>
 																			<td class="align-middle">
-																				<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($files[$j]['original_filename']) ? 'Canvia l’arxiu...' : 'Puja un arxiu...' ; ?></label>
+																				<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($files[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($files[$j]['original_filename']) ? lang('admin.common.change_archive') : lang('admin.common.upload_archive') ; ?></label>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);"/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-<?php echo $j+1; ?>" type="hidden" value="<?php echo $files[$j]['length']; ?>"/>
 																			</td>
@@ -1420,14 +1432,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																						<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
 																							<td class="ps-0 pt-0 pb-0 border-0">
-																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="<?php echo lang('js.admin.version_edit.episode.link_placeholder'); ?>" oninput="$(this).attr('value',$(this).val());"/>
 																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['id']); ?>"/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0" style="width: 22%;">
-																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['resolution']); ?>" maxlength="200" placeholder="- Tria -"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($files[$j]['links'][$k]['resolution']); ?>" maxlength="200" placeholder="<?php echo lang('js.admin.version_edit.episode.resolution_placeholder'); ?>"/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-times p-1 text-danger" title="<?php echo lang('js.admin.version_edit.episode.delete_link_title'); ?>"></button>
 																							</td>
 																						</tr>
 <?php
@@ -1436,14 +1448,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																						<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
 																							<td class="ps-0 pt-0 pb-0 border-0">
-																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="<?php echo lang('js.admin.version_edit.episode.link_placeholder'); ?>" oninput="$(this).attr('value',$(this).val());"/>
 																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value=""/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0" style="width: 22%;">
-																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="<?php echo lang('js.admin.version_edit.episode.resolution_placeholder'); ?>"/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-times p-1 text-danger" title="<?php echo lang('js.admin.version_edit.episode.delete_link_title'); ?>"></button>
 																							</td>
 																						</tr>
 <?php
@@ -1465,9 +1477,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-<?php echo $j+1; ?>" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-<?php echo $j+1; ?>" type="checkbox" value="1"<?php echo $files[$j]['is_lost'] ? ' checked' : ''; ?>/>
 																			</td>
 																			<td class="text-center pt-2">
-																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-width-auto fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-<?php echo $j+1; ?>" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="Afegeix un enllaç addicional"></button>
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
+																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-width-auto fa-arrows-split-up-and-left fa-rotate-180" title="<?php echo lang('js.admin.version_edit.episode.add_file_variant_title'); ?>"></button>
+<?php
+				if ($type!='manga') {
+?>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-<?php echo $j+1; ?>" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="<?php echo lang('js.admin.version_edit.episode.add_file_link_title'); ?>"></button>
+<?php
+				}
+?>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-<?php echo $j+1; ?>" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="<?php echo lang('js.admin.version_edit.episode.delete_file_title'); ?>"></button>
 																			</td>
 																		</tr>
 <?php
@@ -1476,17 +1494,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																		<tr id="form-files-list-<?php echo $episodes[$i]['id']; ?>-row-1">
 																			<td>
-																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" type="text" class="form-control" value="Única" maxlength="200" placeholder="- Nom -" required/>
+																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-variant_name-1" type="text" class="form-control" value="<?php echo lang('admin.version_edit.episode_list.variant_single'); ?>" maxlength="200" placeholder="<?php echo lang('js.admin.version_edit.episode.variant_placeholder'); ?>" required/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-id-1" type="hidden" value="-1"/>
 																			</td>
 <?php
 				if ($type=='manga') {
 ?>
 																			<td class="align-middle">
-																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times"></span> No hi ha cap arxiu pujat.</span></div>
+																				<div id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file_details-1" class="small"><span style="color: gray;"><span class="fa fa-times"></span> <?php echo lang('admin.version_edit.episode_list.no_archive_uploaded'); ?></span></div>
 																			</td>
 																			<td class="align-middle">
-																				<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>Puja un arxiu...</label>
+																				<label style="margin-bottom: 0;" for="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span><?php echo lang('admin.common.upload_archive'); ?></label>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);"/>
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-length-1" type="hidden" value="0"/>
 																			</td>
@@ -1498,14 +1516,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																					<tbody>
 																						<tr id="form-links-list-<?php echo $episodes[$i]['id']; ?>-row-1-1" style="background: none;">
 																							<td class="ps-0 pt-0 pb-0 border-0">
-																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="(Sense enllaç)" oninput="$(this).attr('value',$(this).val());"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="" maxlength="2048" placeholder="<?php echo lang('js.admin.version_edit.episode.link_placeholder'); ?>" oninput="$(this).attr('value',$(this).val());"/>
 																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-id" type="hidden" value="-1"/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0" style="width: 22%;">
-																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="- Tria -"/>
+																								<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-resolution" type="text" class="form-control" list="resolution-options" value="" maxlength="200" placeholder="<?php echo lang('js.admin.version_edit.episode.resolution_placeholder'); ?>"/>
 																							</td>
 																							<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																								<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-file-1-link-1-delete" onclick="deleteLinkRow(<?php echo $episodes[$i]['id']; ?>,1,1);" type="button" class="btn fa fa-times p-1 text-danger" title="<?php echo lang('js.admin.version_edit.episode.delete_link_title'); ?>"></button>
 																							</td>
 																						</tr>
 																					</tbody>
@@ -1524,9 +1542,15 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																				<input id="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-1" name="form-files-list-<?php echo $episodes[$i]['id']; ?>-is_lost-1" type="checkbox" value="1"/>
 																			</td>
 																			<td class="text-center pt-2">
-																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-width-auto fa-arrows-split-up-and-left fa-rotate-180" title="Afegeix una variant addicional"></button>
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-1" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="Afegeix un enllaç addicional"></button>
-																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
+																				<button onclick="addVersionRow(<?php echo $episodes[$i]['id']; ?>);" type="button" class="btn text-primary btn-sm fa p-1 fa-width-auto fa-arrows-split-up-and-left fa-rotate-180" title="<?php echo lang('js.admin.version_edit.episode.add_file_variant_title'); ?>"></button>
+<?php
+				if ($type!='manga') {
+?>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-add_link-1" onclick="addLinkRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="<?php echo lang('js.admin.version_edit.episode.add_file_link_title'); ?>"></button>
+<?php
+				}
+?>
+																				<button id="form-files-list-<?php echo $episodes[$i]['id']; ?>-delete-1" onclick="deleteVersionRow(<?php echo $episodes[$i]['id']; ?>,1);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="<?php echo lang('js.admin.version_edit.episode.delete_file_title'); ?>"></button>
 																			</td>
 																		</tr>
 <?php
@@ -1554,12 +1578,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									</div>
 								</div>
 								<div class="w-100 text-center pt-3">
-									<button data-bs-toggle="modal" data-bs-target="#add-episode-from-version-modal" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix un capítol inexistent</button>
+									<button data-bs-toggle="modal" data-bs-target="#add-episode-from-version-modal" type="button" class="btn btn-success btn-sm"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.version_edit.episode_list.add_episode_button'); ?></button>
 								</div>
 							</div>
 						</div>
 						<div class="mb-3">
-							<label for="form-extras-list">Material extra</label> <?php print_helper_box('Material extra', 'El material extra són elements addicionals de l’obra que no es consideren capítols com a tals, generalment de curta durada: openings, tràilers, material addicional, notes, etc.\n\nEl funcionament del material extra és el mateix que el dels capítols normals, però en aquest cas, no existeixen les variants (si n’hi ha, es poden afegir com a múltiples extres). A banda dels mateixos camps que amb els capítols normals, també hi ha el camp «Títol», que és el títol que tindrà aquell extra en concret.\n\nSe’n poden afegir més prement el botó «Afegeix un altre material extra».'); ?>
+							<label for="form-extras-list"><?php echo lang('admin.version_edit.extra_content'); ?></label> <?php print_helper_box(lang('admin.version_edit.extra_content'), lang('admin.version_edit.extra_content.help')); ?>
 							<div class="container" id="form-extras-list">
 <?php
 
@@ -1588,44 +1612,44 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 												<table class="table table-bordered table-hover table-sm" id="extras-list-table" data-count="<?php echo count($extras); ?>">
 													<thead>
 														<tr>
-															<th style="width: 20%;">Títol<span class="mandatory"></span> <?php print_helper_box('Títol', 'Títol que tindrà aquest contingut extra al web públic.'); ?></th>
+															<th style="width: 20%;"><?php echo lang('admin.version_edit.extra_content.title'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.extra_content.title'), lang('admin.version_edit.extra_content.title.help')); ?></th>
 <?php
 		if ($type=='manga') {
 ?>
-															<th>Arxiu<span class="mandatory"></span> <?php print_helper_box('Arxiu', 'Indica l’arxiu que ja hi ha pujat d’aquest extra, o els detalls de l’arxiu que se seleccioni per a pujar-lo.'); ?></th>
-															<th style="width: 16%;">Pujada <?php print_helper_box('Pujada', 'Permet seleccionar un arxiu local (ZIP, RAR o CBZ) amb les imatges d’aquest capítol per a pujar-lo.\n\nEl contingut de l’arxiu es descomprimirà i penjarà al servidor de fitxers.\n\nL’arxiu ha de contenir fitxers d’imatge JPEG o PNG i, opcionalment, un fitxer d’àudio MP3 o OGG que es reproduirà com a música de fons.'); ?></th>
+															<th><?php echo lang('admin.version_edit.extra_content.archive'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.extra_content.archive'), lang('admin.version_edit.extra_content.archive.help')); ?></th>
+															<th style="width: 16%;"><?php echo lang('admin.version_edit.extra_content.upload'); ?> <?php print_helper_box(lang('admin.version_edit.extra_content.upload'), lang('admin.version_edit.extra_content.upload.help')); ?></th>
 <?php
 		} else {
 ?>
-															<th>Enllaços de streaming / Resolució<span class="mandatory"></span> <?php print_helper_box('Enllaços de streaming / Resolució', 'Cal especificar un enllaç de MEGA amb el contingut amb el format adequat (MP4, H264, AAC i subtítols cremats al vídeo) i la seva resolució. Una vegada el fitxer s’hagi convertit i copiat al servidor de streaming, el sistema hi crearà automàticament un altre enllaç començat per «storage://», que no s’ha d’editar ni esborrar.\n\nSi es vol canviar el fitxer, sols cal canviar-ne l’enllaç de MEGA i el sistema ja detectarà que ha canviat, esborrarà l’enllaç propi, el tornarà a baixar i convertir, i finalment el tornarà a afegir.'); ?></th>
-															<th style="width: 10%;">Durada<span class="mandatory"></span> <?php print_helper_box('Durada', 'S’hi ha d’especificar la durada del contingut extra en hores, minuts i segons.\n\nDepenent de la configuració regional, és possible que el teu navegador mostri un selector d’hores en format AM/PM. Les 00 hores corresponen a les 12 AM, les 01 a les 01 AM, i així successivament.'); ?></th>
+															<th><?php echo lang('admin.version_edit.extra_content.link_and_resolution'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.extra_content.link_and_resolution'), lang('admin.version_edit.extra_content.link_and_resolution.help')); ?></th>
+															<th style="width: 10%;"><?php echo lang('admin.version_edit.extra_content.duration'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.extra_content.duration'), lang('admin.version_edit.extra_content.duration.help')); ?></th>
 <?php
 		}
 ?>
-															<th style="width: 15%;">Comentaris <?php print_helper_box('Comentaris', 'Normalment se sol deixar buit, però es pot fer servir en cas que es desitgi per a aportar informació addicional a la fitxa pública (per exemple, per a indicar que hi ha algun problema amb el fitxer).'); ?></th>
-															<th class="text-center" style="width: 8%;">Accions</th>
+															<th style="width: 15%;"><?php echo lang('admin.version_edit.extra_content.comments'); ?> <?php print_helper_box(lang('admin.version_edit.extra_content.comments'), lang('admin.version_edit.extra_content.comments.help')); ?></th>
+															<th class="text-center" style="width: 8%;"><?php echo lang('admin.generic.actions'); ?></th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr id="extras-list-table-empty" class="<?php echo count($extras)>0 ? 'd-none' : ''; ?>">
-															<td colspan="5" class="text-center">- No hi ha cap extra -</td>
+															<td colspan="5" class="text-center"><?php echo lang('admin.version_edit.extra_content.empty'); ?></td>
 														</tr>
 <?php
 	for ($j=0;$j<count($extras);$j++) {
 ?>
 														<tr id="form-extras-list-row-<?php echo $j+1; ?>">
 															<td>
-																<input id="form-extras-list-name-<?php echo $j+1; ?>" name="form-extras-list-name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['extra_name']); ?>" maxlength="200" required placeholder="- Introdueix un títol -"/>
+																<input id="form-extras-list-name-<?php echo $j+1; ?>" name="form-extras-list-name-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['extra_name']); ?>" maxlength="200" required placeholder="<?php echo lang('js.admin.version_edit.episode.extra_title_placeholder'); ?>"/>
 																<input id="form-extras-list-id-<?php echo $j+1; ?>" name="form-extras-list-id-<?php echo $j+1; ?>" type="hidden" value="<?php echo $extras[$j]['id']; ?>"/>
 															</td>
 <?php
 		if ($type=='manga') {
 ?>
 															<td class="align-middle">
-																<div id="form-extras-list-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($extras[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check"></span> Ja hi ha pujat l’arxiu <strong>'.htmlspecialchars($extras[$j]['original_filename']).'</strong>.</span>' : '<span style="color: gray;"><span class="fa fa-times"></span> No hi ha cap arxiu pujat.</span>'; ?></div>
+																<div id="form-extras-list-file_details-<?php echo $j+1; ?>" class="small"><?php echo !empty($extras[$j]['original_filename']) ? '<span style="color: black;"><span class="fa fa-check"></span> '.sprintf(lang('admin.version_edit.episode_list.archive_already_uploaded'), htmlspecialchars($extras[$j]['original_filename'])).'</span>' : '<span style="color: gray;"><span class="fa fa-times"></span> '.lang('admin.version_edit.episode_list.no_archive_uploaded').'</span>'; ?></div>
 															</td>
 															<td class="align-middle">
-																<label style="margin-bottom: 0;" for="form-extras-list-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($extras[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($extras[$j]['original_filename']) ? 'Canvia l’arxiu...' : 'Puja un arxiu...' ; ?></label>
+																<label style="margin-bottom: 0;" for="form-extras-list-file-<?php echo $j+1; ?>" class="btn btn-sm btn-<?php echo !empty($extras[$j]['original_filename']) ? 'warning' : 'primary' ; ?> w-100"><span class="fa fa-upload pe-2"></span><?php echo !empty($extras[$j]['original_filename']) ? lang('admin.common.change_archive') : lang('admin.common.upload_archive') ; ?></label>
 																<input id="form-extras-list-file-<?php echo $j+1; ?>" name="form-extras-list-file-<?php echo $j+1; ?>" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);"/>
 																<input id="form-extras-list-length-<?php echo $j+1; ?>" name="form-extras-list-length-<?php echo $j+1; ?>" type="hidden" value="<?php echo $extras[$j]['length']; ?>"/>
 															</td>
@@ -1640,14 +1664,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 																		<tr id="form-links-extras-list-row-<?php echo $j+1; ?>-<?php echo $k+1; ?>" style="background: none;">
 																			<td class="ps-0 pt-0 pb-0 border-0">
-																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="- Introdueix un enllaç -" oninput="$(this).attr('value',$(this).val());" required/>
+																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-url" type="text" pattern="<?php echo $link_url_pattern; ?>" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['url']); ?>" maxlength="2048" placeholder="<?php echo lang('js.admin.version_edit.episode.link_placeholder_extra'); ?>" oninput="$(this).attr('value',$(this).val());" required/>
 																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-id" type="hidden" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['id']); ?>"/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0" style="width: 22%;">
-																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['resolution']); ?>" maxlength="200" placeholder="- Tria -" required/>
+																				<input id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" name="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-resolution" type="text" class="form-control" list="resolution-options" value="<?php echo htmlspecialchars($extras[$j]['links'][$k]['resolution']); ?>" maxlength="200" placeholder="<?php echo lang('js.admin.version_edit.episode.resolution_placeholder'); ?>" required/>
 																			</td>
 																			<td class="pt-0 pb-0 border-0 text-center align-middle" style="width: 5%;">
-																				<button id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteExtraLinkRow(<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-times p-1 text-danger" title="Suprimeix aquest enllaç"></button>
+																				<button id="form-extras-list-<?php echo $j+1; ?>-link-<?php echo $k+1; ?>-delete" onclick="deleteExtraLinkRow(<?php echo $j+1; ?>,<?php echo $k+1; ?>);" type="button" class="btn fa fa-times p-1 text-danger" title="<?php echo lang('js.admin.version_edit.episode.delete_link_title'); ?>"></button>
 																			</td>
 																		</tr>
 <?php
@@ -1666,8 +1690,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 																<input id="form-extras-list-comments-<?php echo $j+1; ?>" name="form-extras-list-comments-<?php echo $j+1; ?>" type="text" class="form-control" value="<?php echo htmlspecialchars($extras[$j]['comments']); ?>" maxlength="200"/>
 															</td>
 															<td class="text-center pt-2">
-																<button id="form-extras-list-add_link-<?php echo $j+1; ?>" onclick="addExtraLinkRow(<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="Afegeix un enllaç addicional"></button>
-																<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionExtraRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="Suprimeix les dades d’aquest fitxer"></button>
+<?php
+		if ($type!='manga') {
+?>
+																<button id="form-extras-list-add_link-<?php echo $j+1; ?>" onclick="addExtraLinkRow(<?php echo $j+1; ?>);" type="button" class="btn text-success btn-sm fa p-1 fa-width-auto fa-link" title="<?php echo lang('js.admin.version_edit.episode.add_file_link_title'); ?>"></button>
+<?php
+		}
+?>
+																<button id="form-extras-list-delete-<?php echo $j+1; ?>" onclick="deleteVersionExtraRow(<?php echo $j+1; ?>);" type="button" class="btn fa fa-trash p-1 fa-width-auto text-danger" title="<?php echo lang('js.admin.version_edit.episode.delete_file_title'); ?>"></button>
 															</td>
 														</tr>
 <?php
@@ -1676,7 +1706,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 													</tbody>
 												</table>
 											</div>
-											<div class="w-100 text-center"><button onclick="addVersionExtraRow();" type="button" class="btn btn-primary btn-sm"><span class="fa fa-plus pe-2"></span>Afegeix un altre material extra</button></div>
+											<div class="w-100 text-center"><button onclick="addVersionExtraRow();" type="button" class="btn btn-primary btn-sm"><span class="fa fa-plus pe-2"></span><?php echo lang('admin.version_edit.extra_content.add_button'); ?></button></div>
 										</div>
 									</div>
 								</div>
@@ -1688,22 +1718,22 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 ?>
 							<div class="form-check form-check-inline mb-2">
 								<input class="form-check-input" type="checkbox" name="do_not_count_as_update" id="form-do_not_count_as_update" value="1">
-								<label class="form-check-label" for="form-do_not_count_as_update">No moguis a «Darreres actualitzacions»</label>
+								<label class="form-check-label" for="form-do_not_count_as_update"><?php echo lang('admin.version_edit.do_not_count_as_update'); ?></label>
 							</div>
 							<br />
 <?php
 		if ($_SESSION['username']=='Administrador' && $type!='manga') {
 ?>
 							<div class="form-check form-check-inline mb-2">
-								<input class="form-check-input" type="checkbox" name="do_not_recreate_storage_links" id="form-do_not_recreate_storage_links" value="1" onchange="if($(this).prop('checked')){if (confirm('IMPORTANT, LLEGEIX-ME:\nAquesta opció actualitzarà només els enllaços de MEGA, però els fitxers NO es baixaran al servidor de streaming i els usuaris finals no notaran el canvi. Si no has parlat amb cap administrador o no entens ben bé què vol dir això, si us plau, parla-hi abans d’activar aquesta opció.')) {$('#form-do_not_count_as_update').prop('checked',true);} else {$(this).prop('checked',false);}}">
-								<label class="form-check-label" for="form-do_not_recreate_storage_links">No recreïs els enllaços d’emmagatzematge</label>
+								<input class="form-check-input" type="checkbox" name="do_not_recreate_storage_links" id="form-do_not_recreate_storage_links" value="1" onchange="if($(this).prop('checked')){if (confirm('<?php echo lang('admin.version_edit.do_not_recreate_storage_links.confirm'); ?>')) {$('#form-do_not_count_as_update').prop('checked',true);} else {$(this).prop('checked',false);}}">
+								<label class="form-check-label" for="form-do_not_recreate_storage_links"><?php echo lang('admin.version_edit.do_not_recreate_storage_links'); ?></label>
 							</div>
 							<br />
 <?php
 		}
 	}
 ?>
-							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? "Desa els canvis" : "Afegeix la versió"; ?></button>
+							<button type="submit" name="action" value="<?php echo $row['id']!=NULL? "edit" : "add"; ?>" class="btn btn-primary fw-bold"><span class="fa fa-check pe-2"></span><?php echo !empty($row['id']) ? lang('admin.generic.save_changes') : lang('admin.version_edit.create_button'); ?></button>
 						</div>
 					</form>
 				</article>

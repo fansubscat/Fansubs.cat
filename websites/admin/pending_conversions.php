@@ -1,5 +1,6 @@
 <?php
-$header_title="Conversions pendents - Eines";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.pending_conversions.header');
 $page="tools";
 include(__DIR__.'/header.inc.php');
 
@@ -8,17 +9,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Conversions pendents</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.pending_conversions.title'); ?></h4>
 					<hr>
 					<div class="text-center pb-3">
-						<a href="pending_conversions.php" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span>Refresca</a>
+						<a href="pending_conversions.php" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span><?php echo lang('admin.generic.refresh'); ?></a>
 					</div>
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col" style="width: 12%;">Id. fitxer</th>
-								<th scope="col" style="width: 30%;">Carpeta interna</th>
-								<th scope="col">Enllaç</th>
+								<th scope="col" style="width: 12%;"><?php echo lang('admin.pending_conversions.file_id'); ?></th>
+								<th scope="col" style="width: 30%;"><?php echo lang('admin.pending_conversions.internal_folder'); ?></th>
+								<th scope="col"><?php echo lang('admin.pending_conversions.link'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -38,7 +39,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="3" class="text-center">- No hi ha cap conversió pendent -</td>
+								<td colspan="3" class="text-center"><?php echo lang('admin.pending_conversions.empty'); ?></td>
 							</tr>
 <?php
 	}

@@ -1,5 +1,6 @@
 <?php
-$header_title="Verificador d’enllaços remots - Eines";
+require_once(__DIR__.'/../common/initialization.inc.php');
+$header_title=lang('admin.link_verifier.header');
 $page="tools";
 include(__DIR__.'/header.inc.php');
 
@@ -28,11 +29,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				v.title,
 				GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') fansub_name,
 				IF (f.episode_id IS NULL,
-					CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+					CONCAT(v.title, ' - ".lang('admin.query.extra_division')." - ', f.extra_name),
 					IF(s.subtype='movie' OR s.subtype='oneshot',
 						IFNULL(et.title, v.title),
 						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-							CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+							CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 							CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 						)
 					)
@@ -62,13 +63,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Verificador d’enllaços remots</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.link_verifier.title'); ?></h4>
 					<hr>
-					<p class="text-center">El verificador d’enllaços remots comprova que tots els enllaços estiguin disponibles. En executar-lo, es comprovaran els enllaços remots un a un i se n’obtindrà un resum. És un procés molt lent, tingues paciència.</p>
+					<p class="text-center"><?php echo lang('admin.link_verifier.explanation'); ?></p>
 					<div class="text-center p-2">
 						<button id="link-verifier-button" onclick="verifyLinks(0);" class="btn btn-primary">
 							<span id="link-verifier-loading" class="d-none spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-							Verifica tots els enllaços remots
+							<?php echo lang('admin.link_verifier.verify_all'); ?>
 						</button>
 						<div id="link-verifier-progress" class="d-none"></div>
 					</div>
@@ -78,30 +79,30 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		<div id="link-verifier-results" class="d-none container justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Resultats</h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.link_verifier.results'); ?></h4>
 					<hr>
 					<div class="row text-success">
-						<p class="text-end col-sm-6 mb-0 fw-bold">Vàlids:</p>
+						<p class="text-end col-sm-6 mb-0 fw-bold"><?php echo lang('admin.link_verifier.results.valid'); ?></p>
 						<p class="text-start col-sm-6 mb-0 fw-bold" id="link-verifier-good-links">0</p>
 					</div>
 					<div class="row text-danger">
-						<p class="text-end col-sm-6 mb-0 fw-bold">Invàlids:</p>
+						<p class="text-end col-sm-6 mb-0 fw-bold"><?php echo lang('admin.link_verifier.results.invalid'); ?></p>
 						<p class="text-start col-sm-6 mb-0 fw-bold" id="link-verifier-wrong-links">0</p>
 					</div>
 					<div class="row text-warning">
-						<p class="text-end col-sm-6 mb-0 fw-bold">Desconeguts:</p>
+						<p class="text-end col-sm-6 mb-0 fw-bold"><?php echo lang('admin.link_verifier.results.unknown'); ?></p>
 						<p class="text-start col-sm-6 mb-0 fw-bold" id="link-verifier-failed-links">0</p>
 					</div>
 					<div class="row text-muted">
-						<p class="text-end col-sm-6 mb-0 fw-bold">No verificables:</p>
+						<p class="text-end col-sm-6 mb-0 fw-bold"><?php echo lang('admin.link_verifier.results.unverifiable'); ?></p>
 						<p class="text-start col-sm-6 mb-0 fw-bold" id="link-verifier-unknown-links">0</p>
 					</div>
 					<div id="link-verifier-wrong-links-list" class="d-none mt-4">
-						<h4 class="card-title text-center mb-4 mt-1">Enllaços invàlids</h4>
+						<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.link_verifier.results.invalid_list'); ?></h4>
 						<hr>
 					</div>
 					<div id="link-verifier-failed-links-list" class="d-none mt-4">
-						<h4 class="card-title text-center mb-4 mt-1">Enllaços desconeguts</h4>
+						<h4 class="card-title text-center mb-4 mt-1"><?php echo lang('admin.link_verifier.results.unknown_list'); ?></h4>
 						<hr>
 					</div>
 				</article>

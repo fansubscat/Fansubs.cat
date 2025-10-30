@@ -12,9 +12,16 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$text='';
 	}
 	
-	$result = query("SELECT s.id, CONCAT(IF(s.type='manga','Manga',IF(s.type='liveaction','Imatge real','Anime')),' - ',s.name) name
+	$result = query("SELECT s.id,
+			CONCAT(
+				IF(s.type='manga','".lang('admin.query.search_series.type_manga')."',
+					IF(s.type='liveaction','".lang('admin.query.search_series.type_liveaction')."',
+						'".lang('admin.query.search_series.type_anime')."'
+					)
+			),' - ',s.name) name
 			FROM series s
-			WHERE s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT * FROM version v WHERE v.series_id=s.id AND v.title LIKE '%$text%') LIMIT 20");
+			WHERE s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT * FROM version v WHERE v.series_id=s.id AND v.title LIKE '%$text%')
+			LIMIT 20");
 	$series = array();
 	while ($row = mysqli_fetch_assoc($result)) {
 		array_push($series, $row);

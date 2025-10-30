@@ -32,7 +32,7 @@ function escape($string){
 
 function query($query){
 	global $db_connection;
-	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."<br><br>"."Consulta original:<br>$query");
+	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."<br><br>".sprintf(lang('generic.db_query'), $query));
 	return $result;
 }
 
@@ -49,6 +49,6 @@ function query_single($query){
 mysqli_report(MYSQLI_REPORT_OFF);
 
 //Connect to database and initialize it
-$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash("No s’ha pogut connectar a la base de dades.");
+$db_connection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or crash(lang('generic.db_error'));
 mysqli_set_charset($db_connection, DB_CHARSET) or crash(mysqli_error($db_connection));
 ?>

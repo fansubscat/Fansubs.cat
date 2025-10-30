@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/../common/initialization.inc.php');
+
 $type='anime';
 
 if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' || $_GET['type']=='liveaction')) {
@@ -9,39 +11,36 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Llista d’anime - Anime";
 		$page="anime";
+		$header_title=lang('admin.series_list.header.anime');
+		$main_title_string=lang('admin.series_list.title.anime');
+		$delete_confirm_string=lang('admin.series_list.delete_confirm.anime');
+		$create_button_string=lang('admin.series_list.create_button.anime');
+		$empty_list_string=lang('admin.series_list.empty.anime');
 	break;
 	case 'manga':
-		$header_title="Llista de manga - Manga";
 		$page="manga";
+		$header_title=lang('admin.series_list.header.manga');
+		$main_title_string=lang('admin.series_list.title.manga');
+		$delete_confirm_string=lang('admin.series_list.delete_confirm.manga');
+		$create_button_string=lang('admin.series_list.create_button.manga');
+		$empty_list_string=lang('admin.series_list.empty.manga');
 	break;
 	case 'liveaction':
-		$header_title="Llista de contingut d’imatge real - Imatge real";
 		$page="liveaction";
+		$header_title=lang('admin.series_list.header.liveaction');
+		$main_title_string=lang('admin.series_list.title.liveaction');
+		$delete_confirm_string=lang('admin.series_list.delete_confirm.liveaction');
+		$create_button_string=lang('admin.series_list.create_button.liveaction');
+		$empty_list_string=lang('admin.series_list.empty.liveaction');
 	break;
 }
 
 include(__DIR__.'/header.inc.php');
 
-switch ($type) {
-	case 'anime':
-		$content="anime";
-		$content_prep="d’anime";
-	break;
-	case 'manga':
-		$content="manga";
-		$content_prep="de manga";
-	break;
-	case 'liveaction':
-		$content="contingut d’imatge real";
-		$content_prep="de contingut d’imatge real";
-	break;
-}
-
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-series", "S’ha suprimit la sèrie «".query_single("SELECT name FROM series WHERE id=".escape($_GET['delete_id']))."» (id. de sèrie: ".$_GET['delete_id'].")");
+		log_action("delete-series", "Series «".query_single("SELECT name FROM series WHERE id=".escape($_GET['delete_id']))."» (series id: ".$_GET['delete_id'].") deleted");
 		query("DELETE FROM rel_series_genre WHERE series_id=".escape($_GET['delete_id']));
 		query("DELETE FROM episode WHERE series_id=".escape($_GET['delete_id']));
 		query("DELETE FROM version WHERE series_id=".escape($_GET['delete_id']));
@@ -50,13 +49,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		@unlink(STATIC_DIRECTORY.'/social/series_'.$_GET['delete_id'].'.jpg');
 		//Cascaded deletions: file, link, rel_version_fansub
 		//Views will NOT be removed in order to keep consistent stats history
-		$_SESSION['message']="S’ha suprimit correctament.";
+		$_SESSION['message']=lang('admin.generic.delete_successful');
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
 			<div class="card w-100">
 				<article class="card-body">
-					<h4 class="card-title text-center mb-4 mt-1">Llista <?php echo $content_prep; ?></h4>
+					<h4 class="card-title text-center mb-4 mt-1"><?php echo $main_title_string; ?></h4>
 					<hr>
 
 <?php
@@ -71,12 +70,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-hover table-striped">
 						<thead class="table-dark">
 							<tr>
-								<th scope="col">Nom</th>
-								<th class="text-center" scope="col">Tipus</th>
-								<th class="text-center" scope="col">Divisions</th>
-								<th class="text-center" scope="col">Capítols</th>
-								<th class="text-center" scope="col">Versions</th>
-								<th class="text-center" scope="col">Accions</th>
+								<th scope="col"><?php echo lang('admin.series_list.title'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.series_list.type'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.series_list.divisions'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.series_list.episodes'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.series_list.versions'); ?></th>
+								<th class="text-center" scope="col"><?php echo lang('admin.generic.actions'); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,7 +84,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
-								<td colspan="6" class="text-center">- No hi ha cap <?php echo $content; ?> -</td>
+								<td colspan="6" class="text-center"><?php echo $empty_list_string; ?></td>
 							</tr>
 <?php
 	}
@@ -102,7 +101,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['divisions']; ?><?php echo $row['fake_divisions']>0 ? '<small>+'.$row['fake_divisions'].'</small>' : ''; ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['number_of_episodes']; ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['versions']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="Crea’n una versió" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="Modifica" class="fa fa-edit p-1"></a> <a href="series_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="Suprimeix" onclick="return confirm(<?php echo htmlspecialchars(json_encode("Segur que vols suprimir ".$content_prep." «".$row['name']."» i tot el seu material? L’acció no es podrà desfer.")); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.series_list.create_version.title'); ?>" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a> <a href="series_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf($delete_confirm_string, $row['name']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
 							</tr>
 <?php
 	}
@@ -111,7 +110,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</tbody>
 					</table>
 					<div class="text-center">
-						<a href="series_edit.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pe-2"></span>Afegeix un <?php echo $content; ?></a>
+						<a href="series_edit.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-plus pe-2"></span><?php echo $create_button_string; ?></a>
 					</div>
 				</article>
 			</div>

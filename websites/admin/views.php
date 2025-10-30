@@ -1,4 +1,6 @@
 <?php
+require_once(__DIR__.'/../common/initialization.inc.php');
+
 $page="analytics";
 $type='anime';
 
@@ -10,38 +12,26 @@ if (!empty($_GET['type']) && ($_GET['type']=='anime' || $_GET['type']=='manga' |
 
 switch ($type) {
 	case 'anime':
-		$header_title="Darreres visualitzacions d’anime - Anàlisi";
+		$header_title=lang('admin.views.header.anime');
+		$extra_info_string=lang('admin.views.extra_info');
+		$last_views_string=lang('admin.views.last_views.anime');
+		$in_progress_string=lang('admin.views.in_progress.anime');
 	break;
 	case 'manga':
-		$header_title="Darreres visualitzacions de manga - Anàlisi";
+		$header_title=lang('admin.views.header.manga');
+		$extra_info_string=lang('admin.views.extra_info.manga');
+		$last_views_string=lang('admin.views.last_views.manga');
+		$in_progress_string=lang('admin.views.in_progress.manga');
 	break;
 	case 'liveaction':
-		$header_title="Darreres visualitzacions d’imatge real - Anàlisi";
+		$header_title=lang('admin.views.header.liveaction');
+		$extra_info_string=lang('admin.views.extra_info');
+		$last_views_string=lang('admin.views.last_views.liveaction');
+		$in_progress_string=lang('admin.views.in_progress.liveaction');
 	break;
 }
 
 include(__DIR__.'/header.inc.php');
-
-switch ($type) {
-	case 'anime':
-		$content_prep="d’anime";
-		$view_name="Visualitzacions";
-		$view_name_lc="visualitzacions";
-		$division_name="Temporada";
-	break;
-	case 'manga':
-		$content_prep="de manga";
-		$view_name="Lectures";
-		$view_name_lc="lectures";
-		$division_name="Volum";
-	break;
-	case 'liveaction':
-		$content_prep="de contingut d’imatge real";
-		$view_name="Visualitzacions";
-		$view_name_lc="visualitzacions";
-		$division_name="Temporada";
-	break;
-}
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (!empty($_SESSION['fansub_id'])) {
@@ -65,13 +55,13 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	if (!empty($fansub)) {
 ?>
 				<li class="nav-item">
-					<a class="nav-link active" id="fansub-tab" data-bs-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true">Visualitzacions <?php echo get_fansub_preposition_name($fansub['name']); ?></a>
+					<a class="nav-link active" id="fansub-tab" data-bs-toggle="tab" href="#fansub" role="tab" aria-controls="fansub" aria-selected="true"><?php echo sprintf(lang('admin.views.fansub_tab'), get_fansub_preposition_name($fansub['name'])); ?></a>
 				</li>
 <?php
 	}
 ?>
 				<li class="nav-item">
-					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-bs-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false">Visualitzacions globals</a>
+					<a class="nav-link<?php echo empty($fansub) ? ' active' : ''; ?>" id="totals-tab" data-bs-toggle="tab" href="#totals" role="tab" aria-controls="totals" aria-selected="false"><?php echo lang('admin.views.global_tab'); ?></a>
 				</li>
 			</ul>
 			<div class="tab-content" id="stats_tabs_content" style="border: 1px solid #dee2e6; border-top: none;">
@@ -79,32 +69,32 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1"><?php echo $view_name; ?> <?php echo $content_prep; ?> en curs</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo $in_progress_string; ?></h4>
 								<hr>
 								<div class="text-center pb-3">
-									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span>Refresca</a>
+									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pe-2 fa-width-auto"></span><?php echo lang('admin.generic.refresh'); ?></a>
 								</div>
 								<div class="row">
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col">Contingut i capítol</th>
-												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
-												<th scope="col" class="text-center" style="width: 20%;">Progrés</th>
+												<th scope="col"><?php echo lang('admin.views.content_and_episode'); ?></th>
+												<th scope="col" class="text-center" style="width: 10%;"><?php echo lang('admin.views.user'); ?></th>
+												<th scope="col" class="text-center" style="width: 20%;"><?php echo lang('admin.views.progress'); ?></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-thumbs-up"></span></th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
+$result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') title,
 			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
 			IF (f.episode_id IS NULL,
-				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				CONCAT(v.title, ' - ".lang('admin.query.extra_division')." - ', f.extra_name),
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -137,7 +127,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['updated']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['source'], $row['is_casted']); ?>></div></td>
-												<td class="text-center"><div<?php echo !empty($row['view_counted']) ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" class="hentai" title="De moment no compta com a visualització"'; ?>></div></td>
+												<td class="text-center"><div<?php echo !empty($row['view_counted']) ? ' class="fa fa-thumbs-up" style="color: green;" title="'.lang('admin.views.counted').'"' : ' class="fa fa-thumbs-down hentai" title="'.lang('admin.views.not_counted').'"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -146,35 +136,35 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Depenent de la tecnologia utilitzada, algunes <?php echo $view_name_lc; ?> no mostren el progrés i apareixen immediatament com a completades.</p>
+								<p class="text-center text-muted small"><?php echo $extra_info_string; ?></p>
 							</article>
 						</div>
 					</div>
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Darreres <?php echo $limit; ?> <?php echo $view_name_lc; ?> <?php echo $content_prep; ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf($last_views_string, $limit); ?></h4>
 								<hr>
 								<div class="row">
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col">Contingut i capítol</th>
-												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
+												<th scope="col"><?php echo lang('admin.views.content_and_episode'); ?></th>
+												<th scope="col" class="text-center" style="width: 10%;"><?php echo lang('admin.views.user'); ?></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
-												<th scope="col" class="text-center" style="width: 20%;">Data</th>
+												<th scope="col" class="text-center" style="width: 20%;"><?php echo lang('admin.views.date'); ?></th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
+$result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') title,
 			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
 			IF (f.episode_id IS NULL,
-				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				CONCAT(v.title, ' - ".lang('admin.query.extra_division')." - ', f.extra_name),
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -226,18 +216,18 @@ mysqli_free_result($result);
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1"><?php echo $view_name; ?> <?php echo $content_prep; ?> en curs</h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo $in_progress_string; ?></h4>
 								<hr>
 								<div class="text-center pb-3">
-									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pe-2"></span>Refresca</a>
+									<a href="views.php?type=<?php echo $type; ?>" class="btn btn-primary"><span class="fa fa-redo pe-2"></span><?php echo lang('admin.generic.refresh'); ?></a>
 								</div>
 								<div class="row">
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col">Contingut i capítol</th>
-												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
-												<th scope="col" class="text-center" style="width: 20%;">Progrés</th>
+												<th scope="col"><?php echo lang('admin.views.content_and_episode'); ?></th>
+												<th scope="col" class="text-center" style="width: 10%;"><?php echo lang('admin.views.user'); ?></th>
+												<th scope="col" class="text-center" style="width: 20%;"><?php echo lang('admin.views.progress'); ?></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-thumbs-up"></span></th>
 											</tr>
@@ -245,14 +235,14 @@ mysqli_free_result($result);
 										<tbody>
 <?php
 
-$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
+$result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') title,
 			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
 			IF (f.episode_id IS NULL,
-				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				CONCAT(v.title, ' - ".lang('admin.query.extra_division')." - ', f.extra_name),
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -286,7 +276,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['updated']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['source'], $row['is_casted']); ?>></div></td>
-												<td class="text-center"><div<?php echo !empty($row['view_counted']) ? ' class="fa fa-thumbs-up" style="color: green;" title="Comptada com a visualització"' : ' class="fa fa-thumbs-down" class="hentai" title="De moment no compta com a visualització"'; ?>></div></td>
+												<td class="text-center"><div<?php echo !empty($row['view_counted']) ? ' class="fa fa-thumbs-up" style="color: green;" title="'.lang('admin.views.counted').'"' : ' class="fa fa-thumbs-down hentai" title="'.lang('admin.views.not_counted').'"'; ?>></div></td>
 											</tr>
 <?php
 }
@@ -295,35 +285,35 @@ mysqli_free_result($result);
 										</tbody>
 									</table>
 								</div>
-								<p class="text-center text-muted small">Depenent de la tecnologia utilitzada, algunes <?php echo $view_name_lc; ?> no mostren el progrés i apareixen immediatament com a completades.</p>
+								<p class="text-center text-muted small"><?php echo $extra_info_string; ?></p>
 							</article>
 						</div>
 					</div>
 					<div class="container d-flex justify-content-center p-4">
 						<div class="card w-100">
 							<article class="card-body">
-								<h4 class="card-title text-center mb-4 mt-1">Darreres <?php echo $limit; ?> <?php echo $view_name_lc; ?> <?php echo $content_prep; ?></h4>
+								<h4 class="card-title text-center mb-4 mt-1"><?php echo sprintf($last_views_string, $limit); ?></h4>
 								<hr>
 								<div class="row">
 									<table class="table table-hover table-striped">
 										<thead class="table-dark">
 											<tr>
-												<th scope="col">Contingut i capítol</th>
-												<th scope="col" class="text-center" style="width: 10%;">Usuari</th>
+												<th scope="col"><?php echo lang('admin.views.content_and_episode'); ?></th>
+												<th scope="col" class="text-center" style="width: 10%;"><?php echo lang('admin.views.user'); ?></th>
 												<th scope="col" style="width: 5%; text-align: center;"><span class="far fa-eye"></span></th>
-												<th scope="col" class="text-center" style="width: 20%;">Data</th>
+												<th scope="col" class="text-center" style="width: 20%;"><?php echo lang('admin.views.date'); ?></th>
 											</tr>
 										</thead>
 										<tbody>
 <?php
-$result = query("SELECT IFNULL(v.title, '(enllaç esborrat)') title,
+$result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') title,
 			(SELECT GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') FROM rel_version_fansub vf LEFT JOIN fansub fa ON vf.fansub_id=fa.id WHERE vf.version_id=v.id GROUP BY vf.version_id) fansub_name,
 			IF (f.episode_id IS NULL,
-				CONCAT(v.title, ' - Contingut extra - ', f.extra_name),
+				CONCAT(v.title, ' - ".lang('admin.query.extra_division')." - ', f.extra_name),
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - Capítol ', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
