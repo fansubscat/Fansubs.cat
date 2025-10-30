@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule ^(.*)$ https://imatgereal.fansubs.cat/$1 [R=301,L]
