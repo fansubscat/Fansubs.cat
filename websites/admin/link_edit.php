@@ -58,7 +58,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 
 		$_SESSION['message']=lang('admin.generic.data_saved');
 
-		header("Location: community_list.php");
+		header("Location: link_list.php");
 		die();
 	}
 
@@ -81,7 +81,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			<article class="card-body">
 				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? lang('admin.link_edit.edit_title') : lang('admin.link_edit.create_title'); ?></h4>
 				<hr>
-				<form method="post" action="community_edit.php" enctype="multipart/form-data" onsubmit="return checkCommunity()">
+				<form method="post" action="link_edit.php" enctype="multipart/form-data" onsubmit="return checkCommunity()">
 					<div class="mb-3">
 						<label for="form-name" class="mandatory"><?php echo lang('admin.link_edit.name'); ?></label> <?php print_helper_box(lang('admin.link_edit.name'), lang('admin.link_edit.name.help')); ?>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">

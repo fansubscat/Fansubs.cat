@@ -156,8 +156,8 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 		if (!DISABLE_LINKS) {
 ?>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="community_list.php"><?php echo lang('admin.menu.others.link_list'); ?></a>
-								<a class="dropdown-item" href="community_edit.php"><?php echo lang('admin.menu.others.link_add'); ?></a>
+								<a class="dropdown-item" href="link_list.php"><?php echo lang('admin.menu.others.link_list'); ?></a>
+								<a class="dropdown-item" href="link_edit.php"><?php echo lang('admin.menu.others.link_add'); ?></a>
 <?php
 		}
 		if (!DISABLE_ADVENT) {
