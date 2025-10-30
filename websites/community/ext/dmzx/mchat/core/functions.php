@@ -355,7 +355,7 @@ class functions
 		foreach ($rows as $row)
 		{
 			if ($row['last_message_time']< $check_time) {
-				$this->add_system_message($row['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $row['user_id']]).'][color=#'.$row['user_colour'].'][b]'.$row['username'].'[/b][/color][/url] s’ha desconnectat (inactivitat)');
+				$this->add_system_message($row['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $row['user_id']]).'][color=#'.$row['user_colour'].'][b]'.$row['username'].'[/b][/color][/url] s’ha desconnectat (per inactivitat)');
 				$this->delete_user_session($row['user_id']);
 			}
 		}
@@ -383,7 +383,7 @@ class functions
 		
 		foreach ($rows as $row)
 		{
-			$this->add_system_message($row['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $row['user_id']]).'][color=#'.$row['user_colour'].'][b]'.$row['username'].'[/b][/color][/url] s’ha desconnectat (xat tancat)');
+			$this->add_system_message($row['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $row['user_id']]).'][color=#'.$row['user_colour'].'][b]'.$row['username'].'[/b][/color][/url] s’ha desconnectat (connexió perduda)');
 			$sql = 'DELETE FROM ' . $this->mchat_settings->get_table_mchat_sessions() . '
 				WHERE user_id = ' . (int) $row['user_id'];
 			$this->db->sql_query($sql);
