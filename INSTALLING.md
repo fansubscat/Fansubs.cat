@@ -8,8 +8,6 @@ En aquest document es detalla com instal·lar el codi del portal web de Fansubs.
 
 El codi de Fansubs.cat es va començar a escriure el 2015, per la qual cosa hi ha seccions de codi poc clares i la més antiga, l’apartat de notícies, està fortament enllaçada amb el format dels blogs dels fansubs en català. Per aquest motiu, recomanem desactivar-la si es pretén fer una instal·lació independent de Fansubs.cat. En aquest cas, també recomanem desactivar l’apartat «Enllaços», dissenyat per a enllaçar a la comunitat en català, i modificar l’apartat «Qui som?» i la política de privadesa. Trobareu com fer-ho més endavant.
 
-**Important:** Actualment, tot el tauler d’administració es mostra sempre en català i no és localitzable. Treballarem perquè en el futur també sigui localitzable.
-
 ## Maquinari necessari
 
 El servidor web de Fansubs.cat és un VPS simple d’arquitectura amd64 amb 1 GB de RAM i 25 GB de disc dur. El codi està pensat per a funcionar amb un o diversos servidors d’emmagatzematge i streaming, que hauran de tenir la capacitat adequada per a emmagatzemar el contingut i fer-lo visible mitjançant HTTP. Els portals d’anime i imatge real poden funcionar directament fent streaming de MEGA, però el portal de manga necessita explícitament el servidor d’emmagatzematge.

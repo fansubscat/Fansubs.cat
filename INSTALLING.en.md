@@ -8,8 +8,6 @@ This document details how to install the code from the Fansubs.cat site and the 
 
 The code for Fansubs.cat was first written in 2015. This implies that some portions of the code are not so clear and the oldest portion, the news site, is highly coupled with the format used on blogs from Catalan fansubs. Therefore, we recommend disabling it if you pretend to make an install independent from Fansubs.cat. In this case, we also recommend disabling the «Links» section, which was designed to link back to the Catalan community, and changing the «Who are we?» section and the privacy policy. You will find an explanation of how to do that later.
 
-**Important:** Currently, the admin panel is always shown in Catalan and is not localizable. We are working to make it localizable in the future.
-
 ## Required hardware
 
 The Fansubs.cat web server is a simple VPS with an amd64 architecture, 1 GB of RAM and a 25 GB hard drive. The code is designed to work with one or several storage and streaming servers, which should have the adequate dimensions for storing the content and making it visible through HTTP. The anime and live action sites can work directly by streaming from MEGA, but the manga site explicitly requires a storage server.
