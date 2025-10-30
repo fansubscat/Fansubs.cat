@@ -1,5 +1,17 @@
 # Registre de canvis
 
+## 2025-10-30 - Versió 5.5.4
+- **Catàleg:**
+	- Es corregeix que els enllaços antics del domini accioreal.fansubs.cat no redirigissin a imatgesreal.fansubs.cat.
+- **Comunitat:**
+	- S’afegeix l’eina d’ordenació de cançons per als concursos de cançons de la comunitat.
+	- Es clarifiquen els missatges de desconnexió per inactivitat i connexió perduda.
+	- Es corregeix un error que es produïa en enviar un missatge massa llarg.
+- **Administració:**
+	- Es corregeix l’error que feia que no s’eliminés la imatge d’un enllaç.
+	- S’han mogut totes les cadenes de text del tauler d’administració al fitxer de localització (restava pendent d’ençà de la versió 5.3.0).
+	- S’han corregit errors menors que no afectaven el funcionament del portal.
+
 ## 2025-09-24 - Versió 5.5.3
 - **Catàleg:**
 	- En deixar un comentari, s’indica que s’hi apliquen les normes de la comunitat.
