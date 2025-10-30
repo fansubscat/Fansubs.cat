@@ -258,7 +258,7 @@ $lang = array_merge($lang, array(
 	'TOO_MANY_ATTACHMENTS'		=> 'No pots afegir un altre fitxer adjunt, el màxim és %d.',
 	'TOO_MANY_CHARS'			=> 'El missatge té massa caràcters.',
 	'TOO_MANY_CHARS_LIMIT'		=> array(
-		2	=> 'El nombre màxim de caràcters permesos és %2$d.',
+		2	=> 'El nombre màxim de caràcters permesos és %1$d.',
 	),
 	'TOO_MANY_POLL_OPTIONS'		=> 'Has introduït massa opcions a l’enquesta.',
 	'TOO_MANY_SMILIES'			=> 'El missatge té massa emoticones. El nombre màxim d’emoticones permeses és %d.',
