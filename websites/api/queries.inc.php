@@ -366,7 +366,7 @@ function query_get_manga_chapters_by_slug($slug) {
 			IF(s.subtype='oneshot',
 				IF(s.comic_type='novel', '".lang('catalogue.query.light_novel')."', '".lang('catalogue.query.oneshot')."'),
 				IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-					CONCAT('".lang('catalogue.query.chapter')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+					CONCAT('".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 					CONCAT(IFNULL(et.title, e.description))
 				)
 			) episode_title,
