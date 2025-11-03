@@ -1058,7 +1058,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<div class="col-sm-3">
 								<div class="mb-3">
-									<label><?php echo lang('admin.version_edit.header_image'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.header_image'), lang('admin.version_edit.header_image.help')); ?><br><small class="text-muted"><?php echo lang('admin.version_edit.header_image.help'); ?></small></label><br>
+									<label><?php echo lang('admin.version_edit.header_image'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.version_edit.header_image'), lang('admin.version_edit.header_image.help')); ?><br><small class="text-muted"><?php echo lang('admin.version_edit.header_image.requirements'); ?></small></label><br>
 <?php
 	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/featured/version_'.$row['id'].'.jpg');
 ?>
