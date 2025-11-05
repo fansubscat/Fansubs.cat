@@ -41,8 +41,8 @@ function get_category_name_by_id($id) {
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=3) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-link", "Link «".query_single("SELECT name FROM community WHERE id=".escape($_GET['delete_id']))."» (link id: ".$_GET['delete_id'].") deleted");
-		query("DELETE FROM community WHERE id=".escape($_GET['delete_id']));
+		log_action("delete-link", "Link «".query_single("SELECT name FROM external_link WHERE id=".escape($_GET['delete_id']))."» (link id: ".$_GET['delete_id'].") deleted");
+		query("DELETE FROM external_link WHERE id=".escape($_GET['delete_id']));
 		@unlink(STATIC_DIRECTORY.'/images/communities/'.$_GET['delete_id'].'.png');
 		$_SESSION['message']=lang('admin.generic.delete_successful');
 	}
@@ -71,7 +71,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT c.* FROM community c ORDER BY c.category='featured' DESC, c.name ASC");
+	$result = query("SELECT l.* FROM external_link l ORDER BY l.category='featured' DESC, l.name ASC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>

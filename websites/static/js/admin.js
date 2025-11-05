@@ -968,7 +968,7 @@ function checkFansub() {
 	return true;
 }
 
-function checkCommunity() {
+function checkLink() {
 	if (!$('#form-id').val() && !$('#form-logo').val()) {
 		alert(lang('js.admin.link_edit.error.must_upload_logo'));
 		return false;

@@ -69,12 +69,12 @@ function query_fansubs($user, $status) {
 	return query($final_query);
 }
 
-function query_communities_by_category($category) {
+function query_external_links_by_category($category) {
 	$category = escape($category);
 	$final_query = "SELECT *
-			FROM community c
-			WHERE c.category='$category'
-			ORDER BY c.name ASC";
+			FROM external_link l
+			WHERE l.category='$category'
+			ORDER BY l.name ASC";
 	return query($final_query);
 }
 ?>

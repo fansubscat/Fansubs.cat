@@ -101,13 +101,13 @@ function print_fansub($row) {
 								</div>
 <?php
 }
-function print_community($row) {
+function print_external_link($row) {
 ?>
-							<a class="community-item" href="<?php echo htmlspecialchars($row['url']); ?>" target="_blank">
-								<img class="community-icon" src="<?php echo STATIC_URL.'/images/communities/'.$row['id'].'.png'; ?>" alt="">
-								<div class="community-data">
-									<div class="community-title"><?php echo htmlspecialchars($row['name']); ?></div>
-									<div class="community-description"><?php echo htmlspecialchars($row['description']); ?></div>
+							<a class="external-link-item" href="<?php echo htmlspecialchars($row['url']); ?>" target="_blank">
+								<img class="external-link-icon" src="<?php echo STATIC_URL.'/images/links/'.$row['id'].'.png'; ?>" alt="">
+								<div class="external-link-data">
+									<div class="external-link-title"><?php echo htmlspecialchars($row['name']); ?></div>
+									<div class="external-link-description"><?php echo htmlspecialchars($row['description']); ?></div>
 								</div>
 							</a>
 <?php

@@ -12,8 +12,8 @@ websites/static/images/advent/*
 !websites/static/images/advent/.gitkeep
 websites/static/images/avatars/*
 !websites/static/images/avatars/.gitkeep
-websites/static/images/communities/*
-!websites/static/images/communities/.gitkeep
+websites/static/images/links/*
+!websites/static/images/links/.gitkeep
 websites/static/images/covers/*
 !websites/static/images/covers/.gitkeep
 websites/static/images/divisions/*

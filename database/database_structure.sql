@@ -47,7 +47,7 @@ CREATE TABLE `comment` (
   `updated` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `community` (
+CREATE TABLE `external_link` (
   `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
   `category` varchar(200) NOT NULL DEFAULT 'featured',
@@ -406,7 +406,7 @@ ALTER TABLE `comment`
   ADD KEY `comment_ibfk_4` (`reply_to_comment_id`),
   ADD KEY `comment_ibfk_5` (`last_seen_episode_id`);
 
-ALTER TABLE `community`
+ALTER TABLE `external_link`
   ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `division`
@@ -536,7 +536,7 @@ ALTER TABLE `admin_log`
 ALTER TABLE `comment`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `community`
+ALTER TABLE `external_link`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `division`

@@ -34,25 +34,25 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		}
 		
 		if ($_POST['action']=='edit') {
-			$old_result = query("SELECT * FROM community WHERE id=".$data['id']);
+			$old_result = query("SELECT * FROM external_link WHERE id=".$data['id']);
 			$old_row = mysqli_fetch_assoc($old_result);
 			if ($old_row['updated']!=$_POST['last_update']) {
 				crash(lang('admin.error.link_edit_concurrency_error'));
 			}
 			
 			log_action("update-link", "Link «".$_POST['name']."» (link id: ".$data['id'].") updated");
-			query("UPDATE community SET name='".$data['name']."',url='".$data['url']."',category='".$data['category']."',description='".$data['description']."',updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE external_link SET name='".$data['name']."',url='".$data['url']."',category='".$data['category']."',description='".$data['description']."',updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['logo'])) {
-				move_uploaded_file($_FILES['logo']["tmp_name"], STATIC_DIRECTORY.'/images/communities/'.$data['id'].'.png');
+				move_uploaded_file($_FILES['logo']["tmp_name"], STATIC_DIRECTORY.'/images/links/'.$data['id'].'.png');
 			}
 		}
 		else {
 			log_action("create-link", "Link «".$_POST['name']."» created");
-			query("INSERT INTO community (name,url,category,description,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['url']."','".$data['category']."','".$data['description']."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO external_link (name,url,category,description,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['url']."','".$data['category']."','".$data['description']."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 
 			if (!empty($_FILES['logo'])) {
-				move_uploaded_file($_FILES['logo']["tmp_name"], STATIC_DIRECTORY.'/images/communities/'.mysqli_insert_id($db_connection).'.png');
+				move_uploaded_file($_FILES['logo']["tmp_name"], STATIC_DIRECTORY.'/images/links/'.mysqli_insert_id($db_connection).'.png');
 			}
 		}
 
@@ -63,7 +63,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 
 	if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-		$result = query("SELECT c.* FROM community c WHERE id=".escape($_GET['id']));
+		$result = query("SELECT l.* FROM external_link l WHERE id=".escape($_GET['id']));
 		$row = mysqli_fetch_assoc($result) or crash(lang('admin.error.link_not_found'));
 		mysqli_free_result($result);
 	} else {
@@ -81,7 +81,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			<article class="card-body">
 				<h4 class="card-title text-center mb-4 mt-1"><?php echo !empty($row['id']) ? lang('admin.link_edit.edit_title') : lang('admin.link_edit.create_title'); ?></h4>
 				<hr>
-				<form method="post" action="link_edit.php" enctype="multipart/form-data" onsubmit="return checkCommunity()">
+				<form method="post" action="link_edit.php" enctype="multipart/form-data" onsubmit="return checkLink()">
 					<div class="mb-3">
 						<label for="form-name" class="mandatory"><?php echo lang('admin.link_edit.name'); ?></label> <?php print_helper_box(lang('admin.link_edit.name'), lang('admin.link_edit.name.help')); ?>
 						<input class="form-control" name="name" id="form-name" required maxlength="200" value="<?php echo htmlspecialchars($row['name']); ?>">
@@ -121,7 +121,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<div class="mb-3">
 								<label><?php echo lang('admin.link_edit.logo'); ?><?php echo empty($row['id']) ? '<span class="mandatory"></span>' : ''; ?> <?php print_helper_box(lang('admin.link_edit.logo'), lang('admin.link_edit.logo.help')); ?> <small class="text-muted"><?php echo lang('admin.link_edit.logo.requirements'); ?></small></label><br>
 <?php
-	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/communities/'.$row['id'].'.png');
+	$file_exists = !empty($row['id']) && file_exists(STATIC_DIRECTORY.'/images/links/'.$row['id'].'.png');
 ?>
 								<label for="form-logo" class="btn btn-sm btn-<?php echo $file_exists ? 'warning' : 'primary' ; ?>"><span class="fa fa-upload pe-2"></span><?php echo $file_exists ? lang('admin.common.change_image') : lang('admin.common.upload_image') ; ?></label>
 								<input class="form-control d-none" name="logo" type="file" accept="image/png" id="form-logo" onchange="checkImageUpload(this, -1, 'image/png', 160, 160, 160, 160, 'form-logo-preview', 'form-logo-preview-link');">
@@ -129,8 +129,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-2" style="align-self: center;">
 							<div class="mb-3">
-								<a id="form-logo-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/communities/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/communities/'.$row['id'].'.png"' : ''; ?> target="_blank">
-									<img id="form-logo-preview" style="width: 60px; height: 60px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/communities/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/communities/'.$row['id'].'.png"' : ''; ?> alt="">
+								<a id="form-logo-preview-link"<?php echo $file_exists ? ' href="'.STATIC_URL.'/images/links/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/links/'.$row['id'].'.png"' : ''; ?> target="_blank">
+									<img id="form-logo-preview" style="width: 60px; height: 60px; object-fit: contain; background-color: black; display:inline-block; text-indent: -10000px;"<?php echo $file_exists ? ' src="'.STATIC_URL.'/images/links/'.$row['id'].'.png" data-original="'.STATIC_URL.'/images/links/'.$row['id'].'.png"' : ''; ?> alt="">
 								</a>
 							</div>
 						</div>

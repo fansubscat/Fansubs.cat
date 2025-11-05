@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2025-11-05 - Versió 5.5.5
+- **General:**
+	- Es reanomena internament «community» a «external_link» per a evitar confusions.
+- **Administració:**
+	- Es corregeix una cadena que no apareixia correctament.
+	- Es canvien les «x» per «×» on correspon.
+
 ## 2025-10-30 - Versió 5.5.4
 - **Catàleg:**
 	- Es corregeix que els enllaços antics del domini accioreal.fansubs.cat no redirigissin a imatgesreal.fansubs.cat.

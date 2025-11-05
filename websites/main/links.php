@@ -31,14 +31,14 @@ require_once(__DIR__.'/queries.inc.php');
 		'others' => '<i class="fa fa-fw fa-maximize"></i> '.lang('main.links.category.other'),
 	);
 	foreach ($categories as $id => $title) {
-		$result = query_communities_by_category($id);
+		$result = query_external_links_by_category($id);
 		if (mysqli_num_rows($result)>0) {
 ?>
 						<h2 class="section-title"><?php echo $title; ?></h2>
-						<div class="section-content community-container<?php echo $id=='featured' ? ' community-featured' : ''; ?>">
+						<div class="section-content external-link-container<?php echo $id=='featured' ? ' external-link-featured' : ''; ?>">
 <?php
 			while ($row = mysqli_fetch_assoc($result)){
-				print_community($row);
+				print_external_link($row);
 			}
 ?>
 						</div>
