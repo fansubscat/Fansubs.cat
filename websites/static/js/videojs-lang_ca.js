@@ -91,6 +91,7 @@ videojs.addLanguage('ca', {
   "Opacity": "Opacitat",
   "Text Background": "Fons del text",
   "Caption Area Background": "Fons de la zona de subtítols per a sords",
+  "Playing in Picture-in-Picture": "S’està reproduint en imatge sobre imatge",
   "Skip backward {1} seconds": "Salta {1} segons endarrere",
   "Skip forward {1} seconds": "Salta {1} segons endavant",
   "Open Chromecast menu": "Obre el menú del Chromecast",

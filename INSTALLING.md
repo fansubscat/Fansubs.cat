@@ -137,6 +137,8 @@ El codi actual està pensat per a Fansubs.cat, que funciona en català. Si voleu
 	* `DISABLE_HALLOWEEN_DAYS`: Desactiva el funcionament especial per als dies 31 d’octubre i 1r de novembre.
 	* `DISABLE_CHRISTMAS_DAYS`: Desactiva el funcionament especial per als dies del 5 de desembre al 6 de gener.
 	* `DISABLE_STATUS`: Desactiva l’enllaç a la pàgina d’estat al peu de la pàgina.
+	* `DISABLE_REMOTE_STORAGE_FOR_STREAMING`: Desactiva el servidor d’emmagatzematge extern per a vídeo en streaming (es tirarà directament de MEGA).
+	* `DISABLE_REMOTE_STORAGE_FOR_MANGA`: Desactiva el servidor d’emmagatzematge extern per a manga (es tirarà directament del directori `storage` local).
 
 9) Quan ja tingueu contingut al vostre web, canvieu les previsualitzacions per a xarxes socials existents a `websites/static/social` per les vostres.
 

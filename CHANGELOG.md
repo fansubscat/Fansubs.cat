@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2025-11-06 - Versió 5.5.6
+- **General:**
+	- S’afegeix una traducció a l’anglès de les cadenes del portal.
+- **Administració:**
+	- Es corregeixen dues cadenes que no es mostraven correctament.
+
 ## 2025-11-05 - Versió 5.5.5
 - **General:**
 	- Es reanomena internament «community» a «external_link» per a evitar confusions.

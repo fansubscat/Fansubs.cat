@@ -736,7 +736,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							e.description
 						),
 						IF(e.number IS NOT NULL,
-							CONCAT(d.name, ' -".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
+							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title,
@@ -1397,7 +1397,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 ?>
 																			<th style="width: 15%;"><?php echo lang('admin.version_edit.episode_list.comments'); ?> <?php print_helper_box(lang('admin.version_edit.episode_list.comments'), lang('admin.version_edit.episode_list.comments.help')); ?></th>
-																			<th class="text-center" style="width: 8%;"><?php echo lang('admin.version_edit.episode_list.lost'); ?> <?php print_helper_box(lang('admin.version_edit.episode_list.lost'), lang('admin.version_edit.episode_list.lost.help')); ?></th>
+																			<th class="text-center" style="width: 8%;"><?php echo lang('admin.version_edit.episode_list.lost'); ?> <?php print_helper_box(lang('admin.version_edit.episode_list.lost'), sprintf(lang('admin.version_edit.episode_list.lost.help'), MAIN_SITE_NAME)); ?></th>
 																			<th class="text-center" style="width: 8%;"><?php echo lang('admin.generic.actions'); ?></th>
 																		</tr>
 																	</thead>

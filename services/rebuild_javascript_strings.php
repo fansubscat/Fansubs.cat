@@ -1,5 +1,5 @@
 <?php
-$languages = array('ca');
+$languages = array('ca', 'en');
 foreach ($languages as $language) {
 	$strings = json_decode(file_get_contents(__DIR__.'/../common/languages/lang_'.$language.'.json'),TRUE);
 	$javascript = "//Generated file, do not edit: change strings in lang_ca.json and then run services/rebuild_javascript_strings.php\n";

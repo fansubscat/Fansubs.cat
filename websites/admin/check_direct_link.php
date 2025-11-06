@@ -3,9 +3,9 @@ require_once(__DIR__.'/db.inc.php');
 require_once(__DIR__.'/common.inc.php');
 
 function get_storage_url($url) {
-	if (count(STORAGES)>0 && strpos($url, "storage://")===0) {
+	if (count(REMOTE_STORAGES)>0 && strpos($url, "storage://")===0) {
 		//Always the first storage
-		return generate_storage_url(str_replace("storage://", 'https://'.STORAGES[0].'/', $url));
+		return generate_storage_url(str_replace("storage://", 'https://'.REMOTE_STORAGES[0].'/', $url));
 	} else {
 		return $url;
 	}
@@ -21,7 +21,7 @@ function retrieve_remote_file_size($url){
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HEADER, TRUE);
 	curl_setopt($ch, CURLOPT_NOBODY, TRUE);
-	curl_setopt($ch, CURLOPT_REFERER, 'https://'.STORAGES[0].'/');
+	curl_setopt($ch, CURLOPT_REFERER, 'https://'.REMOTE_STORAGES[0].'/');
 
 	$data = curl_exec($ch);
 	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -33,7 +33,7 @@ function retrieve_remote_file_size($url){
 
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
-	if (count(STORAGES)==0) {
+	if (count(REMOTE_STORAGES)==0) {
 		echo "KO,0";
 	} else {
 		$response = retrieve_remote_file_size($_GET['link']);

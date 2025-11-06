@@ -63,12 +63,12 @@ function get_provider($links){
 }
 
 function get_storage_url($url, $clean=FALSE) {
-	if (count(STORAGES)>0 && strpos($url, "storage://")===0) {
-		$rand = rand(0, count(STORAGES)-1);
+	if (count(REMOTE_STORAGES)>0 && strpos($url, "storage://")===0) {
+		$rand = rand(0, count(REMOTE_STORAGES)-1);
 		if ($clean) {
-			return str_replace("storage://", 'https://'.STORAGES[$rand].'/', $url);
+			return str_replace("storage://", 'https://'.REMOTE_STORAGES[$rand].'/', $url);
 		} else {
-			return generate_storage_url(str_replace("storage://", 'https://'.STORAGES[$rand].'/', $url));
+			return generate_storage_url(str_replace("storage://", 'https://'.REMOTE_STORAGES[$rand].'/', $url));
 		}
 	} else {
 		return $url;
@@ -127,7 +127,7 @@ function filter_links($links){
 	//This establishes the preferences order:
 	//Storage > Direct video > MEGA
 
-	if (count($links_storage)>0 && count(STORAGES)>0 && !DISABLE_STORAGE_STREAMING && empty($_GET['force_mega'])) {
+	if (count($links_storage)>0 && count(REMOTE_STORAGES)>0 && !DISABLE_REMOTE_STORAGE_FOR_STREAMING && empty($_GET['force_mega'])) {
 		return $links_storage;
 	}
 
