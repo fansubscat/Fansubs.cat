@@ -56,6 +56,19 @@ function get_storage_url($url, $clean=FALSE) {
 	}
 }
 
+function list_local_image_files($directory) {
+	$files_raw = array_diff(scandir($directory), array('..', '.'));
+	
+	$files = array();
+	foreach ($files_raw as $file_raw) {
+		//We filter out audio files
+		if (preg_match('/.*\.(jpe?g|png)$/i', $file_raw)) {
+			array_push($files, STATIC_URL.'/storage/'.$file_id.'/'.$file_raw);
+		}
+	}
+	return $files;
+}
+
 function list_remote_image_files($url) {
 	$contents = @file_get_contents($url);
 	preg_match_all("|href=[\"'](.*?)[\"']|", $contents, $hrefs);
@@ -326,8 +339,13 @@ else if ($method === 'manga'){
 				query_save_view_completed($file_id, 'manga', date('Y-m-d'), $row['length']);
 			}
 
-			$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
-			$files = list_remote_image_files($base_path);
+			if (!DISABLE_REMOTE_STORAGE_FOR_MANGA && count(REMOTE_STORAGES)>0) {
+				$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
+				$files = list_remote_image_files($base_path);
+			} else {
+				$base_path="../static/storage/$file_id/";
+				$files = list_local_image_files($base_path, $file_id);
+			}
 			if (count($files)<1) {
 				show_invalid('No valid file specified.');
 			} else {

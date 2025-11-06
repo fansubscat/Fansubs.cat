@@ -167,8 +167,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		$row['mastodon_handle'] = '';
 		$row['twitter_url'] = '';
 		$row['twitter_handle'] = '';
-		$row['status'] = '';
-		$row['is_historical'] = '';
+		$row['status'] = 1;
+		$row['is_historical'] = 0;
 		$row['hentai_category'] = '';
 		$row['archive_url'] = '';
 		$row['ping_token'] = '';

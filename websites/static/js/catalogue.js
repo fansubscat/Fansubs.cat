@@ -2030,17 +2030,17 @@ function formatDoubleSliderInput(input, value) {
 		}
 	} else if (format=='rating') {
 		if (value==0) {
-			input.innerText='TP';
+			input.innerText=lang('js.catalogue.rating.all.short');
 		} else if (value==1) {
-			input.innerText='+7';
+			input.innerText=lang('js.catalogue.rating.7.short');
 		} else if (value==2) {
-			input.innerText='+13';
+			input.innerText=lang('js.catalogue.rating.13.short');
 		} else if (value==3) {
-			input.innerText='+16';
+			input.innerText=lang('js.catalogue.rating.16.short');
 		} else if (value==4) {
-			input.innerText='+18';
+			input.innerText=lang('js.catalogue.rating.18.short');
 		} else {
-			input.innerText='XXX';
+			input.innerText=lang('js.catalogue.rating.explicit.short');
 		}
 	} else if (format=='year') {
 		if (value==1950) {

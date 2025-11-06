@@ -195,16 +195,27 @@ function flatten_directories_and_move_to_storage($file_id, $temp_path){
 	//Clean temporary directory
 	log_action("debug-log", "Removing temporary directory $temp_path for file $file_id");
 	rrmdir($temp_path);
-	//Create remote directory
-	//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
-	log_action("debug-log", "Running: ssh root@".REMOTE_STORAGES[0]." mkdir -p /home/storage/Manga/$file_id/");
-	exec("ssh root@".REMOTE_STORAGES[0]." mkdir -p /home/storage/Manga/$file_id/", $output, $result_code);
-	log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
-	//Copy to remote directory
-	//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
-	log_action("debug-log", "Running: rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".REMOTE_STORAGES[0].":/home/storage/Manga/$file_id/ --delete");
-	exec("rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".REMOTE_STORAGES[0].":/home/storage/Manga/$file_id/ --delete", $output, $result_code);
-	log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
+	if (!DISABLE_REMOTE_STORAGE_FOR_MANGA && count(REMOTE_STORAGES)>0) {
+		//Create remote directory
+		//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
+		log_action("debug-log", "Running: ssh root@".REMOTE_STORAGES[0]." mkdir -p /home/storage/Manga/$file_id/");
+		exec("ssh root@".REMOTE_STORAGES[0]." mkdir -p /home/storage/Manga/$file_id/", $output, $result_code);
+		log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
+		//Copy to remote directory
+		//IMPORTANT: SSH keys must be available for the www-data user, or this will fail silently
+		log_action("debug-log", "Running: rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".REMOTE_STORAGES[0].":/home/storage/Manga/$file_id/ --delete");
+		exec("rsync -avzhW --chmod=u=rwX,go=rX $cleaned_path root@".REMOTE_STORAGES[0].":/home/storage/Manga/$file_id/ --delete", $output, $result_code);
+		log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
+	} else {
+		//Create local directory
+		log_action("debug-log", "Running: mkdir -p ../static/storage/$file_id/");
+		exec("mkdir -p ../static/storage/$file_id/", $output, $result_code);
+		log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
+		//Copy to local directory
+		log_action("debug-log", "Running: cp $cleaned_path* ../static/storage/$file_id/");
+		exec("cp $cleaned_path* ../static/storage/$file_id/", $output, $result_code);
+		log_action("debug-log", "Result ($result_code): ".print_r($output, TRUE));
+	}
 	//Copy first file as preview
 	log_action("debug-log", "Copying first image from $cleaned_path as preview for file $file_id");
 	unset($output);

@@ -198,6 +198,8 @@ function populateMalDataManga(response) {
 	} else {
 		$("#form-comic_type").val('manga');
 	}
+	
+	recalculateDivisionNames();
 
 	var textAuthors = "";
 	for (var i = 0; i < response.data.authors.length; i++) {

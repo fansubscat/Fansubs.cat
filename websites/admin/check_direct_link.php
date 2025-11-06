@@ -33,7 +33,7 @@ function retrieve_remote_file_size($url){
 
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
-	if (count(REMOTE_STORAGES)==0) {
+	if (count(REMOTE_STORAGES)==0 || DISABLE_REMOTE_STORAGE_FOR_STREAMING) {
 		echo "KO,0";
 	} else {
 		$response = retrieve_remote_file_size($_GET['link']);

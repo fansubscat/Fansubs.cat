@@ -75,6 +75,16 @@ function get_storage_url($url, $clean=FALSE) {
 	}
 }
 
+function list_local_files($directory, $file_id) {
+	$files_raw = array_diff(scandir($directory), array('..', '.'));
+	
+	$files = array();
+	foreach ($files_raw as $file_raw) {
+		array_push($files, STATIC_URL.'/storage/'.$file_id.'/'.$file_raw);
+	}
+	return $files;
+}
+
 function list_remote_files($url) {
 	$contents = @file_get_contents($url);
 	preg_match_all("|href=[\"'](.*?)[\"']|", $contents, $hrefs);
@@ -87,7 +97,7 @@ function list_remote_files($url) {
 	return $files;
 }
 
-function filter_remote_files($files, $type) {
+function filter_files($files, $type) {
 	if ($type=='audio') {
 		$result = array();
 		foreach ($files as $file) {

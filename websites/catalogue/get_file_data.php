@@ -83,10 +83,15 @@ function get_player_data(){
 		$pages = array();
 		$music = array();
 		if (CATALOGUE_ITEM_TYPE=='manga') {
-			$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
-			$files = list_remote_files($base_path);
-			$pages = filter_remote_files($files, 'images');
-			$music = filter_remote_files($files, 'audio');
+			if (!DISABLE_REMOTE_STORAGE_FOR_MANGA && count(REMOTE_STORAGES)>0) {
+				$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
+				$files = list_remote_files($base_path);
+			} else {
+				$base_path="../static/storage/$file_id/";
+				$files = list_local_files($base_path, $file_id);
+			}
+			$pages = filter_files($files, 'images');
+			$music = filter_files($files, 'audio');
 			natsort($pages);
 			natsort($music);
 

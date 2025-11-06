@@ -39,15 +39,15 @@ function get_pages_from_duration($duration){
 
 function get_rating_from_integer($value){
 	if ($value==1) {
-		return '+7';
+		return lang('js.catalogue.rating.7.short');
 	} else if ($value==2) {
-		return '+13';
+		return lang('js.catalogue.rating.13.short');
 	} else if ($value==3) {
-		return '+16';
+		return lang('js.catalogue.rating.16.short');
 	} else if ($value==4) {
-		return '+18';
+		return lang('js.catalogue.rating.18.short');
 	} else {
-		return 'TP';
+		return lang('js.catalogue.rating.all.short');
 	}
 }
 

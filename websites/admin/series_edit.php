@@ -674,7 +674,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 														<input id="form-division-list-id-1" name="form-division-list-id-1" type="hidden" value="-1"/>
 													</td>
 													<td>
-														<input id="form-division-list-name-1" name="form-division-list-name-1" type="text" class="form-control" value="<?php echo $type=='manga' ? 'Volum 1' : ''; ?>" placeholder="<?php echo lang('js.admin.series_edit.division.name_placeholder'); ?>" required/>
+														<input id="form-division-list-name-1" name="form-division-list-name-1" type="text" class="form-control" value="<?php echo $type=='manga' ? lang('js.admin.generic.volume_prefix').'1' : ''; ?>" placeholder="<?php echo lang('js.admin.series_edit.division.name_placeholder'); ?>" required/>
 													</td>
 													<td>
 														<input id="form-division-list-number_of_episodes-1" name="form-division-list-number_of_episodes-1" type="number" class="form-control" value="" required/>
