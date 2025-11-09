@@ -1,6 +1,13 @@
 # Registre de canvis
 
 ## 2025-11-09 - Versió 5.5.7
+- **General:**
+	- S’afegeixen dos paquets que mancaven a la documentació d’instal·lació.
+	- Es permet restaurar el funcionament antic de funcionar amb el manga en un directori local, en funció de la configuració de la instal·lació.
+	- Canvis menors en cadenes de text.
+- **Administració:**
+	- Es corregeixen els valors per defecte del formulari en afegir un fansub nou.
+	- Es corregeix que el nom de la primera divisió no canviés automàticament en importar de MyAnimeList.
 - **Catàleg:**
 	- Es corregeix que sovint, el reproductor de MEGA mostrés un error tan sols començar el capítol en navegadors Chromium.
 
