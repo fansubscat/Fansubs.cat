@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2025-11-09 - Versió 5.5.7
+- **Catàleg:**
+	- Es corregeix que sovint, el reproductor de MEGA mostrés un error tan sols començar el capítol en navegadors Chromium.
+
 ## 2025-11-06 - Versió 5.5.6
 - **General:**
 	- S’afegeix una traducció a l’anglès de les cadenes del portal.

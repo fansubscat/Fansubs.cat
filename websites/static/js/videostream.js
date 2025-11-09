@@ -69,7 +69,7 @@ function delay(id, fn, timeout) {
         element.timeoutId = setTimeout(function(element) {
             delete delayedList[element.id];
             var remainingTime = element.totalTimeout - (new Date().getTime() - element.launchTime);
-            if (remainingTime < 20) {
+            if (remainingTime < 50 || remainingTime*100/element.totalTimeout < 2) {
                 queueMicrotask(element.task);
             }
             else {
@@ -117,6 +117,22 @@ function SoonFc(ms, callback) {
 //Main download function!
 var chunkSize = 1024*1024*4; //4MB
 var M = {};
+var lastMegaJsDownload = Promise.resolve();
+
+//This allows us to chain downloads to get them completed in the correct order
+function megaJsQueuedDownload(file, opts, callback) {
+	lastMegaJsDownload = lastMegaJsDownload.then(() => {
+		return new Promise((resolve) => {
+		file.download(opts, (err, chunk) => {
+			callback(err, chunk);
+				resolve();
+			});
+		});
+	});
+
+	return lastMegaJsDownload;
+}
+
 M.gfsfetch = function(data, byteOffset, byteLength){
 	var myAttributes = {};
 	myAttributes.data=data;
@@ -131,7 +147,7 @@ M.gfsfetch = function(data, byteOffset, byteLength){
 		var end = myAttributes.byteLength-1;
 		console.debug('Request chunk '+start+'-'+end);
 		
-		currentMegaFile.download({'start': start, 'end': end, 'initialChunkSize': chunkSize, 'chunkSizeIncrement': chunkSize, 'maxChunkSize': chunkSize}, (err, chunk) => {
+		megaJsQueuedDownload(currentMegaFile, {'start': start, 'end': end, 'maxConnections': 1, 'initialChunkSize': chunkSize, 'chunkSizeIncrement': chunkSize, 'maxChunkSize': chunkSize}, (err, chunk) => {
 			if (err) {
 				//Ignore "Failed to fetch" as it will be refetched if connection is restored
 				if (!/Failed to fetch/.test(err)) {
@@ -7880,10 +7896,13 @@ VideoStream.prototype.createWriteStream = function(obj) {
         videoStream._sbQuotaError = !0;
         videoStream.flushSourceBuffers(-1);
       }
+/* Commented Fansubs.cat
       this._cb = function(err) {
         if (err) return cb(err);
         self._write(chunk, encoding, cb);
       };
+*/
+      console.warn("_write called and sb was updating - ignoring"); //Added Fansubs.cat
     }
   };
   mediaSource.destroy = function(err) {
