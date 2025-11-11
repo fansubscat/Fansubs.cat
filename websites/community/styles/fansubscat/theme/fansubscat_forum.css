@@ -254,6 +254,19 @@ body {
 	transition: none !important;
 }
 
+.site-message {
+	width: 100vw;
+	padding: 1rem;
+	padding-bottom: 1.4rem;
+	background-color: rgb(var(--primary-color));
+	color: rgb(var(--always-positive-color));
+	text-align: center;
+	font-size: 1.6rem;
+	margin: 0 calc(-1 * var(--page-padding));
+	position: relative;
+	z-index: 1;
+}
+
 /* Forum */
 .fansubscat-header {
 	width: 100%;
@@ -1743,6 +1756,11 @@ input[type="checkbox"]:checked:before {
 
 	.hentai-button:hover {
 		color: rgb(var(--icon-button-color-hover));
+	}
+
+	.site-message a:hover {
+		color: rgb(var(--secondary-color));
+		text-decoration: underline;
 	}
 
 	a.secondary-link:hover {

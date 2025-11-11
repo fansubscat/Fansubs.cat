@@ -55,8 +55,20 @@ class event_listener implements EventSubscriberInterface
 
 	public function intercept_header($event)
 	{
+		$special_day = NULL;
+		if (date('m-d')=='12-28' && !DISABLE_FOOLS_DAY) {
+			$special_day = 'fools';
+		} else if (date('m-d')=='04-23' && !DISABLE_SANT_JORDI_DAY) { // Sant Jordi
+			$special_day = 'sant_jordi';
+		} else if (date('m-d')>='10-31' && date('m-d')<='11-01' && !DISABLE_HALLOWEEN_DAYS) {
+			$special_day = 'tots_sants';
+		} else if (((date('m-d')>='12-05' && date('m-d')<='12-31') || (date('m-d')>='01-01' && date('m-d')<='01-06')) && !DISABLE_CHRISTMAS_DAYS) {
+			$special_day = 'nadal';
+		}
+	
 		$this->template->assign_vars(array(
 			'S_SITE_THEME' => $GLOBALS['site_theme'],
+			'S_SPECIAL_DAY' => $special_day,
 		));
 	}
 
