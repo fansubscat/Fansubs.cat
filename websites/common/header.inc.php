@@ -137,6 +137,7 @@ if (PAGE_STYLE_TYPE=='login') {
 ?>
 			<div class="overlay-page">
 				<div class="login-page">
+					<input id="redirect" type="hidden" value="<?php echo htmlspecialchars(get_redirect_from_referrer()); ?>">
 					<div class="login-explanation">
 						<div class="login-header"><?php echo sprintf(lang('users.register.title'), CURRENT_SITE_NAME); ?></div>
 <?php

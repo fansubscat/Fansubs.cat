@@ -76,7 +76,7 @@ function login() {
 			withCredentials: true
 		},
 	}).done(function(data) {
-		window.location.href=MAIN_URL;
+		window.location.href=$('#redirect').val();
 	}).fail(function(data) {
 		try {
 			var response = JSON.parse(data.responseText);
@@ -170,7 +170,7 @@ function register() {
 			withCredentials: true
 		},
 	}).done(function(data) {
-		window.location.href=MAIN_URL;
+		window.location.href=$('#redirect').val();
 	}).fail(function(data) {
 		try {
 			var response = JSON.parse(data.responseText);

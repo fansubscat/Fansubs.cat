@@ -52,6 +52,15 @@ function validate_hentai_ajax() {
 	}
 }
 
+function get_redirect_from_referrer() {
+	$unsafe_url = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+	$host = parse_url($unsafe_url, PHP_URL_HOST);
+	if (str_ends_with($host, '.'.MAIN_DOMAIN) || str_ends_with($host, '.'.HENTAI_DOMAIN)) {
+		return 'https://'.$host;
+	}
+	return MAIN_URL;
+}
+
 function send_email($recipient_address, $recipient_name, $subject, $text, $html_text=NULL) {
 	$mail = new PHPMailer(true);
 
