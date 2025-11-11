@@ -184,6 +184,10 @@ class event_listener implements EventSubscriberInterface
 	{
 		$configurator = $event['configurator'];
 		$configurator->BBCodes->addCustom(
+			'[strike]{TEXT}[/strike]',
+			'<strike>{TEXT}</strike>'
+		);
+		$configurator->BBCodes->addCustom(
 			'[center]{TEXT}[/center]',
 			'<div style="text-align: center;">{TEXT}</span>'
 		);
