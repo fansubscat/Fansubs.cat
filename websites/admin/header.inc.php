@@ -220,7 +220,7 @@ if (empty($skip_navbar) && !empty($_SESSION['username']) && !empty($_SESSION['ad
 					</ul>
 					<a class="navbar-extra-link pe-3" href="<?php echo MAIN_URL; ?>/" target="_blank" title="<?php echo sprintf(lang('admin.menu.quicklinks.main'), MAIN_SUBDOMAIN.'.'.MAIN_DOMAIN); ?>"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-main fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
 					<a class="navbar-extra-link pe-3" href="<?php echo ANIME_URL; ?>/" target="_blank" title="<?php echo sprintf(lang('admin.menu.quicklinks.anime'), ANIME_SUBDOMAIN.'.'.MAIN_DOMAIN); ?>"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-anime fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
-					<a class="navbar-extra-link pe-3" href="<?php echo MANGA_URL; ?>/" target="_blank" title="<?php echo sprintf(lang('admin.menu.quicklinks.anime'), MANGA_SUBDOMAIN.'.'.MAIN_DOMAIN); ?>"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
+					<a class="navbar-extra-link pe-3" href="<?php echo MANGA_URL; ?>/" target="_blank" title="<?php echo sprintf(lang('admin.menu.quicklinks.manga'), MANGA_SUBDOMAIN.'.'.MAIN_DOMAIN); ?>"><span class="fa-stack"><span class="fa fa-globe fa-stack-2x"></span><span class="fa fa-custom-manga fa-stack-1x" style="margin-top: 0.5em; margin-left: 0.75em;"></span></span></a>
 <?php
 	if (!DISABLE_LIVE_ACTION) {
 ?>
