@@ -734,6 +734,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 								WHERE f.version_id=v.id
 									AND f.episode_id IS NOT NULL
 									AND ((e2.number IS NULL AND e1.number IS NULL AND IFNULL(et2.title,e2.description)>IFNULL(et1.title,e1.description)) OR (e2.number IS NULL AND e1.number IS NOT NULL) OR (CONCAT(NATURAL_SORT_KEY(d2.number), ':', NATURAL_SORT_KEY(e2.number))>CONCAT(NATURAL_SORT_KEY(d1.number), ':', NATURAL_SORT_KEY(e1.number))))
+									AND IF((s.subtype='movie' OR s.subtype='oneshot'), 1, (d2.is_real=1 AND d1.is_real=1))
 									AND f.id NOT IN (
 										SELECT ufss.file_id
 										FROM user_file_seen_status ufss
@@ -748,6 +749,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 								LIMIT 1) newer_episode_file_id
 							FROM user_version_followed uvf
 							LEFT JOIN version v ON v.id=uvf.version_id
+							LEFT JOIN series s ON s.id=v.series_id
 							LEFT JOIN episode e1 ON e1.id=uvf.last_seen_episode_id
 							LEFT JOIN division d1 ON d1.id=e1.division_id
 							LEFT JOIN episode_title et1 ON et1.episode_id=uvf.last_seen_episode_id AND et1.version_id=uvf.version_id
