@@ -45,7 +45,7 @@ function show_invalid($reason) {
 
 function get_storage_url($url, $clean=FALSE) {
 	if (count(REMOTE_STORAGES)>0 && strpos($url, "storage://")===0) {
-		$rand = rand(0, count(STORAGES)-1);
+		$rand = rand(0, count(REMOTE_STORAGES)-1);
 		if ($clean) {
 			return str_replace("storage://", 'https://'.REMOTE_STORAGES[$rand].'/', $url);
 		} else {
