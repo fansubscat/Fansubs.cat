@@ -92,6 +92,10 @@ mysqli_free_result($result);
 						<div class="profile-section-data-info"><?php echo date_format(date_create_from_format('Y-m-d', $user['birthdate']), lang('date.birthdate_format')); ?></div>
 					</div>
 					<div class="profile-section-data">
+						<div class="profile-section-data-header"><?php echo lang('users.my_profile.pronoun'); ?></div>
+						<div class="profile-section-data-info"><?php echo $user['pronoun']=='male' ? lang('users.my_profile.pronoun.male') : ($user['pronoun']=='female' ? lang('users.my_profile.pronoun.female') : ($user['pronoun']=='nonbinary' ? lang('users.my_profile.pronoun.other') : lang('users.my_profile.pronoun.none'))); ?></div>
+					</div>
+					<div class="profile-section-data">
 						<div class="profile-section-data-header"><?php echo sprintf(lang('users.my_profile.join_date'), CURRENT_SITE_NAME_ACCOUNT); ?></div>
 						<div class="profile-section-data-info"><?php echo date_format(date_create_from_format('Y-m-d H:i:s', $user['created']), lang('date.birthdate_format')); ?></div>
 					</div>

@@ -54,6 +54,20 @@ if (!empty($user['fansub_id'])) {
 				<input class="date-year" id="edit_profile_birthday_year" type="text" maxlength="4" oninput="removeValidationOnlyText('edit_profile_birthday');" placeholder="<?php echo lang('users.edit_profile.year'); ?>" value="<?php echo date_format(date_create_from_format('Y-m-d', $user['birthdate']), 'Y'); ?>">
 			</div>
 			<div id="edit_profile_birthday_validation" class="validation-message"></div>
+			<label for="edit_profile_pronoun"><?php echo lang('users.edit_profile.pronoun'); ?></label>
+			<select id="edit_profile_pronoun" onchange="removeValidation(this.id);">
+<?php
+	if (empty($user['pronoun'])) {
+?>
+				<option value="" disabled selected><?php echo lang('users.edit_profile.pronoun.select'); ?></option>
+<?php
+	}
+?>
+				<option value="male"<?php echo !empty($user['pronoun']) && $user['pronoun']=='male' ? ' selected' : ''; ?>><?php echo lang('users.edit_profile.pronoun.male'); ?></option>
+				<option value="female"<?php echo !empty($user['pronoun']) && $user['pronoun']=='female' ? ' selected' : ''; ?>><?php echo lang('users.edit_profile.pronoun.female'); ?></option>
+				<option value="nonbinary"<?php echo !empty($user['pronoun']) && $user['pronoun']=='nonbinary' ? ' selected' : ''; ?>><?php echo lang('users.edit_profile.pronoun.other'); ?></option>
+			</select>
+			<div id="edit_profile_pronoun_validation" class="validation-message"></div>
 			<label for="edit_profile_avatar_file"><?php echo lang('users.edit_profile.profile_image'); ?></label>
 			<div class="profile-avatar">
 				<img alt="<?php echo lang('users.edit_profile.profile_image.alt'); ?>" onclick="" class="profile-avatar-image" src="<?php echo get_user_avatar_url($user); ?>">

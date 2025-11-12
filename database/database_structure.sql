@@ -278,6 +278,7 @@ CREATE TABLE `user` (
   `username` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
   `email` varchar(200) NOT NULL,
+  `pronoun` varchar(200) DEFAULT NULL,
   `birthdate` date NOT NULL,
   `reset_password_code` varchar(200) DEFAULT NULL,
   `avatar_filename` varchar(200) DEFAULT NULL,

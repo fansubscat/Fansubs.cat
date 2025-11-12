@@ -119,6 +119,10 @@ function register() {
 		addValidation('register_email',lang('js.users.register.email.error'));
 		failedValidation = true;
 	}
+	if ($('#register_pronoun').val()==null) {
+		addValidation('register_pronoun',lang('js.users.register.pronoun.error'));
+		failedValidation = true;
+	}
 	if ($('#register_birthday_day').val()=='') {
 		addValidationOnlyText('register_birthday',lang('js.users.register.birthdate.error'));
 		failedValidation = true;
@@ -158,6 +162,7 @@ function register() {
 		username: $('#register_username').val().trim(),
 		password: $('#register_password').val(),
 		email_address: $('#register_email').val(),
+		pronoun: $('#register_pronoun').val(),
 		birthday_day: $('#register_birthday_day').val(),
 		birthday_month: $('#register_birthday_month').val(),
 		birthday_year: $('#register_birthday_year').val()
@@ -507,6 +512,10 @@ function editProfile() {
 		addValidation('edit_profile_email',lang('js.users.edit_profile.email.error'));
 		failedValidation = true;
 	}
+	if ($('#edit_profile_pronoun').val()==null) {
+		addValidation('edit_profile_pronoun',lang('js.users.edit_profile.pronoun.error'));
+		failedValidation = true;
+	}
 	if ($('#edit_profile_birthday_day').val()=='') {
 		addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.birthdate.error'));
 		failedValidation = true;
@@ -533,6 +542,7 @@ function editProfile() {
 	var values = {
 		username: $('#edit_profile_username').val(),
 		email_address: $('#edit_profile_email').val(),
+		pronoun: $('#edit_profile_pronoun').val(),
 		birthday_day: $('#edit_profile_birthday_day').val(),
 		birthday_month: $('#edit_profile_birthday_month').val(),
 		birthday_year: $('#edit_profile_birthday_year').val(),
@@ -569,9 +579,9 @@ function editProfile() {
 			} else if (response.code==10) {
 				addValidation('edit_profile_username',lang('js.users.edit_profile.server_error.user_exists'));
 			} else if (response.code==11) {
-				addValidationOnlyText('register_username',lang('js.users.edit_profile.server_error.username_is_email'));
+				addValidationOnlyText('edit_profile_username',lang('js.users.edit_profile.server_error.username_is_email'));
 			} else if (response.code==12) {
-				addValidationOnlyText('register_username',lang('js.users.edit_profile.server_error.username_has_emoji'));
+				addValidationOnlyText('edit_profile_username',lang('js.users.edit_profile.server_error.username_has_emoji'));
 			} else {
 				addValidationOnlyText('edit_profile_generic',lang('js.users.edit_profile.server_error.generic'));
 			}

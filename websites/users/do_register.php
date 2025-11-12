@@ -19,7 +19,7 @@ function register_user(){
 	global $db_connection;
 	
 	//Check if we have all the data
-	if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
+	if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || empty($_POST['pronoun']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 1);
 	}
@@ -28,6 +28,7 @@ function register_user(){
 	$username = $_POST['username'];
 	$password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 	$email_address = $_POST['email_address'];
+	$pronoun = $_POST['pronoun'];
 	$birth_day = $_POST['birthday_day'];
 	$birth_month = $_POST['birthday_month'];
 	$birth_year = $_POST['birthday_year'];
@@ -103,7 +104,7 @@ function register_user(){
 	}
 
 	//Insert user
-	query_insert_registered_user($username, $password, $email_address, $birth_year."-".$birth_month."-".$birth_day);
+	query_insert_registered_user($username, $password, $email_address, $pronoun, $birth_year."-".$birth_month."-".$birth_day);
 	$user_id=mysqli_insert_id($db_connection);
 	
 	//Register in community too
@@ -118,6 +119,7 @@ function register_user(){
 			  json_encode(array(
 			  	'username' => $username,
 			  	'email' => $email_address,
+			  	'pronoun' => $pronoun,
 			  	'birthdate' => $birth_year."-".$birth_month."-".$birth_day,
 			  	)));
 		$output = curl_exec($curl);

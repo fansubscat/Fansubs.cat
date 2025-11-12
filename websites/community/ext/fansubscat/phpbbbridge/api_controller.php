@@ -184,6 +184,7 @@ class api_controller {
 		//WE HAVE THESE PARAMETERS:
 		// -username
 		// -email
+		// -pronoun
 		// -birthdate
 		
 		$request = $this->validate_post_request();
@@ -222,9 +223,12 @@ class api_controller {
 			'user_avatar'		=> 'https://static.fansubs.cat/images/site/default_avatar.jpg',
 			'user_avatar_type'	=> 'avatar.driver.remote',
 		);
+		$cp_data = array(
+			'pf_pronoms'	=> $this->convert_pronoun($request->pronoun),
+		);
 			
 		// effectively add the user
-		$user_id = user_add($user_row);
+		$user_id = user_add($user_row, $cp_data);
 		
 		if (!empty($user_id)) {
 			$output = array(
@@ -721,6 +725,7 @@ class api_controller {
 		// -username_old
 		// -username
 		// -email
+		// -pronoun
 		// -avatar_url
 		// -birth_date
 		
@@ -742,6 +747,10 @@ class api_controller {
 				username = '" . $this->db->sql_escape($this->get_clean_username($request->username)) . "',
 				username_clean = '" . $this->db->sql_escape(utf8_clean_string($this->get_clean_username($request->username))) . "'
 			WHERE username = '" . $this->db->sql_escape($request->username_old) . "'";
+		$this->db->sql_query($sql);
+		$sql = 'UPDATE ' . PROFILE_FIELDS_DATA_TABLE . "
+			SET pf_pronoms = '" . $this->db->sql_escape($this->convert_pronoun($request->pronoun)) . "'
+			WHERE user_id = (SELECT u.user_id FROM " . USERS_TABLE . " u WHERE username = '" . $this->db->sql_escape($request->username) . "')";
 		$this->db->sql_query($sql);
 		
 		//This is needed for the user_update_name function
@@ -947,6 +956,20 @@ class api_controller {
 	 */
 	protected function get_clean_username($username){
 		return preg_replace("/[\x{10000}-\x{10FFFF}]/u", '_', $username);
+	}
+
+	/**
+	 * Converts pronouns from Fansubs.cat system (null, male, female, nonbinary) to phpBB system (1, 2, 3, 4)
+	 */
+	protected function convert_pronoun($pronoun){
+		if ($pronoun=='male'){
+			return 2;
+		} else if ($pronoun=='female'){
+			return 3;
+		} else if ($pronoun=='nonbinary'){
+			return 4;
+		}
+		return 1;
 	}
 
 	/**

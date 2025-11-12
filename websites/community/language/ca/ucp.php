@@ -447,7 +447,7 @@ $lang = array_merge($lang, array(
 	'POST_REPLY_PM'				=> 'Respon el missatge',
 	'PRINT_PM'					=> 'Visualització d’impressió',
 	'PREFERENCES_UPDATED'		=> 'S’han actualitzat les teves preferències.',
-	'PROFILE_INFO_NOTICE'		=> 'Aquí pots editar els camps del perfil que són exclusius de la comunitat de Fansubs.cat. Si vols editar el teu nom d’usuari, data de naixement o imatge de perfil, pots fer-ho al <strong><a href="https://usuaris.fansubs.cat/">perfil de Fansubs.cat</a></strong>. Tingues en compte que aquesta informació pot ser vista per altres membres, i per tant, recomanem que no hi afegeixis informació personal.',
+	'PROFILE_INFO_NOTICE'		=> 'Aquí pots editar els camps del perfil que són exclusius de la comunitat de Fansubs.cat. Si vols editar el teu nom d’usuari, data de naixement, pronom o imatge de perfil, pots fer-ho al <strong><a href="https://usuaris.fansubs.cat/">perfil de Fansubs.cat</a></strong>. Tingues en compte que aquesta informació pot ser vista per altres membres, i per tant, recomanem que no hi afegeixis informació personal.',
 	'PROFILE_UPDATED'			=> 'S’ha actualitzat el perfil.',
 	'PROFILE_AUTOLOGIN_KEYS'	=> 'Les claus d’inici de sessió tipus "Recorda’m" inicien la vostra sessió automàticament quan visiteu el fòrum. Si finalitzeu la sessió, la clau s’elimina només a l’ordinador que esteu utilitzant per finalitzar la sessió. Aquí podeu veure claus d’inici de sessió que heu creat en altres ordinadors que heu utilitzat per accedir a aquest lloc web.',
 	'PROFILE_NO_AUTOLOGIN_KEYS'	=> 'No hi ha cap clau d’inici de sessió tipus "Recorda’m".',

@@ -133,13 +133,14 @@ function query_user_comments_in_the_last_minute($user_id) {
 
 // INSERT
 
-function query_insert_registered_user($username, $password_hash, $email, $birthdate) {
+function query_insert_registered_user($username, $password_hash, $email, $pronoun, $birthdate) {
 	$username_escaped = escape($username);
 	$password_hash_escaped = escape($password_hash);
 	$email_escaped = escape($email);
+	$pronoun_escaped = escape($pronoun);
 	$birthdate_escaped = escape($birthdate);
-	$final_query = "INSERT INTO user (username, password, email, birthdate, created, created_by, updated, updated_by)
-			VALUES ('$username_escaped', '$password_hash_escaped', '$email_escaped', '$birthdate_escaped', CURRENT_TIMESTAMP, 'Themself', CURRENT_TIMESTAMP, 'Themself')";
+	$final_query = "INSERT INTO user (username, password, email, pronoun, birthdate, created, created_by, updated, updated_by)
+			VALUES ('$username_escaped', '$password_hash_escaped', '$email_escaped', '$pronoun_escaped', '$birthdate_escaped', CURRENT_TIMESTAMP, 'Themself', CURRENT_TIMESTAMP, 'Themself')";
 	return query($final_query);
 }
 
@@ -297,14 +298,16 @@ function query_update_comments_for_user_removal($user_id) {
 	return query($final_query);
 }
 
-function query_update_user_profile($user_id, $username, $email_address, $birth_date, $avatar_filename) {
+function query_update_user_profile($user_id, $username, $email_address, $pronoun, $birth_date, $avatar_filename) {
 	$user_id = escape($user_id);
 	$username = escape($username);
 	$email_address = escape($email_address);
+	$pronoun = escape($pronoun);
 	$birth_date = escape($birth_date);
 	$final_query = "UPDATE user
 			SET username='$username',
 				email='$email_address',
+				pronoun='$pronoun',
 				birthdate='$birth_date',
 				avatar_filename=".(!empty($avatar_filename) ? "'".escape($avatar_filename)."'" : "avatar_filename").",
 				updated=CURRENT_TIMESTAMP,

@@ -274,6 +274,14 @@ if (PAGE_STYLE_TYPE=='login') {
 									<input class="date-year" id="register_birthday_year" type="text" maxlength="4" oninput="removeValidationOnlyText('register_birthday');" placeholder="<?php echo lang('users.register.year'); ?>">
 								</div>
 								<div id="register_birthday_validation" class="validation-message"></div>
+								<label for="register_pronoun"><?php echo lang('users.register.pronoun'); ?></label>
+								<select id="register_pronoun" onchange="removeValidation(this.id);">
+									<option value="" disabled selected><?php echo lang('users.register.pronoun.select'); ?></option>
+									<option value="male"><?php echo lang('users.register.pronoun.male'); ?></option>
+									<option value="female"><?php echo lang('users.register.pronoun.female'); ?></option>
+									<option value="nonbinary"><?php echo lang('users.register.pronoun.other'); ?></option>
+								</select>
+								<div id="register_pronoun_validation" class="validation-message"></div>
 								<div class="checkbox-layout">
 									<input id="register_privacy_policy_accept" type="checkbox" onchange="removeValidationOnlyText('register_privacy_policy_accept');">
 									<label for="register_privacy_policy_accept"><?php echo lang('users.register.accept_privacy_policy_1'); ?><a href="<?php echo MAIN_URL.lang('url.privacy_policy'); ?>" target="_blank"><?php echo lang('users.register.accept_privacy_policy_2'); ?></a></label>

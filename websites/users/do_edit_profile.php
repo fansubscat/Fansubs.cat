@@ -13,7 +13,7 @@ function string_ends_with($haystack, $needle) {
 function edit_profile(){
 	global $user;
 	//Check if we have all the data
-	if (empty($user) || empty($_POST['username']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || empty($_POST['avatar']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
+	if (empty($user) || empty($_POST['username']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || empty($_POST['avatar']) || empty($_POST['pronoun']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 1);
 	}
@@ -21,6 +21,7 @@ function edit_profile(){
 	//Transfer to variables
 	$username = $_POST['username'];
 	$email_address = $_POST['email_address'];
+	$pronoun = $_POST['pronoun'];
 	$birth_day = $_POST['birthday_day'];
 	$birth_month = $_POST['birthday_month'];
 	$birth_year = $_POST['birthday_year'];
@@ -91,12 +92,12 @@ function edit_profile(){
 	}
 
 	if (str_starts_with($avatar, 'http')) {
-		query_update_user_profile($user['id'], $username, $email_address, $birth_year."-".$birth_month."-".$birth_day, NULL);
+		query_update_user_profile($user['id'], $username, $email_address, $pronoun, $birth_year."-".$birth_month."-".$birth_day, NULL);
 	} else {
 		$avatar_filename = get_nanoid().'.png';
 		$user['avatar_filename'] = $avatar_filename;
 		file_put_contents(STATIC_DIRECTORY.'/images/avatars/'.$avatar_filename, file_get_contents($avatar));
-		query_update_user_profile($user['id'], $username, $email_address, $birth_year."-".$birth_month."-".$birth_day, $avatar_filename);
+		query_update_user_profile($user['id'], $username, $email_address, $pronoun, $birth_year."-".$birth_month."-".$birth_day, $avatar_filename);
 	}
 	
 	//Update profile in community too
@@ -112,6 +113,7 @@ function edit_profile(){
 			  	'username_old' => $user['username'],
 			  	'username' => $username,
 			  	'email' => $email_address,
+			  	'pronoun' => $pronoun,
 			  	'avatar_url' => get_user_avatar_url($user),
 			  	'birthdate' => $birth_year."-".$birth_month."-".$birth_day,
 			  	)));

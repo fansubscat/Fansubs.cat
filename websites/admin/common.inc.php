@@ -314,8 +314,8 @@ function add_fansub_user($fansub_id, $user_password) {
 	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].lang('generic.user.fansub_username_suffix'));
 	$password_hash_escaped = escape(password_hash($user_password, PASSWORD_BCRYPT));
 	$email_escaped = escape($fansub['email']);
-	query("INSERT INTO user (username, password, email, birthdate, fansub_id, created, created_by, updated, updated_by)
-			VALUES ('$username_escaped', '$password_hash_escaped', '$email_escaped', '2000-01-01', $fansub_id, CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."', CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."')");
+	query("INSERT INTO user (username, password, email, pronoun, birthdate, fansub_id, created, created_by, updated, updated_by)
+			VALUES ('$username_escaped', '$password_hash_escaped', '$email_escaped', NULL, '2000-01-01', $fansub_id, CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."', CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."')");
 	$user_id=mysqli_insert_id($db_connection);
 	
 	if (!DISABLE_COMMUNITY) {

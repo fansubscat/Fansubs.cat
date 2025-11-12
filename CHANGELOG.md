@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2025-11-12 - Versió 5.5.8
+- **Comunitat:**
+	- Nou BBcode per a formatar text ratllat.
+	- Els dies especials, la comunitat també funcionarà com la resta del portal.
+- **Usuaris:**
+	- En iniciar la sessió, es redirigeix l’usuari al portal del qual provenia.
+	- Es mou el pronom al perfil general (fins ara només era editable a la comunitat) i es demana en registrar-se al web.
+	- Es corregeix que no s’informés d’alguns errors en canviar el nom d’usuari al formulari d’edició del perfil.
+
 ## 2025-11-09 - Versió 5.5.7
 - **General:**
 	- S’afegeixen dos paquets que mancaven a la documentació d’instal·lació.
