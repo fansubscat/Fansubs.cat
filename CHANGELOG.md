@@ -1,5 +1,13 @@
 # Registre de canvis
 
+## 2025-11-12 - Versió 5.5.9
+- **General:**
+	- Es permet fer servir altres separadors de decimals en altres llengües.
+- **Catàleg:**
+	- Els capítols de temporades «no reals» no es tenen en compte a l’hora de mostrar sèries a «Continua mirant».
+- **API:**
+	- Se soluciona un error que impedia llegir manga via API.
+
 ## 2025-11-12 - Versió 5.5.8
 - **Comunitat:**
 	- Nou BBcode per a formatar text ratllat.
