@@ -726,17 +726,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resultf);
 
 		$resulte = query("SELECT e.*,
-					REPLACE(TRIM(e.number)+0, '.', ',') formatted_number,
+					REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."') formatted_number,
 					IF(s.subtype='movie' OR s.subtype='oneshot',
 						IF(e.number IS NOT NULL,
 							IF(s.number_of_episodes=1,
 								s.name,
-								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'))
 							),
 							e.description
 						),
 						IF(e.number IS NOT NULL,
-							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
+							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."')),
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title,
@@ -795,17 +795,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		mysqli_free_result($resultd);
 
 		$resulte = query("SELECT e.*,
-					REPLACE(TRIM(e.number)+0, '.', ',') formatted_number,
+					REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."') formatted_number,
 					IF(s.subtype='movie' OR s.subtype='oneshot',
 						IF(e.number IS NOT NULL,
 							IF(s.number_of_episodes=1,
 								s.name,
-								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'))
 							),
 							e.description
 						),
 						IF(e.number IS NOT NULL,
-							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
+							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."')),
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title,
@@ -1327,12 +1327,12 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						IF(e.number IS NOT NULL,
 							IF(s.number_of_episodes=1,
 								s.name,
-								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'))
 							),
 							e.description
 						),
 						IF(e.number IS NOT NULL,
-							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
+							CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."')),
 							CONCAT(d.name, ' - ', e.description)
 						)
 					) episode_title

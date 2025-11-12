@@ -2026,7 +2026,7 @@ function formatDoubleSliderInput(input, value) {
 		if (value==0) {
 			input.innerText="-";
 		} else {
-			input.innerText=Number(value/10).toFixed(1).replaceAll('.',',');
+			input.innerText=Number(value/10).toFixed(1).replaceAll('.',lang('js.decimal_point'));
 		}
 	} else if (format=='rating') {
 		if (value==0) {

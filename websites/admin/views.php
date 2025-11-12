@@ -94,7 +94,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -164,7 +164,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -242,7 +242,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -313,7 +313,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)

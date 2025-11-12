@@ -123,7 +123,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)
@@ -158,7 +158,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
 							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
-								<td scope="row" class="align-middle"><b><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['title']); ?></b> • <?php echo sprintf(lang('admin.index.views_in_progress.percent_completed'), str_replace('.',',',min(100,round($row['progress'],1)))); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></td>
+								<td scope="row" class="align-middle"><b><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['title']); ?></b> • <?php echo sprintf(lang('admin.index.views_in_progress.percent_completed'), str_replace('.',lang('generic.decimal_point'),min(100,round($row['progress'],1)))); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></td>
 							</tr>
 <?php
 	}
@@ -211,7 +211,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IFNULL(et.title, v.title),
 					IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
-						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
+						CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'), IF(et.title IS NULL, '', CONCAT(': ', et.title))),
 						CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description))
 					)
 				)

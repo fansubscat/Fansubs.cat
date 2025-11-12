@@ -167,10 +167,10 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 
 	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
 		if (!empty($title)){
-			return lang('service.post.episode_prefix').str_replace('.',',',floatval($episode_number)).': '.$title;
+			return lang('service.post.episode_prefix').str_replace('.',lang('generic.decimal_point'),floatval($episode_number)).': '.$title;
 		}
 		else {
-			return lang('service.post.episode_prefix').str_replace('.',',',floatval($episode_number));
+			return lang('service.post.episode_prefix').str_replace('.',lang('generic.decimal_point'),floatval($episode_number));
 		}
 	} else {
 		if (!empty($title)){

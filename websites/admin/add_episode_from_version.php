@@ -33,17 +33,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	query("UPDATE series SET number_of_episodes=number_of_episodes+1,updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$series_id);
 	
 	$result = query("SELECT e.*,
-				REPLACE(TRIM(e.number)+0, '.', ',') formatted_number,
+				REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."') formatted_number,
 				IF(s.subtype='movie' OR s.subtype='oneshot',
 					IF(e.number IS NOT NULL,
 						IF(s.number_of_episodes=1,
 							s.name,
-							CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
+							CONCAT(d.name, ' - ".lang('generic.query.movie_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'))
 						),
 						e.description
 					),
 					IF(e.number IS NOT NULL,
-						CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
+						CONCAT(d.name, ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."')),
 						CONCAT(d.name, ' - ', e.description)
 					)
 				) episode_title,

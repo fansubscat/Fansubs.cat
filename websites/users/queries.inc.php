@@ -180,8 +180,8 @@ function query_comment_episode_title($comment_id) {
 						IF(s.type='manga','".lang('catalogue.query.read')."','".lang('catalogue.query.seen')."'),
 						IF(v.show_episode_numbers=1 AND e.number IS NOT NULL,
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
-								CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ',')),
-								CONCAT('".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', ','))
+								CONCAT(IFNULL(vd.title,d.name), ' - ".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."')),
+								CONCAT('".lang('generic.query.episode_space')."', REPLACE(TRIM(e.number)+0, '.', '".lang('generic.decimal_point')."'))
 							),
 							IF((SELECT COUNT(*) FROM division d2 WHERE d2.series_id=s.id AND d2.number_of_episodes>0)>1,
 								CONCAT(IFNULL(vd.title,d.name), ' - ', IFNULL(et.title, e.description)),

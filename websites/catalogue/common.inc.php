@@ -263,10 +263,10 @@ function get_episode_title($series_subtype, $show_episode_numbers, $episode_numb
 
 	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
 		if (!empty($title)){
-			return sprintf(lang('catalogue.generic.episode_number'), str_replace('.',',',floatval($episode_number))).': '.$title;
+			return sprintf(lang('catalogue.generic.episode_number'), str_replace('.',lang('generic.decimal_point'),floatval($episode_number))).': '.$title;
 		}
 		else {
-			return sprintf(lang('catalogue.generic.episode_number'), str_replace('.',',',floatval($episode_number)));
+			return sprintf(lang('catalogue.generic.episode_number'), str_replace('.',lang('generic.decimal_point'),floatval($episode_number)));
 		}
 	} else {
 		if (!empty($title)){
@@ -284,10 +284,10 @@ function get_episode_title_formatted($series_subtype, $show_episode_numbers, $ep
 
 	if ($show_episode_numbers && !empty($episode_number) && empty($linked_episode_id)) {
 		if (!empty($title)){
-			return '<b>'.sprintf(lang('catalogue.generic.episode_number'), str_replace('.',',',floatval($episode_number))).'</b><br>'.htmlspecialchars($title);
+			return '<b>'.sprintf(lang('catalogue.generic.episode_number'), str_replace('.',lang('generic.decimal_point'),floatval($episode_number))).'</b><br>'.htmlspecialchars($title);
 		}
 		else {
-			return '<b>'.sprintf(lang('catalogue.generic.episode_number'), str_replace('.',',',floatval($episode_number))).'</b>';
+			return '<b>'.sprintf(lang('catalogue.generic.episode_number'), str_replace('.',lang('generic.decimal_point'),floatval($episode_number))).'</b>';
 		}
 	} else {
 		if (!empty($title)){
