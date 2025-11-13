@@ -1015,7 +1015,7 @@ function initializePlayer(){
 	//Check for link expiration
 	if (player==null) {
 		//First play: initialize player
-		$(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered">'+(currentSourceData.method=='mega' ? '' : ('<source type="video/mp4" src="'+new Option(sourceUrl).innerHTML+'"/>'))+'</video>'+end).appendTo('#overlay-content');
+		$(start+'<video id="player" playsinline controls disableRemotePlayback class="video-js vjs-default-skin vjs-big-play-centered" crossorigin="anonymous">'+(currentSourceData.method=='mega' ? '' : ('<source type="video/mp4" src="'+new Option(sourceUrl).innerHTML+'"/>'))+'</video>'+end).appendTo('#overlay-content');
 		var options = {
 			controls: true,
 			language: 'ca',
@@ -1235,12 +1235,14 @@ function initializePlayer(){
 	player.controlBar.removeChild('NextButton');
 	player.controlBar.removeChild('PrevButtonDisabled');
 	player.controlBar.removeChild('NextButtonDisabled');
+	player.controlBar.removeChild('ScreenshotButton');
 	player.controlBar.removeChild('PlaySpeedButton');
 	if (!isEmbedPage()) {
 		player.controlBar.addChild(hasPrevFile() ? "PrevButton" : "PrevButtonDisabled", {}, 2);
 		player.controlBar.addChild(hasNextFile() ? "NextButton" : "NextButtonDisabled", {}, 3);
 	}
 	player.controlBar.addChild('PlaySpeedButton', {}, 8);
+	player.controlBar.addChild('ScreenshotButton', {}, 9);
 
 	//We only support one source for now
 	if (currentSourceData.method=='mega') {
@@ -2224,6 +2226,8 @@ $(document).ready(function() {
 	resizeSynopsisHeight(false);
 
 	const Button = videojs.getComponent('Button');
+	const MenuButton = videojs.getComponent('MenuButton');
+	const MenuItem = videojs.getComponent('MenuItem');
 
 	class NextButton extends Button {
 		constructor(player, options) {
@@ -2268,47 +2272,77 @@ $(document).ready(function() {
 		}
 	}
 
-	class PlaySpeedButton extends Button {
+	class ScreenshotButton extends Button {
 		constructor(player, options) {
 			super(player, options);
-			this.applyValue();
+			this.controlText(lang('js.player.screenshot'));
 		}
 		handleClick() {
-			if (window.currentPlayRate==1) {
-				window.currentPlayRate=1.25;
-			} else if (window.currentPlayRate==1.25) {
-				window.currentPlayRate=1.5;
-			} else if (window.currentPlayRate==1.5) {
-				window.currentPlayRate=0.5;
-			} else if (window.currentPlayRate==0.5) {
-				window.currentPlayRate=0.75;
-			} else {
-				window.currentPlayRate=1;
-			}
+			const video = this.player().el().querySelector('video');
+			const canvas = document.createElement('canvas');
+			canvas.width = video.videoWidth;
+			canvas.height = video.videoHeight;
+
+			const ctx = canvas.getContext('2d');
+			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+			canvas.toBlob(blob => {
+				const a = document.createElement('a');
+				a.href = URL.createObjectURL(blob);
+				a.download = currentSourceData.title+' - '+$($('.vjs-current-time-display')[0]).text()+'.png';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			}, 'image/png');
+		}
+		buildCSSClass() {
+			return `${super.buildCSSClass()} vjs-screenshot-button`;
+		}
+	}
+
+	class PlaySpeedButton extends MenuButton {
+		constructor(player, options) {
+			super(player, options);
+			this.controlText(lang('js.player.speed'));
 			this.applyValue();
+		}
+		createItems() {
+			const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+			const items = speeds.map(rate => {
+				const item = new MenuItem(this.player(), {
+					label: Number(rate).toString().replaceAll('.',lang('js.decimal_point'))+'x',
+					selectable: true,
+					selected: rate === window.currentPlayRate
+				});
+
+				item.on('click', () => {
+					window.currentPlayRate = rate;
+					this.applyValue();
+					items.forEach(i => i.selected(false));
+					item.selected(true);
+					this.menu.removeClass('vjs-lock-showing');
+				});
+
+				item.on('touchstart', () => {
+					window.currentPlayRate = rate;
+					this.applyValue();
+					items.forEach(i => i.selected(false));
+					item.selected(true);
+					this.menu.removeClass('vjs-lock-showing');
+				});
+
+				return item;
+			});
+			
+			return items;
 		}
 		applyValue() {
 			this.player().playbackRate(window.currentPlayRate);
-			this.removeClass('fsc-play-speed-ultrafast');
-			this.removeClass('fsc-play-speed-fast');
-			this.removeClass('fsc-play-speed-normal');
-			this.removeClass('fsc-play-speed-slow');
-			this.removeClass('fsc-play-speed-ultraslow');
-			if (window.currentPlayRate==1) {
-				this.addClass('fsc-play-speed-normal');
-				this.controlText(lang('js.player.speed.normal'));
-			} else if (window.currentPlayRate==1.25) {
-				this.addClass('fsc-play-speed-fast');
-				this.controlText(lang('js.player.speed.1.25x'));
-			} else if (window.currentPlayRate==1.5) {
-				this.addClass('fsc-play-speed-ultrafast');
-				this.controlText(lang('js.player.speed.1.5x'));
-			} else if (window.currentPlayRate==0.5) {
-				this.addClass('fsc-play-speed-ultraslow');
-				this.controlText(lang('js.player.speed.0.5x'));
+			const placeholder = $(this.menuButton_.el().querySelector('.vjs-icon-placeholder'));
+			if (window.currentPlayRate==1 || window.currentPlayRate==2) {
+				placeholder.text(Number(window.currentPlayRate).toString().replaceAll('.',lang('js.decimal_point'))+'x');
 			} else {
-				this.addClass('fsc-play-speed-slow');
-				this.controlText(lang('js.player.speed.0.75x'));
+				placeholder.text(Number(window.currentPlayRate).toString().replaceAll('.',lang('js.decimal_point')));
 			}
 		}
 		buildCSSClass() {
@@ -2320,6 +2354,7 @@ $(document).ready(function() {
 	videojs.registerComponent('NextButtonDisabled', NextButtonDisabled);
 	videojs.registerComponent('PrevButton', PrevButton);
 	videojs.registerComponent('PrevButtonDisabled', PrevButtonDisabled);
+	videojs.registerComponent('ScreenshotButton', ScreenshotButton);
 	videojs.registerComponent('PlaySpeedButton', PlaySpeedButton);
 
 	videojs.time.setFormatTime(formatTime);
