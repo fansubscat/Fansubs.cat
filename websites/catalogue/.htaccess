@@ -5,7 +5,9 @@ ErrorDocument 403 /error.php?code=403
 #Hide internal files
 RewriteCond %{THE_REQUEST} ^(.+)\.php(\?\S*)?\ HTTP/ [NC]
 RewriteCond %{REQUEST_URI} !autocomplete\.php
+RewriteCond %{REQUEST_URI} !create_shared_play_session\.php
 RewriteCond %{REQUEST_URI} !get_file_data\.php
+RewriteCond %{REQUEST_URI} !get_shared_play_session_status\.php
 RewriteCond %{REQUEST_URI} !mark_as_seen\.php
 RewriteCond %{REQUEST_URI} !rate_version\.php
 RewriteCond %{REQUEST_URI} !remove_from_continue_watching\.php

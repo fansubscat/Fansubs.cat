@@ -791,6 +791,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	border-radius: 0.5em;
 	z-index: 3;
 	font-size: 0.9em;
+	max-height: 16em !important;
 }
 
 .vjs-menu-button-popup .vjs-menu {
@@ -817,7 +818,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	text-shadow: 0.5px 0 currentColor;
 }
 
-.video-js .vjs-menu-button, .video-js .vjs-screenshot-button {
+.video-js .vjs-menu-button, .video-js .vjs-screenshot-button, .video-js .vjs-shared-play-button {
 	cursor: pointer;
 }
 
@@ -839,6 +840,14 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	line-height: 1.5em;
 	text-shadow: none;
 	content: "\f111"
+}
+
+.video-js .vjs-shared-play-button .vjs-icon-placeholder:before {
+	content: "\e591"
+}
+
+.video-js .vjs-shared-play-button.vjs-shared-play-active .vjs-icon-placeholder:before {
+	content: "\e594"
 }
 
 .video-js .vjs-play-control.vjs-playing .vjs-icon-placeholder:before,.vjs-icon-pause:before {
@@ -2625,6 +2634,68 @@ input:checked + .viewed-slider:before {
 	margin-top: 0.5rem;
 }
 
+.shared-play-dialog-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.shared-play-dialog-container .shared-play-dialog-explanation {
+	margin-bottom: 2rem;
+}
+
+.shared-play-dialog-divider {
+	border: 0.1rem solid rgb(var(--primary-color));
+	margin: 2rem;
+}
+
+.shared-play-dialog-column {
+	flex-basis: 50%;
+}
+
+.shared-play-dialog-title {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 2rem;
+	margin-bottom: 2rem;
+}
+
+.shared-play-dialog-input-box {
+	position: relative;
+	display: inline-block;
+	margin-top: 2rem;
+}
+
+#create_shared_play_session_id, #join_shared_play_session_id {
+	width: 20rem;
+	vertical-align: middle;
+	height: 3.4rem;
+	border-radius: 0.7rem;
+	padding: 0 3.2rem 0 1rem;
+	display: inline-block;
+	border: 0.1em solid rgb(var(--always-negative-color));
+}
+
+#create_shared_play_session_id_copy {
+	cursor: pointer;
+	font-size: 1.7rem;
+	color: gray;
+	float: right;
+	right: 3rem;
+	margin-top: 1rem;
+	position: absolute;
+	z-index: 2;
+}
+
+#create_shared_play_session_id_copy_url {
+	cursor: pointer;
+	font-size: 1.7rem;
+	color: gray;
+	float: right;
+	right: 0.5rem;
+	margin-top: 1rem;
+	position: absolute;
+	z-index: 2;
+}
+
 #bottom-navigation {
 	margin-top: 2.5rem;
 }
@@ -3410,7 +3481,24 @@ input:checked + .viewed-slider:before {
 	.reader-settings-data-header-subtitle {
 		font-size: 1.3rem;
 	}
+	
+	.shared-play-dialog-title {
+		font-size: 1.5rem;
+		margin-bottom: 1.5rem;
+	}
 
+	.shared-play-dialog-container .shared-play-dialog-explanation {
+		margin-bottom: 1.5rem;
+	}
+	
+	.shared-play-dialog-explanation {
+		font-size: 1.3rem;
+	}
+	
+	.shared-play-dialog-input-box {
+		margin-top: 0rem;
+	}
+	
 	input[type='range'].manga-slider-bar::-webkit-slider-thumb {
 		width: 0.9em;
 		height: 0.9em;
@@ -3483,6 +3571,10 @@ input:checked + .viewed-slider:before {
 
 	.carousel .swiper-button-prev, .carousel .swiper-button-next, .recommendations .swiper-button-prev, .recommendations .swiper-button-next {
 		display: none;
+	}
+
+	.shared-play-dialog-container {
+		flex-direction: column;
 	}
 }
 

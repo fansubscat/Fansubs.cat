@@ -273,6 +273,16 @@ CREATE TABLE `series` (
   `updated_by` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `shared_play_session` (
+  `id` varchar(8) NOT NULL,
+  `file_id` int(11) NOT NULL,
+  `position` int(11) NOT NULL,
+  `length` int(11) NOT NULL,
+  `state` varchar(200) DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(200) NOT NULL,
@@ -379,6 +389,7 @@ CREATE TABLE `view_session` (
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),
   `view_counted` timestamp NULL DEFAULT NULL,
+  `shared_play_session_id` varchar(8) DEFAULT NULL,
   `is_casted` tinyint(1) NOT NULL DEFAULT 0,
   `source` varchar(200) NOT NULL,
   `ip` varchar(200) NOT NULL,
@@ -485,6 +496,9 @@ ALTER TABLE `series`
   ADD PRIMARY KEY (`id`),
   ADD KEY `type` (`type`),
   ADD KEY `series_ibfk_1` (`default_version_id`);
+
+ALTER TABLE `shared_play_session`
+  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
@@ -648,6 +662,9 @@ ALTER TABLE `remote_folder_failed_files`
 
 ALTER TABLE `series`
   ADD CONSTRAINT `series_ibfk_1` FOREIGN KEY (`default_version_id`) REFERENCES `version` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `shared_play_session`
+  ADD CONSTRAINT `shared_play_session_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `file` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
   
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`fansub_id`) REFERENCES `fansub` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;

@@ -50,8 +50,8 @@ function query_insert_view_session_completed($view_id, $file_id, $type, $user_id
 	$ip = escape($ip);
 	$user_agent = escape($user_agent);
 	$final_query = "INSERT INTO view_session
-				(id, file_id, type, user_id, anon_id, progress, length, created, updated, view_counted, is_casted, source, ip, user_agent)
-			VALUES ('$view_id', $file_id, '$type', $user_id, $anon_id, $length, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, '$source', '$ip', '$user_agent')";
+				(id, file_id, type, user_id, anon_id, progress, length, created, updated, view_counted, shared_play_session_id, is_casted, source, ip, user_agent)
+			VALUES ('$view_id', $file_id, '$type', $user_id, $anon_id, $length, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 0, '$source', '$ip', '$user_agent')";
 	return query($final_query);
 }
 

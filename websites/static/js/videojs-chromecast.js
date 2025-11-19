@@ -5023,15 +5023,9 @@ var ChromecastSessionManager = /*#__PURE__*/function () {
         }
       } else if (event.sessionState === cast.framework.SessionState.SESSION_STARTED || event.sessionState === cast.framework.SessionState.SESSION_RESUMED) {
         if (window.player) {
-          if (!window.player.currentSource() || window.currentSourceData.method == 'mega') {
+          if (window.isIncompatibleWithCast()) {
             // Do not cast if there is no media item loaded in the player
-            if (window.currentSourceData.method == 'mega') {
-              showAlert("No es pot emetre", "Els vídeos acabats de penjar estan allotjats a MEGA i no es poden emetre. Si vols emetre’l, caldrà que esperis una estona i actualitzis la pàgina.");
-            } else {
-              showAlert("No es pot emetre", "Aquest vídeo no es pot emetre.");
-            }
-            cast.framework.CastContext.getInstance().endCurrentSession(true);
-            window.player.pause();
+            window.showCastAlerts(true);
             return;
           }
           window.player.trigger('chromecastConnected');
@@ -5098,6 +5092,11 @@ var ChromecastSessionManager = /*#__PURE__*/function () {
       // error to bubble up to the console. This error handler is also triggered when
       // the user closes out of the chromecast selector pop-up without choosing a
       // casting destination.
+      if (window.isIncompatibleWithCast()) {
+        // Do not cast if there is no media item loaded in the player
+        window.showCastAlerts(false);
+        return;
+      }
       this.getCastContext().requestSession().then(function () {/* noop */}, function () {/* noop */});
     }
 
@@ -5128,7 +5127,7 @@ var ChromecastSessionManager = /*#__PURE__*/function () {
       player.src(sources);
       player.ready(function () {
         if (window.isChromecastDead) {
-          showAlert("Error en emetre", "S’ha perdut la connexió amb el dispositiu al qual s’emetia. Si vols continuar controlant el Chromecast des d’aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
+          window.showDeadChromecastAlert();
           player.pause();
           //Purely a visual change:
           setTimeout(function () {

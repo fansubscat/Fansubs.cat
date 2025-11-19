@@ -94,6 +94,6 @@ videojs.addLanguage('ca', {
   "Playing in Picture-in-Picture": "S’està reproduint en imatge sobre imatge",
   "Skip backward {1} seconds": "Salta {1} segons endarrere",
   "Skip forward {1} seconds": "Salta {1} segons endavant",
-  "Open Chromecast menu": "Obre el menú del Chromecast",
+  "Open Chromecast menu": "Obre el menú de Google Cast",
   "Cast": "Emet"
 });

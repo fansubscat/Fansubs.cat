@@ -253,8 +253,20 @@ function query_insert_view_session($view_id, $file_id, $type, $user_id, $anon_id
 	$ip = escape($ip);
 	$user_agent = escape($user_agent);
 	$final_query = "INSERT INTO view_session
-				(id, file_id, type, user_id, anon_id, progress, length, created, updated, view_counted, is_casted, source, ip, user_agent)
-			VALUES ('$view_id', $file_id, '$type', $user_id, $anon_id, 0, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, 0, '$source', '$ip', '$user_agent')";
+				(id, file_id, type, user_id, anon_id, progress, length, created, updated, view_counted, shared_play_session_id, is_casted, source, ip, user_agent)
+			VALUES ('$view_id', $file_id, '$type', $user_id, $anon_id, 0, $length, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL, 0, '$source', '$ip', '$user_agent')";
+	return query($final_query);
+}
+
+function query_insert_shared_play_session($id, $file_id, $position, $length, $state) {
+	$id = escape($id);
+	$file_id = intval($file_id);
+	$position = intval($position);
+	$length = intval($length);
+	$state = empty($state) ? 'NULL' : "'".escape($state)."'";
+	$final_query = "INSERT INTO shared_play_session
+				(id, file_id, position, length, state, created, updated)
+			VALUES ('$id', $file_id, $position, $length, $state, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 	return query($final_query);
 }
 
@@ -271,6 +283,18 @@ function query_insert_reported_error($view_id, $file_id, $user_id, $anon_id, $po
 	$final_query = "INSERT INTO reported_error
 				(view_id, file_id, user_id, anon_id, position, type, text, date, ip, user_agent)
 			VALUES ('$view_id', $file_id, $user_id, $anon_id, $position, '$type', '$text', CURRENT_TIMESTAMP, '$ip', '$user_agent')";
+	return query($final_query);
+}
+
+function query_update_shared_play_session($id, $position, $state) {
+	$id = escape($id);
+	$position = intval($position);
+	$state = empty($state) ? 'NULL' : "'".escape($state)."'";
+	$final_query = "UPDATE shared_play_session
+			SET position=LEAST($position,length),
+				updated=CURRENT_TIMESTAMP,
+				state=$state
+			WHERE id='$id'";
 	return query($final_query);
 }
 
@@ -304,6 +328,16 @@ function query_update_view_session_progress($view_id, $progress, $is_casted, $so
 				source='$source',
 				ip='$ip',
 				user_agent='$user_agent'
+			WHERE id='$view_id'";
+	return query($final_query);
+}
+
+function query_update_view_session_shared_play_session_id($view_id, $shared_play_session_id) {
+	$view_id = escape($view_id);
+	$shared_play_session_id = empty($shared_play_session_id) ? 'NULL' : "'".escape($shared_play_session_id)."'";
+	$final_query = "UPDATE view_session
+			SET shared_play_session_id=$shared_play_session_id,
+				updated=CURRENT_TIMESTAMP
 			WHERE id='$view_id'";
 	return query($final_query);
 }
@@ -367,6 +401,13 @@ function query_delete_user_version_followed_by_file_id($user_id, $file_id) {
 				AND version_id=(SELECT f.version_id
 						FROM file f
 						WHERE f.id=$file_id)";
+	return query($final_query);
+}
+
+function query_delete_shared_play_session($id) {
+	$id = escape($id);
+	$final_query = "DELETE FROM shared_play_session
+			WHERE id='$id'";
 	return query($final_query);
 }
 
@@ -1426,6 +1467,14 @@ function query_user_file_seen_status_by_file_id($user_id, $file_id) {
 			FROM user_file_seen_status
 			WHERE user_id=$user_id
 				AND file_id=$file_id";
+	return query($final_query);
+}
+
+function query_shared_play_session_by_id($id) {
+	$id = escape($id);
+	$final_query = "SELECT *, UNIX_TIMESTAMP(updated) updated_timestamp
+			FROM shared_play_session
+			WHERE id='$id'";
 	return query($final_query);
 }
 

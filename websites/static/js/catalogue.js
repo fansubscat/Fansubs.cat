@@ -16,6 +16,7 @@ var enableDebug = false;
 var enableDebugUrl = true;
 var loggedMessages = "";
 var lastTimeUpdate = 0;
+var isDisplayerClosed = true;
 var hasBeenCasted = false;
 var hasJumpedToInitialPosition = false;
 var lastDoubleClickStart = 0;
@@ -31,6 +32,9 @@ var lastMoveY;
 var inactivityTimeout;
 var activityCheckInterval;
 var currentPlayRate = 1;
+var isSharedPlayHost = false;
+var sharedPlaySessionId = null;
+var sharedPlayCheckTimer = null;
 
 //Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
 class Accordion {
@@ -416,7 +420,7 @@ function getReaderReadPages() {
 	return result;
 }
 
-function sendCurrentFileTracking(){
+function sendCurrentFileTracking(stopSharing=false){
 	if (currentSourceData!=null) {
 		var position = getDisplayerCurrentPosition();
 		var progress = currentSourceData.initial_progress+getDisplayerCurrentProgress();
@@ -433,6 +437,10 @@ function sendCurrentFileTracking(){
 		formData.append("is_casted", hasBeenCasted ? 1 : 0);
 		formData.append("position", position);
 		formData.append("progress", progress);
+		if (player!=null) {
+			formData.append("state", player.ended() ? 'ended' : (player.paused() ? 'paused' : 'playing'));
+			formData.append("stop_sharing", stopSharing ? 1 : 0);
+		}
 		var url = getBaseUrl()+'/report_file_status.php';
 		if (!enableDebug) {
 			if (navigator.sendBeacon === "function") {
@@ -520,7 +528,6 @@ function playPrevFile() {
 
 	if (results.length>0) {
 		//In case of multiple files for one episode, only the first will be played
-		sendCurrentFileTracking();
 		shutdownFileStreaming();
 		results.first().click();
 	}
@@ -547,7 +554,6 @@ function playNextFile() {
 
 	if (results.length>0) {
 		//In case of multiple files for one episode, only the first will be played
-		sendCurrentFileTracking();
 		shutdownFileStreaming();
 		results.first().click();
 	}
@@ -1004,7 +1010,7 @@ function initializePlayer(){
 		if (window.chrome && window.chrome.cast && window.cast) {
 			cast.framework.CastContext.getInstance().endCurrentSession(true);
 		}
-		shutdownFileDisplayer(false);
+		shutdownFileDisplayer(false, false);
 		currentTechOrders=techOrders;
 	}
 
@@ -1054,22 +1060,47 @@ function initializePlayer(){
 					}
 				},
 				hotkeys: {
-					enableModifiersForNumbers: false
+					enableModifiersForNumbers: false,
+					//Rebind keys so we can disable them when sharing plays
+					playPauseKey: function (e, player) {
+						return (e.which === 32 || e.which === 179) && (sharedPlaySessionId==null || isSharedPlayHost);
+					},
+					rewindKey: function (e, player) {
+						return (e.which === 37 || e.which === 177) && (sharedPlaySessionId==null || isSharedPlayHost);
+					},
+					forwardKey: function (e, player) {
+						return (e.which === 39 || e.which === 176) && (sharedPlaySessionId==null || isSharedPlayHost);
+					},
 				}
 			}
 		};
 		$('#player').on('contextmenu', function(e) {
+			showAlert('Avís important', 'Recorda que els vídeos');
 			e.preventDefault();
 		});
 
 		player = videojs("player", options, function(){
 			// Player (this) is initialized and ready.
+			var pipToggle = this.controlBar.getChild('PictureInPictureToggle');
+			if (pipToggle) {
+				pipToggle.show();
+			}
 			if (currentSourceData.method=='mega') {
 				this.currentSrc = function() {
 					return 'mega';
 				};
 			}
 		});
+		
+		//Allow disabling keys 0-9 when sharing plays
+		player.el().addEventListener('keydown', function (e) {
+			if (sharedPlaySessionId!=null && !isSharedPlayHost) {
+				if (e.key >= '0' && e.key <= '9') {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+				}
+			}
+		}, true);
 
 		//Allow dragging the seek bar and display its time
 		//Let's thank this person for providing this answer: https://stackoverflow.com/a/60748866/1254846
@@ -1109,7 +1140,25 @@ function initializePlayer(){
 		});
 		player.on('ready', function(){
 			console.log('Ready');
-			if (player.techName_=='Html5') {
+			
+			if (currentSourceData.shared_play_session_id!=null) {
+				isSharedPlayHost = true;
+				sharedPlaySessionId = currentSourceData.shared_play_session_id;
+				beginSharedPlayHost();
+			}
+			
+			var url = new URL(window.location);
+			var sessionId = url.searchParams.get('sp');
+			if (sessionId!=null && !isSharedPlayHost) {
+				hasJumpedToInitialPosition = true;
+				player.pause();
+				removeSharedPlayParams();
+				beginSharedPlay(sessionId);
+			} else if (isSharedPlayHost) {
+				removeSharedPlayParams(false);
+			}
+			
+			if (sessionId==null && player.techName_=='Html5') {
 				setTimeout(function(){
 					if (player) {
 						player.play().catch(error => {
@@ -1132,7 +1181,7 @@ function initializePlayer(){
 							lastDoubleClickStart = 0;
 							const playerWidth = document.querySelector("#player").getBoundingClientRect().width;
 							if (0.66 * playerWidth < e.touches[0].pageX) {
-								if ((player.currentTime()+10)<player.duration()) {
+								if ((player.currentTime()+10)<player.duration() && (sharedPlaySessionId==null || isSharedPlayHost)) {
 									player.currentTime(player.currentTime() + 10);
 									clearTimeout($('.player_extra_backward').stop().data('timer'));
 									$('.player_extra_backward').css({'transition': 'none', 'opacity': '0'});
@@ -1146,7 +1195,7 @@ function initializePlayer(){
 									}, 1000));
 								}
 							} else if (e.touches[0].pageX < 0.33 * playerWidth) {
-								if ((player.currentTime()-10)>=0) {
+								if ((player.currentTime()-10)>=0 && (sharedPlaySessionId==null || isSharedPlayHost)) {
 									player.currentTime(player.currentTime() - 10);
 									clearTimeout($('.player_extra_forward').stop().data('timer'));
 									$('.player_extra_forward').css({'transition': 'none', 'opacity': '0'});
@@ -1178,19 +1227,27 @@ function initializePlayer(){
 		});
 		
 		player.on('playing', function(){
-			player.playbackRate(window.currentPlayRate);
+			player.playbackRate(currentPlayRate);
 			addLog('Playing');
 			hideEndCard();
+			if (isSharedPlayHost) {
+				sendCurrentFileTracking();
+			}
 		});
 		player.on('pause', function(){
 			addLog('Paused');
+			if (isSharedPlayHost) {
+				sendCurrentFileTracking();
+			}
 		});
 		player.on('seeking', function(){
 			hideEndCard();
 		});
 		player.on('ended', function(){
 			addLog('Ended');
-			if (hasNextFile()) {
+			if (isSharedPlayHost) {
+				sendCurrentFileTracking();
+			} else if (sharedPlaySessionId==null && hasNextFile()) {
 				$('.player_extra_ended')[0].style.display='flex';
 				playerEndedTimer = setInterval(function tick() {
 					if (player) {
@@ -1217,7 +1274,7 @@ function initializePlayer(){
 			parsePlayerError((currentSourceData.method=='mega' ? 'E_MEGA_PLAYER_ERROR' : 'E_DIRECT_PLAYER_ERROR')+': '+getPlayerErrorEvent());
 		});
 		player.on('timeupdate', function(){
-			if (Math.abs(player.currentTime()-lastTimeUpdate) >= 30) {
+			if (Math.abs(player.currentTime()-lastTimeUpdate) >= (isSharedPlayHost ? 5 : 30)) {
 				lastTimeUpdate=player.currentTime();
 				sendCurrentFileTracking();
 			}
@@ -1237,12 +1294,14 @@ function initializePlayer(){
 	player.controlBar.removeChild('NextButtonDisabled');
 	player.controlBar.removeChild('ScreenshotButton');
 	player.controlBar.removeChild('PlaySpeedButton');
+	player.controlBar.removeChild('SharedPlayButton');
 	if (!isEmbedPage()) {
 		player.controlBar.addChild(hasPrevFile() ? "PrevButton" : "PrevButtonDisabled", {}, 2);
 		player.controlBar.addChild(hasNextFile() ? "NextButton" : "NextButtonDisabled", {}, 3);
 	}
 	player.controlBar.addChild('PlaySpeedButton', {}, 8);
 	player.controlBar.addChild('ScreenshotButton', {}, 9);
+	player.controlBar.addChild('SharedPlayButton', {}, 10);
 
 	//We only support one source for now
 	if (currentSourceData.method=='mega') {
@@ -1405,6 +1464,12 @@ function loadMegaStream(url){
 }
 
 function shutdownFileStreaming() {
+	if (isSharedPlayHost) {
+		endSharedPlayHost(); //Already calls sendCurrentFileTracking();
+	} else if (sharedPlaySessionId!=null) {
+		endSharedPlay();
+		sendCurrentFileTracking();
+	}
 	if (player!=null && player.techName_=='Html5') {
 		player.pause();
 	}
@@ -1416,8 +1481,9 @@ function shutdownFileStreaming() {
 	hideEndCard();
 }
 
-function shutdownFileDisplayer(clearSourceData) {
+function shutdownFileDisplayer(clearSourceData, removeSharedPlayParam=true) {
 	shutdownFileStreaming();
+	isSharedPlayHost = false;
 	if (player!=null){
 		try {
 			player.dispose();
@@ -1444,11 +1510,12 @@ function hideEndCard() {
 function closeOverlay() {
 	addLog('Closed');
 	isDisplayerClosed = true;
+	
 	stopListeningForUserActivityInMangaReader();
 	if (document.fullscreenElement==$('.main-container')[0]) {
 		document.exitFullscreen();
 	}
-	sendCurrentFileTracking();
+	sendCurrentFileTracking(true);
 	shutdownFileDisplayer(true);
 	if (!isEmbedPage()) {
 		$('#overlay').addClass('hidden');
@@ -2117,7 +2184,7 @@ function initializeSearchAutocomplete() {
 function requestFileData(fileId) {
 	lastRequestedFileId = fileId;
 	hasBeenCasted = false;
-	hasJumpedToInitialPosition = false
+	hasJumpedToInitialPosition = false;
 	lastTimeUpdate = 0;
 	isDisplayerClosed = false;
 	var values = {
@@ -2207,6 +2274,290 @@ function resizeSynopsisHeight(force) {
 		$(".show-more").addClass('hidden');
 		$('.series-synopsis-real').removeClass('expandable-content-hidden');
 	}
+}
+
+function beginSharedPlayHost() {
+	isSharedPlayHost = true;
+	player.controlBar.getChild('PlaySpeedButton').disable();
+	if (player.controlBar.getChild('chromecastButton')) {
+		player.controlBar.getChild('chromecastButton').disable();
+	}
+	currentPlayRate=1;
+	player.controlBar.getChild('PlaySpeedButton').applyValue();
+	player.controlBar.getChild('SharedPlayButton').applyValue();
+	sendCurrentFileTracking();
+}
+
+function endSharedPlayHost() {
+	isSharedPlayHost = false;
+	removeSharedPlayParams();
+	player.controlBar.getChild('PlaySpeedButton').enable();
+	if (player.controlBar.getChild('chromecastButton')) {
+		player.controlBar.getChild('chromecastButton').enable();
+	}
+	player.controlBar.getChild('SharedPlayButton').applyValue();
+	sendCurrentFileTracking(true);
+}
+
+function addSharedPlayParams(sessionId) {
+	sharedPlaySessionId = sessionId;
+	if (!isSharedPlayHost) {
+		var url = new URL(window.location);
+		url.searchParams.append('sp', sessionId);
+		history.replaceState(null, null, url);
+	}
+}
+
+function removeSharedPlayParams(nullify=true) {
+	if (nullify) {
+		sharedPlaySessionId = null;
+	}
+	var url = new URL(window.location);
+	url.searchParams.delete('sp');
+	history.replaceState(null, null, url);
+}
+
+function sharedPlayCheckTick(first = false) {
+	$.get({
+		url: getBaseUrl()+'/get_shared_play_session_status.php?session_id='+sharedPlaySessionId+'&file_id='+currentSourceData.file_id+'&view_id='+currentSourceData.view_id,
+	}).done(function(data) {
+		var response = JSON.parse(data);
+		if (response.result=='ok') {
+			if (response.data.state=='ended' && !player.ended()) {
+				player.currentTime(response.data.position);
+				return;
+			} else if (response.data.state=='paused' && !player.paused()) {
+				player.currentTime(response.data.position);
+				player.pause();
+				return;
+			} else if (response.data.state=='playing' && player.paused()) {
+				player.play();
+			}
+			
+			//we are playing, check for max difference (5s)
+			if (Math.abs(player.currentTime() - response.data.position)>5) {
+				player.currentTime(response.data.position);
+			}
+		} else {
+			if (response.code==1) {
+				showAlert(lang('js.catalogue.player.error.shared_play_wrong_file.title'), lang('js.catalogue.player.error.shared_play_wrong_file.description'));
+			} else if (first) {
+				showAlert(lang('js.catalogue.player.error.shared_play_not_found.title'), lang('js.catalogue.player.error.shared_play_not_found.description'));
+			} else {
+				showAlert(lang('js.catalogue.player.error.shared_play_finished.title'), lang('js.catalogue.player.error.shared_play_finished.description'));
+				player.pause();
+			}
+			endSharedPlay();
+		}
+	}).fail(function(data) {
+		if (first) {
+			showAlert(lang('js.catalogue.player.error.shared_play_error.title'), lang('js.catalogue.player.error.shared_play_error.description'));
+			endSharedPlay();
+		}
+		//Else ignore, keep state
+	});
+}
+
+function beginSharedPlay(sessionId) {
+	addSharedPlayParams(sessionId);
+	player.controlBar.getChild('PlaySpeedButton').disable();
+	if (player.controlBar.getChild('chromecastButton')) {
+		player.controlBar.getChild('chromecastButton').disable();
+	}
+	player.controlBar.getChild('SharedPlayButton').applyValue();
+	player.tech_.off('click');
+	player.tech_.off('touchstart');
+	player.bigPlayButton.disable();
+	player.controlBar.playToggle.disable();
+	player.controlBar.progressControl.disable();
+	sharedPlayCheckTick(true);
+	sharedPlayCheckTimer = setInterval(sharedPlayCheckTick, 5000);
+}
+
+function endSharedPlay() {
+	clearInterval(sharedPlayCheckTimer);
+	removeSharedPlayParams();
+	player.controlBar.getChild('PlaySpeedButton').enable();
+	if (player.controlBar.getChild('chromecastButton')) {
+		player.controlBar.getChild('chromecastButton').enable();
+	}
+	player.controlBar.getChild('SharedPlayButton').applyValue();
+	player.bigPlayButton.enable();
+	player.controlBar.playToggle.enable();
+	player.controlBar.progressControl.enable();
+	player.tech_.on('click', () => {
+		if (player.paused()) {
+			player.play();
+		} else {
+			player.pause();
+		}
+	});
+	player.tech_.on('touchstart', () => {
+		if (player.paused()) {
+			player.play();
+		} else {
+			player.pause();
+		}
+	});
+}
+
+function showSharePlaySessionDialog() {
+	if (player.techName_=='Html5') {
+		showCustomDialog(lang('js.catalogue.player.share_play_dialog.title'), '<div class="shared-play-dialog-container"><div class="shared-play-dialog-column"><div class="shared-play-dialog-title">'+lang('js.catalogue.player.share_play_dialog.as_host')+'</div><div class="shared-play-dialog-explanation">'+lang('js.catalogue.player.share_play_dialog.as_host.explanation')+'</div><button class="dialog-button normal-button" onclick="showCreatePlaySessionDialog();">'+lang('js.catalogue.player.share_play_dialog.as_host.begin')+'</button></div><div class="shared-play-dialog-divider"></div><div class="shared-play-dialog-column"><div class="shared-play-dialog-title">'+lang('js.catalogue.player.share_play_dialog.as_guest')+'</div><div class="shared-play-dialog-explanation">'+lang('js.catalogue.player.share_play_dialog.as_guest.explanation')+'</div><button class="dialog-button normal-button" onclick="showJoinPlaySessionDialog();">'+lang('js.catalogue.player.share_play_dialog.as_guest.begin')+'</button></div></div>', null, true, true, [
+			{
+				text: lang('js.dialog.cancel'),
+				class: 'cancel-button',
+				onclick: function(){
+					closeCustomDialog();
+				}
+			}], true, true);
+	} else {
+		showAlert(lang('js.catalogue.player.error.shared_play_cannot_cast.title'), lang('js.catalogue.player.error.shared_play_cannot_cast.description'));
+	}
+}
+
+function copyToClipboard(text, icon, type) {
+	var copyTest = document.queryCommandSupported('copy');
+
+	if (copyTest === true) {
+		var copyTextArea = document.createElement("textarea");
+		copyTextArea.value = text;
+		document.body.appendChild(copyTextArea);
+		copyTextArea.select();
+		try {
+			document.execCommand('copy');
+			if (type=='url') {
+				$(icon).removeClass('fa-link');
+			} else {
+				$(icon).removeClass('fa-copy');
+			}
+			$(icon).addClass('fa-check');
+			setTimeout(function(){
+				if (type=='url') {
+					$(icon).addClass('fa-link');
+				} else {
+					$(icon).addClass('fa-copy');
+				}
+				$(icon).removeClass('fa-check');
+			}, 2000);
+		} catch (err) {
+			console.log('Oops, unable to copy');
+		}
+		document.body.removeChild(copyTextArea);
+	} else {
+		// Fallback if browser doesn't support .execCommand('copy')
+		window.prompt(lang('js.dialog.copy_to_clipboard_alternate'), text);
+	}
+}
+
+function showCreatePlaySessionDialog() {
+	beginSharedPlayHost();
+	showCustomDialog(lang('js.catalogue.player.share_play_dialog_create.title'), '<div class="shared-play-dialog-explanation">'+lang('js.catalogue.player.share_play_dialog_create.description')+'</div><div class="shared-play-dialog-input-box"><input id="create_shared_play_session_id" type="text" value="" placeholder="'+lang('js.catalogue.player.share_play_dialog_create.generating')+'" readonly><i id="create_shared_play_session_id_copy" class="fa fa-copy" title="'+lang('js.dialog.copy_to_clipboard_code')+'" onclick="copyToClipboard($(\'#create_shared_play_session_id\').val(), this, \'text\');"></i><i id="create_shared_play_session_id_copy_url" class="fa fa-link" title="'+lang('js.dialog.copy_to_clipboard_url')+'" onclick="copyToClipboard(window.location.toString()+\'&sp=\'+$(\'#create_shared_play_session_id\').val(), this, \'url\');"></i></div>', null, true, true, [
+		{
+			text: lang('js.dialog.ok'),
+			class: 'normal-button',
+			onclick: function(){
+				closeCustomDialog();
+			}
+		}], true, true);
+
+	var values = {
+		view_id: currentSourceData.view_id,
+		position: getDisplayerCurrentPosition(),
+		state: player.ended() ? 'ended' : (player.paused() ? 'paused' : 'playing')
+	};
+		
+	$.post({
+		url: getBaseUrl()+"/create_shared_play_session.php",
+		data: values,
+		xhrFields: {
+			withCredentials: true
+		},
+	}).done(function(data) {
+		var response = JSON.parse(data);
+		addSharedPlayParams(response.data.session_id);
+		$('#create_shared_play_session_id').val(sharedPlaySessionId);
+	}).fail(function(data) {
+		showAlert(lang('js.catalogue.player.error.shared_play_create_error.title'), lang('js.catalogue.player.error.shared_play_create_error.description'));
+		endSharedPlayHost();
+	});
+}
+
+function showJoinPlaySessionDialog() {
+	showCustomDialog(lang('js.catalogue.player.share_play_dialog_join.title'), '<div class="shared-play-dialog-explanation">'+lang('js.catalogue.player.share_play_dialog_join.description')+'</div><div class="shared-play-dialog-input-box"><input id="join_shared_play_session_id" type="text" value="" placeholder="'+lang('js.catalogue.player.share_play_dialog_join.enter_code')+'" autocomplete="off" maxlength="8"></div>', null, true, true, [
+		{
+			text: lang('js.dialog.join_shared_play'),
+			class: 'normal-button',
+			onclick: function(){
+				beginSharedPlay($('#join_shared_play_session_id').val());
+				closeCustomDialog();
+			}
+		}, {
+			text: lang('js.dialog.cancel'),
+			class: 'cancel-button',
+			onclick: function(){
+				closeCustomDialog();
+			}
+		}], true, true);
+	$('#join_shared_play_session_id').focus();
+}
+
+function showEndSharePlaySessionDialogHost() {
+	showCustomDialog(lang('js.catalogue.player.share_play_dialog_stop_host.title'), '<div class="shared-play-dialog-explanation">'+lang('js.catalogue.player.share_play_dialog_stop_host.description')+'</div><div class="shared-play-dialog-input-box"><input id="create_shared_play_session_id" type="text" value="'+sharedPlaySessionId+'" readonly><i id="create_shared_play_session_id_copy" class="fa fa-copy" title="'+lang('js.dialog.copy_to_clipboard_code')+'" onclick="copyToClipboard($(\'#create_shared_play_session_id\').val(), this, \'text\');"></i><i id="create_shared_play_session_id_copy_url" class="fa fa-link" title="'+lang('js.dialog.copy_to_clipboard_url')+'" onclick="copyToClipboard(window.location.toString()+\'&sp=\'+$(\'#create_shared_play_session_id\').val(), this, \'url\');"></i></div><br><br><div class="shared-play-dialog-explanation">'+lang('js.catalogue.player.share_play_dialog_stop_host.description_stop')+'</div>', null, true, true, [
+		{
+			text: lang('js.dialog.stop_shared_play'),
+			class: 'normal-button',
+			onclick: function(){
+				endSharedPlayHost();
+				closeCustomDialog();
+			}
+		}, {
+			text: lang('js.dialog.cancel'),
+			class: 'cancel-button',
+			onclick: function(){
+				closeCustomDialog();
+			}
+		}], true, true);
+}
+
+function showEndSharePlaySessionDialogGuest() {
+	showCustomDialog(lang('js.catalogue.player.share_play_dialog_stop_guest.title'), lang('js.catalogue.player.share_play_dialog_stop_guest.description'), null, true, true, [
+		{
+			text: lang('js.dialog.stop_shared_play'),
+			class: 'normal-button',
+			onclick: function(){
+				endSharedPlay();
+				closeCustomDialog();
+			}
+		}, {
+			text: lang('js.dialog.cancel'),
+			class: 'cancel-button',
+			onclick: function(){
+				closeCustomDialog();
+			}
+		}], true, true);
+}
+
+function isIncompatibleWithCast() {
+	return !window.player.currentSource() || window.currentSourceData.method == 'mega' || window.sharedPlaySessionId;
+}
+
+function showCastAlerts(killCastSession=false) {
+	if (sharedPlaySessionId != null) {
+		showAlert(lang('js.catalogue.player.error.cast_unavailable_shared_play.title'), lang('js.catalogue.player.error.cast_unavailable_shared_play.description'));
+	} else if (currentSourceData.method == 'mega') {
+		showAlert(lang('js.catalogue.player.error.cast_unavailable_mega.title'), lang('js.catalogue.player.error.cast_unavailable_mega.description'));
+	} else {
+		showAlert(lang('js.catalogue.player.error.cast_unavailable.title'), lang('js.catalogue.player.error.cast_unavailable.description'));
+	}
+	if (killCastSession) {
+		cast.framework.CastContext.getInstance().endCurrentSession(true);
+		player.pause();
+	}
+}
+
+function showDeadChromecastAlert() {
+	showAlert(lang('js.catalogue.player.error.cast_crashed.title'), lang('js.catalogue.player.error.cast_crashed.description'), true);
 }
 
 $(document).ready(function() {
@@ -2300,6 +2651,37 @@ $(document).ready(function() {
 		}
 	}
 
+	class SharedPlayButton extends Button {
+		constructor(player, options) {
+			super(player, options);
+			this.applyValue();
+		}
+		handleClick() {
+			if (isSharedPlayHost) {
+				showEndSharePlaySessionDialogHost();
+			} else if (sharedPlaySessionId==null) {
+				showSharePlaySessionDialog();
+			} else {
+				showEndSharePlaySessionDialogGuest();
+			}
+		}
+		applyValue() {
+			if (isSharedPlayHost) {
+				this.addClass('vjs-shared-play-active');
+				this.controlText(lang('js.player.share_play_stop'));
+			} else if (sharedPlaySessionId==null) {
+				this.removeClass('vjs-shared-play-active');
+				this.controlText(lang('js.player.share_play'));
+			} else {
+				this.addClass('vjs-shared-play-active');
+				this.controlText(lang('js.player.share_play_stop'));
+			}
+		}
+		buildCSSClass() {
+			return `${super.buildCSSClass()} vjs-shared-play-button`;
+		}
+	}
+
 	class PlaySpeedButton extends MenuButton {
 		constructor(player, options) {
 			super(player, options);
@@ -2307,16 +2689,16 @@ $(document).ready(function() {
 			this.applyValue();
 		}
 		createItems() {
-			const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+			const speeds = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 			const items = speeds.map(rate => {
 				const item = new MenuItem(this.player(), {
 					label: Number(rate).toString().replaceAll('.',lang('js.decimal_point'))+'x',
 					selectable: true,
-					selected: rate === window.currentPlayRate
+					selected: rate === currentPlayRate
 				});
 
 				item.on('click', () => {
-					window.currentPlayRate = rate;
+					currentPlayRate = rate;
 					this.applyValue();
 					items.forEach(i => i.selected(false));
 					item.selected(true);
@@ -2324,7 +2706,7 @@ $(document).ready(function() {
 				});
 
 				item.on('touchstart', () => {
-					window.currentPlayRate = rate;
+					currentPlayRate = rate;
 					this.applyValue();
 					items.forEach(i => i.selected(false));
 					item.selected(true);
@@ -2337,12 +2719,12 @@ $(document).ready(function() {
 			return items;
 		}
 		applyValue() {
-			this.player().playbackRate(window.currentPlayRate);
+			this.player().playbackRate(currentPlayRate);
 			const placeholder = $(this.menuButton_.el().querySelector('.vjs-icon-placeholder'));
-			if (window.currentPlayRate==1 || window.currentPlayRate==2) {
-				placeholder.text(Number(window.currentPlayRate).toString().replaceAll('.',lang('js.decimal_point'))+'x');
+			if (currentPlayRate==1 || currentPlayRate==2) {
+				placeholder.text(Number(currentPlayRate).toString().replaceAll('.',lang('js.decimal_point'))+'x');
 			} else {
-				placeholder.text(Number(window.currentPlayRate).toString().replaceAll('.',lang('js.decimal_point')));
+				placeholder.text(Number(currentPlayRate).toString().replaceAll('.',lang('js.decimal_point')));
 			}
 		}
 		buildCSSClass() {
@@ -2356,6 +2738,7 @@ $(document).ready(function() {
 	videojs.registerComponent('PrevButtonDisabled', PrevButtonDisabled);
 	videojs.registerComponent('ScreenshotButton', ScreenshotButton);
 	videojs.registerComponent('PlaySpeedButton', PlaySpeedButton);
+	videojs.registerComponent('SharedPlayButton', SharedPlayButton);
 
 	videojs.time.setFormatTime(formatTime);
 

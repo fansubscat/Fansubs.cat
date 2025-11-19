@@ -114,6 +114,9 @@ define('ADMIN_TUTORIAL_URL', 'https://www.yourtutorial.xyz/tutorial');
 //Password salt for hashes (used only for the admin site)
 define('PASSWORD_SALT', 'YOUR_PASSWORD_SALT_HERE');
 
+//Defines if the detailed report_file_status log (/srv/fansubscat/temporary/report.log) will be used
+define('REPORT_LOG_ENABLED', FALSE);
+
 //API key for Multiavatar - used only in the admin section
 define('MULTIAVATAR_API_KEY', 'YOUR_API_KEY');
 

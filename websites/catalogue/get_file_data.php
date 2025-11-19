@@ -194,7 +194,8 @@ function get_player_data(){
 			'method' => get_display_method($links),
 			'initial_position' => intval($current_position),
 			'initial_progress' => intval($initial_progress),
-			'is_seen' => $is_seen
+			'is_seen' => $is_seen,
+			'shared_play_session_id' => $rowvs['shared_play_session_id']
 		);
 	}
 

@@ -3,19 +3,18 @@ require_once(__DIR__.'/../common/user_init.inc.php');
 require_once(__DIR__.'/common.inc.php');
 require_once(__DIR__.'/queries.inc.php');
 
-define('REPORT_LOG_ENABLED', FALSE);
-
 function report_file_status(){
 	global $user;
 
 	if (!empty($_POST['view_id'])) {
 		$result = query_view_session_by_id($_POST['view_id']);
 		if ($row = mysqli_fetch_assoc($result)) {
-			if (defined('REPORT_LOG_ENABLED')) {
+			$position = intval($_POST['position']);
+			if (REPORT_LOG_ENABLED) {
 				if ($row['type']=='manga') {
-					file_put_contents('/srv/fansubscat/temporary/report.log', date('Y-m-d H:i:s').' -> '.$_POST['view_id'].': vist: '.$_POST['progress'].'/'.$row['length'].' ('.number_format(($_POST['progress']/$row['length'])*100, 2).'%), ara a la pàgina: '.$_POST['position']."\n", FILE_APPEND);
+					file_put_contents('/srv/fansubscat/temporary/report.log', date('Y-m-d H:i:s').' -> '.$_POST['view_id'].': vist: '.$_POST['progress'].'/'.$row['length'].' ('.number_format(($_POST['progress']/$row['length'])*100, 2).'%), ara a la pàgina: '.$position."\n", FILE_APPEND);
 				} else {
-					file_put_contents('/srv/fansubscat/temporary/report.log', date('Y-m-d H:i:s').' -> '.$_POST['view_id'].': vist: '.gmdate("H:i:s", $_POST['progress']).'/'.gmdate("H:i:s", $row['length']).' ('.number_format(($_POST['progress']/$row['length'])*100, 2).'%), ara al minut: '.gmdate("H:i:s", $_POST['position']).', emès: '.(max($row['is_casted'], $_POST['is_casted'])==1 ? 'sí' : 'no')."\n", FILE_APPEND);
+					file_put_contents('/srv/fansubscat/temporary/report.log', date('Y-m-d H:i:s').' -> '.$_POST['view_id'].': vist: '.gmdate("H:i:s", $_POST['progress']).'/'.gmdate("H:i:s", $row['length']).' ('.number_format(($_POST['progress']/$row['length'])*100, 2).'%), ara al minut: '.gmdate("H:i:s", $position).', emès: '.(max($row['is_casted'], $_POST['is_casted'])==1 ? 'sí' : 'no')."\n", FILE_APPEND);
 				}
 			}
 			$is_casted = $row['is_casted'];
@@ -25,6 +24,14 @@ function report_file_status(){
 				$progress = $row['length']; //We can not determine it reliably, assume it's fully seen
 			}
 			query_update_view_session_progress($_POST['view_id'], $progress, $is_casted, get_view_source_type($_SERVER['HTTP_USER_AGENT'], $is_casted), $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+			if (!empty($row['shared_play_session_id']) && empty($_POST['stop_sharing'])) {
+				//this view_session is a shared play session: update its data
+				query_update_shared_play_session($row['shared_play_session_id'], $position, $_POST['state']);
+			} else if (!empty($row['shared_play_session_id'])) {
+				//stop_sharing is true, remove from view_session and delete shared play session
+				query_update_view_session_shared_play_session_id($_POST['view_id'], NULL);
+				query_delete_shared_play_session($row['shared_play_session_id']);
+			}
 
 			if (!empty($user)) {
 				//This adds the file to the user "currently watching" section. Allows peeking at the file a bit without it counting:
@@ -37,7 +44,7 @@ function report_file_status(){
 				}
 				if ($progress>=$min_progress) {
 					query_insert_or_update_user_version_followed_by_file_id($user['id'], $row['file_id']);
-					query_insert_or_update_user_position_for_file_id($user['id'], $row['file_id'], $_POST['position']);
+					query_insert_or_update_user_position_for_file_id($user['id'], $row['file_id'], $position);
 				}
 			}
 

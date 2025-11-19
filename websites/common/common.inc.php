@@ -121,9 +121,8 @@ function get_user_avatar_url($user) {
 	}
 }
 
-function get_nanoid($size=24) {
+function get_nanoid($size=24, $alphabet='_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
 	//Adapted from: https://github.com/hidehalo/nanoid-php/blob/master/src/Core.php
-	$alphabet = '_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$len = strlen($alphabet);
 	$mask = (2 << (int) (log($len - 1) / M_LN2)) - 1;
 	$step = (int) ceil(1.6 * $mask * $size / $len);
