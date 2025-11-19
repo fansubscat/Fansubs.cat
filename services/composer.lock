@@ -4,34 +4,31 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "41a1f9230d9862e96d13356e7ba10ce9",
+    "content-hash": "27723b395fa9541260aaf81c652a6ae5",
     "packages": [
         {
             "name": "abraham/twitteroauth",
-            "version": "7.0.0",
+            "version": "8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/abraham/twitteroauth.git",
-                "reference": "a8622680f954d0c4f54fd80bedebe00c756ed7aa"
+                "reference": "588e6f2345fb7f930e221848a807dd0fde39e5d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/abraham/twitteroauth/zipball/a8622680f954d0c4f54fd80bedebe00c756ed7aa",
-                "reference": "a8622680f954d0c4f54fd80bedebe00c756ed7aa",
+                "url": "https://api.github.com/repos/abraham/twitteroauth/zipball/588e6f2345fb7f930e221848a807dd0fde39e5d5",
+                "reference": "588e6f2345fb7f930e221848a807dd0fde39e5d5",
                 "shasum": ""
             },
             "require": {
-                "composer/ca-bundle": "^1.2",
+                "composer/ca-bundle": "^1",
                 "ext-curl": "*",
-                "php": "8.*"
+                "php": "^8.2"
             },
             "require-dev": {
-                "php-vcr/php-vcr": "^1",
-                "php-vcr/phpunit-testlistener-vcr": "dev-php8",
-                "phpmd/phpmd": "^2",
                 "phpunit/phpunit": "^9",
-                "rector/rector": "^0.15.7",
-                "squizlabs/php_codesniffer": "^3"
+                "rector/rector": "^0.15.7 || ^2.0.0",
+                "squizlabs/php_codesniffer": "^3 || ^4"
             },
             "type": "library",
             "autoload": {
@@ -66,7 +63,7 @@
                 "issues": "https://github.com/abraham/twitteroauth/issues",
                 "source": "https://github.com/abraham/twitteroauth"
             },
-            "time": "2024-02-11T18:58:08+00:00"
+            "time": "2025-11-17T04:43:06+00:00"
         },
         {
             "name": "cjrasmussen/bluesky-api",
@@ -118,16 +115,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.5.7",
+            "version": "1.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "d665d22c417056996c59019579f1967dfe5c1e82"
+                "reference": "1905981ee626e6f852448b7aaa978f8666c5bc54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/d665d22c417056996c59019579f1967dfe5c1e82",
-                "reference": "d665d22c417056996c59019579f1967dfe5c1e82",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/1905981ee626e6f852448b7aaa978f8666c5bc54",
+                "reference": "1905981ee626e6f852448b7aaa978f8666c5bc54",
                 "shasum": ""
             },
             "require": {
@@ -174,7 +171,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.5.7"
+                "source": "https://github.com/composer/ca-bundle/tree/1.5.9"
             },
             "funding": [
                 {
@@ -184,13 +181,9 @@
                 {
                     "url": "https://github.com/composer",
                     "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2025-05-26T15:08:54+00:00"
+            "time": "2025-11-06T11:46:17+00:00"
         },
         {
             "name": "patrickschur/language-detection",

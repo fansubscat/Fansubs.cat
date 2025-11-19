@@ -36,125 +36,6 @@ var isSharedPlayHost = false;
 var sharedPlaySessionId = null;
 var sharedPlayCheckTimer = null;
 
-//Accordion class from: https://css-tricks.com/how-to-animate-the-details-element-using-waapi/
-class Accordion {
-  constructor(el) {
-    // Store the <details> element
-    this.el = el;
-    // Store the <summary> element
-    this.summary = el.querySelector('summary');
-    // Store the <div class="content"> element
-    this.content = el.querySelector('.division-container');
-
-    // Store the animation object (so we can cancel it if needed)
-    this.animation = null;
-    // Store if the element is closing
-    this.isClosing = false;
-    // Store if the element is expanding
-    this.isExpanding = false;
-    // Detect user clicks on the summary element
-    this.summary.addEventListener('click', (e) => this.onClick(e));
-  }
-
-  onClick(e) {
-    // Stop default behaviour from the browser
-    e.preventDefault();
-    // Add an overflow on the <details> to avoid content overflowing
-    this.el.style.overflow = 'hidden';
-    // Check if the element is being closed or is already closed
-    if (this.isClosing || !this.el.open) {
-      this.open();
-    // Check if the element is being openned or is already open
-    } else if (this.isExpanding || this.el.open) {
-      this.shrink();
-    }
-  }
-
-  shrink() {
-    // Set the element as "being closed"
-    this.isClosing = true;
-    $(this.el).addClass('closing');
-    
-    // Store the current height of the element
-    const startHeight = `${this.el.offsetHeight}px`;
-    // Calculate the height of the summary
-    const endHeight = `${this.summary.offsetHeight}px`;
-    
-    // If there is already an animation running
-    if (this.animation) {
-      // Cancel the current animation
-      this.animation.cancel();
-    }
-    
-    // Start a WAAPI animation
-    this.animation = this.el.animate({
-      // Set the keyframes from the startHeight to endHeight
-      height: [startHeight, endHeight]
-    }, {
-      duration: 300,
-      easing: 'ease-out'
-    });
-    
-    // When the animation is complete, call onAnimationFinish()
-    this.animation.onfinish = () => this.onAnimationFinish(false);
-    // If the animation is cancelled, isClosing variable is set to false
-    this.animation.oncancel = () => {
-        this.isClosing = false; 
-        $(this.el).removeClass('closing');
-    };
-  }
-
-  open() {
-    // Apply a fixed height on the element
-    this.el.style.height = `${this.el.offsetHeight}px`;
-    // Force the [open] attribute on the details element
-    this.el.open = true;
-    // Wait for the next frame to call the expand function
-    window.requestAnimationFrame(() => this.expand());
-  }
-
-  expand() {
-    // Set the element as "being expanding"
-    this.isExpanding = true;
-    // Get the current fixed height of the element
-    const startHeight = `${this.el.offsetHeight}px`;
-    // Calculate the open height of the element (summary height + content height)
-    const endHeight = `${this.summary.offsetHeight + this.content.offsetHeight}px`;
-    
-    // If there is already an animation running
-    if (this.animation) {
-      // Cancel the current animation
-      this.animation.cancel();
-    }
-    
-    // Start a WAAPI animation
-    this.animation = this.el.animate({
-      // Set the keyframes from the startHeight to endHeight
-      height: [startHeight, endHeight]
-    }, {
-      duration: 300,
-      easing: 'ease-out'
-    });
-    // When the animation is complete, call onAnimationFinish()
-    this.animation.onfinish = () => this.onAnimationFinish(true);
-    // If the animation is cancelled, isExpanding variable is set to false
-    this.animation.oncancel = () => this.isExpanding = false;
-  }
-
-  onAnimationFinish(open) {
-    // Set the open attribute based on the parameter
-    this.el.open = open;
-    // Clear the stored animation
-    this.animation = null;
-    // Reset isClosing & isExpanding
-    this.isClosing = false;
-    $(this.el).removeClass('closing');
-    this.isExpanding = false;
-    // Remove the overflow hidden and the fixed height
-    this.el.style.height = this.el.style.overflow = '';
-  }
-}
-
 function isEmbedPage(){
 	return $('.style-type-embed').length!=0;
 }
@@ -855,6 +736,85 @@ function stopListeningForUserActivityInMangaReader() {
 	clearTimeout(inactivityTimeout);
 }
 
+function takeMangaScreenshot() {
+	if (currentSourceData.reader_type=='strip') {
+		const scroll = $('.strip-images')[0];
+		
+		const images = Array.from(scroll.querySelectorAll("img"));
+		
+		let minLeft = Infinity;
+		let maxRight = -Infinity;
+		
+		const parentRect = scroll.getBoundingClientRect();
+		
+		images.forEach(img => {
+			const rect = img.getBoundingClientRect();
+
+			const visibleTop = Math.max(rect.top, parentRect.top);
+			const visibleBottom = Math.min(rect.bottom, parentRect.bottom);
+			const visibleHeight = visibleBottom - visibleTop;
+
+			if (visibleHeight > 0) {
+				minLeft = Math.min(minLeft, rect.left);
+				maxRight = Math.max(maxRight, rect.right);
+			}
+		});
+		
+		const usefulWidth = maxRight - minLeft;
+		
+		const canvas = document.createElement('canvas');
+		canvas.width = usefulWidth;
+		canvas.height = scroll.clientHeight;
+
+		const ctx = canvas.getContext('2d');
+		
+		images.forEach(img => {
+			const rect = img.getBoundingClientRect();
+
+			const visibleTop = Math.max(rect.top, parentRect.top);
+			const visibleBottom = Math.min(rect.bottom, parentRect.bottom);
+			const sliceHeight = visibleBottom - visibleTop;
+
+			if (sliceHeight > 0) {
+				ctx.drawImage(
+					img,
+					0, visibleTop - rect.top,
+					img.width, sliceHeight,
+					rect.left - minLeft, visibleTop - parentRect.top,
+					img.width, sliceHeight
+				);
+			}
+		});
+
+		canvas.toBlob(blob => {
+			const a = document.createElement('a');
+			a.href = URL.createObjectURL(blob);
+			a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		}, 'image/png');
+	} else if ($('.swiper-slide-active > img').length>0 && $('.swiper-slide-active > img')[0].complete){
+		const image = $('.swiper-slide-active > img')[0];
+		const canvas = document.createElement('canvas');
+		canvas.width = image.width;
+		canvas.height = image.height;
+
+		const ctx = canvas.getContext('2d');
+		ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+		canvas.toBlob(blob => {
+			const a = document.createElement('a');
+			a.href = URL.createObjectURL(blob);
+			a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		}, 'image/png');
+	}
+	
+}
+
 function buildMangaReaderBar(current, total, type) {
 	var c = '<div class="manga-bar video-js vjs-has-started vjs-playing vjs-default-skin vjs-big-play-centered vjs-controls-enabled vjs-workinghover vjs-v8 vjs-has-started player-dimensions'+(document.fullscreenElement==$('.main-container')[0] ? ' vjs-fullscreen' : '')+'">';
 	c += '		<div class="vjs-control-bar" dir="ltr">';
@@ -894,6 +854,7 @@ function buildMangaReaderBar(current, total, type) {
 	if (mangaHasMusic()) {
 		c += '		<button class="vjs-mute-control vjs-control vjs-button vjs-vol-0" type="button" title="'+lang('js.catalogue.reader.commute_music')+'" aria-disabled="false" onclick="toggleMangaMusic();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.commute_music')+'</span></button><audio id="manga-music" loop><source src="'+currentSourceData.music+'" type="audio/mpeg"></audio>';
 	}
+	c += '			<button class="vjs-screenshot-button vjs-control vjs-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.screenshot')+'" onclick="takeMangaScreenshot();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.screenshot')+'</span></button>';
 	c += '			<button class="vjs-config-button vjs-control vjs-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.options')+'" onclick="showMangaReaderConfig();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.options')+'</span></button>';
 	c += '			<button class="vjs-fullscreen-control vjs-control vjs-button" type="button" title="'+lang('js.catalogue.reader.full_screen')+'" aria-disabled="false" onclick="requestMangaReaderFullscreen();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.full_screen')+'</span></button>';
 	c += '		</div>';
@@ -919,10 +880,10 @@ function initializeReader(type) {
 	pagesRead[initialPosition-1]=true;
 	for (var i=0; i<currentSourceData.length;i++) {
 		if (type=='strip') {
-			pagesCode+='<div class="manga-page" data-page-number="'+(i+1)+'"><img src="'+currentSourceData.pages[i]+'" draggable="false" onload="stripImageLoaded('+stripImagesLoadedReqNo+');" onerror="stripImageError('+stripImagesLoadedReqNo+');"></div>';
+			pagesCode+='<div class="manga-page" data-page-number="'+(i+1)+'"><img src="'+currentSourceData.pages[i]+'" draggable="false" onload="stripImageLoaded('+stripImagesLoadedReqNo+');" onerror="stripImageError('+stripImagesLoadedReqNo+');" crossorigin="anonymous"></div>';
 		} else {
 			var isLazy = !(i==initialPosition-1 || i==initialPosition-2 || i==initialPosition);
-			pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="'+(isLazy ? 'lazy' : '')+'" draggable="false" onload="imageLoaded(this);" onerror="imageError(this);"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">'+lang('js.catalogue.reader.error_loading_one_image')+'<br><button class="normal-button" onclick="imageReload(this);">'+lang('js.catalogue.reader.retry')+'</button></div></div>';
+			pagesCode+='<div class="manga-page swiper-slide"><img src="'+currentSourceData.pages[i]+'" style="width: 0; height: 0;" loading="'+(isLazy ? 'lazy' : '')+'" draggable="false" onload="imageLoaded(this);" onerror="imageError(this);" crossorigin="anonymous"><div class="image-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i></div><div class="image-error hidden">'+lang('js.catalogue.reader.error_loading_one_image')+'<br><button class="normal-button" onclick="imageReload(this);">'+lang('js.catalogue.reader.retry')+'</button></div></div>';
 		}
 		pagesRead[i]=false;
 	}
@@ -2626,7 +2587,7 @@ $(document).ready(function() {
 	class ScreenshotButton extends Button {
 		constructor(player, options) {
 			super(player, options);
-			this.controlText(lang('js.player.screenshot'));
+			this.controlText(lang('js.catalogue.player.screenshot'));
 		}
 		handleClick() {
 			const video = this.player().el().querySelector('video');
@@ -2668,13 +2629,13 @@ $(document).ready(function() {
 		applyValue() {
 			if (isSharedPlayHost) {
 				this.addClass('vjs-shared-play-active');
-				this.controlText(lang('js.player.share_play_stop'));
+				this.controlText(lang('js.catalogue.player.share_play_stop'));
 			} else if (sharedPlaySessionId==null) {
 				this.removeClass('vjs-shared-play-active');
-				this.controlText(lang('js.player.share_play'));
+				this.controlText(lang('js.catalogue.player.share_play'));
 			} else {
 				this.addClass('vjs-shared-play-active');
-				this.controlText(lang('js.player.share_play_stop'));
+				this.controlText(lang('js.catalogue.player.share_play_stop'));
 			}
 		}
 		buildCSSClass() {
@@ -2685,7 +2646,7 @@ $(document).ready(function() {
 	class PlaySpeedButton extends MenuButton {
 		constructor(player, options) {
 			super(player, options);
-			this.controlText(lang('js.player.speed'));
+			this.controlText(lang('js.catalogue.player.speed'));
 			this.applyValue();
 		}
 		createItems() {
@@ -2758,9 +2719,6 @@ $(document).ready(function() {
 		}
 	}
 	if (!isEmbedPage()) {
-		document.querySelectorAll('details').forEach((el) => {
-			new Accordion(el);
-		});
 		$(".file-launcher").click(function(){
 			//Select season - this will only be effective when invoking play next/prev
 			if ($(this).closest('.division-container').length>0) {

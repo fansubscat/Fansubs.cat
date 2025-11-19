@@ -29,12 +29,12 @@ if(!empty($_SESSION['username']) && mysqli_num_rows(query("SELECT * FROM admin_u
 		<link rel="manifest" href="<?php echo STATIC_URL; ?>/favicons/admin/site.webmanifest">
 		<link rel="mask-icon" href="<?php echo STATIC_URL; ?>/favicons/admin/safari-pinned-tab.svg" color="#6aa0f8">
 		<link rel="shortcut icon" href="<?php echo STATIC_URL; ?>/favicons/admin/favicon.ico">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" integrity="sha256-zRgmWB5PK4CvTx4FiXsxbHaYRBBjz/rvu97sOC7kzXI=" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 		<link rel="stylesheet" href="<?php echo STATIC_URL; ?>/css/admin.css?v=<?php echo VERSION; ?>" />
 		<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha256-NfRUfZNkERrKSFA0c1a8VmCplPDYtpTYj5lQmKe1R/o=" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/lang_<?php echo SITE_LANGUAGE; ?>.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/admin_lang_<?php echo SITE_LANGUAGE; ?>.js?v=<?php echo VERSION; ?>"></script>
 		<script src="<?php echo STATIC_URL; ?>/js/admin.js?v=<?php echo VERSION; ?>"></script>

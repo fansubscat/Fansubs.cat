@@ -223,7 +223,7 @@
 	transform: rotate(360deg);
 }
 
-.manga-reader.manga-reader-strip .swiper-pagination-custom .vjs-config-button, .manga-reader.manga-reader-strip .swiper-pagination-custom .vjs-fullscreen-control, .manga-reader.manga-reader-strip .swiper-pagination-custom .vjs-mute-control {
+.manga-reader.manga-reader-strip .swiper-pagination-custom .vjs-config-button, .manga-reader.manga-reader-strip .swiper-pagination-custom .vjs-fullscreen-control, .manga-reader.manga-reader-strip .swiper-pagination-custom .vjs-mute-control, .manga-reader.manga-reader-strip .swiper-pagination-custom .vjs-screenshot-button {
 	transform: rotate(-90deg);
 }
 
