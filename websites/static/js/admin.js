@@ -1099,6 +1099,10 @@ function checkNumberOfLinks() {
 				alert(lang('js.admin.version_edit.error.must_provide_episode_title'));
 				return false;
 			}
+			if (new RegExp("^" + lang('js.admin.version_edit.episode.episode_number_prefix_check') + "\\d").test($(urls[i]).closest('.episode-container').find('.episode-title-input').val()) || new RegExp("^" + lang('js.admin.version_edit.episode.chapter_number_prefix_check') + "\\d").test($(urls[i]).closest('.episode-container').find('.episode-title-input').val())) {
+				alert(lang('js.admin.version_edit.error.no_episode_prefix_when_episode_numbers_shown'));
+				return false;
+			}
 		}
 	}
 
@@ -1119,6 +1123,12 @@ function checkNumberOfLinks() {
 		var validFiles = $('.episode-container span .fa-check');
 		for (var i=0;i<validFiles.length;i++) {
 			if ($(validFiles[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')==lang('js.admin.version_edit.episode.title_placeholder') && $(validFiles[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
+				$(urls[i]).closest('.accordion-collapse').collapse('show');
+				$(validFiles[i]).closest('.episode-container').find('.episode-title-input').focus();
+				alert(lang('js.admin.version_edit.error.must_provide_episode_title'));
+				return false;
+			}
+			if (new RegExp("^" + lang('js.admin.version_edit.episode.episode_number_prefix_check') + "\\d").test($(validFiles[i]).closest('.episode-container').find('.episode-title-input').val()) || new RegExp("^" + lang('js.admin.version_edit.episode.chapter_number_prefix_check') + "\\d").test($(validFiles[i]).closest('.episode-container').find('.episode-title-input').val())) {
 				$(urls[i]).closest('.accordion-collapse').collapse('show');
 				$(validFiles[i]).closest('.episode-container').find('.episode-title-input').focus();
 				alert(lang('js.admin.version_edit.error.must_provide_episode_title'));
