@@ -1523,7 +1523,6 @@
 	"js.admin.version_edit.episode.add_file_variant_title": "Add additional variant",
 	"js.admin.version_edit.episode.delete_file_title": "Delete data for this file",
 	"js.admin.version_edit.episode.delete_link_title": "Delete this link",
-	"js.admin.version_edit.episode.extra_title_placeholder": "- Enter a title -",
 	"js.admin.version_edit.episode.link_placeholder": "(No link)",
 	"js.admin.version_edit.episode.link_placeholder_extra": "- Enter a link -",
 	"js.admin.version_edit.episode.resolution_placeholder": "- Choose -",

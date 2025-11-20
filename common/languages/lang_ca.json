@@ -1523,7 +1523,6 @@
 	"js.admin.version_edit.episode.add_file_variant_title": "Afegeix una variant addicional",
 	"js.admin.version_edit.episode.delete_file_title": "Suprimeix les dades d’aquest fitxer",
 	"js.admin.version_edit.episode.delete_link_title": "Suprimeix aquest enllaç",
-	"js.admin.version_edit.episode.extra_title_placeholder": "- Introdueix un títol -",
 	"js.admin.version_edit.episode.link_placeholder": "(Sense enllaç)",
 	"js.admin.version_edit.episode.link_placeholder_extra": "- Introdueix un enllaç -",
 	"js.admin.version_edit.episode.resolution_placeholder": "- Tria -",

@@ -454,7 +454,7 @@ function addVersionRow(episode_id) {
 function addVersionExtraRow() {
 	var i = parseInt($('#extras-list-table').attr('data-count'))+1;
 
-	var contents = '<tr id="form-extras-list-row-'+i+'"><td><input id="form-extras-list-name-'+i+'" name="form-extras-list-name-'+i+'" type="text" class="form-control" value="" maxlength="200" required placeholder="'+lang('js.admin.version_edit.episode.extra_title_placeholder')+'"/><input id="form-extras-list-id-'+i+'" name="form-extras-list-id-'+i+'" type="hidden" value="-1"/></td>';
+	var contents = '<tr id="form-extras-list-row-'+i+'"><td><input id="form-extras-list-name-'+i+'" name="form-extras-list-name-'+i+'" type="text" class="form-control" value="" maxlength="200" required placeholder="'+lang('js.admin.version_edit.episode.title_placeholder')+'"/><input id="form-extras-list-id-'+i+'" name="form-extras-list-id-'+i+'" type="hidden" value="-1"/></td>';
 	
 	if ($('#type').val()=='manga') {
 		contents += '<td class="align-middle"><div id="form-extras-list-file_details-'+i+'" class="small"><span style="color: gray;"><span class="fa fa-times fa-fw"></span> '+lang('js.admin.generic.no_file_uploaded')+'</span></div></td><td class="align-middle"><label style="margin-bottom: 0;" for="form-extras-list-file-'+i+'" class="btn btn-sm btn-primary w-100"><span class="fa fa-upload pe-2"></span>'+lang('js.admin.generic.upload_file')+'</label><input id="form-extras-list-file-'+i+'" name="form-extras-list-file-'+i+'" type="file" accept=".zip,.rar,.cbz,.cbr" class="form-control d-none" onchange="uncompressFile(this);" required/><input id="form-extras-list-length-'+i+'" name="form-extras-list-length-'+i+'" type="hidden" value="-1"/></td>';
@@ -1093,7 +1093,7 @@ function checkNumberOfLinks() {
 				alert(lang('js.admin.version_edit.error.invalid_generic_url').replaceAll('%s', urls[i].value));
 				return false;
 			}
-			if ($(urls[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')==lang('js.admin.version_edit.episode.extra_title_placeholder') && $(urls[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
+			if ($(urls[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')==lang('js.admin.version_edit.episode.title_placeholder') && $(urls[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
 				$(urls[i]).closest('.accordion-collapse').collapse('show');
 				$(urls[i]).closest('.episode-container').find('.episode-title-input').focus();
 				alert(lang('js.admin.version_edit.error.must_provide_episode_title'));
@@ -1118,7 +1118,7 @@ function checkNumberOfLinks() {
 	} else { //Manga only
 		var validFiles = $('.episode-container span .fa-check');
 		for (var i=0;i<validFiles.length;i++) {
-			if ($(validFiles[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')==lang('js.admin.version_edit.episode.extra_title_placeholder') && $(validFiles[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
+			if ($(validFiles[i]).closest('.episode-container').find('.episode-title-input').attr('placeholder')==lang('js.admin.version_edit.episode.title_placeholder') && $(validFiles[i]).closest('.episode-container').find('.episode-title-input').val()=='') {
 				$(urls[i]).closest('.accordion-collapse').collapse('show');
 				$(validFiles[i]).closest('.episode-container').find('.episode-title-input').focus();
 				alert(lang('js.admin.version_edit.error.must_provide_episode_title'));
