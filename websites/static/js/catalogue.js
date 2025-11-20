@@ -897,6 +897,10 @@ function initializeReader(type) {
 	$('#overlay-content .manga-reader').remove();
 	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'">'+pagesCode+'<div class="swiper-pagination swiper-pagination-custom swiper-pagination-horizontal'+(type=='strip' ? ' hidden' : '')+'">'+buildMangaReaderBar(initialPosition,currentSourceData.length, type)+'</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
 	$('.main-container').on('fullscreenchange', (e) => handleMangaReaderFullscreen(e));
+	$('.main-container').on('contextmenu', function(e) {
+		showAlert(lang('js.catalogue.player.right_click.title'), lang('js.catalogue.player.right_click.description'), true);
+		e.preventDefault();
+	});
 	
 	if (type!='strip') {
 		new Swiper('.player-popup', {
@@ -1035,8 +1039,8 @@ function initializePlayer(){
 				}
 			}
 		};
-		$('#player').on('contextmenu', function(e) {
-			showAlert('Avís important', 'Recorda que els vídeos');
+		$('.player-popup').on('contextmenu', function(e) {
+			showAlert(lang('js.catalogue.player.right_click.title'), lang('js.catalogue.player.right_click.description'), true);
 			e.preventDefault();
 		});
 
@@ -2301,18 +2305,18 @@ function sharedPlayCheckTick(first = false) {
 			}
 		} else {
 			if (response.code==1) {
-				showAlert(lang('js.catalogue.player.error.shared_play_wrong_file.title'), lang('js.catalogue.player.error.shared_play_wrong_file.description'));
+				showAlert(lang('js.catalogue.player.error.shared_play_wrong_file.title'), lang('js.catalogue.player.error.shared_play_wrong_file.description'), true);
 			} else if (first) {
-				showAlert(lang('js.catalogue.player.error.shared_play_not_found.title'), lang('js.catalogue.player.error.shared_play_not_found.description'));
+				showAlert(lang('js.catalogue.player.error.shared_play_not_found.title'), lang('js.catalogue.player.error.shared_play_not_found.description'), true);
 			} else {
-				showAlert(lang('js.catalogue.player.error.shared_play_finished.title'), lang('js.catalogue.player.error.shared_play_finished.description'));
+				showAlert(lang('js.catalogue.player.error.shared_play_finished.title'), lang('js.catalogue.player.error.shared_play_finished.description'), true);
 				player.pause();
 			}
 			endSharedPlay();
 		}
 	}).fail(function(data) {
 		if (first) {
-			showAlert(lang('js.catalogue.player.error.shared_play_error.title'), lang('js.catalogue.player.error.shared_play_error.description'));
+			showAlert(lang('js.catalogue.player.error.shared_play_error.title'), lang('js.catalogue.player.error.shared_play_error.description'), true);
 			endSharedPlay();
 		}
 		//Else ignore, keep state
@@ -2373,7 +2377,7 @@ function showSharePlaySessionDialog() {
 				}
 			}], true, true);
 	} else {
-		showAlert(lang('js.catalogue.player.error.shared_play_cannot_cast.title'), lang('js.catalogue.player.error.shared_play_cannot_cast.description'));
+		showAlert(lang('js.catalogue.player.error.shared_play_cannot_cast.title'), lang('js.catalogue.player.error.shared_play_cannot_cast.description'), true);
 	}
 }
 
@@ -2439,7 +2443,7 @@ function showCreatePlaySessionDialog() {
 		addSharedPlayParams(response.data.session_id);
 		$('#create_shared_play_session_id').val(sharedPlaySessionId);
 	}).fail(function(data) {
-		showAlert(lang('js.catalogue.player.error.shared_play_create_error.title'), lang('js.catalogue.player.error.shared_play_create_error.description'));
+		showAlert(lang('js.catalogue.player.error.shared_play_create_error.title'), lang('js.catalogue.player.error.shared_play_create_error.description'), true);
 		endSharedPlayHost();
 	});
 }
@@ -2505,11 +2509,11 @@ function isIncompatibleWithCast() {
 
 function showCastAlerts(killCastSession=false) {
 	if (sharedPlaySessionId != null) {
-		showAlert(lang('js.catalogue.player.error.cast_unavailable_shared_play.title'), lang('js.catalogue.player.error.cast_unavailable_shared_play.description'));
+		showAlert(lang('js.catalogue.player.error.cast_unavailable_shared_play.title'), lang('js.catalogue.player.error.cast_unavailable_shared_play.description'), true);
 	} else if (currentSourceData.method == 'mega') {
-		showAlert(lang('js.catalogue.player.error.cast_unavailable_mega.title'), lang('js.catalogue.player.error.cast_unavailable_mega.description'));
+		showAlert(lang('js.catalogue.player.error.cast_unavailable_mega.title'), lang('js.catalogue.player.error.cast_unavailable_mega.description'), true);
 	} else {
-		showAlert(lang('js.catalogue.player.error.cast_unavailable.title'), lang('js.catalogue.player.error.cast_unavailable.description'));
+		showAlert(lang('js.catalogue.player.error.cast_unavailable.title'), lang('js.catalogue.player.error.cast_unavailable.description'), true);
 	}
 	if (killCastSession) {
 		cast.framework.CastContext.getInstance().endCurrentSession(true);

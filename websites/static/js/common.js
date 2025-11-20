@@ -46,7 +46,7 @@ function showCustomDialog(title, text, subtext, closeable=true, blurred=true, bu
 	}
 }
 
-function showAlert(title, desc) {
+function showAlert(title, desc, keepNonScrollable=false) {
 	showCustomDialog(title, desc, null, true, true, [
 		{
 			text: lang('js.dialog.ok'),
@@ -55,7 +55,7 @@ function showAlert(title, desc) {
 				closeCustomDialog();
 			}
 		}
-	]);
+	], false, keepNonScrollable);
 }
 
 function closeCustomDialog() {

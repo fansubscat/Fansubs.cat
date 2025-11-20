@@ -1616,6 +1616,8 @@
 	"js.catalogue.player.error.shared_play_wrong_file.title": "Wrong video",
 	"js.catalogue.player.next_chapter_loading": "Next episode:",
 	"js.catalogue.player.next_chapter_play_now": "Play it now",
+	"js.catalogue.player.right_click.description": "Due to bandwith limitations, downloading files from this server is not allowed.<br>You will find an external download link to the original fansub contents in this page, in the “Authorship of this version” section.",
+	"js.catalogue.player.right_click.title": "Important warning",
 	"js.catalogue.player.screenshot": "Take a screenshot from the video",
 	"js.catalogue.player.share_play": "Share play session",
 	"js.catalogue.player.share_play_dialog.as_guest": "As a guest",

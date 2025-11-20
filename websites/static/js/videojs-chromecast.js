@@ -2982,7 +2982,7 @@ function onChromecastRequested(player) {
   if (!window.isChromecastDead) {
     window.chromecastSessionManager.openCastMenu();
   } else {
-    showAlert("Error en emetre", "S'ha perdut la connexió amb el dispositiu al qual s'emetia. Si vols continuar controlant el Chromecast des d'aquí o mirar-hi un altre vídeo, cal que actualitzis la pàgina.", true);
+    window.showDeadChromecastAlert();
   }
 }
 
