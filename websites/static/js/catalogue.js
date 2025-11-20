@@ -455,6 +455,7 @@ function getCoverImageUrlForChromecast() {
 
 function imageLoaded(image) {
 	var element = $(image);
+	element.addClass('loaded');
 	element.css({"width": "auto", "height": "auto"});
 	element.parent().find('.image-loading').addClass('hidden');
 	element.parent().find('.image-error').addClass('hidden');
@@ -494,6 +495,7 @@ function stripSyncAndShowImages() {
 		$('[data-page-number="'+currentSourceData.initial_position+'"]')[0].scrollIntoView({ behavior: "instant", block: "start", inline: "nearest" });
 	}
 	toggleMangaMusic();
+	$('.strip-images').focus();
 }
 
 function imageError(image) {
@@ -795,24 +797,50 @@ function takeMangaScreenshot() {
 			document.body.removeChild(a);
 		}, 'image/png');
 	} else if ($('.swiper-slide-active > img').length>0 && $('.swiper-slide-active > img')[0].complete){
-		const image = $('.swiper-slide-active > img')[0];
-		const canvas = document.createElement('canvas');
-		canvas.width = image.width;
-		canvas.height = image.height;
+		if ($('.manga-reader-expand-width').length>0) {
+			const container = $('.swiper-slide-active')[0];
+			const image = $('.swiper-slide-active > img')[0];
+			const canvas = document.createElement('canvas');
+			const scrollTop = container.scrollTop;
+			canvas.width = image.width;
+			canvas.height = Math.min(container.clientHeight, image.height);
 
-		const ctx = canvas.getContext('2d');
-		ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+			const ctx = canvas.getContext('2d');
+			ctx.drawImage(image, 0, scrollTop, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
 
-		canvas.toBlob(blob => {
-			const a = document.createElement('a');
-			a.href = URL.createObjectURL(blob);
-			a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-		}, 'image/png');
+			canvas.toBlob(blob => {
+				const a = document.createElement('a');
+				a.href = URL.createObjectURL(blob);
+				a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			}, 'image/png');
+		} else {
+			const image = $('.swiper-slide-active > img')[0];
+			const canvas = document.createElement('canvas');
+			canvas.width = image.width;
+			canvas.height = image.height;
+
+			const ctx = canvas.getContext('2d');
+			ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+			canvas.toBlob(blob => {
+				const a = document.createElement('a');
+				a.href = URL.createObjectURL(blob);
+				a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			}, 'image/png');
+		}
 	}
 	
+}
+
+function changeMangaFitStyle() {
+	$('.manga-reader').toggleClass('manga-reader-expand-width');
+	$('.swiper-slide-active').focus();
 }
 
 function buildMangaReaderBar(current, total, type) {
@@ -853,6 +881,9 @@ function buildMangaReaderBar(current, total, type) {
 	c += '			<div class="vjs-duration vjs-time-control vjs-control">'+total+'</div>';
 	if (mangaHasMusic()) {
 		c += '		<button class="vjs-mute-control vjs-control vjs-button vjs-vol-0" type="button" title="'+lang('js.catalogue.reader.commute_music')+'" aria-disabled="false" onclick="toggleMangaMusic();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.commute_music')+'</span></button><audio id="manga-music" loop><source src="'+currentSourceData.music+'" type="audio/mpeg"></audio>';
+	}
+	if (type!='strip') {
+		c += '			<button class="vjs-resize-button vjs-control vjs-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.change_manga_fit')+'" onclick="changeMangaFitStyle();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.change_manga_fit')+'</span></button>';
 	}
 	c += '			<button class="vjs-screenshot-button vjs-control vjs-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.screenshot')+'" onclick="takeMangaScreenshot();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.screenshot')+'</span></button>';
 	c += '			<button class="vjs-config-button vjs-control vjs-button" type="button" aria-disabled="false" title="'+lang('js.catalogue.reader.options')+'" onclick="showMangaReaderConfig();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.options')+'</span></button>';
@@ -901,13 +932,18 @@ function initializeReader(type) {
 		showAlert(lang('js.catalogue.player.right_click.title'), lang('js.catalogue.player.right_click.description'), true);
 		e.preventDefault();
 	});
+	$('.main-container').on('keydown', function(e) {
+		if (e.code === 'PageUp' || e.code === 'PageDown') {
+			e.stopImmediatePropagation();
+		}
+	});
 	
 	if (type!='strip') {
 		new Swiper('.player-popup', {
 			initialSlide: initialPosition-1,
-			slidesPerView: type=='strip' ? 'auto' : 1,
-			direction: type=='strip' ? 'vertical' : 'horizontal',
-			freeMode: type=='strip' ? {enabled: true, minimumVelocity: 0, momentum: true} : false,
+			slidesPerView: 1,
+			direction: 'horizontal',
+			freeMode: false,
 			effect: 'slide',
 			mousewheel: {
 				enabled: true,
@@ -924,6 +960,9 @@ function initializeReader(type) {
 				prevEl: '.swiper-button-prev',
 			},
 			on: {
+				afterInit: function (swiper) {
+					$('.swiper-slide-active').focus();
+				},
 				slideChange: function (swiper) {
 					//console.log("slideChange "+(swiper.activeIndex+1));
 					setSeekCurrentPage(swiper.activeIndex+1, currentSourceData.length, false);
@@ -934,6 +973,7 @@ function initializeReader(type) {
 						$('.manga-page.swiper-slide-active img').attr('loading','');
 						$('.manga-page.swiper-slide-prev img').attr('loading','');
 						$('.manga-page.swiper-slide-next img').attr('loading','');
+						$('.swiper-slide-active').focus();
 					}, 1);
 				},
 			},

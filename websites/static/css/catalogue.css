@@ -818,7 +818,7 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	text-shadow: 0.5px 0 currentColor;
 }
 
-.video-js .vjs-menu-button, .video-js .vjs-screenshot-button, .video-js .vjs-shared-play-button {
+.video-js .vjs-menu-button, .video-js .vjs-screenshot-button, .video-js .vjs-shared-play-button, .video-js .vjs-resize-button {
 	cursor: pointer;
 }
 
@@ -832,6 +832,25 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 
 .video-js .vjs-screenshot-button .vjs-icon-placeholder:before {
 	content: "\f030"
+}
+
+.video-js .vjs-resize-button .vjs-icon-placeholder:before {
+	content: "\f31e"
+}
+
+.manga-reader-expand-width .video-js .vjs-resize-button .vjs-icon-placeholder:before {
+	content: "\f78c"
+}
+
+.manga-reader.manga-reader-expand-width .manga-page:has(img.loaded) {
+	justify-content: flex-start;
+	overflow-y: scroll;
+	scrollbar-width: none;
+}
+
+.manga-reader.manga-reader-expand-width .manga-page img.loaded {
+	max-height: unset;
+	margin: auto;
 }
 
 .video-js .vjs-play-speed-button .vjs-icon-placeholder:before {

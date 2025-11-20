@@ -1647,6 +1647,7 @@
 	"js.catalogue.rating.all.short": "TP",
 	"js.catalogue.rating.explicit.short": "XXX",
 	"js.catalogue.reader.always_vertical": "Aquest manga no permet triar cap lector diferent: es mostra sempre com a tira vertical.",
+	"js.catalogue.reader.change_manga_fit": "Canvia l’amplada màxima de les imatges",
 	"js.catalogue.reader.commute_music": "Commuta la música de fons",
 	"js.catalogue.reader.eastern_style": "Sentit oriental",
 	"js.catalogue.reader.error_loading_all_images": "No s’han pogut carregar totes les imatges.",
