@@ -24,6 +24,9 @@ use phpbb\user;
 */
 class auth_provider extends \phpbb\auth\provider\base
 {
+	const FANSUBSCAT_STATIC_URL = 'https://static.fansubs.cat';
+	const FANSUBSCAT_USERS_URL = 'https://usuaris.fansubs.cat';
+
 	/** @var config phpBB config */
 	protected $config;
 
@@ -234,7 +237,7 @@ class auth_provider extends \phpbb\auth\provider\base
 			'user_type'		=> USER_NORMAL,
 			'user_ip'		=> $this->user->ip,
 			'user_new'		=> ($this->config['new_member_post_limit']) ? 1 : 0,
-			'user_avatar'		=> 'https://static.fansubs.cat/images/avatars/'.$fansubs_user->avatar_filename,
+			'user_avatar'		=> self::FANSUBSCAT_STATIC_URL.'/images/avatars/'.$fansubs_user->avatar_filename,
 			'user_avatar_type'	=> 'avatar.driver.remote',
 		);
 	}
@@ -276,7 +279,7 @@ class auth_provider extends \phpbb\auth\provider\base
 		}
 		
 		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_URL, 'https://usuaris.fansubs.cat/do_get_user_data.php');
+		curl_setopt($curl, CURLOPT_URL, self::FANSUBSCAT_USERS_URL.'/do_get_user_data.php');
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array("Cookie: session_id=$session_id"));
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

@@ -9,6 +9,7 @@ use voku\helper\HtmlDomParser;
  * Tadaima.cat API main controller.
  */
 class api_controller {
+	const FANSUBSCAT_STATIC_URL = "https://static.fansubs.cat";
 
 	const API_TOKEN_HEADER = "X-Fansubscat-Api-Token";
 
@@ -220,7 +221,7 @@ class api_controller {
 			'user_type'		=> USER_NORMAL,
 			'user_ip'		=> $this->user->ip,
 			'user_new'		=> 0,
-			'user_avatar'		=> 'https://static.fansubs.cat/images/site/default_avatar.jpg',
+			'user_avatar'		=> self::FANSUBSCAT_STATIC_URL.'/images/site/default_avatar.jpg',
 			'user_avatar_type'	=> 'avatar.driver.remote',
 		);
 		$cp_data = array(
@@ -283,7 +284,7 @@ class api_controller {
 			'user_type'		=> USER_NORMAL,
 			'user_ip'		=> $this->user->ip,
 			'user_new'		=> 0,
-			'user_avatar'		=> 'https://static.fansubs.cat/images/icons/'.$request->fansub_id.'.png',
+			'user_avatar'		=> self::FANSUBSCAT_STATIC_URL.'/images/icons/'.$request->fansub_id.'.png',
 			'user_avatar_type'	=> 'avatar.driver.remote',
 		);
 		$cp_data = array(
@@ -783,7 +784,7 @@ class api_controller {
 		}
 		
 		$sql = 'UPDATE ' . USERS_TABLE . "
-			SET user_avatar = '" . $this->db->sql_escape('https://static.fansubs.cat/images/icons/'.$request->fansub_id.'.png') . "',
+			SET user_avatar = '" . $this->db->sql_escape(self::FANSUBSCAT_STATIC_URL.'/images/icons/'.$request->fansub_id.'.png') . "',
 				user_avatar_type = 'avatar.driver.remote',
 				user_email = '" . $this->db->sql_escape($request->email) . "',
 				username = '" . $this->db->sql_escape($this->get_clean_username($request->username)) . "',

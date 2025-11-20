@@ -7,6 +7,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class event_listener implements EventSubscriberInterface
 {
+	const FANSUBSCAT_API_URL = 'https://api.fansubs.cat';
+	const FANSUBSCAT_LOGIN_URL = 'https://usuaris.fansubs.cat/inicia-la-sessio';
 	const FANSUBSCAT_RELAY_USER_ID = 2;
 
 	static public function getSubscribedEvents()
@@ -49,7 +51,7 @@ class event_listener implements EventSubscriberInterface
 	public function intercept_login($event)
 	{
 		if (!$event['admin']) {
-			header('Location: https://usuaris.fansubs.cat/inicia-la-sessio');
+			header('Location: '.self::FANSUBSCAT_LOGIN_URL);
 		}
 	}
 
@@ -258,7 +260,7 @@ class event_listener implements EventSubscriberInterface
 	 
 			//Invoke API: add_or_edit_comment
 			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://api.fansubs.cat/internal/add_or_edit_comment?token='.INTERNAL_SERVICES_TOKEN);
+			curl_setopt($curl, CURLOPT_URL, self::FANSUBSCAT_API_URL.'/internal/add_or_edit_comment?token='.INTERNAL_SERVICES_TOKEN);
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_POST, true);
@@ -284,7 +286,7 @@ class event_listener implements EventSubscriberInterface
 		if (!defined('FANSUBSCAT_API_POSTING') && $data['poster_id'] != self::FANSUBSCAT_RELAY_USER_ID) {
 			//Invoke API: delete_comment
 			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://api.fansubs.cat/internal/delete_comment?token='.INTERNAL_SERVICES_TOKEN);
+			curl_setopt($curl, CURLOPT_URL, self::FANSUBSCAT_API_URL.'/internal/delete_comment?token='.INTERNAL_SERVICES_TOKEN);
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_POST, true);
