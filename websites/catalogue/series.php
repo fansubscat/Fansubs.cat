@@ -490,36 +490,66 @@ while ($version = mysqli_fetch_assoc($result)) {
 <?php
 		if (!empty(!empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url'])) {
 ?>
-													<a class="fa fa-fw fa-earth-europe web-link" title="<?php echo lang('generic.web_link.alt'); ?>" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
+													<a class="fa fa-fw fa-earth-europe fansub-social-link" title="<?php echo lang('generic.web_link.alt'); ?>" href="<?php echo !empty($fansub['archive_url']) ? $fansub['archive_url'] : $fansub['url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['bluesky_url'])) {
 ?>
-													<a class="fab fa-fw fa-bluesky bluesky-link" title="<?php echo lang('generic.bluesky_link.alt'); ?>" href="<?php echo $fansub['bluesky_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-bluesky fansub-social-link" title="<?php echo lang('generic.bluesky_link.alt'); ?>" href="<?php echo $fansub['bluesky_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['discord_url'])) {
 ?>
-													<a class="fab fa-fw fa-discord discord-link" title="<?php echo lang('generic.discord_link.alt'); ?>" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-discord fansub-social-link" title="<?php echo lang('generic.discord_link.alt'); ?>" href="<?php echo $fansub['discord_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['facebook_url'])) {
+?>
+													<a class="fab fa-fw fa-facebook fansub-social-link" title="<?php echo lang('generic.facebook_link.alt'); ?>" href="<?php echo $fansub['facebook_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['instagram_url'])) {
+?>
+													<a class="fab fa-fw fa-instagram fansub-social-link" title="<?php echo lang('generic.instagram_link.alt'); ?>" href="<?php echo $fansub['instagram_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['linktree_url'])) {
+?>
+													<a class="fab fa-fw fa-linktree fansub-social-link" title="<?php echo lang('generic.linktree_link.alt'); ?>" href="<?php echo $fansub['linktree_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['mastodon_url'])) {
 ?>
-													<a class="fab fa-fw fa-mastodon mastodon-link" title="<?php echo lang('generic.mastodon_link.alt'); ?>" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-mastodon fansub-social-link" title="<?php echo lang('generic.mastodon_link.alt'); ?>" href="<?php echo $fansub['mastodon_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['telegram_url'])) {
+?>
+													<a class="fab fa-fw fa-telegram fansub-social-link" title="<?php echo lang('generic.telegram_link.alt'); ?>" href="<?php echo $fansub['telegram_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['threads_url'])) {
+?>
+													<a class="fab fa-fw fa-threads fansub-social-link" title="<?php echo lang('generic.threads_link.alt'); ?>" href="<?php echo $fansub['threads_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['twitter_url'])) {
 ?>
-													<a class="fab fa-fw fa-x-twitter twitter-link" title="<?php echo lang('generic.x_link.alt'); ?>" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
+													<a class="fab fa-fw fa-x-twitter fansub-social-link" title="<?php echo lang('generic.x_link.alt'); ?>" href="<?php echo $fansub['twitter_url']; ?>" target="_blank"></a>
+<?php
+		}
+		if (!empty($fansub['youtube_url'])) {
+?>
+													<a class="fab fa-fw fa-youtube fansub-social-link" title="<?php echo lang('generic.youtube_link.alt'); ?>" href="<?php echo $fansub['youtube_url']; ?>" target="_blank"></a>
 <?php
 		}
 		if (!empty($fansub['downloads_url'])) {
 			$url_arr=explode(';', $fansub['downloads_url']);
 			foreach ($url_arr as $url) {
 				if (preg_match(REGEXP_DL_LINK,$url)) {
-					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link fansub-downloads" title="'.lang('catalogue.series.download.alt').'" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
+					echo ' <a class="fa fa-fw fa-cloud-arrow-down fansub-social-link fansub-downloads" title="'.lang('catalogue.series.download.alt').'" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
 				} else {
-					echo ' <a class="fa fa-fw fa-cloud-arrow-down web-link" href="'.$url.'" title="'.lang('catalogue.series.download.alt').'" target="_blank"></a>';
+					echo ' <a class="fa fa-fw fa-cloud-arrow-down fansub-social-link" href="'.$url.'" title="'.lang('catalogue.series.download.alt').'" target="_blank"></a>';
 				}
 			}
 		}

@@ -32,11 +32,6 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		} else {
 			$data['url']="NULL";
 		}
-		if (!empty($_POST['discord_url'])) {
-			$data['discord_url']="'".escape($_POST['discord_url'])."'";
-		} else {
-			$data['discord_url']="NULL";
-		}
 		if (!empty($_POST['mastodon_url'])) {
 			$data['mastodon_url']="'".escape($_POST['mastodon_url'])."'";
 		} else {
@@ -66,6 +61,41 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			$data['bluesky_handle']=escape($_POST['bluesky_handle']);
 		} else {
 			crash(lang('admin.error.bluesky_handle_missing'));
+		}
+		if (!empty($_POST['discord_url'])) {
+			$data['discord_url']="'".escape($_POST['discord_url'])."'";
+		} else {
+			$data['discord_url']="NULL";
+		}
+		if (!empty($_POST['facebook_url'])) {
+			$data['facebook_url']="'".escape($_POST['facebook_url'])."'";
+		} else {
+			$data['facebook_url']="NULL";
+		}
+		if (!empty($_POST['instagram_url'])) {
+			$data['instagram_url']="'".escape($_POST['instagram_url'])."'";
+		} else {
+			$data['instagram_url']="NULL";
+		}
+		if (!empty($_POST['linktree_url'])) {
+			$data['linktree_url']="'".escape($_POST['linktree_url'])."'";
+		} else {
+			$data['linktree_url']="NULL";
+		}
+		if (!empty($_POST['telegram_url'])) {
+			$data['telegram_url']="'".escape($_POST['telegram_url'])."'";
+		} else {
+			$data['telegram_url']="NULL";
+		}
+		if (!empty($_POST['threads_url'])) {
+			$data['threads_url']="'".escape($_POST['threads_url'])."'";
+		} else {
+			$data['threads_url']="NULL";
+		}
+		if (!empty($_POST['youtube_url'])) {
+			$data['youtube_url']="'".escape($_POST['youtube_url'])."'";
+		} else {
+			$data['youtube_url']="NULL";
 		}
 		if (!empty($_POST['ping_token'])) {
 			$data['ping_token']="'".escape($_POST['ping_token'])."'";
@@ -118,7 +148,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			}
 			
 			log_action("update-fansub", "Fansub «".$_POST['name']."» (fansub id: ".$data['id'].") updated");
-			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",email='".$data['email']."',twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',discord_url=".$data['discord_url'].",bluesky_url=".$data['bluesky_url'].",bluesky_handle='".$data['bluesky_handle']."',status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",email='".$data['email']."',twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',bluesky_url=".$data['bluesky_url'].",bluesky_handle='".$data['bluesky_handle']."',discord_url=".$data['discord_url'].",facebook_url=".$data['facebook_url'].",instagram_url=".$data['instagram_url'].",linktree_url=".$data['linktree_url'].",telegram_url=".$data['telegram_url'].",threads_url=".$data['threads_url'].",youtube_url=".$data['youtube_url'].",status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.$data['id'].'.png');
@@ -128,7 +158,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		}
 		else {
 			log_action("create-fansub", "Fansub «".$_POST['name']."» created");
-			query("INSERT INTO fansub (name,slug,type,url,email,twitter_url,twitter_handle,mastodon_url,mastodon_handle,discord_url,bluesky_handle,bluesky_url,status,ping_token,is_historical,archive_url,hentai_category,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",'".$data['email']."',".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."',".$data['discord_url'].",'".$data['bluesky_handle']."',".$data['bluesky_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO fansub (name,slug,type,url,email,twitter_url,twitter_handle,mastodon_url,mastodon_handle,bluesky_handle,bluesky_url,discord_url,facebook_url,instagram_url,linktree_url,telegram_url,threads_url,youtube_url,status,ping_token,is_historical,archive_url,hentai_category,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",'".$data['email']."',".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."','".$data['bluesky_handle']."',".$data['bluesky_url'].",".$data['discord_url'].",".$data['facebook_url'].",".$data['instagram_url'].",".$data['linktree_url'].",".$data['telegram_url'].",".$data['threads_url'].",".$data['youtube_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			
 			$fansub_id=mysqli_insert_id($db_connection);
 
@@ -161,12 +191,17 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		$row['email'] = '';
 		$row['bluesky_url'] = '';
 		$row['bluesky_handle'] = '';
-		$row['discord_url'] = '';
-		$row['discord_handle'] = '';
 		$row['mastodon_url'] = '';
 		$row['mastodon_handle'] = '';
 		$row['twitter_url'] = '';
 		$row['twitter_handle'] = '';
+		$row['discord_url'] = '';
+		$row['facebook_url'] = '';
+		$row['instagram_url'] = '';
+		$row['linktree_url'] = '';
+		$row['telegram_url'] = '';
+		$row['threads_url'] = '';
+		$row['youtube_url'] = '';
 		$row['status'] = 1;
 		$row['is_historical'] = 0;
 		$row['hentai_category'] = '';
@@ -231,32 +266,56 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 						<input class="form-control" type="password" name="user_password" id="form-user_password" maxlength="200" minlength="6"autocomplete="new-password" value=""<?php echo !empty($row['id']) ? '' : ' required'; ?>>
 					</div>
 					<div class="mb-3">
-						<label for="form-bluesky_url"><?php echo lang('admin.fansub_edit.bluesky_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.bluesky_url'), lang('admin.fansub_edit.bluesky_url.help')); ?>
-						<input class="form-control" type="url" name="bluesky_url" id="form-bluesky_url" maxlength="200" value="<?php echo htmlspecialchars($row['bluesky_url']); ?>">
-					</div>
-					<div class="mb-3">
 						<label for="form-bluesky_handle"><?php echo lang('admin.fansub_edit.bluesky_handle'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.fansub_edit.bluesky_handle'), lang('admin.fansub_edit.bluesky_handle.help')); ?></label>
 						<input class="form-control" name="bluesky_handle" id="form-bluesky_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['bluesky_handle']); ?>">
-					</div>
-					<div class="mb-3">
-						<label for="form-discord_url"><?php echo lang('admin.fansub_edit.discord_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.discord_url'), lang('admin.fansub_edit.discord_url.help')); ?>
-						<input class="form-control" type="url" name="discord_url" id="form-discord_url" maxlength="200" value="<?php echo htmlspecialchars($row['discord_url']); ?>">
-					</div>
-					<div class="mb-3">
-						<label for="form-mastodon_url"><?php echo lang('admin.fansub_edit.mastodon_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.mastodon_url'), lang('admin.fansub_edit.mastodon_url.help')); ?>
-						<input class="form-control" type="url" name="mastodon_url" id="form-mastodon_url" maxlength="200" value="<?php echo htmlspecialchars($row['mastodon_url']); ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-mastodon_handle"><?php echo lang('admin.fansub_edit.mastodon_handle'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.fansub_edit.mastodon_handle'), lang('admin.fansub_edit.mastodon_handle.help')); ?></label>
 						<input class="form-control" name="mastodon_handle" id="form-mastodon_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['mastodon_handle']); ?>">
 					</div>
 					<div class="mb-3">
+						<label for="form-twitter_handle"><?php echo lang('admin.fansub_edit.twitter_handle'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.fansub_edit.twitter_handle'), lang('admin.fansub_edit.twitter_handle.help')); ?></label>
+						<input class="form-control" name="twitter_handle" id="form-twitter_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['twitter_handle']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-bluesky_url"><?php echo lang('admin.fansub_edit.bluesky_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.bluesky_url'), lang('admin.fansub_edit.bluesky_url.help')); ?>
+						<input class="form-control" type="url" name="bluesky_url" id="form-bluesky_url" maxlength="200" value="<?php echo htmlspecialchars($row['bluesky_url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-discord_url"><?php echo lang('admin.fansub_edit.discord_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.discord_url'), lang('admin.fansub_edit.discord_url.help')); ?>
+						<input class="form-control" type="url" name="discord_url" id="form-discord_url" maxlength="200" value="<?php echo htmlspecialchars($row['discord_url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-facebook_url"><?php echo lang('admin.fansub_edit.facebook_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.facebook_url'), lang('admin.fansub_edit.facebook_url.help')); ?>
+						<input class="form-control" type="url" name="facebook_url" id="form-facebook_url" maxlength="200" value="<?php echo htmlspecialchars($row['facebook_url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-instagram_url"><?php echo lang('admin.fansub_edit.instagram_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.instagram_url'), lang('admin.fansub_edit.instagram_url.help')); ?>
+						<input class="form-control" type="url" name="instagram_url" id="form-instagram_url" maxlength="200" value="<?php echo htmlspecialchars($row['instagram_url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-linktree_url"><?php echo lang('admin.fansub_edit.linktree_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.linktree_url'), lang('admin.fansub_edit.linktree_url.help')); ?>
+						<input class="form-control" type="url" name="linktree_url" id="form-linktree_url" maxlength="200" value="<?php echo htmlspecialchars($row['linktree_url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-mastodon_url"><?php echo lang('admin.fansub_edit.mastodon_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.mastodon_url'), lang('admin.fansub_edit.mastodon_url.help')); ?>
+						<input class="form-control" type="url" name="mastodon_url" id="form-mastodon_url" maxlength="200" value="<?php echo htmlspecialchars($row['mastodon_url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-telegram_url"><?php echo lang('admin.fansub_edit.telegram_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.telegram_url'), lang('admin.fansub_edit.telegram_url.help')); ?>
+						<input class="form-control" type="url" name="telegram_url" id="form-telegram_url" maxlength="200" value="<?php echo htmlspecialchars($row['telegram_url']); ?>">
+					</div>
+					<div class="mb-3">
+						<label for="form-threads_url"><?php echo lang('admin.fansub_edit.threads_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.threads_url'), lang('admin.fansub_edit.threads_url.help')); ?>
+						<input class="form-control" type="url" name="threads_url" id="form-threads_url" maxlength="200" value="<?php echo htmlspecialchars($row['threads_url']); ?>">
+					</div>
+					<div class="mb-3">
 						<label for="form-twitter_url"><?php echo lang('admin.fansub_edit.twitter_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.twitter_url'), lang('admin.fansub_edit.twitter_url.help')); ?>
 						<input class="form-control" type="url" name="twitter_url" id="form-twitter_url" maxlength="200" value="<?php echo htmlspecialchars($row['twitter_url']); ?>">
 					</div>
 					<div class="mb-3">
-						<label for="form-twitter_handle"><?php echo lang('admin.fansub_edit.twitter_handle'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.fansub_edit.twitter_handle'), lang('admin.fansub_edit.twitter_handle.help')); ?></label>
-						<input class="form-control" name="twitter_handle" id="form-twitter_handle" required maxlength="200" value="<?php echo htmlspecialchars($row['twitter_handle']); ?>">
+						<label for="form-youtube_url"><?php echo lang('admin.fansub_edit.youtube_url'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.youtube_url'), lang('admin.fansub_edit.youtube_url.help')); ?>
+						<input class="form-control" type="url" name="youtube_url" id="form-youtube_url" maxlength="200" value="<?php echo htmlspecialchars($row['youtube_url']); ?>">
 					</div>
 					<div class="mb-3">
 						<label for="form-status"><?php echo lang('admin.fansub_edit.status'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.status'), lang('admin.fansub_edit.status.help')); ?>

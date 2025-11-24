@@ -19,35 +19,57 @@ function print_fansub($row) {
 <?php
 	if ($url!=NULL){
 ?>
-												<a class="fa fa-fw fa-earth-europe web-link" href="<?php echo $url; ?>" title="<?php echo lang('generic.web_link.alt'); ?>" target="_blank"></a>
+												<a class="fa fa-fw fa-earth-europe fansub-social-link" href="<?php echo $url; ?>" title="<?php echo lang('generic.web_link.alt'); ?>" target="_blank"></a>
 <?php
 	}
-?>
-<?php
 	if ($row['bluesky_url']!=NULL){
 ?>
-												<a class="fab fa-fw fa-bluesky bluesky-link" href="<?php echo $row['bluesky_url']; ?>" title="<?php echo lang('generic.bluesky_link.alt'); ?>" target="_blank"></a>
+												<a class="fab fa-fw fa-bluesky fansub-social-link" href="<?php echo $row['bluesky_url']; ?>" title="<?php echo lang('generic.bluesky_link.alt'); ?>" target="_blank"></a>
 <?php
 	}
-?>
-<?php
 	if ($row['discord_url']!=NULL){
 ?>
-												<a class="fab fa-fw fa-discord discord-link" href="<?php echo $row['discord_url']; ?>" title="<?php echo lang('generic.discord_link.alt'); ?>" target="_blank"></a>
+												<a class="fab fa-fw fa-discord fansub-social-link" href="<?php echo $row['discord_url']; ?>" title="<?php echo lang('generic.discord_link.alt'); ?>" target="_blank"></a>
 <?php
 	}
+	if ($row['facebook_url']!=NULL){
 ?>
+												<a class="fab fa-fw fa-facebook fansub-social-link" href="<?php echo $row['facebook_url']; ?>" title="<?php echo lang('generic.facebook_link.alt'); ?>" target="_blank"></a>
 <?php
+	}
+	if ($row['instagram_url']!=NULL){
+?>
+												<a class="fab fa-fw fa-instagram fansub-social-link" href="<?php echo $row['instagram_url']; ?>" title="<?php echo lang('generic.instagram_link.alt'); ?>" target="_blank"></a>
+<?php
+	}
+	if ($row['linktree_url']!=NULL){
+?>
+												<a class="fab fa-fw fa-linktree fansub-social-link" href="<?php echo $row['linktree_url']; ?>" title="<?php echo lang('generic.linktree_link.alt'); ?>" target="_blank"></a>
+<?php
+	}
 	if ($row['mastodon_url']!=NULL){
 ?>
-												<a class="fab fa-fw fa-mastodon mastodon-link" href="<?php echo $row['mastodon_url']; ?>" title="<?php echo lang('generic.mastodon_link.alt'); ?>" target="_blank"></a>
+												<a class="fab fa-fw fa-mastodon fansub-social-link" href="<?php echo $row['mastodon_url']; ?>" title="<?php echo lang('generic.mastodon_link.alt'); ?>" target="_blank"></a>
 <?php
 	}
+	if ($row['telegram_url']!=NULL){
 ?>
+												<a class="fab fa-fw fa-telegram fansub-social-link" href="<?php echo $row['telegram_url']; ?>" title="<?php echo lang('generic.telegram_link.alt'); ?>" target="_blank"></a>
 <?php
+	}
+	if ($row['threads_url']!=NULL){
+?>
+												<a class="fab fa-fw fa-threads fansub-social-link" href="<?php echo $row['threads_url']; ?>" title="<?php echo lang('generic.threads_link.alt'); ?>" target="_blank"></a>
+<?php
+	}
 	if ($row['twitter_url']!=NULL){
 ?>
-												<a class="fab fa-fw fa-x-twitter twitter-link" href="<?php echo $row['twitter_url']; ?>" title="<?php echo lang('generic.x_link.alt'); ?>" target="_blank"></a>
+												<a class="fab fa-fw fa-x-twitter fansub-social-link" href="<?php echo $row['twitter_url']; ?>" title="<?php echo lang('generic.x_link.alt'); ?>" target="_blank"></a>
+<?php
+	}
+	if ($row['youtube_url']!=NULL){
+?>
+												<a class="fab fa-fw fa-youtube fansub-social-link" href="<?php echo $row['youtube_url']; ?>" title="<?php echo lang('generic.youtube_link.alt'); ?>" target="_blank"></a>
 <?php
 	}
 ?>

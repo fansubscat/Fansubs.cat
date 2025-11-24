@@ -41,7 +41,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</thead>
 						<tbody>
 <?php
-	$result = query("SELECT f.id, f.name, f.url, f.status, f.is_historical, f.twitter_url, f.mastodon_url, f.bluesky_url, f.discord_url, f.archive_url, (SELECT COUNT(*) FROM news WHERE fansub_id=f.id) news, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND vf.fansub_id=f.id) anime_versions, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND vf.fansub_id=f.id) manga_versions, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND vf.fansub_id=f.id) liveaction_versions FROM fansub f".(($_SESSION['admin_level']<3 && !empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) ? ' WHERE f.id='.$_SESSION['fansub_id'] : '')." ORDER BY f.status DESC, f.name ASC");
+	$result = query("SELECT f.*, (SELECT COUNT(*) FROM news WHERE fansub_id=f.id) news, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='anime' AND vf.fansub_id=f.id) anime_versions, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='manga' AND vf.fansub_id=f.id) manga_versions, (SELECT COUNT(*) FROM rel_version_fansub vf LEFT JOIN version v ON vf.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='liveaction' AND vf.fansub_id=f.id) liveaction_versions FROM fansub f".(($_SESSION['admin_level']<3 && !empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) ? ' WHERE f.id='.$_SESSION['fansub_id'] : '')." ORDER BY f.status DESC, f.name ASC");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -72,17 +72,53 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 			$links.='<a href="'.htmlspecialchars($row['discord_url']).'" target="_blank">'.lang('admin.fansub_list.discord').'</a>';
 		}
+		if (!empty($row['facebook_url'])) {
+			if (!empty($links)){
+				$links.=' | ';
+			}
+			$links.='<a href="'.htmlspecialchars($row['facebook_url']).'" target="_blank">'.lang('admin.fansub_list.facebook').'</a>';
+		}
+		if (!empty($row['instagram_url'])) {
+			if (!empty($links)){
+				$links.=' | ';
+			}
+			$links.='<a href="'.htmlspecialchars($row['instagram_url']).'" target="_blank">'.lang('admin.fansub_list.instagram').'</a>';
+		}
+		if (!empty($row['linktree_url'])) {
+			if (!empty($links)){
+				$links.=' | ';
+			}
+			$links.='<a href="'.htmlspecialchars($row['linktree_url']).'" target="_blank">'.lang('admin.fansub_list.linktree').'</a>';
+		}
 		if (!empty($row['mastodon_url'])) {
 			if (!empty($links)){
 				$links.=' | ';
 			}
 			$links.='<a href="'.htmlspecialchars($row['mastodon_url']).'" target="_blank">'.lang('admin.fansub_list.mastodon').'</a>';
 		}
+		if (!empty($row['telegram_url'])) {
+			if (!empty($links)){
+				$links.=' | ';
+			}
+			$links.='<a href="'.htmlspecialchars($row['telegram_url']).'" target="_blank">'.lang('admin.fansub_list.telegram').'</a>';
+		}
+		if (!empty($row['threads_url'])) {
+			if (!empty($links)){
+				$links.=' | ';
+			}
+			$links.='<a href="'.htmlspecialchars($row['threads_url']).'" target="_blank">'.lang('admin.fansub_list.threads').'</a>';
+		}
 		if (!empty($row['twitter_url'])) {
 			if (!empty($links)){
 				$links.=' | ';
 			}
 			$links.='<a href="'.htmlspecialchars($row['twitter_url']).'" target="_blank">'.lang('admin.fansub_list.twitter').'</a>';
+		}
+		if (!empty($row['youtube_url'])) {
+			if (!empty($links)){
+				$links.=' | ';
+			}
+			$links.='<a href="'.htmlspecialchars($row['youtube_url']).'" target="_blank">'.lang('admin.fansub_list.youtube').'</a>';
 		}
 		if (!empty($row['archive_url'])) {
 			if (!empty($links)){
