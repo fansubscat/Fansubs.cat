@@ -2841,6 +2841,14 @@ input:checked + .viewed-slider:before {
 		cursor: pointer;
 	}
 
+	.manga-reader.manga-reader-strip .manga-page {
+		cursor: grab;
+	}
+
+	.manga-reader.manga-reader-expand-width .manga-page:has(img.loaded) {
+		cursor: grab;
+	}
+
 	.player_extra_upper.vjs-user-inactive + .manga-reader .swiper-button-prev:hover, .player_extra_upper.vjs-user-inactive + .manga-reader .swiper-button-next:hover {
 		opacity: 1;
 		pointer-events: auto;

@@ -739,101 +739,117 @@ function stopListeningForUserActivityInMangaReader() {
 }
 
 function takeMangaScreenshot() {
-	if (currentSourceData.reader_type=='strip') {
-		const scroll = $('.strip-images')[0];
-		
-		const images = Array.from(scroll.querySelectorAll("img"));
-		
-		let minLeft = Infinity;
-		let maxRight = -Infinity;
-		
-		const parentRect = scroll.getBoundingClientRect();
-		
-		images.forEach(img => {
-			const rect = img.getBoundingClientRect();
+	try{
+		if (currentSourceData.reader_type=='strip') {
+			const scroll = $('.strip-images')[0];
+			
+			const images = Array.from(scroll.querySelectorAll("img"));
+			
+			let minLeft = Infinity;
+			let maxRight = -Infinity;
+			
+			const parentRect = scroll.getBoundingClientRect();
+			
+			images.forEach(img => {
+				const rect = img.getBoundingClientRect();
 
-			const visibleTop = Math.max(rect.top, parentRect.top);
-			const visibleBottom = Math.min(rect.bottom, parentRect.bottom);
-			const visibleHeight = visibleBottom - visibleTop;
+				const visibleTop = Math.max(rect.top, parentRect.top);
+				const visibleBottom = Math.min(rect.bottom, parentRect.bottom);
+				const visibleHeight = visibleBottom - visibleTop;
 
-			if (visibleHeight > 0) {
-				minLeft = Math.min(minLeft, rect.left);
-				maxRight = Math.max(maxRight, rect.right);
-			}
-		});
-		
-		const usefulWidth = maxRight - minLeft;
-		
-		const canvas = document.createElement('canvas');
-		canvas.width = usefulWidth;
-		canvas.height = scroll.clientHeight;
-
-		const ctx = canvas.getContext('2d');
-		
-		images.forEach(img => {
-			const rect = img.getBoundingClientRect();
-
-			const visibleTop = Math.max(rect.top, parentRect.top);
-			const visibleBottom = Math.min(rect.bottom, parentRect.bottom);
-			const sliceHeight = visibleBottom - visibleTop;
-
-			if (sliceHeight > 0) {
-				ctx.drawImage(
-					img,
-					0, visibleTop - rect.top,
-					img.width, sliceHeight,
-					rect.left - minLeft, visibleTop - parentRect.top,
-					img.width, sliceHeight
-				);
-			}
-		});
-
-		canvas.toBlob(blob => {
-			const a = document.createElement('a');
-			a.href = URL.createObjectURL(blob);
-			a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
-			document.body.appendChild(a);
-			a.click();
-			document.body.removeChild(a);
-		}, 'image/png');
-	} else if ($('.swiper-slide-active > img').length>0 && $('.swiper-slide-active > img')[0].complete){
-		if ($('.manga-reader-expand-width').length>0) {
-			const container = $('.swiper-slide-active')[0];
-			const image = $('.swiper-slide-active > img')[0];
+				if (visibleHeight > 0) {
+					minLeft = Math.min(minLeft, rect.left);
+					maxRight = Math.max(maxRight, rect.right);
+				}
+			});
+			
+			const usefulWidth = maxRight - minLeft;
+			
 			const canvas = document.createElement('canvas');
-			const scrollTop = container.scrollTop;
-			canvas.width = image.width;
-			canvas.height = Math.min(container.clientHeight, image.height);
+			canvas.width = usefulWidth;
+			canvas.height = scroll.clientHeight;
 
 			const ctx = canvas.getContext('2d');
-			ctx.drawImage(image, 0, scrollTop, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+			
+			images.forEach(img => {
+				const rect = img.getBoundingClientRect();
+
+				const visibleTop = Math.max(rect.top, parentRect.top);
+				const visibleBottom = Math.min(rect.bottom, parentRect.bottom);
+				const sliceHeight = visibleBottom - visibleTop;
+
+				if (sliceHeight > 0) {
+					ctx.drawImage(
+						img,
+						0, visibleTop - rect.top,
+						img.width, sliceHeight,
+						rect.left - minLeft, visibleTop - parentRect.top,
+						img.width, sliceHeight
+					);
+				}
+			});
 
 			canvas.toBlob(blob => {
-				const a = document.createElement('a');
-				a.href = URL.createObjectURL(blob);
-				a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
-				document.body.appendChild(a);
-				a.click();
-				document.body.removeChild(a);
+				try{
+					const a = document.createElement('a');
+					a.href = URL.createObjectURL(blob);
+					a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+					document.body.appendChild(a);
+					a.click();
+					document.body.removeChild(a);
+				} catch (err) {
+					showAlert(lang('js.catalogue.player.error.screenshot_failed.title'), lang('js.catalogue.player.error.screenshot_failed.description'), true);
+				}
 			}, 'image/png');
-		} else {
-			const image = $('.swiper-slide-active > img')[0];
-			const canvas = document.createElement('canvas');
-			canvas.width = image.width;
-			canvas.height = image.height;
+		} else if ($('.swiper-slide-active > img').length>0 && $('.swiper-slide-active > img')[0].complete){
+			if ($('.manga-reader-expand-width').length>0) {
+				const container = $('.swiper-slide-active')[0];
+				const image = $('.swiper-slide-active > img')[0];
+				const canvas = document.createElement('canvas');
+				const scrollTop = container.scrollTop;
+				canvas.width = image.width;
+				canvas.height = Math.min(container.clientHeight, image.height);
 
-			const ctx = canvas.getContext('2d');
-			ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+				const ctx = canvas.getContext('2d');
+				ctx.drawImage(image, 0, scrollTop, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
 
-			canvas.toBlob(blob => {
-				const a = document.createElement('a');
-				a.href = URL.createObjectURL(blob);
-				a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
-				document.body.appendChild(a);
-				a.click();
-				document.body.removeChild(a);
-			}, 'image/png');
+				canvas.toBlob(blob => {
+					try{
+						const a = document.createElement('a');
+						a.href = URL.createObjectURL(blob);
+						a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+						document.body.appendChild(a);
+						a.click();
+						document.body.removeChild(a);
+					} catch (err) {
+						showAlert(lang('js.catalogue.player.error.screenshot_failed.title'), lang('js.catalogue.player.error.screenshot_failed.description'), true);
+					}
+				}, 'image/png');
+			} else {
+				const image = $('.swiper-slide-active > img')[0];
+				const canvas = document.createElement('canvas');
+				canvas.width = image.width;
+				canvas.height = image.height;
+
+				const ctx = canvas.getContext('2d');
+				ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+				canvas.toBlob(blob => {
+					try{
+						const a = document.createElement('a');
+						a.href = URL.createObjectURL(blob);
+						a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+						document.body.appendChild(a);
+						a.click();
+						document.body.removeChild(a);
+					} catch (err) {
+						showAlert(lang('js.catalogue.player.error.screenshot_failed.title'), lang('js.catalogue.player.error.screenshot_failed.description'), true);
+					}
+				}, 'image/png');
+			}
 		}
+	} catch (err) {
+		showAlert(lang('js.catalogue.player.error.screenshot_failed.title'), lang('js.catalogue.player.error.screenshot_failed.description'), true);
 	}
 	
 }
@@ -894,6 +910,28 @@ function buildMangaReaderBar(current, total, type) {
 	return c;
 }
 
+function makeScrollDraggable(area) {
+	var isDown = false;
+	var startY, scrollTop;
+
+	area.addEventListener('pointerdown', e => {
+		isDown = true;
+		startY = e.pageY - area.offsetTop;
+		scrollTop = area.scrollTop;
+		e.preventDefault();
+	});
+
+	area.addEventListener('pointerleave', () => { isDown = false; });
+	area.addEventListener('pointerup', () => { isDown = false; });
+
+	area.addEventListener('pointermove', e => {
+		if (!isDown) return;
+		const y = e.pageY - area.offsetTop;
+		const walkY = y - startY;
+		area.scrollTop = scrollTop - walkY;
+	});
+}
+
 function initializeReader(type) {
 	var pagesCode = '';
 	pagesRead = new Array(currentSourceData.length);
@@ -927,6 +965,14 @@ function initializeReader(type) {
 	$('.player_extra_title').html(currentSourceData.title);
 	$('#overlay-content .manga-reader').remove();
 	$('<div class="player-popup swiper manga-reader manga-reader-'+type+'" dir="'+(type=='rtl' ? 'rtl' : 'ltr')+'">'+pagesCode+'<div class="swiper-pagination swiper-pagination-custom swiper-pagination-horizontal'+(type=='strip' ? ' hidden' : '')+'">'+buildMangaReaderBar(initialPosition,currentSourceData.length, type)+'</div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>').appendTo('#overlay-content');
+	if (type=='strip') {
+		makeScrollDraggable($('.strip-images')[0]);
+	} else {
+		var pages = $('.manga-page');
+		for (var i=0; i<pages.length; i++) {
+			makeScrollDraggable(pages[i]);
+		}
+	}
 	$('.main-container').on('fullscreenchange', (e) => handleMangaReaderFullscreen(e));
 	$('.main-container').on('contextmenu', function(e) {
 		showAlert(lang('js.catalogue.player.right_click.title'), lang('js.catalogue.player.right_click.description'), true);
@@ -1283,6 +1329,14 @@ function initializePlayer(){
 				lastTimeUpdate=player.currentTime();
 				sendCurrentFileTracking();
 			}
+		});
+		player.on('chromecastConnected', function(){
+			player.controlBar.getChild('ScreenshotButton').hide();
+			player.controlBar.getChild('SharedPlayButton').hide();
+		});
+		player.on('chromecastDisconnected', function(){
+			player.controlBar.getChild('ScreenshotButton').show();
+			player.controlBar.getChild('SharedPlayButton').show();
 		});
 	} else {
 		//Player already initialized: reuse it and setup new video
@@ -2284,9 +2338,6 @@ function resizeSynopsisHeight(force) {
 function beginSharedPlayHost() {
 	isSharedPlayHost = true;
 	player.controlBar.getChild('PlaySpeedButton').disable();
-	if (player.controlBar.getChild('chromecastButton')) {
-		player.controlBar.getChild('chromecastButton').disable();
-	}
 	currentPlayRate=1;
 	player.controlBar.getChild('PlaySpeedButton').applyValue();
 	player.controlBar.getChild('SharedPlayButton').applyValue();
@@ -2297,9 +2348,6 @@ function endSharedPlayHost() {
 	isSharedPlayHost = false;
 	removeSharedPlayParams();
 	player.controlBar.getChild('PlaySpeedButton').enable();
-	if (player.controlBar.getChild('chromecastButton')) {
-		player.controlBar.getChild('chromecastButton').enable();
-	}
 	player.controlBar.getChild('SharedPlayButton').applyValue();
 	sendCurrentFileTracking(true);
 }
@@ -2366,9 +2414,6 @@ function sharedPlayCheckTick(first = false) {
 function beginSharedPlay(sessionId) {
 	addSharedPlayParams(sessionId);
 	player.controlBar.getChild('PlaySpeedButton').disable();
-	if (player.controlBar.getChild('chromecastButton')) {
-		player.controlBar.getChild('chromecastButton').disable();
-	}
 	player.controlBar.getChild('SharedPlayButton').applyValue();
 	player.tech_.off('click');
 	player.tech_.off('touchstart');
@@ -2383,9 +2428,6 @@ function endSharedPlay() {
 	clearInterval(sharedPlayCheckTimer);
 	removeSharedPlayParams();
 	player.controlBar.getChild('PlaySpeedButton').enable();
-	if (player.controlBar.getChild('chromecastButton')) {
-		player.controlBar.getChild('chromecastButton').enable();
-	}
 	player.controlBar.getChild('SharedPlayButton').applyValue();
 	player.bigPlayButton.enable();
 	player.controlBar.playToggle.enable();
@@ -2634,22 +2676,34 @@ $(document).ready(function() {
 			this.controlText(lang('js.catalogue.player.screenshot'));
 		}
 		handleClick() {
-			const video = this.player().el().querySelector('video');
-			const canvas = document.createElement('canvas');
-			canvas.width = video.videoWidth;
-			canvas.height = video.videoHeight;
+			try{
+				const video = this.player().el().querySelector('video');
+				const canvas = document.createElement('canvas');
+				canvas.width = video.videoWidth;
+				canvas.height = video.videoHeight;
 
-			const ctx = canvas.getContext('2d');
-			ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+				const ctx = canvas.getContext('2d');
+				ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-			canvas.toBlob(blob => {
-				const a = document.createElement('a');
-				a.href = URL.createObjectURL(blob);
-				a.download = currentSourceData.title+' - '+$($('.vjs-current-time-display')[0]).text()+'.png';
-				document.body.appendChild(a);
-				a.click();
-				document.body.removeChild(a);
-			}, 'image/png');
+				canvas.toBlob(blob => {
+					try{
+						const a = document.createElement('a');
+						a.href = URL.createObjectURL(blob);
+						a.download = currentSourceData.title+' - '+$($('.vjs-current-time-display')[0]).text()+'.png';
+						document.body.appendChild(a);
+						a.click();
+						document.body.removeChild(a);
+					} catch (err) {
+						showAlert(lang('js.catalogue.player.error.screenshot_failed.title'), lang('js.catalogue.player.error.screenshot_failed.description'), true);
+					}
+				}, 'image/png');
+			} catch (err) {
+				if (hasBeenCasted) {
+					showAlert(lang('js.catalogue.player.error.screenshot_failed_cast.title'), lang('js.catalogue.player.error.screenshot_failed_cast.description'), true);
+				} else {
+					showAlert(lang('js.catalogue.player.error.screenshot_failed.title'), lang('js.catalogue.player.error.screenshot_failed.description'), true);
+				}
+			}
 		}
 		buildCSSClass() {
 			return `${super.buildCSSClass()} vjs-screenshot-button`;
