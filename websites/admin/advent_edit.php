@@ -143,7 +143,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 						</div>
 						<div class="col-sm-6">
 							<label for="form-position" class="mandatory"><?php echo lang('admin.advent_edit.position'); ?></label> <?php print_helper_box(lang('admin.advent_edit.position'), sprintf(lang('admin.advent_edit.position.help'), MAIN_SITE_NAME)); ?>
-							<select class="form-control" name="position" id="form-position" required>
+							<select class="form-select" name="position" id="form-position" required>
 								<option value=""><?php echo lang('admin.advent_edit.position.select'); ?></option>
 								<option value="left"<?php echo $row['position']=='left' ? " selected" : ""; ?>><?php echo lang('admin.advent_edit.position.left'); ?></option>
 								<option value="right"<?php echo $row['position']=='right' ? " selected" : ""; ?>><?php echo lang('admin.advent_edit.position.right'); ?></option>
