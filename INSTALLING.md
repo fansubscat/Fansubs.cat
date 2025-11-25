@@ -27,7 +27,7 @@ Instal·leu Debian Linux 12 («bookworm») amb normalitat.
 
 Instal·leu els paquets necessaris:
 
-	apt install apache2 php mariadb-server php-mysql php-curl php-dom php-gd php-mbstring php-zip imagemagick
+	apt install apache2 php mariadb-server php-mysql php-curl php-dom php-gd php-mbstring php-tidy php-zip imagemagick
 	
 Instal·leu MegaCMD seguint les instruccions de https://mega.io/cmd#download.
 

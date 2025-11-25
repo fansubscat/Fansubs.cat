@@ -27,7 +27,7 @@ Install Debian Linux 12 («bookworm») normally.
 
 Install these required packages:
 
-	apt install apache2 php mariadb-server php-mysql php-curl php-dom php-gd php-mbstring php-zip imagemagick
+	apt install apache2 php mariadb-server php-mysql php-curl php-dom php-gd php-mbstring php-tidy php-zip imagemagick
 	
 Install MegaCMD by following the instructions at https://mega.io/cmd#download.
 
