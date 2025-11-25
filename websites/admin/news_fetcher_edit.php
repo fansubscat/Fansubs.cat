@@ -101,6 +101,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							<option value=""><?php echo lang('admin.news_fetcher_edit.method.select'); ?></option>
 							<option value="animugen"<?php echo $row['method']=='animugen' ? " selected" : ""; ?>>AniMugen</option>
 							<option value="blogspot"<?php echo $row['method']=='blogspot' ? " selected" : ""; ?>><?php echo lang('admin.generic.fetch_method.blogspot_generic'); ?></option>
+							<option value="blogspot_api"<?php echo $row['method']=='blogspot_api' ? " selected" : ""; ?>><?php echo lang('admin.generic.fetch_method.blogspot_api'); ?></option>
 							<option value="blogspot_2nf"<?php echo $row['method']=='blogspot_2nf' ? " selected" : ""; ?>>Blogspot (2nB no Fansub)</option>
 							<option value="blogspot_as"<?php echo $row['method']=='blogspot_as' ? " selected" : ""; ?>>Blogspot (AnliumSubs)</option>
 							<option value="blogspot_bsc"<?php echo $row['method']=='blogspot_bsc' ? " selected" : ""; ?>>Blogspot (Bleach - Sub Català)</option>

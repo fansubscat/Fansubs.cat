@@ -100,6 +100,9 @@ function fetch_fansub_fetcher($fansub_id, $fansub_slug, $fetcher_id, $method, $u
 		case 'blogspot':
 			$result = fetch_via_blogspot($fansub_slug, $url, $last_fetched_item_date);
 			break;
+		case 'blogspot_api':
+			$result = fetch_via_blogspot_api($fansub_slug, $url, $last_fetched_item_date);
+			break;
 		case 'blogspot_2nf':
 			$result = fetch_via_blogspot_2nf($fansub_slug, $url, $last_fetched_item_date);
 			break;
@@ -247,6 +250,7 @@ function fetch_fansub_fetcher($fansub_id, $fansub_slug, $fetcher_id, $method, $u
 		//Hello 2020, 2020 still. Maybe we will disable the news tweets, they are a bit annoying... And replace them with a cron job that tweets new manga/anime added to the DB.
 		//Hello 2020, we are now in the future 2021. We will report the increments to the action log
 		//Hello 2021, we are now in the future 2023. Just doing some refactors in preparation for v5...
+		//Hello 2023, we are now in the future 2025. Adding a new method to fetch from Blogger API, just wanted to avoid sending unneeded pushes
 		
 		log_action('fetch-news-changes', "Found $increment new posts for fansub $fansub_slug");
 
@@ -422,6 +426,71 @@ function fetch_via_blogspot($fansub_slug, $url, $last_fetched_item_date){
 				}
 			}
 		}
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_blogspot_api($fansub_slug, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+	
+	$blog_info_json = file_get_contents("https://www.googleapis.com/blogger/v3/blogs/byurl?url=$url&key=".BLOGGER_API_KEY) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	
+	$blog_info = json_decode($blog_info_json) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	
+	if (!is_set($blog_info->posts) || !is_set($blog_info->posts->selfLink)) {
+		return array('error_connect',array());
+	}
+	
+	$posts_url = $blog_info->posts->selfLink."?maxResults=500&key=".BLOGGER_API_KEY;
+	
+	$posts_info_json = file_get_contents($posts_url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	
+	$posts_info = json_decode($posts_info_json) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	
+	if (!is_set($posts_info->items)) {
+		return array('error_connect',array());
+	}
+	
+	$posts = $posts_info->items;
+	
+	foreach($posts as $post) {
+		if (count($elements)>0 && $elements[count($elements)-1][3]<$last_fetched_item_date) {
+			break;
+		}
+		$tidy = tidy_parse_string($post->content, $tidy_config, 'UTF8');
+		tidy_clean_repair($tidy);
+		$post_html = str_get_html(tidy_get_output($tidy));
+		
+		//Create an empty item
+		$item = array();
+
+		//Look up and add elements to the item
+		$item[0]=$post->title;
+		$item[1]=$post->content;
+		$item[2]=parse_description($post_html);
+		$date = date_create_from_format('Y-m-d\TH:i:sP', $post->published);
+		$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+		$item[3]= $date->format('Y-m-d H:i:s');
+		$item[4]=$post->url;
+		$item[5]=fetch_and_parse_image($fansub_slug, $url, $post_html);
+
+		$elements[]=$item;
+		sleep(10); //For images 429
 	}
 	return array('ok', $elements);
 }

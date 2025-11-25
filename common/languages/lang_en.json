@@ -333,6 +333,7 @@
 	"admin.generic.edit.title": "Modify",
 	"admin.generic.fansub_type.fandub": "Fandub",
 	"admin.generic.fansub_type.fansub": "Fansub",
+	"admin.generic.fetch_method.blogspot_api": "Blogspot (API)",
 	"admin.generic.fetch_method.blogspot_generic": "Blogspot (generic)",
 	"admin.generic.fetch_result.error_connect.nowrap": "Error&nbsp;(connection)",
 	"admin.generic.fetch_result.error_db.nowrap": "Error&nbsp;(DB)",

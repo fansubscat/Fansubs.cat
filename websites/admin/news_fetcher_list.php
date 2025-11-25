@@ -10,6 +10,8 @@ function get_method($method){
 			return "AniMugen";
 		case 'blogspot':
 			return lang('admin.generic.fetch_method.blogspot_generic');
+		case 'blogspot_api':
+			return lang('admin.generic.fetch_method.blogspot_api');
 		case 'blogspot_2nf':
 			return "Blogspot (2nB no Fansub)";
 		case 'blogspot_as':

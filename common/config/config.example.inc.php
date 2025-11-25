@@ -123,6 +123,9 @@ define('MULTIAVATAR_API_KEY', 'YOUR_API_KEY');
 //Firebase Cloud Messaging key (for sending push messages to the old Android app)
 define('FIREBASE_API_KEY', 'YOUR_FIREBASE_TOKEN_HERE');
 
+//API key for Blogger - used to fetch news from Blogger sites
+define('BLOGGER_API_KEY', 'YOUR_API_KEY');
+
 //Twitter keys (for posting new messages regarding published content)
 //General content
 define('TWITTER_CONSUMER_KEY', 'YOUR_TWITTER_KEY_HERE');
