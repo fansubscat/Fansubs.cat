@@ -480,7 +480,13 @@ while ($version = mysqli_fetch_assoc($result)) {
 								<div class="version-fansub-list-and-rating">
 									<div class="version-fansub-list">
 <?php
+	$are_all_fansubs_inactive = TRUE;
+	$are_all_fansubs_no_access = TRUE;
+	$total_fansubs = 0;
 	foreach ($fansubs as $fansub) {
+		$are_all_fansubs_inactive = $are_all_fansubs_inactive && $fansub['status']==0;
+		$are_all_fansubs_no_access = $are_all_fansubs_no_access && $fansub['has_site_access']==0;
+		$total_fansubs++;
 ?>
 										<div class="version-fansub-element">
 											<img class="version-fansub-image" src="<?php echo STATIC_URL.'/images/icons/'.$fansub['id'].'.png'; ?>" alt="">
@@ -578,6 +584,17 @@ while ($version = mysqli_fetch_assoc($result)) {
 	$total_comments = mysqli_num_rows($resultcom);
 ?>
 								<div class="comments-list">
+<?php
+	if ($are_all_fansubs_inactive) {
+?>
+									<div class="comment-fansub-inactive-warning"><span class="fa fa-fw fa-circle-info"></span> <?php echo $total_fansubs==1 ? lang('catalogue.series.comments.inactive_warning.one') : lang('catalogue.series.comments.inactive_warning.many'); ?></div>
+<?php
+	} else if ($are_all_fansubs_no_access) {
+?>
+									<div class="comment-fansub-inactive-warning"><span class="fa fa-fw fa-circle-info"></span> <?php echo $total_fansubs==1 ? sprintf(lang('catalogue.series.comments.no_access_warning.one'), CURRENT_SITE_NAME) : sprintf(lang('catalogue.series.comments.no_access_warning.many'), CURRENT_SITE_NAME); ?></div>
+<?php
+	}
+?>
 									<div class="comment comment-fake">
 										<img class="comment-avatar" src="<?php echo get_user_avatar_url($user); ?>" alt="">
 										<div class="comment-message comment-input">

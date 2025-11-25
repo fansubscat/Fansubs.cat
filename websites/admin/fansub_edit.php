@@ -122,6 +122,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		} else {
 			$data['hentai_category']=0;
 		}
+		if (!empty($_POST['has_site_access']) && $_POST['has_site_access']==1) {
+			$data['has_site_access']=1;
+		} else {
+			$data['has_site_access']=0;
+		}
 		if (!empty($_POST['old_username'])) {
 			$data['old_username']=escape($_POST['old_username']);
 		} else if ($_POST['action']=='edit') {
@@ -148,7 +153,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			}
 			
 			log_action("update-fansub", "Fansub «".$_POST['name']."» (fansub id: ".$data['id'].") updated");
-			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",email='".$data['email']."',twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',bluesky_url=".$data['bluesky_url'].",bluesky_handle='".$data['bluesky_handle']."',discord_url=".$data['discord_url'].",facebook_url=".$data['facebook_url'].",instagram_url=".$data['instagram_url'].",linktree_url=".$data['linktree_url'].",telegram_url=".$data['telegram_url'].",threads_url=".$data['threads_url'].",youtube_url=".$data['youtube_url'].",status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
+			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",email='".$data['email']."',twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',bluesky_url=".$data['bluesky_url'].",bluesky_handle='".$data['bluesky_handle']."',discord_url=".$data['discord_url'].",facebook_url=".$data['facebook_url'].",instagram_url=".$data['instagram_url'].",linktree_url=".$data['linktree_url'].",telegram_url=".$data['telegram_url'].",threads_url=".$data['threads_url'].",youtube_url=".$data['youtube_url'].",status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",has_site_access=".$data['has_site_access'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
 
 			if (!empty($_FILES['icon'])) {
 				move_uploaded_file($_FILES['icon']["tmp_name"], STATIC_DIRECTORY.'/images/icons/'.$data['id'].'.png');
@@ -158,7 +163,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		}
 		else {
 			log_action("create-fansub", "Fansub «".$_POST['name']."» created");
-			query("INSERT INTO fansub (name,slug,type,url,email,twitter_url,twitter_handle,mastodon_url,mastodon_handle,bluesky_handle,bluesky_url,discord_url,facebook_url,instagram_url,linktree_url,telegram_url,threads_url,youtube_url,status,ping_token,is_historical,archive_url,hentai_category,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",'".$data['email']."',".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."','".$data['bluesky_handle']."',".$data['bluesky_url'].",".$data['discord_url'].",".$data['facebook_url'].",".$data['instagram_url'].",".$data['linktree_url'].",".$data['telegram_url'].",".$data['threads_url'].",".$data['youtube_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
+			query("INSERT INTO fansub (name,slug,type,url,email,twitter_url,twitter_handle,mastodon_url,mastodon_handle,bluesky_handle,bluesky_url,discord_url,facebook_url,instagram_url,linktree_url,telegram_url,threads_url,youtube_url,status,ping_token,is_historical,archive_url,hentai_category,has_site_access,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",'".$data['email']."',".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."','".$data['bluesky_handle']."',".$data['bluesky_url'].",".$data['discord_url'].",".$data['facebook_url'].",".$data['instagram_url'].",".$data['linktree_url'].",".$data['telegram_url'].",".$data['threads_url'].",".$data['youtube_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",".$data['has_site_access'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			
 			$fansub_id=mysqli_insert_id($db_connection);
 
@@ -205,6 +210,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 		$row['status'] = 1;
 		$row['is_historical'] = 0;
 		$row['hentai_category'] = '';
+		$row['has_site_access'] = 0;
 		$row['archive_url'] = '';
 		$row['ping_token'] = '';
 	}
@@ -323,6 +329,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="checkbox" name="status" id="form-active" value="1"<?php echo $row['status']==1? " checked" : ""; ?>>
 								<label class="form-check-label" for="form-active"><?php echo lang('admin.fansub_edit.status.active'); ?></label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="has_site_access" id="form-has_site_access" value="1"<?php echo $row['has_site_access']==1? " checked" : ""; ?>>
+								<label class="form-check-label" for="form-has_site_access"><?php echo lang('admin.fansub_edit.status.has_site_access'); ?></label>
 							</div>
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="checkbox" name="is_historical" id="form-is_historical" value="1"<?php echo $row['is_historical']==1? " checked" : ""; ?> onchange="$('#form-archive_url').prop('disabled',!$(this).prop('checked'));">

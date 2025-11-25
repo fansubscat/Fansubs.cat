@@ -113,6 +113,7 @@ CREATE TABLE `fansub` (
   `is_historical` tinyint(1) NOT NULL DEFAULT 0,
   `archive_url` varchar(200) DEFAULT NULL,
   `hentai_category` tinyint(1) NOT NULL DEFAULT 0,
+  `has_site_access` tinyint(1) NOT NULL DEFAULT 0,
   `created` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_by` varchar(200) NOT NULL,
   `updated` timestamp NOT NULL DEFAULT current_timestamp(),

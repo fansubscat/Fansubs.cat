@@ -2370,7 +2370,22 @@ textarea:valid ~ .comment-checkbox {
 	justify-content: center;
 }
 
-.series-licensed-parts .fa {
+.comment-fansub-inactive-warning {
+	text-align: center;
+	background-color: rgba(var(--neutral-color), 0.2);
+	padding: 1rem;
+	font-size: 1.5rem;
+	border-radius: 1rem;
+	margin-top: 0;
+	margin-bottom: 2rem;
+	width: fit-content;
+	margin-right: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.series-licensed-parts .fa, .comment-fansub-inactive-warning .fa {
 	font-size: 1.8rem;
 	margin-right: 0.5rem;
 }
@@ -3486,6 +3501,11 @@ input:checked + .viewed-slider:before {
 
 	.series-licensed-parts {
 		font-size: 1.3rem;
+	}
+
+	.comment-fansub-inactive-warning {
+		font-size: 1.3rem;
+		margin-bottom: var(--page-padding);
 	}
 
 	.episode-table-manga .version-status-explanation {
