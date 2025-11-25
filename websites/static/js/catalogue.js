@@ -1192,7 +1192,7 @@ function initializePlayer(){
 		player.on('ready', function(){
 			console.log('Ready');
 			
-			if (currentSourceData.shared_play_session_id!=null) {
+			if (currentSourceData.shared_play_session_id!=null && player.techName_=='Html5') {
 				isSharedPlayHost = true;
 				sharedPlaySessionId = currentSourceData.shared_play_session_id;
 				beginSharedPlayHost();
