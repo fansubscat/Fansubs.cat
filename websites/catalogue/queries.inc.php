@@ -817,7 +817,8 @@ function query_home_continue_watching_by_user_id($user_id) {
 					WHERE v.series_id=t2.series_id
 						AND v.is_hidden=0
 				)>0
-			GROUP BY t2.version_id";
+			GROUP BY t2.version_id
+			ORDER BY t2.origin ASC, t2.series_name ASC";
 	return query($final_query);
 }
 
