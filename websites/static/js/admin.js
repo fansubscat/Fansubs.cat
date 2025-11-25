@@ -1818,6 +1818,13 @@ $(document).ready(function() {
 			$($('[id^=form-division-title-]')[0])
 			$($('[id^=form-division-title-]')[0]).val($("#form-title-with-autocomplete").val());
 		}
+		
+		if (($('#series_subtype').val()=='oneshot' || $('#series_subtype').val()=='movie') && $('.episode-title-input').length==1) {
+			var singleEpisodeTitle = $($('.episode-title-input')[0]);
+			if ($("#form-title-with-autocomplete").attr('data-old-value')==singleEpisodeTitle.val()) {
+				singleEpisodeTitle.val($("#form-title-with-autocomplete").val());
+			}
+		}
 		$("#form-title-with-autocomplete").attr('data-old-value', $("#form-title-with-autocomplete").val());
 	});
 
