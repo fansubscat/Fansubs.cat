@@ -17,6 +17,8 @@
 	- S’ordenen els elements de «Continua mirant» (fins ara apareixien sense un ordre definit, ara primer per capítols nous o en progrés, i després alfabèticament).
 - **Notícies:**
 	- S’afegeix un nou mètode d’obtenció mitjançant l’API de Blogger, la qual cosa permet tornar a disposar de les notícies de Lluna Plena no Fansub.
+- **Usuaris:**
+	- S’impedeix el registre d’usuaris amb el sufix « (fansub), perquè està reservat a ús intern.
 - **Administració:**
 	- El títol del capítol a les versions amb capítol únic (one-shots i films) per defecte es copia automàticament del títol de la sèrie.
 	- Es corregeix l’estil visual del camp de posició al formulari d’edició de calendaris d’advent.
