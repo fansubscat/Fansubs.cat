@@ -553,9 +553,9 @@ while ($version = mysqli_fetch_assoc($result)) {
 			$url_arr=explode(';', $fansub['downloads_url']);
 			foreach ($url_arr as $url) {
 				if (preg_match(REGEXP_DL_LINK,$url)) {
-					echo ' <a class="fa fa-fw fa-cloud-arrow-down fansub-social-link fansub-downloads" title="'.lang('catalogue.series.download.alt').'" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
+					echo ' <a class="fa fa-fw fa-download fansub-social-link fansub-downloads" title="'.lang('catalogue.series.download.alt').'" data-url="'.htmlspecialchars(base64_encode($url)).'"></a>';
 				} else {
-					echo ' <a class="fa fa-fw fa-cloud-arrow-down fansub-social-link" href="'.$url.'" title="'.lang('catalogue.series.download.alt').'" target="_blank"></a>';
+					echo ' <a class="fa fa-fw fa-download fansub-social-link" href="'.$url.'" title="'.lang('catalogue.series.download.alt').'" target="_blank"></a>';
 				}
 			}
 		}
