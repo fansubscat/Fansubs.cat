@@ -203,6 +203,8 @@ function register() {
 				addValidationOnlyText('register_username',lang('js.users.register.server_error.username_is_email'));
 			} else if (response.code==12) {
 				addValidationOnlyText('register_username',lang('js.users.register.server_error.username_has_emoji'));
+			} else if (response.code==13) {
+				addValidationOnlyText('register_username',lang('js.users.register.server_error.username_has_fansub_suffix'));
 			} else {
 				addValidationOnlyText('register_generic',lang('js.users.register.server_error.generic'));
 			}
@@ -582,6 +584,8 @@ function editProfile() {
 				addValidationOnlyText('edit_profile_username',lang('js.users.edit_profile.server_error.username_is_email'));
 			} else if (response.code==12) {
 				addValidationOnlyText('edit_profile_username',lang('js.users.edit_profile.server_error.username_has_emoji'));
+			} else if (response.code==13) {
+				addValidationOnlyText('edit_profile_username',lang('js.users.edit_profile.server_error.username_has_fansub_suffix'));
 			} else {
 				addValidationOnlyText('edit_profile_generic',lang('js.users.edit_profile.server_error.generic'));
 			}

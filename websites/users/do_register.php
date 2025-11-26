@@ -73,6 +73,12 @@ function register_user(){
 		return array('result' => 'ko', 'code' => 11);
 	}
 
+	//Check that username is not a fake fansub
+	if (str_ends_with($username, lang('generic.user.fansub_username_suffix'))) {
+		http_response_code(400);
+		return array('result' => 'ko', 'code' => 13);
+	}
+
 	//Check that username has no unsupported emojis
 	if (preg_match("/[\x{10000}-\x{10FFFF}]/u",$username)) {
 		http_response_code(400);

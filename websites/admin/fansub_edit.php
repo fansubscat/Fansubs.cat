@@ -151,6 +151,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			if ($old_row['updated']!=$_POST['last_update']) {
 				crash(lang('admin.error.fansub_edit_concurrency_error'));
 			}
+			$user_email_result = query("SELECT * FROM user WHERE email='".$data['email']."' AND fansub_id<>".$data['id']);
+			if (mysqli_num_rows($user_email_result)>0) {
+				crash(lang('admin.error.fansub_edit_email_error'));
+			}
 			
 			log_action("update-fansub", "Fansub «".$_POST['name']."» (fansub id: ".$data['id'].") updated");
 			query("UPDATE fansub SET name='".$data['name']."',slug='".$data['slug']."',type='".$data['type']."',url=".$data['url'].",email='".$data['email']."',twitter_url=".$data['twitter_url'].",twitter_handle='".$data['twitter_handle']."',mastodon_url=".$data['mastodon_url'].",mastodon_handle='".$data['mastodon_handle']."',bluesky_url=".$data['bluesky_url'].",bluesky_handle='".$data['bluesky_handle']."',discord_url=".$data['discord_url'].",facebook_url=".$data['facebook_url'].",instagram_url=".$data['instagram_url'].",linktree_url=".$data['linktree_url'].",telegram_url=".$data['telegram_url'].",threads_url=".$data['threads_url'].",youtube_url=".$data['youtube_url'].",status=".$data['status'].",ping_token=".$data['ping_token'].",is_historical=".$data['is_historical'].",archive_url=".$data['archive_url'].",hentai_category=".$data['hentai_category'].",has_site_access=".$data['has_site_access'].",updated=CURRENT_TIMESTAMP,updated_by='".escape($_SESSION['username'])."' WHERE id=".$data['id']);
@@ -162,6 +166,11 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 			edit_fansub_user($data['id'], $data['old_username'], $data['user_password']);
 		}
 		else {
+			$user_email_result = query("SELECT * FROM user WHERE email='".$data['email']."'");
+			if (mysqli_num_rows($user_email_result)>0) {
+				crash(lang('admin.error.fansub_edit_email_error'));
+			}
+			
 			log_action("create-fansub", "Fansub «".$_POST['name']."» created");
 			query("INSERT INTO fansub (name,slug,type,url,email,twitter_url,twitter_handle,mastodon_url,mastodon_handle,bluesky_handle,bluesky_url,discord_url,facebook_url,instagram_url,linktree_url,telegram_url,threads_url,youtube_url,status,ping_token,is_historical,archive_url,hentai_category,has_site_access,created,created_by,updated,updated_by) VALUES ('".$data['name']."','".$data['slug']."','".$data['type']."',".$data['url'].",'".$data['email']."',".$data['twitter_url'].",'".$data['twitter_handle']."',".$data['mastodon_url'].",'".$data['mastodon_handle']."','".$data['bluesky_handle']."',".$data['bluesky_url'].",".$data['discord_url'].",".$data['facebook_url'].",".$data['instagram_url'].",".$data['linktree_url'].",".$data['telegram_url'].",".$data['threads_url'].",".$data['youtube_url'].",".$data['status'].",".$data['ping_token'].",".$data['is_historical'].",".$data['archive_url'].",".$data['hentai_category'].",".$data['has_site_access'].",CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."',CURRENT_TIMESTAMP,'".escape($_SESSION['username'])."')");
 			
