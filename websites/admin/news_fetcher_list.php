@@ -66,6 +66,8 @@ function get_method($method){
 			return "Wordpress (Yoshiwara no Fansub)";
 		case 'wordpress_ys':
 			return "Wordpress (YacchySubs)";
+		case 'facebook_edcec': //Deleted from logic
+			return "Facebook (El Detectiu Conan en català)";
 		default:
 			return $method;
 	}
