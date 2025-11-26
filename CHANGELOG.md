@@ -1,5 +1,27 @@
 # Registre de canvis
 
+## 2025-11-26 - Versió 5.6.0
+- **General:**
+	- S’han actualitzat les biblioteques a les darreres versions disponibles.
+	- Els fansubs poden enllaçar també als seus perfils de Facebook, Instagram, Linktree, Telegram, Threads i YouTube.
+- **Catàleg:**
+	- Nou botó per a fer captures de pantalla dels vídeos i del manga.
+	- Nova opció per a posar la velocitat de reproducció a 1,75x i 2x.
+	- Ja no cal fer clic contínuament per a canviar de velocitat: hi ha un submenú nou.
+	- Nova funcionalitat per a mirar vídeos en sincronia amb algú altre.
+	- Nou botó per a canviar l’amplada màxima de les imatges del manga (si són més grosses).
+	- Es millora la navegació amb teclat pel manga.
+	- Es permet desplaçar-se pel manga en format tira llarga (i pel manga amb amplada maximitzada) arrossegant amb el ratolí.
+	- S’afegeix un missatge en fer clic dret sobre el reproductor de vídeo o lector de manga indicant com baixar els fitxers del fansub original.
+	- Es mostra un missatge informatiu a sobre dels comentaris si els fansubs estan inactius o no tenen accés al web.
+	- S’ordenen els elements de «Continua mirant» (fins ara apareixien sense un ordre definit, ara primer per capítols nous o en progrés, i després alfabèticament).
+- **Notícies:**
+	- S’afegeix un nou mètode d’obtenció mitjançant l’API de Blogger, la qual cosa permet tornar a disposar de les notícies de Lluna Plena no Fansub.
+- **Administració:**
+	- El títol del capítol a les versions amb capítol únic (one-shots i films) per defecte es copia automàticament del títol de la sèrie.
+	- Es corregeix l’estil visual del camp de posició al formulari d’edició de calendaris d’advent.
+	- Es corregeix l’enllaç al portal de manga.
+
 ## 2025-11-12 - Versió 5.5.9
 - **General:**
 	- Es permet fer servir altres separadors de decimals en altres llengües.
