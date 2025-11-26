@@ -103,6 +103,9 @@ function fetch_fansub_fetcher($fansub_id, $fansub_slug, $fetcher_id, $method, $u
 		case 'blogspot_api':
 			$result = fetch_via_blogspot_api($fansub_slug, $url, $last_fetched_item_date);
 			break;
+		case 'blogspot_api_llpnf':
+			$result = fetch_via_blogspot_api_llpnf($fansub_slug, $url, $last_fetched_item_date);
+			break;
 		case 'blogspot_2nf':
 			$result = fetch_via_blogspot_2nf($fansub_slug, $url, $last_fetched_item_date);
 			break;
@@ -117,6 +120,9 @@ function fetch_fansub_fetcher($fansub_id, $fansub_slug, $fetcher_id, $method, $u
 			break;
 		case 'blogspot_llpnf':
 			$result = fetch_via_blogspot_llpnf($fansub_slug, $url, $last_fetched_item_date);
+			break;
+		case 'blogspot_api_llpnf':
+			$result = fetch_via_blogspot_api_llpnf($fansub_slug, $url, $last_fetched_item_date);
 			break;
 		case 'blogspot_mnf':
 			$result = fetch_via_blogspot_mnf($fansub_slug, $url, $last_fetched_item_date);
@@ -446,7 +452,7 @@ function fetch_via_blogspot_api($fansub_slug, $url, $last_fetched_item_date){
 		return array('error_connect',array());
 	}
 	
-	if (!is_set($blog_info->posts) || !is_set($blog_info->posts->selfLink)) {
+	if (!isset($blog_info->posts) || !isset($blog_info->posts->selfLink)) {
 		return array('error_connect',array());
 	}
 	
@@ -462,7 +468,7 @@ function fetch_via_blogspot_api($fansub_slug, $url, $last_fetched_item_date){
 		return array('error_connect',array());
 	}
 	
-	if (!is_set($posts_info->items)) {
+	if (!isset($posts_info->items)) {
 		return array('error_connect',array());
 	}
 	
@@ -483,6 +489,93 @@ function fetch_via_blogspot_api($fansub_slug, $url, $last_fetched_item_date){
 		$item[0]=$post->title;
 		$item[1]=$post->content;
 		$item[2]=parse_description($post_html);
+		$date = date_create_from_format('Y-m-d\TH:i:sP', $post->published);
+		$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+		$item[3]= $date->format('Y-m-d H:i:s');
+		$item[4]=$post->url;
+		$item[5]=fetch_and_parse_image($fansub_slug, $url, $post_html);
+
+		$elements[]=$item;
+		sleep(10); //For images 429
+	}
+	return array('ok', $elements);
+}
+
+function fetch_via_blogspot_api_llpnf($fansub_slug, $url, $last_fetched_item_date){
+	$elements = array();
+
+	$tidy_config = "tidy.conf";
+	$error_connect=FALSE;
+	
+	$blog_info_json = file_get_contents("https://www.googleapis.com/blogger/v3/blogs/byurl?url=$url&key=".BLOGGER_API_KEY) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	
+	$blog_info = json_decode($blog_info_json) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	
+	if (!isset($blog_info->posts) || !isset($blog_info->posts->selfLink)) {
+		return array('error_connect',array());
+	}
+	
+	$posts_url = $blog_info->posts->selfLink."?maxResults=500&key=".BLOGGER_API_KEY;
+	
+	$posts_info_json = file_get_contents($posts_url) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	
+	$posts_info = json_decode($posts_info_json) or $error_connect=TRUE;
+	if ($error_connect){
+		return array('error_connect',array());
+	}
+	
+	if (!isset($posts_info->items)) {
+		return array('error_connect',array());
+	}
+	
+	$posts = $posts_info->items;
+	
+	foreach($posts as $post) {
+		if (count($elements)>0 && $elements[count($elements)-1][3]<$last_fetched_item_date) {
+			break;
+		}
+		$tidy = tidy_parse_string($post->content, $tidy_config, 'UTF8');
+		tidy_clean_repair($tidy);
+		$post_html = str_get_html(tidy_get_output($tidy));
+		
+		//Create an empty item
+		$item = array();
+
+		//Look up and add elements to the item
+		$item[0]=$post->title;
+		$item[1]=$post->content;
+		
+		$description = $post_html->outertext;
+		
+		//We replace the notiwrapper with an empty string to remove the download links
+		foreach ($post_html->find('div.noti_wrapper') as $notiwrapper){
+			$description = str_replace($notiwrapper->outertext, '', $description);
+		}
+
+		//This helps with the layout here: http://llunaplenanofansub.blogspot.com.es/2015/08/anime-kokoro-connect-01-02-03-i-04.html
+		$description = str_replace('</center>','</center><br /><br />', $description);
+
+		//We replace headers with bold text so it doesn't crash our layout
+		$description = str_replace('<h1>','<b>', $description);
+		$description = str_replace('</h1>','</b><br />', $description);
+		$description = str_replace('<h2>','<b>', $description);
+		$description = str_replace('</h2>','</b><br />', $description);
+		$description = str_replace('<h3>','<b>', $description);
+		$description = str_replace('</h3>','</b><br />', $description);
+
+		//Fix for big text style
+		$description = str_replace(' style="font-size: xx-large;"','', $description);
+
+		$item[2]=parse_description($description);
 		$date = date_create_from_format('Y-m-d\TH:i:sP', $post->published);
 		$date->setTimeZone(new DateTimeZone('Europe/Berlin'));
 		$item[3]= $date->format('Y-m-d H:i:s');

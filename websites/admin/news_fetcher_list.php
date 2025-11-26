@@ -12,6 +12,8 @@ function get_method($method){
 			return lang('admin.generic.fetch_method.blogspot_generic');
 		case 'blogspot_api':
 			return lang('admin.generic.fetch_method.blogspot_api');
+		case 'blogspot_api_llpnf':
+			return 'Blogspot (API - Lluna Plena no Fansub)';
 		case 'blogspot_2nf':
 			return "Blogspot (2nB no Fansub)";
 		case 'blogspot_as':
