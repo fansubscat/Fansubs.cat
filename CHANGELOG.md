@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2025-12-02 - Versió 5.6.1
+- **Catàleg:**
+	- Se soluciona que l’enllaç de reproducció compartida fallés al Firefox (a causa d’un error de bloqueig de la reproducció automàtica).
+	- S’amaguen els números de pàgina en mangues en format tira vertical, perquè no són un clar indicatiu del progrés. Es mantenen si l’usuari tria manualment «Tira vertical» al mode de visualització d’un manga paginat.
+	- En carregar un manga en format tira vertical, es mostra el percentatge de càrrega en lloc del nombre de pàgines.
+	- Se soluciona que algunes finestres modals no es mostressin amb el reproductor a pantalla completa.
+	- Es corregeix que els botons del reproductor apareguessin en un ordre diferent en enllaços incrustats.
+	- No es mostra el botó de reproducció compartida en enllaços incrustats.
+
 ## 2025-11-26 - Versió 5.6.0
 - **General:**
 	- S’han actualitzat les biblioteques a les darreres versions disponibles.
