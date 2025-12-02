@@ -464,7 +464,7 @@ function imageLoaded(image) {
 function stripImageLoaded(reqNo) {
 	if (currentSourceData!=null && reqNo==stripImagesLoadedReqNo) {
 		stripImagesLoaded++;
-		$('.strip-images-loading-progress').text(stripImagesLoaded+' / '+currentSourceData.length);
+		$('.strip-images-loading-progress').text(Math.round(stripImagesLoaded*100/Math.max(currentSourceData.length, 1))+'%');
 		if (stripImagesLoaded==currentSourceData.length) {
 			stripSyncAndShowImages();
 		}
@@ -793,7 +793,7 @@ function takeMangaScreenshot() {
 				try{
 					const a = document.createElement('a');
 					a.href = URL.createObjectURL(blob);
-					a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+					a.download = currentSourceData.title+' - '+getReaderCurrentPage()+'.png';
 					document.body.appendChild(a);
 					a.click();
 					document.body.removeChild(a);
@@ -817,7 +817,7 @@ function takeMangaScreenshot() {
 					try{
 						const a = document.createElement('a');
 						a.href = URL.createObjectURL(blob);
-						a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+						a.download = currentSourceData.title+' - '+getReaderCurrentPage()+'.png';
 						document.body.appendChild(a);
 						a.click();
 						document.body.removeChild(a);
@@ -838,7 +838,7 @@ function takeMangaScreenshot() {
 					try{
 						const a = document.createElement('a');
 						a.href = URL.createObjectURL(blob);
-						a.download = currentSourceData.title+' - '+$($('.vjs-current-time')[0]).text()+'.png';
+						a.download = currentSourceData.title+' - '+getReaderCurrentPage()+'.png';
 						document.body.appendChild(a);
 						a.click();
 						document.body.removeChild(a);
@@ -892,9 +892,9 @@ function buildMangaReaderBar(current, total, type) {
 			}
 		}
 	}
-	c += '			<div class="vjs-current-time vjs-time-control vjs-control">'+current+'</div>';
-	c += '			<div class="vjs-time-control vjs-time-divider"><div><span>/</span></div></div>';
-	c += '			<div class="vjs-duration vjs-time-control vjs-control">'+total+'</div>';
+	c += '			<div class="vjs-current-time vjs-time-control vjs-control'+(currentSourceData.default_reader_type!='strip' ? '' : ' hidden')+'">'+current+'</div>';
+	c += '			<div class="vjs-time-control vjs-time-divider"><div><span>'+(currentSourceData.default_reader_type!='strip' ? '/' : '')+'</span></div></div>';
+	c += '			<div class="vjs-duration vjs-time-control vjs-control">'+(currentSourceData.default_reader_type!='strip' ? total : '')+'</div>';
 	if (mangaHasMusic()) {
 		c += '		<button class="vjs-mute-control vjs-control vjs-button vjs-vol-0" type="button" title="'+lang('js.catalogue.reader.commute_music')+'" aria-disabled="false" onclick="toggleMangaMusic();"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">'+lang('js.catalogue.reader.commute_music')+'</span></button><audio id="manga-music" loop><source src="'+currentSourceData.music+'" type="audio/mpeg"></audio>';
 	}
@@ -943,7 +943,7 @@ function initializeReader(type) {
 	if (type=='strip') {
 		stripImagesLoadedReqNo++;
 		stripImagesLoaded = 0;
-		pagesCode+='<div class="swiper-wrapper"><div class="strip-images-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i><span class="strip-images-loading-progress">0 / '+currentSourceData.length+'</span></div><div class="strip-images-error hidden">'+lang('js.catalogue.reader.error_loading_all_images')+'<br><button class="normal-button" onclick="stripImagesReload();">'+lang('js.catalogue.reader.retry')+'</button></div><div class="strip-images hidden" onscroll="setSeekCurrentPageOnScroll(this);">';
+		pagesCode+='<div class="swiper-wrapper"><div class="strip-images-loading"><i class="fa-3x fas fa-circle-notch fa-spin"></i><span class="strip-images-loading-progress">0%</span></div><div class="strip-images-error hidden">'+lang('js.catalogue.reader.error_loading_all_images')+'<br><button class="normal-button" onclick="stripImagesReload();">'+lang('js.catalogue.reader.retry')+'</button></div><div class="strip-images hidden" onscroll="setSeekCurrentPageOnScroll(this);">';
 	} else {
 		pagesCode+='<div class="swiper-wrapper">';
 	}
