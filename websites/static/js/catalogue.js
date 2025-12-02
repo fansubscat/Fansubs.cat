@@ -1161,6 +1161,8 @@ function initializePlayer(){
 		//Allow dragging the seek bar and display its time
 		//Let's thank this person for providing this answer: https://stackoverflow.com/a/60748866/1254846
 		const SeekBar = videojs.getComponent('SeekBar');
+		//Workaround for videojs 8.23.4, see https://github.com/videojs/video.js/issues/9133 and https://github.com/videojs/video.js/pull/8988#issuecomment-3402464579
+		SeekBar.prototype.pendingSeekTime = SeekBar.prototype.getCurrentTime_;
 		SeekBar.prototype.getPercent = function getPercent() {
 			const time = this.player_.currentTime()
 			const percent = time / this.player_.duration()
