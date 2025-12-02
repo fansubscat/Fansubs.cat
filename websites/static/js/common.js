@@ -21,7 +21,7 @@ function lang(string) {
 	return window.LANGUAGE_STRINGS[string];
 }
 
-function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray, scrollable=false, keepNonScrollable=false) {
+function showCustomDialog(title, text, subtext, closeable=true, blurred=true, buttonsArray, scrollable=false, keepNonScrollable=false, appendTo='.main-container') {
 	$('html').addClass('page-no-overflow');
 	$('#dialog-overlay').remove();
 	var code = '<div data-nosnippet id="dialog-overlay" class="flex'+(blurred ? ' dialog-overlay-blurred' : '')+(keepNonScrollable ? ' dialog-overlay-keep-non-scroll' : '')+'"><div id="dialog-overlay-content"'+(scrollable ? ' class="scrollable-dialog"' : '')+'>';
@@ -37,7 +37,7 @@ function showCustomDialog(title, text, subtext, closeable=true, blurred=true, bu
 	}
 	code += '<div id="dialog-buttonbar"></div></div></div>';
 
-	$(code).appendTo('.main-container');
+	$(code).appendTo(appendTo);
 		
 	for (var i=0; i<buttonsArray.length;i++) {
 		var button = $('<button class="dialog-button '+buttonsArray[i].class+'">'+buttonsArray[i].text+'</button>');
@@ -46,7 +46,7 @@ function showCustomDialog(title, text, subtext, closeable=true, blurred=true, bu
 	}
 }
 
-function showAlert(title, desc, keepNonScrollable=false) {
+function showAlert(title, desc, keepNonScrollable=false, appendTo='.main-container') {
 	showCustomDialog(title, desc, null, true, true, [
 		{
 			text: lang('js.dialog.ok'),
@@ -55,7 +55,7 @@ function showAlert(title, desc, keepNonScrollable=false) {
 				closeCustomDialog();
 			}
 		}
-	], false, keepNonScrollable);
+	], false, keepNonScrollable, appendTo);
 }
 
 function closeCustomDialog() {

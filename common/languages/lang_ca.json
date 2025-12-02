@@ -1653,6 +1653,7 @@
 	"js.catalogue.player.next_chapter_play_now": "Reprodueix-lo ara",
 	"js.catalogue.player.right_click.description": "Per limitacions en l’ample de banda, no es permet baixar els fitxers d’aquest servidor.<br>Trobaràs un enllaç extern per a baixar el contingut original del fansub a la fitxa, a l’apartat «Autoria d’aquesta versió».",
 	"js.catalogue.player.right_click.title": "Avís important",
+	"js.catalogue.player.press_to_play": "Prem per a permetre’n la reproducció",
 	"js.catalogue.player.screenshot": "Fes una captura del vídeo",
 	"js.catalogue.player.share_play": "Comparteix la reproducció",
 	"js.catalogue.player.share_play_dialog.as_guest": "Com a convidat",

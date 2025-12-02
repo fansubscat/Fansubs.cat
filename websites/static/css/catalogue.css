@@ -698,6 +698,22 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	margin-top: -1.5em;
 }
 
+.video-js .player_extra_autoplay_blocked {
+	display: none;
+	position: relative;
+	top: calc(50% + 6rem);
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 1.8rem;
+	pointer-events: none;
+	text-shadow: 0 0 0.5rem rgba(var(--always-negative-color),1);
+}
+
+.video-js.autoplay-blocked .player_extra_autoplay_blocked {
+	display: block;
+}
+
 .video-js .vjs-progress-holder .vjs-load-progress,.video-js .vjs-progress-holder .vjs-load-progress div,.video-js .vjs-progress-holder .vjs-play-progress {
 	border-radius: 2em;
 }
@@ -968,6 +984,11 @@ input[type='range'].manga-slider-bar::-moz-range-thumb {
 	order: -1;
 	flex-basis: 100%;
 	height: 2em;
+}
+
+.video-js button.dialog-button {
+	background: rgb(var(--primary-color));
+	line-height: normal;
 }
 
 .player_error_icon {
@@ -2822,6 +2843,10 @@ input:checked + .viewed-slider:before {
 
 	.player_extra_ended_thumbnail:hover div {
 		width: 100% !important;
+	}
+
+	.video-js button.dialog-button:hover {
+		background: rgb(var(--primary-color-hover));
 	}
 
 	.video-js .vjs-volume-control:hover .vjs-volume-tooltip {
