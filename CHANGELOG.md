@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2025-12-08 - Versió 5.6.2
+- **Administració:**
+	- Es permet marcar sèries existents com a completament llicenciades. Això fa que, com que no s’esborren, no se’n perdin les estadístiques.
+- **Catàleg:**
+	- Les sèries llicenciades són accessibles (sols via URL), mostren un missatge més explicatiu i mantenen les dades bàsiques.
+
 ## 2025-12-02 - Versió 5.6.1
 - **Catàleg:**
 	- Se soluciona que l’enllaç de reproducció compartida fallés al Firefox (a causa d’un error de bloqueig de la reproducció automàtica).
