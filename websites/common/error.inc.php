@@ -6,9 +6,6 @@ if (!defined('PAGE_STYLE_TYPE')) {
 define('PAGE_TITLE', lang('error.page_title'));
 define('ERROR_PAGE', TRUE);
 $code = !empty($_GET['code']) ? $_GET['code'] : 404;
-if (defined('COPYRIGHT_ISSUE')) {
-	$code = 451;
-}
 http_response_code($code);
 require_once(__DIR__.'/header.inc.php');
 ?>
@@ -22,10 +19,6 @@ require_once(__DIR__.'/header.inc.php');
 if ($code==403){
 ?>
 						<?php echo sprintf(lang('error.403.explanation'), SITE_BASE_URL); ?>
-<?php
-} else if ($code==451){
-?>
-						<?php echo sprintf(lang('error.451.explanation'), SITE_BASE_URL); ?>
 <?php
 }  else {
 ?>

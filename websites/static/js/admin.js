@@ -2113,6 +2113,8 @@ $(document).ready(function() {
 	$("#form-licensed_status").change(function() {
 		if ($(this).val()==1) {
 			alert(lang('js.admin.series_edit.warning.licensed_parts_selected'));
+		} else if ($(this).val()>1) {
+			alert(lang('js.admin.series_edit.warning.licensed_selected'));
 		}
 	});
 	$('#form-reader_type').change(function() {

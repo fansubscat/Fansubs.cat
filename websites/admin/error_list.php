@@ -88,7 +88,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				re.position,
 				v.id version_id,
 				re.user_id,
-				re.anon_id
+				re.anon_id,
+				s.rating,
+				s.has_licensed_parts
 			FROM reported_error re
 				LEFT JOIN file f ON re.file_id=f.id
 				LEFT JOIN version v ON f.version_id=v.id
@@ -111,7 +113,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<tr>
+							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 								<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 								<td class="align-middle text-center"><span style="cursor: help;" title="<?php echo htmlentities($row['text']); ?>"><?php echo get_error_type($row['type']); ?></span></td>
 								<td class="align-middle text-center"><?php echo get_time($row['position']); ?></td>

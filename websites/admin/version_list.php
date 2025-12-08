@@ -85,7 +85,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$extra_where = '';
 	}
 
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, v.title version_title, s.rating series_rating, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, v.title");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, v.title version_title, s.rating series_rating, s.name series_name, s.has_licensed_parts, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE s.type='$type'$extra_where GROUP BY v.id ORDER BY fansub_name, v.title");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -96,7 +96,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	while ($row = mysqli_fetch_assoc($result)) {
 		$link_url=get_public_site_url($type, $row['slug'], $row['series_rating']=='XXX');
 ?>
-							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 								<th scope="row" class="align-middle<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo htmlspecialchars($row['fansub_name']); ?></th>
 								<td class="align-middle<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><b><?php echo htmlspecialchars($row['version_title']); ?></b><?php echo $row['version_title']!=$row['series_name'] ? '<br><i style="font-weight: normal;" class="text-muted small">('.htmlspecialchars($row['series_name']).')</i>' : ''; ?></td>
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo get_status_description_short($row['status']); ?></td>

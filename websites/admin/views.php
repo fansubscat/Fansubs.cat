@@ -108,7 +108,8 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 			ps.user_agent,
 			ps.is_casted,
 			ps.view_counted,
-			s.rating
+			s.rating,
+			s.has_licensed_parts
 		FROM view_session ps 
 			LEFT JOIN file f ON ps.file_id=f.id 
 			LEFT JOIN version v ON f.version_id=v.id 
@@ -122,7 +123,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 		ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+											<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 												<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['updated']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
@@ -178,7 +179,8 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 			ps.user_agent,
 			ps.is_casted,
 			UNIX_TIMESTAMP(ps.view_counted) view_counted,
-			s.rating
+			s.rating,
+			s.has_licensed_parts
 		FROM view_session ps 
 			LEFT JOIN file f ON ps.file_id=f.id 
 			LEFT JOIN version v ON f.version_id=v.id 
@@ -192,7 +194,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 		ORDER BY ps.view_counted DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+											<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 												<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['source'], $row['is_casted']); ?>></div></td>
@@ -256,7 +258,8 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 			ps.user_agent,
 			ps.is_casted,
 			ps.view_counted,
-			s.rating
+			s.rating,
+			s.has_licensed_parts
 		FROM view_session ps 
 			LEFT JOIN file f ON ps.file_id=f.id 
 			LEFT JOIN version v ON f.version_id=v.id 
@@ -271,7 +274,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 		ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+											<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 												<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div class="progress"><div class="progress-bar progress-bar-striped <?php echo $row['updated']<date('U')-120 ? "bg-primary" : "progress-bar-animated"; ?>" role="progressbar" style="width: <?php echo min(100,$row['progress']); ?>%;" aria-valuenow="<?php echo min(100,$row['progress']); ?>" aria-valuemin="0" aria-valuemax="100"><?php echo min(100,round($row['progress'],1)); ?>%</div></div></td>
@@ -327,7 +330,8 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 			ps.user_agent,
 			ps.is_casted,
 			UNIX_TIMESTAMP(ps.view_counted) view_counted,
-			s.rating
+			s.rating,
+			s.has_licensed_parts
 		FROM view_session ps 
 			LEFT JOIN file f ON ps.file_id=f.id 
 			LEFT JOIN version v ON f.version_id=v.id 
@@ -342,7 +346,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 		ORDER BY ps.view_counted DESC LIMIT $limit");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
-											<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+											<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 												<th scope="row" class="align-middle"><?php echo htmlspecialchars($row['fansub_name'].' - '.$row['title']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></th>
 												<td scope="col" class="text-center"><?php echo get_anonymized_username($row['user_id'], $row['anon_id']); ?></td>
 												<td class="text-center"><div <?php echo get_browser_icon_by_source_type($row['source'], $row['is_casted']); ?>></div></td>

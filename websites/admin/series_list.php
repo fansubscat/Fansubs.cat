@@ -95,7 +95,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			array_push($divisions_escaped, htmlspecialchars($division));
 		}
 ?>
-							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 								<th scope="row" class="align-middle<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo htmlspecialchars($row['name']); ?><?php echo !empty($divisions_escaped) ? '<i><br>&nbsp;&nbsp;&nbsp┗ '.implode('<br>&nbsp;&nbsp;&nbsp;┗ ', $divisions_escaped).'</i>' : ''; ?><?php echo !empty($row['version_titles']) ? '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i style="font-weight: normal;" class="text-muted">('.htmlspecialchars($row['version_titles']).')</i>' : ''; ?></th>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo get_subtype_name($row['subtype']); ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['divisions']; ?><?php echo $row['fake_divisions']>0 ? '<small>+'.$row['fake_divisions'].'</small>' : ''; ?></td>

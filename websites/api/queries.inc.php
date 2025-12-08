@@ -78,6 +78,7 @@ function query_get_all_manga_files() {
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
 			WHERE s.type='manga'
+				AND s.has_licensed_parts<=1
 				AND f.is_lost=0
 			ORDER BY v.title ASC,
 				f.original_filename ASC";
@@ -95,7 +96,8 @@ function query_get_unconverted_links($file_id) {
 				LEFT JOIN file f ON l.file_id=f.id
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
-			WHERE url NOT LIKE 'storage://%'
+			WHERE s.has_licensed_parts<=1
+				AND url NOT LIKE 'storage://%'
 				AND $file_id_condition
 				AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%')
 			ORDER BY v.title ASC,
@@ -115,7 +117,8 @@ function query_get_converted_links($file_id) {
 				LEFT JOIN file f ON l.file_id=f.id
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
-			WHERE url LIKE 'storage://%'
+			WHERE s.has_licensed_parts
+				AND url LIKE 'storage://%'
 				AND $file_id_condition
 			ORDER BY v.title ASC,
 				f.id ASC";
@@ -230,6 +233,7 @@ function query_popular_manga($offset, $max_items) {
 						LEFT JOIN file fi ON fi.episode_id=c.id
 						LEFT JOIN views vi ON vi.file_id=fi.id
 					WHERE s.type='manga'
+						AND s.has_licensed_parts<=1
 						AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0
 						AND fi.episode_id IS NOT NULL
 						AND ".get_internal_hentai_condition()."
@@ -262,6 +266,7 @@ function query_recent_manga($offset, $max_items) {
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
 				LEFT JOIN genre g ON sg.genre_id = g.id
 			WHERE s.type='manga'
+				AND s.has_licensed_parts<=1
 				AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0
 				AND ".get_internal_hentai_condition()."
 			GROUP BY s.id
@@ -313,6 +318,7 @@ function query_search_manga($offset, $max_items, $query, $type, $statuses, $demo
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
 				LEFT JOIN genre g ON sg.genre_id = g.id
 			WHERE s.type='manga'
+				AND s.has_licensed_parts<=1
 				AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0
 				AND ".get_internal_hentai_condition()."
 				AND (s.name LIKE '%$query%' OR s.alternate_names LIKE '%$query%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND (v.title LIKE '%$query%' OR v.alternate_titles LIKE '%$query%')) OR s.author LIKE '%$query%' OR s.keywords LIKE '%$query%')
@@ -343,6 +349,7 @@ function query_get_manga_details_by_slug($slug) {
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
 				LEFT JOIN genre g ON sg.genre_id = g.id
 			WHERE s.type='manga'
+				AND s.has_licensed_parts<=1
 				AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0
 				AND ".get_internal_hentai_condition()."
 				AND dv.slug LIKE '$slug/%'";
@@ -383,6 +390,7 @@ function query_get_manga_chapters_by_slug($slug) {
 				LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			WHERE v.is_hidden=0
 				AND s.type='manga'
+				AND s.has_licensed_parts<=1
 				AND dv.slug LIKE '$slug/%'
 				AND fi.is_lost=0
 				AND (SELECT COUNT(*) FROM version v WHERE v.series_id=s.id AND v.is_hidden=0)>0

@@ -159,6 +159,7 @@ function get_internal_catalogue_base_query_portion($user, $apply_hentai_rule=TRU
 			WHERE v.series_id=s.id
 				AND v.is_hidden=0
 			)>0
+			AND s.has_licensed_parts<=1
 			AND v.is_hidden=0
 			AND ".($apply_hentai_rule ? get_internal_hentai_condition() : '1');
 }

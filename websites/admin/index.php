@@ -137,7 +137,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			ps.user_agent,
 			ps.is_casted,
 			UNIX_TIMESTAMP(ps.view_counted) view_counted,
-			s.rating
+			s.rating,
+			s.has_licensed_parts
 		FROM view_session ps 
 			LEFT JOIN file f ON ps.file_id=f.id 
 			LEFT JOIN version v ON f.version_id=v.id 
@@ -157,7 +158,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+							<tr class="<?php echo $row['rating']=='XXX' ? ' hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 								<td scope="row" class="align-middle"><b><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['title']); ?></b> • <?php echo sprintf(lang('admin.index.views_in_progress.percent_completed'), str_replace('.',lang('generic.decimal_point'),min(100,round($row['progress'],1)))); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></td>
 							</tr>
 <?php
@@ -173,7 +174,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-welcome table-hover table-striped">
 						<tbody>
 <?php
-	$result = query("SELECT c.*, UNIX_TIMESTAMP(c.created) created_timestamp, v.title, u.username, u.status, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs, s.rating FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE c.type='user'$extra_where ORDER BY c.created DESC LIMIT 5");
+	$result = query("SELECT c.*, UNIX_TIMESTAMP(c.created) created_timestamp, v.title, u.username, u.status, (SELECT GROUP_CONCAT(DISTINCT sf.name SEPARATOR ' + ') FROM rel_version_fansub svf LEFT JOIN fansub sf ON sf.id=svf.fansub_id WHERE svf.version_id=c.version_id) fansubs, s.rating, s.has_licensed_parts FROM comment c LEFT JOIN user u ON c.user_id=u.id LEFT JOIN version v ON c.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE c.type='user'$extra_where ORDER BY c.created DESC LIMIT 5");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -183,7 +184,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['status']==1 ? 'shadowbanned' : ''; ?>">
+							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['status']==1 ? ' shadowbanned' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 								<td class="align-middle"><b><?php echo !empty($row['username']) ? htmlentities($row['username']) : lang('admin.generic.deleted_user'); ?></b> a <?php echo '<b>'.htmlspecialchars($row['title']).'</b>'.(empty($_SESSION['fansub_id']) ? sprintf(lang('admin.index.latest_comments.by_fansub'), htmlspecialchars($row['fansubs'])) : '').' • '.get_relative_date($row['created_timestamp']); ?><?php echo $row['last_replied']!=$row['created'] ? ' • <b>'.lang('admin.comment_list.replied').'</b>' : ''; ?><br><small><?php echo !empty($row['text']) ? str_replace("\n", "<br>", htmlentities($row['text'])) : '<i>'.lang('admin.generic.deleted_comment').'</i>'; ?></small></td>
 								<td class="align-middle text-center">
 									<a href="comment_reply.php?id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.reply.title'); ?>" class="fa fa-reply p-1"></a>
@@ -225,7 +226,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			ps.user_agent,
 			ps.is_casted,
 			UNIX_TIMESTAMP(ps.view_counted) view_counted,
-			s.rating
+			s.rating,
+			s.has_licensed_parts
 		FROM view_session ps 
 			LEFT JOIN file f ON ps.file_id=f.id 
 			LEFT JOIN version v ON f.version_id=v.id 
@@ -245,7 +247,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
 ?>
-							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 								<td scope="row" class="align-middle"><b><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['title']); ?></b> • <?php echo get_relative_date($row['view_counted']); ?><br /><small class="fw-normal"><?php echo $row['episode_title']; ?></small></td>
 							</tr>
 <?php
@@ -261,7 +263,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 					<table class="table table-welcome table-hover table-striped">
 						<tbody>
 <?php
-	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, v.title version_title, s.rating series_rating, s.type, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE 1$extra_where GROUP BY v.id ORDER BY v.updated DESC LIMIT 8");
+	$result = query("SELECT GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_name, v.title version_title, s.rating, s.type, s.name series_name, v.*, COUNT(DISTINCT fi.id) files, (SELECT COUNT(*) FROM user_version_rating WHERE rating=1 AND version_id=v.id) good_ratings, (SELECT COUNT(*) FROM user_version_rating WHERE rating=-1 AND version_id=v.id) bad_ratings, (SELECT COUNT(*) FROM comment WHERE type='user' AND version_id=v.id) num_comments, s.rating, s.has_licensed_parts FROM version v LEFT JOIN file fi ON v.id=fi.version_id LEFT JOIN rel_version_fansub vf ON v.id=vf.version_id LEFT JOIN fansub f ON vf.fansub_id=f.id LEFT JOIN series s ON v.series_id=s.id WHERE 1$extra_where GROUP BY v.id ORDER BY v.updated DESC LIMIT 8");
 	if (mysqli_num_rows($result)==0) {
 ?>
 							<tr>
@@ -270,9 +272,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 <?php
 	}
 	while ($row = mysqli_fetch_assoc($result)) {
-		$link_url=get_public_site_url($row['type'], $row['slug'], $row['series_rating']=='XXX');
+		$link_url=get_public_site_url($row['type'], $row['slug'], $row['rating']=='XXX');
 ?>
-							<tr<?php echo $row['rating']=='XXX' ? ' class="hentai"' : ''; ?>>
+							<tr class="<?php echo $row['rating']=='XXX' ? 'hentai' : ''; ?><?php echo $row['has_licensed_parts']>1 ? ' licensed' : ''; ?>">
 								<th style="width: 70%;" scope="row" class="align-middle<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo empty($_SESSION['fansub_id']) ? htmlspecialchars($row['fansub_name']).' - ' : ''; ?><?php echo htmlspecialchars($row['version_title']); ?></th>
 								<td class="align-middle text-center text-nowrap<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '0'; ?> <span title="<?php echo lang('admin.index.latest_edits.good_ratings'); ?>" class="fa far fa-thumbs-up"></span>&nbsp;&nbsp;<?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '0'; ?> <span title="<?php echo lang('admin.index.latest_edits.bad_ratings'); ?>" class="fa far fa-thumbs-down"></span>&nbsp;&nbsp;<?php echo $row['num_comments']>0 ? $row['num_comments'] : '0'; ?> <span title="<?php echo lang('admin.index.latest_edits.comments'); ?>" class="fa far fa-comment"></span></td>
 								<td class="align-middle text-center text-nowrap"><a href="<?php echo $link_url; ?>" title="<?php echo lang('admin.index.latest_edits.public_view'); ?>" target="_blank" class="fa fa-up-right-from-square p-1 text-warning"></a> <a href="version_stats.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.index.latest_edits.stats_and_comments'); ?>" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $row['type']; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a></td>

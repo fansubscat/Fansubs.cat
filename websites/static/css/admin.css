@@ -45,6 +45,10 @@ small {
 	color: darkred !important;
 }
 
+.licensed, .licensed th, .licensed td {
+	text-decoration: line-through;
+}
+
 .hentai .text-muted {
 	opacity: 0.6;
 }

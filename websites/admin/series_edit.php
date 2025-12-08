@@ -106,8 +106,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		} else {
 			$data['score']="NULL";
 		}
-		if (!empty($_POST['has_licensed_parts'])){
-			$data['has_licensed_parts']=1;
+		if (!empty($_POST['has_licensed_parts']) && is_numeric($_POST['has_licensed_parts'])){
+			$data['has_licensed_parts']=$_POST['has_licensed_parts'];
 		} else {
 			$data['has_licensed_parts']=0;
 		}
@@ -436,6 +436,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 									<select class="form-select" name="has_licensed_parts" id="form-licensed_status" required>
 										<option value="0"<?php echo $row['has_licensed_parts']==0 ? " checked" : ""; ?>><?php echo lang('admin.series_edit.licensed_status.no_parts_licensed'); ?></option>
 										<option value="1"<?php echo $row['has_licensed_parts']==1 ? " selected" : ""; ?>><?php echo lang('admin.series_edit.licensed_status.parts_licensed'); ?></option>
+<?php
+	if (!empty($_GET['id'])) {
+?>
+										<option value="2"<?php echo $row['has_licensed_parts']==2 ? " selected" : ""; ?>><?php echo lang('admin.series_edit.licensed_status.unavailable_for_legal_reasons'); ?></option>
+										<option value="3"<?php echo $row['has_licensed_parts']==3 ? " selected" : ""; ?>><?php echo lang('admin.series_edit.licensed_status.fully_licensed'); ?></option>
+<?php
+	}
+?>
 									</select>
 								</div>
 							</div>

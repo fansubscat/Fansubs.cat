@@ -2411,6 +2411,27 @@ textarea:valid ~ .comment-checkbox {
 	margin-right: 0.5rem;
 }
 
+.licensed-message {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 2.5rem;
+	font-size: 1.6rem;
+	flex-basis: 0;
+	justify-content: center;
+	border: 0.2rem solid rgb(var(--primary-color));
+	margin: 0;
+	border-radius: 1rem;
+	background: rgba(var(--primary-color), 0.2);
+}
+
+.licensed-title {
+	font-size: 2.5rem;
+	font-weight: bold;
+	margin-bottom: 2.5rem;
+}
+
 .division-list {
 	margin-top: calc(-1 * var(--page-padding) + 1rem);
 	margin-bottom: calc(-1 * var(--page-padding) + 1rem);

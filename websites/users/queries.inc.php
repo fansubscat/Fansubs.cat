@@ -110,6 +110,7 @@ function query_all_fansubs() {
 						LEFT JOIN version v ON vf.version_id=v.id
 						LEFT JOIN series s ON v.series_id=s.id
 						WHERE vf.fansub_id=f.id
+							AND s.has_licensed_parts<=1
 							AND v.is_hidden=0
 					) total_series,
 					(SELECT COUNT(*)

@@ -39,6 +39,7 @@ function get_internal_most_popular_series_from_date($since_date) {
 							AND v.series_id=s.id
 							AND v.is_hidden=0
 					)>0
+						AND s.has_licensed_parts<=1
 						AND f.episode_id IS NOT NULL
 						AND vi.views>0
 						AND vi.day>='$since_date'
@@ -537,6 +538,7 @@ function query_filter_genders() {
 						WHERE v.series_id=s.id
 							AND v.is_hidden=0
 						)>0
+						AND s.has_licensed_parts<=1
 						AND sg.genre_id=g.id
 						AND s.type='".CATALOGUE_ITEM_TYPE."'
 						AND ".get_internal_hentai_condition()."
@@ -557,6 +559,7 @@ function query_filter_themes() {
 						WHERE v.series_id=s.id
 							AND v.is_hidden=0
 						)>0
+						AND s.has_licensed_parts<=1
 						AND sg.genre_id=g.id
 						AND s.type='".CATALOGUE_ITEM_TYPE."'
 						AND ".get_internal_hentai_condition()."
@@ -696,6 +699,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 								CONCAT(IFNULL(et.title, e.description))
 							)
 						) episode_title,
+						s.has_licensed_parts,
 						f.extra_name,
 						v.series_id,
 						v.status,
@@ -742,6 +746,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 								CONCAT(IFNULL(et.title, e.description))
 							)
 						) episode_title,
+						s.has_licensed_parts,
 						f.extra_name,
 						v.series_id,
 						v.status,
@@ -817,6 +822,7 @@ function query_home_continue_watching_by_user_id($user_id) {
 					WHERE v.series_id=t2.series_id
 						AND v.is_hidden=0
 				)>0
+				AND t2.has_licensed_parts<=1
 			GROUP BY t2.version_id
 			ORDER BY t2.origin ASC, t2.series_name ASC";
 	return query($final_query);
@@ -890,6 +896,7 @@ function query_home_last_updated($user, $max_items) {
 						LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 						LEFT JOIN episode_title et ON et.episode_id=e.id AND et.version_id=v.id
 					WHERE s.type='".CATALOGUE_ITEM_TYPE."'
+						AND s.has_licensed_parts<=1
 						AND f.is_lost=0
 						AND ".get_internal_hentai_condition()."
 						AND ".get_internal_blacklisted_fansubs_condition($user)."

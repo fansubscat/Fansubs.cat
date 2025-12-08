@@ -4,7 +4,7 @@ require_once(__DIR__.'/../common/libraries/preview_image_generator.php');
 
 log_action('cron-links-updater-started', "Automatic link retrieval has started");
 
-$resulta = query("SELECT f.*, a.id remote_account_id, a.name, a.token, v.series_id FROM remote_folder f LEFT JOIN remote_account a ON f.remote_account_id=a.id LEFT JOIN version v ON f.version_id=v.id WHERE is_active=1");
+$resulta = query("SELECT f.*, a.id remote_account_id, a.name, a.token, v.series_id FROM remote_folder f LEFT JOIN remote_account a ON f.remote_account_id=a.id LEFT JOIN version v ON f.version_id=v.id LEFT JOIN series s ON v.series_id=s.id WHERE is_active=1 AND s.has_licensed_parts<=1");
 
 $lock_pointer = fopen(MEGA_LOCK_FILE, "w+");
 
