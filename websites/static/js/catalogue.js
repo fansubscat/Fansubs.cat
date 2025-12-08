@@ -3117,22 +3117,23 @@ $(document).ready(function() {
 			window.history.replaceState(null, null,  window.location.href.split('#')[0]);
 		}
 	} else {
-		//This is an embed
-		$('html').addClass('page-no-overflow');
-		$('#overlay').removeClass('hidden');
-		
-		if ($('#overlay-content > .player_extra_upper').length==0) {
-			$('<div class="player_extra_upper"><div class="player_extra_title">'+$('.embed-data').attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="'+lang('js.dialog.close')+'" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
-		} else {
-			if ($('.video-js .player_extra_upper').length==0) {
-				//Only if player is not loaded already
-				$('#overlay-content > .player_extra_upper').removeClass('hidden');
+		//This is an embed - embed data will not be available if licensed
+		if ($('.embed-data').length>0) {
+			$('html').addClass('page-no-overflow');
+			$('#overlay').removeClass('hidden');
+			if ($('#overlay-content > .player_extra_upper').length==0) {
+				$('<div class="player_extra_upper"><div class="player_extra_title">'+$('.embed-data').attr('data-title')+'</div>'+((isEmbedPage() && self==top) ? '' : '<button class="player_extra_close fa fa-times vjs-button" title="'+lang('js.dialog.close')+'" type="button" onclick="closeOverlay();"></button>')+'</div>').appendTo("#overlay-content");
+			} else {
+				if ($('.video-js .player_extra_upper').length==0) {
+					//Only if player is not loaded already
+					$('#overlay-content > .player_extra_upper').removeClass('hidden');
+				}
+				$('.player_extra_title').html($('.embed-data').attr('data-title'));
 			}
-			$('.player_extra_title').html($('.embed-data').attr('data-title'));
+			//Remove previous errors
+			$('.player-error').remove();
+			requestFileData($('.embed-data').attr('data-file-id'));
 		}
-		//Remove previous errors
-		$('.player-error').remove();
-		requestFileData($('.embed-data').attr('data-file-id'));
 		window.parent.postMessage('embedInitialized', '*');
 	}
 

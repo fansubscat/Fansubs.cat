@@ -25,9 +25,27 @@ define('PAGE_DESCRIPTION', str_replace("\n", " ", strip_tags($synopsis)));
 define('PAGE_PREVIEW_IMAGE', STATIC_URL.'/social/version_'.$series['version_id'].'.jpg');
 
 require_once(__DIR__.'/../common/header.inc.php');
+if ($series['has_licensed_parts']<=1) {
 ?>
 <span class="embed-data" data-file-id="<?php echo $file_id; ?>" data-title="<?php echo lang('catalogue.embed.loading'); ?>"></span>
 <?php
+} else if ($series['has_licensed_parts']==2) {
+?>
+	<div class="section-content licensed-message">
+		<div class="licensed-title"><?php echo lang('catalogue.series.unavailable.title'); ?></div>
+		<div class="licensed-explanation"><?php echo sprintf(lang('catalogue.series.unavailable.explanation.embed'), CURRENT_SITE_NAME); ?></div>
+		<button class="normal-button" onclick="closeOverlay();"><?php echo lang('js.dialog.close'); ?></button>
+	</div>
+<?php
+} else if ($series['has_licensed_parts']==3) {
+?>
+	<div class="section-content licensed-message">
+		<div class="licensed-title"><?php echo lang('catalogue.series.licensed.title'); ?></div>
+		<div class="licensed-explanation"><?php echo sprintf(lang('catalogue.series.licensed.explanation.embed'), CURRENT_SITE_NAME); ?></div>
+		<button class="normal-button" onclick="closeOverlay();"><?php echo lang('js.dialog.close'); ?></button>
+	</div>
+<?php
+}
 require_once(__DIR__.'/../common/footer.inc.php');
 ?>
 
