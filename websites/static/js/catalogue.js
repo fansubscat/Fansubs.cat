@@ -1082,6 +1082,7 @@ function initializePlayer(){
 			controls: true,
 			language: 'ca',
 			errorDisplay: false,
+			disableSeekWhileScrubbingOnSTV: true,
 			controlBar: {
 				children: [
 					"playToggle",
