@@ -1722,7 +1722,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 							</div>
 							<br />
 <?php
-		if ($_SESSION['username']=='Administrador' && $type!='manga') {
+		if ($_SESSION['admin_level']>=4 && $type!='manga') {
 ?>
 							<div class="form-check form-check-inline mb-2">
 								<input class="form-check-input" type="checkbox" name="do_not_recreate_storage_links" id="form-do_not_recreate_storage_links" value="1" onchange="if($(this).prop('checked')){if (confirm('<?php echo lang('admin.version_edit.do_not_recreate_storage_links.confirm'); ?>')) {$('#form-do_not_count_as_update').prop('checked',true);} else {$(this).prop('checked',false);}}">

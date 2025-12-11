@@ -17,7 +17,7 @@ else if (isset($_POST['username']) && isset($_POST['password'])) {
 	
 	if (mysqli_num_rows(query("SELECT * FROM admin_user u LIMIT 1"))==0) {
 		$result=query("INSERT INTO admin_user (username, password, admin_level, fansub_id, default_storage_processing, disabled, created, created_by, updated, updated_by) VALUES
-('$username', '$password', 3, NULL, 5, 0, CURRENT_TIMESTAMP, '$username', CURRENT_TIMESTAMP, '$username')");
+('$username', '$password', 4, NULL, 5, 0, CURRENT_TIMESTAMP, '$username', CURRENT_TIMESTAMP, '$username')");
 	}
 	
 	$result=query("SELECT * FROM admin_user u WHERE username='".$username."' AND password='".$password."'");

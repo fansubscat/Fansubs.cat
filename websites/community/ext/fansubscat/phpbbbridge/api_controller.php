@@ -321,6 +321,7 @@ class api_controller {
 		// -subject
 		// -message
 		// -timestamp
+		// -locked (1/0)
 		
 		define('FANSUBSCAT_API_POSTING', TRUE);
 		
@@ -384,6 +385,7 @@ class api_controller {
 		    'post_time' => $request->timestamp,
 		    'forum_name' => $forum_name,
 		    'enable_indexing' => true,
+		    'topic_status' => $request->locked==1 ? ITEM_LOCKED : ITEM_UNLOCKED,
 		);
 
 		$result = submit_post($mode, $request->subject, $this->get_clean_username($request->username), POST_NORMAL, $poll, $data);
@@ -509,6 +511,7 @@ class api_controller {
 		// -post_id
 		// -subject
 		// -message
+		// -locked (1/0)
 		
 		define('FANSUBSCAT_API_POSTING', TRUE);
 		
@@ -552,9 +555,9 @@ class api_controller {
 		$forum_id = $row['forum_id'];
 		$topic_id = $postrow['topic_id'];
 
-		if (!$this->auth->acl_get('f_edit', $forum_id) || $row['topic_status'] == ITEM_LOCKED || $row['topic_status'] == ITEM_MOVED){
-			return $this->create_permission_denied_response();
-		}
+		//if (!$this->auth->acl_get('f_edit', $forum_id) || $row['topic_status'] == ITEM_LOCKED || $row['topic_status'] == ITEM_MOVED){
+		//	return $this->create_permission_denied_response();
+		//}
 
 		//Submit the new post
 		$poll = $uid = $bitfield = $flags = '';
@@ -593,6 +596,11 @@ class api_controller {
 		$data['post_edit_user'] = $postrow['poster_id'];
 
 		$result = submit_post($mode, $request->subject, $this->user->data['username'], POST_NORMAL, $poll, $data);
+		
+		$sql = 'UPDATE ' . TOPICS_TABLE . '
+			SET topic_status = ' . ($request->locked==1 ? ITEM_LOCKED : ITEM_UNLOCKED) . '
+			WHERE topic_id = ' . (int) $topic_id;
+		$this->db->sql_query($sql);
 		
 		$this->end_user_session();
 		

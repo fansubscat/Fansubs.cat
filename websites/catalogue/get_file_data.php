@@ -135,10 +135,12 @@ function get_player_data(){
 			if ($rowvs = mysqli_fetch_assoc($resvs)) {
 				$view_id = $rowvs['id'];
 				$initial_progress = $rowvs['progress'];
+				$shared_play_session_id = $rowvs['shared_play_session_id'];
 				query_update_view_session_basic_attrs($view_id, $row['length'], get_view_source_type($_SERVER['HTTP_USER_AGENT'], FALSE), $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 			} else {
 				$view_id = get_nanoid();
 				$initial_progress = 0;
+				$shared_play_session_id = NULL;
 				query_insert_view_session($view_id, $file_id, $row['series_type'], $user['id'], NULL, $row['length'], get_view_source_type($_SERVER['HTTP_USER_AGENT'], FALSE), $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 				query_save_click($file_id, $row['series_type'], date('Y-m-d'));
 			}
@@ -148,10 +150,12 @@ function get_player_data(){
 			if ($rowvs = mysqli_fetch_assoc($resvs)) {
 				$view_id = $rowvs['id'];
 				$initial_progress = $rowvs['progress'];
+				$shared_play_session_id = $rowvs['shared_play_session_id'];
 				query_update_view_session_basic_attrs($view_id, $row['length'], get_view_source_type($_SERVER['HTTP_USER_AGENT'], FALSE), $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 			} else {
 				$view_id = get_nanoid();
 				$initial_progress = 0;
+				$shared_play_session_id = NULL;
 				query_insert_view_session($view_id, $file_id, $row['series_type'], NULL, session_id(), $row['length'], get_view_source_type($_SERVER['HTTP_USER_AGENT'], FALSE), $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 				query_save_click($file_id, $row['series_type'], date('Y-m-d'));
 			}
@@ -195,7 +199,7 @@ function get_player_data(){
 			'initial_position' => intval($current_position),
 			'initial_progress' => intval($initial_progress),
 			'is_seen' => $is_seen,
-			'shared_play_session_id' => $rowvs['shared_play_session_id']
+			'shared_play_session_id' => $shared_play_session_id
 		);
 	}
 

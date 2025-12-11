@@ -120,6 +120,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<option value="1"<?php echo $row['admin_level']==1 ? " selected" : ""; ?>><?php echo lang('admin.admin_edit.admin_level.level_1'); ?></option>
 								<option value="2"<?php echo $row['admin_level']==2 ? " selected" : ""; ?>><?php echo lang('admin.admin_edit.admin_level.level_2'); ?></option>
 								<option value="3"<?php echo $row['admin_level']==3 ? " selected" : ""; ?>><?php echo lang('admin.admin_edit.admin_level.level_3'); ?></option>
+								<option value="4"<?php echo $row['admin_level']==4 ? " selected" : ""; ?>><?php echo lang('admin.admin_edit.admin_level.level_4'); ?></option>
 							</select>
 						</div>
 						<div class="mb-3">

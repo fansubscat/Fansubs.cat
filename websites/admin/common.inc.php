@@ -1,4 +1,44 @@
 <?php
+
+//Taken from: http://stackoverflow.com/a/2955878/1254846
+function slugify($text){
+	$table = array(
+		'Š'=>'S', 'š'=>'s', 'Đ'=>'Dj', 'đ'=>'dj', 'Ž'=>'Z', 'ž'=>'z', 'Č'=>'C', 'č'=>'c', 'Ć'=>'C', 'ć'=>'c',
+		'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+		'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O',
+		'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U', 'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss',
+		'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c', 'è'=>'e', 'é'=>'e',
+		'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o',
+		'ô'=>'o', 'õ'=>'o', 'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'ý'=>'y', 'þ'=>'b',
+		'ÿ'=>'y', 'Ŕ'=>'R', 'ŕ'=>'r', '/' => '-', ' ' => '-'
+	);
+	$text = strtr($text, $table);
+
+	// replace non letter or digits by -
+	$text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+	// transliterate
+	$text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+	// remove unwanted characters
+	$text = preg_replace('~[^-\w]+~', '', $text);
+
+	// trim
+	$text = trim($text, '-');
+
+	// remove duplicate -
+	$text = preg_replace('~-+~', '-', $text);
+
+	// lowercase
+	$text = strtolower($text);
+
+	if (empty($text)) {
+		return 'n-a';
+	}
+
+	return $text;
+}
+	
 function get_status_description_short($id){
 	switch ($id){
 		case 1:
@@ -390,6 +430,7 @@ function add_or_update_topic_to_community($version_id){
 	$result = query("SELECT v.*,
 			UNIX_TIMESTAMP(v.created) version_created_timestamp,
 			s.type series_type,
+			s.has_licensed_parts,
 			s.rating series_rating,
 			GROUP_CONCAT(DISTINCT f.name ORDER BY f.name SEPARATOR ' + ') fansub_names
 		FROM version v
@@ -425,7 +466,7 @@ function add_or_update_topic_to_community($version_id){
 		$call_to_action = sprintf(lang('community.call_to_action.anime'), MAIN_SITE_NAME);
 	}
 	
-	$message = "[center][size=150][b]".$version['title']."[/b][/size]\n".lang('catalogue.series.version').get_fansub_preposition_name($version['fansub_names'])."\n\n[cover]".$static_url."/images/covers/version_".$version['id'].".jpg[/cover]\n\n\n[size=125][b]".lang('community.post.synopsis')."[/b][/size]\n".$version['synopsis']."\n\n[button=".$url."/".$version['slug']."]".$call_to_action."[/button][/center]";
+	$message = "[center][size=150][b]".$version['title']."[/b][/size]\n".lang('catalogue.series.version').get_fansub_preposition_name($version['fansub_names'])."\n\n[cover]".$static_url."/images/covers/version_".$version['id'].".jpg[/cover]\n\n\n[size=125][b]".lang('community.post.synopsis')."[/b][/size]\n".$version['synopsis']."\n\n".($version['has_licensed_parts']>1 ? "[b]".lang('community.post.work_removed')."[/b]" : "[button=".$url."/".$version['slug']."]".$call_to_action."[/button]")."[/center]";
 	
 	if (empty($version['forum_topic_id'])) {
 		$curl = curl_init();
@@ -441,6 +482,7 @@ function add_or_update_topic_to_community($version_id){
 			  	'subject' => $version['title'].sprintf(lang('community.post.title_version'), get_fansub_preposition_name($version['fansub_names'])),
 			  	'message' => $message,
 			  	'timestamp' => time(),
+			  	'locked' => $version['has_licensed_parts']>1 ? 1 : 0,
 			  	)));
 		$output = curl_exec($curl);
 		
@@ -465,6 +507,7 @@ function add_or_update_topic_to_community($version_id){
 			  	'post_id' => $version['forum_post_id'],
 			  	'subject' => $version['title'].sprintf(lang('community.post.title_version'), get_fansub_preposition_name($version['fansub_names'])),
 			  	'message' => $message,
+			  	'locked' => $version['has_licensed_parts']>1 ? 1 : 0,
 			  	)));
 		$output = curl_exec($curl);
 		

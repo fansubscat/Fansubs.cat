@@ -34,18 +34,20 @@ include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=1) {
 	if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-version", "Version of «".query_single("SELECT s.name FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".escape($_GET['delete_id']))."» (version id: ".$_GET['delete_id'].") deleted");
-		query("DELETE FROM file WHERE version_id=".escape($_GET['delete_id']));
-		query("DELETE FROM remote_folder WHERE version_id=".escape($_GET['delete_id']));
-		query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));
-		query("DELETE FROM rel_version_fansub WHERE version_id=".escape($_GET['delete_id']));
-		query("DELETE FROM version_division WHERE version_id=".escape($_GET['delete_id']));
-		query("DELETE FROM version WHERE id=".escape($_GET['delete_id']));
-		@unlink(STATIC_DIRECTORY.'/images/covers/version_'.$_GET['delete_id'].'.jpg');
-		@unlink(STATIC_DIRECTORY.'/images/featured/version_'.$_GET['delete_id'].'.jpg');
-		@unlink(STATIC_DIRECTORY.'/social/version_'.$_GET['delete_id'].'.jpg');
-		//Views will NOT be removed in order to keep consistent stats history
-		$_SESSION['message']=lang('admin.generic.delete_successful');
+		if (query_single("SELECT COUNT(*) cnt FROM file f WHERE version_id=".escape($_GET['delete_id']))==0 || $_SESSION['admin_level']>=4) {
+			log_action("delete-version", "Version of «".query_single("SELECT s.name FROM version v LEFT JOIN series s ON v.series_id=s.id WHERE v.id=".escape($_GET['delete_id']))."» (version id: ".$_GET['delete_id'].") deleted");
+			query("DELETE FROM file WHERE version_id=".escape($_GET['delete_id']));
+			query("DELETE FROM remote_folder WHERE version_id=".escape($_GET['delete_id']));
+			query("DELETE FROM episode_title WHERE version_id=".escape($_GET['delete_id']));
+			query("DELETE FROM rel_version_fansub WHERE version_id=".escape($_GET['delete_id']));
+			query("DELETE FROM version_division WHERE version_id=".escape($_GET['delete_id']));
+			query("DELETE FROM version WHERE id=".escape($_GET['delete_id']));
+			@unlink(STATIC_DIRECTORY.'/images/covers/version_'.$_GET['delete_id'].'.jpg');
+			@unlink(STATIC_DIRECTORY.'/images/featured/version_'.$_GET['delete_id'].'.jpg');
+			@unlink(STATIC_DIRECTORY.'/social/version_'.$_GET['delete_id'].'.jpg');
+			//Views will NOT be removed in order to keep consistent stats history
+			$_SESSION['message']=lang('admin.generic.delete_successful');
+		}
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -105,7 +107,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['good_ratings']>0 ? $row['good_ratings'] : '-'; ?></td>
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['bad_ratings']>0 ? $row['bad_ratings'] : '-'; ?></td>
 								<td class="align-middle text-center<?php echo $row['files']==0 ? ' text-muted' : ''; ?>"><?php echo $row['num_comments']>0 ? $row['num_comments'] : '-'; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="<?php echo $link_url; ?>" title="<?php echo lang('admin.version_list.public_page.title'); ?>" target="_blank" class="fa fa-up-right-from-square p-1 text-warning"></a> <a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.version_list.links.title'); ?>" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.version_list.stats.title'); ?>" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf(lang('admin.version_list.delete_confirm'), $row['series_name'], $row['fansub_name']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="<?php echo $link_url; ?>" title="<?php echo lang('admin.version_list.public_page.title'); ?>" target="_blank" class="fa fa-up-right-from-square p-1 text-warning"></a> <a href="version_links.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.version_list.links.title'); ?>" class="fa fa-link p-1 text-info"></a> <a href="version_stats.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.version_list.stats.title'); ?>" class="fa fa-chart-line p-1 text-success"></a> <a href="version_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a><?php if ($row['files']==0 || $_SESSION['admin_level']>=4) { ?> <a href="version_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf(lang('admin.version_list.delete_confirm'), $row['series_name'], $row['fansub_name']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a><?php } else { ?> <span class="fa fa-trash p-1 text-danger opacity-25"></span><?php } ?></td>
 							</tr>
 <?php
 	}

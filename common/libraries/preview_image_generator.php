@@ -48,7 +48,6 @@ function query_version_data_for_preview_image_by_id($id) {
 				LEFT JOIN rel_series_genre sg ON s.id=sg.series_id
 				LEFT JOIN genre g ON sg.genre_id = g.id
 			WHERE v.id=$id
-				AND v.is_hidden=0
 			GROUP BY v.id";
 	return query($final_query);
 }

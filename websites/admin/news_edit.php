@@ -44,6 +44,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				crash(lang('admin.error.news_edit_same_hash_error'));
 			} else if (mysqli_num_rows($toupdate_result)==1) {
 				$toupdate_row = mysqli_fetch_assoc($toupdate_result);
+				if (empty($toupdate_row['fansub_name'])) {
+					$toupdate_row['fansub_slug']=slugify(CURRENT_SITE_NAME);
+					$toupdate_row['fansub_name']=CURRENT_SITE_NAME;
+				}
 				log_action("update-news", "News «".$toupdate_row['title']."» for fansub «".$toupdate_row['fansub_name']."» updated");
 				if (!empty($_FILES['image'])) {
 					move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/news/'.$toupdate_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
@@ -57,8 +61,14 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			}
 		}
 		else {
-			$fansub_result = query("SELECT f.name fansub_name, f.slug fansub_slug FROM fansub f WHERE f.id=".$data['fansub_id']);
-			$fansub_row = mysqli_fetch_assoc($fansub_result);
+			if ($data['fansub_id']!='NULL') {
+				$fansub_result = query("SELECT f.name fansub_name, f.slug fansub_slug FROM fansub f WHERE f.id=".$data['fansub_id']);
+				$fansub_row = mysqli_fetch_assoc($fansub_result);
+			} else {
+				$fansub_row = array();
+				$fansub_row['fansub_slug']=slugify(CURRENT_SITE_NAME);
+				$fansub_row['fansub_name']=CURRENT_SITE_NAME;
+			}
 			if (!empty($_FILES['image'])) {
 				move_uploaded_file($_FILES['image']["tmp_name"], STATIC_DIRECTORY.'/images/news/'.$fansub_row['fansub_slug'].'/'.md5($data['title'].$data['date']));
 				$data['image'] = "'".md5($data['title'].$data['date'])."'";
@@ -79,6 +89,10 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 		$result = query("SELECT MD5(CONCAT(n.title, n.date)) id, n.*, f.slug fansub_slug FROM news n LEFT JOIN fansub f ON n.fansub_id=f.id WHERE MD5(CONCAT(n.title, n.date))='".escape($_GET['id'])."'");
 		$row = mysqli_fetch_assoc($result) or crash(lang('admin.error.news_not_found'));
 		mysqli_free_result($result);
+		
+		if (empty($row['fansub_slug'])) {
+			$row['fansub_slug']=slugify(CURRENT_SITE_NAME);
+		}
 	} else {
 		$row = array();
 		$row['id'] = '';

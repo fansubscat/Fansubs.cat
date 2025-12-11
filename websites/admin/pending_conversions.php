@@ -33,7 +33,8 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 				LEFT JOIN file f ON l.file_id=f.id
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
-			WHERE url NOT LIKE 'storage://%'
+			WHERE s.has_licensed_parts<=1
+				AND  url NOT LIKE 'storage://%'
 				AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%')
 			ORDER BY f.id DESC");
 	if (mysqli_num_rows($result)==0) {

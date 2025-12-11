@@ -1,5 +1,19 @@
 # Registre de canvis
 
+## 2025-12-11 - Versió 5.6.3
+- **Administració:**
+	- Amb l’objectiu de limitar la pèrdua d’estadístiques, no es permet l’eliminació de sèries ni versions, excepte que no tinguin cap versió o fitxer, respectivament.
+	- Es crea un nou rol de superadministrador que es pot saltar aquests requisits.
+	- Es generen les imatges de previsualització a xarxes socials també per a les versions sense publicar, per a evitar problemes amb la memòria cau de les xarxes.
+	- Es generen o actualitzen les fitxes al fòrum de la comunitat indicant si l’obra està retirada o no. En el primer cas, es bloquen.
+	- Es corregeix el missatge d’error que comprova que els capítols no comencin per «Capítol» o «Episodi» si es mostra el número dels capítols perquè només s’apliqui quan cal.
+	- Es corregeix la pujada d’imatges de notícies manuals de Fansubs.cat.
+	- L’apartat de «Conversions pendents» ja no mostra el contingut llicenciat.
+- **Catàleg:**
+	- Es corregeix un warning en obtenir les dades de reproducció.
+- **Comunitat:**
+	- L’API permet blocar temes (per a obres retirades).	
+
 ## 2025-12-08 - Versió 5.6.2
 - **Administració:**
 	- Es permet marcar sèries existents com a completament llicenciades. Això fa que, com que no s’esborren, no se’n perdin les estadístiques.

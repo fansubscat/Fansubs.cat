@@ -1099,7 +1099,7 @@ function checkNumberOfLinks() {
 				alert(lang('js.admin.version_edit.error.must_provide_episode_title'));
 				return false;
 			}
-			if (new RegExp("^" + lang('js.admin.version_edit.episode.episode_number_prefix_check') + "\\d").test($(urls[i]).closest('.episode-container').find('.episode-title-input').val()) || new RegExp("^" + lang('js.admin.version_edit.episode.chapter_number_prefix_check') + "\\d").test($(urls[i]).closest('.episode-container').find('.episode-title-input').val())) {
+			if ($('#form-show_episode_numbers').val()==1 && (new RegExp("^" + lang('js.admin.version_edit.episode.episode_number_prefix_check') + "\\d").test($(urls[i]).closest('.episode-container').find('.episode-title-input').val()) || new RegExp("^" + lang('js.admin.version_edit.episode.chapter_number_prefix_check') + "\\d").test($(urls[i]).closest('.episode-container').find('.episode-title-input').val()))) {
 				alert(lang('js.admin.version_edit.error.no_episode_prefix_when_episode_numbers_shown'));
 				return false;
 			}

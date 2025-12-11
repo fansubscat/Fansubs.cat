@@ -40,16 +40,18 @@ include(__DIR__.'/header.inc.php');
 
 if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSION['admin_level']>=2) {
 	if (!empty($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-		log_action("delete-series", "Series «".query_single("SELECT name FROM series WHERE id=".escape($_GET['delete_id']))."» (series id: ".$_GET['delete_id'].") deleted");
-		query("DELETE FROM rel_series_genre WHERE series_id=".escape($_GET['delete_id']));
-		query("DELETE FROM episode WHERE series_id=".escape($_GET['delete_id']));
-		query("DELETE FROM version WHERE series_id=".escape($_GET['delete_id']));
-		query("DELETE FROM series WHERE id=".escape($_GET['delete_id']));
-		@unlink(STATIC_DIRECTORY.'/images/series/'.$_GET['delete_id'].'.jpg');
-		@unlink(STATIC_DIRECTORY.'/social/series_'.$_GET['delete_id'].'.jpg');
-		//Cascaded deletions: file, link, rel_version_fansub
-		//Views will NOT be removed in order to keep consistent stats history
-		$_SESSION['message']=lang('admin.generic.delete_successful');
+		if (query_single("SELECT COUNT(*) cnt FROM version v WHERE series_id=".escape($_GET['delete_id']))==0 || $_SESSION['admin_level']>=4) {
+			log_action("delete-series", "Series «".query_single("SELECT name FROM series WHERE id=".escape($_GET['delete_id']))."» (series id: ".$_GET['delete_id'].") deleted");
+			query("DELETE FROM rel_series_genre WHERE series_id=".escape($_GET['delete_id']));
+			query("DELETE FROM episode WHERE series_id=".escape($_GET['delete_id']));
+			query("DELETE FROM version WHERE series_id=".escape($_GET['delete_id']));
+			query("DELETE FROM series WHERE id=".escape($_GET['delete_id']));
+			@unlink(STATIC_DIRECTORY.'/images/series/'.$_GET['delete_id'].'.jpg');
+			@unlink(STATIC_DIRECTORY.'/social/series_'.$_GET['delete_id'].'.jpg');
+			//Cascaded deletions: file, link, rel_version_fansub
+			//Views will NOT be removed in order to keep consistent stats history
+			$_SESSION['message']=lang('admin.generic.delete_successful');
+		}
 	}
 ?>
 		<div class="container d-flex justify-content-center p-4">
@@ -101,7 +103,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['divisions']; ?><?php echo $row['fake_divisions']>0 ? '<small>+'.$row['fake_divisions'].'</small>' : ''; ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['number_of_episodes']; ?></td>
 								<td class="align-middle text-center<?php echo $row['versions']==0 ? ' text-muted' : ''; ?>"><?php echo $row['versions']; ?></td>
-								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.series_list.create_version.title'); ?>" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a> <a href="series_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf($delete_confirm_string, $row['name']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a></td>
+								<td class="align-middle text-center text-nowrap"><a href="version_edit.php?type=<?php echo $type; ?>&series_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.series_list.create_version.title'); ?>" class="fa fa-plus p-1 text-success"></a> <a href="series_edit.php?type=<?php echo $type; ?>&id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.edit.title'); ?>" class="fa fa-edit p-1"></a><?php if ($row['versions']==0 || $_SESSION['admin_level']>=4) { ?> <a href="series_list.php?type=<?php echo $type; ?>&delete_id=<?php echo $row['id']; ?>" title="<?php echo lang('admin.generic.delete.title'); ?>" onclick="return confirm(<?php echo htmlspecialchars(json_encode(sprintf($delete_confirm_string, $row['name']))); ?>)" onauxclick="return false;" class="fa fa-trash p-1 text-danger"></a><?php } else { ?> <span class="fa fa-trash p-1 text-danger opacity-25"></span><?php } ?></td>
 							</tr>
 <?php
 	}
