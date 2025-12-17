@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2025-12-17 - Versió 5.6.5
+- **Usuaris:**
+	- Es canvia el càlcul del resum anual perquè inclogui tot el contingut, no només el que ha comptat com a visualització completa.
+	- Es corregeix una cadena de text errònia.
+- **Administració:**
+	- Es canvia el camp «Usuaris visualitzadors» de l’apartat d’estadístiques per «Usuaris actius el darrer any» (amb una visualització iniciada com a mínim).
+
 ## 2025-12-17 - Versió 5.6.4
 - **General:**
 	- Es corregeix que les recomanacions no es regeneressin.
