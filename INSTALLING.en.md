@@ -95,7 +95,7 @@ If you want to be able to upload RAR archives, you will need to install the php-
 
 Under the `common/config` directory you will find a `config.example.inc.php` file. You must rename it to `config.inc.php` and set it up as needed. You must enter your database access credentials, domains and subdomains, the name for the sites, users and API keys from social networks (Bluesky, Discord, Mastodon, Telegram and X), an SMTP server for posting e-mails, etc. You will find an explanation of each field in the same file.
 
-Change `/etc/php/8.2/apache2/php.ini` and set `session.cookie_lifetime` to `0`. If you installed the php-rar extension, enable it by using `extension=rar.so`.
+Change `/etc/php/8.2/apache2/php.ini` and set `session.gc_maxlifetime` to `2592000`. If you installed the php-rar extension, enable it by using `extension=rar.so`.
 
 In the `websites/users/.htaccess` file, change the regular expression at the line starting with `SetEnvIf Origin` so it matches your domains.
 
