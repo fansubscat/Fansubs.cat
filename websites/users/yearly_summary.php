@@ -229,7 +229,7 @@ if (is_yearly_summary_available()) {
 			$i++;
 		}
 ?>
-		<span class="yearly-summary-text" id="yearly-summary-liveaction-rank" style="opacity: 0;"><i class="fa fa-award"></i> <?php echo sprintf(lang('users.yearly_summary.mangas_rank'), str_replace('.',lang('generic.decimal_point'),round(($total_users-$liveaction_rank)/$total_users*100, 1))); ?></span>
+		<span class="yearly-summary-text" id="yearly-summary-liveaction-rank" style="opacity: 0;"><i class="fa fa-award"></i> <?php echo sprintf(lang('users.yearly_summary.liveactions_rank'), str_replace('.',lang('generic.decimal_point'),round(($total_users-$liveaction_rank)/$total_users*100, 1))); ?></span>
 <?php
 	}
 ?>
