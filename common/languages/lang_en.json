@@ -917,7 +917,7 @@
 	"admin.stats.total_reads": "Reads:",
 	"admin.stats.total_time_viewed": "Total time viewed:",
 	"admin.stats.total_views": "Views:",
-	"admin.stats.users_with_views": "Viewing users:",
+	"admin.stats.users_with_views": "Users active in the last year:",
 	"admin.stats.users_with_views.details": "%1$d of %2$d",
 	"admin.twitter_image.follower": " follower",
 	"admin.twitter_image.followers": " followers",

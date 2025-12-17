@@ -917,7 +917,7 @@
 	"admin.stats.total_reads": "Lectures:",
 	"admin.stats.total_time_viewed": "Temps total visualitzat:",
 	"admin.stats.total_views": "Visualitzacions:",
-	"admin.stats.users_with_views": "Usuaris visualitzadors:",
+	"admin.stats.users_with_views": "Usuaris actius el darrer any:",
 	"admin.stats.users_with_views.details": "%1$d de %2$d",
 	"admin.twitter_image.follower": " seguidor",
 	"admin.twitter_image.followers": " seguidors",
