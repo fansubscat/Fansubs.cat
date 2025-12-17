@@ -100,7 +100,7 @@ function send_email($recipient_address, $recipient_name, $subject, $text, $html_
 function get_opposite_url() {
 	$path = strtok($_SERVER["REQUEST_URI"], '?');
 	if ($path==lang('url.fansubs') || $path==lang('url.privacy_policy') || $path==lang('url.contact_us') || $path==lang('url.my_list') || $path==lang('url.settings')
-			|| $path==lang('url.edit_profile') || $path==lang('url.delete_profile') || $path==lang('url.change_password')) {
+			|| $path==lang('url.edit_profile') || $path==lang('url.delete_profile') || $path==lang('url.change_password') || $path==lang('url.yearly_summary')) {
 		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).$path;
 	} else if (str_starts_with($path,lang('url.search'))) {
 		return 'https://'.str_replace(CURRENT_DOMAIN,OTHER_DOMAIN,$_SERVER['HTTP_HOST']).lang('url.search');
@@ -223,6 +223,74 @@ function get_custom_formatted_date($date) {
 		return "$day $month del $year";
 	} else {
 		return date(lang('date.short_format'));
+	}
+}
+
+function get_relative_time_spent($time) {
+	if ($time<3600) {
+		$minutes = intval($time/60);
+		if ($minutes==1) {
+			return lang('common.time.minute.single');
+		} else {
+			return sprintf(lang('common.time.minute.plural'), $minutes);
+		}
+	} else {
+		$result = '';
+		$hours = intval($time/3600);
+		$minutes = intval(($time%3600)/60);
+		if ($hours==1) {
+			$result .= lang('common.time.hour.single');
+		} else {
+			$result .= sprintf(lang('common.time.hour.plural'), $hours);
+		}
+		if ($minutes==1) {
+			$result .= lang('common.time.and_minute.single');
+		} else {
+			$result .= sprintf(lang('common.time.and_minute.plural'), $minutes);
+		}
+		return $result;
+	}
+}
+
+function get_relative_time_spent_short($time) {
+	if ($time<3600) {
+		$minutes = intval($time/60);
+		if ($minutes==1) {
+			return lang('common.time.minute.single.short');
+		} else {
+			return sprintf(lang('common.time.minute.plural.short'), $minutes);
+		}
+	} else {
+		$result = '';
+		$hours = intval($time/3600);
+		$minutes = intval(($time%3600)/60);
+		if ($hours==1) {
+			$result .= lang('common.time.hour.single.short');
+		} else {
+			$result .= sprintf(lang('common.time.hour.plural.short'), $hours);
+		}
+		if ($minutes==1) {
+			$result .= lang('common.time.and_minute.single.short');
+		} else {
+			$result .= sprintf(lang('common.time.and_minute.plural.short'), $minutes);
+		}
+		return $result;
+	}
+}
+
+function get_relative_pages_read($pages) {
+	if ($pages==1) {
+		return lang('common.pages.single');
+	} else {
+		return sprintf(lang('common.pages.plural'), $pages);
+	}
+}
+
+function get_relative_pages_read_short($pages) {
+	if ($pages==1) {
+		return lang('common.pages.single.short');
+	} else {
+		return sprintf(lang('common.pages.plural.short'), $pages);
 	}
 }
 
@@ -499,5 +567,10 @@ function get_special_day() {
 
 function is_advent_days() {
 	return strcmp(date('m-d H:i:s'),'12-01 12:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-25 11:59:59')<=0 && !DISABLE_ADVENT;
+}
+
+function is_yearly_summary_available() {
+	global $user;
+	return !empty($user) && strcmp($user['created'], date('Y').'-12-16 00:00:00')<0 && strcmp(date('m-d H:i:s'),'12-16 00:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-31 23:59:59')<=0;
 }
 ?>

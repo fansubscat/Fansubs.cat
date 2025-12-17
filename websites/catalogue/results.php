@@ -403,6 +403,22 @@ foreach($sections as $section){
 							</div>
 <?php
 				}
+				if (is_yearly_summary_available()) {
+?>
+							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">
+								<div class="recommendation special-day-header">
+									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark'.(SITE_IS_HENTAI ? '_hentai' : '').'_hd.jpg'; ?>" alt="">
+									<div class="infoholder" data-swiper-parallax="-30%">
+										<div class="dataholder">
+											<div class="title"><span class="fa fa-clock-rotate-left"></span><br><?php echo sprintf(lang('catalogue.featured.yearly_summary.title'), date('Y')); ?></div>
+											<div class="divisions"><?php echo sprintf(lang('catalogue.featured.yearly_summary.description'), CURRENT_SITE_NAME); ?></div>
+											<a class="watchbutton" href="<?php echo USERS_URL.lang('url.yearly_summary'); ?>"><?php echo lang('catalogue.featured.yearly_summary.go_button'); ?></a>
+										</div>
+									</div>
+								</div>
+							</div>
+<?php
+				}
 				if (is_user_birthday()) {
 ?>
 							<div class="<?php echo $uses_swiper ? 'swiper-slide' : 'static-slide'; ?>">

@@ -231,7 +231,7 @@ html.page-no-overflow, html.page-no-overflow body {
 	overflow: hidden;
 }
 
-body.style-type-catalogue, body.style-type-news, body.style-type-fansubs, body.style-type-users, body.style-type-settings, body.style-type-embed {
+body.style-type-catalogue, body.style-type-news, body.style-type-fansubs, body.style-type-users, body.style-type-settings, body.style-type-yearly-summary, body.style-type-embed {
 	background: rgb(var(--background-color-standard));
 }
 
@@ -284,7 +284,7 @@ a img {
 	padding-right: var(--page-padding);
 }
 
-.style-type-catalogue .header, .style-type-news .header, .style-type-fansubs .header, .style-type-settings .header {
+.style-type-catalogue .header, .style-type-news .header, .style-type-fansubs .header, .style-type-settings .header, .style-type-yearly-summary .header {
 	border-bottom: var(--divider-border-height) solid rgb(var(--primary-color));
 }
 
@@ -2016,7 +2016,7 @@ input:checked + .slider:before {
 		font-size: 1.8rem;
 	}
 
-	.style-type-catalogue .header, .style-type-news .header, .style-type-fansubs .header, .style-type-settings .header {
+	.style-type-catalogue .header, .style-type-news .header, .style-type-fansubs .header, .style-type-settings .header, .style-type-yearly-summary .header {
 		justify-content: left;
 		flex-wrap: wrap;
 	}

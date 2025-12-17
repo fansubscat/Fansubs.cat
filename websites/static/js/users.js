@@ -1,3 +1,5 @@
+var bgAudio;
+
 function clearForms() {
 	$('.invalid').removeClass('invalid');
 	$('.validation-message').text('');
@@ -644,6 +646,222 @@ function checkAvatarUpload() {
 	}
 }
 
+function beginSlideShow() {
+	bgAudio.currentTime = 0;
+	bgAudio.play();
+	showYearlyTotals();
+}
+
+function showYearlyTotals() {
+	$('#yearly-summary-anime-total').text('0');
+	$('#yearly-summary-manga-total').text('0');
+	$('#yearly-summary-liveaction-total').text('0');
+	$('#yearly-summary-hours-total-length').text('0');
+	$('#yearly-summary-pages-total-length').text('0');
+	$('#yearly-summary-anime-counter').css('opacity', '0');
+	$('#yearly-summary-manga-counter').css('opacity', '0');
+	$('#yearly-summary-liveaction-counter').css('opacity', '0');
+	$('#yearly-summary-total-time-counters-header').css('opacity', '0');
+	$('#yearly-summary-total-time-counters').css('opacity', '0');
+	setTimeout(() => {
+		$('#yearly-summary-totals').fadeIn(1000);
+		
+		setTimeout(() => {
+			$('#yearly-summary-anime-counter').animate({opacity: 1}, 1000);
+		}, 1000);
+		setTimeout(() => {
+			animateNumber($('#yearly-summary-anime-total')[0], 0, $('#anime_watched').val(), 2000);
+		}, 1000);
+		setTimeout(() => {
+			$('#yearly-summary-manga-counter').animate({opacity: 1}, 1000);
+		}, 4000);
+		setTimeout(() => {
+			animateNumber($('#yearly-summary-manga-total')[0], 0, $('#manga_watched').val(), 2000);
+		}, 4000);
+		setTimeout(() => {
+			$('#yearly-summary-liveaction-counter').animate({opacity: 1}, 1000);
+		}, 7000);
+		setTimeout(() => {
+			animateNumber($('#yearly-summary-liveaction-total')[0], 0, $('#liveaction_watched').val(), 2000);
+		}, 7000);
+		setTimeout(() => {
+			$('#yearly-summary-total-time-counters-header').animate({opacity: 1}, 1000);
+			$('#yearly-summary-total-time-counters').animate({opacity: 1}, 1000);
+			animateNumber($('#yearly-summary-hours-total-length')[0], 0, $('#hours_length').val(), 2000);
+			animateNumber($('#yearly-summary-pages-total-length')[0], 0, $('#pages_length').val(), 2000);
+		}, 9000);
+		setTimeout(() => {
+			$('#yearly-summary-totals').fadeOut(1000);
+			showYearlyAnime();
+		}, 15000);
+	}, 1000);
+}
+
+function showYearlyAnime() {
+	$('#anime-series-1').css('left', '100%');
+	$('#anime-series-2').css('left', '-100%');
+	$('#anime-series-3').css('left', '100%');
+	$('#yearly-summary-anime-rank').css('opacity', '0');
+	setTimeout(() => {
+		$('#background-main').fadeOut(1000);
+		$('#background-anime').fadeIn(1000);
+		$('#yearly-summary-most-popular-anime').fadeIn(1000);
+		if ($('[id^="anime-series"]').length>0) {
+			setTimeout(() => {
+				$('#anime-series-1').animate({left: '0'}, 1000);
+			}, 1000);
+			setTimeout(() => {
+				$('#anime-series-2').animate({left: '0'}, 1000);
+			}, 3000);
+			setTimeout(() => {
+				$('#anime-series-3').animate({left: '0'}, 1000);
+			}, 5000);
+			setTimeout(() => {
+				$('#yearly-summary-anime-rank').animate({opacity: 1}, 1000);
+			}, 8000);
+		} else {
+			setTimeout(() => {
+				$('#yearly-summary-anime-rank').animate({opacity: 1}, 1000);
+			}, 3000);
+		}
+		setTimeout(() => {
+			$('#yearly-summary-most-popular-anime').fadeOut(1000);
+			showYearlyManga();
+		}, 12000);
+	}, 1000);
+}
+
+function showYearlyManga() {
+	$('#manga-series-1').css('left', '100%');
+	$('#manga-series-2').css('left', '-100%');
+	$('#manga-series-3').css('left', '100%');
+	$('#yearly-summary-manga-rank').css('opacity', '0');
+	setTimeout(() => {
+		$('#background-anime').fadeOut(1000);
+		$('#background-manga').fadeIn(1000);
+		$('#yearly-summary-most-popular-manga').fadeIn(1000);
+		if ($('[id^="manga-series"]').length>0) {
+			setTimeout(() => {
+				$('#manga-series-1').animate({left: '0'}, 1000);
+			}, 1000);
+			setTimeout(() => {
+				$('#manga-series-2').animate({left: '0'}, 1000);
+			}, 3000);
+			setTimeout(() => {
+				$('#manga-series-3').animate({left: '0'}, 1000);
+			}, 5000);
+			setTimeout(() => {
+				$('#yearly-summary-manga-rank').animate({opacity: 1}, 1000);
+			}, 8000);
+		} else {
+			setTimeout(() => {
+				$('#yearly-summary-manga-rank').animate({opacity: 1}, 1000);
+			}, 3000);
+		}
+		setTimeout(() => {
+			$('#yearly-summary-most-popular-manga').fadeOut(1000);
+			showYearlyLiveAction();
+		}, 12000);
+	}, 1000);
+}
+
+function showYearlyLiveAction() {
+	$('#liveaction-series-1').css('left', '100%');
+	$('#liveaction-series-2').css('left', '-100%');
+	$('#liveaction-series-3').css('left', '100%');
+	$('#yearly-summary-liveaction-rank').css('opacity', '0');
+	setTimeout(() => {
+		$('#background-manga').fadeOut(1000);
+		$('#background-liveaction').fadeIn(1000);
+		$('#yearly-summary-most-popular-liveaction').fadeIn(1000);
+		if ($('[id^="liveaction-series"]').length>0) {
+			setTimeout(() => {
+				$('#liveaction-series-1').animate({left: '0'}, 1000);
+			}, 1000);
+			setTimeout(() => {
+				$('#liveaction-series-2').animate({left: '0'}, 1000);
+			}, 3000);
+			setTimeout(() => {
+				$('#liveaction-series-3').animate({left: '0'}, 1000);
+			}, 5000);
+			setTimeout(() => {
+				$('#yearly-summary-liveaction-rank').animate({opacity: 1}, 1000);
+			}, 8000);
+		} else {
+			setTimeout(() => {
+				$('#yearly-summary-liveaction-rank').animate({opacity: 1}, 1000);
+			}, 3000);
+		}
+		setTimeout(() => {
+			$('#yearly-summary-most-popular-liveaction').fadeOut(1000);
+			showYearlyCommunity();
+		}, 12000);
+	}, 1000);
+}
+
+function showYearlyCommunity() {
+	$('#yearly-summary-comments-total').text('0');
+	$('#yearly-summary-community-total').text('0');
+	$('#yearly-summary-comments-counter').css('opacity', '0');
+	$('#yearly-summary-community-counter').css('opacity', '0');
+	$('#yearly-summary-community-extra-series').css('opacity', '0');
+	$('#yearly-summary-community-extra-topic').css('opacity', '0');
+	setTimeout(() => {
+		$('#background-liveaction').fadeOut(1000);
+		$('#background-main').fadeIn(1000);
+		$('#yearly-summary-community').fadeIn(1000);
+		
+		setTimeout(() => {
+			$('#yearly-summary-comments-counter').animate({opacity: 1}, 1000);
+		}, 1000);
+		setTimeout(() => {
+			animateNumber($('#yearly-summary-comments-total')[0], 0, $('#comments_left').val(), 2000);
+		}, 1000);
+		setTimeout(() => {
+			$('#yearly-summary-community-counter').animate({opacity: 1}, 1000);
+		}, 4000);
+		setTimeout(() => {
+			animateNumber($('#yearly-summary-community-total')[0], 0, $('#community_posts').val(), 2000);
+		}, 4000);
+		setTimeout(() => {
+			$('#yearly-summary-community-extra-series').animate({opacity: 1}, 1000);
+		}, 7000);
+		setTimeout(() => {
+			$('#yearly-summary-community-extra-topic').animate({opacity: 1}, 1000);
+		}, 10000);
+		setTimeout(() => {
+			$('#yearly-summary-community').fadeOut(1000);
+			showYearlyEnd();
+		}, 15000);
+	}, 1000);
+}
+
+function showYearlyEnd() {
+	setTimeout(() => {
+		$('#yearly-summary-restart').fadeIn(1000);
+	}, 1000);
+}
+
+function animateNumber(el, start, end, duration) {
+	var startTime = performance.now();
+
+	function update(currentTime) {
+		var elapsed = currentTime - startTime;
+		var progress = Math.min(elapsed / duration, 1);
+		var value = Math.floor(start + (end - start) * progress);
+
+		if (value>=0) {
+			el.textContent = value.toString();
+		}
+
+		if (progress < 1) {
+			requestAnimationFrame(update);
+		}
+	}
+
+	requestAnimationFrame(update);
+}
+
 $(document).ready(function() {
 	$('.edit-blacklisted-fansubs').on("click", function() {
 		var code = '';
@@ -664,5 +882,31 @@ $(document).ready(function() {
 				}
 			}
 		], true);
+	});
+	
+	if ($('#bg_audio').length>0) {
+		bgAudio = $('#bg_audio')[0];
+	}
+	
+	$('.yearly-summary-toggle-mute').on("click", function() {
+		if ($(this).hasClass('fa-volume-xmark')) {
+			$(this).removeClass('fa-volume-xmark');
+			$(this).addClass('fa-volume-high');
+			bgAudio.muted=false;
+		} else {
+			$(this).removeClass('fa-volume-high');
+			$(this).addClass('fa-volume-xmark');
+			bgAudio.muted=true;
+		}
+	});
+	
+	$('#yearly-summary-button-start').on("click", function() {
+		$('#yearly-summary-start').fadeOut(1000);
+		beginSlideShow();
+	});
+	
+	$('#yearly-summary-button-restart').on("click", function() {
+		$('#yearly-summary-restart').fadeOut(1000);
+		beginSlideShow();
 	});
 });

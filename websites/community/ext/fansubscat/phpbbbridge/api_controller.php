@@ -144,6 +144,9 @@ class api_controller {
 			case 'add_chat_message':
 				$response = $this->add_chat_message();
 				break;
+			case 'get_user_yearly_stats':
+				$response = $this->get_user_yearly_stats();
+				break;
 			default:
 				$result = array(
 					"status" => 'ko',
@@ -856,6 +859,68 @@ class api_controller {
 		$this->end_user_session();
 		
 		return $this->create_generic_ok_response();
+	}
+
+	/**
+	 * Gets user stats used for the yearly summary page.
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	protected function get_user_yearly_stats(){
+		global $table_prefix;
+		//WE HAVE THESE PARAMETERS:
+		// -username
+		// -year
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		$request = $this->validate_post_request();
+		if ($request===FALSE){
+			return $this->create_invalid_format_response();
+		}
+		
+		$sql = 'SELECT user_id 
+			FROM ' . USERS_TABLE . "
+			WHERE username='" . $this->db->sql_escape($this->get_clean_username($request->username)) . "'";
+		$result = $this->db->sql_query($sql);
+		$user_id = $this->db->sql_fetchrow($result)['user_id'];
+		$this->db->sql_freeresult($result);
+		
+		$sql = 'SELECT t.topic_title 
+			FROM ' . POSTS_TABLE . " p
+				LEFT JOIN " . TOPICS_TABLE . " t ON p.topic_id=t.topic_id
+			WHERE p.poster_id=$user_id
+				AND IF(t.forum_id NOT IN (4,5,6),1,t.topic_poster<>".self::SYSTEM_USER_ID.")
+				AND p.post_time>=UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-01-01 00:00:00')
+				AND p.post_time<UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-12-16 00:00:00')
+			GROUP BY t.topic_id
+			ORDER BY COUNT(*) DESC
+			LIMIT 1";
+		$result = $this->db->sql_query($sql);
+		$most_posted_topic = $this->db->sql_fetchrow($result)['topic_title'];
+		$this->db->sql_freeresult($result);
+		
+		$sql = 'SELECT COUNT(*) cnt
+			FROM ' . POSTS_TABLE . " p
+				LEFT JOIN " . TOPICS_TABLE . " t ON p.topic_id=t.topic_id
+			WHERE p.poster_id=$user_id
+				AND IF(t.forum_id NOT IN (4,5,6),1,t.topic_poster<>".self::SYSTEM_USER_ID.")
+				AND p.post_time>=UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-01-01 00:00:00')
+				AND p.post_time<UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-12-16 00:00:00')";
+		$result = $this->db->sql_query($sql);
+		$number_of_posts = $this->db->sql_fetchrow($result)['cnt'];
+		$this->db->sql_freeresult($result);
+		
+		$output = array(
+			"status" => 'ok',
+			"number_of_posts" => $number_of_posts,
+			"most_posted_topic" => $most_posted_topic,
+		);
+	
+		return $this->create_json_response($output, 200);
 	}
 
 	/************* UTILITY METHODS *************/

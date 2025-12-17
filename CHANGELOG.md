@@ -1,5 +1,16 @@
 # Registre de canvis
 
+## 2025-12-17 - Versió 5.6.4
+- **General:**
+	- Es corregeix que les recomanacions no es regeneressin.
+	- Es corregeix la documentació d’un paràmetre al procés d’instal·lació.
+- **Usuaris:**
+	- S’afegeix un nou resum anual de l’activitat de l’usuari, amb l’opció de baixar-ne una imatge per a compartir-la.
+- **Catàleg:**
+	- S’afegeix un enllaç al resum anual durant les dates en què està disponible.
+- **Comunitat:**
+	- L’API permet obtenir dades per al resum anual.
+
 ## 2025-12-11 - Versió 5.6.3
 - **Administració:**
 	- Amb l’objectiu de limitar la pèrdua d’estadístiques, no es permet l’eliminació de sèries ni versions, excepte que no tinguin cap versió o fitxer, respectivament.

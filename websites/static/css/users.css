@@ -160,14 +160,21 @@ a.forgot-password {
 	width: 30%;
 }
 
-.style-type-users .main-section {
+.style-type-users .main-section, .style-type-settings .main-section {
 	width: calc(100% + var(--page-padding) + var(--page-padding));
 	margin-left: calc(0rem - var(--page-padding));
 	margin-right: calc(0rem - var(--page-padding));
 	justify-content: start;
 }
 
-.style-type-settings .main-section {
+.style-type-yearly-summary .main-section {
+	width: calc(100% + var(--page-padding) + var(--page-padding));
+	margin-left: calc(0rem - var(--page-padding));
+	margin-right: calc(0rem - var(--page-padding));
+	justify-content: start;
+}
+
+.style-type-yearly-summary .main-section .section {
 	width: calc(100% + var(--page-padding) + var(--page-padding));
 	margin-left: calc(0rem - var(--page-padding));
 	margin-right: calc(0rem - var(--page-padding));
@@ -523,6 +530,171 @@ a.forgot-password {
 	margin-top: 0;
 }
 
+.yearly-summary {
+	display: flex;
+	width: 100%;
+	height: 45rem;
+	min-height: 45rem;
+	position: relative;
+	overflow: hidden;
+	background: rgb(var(--secondary-color)) 0% 0% no-repeat padding-box;
+	justify-content: center;
+	align-items: center;
+	cursor: default;
+	flex-grow: 1;
+}
+
+.yearly-summary .background {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	filter: sepia(1) brightness(0.8);
+	opacity: 0.2;
+	position: absolute;
+}
+
+.yearly-summary-slide {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+.yearly-summary-header {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 3.8rem;
+	color: rgb(var(--negative-color));
+	margin-bottom: 2rem;
+	padding: 0 2rem;
+}
+
+.yearly-summary-text {
+	font-size: 2rem;
+	color: rgb(var(--negative-color));
+	padding: 0 2rem;
+}
+
+.yearly-summary-button {
+	font-family: "lexend_deca_bold", sans-serif;
+	border-radius: 0.8rem;
+	padding: 0.8rem 3rem;
+	font-size: 1.65rem;
+	background: rgb(var(--negative-color));
+	white-space: nowrap;
+	text-transform: uppercase;
+	display: inline-block;
+	color: rgb(var(--positive-color));
+	margin-top: 4rem;
+	line-height: 1.5;
+}
+
+.yearly-summary-counters {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+}
+
+.yearly-summary-counter {
+	font-family: "lexend_deca_numbers", sans-serif;
+	font-weight: bold;
+	text-align: center;
+	font-size: 3.6rem;
+}
+
+.yearly-summary-counter-type {
+	font-size: 1.8rem;
+	font-family: "lexend_deca", sans-serif;
+	white-space: nowrap;
+	padding: 0 1rem;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+
+#yearly-summary-total-time-counters-header {
+	margin-top: 3rem;
+	margin-bottom: 1rem;
+	font-size: 2.2rem;
+}
+
+#yearly-summary-anime-rank, #yearly-summary-manga-rank, #yearly-summary-liveaction-rank, #yearly-summary-community-extra-series {
+	margin-top: 3rem;
+	font-size: 2.2rem;
+}
+
+#yearly-summary-community-extra-topic {
+	font-size: 2.2rem;
+}
+
+.yearly-summary-empty-list#yearly-summary-anime-rank, .yearly-summary-empty-list#yearly-summary-manga-rank, .yearly-summary-empty-list#yearly-summary-liveaction-rank {
+	margin-top: 0;
+}
+
+.yearly-summary-series {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	padding: 0.1rem;
+	text-align: left;
+	position: relative;
+}
+
+.yearly-summary-series:nth-child(odd) {
+	flex-direction: row-reverse;
+	text-align: right;
+}
+
+.yearly-summary-series img {
+	width: 7.07rem;
+	height: 10rem;
+	object-fit: cover;
+	border-radius: 0.8rem;
+	margin: 0 1rem;
+}
+
+.yearly-summary-series-title {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 2.2rem;
+	width: min(60vw, 60rem);
+	max-width: min(60vw, 60rem);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.yearly-summary-note {
+	font-size: 1.2rem;
+	color: rgb(var(--negative-color));
+	margin-top: 2rem;
+}
+
+#yearly-summary-button-download {
+	margin-top: 1rem;
+}
+
+.yearly-summary-avatar {
+	display: block;
+	border-radius: 99rem;
+	width: 8rem;
+	height: 8rem;
+	border: 0.2rem solid rgb(var(--primary-color));
+	margin-bottom: 2rem;
+}
+
+.yearly-summary-toggle-mute {
+	cursor: pointer;
+	font-size: 3rem;
+	position: absolute;
+	top: 0;
+	right: 0;
+	color: rgb(var(--negative-color));
+	z-index: 1;
+	margin: 1rem;
+}
+
 @media (hover: hover) and (pointer: fine) {
 	.login-close:hover {
 		filter: drop-shadow(0 0 0.4rem rgba(var(--positive-color), 0.5));
@@ -559,6 +731,14 @@ a.forgot-password {
 
 	.blacklisted-fansubs-dialog-container input[type="checkbox"]:hover {
 		filter: brightness(0.9);
+	}
+	
+	.yearly-summary-button:hover {
+		background: rgb(var(--negative-color-button-hover));
+	}
+
+	.yearly-summary-toggle-mute:hover {
+		color: rgb(var(--negative-color-button-hover));
 	}
 }
 
@@ -690,6 +870,61 @@ a.forgot-password {
 
 	.blacklisted-fansubs-dialog-element {
 		width: 100%;
+	}
+
+	.yearly-summary-note {
+		font-size: 1.1rem;
+		margin-top: 1rem;
+	}
+	
+	.yearly-summary-header {
+		font-size: 2.4rem;
+		margin-bottom: 1rem;
+		padding: 0 1rem;
+	}
+
+	.yearly-summary-text {
+		font-size: 1.3rem;
+		padding: 0 1rem;
+	}
+
+	.yearly-summary-button {
+		border-radius: 0.4rem;
+		padding: 0.6rem 2rem;
+		font-size: 1.3rem;
+		margin-top: 1.2rem;
+	}
+	
+	.yearly-summary-series-title {
+		font-size: 1.8rem;
+	}
+
+	#yearly-summary-total-time-counters-header {
+		margin-top: 1.5rem;
+		margin-bottom: 1rem;
+		font-size: 1.6rem;
+	}
+
+	#yearly-summary-anime-rank, #yearly-summary-manga-rank, #yearly-summary-liveaction-rank, #yearly-summary-community-extra-series {
+		margin-top: 1.5rem;
+		font-size: 1.6rem;
+	}
+
+	#yearly-summary-community-extra-topic {
+		font-size: 1.6rem;
+	}
+
+	.yearly-summary-counter {
+		font-size: 2.4rem;
+	}
+
+	.yearly-summary-counter-type {
+		font-size: 1.4rem;
+		padding: 0 0.6rem;
+	}
+
+	.yearly-summary-toggle-mute {
+		font-size: 2rem;
 	}
 }
 

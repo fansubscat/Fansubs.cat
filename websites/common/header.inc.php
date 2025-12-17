@@ -331,7 +331,7 @@ if (PAGE_STYLE_TYPE=='login') {
 ?>
 					</a>
 <?php
-			if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='news' || PAGE_STYLE_TYPE=='fansubs' || PAGE_STYLE_TYPE=='settings') {
+			if (PAGE_STYLE_TYPE=='catalogue' || PAGE_STYLE_TYPE=='news' || PAGE_STYLE_TYPE=='fansubs' || PAGE_STYLE_TYPE=='settings' || PAGE_STYLE_TYPE=='yearly-summary') {
 ?>
 					<div class="catalogues-navigation">
 						<a href="<?php echo ANIME_URL; ?>"<?php echo defined('CATALOGUE_ITEM_TYPE') && CATALOGUE_ITEM_TYPE=='anime' ? ' class="catalogue-selected"' : ''; ?>><?php echo lang('main.header.anime'); ?></a>

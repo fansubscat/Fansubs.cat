@@ -3,7 +3,7 @@
 //If you edit this, be sure of what you are doing and check the code that uses these: you might break things!
 
 //Software version
-define('VERSION', '5.6.3');
+define('VERSION', '5.6.4');
 
 //Database charset
 define('DB_CHARSET', 'utf8mb4');
