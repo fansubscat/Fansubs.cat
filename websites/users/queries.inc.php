@@ -90,9 +90,8 @@ function query_yearly_summary_data_by_user_id($user_id, $year) {
 					LEFT JOIN version v ON v.id=f.version_id 
 					LEFT JOIN series s ON s.id=v.series_id 
 				WHERE vs.user_id=$user_id
-					AND vs.view_counted IS NOT NULL
-					AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-					AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+					AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+					AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 					AND s.type='anime'
 					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) anime_watched,
@@ -102,9 +101,8 @@ function query_yearly_summary_data_by_user_id($user_id, $year) {
 					LEFT JOIN version v ON v.id=f.version_id 
 					LEFT JOIN series s ON s.id=v.series_id 
 				WHERE vs.user_id=$user_id
-					AND vs.view_counted IS NOT NULL
-					AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-					AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+					AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+					AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 					AND s.type='manga'
 					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) manga_watched,
@@ -114,45 +112,41 @@ function query_yearly_summary_data_by_user_id($user_id, $year) {
 					LEFT JOIN version v ON v.id=f.version_id 
 					LEFT JOIN series s ON s.id=v.series_id 
 				WHERE vs.user_id=$user_id
-					AND vs.view_counted IS NOT NULL
-					AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-					AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+					AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+					AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 					AND s.type='liveaction' 
 					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) liveaction_watched,
-				(SELECT IFNULL(SUM(LEAST(vs.length,vs.progress)),0)
+				(SELECT IFNULL(SUM(vs.progress),0)
 				FROM view_session vs
 					LEFT JOIN file f ON f.id=vs.file_id
 					LEFT JOIN version v ON v.id=f.version_id
 					LEFT JOIN series s ON s.id=v.series_id
 				WHERE vs.user_id=$user_id
-					AND vs.view_counted IS NOT NULL
-					AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-					AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+					AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+					AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 					AND s.type='anime'
 					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) anime_length,
-				(SELECT IFNULL(SUM(LEAST(vs.length,vs.progress)),0)
+				(SELECT IFNULL(SUM(vs.progress),0)
 				FROM view_session vs
 					LEFT JOIN file f ON f.id=vs.file_id
 					LEFT JOIN version v ON v.id=f.version_id
 					LEFT JOIN series s ON s.id=v.series_id
 				WHERE vs.user_id=$user_id
-					AND vs.view_counted IS NOT NULL
-					AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-					AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+					AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+					AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 					AND s.type='manga'
 					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) manga_length,
-				(SELECT IFNULL(SUM(LEAST(vs.length,vs.progress)),0)
+				(SELECT IFNULL(SUM(vs.progress),0)
 				FROM view_session vs
 					LEFT JOIN file f ON f.id=vs.file_id
 					LEFT JOIN version v ON v.id=f.version_id
 					LEFT JOIN series s ON s.id=v.series_id
 				WHERE vs.user_id=$user_id
-					AND vs.view_counted IS NOT NULL
-					AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-					AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+					AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+					AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 					AND s.type='liveaction'
 					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) liveaction_length,
@@ -180,21 +174,21 @@ function query_yearly_summary_data_by_user_id($user_id, $year) {
 				(WITH ranking AS (
 					SELECT 
 						vs.user_id,
-						SUM(LEAST(vs.progress, vs.length)) total_duration,
-					RANK() OVER (ORDER BY SUM(LEAST(vs.progress, vs.length)) DESC) AS rank
+						SUM(vs.progress) total_duration,
+					RANK() OVER (ORDER BY SUM(vs.progress) DESC) AS rank
 					FROM view_session vs
 						LEFT JOIN file f ON f.id=vs.file_id
 						LEFT JOIN version v ON v.id=f.version_id
 						LEFT JOIN series s ON s.id=v.series_id
 						LEFT JOIN user u ON vs.user_id=u.id
 					WHERE vs.user_id IS NOT NULL
-						AND vs.view_counted IS NOT NULL
-						AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-						AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+						AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+						AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 						AND s.type='anime'
 						AND u.fansub_id IS NULL
 						AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 					GROUP BY vs.user_id
+                    			HAVING total_duration>0
 				)
 				SELECT rank
 				FROM ranking
@@ -203,21 +197,21 @@ function query_yearly_summary_data_by_user_id($user_id, $year) {
 				(WITH ranking AS (
 					SELECT 
 						vs.user_id,
-						SUM(LEAST(vs.progress, vs.length)) total_duration,
-					RANK() OVER (ORDER BY SUM(LEAST(vs.progress, vs.length)) DESC) AS rank
+						SUM(vs.progress) total_duration,
+					RANK() OVER (ORDER BY SUM(vs.progress) DESC) AS rank
 					FROM view_session vs
 						LEFT JOIN file f ON f.id=vs.file_id
 						LEFT JOIN version v ON v.id=f.version_id
 						LEFT JOIN series s ON s.id=v.series_id
 						LEFT JOIN user u ON vs.user_id=u.id
 					WHERE vs.user_id IS NOT NULL
-						AND vs.view_counted IS NOT NULL
-						AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-						AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+						AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+						AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 						AND s.type='manga'
 						AND u.fansub_id IS NULL
 						AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 					GROUP BY vs.user_id
+                    			HAVING total_duration>0
 				)
 				SELECT rank
 				FROM ranking
@@ -226,21 +220,21 @@ function query_yearly_summary_data_by_user_id($user_id, $year) {
 				(WITH ranking AS (
 					SELECT 
 						vs.user_id,
-						SUM(LEAST(vs.progress, vs.length)) total_duration,
-					RANK() OVER (ORDER BY SUM(LEAST(vs.progress, vs.length)) DESC) AS rank
+						SUM(vs.progress) total_duration,
+					RANK() OVER (ORDER BY SUM(vs.progress) DESC) AS rank
 					FROM view_session vs
 						LEFT JOIN file f ON f.id=vs.file_id
 						LEFT JOIN version v ON v.id=f.version_id
 						LEFT JOIN series s ON s.id=v.series_id
 						LEFT JOIN user u ON vs.user_id=u.id
 					WHERE vs.user_id IS NOT NULL
-						AND vs.view_counted IS NOT NULL
-						AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-						AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+						AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+						AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 						AND s.type='liveaction'
 						AND u.fansub_id IS NULL
 						AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 					GROUP BY vs.user_id
+                    			HAVING total_duration>0
 				)
 				SELECT rank
 				FROM ranking
@@ -253,9 +247,8 @@ function query_yearly_summary_data_by_user_id($user_id, $year) {
 					LEFT JOIN series s ON s.id=v.series_id
 					LEFT JOIN user u ON vs.user_id=u.id
 				WHERE vs.user_id IS NOT NULL
-					AND vs.view_counted IS NOT NULL
-					AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-					AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+					AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+					AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 					AND u.fansub_id IS NULL
 					AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
 				) total_users";
@@ -264,57 +257,57 @@ function query_yearly_summary_data_by_user_id($user_id, $year) {
 
 function query_yearly_summary_anime_by_user_id($user_id, $year, $limit) {
 	$user_id = escape($user_id);
-	$final_query = "SELECT v.id, v.title, SUM(LEAST(vs.length,vs.progress)) total_length
+	$final_query = "SELECT v.id, v.title, SUM(vs.progress) total_length
 			FROM view_session vs
 				LEFT JOIN file f ON f.id=vs.file_id 
 				LEFT JOIN version v ON v.id=f.version_id 
 				LEFT JOIN series s ON s.id=v.series_id 
 			WHERE vs.user_id=$user_id
-				AND vs.view_counted IS NOT NULL
-				AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-				AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+				AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+				AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 				AND s.type='anime'
 				AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
                     	GROUP BY v.id
-                    	ORDER BY total_length DESC
+                    	HAVING total_length>0
+                    	ORDER BY total_length DESC, v.title ASC
                     	LIMIT $limit";
 	return query($final_query);
 }
 
 function query_yearly_summary_manga_by_user_id($user_id, $year, $limit) {
 	$user_id = escape($user_id);
-	$final_query = "SELECT v.id, v.title, SUM(LEAST(vs.length,vs.progress)) total_length
+	$final_query = "SELECT v.id, v.title, SUM(vs.progress) total_length
 			FROM view_session vs
 				LEFT JOIN file f ON f.id=vs.file_id 
 				LEFT JOIN version v ON v.id=f.version_id 
 				LEFT JOIN series s ON s.id=v.series_id 
 			WHERE vs.user_id=$user_id
-				AND vs.view_counted IS NOT NULL
-				AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-				AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+				AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+				AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 				AND s.type='manga'
 				AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
                     	GROUP BY v.id
-                    	ORDER BY total_length DESC
+                    	HAVING total_length>0
+                    	ORDER BY total_length DESC, v.title ASC
                     	LIMIT $limit";
 	return query($final_query);
 }
 
 function query_yearly_summary_liveaction_by_user_id($user_id, $year, $limit) {
 	$user_id = escape($user_id);
-	$final_query = "SELECT v.id, v.title, SUM(LEAST(vs.length,vs.progress)) total_length
+	$final_query = "SELECT v.id, v.title, SUM(vs.progress) total_length
 			FROM view_session vs
 				LEFT JOIN file f ON f.id=vs.file_id 
 				LEFT JOIN version v ON v.id=f.version_id 
 				LEFT JOIN series s ON s.id=v.series_id 
 			WHERE vs.user_id=$user_id
-				AND vs.view_counted IS NOT NULL
-				AND vs.view_counted>=TIMESTAMP('$year-01-01 00:00:00')
-				AND vs.view_counted<TIMESTAMP('$year-12-16 00:00:00')
+				AND vs.created>=TIMESTAMP('$year-01-01 00:00:00')
+				AND vs.created<TIMESTAMP('$year-12-16 00:00:00')
 				AND s.type='liveaction'
 				AND s.rating".(SITE_IS_HENTAI ? '=' : '<>')."'XXX'
                     	GROUP BY v.id
-                    	ORDER BY total_length DESC
+                    	HAVING total_length>0
+                    	ORDER BY total_length DESC, v.title ASC
                     	LIMIT $limit";
 	return query($final_query);
 }
