@@ -48,7 +48,7 @@ if (!DISABLE_NEWS) {
 						<a class="secondary-button" href="<?php echo lang('url.fansubs'); ?>"><?php echo lang('main.button.fansubs'); ?></a>
 					</div>
 <?php
-if (is_advent_days() && !DISABLE_ADVENT) {
+if (!SITE_IS_HENTAI && is_advent_days() && !DISABLE_ADVENT) {
 ?>
 					<div class="main-buttons">
 						<a class="main-button advent-button" href="<?php echo ADVENT_URL; ?>"><?php echo lang('main.button.advent_calendar'); ?></a>

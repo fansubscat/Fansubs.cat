@@ -139,12 +139,12 @@ if (!is_yearly_summary_available()) {
 }
 
 //This is just plain copied from yearly_summary.php:
-$result = query_yearly_summary_data_by_user_id($user['id'], date('Y'));
+$result = query_yearly_summary_data_by_user_id($user['id'], date('Y')-1);
 $summary_data = mysqli_fetch_assoc($result);
 
-$result_anime = query_yearly_summary_anime_by_user_id($user['id'], date('Y'), 8);
-$result_manga = query_yearly_summary_manga_by_user_id($user['id'], date('Y'), 8);
-$result_liveaction = query_yearly_summary_liveaction_by_user_id($user['id'], date('Y'), 8);
+$result_anime = query_yearly_summary_anime_by_user_id($user['id'], date('Y')-1, 8);
+$result_manga = query_yearly_summary_manga_by_user_id($user['id'], date('Y')-1, 8);
+$result_liveaction = query_yearly_summary_liveaction_by_user_id($user['id'], date('Y')-1, 8);
 
 $anime = array();
 while ($data = mysqli_fetch_assoc($result_anime)) {
@@ -185,7 +185,7 @@ if (!DISABLE_COMMUNITY && !SITE_IS_HENTAI) {
 	curl_setopt($curl, CURLOPT_POSTFIELDS, 
 		  json_encode(array(
 		  	'username' => $user['username'],
-		  	'year' => date('Y'),
+		  	'year' => date('Y')-1,
 		  	)));
 	$output = curl_exec($curl);
 	
@@ -211,7 +211,7 @@ $liveaction_length = intval($liveaction_length/3600);
 //End plain copy from yearly_summary.php
 
 //Make this downloadable
-header('Content-Disposition: attachment; filename="'.sprintf(lang('users.yearly_summary.image.filename'), date('Y'), CURRENT_SITE_NAME).'.jpg"');
+header('Content-Disposition: attachment; filename="'.sprintf(lang('users.yearly_summary.image.filename'), date('Y')-1, CURRENT_SITE_NAME).'.jpg"');
 header("Content-Type: image/jpeg");
 
 //Create the image
@@ -240,9 +240,9 @@ if (SITE_IS_HENTAI) {
 $secondary_color = imagecolorallocate($image, 0xF9, 0xC0, 0x2B);
 
 //Title
-$bbox = imagettfbbox(42, 0, FONT_BOLD, sprintf(lang('users.yearly_summary.image.header'), date('Y'), CURRENT_SITE_NAME));
+$bbox = imagettfbbox(42, 0, FONT_BOLD, sprintf(lang('users.yearly_summary.image.header'), date('Y')-1, CURRENT_SITE_NAME));
 $title_width = abs($bbox[2] - $bbox[0]);
-imagefttext($image, 42, 0, TEXT_MARGIN_HORIZONTAL, TEXT_MARGIN_VERTICAL, $white, FONT_BOLD, sprintf(lang('users.yearly_summary.image.header'), date('Y'), CURRENT_SITE_NAME));
+imagefttext($image, 42, 0, TEXT_MARGIN_HORIZONTAL, TEXT_MARGIN_VERTICAL, $white, FONT_BOLD, sprintf(lang('users.yearly_summary.image.header'), date('Y')-1, CURRENT_SITE_NAME));
 imageroundedrectangle($image, TEXT_MARGIN_HORIZONTAL, TEXT_MARGIN_VERTICAL+8, TEXT_MARGIN_HORIZONTAL+$title_width, TEXT_MARGIN_VERTICAL+8+4, 2, $primary_color);
 
 //User avatar

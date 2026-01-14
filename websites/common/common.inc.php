@@ -571,6 +571,6 @@ function is_advent_days() {
 
 function is_yearly_summary_available() {
 	global $user;
-	return !empty($user) && strcmp($user['created'], date('Y').'-12-16 00:00:00')<0 && strcmp(date('m-d H:i:s'),'12-16 00:00:00')>=0 && strcmp(date('m-d H:i:s'),'12-31 23:59:59')<=0;
+	return !empty($user) && strcmp($user['created'], date('Y').'-01-01 00:00:00')<0 && strcmp(date('m-d H:i:s'),'01-01 00:00:00')>=0 && strcmp(date('m-d H:i:s'),'01-15 23:59:59')<=0;
 }
 ?>

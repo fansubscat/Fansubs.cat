@@ -829,7 +829,7 @@ function checkNumberOfEpisodes() {
 	for (var i=0;i<divisionsEpisodes.length;i++){
 		if ($(divisionsEpisodes[i]).val()!='') {
 			var divisionEpisodeCount=parseInt($(divisionsEpisodes[i]).val());
-			var divisionNumber=parseInt($(divisionsNumbers[i]).val());
+			var divisionNumber=$(divisionsNumbers[i]).val();
 			var realDivisionEpisodeCount = 0;
 			for (var j=1;j<=episodeCount;j++){
 				if ($('#form-episode-list-division-'+j).val()==divisionNumber){

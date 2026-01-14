@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2026-01-14 - Versió 5.6.6
+- **Principal:**
+	- S’amaga el calendari d’advent al portal de hentai.
+- **Usuaris:**
+	- El resum anual passa a estar disponible fins al 15 de gener i inclou tot l’any anterior sencer.
+	- El resum anual exclou del recompte els continguts oberts però sense cap segon ni pàgina visualitzats.
+- **Administració:**
+	- Es corregeix un error de validació que feia impossible desar les sèries amb divisions amb numeració decimal.
+
 ## 2025-12-17 - Versió 5.6.5
 - **Usuaris:**
 	- Es canvia el càlcul del resum anual perquè inclogui tot el contingut, no només el que ha comptat com a visualització completa.

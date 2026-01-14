@@ -895,7 +895,7 @@ class api_controller {
 			WHERE p.poster_id=$user_id
 				AND IF(t.forum_id NOT IN (4,5,6),1,t.topic_poster<>".self::SYSTEM_USER_ID.")
 				AND p.post_time>=UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-01-01 00:00:00')
-				AND p.post_time<UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-12-16 00:00:00')
+				AND p.post_time<=UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-12-31 23:59:59')
 			GROUP BY t.topic_id
 			ORDER BY COUNT(*) DESC
 			LIMIT 1";
@@ -909,7 +909,7 @@ class api_controller {
 			WHERE p.poster_id=$user_id
 				AND IF(t.forum_id NOT IN (4,5,6),1,t.topic_poster<>".self::SYSTEM_USER_ID.")
 				AND p.post_time>=UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-01-01 00:00:00')
-				AND p.post_time<UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-12-16 00:00:00')";
+				AND p.post_time<=UNIX_TIMESTAMP('".$this->db->sql_escape((int)$request->year)."-12-31 23:59:59')";
 		$result = $this->db->sql_query($sql);
 		$number_of_posts = $this->db->sql_fetchrow($result)['cnt'];
 		$this->db->sql_freeresult($result);

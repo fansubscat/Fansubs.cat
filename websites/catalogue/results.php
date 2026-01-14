@@ -410,7 +410,7 @@ foreach($sections as $section){
 									<img class="background" src="<?php echo STATIC_URL.'/images/site/background_dark'.(SITE_IS_HENTAI ? '_hentai' : '').'_hd.jpg'; ?>" alt="">
 									<div class="infoholder" data-swiper-parallax="-30%">
 										<div class="dataholder">
-											<div class="title"><span class="fa fa-clock-rotate-left"></span><br><?php echo sprintf(lang('catalogue.featured.yearly_summary.title'), date('Y')); ?></div>
+											<div class="title"><span class="fa fa-clock-rotate-left"></span><br><?php echo sprintf(lang('catalogue.featured.yearly_summary.title'), date('Y')-1); ?></div>
 											<div class="divisions"><?php echo sprintf(lang('catalogue.featured.yearly_summary.description'), CURRENT_SITE_NAME); ?></div>
 											<a class="watchbutton" href="<?php echo USERS_URL.lang('url.yearly_summary'); ?>"><?php echo lang('catalogue.featured.yearly_summary.go_button'); ?></a>
 										</div>

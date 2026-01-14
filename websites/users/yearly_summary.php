@@ -16,12 +16,12 @@ define('PAGE_STYLE_TYPE', 'yearly-summary');
 require_once(__DIR__.'/../common/header.inc.php');
 
 if (is_yearly_summary_available()) {
-	$result = query_yearly_summary_data_by_user_id($user['id'], date('Y'));
+	$result = query_yearly_summary_data_by_user_id($user['id'], date('Y')-1);
 	$summary_data = mysqli_fetch_assoc($result);
 
-	$result_anime = query_yearly_summary_anime_by_user_id($user['id'], date('Y'), 3);
-	$result_manga = query_yearly_summary_manga_by_user_id($user['id'], date('Y'), 3);
-	$result_liveaction = query_yearly_summary_liveaction_by_user_id($user['id'], date('Y'), 3);
+	$result_anime = query_yearly_summary_anime_by_user_id($user['id'], date('Y')-1, 3);
+	$result_manga = query_yearly_summary_manga_by_user_id($user['id'], date('Y')-1, 3);
+	$result_liveaction = query_yearly_summary_liveaction_by_user_id($user['id'], date('Y')-1, 3);
 
 	$anime = array();
 	while ($data = mysqli_fetch_assoc($result_anime)) {
@@ -62,7 +62,7 @@ if (is_yearly_summary_available()) {
 		curl_setopt($curl, CURLOPT_POSTFIELDS, 
 			  json_encode(array(
 			  	'username' => $user['username'],
-			  	'year' => date('Y'),
+			  	'year' => date('Y')-1,
 			  	)));
 		$output = curl_exec($curl);
 		
@@ -101,12 +101,12 @@ if (is_yearly_summary_available()) {
 	<img class="background" id="background-liveaction" src="<?php echo count($liveaction)>0 ? (STATIC_URL.'/images/featured/version_'.$liveaction[0]['id'].'.jpg') : (STATIC_URL.'/images/site/background_dark'.(SITE_IS_HENTAI ? '_hentai' : '').'_hd.jpg'); ?>" alt="" style="display: none;">
 	<div id="yearly-summary-start" class="yearly-summary-slide">
 		<img class="yearly-summary-avatar" src="<?php echo get_user_avatar_url($user); ?>">
-		<span class="yearly-summary-header"><?php echo sprintf(lang('users.yearly_summary.main_header'), date('Y'), CURRENT_SITE_NAME); ?></span>
+		<span class="yearly-summary-header"><?php echo sprintf(lang('users.yearly_summary.main_header'), date('Y')-1, CURRENT_SITE_NAME); ?></span>
 		<span class="yearly-summary-text"><?php echo lang('users.yearly_summary.main_explanation'); ?></span>
 		<a id="yearly-summary-button-start" class="yearly-summary-button"><?php echo lang('users.yearly_summary.button_begin'); ?></a>
 	</div>
 	<div id="yearly-summary-totals" class="yearly-summary-slide" style="display: none;">
-		<div class="yearly-summary-header"><?php echo sprintf(lang('users.yearly_summary.counters_header'), $user['username'], date('Y')); ?></div>
+		<div class="yearly-summary-header"><?php echo sprintf(lang('users.yearly_summary.counters_header'), $user['username'], date('Y')-1); ?></div>
 		<div class="yearly-summary-text yearly-summary-counters">
 			<div class="yearly-summary-counter" id="yearly-summary-anime-counter" style="opacity: 0;">
 				<div id="yearly-summary-anime-total">0</div>
@@ -144,7 +144,7 @@ if (is_yearly_summary_available()) {
 	if ($anime_watched==0) {
 ?>
 		<div class="yearly-summary-header"><?php echo lang('users.yearly_summary.animes_header'); ?></div>
-		<span class="yearly-summary-text yearly-summary-empty-list" id="yearly-summary-anime-rank" style="opacity: 0;"><i class="fa fa-face-sad-tear"></i> <?php echo sprintf(lang('users.yearly_summary.animes_empty'), date('Y')+1); ?></span>
+		<span class="yearly-summary-text yearly-summary-empty-list" id="yearly-summary-anime-rank" style="opacity: 0;"><i class="fa fa-face-sad-tear"></i> <?php echo sprintf(lang('users.yearly_summary.animes_empty'), date('Y')); ?></span>
 <?php
 	} else {
 ?>
@@ -174,7 +174,7 @@ if (is_yearly_summary_available()) {
 	if ($manga_watched==0) {
 ?>
 		<div class="yearly-summary-header"><?php echo lang('users.yearly_summary.mangas_header'); ?></div>
-		<span class="yearly-summary-text yearly-summary-empty-list" id="yearly-summary-manga-rank" style="opacity: 0;"><i class="fa fa-face-sad-tear"></i> <?php echo sprintf(lang('users.yearly_summary.mangas_empty'), date('Y')+1); ?></span>
+		<span class="yearly-summary-text yearly-summary-empty-list" id="yearly-summary-manga-rank" style="opacity: 0;"><i class="fa fa-face-sad-tear"></i> <?php echo sprintf(lang('users.yearly_summary.mangas_empty'), date('Y')); ?></span>
 <?php
 	} else {
 ?>
@@ -209,7 +209,7 @@ if (is_yearly_summary_available()) {
 	} else if ($liveaction_watched==0) {
 ?>
 		<div class="yearly-summary-header"><?php echo lang('users.yearly_summary.liveactions_header'); ?></div>
-		<span class="yearly-summary-text yearly-summary-empty-list" id="yearly-summary-liveaction-rank" style="opacity: 0;"><i class="fa fa-face-sad-tear"></i> <?php echo sprintf(lang('users.yearly_summary.liveactions_empty'), date('Y')+1); ?></span>
+		<span class="yearly-summary-text yearly-summary-empty-list" id="yearly-summary-liveaction-rank" style="opacity: 0;"><i class="fa fa-face-sad-tear"></i> <?php echo sprintf(lang('users.yearly_summary.liveactions_empty'), date('Y')); ?></span>
 <?php
 	} else {
 ?>
@@ -274,8 +274,8 @@ if (is_yearly_summary_available()) {
 ?>
 	</div>
 	<div id="yearly-summary-restart" class="yearly-summary-slide" style="display: none;">
-		<span class="yearly-summary-header"><?php echo sprintf(lang('users.yearly_summary.end_header'), date('Y')+1); ?></span>
-		<span class="yearly-summary-text"><?php echo sprintf(lang('users.yearly_summary.end_explanation'), date('Y')); ?></span>
+		<span class="yearly-summary-header"><?php echo sprintf(lang('users.yearly_summary.end_header'), date('Y')); ?></span>
+		<span class="yearly-summary-text"><?php echo sprintf(lang('users.yearly_summary.end_explanation'), date('Y')-1); ?></span>
 		<div><a id="yearly-summary-button-restart" class="yearly-summary-button"><span class="fa fa-rotate-left"></span> <?php echo lang('users.yearly_summary.button_rewatch'); ?></a></div>
 		<div><a id="yearly-summary-button-download" class="yearly-summary-button" href="get_user_yearly_summary_image.php"><span class="fa fa-download"></span> <?php echo lang('users.yearly_summary.button_download'); ?></a></div>
 		<div class="yearly-summary-note"><?php echo lang('users.yearly_summary.end_disclaimer'); ?></div>
