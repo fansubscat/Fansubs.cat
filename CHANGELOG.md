@@ -1,5 +1,18 @@
 # Registre de canvis
 
+## 2026-01-23 - Versió 5.6.7
+- **Catàleg:**
+	- Se soluciona una cadena de text errònia en marcar com a vist (gràcies @rogerlopez13).
+- **Comunitat:**
+	- Noves imatges per als rangs d’usuari.
+- **Administració:**
+	- Es verifiquen els enllaços de totes les obres llevat de les llicenciades.
+	- Es corregeix un error que feia que, en esborrar una divisió, es perdés l’atribut «real».
+- **Serveis:**
+	- Nou servei per a generar només les miniatures inexistents.
+- **API:**
+	- Es retornen els enllaços de totes les obres llevat de les llicenciades.
+
 ## 2026-01-14 - Versió 5.6.6
 - **Principal:**
 	- S’amaga el calendari d’advent al portal de hentai.
