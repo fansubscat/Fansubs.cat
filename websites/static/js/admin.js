@@ -411,6 +411,8 @@ function deleteDivisionRow(id) {
 			$("#form-division-list-number_of_episodes-"+j).attr('id','form-division-list-number_of_episodes-'+(j-1));
 			$("#form-division-list-external_id-"+j).attr('name','form-division-list-external_id-'+(j-1));
 			$("#form-division-list-external_id-"+j).attr('id','form-division-list-external_id-'+(j-1));
+			$("#form-division-list-is_real-"+j).attr('name','form-division-list-is_real-'+(j-1));
+			$("#form-division-list-is_real-"+j).attr('id','form-division-list-is_real-'+(j-1));
 			$("#form-division-list-delete-"+j).attr('onclick','deleteDivisionRow('+(j-1)+');');
 			$("#form-division-list-delete-"+j).attr('id','form-division-list-delete-'+(j-1));
 		}
