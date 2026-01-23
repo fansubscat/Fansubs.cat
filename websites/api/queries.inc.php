@@ -78,7 +78,7 @@ function query_get_all_manga_files() {
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
 			WHERE s.type='manga'
-				AND s.has_licensed_parts<=1
+				AND s.has_licensed_parts<3
 				AND f.is_lost=0
 			ORDER BY v.title ASC,
 				f.original_filename ASC";
@@ -96,7 +96,7 @@ function query_get_unconverted_links($file_id) {
 				LEFT JOIN file f ON l.file_id=f.id
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
-			WHERE s.has_licensed_parts<=1
+			WHERE s.has_licensed_parts<3
 				AND url NOT LIKE 'storage://%'
 				AND $file_id_condition
 				AND NOT EXISTS (SELECT * FROM link l2 WHERE l2.file_id=l.file_id AND l2.url LIKE 'storage://%')
@@ -117,7 +117,7 @@ function query_get_converted_links($file_id) {
 				LEFT JOIN file f ON l.file_id=f.id
 				LEFT JOIN version v ON f.version_id=v.id
 				LEFT JOIN series s ON v.series_id=s.id
-			WHERE s.has_licensed_parts
+			WHERE s.has_licensed_parts<3
 				AND url LIKE 'storage://%'
 				AND $file_id_condition
 			ORDER BY v.title ASC,

@@ -10,9 +10,9 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			var links = [
 <?php
 	if (!empty($_SESSION['fansub_id']) && is_numeric($_SESSION['fansub_id'])) {
-		$where = ' WHERE s.has_licensed_parts<=1 AND EXISTS (SELECT vf.version_id FROM rel_version_fansub vf WHERE vf.version_id=v.id AND vf.fansub_id='.$_SESSION['fansub_id'].')';
+		$where = ' WHERE s.has_licensed_parts<3 AND EXISTS (SELECT vf.version_id FROM rel_version_fansub vf WHERE vf.version_id=v.id AND vf.fansub_id='.$_SESSION['fansub_id'].')';
 	} else {
-		$where = ' WHERE s.has_licensed_parts<=1';
+		$where = ' WHERE s.has_licensed_parts<3';
 	}
 
 	if (!empty($_GET['version_id']) && is_numeric($_GET['version_id'])) {
