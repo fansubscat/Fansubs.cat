@@ -1754,19 +1754,21 @@ $(document).ready(function() {
 	});
 
 	var genericModal = document.getElementById('generic-modal');
-	genericModal.addEventListener('show.bs.modal', function (event) {
-		// Button that triggered the modal
-		var button = event.relatedTarget;
-		// Extract info from data-bs-* attributes
-		var title = button.getAttribute('data-bs-title');
-		var contents = button.getAttribute('data-bs-contents');
-		// Update the modal's content.
-		var modalTitle = genericModal.querySelector('.modal-title');
-		var modalBody = genericModal.querySelector('.modal-body');
+	if (genericModal!=null) {
+		genericModal.addEventListener('show.bs.modal', function (event) {
+			// Button that triggered the modal
+			var button = event.relatedTarget;
+			// Extract info from data-bs-* attributes
+			var title = button.getAttribute('data-bs-title');
+			var contents = button.getAttribute('data-bs-contents');
+			// Update the modal's content.
+			var modalTitle = genericModal.querySelector('.modal-title');
+			var modalBody = genericModal.querySelector('.modal-body');
 
-		modalTitle.textContent = title;
-		modalBody.innerHTML = contents.replaceAll('\\n','<br>');
-	});
+			modalTitle.textContent = title;
+			modalBody.innerHTML = contents.replaceAll('\\n','<br>');
+		});
+	}
 	
 	$('#add-related-series-modal').on('show.bs.modal', function () {
 		$('#add-related-series-results').html('');
