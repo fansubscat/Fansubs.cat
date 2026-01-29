@@ -244,7 +244,7 @@ function populateMalDataManga(response) {
 				addDivisionRow();
 			}
 		}
-		if (response.data.chapters) {
+		if (response.data.type!='One-shot' && response.data.chapters) {
 			var howMany = prompt(lang('js.admin.series_edit.manga_import_chapters_decide').replaceAll('%1$d', response.data.chapters).replaceAll('%2$d', response.data.volumes).replaceAll('%3$d', Math.floor(response.data.chapters/response.data.volumes)));
 			if (!howMany || !howMany.match(/^-?[0-9]+$/)) {
 				$("#form-division-list-number_of_episodes-1").val(response.data.chapters);
@@ -820,6 +820,9 @@ function recalculateDivisionNames() {
 		else {
 			$("#form-division-list-name-1").val(lang('js.admin.generic.volume_prefix')+'1');
 		}
+	}
+	if ($("#form-subtype").val()=='oneshot') {
+		$("#form-division-list-number_of_episodes-1").val(1);
 	}
 }
 
