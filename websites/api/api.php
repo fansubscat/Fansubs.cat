@@ -447,14 +447,32 @@ else if ($method === 'internal' && !empty($_GET['token']) && $_GET['token']===IN
 			query_insert_link($_POST['file_id'], $_POST['url'], $_POST['original_url'], $_POST['resolution']);
 			if (get_previous_query_num_affected_rows()>0) {
 				log_action('api-insert-converted-link', "Inserted converted link «${_POST['url']}» for file id ${_POST['file_id']}");
+			
+				//Check if any files have that same link, then reply with a KO: the caller script will report it.
+				$url_result=query_get_files_with_url($_POST['url']);
+				
+				if (mysqli_num_rows($url_result)>1) {
+					$response = array(
+						'status' => 'ko',
+						'error' => array(
+								'code' => 'URL_SHARED_BETWEEN_DIFFERENT_FILES',
+								'description' => 'Multiple files were found with this newly converted URL, please check and fix the issue: '.$_POST['url']
+							)
+					);
+					echo json_encode($response);
+				} else {
+					$response = array(
+						'status' => 'ok'
+					);
+					echo json_encode($response);
+				}
 			} else {
 				log_action('api-discard-converted-link', "Discarded converted link «${_POST['url']}» for file id ${_POST['file_id']}, probably updated while converting");
+				$response = array(
+					'status' => 'ok'
+				);
+				echo json_encode($response);
 			}
-			
-			$response = array(
-				'status' => 'ok'
-			);
-			echo json_encode($response);
 		}
 		else {
 			show_invalid('No valid input provided.');

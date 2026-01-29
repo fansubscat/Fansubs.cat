@@ -125,6 +125,14 @@ function query_get_converted_links($file_id) {
 	return query($final_query);
 }
 
+function query_get_files_with_url($url) {
+	$url = escape($url);
+	$final_query = "SELECT *
+			FROM link
+			WHERE url='$url'";
+	return query($final_query);
+}
+
 function query_insert_link($file_id, $url, $original_url, $resolution) {
 	$file_id=intval($file_id);
 	$url=escape($url);

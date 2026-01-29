@@ -172,7 +172,11 @@ do
 				rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --exclude "Manga" --exclude "ZZZ_INTERNAL" --delete
 
 				# Insert converted file
-				curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$folder_type/$storage_folder/$output" --data-urlencode "file_id=$file_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null
+				res_json=`curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$folder_type/$storage_folder/$output" --data-urlencode "file_id=$file_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null`
+				if [ ! "$res_json" = "{\"status\":\"ok\"}" ]
+				then
+					notify_error "S’ha produït un error en inserir l’enllaç convertit del fitxer $folder_type/$storage_folder/$file (id. de fitxer $file_id): $res_json"
+				fi
 				error=0
 			else
 				echo "Error downloading file: error $?, id: $file_id, URL: $url"
