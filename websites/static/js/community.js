@@ -1,3 +1,7 @@
+var chatShouldStickToBottom = true;
+var chatContainer;
+var resizeObserver;
+
 function showForumDropdown() {
 	$('#user-dropdown').removeClass('dropdown-show');
 	$('#forum-dropdown').toggleClass('dropdown-show');
@@ -77,6 +81,20 @@ function addChatMention(username) {
 	$('#mchat-input').focus();
 }
 
+function isUserAtBottom(container) {
+	var scrollLeeway = 100;
+	var scrollTop = container.scrollTop();
+	var scrollHeight = container[0].scrollHeight;
+	var height = container.outerHeight();
+	console.log('Scrolled: User at bottom? '+((scrollHeight - height - scrollTop <= scrollLeeway) ? 'yes' : 'no')+', scrollTop='+scrollTop+', scrollHeight='+scrollHeight+', height='+height+', value='+(scrollHeight - height - scrollTop));
+	return scrollHeight - height - scrollTop <= scrollLeeway;
+}
+
+function scrollToBottom(container) {
+	container.scrollTop(container[0].scrollHeight);
+	//console.log('Scrolled to bottom');
+}
+
 $(document).ready(function() {
 	var flair_tooltip = undefined;
 	var flair = $('.flair-icon');
@@ -122,6 +140,23 @@ $(document).ready(function() {
 		}
 	});
 	addTargetToExternalLinks();
+	
+	chatContainer = $('#mchat-messages');
+	
+	chatContainer.on(('onscrollend' in window ? 'scrollend' : 'scroll'), function () {
+		chatShouldStickToBottom = isUserAtBottom(chatContainer);
+	})
+	resizeObserver = new ResizeObserver(() => {
+		//console.log('Resize observer called!');
+		if (chatShouldStickToBottom) {
+			scrollToBottom(chatContainer);
+		}
+	});
+	
+	document.querySelectorAll('.mchat-message').forEach(elem => {
+		//console.log('Added to observer: '+elem.id);
+		resizeObserver.observe(elem);
+	});
 	
 	window.onkeydown = function(e) {
 		if (e.ctrlKey) {

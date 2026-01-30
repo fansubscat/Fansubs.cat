@@ -420,6 +420,8 @@ jQuery(function($) {
 				return;
 			}
 			
+			//console.log('Added to observer: '+$message.get(0).id);
+			resizeObserver.observe($message.get(0));
 			mChat.clearOldMessages();
 			if (dataAddMessageBefore.playSound) {
 				mChat.sound('add');
@@ -440,11 +442,13 @@ jQuery(function($) {
 					}
 				},
 				show: function() {
+					this.message.show();
+					this.message.addClass('mchat-message-flash');
+					//We control this with our own logic on community.js
+					/*
 					var scrollLeeway = 150;
 					var scrollTop = this.container.scrollTop();
 					var scrollHeight = this.container[0].scrollHeight;
-					this.message.show();
-					this.message.addClass('mchat-message-flash');
 					if (mChat.messageTop) {
 						if (scrollTop <= scrollLeeway)  {
 							this.container.scrollTop(0);
@@ -455,6 +459,7 @@ jQuery(function($) {
 							this.container.scrollTop(scrollHeight);
 						}
 					}
+					*/
 				}
 			};
 			$(mChat).trigger('mchat_add_message_animate_before', [dataAddMessageAnimateBefore]);
@@ -781,7 +786,8 @@ jQuery(function($) {
 		mChat.resetSession();
 
 		if (!mChat.messageTop) {
-			mChat.cached('messages').delay(1).scrollTop(mChat.cached('messages')[0].scrollHeight);
+			//We control this with our own logic on community.js
+			//mChat.cached('messages').delay(1).scrollTop(mChat.cached('messages')[0].scrollHeight);
 		}
 
 		$.each(mChat.removeBBCodes.split('|'), function(i, bbcode) {
