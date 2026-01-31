@@ -13,7 +13,7 @@ function string_ends_with($haystack, $needle) {
 function edit_profile(){
 	global $user;
 	//Check if we have all the data
-	if (empty($user) || empty($_POST['username']) || empty($_POST['email_address']) || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || empty($_POST['avatar']) || empty($_POST['pronoun']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year'])) {
+	if (empty($user) || empty($_POST['username']) || mb_strlen($_POST['username'])>200 || empty($_POST['email_address']) || mb_strlen($_POST['email_address'])>200 || empty($_POST['birthday_day']) || empty($_POST['birthday_month']) || empty($_POST['birthday_year']) || empty($_POST['avatar']) || empty($_POST['pronoun']) || !is_numeric($_POST['birthday_day']) || !is_numeric($_POST['birthday_month']) || !is_numeric($_POST['birthday_year']) || (!empty($_POST['personal_message']) && mb_strlen($_POST['personal_message'])>40) || (!empty($_POST['location']) && mb_strlen($_POST['location'])>100) || (!empty($_POST['url']) && mb_strlen($_POST['url'])>255) || (!empty($_POST['bluesky_url']) && mb_strlen($_POST['bluesky_url'])>255) || (!empty($_POST['mastodon_url']) && mb_strlen($_POST['mastodon_url'])>255) || (!empty($_POST['twitter_url']) && mb_strlen($_POST['twitter_url'])>255) || (!empty($_POST['youtube_url']) && mb_strlen($_POST['youtube_url'])>255)) {
 		http_response_code(400);
 		return array('result' => 'ko', 'code' => 1);
 	}
@@ -26,6 +26,13 @@ function edit_profile(){
 	$birth_month = $_POST['birthday_month'];
 	$birth_year = $_POST['birthday_year'];
 	$avatar = $_POST['avatar'];
+	$personal_message = !empty($_POST['personal_message']) ? $_POST['personal_message'] : '';
+	$location = !empty($_POST['location']) ? $_POST['location'] : '';
+	$url = !empty($_POST['url']) ? $_POST['url'] : '';
+	$bluesky_url = !empty($_POST['bluesky_url']) ? $_POST['bluesky_url'] : '';
+	$mastodon_url = !empty($_POST['mastodon_url']) ? $_POST['mastodon_url'] : '';
+	$twitter_url = !empty($_POST['twitter_url']) ? $_POST['twitter_url'] : '';
+	$youtube_url = !empty($_POST['youtube_url']) ? $_POST['youtube_url'] : '';
 
 	//Check for valid date
 	if (!checkdate($birth_month, $birth_day, $birth_year)) {
@@ -98,17 +105,21 @@ function edit_profile(){
 	}
 
 	if (str_starts_with($avatar, 'http')) {
-		query_update_user_profile($user['id'], $username, $email_address, $pronoun, $birth_year."-".$birth_month."-".$birth_day, NULL);
+		query_update_user_profile($user['id'], $username, $email_address, $pronoun, $birth_year."-".$birth_month."-".$birth_day, NULL, $personal_message, $location, $url, $bluesky_url, $mastodon_url, $twitter_url, $youtube_url);
 	} else {
 		$avatar_filename = get_nanoid().'.png';
 		$user['avatar_filename'] = $avatar_filename;
 		file_put_contents(STATIC_DIRECTORY.'/images/avatars/'.$avatar_filename, file_get_contents($avatar));
-		query_update_user_profile($user['id'], $username, $email_address, $pronoun, $birth_year."-".$birth_month."-".$birth_day, $avatar_filename);
+		query_update_user_profile($user['id'], $username, $email_address, $pronoun, $birth_year."-".$birth_month."-".$birth_day, $avatar_filename, $personal_message, $location, $url, $bluesky_url, $mastodon_url, $twitter_url, $youtube_url);
 	}
 	
 	//Update profile in community too
 	if (!DISABLE_COMMUNITY) {
 		$curl = curl_init();
+		if (MAIN_DOMAIN=='fansubs.test') {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		}
 		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/update_profile');
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
@@ -122,6 +133,13 @@ function edit_profile(){
 			  	'pronoun' => $pronoun,
 			  	'avatar_url' => get_user_avatar_url($user),
 			  	'birthdate' => $birth_year."-".$birth_month."-".$birth_day,
+			  	'personal_message' => $personal_message,
+			  	'location' => $location,
+			  	'url' => $url,
+			  	'bluesky_url' => $bluesky_url,
+			  	'mastodon_url' => $mastodon_url,
+			  	'twitter_url' => $twitter_url,
+			  	'youtube_url' => $youtube_url,
 			  	)));
 		curl_exec($curl);
 		curl_close($curl);

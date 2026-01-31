@@ -9,7 +9,7 @@ use voku\helper\HtmlDomParser;
  * Tadaima.cat API main controller.
  */
 class api_controller {
-	const FANSUBSCAT_STATIC_URL = "https://static.fansubs.cat";
+	const FANSUBSCAT_STATIC_URL = "https://".STATIC_SUBDOMAIN.".".MAIN_DOMAIN;
 
 	const API_TOKEN_HEADER = "X-Fansubscat-Api-Token";
 
@@ -260,6 +260,7 @@ class api_controller {
 		// -bluesky_url
 		// -mastodon_url
 		// -twitter_url
+		// -youtube_url
 		
 		$request = $this->validate_post_request();
 		if ($request===FALSE){
@@ -291,9 +292,11 @@ class api_controller {
 			'user_avatar_type'	=> 'avatar.driver.remote',
 		);
 		$cp_data = array(
+			'pf_pronoms'	=> 1,
 			'pf_bluesky'	=> !empty($request->bluesky_url) ? $request->bluesky_url : '',
 			'pf_mastodon'	=> !empty($request->mastodon_url) ? $request->mastodon_url : '',
 			'pf_twitter'	=> !empty($request->twitter_url) ? $request->twitter_url : '',
+			'pf_youtube'	=> !empty($request->youtube_url) ? $request->youtube_url : '',
 			'pf_phpbb_website'	=> !empty($request->url) ? $request->url : '',
 		);
 			
@@ -740,6 +743,13 @@ class api_controller {
 		// -pronoun
 		// -avatar_url
 		// -birth_date
+		// -personal_message
+		// -location
+		// -url
+		// -bluesky_url
+		// -mastodon_url
+		// -twitter_url
+		// -youtube_url
 		
 		$request = $this->validate_post_request();
 		if ($request===FALSE){
@@ -761,7 +771,14 @@ class api_controller {
 			WHERE username = '" . $this->db->sql_escape($request->username_old) . "'";
 		$this->db->sql_query($sql);
 		$sql = 'UPDATE ' . PROFILE_FIELDS_DATA_TABLE . "
-			SET pf_pronoms = '" . $this->db->sql_escape($this->convert_pronoun($request->pronoun)) . "'
+			SET pf_pronoms = '" . $this->db->sql_escape($this->convert_pronoun($request->pronoun)) . "',
+				pf_missatge_personal = '" . $this->db->sql_escape($request->personal_message) . "',
+				pf_phpbb_location = '" . $this->db->sql_escape($request->location) . "',
+				pf_phpbb_website = '" . $this->db->sql_escape($request->url) . "',
+				pf_bluesky = '" . $this->db->sql_escape($request->bluesky_url) . "',
+				pf_mastodon = '" . $this->db->sql_escape($request->mastodon_url) . "',
+				pf_twitter = '" . $this->db->sql_escape($request->twitter_url) . "',
+				pf_youtube = '" . $this->db->sql_escape($request->youtube_url) . "'
 			WHERE user_id = (SELECT u.user_id FROM " . USERS_TABLE . " u WHERE username = '" . $this->db->sql_escape($request->username) . "')";
 		$this->db->sql_query($sql);
 		
@@ -788,6 +805,7 @@ class api_controller {
 		// -bluesky_url
 		// -mastodon_url
 		// -twitter_url
+		// -youtube_url
 		
 		$request = $this->validate_post_request();
 		if ($request===FALSE){
@@ -806,7 +824,8 @@ class api_controller {
 			SET pf_bluesky = '" . $this->db->sql_escape($request->bluesky_url) . "',
 				pf_twitter = '" . $this->db->sql_escape($request->twitter_url) . "',
 				pf_phpbb_website = '" . $this->db->sql_escape($request->url) . "',
-				pf_mastodon = '" . $this->db->sql_escape($request->mastodon_url) . "'
+				pf_mastodon = '" . $this->db->sql_escape($request->mastodon_url) . "',
+				pf_youtube = '" . $this->db->sql_escape($request->youtube_url) . "'
 			WHERE user_id = (SELECT u.user_id FROM " . USERS_TABLE . " u WHERE username = '" . $this->db->sql_escape($request->username) . "')";
 		$this->db->sql_query($sql);
 		

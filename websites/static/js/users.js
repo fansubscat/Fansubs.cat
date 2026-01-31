@@ -536,6 +536,26 @@ function editProfile() {
 		addValidationOnlyText('edit_profile_birthday',lang('js.users.edit_profile.birthdate_too_old.error'));
 		failedValidation = true;
 	}
+	if ($('#edit_profile_url').length>0 && $('#edit_profile_url').val()!='' && !$('#edit_profile_url').val().startsWith('http://') && !$('#edit_profile_url').val().startsWith('https://')) {
+		addValidation('edit_profile_url',lang('js.users.edit_profile.url.error'));
+		failedValidation = true;
+	}
+	if ($('#edit_profile_bluesky_url').length>0 && $('#edit_profile_bluesky_url').val()!='' && !$('#edit_profile_bluesky_url').val().startsWith('http://') && !$('#edit_profile_bluesky_url').val().startsWith('https://')) {
+		addValidation('edit_profile_bluesky_url',lang('js.users.edit_profile.url.error'));
+		failedValidation = true;
+	}
+	if ($('#edit_profile_mastodon_url').length>0 && $('#edit_profile_mastodon_url').val()!='' && !$('#edit_profile_mastodon_url').val().startsWith('http://') && !$('#edit_profile_mastodon_url').val().startsWith('https://')) {
+		addValidation('edit_profile_mastodon_url',lang('js.users.edit_profile.url.error'));
+		failedValidation = true;
+	}
+	if ($('#edit_profile_twitter_url').length>0 && $('#edit_profile_twitter_url').val()!='' && !$('#edit_profile_twitter_url').val().startsWith('http://') && !$('#edit_profile_twitter_url').val().startsWith('https://')) {
+		addValidation('edit_profile_twitter_url',lang('js.users.edit_profile.url.error'));
+		failedValidation = true;
+	}
+	if ($('#edit_profile_youtube_url').length>0 && $('#edit_profile_youtube_url').val()!='' && !$('#edit_profile_youtube_url').val().startsWith('http://') && !$('#edit_profile_youtube_url').val().startsWith('https://')) {
+		addValidation('edit_profile_youtube_url',lang('js.users.edit_profile.url.error'));
+		failedValidation = true;
+	}
 
 	if (failedValidation) {
 		$('#edit_profile_submit').prop('disabled', false);
@@ -551,6 +571,13 @@ function editProfile() {
 		birthday_month: $('#edit_profile_birthday_month').val(),
 		birthday_year: $('#edit_profile_birthday_year').val(),
 		avatar: $('.profile-avatar-image').attr('src'),
+		personal_message: $('#edit_profile_personal_message').val(),
+		location: $('#edit_profile_location').val(),
+		url: $('#edit_profile_url').val(),
+		bluesky_url: $('#edit_profile_bluesky_url').val(),
+		mastodon_url: $('#edit_profile_mastodon_url').val(),
+		twitter_url: $('#edit_profile_twitter_url').val(),
+		youtube_url: $('#edit_profile_youtube_url').val(),
 	};
 
 	$.post({

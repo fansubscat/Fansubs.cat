@@ -49,6 +49,10 @@ function leave_comment(){
 		if ($comment = mysqli_fetch_assoc($query)) {
 			if (!empty($comment['forum_topic_id']) && $comment['user_status']!=1) {
 				$curl = curl_init();
+				if (MAIN_DOMAIN=='fansubs.test') {
+					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+					curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+				}
 				curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/add_reply');
 				curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 				curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);

@@ -1009,6 +1009,21 @@ class functions
 		return $is_new_session;
 	}
 	
+	public function mchat_save_preferences($chat_color, $chat_sound) {
+		$sql = 'UPDATE ' . PROFILE_FIELDS_DATA_TABLE . "
+			SET pf_chat_color = '" . $this->db->sql_escape($chat_color) . "',
+				pf_chat_sound = '" . $this->db->sql_escape($chat_sound) . "'
+			WHERE user_id = ".$this->db->sql_escape($this->user->data['user_id']);
+		$this->db->sql_query($sql);
+	}
+	
+	public function exists_uuid($uuid) {
+		$result = $this->db->sql_query('SELECT COUNT(*) cnt FROM ' . $this->mchat_settings->get_table_mchat() . " WHERE uuid='" . $this->db->sql_escape($uuid) . "'");
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+		return $row['cnt']>0;
+	}
+	
 	protected function prepare_system_message($message)
 	{
 		$mchat_img = $mchat_flash = $mchat_quote = $mchat_url = $mchat_bbcode = $mchat_magic_urls = $mchat_smilies = TRUE;
@@ -1024,12 +1039,13 @@ class functions
 		];
 	}
 	
-	public function add_system_message($user_id, $message)
+	public function add_system_message($user_id, $message, $uuid='system')
 	{
 		$message_data = $this->prepare_system_message($message);
 		$message_data = array_merge($message_data, [
 			'user_id'		=> $user_id,
 			'message_time'	=> time(),
+			'uuid' => $uuid,
 		]);
 		$this->db->sql_query('INSERT INTO ' . $this->mchat_settings->get_table_mchat() . ' ' . $this->db->sql_build_array('INSERT', $message_data));
 	}

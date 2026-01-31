@@ -35,3 +35,7 @@ dmzx_mchat_action_whois_controller:
     path: '/xat/action/whois'
     methods: ['POST']
     defaults: { _controller: 'dmzx.mchat.core:action_whois' }
+dmzx_mchat_action_preferences_controller:
+    path: '/xat/action/preferences'
+    methods: ['POST']
+    defaults: { _controller: 'dmzx.mchat.core:action_preferences' }

@@ -158,7 +158,9 @@ jQuery(function($) {
 			};
 			$(mChat).trigger('mchat_ajax_fail_before', [data]);
 			//mChat.sound('error');
-			mChat.status('error');
+			if (data.xhr.status !== 400 && data.xhr.status !== 403) {
+				mChat.status('error');
+			}
 			var title = mChat.lang.err;
 			var responseText;
 			try {
@@ -198,7 +200,7 @@ jQuery(function($) {
 			data.updateSession();
 		},
 		sound: function(file, forceSoundType=null) {
-			var soundType = mChat.storage.get('sound');
+			var soundType = mChat.chatSound;
 			if (!soundType) {
 				soundType = 'default';
 			}
@@ -273,13 +275,17 @@ jQuery(function($) {
 			$add.prop('disabled', true);
 			mChat.pauseSession();
 			var inputValue = originalInputValue;
-			var color = mChat.storage.get('color');
+			var color = mChat.chatColor;
 			if (!color) {
 				color = '808080';
 			}
-			inputValue = '[color=#' + color + '] ' + inputValue + ' [/color]';
+			inputValue = '[color="#' + color + '"] ' + inputValue + ' [/color]';
 			mChat.setText('');
-			mChat.refresh(inputValue).done(function() {
+			if (originalInputValue!=lastSentChatMessage) {
+				lastSentChatMessage = originalInputValue;
+				lastSentChatMessageUUID = shortUUID16();
+			}
+			mChat.refresh(inputValue, lastSentChatMessageUUID).done(function() {
 				mChat.resetSession();
 			}).fail(function() {
 				mChat.setText(originalInputValue);
@@ -290,7 +296,8 @@ jQuery(function($) {
 		},
 		edit: function() {
 			var $message = $(this).closest('.mchat-message');
-			var code = '<textarea style="width: 50vw; height: 8rem;" id="edit-chat-message">'+$("<div>").text($message.data('mchat-message')).html()+'</textarea>';
+			var messageData = extractColorFromCode($message.data('mchat-message'));
+			var code = '<textarea style="width: 50vw; height: 8rem;" id="edit-chat-message">'+$("<div>").text(messageData.message).html()+'</textarea>';
 			showCustomDialog(lang('js.community.chat_edit_message.title'), code, null, true, true, [
 				{
 					text: lang('js.community.chat_edit_message.save'),
@@ -298,7 +305,7 @@ jQuery(function($) {
 					onclick: function(){
 						mChat.ajaxRequest('edit', true, {
 							message_id: $message.data('mchat-id'),
-							message: $('#edit-chat-message').val(),
+							message: '[color="#'+messageData.color+'"] '+$('#edit-chat-message').val()+' [/color]',
 							page: mChat.page
 						}).done(mChat.editDone);
 						closeCustomDialog();
@@ -312,6 +319,8 @@ jQuery(function($) {
 					}
 				}
 			]);
+			$('#edit-chat-message').focus();
+			$('#edit-chat-message')[0].setSelectionRange($('#edit-chat-message').val().length, $('#edit-chat-message').val().length);
 		},
 		editDone: function(json) {
 			mChat.updateMessages($(json.edit));
@@ -343,7 +352,7 @@ jQuery(function($) {
 			mChat.removeMessages([json.del]);
 			mChat.resetSession();
 		},
-		refresh: function(message) {
+		refresh: function(message, uuid) {
 			var isAdd = typeof message !== 'undefined';
 			if (!isAdd) {
 				mChat.sessionLength += mChat.refreshTime;
@@ -358,7 +367,8 @@ jQuery(function($) {
 			var data = {
 				last: mChat.messageIds.length ? mChat.messageIds.max() : 0,
 				log: mChat.logId,
-				message: isAdd ? message : undefined
+				message: isAdd ? message : undefined,
+				uuid: isAdd ? uuid : undefined
 			};
 			//mChat.status('load');
 			return mChat.ajaxRequest(isAdd ? 'add' : 'refresh', isAdd, data).done(mChat.refreshDone);
@@ -408,6 +418,13 @@ jQuery(function($) {
 		addMessage: function(index) {
 			var $message = $(this);
 			var myUserId = $('#my-user-id').val();
+			if ($message.data('mchat-user-id')== myUserId && $message.data('mchat-uuid')==lastSentChatMessageUUID) {
+				if (lastSentChatMessage==mChat.cleanMessage(mChat.cached('input').val()).trim()) {
+					mChat.setText('');
+				}
+				lastSentChatMessage = null;
+				lastSentChatMessageUUID = null;
+			}
 			var dataAddMessageBefore = {
 				message: $message,
 				delay: mChat.refreshInterval ? 400 : 0,
@@ -496,6 +513,7 @@ jQuery(function($) {
 					oldMessage: $('#mchat-message-' + $newMessage.data('mchat-id')),
 					playSound: playSound
 				};
+				data.newMessage.find('.mchat-edited').removeClass('hidden');
 				$(mChat).trigger('mchat_edit_message_before', [data]);
 				mChat.stopRelativeTimeUpdate(data.oldMessage);
 				mChat.startRelativeTimeUpdate.call(data.newMessage);
@@ -606,7 +624,7 @@ jQuery(function($) {
 			mChat.pauseSession();
 			mChat.sessionLength = 0;
 			mChat.refreshInterval = setInterval(mChat.refresh, mChat.refreshTime);
-			mChat.status('ok');
+			//mChat.status('ok');
 		},
 		endSession: function(skipUpdateWhois) {
 			mChat.pauseSession();

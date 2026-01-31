@@ -7,8 +7,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class event_listener implements EventSubscriberInterface
 {
-	const FANSUBSCAT_API_URL = 'https://api.fansubs.cat';
-	const FANSUBSCAT_LOGIN_URL = 'https://usuaris.fansubs.cat/inicia-la-sessio';
+	const FANSUBSCAT_API_URL = "https://".API_SUBDOMAIN.".".MAIN_DOMAIN;
+	const FANSUBSCAT_LOGIN_URL = "https://".USERS_SUBDOMAIN.".".MAIN_DOMAIN.'/inicia-la-sessio';
 	const FANSUBSCAT_RELAY_USER_ID = 2;
 
 	static public function getSubscribedEvents()
@@ -180,6 +180,9 @@ class event_listener implements EventSubscriberInterface
 		}
 		
 		$this->template->assign_var('T_STYLESHEET_LINK', $original_stylesheet);
+		
+		//Set main domain
+		$this->template->assign_var('T_FANSUBSCAT_DOMAIN', MAIN_DOMAIN);
 	}
 
 	public function configure_bbcode($event)
@@ -260,6 +263,10 @@ class event_listener implements EventSubscriberInterface
 	 
 			//Invoke API: add_or_edit_comment
 			$curl = curl_init();
+			if (MAIN_DOMAIN=='fansubs.test') {
+				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+			}
 			curl_setopt($curl, CURLOPT_URL, self::FANSUBSCAT_API_URL.'/internal/add_or_edit_comment?token='.INTERNAL_SERVICES_TOKEN);
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -286,6 +293,10 @@ class event_listener implements EventSubscriberInterface
 		if (!defined('FANSUBSCAT_API_POSTING') && $data['poster_id'] != self::FANSUBSCAT_RELAY_USER_ID) {
 			//Invoke API: delete_comment
 			$curl = curl_init();
+			if (MAIN_DOMAIN=='fansubs.test') {
+				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+			}
 			curl_setopt($curl, CURLOPT_URL, self::FANSUBSCAT_API_URL.'/internal/delete_comment?token='.INTERNAL_SERVICES_TOKEN);
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

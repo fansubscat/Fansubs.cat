@@ -1,6 +1,8 @@
 var chatShouldStickToBottom = true;
 var chatContainer;
 var resizeObserver;
+var lastSentChatMessage = null;
+var lastSentChatMessageUUID = null;
 
 function showForumDropdown() {
 	$('#user-dropdown').removeClass('dropdown-show');
@@ -29,12 +31,30 @@ function previewChatColor(color) {
 	$('.chat-choose-color-wrapper span').css('color', color);
 }
 
+function extractColorFromCode(code) {
+	const regex = /^\[color="#([A-Fa-f0-9]{6})"\]\s*(.*?)\s*\[\/color\]$/;
+	const match = code.match(regex);
+
+	if (match) {
+		return {
+			color: match[1],
+			message: match[2]
+		};
+	}
+
+	// No color tag
+	return {
+		color: '808080',
+		message: code
+	};
+}
+
 function showChatSettings() {
-	var currentSound = mChat.storage.get('sound');
+	var currentSound = mChat.chatSound;
 	if (!currentSound) {
 		currentSound = 'default';
 	}
-	var currentColor = mChat.storage.get('color');
+	var currentColor = mChat.chatColor;
 	if (!currentColor) {
 		currentColor = '808080';
 	}
@@ -63,12 +83,12 @@ function showChatSettings() {
 function saveChatSettings() {
 	var newSound = $('#chat-sound').val();
 	var newColor = $('#chat-color').val().replaceAll('#','').toUpperCase();
-	mChat.storage.set('sound', newSound);
-	if (newColor=='000000' || newColor=='FFFFFF') {
-		mChat.storage.remove('color');
-	} else {
-		mChat.storage.set('color', newColor);
-	}
+	mChat.ajaxRequest('preferences', true, {
+		chat_color: newColor,
+		chat_sound: newSound
+	})
+	mChat.chatColor = newColor;
+	mChat.chatSound=newSound;
 }
 
 function addChatMention(username) {
@@ -93,6 +113,12 @@ function isUserAtBottom(container) {
 function scrollToBottom(container) {
 	container.scrollTop(container[0].scrollHeight);
 	//console.log('Scrolled to bottom');
+}
+
+function shortUUID16() {
+	return [...crypto.getRandomValues(new Uint8Array(8))]
+		.map(b => b.toString(16).padStart(2, '0'))
+		.join('');
 }
 
 $(document).ready(function() {

@@ -85,7 +85,7 @@ mysqli_free_result($result);
 				<div class="profile-section-content">
 					<div class="profile-section-data">
 						<div class="profile-section-data-header"><?php echo lang('users.my_profile.email'); ?></div>
-						<div class="profile-section-data-info"><?php echo $user['email']; ?></div>
+						<div class="profile-section-data-info"><?php echo htmlspecialchars($user['email']); ?></div>
 					</div>
 					<div class="profile-section-data">
 						<div class="profile-section-data-header"><?php echo lang('users.my_profile.birth_date'); ?></div>
@@ -101,6 +101,39 @@ mysqli_free_result($result);
 					</div>
 				</div>
 			</div>
+<?php
+if (!DISABLE_COMMUNITY) {
+?>
+			<div class="profile-basic-info profile-details-section">
+				<div class="profile-section-header"><?php echo lang('users.my_profile.community_data'); ?></div>
+				<div class="profile-section-content">
+					<div class="profile-section-data">
+						<div class="profile-section-data-header"><?php echo lang('users.my_profile.personal_message'); ?></div>
+						<div class="profile-section-data-info"><?php echo htmlspecialchars(!empty($user['personal_message']) ? $user['personal_message'] : lang('users.my_profile.personal_message.undefined')); ?></div>
+					</div>
+					<div class="profile-section-data">
+						<div class="profile-section-data-header"><?php echo lang('users.my_profile.location'); ?></div>
+						<div class="profile-section-data-info"><?php echo htmlspecialchars(!empty($user['location']) ? $user['location'] : lang('users.my_profile.location.undefined')); ?></div>
+					</div>
+					<div class="profile-section-data">
+						<div class="profile-section-data-header"><?php echo lang('users.my_profile.links'); ?></div>
+<?php
+if (empty($user['url'])) {
+?>
+						<div class="profile-section-data-info"><?php echo lang('users.my_profile.links.undefined'); ?></div>
+<?php
+} else {
+?>
+						<div class="profile-section-data-info"><?php if (!empty($user['url'])) { ?><a target="_blank" title="<?php echo lang('users.my_profile.links.web.title'); ?>" class="fa fa-fw fa-globe" href="<?php echo htmlspecialchars($user['url']); ?>"></a> <?php } ?><?php if (!empty($user['bluesky_url'])) { ?><a target="_blank" title="<?php echo lang('users.my_profile.links.bluesky.title'); ?>" class="fab fa-fw fa-bluesky" href="<?php echo htmlspecialchars($user['bluesky_url']); ?>"></a> <?php } ?><?php if (!empty($user['mastodon_url'])) { ?><a target="_blank" title="<?php echo lang('users.my_profile.links.mastodon.title'); ?>" class="fab fa-fw fa-mastodon" href="<?php echo htmlspecialchars($user['mastodon_url']); ?>"></a> <?php } ?><?php if (!empty($user['twitter_url'])) { ?><a target="_blank" title="<?php echo lang('users.my_profile.links.twitter.title'); ?>" class="fab fa-fw fa-x-twitter" href="<?php echo htmlspecialchars($user['twitter_url']); ?>"></a> <?php } ?><?php if (!empty($user['youtube_url'])) { ?><a target="_blank" title="<?php echo lang('users.my_profile.links.youtube.title'); ?>" class="fab fa-fw fa-youtube" href="<?php echo htmlspecialchars($user['youtube_url']); ?>"></a> <?php } ?></div>
+<?php
+}
+?>
+					</div>
+				</div>
+			</div>
+<?php
+}
+?>
 			<div class="profile-statistics profile-details-section">
 				<div class="profile-section-header"><?php echo lang('users.my_profile.stats'); ?></div>
 				<div class="profile-section-content">

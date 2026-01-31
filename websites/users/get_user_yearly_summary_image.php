@@ -177,6 +177,10 @@ mysqli_free_result($result);
 if (!DISABLE_COMMUNITY && !SITE_IS_HENTAI) {
 	//Get data via community API - assume zero if failed
 	$curl = curl_init();
+	if (MAIN_DOMAIN=='fansubs.test') {
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+	}
 	curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/get_user_yearly_stats');
 	curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);

@@ -28,10 +28,10 @@ if (!empty($user['fansub_id'])) {
 } else {
 ?>
 		<form id="edit-profile-form" onsubmit="return editProfile();" autocomplete="off" novalidate="">
-			<label for=edit_profile_username"><?php echo lang('users.edit_profile.username'); ?></label>
+			<label for="edit_profile_username"><?php echo lang('users.edit_profile.username'); ?></label>
 			<input id="edit_profile_username" type="text" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['username']); ?>">
 			<div id="edit_profile_username_validation" class="validation-message"></div>
-			<label for=edit_profile_email"><?php echo lang('users.edit_profile.email'); ?></label>
+			<label for="edit_profile_email"><?php echo lang('users.edit_profile.email'); ?></label>
 			<input id="edit_profile_email" type="email" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['email']); ?>">
 			<div id="edit_profile_email_validation" class="validation-message"></div>
 			<label for="edit_profile_birthday_day"><?php echo lang('users.edit_profile.birth_date'); ?></label>
@@ -74,6 +74,34 @@ if (!empty($user['fansub_id'])) {
 				<input id="edit_profile_avatar_file" class="hidden" name="file" type="file" onchange="checkAvatarUpload();" accept="image/png, image/gif, image/jpeg" />
 				<div class="profile-avatar-change" onclick="chooseAvatar();"><i class="fa fa-fw fa-upload"></i><?php echo lang('users.edit_profile.change_image'); ?></div>
 			</div>
+<?php
+	if (!DISABLE_COMMUNITY) {
+?>
+			<div class="profile-section-subheader"><?php echo lang('users.edit_profile.header.community'); ?></div>
+			<label for="edit_profile_personal_message"><?php echo lang('users.edit_profile.personal_message'); ?></label>
+			<input id="edit_profile_personal_message" type="text" maxlength="40" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['personal_message']); ?>">
+			<div id="edit_profile_personal_message_validation" class="validation-message"></div>
+			<label for="edit_profile_location"><?php echo lang('users.edit_profile.location'); ?></label>
+			<input id="edit_profile_location" type="text" maxlength="100" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['location']); ?>">
+			<div id="edit_profile_location_validation" class="validation-message"></div>
+			<label for="edit_profile_url"><?php echo lang('users.edit_profile.url'); ?></label>
+			<input id="edit_profile_url" type="url" maxlength="255" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['url']); ?>">
+			<div id="edit_profile_url_validation" class="validation-message"></div>
+			<label for="edit_profile_bluesky_url"><?php echo lang('users.edit_profile.bluesky_url'); ?></label>
+			<input id="edit_profile_bluesky_url" type="url" maxlength="255" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['bluesky_url']); ?>">
+			<div id="edit_profile_bluesky_url_validation" class="validation-message"></div>
+			<label for="edit_profile_mastodon_url"><?php echo lang('users.edit_profile.mastodon_url'); ?></label>
+			<input id="edit_profile_mastodon_url" type="url" maxlength="255" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['mastodon_url']); ?>">
+			<div id="edit_profile_mastodon_url_validation" class="validation-message"></div>
+			<label for="edit_profile_youtube_url"><?php echo lang('users.edit_profile.bluesky_url'); ?></label>
+			<input id="edit_profile_youtube_url" type="url" maxlength="255" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['youtube_url']); ?>">
+			<div id="edit_profile_youtube_url_validation" class="validation-message"></div>
+			<label for="edit_profile_twitter_url"><?php echo lang('users.edit_profile.twitter_url'); ?></label>
+			<input id="edit_profile_twitter_url" type="url" maxlength="255" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['twitter_url']); ?>">
+			<div id="edit_profile_twitter_url_validation" class="validation-message"></div>
+<?php
+	}
+?>
 			<div id="edit_profile_generic_validation" class="validation-message-generic"></div>
 			<button id="edit_profile_submit" type="submit" class="login-button account-button"><?php echo lang('users.edit_profile.save_button'); ?></button>
 		</form>

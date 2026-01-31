@@ -1,17 +1,7 @@
 <?php
-/**
-*
-* This file is part of the phpBB Forum Software package.
-*
-* @copyright (c) phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-* For full copyright and license information, please see
-* the docs/CREDITS.txt file.
-*
-*/
-
 namespace fansubscat\phpbbbridge;
+
+require_once(__DIR__.'/../../../../../common/config/config.inc.php');
 
 use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
@@ -24,8 +14,8 @@ use phpbb\user;
 */
 class auth_provider extends \phpbb\auth\provider\base
 {
-	const FANSUBSCAT_STATIC_URL = 'https://static.fansubs.cat';
-	const FANSUBSCAT_USERS_URL = 'https://usuaris.fansubs.cat';
+	const FANSUBSCAT_STATIC_URL = "https://".STATIC_SUBDOMAIN.".".MAIN_DOMAIN;
+	const FANSUBSCAT_USERS_URL = "https://".USERS_SUBDOMAIN.".".MAIN_DOMAIN;
 
 	/** @var config phpBB config */
 	protected $config;
@@ -279,7 +269,11 @@ class auth_provider extends \phpbb\auth\provider\base
 		}
 		
 		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_URL, self::FANSUBSCAT_USERS_URL.'/do_get_user_data.php');
+		if (MAIN_DOMAIN=='fansubs.test') {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		}
+		curl_setopt($curl, CURLOPT_URL, self::FANSUBSCAT_USERS_URL.'/do_get_user_data.php?internal_api_request=1');
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array("Cookie: session_id=$session_id"));
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

@@ -552,6 +552,7 @@ if ($series['has_licensed_parts']<=1) {
 				}
 			}
 ?>
+													<a class="fa fa-fw fa-table-cells fansub-social-link" title="<?php echo lang('generic.fansub_link.alt'); ?>" href="<?php echo lang('url.search').'/%25?fansub='.$fansub['slug']; ?>"></a>
 												</div>
 											</div>
 										</div>

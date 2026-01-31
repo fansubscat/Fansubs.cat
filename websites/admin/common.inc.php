@@ -354,12 +354,21 @@ function add_fansub_user($fansub_id, $user_password) {
 	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].lang('generic.user.fansub_username_suffix'));
 	$password_hash_escaped = escape(password_hash($user_password, PASSWORD_BCRYPT));
 	$email_escaped = escape($fansub['email']);
-	query("INSERT INTO user (username, password, email, pronoun, birthdate, fansub_id, created, created_by, updated, updated_by)
-			VALUES ('$username_escaped', '$password_hash_escaped', '$email_escaped', NULL, '2000-01-01', $fansub_id, CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."', CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."')");
+	$url_escaped = escape($fansub['url']);
+	$bluesky_url_escaped = escape($fansub['bluesky_url']);
+	$mastodon_url_escaped = escape($fansub['mastodon_url']);
+	$twitter_url_escaped = escape($fansub['twitter_url']);
+	$youtube_url_escaped = escape($fansub['youtube_url']);
+	query("INSERT INTO user (username, password, email, pronoun, birthdate, fansub_id, personal_message, location, url, bluesky_url, mastodon_url, twitter_url, youtube_url, created, created_by, updated, updated_by)
+			VALUES ('$username_escaped', '$password_hash_escaped', '$email_escaped', NULL, '2000-01-01', $fansub_id, NULL, NULL, '$url_escaped', '$bluesky_url_escaped', '$mastodon_url_escaped', '$twitter_url_escaped', '$youtube_url_escaped', CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."', CURRENT_TIMESTAMP, '".escape($_SESSION['username'])."')");
 	$user_id=mysqli_insert_id($db_connection);
 	
 	if (!DISABLE_COMMUNITY) {
 		$curl = curl_init();
+		if (MAIN_DOMAIN=='fansubs.test') {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		}
 		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/create_fansub');
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
@@ -374,6 +383,7 @@ function add_fansub_user($fansub_id, $user_password) {
 			  	'bluesky_url' => $fansub['bluesky_url'],
 			  	'mastodon_url' => $fansub['mastodon_url'],
 			  	'twitter_url' => $fansub['twitter_url'],
+			  	'youtube_url' => $fansub['youtube_url'],
 			  	)));
 		$output = curl_exec($curl);		
 		curl_close($curl);
@@ -394,16 +404,30 @@ function edit_fansub_user($fansub_id, $old_username, $user_password) {
 	$username_escaped = escape($fansub['users']==0 ? $fansub['name'] : $fansub['name'].lang('generic.user.fansub_username_suffix'));
 	$password_hash_escaped = escape(password_hash($user_password, PASSWORD_BCRYPT));
 	$email_escaped = escape($fansub['email']);
+	$url_escaped = escape($fansub['url']);
+	$bluesky_url_escaped = escape($fansub['bluesky_url']);
+	$mastodon_url_escaped = escape($fansub['mastodon_url']);
+	$twitter_url_escaped = escape($fansub['twitter_url']);
+	$youtube_url_escaped = escape($fansub['youtube_url']);
 	query("UPDATE user
 			SET username='$username_escaped',
 				email='$email_escaped',".(!empty($user_password) ? "password='$password_hash_escaped'," : '')."
 				birthdate='2000-01-01',
+				url='$url_escaped',
+				bluesky_url='$bluesky_url_escaped',
+				mastodon_url='$mastodon_url_escaped',
+				twitter_url='$twitter_url_escaped',
+				youtube_url='$youtube_url_escaped',
 				updated=CURRENT_TIMESTAMP,
 				updated_by='".escape($_SESSION['username'])."'
 			WHERE username='$username_old_escaped'");
 	
 	if (!DISABLE_COMMUNITY) {
 		$curl = curl_init();
+		if (MAIN_DOMAIN=='fansubs.test') {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		}
 		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/update_fansub');
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
@@ -420,6 +444,7 @@ function edit_fansub_user($fansub_id, $old_username, $user_password) {
 			  	'discord_url' => $fansub['discord_url'],
 			  	'mastodon_url' => $fansub['mastodon_url'],
 			  	'twitter_url' => $fansub['twitter_url'],
+			  	'youtube_url' => $fansub['youtube_url'],
 			  	)));
 		curl_exec($curl);
 		curl_close($curl);
@@ -470,6 +495,10 @@ function add_or_update_topic_to_community($version_id){
 	
 	if (empty($version['forum_topic_id'])) {
 		$curl = curl_init();
+		if (MAIN_DOMAIN=='fansubs.test') {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		}
 		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/add_topic');
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
@@ -497,6 +526,10 @@ function add_or_update_topic_to_community($version_id){
 		}
 	} else {
 		$curl = curl_init();
+		if (MAIN_DOMAIN=='fansubs.test') {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+		}
 		curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/edit_post');
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
@@ -556,6 +589,10 @@ function add_comment_to_community($comment_id){
 	}
 
 	$curl = curl_init();
+	if (MAIN_DOMAIN=='fansubs.test') {
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+	}
 	curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/add_reply');
 	curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
@@ -595,6 +632,10 @@ function delete_comment_from_community($comment_id){
 	}
 
 	$curl = curl_init();
+	if (MAIN_DOMAIN=='fansubs.test') {
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+	}
 	curl_setopt($curl, CURLOPT_URL, COMMUNITY_URL.'/api/delete_post');
 	curl_setopt($curl, CURLOPT_HTTPHEADER, array("X-Fansubscat-Api-Token: ".INTERNAL_SERVICES_TOKEN));
 	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);

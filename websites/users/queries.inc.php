@@ -542,18 +542,32 @@ function query_update_comments_for_user_removal($user_id) {
 	return query($final_query);
 }
 
-function query_update_user_profile($user_id, $username, $email_address, $pronoun, $birth_date, $avatar_filename) {
+function query_update_user_profile($user_id, $username, $email_address, $pronoun, $birth_date, $avatar_filename, $personal_message, $location, $url, $bluesky_url, $mastodon_url, $twitter_url, $youtube_url) {
 	$user_id = escape($user_id);
 	$username = escape($username);
 	$email_address = escape($email_address);
 	$pronoun = escape($pronoun);
 	$birth_date = escape($birth_date);
+	$personal_message = escape($personal_message);
+	$location = escape($location);
+	$url = escape($url);
+	$bluesky_url = escape($bluesky_url);
+	$mastodon_url = escape($mastodon_url);
+	$twitter_url = escape($twitter_url);
+	$youtube_url = escape($youtube_url);
 	$final_query = "UPDATE user
 			SET username='$username',
 				email='$email_address',
 				pronoun='$pronoun',
 				birthdate='$birth_date',
 				avatar_filename=".(!empty($avatar_filename) ? "'".escape($avatar_filename)."'" : "avatar_filename").",
+				personal_message='$personal_message',
+				location='$location',
+				url='$url',
+				bluesky_url='$bluesky_url',
+				mastodon_url='$mastodon_url',
+				twitter_url='$twitter_url',
+				youtube_url='$youtube_url',
 				updated=CURRENT_TIMESTAMP,
 				updated_by='Themself'
 			WHERE id=$user_id";

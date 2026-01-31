@@ -350,6 +350,7 @@ class mchat
 		}
 
 		$message = $this->request->variable('message', '', true);
+		$uuid = $this->request->variable('uuid', '', true);
 
 		if (!$this->mchat_settings->cfg('mchat_max_input_height'))
 		{
@@ -364,63 +365,71 @@ class mchat
 		$user_facing_messages = array();
 		$is_quit_command = FALSE;
 		
-		$is_command = $this->process_command($message, $user_facing_messages, $is_quit_command);
-		
-		if (!$is_command) {
-			$message_data = $this->process_message($message);
+		//Find message UUID, if found, ignore, else add:
+		if (!$this->mchat_functions->exists_uuid($uuid)) {
+			$is_command = $this->process_command($message, $uuid, $user_facing_messages, $is_quit_command);
+			
+			if (!$is_command) {
+				$message_data = $this->process_message($message);
 
-			$message_data = array_merge($message_data, [
-				'user_id'		=> $this->user->data['user_id'],
-				'user_ip'		=> $this->user->ip,
-				'message_time'	=> time(),
-			]);
+				$message_data = array_merge($message_data, [
+					'user_id'		=> $this->user->data['user_id'],
+					'user_ip'		=> $this->user->ip,
+					'uuid' 			=> $uuid,
+					'message_time'	=> time(),
+				]);
+
+				/**
+				 * Event to modify a new message before it is inserted in the database
+				 *
+				 * @event dmzx.mchat.action_add_before
+				 * @var	string	message			The message that is about to be processed and added to the database
+				 * @var array	message_data	Array containing additional information that is added to the database
+				 * @since 2.0.0-RC6
+				 */
+				$vars = [
+					'message',
+					'message_data',
+				];
+				extract($this->dispatcher->trigger_event('dmzx.mchat.action_add_before', compact($vars)));
+				$this->mchat_functions->mchat_action('add', $message_data);
+			} else {
+				$message_data = array();
+			}
+
+			$response = $this->action_refresh(true, $is_quit_command);
+			
+			if ($is_command) {
+				$this->assign_global_template_data();
+				$this->assign_messages($user_facing_messages);
+				$response['add'] = $this->render_template('mchat_messages.html');
+			}
 
 			/**
-			 * Event to modify a new message before it is inserted in the database
+			 * Event to modify message data of a user's new message before it is sent back to the user
 			 *
-			 * @event dmzx.mchat.action_add_before
-			 * @var	string	message			The message that is about to be processed and added to the database
-			 * @var array	message_data	Array containing additional information that is added to the database
+			 * @event dmzx.mchat.action_add_after
+			 * @var	string	message			The message that was added to the database
+			 * @var array	message_data	Array containing additional information that was added to the database
+			 * @var array	response		The data that is sent back to the user
+			 * @var boolean	return_raw		Whether to return a raw array or a JsonResponse object
 			 * @since 2.0.0-RC6
 			 */
 			$vars = [
 				'message',
 				'message_data',
+				'response',
+				'return_raw',
 			];
-			extract($this->dispatcher->trigger_event('dmzx.mchat.action_add_before', compact($vars)));
+			extract($this->dispatcher->trigger_event('dmzx.mchat.action_add_after', compact($vars)));
 
-			$this->mchat_functions->mchat_action('add', $message_data);
+			return $return_raw ? $response : new JsonResponse($response);
 		} else {
-			$message_data = array();
+			$response = $this->action_refresh(true, $is_quit_command);
+			$response['add'] = '';
+
+			return $return_raw ? $response : new JsonResponse($response);
 		}
-
-		$response = $this->action_refresh(true, $is_quit_command);
-		
-		if ($is_command) {
-			$this->assign_global_template_data();
-			$this->assign_messages($user_facing_messages);
-			$response['add'] = $this->render_template('mchat_messages.html');
-		}
-
-		/**
-		 * Event to modify message data of a user's new message before it is sent back to the user
-		 *
-		 * @event dmzx.mchat.action_add_after
-		 * @var	string	message			The message that was added to the database
-		 * @var array	message_data	Array containing additional information that was added to the database
-		 * @var array	response		The data that is sent back to the user
-		 * @var boolean	return_raw		Whether to return a raw array or a JsonResponse object
-		 * @since 2.0.0-RC6
-		 */
-		$vars = [
-			'message',
-			'message_data',
-			'response',
-			'return_raw',
-		];
-		extract($this->dispatcher->trigger_event('dmzx.mchat.action_add_after', compact($vars)));
-
-		return $return_raw ? $response : new JsonResponse($response);
 	}
 
 	/**
@@ -761,6 +770,21 @@ class mchat
 	}
 
 	/**
+	 * User saves preferences
+	 *
+	 * @param bool $return_raw
+	 * @return array|JsonResponse data sent to client as JSON
+	 */
+	public function action_preferences($return_raw = false)
+	{
+		$chat_color = $this->request->variable('chat_color', '808080');
+		$chat_sound = $this->request->variable('chat_sound', 'default');
+		$this->mchat_functions->mchat_save_preferences($chat_color, $chat_sound);
+		$response = ['status' => 'ok'];
+		return $return_raw ? $response : new JsonResponse($response);
+	}
+
+	/**
 	 * Adds the template variables for the header link
 	 */
 	public function render_page_header_link()
@@ -844,6 +868,9 @@ class mchat
 		$whois_refresh = $this->mchat_settings->cfg('mchat_whois_index') || $this->mchat_settings->cfg('mchat_navbar_link_count');
 
 		$total_messages = $this->mchat_functions->mchat_total_message_count();
+		
+		//Get custom profile fields (for sound and color)
+		$this->user->get_profile_fields($this->user->data['user_id']);
 
 		$template_data = [
 			'MCHAT_PAGE'					=> $page,
@@ -870,6 +897,8 @@ class mchat
 			'MCHAT_JUMP_TO'					=> $jump_to_id,
 			'COOKIE_NAME'					=> $this->mchat_settings->cfg('cookie_name', true) . '_',
 			'MCHAT_USER_ID'					=> $this->user->data['user_id'],
+			'MCHAT_CHAT_COLOR'					=> $this->user->profile_fields['pf_chat_color'],
+			'MCHAT_CHAT_SOUND'					=> $this->user->profile_fields['pf_chat_sound'],
 		];
 
 		// The template needs some language variables if we display relative time for messages
@@ -885,6 +914,7 @@ class mchat
 			'refresh'	=> !$is_archive && $this->auth->acl_get('u_mchat_view'),
 			'add'		=> !$is_archive && $this->auth->acl_get('u_mchat_use'),
 			'whois'		=> !$is_archive && $whois_refresh,
+			'preferences'	=> TRUE,
 		]));
 
 		foreach ($actions as $action)
@@ -1196,6 +1226,7 @@ class mchat
 				'MCHAT_IS_USER_FACING_MESSAGE'		=> !empty($row['user_facing_message']),
 				'MCHAT_PM'					=> !$is_poster && $this->mchat_settings->cfg('allow_privmsg') && $this->auth->acl_get('u_sendpm') && ($row['user_allow_pm'] || $this->auth->acl_gets('a_', 'm_') || $this->auth->acl_getf_global('m_')) ? append_sid($this->mchat_settings->url('ucp', true), ['i' => 'pm', 'mode' => 'compose', 'mchat_pm_quote_message' => $row['message_id'], 'u' => $row['user_id']]) : '',
 				'MCHAT_MESSAGE_EDIT'		=> $message_for_edit['text'],
+				'MCHAT_UUID'		=> !empty($row['uuid']) ? $row['uuid'] : '',
 				'MCHAT_MESSAGE_ID'			=> $row['message_id'],
 				'MCHAT_USERNAME_FULL'		=> $username_full,
 				'MCHAT_USERNAME'			=> get_username_string('username', $row['user_id'], $row['username'], $row['user_colour'], $this->lang->lang('GUEST')),
@@ -1626,7 +1657,7 @@ class mchat
 		];
 	}
 	
-	protected function process_command($message, &$user_facing_messages, &$is_quit_command)
+	protected function process_command($message, $uuid, &$user_facing_messages, &$is_quit_command)
 	{
 		$message_without_bbcode = trim(preg_replace('#\[\/?[^\[\]]+\]#m', '', $message));
 		if (strpos($message_without_bbcode, '/')!==0) {
@@ -1637,9 +1668,9 @@ class mchat
 		
 		if ($args[0]=='surt' || $args[0]=='quit') {
 			if (count($args)==1) {
-				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha desconnectat');
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha desconnectat', $uuid);
 			} else {
-				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha desconnectat: '.$args[1]);
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] s’ha desconnectat: '.$args[1], $uuid);
 			}
 			$this->mchat_functions->delete_user_session($this->user->data['user_id']);
 			$is_quit_command = TRUE;
@@ -1647,21 +1678,21 @@ class mchat
 			if (count($args)==1) {
 				// /topic -> empty topic -> remove topic
 				$this->mchat_settings->set_cfg('mchat_static_message', '');
-				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha eliminat el tema del xat');
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha eliminat el tema del xat', $uuid);
 			} else {
 				// /topic description -> set as topic
 				$this->mchat_settings->set_cfg('mchat_static_message', 'Tema actual: '.$args[1]);
-				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha canviat el tema del xat a [b]'.$args[1].'[/b]');
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha canviat el tema del xat a [b]'.$args[1].'[/b]', $uuid);
 			}
 		} else if ($args[0]=='jo' || $args[0]=='me') {
 			if (count($args)==1) {
 				$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': cal que especifiquis un missatge');
 			} else {
-				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] '.$args[1]);
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] '.$args[1], $uuid);
 			}
 		} else if ($args[0]=='safareig' || $args[0]=='gossip') {
 			$gossip_question = $this->mchat_functions->get_random_gossip_question();
-			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] fa una qüestió a l’atzar: [b]'.$gossip_question.'[/b]');
+			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] fa una qüestió a l’atzar: [b]'.$gossip_question.'[/b]', $uuid);
 		} else if ($args[0]=='dau' || $args[0]=='dice') {
 			if (count($args)==1 || !is_numeric($args[1]) || $args[1]<2) {
 				$faces=6;
@@ -1670,7 +1701,7 @@ class mchat
 				$faces=(int)$args[1];
 				$faces_desc=" de $faces cares";
 			}
-			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha tirat un dau'.$faces_desc.'. El resultat és: [b]'.rand(1, $faces).'[/b]');
+			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha tirat un dau'.$faces_desc.'. El resultat és: [b]'.rand(1, $faces).'[/b]', $uuid);
 		} else if ($this->auth->acl_get('u_mchat_moderator_delete') && ($args[0]=='neteja' || $args[0]=='clear')) {
 			$this->mchat_functions->clear_chat();
 		} else if ($this->auth->acl_get('u_mchat_moderator_delete') && ($args[0]=='expulsa' || $args[0]=='kick')) {
@@ -1682,7 +1713,7 @@ class mchat
 				if ($kicked_user===NULL) {
 					$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': l’usuari especificat no està connectat');
 				} else {
-					$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha expulsat del xat l’usuari [url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $kicked_user['user_id']]).'][color=#'.$kicked_user['user_colour'].'][b]'.$kicked_user['username'].'[/b][/color][/url]');
+					$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha expulsat del xat l’usuari [url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $kicked_user['user_id']]).'][color=#'.$kicked_user['user_colour'].'][b]'.$kicked_user['username'].'[/b][/color][/url]', $uuid);
 					$this->mchat_functions->delete_user_session($kicked_user['user_id']);
 				}
 			}

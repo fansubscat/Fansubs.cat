@@ -359,6 +359,12 @@ a.forgot-password {
 	font-size: 2.2rem;
 }
 
+.profile-section-subheader {
+	font-family: "lexend_deca_bold", sans-serif;
+	font-size: 2rem;
+	margin-top: 2rem;
+}
+
 .profile-section-data-header {
 	font-family: "lexend_deca_bold", sans-serif;
 	font-size: 1.7rem;
@@ -814,6 +820,10 @@ a.forgot-password {
 	}
 
 	.profile-section-header, .settings-section-header {
+		font-size: 1.7rem;
+	}
+
+	.profile-section-subheader {
 		font-size: 1.7rem;
 	}
 
