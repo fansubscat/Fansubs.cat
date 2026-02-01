@@ -14,7 +14,7 @@ function showChatUsersDropdown() {
 }
 
 function exitChat() {
-	mChat.refresh('/surt').always(function() {
+	mChat.refresh('/surt', shortUUID16()).always(function() {
 		window.location.href="/";
 	});
 }

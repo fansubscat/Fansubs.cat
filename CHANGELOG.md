@@ -1,5 +1,29 @@
 # Registre de canvis
 
+## 2026-02-01 - Versió 5.7.0
+- **Catàleg:**
+	- S’afegeix un botó a les fitxes per a veure tot el contingut de cada fansub.
+- **Comunitat:**
+	- S’elimina el perfil d’usuari de la comunitat i ara se n’editen tots els camps al perfil d’usuari del portal principal.
+	- Es reorganitzen i canvien de nom parts del tauler de control de l’usuari.
+	- Xat: En enviar imatges o mitjans incrustats, no es perd el desplaçament.
+	- Xat: Es desen les preferències de color i so al perfil d’usuari i, per tant, se sincronitzen entre dispositius.
+	- Xat: Es crea un sistema per a evitar que, en casos de problemes de connexió, es dupliquin els missatges.
+	- Xat: Si hi ha problemes de connexió, es mostra un missatge informatiu sobre el camp de text.
+	- Xat: Quan algú edita un missatge, als usuaris que han rebut d’edició se’ls marca el missatge com a «Editat».
+	- Xat: En editar un missatge, es posa automàticament el focus al camp d’edició.
+	- Xat: En editar un missatge, no es veu el codi de format del color.
+- **Administració:**
+	- En crear one-shots, es defineix per defecte el nombre de capítols a 1.
+	- Es corregeix un error de JavaScript a la pantalla d’inici de sessió.
+- **Usuaris:**
+	- Es mostren els camps del perfil de la comunitat a la pàgina d’usuari.
+	- Es poden editar els camps del perfil de la comunitat a l’edició del perfil d’usuari.
+- **Serveis:**
+	- Es corregeix l’enviament de correus i s’envien correus també quan un enllaç esdevé duplicat.
+- **API:**
+	- En afegir un enllaç nou, es verifica que no hi hagi altres fitxers amb aquell mateix enllaç i es retorna un error indicant-ho.
+
 ## 2026-01-23 - Versió 5.6.7
 - **Catàleg:**
 	- Se soluciona una cadena de text errònia en marcar com a vist (gràcies @rogerlopez13).

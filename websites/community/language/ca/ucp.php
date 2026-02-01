@@ -533,7 +533,7 @@ $lang = array_merge($lang, array(
 	'UCP_MAIN_ATTACHMENTS'		=> 'Gestió dels fitxers adjunts',
 	'UCP_MAIN_BOOKMARKS'		=> 'Adreces d’interès',
 	'UCP_MAIN_DRAFTS'			=> 'Gestió dels esborranys',
-	'UCP_MAIN_FRONT'			=> 'Pàgina principal',
+	'UCP_MAIN_FRONT'			=> 'Inici',
 	'UCP_MAIN_SUBSCRIBED'		=> 'Subscripcions',
 
 	'UCP_NO_ATTACHMENTS'		=> 'No has publicat cap fitxer.',
@@ -544,7 +544,7 @@ $lang = array_merge($lang, array(
 	'UCP_NOTIFICATION_OPTIONS_EXPLAIN'	=> 'Aquí pots configurar el mètode de notificació preferit per a cada categoria.',
 
 	'UCP_PREFS'					=> 'Preferències',
-	'UCP_PREFS_PERSONAL'		=> 'Preferències globals',
+	'UCP_PREFS_PERSONAL'		=> 'Altres opcions',
 	'UCP_PREFS_POST'			=> 'Opcions de publicació',
 	'UCP_PREFS_VIEW'			=> 'Opcions de visualització',
 
@@ -569,7 +569,7 @@ $lang = array_merge($lang, array(
 	'UCP_PASSWORD_RESET_DISABLED'	=> 'La funcionalitat de reinicialització de contrasenya està desactivada. Si necessiteu ajuda per accedir al vostre compte, poseu-vos en contacte amb els %sadministradors del fòrum%s',
 	'UCP_REGISTER_DISABLE'			=> 'No és possible crear un compte nou actualment.',
 	'UCP_RESEND'					=> 'Envia el correu electrònic d’activació',
-	'UCP_WELCOME'					=> 'Et donem la benvinguda al Tauler de control. Aquí pots veure, editar i fer un seguiment del teu perfil, les teves preferències i les teves subscripcions. També pots enviar missatges privats a altres usuaris.',
+	'UCP_WELCOME'					=> 'Et donem la benvinguda al Tauler de control. Aquí pots fer el seguiment de les teves adreces d’interès, subscripcions i notificacions, canviar la signatura, gestionar les teves preferències i accedir a la missatgeria privada entre usuaris.',
 	'UCP_ZEBRA'						=> 'Amics i enemics',
 	'UCP_ZEBRA_FOES'				=> 'Gestió dels enemics',
 	'UCP_ZEBRA_FRIENDS'				=> 'Gestió dels amics',
