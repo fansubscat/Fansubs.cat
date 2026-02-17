@@ -1,0 +1,10 @@
+services:
+    posey.nasr.event:
+        class: 'posey\nasr\event\listener'
+        arguments:
+            - '@template'
+            - '@config'
+            - '@dbal.conn'
+            - '@path_helper'
+        tags:
+            - { name: 'event.listener' }

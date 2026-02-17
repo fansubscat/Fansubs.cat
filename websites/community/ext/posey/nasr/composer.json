@@ -1,0 +1,43 @@
+{
+    "name": "posey/nasr",
+    "type": "phpbb-extension",
+    "description": "Normal and Special Ranks",
+    "homepage": "http://www.godfathertalks.com",
+    "version": "2.1.0",
+    "time": "2020-02-19",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Gijs Martens",
+            "email": "admin@godfathertalks.com",
+            "homepage": "http://www.godfathertalks.com",
+            "role": "Original Developer"
+        },
+        {
+            "name": "kasimi",
+            "email": "mail@kasimi.net",
+            "homepage": "https://kasimi.net",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.7",
+        "phpbb/phpbb": ">=3.2.0",
+        "composer/installers": "~1.0.0"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "Normal and Special Ranks",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0"
+        },
+        "version-check": {
+            "host": "www.phpbb.com",
+            "directory": "/customise/db/extension/normal_and_special_ranks",
+            "filename": "version_check",
+            "ssl": true
+        }
+    }
+}

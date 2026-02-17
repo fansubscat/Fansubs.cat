@@ -1,0 +1,7 @@
+{% if postrow.EXTRA_RANK_TITLE or postrow.EXTRA_RANK_IMG %}
+	<dd class="profile-rank">
+		{{ postrow.EXTRA_RANK_TITLE }}
+		{% if postrow.EXTRA_RANK_TITLE and postrow.EXTRA_RANK_IMG %}<br />{% endif %}
+		{{ postrow.EXTRA_RANK_IMG }}
+	</dd>
+{% endif %}
