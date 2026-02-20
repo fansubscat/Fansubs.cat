@@ -332,13 +332,6 @@ else if ($method === 'manga'){
 
 		$result = query_get_manga_chapter_pages($file_id);
 		if ($row = mysqli_fetch_assoc($result)) {
-			//Check if this view is already in the database: same user agent, same IP and same file in the last hour
-			$exists_result = query_get_view_session_from_anon_id($file_id, get_api_session_id());
-			if (mysqli_num_rows($exists_result)==0) {
-				query_insert_view_session_completed(get_nanoid(), $file_id, 'manga', NULL, get_api_session_id(), $row['length'], 'api', $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
-				query_save_view_completed($file_id, 'manga', date('Y-m-d'), $row['length']);
-			}
-
 			if (!DISABLE_REMOTE_STORAGE_FOR_MANGA && count(REMOTE_STORAGES)>0) {
 				$base_path=get_storage_url("storage://Manga/$file_id/", TRUE);
 				$files = list_remote_image_files($base_path);
@@ -362,6 +355,13 @@ else if ($method === 'manga'){
 					'result' => $elements
 				);
 				echo json_encode($response);
+				
+				//Check if this view is already in the database: same user agent, same IP and same file in the last hour
+				$exists_result = query_get_view_session_from_anon_id($file_id, get_api_session_id());
+				if (mysqli_num_rows($exists_result)==0) {
+					query_insert_view_session_completed(get_nanoid(), $file_id, 'manga', NULL, get_api_session_id(), $row['length'], 'api', $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+					query_save_view_completed($file_id, 'manga', date('Y-m-d'), $row['length']);
+				}
 			}
 		} else {
 			//Not in database - no file with this id or file has been removed
