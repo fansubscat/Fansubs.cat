@@ -705,7 +705,19 @@ class mchat
 		
 		$response['users'] = $whois;
 		
-		$response['topic'] = html_entity_decode($this->mchat_settings->cfg('mchat_static_message'));
+		$topic = $this->mchat_settings->cfg('mchat_static_message');
+		
+		if (!empty($topic)) {
+			$uid = '';
+			$bitfield = '';
+			$options = 0;
+
+			generate_text_for_storage($topic, $uid, $bitfield, $options, true, true, true);
+			
+			$response['topic'] = html_entity_decode(generate_text_for_display($topic, $uid, $bitfield, $options));
+		} else {
+			$response['topic'] = '';
+		}
 
 		/**
 		 * Event to modify the data that is sent to the user after checking for new mChat message
@@ -1681,7 +1693,9 @@ class mchat
 				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha eliminat el tema del xat', $uuid);
 			} else {
 				// /topic description -> set as topic
-				$this->mchat_settings->set_cfg('mchat_static_message', 'Tema actual: '.$args[1]);
+				$message_without_color = trim(preg_replace('#\[color=.*?\](.*)\[/color\]#si', '$1', $message));
+				$args_real = explode(' ', substr($message_without_color, 1), 2);
+				$this->mchat_settings->set_cfg('mchat_static_message', 'Tema actual: '.$args_real[1]);
 				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha canviat el tema del xat a [b]'.$args[1].'[/b]', $uuid);
 			}
 		} else if ($args[0]=='jo' || $args[0]=='me') {
@@ -1694,14 +1708,18 @@ class mchat
 			$gossip_question = $this->mchat_functions->get_random_gossip_question();
 			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] fa una qüestió a l’atzar: [b]'.$gossip_question.'[/b]', $uuid);
 		} else if ($args[0]=='dau' || $args[0]=='dice') {
-			if (count($args)==1 || !is_numeric($args[1]) || $args[1]<2) {
+			if (count($args)==1 || !is_numeric($args[1]) || $args[1]==6) {
 				$faces=6;
-				$faces_desc='';
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha tirat un dau. El resultat és: [b]'.rand(1, $faces).'[/b]', $uuid);
+			} else if ($args[1]==1) {
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha tirat un dau d’1 cara. El resultat és: [b]1[/b]', $uuid);
+			} else if ($args[1]>0) {
+				$faces=(int)$args[1];
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha tirat un dau de '.$faces.' cares. El resultat és: [b]'.rand(1, $faces).'[/b]', $uuid);
 			} else {
 				$faces=(int)$args[1];
-				$faces_desc=" de $faces cares";
+				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha tirat un dau de '.$faces.' cares. El resultat és que li ha caigut al cap: és el càstig per provar coses impossibles.', $uuid);
 			}
-			$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha tirat un dau'.$faces_desc.'. El resultat és: [b]'.rand(1, $faces).'[/b]', $uuid);
 		} else if ($this->auth->acl_get('u_mchat_moderator_delete') && ($args[0]=='neteja' || $args[0]=='clear')) {
 			$this->mchat_functions->clear_chat();
 		} else if ($this->auth->acl_get('u_mchat_moderator_delete') && ($args[0]=='expulsa' || $args[0]=='kick')) {
