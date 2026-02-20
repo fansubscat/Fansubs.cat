@@ -551,6 +551,10 @@ li.row {
 	padding-left: 2rem;
 }
 
+.postprofile dd.profile-rank:has(+ dd.profile-rank) {
+	margin-bottom: 0;
+}
+
 .dropdown .dropdown-contents {
 	border-radius: 1rem;
 	border-width: 2px;

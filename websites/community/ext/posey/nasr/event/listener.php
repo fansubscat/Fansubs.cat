@@ -176,7 +176,7 @@ class listener implements EventSubscriberInterface
 	protected function get_users_special_ranks($user_ids)
 	{
 		$sql_array = [
-			'SELECT'	=> 'u.user_id, r.rank_special',
+			'SELECT'	=> 'u.user_id, IF(u.user_rank=7 OR u.user_rank=8,r.rank_special,NULL) rank_special',
 			'FROM'		=> [USERS_TABLE => 'u'],
 			'LEFT_JOIN' => [
 				[
