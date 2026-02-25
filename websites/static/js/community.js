@@ -21,7 +21,13 @@ function exitChat() {
 
 function addTargetToExternalLinks() {
 	$('.postlink').each(function() {
-		if ($('#mchat-body').length>0 || new URL($(this).attr('href')).hostname!=window.location.hostname) {
+		var hostname = window.location.hostname;
+		try {
+			hostname = new URL($(this).attr('href')).hostname
+		} catch(e){
+			console.log('Invalid URL: '+$(this).attr('href'));
+		}
+		if ($('#mchat-body').length>0 || hostname!=window.location.hostname) {
 			$(this).attr("target", '_blank');
 		}
 	});

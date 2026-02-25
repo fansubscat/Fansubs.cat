@@ -29,7 +29,7 @@ Arreu del portal s’esmenten els creadors del contingut i s’hi enllaça per t
 
 ## Com funciona?
 
-El web s’executa en un servidor simple amb Debian 12 (Bookworm), un servidor web Apache 2.4, PHP 8.2 i MariaDB 10.11.
+El web s’executa en un servidor simple amb Debian 13 (Trixie), un servidor web Apache 2.4, PHP 8.4 i MariaDB 11.8.
 
 Com hem comentat abans, hi ha molts serveis i webs inclosos. Descriure’ls tots en detall implicaria força temps, així que si vols saber-ne més, dóna un cop d’ull al codi o crea una incidència perquè et resolguem els dubtes! :)
 
