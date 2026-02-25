@@ -1,5 +1,14 @@
 # Registre de canvis
 
+## 2026-02-25 - Versió 5.7.1
+- **Comunitat:**
+	- Es corregeix un error que feia que alguns enllaços no s’obrissin en una finestra nova.
+	- Ara es mostra també el rang normal dels moderadors a banda del rang especial.
+	- Xat: Es manté correctament el format en definir el tema del xat.
+	- Xat: Es poden llançar daus amb menys de 2 cares.
+- **API:**
+	- Si la consulta de les pàgines al servidor remot falla, no es compta la visualització.
+
 ## 2026-02-01 - Versió 5.7.0
 - **Catàleg:**
 	- S’afegeix un botó a les fitxes per a veure tot el contingut de cada fansub.
