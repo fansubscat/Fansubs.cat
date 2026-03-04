@@ -1,5 +1,9 @@
 # Registre de canvis
 
+## 2026-03-04 - Versió 5.7.2
+- **Administració:**
+	- S’impedeix esborrar fitxers ja publicats.
+
 ## 2026-02-25 - Versió 5.7.1
 - **Comunitat:**
 	- Es corregeix un error que feia que alguns enllaços no s’obrissin en una finestra nova.

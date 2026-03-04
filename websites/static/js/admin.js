@@ -619,67 +619,69 @@ function addVersionRemoteFolderRow() {
 }
 
 function deleteVersionRow(episode_id, id) {
-	if ($("#form-files-list-"+episode_id+"-id-"+id).val()=='-1' || ($("#form-files-list-"+episode_id+"-id-"+id).val()!='-1' && confirm($('#type').val()=='manga' ? lang('js.admin.version_edit.warning.delete_file.manga') : lang('js.admin.version_edit.warning.delete_file')))) {
-		var i = parseInt($('#files-list-table-'+episode_id).attr('data-count'));
-		if(i==1) {
-			$("#form-files-list-"+episode_id+"-id-1").val("-1");
-			$("#form-files-list-"+episode_id+"-comments-1").val("");
-			$("#form-files-list-"+episode_id+"-is_lost-1").prop('checked',false);
-			if ($('#type').val()=='manga') {
-				$("#form-files-list-"+episode_id+"-file-1").val("");
-				$('label[for="form-files-list-'+episode_id+'-file-1"]').removeClass("btn-warning");
-				$('label[for="form-files-list-'+episode_id+'-file-1"]').addClass("btn-primary");
-				$('label[for="form-files-list-'+episode_id+'-file-1"]').html('<span class="fa fa-upload pe-2"></span> '+lang('js.admin.generic.upload_file'));
-				$("#form-files-list-"+episode_id+"-file_details-1").html('<span style="color: gray;"><span class="fa fa-times fa-fw"></span> '+lang('js.admin.generic.no_file_uploaded')+'</span>');
-			} else {
-				$("#form-files-list-"+episode_id+"-length-1").val("");
-			}
-			var numInstances = parseInt($('#links-list-table-'+episode_id+'-1').attr('data-count'));
-			for (var k=numInstances;k>0;k--) {
-				deleteLinkRow(episode_id,1,k);
-			}
+	if ($("#form-files-list-"+episode_id+"-id-"+id).val()!='-1'){
+		alert($('#type').val()=='manga' ? lang('js.admin.version_edit.warning.delete_file.manga') : lang('js.admin.version_edit.warning.delete_file'));
+		return;
+	}
+	var i = parseInt($('#files-list-table-'+episode_id).attr('data-count'));
+	if(i==1) {
+		$("#form-files-list-"+episode_id+"-id-1").val("-1");
+		$("#form-files-list-"+episode_id+"-comments-1").val("");
+		$("#form-files-list-"+episode_id+"-is_lost-1").prop('checked',false);
+		if ($('#type').val()=='manga') {
+			$("#form-files-list-"+episode_id+"-file-1").val("");
+			$('label[for="form-files-list-'+episode_id+'-file-1"]').removeClass("btn-warning");
+			$('label[for="form-files-list-'+episode_id+'-file-1"]').addClass("btn-primary");
+			$('label[for="form-files-list-'+episode_id+'-file-1"]').html('<span class="fa fa-upload pe-2"></span> '+lang('js.admin.generic.upload_file'));
+			$("#form-files-list-"+episode_id+"-file_details-1").html('<span style="color: gray;"><span class="fa fa-times fa-fw"></span> '+lang('js.admin.generic.no_file_uploaded')+'</span>');
+		} else {
+			$("#form-files-list-"+episode_id+"-length-1").val("");
 		}
-		else {
-			$("#form-files-list-"+episode_id+"-row-"+id).remove();
-			for (var j=id+1;j<i+1;j++) {
-				$("#form-files-list-"+episode_id+"-row-"+j).attr('id','form-files-list-'+episode_id+'-row-'+(j-1));
-				$("#form-files-list-"+episode_id+"-id-"+j).attr('name','form-files-list-'+episode_id+'-id-'+(j-1));
-				$("#form-files-list-"+episode_id+"-id-"+j).attr('id','form-files-list-'+episode_id+'-id-'+(j-1));
-				$("#form-files-list-"+episode_id+"-variant_name-"+j).attr('name','form-files-list-'+episode_id+'-variant_name-'+(j-1));
-				$("#form-files-list-"+episode_id+"-variant_name-"+j).attr('id','form-files-list-'+episode_id+'-variant_name-'+(j-1));
-				$("#form-files-list-"+episode_id+"-length-"+j).attr('name','form-files-list-'+episode_id+'-length-'+(j-1));
-				$("#form-files-list-"+episode_id+"-length-"+j).attr('id','form-files-list-'+episode_id+'-length-'+(j-1));
-				$("#form-files-list-"+episode_id+"-comments-"+j).attr('name','form-files-list-'+episode_id+'-comments-'+(j-1));
-				$("#form-files-list-"+episode_id+"-comments-"+j).attr('id','form-files-list-'+episode_id+'-comments-'+(j-1));
-				$("#form-files-list-"+episode_id+"-is_lost-"+j).attr('name','form-files-list-'+episode_id+'-is_lost-'+(j-1));
-				$("#form-files-list-"+episode_id+"-is_lost-"+j).attr('id','form-files-list-'+episode_id+'-is_lost-'+(j-1));
-				$("#form-files-list-"+episode_id+"-delete-"+j).attr('onclick','deleteVersionRow('+episode_id+','+(j-1)+');');
-				$("#form-files-list-"+episode_id+"-delete-"+j).attr('id','form-files-list-'+episode_id+'-delete-'+(j-1));
-				if ($('#type').val()=='manga') {
-					$('label[for="form-files-list-'+episode_id+'-file-'+j+'"]').attr('for', 'form-files-list-'+episode_id+'-file-'+(j-1));
-					$("#form-files-list-"+episode_id+"-file-"+j).attr('name','form-files-list-'+episode_id+'-file-'+(j-1));
-					$("#form-files-list-"+episode_id+"-file-"+j).attr('id','form-files-list-'+episode_id+'-file-'+(j-1));
-					$("#form-files-list-"+episode_id+"-file_details-"+j).attr('id','form-files-list-'+episode_id+'-file_details-'+(j-1));
-				} else {
-					$("#form-files-list-"+episode_id+"-add_link-"+j).attr('onclick','addLinkRow('+episode_id+','+(j-1)+');');
-					$("#form-files-list-"+episode_id+"-add_link-"+j).attr('id','form-files-list-'+episode_id+'-add_link-'+(j-1));
-					$("#links-list-table-"+episode_id+"-"+j).attr('id','links-list-table-'+episode_id+'-'+(j-1));
-					var numInstances = parseInt($('#links-list-table-'+episode_id+'-'+(j-1)).attr('data-count'));
-					for (var k=1;k<numInstances+1;k++) {
-						$("#form-links-list-"+episode_id+"-row-"+j+"-"+k).attr('id','form-links-list-'+episode_id+'-row-'+(j-1)+'-'+k);
-						$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-url").attr('name', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-url");
-						$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-url").attr('id', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-url");
-						$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-id").attr('name', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-id");
-						$("#form-files-list-"+episode_id+"-link-"+j+"-link-"+k+"-id").attr('id', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-id");
-						$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-resolution").attr('name', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-resolution");
-						$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-resolution").attr('id', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-resolution");
-						$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-delete").attr('onclick','deleteLinkRow('+episode_id+','+(j-1)+','+k+');');
-						$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-delete").attr('id','form-files-list-'+episode_id+"-file-"+(j-1)+"-link-"+k+"-delete");
-					}
+		var numInstances = parseInt($('#links-list-table-'+episode_id+'-1').attr('data-count'));
+		for (var k=numInstances;k>0;k--) {
+			deleteLinkRow(episode_id,1,k);
+		}
+	}
+	else {
+		$("#form-files-list-"+episode_id+"-row-"+id).remove();
+		for (var j=id+1;j<i+1;j++) {
+			$("#form-files-list-"+episode_id+"-row-"+j).attr('id','form-files-list-'+episode_id+'-row-'+(j-1));
+			$("#form-files-list-"+episode_id+"-id-"+j).attr('name','form-files-list-'+episode_id+'-id-'+(j-1));
+			$("#form-files-list-"+episode_id+"-id-"+j).attr('id','form-files-list-'+episode_id+'-id-'+(j-1));
+			$("#form-files-list-"+episode_id+"-variant_name-"+j).attr('name','form-files-list-'+episode_id+'-variant_name-'+(j-1));
+			$("#form-files-list-"+episode_id+"-variant_name-"+j).attr('id','form-files-list-'+episode_id+'-variant_name-'+(j-1));
+			$("#form-files-list-"+episode_id+"-length-"+j).attr('name','form-files-list-'+episode_id+'-length-'+(j-1));
+			$("#form-files-list-"+episode_id+"-length-"+j).attr('id','form-files-list-'+episode_id+'-length-'+(j-1));
+			$("#form-files-list-"+episode_id+"-comments-"+j).attr('name','form-files-list-'+episode_id+'-comments-'+(j-1));
+			$("#form-files-list-"+episode_id+"-comments-"+j).attr('id','form-files-list-'+episode_id+'-comments-'+(j-1));
+			$("#form-files-list-"+episode_id+"-is_lost-"+j).attr('name','form-files-list-'+episode_id+'-is_lost-'+(j-1));
+			$("#form-files-list-"+episode_id+"-is_lost-"+j).attr('id','form-files-list-'+episode_id+'-is_lost-'+(j-1));
+			$("#form-files-list-"+episode_id+"-delete-"+j).attr('onclick','deleteVersionRow('+episode_id+','+(j-1)+');');
+			$("#form-files-list-"+episode_id+"-delete-"+j).attr('id','form-files-list-'+episode_id+'-delete-'+(j-1));
+			if ($('#type').val()=='manga') {
+				$('label[for="form-files-list-'+episode_id+'-file-'+j+'"]').attr('for', 'form-files-list-'+episode_id+'-file-'+(j-1));
+				$("#form-files-list-"+episode_id+"-file-"+j).attr('name','form-files-list-'+episode_id+'-file-'+(j-1));
+				$("#form-files-list-"+episode_id+"-file-"+j).attr('id','form-files-list-'+episode_id+'-file-'+(j-1));
+				$("#form-files-list-"+episode_id+"-file_details-"+j).attr('id','form-files-list-'+episode_id+'-file_details-'+(j-1));
+			} else {
+				$("#form-files-list-"+episode_id+"-add_link-"+j).attr('onclick','addLinkRow('+episode_id+','+(j-1)+');');
+				$("#form-files-list-"+episode_id+"-add_link-"+j).attr('id','form-files-list-'+episode_id+'-add_link-'+(j-1));
+				$("#links-list-table-"+episode_id+"-"+j).attr('id','links-list-table-'+episode_id+'-'+(j-1));
+				var numInstances = parseInt($('#links-list-table-'+episode_id+'-'+(j-1)).attr('data-count'));
+				for (var k=1;k<numInstances+1;k++) {
+					$("#form-links-list-"+episode_id+"-row-"+j+"-"+k).attr('id','form-links-list-'+episode_id+'-row-'+(j-1)+'-'+k);
+					$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-url").attr('name', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-url");
+					$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-url").attr('id', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-url");
+					$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-id").attr('name', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-id");
+					$("#form-files-list-"+episode_id+"-link-"+j+"-link-"+k+"-id").attr('id', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-id");
+					$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-resolution").attr('name', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-resolution");
+					$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-resolution").attr('id', "form-files-list-"+episode_id+"-file-"+(j-1)+"-link-"+k+"-resolution");
+					$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-delete").attr('onclick','deleteLinkRow('+episode_id+','+(j-1)+','+k+');');
+					$("#form-files-list-"+episode_id+"-file-"+j+"-link-"+k+"-delete").attr('id','form-files-list-'+episode_id+"-file-"+(j-1)+"-link-"+k+"-delete");
 				}
 			}
-			$('#files-list-table-'+episode_id).attr('data-count', i-1);
 		}
+		$('#files-list-table-'+episode_id).attr('data-count', i-1);
 	}
 }
 
