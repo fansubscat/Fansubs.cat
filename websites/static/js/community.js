@@ -1,8 +1,7 @@
 var chatShouldStickToBottom = true;
 var chatContainer;
 var resizeObserver;
-var lastSentChatMessage = null;
-var lastSentChatMessageUUID = null;
+var pendingSentMessages = [];
 
 function showForumDropdown() {
 	$('#user-dropdown').removeClass('dropdown-show');
@@ -16,6 +15,52 @@ function showChatUsersDropdown() {
 function exitChat() {
 	mChat.refresh('/surt', shortUUID16()).always(function() {
 		window.location.href="/";
+	});
+}
+
+function addPendingSentMessage(originalInputValue, sentUUID) {
+	pendingSentMessages.push({text: originalInputValue, uuid: sentUUID});
+	syncPendingMessages();
+}
+
+function getFirstPendingSetMessage() {
+	if (pendingSentMessages.length==0) {
+		return null;
+	} else {
+		return pendingSentMessages[0];
+	}
+}
+
+function removePendingMessage(uuid) {
+	pendingSentMessages = pendingSentMessages.filter(p => p.uuid !== uuid);	
+}
+
+function syncPendingMessages() {
+	$('.mchat-pending-message').remove();
+	pendingSentMessages.forEach(function(pendingMessage) {
+		var color = mChat.chatColor;
+		if (!color) {
+			color = '808080';
+		}
+		var username = $('#user-dropdown .dropdown-title').html();
+		var avatarUrl = $('.dropdown-menu .avatar').attr('src');
+		
+		var el = document.createElement('div');
+		el.textContent = pendingMessage.text;
+		var escapedText = el.innerHTML;
+		
+		var message = '<li class="row mchat-message mchat-pending-message"><div class="mchat-avatar"><span><img title="Missatge pendent d’enviar: comprova la connexió" class="avatar" src="'+avatarUrl+'" width="42" alt="Imatge de perfil de l’usuari"></span></div><div class="mchat-message-wrapper"><ul class="mchat-buttons"><li><i title="Missatge pendent d’enviar: comprova la connexió" class="icon fa-warning"></i></li></ul><div class="mchat-message-header"><a href="./memberlist.php?mode=viewprofile&amp;u='+$('#my-user-id').val()+'" style="color: #6aa0f8;" class="username-coloured" target="_blank">'+username+'</a> • <span class="mchat-time">Missatge pendent d’enviar</span></div><div class="mchat-text"><span style="color:#'+color+'"> '+escapedText+' </span></div></div></li>';
+
+		if (mChat.messageTop) {
+			mChat.cached('messages').prepend(message);
+		} else {
+			mChat.cached('messages').append(message);
+		}
+	});
+	
+	document.querySelectorAll('.mchat-message').forEach(elem => {
+		//console.log('Added to observer: '+elem.id);
+		resizeObserver.observe(elem);
 	});
 }
 

@@ -1,5 +1,12 @@
 # Registre de canvis
 
+## 2026-04-12 - Versió 5.7.3
+- **Comunitat:**
+	- Xat: S’implementa una cua de missatges pendents d’enviar per a quan la connexió és dolenta.
+	- Xat: Es corregeix que, en cas de connexió dolenta i enviar un missatge per duplicat, la resposta no incloïa mai el missatge enviat.
+- **Administració:**
+	- Es corregeix que les caixes d’ajuda no mostressin correctament els salts de línia.
+
 ## 2026-03-04 - Versió 5.7.2
 - **Administració:**
 	- S’impedeix esborrar fitxers ja publicats.

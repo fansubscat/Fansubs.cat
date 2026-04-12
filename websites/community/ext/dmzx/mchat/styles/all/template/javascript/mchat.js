@@ -281,14 +281,11 @@ jQuery(function($) {
 			}
 			inputValue = '[color="#' + color + '"] ' + inputValue + ' [/color]';
 			mChat.setText('');
-			if (originalInputValue!=lastSentChatMessage) {
-				lastSentChatMessage = originalInputValue;
-				lastSentChatMessageUUID = shortUUID16();
-			}
-			mChat.refresh(inputValue, lastSentChatMessageUUID).done(function() {
+			var sentUUID = shortUUID16();
+			mChat.refresh(inputValue, sentUUID).done(function() {
 				mChat.resetSession();
 			}).fail(function() {
-				mChat.setText(originalInputValue);
+				addPendingSentMessage(originalInputValue, sentUUID);
 			}).always(function() {
 				$add.prop('disabled', false);
 				$input.delay(1).trigger('focus');
@@ -364,6 +361,18 @@ jQuery(function($) {
 					return;
 				}
 			}
+			
+			var pendingSentMessage = getFirstPendingSetMessage();
+			if (!isAdd && pendingSentMessage!=null) {
+				var color = mChat.chatColor;
+				if (!color) {
+					color = '808080';
+				}
+				isAdd = true;
+				message = '[color="#' + color + '"] ' + pendingSentMessage.text + ' [/color]';
+				uuid = pendingSentMessage.uuid;
+			}
+			
 			var data = {
 				last: mChat.messageIds.length ? mChat.messageIds.max() : 0,
 				log: mChat.logId,
@@ -393,6 +402,7 @@ jQuery(function($) {
 			if (json.clear) {
 				mChat.clearMessages(json.clear);
 			}
+			syncPendingMessages();
 			mChat.whoisDone(json.users);
 			if (json.log) {
 				mChat.logId = json.log;
@@ -418,13 +428,7 @@ jQuery(function($) {
 		addMessage: function(index) {
 			var $message = $(this);
 			var myUserId = $('#my-user-id').val();
-			if ($message.data('mchat-user-id')== myUserId && $message.data('mchat-uuid')==lastSentChatMessageUUID) {
-				if (lastSentChatMessage==mChat.cleanMessage(mChat.cached('input').val()).trim()) {
-					mChat.setText('');
-				}
-				lastSentChatMessage = null;
-				lastSentChatMessageUUID = null;
-			}
+			removePendingMessage($message.data('mchat-uuid'));
 			var dataAddMessageBefore = {
 				message: $message,
 				delay: mChat.refreshInterval ? 400 : 0,
@@ -608,10 +612,10 @@ jQuery(function($) {
 				container: mChat.cached('status')
 			};
 			$(mChat).trigger('mchat_status_before', [data]);
-			var $activeStatus = data.container.find('.mchat-status-' + data.status).removeClass('hidden');
+			/*var $activeStatus = data.container.find('.mchat-status-' + data.status).removeClass('hidden');
 			if ($activeStatus.length) {
 				data.container.find('.mchat-status').not($activeStatus).addClass('hidden');
-			}
+			}*/
 		},
 		pauseSession: function() {
 			clearInterval(mChat.refreshInterval);

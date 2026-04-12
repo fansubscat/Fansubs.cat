@@ -426,7 +426,6 @@ class mchat
 			return $return_raw ? $response : new JsonResponse($response);
 		} else {
 			$response = $this->action_refresh(true, $is_quit_command);
-			$response['add'] = '';
 
 			return $return_raw ? $response : new JsonResponse($response);
 		}
@@ -1000,7 +999,7 @@ class mchat
 		if ($limit)
 		{
 			$rows_with_additional_message = $rows;
-			array_unshift($rows_with_additional_message, $this->build_user_facing_message($this->lang->lang('MCHAT_RULES_MESSAGE') ?: htmlspecialchars_decode($this->mchat_settings->cfg('mchat_rules'))));
+			array_unshift($rows_with_additional_message, $this->build_user_facing_message($this->lang->lang('MCHAT_RULES_MESSAGE') ?: htmlspecialchars_decode($this->mchat_settings->cfg('mchat_rules')), ''));
 			$this->assign_messages($rows_with_additional_message, $page);
 		}
 
@@ -1700,7 +1699,7 @@ class mchat
 			}
 		} else if ($args[0]=='jo' || $args[0]=='me') {
 			if (count($args)==1) {
-				$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': cal que especifiquis un missatge');
+				$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': cal que especifiquis un missatge', $uuid);
 			} else {
 				$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] '.$args[1], $uuid);
 			}
@@ -1724,12 +1723,12 @@ class mchat
 			$this->mchat_functions->clear_chat();
 		} else if ($this->auth->acl_get('u_mchat_moderator_delete') && ($args[0]=='expulsa' || $args[0]=='kick')) {
 			if (count($args)==1) {
-				$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': cal que especifiquis un usuari');
+				$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': cal que especifiquis un usuari', $uuid);
 			} else {
 				$kicked_user = $this->mchat_functions->get_user_from_logged_user_session($args[1]);
 				
 				if ($kicked_user===NULL) {
-					$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': l’usuari especificat no està connectat');
+					$user_facing_messages[] = $this->build_user_facing_message('No s’ha pogut executar l’ordre /'.$args[0].': l’usuari especificat no està connectat', $uuid);
 				} else {
 					$this->mchat_functions->add_system_message($this->user->data['user_id'], '[url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $this->user->data['user_id']]).'][color=#'.$this->user->data['user_colour'].'][b]'.$this->user->data['username'].'[/b][/color][/url] ha expulsat del xat l’usuari [url='.append_sid($this->mchat_settings->url('memberlist', true), ['mode' => 'viewprofile', 'u' => $kicked_user['user_id']]).'][color=#'.$kicked_user['user_colour'].'][b]'.$kicked_user['username'].'[/b][/color][/url]', $uuid);
 					$this->mchat_functions->delete_user_session($kicked_user['user_id']);
@@ -1752,7 +1751,7 @@ class mchat
 					'</ul>';
 			}
 		
-			$user_facing_messages[] = $this->build_user_facing_message($help);
+			$user_facing_messages[] = $this->build_user_facing_message($help, $uuid);
 		} else {
 			return FALSE;
 		}
@@ -1760,7 +1759,7 @@ class mchat
 		return TRUE;
 	}
 	
-	protected function build_user_facing_message($message)
+	protected function build_user_facing_message($message, $uuid)
 	{
 		$system_user = $this->mchat_functions->mchat_get_system_user();
 		
@@ -1776,6 +1775,7 @@ class mchat
 			'post_visibility' => $system_user['post_visibility'],
 			'message_id' => -time(),
 			'message' => str_replace("'", '&#39;', $message),
+			'uuid' => $uuid,
 			'user_ip' => '',
 			'bbcode_bitfield' => NULL,
 			'bbcode_uid' => NULL,
