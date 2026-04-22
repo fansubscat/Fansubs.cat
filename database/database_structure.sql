@@ -549,6 +549,7 @@ ALTER TABLE `version_division`
 
 ALTER TABLE `views`
   ADD PRIMARY KEY (`file_id`,`day`),
+  ADD KEY `day` (`day`),
   ADD KEY `type` (`type`);
 
 ALTER TABLE `view_session`

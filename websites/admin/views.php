@@ -119,7 +119,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id 
 		WHERE s.type='$type' 
-			AND UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)." 
+			AND ps.updated>='".date("Y-m-d H:i:s",strtotime("-1 minute"))."' 
 		ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {
 ?>
@@ -269,7 +269,7 @@ $result = query("SELECT IFNULL(v.title, '".lang('admin.query.link_deleted')."') 
 			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id 
 		WHERE s.type='$type' 
-			AND UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)."
+			AND ps.updated>='".date("Y-m-d H:i:s",strtotime("-1 minute"))."'
 			AND v.id IN (SELECT version_id FROM rel_version_fansub WHERE fansub_id=".$fansub['id'].")
 		ORDER BY ps.created DESC");
 while ($row = mysqli_fetch_assoc($result)) {

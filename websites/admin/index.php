@@ -147,7 +147,7 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && $_SESSI
 			LEFT JOIN division d ON e.division_id=d.id 
 			LEFT JOIN version_division vd ON vd.division_id=d.id AND vd.version_id=v.id
 			LEFT JOIN episode_title et ON f.version_id=et.version_id AND f.episode_id=et.episode_id 
-		WHERE UNIX_TIMESTAMP(ps.updated)>=".(date('U')-60)."$extra_where
+		WHERE ps.updated>='".date("Y-m-d H:i:s",strtotime("-1 minute"))."'$extra_where
 		ORDER BY ps.created DESC");
 	if (mysqli_num_rows($result)==0) {
 ?>

@@ -38,9 +38,9 @@ function escape_for_like($string){
 
 function query($query){
 	global $db_connection;
-	$start = microtime(true);
+	$start = hrtime(true)/1000000000;
 	$result = mysqli_query($db_connection, $query) or crash(mysqli_error($db_connection)."<br><br>".sprintf(lang('generic.db_query'), $query));
-	$end = microtime(true);
+	$end = hrtime(true)/1000000000;
 	if (($end - $start)>2) {
 		log_action('slow-query', "Slow query detected (time: " . ($end - $start) . "s): $query");
 	}
