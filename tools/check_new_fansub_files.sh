@@ -8,7 +8,7 @@ function notify_error {
 	#Replace this with your own method of sending, i.e.
 	#php -r "mail('YOUR_EMAIL', \"Notificació del procés d’importació de fitxers a Fansubs.cat\", \"$1\", \"From: $sender_email\");"
 	#mailer.php is a script that sends through SMTP in our case
-	echo "$1" | php mailer.php YOUR_EMAIL "Notificació del procés d’importació de fitxers a Fansubs.cat"
+	echo "$1" | php "$base_dest_dir/ZZZ_INTERNAL/mailer.php" YOUR_EMAIL "Notificació del procés d’importació de fitxers a Fansubs.cat"
 }
 
 function generate_streaming {
@@ -21,7 +21,7 @@ function generate_streaming {
 	output_file=$7
 	
 	author="Recompressió per a Fansubs.cat"
-	title="No baixeu aquest fitxer, baixeu l'original!"
+	title="No baixeu aquest fitxer, baixeu l’original!"
 	script_id="AutomaticBatchProcessor"
 	crf_fullhd="23"
 	crf_hd="21"
@@ -137,47 +137,53 @@ do
 			if [ $? -eq 0 ]
 			then
 				file=`ls *.mp4`
-				output=`echo "$file" | sed -E "s/ \[.*\]//"`
-
-				# Copy to original folder, unless the method is only copy to storage
-				if [ $storage_processing -ne 5 ]
+				
+				if [ "$file" = "" ]
 				then
-					mkdir -p "$orig_dir/$storage_folder"
-					if [ -f "$orig_dir/$storage_folder/$file" ]
-					then
-						notify_error "S’ha sobreescrit el fitxer original $folder_type/$storage_folder/$file i se’n sobreescriurà també la versió recomprimida, si existeix."
-					fi
-					cp "$file" "$orig_dir/$storage_folder/"
-				fi
-
-				# Extract thumbnail
-				duration=`../ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$file" | awk -F'.' '{print $1}'`
-				../ffmpeg -i "$file" -ss $(((duration)/6)) -vframes 1 -filter:v scale="-1:240" thumbnail_$file_id.jpg
-				curl -F "thumbnail=@thumbnail_$file_id.jpg" -F "file_id=$file_id" https://api.fansubs.cat/internal/change_file_thumbnail/?token=$token 2> /dev/null
-
-				# Update duration
-				curl --data-urlencode "duration=$duration" --data-urlencode "file_id=$file_id" https://api.fansubs.cat/internal/change_file_duration/?token=$token 2> /dev/null
-
-				artist=`../ffprobe -v error -select_streams v:0 -show_entries format_tags=artist -of csv=s=x:p=0 "$file"`
-
-				if [ "$artist" = "Recompressió per a Fansubs.cat" ]
-				then
-					cp "$file" "$dest_dir/$storage_folder/$output"
-				elif [ "$artist" = "Recompressió per a anime.fansubs.cat" ]
-				then
-					cp "$file" "$dest_dir/$storage_folder/$output"
+					notify_error "El fitxer $file_id de la carpeta $storage_folder no és un MP4."
 				else
-					generate_streaming "$file" 0 0 -1 CONVERT CONVERT "$dest_dir/$storage_folder/$output"
-				fi
-				rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --exclude "Manga" --exclude "ZZZ_INTERNAL" --delete
+					output=`echo "$file" | sed -E "s/ \[.*\]//"`
 
-				# Insert converted file
-				res_json=`curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$folder_type/$storage_folder/$output" --data-urlencode "file_id=$file_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null`
-				if [ ! "$res_json" = "{\"status\":\"ok\"}" ]
-				then
-					notify_error "S’ha produït un error en inserir l’enllaç convertit del fitxer $folder_type/$storage_folder/$file (id. de fitxer $file_id): $res_json"
+					# Copy to original folder, unless the method is only copy to storage
+					if [ $storage_processing -ne 5 ]
+					then
+						mkdir -p "$orig_dir/$storage_folder"
+						if [ -f "$orig_dir/$storage_folder/$file" ]
+						then
+							notify_error "S’ha sobreescrit el fitxer original $folder_type/$storage_folder/$file i se’n sobreescriurà també la versió recomprimida, si existeix."
+						fi
+						cp "$file" "$orig_dir/$storage_folder/"
+					fi
+
+					# Extract thumbnail
+					duration=`../ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=s=x:p=0 "$file" | awk -F'.' '{print $1}'`
+					../ffmpeg -i "$file" -ss $(((duration)/6)) -vframes 1 -filter:v scale="-1:240" thumbnail_$file_id.jpg
+					curl -F "thumbnail=@thumbnail_$file_id.jpg" -F "file_id=$file_id" https://api.fansubs.cat/internal/change_file_thumbnail/?token=$token 2> /dev/null
+
+					# Update duration
+					curl --data-urlencode "duration=$duration" --data-urlencode "file_id=$file_id" https://api.fansubs.cat/internal/change_file_duration/?token=$token 2> /dev/null
+
+					artist=`../ffprobe -v error -select_streams v:0 -show_entries format_tags=artist -of csv=s=x:p=0 "$file"`
+
+					if [ "$artist" = "Recompressió per a Fansubs.cat" ]
+					then
+						cp "$file" "$dest_dir/$storage_folder/$output"
+					elif [ "$artist" = "Recompressió per a anime.fansubs.cat" ]
+					then
+						cp "$file" "$dest_dir/$storage_folder/$output"
+					else
+						generate_streaming "$file" 0 0 -1 CONVERT CONVERT "$dest_dir/$storage_folder/$output"
+					fi
+					rsync -avzhW --chmod=u=rwX,go=rX "$base_dest_dir/" root@$dest_host:/home/storage/ --exclude "@eaDir" --exclude "Manga" --exclude "ZZZ_INTERNAL" --delete
+
+					# Insert converted file
+					res_json=`curl --data-urlencode "original_url=$url" --data-urlencode "url=storage://$folder_type/$storage_folder/$output" --data-urlencode "file_id=$file_id" --data-urlencode "resolution=$resolutionp" https://api.fansubs.cat/internal/insert_converted_link/?token=$token 2> /dev/null`
+					if [ ! "$res_json" = "{\"status\":\"ok\"}" ]
+					then
+						notify_error "S’ha produït un error en inserir l’enllaç convertit del fitxer $folder_type/$storage_folder/$file (id. de fitxer $file_id): $res_json"
+					fi
+					error=0
 				fi
-				error=0
 			else
 				echo "Error downloading file: error $?, id: $file_id, URL: $url"
 			fi
