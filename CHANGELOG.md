@@ -1,5 +1,16 @@
 # Registre de canvis
 
+## 2026-04-22 - Versió 5.7.4
+- **Catàleg:**
+	- La cerca de text cerca que el títol contingui el text cercat, no que comenci pel text cercat.
+- **Comunitat:**
+	- Nova medalla.
+	- Xat: Es corregeix el marge de la part inferior de la pàgina.
+- **Serveis:**
+	- En convertir un fitxer de format, es comprova abans que l’extensió sigui .mp4.
+- **Administració:**
+	- Es fan canvis menors a les consultes per a incrementar-ne el rendiment i s’afegeix un nou índex a la base de dades.
+
 ## 2026-04-12 - Versió 5.7.3
 - **Comunitat:**
 	- Xat: S’implementa una cua de missatges pendents d’enviar per a quan la connexió és dolenta.
