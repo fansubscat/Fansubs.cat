@@ -20,6 +20,7 @@ Aquest projecte inclou el codi font dels següents webs:
 I també inclou els següents fragments de codi addicionals:
 - Aplicació d’Android: Mostra notícies i rep notificacions push quan hi ha disponible nou contingut. Actualment sense manteniment.
 - Serveis: Serveis interns que fan que el web funcioni com cal, normalment mitjançant tasques programades via «cron».
+- Corrector: API interna per als fansubs que connecta amb un servidor LanguageTool per a corregir textos.
 
 ## Per què existeix aquest web?
 

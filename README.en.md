@@ -20,6 +20,7 @@ This project includes the source code for the following sites:
 And also includes the following extra pieces of code:
 - Android app: Displays news and receives push notifications when new content is available. Currently unmaintained.
 - Services: Internal services that keep the site running, normally via cron jobs.
+- Grammar: Internal API for fansubs that connects with a LanguageTool server to grammar check texts.
 
 ## Why this site?
 
