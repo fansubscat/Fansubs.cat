@@ -1409,7 +1409,7 @@ function query_autocomplete($user, $text, $type) {
 				AND s.type='$type'
 				AND (s.name LIKE '%$text%' OR s.alternate_names LIKE '%$text%' OR EXISTS(SELECT v.id FROM version v WHERE v.series_id=s.id AND (v.title LIKE '%$text%' OR v.alternate_titles LIKE '%$text%')) OR s.studio LIKE '%$text%' OR s.author LIKE '%$text%' OR s.keywords LIKE '%$text%')
 			GROUP BY s.id
-			ORDER BY default_version_title LIKE '$text%' DESC, default_version_title ASC";
+			ORDER BY default_version_title LIKE '%$text%' DESC, default_version_title ASC";
 	return query($final_query);
 }
 
