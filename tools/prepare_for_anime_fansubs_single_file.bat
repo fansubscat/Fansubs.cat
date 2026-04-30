@@ -7,21 +7,21 @@ rem Nom del fitxer de vídeo original: el fitxer resultant tindrà el mateix nom
 rem Si hi ha una exclamació al nom del fitxer, cal canviar "!" per "^^!"
 set input_file=Nom del fitxer del vídeo original.mkv
 rem Fitxer de subtítols: si és extern, el nom sencer del fitxer; si és intern, número de pista (normalment 0); -1 si el vídeo ja té subtítols cremats
-rem Aquest nom de fitxer pot contenir espais, però no caràcters especials com ara accents (a causa d'un bug del filtre ass)
+rem Aquest nom de fitxer pot contenir espais, però no caràcters especials com ara accents (a causa d’un bug del filtre ass)
 set input_subs=Nom del fitxer dels subtitols.ass
 
 rem --- CONVERSIÓ ---
 rem Pista de vídeo que es processarà (normalment 0)
 set video_track=0
-rem Pista d'àudio que es processarà (normalment 0)
+rem Pista d’àudio que es processarà (normalment 0)
 set audio_track=0
 rem Acció a fer amb el vídeo: CONVERT per a recomprimir, COPY per a deixar-lo tal qual (en principi, sempre CONVERT)
 set video_action=CONVERT
-rem Acció a fer amb l'àudio: CONVERT per a recomprimir, COPY per a deixar-lo tal qual (en principi, sempre CONVERT)
+rem Acció a fer amb l’àudio: CONVERT per a recomprimir, COPY per a deixar-lo tal qual (en principi, sempre CONVERT)
 set audio_action=CONVERT
 
 rem --- EXECUCIÓ ---
-rem NO CANVIÏS RES D'AQUÍ EN AVALL!
+rem NO CANVIÏS RES D’AQUÍ EN AVALL!
 call :main
 pause
 exit /b 0
@@ -36,8 +36,8 @@ set action_video=%~5
 set action_audio=%~6
 set output_file=%~7
 
-set author=Recompressió per a anime.fansubs.cat
-set title=No baixeu aquest fitxer, baixeu l'original^^!
+set author=Recompressió per a Fansubs.cat
+set title=No baixeu aquest fitxer, baixeu l’original^^!
 set script_id=BaseScript-Windows-External
 set crf_fullhd=23
 set crf_hd=21
@@ -65,12 +65,12 @@ if %errorlevel% neq 0 (
 )
 
 if not exist "ffmpeg\bin\ffmpeg.exe" (
-	echo ERROR: No s'ha trobat l'ordre 'ffmpeg'. Assegura't que tinguis l'ffmpeg descomprimit dins la carpeta "ffmpeg".
+	echo ERROR: No s’ha trobat l’ordre «ffmpeg». Assegura’t que tinguis l’ffmpeg descomprimit dins la carpeta «ffmpeg».
 	exit /b 3
 )
 
 if not exist "ffmpeg\bin\ffprobe.exe" (
-	echo ERROR: No s'ha trobat l'ordre 'ffprobe'. Assegura't que tinguis l'ffmpeg descomprimit dins la carpeta "ffmpeg".
+	echo ERROR: No s’ha trobat l’ordre «ffprobe». Assegura’t que tinguis l’ffmpeg descomprimit dins la carpeta «ffmpeg».
 	exit /b 3
 )
 
@@ -142,7 +142,7 @@ if "%action_video%" == "COPY" (
 	setlocal DisableDelayedExpansion
 ) else (
 	if %has_softsubs% equ 1 (
-		echo S'està comprovant que els tipus de lletra existeixin i s'identifiquin correctament ^(caldrà validació manual^)...
+		echo S’està comprovant que els tipus de lletra existeixin i s’identifiquin correctament ^(caldrà validació manual^)...
 		ffmpeg\bin\ffmpeg.exe -y -i "%original_file%" -map_metadata -1 -map_chapters -1 -map 0:v:%$video_stream% -map 0:a:%audio_stream% -vf %filter_opts% -f null - 2>&1| findstr fontselect 2> nul
 		set /p=Premeu Intro si tots els tipus de lletra estan correctament identificats o tanqueu la finestra si no és així.
 		setlocal EnableDelayedExpansion

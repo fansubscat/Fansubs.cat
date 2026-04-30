@@ -9,15 +9,15 @@ input_subs="Nom del fitxer dels subtítols.ass"
 # --- CONVERSIÓ ---
 # Pista de vídeo que es processarà (normalment 0)
 video_track=0
-# Pista d'àudio que es processarà (normalment 0)
+# Pista d’àudio que es processarà (normalment 0)
 audio_track=0
 # Acció a fer amb el vídeo: CONVERT per a recomprimir, COPY per a deixar-lo tal qual (en principi, sempre CONVERT)
 video_action=CONVERT
-# Acció a fer amb l'àudio: CONVERT per a recomprimir, COPY per a deixar-lo tal qual (en principi, sempre CONVERT)
+# Acció a fer amb l’àudio: CONVERT per a recomprimir, COPY per a deixar-lo tal qual (en principi, sempre CONVERT)
 audio_action=CONVERT
 
 # --- EXECUCIÓ ---
-# NO CANVIÏS RES D'AQUÍ EN AVALL!
+# NO CANVIÏS RES D’AQUÍ EN AVALL!
 
 function generate_streaming {
 	original_file=$1
@@ -28,8 +28,8 @@ function generate_streaming {
 	action_audio=$6
 	output_file=$7
 	
-	author="Recompressió per a anime.fansubs.cat"
-	title="No baixeu aquest fitxer, baixeu l'original!"
+	author="Recompressió per a Fansubs.cat"
+	title="No baixeu aquest fitxer, baixeu l’original!"
 	script_id="BaseScript-Linux-External"
 	crf_fullhd="23"
 	crf_hd="21"
@@ -58,13 +58,13 @@ function generate_streaming {
 
 	if ! command -v ffmpeg &> /dev/null
 	then
-	    echo "ERROR: No s'ha trobat l'ordre 'ffmpeg'. Assegura't que tinguis el paquet ffmpeg correctament instal·lat."
+	    echo "ERROR: No s’ha trobat l’ordre «ffmpeg». Assegura’t que tinguis el paquet ffmpeg correctament instal·lat."
 	    exit 3
 	fi
 
 	if ! command -v ffprobe &> /dev/null
 	then
-	    echo "ERROR: No s'ha trobat l'ordre 'ffprobe'. Assegura't que tinguis el paquet ffmpeg correctament instal·lat."
+	    echo "ERROR: No s’ha trobat l’ordre «ffprobe». Assegura’t que tinguis el paquet ffmpeg correctament instal·lat."
 	    exit 3
 	fi
 
@@ -132,7 +132,7 @@ function generate_streaming {
 	else
 		if [ $has_softsubs -eq 1 ]
 		then
-			echo "S'està comprovant que els tipus de lletra existeixin i s'identifiquin correctament (caldrà validació manual)..."
+			echo "S’està comprovant que els tipus de lletra existeixin i s’identifiquin correctament (caldrà validació manual)..."
 			ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream -vf "$filter_opts" -f null - 2>&1 | grep fontselect | sed -E "s/.* fontselect:/Tipus de lletra:/"
 			read -p "Premeu Intro si tots els tipus de lletra estan correctament identificats o Control-C si no és així."
 			ffmpeg -y -i "$original_file" -map_metadata -1 -map_chapters -1 -map 0:v:$video_stream -map 0:a:$audio_stream -pix_fmt yuv420p -vf "$filter_opts" $video_opts $audio_opts -metadata title="$title" -metadata artist="$author" -metadata comment="$comment" -movflags faststart "$output_dir/$output_file.mp4"
