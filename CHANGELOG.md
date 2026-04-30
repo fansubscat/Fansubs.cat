@@ -1,5 +1,19 @@
 # Registre de canvis
 
+## 2026-04-30 - Versió 5.7.5
+- **Comunitat:**
+	- Nova medalla.
+	- Xat: Es corregeix que el tema del xat es mostrés amb un format erroni en entrar-hi.
+- **Usuaris:**
+	- Es corregeix el títol del camp de l’URL de YouTube de l’usuari (s’hi mostrava «Bluesky» en lloc de «YouTube»).
+- **Administració:**
+	- Es mostra el nom d’usuari de l’usuari públic del fansub a la fitxa del fansub.
+	- Es valida que les imatges penjades siguin realment del tipus que correspon. Fins ara era possible penjar imatges en formats erronis canviant-ne l’extensió: ara ja no.
+	- Es valida que els camps de títol localitzat, títol de cada divisió i nom del fansub no continguin caràcters no suportats.
+- **Eines:**
+	- Es processen els fitxers per ordre numèric invers, i no ordre alfabètic.
+	- Es canvien a tipogràfics els apòstrofs dels scripts de conversió.
+
 ## 2026-04-22 - Versió 5.7.4
 - **Catàleg:**
 	- La cerca de text cerca que el títol contingui el text cercat, no que comenci pel text cercat.
