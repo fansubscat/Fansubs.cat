@@ -882,6 +882,16 @@ class mchat
 		
 		//Get custom profile fields (for sound and color)
 		$this->user->get_profile_fields($this->user->data['user_id']);
+		
+		if (!empty($static_message)) {
+			$uid = '';
+			$bitfield = '';
+			$options = 0;
+
+			generate_text_for_storage($static_message, $uid, $bitfield, $options, true, true, true);
+			
+			$static_message = html_entity_decode(generate_text_for_display($static_message, $uid, $bitfield, $options));
+		}
 
 		$template_data = [
 			'MCHAT_PAGE'					=> $page,
@@ -901,7 +911,7 @@ class mchat
 			'MCHAT_ARCHIVE'					=> $this->auth->acl_get('u_mchat_archive'),
 			'MCHAT_RULES'					=> $this->lang->lang('MCHAT_RULES_MESSAGE') ?: $this->mchat_settings->cfg('mchat_rules'),
 			'MCHAT_LOG_ID'					=> $this->mchat_log->get_latest_id(),
-			'MCHAT_STATIC_MESS'				=> htmlspecialchars_decode($static_message),
+			'MCHAT_STATIC_MESS'				=> $static_message,
 			'MCHAT_MAX_INPUT_HEIGHT'		=> $this->mchat_settings->cfg('mchat_max_input_height'),
 			'MCHAT_MAX_MESSAGE_LENGTH'		=> $this->mchat_settings->cfg('mchat_max_message_lngth'),
 			'MCHAT_TOTAL_MESSAGES'			=> $total_messages,
