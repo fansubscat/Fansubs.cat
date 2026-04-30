@@ -493,8 +493,8 @@ $lang = array_merge($lang, array(
 	'SMILIES_PATH_EXPLAIN'		=> 'Camí a partir del directori arrel del phpBB, p.ex. <samp>images/smilies</samp>.',
 	'UPLOAD_ICONS_PATH'			=> 'Camí d’emmagatzemament de les icones dels grups d’extensions',
 	'UPLOAD_ICONS_PATH_EXPLAIN'	=> 'Camí a partir del directori arrel del phpBB, p.ex. <samp>images/upload_icons</samp>.',
-	'USE_SYSTEM_CRON'		=> 'Executa les tasques periòdiques amb el cron del sistema',
-	'USE_SYSTEM_CRON_EXPLAIN'		=> 'Si ho inhabiliteu, el phpBB organitzarà l’execució automàtica de tasques periòdiques. Si ho habiliteu, el phpBB no planificarà cap tasca periòdica per sí mateix; caldrà que un administrador del sistema organitzi l’execució de <code>bin/phpbbcli.php cron:run</code> amb la utilitat cron del sistema a intervals regulars (p.ex. cada 5 minuts).',
+	'USE_SYSTEM_CRON'			=> 'Executa tasques periòdiques amb el cron del sistema operatiu',
+	'USE_SYSTEM_CRON_EXPLAIN'	=> 'Si ho inhabiliteu, el phpBB organitzarà l’execució automàtica de tasques periòdiques. Si ho habiliteu, el phpBB no planificarà cap tasca periòdica per sí mateix; caldrà que un administrador del sistema organitzi l’execució de <code>bin/phpbbcli.php cron:run</code> amb la utilitat cron del sistema operatiu a intervals regulars (p.ex. cada 5 minuts).',
 ));
 
 // Security Settings
