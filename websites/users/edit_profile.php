@@ -93,7 +93,7 @@ if (!empty($user['fansub_id'])) {
 			<label for="edit_profile_mastodon_url"><?php echo lang('users.edit_profile.mastodon_url'); ?></label>
 			<input id="edit_profile_mastodon_url" type="url" maxlength="255" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['mastodon_url']); ?>">
 			<div id="edit_profile_mastodon_url_validation" class="validation-message"></div>
-			<label for="edit_profile_youtube_url"><?php echo lang('users.edit_profile.bluesky_url'); ?></label>
+			<label for="edit_profile_youtube_url"><?php echo lang('users.edit_profile.youtube_url'); ?></label>
 			<input id="edit_profile_youtube_url" type="url" maxlength="255" oninput="removeValidation(this.id);" value="<?php echo htmlspecialchars($user['youtube_url']); ?>">
 			<div id="edit_profile_youtube_url_validation" class="validation-message"></div>
 			<label for="edit_profile_twitter_url"><?php echo lang('users.edit_profile.twitter_url'); ?></label>
