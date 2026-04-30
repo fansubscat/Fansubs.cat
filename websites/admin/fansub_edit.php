@@ -276,9 +276,19 @@ if (!empty($_SESSION['username']) && !empty($_SESSION['admin_level']) && ($_SESS
 						<label for="form-email"><?php echo lang('admin.fansub_edit.email'); ?><span class="mandatory"></label> <?php print_helper_box(lang('admin.fansub_edit.email'), lang('admin.fansub_edit.email.help')); ?>
 						<input class="form-control" type="email" name="email" id="form-email" maxlength="200" value="<?php echo htmlspecialchars($row['email']); ?>" required>
 					</div>
+<?php
+	if (!empty($row['id'])) {
+?>
+					<div class="mb-3">
+						<label for="form-public_username"><?php echo lang('admin.fansub_edit.public_username'); ?></label> <?php print_helper_box(lang('admin.fansub_edit.public_username'), lang('admin.fansub_edit.public_username.help')); ?>
+						<input class="form-control" type="text" id="form-public_username" value="<?php echo htmlspecialchars($row['old_username']); ?>" readonly disabled>
+					</div>
+<?php
+	}
+?>
 					<div class="mb-3">
 						<label for="form-user_password"><?php echo !empty($row['id']) ? lang('admin.fansub_edit.user_password_edit') : lang('admin.fansub_edit.user_password').'<span class="mandatory">'; ?></label> <?php print_helper_box(lang('admin.fansub_edit.user_password'), lang('admin.fansub_edit.user_password.help')); ?>
-						<input class="form-control" type="password" name="user_password" id="form-user_password" maxlength="200" minlength="6"autocomplete="new-password" value=""<?php echo !empty($row['id']) ? '' : ' required'; ?>>
+						<input class="form-control" type="password" name="user_password" id="form-user_password" maxlength="200" minlength="6" autocomplete="new-password" value=""<?php echo !empty($row['id']) ? '' : ' required'; ?>>
 					</div>
 					<div class="mb-3">
 						<label for="form-bluesky_handle"><?php echo lang('admin.fansub_edit.bluesky_handle'); ?><span class="mandatory"></span> <?php print_helper_box(lang('admin.fansub_edit.bluesky_handle'), lang('admin.fansub_edit.bluesky_handle.help')); ?></label>
