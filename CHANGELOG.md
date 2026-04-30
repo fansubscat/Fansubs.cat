@@ -2,6 +2,7 @@
 
 ## 2026-04-30 - Versió 5.7.5
 - **Comunitat:**
+	- Actualització a phpBB 3.3.16.
 	- Nova medalla.
 	- Xat: Es corregeix que el tema del xat es mostrés amb un format erroni en entrar-hi.
 - **Usuaris:**
