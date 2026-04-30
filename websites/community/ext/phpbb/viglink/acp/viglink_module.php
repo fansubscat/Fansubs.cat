@@ -131,7 +131,7 @@ class viglink_module
 
 		$template->assign_vars(array(
 			'S_ERROR'				=> (bool) count($error),
-			'ERROR_MSG'				=> implode('<br />', $error),
+			'ERROR_MSG'				=> implode('<br>', $error),
 
 			'VIGLINK_ENABLED'		=> $cfg_array['viglink_enabled'],
 

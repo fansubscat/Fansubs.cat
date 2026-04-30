@@ -1,7 +1,7 @@
 <IfModule mod_rewrite.c>
 RewriteEngine on
 
-# Forbid stupid and aggressive bots
+# FANSUBS.CAT: Forbid stupid and aggressive bots
 RewriteCond %{HTTP_USER_AGENT} AspiegelBot [NC]
 RewriteRule .* - [F,L]
 RewriteCond %{HTTP_USER_AGENT} Applebot [NC]
@@ -66,12 +66,26 @@ RewriteRule ^(.*)$ app.php [QSA,L]
 			Order Allow,Deny
 			Deny from All
 		</Files>
+		<Files "composer.json">
+			Order Allow,Deny
+			Deny from All
+		</Files>
+		<Files "composer.lock">
+			Order Allow,Deny
+			Deny from All
+		</Files>
 	</IfVersion>
 	<IfVersion >= 2.4>
 		<Files "config.php">
 			Require all denied
 		</Files>
 		<Files "common.php">
+			Require all denied
+		</Files>
+		<Files "composer.json">
+			Require all denied
+		</Files>
+		<Files "composer.lock">
 			Require all denied
 		</Files>
 	</IfVersion>
@@ -86,12 +100,26 @@ RewriteRule ^(.*)$ app.php [QSA,L]
 			Order Allow,Deny
 			Deny from All
 		</Files>
+		<Files "composer.json">
+			Order Allow,Deny
+			Deny from All
+		</Files>
+		<Files "composer.lock">
+			Order Allow,Deny
+			Deny from All
+		</Files>
 	</IfModule>
 	<IfModule mod_authz_core.c>
 		<Files "config.php">
 			Require all denied
 		</Files>
 		<Files "common.php">
+			Require all denied
+		</Files>
+		<Files "composer.json">
+			Require all denied
+		</Files>
+		<Files "composer.lock">
 			Require all denied
 		</Files>
 	</IfModule>

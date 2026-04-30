@@ -18,9 +18,9 @@
 	<fieldset>
 		<legend>{{ lang('ACP_VIGLINK_SETTINGS') }}</legend>
 		<dl>
-			<dt><label for="viglink_enabled">{{ lang('ACP_VIGLINK_ENABLE') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_VIGLINK_ENABLE_EXPLAIN') }}</span></dt>
-			<dd><label><input type="radio" class="radio" id="viglink_enabled" name="viglink_enabled" value="1"{% if VIGLINK_ENABLED %} checked="checked"{% endif %} /> {{ lang('ENABLED') }}</label>
-				<label><input type="radio" class="radio" name="viglink_enabled" value="0"{% if not VIGLINK_ENABLED %} checked="checked"{% endif %} /> {{ lang('DISABLED') }}</label></dd>
+			<dt><label for="viglink_enabled">{{ lang('ACP_VIGLINK_ENABLE') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_VIGLINK_ENABLE_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" id="viglink_enabled" name="viglink_enabled" value="1"{% if VIGLINK_ENABLED %} checked="checked"{% endif %}> {{ lang('ENABLED') }}</label>
+				<label><input type="radio" class="radio" name="viglink_enabled" value="0"{% if not VIGLINK_ENABLED %} checked="checked"{% endif %}> {{ lang('DISABLED') }}</label></dd>
 		</dl>
 	</fieldset>
 
@@ -32,15 +32,15 @@
 		<legend>{{ lang('ACP_VIGLINK_EARNINGS') }}</legend>
 		{% if U_VIGLINK_CONVERT %}
 		<dl>
-			<dt><label>{{ lang('ACP_VIGLINK_CLAIM') ~ lang('COLON') }}</label><br /><span>{{ lang('ACP_VIGLINK_CLAIM_EXPLAIN') }}</span></dt>
+			<dt><label>{{ lang('ACP_VIGLINK_CLAIM') ~ lang('COLON') }}</label><br><span>{{ lang('ACP_VIGLINK_CLAIM_EXPLAIN') }}</span></dt>
 			<dd><a href="{{ U_VIGLINK_CONVERT }}">{{ lang('ACP_VIGLINK_CONVERT_ACCOUNT') }}</a></dd>
 		</dl>
 		{% endif %}
 	</fieldset>
 
 	<fieldset class="submit-buttons">
-		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
 		{{ S_FORM_TOKEN }}
 	</fieldset>
 </form>
