@@ -1,5 +1,8 @@
 var linkUrlPattern = "(https:\/\/mega(?:\.co)?\.nz\/(?:#!|embed#!|file\/|embed\/)?([a-zA-Z0-9]{0,8})[!#]([a-zA-Z0-9_\-]+)|storage:\/\/.*)";
 
+//List of supported characters extracted from Lexend Deca using: fc-match --format='%{charset}\n' "Lexend Deca"
+var supportedCharsRegex = /[^\u0020-\u007e\u00a0-\u017e\u018f\u0192\u019d\u01a0-\u01a1\u01af-\u01b0\u01c4-\u01d4\u01e6-\u01e7\u01ea-\u01eb\u01f1-\u01f2\u01fa-\u021b\u022a-\u022d\u0230-\u0233\u0237\u0259\u0272\u02bb-\u02bc\u02be-\u02bf\u02c6-\u02c8\u02cc\u02d8-\u02dd\u0300-\u0304\u0306-\u030c\u030f\u0311-\u0312\u031b\u0323-\u0324\u0326-\u0328\u032e\u0331\u0335\u0394\u03a9\u03bc\u03c0\u1e08-\u1e09\u1e0c-\u1e0f\u1e14-\u1e17\u1e1c-\u1e1d\u1e20-\u1e21\u1e24-\u1e25\u1e2a-\u1e2b\u1e2e-\u1e2f\u1e36-\u1e37\u1e3a-\u1e3b\u1e42-\u1e49\u1e4c-\u1e53\u1e5a-\u1e5b\u1e5e-\u1e69\u1e6c-\u1e6f\u1e78-\u1e7b\u1e80-\u1e85\u1e8e-\u1e8f\u1e92-\u1e93\u1e97\u1e9e\u1ea0-\u1ef9\u2007-\u200b\u2010\u2012-\u2015\u2018-\u201a\u201c-\u201e\u2020-\u2022\u2026\u2030\u2033\u2039-\u203a\u2044\u2070\u2074-\u2079\u2080-\u2089\u20a1\u20a3-\u20a4\u20a6-\u20a7\u20a9\u20ab-\u20ad\u20b1-\u20b2\u20b5\u20b9-\u20ba\u20bc-\u20bd\u2113\u2116\u2122\u2126\u212e\u215b-\u215e\u2202\u2205-\u2206\u220f\u2211-\u2212\u2215\u2219-\u221a\u221e\u222b\u2248\u2260\u2264-\u2265\u25ca\ufb01-\ufb02]/g;
+
 function lang(string) {
 	if (window.LANGUAGE_STRINGS[string]===undefined) {
 		alert('Missing string: '+string);
@@ -939,8 +942,6 @@ function checkNumberOfEpisodes() {
 		return false;
 	}
 
-	//List of supported characters extracted from Lexend Deca using: fc-match --format='%{charset}\n' "Lexend Deca"
-	var supportedCharsRegex = /[^\u0020-\u007e\u00a0-\u017e\u018f\u0192\u019d\u01a0-\u01a1\u01af-\u01b0\u01c4-\u01d4\u01e6-\u01e7\u01ea-\u01eb\u01f1-\u01f2\u01fa-\u021b\u022a-\u022d\u0230-\u0233\u0237\u0259\u0272\u02bb-\u02bc\u02be-\u02bf\u02c6-\u02c8\u02cc\u02d8-\u02dd\u0300-\u0304\u0306-\u030c\u030f\u0311-\u0312\u031b\u0323-\u0324\u0326-\u0328\u032e\u0331\u0335\u0394\u03a9\u03bc\u03c0\u1e08-\u1e09\u1e0c-\u1e0f\u1e14-\u1e17\u1e1c-\u1e1d\u1e20-\u1e21\u1e24-\u1e25\u1e2a-\u1e2b\u1e2e-\u1e2f\u1e36-\u1e37\u1e3a-\u1e3b\u1e42-\u1e49\u1e4c-\u1e53\u1e5a-\u1e5b\u1e5e-\u1e69\u1e6c-\u1e6f\u1e78-\u1e7b\u1e80-\u1e85\u1e8e-\u1e8f\u1e92-\u1e93\u1e97\u1e9e\u1ea0-\u1ef9\u2007-\u200b\u2010\u2012-\u2015\u2018-\u201a\u201c-\u201e\u2020-\u2022\u2026\u2030\u2033\u2039-\u203a\u2044\u2070\u2074-\u2079\u2080-\u2089\u20a1\u20a3-\u20a4\u20a6-\u20a7\u20a9\u20ab-\u20ad\u20b1-\u20b2\u20b5\u20b9-\u20ba\u20bc-\u20bd\u2113\u2116\u2122\u2126\u212e\u215b-\u215e\u2202\u2205-\u2206\u220f\u2211-\u2212\u2215\u2219-\u221a\u221e\u222b\u2248\u2260\u2264-\u2265\u25ca\ufb01-\ufb02]/g;
 	if ($('#form-name-with-autocomplete').val().match(supportedCharsRegex)) {
 		alert(lang('js.admin.series_edit.error.title_contains_unsupported_chars').replaceAll('%s', $('#form-name-with-autocomplete').val().match(supportedCharsRegex).join('')));
 		return false;
@@ -974,6 +975,11 @@ function checkFansub() {
 		return false;
 	}
 
+	if ($('#form-name-with-autocomplete').val().match(supportedCharsRegex)) {
+		alert(lang('js.admin.fansub_edit.error.name_contains_unsupported_chars').replaceAll('%s', $('#form-name-with-autocomplete').val().match(supportedCharsRegex).join('')));
+		return false;
+	}
+
 	return true;
 }
 
@@ -1004,6 +1010,15 @@ function checkNumberOfLinks() {
 
 	if ($('#form-title-with-autocomplete').val()==$('#form-alternate_titles').val()) {
 		alert(lang('js.admin.version_edit.error.localized_title_and_alternate_titles_are_equal'));
+		return false;
+	}
+	
+	if ($('#form-title-with-autocomplete').val().match(supportedCharsRegex)) {
+		alert(lang('js.admin.version_edit.error.title_contains_unsupported_chars').replaceAll('%s', $('#form-title-with-autocomplete').val().match(supportedCharsRegex).join('')));
+		return false;
+	}
+	if ($('#form-alternate_titles').val().match(supportedCharsRegex)) {
+		alert(lang('js.admin.version_edit.error.alternate_titles_contains_unsupported_chars').replaceAll('%s', $('#form-alternate_titles').val().match(supportedCharsRegex).join('')));
 		return false;
 	}
 
@@ -1045,6 +1060,10 @@ function checkNumberOfLinks() {
 				alert(lang('js.admin.series_edit.error.division_is_repeated'));
 				return false;
 			}
+		}
+		if ($(divisionsTitles[i]).val().match(supportedCharsRegex)) {
+			alert(lang('js.admin.version_edit.error.division_contains_unsupported_chars').replaceAll('%s', $(divisionsTitles[i]).val().match(supportedCharsRegex).join('')));
+			return false;
 		}
 	}
 
@@ -1401,16 +1420,39 @@ function checkImageUpload(fileInput, maxBytes, fileMimeType, minResX, minResY, m
 	if (fileInput.files && fileInput.files[0]) {
 		if (maxBytes!=-1 && fileInput.files[0].size>maxBytes) {
 			alert(lang('js.admin.file_uploader.error_file_too_big').replaceAll('%d', maxBytes/1024));
+			resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+			resetFileInput($(fileInput));
 		} else if (fileMimeType=='image/*' && !fileInput.files[0].type.startsWith('image/')) {
 			alert(lang('js.admin.file_uploader.error_wrong_type'));
+			resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+			resetFileInput($(fileInput));
 		} else if (fileMimeType!='image/*' && fileInput.files[0].type!=fileMimeType) {
 			alert(lang('js.admin.file_uploader.error_wrong_type'));
+			resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+			resetFileInput($(fileInput));
 		} else {
 			var reader = new FileReader();
 			reader.onload = function(e) {
+				//Check that images are really what they say they are
+				var fileArr = new Uint8Array(e.target.result);
+				var isJpeg = (fileArr[0]===0xFF && fileArr[1]===0xD8 && fileArr[2]===0xFF);
+				var isPng = (fileArr[0]===0x89 && fileArr[1]===0x50 && fileArr[2]===0x4E && fileArr[3]===0x47);
+				if (fileMimeType=='image/jpeg' && !isJpeg) {
+					alert(lang('js.admin.file_uploader.error_wrong_type_jpeg'));
+					resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+					resetFileInput($(fileInput));
+					return;
+				} else if (fileMimeType=='image/png' && !isPng) {
+					alert(lang('js.admin.file_uploader.error_wrong_type_png'));
+					resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
+					resetFileInput($(fileInput));
+					return;
+				}
 				//Get image dimensions
 				var img = new Image();
-				img.src = e.target.result;
+				var blob = new Blob([e.target.result], { type: isJpeg ? 'image/jpeg' : 'image/png' });
+				var blobUrl = URL.createObjectURL(blob)
+				img.src = blobUrl;
 				img.onload = function(e2) {
 					var width = img.naturalWidth;
 					var height = img.naturalHeight;
@@ -1423,9 +1465,9 @@ function checkImageUpload(fileInput, maxBytes, fileMimeType, minResX, minResY, m
 						resetOptionalUrl(optionalUrlId, previewImageId, previewLinkId);
 						resetFileInput($(fileInput));
 					} else {
-						$('#'+previewImageId).attr('src',e.target.result);
+						$('#'+previewImageId).attr('src',blobUrl);
 						if (previewLinkId) {
-							$('#'+previewLinkId).attr('href',e.target.result);
+							$('#'+previewLinkId).attr('href',blobUrl);
 						}
 						if (optionalUrlId) {
 							$('#'+optionalUrlId).val('');
@@ -1440,7 +1482,7 @@ function checkImageUpload(fileInput, maxBytes, fileMimeType, minResX, minResY, m
 					syncDivisionImages();
 				}
 			};
-			reader.readAsDataURL(fileInput.files[0]);
+			reader.readAsArrayBuffer(fileInput.files[0]);
 			return;
 		}
 	}
