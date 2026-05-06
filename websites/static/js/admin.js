@@ -622,7 +622,7 @@ function addVersionRemoteFolderRow() {
 }
 
 function deleteVersionRow(episode_id, id) {
-	if ($("#form-files-list-"+episode_id+"-id-"+id).val()!='-1'){
+	if ($("#form-files-list-"+episode_id+"-id-"+id).val()!='-1' && $('meta[name="admin-level"]').attr('content')<4){
 		alert($('#type').val()=='manga' ? lang('js.admin.version_edit.warning.delete_file.manga') : lang('js.admin.version_edit.warning.delete_file'));
 		return;
 	}
@@ -836,18 +836,18 @@ function checkNumberOfEpisodes() {
 	var divisionsEpisodes = $('[id^=form-division-list-number_of_episodes-]');
 	var divisionsNumbers = $('[id^=form-division-list-number-]');
 	var divisionsTitles = $('[id^=form-division-list-name-]');
-	for (var i=0;i<divisionsEpisodes.length;i++){
-		if ($(divisionsEpisodes[i]).val()!='') {
-			var divisionEpisodeCount=parseInt($(divisionsEpisodes[i]).val());
-			var divisionNumber=$(divisionsNumbers[i]).val();
-			var realDivisionEpisodeCount = 0;
-			for (var j=1;j<=episodeCount;j++){
-				if ($('#form-episode-list-division-'+j).val()==divisionNumber){
-					realDivisionEpisodeCount++;
-				}
+	for (var i=0;i<divisionsNumbers.length;i++){
+		for (var j=0;j<divisionsNumbers.length;j++){
+			if ($(divisionsNumbers[j]).val()==$(divisionsNumbers[i]).val() && i!=j) {
+				alert(lang('js.admin.series_edit.error.division_number_is_repeated'));
+				return false;
 			}
-			if (divisionEpisodeCount!=realDivisionEpisodeCount){
-				alert(lang('js.admin.series_edit.error.division_has_unmatching_episodes').replaceAll('%1$d', divisionNumber).replaceAll('%2$d', divisionEpisodeCount).replaceAll('%3$d', realDivisionEpisodeCount));
+		}
+	}
+	for (var i=0;i<divisionsTitles.length;i++){
+		for (var j=0;j<divisionsTitles.length;j++){
+			if ($(divisionsTitles[j]).val()==$(divisionsTitles[i]).val() && i!=j) {
+				alert(lang('js.admin.series_edit.error.division_is_repeated'));
 				return false;
 			}
 		}
@@ -869,10 +869,18 @@ function checkNumberOfEpisodes() {
 			}
 		}
 	}
-	for (var i=0;i<divisionsTitles.length;i++){
-		for (var j=0;j<divisionsTitles.length;j++){
-			if ($(divisionsTitles[j]).val()==$(divisionsTitles[i]).val() && i!=j) {
-				alert(lang('js.admin.series_edit.error.division_is_repeated'));
+	for (var i=0;i<divisionsEpisodes.length;i++){
+		if ($(divisionsEpisodes[i]).val()!='') {
+			var divisionEpisodeCount=parseInt($(divisionsEpisodes[i]).val());
+			var divisionNumber=$(divisionsNumbers[i]).val();
+			var realDivisionEpisodeCount = 0;
+			for (var j=1;j<=episodeCount;j++){
+				if ($('#form-episode-list-division-'+j).val()==divisionNumber){
+					realDivisionEpisodeCount++;
+				}
+			}
+			if (divisionEpisodeCount!=realDivisionEpisodeCount){
+				alert(lang('js.admin.series_edit.error.division_has_unmatching_episodes').replaceAll('%1$d', divisionNumber).replaceAll('%2$d', divisionEpisodeCount).replaceAll('%3$d', realDivisionEpisodeCount));
 				return false;
 			}
 		}
@@ -881,6 +889,14 @@ function checkNumberOfEpisodes() {
 		if ($('#form-episode-list-num-'+i).val()=='' && $('#form-episode-list-description-'+i).val()==''){
 			alert(lang('js.admin.series_edit.error.episodes_with_no_number_or_specials_without_name'));
 			return false;
+		}
+	}
+	for (var i=1;i<=episodeCount;i++){
+		for (var j=1;j<=episodeCount;j++){
+			if ($('#form-episode-list-num-'+i).val()!='' && $('#form-episode-list-num-'+j).val()!='' && $('#form-episode-list-num-'+i).val()==$('#form-episode-list-num-'+j).val() && $('#form-episode-list-division-'+i).val()==$('#form-episode-list-division-'+j).val()){
+				alert(lang('js.admin.series_edit.error.episodes_with_numbers_repeated'));
+				return false;
+			}
 		}
 	}
 

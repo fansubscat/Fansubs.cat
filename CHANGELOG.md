@@ -1,5 +1,11 @@
 # Registre de canvis
 
+## 2026-05-06 - Versió 5.7.6
+- **Administració:**
+	- Es valida que no hi hagi divisions amb números repetits.
+	- Es valida que no hi hagi capítols amb números repetits dins de la mateixa divisió.
+	- Es permet que els administradors de nivell màxim suprimeixin fitxers de les versions.
+
 ## 2026-04-30 - Versió 5.7.5
 - **Comunitat:**
 	- Actualització a phpBB 3.3.16.

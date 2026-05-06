@@ -22,6 +22,7 @@ if(!empty($_SESSION['username']) && mysqli_num_rows(query("SELECT * FROM admin_u
 		<meta name="msapplication-TileColor" content="#da532c">
 		<meta name="msapplication-config" content="<?php echo STATIC_URL; ?>/favicons/admin/browserconfig.xml">
 		<meta name="theme-color" content="#6aa0f8">
+		<meta name="admin-level" content="<?php echo !empty($_SESSION['admin_level']) ? $_SESSION['admin_level'] : 0; ?>">
 		<title><?php echo $header_title; ?> - <?php echo sprintf(lang('admin.generic.header'), MAIN_SITE_NAME); ?></title>
 		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo STATIC_URL; ?>/favicons/admin/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="<?php echo STATIC_URL; ?>/favicons/admin/favicon-32x32.png">
