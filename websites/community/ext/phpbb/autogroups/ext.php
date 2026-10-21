@@ -59,7 +59,7 @@ class ext extends \phpbb\extension\base
 	 */
 	protected function check_php_version()
 	{
-		return phpbb_version_compare(PHP_VERSION, '5.5.0', '>=');
+		return PHP_VERSION_ID >= 50500;
 	}
 
 	/**

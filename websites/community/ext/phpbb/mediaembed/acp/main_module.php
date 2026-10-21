@@ -54,20 +54,23 @@ class main_module
 
 		/** @var \phpbb\request\request $request */
 		$request = $phpbb_container->get('request');
-		if ($request->is_set_post('action_purge_cache'))
+		$purge_cache = $request->is_set_post('action_purge_cache');
+		$submit = $request->is_set_post('submit');
+
+		if (($purge_cache || $submit) && !check_form_key($form_key))
+		{
+			$language = $phpbb_container->get('language');
+			trigger_error($language->lang('FORM_INVALID'), E_USER_WARNING);
+		}
+
+		if ($purge_cache)
 		{
 			$result = $acp_controller->purge_mediaembed_cache();
 			trigger_error($result['message'] . adm_back_link($this->u_action), $result['code']);
 		}
 
-		if ($request->is_set_post('submit'))
+		if ($submit)
 		{
-			if (!check_form_key($form_key))
-			{
-				$language = $phpbb_container->get('language');
-				trigger_error($language->lang('FORM_INVALID'), E_USER_WARNING);
-			}
-
 			$result = $acp_controller->{'save_' . $mode}();
 			trigger_error($result['message'] . adm_back_link($this->u_action), $result['code']);
 		}

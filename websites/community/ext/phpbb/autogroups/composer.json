@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
     "description": "An extension that can automate the process of adding and removing users from groups upon reaching specified milestones related to their post count, age, membership, and warnings count.",
     "homepage": "https://www.phpbb.com/customise/db/extension/auto_groups/",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "keywords": [
         "phpbb",
         "extension",
@@ -57,11 +57,11 @@
     ],
     "require": {
         "php": ">=5.5",
-        "composer/installers": "~1.0.0",
+        "composer/installers": "^1.0 || ^2.0",
         "phpbb/phpbb": ">=3.2.0"
     },
     "require-dev": {
-        "phing/phing": "2.4.*"
+        "phing/phing": "~2.4"
     },
     "extra": {
         "display-name": "Auto Groups",
@@ -73,6 +73,11 @@
             "directory": "/customise/db/extension/auto_groups",
             "filename": "version_check",
             "ssl": true
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
         }
     }
 }

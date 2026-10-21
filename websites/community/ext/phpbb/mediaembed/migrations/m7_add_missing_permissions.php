@@ -100,10 +100,10 @@ class m7_add_missing_permissions extends \phpbb\db\migration\migration
 					'ON'	=> 'data.auth_option_id = opts.auth_option_id',
 				],
 			],
-			'WHERE'	=> 'opts.auth_option = "f_bbcode"
-				AND data.auth_setting = "1"
-				AND roles.role_type = "f_"
-				AND ' . $this->db->sql_in_set('roles.role_name', $this->predefined_roles(), true),
+			'WHERE'	=> "opts.auth_option = 'f_bbcode'
+				AND data.auth_setting = '1'
+				AND roles.role_type = 'f_'
+				AND " . $this->db->sql_in_set('roles.role_name', $this->predefined_roles(), true),
 		];
 
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);

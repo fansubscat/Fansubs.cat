@@ -71,7 +71,7 @@ $lang = array_merge($lang, array(
 	'ACP_AUTOGROUPS_DELETE_SUCCESS'	=> 'Usunięto automatyczną grupę.',
 	'ACP_AUTOGROUPS_EMPTY'			=> 'Brak automatycznych grup.',
 	'ACP_AUTOGROUPS_NO_GROUPS'		=> 'Brak grup',
-	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Nie wybrano żadnej grupy.<br /><br />Automatyczne grupy muszą być połączone z istniejącymi grupami, które można utworzyć na stronie zarządzania grupami.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Nie wybrano żadnej grupy.<br><br>Automatyczne grupy muszą być połączone z istniejącymi grupami, które można utworzyć na stronie zarządzania grupami.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'	=> 'Minimalna i maksymalna wartość nie może być taka sama.',
 
 	// Conditions

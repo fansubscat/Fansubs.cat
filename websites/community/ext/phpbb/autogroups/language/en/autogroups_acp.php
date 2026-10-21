@@ -70,7 +70,7 @@ $lang = array_merge($lang, array(
 	'ACP_AUTOGROUPS_DELETE_SUCCESS'	=> 'Auto Group successfully deleted.',
 	'ACP_AUTOGROUPS_EMPTY'			=> 'There are no auto groups.',
 	'ACP_AUTOGROUPS_NO_GROUPS'		=> 'No groups available',
-	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'An error occurred. A valid user group was not selected.<br />Auto Groups can only be used with user defined groups, which can be created on the Manage groups page.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'An error occurred. A valid user group was not selected.<br>Auto Groups can only be used with user defined groups, which can be created on the Manage groups page.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'	=> 'An error occurred. Minimum and maximum values can not be set to the same value.',
 
 	// Conditions

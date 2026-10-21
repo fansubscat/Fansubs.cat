@@ -2,6 +2,9 @@
 /**
  *
  * phpBB Media Embed PlugIn extension for the phpBB Forum Software package.
+ * @简体中文语言　David Yin <https://www.phpbbchinese.com/>
+ *
+ * phpBB Media Embed PlugIn extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2016 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)

@@ -38,18 +38,17 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'HELP_EMBEDDING_MEDIA'			=> 'Embedding Media',
+	'HELP_EMBEDDING_MEDIA'			=> 'Medien einbetten',
 	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Wie werden Medien von anderen Seiten in Posts eingebunden',
 	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'User können Medien von anderen erlaubten Seiten wie Video und Audio einbinden indem
 										die <strong>[media][/media]</strong> Tags oder indem einfach die reine URL der erlaubten Seite
-										in den Text kopiert wird. Als Beispiel:<br /><br />
+										in den Text kopiert wird. Als Beispiel:<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
-										<br /><br />Wie oben beschrieben kann die URL auch ohne die
+										<br><br>Wie oben beschrieben kann die URL auch ohne die
 										<strong>[media]</strong> Tags verwendet werden.
-										<br /><br />Das hier gezeigt Beispiel würde folgendes generieren:<br /><br />%2$s
-										<br /><br />Die folgenden Seiten sind erlaubt:<br /><samp>%3$s.</samp>
-										<br /><br />Für eine komplette Dokumentation der unterstützen Seiten und Beispiel URLs,
+										<br><br>Das hier gezeigt Beispiel würde folgendes generieren:<br><br>%2$s
+										<br><br>Die folgenden Seiten sind erlaubt:<br><samp>%3$s.</samp>
+										<br><br>Für eine komplette Dokumentation der unterstützen Seiten und Beispiel URLs,
 										besuche die <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										MediaEmbed Plugin Documentation</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
 ]);

@@ -1,3 +1,4 @@
+{% INCLUDECSS '@phpbb_mediaembed/mediaembed_acp.css' %}
 {% include 'overall_header.html' %}
 
 <h1>{{ lang('ACP_MEDIA_MANAGE') }}</h1>
@@ -15,42 +16,34 @@
 {% endif %}
 
 <form id="mediaembed_manage" method="post" action="{{ U_ACTION }}" data-ajax="true">
-	<table class="table1 zebra-table">
-		{% for sites in MEDIA_SITES|batch(4, '') %}
-			<tr>
-				{% for site in sites %}
-					<td style="width: 25%;">
-						{% if site %}
-							<label style="font-size: 1em;" title="{{ site.title }}">
-								<input type="checkbox" class="radio" name="mark[]" value="{{ site.id }}"{% if site.disabled %} disabled{% elseif site.enabled %} checked{% endif %} /> {{ site.name }}
-							</label>
-						{% endif %}
-					</td>
-				{% endfor %}
-			</tr>
+	{% if MEDIA_SITES %}
+		<div class="mediaembed-site-toolbar">
+			<p class="mediaembed-site-filter">
+				<label for="mediaembed-site-filter"><strong>{{ lang('SEARCH') ~ lang('COLON') }}</strong></label>
+				<input type="search" id="mediaembed-site-filter" class="text medium" autocomplete="off" aria-controls="mediaembed-site-list" placeholder="{{ lang('SEARCH_MINI') }}">
+			</p>
+			<p class="small mediaembed-site-actions"><a href="#" data-marksites="true">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" data-marksites="false">{{ lang('UNMARK_ALL') }}</a></p>
+		</div>
+	{% endif %}
+
+	<div id="mediaembed-site-list" class="mediaembed-site-grid">
+		{% for site in MEDIA_SITES %}
+			<label class="mediaembed-site{% if site.disabled %} mediaembed-site-disabled{% endif %}" data-media-site="{{ (site.name ~ ' ' ~ site.id)|escape('html_attr') }}" title="{{ site.title }}">
+				<input type="checkbox" class="radio" name="mark[]" value="{{ site.id }}"{% if site.disabled %} disabled{% elseif site.enabled %} checked{% endif %}>
+				<span>{{ site.name }}</span>
+			</label>
 		{% else %}
-			<tr>
-				<td><div class="errorbox">{{ lang('ACP_MEDIA_SITES_ERROR') }}</div></td>
-			</tr>
+			<div class="errorbox">{{ lang('ACP_MEDIA_SITES_ERROR') }}</div>
 		{% endfor %}
-	</table>
-	<fieldset class="quick">
-		<p class="small"><a href="#" data-marksites="true">{{ lang('MARK_ALL') }}</a> &bull; <a href="#" data-marksites="false">{{ lang('UNMARK_ALL') }}</a></p>
-	</fieldset>
+	</div>
+	{% if MEDIA_SITES %}
+		<div id="mediaembed-filter-empty" class="errorbox" style="display: none;">{{ lang('ACP_MEDIA_SITES_ERROR') }}</div>
+	{% endif %}
 	<p id="buttons" class="submit-buttons">
-		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />&nbsp;
-		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}" />
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}">&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}">
 	</p>
 	{{ S_FORM_TOKEN }}
 </form>
-
-<script>
-	for (const mark of document.querySelectorAll("[data-marksites]")) {
-		mark.addEventListener("click", (e) => {
-			e.preventDefault();
-			marklist("mediaembed_manage", "mark", e.target.dataset.marksites === "true");
-		})
-	}
-</script>
 
 {% include 'overall_footer.html' %}

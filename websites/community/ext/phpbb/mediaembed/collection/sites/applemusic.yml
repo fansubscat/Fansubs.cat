@@ -1,6 +1,6 @@
 name: "Apple Music"
 host: music.apple.com
-example: https://music.apple.com/us/album/taking-flight/1681148980?i=1681148982
+example: https://music.apple.com/us/album/fever-to-the-form/1442817271?i=1442817280
 extract:
     - "!//music.apple.com/(?'country'[a-z]{2})/playlist/(?'plname'[\\w\\d\\-%A-F]+)/(?'plid'pl\\.[\\w\\d-]+)!"
     - "!//music.apple.com/(?'country'[a-z]{2})/album/(?'artist'[\\w\\d\\-%A-F]+)/(?'aid'\\d+)!"

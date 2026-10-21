@@ -43,14 +43,13 @@ $lang = array_merge($lang, [
 	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Intégrer un média dans les messages provenant d’un service d’un autre site Web',
 	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Les utilisateurs peuvent intégrer du contenu multimédia (audio, vidéo) provenant de services fournis
 										par d’autres sites Web en utilisant les balises du BBCode <strong>[media][/media]</strong>,
-										ou en publiant simplement l’adresse URL d’un lien pris en charge. Tel que, par exemple :<br /><br />
+										ou en publiant simplement l’adresse URL d’un lien pris en charge. Tel que, par exemple :<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
-										<br /><br />Comme indiqué précédemment, le lien peut aussi être utilisé sans
+										<br><br>Comme indiqué précédemment, le lien peut aussi être utilisé sans
 										les balises du BBCode <strong>[media]</strong>.
-										<br /><br />Ainsi, l’exemple montré ci-dessus affichera :<br /><br />%2$s
-										<br /><br />Le services des sites Web suivants sont supportés :<br /><samp>%3$s.</samp>
-										<br /><br />Une documentation complète à propos des services et des exemples d’adresses URL pris en charge,
+										<br><br>Ainsi, l’exemple montré ci-dessus affichera :<br><br>%2$s
+										<br><br>Le services des sites Web suivants sont supportés :<br><samp>%3$s.</samp>
+										<br><br>Une documentation complète à propos des services et des exemples d’adresses URL pris en charge,
 										est disponible depuis la page : <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										Sites pris en charges par le plugin MediaEmbed</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
 ]);

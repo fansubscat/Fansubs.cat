@@ -3,7 +3,34 @@
 	(function($) {
 		'use strict';
 		$(function() {
-			$('#mediaembed_manage').on('click', 'label', function() {
+			var $manageForm = $('#mediaembed_manage');
+			var $siteFilter = $('#mediaembed-site-filter');
+
+			function filterSites() {
+				var query = $.trim($siteFilter.val()).toLowerCase();
+				var matches = 0;
+
+				$('#mediaembed-site-list [data-media-site]').each(function() {
+					var $site = $(this);
+					var searchableText = $site.attr('data-media-site').toLowerCase();
+					var match = !query || searchableText.indexOf(query) !== -1;
+
+					$site.toggle(match);
+					matches += match ? 1 : 0;
+				});
+
+				$('#mediaembed-filter-empty').toggle(matches === 0);
+			}
+
+			$siteFilter.on('input', filterSites);
+			$manageForm.on('reset', function() {
+				setTimeout(filterSites, 0);
+			});
+			$manageForm.on('click', '[data-marksites]', function(e) {
+				e.preventDefault();
+				marklist('mediaembed_manage', 'mark', $(this).data('marksites'));
+			});
+			$manageForm.on('click', '[data-media-site]', function() {
 				if ($(this).children('input').prop('disabled')) {
 					// Create a phantom <div> element and set the HTML content for it, then return it as text
 					var title = $('<div>').html($(this).attr('title')).text();

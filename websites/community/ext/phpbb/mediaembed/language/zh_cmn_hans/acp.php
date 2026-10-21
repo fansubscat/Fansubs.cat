@@ -21,12 +21,12 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 	// Settings
-	'ACP_MEDIA_SETTINGS'				=> 'Media Embed Settings',
+	'ACP_MEDIA_SETTINGS'				=> 'Media Embed 设置',
 	'ACP_MEDIA_SETTINGS_EXPLAIN'		=> '这里可设置 Media Embed PlugIn 的相关参数。',
 	'ACP_MEDIA_BBCODE_LEGEND'			=> 'BBCode',
-	'ACP_MEDIA_DISPLAY_BBCODE'			=> '在发帖页面显示 <samp>[MEDIA]</samp> BBCode',
+	'ACP_MEDIA_DISPLAY_BBCODE'			=> '在发帖页面显示 <samp>[media]</samp> BBCode',
 	'ACP_MEDIA_DISPLAY_BBCODE_EXPLAIN'	=> '若禁用， BBCode 按钮就不会显示，但用户还是可以在帖子中使用 <samp>[media]</samp> 标签。',
-	'ACP_MEDIA_OPTIONS_LEGEND'			=> 'Options',
+	'ACP_MEDIA_OPTIONS_LEGEND'			=> '选项',
 	'ACP_MEDIA_ALLOW_SIG'				=> '允许使用在用户签名',
 	'ACP_MEDIA_ALLOW_SIG_EXPLAIN'		=> '允许在用户签名处显示嵌入媒体内容。',
 	'ACP_MEDIA_CACHE_LEGEND'			=> '内容缓存',

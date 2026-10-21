@@ -10,6 +10,10 @@
 
 namespace phpbb\mediaembed\migrations;
 
+use phpbb\mediaembed\collection\customsitescollection;
+use phpbb\mediaembed\collection\sitescollection;
+use phpbb\mediaembed\collection\upstreamsitescollection;
+
 /**
  * Migration 1: Install data to the database
  */
@@ -54,10 +58,21 @@ class m1_install_data extends \phpbb\db\migration\container_aware_migration
 	{
 		/** @var \s9e\TextFormatter\Configurator $configurator */
 		$configurator = $this->container->get('text_formatter.s9e.factory')->get_configurator();
-		$sites = array_filter(array_keys(iterator_to_array($configurator->MediaEmbed->defaultSites)), function ($siteId) use ($configurator) {
+
+		/** @var \phpbb\extension\manager $ext_manager */
+		$ext_manager = $this->container->get('ext.manager');
+
+		$site_collection = new sitescollection(
+			$this->config,
+			new customsitescollection($ext_manager),
+			new upstreamsitescollection()
+		);
+		$site_collection->configure($configurator);
+
+		$site_ids = array_filter(array_keys(iterator_to_array($configurator->MediaEmbed->defaultSites)), static function ($siteId) use ($configurator) {
 			return !isset($configurator->BBCodes[$siteId]);
 		});
 
-		return json_encode(array_values($sites));
+		return json_encode(array_values($site_ids));
 	}
 }

@@ -71,7 +71,7 @@ $lang = array_merge($lang, array(
 	'ACP_AUTOGROUPS_DELETE_SUCCESS'	=> 'Automaatne grupp on edukalt kustutatud.',
 	'ACP_AUTOGROUPS_EMPTY'			=> 'Ühtegi automaatset gruppi ei ole.',
 	'ACP_AUTOGROUPS_NO_GROUPS'		=> 'Ühtegi gruppi ei ole saadaval.',
-	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Tekkis viga. Kehtivat kasutajagruppi ei ole valitud.<br />Automaatseid gruppe saab kasutada ainult siis, kui liikmele on määratud grupid, mida saab luua grupide halduse leheküljel.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Tekkis viga. Kehtivat kasutajagruppi ei ole valitud.<br>Automaatseid gruppe saab kasutada ainult siis, kui liikmele on määratud grupid, mida saab luua grupide halduse leheküljel.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'	=> 'Tekkis viga. Minimaalset ja maksimaalset väärtust ei saa seadistada samade väärtustega.',
 
 	// Conditions

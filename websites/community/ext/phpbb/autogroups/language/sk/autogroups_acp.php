@@ -71,7 +71,7 @@ $lang = array_merge($lang, array(
 	'ACP_AUTOGROUPS_DELETE_SUCCESS'	=> 'Automatická skupina bola úspešne vymazaná.',
 	'ACP_AUTOGROUPS_EMPTY'			=> 'Nie sú zatiaľ žiadne automatické skupiny.',
 	'ACP_AUTOGROUPS_NO_GROUPS'		=> 'Nie sú dostupné žiadne skupiny',
-	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Nastala chyba. Nebola vybraná správna používteľská skupina.<br />Automatické skupiny môžu byť použité iba s používateľskými skupinami, ktoré môžu byť vytvorené na stránke Spravovať skupiny.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Nastala chyba. Nebola vybraná správna používteľská skupina.<br>Automatické skupiny môžu byť použité iba s používateľskými skupinami, ktoré môžu byť vytvorené na stránke Spravovať skupiny.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'	=> 'Nastala chyba. Minimálna a maximálna hodnota nemôžu byť nastavené na rovnakú hodnotu.',
 
 	// Conditions

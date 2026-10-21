@@ -25,7 +25,7 @@ $lang = array_merge($lang, [
 	'ACP_PHPBB_MEDIA_EMBED_SETTINGS'	=> 'الإعدادات',
 
 	// Log keys
-	'LOG_PHPBB_MEDIA_EMBED_CACHE_PURGED'=> '<strong>Media Embed cache purged</strong>',
+	'LOG_PHPBB_MEDIA_EMBED_CACHE_PURGED'=> '<strong>تم مسح التخزين المؤقت للوسائط المضمنة</strong>',
 	'LOG_PHPBB_MEDIA_EMBED_MANAGE'		=> '<strong>تم تحديث قائمة المواقع في “إدراج مُحتوى الوسائط”</strong>',
 	'LOG_PHPBB_MEDIA_EMBED_SETTINGS'	=> '<strong>تم تحديث إعدادات “إدراج مُحتوى الوسائط”</strong>',
 ]);

@@ -43,14 +43,13 @@ $lang = array_merge($lang, [
 	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Diğer sitelerden alınan medya(ortam) içerikleri mesajların içerisine nasıl yerleştirilir',
 	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Kullanıcılar izin verilen sitelerden aldığı video ve ses gibi içerikleri
 										<strong>[media][/media]</strong> etiketlerini kullanarak, ya da düz metin içerisine desteklenen URL adreslerini basit bir şekilde ekleyerek
-										mesajlara yerleştirebilir. Örneğin:<br /><br />
+										mesajlara yerleştirebilir. Örneğin:<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
-										<br /><br />Yukarıda belirtildiği gibi, <strong>[media]</strong> etiketleri olmadan
+										<br><br>Yukarıda belirtildiği gibi, <strong>[media]</strong> etiketleri olmadan
 										sadece bağlantılar da kullanılabilir.
-										<br /><br />Burada gösterilen örnek şu şekilde oluşturulacaktır:<br /><br />%2$s
-										<br /><br />Şu siteler desteklenmektedir:<br /><samp>%3$s.</samp>
-										<br /><br />Desteklenen siteler ve örnek URL adresleri hakkında tüm belgeler için,
+										<br><br>Burada gösterilen örnek şu şekilde oluşturulacaktır:<br><br>%2$s
+										<br><br>Şu siteler desteklenmektedir:<br><samp>%3$s.</samp>
+										<br><br>Desteklenen siteler ve örnek URL adresleri hakkında tüm belgeler için,
 										<a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										MediaEmbed Plugin Belgeleri</a> sayfasını ziyaret edin.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
 ]);

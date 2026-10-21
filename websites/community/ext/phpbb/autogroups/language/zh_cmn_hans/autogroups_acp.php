@@ -71,7 +71,7 @@ $lang = array_merge($lang, array(
 	'ACP_AUTOGROUPS_DELETE_SUCCESS'	=> '自动分组配置已删除。',
 	'ACP_AUTOGROUPS_EMPTY'			=> '没有任何的自动分组设置。',
 	'ACP_AUTOGROUPS_NO_GROUPS'		=> '无用户组可以选择',
-	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> '错误！无效用户组被选中。<br /> 自动分组只能应用于用户定义的组，用户定义的组可以在用户组管理界面添加。',
+	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> '错误！无效用户组被选中。<br> 自动分组只能应用于用户定义的组，用户定义的组可以在用户组管理界面添加。',
 	'ACP_AUTOGROUPS_INVALID_RANGE'	=> '错误！最大值不能等于最小值。',
 
 	// Conditions

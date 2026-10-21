@@ -42,14 +42,13 @@ $lang = array_merge($lang, [
 	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'How to embed media from other sites into posts',
 	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Users can embed content such as videos and audio from allowed sites using
 										the <strong>[media][/media]</strong> tags, or from simply posting a supported
-										URL in plain text. For example:<br /><br />
+										URL in plain text. For example:<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
-										<br /><br />As noted above, the link could also be used without the
+										<br><br>As noted above, the link could also be used without the
 										<strong>[media]</strong> tags.
-										<br /><br />The example shown here would generate:<br /><br />%2$s
-										<br /><br />The following sites are supported:<br /><samp>%3$s.</samp>
-										<br /><br />For complete documentation on supported sites and example URLs,
+										<br><br>The example shown here would generate:<br><br>%2$s
+										<br><br>The following sites are supported:<br><samp>%3$s.</samp>
+										<br><br>For complete documentation on supported sites and example URLs,
 										visit the <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										MediaEmbed Plugin Documentation</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
 ]);

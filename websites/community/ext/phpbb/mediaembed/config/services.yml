@@ -2,16 +2,31 @@ imports:
     - { resource: cron.yml }
 
 services:
-    phpbb.mediaembed.listener:
-        class: phpbb\mediaembed\event\main_listener
+    phpbb.mediaembed.formatter_listener:
+        class: phpbb\mediaembed\event\formatter_listener
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@phpbb.mediaembed.sitescollection'
+            - '%core.cache_dir%'
+        tags:
+            - { name: event.listener }
+
+    phpbb.mediaembed.parsing_listener:
+        class: phpbb\mediaembed\event\parsing_listener
         arguments:
             - '@auth'
+            - '@config'
+        tags:
+            - { name: event.listener }
+
+    phpbb.mediaembed.display_listener:
+        class: phpbb\mediaembed\event\display_listener
+        arguments:
             - '@config'
             - '@config_text'
             - '@language'
             - '@template'
-            - '@phpbb.mediaembed.customsitescollection'
-            - '%core.cache_dir%'
         tags:
             - { name: event.listener }
 
@@ -19,6 +34,16 @@ services:
         class: phpbb\mediaembed\collection\customsitescollection
         arguments:
             - '@ext.manager'
+
+    phpbb.mediaembed.upstreamsitescollection:
+        class: phpbb\mediaembed\collection\upstreamsitescollection
+
+    phpbb.mediaembed.sitescollection:
+        class: phpbb\mediaembed\collection\sitescollection
+        arguments:
+            - '@config'
+            - '@phpbb.mediaembed.customsitescollection'
+            - '@phpbb.mediaembed.upstreamsitescollection'
 
     phpbb.mediaembed.cache:
         class: phpbb\mediaembed\cache\cache

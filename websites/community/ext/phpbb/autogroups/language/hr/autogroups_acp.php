@@ -71,7 +71,7 @@ $lang = array_merge($lang, array(
 	'ACP_AUTOGROUPS_DELETE_SUCCESS'	=> 'Automatsko upravljanje izabranom grupom je izbrisano.',
 	'ACP_AUTOGROUPS_EMPTY'			=> 'There are no auto groups.',
 	'ACP_AUTOGROUPS_NO_GROUPS'		=> 'Nema dostupnih grupa',
-	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Došlo je do greške: nije izabrana niti jedna grupa.<br />Automatsko upravljanje grupom/ama može se primijeniti samo na korisnički dodane grupe.',
+	'ACP_AUTOGROUPS_INVALID_GROUPS'	=> 'Došlo je do greške: nije izabrana niti jedna grupa.<br>Automatsko upravljanje grupom/ama može se primijeniti samo na korisnički dodane grupe.',
 	'ACP_AUTOGROUPS_INVALID_RANGE'	=> 'Došlo je do greške: minimalna i maksimalna vrijednost ne mogu biti postavljene na istu vrijednost.',
 
 	// Conditions

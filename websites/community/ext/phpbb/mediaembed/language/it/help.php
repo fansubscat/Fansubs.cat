@@ -42,14 +42,13 @@ $lang = array_merge($lang, [
 	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Come incorporare i contenuti multimediali da altri siti nei messaggi',
 	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Gli utenti possono incorporare contenuti come video e audio dai siti consentiti utilizzando
 										i tags <strong>[media][/media]</strong>, o semplicemente postando in testo normale un URL
-                                        che lo supporta. Per esempio:<br /><br />
+                                        che lo supporta. Per esempio:<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
-										<br /><br />Come notato sopra, il collegamento potrebbe anche essere utilizzato senza
+										<br><br>Come notato sopra, il collegamento potrebbe anche essere utilizzato senza
 										<strong>[media]</strong> tags.
-										<br /><br />L’esempio mostrato qui genererebbe:<br /><br />%2$s
-										<br /><br />Sono supportati i seguenti siti:<br /><samp>%3$s.</samp>
-										<br /><br />Per la documentazione completa sui siti supportati e sugli URL di esempio,
+										<br><br>L’esempio mostrato qui genererebbe:<br><br>%2$s
+										<br><br>Sono supportati i seguenti siti:<br><samp>%3$s.</samp>
+										<br><br>Per la documentazione completa sui siti supportati e sugli URL di esempio,
 										consulta la <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										Documentazione sul plug-in multimediale incorporato</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
 ]);

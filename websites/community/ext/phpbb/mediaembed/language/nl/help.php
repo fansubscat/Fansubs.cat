@@ -42,14 +42,13 @@ $lang = array_merge($lang, [
 	'HELP_EMBEDDING_MEDIA_QUESTION'	=> 'Hoe voeg je media van andere website in in je berichten',
 	'HELP_EMBEDDING_MEDIA_ANSWER'	=> 'Gebruikers kunnen inhoud zoals video\'s en audo invoegen van toegestane websites met gebruik van
 										de <strong>[media][/media]</strong> tags, of door heel simpel het plaatsen van een ondersteunde
-										URL in platte tekst. Als voorbeeld:<br /><br />
+										URL in platte tekst. Als voorbeeld:<br><br>
 										<strong>[media]</strong>%1$s<strong>[/media]</strong>
-										<br /><br />Zoals we zien hierboven kan de link ook worden gebruikt zonder de
+										<br><br>Zoals we zien hierboven kan de link ook worden gebruikt zonder de
 										<strong>[media]</strong> tags.
-										<br /><br />Bovenstaand voorbeeld geeft als resultaat:<br /><br />%2$s
-										<br /><br />De volgende websites worden ondersteund:<br /><samp>%3$s.</samp>
-										<br /><br />Voor de volledige documentatie op ondersteunde websites en voorbeeld URL\'s,
+										<br><br>Bovenstaand voorbeeld geeft als resultaat:<br><br>%2$s
+										<br><br>De volgende websites worden ondersteund:<br><samp>%3$s.</samp>
+										<br><br>Voor de volledige documentatie op ondersteunde websites en voorbeeld URL\'s,
 										bezoekt u de <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">
 										MediaEmbed Plugin Documentatie</a>.',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
 ]);

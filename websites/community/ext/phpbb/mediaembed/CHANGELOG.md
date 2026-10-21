@@ -1,15 +1,73 @@
 # Changelog
 
+### 2.1.0 - 2026-09-06
+
+- Updated phpBB 3's MediaEmbed site definitions from s9e/TextFormatter 2.11.5 to 2.19.3.
+- Expanded phpBB 3 support with new media sites:
+  - Captivate
+  - Crankers Videos
+  - Nacho Video
+  - Omny Studio
+  - On3 DB
+  - PeerTube
+  - XenForo
+- Removed obsolete or nonfunctional media sites:
+  - Amazon
+  - Bleacher Report
+  - Dotsub
+  - eBaum's World
+  - Gfycat
+  - Livestream
+  - ModDB
+  - NBC Sports
+  - Snotr
+  - Stitcher
+  - Streamja
+- Redesigned ACP Manage Sites as a responsive checkbox grid with live filtering by site name or ID and bulk-selection controls beside the filter.
+- Fixed fresh installations to enable every compatible site in the final collection immediately and avoid warnings for sites removed from the collection.
+- Fixed parser state leaking between messages so permissions and BBCode or plain-URL settings are applied independently to every parse.
+- Updated Apple Music and VideoPress example URLs.
+- Updated bundled translations.
+- Hardened security in the ACP when using the Purge Media Cache form action.
+- Internal: Refactored event handling into focused formatter, parsing, and display listeners backed by a shared site collection.
+- Internal: Added generated PHP site-definition updates, compatibility validation, and scheduled checks for new TextFormatter releases while retaining YAML for manually authored sites.
+
+### 2.0.5 - 2026-03-21
+
+- Added and/or updated support for media sites:
+	- Facebook
+	- vk.com
+
+### 2.0.4 - 2025-12-16
+
+- Fixed problems with YouTube not playing videos due to YouTube's referrerer policy.
+- Ensure and future-proof compatibility with phpBB4.
+- Added language packs:
+	- Romanian
+
+### 2.0.3 - 2025-09-20
+
+- Added an amendment to the forum privacy policy regarding how embedded content may affect user privacy.
+- Updated YouTube to use their enhanced privacy feature (no cookies until you play a video).
+- Fixed an issue in the BBCode FAQ media embed example.
+- Fixed issues in the language files.
+- Removed the last traces of old XHTML code.
+- Added and/or updated support for media sites:
+  - Apple Podcasts
+  - Bluesky
+  - Pastebin
+  - x.com (aka Twitter)
+
 ### 2.0.2 - 2024-01-21
 
 - Small QoL improvement in the ACP, added sample placeholder data to the custom max-width field in the content-sizing settings.
 - Minor code updates.
 - Added and/or updated support for media sites:
-	- Apple Music
-	- x.com (aka Twitter)
-	- kick.com
-	- Threads
-    - Bunny Stream
+  - Apple Music
+  - x.com (aka Twitter)
+  - kick.com
+  - Threads
+  - Bunny Stream
 
 ### 2.0.1 - 2023-04-15
 
@@ -24,9 +82,9 @@
 
 - Backwards incompatible changes require a new minimum phpBB version of 3.3.2.
 - New ACP options for custom content sizing:
-  - Added a new setting to enlarge most embedded content to fit 100% of the width of the post area.
+  - Added a new setting to enlarge most embedded content to fit 100% of the width of the post-area.
   - Added a new setting to define custom maximum widths in pixels or percent for individual sites.
-- Fixed issues for new installs that would fail if any of phpBB's default forum roles were missing.
+- Fixed issues for new installations that would fail if any of phpBB's default forum roles were missing.
 - Added language packs:
   - Portuguese
   - Chinese (traditional)
@@ -84,10 +142,10 @@ on adding and creating new site YAML files for MediaEmbed.
 ### 1.0.2 - 2018-06-25
 
 - Added a global setting to enable or disable the conversion of plain URLs into embedded content.
-- Added a forum based permission, allowing control over who can post embedded content in specific forums.
-- Added a user based private messages permission, allowing control over who can post embedded content in their private messages.
+- Added a forum-based permission, allowing control over who can post embedded content in specific forums.
+- Added a user-based private messages permission, allowing control over who can post embedded content in their private messages.
 - Fixed an issue where embedded content could still be posted by users who did not have permission to use BBCodes in a specific forum.
-- Fixed an issue where embedded content could still be posted even though the Disable BBCode option was checked in the post editor.
+- Fixed an issue where embedded content could still be posted even though the Disable BBCode option was checked in the post-editor.
 - When users disable the option to automatically parse URLs in their post, plain URLs will no longer be converted to embedded content either.
 
 ### 1.0.1 - 2017-08-04

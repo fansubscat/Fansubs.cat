@@ -1,20 +1,27 @@
 # Changelog
 
-## Version 2.x (for phpBB 3.2.x and 3.3.x)
+## Version 2.x (for phpBB 3.2.x, 3.3.x and 4.0.x)
 
-## 2.0.6 - 2024-01-18
+### 2.0.7 - 2026-03-20
+
+- Allow installations on phpBB4-alpha+ boards via Extension Catalog.
+- Removed old XHTML code.
+- Added Romanian language pack.
+- Updated Dutch language pack.
+
+### 2.0.6 - 2024-01-18
 
 - Fixed PHP warnings that could be caused by a conflict with other extensions.
 - Updated English, French, German and Turkish language packs.
 
-## 2.0.5 - 2022-06-18
+### 2.0.5 - 2022-06-18
 
 - Run membership condition check when a user logs in.
 - Added Portuguese language pack
 
 ### 2.0.4 - 2021-03-12
 
-- Added new option to exempt members of selected user groups from being affected by an Auto Group rule.
+- Added a new option to exempt members of selected user groups from being affected by an Auto Group rule.
 - Fixed potential PHP DEBUG notices.
 - Fixed MSSQL issues with the Warnings and Membership auto group rules.
 - Various minor code and behavior improvements.
@@ -30,7 +37,7 @@
 ### 2.0.2 - 2019-03-27
 
 - Check Membership days after user registrations.
-- Check Post counts after post approvals.
+- Check Post counts after post-approvals.
 - Avoid possible errors with User age due to invalid dates.
 - Added Polish language pack
 - Added Turkish language pack
@@ -49,7 +56,7 @@
 
 ### 1.0.2 - 2016-11-30
 
-- Fixed new years day bug in the auto group by user age condition
+- Fixed a new years day bug in the auto group by user age condition
 - Various code improvements and maintenance
 - Added Croatian language packs
 - Added Chinese language packs

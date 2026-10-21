@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	// Notifications
-	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'	=> '<strong>Groepen bijgewerkt</strong>: Je bent toegevoegd aan de groep %1$s.',
-	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED'	=> '<strong>Groepen bijgewerkt</strong>: Je bent verwijderd van de groep %1$s.',
+	// Meldingen
+	'AUTOGROUPS_NOTIFICATION_GROUP_ADDED'	=> '<strong>Groepupdate</strong>: Je bent toegevoegd aan de groep %1$s.',
+	'AUTOGROUPS_NOTIFICATION_GROUP_REMOVED'	=> '<strong>Groepupdate</strong>: Je bent verwijderd uit de groep %1$s.',
 ));

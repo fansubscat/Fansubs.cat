@@ -41,10 +41,9 @@ $lang = array_merge($lang, [
 	'HELP_EMBEDDING_MEDIA'			=> '嵌入媒體',
 	'HELP_EMBEDDING_MEDIA_QUESTION'	=> '如何將來自其他網站的媒體嵌入到文章中',
 	'HELP_EMBEDDING_MEDIA_ANSWER'	=> '會員可以使用 <strong>[media][/media]</strong> 標籤嵌入來自允許網站的視頻和音頻等內容，或者簡單地以純文本形式發表受支持的網址。例如：
-										<br /><br /><strong>[media]</strong>%1$s<strong>[/media]</strong>
-										<br /><br />如上所述，連結也可以在沒有 <strong>[media]</strong> 標籤的情況下使用。
-										<br /><br />此處顯示的範例將生成：<br /><br />%2$s
-										<br /><br />支持以下站點：<br /><samp>%3$s</samp>。
-										<br /><br />有關受支持站點和範例網址的完整文件，參訪 <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">MediaEmbed Plugin Documentation</a>。',
-	'HELP_EMBEDDING_MEDIA_DEMO'		=>	'https://youtu.be/QH2-TGUlwu4',
+										<br><br><strong>[media]</strong>%1$s<strong>[/media]</strong>
+										<br><br>如上所述，連結也可以在沒有 <strong>[media]</strong> 標籤的情況下使用。
+										<br><br>此處顯示的範例將生成：<br><br>%2$s
+										<br><br>支持以下站點：<br><samp>%3$s</samp>。
+										<br><br>有關受支持站點和範例網址的完整文件，參訪 <a href="https://s9etextformatter.readthedocs.io/Plugins/MediaEmbed/Sites/">MediaEmbed Plugin Documentation</a>。',
 ]);
