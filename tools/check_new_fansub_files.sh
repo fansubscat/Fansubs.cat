@@ -136,6 +136,13 @@ do
 			mega-get $url
 			if [ $? -eq 0 ]
 			then
+				#Normalize extensions
+				find . -type f -iname "*.mp4" | while IFS= read -r file; do
+					if [[ "$file" != *.mp4 ]]; then
+						mv "$file" "${file%.*}.mp4"
+					fi
+				done
+				
 				file=`ls *.mp4`
 				
 				if [ "$file" = "" ]

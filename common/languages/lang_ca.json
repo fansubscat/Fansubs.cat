@@ -1561,7 +1561,7 @@
 	"js.admin.series_edit.error.episodes_with_invalid_division": "Hi ha capítols de divisions inexistents. Corregeix-ho.",
 	"js.admin.series_edit.error.episodes_with_no_number_or_specials_without_name": "Hi ha capítols sense número ni nom d’especial. Els capítols normals han de tenir com a mínim número, i els capítols especials han de tenir com a mínim el nom de l’especial.",
 	"js.admin.series_edit.error.episodes_with_numbers_repeated": "Hi ha capítols amb el mateix número assignats a la mateixa divisió. Els números de capítols han de ser únics dins de la mateixa divisió.",
-	"js.admin.series_edit.error.keywords_with_spaces": "Al camp «paraules clau» can fer servir espais com a separadors, no comes.",
+	"js.admin.series_edit.error.keywords_with_spaces": "Al camp «paraules clau» cal fer servir espais com a separadors, no comes.",
 	"js.admin.series_edit.error.mal_mdl_generic_error": "S’ha produït un error en obtenir dades de MyAnimeList o MyDramaList, torna-ho a provar més tard.",
 	"js.admin.series_edit.error.oneshot_with_more_than_one_episode": "Has seleccionat tipus «One-shot», però a la fitxa hi ha més d’un capítol. Les fitxes de one-shots només poden tenir un sol capítol. Canvia el tipus a «Serialitzat».",
 	"js.admin.series_edit.error.please_input_number_of_episodes": "Per a poder-los generar, cal que introdueixis el nombre de capítols de cada divisió.",

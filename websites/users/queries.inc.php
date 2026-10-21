@@ -449,8 +449,8 @@ function query_comment_for_forum_posting($comment_id) {
 	$comment_id = intval($comment_id);
 	$final_query = "SELECT c.*,
 				v.forum_topic_id,
-				u.status user_status,
-				u.username,
+				IF(c.fansub_id IS NULL, u.status, 0) user_status,
+				IF(c.fansub_id IS NULL, u.username, (SELECT u2.username FROM user u2 WHERE u2.fansub_id=c.fansub_id)) username,
 				UNIX_TIMESTAMP(c.created) comment_created_timestamp,
 				v.title version_title,
 				GROUP_CONCAT(DISTINCT fa.name ORDER BY fa.name SEPARATOR ' + ') version_fansub_names

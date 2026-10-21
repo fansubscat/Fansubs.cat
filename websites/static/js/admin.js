@@ -893,7 +893,7 @@ function checkNumberOfEpisodes() {
 	}
 	for (var i=1;i<=episodeCount;i++){
 		for (var j=1;j<=episodeCount;j++){
-			if ($('#form-episode-list-num-'+i).val()!='' && $('#form-episode-list-num-'+j).val()!='' && $('#form-episode-list-num-'+i).val()==$('#form-episode-list-num-'+j).val() && $('#form-episode-list-division-'+i).val()==$('#form-episode-list-division-'+j).val()){
+			if ($('#form-episode-list-num-'+i).val()!='' && $('#form-episode-list-num-'+j).val()!='' && $('#form-episode-list-num-'+i).val()==$('#form-episode-list-num-'+j).val() && $('#form-episode-list-division-'+i).val()==$('#form-episode-list-division-'+j).val() && i!=j){
 				alert(lang('js.admin.series_edit.error.episodes_with_numbers_repeated'));
 				return false;
 			}
