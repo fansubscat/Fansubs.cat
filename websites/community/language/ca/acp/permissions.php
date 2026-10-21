@@ -41,16 +41,16 @@ $lang = array_merge($lang, array(
 		<p>Els permisos són altament granulars i estan agrupats en quatre seccions principals que són:</p>
 
 		<h2>Permisos globals</h2>
-		<p>S’utilitzen per controlar l’accés a nivell global i apliquen a tot el fòrum. Es divideixen posteriorment en permisos d’usuaris, permisos de grups, d’administradors i de moderadors globals.</p>
+		<p>S’usen per controlar l’accés a nivell global i apliquen a tot el fòrum. Es divideixen posteriorment en permisos d’usuaris, permisos de grups, d’administradors i de moderadors globals.</p>
 
 		<h2>Permisos per fòrums</h2>
-		<p>S’utilitzen per controlar l’accés a fòrums concrets. Es divideixen en permisos de fòrums, moderadors de fòrums, permisos d’usuari per fòrums i permisos de grups per fòrums.</p>
+		<p>S’usen per controlar l’accés a fòrums concrets. Es divideixen en permisos de fòrums, moderadors de fòrums, permisos d’usuari per fòrums i permisos de grups per fòrums.</p>
 
 		<h2>Rols de permisos</h2>
-		<p>S’utilitzen per crear grups diferents de permisos per poder assignar els diferents tipus de permisos segons els rols. Els rols per defecte probablement cobreixen l’administració de fòrums grans i petits, però dintre de cadascuna de les quatre divisions podeu afegir, editar i eliminar rols com més us convingui.</p>
+		<p>S’usen per crear grups diferents de permisos per poder assignar els diferents tipus de permisos segons els rols. Els rols per defecte probablement cobreixen l’administració de fòrums grans i petits, però dintre de cadascuna de les quatre divisions podeu afegir, editar i eliminar rols com més us convingui.</p>
 
 		<h2>Màscares de permisos</h2>
-		<p>S’utilitzen per veure els permisos efectius assignats als usuaris, moderadors (locals i globals), administradors i fòrums.</p>
+		<p>S’usen per veure els permisos efectius assignats als usuaris, moderadors (locals i globals), administradors i fòrums.</p>
 
 		<br />
 
@@ -79,8 +79,8 @@ $lang = array_merge($lang, array(
 	'ACL_YES'				=> 'Sí',
 
 	'ACP_ADMINISTRATORS_EXPLAIN'				=> 'Aquí podeu assignar permisos d’administrador a usuaris o grups. Tots els usuaris amb permisos d’administrador poden veure el Tauler de control de l’administrador.',
-	'ACP_FORUM_MODERATORS_EXPLAIN'				=> 'Aquí podeu assignar permisos de moderador de fòrum a usuaris o grups. Per definir l’accés als fòrums, per definir moderadors globals o administradors utilitzeu la pàgina apropiada.',
-	'ACP_FORUM_PERMISSIONS_EXPLAIN'				=> 'Aquí podeu modificar quins usuaris i grups poden accedir a quins fòrums. Per assignar moderadors o definir administradors utilitzeu la pàgina apropiada.',
+	'ACP_FORUM_MODERATORS_EXPLAIN'				=> 'Aquí podeu assignar permisos de moderador de fòrum a usuaris o grups. Per definir l’accés als fòrums, per definir moderadors globals o administradors useu la pàgina apropiada.',
+	'ACP_FORUM_PERMISSIONS_EXPLAIN'				=> 'Aquí podeu modificar quins usuaris i grups poden accedir a quins fòrums. Per assignar moderadors o definir administradors useu la pàgina apropiada.',
 	'ACP_FORUM_PERMISSIONS_COPY_EXPLAIN'		=> 'Aquí podeu copiar els permisos d’un fòrum a un altre o altres.',
 	'ACP_GLOBAL_MODERATORS_EXPLAIN'				=> 'Aquí podeu assignar permisos de moderador global a usuaris o grups. Aquests moderadors són com els moderadors normals amb l’excepcció que tenen accés a tots els fòrums.',
 	'ACP_GROUPS_FORUM_PERMISSIONS_EXPLAIN'		=> 'Aquí podeu assignar permisos de fòrums a grups.',
@@ -118,13 +118,13 @@ $lang = array_merge($lang, array(
 	'COPY_PERMISSIONS_TO'					=> 'Aplica el permisos a',
 
 	'CREATE_ROLE'				=> 'Crea un rol',
-	'CREATE_ROLE_FROM'			=> 'Utilitza la configuració de…',
+	'CREATE_ROLE_FROM'			=> 'Usa la configuració de…',
 	'CUSTOM'					=> 'Personalitzat…',
 
 	'DEFAULT'					=> 'Per defecte',
 	'DELETE_ROLE'				=> 'Elimina el rol',
 	'DELETE_ROLE_CONFIRM'		=> 'Esteu segur que voleu eliminar aquest rol? Els elements que tinguin aquest rol assignat <strong>no</strong> perdran la seva configuració de permisos.',
-	'DISPLAY_ROLE_ITEMS'		=> 'Mostra els elements que utilitzen aquest rol',
+	'DISPLAY_ROLE_ITEMS'		=> 'Mostra els elements que usen aquest rol',
 
 	'EDIT_PERMISSIONS'			=> 'Edita els permisos',
 	'EDIT_ROLE'					=> 'Edita el rol',

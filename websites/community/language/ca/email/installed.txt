@@ -4,7 +4,7 @@ Enhorabona,
 
 Heu instal·lat correctament el phpBB en el vostre servidor.
 
-Aquest correu electrònic conté informació important sobre la instal·lació i és recomanable que el conserveu per a futures referències. La vostra contrasenya està emmagatzemada de forma segura a la base de dades i no podeu recuperar el text desencriptat. Si l’oblideu, podeu reiniciar-la utilitzant el correu electrònic associat al vostre compte.
+Aquest correu electrònic conté informació important sobre la instal·lació i és recomanable que el conserveu per a futures referències. La vostra contrasenya està emmagatzemada de forma segura a la base de dades i no podeu recuperar el text desencriptat. Si l’oblideu, podeu reiniciar-la usant el correu electrònic associat al vostre compte.
 
 ----------------------------
 Nom d’usuari: {USERNAME}

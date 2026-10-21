@@ -1,5 +1,5 @@
 {% if VIGLINK_ENABLED %}
-<script>
+<script{% if S_CONSENTMANAGER_MARKETING_ENABLED %} type="text/plain" data-consent-category="marketing"{% endif %}>
 	var vglnk = {
 		key: '{{ VIGLINK_API_KEY|e("js") }}',
 		sub_id: '{{ VIGLINK_SUB_ID|e("js") }}'

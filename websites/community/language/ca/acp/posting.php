@@ -42,7 +42,7 @@ $lang = array_merge($lang, array(
 	'ACP_BBCODES_EXPLAIN'		=> 'El BBCode és una implementació especial de l’HTML que ofereix un control més gran sobre què i com es mostra alguna cosa. Des d’aquesta pàgina podeu afegir, eliminar i editar BBCodes personalitzats.',
 	'ADD_BBCODE'				=> 'Afegeix un BBCode nou',
 
-	'BBCODE_DANGER'				=> 'El BBCode que esteu afegint sembla que no és segur. Si el BBCode utilitza un testimoni {TEXT} dintre d’un context delicat, intenteu usar un tipus més restricitu. Continueu només si enteneu els riscos que això implica.',
+	'BBCODE_DANGER'				=> 'El BBCode que esteu afegint sembla que no és segur. Si el BBCode usa un testimoni {TEXT} dintre d’un context delicat, intenteu usar un tipus més restricitu. Continueu només si enteneu els riscos que això implica.',
 	'BBCODE_DANGER_PROCEED'		=> 'Continua', //'I understand the risk',
 
 	'BBCODE_ADDED'				=> 'S’ha afegit el BBCode correctament.',
@@ -62,14 +62,14 @@ $lang = array_merge($lang, array(
 	'BBCODE_TAG_DEF_TOO_LONG'	=> 'La definició de l’etiqueta que heu introduït és massa llarga, escurceu la definició de l’etiqueta.',
 	'BBCODE_USAGE'				=> 'Sintaxi BBCode',
 	'BBCODE_USAGE_EXAMPLE'		=> '[ressalta={COLOR}]{TEXT}[/ressalta]<br /><br />[lletra={SIMPLETEXT1}]{SIMPLETEXT2}[/lletra]',
-	'BBCODE_USAGE_EXPLAIN'		=> 'Aquí definiu com s’utilitza el BBCode. Reemplaceu les variables d’entrada pel testimoni corresponent (%svegeu a sota%s).',
+	'BBCODE_USAGE_EXPLAIN'		=> 'Aquí definiu com s’usa el BBCode. Reemplaceu les variables d’entrada pel testimoni corresponent (%svegeu a sota%s).',
 
 	'EXAMPLE'						=> 'Exemple:',
 	'EXAMPLES'						=> 'Exemples:',
 
 	'HTML_REPLACEMENT'				=> 'Substitució HTML',
 	'HTML_REPLACEMENT_EXAMPLE'		=> '&lt;span style="background-color: {COLOR};"&gt;{TEXT}&lt;/span&gt;<br /><br />&lt;span style="font-family: {SIMPLETEXT1};"&gt;{SIMPLETEXT2}&lt;/span&gt;',
-	'HTML_REPLACEMENT_EXPLAIN'		=> 'Aquí definiu la substitució HTML per defecte. No us oblideu de posar els testimonis que heu utilitzat a sobre!',
+	'HTML_REPLACEMENT_EXPLAIN'		=> 'Aquí definiu la substitució HTML per defecte. No us oblideu de posar els testimonis que heu usat a sobre!',
 
 	'TOKEN'					=> 'Testimoni',
 	'TOKENS'				=> 'Testimonis',
@@ -84,9 +84,9 @@ $lang = array_merge($lang, array(
 		'IDENTIFIER'	=> 'Caràcters de l’alfabet llatí (A-Z), números, guió i caràcter de subratllat',
 		'NUMBER'		=> 'Qualsevol sèrie de dígits',
 		'EMAIL'			=> 'Una adreça electrònica vàlida',
-		'URL'			=> 'Un URL vàlid que utilitzi qualsevol protocol permès (http, ftp, etc… no es pot usar per aprofitar-se del javascript). Si no se’n proporciona cap, la cadena es prefixa amb “http://”.',
+		'URL'			=> 'Un URL vàlid que usi qualsevol protocol permès (http, ftp, etc… no es pot usar per aprofitar-se del javascript). Si no se’n proporciona cap, la cadena es prefixa amb “http://”.',
 		'LOCAL_URL'		=> 'Un URL local. L’URL ha de ser relatiu a la pàgina del tema i no pot contenir un nom de servidor ni un protocol, ja que els enllaços es prefixen amb “%s”',
-		'RELATIVE_URL'	=> 'Un URL relatiu. Podeu usar-ho per tal que coincideixi amb parts d’un URL, aneu amb compte: un URL complet és un URL realtiu vàlid. Quan vulgueu usar URL relatius al vostre fòrum, utilitzeu l’etiqueta LOCAL_URL.',
+		'RELATIVE_URL'	=> 'Un URL relatiu. Podeu usar-ho per tal que coincideixi amb parts d’un URL, aneu amb compte: un URL complet és un URL realtiu vàlid. Quan vulgueu usar URL relatius al fòrum, useu l’etiqueta LOCAL_URL.',
 		'COLOR'			=> 'Un color HTML, pot ser o bé en forma numèrica <samp>#FF1234</samp> o una <a href="http://www.w3.org/TR/CSS21/syndata.html#value-def-color">paraula clau de color CSS</a> com ara <samp>fuchsia</samp> o <samp>InactiveBorder</samp>',
 		'ALNUM'			=> 'Caràcters de l’alfabet llatí (A-Z) i números.',
 		'CHOICE'		=> 'Una tria entre valors específics, p.ex. <samp>{CHOICE=ors,copes,espases,bastos}</samp>. Els valors no distingeixen majúscules i minúscules per defecte, però poden distingir-les especificant l’opció <samp>caseSensitive</samp>: <samp>{CHOICE=Ors,Copes,Espases,Bastos;caseSensitive}</samp>',
@@ -101,14 +101,14 @@ $lang = array_merge($lang, array(
 		'RANGE'			=> 'Accepta un enter en un rang determinat, p.ex. <samp>{RANGE=-10,42}</samp>.',
 		'REGEXP'		=> 'Valida el valor amb una expressió regular, p.ex. <samp>{REGEXP=/^foo\w+bar$/}</samp>.',
 		'TIMESTAMP'		=> 'Una marca horària com ara <samp>1h30m10s</samp> que es convertirà a un número de segons. També accepta un número.',
-		'UINT'			=> 'Un valor enter sense signe. Idèntic a <samp>{INT}</samp>, però rebutja valors menors a 0.',			
+		'UINT'			=> 'Un valor enter sense signe. Idèntic a <samp>{INT}</samp>, però rebutja valors menors a 0.',
 	),
 ));
 
 // Smilies and topic icons
 $lang = array_merge($lang, array(
 	'ACP_ICONS_EXPLAIN'		=> 'Des d’aquesta pàgina podeu afegir, eliminar i editar les icones que els usuaris poden afegir als temes o entrades. Aquestes icones normalment es mostren al costat del títol dels temes a la llista dels fòrums, o al costat dels assumptes de les entrades a la llista dels temes. També podeu instal·lar i crear paquets nous d’icones.',
-	'ACP_SMILIES_EXPLAIN'	=> 'Les emoticones són imatges típicament petites, de vegades animades, utilitzades per transmetre una emoció o sentiment. Des d’aquesta pàgina podeu afegir, eliminar i editar les emoticones que els usuaris poden usar a les entrades i els missatges privats. També podeu instal·lar i crear paquets nous d’emoticones.',
+	'ACP_SMILIES_EXPLAIN'	=> 'Les emoticones són imatges típicament petites, de vegades animades, usades per transmetre una emoció o sentiment. Des d’aquesta pàgina podeu afegir, eliminar i editar les emoticones que els usuaris poden usar a les entrades i els missatges privats. També podeu instal·lar i crear paquets nous d’emoticones.',
 	'ADD_SMILIES'			=> 'Afegeix múltiples emoticones',
 	'ADD_SMILEY_CODE'		=> 'Afegeix un codi d’emoticona nou',
 	'ADD_ICONS'				=> 'Afegeix múltiples icones',
@@ -129,9 +129,9 @@ $lang = array_merge($lang, array(
 	'EDIT_SMILIES'				=> 'Edita les emoticones',
 	'EMOTION'					=> 'Emoció',
 	'EXPORT_ICONS'				=> 'Exporta i baixa icons.pak',
-	'EXPORT_ICONS_EXPLAIN'		=> '%sEn fer clic sobre aquest enllaç, la configuració de les icones instal·lades s’empaquetarà al fitxer <samp>icons.pak</samp> que un cop baixat pot ser utilitzat per crear un fitxer <samp>.zip</samp> o <samp>.tgz</samp> que contingui totes les icones més la configuració d’aquest fitxer <samp>icons.pak</samp>%s.',
+	'EXPORT_ICONS_EXPLAIN'		=> '%sEn fer clic sobre aquest enllaç, la configuració de les icones instal·lades s’empaquetarà al fitxer <samp>icons.pak</samp> que un cop baixat pot ser usat per crear un fitxer <samp>.zip</samp> o <samp>.tgz</samp> que contingui totes les icones més la configuració d’aquest fitxer <samp>icons.pak</samp>%s.',
 	'EXPORT_SMILIES'			=> 'Exporta i baixa smilies.pak',
-	'EXPORT_SMILIES_EXPLAIN'	=> '%sEn fer clic sobre aquest enllaç, la configuració de les emoticones instal·lades s’empaquetarà al fitxer <samp>smilies.pak</samp> que un cop baixat pot ser utilitzat per crear un fitxer <samp>.zip</samp> o <samp>.tgz</samp> que contingui totes les emoticones més la configuració d’aquest fitxer <samp>smilies.pak</samp>%s.',
+	'EXPORT_SMILIES_EXPLAIN'	=> '%sEn fer clic sobre aquest enllaç, la configuració de les emoticones instal·lades s’empaquetarà al fitxer <samp>smilies.pak</samp> que un cop baixat pot ser usat per crear un fitxer <samp>.zip</samp> o <samp>.tgz</samp> que contingui totes les emoticones més la configuració d’aquest fitxer <samp>smilies.pak</samp>%s.',
 
 	'FIRST'			=> 'Primer',
 
@@ -245,7 +245,7 @@ $lang = array_merge($lang, array(
 
 	'NO_ASSIGNED_RANK'		=> 'No hi ha cap rang especial assignat.',
 	'NO_RANK_TITLE'			=> 'No heu especificat un títol per al rang.',
-	'NO_UPDATE_RANKS'		=> 'S’ha eliminat el rang correctament. Això no obstant, els comptes d’usuari que utilitzaven aquest rang no s’han actualitzat. Caldrà que reinicialitzeu el rang d’aquests comptes manualment.',
+	'NO_UPDATE_RANKS'		=> 'S’ha eliminat el rang correctament. Això no obstant, els comptes d’usuari que usaven aquest rang no s’han actualitzat. Caldrà que reinicialitzeu el rang d’aquests comptes manualment.',
 
 	'RANK_ADDED'			=> 'S’ha afegit el rang correctament.',
 	'RANK_IMAGE'			=> 'Imatge del rang',
@@ -261,7 +261,7 @@ $lang = array_merge($lang, array(
 // Disallow Usernames
 $lang = array_merge($lang, array(
 	'ACP_DISALLOW_EXPLAIN'	=> 'Aquí podeu controlar els noms d’usuari que no estan permesos. Els noms d’usuari prohibits poden contenir un caràcter comodí *.',
-	'ADD_DISALLOW_EXPLAIN'	=> 'Podeu prohibir un nom d’usuari utilitzant el caràcter comodí * per obtenir coincidències amb qualsevol caràcter.',
+	'ADD_DISALLOW_EXPLAIN'	=> 'Podeu prohibir un nom d’usuari usant el caràcter comodí * per obtenir coincidències amb qualsevol caràcter.',
 	'ADD_DISALLOW_TITLE'	=> 'Afegeix un nom d’usuari prohibit',
 
 	'DELETE_DISALLOW_EXPLAIN'	=> 'Podeu eliminar un nom d’usuari prohibit seleccionant el nom d’usuari d’aquesta llista i fent clic al botó Tramet.',
@@ -276,7 +276,7 @@ $lang = array_merge($lang, array(
 
 // Reasons
 $lang = array_merge($lang, array(
-	'ACP_REASONS_EXPLAIN'	=> 'Aquí podeu gestionar les raons utilitzades als informes i als missatges de denegació quan no s’aprova una entrada. Hi ha una raó per defecte (marcada amb un *) que no podeu eliminar, aquesta raó normalment s’utilitza per a missatges personalitzats si cap altra raó és adient.',
+	'ACP_REASONS_EXPLAIN'	=> 'Aquí podeu gestionar les raons usades als informes i als missatges de denegació quan no s’aprova una entrada. Hi ha una raó per defecte (marcada amb un *) que no podeu eliminar, aquesta raó normalment s’usa per a missatges personalitzats si cap altra raó és adient.',
 	'ADD_NEW_REASON'		=> 'Afegeix una raó nova',
 	'AVAILABLE_TITLES'		=> 'Títols de raons traduïdes disponibles',
 
@@ -295,11 +295,11 @@ $lang = array_merge($lang, array(
 	'REASON_DESCRIPTION'		=> 'Descripció de la raó',
 	'REASON_DESC_TRANSLATED'	=> 'Descripció que es mostra de la raó',
 	'REASON_EDIT'				=> 'Edita la raó d’informe/denegació',
-	'REASON_EDIT_EXPLAIN'		=> 'Aquí podeu afegir o editar una raó. Si la raó està traduïda, s’utilitza la versió localitzada en lloc de la descripció introduïda.',
+	'REASON_EDIT_EXPLAIN'		=> 'Aquí podeu afegir o editar una raó. Si la raó està traduïda, s’usa la versió localitzada en lloc de la descripció introduïda.',
 	'REASON_REMOVED'			=> 'S’ha eliminat la raó d’informe/denegació correctament.',
 	'REASON_TITLE'				=> 'Títol de la raó',
 	'REASON_TITLE_TRANSLATED'	=> 'Títol que es mostra de la raó',
 	'REASON_UPDATED'			=> 'S’ha actualitzat la raó d’informe/denegació correctament.',
 
-	'USED_IN_REPORTS'		=> 'S’utilitza als informes',
+	'USED_IN_REPORTS'		=> 'S’usa als informes',
 ));

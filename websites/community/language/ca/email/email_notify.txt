@@ -10,7 +10,7 @@ Podeu trobar-lo a:
 
 {U_TOPIC}
 
-És possible que a continuació aparegui un missatge de {FROM_USERNAME}. Tingueu en compte que aquest missatge no ha estat vist ni aprovat pels administradors del fòrum. Si voleu queixar-vos per haver rebut aquest correu electrònic poseu-vos en contacte amb l’administrador del fòrum a {BOARD_CONTACT} incloent-hi les capcaleres del missatge.
+És possible que a continuació aparegui un missatge de {FROM_USERNAME}. Tingueu en compte que aquest missatge no ha estat vist ni aprovat pels administradors del fòrum. Si voleu queixar-vos per haver rebut aquest correu electrònic contacteu amb l’administrador del fòrum a {BOARD_CONTACT} incloent-hi les capcaleres del missatge.
 
 ----------
 

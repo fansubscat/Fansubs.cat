@@ -54,18 +54,18 @@ $lang = array_merge($lang, array(
 
 	'EMAIL_BAN'					=> 'Bandeja una o més adreces electròniques',
 	'EMAIL_BAN_EXCLUDE_EXPLAIN'	=> 'Habiliteu aquesta opció per excloure l’adreca electrònica introduïda de tots els bandejos actuals.',
-	'EMAIL_BAN_EXPLAIN'			=> 'Per especificar més d’una adreça electrònica, introduïu cadascuna d’elles en una línia nova. Utilitzeu * com a comodí per obtenir coincidències parcials, p.ex. <samp>*@hotmail.com</samp>, <samp>*@*.domain.tld</samp>, etc.',
+	'EMAIL_BAN_EXPLAIN'			=> 'Per especificar més d’una adreça electrònica, introduïu cadascuna d’elles en una línia nova. Useu * com a comodí per obtenir coincidències parcials, p.ex. <samp>*@hotmail.com</samp>, <samp>*@*.domain.tld</samp>, etc.',
 	'EMAIL_NO_BANNED'			=> 'No hi ha adreces electròniques bandejades',
 	'EMAIL_UNBAN'				=> 'Desbandeja o desexclou les adreces electròniques',
-	'EMAIL_UNBAN_EXPLAIN'		=> 'Podeu desbandejar (o desexcloure) múltiples adreces electròniques d’un sol cop si utilitzeu la combinació de ratolí i teclat adequada per al vostre ordinador i navegador. Les adreces electròniques excloses estan ressaltades.',
+	'EMAIL_UNBAN_EXPLAIN'		=> 'Podeu desbandejar (o desexcloure) múltiples adreces electròniques d’un sol cop si useu la combinació de ratolí i teclat adequada per al vostre ordinador i navegador. Les adreces electròniques excloses estan ressaltades.',
 
 	'IP_BAN'					=> 'Bandeja una o més adreces IP',
 	'IP_BAN_EXCLUDE_EXPLAIN'	=> 'Habiliteu aquesta opció per excloure l’adreca IP introduïda de tots els bandejos actuals.',
-	'IP_BAN_EXPLAIN'			=> 'Per especificar diverses adreces IP o noms d’amfitrió diferents, introduïu cadascun d’ells en una línia nova. Per especificar un rang d’adreces IP, separeu l’inici i el final amb un guió (-), per especificar un comodí utilitzeu un asterisc “*”.',
+	'IP_BAN_EXPLAIN'			=> 'Per especificar diverses adreces IP o noms d’amfitrió diferents, introduïu cadascun d’ells en una línia nova. Per especificar un rang d’adreces IP, separeu l’inici i el final amb un guió (-), per especificar un comodí useu un asterisc “*”.',
 	'IP_HOSTNAME'				=> 'Adreces IP o noms d’amfitrió',
 	'IP_NO_BANNED'				=> 'No hi ha adreces IP bandejades',
 	'IP_UNBAN'					=> 'Desbandeja o desexclou les adreces IP',
-	'IP_UNBAN_EXPLAIN'			=> 'Podeu desbandejar (o desexcloure) múltiples adreces IP d’un sol cop si utilitzeu la combinació de ratolí i teclat adequada per al vostre ordinador i navegador. Les adreces IP excloses estan ressaltades.',
+	'IP_UNBAN_EXPLAIN'			=> 'Podeu desbandejar (o desexcloure) múltiples adreces IP d’un sol cop si useu la combinació de ratolí i teclat adequada per al vostre ordinador i navegador. Les adreces IP excloses estan ressaltades.',
 
 	'LENGTH_BAN_INVALID'		=> 'La data ha de tenir el format <kbd>AAAA-MM-DD</kbd>.',
 
@@ -73,12 +73,12 @@ $lang = array_merge($lang, array(
 	'OPTIONS_EXCLUDED'			=> 'Exclòs',
 
 	'PERMANENT'		=> 'Permanent',
-	
+
 	'UNTIL'						=> 'Fins el',
 	'USER_BAN'					=> 'Bandeja un o més usuaris per nom d’usuari',
 	'USER_BAN_EXCLUDE_EXPLAIN'	=> 'Habiliteu aquesta opció per excloure els usuaris introduïts de tots els bandejos actuals.',
-	'USER_BAN_EXPLAIN'			=> 'Podeu bandejar múltiples usuaris d’un sol cop introduïnt cada nom en una línia nova. Utilitzeu la funció <span style="text-decoration: underline;">Cerca un membre</span> per trobar i afegir un o més usuaris automàticament.',
+	'USER_BAN_EXPLAIN'			=> 'Podeu bandejar múltiples usuaris d’un sol cop introduïnt cada nom en una línia nova. Useu la funció <span style="text-decoration: underline;">Cerca un membre</span> per trobar i afegir un o més usuaris automàticament.',
 	'USER_NO_BANNED'			=> 'No hi ha noms d’usuari bandejats',
 	'USER_UNBAN'				=> 'Desbandeja o desexclou usuaris per nom d’usuari',
-	'USER_UNBAN_EXPLAIN'		=> 'Podeu desbandejar (o desexcloure) múltiples usuaris d’un sol cop si utilitzeu la combinació de ratolí i teclat adequada per al vostre ordinador i navegador. Els usuaris exclosos estan ressaltats.',
+	'USER_UNBAN_EXPLAIN'		=> 'Podeu desbandejar (o desexcloure) múltiples usuaris d’un sol cop si useu la combinació de ratolí i teclat adequada per al vostre ordinador i navegador. Els usuaris exclosos estan ressaltats.',
 ));

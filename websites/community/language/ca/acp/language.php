@@ -46,7 +46,7 @@ $lang = array_merge($lang, array(
 
 	'LANGUAGE_DETAILS_UPDATED'			=> 'S’ha actualitzat la informació de l’idioma correctament.',
 	'LANGUAGE_PACK_ALREADY_INSTALLED'	=> 'Aquest paquet d’idioma ja està instal·lat.',
-	'LANGUAGE_PACK_DELETED'				=> 'S’ha eliminat el paquet d’idioma “%s” correctament. A tots els usuaris que utilitzaven aquest idioma se’ls ha assignat l’idioma per defecte del fòrum.',
+	'LANGUAGE_PACK_DELETED'				=> 'S’ha eliminat el paquet d’idioma “%s” correctament. A tots els usuaris que usaven aquest idioma se’ls ha assignat l’idioma per defecte del fòrum.',
 	'LANGUAGE_PACK_DETAILS'				=> 'Informació del paquet d’idioma',
 	'LANGUAGE_PACK_INSTALLED'			=> 'S’ha instal·lat el paquet d’idioma “%s” correctament.',
 	'LANGUAGE_PACK_CPF_UPDATE'			=> 'Les cadenes d’idioma dels camps de perfil personalitzats s’han copiat des de l’idioma per defecte. Canvieu-los si fos necessari.',
@@ -54,7 +54,7 @@ $lang = array_merge($lang, array(
 	'LANGUAGE_PACK_LOCALNAME'			=> 'Nom local',
 	'LANGUAGE_PACK_NAME'				=> 'Nom',
 	'LANGUAGE_PACK_NOT_EXIST'			=> 'El paquet d’idioma seleccionat no existeix.',
-	'LANGUAGE_PACK_USED_BY'				=> 'Utilitzat per (incloent-hi els robots)',
+	'LANGUAGE_PACK_USED_BY'				=> 'Usat per (incloent-hi els robots)',
 	'LANGUAGE_VARIABLE'					=> 'Variable d’idioma',
 	'LANG_AUTHOR'						=> 'Autor del paquet d’idioma',
 	'LANG_ENGLISH_NAME'					=> 'Nom en anglès',

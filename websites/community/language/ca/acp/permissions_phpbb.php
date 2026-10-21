@@ -80,7 +80,7 @@ $lang = array_merge($lang, array(
 	'ACL_U_CHGCENSORS'	=> 'Pot inhabilitar la censura de paraules',
 	'ACL_U_SIG'			=> 'Pot usar una signatura',
 	'ACL_U_EMOJI'		=> 'Pot usar emoji i caràcters de text enriquit al títol dels temes',
-	
+
 	'ACL_U_SENDPM'		=> 'Pot enviar missatges privats',
 	'ACL_U_MASSPM'		=> 'Pot enviar missatges privats a múltiples usuaris',
 	'ACL_U_MASSPM_GROUP'=> 'Pot enviar missatges privats a grups',
@@ -138,7 +138,7 @@ $lang = array_merge($lang, array(
 	'ACL_F_IMG'			=> 'Pot usar l’etiqueta del BBCode [img]',
 	'ACL_F_SIGS'		=> 'Pot usar signatures',
 	'ACL_F_SMILIES'		=> 'Pot usar emoticones',
-	
+
 	'ACL_F_POLL'		=> 'Pot crear enquestes',
 	'ACL_F_VOTE'		=> 'Pot votar a les enquestes',
 	'ACL_F_VOTECHG'		=> 'Pot canviar el seu vot',

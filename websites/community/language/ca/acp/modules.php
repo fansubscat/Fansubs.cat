@@ -67,7 +67,7 @@ $lang = array_merge($lang, array(
 	'MODULE_EDITED'				=> 'S’ha editat el mòdul correctament.',
 	'MODULE_ENABLED'			=> 'Mòdul habilitat',
 	'MODULE_LANGNAME'			=> 'Nom del mòdul',
-	'MODULE_LANGNAME_EXPLAIN'	=> 'Introduïu el nom que es mostrarà per al mòdul. Utilitzeu una constant d’idioma si el nom es serveix des d’un fitxer d’idioma.',
+	'MODULE_LANGNAME_EXPLAIN'	=> 'Introduïu el nom que es mostrarà per al mòdul. Useu una constant d’idioma si el nom es serveix des d’un fitxer d’idioma.',
 	'MODULE_TYPE'				=> 'Tipus de mòdul',
 
 	'NO_CATEGORY_TO_MODULE'	=> 'No s’ha pogut convertir la categoria en un mòdul. Moveu o elimineu-ne tots els fills abans de realitzar aquesta acció.',

@@ -1,5 +1,16 @@
 # Registre de canvis
 
+## 2026-10-21 - Versió 5.7.7
+- **Comunitat:**
+	- Actualització a phpBB 3.3.19.
+	- Nova medalla.
+- **Usuaris:**
+	- Es corregeix la publicació a la comunitat de missatges fets per usuaris de fansubs.
+- **Administració:**
+	- Es corregeix la validació dels capítols amb números repetits.
+- **Eines:**
+	- Es normalitzen les extensions dels fitxers en processar-los (per si algun té l’extensió en majúscules).
+
 ## 2026-05-06 - Versió 5.7.6
 - **Administració:**
 	- Es valida que no hi hagi divisions amb números repetits.

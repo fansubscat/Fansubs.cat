@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_ATTACHMENT_SETTINGS_EXPLAIN'	=> 'Aquí podeu configurar les opcions principals dels fitxers adjunts i les categories especials associades.',
 	'ACP_EXTENSION_GROUPS_EXPLAIN'		=> 'Aquí podeu afegir, eliminar, modificar o inhabilitar grups d’extensions. Opcions addicionals inclouen l’assignació de categories especials, el canvi del mecanisme de baixada, la definició d’una icona de penjada que es mostrarà al davant del fitxer adjunt depenent del grup al qual pertanyi.',
-	'ACP_MANAGE_EXTENSIONS_EXPLAIN'		=> 'Aquí podeu gestionar les extensions permeses. Per activar les extensions, utilitzeu el tauler de gestió de grups d’extensions. Us recomanem especialment que no permeteu les extensions de fitxers script (com ara <code>php</code>, <code>php3</code>, <code>php4</code>, <code>phtml</code>, <code>pl</code>, <code>cgi</code>, <code>py</code>, <code>rb</code>, <code>asp</code>, <code>aspx</code>, i demés…).',
+	'ACP_MANAGE_EXTENSIONS_EXPLAIN'		=> 'Aquí podeu gestionar les extensions permeses. Per activar les extensions, useu el tauler de gestió de grups d’extensions. Us recomanem especialment que no permeteu les extensions de fitxers script (com ara <code>php</code>, <code>php3</code>, <code>php4</code>, <code>phtml</code>, <code>pl</code>, <code>cgi</code>, <code>py</code>, <code>rb</code>, <code>asp</code>, <code>aspx</code>, i demés…).',
 	'ACP_ORPHAN_ATTACHMENTS_EXPLAIN'	=> 'Aquí podeu veure els fitxers orfes. Això succeeix principalment si els usuaris adjunten els fitxers, però no publiquen l’entrada. Podeu eliminar els fitxers o adjuntar-los a entrades existents. Per adjuntar-los a una entrada us cal un ID d’entrada vàlid, heu d’esbrinar aquest ID pel vostre compte. Això assignarà el fitxer adjunt quan ja està penjat a l’entrada que introduïu.',
 	'ADD_EXTENSION'						=> 'Afegeix una extensió',
 	'ADD_EXTENSION_GROUP'				=> 'Afegeix un grup d’extensions',
@@ -77,13 +77,13 @@ $lang = array_merge($lang, array(
 
 	'DEFINE_ALLOWED_IPS'			=> 'Defineix les adreces IP/noms d’amfitrió permesos',
 	'DEFINE_DISALLOWED_IPS'			=> 'Defineix les adreces IP/noms d’amfitrió no permesos',
-	'DOWNLOAD_ADD_IPS_EXPLAIN'		=> 'Per especificar diverses adreces IP o noms d’amfitrió diferents, introduïu cadascun d’ells en una línia nova. Per especificar un rang d’adreces IP, separeu l’inici i el final amb un guió (-), per especificar un comodí utilitzeu un asterisc “*”.',
-	'DOWNLOAD_REMOVE_IPS_EXPLAIN'	=> 'Podeu treure (o desexcloure) múltiples adreces IP d’un sol cop si utilitzeu la combinació de ratolí i teclat adequada per al vostre ordinador i navegador. Les adreces IP excloses estan ressaltades.',
+	'DOWNLOAD_ADD_IPS_EXPLAIN'		=> 'Per especificar diverses adreces IP o noms d’amfitrió diferents, introduïu cadascun d’ells en una línia nova. Per especificar un rang d’adreces IP, separeu l’inici i el final amb un guió (-), per especificar un comodí useu un asterisc “*”.',
+	'DOWNLOAD_REMOVE_IPS_EXPLAIN'	=> 'Podeu treure (o desexcloure) múltiples adreces IP d’un sol cop si useu la combinació de ratolí i teclat adequada per al vostre ordinador i navegador. Les adreces IP excloses estan ressaltades.',
 	'DISPLAY_INLINED'				=> 'Mostra les imatges en línia',
 	'DISPLAY_INLINED_EXPLAIN'		=> 'Si seleccioneu “No”, els fitxers adjunts de tipus imatge es mostraran com un enllaç.',
 	'DISPLAY_ORDER'					=> 'Ordre de visualització dels fitxers adjunts',
 	'DISPLAY_ORDER_EXPLAIN'			=> 'Mostra els fitxers adjunts ordenats per data.',
-	
+
 	'EDIT_EXTENSION_GROUP'			=> 'Edita el grup d’extensions',
 	'EXCLUDE_ENTERED_IP'			=> 'Habiliteu aquesta opció per tal d’excloure les adreces IP/noms d’amfitrió introduïdes.',
 	'EXCLUDE_FROM_ALLOWED_IP'		=> 'Exclou l’adreça IP de la llista d’adreces IP/noms d’amfitrió permesos',
@@ -108,7 +108,7 @@ $lang = array_merge($lang, array(
 	'GROUP_NAME'			=> 'Nom del grup',
 
 	'IMAGE_LINK_SIZE'			=> 'Dimensions d’enllaç a imatge',
-	'IMAGE_LINK_SIZE_EXPLAIN'	=> 'Si la imatge adjunta és més gran, es mostrarà com un enllaç de text. Per inhabilitar aquest comportament, utilitzeu els valors 0px x 0px.',
+	'IMAGE_LINK_SIZE_EXPLAIN'	=> 'Si la imatge adjunta és més gran, es mostrarà com un enllaç de text. Per inhabilitar aquest comportament, useu els valors 0px x 0px.',
 	'IMAGE_QUALITY'				=> 'Qualitat de les imatges adjuntes penjades (només per JPEG)',
 	'IMAGE_QUALITY_EXPLAIN'		=> 'Especifiqueu un valor entre 50% (mida del fitxer més petita) i 90% (millor qualitat). Els valors de qualitat majors que 90% incrementen la mida dels fitxers i estan inhabilitats. Aquesta configuració només s’aplica si poseu les dimensions màximes de les imatges a uns valors que no siguin 0px x 0px.',
 	'IMAGE_STRIP_METADATA'		=> 'Elimina les metadades de la imatge (només per JPEG)',
@@ -118,7 +118,7 @@ $lang = array_merge($lang, array(
 	'MAX_ATTACHMENTS_PM'			=> 'Nombre màxim de fitxers adjunts per missatge privat',
 	'MAX_EXTGROUP_FILESIZE'			=> 'Mida màxima de fitxer',
 	'MAX_IMAGE_SIZE'				=> 'Dimensions màximes de la imatge',
-	'MAX_IMAGE_SIZE_EXPLAIN'		=> 'Mida màxima de les imatges adjuntes. Utilitzeu els valors 0px x 0px per inhabilitar la comprovació de dimensions.',
+	'MAX_IMAGE_SIZE_EXPLAIN'		=> 'Dimensions màximes de les imatges adjuntes. El phpBB pot intentar redimensionar automàticament les imatges a aquestes dimensions màximes abans de penjar-les. Useu els valors 0px x 0px per inhabilitar la comprovació de dimensions i redimensionat automàtic.',
 	'MAX_THUMB_WIDTH'				=> 'Amplària/Alçària màxima de les miniatures en píxels',
 	'MAX_THUMB_WIDTH_EXPLAIN'		=> 'Una miniatura generada no superarà l’amplària definida aquí.',
 	'MIN_THUMB_FILESIZE'			=> 'Mida de fitxer mínima per miniatures',

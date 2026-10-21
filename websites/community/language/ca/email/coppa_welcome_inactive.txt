@@ -35,7 +35,7 @@ Data: _______________
 
 Un cop l’administrador hagi rebut el formulari anterior per fax o per correu tradicional, el vostre compte serà activat.
 
-La vostra contrasenya està emmagatzemada de forma segura a la base de dades i no podeu recuperar el text desencriptat. Si l’oblideu, podeu reiniciar-la utilitzant el correu electrònic associat al vostre compte.
+La vostra contrasenya està emmagatzemada de forma segura a la base de dades i no podeu recuperar el text desencriptat. Si l’oblideu, podeu reiniciar-la usant el correu electrònic associat al vostre compte.
 
 Gràcies per registrar-vos.
 

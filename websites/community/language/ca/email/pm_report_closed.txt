@@ -4,6 +4,6 @@ Bon dia, {USERNAME},
 
 L’informe que has fet del missatge privat «{PM_SUBJECT}» a {SITENAME} ha estat gestionat per un moderador o un administrador. L’informe ja està tancat.
 
-Si tens més dubtes, posa’t en contacte amb {CLOSER_NAME} per missatge privat.
+Si tens més dubtes, contacta amb {CLOSER_NAME} per missatge privat.
 
 {EMAIL_SIG}

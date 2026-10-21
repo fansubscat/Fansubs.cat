@@ -6,6 +6,7 @@ services:
         class: phpbb\viglink\event\listener
         arguments:
             - '@config'
+            - '@language'
             - '@template'
         tags:
             - { name: event.listener }

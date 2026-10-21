@@ -38,7 +38,7 @@ if (empty($lang) || !is_array($lang))
 
 // User pruning
 $lang = array_merge($lang, array(
-	'ACP_PRUNE_USERS_EXPLAIN'	=> 'Aquesta secció us permet eliminar o desactivar usuaris del vostre fòrum. Els comptes es poden filtrar de diverses maneres: per nombre d’entrades, activitat més recent, etc. Es poden combinar diversos criteris per ajustar quins comptes es veuran afectats. Per exemple, podeu podar els usuaris amb menys de 10 entrades i que també estiguin inactius des del 2002-01-01. Utilitzeu * com comodí per als camps de text. De forma alternativa, podeu ignorar completament la selecció per criteris introduïnt una llista d’usuaris (cadascun en una línia nova) a la casella de text. Aneu amb compte amb aquesta utilitat! L’eliminació d’un usuari no es pot desfer.',
+	'ACP_PRUNE_USERS_EXPLAIN'	=> 'Aquesta secció us permet eliminar o desactivar usuaris del fòrum. Els comptes es poden filtrar de diverses maneres: per nombre d’entrades, activitat més recent, etc. Es poden combinar diversos criteris per ajustar quins comptes es veuran afectats. Per exemple, podeu podar els usuaris amb menys de 10 entrades i que també estiguin inactius des del 2002-01-01. Useu * com comodí per als camps de text. De forma alternativa, podeu ignorar completament la selecció per criteris introduïnt una llista d’usuaris (cadascun en una línia nova) a la casella de text. Aneu amb compte amb aquesta utilitat! L’eliminació d’un usuari no es pot desfer.',
 
 	'CRITERIA'				=> 'Criteris',
 

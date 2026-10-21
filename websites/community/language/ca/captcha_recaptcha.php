@@ -43,7 +43,7 @@ $lang = array_merge($lang, [
 
 	'CAPTCHA_RECAPTCHA'				=> 'reCaptcha v2',
 	'CAPTCHA_RECAPTCHA_V3'			=> 'reCaptcha v3',
-	
+
 	'RECAPTCHA_INCORRECT'				=> 'La solució que heu proporcionat és incorrecta',
 	'RECAPTCHA_NOSCRIPT'				=> 'Habiliteu el JavaScript al vostre navegador per carregar el repte.',
 	'RECAPTCHA_NOT_AVAILABLE'			=> 'Per tal d’usar reCaptcha heu de crear un compte al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>.',
@@ -51,14 +51,14 @@ $lang = array_merge($lang, [
 	'RECAPTCHA_V3_LOGIN_ERROR_ATTEMPTS'	=> 'Heu excedit el nombre màxim permès d’intents d’inici de sessió.<br>A més del vostre usuari i contrasenya, s’usarà el reCAPTCHA v3 invisible per autenticar la vostra sessió.',
 
 	'RECAPTCHA_PUBLIC'				=> 'Clau del lloc web',
-	'RECAPTCHA_PUBLIC_EXPLAIN'		=> 'La clau reCAPTCHA del vostre lloc web. Podeu aconseguir claus al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>. Si us plau, utilitzeu el distintiu de tipus reCAPTCHA v2 &gt; Invisible reCAPTCHA.',
-	'RECAPTCHA_V3_PUBLIC_EXPLAIN'	=> 'La clau reCAPTCHA del vostre lloc web. Podeu aconseguir claus al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>. Si us plau, utilitzeu el distintiu de tipus reCAPTCHA v3.',
+	'RECAPTCHA_PUBLIC_EXPLAIN'		=> 'La clau reCAPTCHA del vostre lloc web. Podeu aconseguir claus al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>. Si us plau, useu el distintiu de tipus reCAPTCHA v2 &gt; Invisible reCAPTCHA.',
+	'RECAPTCHA_V3_PUBLIC_EXPLAIN'	=> 'La clau reCAPTCHA del vostre lloc web. Podeu aconseguir claus al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>. Si us plau, useu el distintiu de tipus reCAPTCHA v3.',
 	'RECAPTCHA_PRIVATE'				=> 'Clau secreta',
-	'RECAPTCHA_PRIVATE_EXPLAIN'		=> 'La vostra clau reCAPTCHA secreta. Podeu aconseguir claus al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>. Si us plau, utilitzeu el distintiu de tipus reCAPTCHA v2 &gt; Invisible reCAPTCHA.',
-	'RECAPTCHA_V3_PRIVATE_EXPLAIN'	=> 'La vostra clau reCAPTCHA secreta. Podeu aconseguir claus al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>. Si us plau, utilitzeu el distintiu de tipus reCAPTCHA v3.',
+	'RECAPTCHA_PRIVATE_EXPLAIN'		=> 'La vostra clau reCAPTCHA secreta. Podeu aconseguir claus al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>. Si us plau, useu el distintiu de tipus reCAPTCHA v2 &gt; Invisible reCAPTCHA.',
+	'RECAPTCHA_V3_PRIVATE_EXPLAIN'	=> 'La vostra clau reCAPTCHA secreta. Podeu aconseguir claus al lloc web <a href="https://www.google.com/recaptcha">www.google.com/recaptcha</a>. Si us plau, useu el distintiu de tipus reCAPTCHA v3.',
 
 	'RECAPTCHA_V3_DOMAIN'				=> 'Domini de la sol·licitud',
-	'RECAPTCHA_V3_DOMAIN_EXPLAIN'		=> 'El domini des d’on s’ha d’obtenir l’script i que s’utilitza per verificar la sol·licitud.<br>Utilitzeu <samp>recaptcha.net</samp> quan <samp>google.com</samp> no sigui accessible.',
+	'RECAPTCHA_V3_DOMAIN_EXPLAIN'		=> 'El domini des d’on s’ha d’obtenir l’script i que s’usa per verificar la sol·licitud.<br>Useu <samp>recaptcha.net</samp> quan <samp>google.com</samp> no sigui accessible.',
 
 	'RECAPTCHA_V3_METHOD'				=> 'Mètode de la sol·licitud',
 	'RECAPTCHA_V3_METHOD_EXPLAIN'		=> 'El mètode a usar quan es verifica la sol·licitud.<br>Les opcions inhabilitades no estan disponibles en la vostra configuració.',
@@ -67,7 +67,7 @@ $lang = array_merge($lang, [
 	'RECAPTCHA_V3_METHOD_SOCKET'		=> 'Socket',
 
 	'RECAPTCHA_V3_THRESHOLD_DEFAULT'			=> 'Llindar per defecte',
-	'RECAPTCHA_V3_THRESHOLD_DEFAULT_EXPLAIN'	=> 'S’utilitza quan no aplica cap de les altres accions.',
+	'RECAPTCHA_V3_THRESHOLD_DEFAULT_EXPLAIN'	=> 'S’usa quan no aplica cap de les altres accions.',
 	'RECAPTCHA_V3_THRESHOLD_LOGIN'				=> 'Llindar per iniciar la sessió',
 	'RECAPTCHA_V3_THRESHOLD_POST'				=> 'Llindar per fer publicacions',
 	'RECAPTCHA_V3_THRESHOLD_REGISTER'			=> 'Llindar per registrar-se',

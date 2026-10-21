@@ -352,7 +352,7 @@ function download_allowed()
 	// Split URL into domain and script part
 	$url = @parse_url($url);
 
-	if ($url === false)
+	if ($url === false || !isset($url['host']))
 	{
 		return ($config['secure_allow_empty_referer']) ? true : false;
 	}
@@ -360,7 +360,7 @@ function download_allowed()
 	$hostname = $url['host'];
 	unset($url);
 
-	$allowed = ($config['secure_allow_deny']) ? false : true;
+	$allowed = !$config['secure_allow_deny'];
 	$iplist = array();
 
 	if (($ip_ary = @gethostbynamel($hostname)) !== false)
@@ -383,60 +383,57 @@ function download_allowed()
 		$server_name = $config['server_name'];
 	}
 
-	if (preg_match('#^.*?' . preg_quote($server_name, '#') . '.*?$#i', $hostname))
+	if (preg_match('#(?:^|\\.)' . preg_quote($server_name, '#') . '$#i', $hostname))
 	{
-		$allowed = true;
+		return true;
 	}
 
 	// Get IP's and Hostnames
-	if (!$allowed)
+	$sql = 'SELECT site_ip, site_hostname, ip_exclude
+		FROM ' . SITELIST_TABLE;
+	$result = $db->sql_query($sql);
+
+	while ($row = $db->sql_fetchrow($result))
 	{
-		$sql = 'SELECT site_ip, site_hostname, ip_exclude
-			FROM ' . SITELIST_TABLE;
-		$result = $db->sql_query($sql);
+		$site_ip = trim($row['site_ip']);
+		$site_hostname = trim($row['site_hostname']);
 
-		while ($row = $db->sql_fetchrow($result))
+		if ($site_ip)
 		{
-			$site_ip = trim($row['site_ip']);
-			$site_hostname = trim($row['site_hostname']);
-
-			if ($site_ip)
+			foreach ($iplist as $ip)
 			{
-				foreach ($iplist as $ip)
-				{
-					if (preg_match('#^' . str_replace('\*', '.*?', preg_quote($site_ip, '#')) . '$#i', $ip))
-					{
-						if ($row['ip_exclude'])
-						{
-							$allowed = ($config['secure_allow_deny']) ? false : true;
-							break 2;
-						}
-						else
-						{
-							$allowed = ($config['secure_allow_deny']) ? true : false;
-						}
-					}
-				}
-			}
-
-			if ($site_hostname)
-			{
-				if (preg_match('#^' . str_replace('\*', '.*?', preg_quote($site_hostname, '#')) . '$#i', $hostname))
+				if (preg_match('#^' . str_replace('\*', '.*?', preg_quote($site_ip, '#')) . '$#i', $ip))
 				{
 					if ($row['ip_exclude'])
 					{
-						$allowed = ($config['secure_allow_deny']) ? false : true;
-						break;
+						$allowed = !$config['secure_allow_deny'];
+						break 2;
 					}
 					else
 					{
-						$allowed = ($config['secure_allow_deny']) ? true : false;
+						$allowed = (bool) $config['secure_allow_deny'];
 					}
 				}
 			}
 		}
-		$db->sql_freeresult($result);
+
+		if ($site_hostname)
+		{
+			if (preg_match('#^' . str_replace('\*', '.*?', preg_quote($site_hostname, '#')) . '$#i', $hostname))
+			{
+				if ($row['ip_exclude'])
+				{
+					$allowed = !$config['secure_allow_deny'];
+					break;
+				}
+				else
+				{
+					$allowed = (bool) $config['secure_allow_deny'];
+				}
+			}
+		}
 	}
+	$db->sql_freeresult($result);
 
 	return $allowed;
 }

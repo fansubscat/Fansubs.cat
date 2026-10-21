@@ -1097,6 +1097,9 @@ function smtpmail($addresses, $subject, $message, &$err_msg, $headers = false)
 	// Fix any bare linefeeds in the message to make it RFC821 Compliant.
 	$message = preg_replace("#(?<!\r)\n#si", "\r\n", $message);
 
+	// Escape leading dots as required by RFC 5321 section 4.5.2
+	$message = preg_replace('/^\./m', '..', $message);
+
 	if ($headers !== false)
 	{
 		if (!is_array($headers))
@@ -1434,6 +1437,11 @@ class smtp_class
 		{
 			$local_host = $user->host;
 		}
+
+		// Ensure the hostname does not contain characters that could break the SMTP protocol.
+		// We specifically strip carriage returns and line feeds to prevent SMTP injection.
+		$local_host = str_replace(["\r", "\n"], '', $local_host);
+		$local_host = trim($local_host);
 
 		// If we are authenticating through pop-before-smtp, we
 		// have to login ones before we get authenticated

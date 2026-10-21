@@ -20,18 +20,25 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\config\config $config Config object */
 	protected $config;
 
+	protected $language;
+
 	/** @var \phpbb\template\template $template Template object */
 	protected $template;
+
+	/** @var string|null Cached VigLink API key */
+	protected $viglink_key;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\config\config     $config   Config object
+	 * @param \phpbb\language\language $language Language object
 	 * @param \phpbb\template\template $template Template object
 	 */
-	public function __construct(\phpbb\config\config $config, \phpbb\template\template $template)
+	public function __construct(\phpbb\config\config $config, \phpbb\language\language $language, \phpbb\template\template $template)
 	{
 		$this->config = $config;
+		$this->language = $language;
 		$this->template = $template;
 	}
 
@@ -42,6 +49,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.viewtopic_post_row_after'		=> 'display_viglink',
+			'phpbb.consentmanager.collect_registrations' => 'register_viglink',
 		);
 	}
 
@@ -52,6 +60,44 @@ class listener implements EventSubscriberInterface
 	 */
 	public function display_viglink()
 	{
+		$viglink_key = $this->get_viglink_key();
+
+		$this->template->assign_vars(array(
+			'VIGLINK_ENABLED'	=> $this->config['viglink_enabled'] && $viglink_key,
+			'VIGLINK_API_KEY'	=> $viglink_key,
+			'VIGLINK_SUB_ID'	=> md5(urlencode($this->config['viglink_api_siteid']) . $this->config['questionnaire_unique_id']),
+		));
+	}
+
+	/**
+	 * Register Viglink with Consent Manager when available.
+	 *
+	 * @param \phpbb\event\data|array $event The event object or event data
+	 * @return void
+	 */
+	public function register_viglink($event)
+	{
+		if (!$this->config['viglink_enabled'] || empty($this->get_viglink_key()))
+		{
+			return;
+		}
+
+		$this->language->add_lang('viglink_common', 'phpbb/viglink');
+
+		$event['consent_manager']->register('phpbb.viglink', [
+			'label'		=> $this->language->lang('VIGLINK'),
+			'category'	=> 'marketing',
+			'description' => $this->language->lang('VIGLINK_DESCRIPTION'),
+		]);
+	}
+
+	protected function get_viglink_key()
+	{
+		if ($this->viglink_key !== null)
+		{
+			return $this->viglink_key;
+		}
+
 		$viglink_key = '';
 
 		if ($this->config['allow_viglink_phpbb'] && $this->config['phpbb_viglink_api_key'])
@@ -60,10 +106,6 @@ class listener implements EventSubscriberInterface
 			$viglink_key = $this->config['phpbb_viglink_api_key'];
 		}
 
-		$this->template->assign_vars(array(
-			'VIGLINK_ENABLED'	=> $this->config['viglink_enabled'] && $viglink_key,
-			'VIGLINK_API_KEY'	=> $viglink_key,
-			'VIGLINK_SUB_ID'	=> md5(urlencode($this->config['viglink_api_siteid']) . $this->config['questionnaire_unique_id']),
-		));
+		return $this->viglink_key = $viglink_key;
 	}
 }

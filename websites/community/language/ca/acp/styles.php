@@ -81,7 +81,7 @@ $lang = array_merge($lang, [
 	'STYLE_UNINSTALL_DEPENDENT'					=> 'L’estil "%s" no es pot desinstal·lar perquè es pare d’un o més estils.',
 	'STYLE_UNINSTALLED'							=> 'S’ha desinstal·lat l’estil  "%s" correctament.',
 	'STYLE_PHPBB_VERSION'						=> 'Versió del phpBB',
-	'STYLE_USED_BY'								=> 'Utilitzat per (incloent-hi els robots)',
+	'STYLE_USED_BY'								=> 'Usat per (incloent-hi els robots)',
 	'STYLE_VERSION'								=> 'Versió de l’estil',
 
 	'UNINSTALL_PROSILVER'						=> 'No es pot desinstal·lar l’estil “prosilver”.',

@@ -222,7 +222,7 @@ class mcp_queue
 						FROM ' . ATTACHMENTS_TABLE . '
 						WHERE post_msg_id = ' . $post_id . '
 							AND in_message = 0
-						ORDER BY filetime DESC, post_msg_id ASC';
+						ORDER BY attach_id DESC, post_msg_id ASC';
 					$result = $db->sql_query($sql);
 
 					while ($row = $db->sql_fetchrow($result))
@@ -321,7 +321,7 @@ class mcp_queue
 					'POST_SUBJECT'			=> $post_info['post_subject'],
 					'POST_DATE'				=> $user->format_date($post_info['post_time']),
 					'POST_IP'				=> $post_info['poster_ip'],
-					'POST_IPADDR'			=> ($auth->acl_get('m_info', $post_info['forum_id']) && $request->variable('lookup', '')) ? @gethostbyaddr($post_info['poster_ip']) : '',
+					'POST_IPADDR'			=> ($auth->acl_get('m_info', $post_info['forum_id']) && $request->variable('lookup', '')) ? phpbb_get_host_for_ip($post_info['poster_ip']) : '',
 					'POST_ID'				=> $post_info['post_id'],
 					'S_FIRST_POST'			=> ($post_info['topic_first_post_id'] == $post_id),
 
@@ -1336,6 +1336,7 @@ class mcp_queue
 
 			foreach ($post_info as $post_id => $post_data)
 			{
+				$topic_id = (int) $post_data['topic_id'];
 				$disapprove_all_posts_in_topic = $topic_information[$topic_id]['topic_posts_approved'] == 0 &&
 					$topic_information[$topic_id]['topic_posts_softdeleted'] == 0 &&
 					$topic_information[$topic_id]['topic_posts_unapproved'] == $topic_posts_unapproved[$topic_id];

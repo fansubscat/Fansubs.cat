@@ -38,9 +38,9 @@ $lang = array_merge($lang, array(
 	'CLI_APCU_CACHE_NOTICE'				=> 'La memòria cau APCu l’heu de purgar des del Tauler de control de l’administrador.',
 
 	'CLI_CONFIG_CANNOT_CACHED'			=> 'Marqueu aquesta opció si l’opció de configuració canvia massa sovint com per emmagatzemar-la de forma eficient a la memòria cau.',
-	'CLI_CONFIG_CURRENT'				=> 'Valor actual de la configuració, utilitzeu 0 i 1 per especificar valors booleans',
+	'CLI_CONFIG_CURRENT'				=> 'Valor actual de la configuració, useu 0 i 1 per especificar valors booleans',
 	'CLI_CONFIG_DELETE_SUCCESS'			=> 'S’ha eliminat la configuració %s correctament',
-	'CLI_CONFIG_NEW'					=> 'Nou valor de la configuració, utilitzeu 0 i 1 per especificar valors booleans',
+	'CLI_CONFIG_NEW'					=> 'Nou valor de la configuració, useu 0 i 1 per especificar valors booleans',
 	'CLI_CONFIG_NOT_EXISTS'				=> 'La configuració %s no existeix',
 	'CLI_CONFIG_OPTION_NAME'			=> 'El nom de l’opció de configuració',
 	'CLI_CONFIG_PRINT_WITHOUT_NEWLINE'	=> 'Marqueu aquesta opció si el valor s’ha d’imprimir sense una linia nova al final.',
@@ -89,7 +89,7 @@ $lang = array_merge($lang, array(
 	'CLI_DESCRIPTION_THUMBNAIL_RECREATE'				=> 'Torna a crear totes les miniatures.',
 
 	'CLI_DESCRIPTION_UPDATE_CHECK'					=> 'Comprova si el fòrum està actualitzat.',
-	'CLI_DESCRIPTION_UPDATE_CHECK_ARGUMENT_1'		=> 'Nom de ’extensió a comprovar (si utilitzeu l’opció “all”, comprova totes les extensions)',
+	'CLI_DESCRIPTION_UPDATE_CHECK_ARGUMENT_1'		=> 'Nom de ’extensió a comprovar (si useu l’opció “all”, comprova totes les extensions)',
 	'CLI_DESCRIPTION_UPDATE_CHECK_OPTION_CACHE'		=> 'Executa l’ordre de comprovació amb memòria cau.',
 	'CLI_DESCRIPTION_UPDATE_CHECK_OPTION_STABILITY'	=> 'Executa l’ordre amb l’opció de comprovar només versions estables o inestables.',
 
@@ -135,7 +135,7 @@ $lang = array_merge($lang, array(
 	'CLI_FIXUP_FIX_LEFT_RIGHT_IDS_SUCCESS'		=> 'S’ha reparat correctament l’estructura en arbre dels fòrums i els mòduls.',
 	'CLI_FIXUP_UPDATE_HASH_BCRYPT_SUCCESS'		=> 'S’han actualitzat correctament a bcrypt els resums de contrasenya obsolets.',
 
-	'CLI_MIGRATION_NAME'					=> 'Nom de la migració, amb l’espai de noms inclòs (utilitzeu barres inclinades en lloc de barres inverses per evitar problemes).',
+	'CLI_MIGRATION_NAME'					=> 'Nom de la migració, amb l’espai de noms inclòs (useu barres inclinades en lloc de barres inverses per evitar problemes).',
 	'CLI_MIGRATIONS_AVAILABLE'				=> 'Migracions disponibles',
 	'CLI_MIGRATIONS_INSTALLED'				=> 'Migracions instal·lades',
 	'CLI_MIGRATIONS_ONLY_AVAILABLE'		    => 'Mostra només les migracions disponibles',
@@ -175,10 +175,10 @@ $lang = array_merge($lang, array(
 // Additional help for commands.
 $lang = array_merge($lang, array(
 	'CLI_HELP_CRON_RUN'			=> $lang['CLI_DESCRIPTION_CRON_RUN'] . ' Opcionalment, podeu indicar el nom d’una tasca “cron” per que s’executi només la tasca “cron” especificada.',
-	'CLI_HELP_USER_ACTIVATE'	=> 'Activeu o desactiveu un compte d’usuari utilitzant l’opció <info>--deactivate</info>.
-Opcionalment, per enviar a l’usuari un correu electrònic d’activació, utilitzeu l’opció <info>--send-email</info>.',
+	'CLI_HELP_USER_ACTIVATE'	=> 'Activeu o desactiveu un compte d’usuari usant l’opció <info>--deactivate</info>.
+Opcionalment, per enviar a l’usuari un correu electrònic d’activació, useu l’opció <info>--send-email</info>.',
 	'CLI_HELP_USER_ADD'			=> 'L’ordre <info>%command.name%</info> afegeix un usuari nou:
 Si executeu l’ordre sense opcions , se us demanarà que les introduïu.
-Opcionalment, per enviar a l’usuari nou un correu electrònic, utilitzeu l’opció <info>--send-email</info>.',
+Opcionalment, per enviar a l’usuari nou un correu electrònic, useu l’opció <info>--send-email</info>.',
 	'CLI_HELP_USER_RECLEAN'		=> 'Netejar els noms d’usuari comprobarà tots els noms d’usuari emmagatzemats i s’assegurarà que també s’emmagatzemen versions netes. Els noms d’usuari nets són una forma que no distingeix entre majúscules i minúscules, normalitzada amb NFC i transformada a ASCII.',
 ));

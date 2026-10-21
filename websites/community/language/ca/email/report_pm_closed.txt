@@ -2,7 +2,7 @@ Subject: Informe de missatge privat tancat - «{SUBJECT}»
 
 Bon dia, {USERNAME},
 
-L’informe que has fet del missatge privat amb el títol «{SUBJECT}» fet per {AUTHOR_NAME} a {SITENAME} ha estat gestionat per un moderador o un administrador. Posteriorment, se n’ha tancat l’informe. Si tens més dubtes, posa’t en contacte amb {CLOSER_NAME} per missatge privat.
+L’informe que has fet del missatge privat amb el títol «{SUBJECT}» fet per {AUTHOR_NAME} a {SITENAME} ha estat gestionat per un moderador o un administrador. Posteriorment, se n’ha tancat l’informe. Si tens més dubtes, contacta amb {CLOSER_NAME} per missatge privat.
 
 Pots veure el missatge privat del qual vas informar si visites l’enllaç següent:
 

@@ -37,11 +37,11 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, array(
-	'ACP_SEARCH_INDEX_EXPLAIN'				=> 'Aquí podeu gestionar els índexs dels motor de cerques. Com que normalment només utilitzeu un motor, és recomanable que elimineu tots els índexs que no utilitzeu. Després de modificar alguna de les configuracions de les cerques (p.ex. el nombre mínim/màxim de caràcters) val la pena que recreeu l’índex per que reflecteixi aquests canvis.',
+	'ACP_SEARCH_INDEX_EXPLAIN'				=> 'Aquí podeu gestionar els índexs dels motor de cerques. Com que normalment només useu un motor, és recomanable que elimineu tots els índexs que no useu. Després de modificar alguna de les configuracions de les cerques (p.ex. el nombre mínim/màxim de caràcters) val la pena que recreeu l’índex per que reflecteixi aquests canvis.',
 	'ACP_SEARCH_SETTINGS_EXPLAIN'			=> 'Aquí podeu definir quin motor s’usarà per indexar les entrades i realitzar les cerques. Podeu definir diverses opcions que poden influir en la quantitat de processament que requereixen aquestes accions. Algunes d’aquestes opcions són les mateixes per tots els motors de cerca.',
 
 	'COMMON_WORD_THRESHOLD'					=> 'Llindar per a paraules comuns',
-	'COMMON_WORD_THRESHOLD_EXPLAIN'			=> 'Les paraules que apareguin en un percentatge més gran d’entre totes les entrades es consideraran comuns. Les paraules comuns s’ignoren en les consultes de cerca. Utilitzeu el zero per inhabilitar-ho. Només té efecte si hi ha més de 100 entrades. Si voleu que es reconsiderin paraules actualment considerades comuns, cal que torneu a crear l’índex.',
+	'COMMON_WORD_THRESHOLD_EXPLAIN'			=> 'Les paraules que apareguin en un percentatge més gran d’entre totes les entrades es consideraran comuns. Les paraules comuns s’ignoren en les consultes de cerca. Useu el zero per inhabilitar-ho. Només té efecte si hi ha més de 100 entrades. Si voleu que es reconsiderin paraules actualment considerades comuns, cal que torneu a crear l’índex.',
 	'CONFIRM_SEARCH_BACKEND'				=> 'Esteu segur que voleu canviar a un motor de cerca diferent? Després de canviar el motor de cerca, caldrà que creeu un índex per al nou motor. Si no teniu pensat tornar al motor de cerca antic, també podeu eliminar l’índex del motor antic per alliberar recursos del sistema.',
 	'CONTINUE_DELETING_INDEX'				=> 'Continua amb el procediment d’eliminació de l’índex anterior',
 	'CONTINUE_DELETING_INDEX_EXPLAIN'		=> 'S’ha iniciat un procediment d’eliminació d’índex. Per accedir a la pàgina de l’índex de cerques cal que el completeu o el cancel·leu.',
@@ -68,7 +68,7 @@ $lang = array_merge($lang, array(
 	'FULLTEXT_POSTGRES_MIN_WORD_LEN'			=> 'Longitud mínima de les paraules clau',
 	'FULLTEXT_POSTGRES_MAX_WORD_LEN'			=> 'Longitud màxima de les paraules clau',
 	'FULLTEXT_POSTGRES_VERSION_CHECK_EXPLAIN'	=> 'Aquest motor de cerca necessita la versió 8.3 o superior del PostgreSQL.',
-	'FULLTEXT_POSTGRES_TS_NAME_EXPLAIN'			=> 'El perfil de configuració de cerca de text que s’utilitza per determinar l’analitzador i el diccionari.',
+	'FULLTEXT_POSTGRES_TS_NAME_EXPLAIN'			=> 'El perfil de configuració de cerca de text que s’usa per determinar l’analitzador i el diccionari.',
 	'FULLTEXT_POSTGRES_MIN_WORD_LEN_EXPLAIN'	=> 'Les paraules que tinguin com a mínim aquest quantitat de caràcters s’inclouran a la consulta a la base de dades.',
 	'FULLTEXT_POSTGRES_MAX_WORD_LEN_EXPLAIN'	=> 'Les paraules que tinguin com a màxim aquest quantitat de caràcters s’inclouran a la consulta a la base de dades.',
 
@@ -85,7 +85,7 @@ $lang = array_merge($lang, array(
 	'FULLTEXT_SPHINX_PORT_EXPLAIN'			=> 'Port al qual escolta el dimoni de cerca sphinx (searchd). Deixeu-lo buit per usar el valor per defecte 9312',
 	'FULLTEXT_SPHINX_WRONG_DATABASE'		=> 'La cerca sphinx del phpBB només es compatible amb MySQL i PostgreSQL.',
 	'FULLTEXT_SPHINX_CONFIG_FILE'			=> 'Fitxer de configuració de sphinx',
-	'FULLTEXT_SPHINX_CONFIG_FILE_EXPLAIN'	=> 'El contingut generat del fitxer de configuració de sphinx. Aquestes dades s’han d’enganxar al fitxer sphinx.conf que utilitza el dimoni de cerca sphinx. Substituïu el text [dbuser] i [dbpassword] amb les vostres credencials d’accés a la base de dades.',
+	'FULLTEXT_SPHINX_CONFIG_FILE_EXPLAIN'	=> 'El contingut generat del fitxer de configuració de sphinx. Aquestes dades s’han d’enganxar al fitxer sphinx.conf que usa el dimoni de cerca sphinx. Substituïu el text [dbuser] i [dbpassword] amb les vostres credencials d’accés a la base de dades.',
 	'FULLTEXT_SPHINX_NO_CONFIG_DATA'		=> 'El camí al directori de dades no està definit. Definiu el camí i trameteu-lo per generar el fitxer de configuració.',
 
 	'GENERAL_SEARCH_SETTINGS'				=> 'Configuracions generals de les cerques',
@@ -96,7 +96,7 @@ $lang = array_merge($lang, array(
 	'INDEXING_IN_PROGRESS_EXPLAIN'			=> 'El motor de cerca està indexant totes les entrades del fòrum. Això pot trigar uns quants minuts o diverses hores depenent de la mida del fòrum.',
 
 	'LIMIT_SEARCH_LOAD'						=> 'Límit de càrrega del sistema per a la pàgina de cerca',
-	'LIMIT_SEARCH_LOAD_EXPLAIN'				=> 'Si la càrrega del sistema per a 1 minut sobrepassa aquest valor, la pàgina de cerca es quedarà fora de línia; 1.0 equival a una utilització aproximada del 100% d’un processador. Això només funciona en servidors basats en UNIX.',
+	'LIMIT_SEARCH_LOAD_EXPLAIN'				=> 'Si la càrrega del sistema per a 1 minut sobrepassa aquest valor, la pàgina de cerca es quedarà fora de línia; 1.0 equival a un ús aproximat del 100% d’un processador. Això només funciona en servidors basats en UNIX.',
 
 	'MAX_SEARCH_CHARS'						=> 'Nombre màxim de caràcters indexats per la cerca',
 	'MAX_SEARCH_CHARS_EXPLAIN'				=> 'Només s’indexaran per ser cercades les paraules que tinguin com a màxim aquest nombre de caràcters.',
@@ -135,7 +135,7 @@ $lang = array_merge($lang, array(
 	'SEARCH_STORE_RESULTS'					=> 'Durada de la mèmoria cau de resultats de la cerca',
 	'SEARCH_STORE_RESULTS_EXPLAIN'			=> 'Els resultats emmagatzemats a la memòria cau de la cerca venceran després d’aquest temps, mesurat en segons. Introduïu un 0 si voleu inhabilitar la memòria cau de la cerca.',
 	'SEARCH_TYPE'							=> 'Motor de cerca',
-	'SEARCH_TYPE_EXPLAIN'					=> 'El phpBB us permet triar el motor que s’utilitza per cercar text al contingut de les entrades. Per defecte, s’utilitza la cerca fulltext pròpia del phpBB.',
+	'SEARCH_TYPE_EXPLAIN'					=> 'El phpBB us permet triar el motor que s’usa per cercar text al contingut de les entrades. Per defecte, s’usa la cerca fulltext pròpia del phpBB.',
 	'SWITCHED_SEARCH_BACKEND'				=> 'Heu canviat el motor de cerca. Per usar el nou motor de cerca assegureu-vos que hi hagi un índex per al motor que heu triat.',
 
 	'TOTAL_WORDS'							=> 'Nombre total de paraules indexades',

@@ -1,7 +1,7 @@
 
 Bon dia, {TO_USERNAME},
 
-{FROM_USERNAME} t’ha enviat el correu electrònic següent mitjançant el teu compte a {SITENAME}. Si és correu brossa, conté insults o comentaris ofensius, posa’t en contacte amb l’administrador de la comunitat a l’adreça electrònica següent:
+{FROM_USERNAME} t’ha enviat el correu electrònic següent mitjançant el teu compte a {SITENAME}. Si és correu brossa, conté insults o comentaris ofensius, contacta amb l’administrador de la comunitat a l’adreça electrònica següent:
 
 {BOARD_CONTACT}
 

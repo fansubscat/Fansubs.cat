@@ -1,0 +1,14 @@
+Subject: Actualització al phpBB {NEW_VERSION} disponible per "{SITENAME}"
+
+Hola {USERNAME},
+
+Aquesta notificació és per informar-vos que s’ha publicat una actualització nova per la vostra instal·lació del phpBB.
+
+La versió que teniu actualment és {CURRENT_VERSION} i la versió més recent és {NEW_VERSION}. Us recomanem que mantingueu el vostre fòrum actualitzat per assegurar el màxim nivell de seguretat, estabilitat i rendiment.
+
+Podeu consultar els detals de la versió al Tauler de control de l’administrador de la vostra instal·lació de phpBB.
+{U_BOARD}
+
+Per rebre suport amb el procés d’actualització, llegiu la documentació o visiteu els fòrums de suport del phpBB.
+
+{EMAIL_SIG}

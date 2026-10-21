@@ -53,7 +53,7 @@ $lang = array_merge($lang, array(
 	'SEND_TO_GROUP'			=> 'Envia’l al grup',
 	'SEND_TO_USERS'			=> 'Envia’l als usuaris',
 	'SEND_TO_USERS_EXPLAIN'	=> 'Si introduïu noms aquí tindran precedència sobre el grup seleccionat a sobre. Introduïu cada nom d’usuari en una línia nova.',
-	
+
 	'MAIL_BANNED'			=> 'Envia’l també als usuaris bandejats',
 	'MAIL_BANNED_EXPLAIN'	=> 'Quan envieu correu electrònic massiu a un grup, amb aquesta opció podeu triar si els usuaris bandejats també el rebran.',
 	'MAIL_HIGH_PRIORITY'	=> 'Alta',
@@ -62,7 +62,7 @@ $lang = array_merge($lang, array(
 	'MAIL_PRIORITY'			=> 'Prioritat del correu',
 	'MASS_MESSAGE'			=> 'El vostre missatge',
 	'MASS_MESSAGE_EXPLAIN'	=> 'Tingueu en compte que només podeu introduir text net. S’eliminaran totes les etiquetes HTML abans de l’enviament.',
-	
+
 	'NO_EMAIL_MESSAGE'		=> 'Cal que introduïu un missatge.',
 	'NO_EMAIL_SUBJECT'		=> 'Cal que especifiqueu un assumpte per al missatge.',
 ));

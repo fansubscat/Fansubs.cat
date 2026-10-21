@@ -481,7 +481,7 @@ $lang = array_merge($lang, array(
 // Help support phpBB page
 $lang = array_merge($lang, array(
 	'EXPLAIN_SEND_STATISTICS'	=> 'Si us plau envieu informació sobre el vostre servidor i configuracions del fòrum al web del phpBB per fer-ne una anàlisi estadística. S’ha suprimit tota la informació que pot identificar-vos o identificar el vostre lloc web - les dades són completament <strong>anònimes</strong>. Basem les decisions sobre futures versions del phpBB en aquesta informació. Les estadístiques es fan públiques. També compartim questes dades amb el projecte PHP, el llenguatge de programació en què està escrit el phpBB.',
-	'EXPLAIN_SHOW_STATISTICS'	=> 'Utilitzant el botó a sota podeu previsualitzar totes les variables que es transmetran.',
+	'EXPLAIN_SHOW_STATISTICS'	=> 'Usant el botó a sota podeu previsualitzar totes les variables que es transmetran.',
 	'DONT_SEND_STATISTICS'		=> 'Torneu al TCA si no voleu enviar informació estadística al web del phpBB.',
 	'GO_ACP_MAIN'				=> 'Ves a la pàgina d’inici del TCA',
 	'HIDE_STATISTICS'			=> 'Oculta els detalls',
@@ -609,6 +609,7 @@ $lang = array_merge($lang, array(
 	'LOG_TOPIC_TYPE_CHANGED'	=> '<strong>Ha canviat el tipus de tema</strong><br />» %s',
 	'LOG_UNLOCK'				=> '<strong>Ha desbloquejat el tema</strong><br />» %s',
 	'LOG_UNLOCK_POST'			=> '<strong>Ha desbloquejat l’entrada</strong><br />» %s',
+	'LOG_VERSION_CHECK_FAIL'	=> '<strong>Ha fallat la comprovació de versió</strong>',
 
 	'LOG_DISALLOW_ADD'		=> '<strong>Ha prohibit el nom d’usuari</strong><br />» %s',
 	'LOG_DISALLOW_DELETE'	=> '<strong>Ha eliminat la prohibició del nom d’usuari</strong>',
@@ -739,8 +740,8 @@ $lang = array_merge($lang, array(
 	'LOG_SEARCH_INDEX_REMOVED'	=> '<strong>Ha eliminat l’índex de cerca per</strong><br />» %s',
 	'LOG_SPHINX_ERROR'			=> '<strong>Error de Sphinx</strong><br />» %s',
 
-	'LOG_SPAMHAUS_OPEN_RESOLVER'		=> 'Spamhaus no permet peticions que utilitzin un sistema de resolució obert. La comprovació de llista negra s’ha inahiblitat. Disposeu de més informació a https://www.spamhaus.com/product/help-for-spamhaus-public-mirror-users/.',
-	'LOG_SPAMHAUS_VOLUME_LIMIT'			=> 'Heu excedit el límit de volum de peticions de Spamhaus. La comprovació de llista negra s’ha inahiblitat. Disposeu de més informació a https://www.spamhaus.com/product/help-for-spamhaus-public-mirror-users/.',	
+	'LOG_SPAMHAUS_OPEN_RESOLVER'		=> 'Spamhaus no permet peticions que usin un sistema de resolució obert. La comprovació de llista negra s’ha inahiblitat. Disposeu de més informació a https://www.spamhaus.com/product/help-for-spamhaus-public-mirror-users/.',
+	'LOG_SPAMHAUS_VOLUME_LIMIT'			=> 'Heu excedit el límit de volum de peticions de Spamhaus. La comprovació de llista negra s’ha inahiblitat. Disposeu de més informació a https://www.spamhaus.com/product/help-for-spamhaus-public-mirror-users/.',
 
 	'LOG_STYLE_ADD'				=> '<strong>Ha afegit el nou estil</strong><br />» %s',
 	'LOG_STYLE_DELETE'			=> '<strong>Ha eliminat l’estil</strong><br />» %s',

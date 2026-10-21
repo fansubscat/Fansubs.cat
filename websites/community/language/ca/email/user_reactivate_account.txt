@@ -9,7 +9,7 @@ Si us plau, guardeu aquest correu electrònic per a la vostra informació. Les d
 Nom d’usuari: {USERNAME}
 ----------------------------
 
-La vostra contrasenya està emmagatzemada de forma segura a la base de dades i no podeu recuperar el text desencriptat. Si l’oblideu, podeu reiniciar-la utilitzant el correu electrònic associat al vostre compte.
+La vostra contrasenya està emmagatzemada de forma segura a la base de dades i no podeu recuperar el text desencriptat. Si l’oblideu, podeu reiniciar-la usant el correu electrònic associat al vostre compte.
 
 Visiteu l’enllaç següent per reactivar el vostre compte:
 
